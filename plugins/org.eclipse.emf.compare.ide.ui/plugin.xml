@@ -253,16 +253,10 @@
    <extension
          point="org.eclipse.emf.compare.ide.ui.modelResolvers">
       <resolver
-            class="org.eclipse.emf.compare.ide.ui.internal.logical.LogicalModelResolver"
-            description="%resolver.logicalmodelresolver.description"
-            label="%resolver.logicalmodelresolver.label"
-            ranking="0">
-      </resolver>
-      <resolver
-            class="org.eclipse.emf.compare.ide.ui.internal.logical.ProjectModelResolver"
-            description="%resolver.projectresolver.description"
-            label="%resolver.projectresolver.label"
-            ranking="1">
+            class="org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver"
+            description="%resolver.threadedModelResolver.description"
+            label="%resolver.threadedModelResolver.label"
+            ranking = "0">
       </resolver>
    </extension>
    <extension

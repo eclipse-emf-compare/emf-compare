@@ -97,13 +97,14 @@
          <meta.section type="examples"/>
       </appinfo>
       <documentation>
-         &lt;extension
-         point=&quot;org.eclipse.emf.compare.ide.ui.modelResolvers&quot;&gt;
-      &lt;resolver
-            class=&quot;org.eclipse.emf.compare.ide.ui.internal.logical.LogicalModelResolver&quot;
-            ranking=&quot;0&quot;&gt;
-      &lt;/resolver&gt;
-   &lt;/extension&gt;
+         &lt;extension point=&quot;org.eclipse.emf.compare.ide.ui.modelResolvers&quot;&gt;
+  &lt;resolver
+            class=&quot;org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver&quot;
+            description=&quot;Resolves cross referenced resources within a given scope.&quot;
+            label=&quot;Cross reference resolver&quot;
+            ranking = &quot;0&quot;&gt;
+  &lt;/resolver&gt;
+&lt;/extension&gt;
       </documentation>
    </annotation>
 
@@ -122,7 +123,7 @@
          <meta.section type="copyright"/>
       </appinfo>
       <documentation>
-         Copyright (c) 2013 Obeo.
+         Copyright (c) 2013, 2014 Obeo.
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
 which accompanies this distribution, and is available at

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.logical;
+package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterators.concat;
@@ -44,7 +44,7 @@ import org.eclipse.emf.common.util.AbstractTreeIterator;
  *            Kind of elements used as this graph's nodes.
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public final class Graph<E> {
+final class Graph<E> {
 	/** Keeps track of this graph's individual nodes. */
 	private final Map<E, Node<E>> nodes;
 
@@ -111,8 +111,10 @@ public final class Graph<E> {
 	 *            The elements which are to be removed from this graph.
 	 */
 	public void removeAll(Collection<E> elements) {
-		for (E e : elements) {
-			remove(e);
+		synchronized(nodes) {
+			for (E e : elements) {
+				remove(e);
+			}
 		}
 	}
 
@@ -175,30 +177,79 @@ public final class Graph<E> {
 		};
 	}
 
-	/**
-	 * Returns an iterable over all elements of the subgraph containing the given element.
-	 * 
-	 * @param element
-	 *            Element we need the subgraph of.
-	 * @return An iterable over all elements of the subgraph containing the given element, an empty list if
-	 *         that element is not present in this graph.
-	 */
-	public Iterable<E> getSubgraphOf(E element) {
-		return getBoundedSubgraphOf(element, Collections.<E> emptySet());
+	public Set<E> getDirectParents(E element) {
+		final Set<E> parents = new LinkedHashSet<E>();
+		synchronized(nodes) {
+			final Node<E> node = nodes.get(element);
+			if (node != null) {
+				for (Node<E> parent : node.getParents()) {
+					parents.add(parent.getElement());
+				}
+			}
+		}
+		return parents;
 	}
 
 	/**
-	 * Returns an iterable over all elements of the subgraph containing the given element and ending at the
-	 * given boundaries.
+	 * Returns the tree starting from the given root element if it is contained in the graph.
+	 * 
+	 * @param root
+	 *            The element we are to consider as the root of a tree.
+	 * @return The tree starting from the given root element if it is contained in this graph, and empty set
+	 *         otherwise.
+	 */
+	public Set<E> getTreeFrom(E root) {
+		return getTreeFrom(root, Collections.<E> emptySet());
+	}
+
+	/**
+	 * Returns the tree starting from the given root element and ending at the given boundaries..
+	 * 
+	 * @param root
+	 *            The element we are to consider as the root of a tree.
+	 * @param endPoints
+	 *            Boundaries of the tree.
+	 * @return The tree starting from the given root element if it is contained in this graph, and empty set
+	 *         otherwise.
+	 */
+	public Set<E> getTreeFrom(E root, Set<E> endPoints) {
+		synchronized(nodes) {
+			final Node<E> node = nodes.get(root);
+			if (node != null) {
+				Set<E> boundaries = endPoints;
+				if (boundaries == null) {
+					boundaries = Collections.emptySet();
+				}
+				return new SubgraphBuilder<E>(node, boundaries).buildTree();
+			}
+		}
+		return Collections.emptySet();
+	}
+
+	/**
+	 * Returns the set of all elements of the subgraph containing the given element.
+	 * 
+	 * @param element
+	 *            Element we need the subgraph of.
+	 * @return The set of all elements of the subgraph containing the given element, an empty set if that
+	 *         element is not present in this graph.
+	 */
+	public Set<E> getSubgraphContaining(E element) {
+		return getSubgraphContaining(element, Collections.<E> emptySet());
+	}
+
+	/**
+	 * Returns the set of all elements of the subgraph containing the given element and ending at the given
+	 * boundaries.
 	 * 
 	 * @param element
 	 *            Element we need the subgraph of.
 	 * @param endPoints
-	 *            Boundaries of the need subgraph.
+	 *            Boundaries of the needed subgraph.
 	 * @return An iterable over all elements of the subgraph containing the given element, an empty list if
 	 *         that element is not present in this graph.
 	 */
-	public Iterable<E> getBoundedSubgraphOf(E element, Set<E> endPoints) {
+	public Set<E> getSubgraphContaining(E element, Set<E> endPoints) {
 		synchronized(nodes) {
 			final Node<E> node = nodes.get(element);
 			if (node != null) {
@@ -206,9 +257,9 @@ public final class Graph<E> {
 				if (boundaries == null) {
 					boundaries = Collections.emptySet();
 				}
-				return new SubgraphBuilder<E>(node, boundaries).build();
+				return new SubgraphBuilder<E>(node, boundaries).buildSubgraph();
 			}
-			return Collections.emptyList();
+			return Collections.emptySet();
 		}
 	}
 
@@ -304,7 +355,7 @@ public final class Graph<E> {
 	}
 
 	/**
-	 * This will be used to create a set over an entire subgraph given a starting point in said subgraph.
+	 * This can be used to create a set over an entire subgraph given a starting point within said subgraph.
 	 * 
 	 * @param <L>
 	 *            Kind of elements the created set is meant to contain.
@@ -338,12 +389,28 @@ public final class Graph<E> {
 		}
 
 		/**
-		 * Constructs the set corresponding to the required subgraph.
+		 * Constructs a set over the entire subgraph containing the specified starting point.
 		 * 
 		 * @return The set of all nodes composing the required subgraph.
 		 */
-		public Set<L> build() {
+		public Set<L> buildSubgraph() {
 			return ImmutableSet.copyOf(new NodeIterator(start));
+		}
+
+		/**
+		 * Constructs a set over the subtree starting from the specified starting point. This will only
+		 * (recursively) iterate over the children of the nodes.
+		 * 
+		 * @return The tree containined the specified starting point.
+		 */
+		public Set<L> buildTree() {
+			final Iterator<L> iterator = new NodeIterator(start) {
+				@Override
+				protected Iterator<Node<L>> createConnectedNodesIterator(Node<L> node) {
+					return node.getChildren().iterator();
+				}
+			};
+			return ImmutableSet.copyOf(iterator);
 		}
 
 		/**
@@ -380,8 +447,18 @@ public final class Graph<E> {
 			 */
 			public NodeIterator(Node<L> node) {
 				this.next = node.getElement();
-				this.nodesIterator = concat(node.getParents().iterator(), node.getChildren().iterator());
+				this.nodesIterator = createConnectedNodesIterator(node);
 				prepareNextIterator();
+			}
+
+			/**
+			 * Creates the iterator over the nodes connected to the current. By default, this will iterate
+			 * over all parents, then all children.
+			 * 
+			 * @return Iterator over the connected nodes we are to iterate over.
+			 */
+			protected Iterator<Node<L>> createConnectedNodesIterator(Node<L> node) {
+				return concat(node.getParents().iterator(), node.getChildren().iterator());
 			}
 
 			/**
@@ -460,16 +537,17 @@ public final class Graph<E> {
 	 * 
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
-	private static class ParentsIterable<M> implements Iterable<Node<M>> {
+	private static class ParentsIterable<O> implements Iterable<Node<O>> {
 		/** The leaf of the Node->parent tree for which this iterable has been constructed. */
-		private final Node<M> start;
+		private final Node<O> start;
 
 		/**
-		 * Constructs an iterable given the root of its tree
+		 * Constructs an iterable given the leaf of its tree.
 		 * 
 		 * @param start
+		 *            Leaf node of the tree we'll iterate over.
 		 */
-		public ParentsIterable(Node<M> start) {
+		public ParentsIterable(Node<O> start) {
 			this.start = start;
 		}
 
@@ -478,8 +556,8 @@ public final class Graph<E> {
 		 * 
 		 * @see java.lang.Iterable#iterator()
 		 */
-		public Iterator<Node<M>> iterator() {
-			return new ParentsIterator<M>(start);
+		public Iterator<Node<O>> iterator() {
+			return new ParentsIterator<O>(start);
 		}
 	}
 
@@ -488,7 +566,7 @@ public final class Graph<E> {
 	 * 
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
-	private static class ParentsIterator<N> extends AbstractTreeIterator<Node<N>> {
+	private static class ParentsIterator<P> extends AbstractTreeIterator<Node<P>> {
 		/** Generated SUID. */
 		private static final long serialVersionUID = -4476850344598138970L;
 
@@ -498,7 +576,7 @@ public final class Graph<E> {
 		 * @param start
 		 *            Start node of the tree we'll iterate over.
 		 */
-		public ParentsIterator(Node<N> start) {
+		public ParentsIterator(Node<P> start) {
 			super(start, false);
 		}
 
@@ -509,8 +587,8 @@ public final class Graph<E> {
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		protected Iterator<? extends Node<N>> getChildren(Object obj) {
-			return ((Node<N>)obj).getParents().iterator();
+		protected Iterator<? extends Node<P>> getChildren(Object obj) {
+			return ((Node<P>)obj).getParents().iterator();
 		}
 	}
 }

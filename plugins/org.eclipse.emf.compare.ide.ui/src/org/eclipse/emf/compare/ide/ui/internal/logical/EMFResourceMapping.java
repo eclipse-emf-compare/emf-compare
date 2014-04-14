@@ -89,7 +89,14 @@ public class EMFResourceMapping extends ResourceMapping {
 	public ResourceTraversal[] getTraversals(ResourceMappingContext context, IProgressMonitor monitor)
 			throws CoreException {
 		if (cachedTraversals == null) {
-			cachedTraversals = convertCompareTraversal(resolveEMFTraversal(context, monitor));
+			try {
+				cachedTraversals = convertCompareTraversal(resolveEMFTraversal(context, monitor));
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				final ResourceTraversal singletonTraversal = new ResourceTraversal(new IResource[] {file, },
+						IResource.DEPTH_ONE, IResource.NONE);
+				return new ResourceTraversal[] {singletonTraversal, };
+			}
 		}
 		return cachedTraversals;
 	}
@@ -106,7 +113,8 @@ public class EMFResourceMapping extends ResourceMapping {
 	 *            Used to display progress information to the user.
 	 * @return The resolved traversal.
 	 */
-	private StorageTraversal resolveEMFTraversal(ResourceMappingContext context, IProgressMonitor monitor) {
+	private StorageTraversal resolveEMFTraversal(ResourceMappingContext context, IProgressMonitor monitor)
+			throws InterruptedException {
 		/*
 		 * Using the context (if it is an instance of RemoteResourceMappingContext) would give better
 		 * results... but would also be far longer. This is mainly used prior to synchronization, and
