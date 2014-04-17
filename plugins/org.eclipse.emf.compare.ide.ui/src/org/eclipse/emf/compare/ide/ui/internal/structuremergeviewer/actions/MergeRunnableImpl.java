@@ -118,6 +118,7 @@ final class MergeRunnableImpl implements IMergeRunnable {
 		for (Diff difference : differences) {
 			addOrUpdateMergeData(difference, mergeMode);
 			addOrUpdateMergeData(DiffUtil.getRequires(difference, leftToRight), mergeMode);
+			addOrUpdateMergeData(DiffUtil.getEquivalences(difference), mergeMode);
 			addOrUpdateMergeData(DiffUtil.getUnmergeables(difference, leftToRight), mergeMode);
 		}
 	}

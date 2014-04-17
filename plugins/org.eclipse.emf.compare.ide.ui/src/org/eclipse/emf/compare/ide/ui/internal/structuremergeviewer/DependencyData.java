@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,13 +70,14 @@ public class DependencyData {
 			Iterable<Diff> selectedDiffs = filter(getSelectedComparisonObjects(selection), Diff.class);
 
 			MergeMode mergePreviewMode = compareConfiguration.getMergePreviewMode();
-			boolean leftToRigh = mergePreviewMode.isLeftToRight(leftEditable, rightEditable);
+			boolean leftToRight = mergePreviewMode.isLeftToRight(leftEditable, rightEditable);
 
 			requires = newHashSet();
 			unmergeables = newHashSet();
 			for (Diff diff : selectedDiffs) {
-				addAll(requires, DiffUtil.getRequires(diff, leftToRigh));
-				addAll(unmergeables, DiffUtil.getUnmergeables(diff, leftToRigh));
+				addAll(requires, DiffUtil.getRequires(diff, leftToRight));
+				addAll(requires, DiffUtil.getEquivalences(diff));
+				addAll(unmergeables, DiffUtil.getUnmergeables(diff, leftToRight));
 			}
 		}
 	}

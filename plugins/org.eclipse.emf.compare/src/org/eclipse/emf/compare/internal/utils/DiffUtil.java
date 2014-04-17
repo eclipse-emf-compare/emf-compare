@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -39,6 +40,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompareMessages;
+import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
@@ -973,6 +975,23 @@ public final class DiffUtil {
 			}
 		}
 		return unmergeables;
+	}
+
+	/**
+	 * Get the list of equivalent differences of the given difference.
+	 * 
+	 * @param diff
+	 *            the given Diff.
+	 * @return the list of equivalent differences.
+	 */
+	public static Set<Diff> getEquivalences(Diff diff) {
+		LinkedHashSet<Diff> equivalences = Sets.newLinkedHashSet();
+		Equivalence equivalence = diff.getEquivalence();
+		if (equivalence != null) {
+			equivalences.addAll(equivalence.getDifferences());
+			equivalences.remove(diff);
+		}
+		return equivalences;
 	}
 
 	/**
