@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EAttribute;
@@ -455,9 +456,9 @@ public final class EMFComparePredicates {
 	}
 
 	/**
-	 * This can be used to check that a given Diff correspond to either an {@link AttributeChange} or a
-	 * {@link ReferenceChange}, and that the corresponding reference or attribute matches the given
-	 * {@code featureName}.
+	 * This can be used to check that a given Diff correspond to either an {@link AttributeChange}, a
+	 * {@link FeatureMapChange} or a {@link ReferenceChange}, and that the corresponding reference or
+	 * attribute matches the given {@code featureName}.
 	 * 
 	 * @param featureName
 	 *            Name of the feature on which we expect a change.
@@ -471,6 +472,8 @@ public final class EMFComparePredicates {
 					affectedFeature = ((AttributeChange)input).getAttribute();
 				} else if (input instanceof ReferenceChange) {
 					affectedFeature = ((ReferenceChange)input).getReference();
+				} else if (input instanceof FeatureMapChange) {
+					affectedFeature = ((FeatureMapChange)input).getAttribute();
 				} else {
 					return false;
 				}
@@ -589,7 +592,8 @@ public final class EMFComparePredicates {
 
 	/**
 	 * This predicate can be used in order to check that a particular Diff describes either a
-	 * {@link ReferenceChange} or {@link AttributeChange} for the given {@code expectedValue}.
+	 * {@link ReferenceChange}, {@link AttributeChange} or {@link FeatureMapChange} for the given
+	 * {@code expectedValue}.
 	 * <p>
 	 * For example, this could be used to check that the given value has indeed been added to a reference or
 	 * attribute, though such checks are more easily performed through {@link #addedIn(EObject, EObject)} or
@@ -608,6 +612,8 @@ public final class EMFComparePredicates {
 					value = ((ReferenceChange)input).getValue();
 				} else if (input instanceof AttributeChange) {
 					value = ((AttributeChange)input).getValue();
+				} else if (input instanceof FeatureMapChange) {
+					value = ((FeatureMapChange)input).getValue();
 				} else {
 					return false;
 				}

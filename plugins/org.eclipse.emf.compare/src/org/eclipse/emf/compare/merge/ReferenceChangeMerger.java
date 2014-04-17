@@ -224,8 +224,15 @@ public class ReferenceChangeMerger extends AbstractMerger {
 				expectedValue = valueMatch.getRight();
 			}
 		}
-		// We now know the target container, target reference and target value.
-		doMove(diff, comparison, expectedContainer, expectedValue, rightToLeft);
+		// If expectedValue is null at this point, we have to copy the value from the other side.
+		// It can happens with a move between the ancestor and one side, while the other side doesn't has the
+		// value.
+		if (expectedValue == null) {
+			addInTarget(diff, rightToLeft);
+		} else {
+			// We now know the target container, target reference and target value.
+			doMove(diff, comparison, expectedContainer, expectedValue, rightToLeft);
+		}
 	}
 
 	/**
@@ -267,20 +274,20 @@ public class ReferenceChangeMerger extends AbstractMerger {
 				if (!reference.isContainment()) {
 					targetList.remove(expectedValue);
 				}
-				if (insertionIndex < 0 && insertionIndex > targetList.size()) {
+				if (insertionIndex < 0 || insertionIndex > targetList.size()) {
 					targetList.add(expectedValue);
 				} else {
 					targetList.add(insertionIndex, expectedValue);
 				}
 			} else if (targetList instanceof EList<?>) {
-				if (insertionIndex < 0 && insertionIndex > targetList.size()) {
+				if (insertionIndex < 0 || insertionIndex > targetList.size()) {
 					((EList<EObject>)targetList).move(targetList.size() - 1, expectedValue);
 				} else {
 					((EList<EObject>)targetList).move(insertionIndex, expectedValue);
 				}
 			} else {
 				targetList.remove(expectedValue);
-				if (insertionIndex < 0 && insertionIndex > targetList.size()) {
+				if (insertionIndex < 0 || insertionIndex > targetList.size()) {
 					targetList.add(expectedValue);
 				} else {
 					targetList.add(insertionIndex, expectedValue);

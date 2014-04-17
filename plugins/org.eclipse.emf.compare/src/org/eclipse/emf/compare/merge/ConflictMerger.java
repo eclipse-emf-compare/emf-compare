@@ -51,12 +51,25 @@ public class ConflictMerger extends AbstractMerger {
 			return;
 		}
 
-		if (target.getSource() == DifferenceSource.LEFT && target.getKind() != DifferenceKind.MOVE) {
+		if (target.getSource() == DifferenceSource.LEFT) {
 			// Call the appropriate merger for each conflicted diff
 			Conflict conflict = target.getConflict();
 			for (Diff conflictedDiff : conflict.getDifferences()) {
 				if (target != conflictedDiff) {
-					if (conflictedDiff.getSource() == DifferenceSource.RIGHT) {
+					if (target.getKind() == DifferenceKind.MOVE
+							&& conflictedDiff.getKind() != DifferenceKind.MOVE
+							&& conflictedDiff.getKind() != DifferenceKind.DELETE) {
+						// In case of a conflict between a move and an add/change, we don't want to merge
+						// the conflicted diff and we don't want to mark as merged the conflicted diff
+						// neither.
+						// In case of a conflict between a move and another move, we don't want to merge
+						// the conflicted diff but we want to mark as merged the conflicted diff.
+						// In case of a conflict between a move and a delete, we want to merge the conflicted
+						// diff.
+						// See move tests in org.eclipse.emf.compare.tests.merge.ConflictMergeTest for more
+						// details.
+						continue;
+					} else if (conflictedDiff.getSource() == DifferenceSource.RIGHT) {
 						mergeConflictedDiff(conflictedDiff, true, monitor);
 					}
 				}
@@ -81,12 +94,25 @@ public class ConflictMerger extends AbstractMerger {
 			return;
 		}
 
-		if (target.getSource() == DifferenceSource.RIGHT && target.getKind() != DifferenceKind.MOVE) {
+		if (target.getSource() == DifferenceSource.RIGHT) {
 			// Call the appropriate merger for each conflicted diff
 			Conflict conflict = target.getConflict();
 			for (Diff conflictedDiff : conflict.getDifferences()) {
 				if (target != conflictedDiff) {
-					if (conflictedDiff.getSource() == DifferenceSource.LEFT) {
+					if (target.getKind() == DifferenceKind.MOVE
+							&& conflictedDiff.getKind() != DifferenceKind.MOVE
+							&& conflictedDiff.getKind() != DifferenceKind.DELETE) {
+						// In case of a conflict between a move and an add/change, we don't want to merge
+						// the conflicted diff and we don't want to mark as merged the conflicted diff
+						// neither.
+						// In case of a conflict between a move and another move, we don't want to merge
+						// the conflicted diff but we want to mark as merged the conflicted diff.
+						// In case of a conflict between a move and a delete, we want to merge the conflicted
+						// diff.
+						// See move tests in org.eclipse.emf.compare.tests.merge.ConflictMergeTest for more
+						// details.
+						continue;
+					} else if (conflictedDiff.getSource() == DifferenceSource.LEFT) {
 						mergeConflictedDiff(conflictedDiff, false, monitor);
 					}
 				}

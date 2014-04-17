@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,8 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.FeatureMap;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 
 /**
  * The diff engine is in charge of actually computing the differences between the objects mapped by a
@@ -590,6 +592,16 @@ public class DefaultDiffEngine implements IDiffEngine {
 				if (checkOrdering) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
 				}
+			} else if (FeatureMapUtil.isFeatureMap(feature) && diffCandidate instanceof FeatureMap.Entry) {
+				// A value of a FeatureMap changed his key
+				if (isFeatureMapEntryKeyChange(equality, (FeatureMap.Entry)diffCandidate, originValues)) {
+					featureChange(match, feature, diffCandidate, DifferenceKind.CHANGE, DifferenceSource.LEFT);
+				} else if (isFeatureMapEntryMove(comparison, (FeatureMap.Entry)diffCandidate,
+						DifferenceSource.LEFT)) {
+					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
+				} else {
+					featureChange(match, feature, diffCandidate, DifferenceKind.ADD, DifferenceSource.LEFT);
+				}
 			} else {
 				featureChange(match, feature, diffCandidate, DifferenceKind.ADD, DifferenceSource.LEFT);
 			}
@@ -609,6 +621,17 @@ public class DefaultDiffEngine implements IDiffEngine {
 				if (checkOrdering) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.RIGHT);
 				}
+			} else if (FeatureMapUtil.isFeatureMap(feature) && diffCandidate instanceof FeatureMap.Entry) {
+				// A value of a FeatureMap changed his key
+				if (isFeatureMapEntryKeyChange(equality, (FeatureMap.Entry)diffCandidate, originValues)) {
+					featureChange(match, feature, diffCandidate, DifferenceKind.CHANGE,
+							DifferenceSource.RIGHT);
+				} else if (isFeatureMapEntryMove(comparison, (FeatureMap.Entry)diffCandidate,
+						DifferenceSource.RIGHT)) {
+					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.RIGHT);
+				} else {
+					featureChange(match, feature, diffCandidate, DifferenceKind.ADD, DifferenceSource.RIGHT);
+				}
 			} else {
 				featureChange(match, feature, diffCandidate, DifferenceKind.ADD, DifferenceSource.RIGHT);
 			}
@@ -619,12 +642,16 @@ public class DefaultDiffEngine implements IDiffEngine {
 			// A value that is in the origin but not in one of the side has been deleted.
 			// However, we do not want attribute changes on removed elements.
 			if (!contains(comparison, leftValues, diffCandidate)) {
-				if (feature instanceof EReference || match.getLeft() != null) {
+				if ((feature instanceof EReference || match.getLeft() != null)
+						&& !isFeatureMapChangeOrMove(comparison, feature, diffCandidate, leftValues,
+								DifferenceSource.LEFT)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE, DifferenceSource.LEFT);
 				}
 			}
 			if (!contains(comparison, rightValues, diffCandidate)) {
-				if (feature instanceof EReference || match.getRight() != null) {
+				if ((feature instanceof EReference || match.getRight() != null)
+						&& !isFeatureMapChangeOrMove(comparison, feature, diffCandidate, rightValues,
+								DifferenceSource.RIGHT)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE,
 							DifferenceSource.RIGHT);
 				}
@@ -675,6 +702,16 @@ public class DefaultDiffEngine implements IDiffEngine {
 				if (checkOrdering) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
 				}
+			} else if (FeatureMapUtil.isFeatureMap(feature) && diffCandidate instanceof FeatureMap.Entry) {
+				// A value of a FeatureMap changed his key
+				if (isFeatureMapEntryKeyChange(equality, (FeatureMap.Entry)diffCandidate, rightValues)) {
+					featureChange(match, feature, diffCandidate, DifferenceKind.CHANGE, DifferenceSource.LEFT);
+				} else if (isFeatureMapEntryMove(comparison, (FeatureMap.Entry)diffCandidate,
+						DifferenceSource.LEFT)) {
+					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
+				} else {
+					featureChange(match, feature, diffCandidate, DifferenceKind.ADD, DifferenceSource.LEFT);
+				}
 			} else {
 				featureChange(match, feature, diffCandidate, DifferenceKind.ADD, DifferenceSource.LEFT);
 			}
@@ -683,13 +720,118 @@ public class DefaultDiffEngine implements IDiffEngine {
 		// deleted
 		for (Object diffCandidate : rightValues) {
 			// A value that is in the right but not in the left has been deleted.
-			// However, we do not want attribute changes on removed elements.
+			// However, we do not want attribute changes on removed elements and in case of a FeatureMapChange
+			// of kind DifferenceKind.CHANGE or DifferenceKind.MOVE
 			if (!contains(comparison, leftValues, diffCandidate)) {
-				if (feature instanceof EReference || match.getLeft() != null) {
+				if ((feature instanceof EReference || match.getLeft() != null)
+						&& !isFeatureMapChangeOrMove(comparison, feature, diffCandidate, leftValues,
+								DifferenceSource.LEFT)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE, DifferenceSource.LEFT);
 				}
 			}
 		}
+	}
+
+	/**
+	 * Checks if the given candidate is a FeatureMap change of type DifferenceKind.CHANGE or
+	 * DifferenceKind.MOVE.
+	 * 
+	 * @param comparison
+	 *            The comparison object.
+	 * @param feature
+	 *            The feature which values are to be checked.
+	 * @param diffCandidate
+	 *            The given candidate for which we search an equivalent value.
+	 * @param values
+	 *            The entries in which we search.
+	 * @param source
+	 *            The given DifferenceSource of the entry.
+	 * @return true if the given candidate is a FeatureMap change of type DifferenceKind.CHANGE or
+	 *         DifferenceKind.MOVE, false otherwise.
+	 */
+	private boolean isFeatureMapChangeOrMove(final Comparison comparison, final EStructuralFeature feature,
+			final Object diffCandidate, final List<Object> values, final DifferenceSource source) {
+		return FeatureMapUtil.isFeatureMap(feature)
+				&& (isFeatureMapEntryKeyChange(comparison.getEqualityHelper(),
+						(FeatureMap.Entry)diffCandidate, values) || isFeatureMapEntryMove(comparison,
+						(FeatureMap.Entry)diffCandidate, source));
+	}
+
+	/**
+	 * Checks if the entry has its value equivalent in the list of entries, with a different key.
+	 * 
+	 * @param equality
+	 *            Use to compare objects by the org.eclipse.emf.compare.match.IMatchEngine.
+	 * @param entry
+	 *            The given FeatureMap.Entry for which we search an equivalent value.
+	 * @param entries
+	 *            The entries in which we search.
+	 * @return true if the entry has its value equivalent in the list of entries, with a different key, false
+	 *         otherwise.
+	 */
+	private boolean isFeatureMapEntryKeyChange(final IEqualityHelper equality, final FeatureMap.Entry entry,
+			final List<Object> entries) {
+		final Object entryValue = entry.getValue();
+		final EStructuralFeature entryKey = entry.getEStructuralFeature();
+		if (entryKey instanceof EReference && ((EReference)entryKey).isContainment()) {
+			for (Object object : entries) {
+				if (object instanceof FeatureMap.Entry) {
+					if (equality.matchingValues(entryValue, ((FeatureMap.Entry)object).getValue())) {
+						return !entryKey.equals(((FeatureMap.Entry)object).getEStructuralFeature());
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if the entry has its equivalent in the opposite side, and thus is a DifferenceKind.MOVE
+	 * difference.
+	 * 
+	 * @param comparison
+	 *            The comparison object.
+	 * @param entry
+	 *            The FeatureMap.Entry for which we try to find its equivalent.
+	 * @param side
+	 *            The given DifferenceSource of the entry.
+	 * @return true if the entry has its equivalent in the opposite side, false otherwise.
+	 */
+	private boolean isFeatureMapEntryMove(final Comparison comparison, FeatureMap.Entry entry,
+			DifferenceSource side) {
+		final boolean move;
+		final Object entryValue = entry.getValue();
+		if (entryValue instanceof EObject) {
+			final Match candidateMatch = comparison.getMatch((EObject)entryValue);
+
+			if (candidateMatch == null) {
+				move = false;
+			} else {
+				final EObject value;
+				if (side == DifferenceSource.LEFT) {
+					value = candidateMatch.getLeft();
+				} else {
+					value = candidateMatch.getRight();
+				}
+				final EObject oppositeValue;
+				if (comparison.isThreeWay()) {
+					oppositeValue = candidateMatch.getOrigin();
+				} else {
+					oppositeValue = candidateMatch.getRight();
+				}
+
+				if (value != null && oppositeValue != null) {
+					move = !comparison.getEqualityHelper().matchingValues(value.eContainer(),
+							oppositeValue.eContainer());
+				} else {
+					move = false;
+				}
+			}
+		} else {
+			move = false;
+		}
+		return move;
+
 	}
 
 	/**
@@ -981,7 +1123,9 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 */
 	protected void featureChange(Match match, EStructuralFeature feature, Object value, DifferenceKind kind,
 			DifferenceSource source) {
-		if (feature instanceof EAttribute) {
+		if (FeatureMapUtil.isFeatureMap(feature)) {
+			getDiffProcessor().featureMapChange(match, (EAttribute)feature, value, kind, source);
+		} else if (feature instanceof EAttribute) {
 			getDiffProcessor().attributeChange(match, (EAttribute)feature, value, kind, source);
 		} else if (value instanceof EObject) {
 			getDiffProcessor().referenceChange(match, (EReference)feature, (EObject)value, kind, source);

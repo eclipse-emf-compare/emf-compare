@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl;
 
 import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.collect.Iterables.addAll;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.isEmpty;
@@ -27,11 +26,13 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
@@ -56,6 +57,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.FeatureMap;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
@@ -454,8 +457,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 	protected final List<IMergeViewerItem> createMergeViewerItemFrom(Collection<?> values) {
 		List<IMergeViewerItem> ret = newArrayListWithCapacity(values.size());
-		for (Object value : values) {
-			IMergeViewerItem valueToAdd = createMergeViewerItemFrom((EObject)value);
+		for (EObject value : filter(values, EObject.class)) {
+			IMergeViewerItem valueToAdd = createMergeViewerItemFrom(value);
 			if (valueToAdd != null) {
 				ret.add(valueToAdd);
 			}
@@ -608,7 +611,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			Object sideValue = getSideValue(getSide());
 			EObject bestSideValue = (EObject)getBestSideValue();
 
-			final Collection<? extends EReference> childrenFeatures = getChildrenFeatures(bestSideValue);
+			final Collection<? extends EStructuralFeature> childrenFeatures = getChildrenFeatures(bestSideValue);
 
 			Match match = getComparison().getMatch(bestSideValue);
 			final ImmutableList<Diff> differences;
@@ -622,20 +625,90 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			List<IMergeViewerItem> ret = newArrayList();
 
 			for (EStructuralFeature eStructuralFeature : childrenFeatures) {
-				List<Object> featureContent = ReferenceUtil.getAsList((EObject)sideValue, eStructuralFeature);
-				List<IMergeViewerItem> mergeViewerItem = createMergeViewerItemFrom(featureContent);
-				if (getSide() != MergeViewerSide.ANCESTOR) {
-					List<? extends Diff> differencesOnFeature = ImmutableList.copyOf(filter(differences,
-							onFeature(eStructuralFeature.getName())));
-					ret.addAll(createInsertionPoints(getComparison(), eStructuralFeature, mergeViewerItem,
-							filteredDiffs(differencesOnFeature, predicate, group)));
-
-				} else {
-					ret.addAll(mergeViewerItem);
+				if (eStructuralFeature instanceof EReference) {
+					ret.addAll(getChildrenOfReference(group, predicate, sideValue, differences,
+							(EReference)eStructuralFeature));
+				} else if (FeatureMapUtil.isFeatureMap(eStructuralFeature)) {
+					ret.addAll(getChildrenOfFeatureMap(group, predicate, sideValue, differences,
+							eStructuralFeature));
 				}
 			}
 
 			return ret.toArray(NO_ITEMS_ARR);
+		}
+
+		/**
+		 * Returns the children of the container that apply on the given reference.
+		 * 
+		 * @param group
+		 *            The active group provider.
+		 * @param predicate
+		 *            The active predicate.
+		 * @param container
+		 *            The container object.
+		 * @param differences
+		 *            The differences that apply on the container.
+		 * @param reference
+		 *            The reference for which we want the children.
+		 */
+		private List<IMergeViewerItem> getChildrenOfReference(final IDifferenceGroupProvider group,
+				final Predicate<? super EObject> predicate, final Object container,
+				final ImmutableList<Diff> differences, final EReference reference) {
+			List<IMergeViewerItem> ret = Lists.newArrayList();
+			List<Object> featureContent = ReferenceUtil.getAsList((EObject)container, reference);
+			List<IMergeViewerItem> mergeViewerItem = createMergeViewerItemFrom(featureContent);
+			if (getSide() != MergeViewerSide.ANCESTOR) {
+				List<? extends Diff> differencesOnFeature = ImmutableList.copyOf(filter(differences,
+						onFeature(reference.getName())));
+				ret.addAll(createInsertionPoints(getComparison(), reference, mergeViewerItem, filteredDiffs(
+						differencesOnFeature, predicate, group)));
+
+			} else {
+				ret.addAll(mergeViewerItem);
+			}
+			return ret;
+		}
+
+		/**
+		 * Returns the children of the container that apply on the given reference.
+		 * 
+		 * @param group
+		 *            The active group provider.
+		 * @param predicate
+		 *            The active predicate.
+		 * @param container
+		 *            The container object.
+		 * @param differences
+		 *            The differences that apply on the container.
+		 * @param reference
+		 *            The feature map for which we want the children.
+		 */
+		private List<IMergeViewerItem> getChildrenOfFeatureMap(final IDifferenceGroupProvider group,
+				final Predicate<? super EObject> predicate, final Object container,
+				final ImmutableList<Diff> differences, final EStructuralFeature featureMap) {
+			List<IMergeViewerItem> ret = Lists.newArrayList();
+			List<Object> mapContent = ReferenceUtil.getAsList((EObject)container, featureMap);
+			List<Object> featureContent = Lists.newArrayList();
+			Set<EStructuralFeature> derivedFeatures = Sets.newLinkedHashSet();
+			for (Object object : mapContent) {
+				if (object instanceof FeatureMap.Entry) {
+					featureContent.add(((FeatureMap.Entry)object).getValue());
+					derivedFeatures.add(((FeatureMap.Entry)object).getEStructuralFeature());
+				}
+			}
+			List<IMergeViewerItem> mergeViewerItem = createMergeViewerItemFrom(featureContent);
+			if (getSide() != MergeViewerSide.ANCESTOR) {
+				List<Diff> differencesOnFeature = newArrayList();
+				for (EStructuralFeature derivedFeature : derivedFeatures) {
+					differencesOnFeature.addAll(ImmutableList.copyOf(filter(differences,
+							onFeature(derivedFeature.getName()))));
+				}
+				ret.addAll(createInsertionPoints(getComparison(), featureMap, mergeViewerItem, filteredDiffs(
+						differencesOnFeature, predicate, group)));
+			} else {
+				ret.addAll(mergeViewerItem);
+			}
+			return ret;
 		}
 
 		/**
@@ -644,20 +717,20 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		 * @param object
 		 * @return
 		 */
-		protected Collection<EReference> getChildrenFeatures(Object object) {
-			Collection<EReference> ret = Lists.newArrayList();
+		protected Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+			Collection<? extends EStructuralFeature> ret = Lists.newArrayList();
 			Collection<? extends EStructuralFeature> childrenFeaturesFromItemProviderAdapter = getChildrenFeaturesFromItemProviderAdapter(object);
 			if (childrenFeaturesFromItemProviderAdapter == null) {
 				ret = getChildrenFeaturesFromEClass(object);
 			} else {
-				addAll(ret, filter(childrenFeaturesFromItemProviderAdapter, EReference.class));
+				ret = childrenFeaturesFromItemProviderAdapter;
 			}
 
 			return ret;
 		}
 
-		protected Collection<EReference> getChildrenFeaturesFromEClass(Object object) {
-			ImmutableSet.Builder<EReference> features = ImmutableSet.builder();
+		protected Collection<EStructuralFeature> getChildrenFeaturesFromEClass(Object object) {
+			ImmutableSet.Builder<EStructuralFeature> features = ImmutableSet.builder();
 			if (object instanceof EObject) {
 				for (EReference feature : ((EObject)object).eClass().getEAllContainments()) {
 					features.add(feature);

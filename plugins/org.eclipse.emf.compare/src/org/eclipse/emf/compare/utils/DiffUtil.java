@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -245,8 +245,9 @@ public final class DiffUtil {
 	 * When merging a {@link Diff}, returns the sub diffs of this given diff, and all associated diffs (see
 	 * {@link DiffUtil#getAssociatedDiffs(Iterable, boolean, Diff)}) of these sub diffs.
 	 * <p>
-	 * If the diff is an {@link org.eclipse.emf.compare.AttributeChange} or a @{code
-	 * ResourceAttachmentChange}, this method will return an empty iterable.
+	 * If the diff is an {@link org.eclipse.emf.compare.AttributeChange}, a
+	 * {@link org.eclipse.emf.compare.FeatureMapChange} or a @{code ResourceAttachmentChange}, this method
+	 * will return an empty iterable.
 	 * </p>
 	 * <p>
 	 * If the diff is a {@link org.eclipse.emf.compare.ReferenceChange} this method will return all

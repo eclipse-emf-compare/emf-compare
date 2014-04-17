@@ -23,6 +23,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
@@ -129,32 +130,27 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 			Object left = getValueFromDiff(diff, MergeViewerSide.LEFT);
 			Object right = getValueFromDiff(diff, MergeViewerSide.RIGHT);
 
-			if (left == null && right == null) {
-				// Do not display anything
-			} else {
-				final boolean leftEmptyBox = getSide() == MergeViewerSide.LEFT
-						&& (left == null || !getFeatureValues(getSide()).contains(left));
-				final boolean rightEmptyBox = getSide() == MergeViewerSide.RIGHT
-						&& (right == null || !getFeatureValues(getSide()).contains(right));
-				if (leftEmptyBox || rightEmptyBox) {
-					Object ancestor = getValueFromDiff(diff, MergeViewerSide.ANCESTOR);
-					if (leftEmptyBox) {
-						left = null;
-					}
-					if (rightEmptyBox) {
-						right = null;
-					}
-					IMergeViewerItem insertionPoint = new MergeViewerItem(getComparison(), diff, left, right,
-							ancestor, getSide(), getRootAdapterFactory());
-
-					final int insertionIndex = Math.min(findInsertionIndex(diff, rightToLeft), ret.size());
-					List<IMergeViewerItem> subList = ret.subList(0, insertionIndex);
-					final int nbInsertionPointBefore = size(filter(subList,
-							IMergeViewerItem.IS_INSERTION_POINT));
-
-					int index = Math.min(insertionIndex + nbInsertionPointBefore, ret.size());
-					ret.add(index, insertionPoint);
+			final boolean leftEmptyBox = getSide() == MergeViewerSide.LEFT
+					&& (left == null || !getFeatureValues(getSide()).contains(left));
+			final boolean rightEmptyBox = getSide() == MergeViewerSide.RIGHT
+					&& (right == null || !getFeatureValues(getSide()).contains(right));
+			if (leftEmptyBox || rightEmptyBox) {
+				Object ancestor = getValueFromDiff(diff, MergeViewerSide.ANCESTOR);
+				if (leftEmptyBox) {
+					left = null;
 				}
+				if (rightEmptyBox) {
+					right = null;
+				}
+				IMergeViewerItem insertionPoint = new MergeViewerItem(getComparison(), diff, left, right,
+						ancestor, getSide(), getRootAdapterFactory());
+
+				final int insertionIndex = Math.min(findInsertionIndex(diff, rightToLeft), ret.size());
+				List<IMergeViewerItem> subList = ret.subList(0, insertionIndex);
+				final int nbInsertionPointBefore = size(filter(subList, IMergeViewerItem.IS_INSERTION_POINT));
+
+				int index = Math.min(insertionIndex + nbInsertionPointBefore, ret.size());
+				ret.add(index, insertionPoint);
 			}
 		}
 		return ret;
@@ -278,8 +274,9 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 	}
 
 	/**
-	 * Returns either {@link ReferenceChange#getValue()} or {@link AttributeChange#getValue()} depending on
-	 * the runtime type of the give, {@code diff} or null otherwise.
+	 * Returns either {@link ReferenceChange#getValue()}, {@link AttributeChange#getValue()} or a
+	 * {@link FeatureMapChange#getValue()} depending on the runtime type of the give, {@code diff} or null
+	 * otherwise.
 	 * 
 	 * @param diff
 	 *            the given Diff.
@@ -291,6 +288,8 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 			ret = ((ReferenceChange)diff).getValue();
 		} else if (diff instanceof AttributeChange) {
 			ret = ((AttributeChange)diff).getValue();
+		} else if (diff instanceof FeatureMapChange) {
+			ret = ((FeatureMapChange)diff).getValue();
 		} else if (diff.getPrimeRefining() instanceof ReferenceChange) {
 			ret = ((ReferenceChange)diff.getPrimeRefining()).getValue();
 		} else {

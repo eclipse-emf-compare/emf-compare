@@ -10,14 +10,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
+import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.IStructuralFeatureAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.FeatureMapKeyChangeAccessorImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.ResourceContentsAccessorImpl;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -275,7 +278,25 @@ public class TableMergeViewer extends AbstractTableOrTreeMergeViewer {
 		 */
 		@Override
 		public void refresh() {
-			if (fInput instanceof IStructuralFeatureAccessor) {
+			if (fInput instanceof FeatureMapKeyChangeAccessorImpl) {
+				FeatureMapKeyChangeAccessorImpl featureMapAccessor = (FeatureMapKeyChangeAccessorImpl)fInput;
+
+				final FeatureMapChange diff = featureMapAccessor.getFeatureMapChange();
+				final FeatureMap.Entry entry = (FeatureMap.Entry)diff.getValue();
+				final Object entryValue = entry.getValue();
+
+				if (getLabelProvider() instanceof ILabelProvider) {
+					ILabelProvider labelProvider = (ILabelProvider)getLabelProvider();
+
+					fFeatureLabel.setText(EMFCompareRCPUIMessages
+							.getString("TableMergeViewer.featureMapEntryKeyLabel")); //$NON-NLS-1$
+
+					fEObjectIcon.setImage(labelProvider.getImage(entryValue));
+					fEObjectLabel.setText(labelProvider.getText(entryValue));
+				}
+
+				fControl.layout(true);
+			} else if (fInput instanceof IStructuralFeatureAccessor) {
 				IStructuralFeatureAccessor featureAccessor = (IStructuralFeatureAccessor)fInput;
 
 				EObject eObject = featureAccessor.getEObject(fSide);

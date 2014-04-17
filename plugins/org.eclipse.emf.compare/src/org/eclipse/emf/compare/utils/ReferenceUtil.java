@@ -15,10 +15,15 @@ import com.google.common.collect.ImmutableList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.ExtendedMetaData;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -136,5 +141,31 @@ public final class ReferenceUtil {
 			// Assumes that the containing package is the same, let it fail otherwise
 			object.eSet(clazz.getEStructuralFeature(feature.getName()), newValue);
 		}
+	}
+
+	/**
+	 * Checks if the given reference is a FeatureMap-derived feature.
+	 * 
+	 * @param reference
+	 *            the given EReference.
+	 * @return true if the given reference is a FeatureMap-derived feature, false otherwise.
+	 */
+	public static boolean isFeatureMapDerivedFeature(EReference reference) {
+		if (reference.isDerived() && reference.isTransient() && reference.isVolatile()) {
+			String annotation = EcoreUtil.getAnnotation(reference, ExtendedMetaData.ANNOTATION_URI, "group"); //$NON-NLS-1$
+			if (annotation != null) {
+				if (annotation.startsWith("#")) { //$NON-NLS-1$
+					annotation = annotation.substring(1); // deletes the '#' character
+				}
+				EClass container = reference.getEContainingClass();
+				for (EAttribute content : container.getEAttributes()) {
+					if (FeatureMapUtil.isFeatureMap(content)
+							&& annotation.toLowerCase().startsWith(content.getName().toLowerCase())) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 }

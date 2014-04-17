@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,21 +10,23 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl;
 
+import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isFeatureMapContainment;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.ContainmentReferenceChangeAccessorImpl;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 
 /**
  * A specific {@link org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory} for
- * containment {@link ReferenceChange} objects.
+ * FeatureMapChanges of kind DifferenceKind.MOVE (represent an entry that moved from map to another).
  * 
- * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 4.0
  */
-public class ContainmentReferenceChangeAccessorFactory extends AbstractAccessorFactory {
+public class FeatureMapChangeMoveAccessorFactory extends AbstractAccessorFactory {
 
 	/**
 	 * {@inheritDoc}
@@ -32,17 +34,12 @@ public class ContainmentReferenceChangeAccessorFactory extends AbstractAccessorF
 	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory#isFactoryFor(java.lang.Object)
 	 */
 	public boolean isFactoryFor(Object target) {
-		final boolean isFactoryFor;
-		if (target instanceof ReferenceChange) {
-			isFactoryFor = ((ReferenceChange)target).getReference().isContainment();
-		} else if (target instanceof Diff) {
-			Diff primeRefining = ((Diff)target).getPrimeRefining();
-			isFactoryFor = primeRefining instanceof ReferenceChange
-					&& ((ReferenceChange)primeRefining).getReference().isContainment();
-		} else {
-			isFactoryFor = false;
+		if (target instanceof FeatureMapChange) {
+			FeatureMapChange featureMapChange = (FeatureMapChange)target;
+			return featureMapChange.getKind() == DifferenceKind.MOVE
+					&& isFeatureMapContainment(featureMapChange);
 		}
-		return isFactoryFor;
+		return false;
 	}
 
 	/**
@@ -52,8 +49,7 @@ public class ContainmentReferenceChangeAccessorFactory extends AbstractAccessorF
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createLeft(AdapterFactory adapterFactory, Object target) {
-		ReferenceChange referenceChange = getAppropriateReferenceChange(target);
-		return new ContainmentReferenceChangeAccessorImpl(adapterFactory, referenceChange,
+		return new ContainmentReferenceChangeAccessorImpl(adapterFactory, (FeatureMapChange)target,
 				MergeViewerSide.LEFT);
 	}
 
@@ -64,8 +60,7 @@ public class ContainmentReferenceChangeAccessorFactory extends AbstractAccessorF
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createRight(AdapterFactory adapterFactory, Object target) {
-		ReferenceChange referenceChange = getAppropriateReferenceChange(target);
-		return new ContainmentReferenceChangeAccessorImpl(adapterFactory, referenceChange,
+		return new ContainmentReferenceChangeAccessorImpl(adapterFactory, (FeatureMapChange)target,
 				MergeViewerSide.RIGHT);
 	}
 
@@ -76,29 +71,7 @@ public class ContainmentReferenceChangeAccessorFactory extends AbstractAccessorF
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createAncestor(AdapterFactory adapterFactory, Object target) {
-		ReferenceChange referenceChange = getAppropriateReferenceChange(target);
-		return new ContainmentReferenceChangeAccessorImpl(adapterFactory, referenceChange,
+		return new ContainmentReferenceChangeAccessorImpl(adapterFactory, (FeatureMapChange)target,
 				MergeViewerSide.ANCESTOR);
-	}
-
-	/**
-	 * Returns the appropriate reference change. If the given object has a prime refining that is a reference
-	 * change, returns this reference change. If the given object is a reference change, returns it.
-	 * Otherwise, returns null.
-	 * 
-	 * @param target
-	 *            the given object.
-	 * @return the appropriate reference change.
-	 */
-	private ReferenceChange getAppropriateReferenceChange(Object target) {
-		final ReferenceChange referenceChange;
-		if (target instanceof ReferenceChange) {
-			referenceChange = (ReferenceChange)target;
-		} else if (((Diff)target).getPrimeRefining() instanceof ReferenceChange) {
-			referenceChange = (ReferenceChange)((Diff)target).getPrimeRefining();
-		} else {
-			referenceChange = null;
-		}
-		return referenceChange;
 	}
 }

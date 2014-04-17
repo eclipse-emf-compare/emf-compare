@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -45,6 +46,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
@@ -107,6 +109,8 @@ public final class MergeViewerUtil {
 			feature = ((ReferenceChange)diff).getReference();
 		} else if (diff instanceof AttributeChange) {
 			feature = ((AttributeChange)diff).getAttribute();
+		} else if (diff instanceof FeatureMapChange) {
+			feature = ((FeatureMapChange)diff).getAttribute();
 		} else {
 			feature = null;
 		}
@@ -114,8 +118,9 @@ public final class MergeViewerUtil {
 	}
 
 	/**
-	 * Returns either {@link ReferenceChange#getValue()} or {@link AttributeChange#getValue()} depending on
-	 * the runtime type of the give {@code diff} or null otherwise.
+	 * Returns either {@link ReferenceChange#getValue()}, {@link AttributeChange#getValue()} or a
+	 * {@link FeatureMapChange#getValue()} depending on the runtime type of the give {@code diff} or null
+	 * otherwise.
 	 * 
 	 * @param diff
 	 * @return
@@ -126,6 +131,13 @@ public final class MergeViewerUtil {
 			ret = ((ReferenceChange)diff).getValue();
 		} else if (diff instanceof AttributeChange) {
 			ret = ((AttributeChange)diff).getValue();
+		} else if (diff instanceof FeatureMapChange) {
+			Object entry = ((FeatureMapChange)diff).getValue();
+			if (entry instanceof FeatureMap.Entry) {
+				ret = ((FeatureMap.Entry)entry).getValue();
+			} else {
+				ret = null;
+			}
 		} else {
 			ret = null;
 		}

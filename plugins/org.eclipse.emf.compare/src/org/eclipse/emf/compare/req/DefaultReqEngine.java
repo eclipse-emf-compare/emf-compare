@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isAddOrSetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
+import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isFeatureMapContainment;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Predicate;
@@ -29,6 +30,7 @@ import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
@@ -36,6 +38,7 @@ import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
  * The requirements engine is in charge of actually computing the requirements between the differences.
@@ -82,7 +85,7 @@ public class DefaultReqEngine implements IReqEngine {
 			boolean isDeletion = !isAddition && isDeleteOrUnsetDiff(difference);
 
 			// ADD object
-			if (isAddition && isContainment(difference)) {
+			if (isAddition && isReferenceContainment(difference)) {
 
 				// -> requires ADD on the container of the object
 				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value.eContainer(),
@@ -92,7 +95,7 @@ public class DefaultReqEngine implements IReqEngine {
 				requiredDifferences.addAll(getDELOriginValueOnContainmentRefSingle(comparison, difference));
 
 				// ADD reference
-			} else if (isAddition) {
+			} else if (isAddition && !isFeatureMapContainment(difference)) {
 
 				// -> requires ADD of the value of the reference (target object)
 				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value, DifferenceKind.ADD));
@@ -107,7 +110,7 @@ public class DefaultReqEngine implements IReqEngine {
 						instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.ADD))));
 
 				// DELETE object
-			} else if (isDeletion && isContainment(difference)) {
+			} else if (isDeletion && isReferenceContainment(difference)) {
 
 				// -> requires DELETE of the outgoing references and contained objects
 				requiredDifferences.addAll(getDELOutgoingReferences(comparison, difference));
@@ -121,14 +124,14 @@ public class DefaultReqEngine implements IReqEngine {
 				// reference cases.
 
 				// DELETE reference
-			} else if (isDeletion) {
+			} else if (isDeletion && !isFeatureMapContainment(difference)) {
 
 				// -> is required by DELETE of the target object
 				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison, value,
 						DifferenceKind.DELETE));
 
 				// MOVE object
-			} else if (kind == DifferenceKind.MOVE && isContainment(difference)) {
+			} else if (kind == DifferenceKind.MOVE && isReferenceContainment(difference)) {
 
 				EObject container = value.eContainer();
 
@@ -141,7 +144,8 @@ public class DefaultReqEngine implements IReqEngine {
 						DifferenceKind.MOVE));
 
 				// CHANGE reference
-			} else if (kind == DifferenceKind.CHANGE && !isAddition && !isDeletion) {
+			} else if (kind == DifferenceKind.CHANGE && !isAddition && !isDeletion
+					&& !(difference instanceof FeatureMapChange)) {
 
 				// -> is required by DELETE of the origin target object
 				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison, MatchUtil.getOriginValue(
@@ -329,7 +333,7 @@ public class DefaultReqEngine implements IReqEngine {
 	 * @return <code>true</code> if the given {@code diff} is to be considered a containment change,
 	 *         <code>false</code> otherwise.
 	 */
-	private static boolean isContainment(Diff diff) {
+	private static boolean isReferenceContainment(Diff diff) {
 		return diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment()
 				|| diff instanceof ResourceAttachmentChange;
 	}
@@ -350,6 +354,14 @@ public class DefaultReqEngine implements IReqEngine {
 			value = ((ReferenceChange)diff).getValue();
 		} else if (diff instanceof ResourceAttachmentChange) {
 			value = MatchUtil.getContainer(comparison, diff);
+		} else if (diff instanceof FeatureMapChange) {
+			Object entry = ((FeatureMapChange)diff).getValue();
+			if (entry instanceof FeatureMap.Entry) {
+				Object entryValue = ((FeatureMap.Entry)entry).getValue();
+				if (entryValue instanceof EObject) {
+					value = (EObject)entryValue;
+				}
+			}
 		}
 		return value;
 	}

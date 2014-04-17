@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -170,8 +170,8 @@ public interface IMerger {
 
 		/**
 		 * Returns a registry filled with the default mergers provided by EMF Compare; namely
-		 * {@link AttributeChangeMerger}, {@link ReferenceChangeMerger} and
-		 * {@link ResourceAttachmentChangeMerger}.
+		 * {@link AttributeChangeMerger}, {@link ReferenceChangeMerger}, {@link FeatureMapChangeMerger},
+		 * {@link ResourceAttachmentChangeMerger}, {@link PseudoConflictMerger} and {@link ConflictMerger}.
 		 * 
 		 * @return A registry filled with the default mergers provided by EMF Compare.
 		 */
@@ -188,6 +188,8 @@ public interface IMerger {
 			attributeMerger.setRanking(defaultRanking);
 			final IMerger referenceMerger = new ReferenceChangeMerger();
 			referenceMerger.setRanking(defaultRanking);
+			final IMerger featureMapMerger = new FeatureMapChangeMerger();
+			featureMapMerger.setRanking(defaultRanking);
 			final IMerger resourceAttachmentMerger = new ResourceAttachmentChangeMerger();
 			resourceAttachmentMerger.setRanking(defaultRanking);
 			final IMerger pseudoConflictMerger = new PseudoConflictMerger();
@@ -197,6 +199,7 @@ public interface IMerger {
 
 			registry.add(attributeMerger);
 			registry.add(referenceMerger);
+			registry.add(featureMapMerger);
 			registry.add(resourceAttachmentMerger);
 			registry.add(pseudoConflictMerger);
 			registry.add(conflictMerger);

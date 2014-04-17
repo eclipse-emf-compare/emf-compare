@@ -45,6 +45,10 @@
             ranking="10">
       </merger>
       <merger
+            class="org.eclipse.emf.compare.merge.FeatureMapChangeMerger"
+            ranking="10">
+      </merger>
+      <merger
             class="org.eclipse.emf.compare.merge.PseudoConflictMerger"
             ranking="15">
       </merger>

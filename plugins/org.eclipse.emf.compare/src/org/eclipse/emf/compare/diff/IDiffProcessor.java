@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,6 +70,25 @@ public interface IDiffProcessor {
 	 *            difference has been detected.
 	 */
 	void attributeChange(Match match, EAttribute attribute, Object value, DifferenceKind kind,
+			DifferenceSource source);
+
+	/**
+	 * This will be called whenever the diff engine detected a difference for a given attribute value.
+	 * 
+	 * @param match
+	 *            The match to which this difference should be attached.
+	 * @param attribute
+	 *            The EFeatureMapEntry attribute on which we detected a difference.
+	 * @param value
+	 *            The actual FeatureMap.Entry value for which we detected a difference.
+	 * @param kind
+	 *            Kind of the difference.
+	 * @param source
+	 *            Source of the difference. For two way comparisons, this will always be
+	 *            {@link DifferenceSource#LEFT}. Otherwise, this will indicate the side on which this
+	 *            difference has been detected.
+	 */
+	void featureMapChange(Match match, EAttribute attribute, Object value, DifferenceKind kind,
 			DifferenceSource source);
 
 	/**

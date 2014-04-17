@@ -104,6 +104,14 @@
             ranking="10">
       </factory>
       <factory
+            class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.FeatureMapKeyChangeAccessorFactory"
+            ranking="10">
+      </factory>
+      <factory
+            class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.FeatureMapChangeMoveAccessorFactory"
+            ranking="10">
+      </factory>
+      <factory
             class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.ContainmentReferenceChangeAccessorFactory"
             ranking="15">
       </factory>

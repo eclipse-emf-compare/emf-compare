@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.conflict;
 
 import static com.google.common.base.Predicates.and;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
+import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isFeatureMapContainment;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
@@ -36,16 +37,20 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompareMessages;
+import org.eclipse.emf.compare.Equivalence;
+import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.SubMatchIterator;
+import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
  * The conflict detector is in charge of refining the Comparison model with all detected Conflict between its
@@ -106,6 +111,9 @@ public class DefaultConflictDetector implements IConflictDetector {
 			// These will be handled about the same way as containment deletions,
 			// Though they can also conflict with themselves
 			checkResourceAttachmentConflict(comparison, (ResourceAttachmentChange)diff, candidates);
+		} else if (isFeatureMapContainment(diff)) {
+			checkContainmentFeatureMapConflict(comparison, (FeatureMapChange)diff, Iterables.filter(
+					candidates, FeatureMapChange.class));
 		} else {
 			switch (diff.getKind()) {
 				case DELETE:
@@ -141,8 +149,9 @@ public class DefaultConflictDetector implements IConflictDetector {
 		final Match valueMatch = comparison.getMatch(diff.getValue());
 
 		for (ReferenceChange candidate : candidates) {
-			if (valueMatch.getLeft() == candidate.getValue() || valueMatch.getRight() == candidate.getValue()
-					|| valueMatch.getOrigin() == candidate.getValue()) {
+			EObject candidateValue = candidate.getValue();
+			if (valueMatch.getLeft() == candidateValue || valueMatch.getRight() == candidateValue
+					|| valueMatch.getOrigin() == candidateValue) {
 				checkContainmentConflict(comparison, diff, candidate);
 			}
 		}
@@ -230,6 +239,121 @@ public class DefaultConflictDetector implements IConflictDetector {
 	}
 
 	/**
+	 * This will be called once for each FeatureMapChange on containment values in the comparison model.
+	 * 
+	 * @param comparison
+	 *            The originating comparison of those diffs.
+	 * @param diff
+	 *            The feature map change for which we are to try and determine conflicts.
+	 * @param candidates
+	 *            An iterable over the FeatureMapChanges that are possible candidates for conflicts.
+	 */
+	protected void checkContainmentFeatureMapConflict(Comparison comparison, FeatureMapChange diff,
+			Iterable<FeatureMapChange> candidates) {
+		final FeatureMap.Entry entry = (FeatureMap.Entry)diff.getValue();
+		final EStructuralFeature key = entry.getEStructuralFeature();
+		final Object value = entry.getValue();
+		final Match valueMatch;
+		if (value instanceof EObject) {
+			valueMatch = comparison.getMatch((EObject)value);
+		} else {
+			valueMatch = diff.getMatch();
+		}
+
+		for (FeatureMapChange candidate : candidates) {
+			FeatureMap.Entry candidateEntry = (FeatureMap.Entry)candidate.getValue();
+			Object candidateValue = candidateEntry.getValue();
+			if (valueMatch.getLeft() == candidateValue || valueMatch.getRight() == candidateValue
+					|| valueMatch.getOrigin() == candidateValue) {
+				checkContainmentFeatureMapConflict(comparison, diff, candidate);
+			}
+		}
+
+		// [381143] Every Diff "under" a containment deletion conflicts with it.
+		if (diff.getKind() == DifferenceKind.DELETE) {
+			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
+			final DiffTreeIterator diffIterator = new DiffTreeIterator(valueMatch);
+			diffIterator.setFilter(candidateFilter);
+			diffIterator.setPruningFilter(isContainmentDelete());
+
+			while (diffIterator.hasNext()) {
+				Diff extendedCandidate = diffIterator.next();
+				if (isDeleteOrUnsetDiff(extendedCandidate)) {
+					conflictOn(comparison, diff, extendedCandidate, ConflictKind.PSEUDO);
+				} else {
+					conflictOn(comparison, diff, extendedCandidate, ConflictKind.REAL);
+				}
+			}
+		}
+	}
+
+	/**
+	 * For each couple of diffs on the same value in which one is a containment feature map change, we will
+	 * call this in order to check for possible conflicts.
+	 * <p>
+	 * Once here, we know that {@code diff} is a containment feature map change, and we known that
+	 * {@code diff} and {@code candidate} are both pointing to the same value. {@code candidate} can be a
+	 * containment feature map change, but that is not a given.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            The originating comparison of those diffs.
+	 * @param diff
+	 *            Containment feature map changes for which we need to check possible conflicts.
+	 * @param candidate
+	 *            A feature map change that point to the same value as {@code diff}.
+	 */
+	protected void checkContainmentFeatureMapConflict(Comparison comparison, FeatureMapChange diff,
+			FeatureMapChange candidate) {
+		final boolean candidateIsDelete = isDeleteOrUnsetDiff(candidate);
+		if (isFeatureMapContainment(candidate)) {
+			// The same value has been changed on both sides in containment references
+			// This is a conflict, but is it a pseudo-conflict?
+			ConflictKind kind = ConflictKind.REAL;
+			final boolean diffIsDelete = isDeleteOrUnsetDiff(diff);
+			if (diffIsDelete && candidateIsDelete) {
+				kind = ConflictKind.PSEUDO;
+			} else if (diff.getMatch() == candidate.getMatch()
+					&& diff.getAttribute() == candidate.getAttribute()) {
+				// Same value added in the same container/reference couple with the same key
+				if (!diffIsDelete
+						&& !candidateIsDelete
+						&& matchingIndices(comparison, diff.getMatch(), diff.getAttribute(), diff.getValue(),
+								candidate.getValue()) && haveSameKey(diff, candidate)) {
+					kind = ConflictKind.PSEUDO;
+				}
+			}
+			conflictOn(comparison, diff, candidate, kind);
+		} else if (diff.getKind() == DifferenceKind.DELETE) {
+			/*
+			 * We removed an element from its containment difference, but it has been used in some way on the
+			 * other side.
+			 */
+			if (candidateIsDelete) {
+				// No conflict here
+			} else {
+				// Be it added, moved or changed, this is a REAL conflict
+				conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+			}
+		}
+	}
+
+	/**
+	 * Check if both feature map changes (hosting FeatureMap entries) have entries with same key.
+	 * 
+	 * @param left
+	 *            the left candidate.
+	 * @param right
+	 *            the right candiadte.
+	 * @return true if both feature map changes have entries with same key, false otherwise.
+	 */
+	private boolean haveSameKey(FeatureMapChange left, FeatureMapChange right) {
+		FeatureMap.Entry leftEntry = (FeatureMap.Entry)left.getValue();
+		FeatureMap.Entry rightEntry = (FeatureMap.Entry)right.getValue();
+		return leftEntry.getEStructuralFeature().equals(rightEntry.getEStructuralFeature());
+	}
+
+	/**
 	 * This will be called from {@link #checkConflict(Comparison, Diff, Iterable)} in order to detect
 	 * conflicts on a Diff that is of type "CHANGE".
 	 * <p>
@@ -253,6 +377,9 @@ public class DefaultConflictDetector implements IConflictDetector {
 		} else if (diff instanceof AttributeChange) {
 			changedValue = ((AttributeChange)diff).getValue();
 			feature = ((AttributeChange)diff).getAttribute();
+		} else if (diff instanceof FeatureMapChange) {
+			changedValue = ((FeatureMap.Entry)((FeatureMapChange)diff).getValue()).getValue();
+			feature = ((FeatureMapChange)diff).getAttribute();
 		} else {
 			return;
 		}
@@ -265,25 +392,33 @@ public class DefaultConflictDetector implements IConflictDetector {
 						apply = ((ReferenceChange)input).getReference() == feature;
 					} else if (input instanceof AttributeChange) {
 						apply = ((AttributeChange)input).getAttribute() == feature;
+					} else if (input instanceof FeatureMapChange) {
+						apply = ((FeatureMapChange)input).getAttribute() == feature;
 					}
 				}
 				return apply;
 			}
 		});
 
+		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+
 		for (Diff candidate : refinedCandidates) {
 			final Object candidateValue;
 			if (candidate instanceof ReferenceChange) {
 				candidateValue = ((ReferenceChange)candidate).getValue();
-			} else {
+			} else if (candidate instanceof AttributeChange) {
 				candidateValue = ((AttributeChange)candidate).getValue();
+			} else if (candidate instanceof FeatureMapChange) {
+				candidateValue = ((FeatureMap.Entry)((FeatureMapChange)candidate).getValue()).getValue();
+			} else {
+				candidateValue = null;
 			}
 
 			if (diff.getMatch() == candidate.getMatch()) {
-				if (comparison.getEqualityHelper().matchingValues(changedValue, candidateValue)) {
+				if (equalityHelper.matchingValues(changedValue, candidateValue)) {
 					// Same value added on both side in the same container
 					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
-				} else {
+				} else if (!(diff instanceof FeatureMapChange)) {
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 				}
 			}
@@ -314,6 +449,9 @@ public class DefaultConflictDetector implements IConflictDetector {
 		} else if (diff instanceof AttributeChange) {
 			changedValue = ((AttributeChange)diff).getValue();
 			feature = ((AttributeChange)diff).getAttribute();
+		} else if (diff instanceof FeatureMapChange) {
+			changedValue = ((FeatureMap.Entry)((FeatureMapChange)diff).getValue()).getValue();
+			feature = ((FeatureMapChange)diff).getAttribute();
 		} else {
 			return;
 		}
@@ -326,6 +464,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 						apply = ((ReferenceChange)input).getReference() == feature;
 					} else if (input instanceof AttributeChange) {
 						apply = ((AttributeChange)input).getAttribute() == feature;
+					} else if (input instanceof FeatureMapChange) {
+						apply = ((FeatureMapChange)input).getAttribute() == feature;
 					}
 				}
 				return apply;
@@ -336,8 +476,12 @@ public class DefaultConflictDetector implements IConflictDetector {
 			final Object candidateValue;
 			if (candidate instanceof ReferenceChange) {
 				candidateValue = ((ReferenceChange)candidate).getValue();
-			} else {
+			} else if (candidate instanceof AttributeChange) {
 				candidateValue = ((AttributeChange)candidate).getValue();
+			} else if (candidate instanceof FeatureMapChange) {
+				candidateValue = ((FeatureMap.Entry)((FeatureMapChange)candidate).getValue()).getValue();
+			} else {
+				candidateValue = null;
 			}
 
 			if (diff.getMatch() == candidate.getMatch()
@@ -376,6 +520,9 @@ public class DefaultConflictDetector implements IConflictDetector {
 		} else if (diff instanceof AttributeChange) {
 			deletedValue = ((AttributeChange)diff).getValue();
 			feature = ((AttributeChange)diff).getAttribute();
+		} else if (diff instanceof FeatureMapChange) {
+			deletedValue = ((FeatureMap.Entry)((FeatureMapChange)diff).getValue()).getValue();
+			feature = ((FeatureMapChange)diff).getAttribute();
 		} else {
 			return;
 		}
@@ -394,6 +541,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 						apply = ((ReferenceChange)input).getReference() == feature;
 					} else if (input instanceof AttributeChange) {
 						apply = ((AttributeChange)input).getAttribute() == feature;
+					} else if (input instanceof FeatureMapChange) {
+						apply = ((FeatureMapChange)input).getAttribute() == feature;
 					}
 				}
 				return apply;
@@ -404,8 +553,12 @@ public class DefaultConflictDetector implements IConflictDetector {
 			final Object movedValue;
 			if (candidate instanceof ReferenceChange) {
 				movedValue = ((ReferenceChange)candidate).getValue();
-			} else {
+			} else if (candidate instanceof AttributeChange) {
 				movedValue = ((AttributeChange)candidate).getValue();
+			} else if (candidate instanceof FeatureMapChange) {
+				movedValue = ((FeatureMap.Entry)((FeatureMapChange)candidate).getValue()).getValue();
+			} else {
+				movedValue = null;
 			}
 
 			if (comparison.getEqualityHelper().matchingValues(deletedValue, movedValue)) {
@@ -444,6 +597,9 @@ public class DefaultConflictDetector implements IConflictDetector {
 		} else if (diff instanceof AttributeChange) {
 			addedValue = ((AttributeChange)diff).getValue();
 			feature = ((AttributeChange)diff).getAttribute();
+		} else if (diff instanceof FeatureMapChange) {
+			addedValue = ((FeatureMap.Entry)((FeatureMapChange)diff).getValue()).getValue();
+			feature = ((FeatureMapChange)diff).getAttribute();
 		} else {
 			return;
 		}
@@ -461,6 +617,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 						apply = ((ReferenceChange)input).getReference() == feature;
 					} else if (input instanceof AttributeChange) {
 						apply = ((AttributeChange)input).getAttribute() == feature;
+					} else if (input instanceof FeatureMapChange) {
+						apply = ((FeatureMapChange)input).getAttribute() == feature;
 					}
 				}
 				return apply;
@@ -471,14 +629,31 @@ public class DefaultConflictDetector implements IConflictDetector {
 			final Object candidateValue;
 			if (candidate instanceof ReferenceChange) {
 				candidateValue = ((ReferenceChange)candidate).getValue();
-			} else {
+			} else if (candidate instanceof AttributeChange) {
 				candidateValue = ((AttributeChange)candidate).getValue();
+			} else if (candidate instanceof FeatureMapChange) {
+				candidateValue = ((FeatureMap.Entry)((FeatureMapChange)candidate).getValue()).getValue();
+			} else {
+				candidateValue = null;
 			}
 			// No diff on non unique features : multiple same values can coexist
 			if (feature.isUnique()
 					&& comparison.getEqualityHelper().matchingValues(addedValue, candidateValue)) {
 				// This is a conflict. Is it real?
-				if (matchingIndices(comparison, diff.getMatch(), feature, addedValue, candidateValue)) {
+				if (diff instanceof FeatureMapChange) {
+
+					// If the key changed, this is a real conflict
+					EStructuralFeature key1 = ((FeatureMap.Entry)((FeatureMapChange)diff).getValue())
+							.getEStructuralFeature();
+					EStructuralFeature key2 = ((FeatureMap.Entry)((FeatureMapChange)candidate).getValue())
+							.getEStructuralFeature();
+					if (key1.equals(key2)) {
+						conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
+					} else if (isFeatureMapContainment(diff)) { // If the feature map is non-containment, the
+																// same value can appear twice.
+						conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+					}
+				} else if (matchingIndices(comparison, diff.getMatch(), feature, addedValue, candidateValue)) {
 					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
 				} else {
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
@@ -727,7 +902,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 *            Kind of this conflict.
 	 */
 	protected void conflictOn(Comparison comparison, Diff diff1, Diff diff2, ConflictKind kind) {
-		final Conflict conflict;
+		Conflict conflict = null;
 		Conflict toBeMerged = null;
 		if (diff1.getConflict() != null) {
 			conflict = diff1.getConflict();
@@ -743,7 +918,35 @@ public class DefaultConflictDetector implements IConflictDetector {
 			if (conflict.getKind() == ConflictKind.PSEUDO && conflict.getKind() != kind) {
 				conflict.setKind(kind);
 			}
-		} else {
+		} else if (diff1.getEquivalence() != null) {
+			Equivalence equivalence = diff1.getEquivalence();
+			for (Diff equ : equivalence.getDifferences()) {
+				if (equ.getConflict() != null) {
+					conflict = equ.getConflict();
+					if (conflict.getKind() == ConflictKind.PSEUDO && conflict.getKind() != kind) {
+						conflict.setKind(kind);
+					}
+					if (diff2.getConflict() != null) {
+						// Merge the two
+						toBeMerged = diff2.getConflict();
+					}
+					break;
+				}
+			}
+		} else if (diff2.getEquivalence() != null) {
+			Equivalence equivalence = diff2.getEquivalence();
+			for (Diff equ : equivalence.getDifferences()) {
+				if (equ.getConflict() != null) {
+					conflict = equ.getConflict();
+					if (conflict.getKind() == ConflictKind.PSEUDO && conflict.getKind() != kind) {
+						conflict.setKind(kind);
+					}
+					break;
+				}
+			}
+		}
+
+		if (conflict == null) {
 			conflict = CompareFactory.eINSTANCE.createConflict();
 			conflict.setKind(kind);
 			comparison.getConflicts().add(conflict);
@@ -770,6 +973,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 		if (!conflict.getDifferences().contains(diff2)) {
 			conflict.getDifferences().add(diff2);
 		}
+
+		// This diff may have equivalences. These equivalences
 	}
 
 	/**

@@ -39,6 +39,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Equivalence;
+import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -46,6 +47,7 @@ import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
  * This utility class provides common methods for navigation over and querying of the Comparison model.
@@ -69,7 +71,8 @@ public final class ComparisonUtil {
 	 * When merging a {@link Diff}, returns the sub diffs of this given diff, and all associated diffs (see
 	 * {@link DiffUtil#getAssociatedDiffs(Iterable, boolean, Diff)}) of these sub diffs.
 	 * <p>
-	 * If the diff is an {@link org.eclipse.emf.compare.AttributeChange} or a
+	 * If the diff is an {@link org.eclipse.emf.compare.AttributeChange}, a
+	 * {@link org.eclipse.emf.compare.FeatureMapChange} or a
 	 * {@link org.eclipse.emf.compare.ResourceAttachmentChange} , this method will return an empty iterable.
 	 * </p>
 	 * <p>
@@ -105,6 +108,8 @@ public final class ComparisonUtil {
 				feature = ((ReferenceChange)difference).getReference();
 			} else if (difference instanceof AttributeChange) {
 				feature = ((AttributeChange)difference).getAttribute();
+			} else if (difference instanceof FeatureMapChange) {
+				feature = ((FeatureMapChange)difference).getAttribute();
 			} else {
 				feature = null;
 			}
@@ -163,6 +168,8 @@ public final class ComparisonUtil {
 				feature = ((ReferenceChange)difference).getReference();
 			} else if (difference instanceof AttributeChange) {
 				feature = ((AttributeChange)difference).getAttribute();
+			} else if (difference instanceof FeatureMapChange) {
+				feature = ((FeatureMapChange)difference).getAttribute();
 			} else {
 				feature = null;
 			}
@@ -187,10 +194,123 @@ public final class ComparisonUtil {
 	}
 
 	/**
+	 * Checks whether the given diff corresponds to a feature map containment change. This holds true for
+	 * differences on feature map containment references' values.
+	 * 
+	 * @param diff
+	 *            The diff to consider.
+	 * @return <code>true</code> if the given {@code diff} is to be considered a containment change,
+	 *         <code>false</code> otherwise.
+	 */
+	public static boolean isFeatureMapContainment(final Diff diff) {
+		// If the value of the FeatureMap.Entry is contained in the same container than the FeatureMap, it is
+		// a containment change.
+		if (diff instanceof FeatureMapChange) {
+			FeatureMap.Entry entry = (FeatureMap.Entry)((FeatureMapChange)diff).getValue();
+			Object entryValue = entry.getValue();
+			if (entryValue instanceof EObject) {
+				EObject container = ((EObject)entryValue).eContainer();
+				Match match = diff.getMatch();
+				return container == match.getLeft() || container == match.getRight()
+						|| container == match.getOrigin();
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Get the expected target container in case of a move.
+	 * 
+	 * @param comparison
+	 *            The comparison object.
+	 * @param diff
+	 *            The diff we are currently merging.
+	 * @param rightToLeft
+	 *            Whether we should move the value in the left or right side.
+	 * @return The expected target container if found, <code>null</code> otherwise.
+	 */
+	public static EObject moveElementGetExpectedContainer(final Comparison comparison,
+			final FeatureMapChange diff, final boolean rightToLeft) {
+		final EObject expectedContainer;
+		if (!isFeatureMapContainment(diff)) {
+			if (rightToLeft) {
+				expectedContainer = diff.getMatch().getLeft();
+			} else {
+				expectedContainer = diff.getMatch().getRight();
+			}
+		} else if (diff.getSource() == DifferenceSource.LEFT) {
+			if (rightToLeft) {
+				expectedContainer = getContainerInEquivalence(comparison, diff, rightToLeft);
+			} else {
+				expectedContainer = diff.getMatch().getRight();
+			}
+		} else {
+			if (rightToLeft) {
+				expectedContainer = diff.getMatch().getLeft();
+			} else {
+				expectedContainer = getContainerInEquivalence(comparison, diff, rightToLeft);
+			}
+		}
+		return expectedContainer;
+	}
+
+	/**
+	 * Get the expected target container in the equivalent diffs of the given diff in case of a move.
+	 * 
+	 * @param comparison
+	 *            The comparison object.
+	 * @param diff
+	 *            The diff we are currently merging.
+	 * @param rightToLeft
+	 *            Whether we should move the value in the left or right side.
+	 * @return The expected target container if found, <code>null</code> otherwise.
+	 */
+	private static EObject getContainerInEquivalence(final Comparison comparison,
+			final FeatureMapChange diff, final boolean rightToLeft) {
+		EObject expectedContainer = null;
+		Equivalence equ = diff.getEquivalence();
+		if (equ != null) {
+			for (Diff equivalence : equ.getDifferences()) {
+				if (equivalence instanceof ReferenceChange) {
+					final Match valueMatch = comparison.getMatch(((ReferenceChange)equivalence).getValue());
+					/*
+					 * We cannot "trust" the holding match (getMatch) in this case. However, "valueMatch"
+					 * cannot be null : we cannot have detected a move if the moved element is not matched on
+					 * both sides. Use that information to retrieve the proper "target" container.
+					 */
+					final Match targetContainerMatch;
+					// If it exists, use the source side's container as reference
+					if (rightToLeft && valueMatch.getRight() != null) {
+						targetContainerMatch = comparison.getMatch(valueMatch.getRight().eContainer());
+					} else if (!rightToLeft && valueMatch.getLeft() != null) {
+						targetContainerMatch = comparison.getMatch(valueMatch.getLeft().eContainer());
+					} else {
+						// Otherwise, the value we're moving on one side has been removed from its source
+						// side.
+						targetContainerMatch = comparison.getMatch(valueMatch.getOrigin().eContainer());
+					}
+					if (rightToLeft) {
+						expectedContainer = targetContainerMatch.getLeft();
+					} else {
+						expectedContainer = targetContainerMatch.getRight();
+					}
+					break;
+				}
+			}
+		} else if (rightToLeft) {
+			expectedContainer = diff.getMatch().getLeft();
+		} else {
+			expectedContainer = diff.getMatch().getRight();
+		}
+		return expectedContainer;
+	}
+
+	/**
 	 * When merging a {@link Diff}, returns the sub diffs of this given diff, and all associated diffs (see
 	 * {@link DiffUtil#getAssociatedDiffs(Iterable, boolean, Diff)}) of these sub diffs.
 	 * <p>
-	 * If the diff is an {@link org.eclipse.emf.compare.AttributeChange} or a
+	 * If the diff is an {@link org.eclipse.emf.compare.AttributeChange}, a
+	 * {@link org.eclipse.emf.compare.FeatureMapChange} or a
 	 * {@link org.eclipse.emf.compare.ResourceAttachmentChange}, this method will return an empty iterable.
 	 * </p>
 	 * <p>

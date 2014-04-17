@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -996,20 +996,24 @@ public class ConflictMergeTest {
 		final Diff diff = Iterators.find(differences.iterator(), fromSide(DifferenceSource.RIGHT));
 
 		// Merge EString [eStructuralFeatures move] from right to left : B[eClassifiers delete]
-		// will not be merge.
+		// will be merge too.
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 
 		final String featureName = "eStructuralFeatures";
 		final EObject leftEClassB = getNodeNamed(left, "B");
-		assertNull(leftEClassB);
-
+		assertNotNull(leftEClassB);
+		final EStructuralFeature featureB = leftEClassB.eClass().getEStructuralFeature(featureName);
+		assertNotNull(featureB);
+		final EStructuralFeature eStructuralFeatureNameB = ((EClass)leftEClassB)
+				.getEStructuralFeature("name");
+		assertNotNull(eStructuralFeatureNameB);
 		final EObject leftEClassA = getNodeNamed(left, "A");
 		assertNotNull(leftEClassA);
 		final EStructuralFeature featureA = leftEClassA.eClass().getEStructuralFeature(featureName);
 		assertNotNull(featureA);
 		final EStructuralFeature eStructuralFeatureNameA = ((EClass)leftEClassA)
 				.getEStructuralFeature("name");
-		assertNotNull(eStructuralFeatureNameA);
+		assertNull(eStructuralFeatureNameA);
 
 		Iterators.any(differences.iterator(), hasConflict(ConflictKind.REAL));
 
@@ -1038,12 +1042,12 @@ public class ConflictMergeTest {
 		assertNotNull(move);
 
 		// Merge EString [eStructuralFeatures move] from left to right : B[eClassifiers delete]
-		// will not be merge.
+		// will be merge from left to right.
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 
 		final String featureName = "eStructuralFeatures";
 		final EObject rightEClassB = getNodeNamed(right, "B");
-		assertNull(rightEClassB);
+		assertNotNull(rightEClassB);
 
 		final EObject rightEClassA = getNodeNamed(right, "A");
 		assertNotNull(rightEClassA);
@@ -1051,7 +1055,12 @@ public class ConflictMergeTest {
 		assertNotNull(featureA);
 		final EStructuralFeature eStructuralFeatureNameA = ((EClass)rightEClassA)
 				.getEStructuralFeature("name");
-		assertNotNull(eStructuralFeatureNameA);
+		assertNull(eStructuralFeatureNameA);
+		final EStructuralFeature featureB = rightEClassB.eClass().getEStructuralFeature(featureName);
+		assertNotNull(featureB);
+		final EStructuralFeature eStructuralFeatureNameB = ((EClass)rightEClassB)
+				.getEStructuralFeature("name");
+		assertNotNull(eStructuralFeatureNameB);
 
 		Iterators.any(differences.iterator(), hasConflict(ConflictKind.REAL));
 

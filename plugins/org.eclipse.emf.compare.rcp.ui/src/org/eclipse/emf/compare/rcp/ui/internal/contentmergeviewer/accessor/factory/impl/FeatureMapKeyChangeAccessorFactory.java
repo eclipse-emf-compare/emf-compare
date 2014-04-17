@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,27 +10,21 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl;
 
-import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isFeatureMapContainment;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.AttributeChange;
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.FeatureMapChange;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement;
-import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.ManyStructuralFeatureAccessorImpl;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.FeatureMapKeyChangeAccessorImpl;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * A specific {@link org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory} for
- * multi-valued structural feature objects.
+ * FeatureMapChanges of kind DifferenceKind.CHANGE (represent a value that changed his key).
  * 
- * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 4.0
  */
-public class ManyStructuralFeatureAccessorFactory extends AbstractAccessorFactory {
+public class FeatureMapKeyChangeAccessorFactory extends AbstractAccessorFactory {
 
 	/**
 	 * {@inheritDoc}
@@ -38,29 +32,10 @@ public class ManyStructuralFeatureAccessorFactory extends AbstractAccessorFactor
 	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory#isFactoryFor(java.lang.Object)
 	 */
 	public boolean isFactoryFor(Object target) {
-		EStructuralFeature eStructuralFeature = null;
-		if (target instanceof ReferenceChange) {
-			eStructuralFeature = ((ReferenceChange)target).getReference();
-		} else if (target instanceof AttributeChange) {
-			eStructuralFeature = ((AttributeChange)target).getAttribute();
-		} else if (target instanceof FeatureMapChange) {
+		if (target instanceof FeatureMapChange) {
 			FeatureMapChange featureMapChange = (FeatureMapChange)target;
-			DifferenceKind kind = featureMapChange.getKind();
-			if (kind != DifferenceKind.CHANGE && kind != DifferenceKind.MOVE
-					|| (kind == DifferenceKind.MOVE && !isFeatureMapContainment(featureMapChange))) {
-				eStructuralFeature = featureMapChange.getAttribute();
-			}
-		} else if (target instanceof Diff) {
-			Diff primeRefining = ((Diff)target).getPrimeRefining();
-			if (primeRefining instanceof ReferenceChange) {
-				eStructuralFeature = ((ReferenceChange)primeRefining).getReference();
-			}
+			return featureMapChange.getKind() == DifferenceKind.CHANGE;
 		}
-
-		if (eStructuralFeature != null) {
-			return eStructuralFeature.isMany();
-		}
-
 		return false;
 	}
 
@@ -71,7 +46,8 @@ public class ManyStructuralFeatureAccessorFactory extends AbstractAccessorFactor
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createLeft(AdapterFactory adapterFactory, Object target) {
-		return new ManyStructuralFeatureAccessorImpl(adapterFactory, (Diff)target, MergeViewerSide.LEFT);
+		return new FeatureMapKeyChangeAccessorImpl(adapterFactory, (FeatureMapChange)target,
+				MergeViewerSide.LEFT);
 	}
 
 	/**
@@ -81,7 +57,8 @@ public class ManyStructuralFeatureAccessorFactory extends AbstractAccessorFactor
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createRight(AdapterFactory adapterFactory, Object target) {
-		return new ManyStructuralFeatureAccessorImpl(adapterFactory, (Diff)target, MergeViewerSide.RIGHT);
+		return new FeatureMapKeyChangeAccessorImpl(adapterFactory, (FeatureMapChange)target,
+				MergeViewerSide.RIGHT);
 	}
 
 	/**
@@ -91,7 +68,7 @@ public class ManyStructuralFeatureAccessorFactory extends AbstractAccessorFactor
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createAncestor(AdapterFactory adapterFactory, Object target) {
-		return new ManyStructuralFeatureAccessorImpl(adapterFactory, (Diff)target, MergeViewerSide.ANCESTOR);
+		return new FeatureMapKeyChangeAccessorImpl(adapterFactory, (FeatureMapChange)target,
+				MergeViewerSide.ANCESTOR);
 	}
-
 }

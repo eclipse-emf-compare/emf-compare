@@ -26,6 +26,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
 
@@ -113,26 +114,30 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 */
 	public boolean matchingValues(Object object1, Object object2) {
 		final boolean equal;
-		final Object converted1 = internalFindActualObject(object1);
-		final Object converted2 = internalFindActualObject(object2);
-		if (converted1 == converted2) {
+		if (object1 == object2) {
 			equal = true;
-		} else if (converted1 instanceof EObject && converted2 instanceof EObject) {
+		} else if (object1 instanceof EObject && object2 instanceof EObject) {
 			// [248442] This will handle FeatureMapEntries detection
-			equal = matchingEObjects((EObject)converted1, (EObject)converted2);
-		} else if (isNullOrEmptyString(converted1) && isNullOrEmptyString(converted2)) {
+			equal = matchingEObjects((EObject)object1, (EObject)object2);
+		} else if (isNullOrEmptyString(object1) && isNullOrEmptyString(object2)) {
 			// Special case, consider that the empty String is equal to null (unset attributes)
 			equal = true;
-		} else if (converted1 instanceof String || converted1 instanceof Integer
-				|| converted1 instanceof Boolean) {
+		} else if (object1 instanceof String || object1 instanceof Integer || object1 instanceof Boolean) {
 			// primitives and String are much more common than arrays... and isArray() is expensive.
-			equal = converted1.equals(converted2);
-		} else if (converted1 != null && converted1.getClass().isArray() && converted2 != null
-				&& converted2.getClass().isArray()) {
+			equal = object1.equals(object2);
+		} else if (object1 != null && object1.getClass().isArray() && object2 != null
+				&& object2.getClass().isArray()) {
 			// [299641] compare arrays by their content instead of instance equality
-			equal = matchingArrays(converted1, converted2);
+			equal = matchingArrays(object1, object2);
+		} else if (object1 instanceof FeatureMap.Entry && object2 instanceof FeatureMap.Entry) {
+			EStructuralFeature key1 = ((FeatureMap.Entry)object1).getEStructuralFeature();
+			EStructuralFeature key2 = ((FeatureMap.Entry)object2).getEStructuralFeature();
+			Object value1 = ((FeatureMap.Entry)object1).getValue();
+			Object value2 = ((FeatureMap.Entry)object2).getValue();
+
+			equal = key1.equals(key2) && matchingValues(value1, value2);
 		} else {
-			equal = converted1 != null && converted1.equals(converted2);
+			equal = object1 != null && object1.equals(object2);
 		}
 		return equal;
 	}
@@ -304,22 +309,6 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	@Deprecated
 	public Cache<EObject, URI> getCache() {
 		return uriCache;
-	}
-
-	/**
-	 * This will convert any Feature map entry to its actual data value. Note that it will have no effect on
-	 * an object that is not a {@link FeatureMap.Entry}.
-	 * 
-	 * @param data
-	 *            The data we wish converted.
-	 * @return The first value under {@code data} that is not a {@link FeatureMap.Entry}, {@code data} itself
-	 *         if it is not a feature map entry.
-	 */
-	private Object internalFindActualObject(Object data) {
-		if (data instanceof FeatureMap.Entry) {
-			return internalFindActualObject(((FeatureMap.Entry)data).getValue());
-		}
-		return data;
 	}
 
 	/**

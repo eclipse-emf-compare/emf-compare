@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.internal.utils;
 
 import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.addAll;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
@@ -42,6 +43,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Equivalence;
+import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
@@ -809,6 +811,9 @@ public final class DiffUtil {
 		} else if (diff instanceof ReferenceChange) {
 			feature = ((ReferenceChange)diff).getReference();
 			value = ((ReferenceChange)diff).getValue();
+		} else if (diff instanceof FeatureMapChange) {
+			feature = ((FeatureMapChange)diff).getAttribute();
+			value = ((FeatureMapChange)diff).getValue();
 		} else {
 			throw new IllegalArgumentException(EMFCompareMessages.getString(
 					"DiffUtil.IllegalDiff", diff.eClass().getName())); //$NON-NLS-1$
@@ -820,7 +825,10 @@ public final class DiffUtil {
 		final Match match = diff.getMatch();
 
 		final EObject expectedContainer;
-		if (feature instanceof EReference && ((EReference)feature).isContainment()
+		if (ComparisonUtil.isFeatureMapContainment(diff) && diff.getKind() == DifferenceKind.MOVE) {
+			expectedContainer = ComparisonUtil.moveElementGetExpectedContainer(comparison,
+					(FeatureMapChange)diff, rightToLeft);
+		} else if (feature instanceof EReference && ((EReference)feature).isContainment()
 				&& diff.getKind() == DifferenceKind.MOVE) {
 			// The value can only be an EObject, and its match cannot be null.
 			// If any of these two assumptions is wrong, something went horribly awry beforehand.
@@ -980,8 +988,7 @@ public final class DiffUtil {
 				if (leftToRight
 						&& and(fromSide(DifferenceSource.LEFT),
 								or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.CHANGE))).apply(diff)) {
-					if (and(fromSide(DifferenceSource.RIGHT),
-							or(ofKind(DifferenceKind.DELETE), ofKind(DifferenceKind.CHANGE))).apply(
+					if (and(fromSide(DifferenceSource.RIGHT), not(ofKind(DifferenceKind.MOVE))).apply(
 							diffConflict)) {
 						unmergeables.add(diffConflict);
 					}
@@ -990,6 +997,12 @@ public final class DiffUtil {
 								or(ofKind(DifferenceKind.DELETE), ofKind(DifferenceKind.CHANGE))).apply(diff)) {
 					if (and(fromSide(DifferenceSource.RIGHT),
 							or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.CHANGE)))
+							.apply(diffConflict)) {
+						unmergeables.add(diffConflict);
+					}
+				} else if (leftToRight
+						&& and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.MOVE)).apply(diff)) {
+					if (and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.MOVE))
 							.apply(diffConflict)) {
 						unmergeables.add(diffConflict);
 					}
@@ -1002,13 +1015,16 @@ public final class DiffUtil {
 				} else if (!leftToRight
 						&& and(fromSide(DifferenceSource.RIGHT),
 								or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.CHANGE))).apply(diff)) {
-					if (and(fromSide(DifferenceSource.LEFT),
-							or(ofKind(DifferenceKind.DELETE), ofKind(DifferenceKind.CHANGE))).apply(
+					if (and(fromSide(DifferenceSource.LEFT), not(ofKind(DifferenceKind.MOVE))).apply(
 							diffConflict)) {
 						unmergeables.add(diffConflict);
 					}
+				} else if (!leftToRight
+						&& and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.MOVE)).apply(diff)) {
+					if (and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.MOVE)).apply(diffConflict)) {
+						unmergeables.add(diffConflict);
+					}
 				}
-
 			}
 		}
 
@@ -1044,6 +1060,7 @@ public final class DiffUtil {
 				addAll(unmergeables, getAllUnmergeables(require, leftToRight, processedDiffs));
 			}
 		}
+		unmergeables.remove(diff);
 		return unmergeables;
 	}
 
@@ -1131,6 +1148,8 @@ public final class DiffUtil {
 			feature = ((AttributeChange)diff).getAttribute();
 		} else if (diff instanceof ReferenceChange) {
 			feature = ((ReferenceChange)diff).getReference();
+		} else if (diff instanceof FeatureMapChange) {
+			feature = ((FeatureMapChange)diff).getAttribute();
 		} else {
 			return Collections.emptyList();
 		}
@@ -1194,6 +1213,10 @@ public final class DiffUtil {
 				apply = input.getState() == DifferenceState.UNRESOLVED
 						&& ((ReferenceChange)input).getReference() == feature
 						&& matchingValues((ReferenceChange)input, element);
+			} else if (input instanceof FeatureMapChange) {
+				apply = input.getState() == DifferenceState.UNRESOLVED
+						&& ((FeatureMapChange)input).getAttribute() == feature
+						&& matchingValues((FeatureMapChange)input, element);
 			} else {
 				apply = false;
 			}
@@ -1211,6 +1234,25 @@ public final class DiffUtil {
 		 * @return <code>true</code> if the value matches.
 		 */
 		private boolean matchingValues(AttributeChange diff, Object value) {
+			if (diff.getValue() == value) {
+				return true;
+			}
+			// Only resort to the equality helper as "last resort"
+			final IEqualityHelper helper = diff.getMatch().getComparison().getEqualityHelper();
+			return helper.matchingAttributeValues(diff.getValue(), value);
+		}
+
+		/**
+		 * Checks that the value of the given diff matches <code>value</code>, resorting to the equality
+		 * helper if needed.
+		 * 
+		 * @param diff
+		 *            The diff which value we need to check.
+		 * @param value
+		 *            The expected value of <code>diff</code>
+		 * @return <code>true</code> if the value matches.
+		 */
+		private boolean matchingValues(FeatureMapChange diff, Object value) {
 			if (diff.getValue() == value) {
 				return true;
 			}

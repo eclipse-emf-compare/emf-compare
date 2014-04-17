@@ -332,6 +332,41 @@ public class EditionDistance implements DistanceFunction {
 
 		/**
 		 * {@inheritDoc}
+		 */
+		public void featureMapChange(Match match, EAttribute attribute, Object value, DifferenceKind kind,
+				DifferenceSource source) {
+			if (!alreadyChanged.contains(attribute)) {
+				Object aValue = ReferenceUtil.safeEGet(match.getLeft(), attribute);
+				Object bValue = ReferenceUtil.safeEGet(match.getRight(), attribute);
+				switch (kind) {
+					case MOVE:
+						distance += weightProviderRegistry.getHighestRankingWeightProvider(
+								attribute.eClass().getEPackage()).getWeight(attribute)
+								* orderChangeCoef;
+						break;
+					case ADD:
+					case DELETE:
+					case CHANGE:
+						if (aValue instanceof String && bValue instanceof String) {
+							distance += weightProviderRegistry.getHighestRankingWeightProvider(
+									attribute.eClass().getEPackage()).getWeight(attribute)
+									* (1 - DiffUtil.diceCoefficient((String)aValue, (String)bValue));
+						} else {
+							distance += weightProviderRegistry.getHighestRankingWeightProvider(
+									attribute.eClass().getEPackage()).getWeight(attribute);
+						}
+						break;
+					default:
+						break;
+				}
+				alreadyChanged.add(attribute);
+			} else {
+				distance += 1;
+			}
+		}
+
+		/**
+		 * {@inheritDoc}
 		 * 
 		 * @see org.eclipse.emf.compare.diff.IDiffProcessor#resourceAttachmentChange(org.eclipse.emf.compare.Match,
 		 *      java.lang.String, org.eclipse.emf.compare.DifferenceKind,

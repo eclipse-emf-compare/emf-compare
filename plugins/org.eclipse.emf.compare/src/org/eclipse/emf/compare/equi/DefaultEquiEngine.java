@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,17 +13,25 @@ package org.eclipse.emf.compare.equi;
 import static com.google.common.collect.Iterables.filter;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
 
+import java.util.Set;
+
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Equivalence;
+import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
  * The requirements engine is in charge of actually computing the equivalences between the differences.
@@ -67,6 +75,10 @@ public class DefaultEquiEngine implements IEquiEngine {
 			if (eOpposite != null && !eOpposite.isContainer() && !eOpposite.isDerived()) {
 				checkForEquivalences(comparison, referenceChange);
 			}
+		} else if (difference instanceof FeatureMapChange) {
+			FeatureMapChange featureMapChange = (FeatureMapChange)difference;
+			// Case of a FeatureMap, it may be linked with FeatureMap-derived references.
+			checkForEquivalences(comparison, featureMapChange);
 		}
 	}
 
@@ -150,4 +162,45 @@ public class DefaultEquiEngine implements IEquiEngine {
 		}
 	}
 
+	/**
+	 * Checks the potential equivalence from the given <code>difference</code>.
+	 * 
+	 * @param comparison
+	 *            The comparison this engine is expected to complete.
+	 * @param featureMapChange
+	 *            The difference that is to be checked
+	 */
+	protected void checkForEquivalences(final Comparison comparison, final FeatureMapChange featureMapChange) {
+		Equivalence equivalence = featureMapChange.getEquivalence();
+		if (equivalence == null) {
+			EList<Diff> differences = featureMapChange.getMatch().getDifferences();
+			Object featureMapEntry = featureMapChange.getValue();
+			Object entryValue = ((FeatureMap.Entry)featureMapEntry).getValue();
+			EStructuralFeature entryKey = ((FeatureMap.Entry)featureMapEntry).getEStructuralFeature();
+			Set<ReferenceChange> equivalentDiffs = Sets.newLinkedHashSet();
+			IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+			for (ReferenceChange refChange : filter(differences, ReferenceChange.class)) {
+				// The current diff has the same ref & value than the Map Entry of the FeatureMapChange.
+				if (featureMapChange.getSource() == refChange.getSource()
+						&& refChange.getReference() == entryKey
+						&& equalityHelper.matchingValues(refChange.getValue(), entryValue)) {
+					equivalentDiffs.add(refChange);
+					if (equivalence == null && refChange.getEquivalence() != null) {
+						equivalence = refChange.getEquivalence();
+					}
+				}
+			}
+
+			if (!equivalentDiffs.isEmpty()) {
+				if (equivalence == null) {
+					equivalence = CompareFactory.eINSTANCE.createEquivalence();
+					comparison.getEquivalences().add(equivalence);
+				}
+				// Add the current difference to the equivalence
+				equivalence.getDifferences().add(featureMapChange);
+				// Add the MapFeature-derived references to the equivalence
+				equivalence.getDifferences().addAll(equivalentDiffs);
+			}
+		}
+	}
 }

@@ -48,9 +48,9 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 	 *      org.eclipse.emf.compare.Diff,
 	 *      org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide)
 	 */
-	public ContainmentReferenceChangeAccessorImpl(AdapterFactory adapterFactory,
-			ReferenceChange referenceChange, MergeViewerSide side) {
-		super(adapterFactory, referenceChange, side);
+	public ContainmentReferenceChangeAccessorImpl(AdapterFactory adapterFactory, Diff diff,
+			MergeViewerSide side) {
+		super(adapterFactory, diff, side);
 	}
 
 	/**

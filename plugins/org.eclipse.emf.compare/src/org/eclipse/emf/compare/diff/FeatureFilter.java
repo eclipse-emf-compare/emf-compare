@@ -18,6 +18,7 @@ import com.google.common.collect.Iterators;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
@@ -149,6 +150,7 @@ public class FeatureFilter {
 	 * @return {@code true} if that reference should be ignored by the comparison engine.
 	 */
 	protected boolean isIgnoredReference(Match match, EReference reference) {
+		final boolean toIgnore;
 		if (reference != null) {
 			// ignore the derived, container or transient
 			if (!reference.isDerived() && !reference.isContainer() && !reference.isTransient()) {
@@ -166,10 +168,16 @@ public class FeatureFilter {
 							&& IS_EGENERIC_TYPE_WITHOUT_PARAMETERS.apply(match.getRight())
 							&& IS_EGENERIC_TYPE_WITHOUT_PARAMETERS.apply(match.getOrigin());
 				}
-				return isGenericTypeWithoutArguments || !referenceIsSet(reference, match);
+				toIgnore = isGenericTypeWithoutArguments || !referenceIsSet(reference, match);
+			} else if (ReferenceUtil.isFeatureMapDerivedFeature(reference)) {
+				toIgnore = false;
+			} else {
+				toIgnore = true;
 			}
+		} else {
+			toIgnore = true;
 		}
-		return true;
+		return toIgnore;
 	}
 
 	/**

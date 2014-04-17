@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
@@ -60,6 +61,23 @@ public class DiffBuilder implements IDiffProcessor {
 		attributeChange.setValue(value);
 		attributeChange.setKind(kind);
 		attributeChange.setSource(source);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.IDiffProcessor#featureMapChange(org.eclipse.emf.compare.Match,
+	 *      org.eclipse.emf.ecore.EAttribute, java.lang.Object, org.eclipse.emf.compare.DifferenceKind,
+	 *      org.eclipse.emf.compare.DifferenceSource)
+	 */
+	public void featureMapChange(Match match, EAttribute attribute, Object value, DifferenceKind kind,
+			DifferenceSource source) {
+		final FeatureMapChange featureMapChange = CompareFactory.eINSTANCE.createFeatureMapChange();
+		featureMapChange.setMatch(match);
+		featureMapChange.setAttribute(attribute);
+		featureMapChange.setValue(value);
+		featureMapChange.setKind(kind);
+		featureMapChange.setSource(source);
 	}
 
 	/**
