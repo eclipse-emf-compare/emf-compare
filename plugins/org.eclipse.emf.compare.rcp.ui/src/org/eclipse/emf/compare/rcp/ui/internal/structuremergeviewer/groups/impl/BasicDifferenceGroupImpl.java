@@ -56,6 +56,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.edit.tree.TreeFactory;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -447,8 +448,11 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 * @return true if the resource of the given object as the same uri as the given uri, false otherwise.
 	 */
 	protected boolean isRootOfResourceURI(EObject eObject, String uri) {
-		return eObject != null && uri != null && eObject.eResource() != null
-				&& uri.equals(eObject.eResource().getURI().toString());
+		if (eObject != null && uri != null) {
+			final Resource resource = eObject.eResource();
+			return resource != null && uri.equals(resource.getURI().toString());
+		}
+		return false;
 	}
 
 	/**
