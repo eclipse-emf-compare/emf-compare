@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.utils;
 
+import com.google.common.collect.Lists;
 import com.google.common.io.Closeables;
 
 import java.io.BufferedReader;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -43,6 +45,11 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class ResourceUtil {
+	/** Content types of the files to consider as potential models. */
+	private static final String[] MODEL_CONTENT_TYPES = new String[] {
+			"org.eclipse.emf.compare.content.type", "org.eclipse.emf.ecore", //$NON-NLS-1$ //$NON-NLS-2$
+			"org.eclipse.emf.ecore.xmi", }; //$NON-NLS-1$
+
 	/**
 	 * This does not need to be instantiated.
 	 */
@@ -279,6 +286,7 @@ public final class ResourceUtil {
 	 *            The resource to save.
 	 * @param options
 	 *            The options we are to pass on to {@link Resource#save(Map)}.
+	 * @since 3.1
 	 */
 	public static void saveResource(Resource resource, Map<?, ?> options) {
 		if (supportsOutput(resource)) {
@@ -301,7 +309,7 @@ public final class ResourceUtil {
 	 * @return <code>true</code> if the given array contains a content-type with this id.
 	 * @since 3.1
 	 */
-	public static boolean hasContentType(String contentTypeId, IContentType[] contentTypes) {
+	public static boolean hasContentType(String contentTypeId, List<IContentType> contentTypes) {
 		IContentTypeManager ctManager = Platform.getContentTypeManager();
 		IContentType expected = ctManager.getContentType(contentTypeId);
 		if (expected == null) {
@@ -309,12 +317,43 @@ public final class ResourceUtil {
 		}
 
 		boolean hasContentType = false;
-		for (int i = 0; i < contentTypes.length && !hasContentType; i++) {
-			if (contentTypes[i].isKindOf(expected)) {
+		for (int i = 0; i < contentTypes.size() && !hasContentType; i++) {
+			if (contentTypes.get(i).isKindOf(expected)) {
 				hasContentType = true;
 			}
 		}
 		return hasContentType;
+	}
+
+	/**
+	 * Checks whether the given file has one of the content types described in {@link #MODEL_CONTENT_TYPES}.
+	 * 
+	 * @param file
+	 *            The file which contents are to be checked.
+	 * @return <code>true</code> if this file has one of the "model" content types.
+	 * @since 3.1
+	 */
+	public static boolean hasModelType(IFile file) {
+		boolean isModel = false;
+		// Try a first pass without the file contents, since some content type parsers can be very sluggish
+		// (EMF uses a sax parser to describe its content)
+		final IContentTypeManager ctManager = Platform.getContentTypeManager();
+		final List<IContentType> fileNameTypes = Lists.newArrayList(ctManager.findContentTypesFor(file
+				.getName()));
+		for (int i = 0; i < MODEL_CONTENT_TYPES.length && !isModel; i++) {
+			isModel = hasContentType(MODEL_CONTENT_TYPES[i], fileNameTypes);
+		}
+		if (isModel) {
+			return true;
+		}
+
+		// Fall back to the slower test
+		final List<IContentType> contentTypes = Lists.newArrayList(getContentTypes(file));
+		contentTypes.removeAll(fileNameTypes);
+		for (int i = 0; i < MODEL_CONTENT_TYPES.length && !isModel; i++) {
+			isModel = hasContentType(MODEL_CONTENT_TYPES[i], contentTypes);
+		}
+		return isModel;
 	}
 
 	/**
@@ -326,7 +365,7 @@ public final class ResourceUtil {
 	 * @since 3.1
 	 */
 	public static IContentType[] getContentTypes(IFile file) {
-		IContentTypeManager ctManager = Platform.getContentTypeManager();
+		final IContentTypeManager ctManager = Platform.getContentTypeManager();
 
 		InputStream resourceContent = null;
 		IContentType[] contentTypes = new IContentType[0];

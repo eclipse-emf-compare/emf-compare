@@ -14,7 +14,7 @@ import static com.google.common.collect.Sets.difference;
 import static com.google.common.collect.Sets.intersection;
 import static org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil.adaptAs;
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.createURIFor;
-import static org.eclipse.emf.compare.ide.utils.ResourceUtil.hasContentType;
+import static org.eclipse.emf.compare.ide.utils.ResourceUtil.hasModelType;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -46,7 +46,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -84,11 +83,6 @@ import org.eclipse.emf.ecore.resource.Resource;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ThreadedModelResolver extends AbstractModelResolver {
-	/** Content types of the files to consider as potential models. */
-	private static final String[] MODEL_CONTENT_TYPES = new String[] {
-			"org.eclipse.emf.compare.content.type", "org.eclipse.emf.ecore", //$NON-NLS-1$ //$NON-NLS-2$
-			"org.eclipse.emf.ecore.xmi", }; //$NON-NLS-1$
-
 	/** This can be used in order to convert an Iterable of IStorages to an Iterable over the storage's URIs. */
 	private static final Function<IStorage, URI> AS_URI = new Function<IStorage, URI>() {
 		public URI apply(IStorage input) {
@@ -824,22 +818,6 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	protected void demandUnload(SynchronizedResourceSet resourceSet, Resource resource,
 			IProgressMonitor monitor) {
 		unloadingPool.execute(new ResourceUnloader(resourceSet, resource, monitor));
-	}
-
-	/**
-	 * Checks whether the given file has one of the content types described in {@link #MODEL_CONTENT_TYPES}.
-	 * 
-	 * @param file
-	 *            The file which contents are to be checked.
-	 * @return <code>true</code> if this file has one of the "model" content types.
-	 */
-	private static final boolean hasModelType(IFile file) {
-		boolean isModel = false;
-		final IContentType[] contentTypes = ResourceUtil.getContentTypes(file);
-		for (int i = 0; i < MODEL_CONTENT_TYPES.length && !isModel; i++) {
-			isModel = hasContentType(MODEL_CONTENT_TYPES[i], contentTypes);
-		}
-		return isModel;
 	}
 
 	/**
