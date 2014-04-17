@@ -100,6 +100,15 @@ public interface CompareFactory extends EFactory {
 	AttributeChange createAttributeChange();
 
 	/**
+	 * Returns a new object of class '<em>Feature Map Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Feature Map Change</em>'.
+	 * @generated
+	 */
+	FeatureMapChange createFeatureMapChange();
+
+	/**
 	 * Returns a new object of class '<em>Conflict</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -124,7 +124,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 	 * --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDiagnostic()
-	 * @since 3.1
 	 * @generated
 	 * @ordered
 	 */
@@ -135,7 +134,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 	 * --> <!-- end-user-doc -->
 	 * 
 	 * @see #getDiagnostic()
-	 * @since 3.1
 	 * @generated
 	 * @ordered
 	 */
@@ -299,7 +297,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 3.1
 	 * @generated
 	 */
 	public Diagnostic getDiagnostic() {
@@ -309,7 +306,6 @@ public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 3.1
 	 * @generated
 	 */
 	public void setDiagnostic(Diagnostic newDiagnostic) {

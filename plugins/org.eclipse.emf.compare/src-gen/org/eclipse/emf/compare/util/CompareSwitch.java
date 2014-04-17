@@ -151,6 +151,15 @@ public class CompareSwitch<T> {
 					result = defaultCase(theEObject);
 				return result;
 			}
+			case ComparePackage.FEATURE_MAP_CHANGE: {
+				FeatureMapChange featureMapChange = (FeatureMapChange)theEObject;
+				T result = caseFeatureMapChange(featureMapChange);
+				if (result == null)
+					result = caseDiff(featureMapChange);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
 			case ComparePackage.CONFLICT: {
 				Conflict conflict = (Conflict)theEObject;
 				T result = caseConflict(conflict);
@@ -272,6 +281,21 @@ public class CompareSwitch<T> {
 	 * @generated
 	 */
 	public T caseAttributeChange(AttributeChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Feature Map Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Feature Map Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseFeatureMapChange(FeatureMapChange object) {
 		return null;
 	}
 

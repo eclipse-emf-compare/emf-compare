@@ -129,7 +129,6 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 3.1
 	 */
 	int COMPARISON__DIAGNOSTIC = 5;
 
@@ -327,7 +326,6 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 3.1
 	 */
 	int DIFF__IMPLIES = 3;
 
@@ -337,7 +335,6 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 3.1
 	 */
 	int DIFF__IMPLIED_BY = 4;
 
@@ -365,7 +362,6 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 3.1
 	 */
 	int DIFF__PRIME_REFINING = 7;
 
@@ -464,7 +460,6 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 3.1
 	 */
 	int RESOURCE_ATTACHMENT_CHANGE__IMPLIES = DIFF__IMPLIES;
 
@@ -474,7 +469,6 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 3.1
 	 */
 	int RESOURCE_ATTACHMENT_CHANGE__IMPLIED_BY = DIFF__IMPLIED_BY;
 
@@ -502,7 +496,6 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 3.1
 	 */
 	int RESOURCE_ATTACHMENT_CHANGE__PRIME_REFINING = DIFF__PRIME_REFINING;
 
@@ -610,7 +603,6 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 3.1
 	 */
 	int REFERENCE_CHANGE__IMPLIES = DIFF__IMPLIES;
 
@@ -620,7 +612,6 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 3.1
 	 */
 	int REFERENCE_CHANGE__IMPLIED_BY = DIFF__IMPLIED_BY;
 
@@ -648,7 +639,6 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 3.1
 	 */
 	int REFERENCE_CHANGE__PRIME_REFINING = DIFF__PRIME_REFINING;
 
@@ -764,7 +754,6 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 3.1
 	 */
 	int ATTRIBUTE_CHANGE__IMPLIES = DIFF__IMPLIES;
 
@@ -774,7 +763,6 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 3.1
 	 */
 	int ATTRIBUTE_CHANGE__IMPLIED_BY = DIFF__IMPLIED_BY;
 
@@ -802,7 +790,6 @@ public interface ComparePackage extends EPackage {
 	 * 
 	 * @generated
 	 * @ordered
-	 * @since 3.1
 	 */
 	int ATTRIBUTE_CHANGE__PRIME_REFINING = DIFF__PRIME_REFINING;
 
@@ -876,6 +863,157 @@ public interface ComparePackage extends EPackage {
 	int ATTRIBUTE_CHANGE_FEATURE_COUNT = DIFF_FEATURE_COUNT + 2;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.impl.FeatureMapChangeImpl
+	 * <em>Feature Map Change</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.emf.compare.impl.FeatureMapChangeImpl
+	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getFeatureMapChange()
+	 * @generated
+	 */
+	int FEATURE_MAP_CHANGE = 7;
+
+	/**
+	 * The feature id for the '<em><b>Match</b></em>' container reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__MATCH = DIFF__MATCH;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__REQUIRES = DIFF__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__REQUIRED_BY = DIFF__REQUIRED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__IMPLIES = DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__IMPLIED_BY = DIFF__IMPLIED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Refines</b></em>' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__REFINES = DIFF__REFINES;
+
+	/**
+	 * The feature id for the '<em><b>Refined By</b></em>' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__REFINED_BY = DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__PRIME_REFINING = DIFF__PRIME_REFINING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__KIND = DIFF__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__SOURCE = DIFF__SOURCE;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__STATE = DIFF__STATE;
+
+	/**
+	 * The feature id for the '<em><b>Equivalence</b></em>' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__EQUIVALENCE = DIFF__EQUIVALENCE;
+
+	/**
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__CONFLICT = DIFF__CONFLICT;
+
+	/**
+	 * The feature id for the '<em><b>Attribute</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__ATTRIBUTE = DIFF_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE__VALUE = DIFF_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Feature Map Change</em>' class. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAP_CHANGE_FEATURE_COUNT = DIFF_FEATURE_COUNT + 2;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.impl.ConflictImpl <em>Conflict</em>}' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -883,7 +1021,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getConflict()
 	 * @generated
 	 */
-	int CONFLICT = 7;
+	int CONFLICT = 8;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -919,7 +1057,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getEquivalence()
 	 * @generated
 	 */
-	int EQUIVALENCE = 8;
+	int EQUIVALENCE = 9;
 
 	/**
 	 * The feature id for the '<em><b>Differences</b></em>' reference list. <!-- begin-user-doc --> <!--
@@ -947,7 +1085,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getDifferenceKind()
 	 * @generated
 	 */
-	int DIFFERENCE_KIND = 9;
+	int DIFFERENCE_KIND = 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.DifferenceSource <em>Difference Source</em>}
@@ -957,7 +1095,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getDifferenceSource()
 	 * @generated
 	 */
-	int DIFFERENCE_SOURCE = 10;
+	int DIFFERENCE_SOURCE = 11;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.DifferenceState <em>Difference State</em>}'
@@ -967,7 +1105,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getDifferenceState()
 	 * @generated
 	 */
-	int DIFFERENCE_STATE = 11;
+	int DIFFERENCE_STATE = 12;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.ConflictKind <em>Conflict Kind</em>}' enum.
@@ -977,7 +1115,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getConflictKind()
 	 * @generated
 	 */
-	int CONFLICT_KIND = 12;
+	int CONFLICT_KIND = 13;
 
 	/**
 	 * The meta object id for the '<em>EIterable</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc
@@ -987,7 +1125,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getEIterable()
 	 * @generated
 	 */
-	int EITERABLE = 13;
+	int EITERABLE = 14;
 
 	/**
 	 * The meta object id for the '<em>IEquality Helper</em>' data type. <!-- begin-user-doc --> <!--
@@ -997,7 +1135,7 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getIEqualityHelper()
 	 * @generated
 	 */
-	int IEQUALITY_HELPER = 14;
+	int IEQUALITY_HELPER = 15;
 
 	/**
 	 * The meta object id for the '<em>Diagnostic</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1008,7 +1146,7 @@ public interface ComparePackage extends EPackage {
 	 * @generated
 	 * @since 3.1
 	 */
-	int DIAGNOSTIC = 15;
+	int DIAGNOSTIC = 16;
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.Comparison <em>Comparison</em>}'.
@@ -1087,7 +1225,6 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.Comparison#getDiagnostic()
 	 * @see #getComparison()
 	 * @generated
-	 * @since 3.1
 	 */
 	EAttribute getComparison_Diagnostic();
 
@@ -1297,7 +1434,6 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.Diff#getImplies()
 	 * @see #getDiff()
 	 * @generated
-	 * @since 3.1
 	 */
 	EReference getDiff_Implies();
 
@@ -1309,7 +1445,6 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.Diff#getImpliedBy()
 	 * @see #getDiff()
 	 * @generated
-	 * @since 3.1
 	 */
 	EReference getDiff_ImpliedBy();
 
@@ -1343,7 +1478,6 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.compare.Diff#getPrimeRefining()
 	 * @see #getDiff()
 	 * @generated
-	 * @since 3.1
 	 */
 	EReference getDiff_PrimeRefining();
 
@@ -1489,6 +1623,39 @@ public interface ComparePackage extends EPackage {
 	EAttribute getAttributeChange_Value();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.FeatureMapChange
+	 * <em>Feature Map Change</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Feature Map Change</em>'.
+	 * @see org.eclipse.emf.compare.FeatureMapChange
+	 * @generated
+	 */
+	EClass getFeatureMapChange();
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link org.eclipse.emf.compare.FeatureMapChange#getAttribute <em>Attribute</em>}'. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Attribute</em>'.
+	 * @see org.eclipse.emf.compare.FeatureMapChange#getAttribute()
+	 * @see #getFeatureMapChange()
+	 * @generated
+	 */
+	EReference getFeatureMapChange_Attribute();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.FeatureMapChange#getValue
+	 * <em>Value</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see org.eclipse.emf.compare.FeatureMapChange#getValue()
+	 * @see #getFeatureMapChange()
+	 * @generated
+	 */
+	EAttribute getFeatureMapChange_Value();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.Conflict <em>Conflict</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -1612,7 +1779,6 @@ public interface ComparePackage extends EPackage {
 	 * @see org.eclipse.emf.common.util.Diagnostic
 	 * @model instanceClass="org.eclipse.emf.common.util.Diagnostic" serializeable="false"
 	 * @generated
-	 * @since 3.1
 	 */
 	EDataType getDiagnostic();
 
@@ -1695,7 +1861,6 @@ public interface ComparePackage extends EPackage {
 		 * --> <!-- end-user-doc -->
 		 * 
 		 * @generated
-		 * @since 3.1
 		 */
 		EAttribute COMPARISON__DIAGNOSTIC = eINSTANCE.getComparison_Diagnostic();
 
@@ -2004,6 +2169,32 @@ public interface ComparePackage extends EPackage {
 		EAttribute ATTRIBUTE_CHANGE__VALUE = eINSTANCE.getAttributeChange_Value();
 
 		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.impl.FeatureMapChangeImpl
+		 * <em>Feature Map Change</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.emf.compare.impl.FeatureMapChangeImpl
+		 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getFeatureMapChange()
+		 * @generated
+		 */
+		EClass FEATURE_MAP_CHANGE = eINSTANCE.getFeatureMapChange();
+
+		/**
+		 * The meta object literal for the '<em><b>Attribute</b></em>' reference feature. <!-- begin-user-doc
+		 * --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference FEATURE_MAP_CHANGE__ATTRIBUTE = eINSTANCE.getFeatureMapChange_Attribute();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature. <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute FEATURE_MAP_CHANGE__VALUE = eINSTANCE.getFeatureMapChange_Value();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.impl.ConflictImpl
 		 * <em>Conflict</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
@@ -2114,7 +2305,6 @@ public interface ComparePackage extends EPackage {
 		 * @see org.eclipse.emf.common.util.Diagnostic
 		 * @see org.eclipse.emf.compare.impl.ComparePackageImpl#getDiagnostic()
 		 * @generated
-		 * @since 3.1
 		 */
 		EDataType DIAGNOSTIC = eINSTANCE.getDiagnostic();
 

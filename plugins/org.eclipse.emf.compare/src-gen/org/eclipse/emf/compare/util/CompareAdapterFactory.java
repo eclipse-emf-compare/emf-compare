@@ -117,6 +117,11 @@ public class CompareAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseFeatureMapChange(FeatureMapChange object) {
+			return createFeatureMapChangeAdapter();
+		}
+
+		@Override
 		public Adapter caseConflict(Conflict object) {
 			return createConflictAdapter();
 		}
@@ -240,6 +245,20 @@ public class CompareAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createAttributeChangeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.FeatureMapChange <em>Feature Map Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.FeatureMapChange
+	 * @generated
+	 */
+	public Adapter createFeatureMapChangeAdapter() {
 		return null;
 	}
 

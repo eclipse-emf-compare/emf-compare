@@ -48,7 +48,7 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 	public static CompareFactory init() {
 		try {
 			CompareFactory theCompareFactory = (CompareFactory)EPackage.Registry.INSTANCE
-					.getEFactory("http://www.eclipse.org/emf/compare"); //$NON-NLS-1$ 
+					.getEFactory(ComparePackage.eNS_URI);
 			if (theCompareFactory != null) {
 				return theCompareFactory;
 			}
@@ -88,6 +88,8 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 				return createReferenceChange();
 			case ComparePackage.ATTRIBUTE_CHANGE:
 				return createAttributeChange();
+			case ComparePackage.FEATURE_MAP_CHANGE:
+				return createFeatureMapChange();
 			case ComparePackage.CONFLICT:
 				return createConflict();
 			case ComparePackage.EQUIVALENCE:
@@ -200,6 +202,16 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 	 */
 	public AttributeChange createAttributeChange() {
 		return new AttributeChangeSpec();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public FeatureMapChange createFeatureMapChange() {
+		FeatureMapChangeImpl featureMapChange = new FeatureMapChangeImpl();
+		return featureMapChange;
 	}
 
 	/**

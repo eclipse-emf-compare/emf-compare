@@ -89,7 +89,6 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * --> <!-- end-user-doc -->
 	 * 
 	 * @see #getImplies()
-	 * @since 3.1
 	 * @generated
 	 * @ordered
 	 */
@@ -245,7 +244,7 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 		if (eContainerFeatureID() != ComparePackage.DIFF__MATCH) {
 			return null;
 		}
-		return (Match)eContainer();
+		return (Match)eInternalContainer();
 	}
 
 	/**
@@ -316,7 +315,6 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 3.1
 	 * @generated
 	 */
 	public EList<Diff> getImplies() {
@@ -330,7 +328,6 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 3.1
 	 * @generated
 	 */
 	public EList<Diff> getImpliedBy() {
@@ -370,7 +367,6 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 3.1
 	 * @generated
 	 */
 	public Diff getPrimeRefining() {
@@ -390,7 +386,6 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 3.1
 	 * @generated
 	 */
 	public Diff basicGetPrimeRefining() {
