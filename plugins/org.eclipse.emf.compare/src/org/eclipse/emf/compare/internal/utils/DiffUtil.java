@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.internal.utils;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.or;
+import static com.google.common.collect.Iterables.addAll;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
@@ -862,7 +863,7 @@ public final class DiffUtil {
 
 	/**
 	 * Get the list of all required differences for merge of the given difference (required, required of
-	 * required...).
+	 * required..., equivalences and pseudo conflicts).
 	 * 
 	 * @param diff
 	 *            the given difference.
@@ -872,7 +873,15 @@ public final class DiffUtil {
 	 * @since 3.0
 	 */
 	public static Set<Diff> getRequires(Diff diff, boolean leftToRight) {
-		return getRequires(diff, diff, leftToRight, Sets.newHashSet());
+		Set<Diff> requires = Sets.newHashSet();
+		addAll(requires, getRequires(diff, diff, leftToRight, Sets.newHashSet()));
+		addAll(requires, getEquivalences(diff));
+		Conflict conflict = diff.getConflict();
+		if (conflict != null && conflict.getKind() == ConflictKind.PSEUDO) {
+			addAll(requires, diff.getConflict().getDifferences());
+		}
+
+		return requires;
 	}
 
 	/**
@@ -984,7 +993,7 @@ public final class DiffUtil {
 	 *            the given Diff.
 	 * @return the list of equivalent differences.
 	 */
-	public static Set<Diff> getEquivalences(Diff diff) {
+	private static Set<Diff> getEquivalences(Diff diff) {
 		LinkedHashSet<Diff> equivalences = Sets.newLinkedHashSet();
 		Equivalence equivalence = diff.getEquivalence();
 		if (equivalence != null) {

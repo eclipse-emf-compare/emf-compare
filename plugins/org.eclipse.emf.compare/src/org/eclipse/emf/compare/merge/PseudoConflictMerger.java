@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
 
 /**
  * A simple merger for pseudo conflict. It only marks the differences as merged without doing anything except
@@ -28,5 +30,33 @@ public class PseudoConflictMerger extends AbstractMerger {
 	 */
 	public boolean isMergerFor(Diff target) {
 		return target.getConflict() != null && target.getConflict().getKind() == ConflictKind.PSEUDO;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.merge.AbstractMerger#copyLeftToRight(org.eclipse.emf.compare.Diff,
+	 *      org.eclipse.emf.common.util.Monitor)
+	 */
+	@Override
+	public void copyLeftToRight(Diff target, Monitor monitor) {
+		super.copyLeftToRight(target, monitor);
+		for (Diff pseudoConflictedDiff : target.getConflict().getDifferences()) {
+			pseudoConflictedDiff.setState(DifferenceState.MERGED);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.merge.AbstractMerger#copyRightToLeft(org.eclipse.emf.compare.Diff,
+	 *      org.eclipse.emf.common.util.Monitor)
+	 */
+	@Override
+	public void copyRightToLeft(Diff target, Monitor monitor) {
+		super.copyRightToLeft(target, monitor);
+		for (Diff pseudoConflictedDiff : target.getConflict().getDifferences()) {
+			pseudoConflictedDiff.setState(DifferenceState.MERGED);
+		}
 	}
 }
