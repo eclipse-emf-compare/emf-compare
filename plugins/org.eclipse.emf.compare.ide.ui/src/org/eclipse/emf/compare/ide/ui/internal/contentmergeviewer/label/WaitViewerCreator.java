@@ -16,7 +16,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * Creates an empty viewer with a single centered label which say to wait for the comparison to finish.
+ * Creates an empty viewer with a single centered label which say to wait for the comparison to finish or
+ * there is no selected item if the comparison is finished.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
@@ -29,7 +30,11 @@ public class WaitViewerCreator implements IViewerCreator {
 	 *      org.eclipse.compare.CompareConfiguration)
 	 */
 	public Viewer createViewer(final Composite parent, CompareConfiguration config) {
-		return new WaitContentViewer(parent);
+		if (config != null) {
+			return new NoSelectedItemContentViewer(parent);
+		} else {
+			return new WaitContentViewer(parent);
+		}
 	}
 
 }
