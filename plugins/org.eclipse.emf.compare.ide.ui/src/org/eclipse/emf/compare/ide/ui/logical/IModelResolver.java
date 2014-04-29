@@ -91,22 +91,6 @@ public interface IModelResolver {
 			throws InterruptedException;
 
 	/**
-	 * Ranking of this model resolver. Will be used by EMF Compare to determine which resolver is best for
-	 * which kind of resource.
-	 * 
-	 * @return The ranking of this resolver.
-	 */
-	int getRanking();
-
-	/**
-	 * Sets the ranking of this resolver to the given value. Mainly used by the extension point registration.
-	 * 
-	 * @param newRanking
-	 *            New ranking for this model resolver.
-	 */
-	void setRanking(int newRanking);
-
-	/**
 	 * This will be used in order to determine whether this resolver can be used for the given storage. For
 	 * each given storage, the resolver with the highest ranking will be selected for resolution. This test
 	 * should be fast.

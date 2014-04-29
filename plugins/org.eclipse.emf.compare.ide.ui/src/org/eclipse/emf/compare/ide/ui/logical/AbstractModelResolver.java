@@ -19,29 +19,7 @@ import com.google.common.annotations.Beta;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @since 4.0
  */
-@Beta
 public abstract class AbstractModelResolver implements IModelResolver {
-	/** Ranking of this resolver. */
-	protected int ranking;
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.logical.IModelResolver#getRanking()
-	 */
-	public int getRanking() {
-		return ranking;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.logical.IModelResolver#setRanking(int)
-	 */
-	public void setRanking(int newRanking) {
-		this.ranking = newRanking;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 

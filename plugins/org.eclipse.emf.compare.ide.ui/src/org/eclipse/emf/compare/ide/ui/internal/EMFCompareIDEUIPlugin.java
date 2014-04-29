@@ -21,10 +21,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.ide.ui.internal.editor.PropertySheetAdapterFactory;
-import org.eclipse.emf.compare.ide.ui.internal.logical.IModelResolverRegistry;
-import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverManager;
-import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverRegistryImpl;
-import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverRegistryListener;
+import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverRegistry;
+import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverRegistryListener;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -50,10 +48,7 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	private AbstractRegistryEventListener modelResolverRegistryListener;
 
 	/** Registry of model resolvers. */
-	private IModelResolverRegistry modelResolverRegistry;
-
-	/** Manager of resolver. */
-	private ModelResolverManager modelResolverManager;
+	private ModelResolverRegistry modelResolverRegistry;
 
 	/** keep track of resources that should be freed when exiting. */
 	private static Map<String, Image> resourcesMapper = new HashMap<String, Image>();
@@ -85,10 +80,9 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		plugin = this;
 
 		final IExtensionRegistry globalRegistry = Platform.getExtensionRegistry();
-		modelResolverManager = new ModelResolverManager(instanceScope.getNode(PLUGIN_ID));
-		modelResolverRegistry = new ModelResolverRegistryImpl(modelResolverManager);
+		modelResolverRegistry = new ModelResolverRegistry(instanceScope.getNode(PLUGIN_ID));
 		modelResolverRegistryListener = new ModelResolverRegistryListener(PLUGIN_ID, MODEL_RESOLVER_PPID,
-				getLog(), modelResolverManager);
+				getLog(), modelResolverRegistry);
 		globalRegistry.addListener(modelResolverRegistryListener);
 		modelResolverRegistryListener.readRegistry(globalRegistry);
 
@@ -105,7 +99,6 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		final IExtensionRegistry globalRegistry = Platform.getExtensionRegistry();
 		globalRegistry.removeListener(modelResolverRegistryListener);
 		modelResolverRegistry.clear();
-		modelResolverManager = null;
 		plugin = null;
 		super.stop(context);
 	}
@@ -180,7 +173,7 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	 * 
 	 * @return The registry containing all known model resolvers.
 	 */
-	public IModelResolverRegistry getModelResolverRegistry() {
+	public ModelResolverRegistry getModelResolverRegistry() {
 		return modelResolverRegistry;
 	}
 
@@ -206,14 +199,4 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	public void log(int severity, String message) {
 		getLog().log(new Status(severity, PLUGIN_ID, message));
 	}
-
-	/**
-	 * Return the model resolver manager.
-	 * 
-	 * @return
-	 */
-	public ModelResolverManager getModelResolverManager() {
-		return modelResolverManager;
-	}
-
 }

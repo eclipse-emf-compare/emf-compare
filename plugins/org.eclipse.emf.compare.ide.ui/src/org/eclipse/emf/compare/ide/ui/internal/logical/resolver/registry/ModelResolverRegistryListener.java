@@ -8,14 +8,12 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.logical;
+package org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
-import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 
 /**
@@ -25,7 +23,6 @@ import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ModelResolverRegistryListener extends AbstractRegistryEventListener {
-
 	/** The "resolver" tag of our extension point. */
 	private static final String TAG_RESOLVER = "resolver"; //$NON-NLS-1$
 
@@ -42,7 +39,7 @@ public class ModelResolverRegistryListener extends AbstractRegistryEventListener
 	private static final String ATTRIBUTE_RANKING = "ranking"; //$NON-NLS-1$
 
 	/** The actual registry this listener will alter. */
-	private final ModelResolverManager registry;
+	private final ModelResolverRegistry registry;
 
 	/**
 	 * Initialize a registry event listener for our model resolvers.
@@ -57,7 +54,7 @@ public class ModelResolverRegistryListener extends AbstractRegistryEventListener
 	 *            The actual store of model resolvers this registry will alter.
 	 */
 	public ModelResolverRegistryListener(String pluginID, String extensionPointID, ILog log,
-			ModelResolverManager registry) {
+			ModelResolverRegistry registry) {
 		super(pluginID, extensionPointID, log);
 		this.registry = registry;
 	}
@@ -71,17 +68,7 @@ public class ModelResolverRegistryListener extends AbstractRegistryEventListener
 	protected boolean addedValid(IConfigurationElement element) {
 		if (element.getName().equals(TAG_RESOLVER)) {
 			final String className = element.getAttribute(ATTRIBUTE_CLASS);
-			IModelResolver resolver;
-			try {
-				resolver = (IModelResolver)element.createExecutableExtension(ATTRIBUTE_CLASS);
-			} catch (CoreException e) {
-				final String message = EMFCompareIDEUIMessages.getString(
-						"ModelResolverRegistry.invalidResolver", className); //$NON-NLS-1$
-				log(element, message, e);
-				return false;
-			}
 
-			assert resolver != null;
 			final String rankingStr = element.getAttribute(ATTRIBUTE_RANKING);
 			int ranking = -1;
 			try {
@@ -90,12 +77,13 @@ public class ModelResolverRegistryListener extends AbstractRegistryEventListener
 				log(IStatus.ERROR, element, EMFCompareIDEUIMessages.getString(
 						"ModelResolverRegistry.invalidRanking", className, rankingStr)); //$NON-NLS-1$
 			}
-			resolver.setRanking(ranking);
 
-			resolver.initialize();
+			final String label = element.getAttribute(ATTRIBUTE_LABEL);
+			final String description = element.getAttribute(ATTRIBUTE_DESCRIPTION);
 
-			registry.add(resolver, className, element.getAttribute(ATTRIBUTE_LABEL), element
-					.getAttribute(ATTRIBUTE_DESCRIPTION));
+			final ModelResolverDescriptor descriptor = new ModelResolverDescriptor(element, ATTRIBUTE_CLASS,
+					ranking, label, description);
+			registry.addResolver(className, descriptor);
 			return true;
 		}
 		return false;
@@ -109,11 +97,7 @@ public class ModelResolverRegistryListener extends AbstractRegistryEventListener
 	@Override
 	protected boolean removedValid(IConfigurationElement element) {
 		final String className = element.getAttribute(ATTRIBUTE_CLASS);
-		ModelResolverDescriptor resolverDescriptor = registry.remove(className);
-		if (resolverDescriptor != null) {
-			IModelResolver resolver = resolverDescriptor.getModelResolver();
-			resolver.dispose();
-		}
+		registry.removeResolver(className);
 		return true;
 	}
 

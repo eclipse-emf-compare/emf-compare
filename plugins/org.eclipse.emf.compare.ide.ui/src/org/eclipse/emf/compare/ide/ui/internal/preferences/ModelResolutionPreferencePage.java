@@ -14,11 +14,13 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverDescriptor;
-import org.eclipse.emf.compare.ide.ui.internal.logical.ModelResolverManager;
+import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverDescriptor;
+import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverRegistry;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -40,29 +42,17 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
 public class ModelResolutionPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-
-	/** Label for default value of "forced resolver" preference. */
+	/** Label for default value of the "selected resolver" preference. */
 	private static final String DEFAULT_LABEL_VALUE = EMFCompareIDEUIMessages
-			.getString("ModelResolutionPreferencePage.forcedresolver.default.value.label"); //$NON-NLS-1$
+			.getString("ModelResolutionPreferencePage.selectedresolver.default.value.label"); //$NON-NLS-1$
 
-	/** Description for default value of "forced resolver" preference. */
+	/** Description for default value of "selected resolver" preference. */
 	private static final String DEFAULT_DESCRIPTION_VALUE = EMFCompareIDEUIMessages
-			.getString("ModelResolutionPreferencePage.forcedresolver.default.value.description"); //$NON-NLS-1$
+			.getString("ModelResolutionPreferencePage.selectedresolver.default.value.description"); //$NON-NLS-1$
 
-	/** Index for default value of "forced resolver" preference. */
-	private static final int DEFAULT_VALUE_INDEX = 0;
+	private final ModelResolverRegistry modelResolverRegistry;
 
-	/** {@link ModelResolverManager} */
-	private final ModelResolverManager modelResolverManager = EMFCompareIDEUIPlugin.getDefault()
-			.getModelResolverManager();
-
-	/** User selected resolver. This should be null if the default strategy is chosen. */
-	private ModelResolverDescriptor userSelectedResolver;
-
-	/** Is set to true if the "Model resolution" should be enabled. */
-	private boolean isEnabled;
-
-	private Button enableModelResolutionButton;
+	private Button disableModelResolutionButton;
 
 	/**
 	 * List of element that need to be enabled or disabled depending on state of
@@ -73,8 +63,15 @@ public class ModelResolutionPreferencePage extends PreferencePage implements IWo
 	/** Forced resolver combo chooser. */
 	private Combo resolverCombo;
 
+	/** Values of the resolver combo, in displayed order. */
+	private ModelResolverDescriptor[] comboValues;
+
 	/** Label displaying the description of {@link ModelResolutionPreferencePage#userSelectedResolver} */
 	private Label descriptionLabel;
+
+	public ModelResolutionPreferencePage() {
+		this.modelResolverRegistry = EMFCompareIDEUIPlugin.getDefault().getModelResolverRegistry();
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -82,9 +79,6 @@ public class ModelResolutionPreferencePage extends PreferencePage implements IWo
 	@Override
 	protected Control createContents(Composite parent) {
 		activableElements = Lists.newArrayList();
-		// Init data value
-		isEnabled = modelResolverManager.isResolutionEnabled();
-		userSelectedResolver = modelResolverManager.getUserSelectedResolver();
 
 		Composite mainContainer = new Composite(parent, SWT.NONE);
 		mainContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -98,7 +92,6 @@ public class ModelResolutionPreferencePage extends PreferencePage implements IWo
 
 		createDescription(resolutionStrategyComposite);
 
-		updateDescription();
 		updateWidgetEnablement();
 
 		return mainContainer;
@@ -127,27 +120,25 @@ public class ModelResolutionPreferencePage extends PreferencePage implements IWo
 	}
 
 	/**
-	 * Enable/Disable all widget from activableElements depending on the state of isEnabled.
+	 * Enable/Disable all widget from activableElements depending on whether the user accepts model
+	 * resolutions or disabled them.
 	 */
 	private void updateWidgetEnablement() {
-		enableModelResolutionButton.setSelection(isEnabled);
+		final boolean resolutionEnabled = !disableModelResolutionButton.getSelection();
+		disableModelResolutionButton.setSelection(!resolutionEnabled);
 		for (Control controlToDisable : activableElements) {
 			if (!controlToDisable.isDisposed()) {
-				controlToDisable.setEnabled(isEnabled);
+				controlToDisable.setEnabled(resolutionEnabled);
 			}
 		}
 	}
 
 	/**
-	 * Update the description field using {@link ModelResolutionPreferencePage#userSelectedResolver} as input.
+	 * Update the description field.
 	 */
-	private void updateDescription() {
+	private void updateDescription(String selectedDescription) {
 		if (descriptionLabel != null && !descriptionLabel.isDisposed()) {
-			if (userSelectedResolver != null) {
-				descriptionLabel.setText(userSelectedResolver.getDescription());
-			} else {
-				descriptionLabel.setText(DEFAULT_DESCRIPTION_VALUE);
-			}
+			descriptionLabel.setText(selectedDescription);
 		}
 	}
 
@@ -172,7 +163,6 @@ public class ModelResolutionPreferencePage extends PreferencePage implements IWo
 		descriptionLayoutData.minimumWidth = 500;
 		descriptionLabel.setLayoutData(descriptionLayoutData);
 		activableElements.add(descriptionLabel);
-
 	}
 
 	/**
@@ -181,82 +171,94 @@ public class ModelResolutionPreferencePage extends PreferencePage implements IWo
 	 * @param resolutionStrategyComposite
 	 */
 	private void createEnablementCheckBox(Composite resolutionStrategyComposite) {
-		enableModelResolutionButton = new Button(resolutionStrategyComposite, SWT.CHECK);
-		enableModelResolutionButton.setText(EMFCompareIDEUIMessages
-				.getString("ModelResolutionPreferencePage.enable.resolution.checkbox")); //$NON-NLS-1$
-		enableModelResolutionButton.setSelection(isEnabled);
+		disableModelResolutionButton = new Button(resolutionStrategyComposite, SWT.CHECK);
+		disableModelResolutionButton.setText(EMFCompareIDEUIMessages
+				.getString("ModelResolutionPreferencePage.disable.resolution.checkbox")); //$NON-NLS-1$
+		disableModelResolutionButton.setSelection(!modelResolverRegistry.isEnabled());
 		GridData checkBoxGridData = new GridData(SWT.FILL, SWT.TOP, true, false);
-		enableModelResolutionButton.setLayoutData(checkBoxGridData);
-		enableModelResolutionButton.addSelectionListener(new SelectionAdapter() {
-
+		disableModelResolutionButton.setLayoutData(checkBoxGridData);
+		disableModelResolutionButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				isEnabled = enableModelResolutionButton.getSelection();
 				updateWidgetEnablement();
 			}
-
 		});
 	}
 
 	/**
-	 * Create the combo used to choose {@link ModelResolutionPreferencePage#userSelectedResolver}
+	 * Create the combo used to choose a resolver.
 	 * 
 	 * @param resolutionStrategyComposite
 	 */
 	private void createCombo(Composite resolutionStrategyComposite) {
-		ArrayList<ModelResolverDescriptor> resolvers = Lists.newArrayList(modelResolverManager
-				.getAllResolver());
-		Collections.sort(resolvers);
-		String[] comboLabels = new String[resolvers.size() + 1];
-		final ModelResolverDescriptor[] comboValues = new ModelResolverDescriptor[resolvers.size() + 1];
+		List<ModelResolverDescriptor> resolvers = modelResolverRegistry.getRegisteredDescriptors();
+		Collections.sort(resolvers, new Comparator<ModelResolverDescriptor>() {
+			public int compare(ModelResolverDescriptor o1, ModelResolverDescriptor o2) {
+				return o2.getRanking() - o1.getRanking();
+			}
+		});
 
-		int forcedResolverInitialValueIndex = 0;
+		final String[] comboLabels = new String[resolvers.size() + 1];
+		comboValues = new ModelResolverDescriptor[resolvers.size() + 1];
+		comboLabels[0] = DEFAULT_LABEL_VALUE;
+		comboValues[0] = null;
 
-		comboLabels[DEFAULT_VALUE_INDEX] = DEFAULT_LABEL_VALUE;
-		comboValues[DEFAULT_VALUE_INDEX] = null;
+		final ModelResolverDescriptor selected = modelResolverRegistry.getSelectedResolver();
 
+		int initialValueIndex = 0;
 		for (int index = 1; index <= resolvers.size(); index++) {
-			ModelResolverDescriptor modelResolverDescriptor = resolvers.get(index - 1);
-			comboLabels[index] = modelResolverDescriptor.getLabel();
-			comboValues[index] = modelResolverDescriptor;
-			if (userSelectedResolver == modelResolverDescriptor) {
-				forcedResolverInitialValueIndex = index;
+			final ModelResolverDescriptor descriptor = resolvers.get(index);
+			comboLabels[index] = descriptor.getLabel();
+			comboValues[index] = descriptor;
+			if (selected == descriptor) {
+				initialValueIndex = index;
 			}
 		}
+
 		resolverCombo = new Combo(resolutionStrategyComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		resolverCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		resolverCombo.setItems(comboLabels);
 		resolverCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
-				int selectionIndex = resolverCombo.getSelectionIndex();
-				if (DEFAULT_VALUE_INDEX == selectionIndex) {
-					userSelectedResolver = null;
+				final ModelResolverDescriptor selection = comboValues[resolverCombo.getSelectionIndex()];
+				if (selection == null) {
+					updateDescription(DEFAULT_DESCRIPTION_VALUE);
 				} else {
-					String currentValue = comboValues[selectionIndex].getId();
-					userSelectedResolver = modelResolverManager.getDescriptor(currentValue);
+					updateDescription(selection.getDescription());
 				}
-				updateDescription();
 			}
 		});
-		resolverCombo.select(forcedResolverInitialValueIndex);
+		resolverCombo.select(initialValueIndex);
+		final ModelResolverDescriptor initialValue = comboValues[initialValueIndex];
+		if (initialValue == null) {
+			updateDescription(DEFAULT_DESCRIPTION_VALUE);
+		} else {
+			updateDescription(initialValue.getDescription());
+		}
 		activableElements.add(resolverCombo);
 	}
 
 	@Override
 	public boolean performOk() {
-		modelResolverManager.setUserSelectedResolver(userSelectedResolver);
-		modelResolverManager.setResolution(isEnabled);
+		final boolean resolutionEnabled = !disableModelResolutionButton.getSelection();
+		modelResolverRegistry.toggleEnablement(resolutionEnabled);
+		if (resolutionEnabled) {
+			final ModelResolverDescriptor resolver = comboValues[resolverCombo.getSelectionIndex()];
+			if (resolver == null) {
+				modelResolverRegistry.setSelectedResolver(null);
+			} else {
+				modelResolverRegistry.setSelectedResolver(resolver.getClassName());
+			}
+		}
 		return super.performOk();
 	}
 
 	@Override
 	protected void performDefaults() {
-		userSelectedResolver = null;
-		resolverCombo.select(DEFAULT_VALUE_INDEX);
-		isEnabled = true;
-		updateDescription();
+		resolverCombo.select(0);
+		disableModelResolutionButton.setSelection(false);
+		updateDescription(DEFAULT_DESCRIPTION_VALUE);
 		updateWidgetEnablement();
 		super.performDefaults();
 	}
