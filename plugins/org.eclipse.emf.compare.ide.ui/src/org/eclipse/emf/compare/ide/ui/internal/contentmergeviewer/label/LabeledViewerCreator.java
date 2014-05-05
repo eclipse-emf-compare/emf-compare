@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IViewerCreator;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
@@ -21,7 +22,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class WaitViewerCreator implements IViewerCreator {
+public class LabeledViewerCreator implements IViewerCreator {
 
 	/**
 	 * {@inheritDoc}
@@ -30,7 +31,7 @@ public class WaitViewerCreator implements IViewerCreator {
 	 *      org.eclipse.compare.CompareConfiguration)
 	 */
 	public Viewer createViewer(final Composite parent, CompareConfiguration config) {
-		if (config != null) {
+		if (config != null && config.getProperty(EMFCompareIDEUIPlugin.PLUGIN_ID + ".COMPARE_RESULT") != null) { //$NON-NLS-1$
 			return new NoSelectedItemContentViewer(parent);
 		} else {
 			return new WaitContentViewer(parent);
