@@ -76,7 +76,6 @@ public class DependencyData {
 			unmergeables = newHashSet();
 			for (Diff diff : selectedDiffs) {
 				addAll(requires, DiffUtil.getRequires(diff, leftToRight));
-				addAll(requires, DiffUtil.getEquivalences(diff));
 				addAll(unmergeables, DiffUtil.getUnmergeables(diff, leftToRight));
 			}
 		}
