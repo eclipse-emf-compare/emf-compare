@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,14 +76,6 @@ public enum MergeMode {
 				ret = DifferenceSource.LEFT;
 				break;
 			case ACCEPT:
-				if (isLeftEditable) {
-					ret = DifferenceSource.RIGHT;
-				} else if (isRightEditable) {
-					ret = DifferenceSource.LEFT;
-				} else {
-					throw new IllegalStateException();
-				}
-				break;
 			case REJECT:
 				if (isLeftEditable) {
 					ret = DifferenceSource.LEFT;
@@ -112,6 +104,33 @@ public enum MergeMode {
 	 */
 	public boolean isLeftToRight(boolean isLeftEditable, boolean isRightEditable) {
 		return getMergeTarget(isLeftEditable, isRightEditable) == DifferenceSource.RIGHT;
+	}
+
+	/**
+	 * To exactly know the way of merge (to compute consequences) we need the source of the diff.
+	 * 
+	 * @param diff
+	 *            the diff to merge.
+	 * @param isLeftEditable
+	 *            is left side of the comparison editable.
+	 * @param isRightEditable
+	 *            is right side of the comparison editable.
+	 * @return the way of merge.
+	 */
+	public boolean isLeftToRight(Diff diff, boolean isLeftEditable, boolean isRightEditable) {
+		final boolean leftToRight;
+		if (this == MergeMode.ACCEPT && diff.getSource() == DifferenceSource.LEFT && isLeftEditable) {
+			leftToRight = true;
+		} else if (this == MergeMode.REJECT && diff.getSource() == DifferenceSource.RIGHT && isLeftEditable) {
+			leftToRight = true;
+		} else if (this == MergeMode.ACCEPT && diff.getSource() == DifferenceSource.RIGHT && isRightEditable) {
+			leftToRight = false;
+		} else if (this == MergeMode.REJECT && diff.getSource() == DifferenceSource.LEFT && isRightEditable) {
+			leftToRight = false;
+		} else {
+			leftToRight = isLeftToRight(isLeftEditable, isRightEditable);
+		}
+		return leftToRight;
 	}
 
 	/**

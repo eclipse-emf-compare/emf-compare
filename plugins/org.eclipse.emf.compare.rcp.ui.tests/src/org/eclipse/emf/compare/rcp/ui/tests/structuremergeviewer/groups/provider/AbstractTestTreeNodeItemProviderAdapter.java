@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -93,6 +93,18 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 		}
 		return null;
 	}
+	
+	public static Predicate<Object> matchTreeNode = new Predicate<Object>() {
+		public boolean apply(Object object) {
+			if (object instanceof TreeNode) {
+				EObject data = ((TreeNode)object).getData();
+				if (data instanceof Match) {
+					return true;
+				}
+			}
+			return false;
+		}
+	};
 	
 	protected Match getMatchWithFeatureValue(Iterable<?> c, final String featureName, final Object value) {
 		Iterable<Match> matches = filter(c, Match.class);

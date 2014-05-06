@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,13 +14,14 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
+import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeActionTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.DependenciesTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({DependenciesTest.class, })
+@SuiteClasses({DependenciesTest.class, MergeActionTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

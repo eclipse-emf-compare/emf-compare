@@ -189,7 +189,7 @@ public class MergeAction extends BaseSelectionListenerAction {
 		selectedDifferences.clear();
 	}
 
-	private Iterable<Diff> getSelectedDifferences(IStructuredSelection selection) {
+	protected Iterable<Diff> getSelectedDifferences(IStructuredSelection selection) {
 		List<?> selectedObjects = selection.toList();
 		Iterable<Adapter> selectedAdapters = filter(selectedObjects, Adapter.class);
 		Iterable<Notifier> selectedNotifiers = transform(selectedAdapters, ADAPTER__TARGET);

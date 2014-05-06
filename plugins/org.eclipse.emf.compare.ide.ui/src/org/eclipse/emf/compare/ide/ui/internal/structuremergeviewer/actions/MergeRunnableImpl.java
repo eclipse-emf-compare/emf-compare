@@ -56,17 +56,23 @@ final class MergeRunnableImpl implements IMergeRunnable {
 			mergeAll(differences, leftToRight, mergerRegistry);
 		} else if (mergeMode == MergeMode.ACCEPT || mergeMode == MergeMode.REJECT) {
 			List<Diff> diffToMarkAsMerged = newArrayList();
-			List<Diff> diffToCopy = newArrayList();
+			List<Diff> diffToCopyFromLeftToRight = newArrayList();
+			List<Diff> diffToCopyFromRightToLeft = newArrayList();
 			for (Diff diff : differences) {
 				MergeOperation mergeAction = mergeMode.getMergeAction(diff, isLeftEditable, isRightEditable);
 				if (mergeAction == MergeOperation.MARK_AS_MERGE) {
 					diffToMarkAsMerged.add(diff);
 				} else {
-					diffToCopy.add(diff);
+					if (isLeftEditable && leftToRight) {
+						diffToCopyFromRightToLeft.add(diff);
+					} else {
+						diffToCopyFromLeftToRight.add(diff);
+					}
 				}
 			}
-			mergeAll(diffToCopy, leftToRight, mergerRegistry);
-			markAllAsMerged(diffToMarkAsMerged, mergeMode, leftToRight);
+			mergeAll(diffToCopyFromLeftToRight, leftToRight, mergerRegistry);
+			mergeAll(diffToCopyFromRightToLeft, !leftToRight, mergerRegistry);
+			markAllAsMerged(diffToMarkAsMerged, mergeMode);
 		} else {
 			throw new IllegalStateException();
 		}
@@ -74,13 +80,12 @@ final class MergeRunnableImpl implements IMergeRunnable {
 
 	/**
 	 * @param diffToMarkAsMerged
-	 * @param leftToRight
-	 * @param isLeftEditable
-	 * @param isRightEditable
+	 * @param mode
 	 */
-	private void markAllAsMerged(Collection<Diff> diffToMarkAsMerged, MergeMode mode, boolean leftToRight) {
+	private void markAllAsMerged(Collection<Diff> diffToMarkAsMerged, MergeMode mode) {
 		for (Diff diff : diffToMarkAsMerged) {
-			markAsMerged(diff, mode, leftToRight);
+			boolean isLeftToRight = mode.isLeftToRight(diff, isLeftEditable, isRightEditable);
+			markAsMerged(diff, mode, isLeftToRight);
 		}
 	}
 
