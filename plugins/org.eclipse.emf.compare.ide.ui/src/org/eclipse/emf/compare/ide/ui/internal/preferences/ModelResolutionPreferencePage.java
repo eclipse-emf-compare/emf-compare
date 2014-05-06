@@ -207,7 +207,7 @@ public class ModelResolutionPreferencePage extends PreferencePage implements IWo
 
 		int initialValueIndex = 0;
 		for (int index = 1; index <= resolvers.size(); index++) {
-			final ModelResolverDescriptor descriptor = resolvers.get(index);
+			final ModelResolverDescriptor descriptor = resolvers.get(index - 1);
 			comboLabels[index] = descriptor.getLabel();
 			comboValues[index] = descriptor;
 			if (selected == descriptor) {
