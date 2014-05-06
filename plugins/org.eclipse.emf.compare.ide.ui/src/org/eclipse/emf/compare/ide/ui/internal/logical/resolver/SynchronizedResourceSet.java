@@ -1,18 +1,6 @@
-/*******************************************************************************
- * Copyright (c) 2011, 2013 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
-package org.eclipse.emf.compare.ide.internal.utils;
+package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
-import com.google.common.annotations.Beta;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -21,23 +9,16 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
-import org.eclipse.emf.compare.ide.internal.utils.PriorityExecutor.Priority;
-import org.eclipse.emf.compare.ide.utils.ResourceUtil;
+import org.eclipse.emf.compare.ide.internal.utils.NoNotificationParserPool;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -47,74 +28,14 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 
-/**
- * This implementation of a ResourceSet will avoid loading of any resource from any other mean than
- * {@link #resolveAll()}. Furthermore, it will unload any resource it has loaded as soon as its finished with
- * the cross reference links resolving.
- * <p>
- * This is used from our EMFSynchronizationModel in order to resolve the traversals without keeping the whole
- * model in-memory (and striving to never have it in-memory as a whole).
- * </p>
- * <p>
- * Since this class only aims at resolving cross-resource dependencies, its main bottleneck is the parsing of
- * resources when loading (not even the I/O, but the time spent in the SAX parser). We're using a number of
- * tricks to make this bottleneck less problematic. The main improvement in loading performance when compared
- * with the usual resource sets is the threading of the load and unload operations. {@link ResourceLoader}
- * threads are used to load the files and parse them as EMF models. When they're done, they spawn their own
- * {@link #unload(Resource) sub-threads} to unload the models in separate threads.
- * </p>
- * <p>
- * The second improvement of loading performance comes from the specialization of {@link #getLoadOptions()}
- * that allows us to define a set of options that aims at speeding up the parsing process. Further profiling
- * might be needed to isolate other options that would have an impact, such as parser features or XML
- * options...
- * </p>
- * <p>
- * Finally, the humongous CacheAdapter of UML was causing serious issues. Not only did it hinder the
- * performance, but it also caused a random dead lock between our unloading and loading threads. We managed to
- * totally disable it through three means.
- * <ul>
- * <li>The use of the {@link XMLResource#OPTION_DISABLE_NOTIFY} load option.</li>
- * <li>The use of our own {@link NoNotificationParserPool parser pool} that does not re-enable notifications
- * at the end of loading.</li>
- * <li>The removal of all roots from their containing {@link Resource} during iteration when
- * {@link #resolve(Resource) resolving}.</li>
- * </ul>
- * </p>
- * 
- * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @noextend This class is not intended to be subclassed by clients.
- */
-@Beta
-public class SyncResourceSet extends ResourceSetImpl {
-	/**
-	 * Keeps track of the URIs that have been demanded by the resolving of a resource. This cache will be
-	 * invalidated when we start resolving this new set of resources.
-	 */
-	private final Set<URI> demandedURIs = Sets.newLinkedHashSet();
-
-	/** Keeps track of the URIs of all resources that have been loaded by this resource set. */
-	private final Set<URI> loadedURIs = Sets.newLinkedHashSet();
-
+class SynchronizedResourceSet extends ResourceSetImpl {
 	/** Associates URIs with their resources. */
-	private final Map<URI, Resource> uriCache = Maps.newConcurrentMap();
+	private final Map<URI, Resource> uriCache;
 
-	/**
-	 * This thread pool will be used to launch the loading and unloading of resources in separate threads.
-	 * <p>
-	 * Take note that the unloading threads will take precedence over the loading threads : we need to free
-	 * the memory as soon as possible, and we expect "unload" threads to complete faster that "load" ones.
-	 * </p>
-	 */
-	private final PriorityExecutor pool = new PriorityExecutor("ModelResolver"); //$NON-NLS-1$
-
-	/**
-	 * Default constructor.
-	 */
-	public SyncResourceSet() {
-		// initialize from here to avoid synchronization
-		resources = new SynchronizedResourcesEList<Resource>();
-		loadOptions = super.getLoadOptions();
+	public SynchronizedResourceSet() {
+		this.uriCache = new ConcurrentHashMap<URI, Resource>();
+		this.resources = new SynchronizedResourcesEList<Resource>();
+		this.loadOptions = super.getLoadOptions();
 		/*
 		 * This resource set is specifically designed to resolve cross resources links, it thus spends a lot
 		 * of time loading resources. The following set of options is what seems to give the most significant
@@ -133,6 +54,7 @@ public class SyncResourceSet extends ResourceSetImpl {
 		loadOptions.put(XMLResource.OPTION_PARSER_PROPERTIES, parserProperties);
 
 		// These two might be superfluous
+		loadOptions.put(XMLResource.OPTION_DEFER_ATTACHMENT, Boolean.TRUE);
 		loadOptions.put(XMLResource.OPTION_DEFER_IDREF_RESOLUTION, Boolean.TRUE);
 
 		/*
@@ -145,74 +67,18 @@ public class SyncResourceSet extends ResourceSetImpl {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getResource(org.eclipse.emf.common.util.URI,
-	 *      boolean)
-	 */
-	@Override
-	public Resource getResource(URI uri, boolean loadOnDemand) {
-		// Never load resources from here... But we can't simply return "null" if the resource has already
-		// been loaded once, since the XMLHandler would recursively call this till the stack overflow
-		// otherwise.
-		Resource demanded = uriCache.get(uri);
-		if (!loadedURIs.contains(uri) && demanded == null) {
-			final EPackage ePackage = getPackageRegistry().getEPackage(uri.toString());
-			if (ePackage != null) {
-				demanded = ePackage.eResource();
-				uriCache.put(uri, demanded);
-			} else {
-				synchronized(demandedURIs) {
-					demandedURIs.add(uri);
-				}
-			}
-		}
-		return demanded;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#createResource(org.eclipse.emf.common.util.URI)
-	 */
-	@Override
-	public synchronized Resource createResource(URI uri) {
-		final Resource created = super.createResource(uri);
-		uriCache.put(uri, created);
-		return created;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#createResource(org.eclipse.emf.common.util.URI,
-	 *      java.lang.String)
-	 */
-	@Override
-	public synchronized Resource createResource(URI uri, String contentType) {
-		final Resource created = super.createResource(uri, contentType);
-		uriCache.put(uri, created);
-		return created;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getResources()
-	 */
-	@Override
-	public EList<Resource> getResources() {
-		return resources;
-	}
-
-	/**
-	 * Loads the given URI as an EMF resource.
+	 * This will load the given URI as an EMF Resource.
+	 * <p>
+	 * This is the only entry point within this resource set to load an EMF resource, and it will _only_ load
+	 * the resource pointed at by <code>uri</code>, ignoring all cross-referenced resources (including
+	 * containment proxies).
+	 * </p>
 	 * 
 	 * @param uri
 	 *            The URI to load as a resource.
 	 * @return The loaded Resource.
 	 */
-	protected Resource loadResource(URI uri) {
+	public Resource loadResource(URI uri) {
 		/*
 		 * Don't use super.getResource : we know the resource does not exist yet as there will only be one
 		 * "load" call for each given URI. The super implementation iterates over loaded resources before
@@ -222,11 +88,14 @@ public class SyncResourceSet extends ResourceSetImpl {
 		final URIConverter theURIConverter = getURIConverter();
 		final URI normalizedURI = theURIConverter.normalize(uri);
 
-		Resource result = uriCache.get(normalizedURI);
-		if (result == null) {
-			result = delegatedGetResource(uri, true);
-			if (result != null) {
-				uriCache.put(uri, result);
+		Resource result = null;
+		synchronized(uriCache) {
+			result = uriCache.get(normalizedURI);
+			if (result == null) {
+				result = delegatedGetResource(uri, true);
+				if (result != null) {
+					uriCache.put(uri, result);
+				}
 			}
 		}
 
@@ -242,176 +111,40 @@ public class SyncResourceSet extends ResourceSetImpl {
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getLoadOptions()
-	 */
-	@Override
-	public Map<Object, Object> getLoadOptions() {
-		return loadOptions;
-	}
-
-	/**
-	 * Resolve all cross resources links of the given starting point. Take note that this resource set is only
-	 * interested in the URIs of the resources, and that it will not keep the loaded content in memory. No
-	 * resource will be kept in the {@link #getResources() resources'} list of this set.
-	 * 
-	 * @param start
-	 *            The starting point from which we'll resolve cross resources references.
-	 * @param monitor
-	 *            the monitor to which progress will be reported
-	 * @return <code>true</code> if we could resolve the model, <code>false</code> if there was an error
-	 *         loading the starting point.
-	 */
-	public boolean resolveAll(IStorage start, IProgressMonitor monitor) {
-		final boolean result;
-		final URI expectedURI = ResourceUtil.createURIFor(start);
-		if (loadedURIs.contains(expectedURI)) {
-			result = true;
-		} else {
-			SubMonitor progress = SubMonitor.convert(monitor, 100);
-			final Resource resource = loadResource(expectedURI);
-			if (resource == null || !resource.getErrors().isEmpty()) {
-				result = false;
-			} else {
-				progress.worked(2);
-
-				// reset the demanded URI that was added by this first call
-				demandedURIs.clear();
-				// and make it "loaded" instead
-				loadedURIs.add(resource.getURI());
-
-				resolve(resource, progress.newChild(2));
-				unload(resource, progress.newChild(2));
-
-				final int remainingWork = 100 - 2 - 2 - 2;
-				resolveAll(progress.newChild(remainingWork));
-
-				result = true;
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Resolve all cross resources links of the resource located at the given URI. Take note that this
-	 * resource set is only interested in the URIs of the resource, and that it will not keep the loaded
-	 * content in memory. No resource will be kept in the {@link #getResources() resources'} list of this set.
-	 * 
-	 * @param resourceUri
-	 *            The URI of the "starting" resource from which we'll resolve all cross resources references.
-	 * @param monitor
-	 *            the monitor to which progress will be reported
-	 */
-	public void resolveAll(URI resourceUri, IProgressMonitor monitor) {
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
-		Resource resource = super.getResource(resourceUri, true);
-		// reset the demanded URI that was added by this first call
-		demandedURIs.clear();
-		// and make it "loaded" instead
-		loadedURIs.add(resourceUri);
-
-		resolve(resource, subMonitor.newChild(2));
-		unload(resource, subMonitor.newChild(2));
-
-		final int remainingWork = 100 - 2 - 2;
-		resolveAll(subMonitor.newChild(remainingWork));
-	}
-
-	/**
-	 * We've loaded a first resource (from one of the {@link #resolveAll(IStorage)} or
-	 * {@link #resolveAll(URI)} calls). We will now resolve all of this starting point's cross resources
-	 * references.
-	 * 
-	 * @param monitor
-	 *            the monitor to which progress will be reported
-	 */
-	private void resolveAll(IProgressMonitor monitor) {
-		// no need to size this monitor as it will just report logarithmic progress (see javadoc)
-		final SubMonitor progress = SubMonitor.convert(monitor);
-		Set<URI> newURIs;
-		synchronized(demandedURIs) {
-			newURIs = new LinkedHashSet<URI>(demandedURIs);
-			demandedURIs.clear();
-		}
-		while (!newURIs.isEmpty()) {
-			// report logarithmic progress (see SubMonitor javadoc)
-			progress.setWorkRemaining(10000);
-			loadedURIs.addAll(newURIs);
-			final Set<Future<Object>> resolveThreads = Sets.newLinkedHashSet();
-			for (URI uri : newURIs) {
-				resolveThreads.add(pool.submit(new ResourceLoader(uri, progress.newChild(1)), Priority.LOW));
-			}
-			for (Future<Object> future : resolveThreads) {
-				try {
-					future.get();
-				} catch (InterruptedException e) {
-					// Ignore
-				} catch (ExecutionException e) {
-					// TODO does this need to be logged when the underlying exception is IO?
-					final IStatus status = new Status(IStatus.WARNING, EMFCompareIDEPlugin.PLUGIN_ID, e
-							.getMessage(), e);
-					EMFCompareIDEPlugin.getDefault().getLog().log(status);
-				}
-			}
-			synchronized(demandedURIs) {
-				newURIs = new LinkedHashSet<URI>(demandedURIs);
-				demandedURIs.clear();
-			}
-		}
-	}
-
-	/**
-	 * This will resolve all cross references of the given resource, never actually loading other resources
-	 * (their URIs are collected within {@link #demandedURIs}.
-	 * 
-	 * @param resource
-	 *            The resource for which we are to resolve all cross references.
-	 * @param monitor
-	 *            The monitor to which progress will be reported.
-	 */
-	private void resolve(Resource resource, IProgressMonitor monitor) {
+	public Set<URI> discoverCrossReferences(Resource resource, IProgressMonitor monitor) {
 		resource.eSetDeliver(false);
 		final List<EObject> roots = ((InternalEList<EObject>)resource.getContents()).basicList();
 		final Iterator<EObject> resourceContent = roots.iterator();
-		resource.getContents().clear();
 
-		SubMonitor subMonitor = SubMonitor.convert(monitor, roots.size());
+		final Set<URI> crossReferencedResources = new LinkedHashSet<URI>();
 		while (resourceContent.hasNext()) {
 			final EObject eObject = resourceContent.next();
-			resolveCrossReferences(resource, eObject);
-			final TreeIterator<EObject> childContent = basicEAllContents(eObject);
-			// the process of one root is one tick
-			SubMonitor childMonitor = subMonitor.newChild(1);
-			while (childContent.hasNext()) {
-				// report logarithmic progress for each root processing (see javadoc)
-				childMonitor.setWorkRemaining(10000);
-				final EObject child = childContent.next();
+			crossReferencedResources.addAll(resolveCrossReferences(eObject));
+			final TreeIterator<EObject> objectChildren = basicEAllContents(eObject);
+			while (objectChildren.hasNext()) {
+				final EObject child = objectChildren.next();
 				if (child.eIsProxy()) {
-					resolveCrossReference(resource, child);
+					final URI proxyURI = ((InternalEObject)child).eProxyURI().trimFragment();
+					crossReferencedResources.add(proxyURI);
 				} else {
-					resolveCrossReferences(resource, child);
+					crossReferencedResources.addAll(resolveCrossReferences(child));
 				}
-				// report logarithmic progress (see javadoc)
-				childMonitor.worked(1);
 			}
 		}
-		resource.getContents().addAll(roots);
+
+		return crossReferencedResources;
 	}
 
-	/**
-	 * Resolve a given proxy's reference. This will only be called on proxy EObjects (
-	 * <code>proxy.eIsProxy()</code> is true).
-	 * 
-	 * @param resource
-	 *            Resource containing this proxy.
-	 * @param proxy
-	 *            The proxy to resolve.
-	 */
-	protected void resolveCrossReference(Resource resource, EObject proxy) {
-		final URI proxyURI = ((InternalEObject)proxy).eProxyURI();
-		getResource(proxyURI.trimFragment(), false);
+	public void unload(Resource resource, IProgressMonitor monitor) {
+		final URI uri = resource.getURI();
+		uriCache.remove(uri);
+		getResources().remove(resource);
+
+		// Only call "unload()" when really needed as this is both a time and memory hog.
+		// We can't ignore this call with UML because of the CacheAdapter.
+		if (resource.getClass().getSimpleName().startsWith("UMLResource")) { //$NON-NLS-1$
+			resource.unload();
+		}
 	}
 
 	/**
@@ -424,7 +157,7 @@ public class SyncResourceSet extends ResourceSetImpl {
 	private TreeIterator<EObject> basicEAllContents(final EObject eObject) {
 		return new AbstractTreeIterator<EObject>(eObject, false) {
 			/** Generated SUID. */
-			private static final long serialVersionUID = 6874121606163401152L;
+			private static final long serialVersionUID = -617740251257708686L;
 
 			/**
 			 * {@inheritDoc}
@@ -439,99 +172,98 @@ public class SyncResourceSet extends ResourceSetImpl {
 	}
 
 	/**
-	 * Unload the given resource.
+	 * Resolves the cross references of the given EObject, but leaves proxies as-is.
 	 * 
-	 * @param resource
-	 *            The resource we are to unload.
-	 * @param monitor
-	 *            The monitor to which progress will be reported.
-	 */
-	private void unload(final Resource resource, IProgressMonitor monitor) {
-		final SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
-		// only unload those resources that are located in the workspace
-		final URI uri = resource.getURI();
-		if (uri.isPlatformResource() || uri.isRelative() || uri.isFile()) {
-			uriCache.remove(uri);
-			getResources().remove(resource);
-
-			// Only "unload()" when needed... The one we know of is UML
-			if (resource.getClass().getSimpleName().startsWith("UMLResource")) { //$NON-NLS-1$
-				// We still need to unload what we loaded since some (like UML) cross reference everything...
-				final Runnable unloader = new Runnable() {
-					public void run() {
-						resource.unload();
-						subMonitor.worked(1);
-					}
-				};
-				pool.submit(unloader, Priority.NORMAL);
-			}
-		}
-	}
-
-	/**
-	 * Resolves the cross references of the given EObject.
-	 * 
-	 * @param resource
-	 *            Resource containing this EObject.
 	 * @param eObject
 	 *            The EObject for which we are to resolve the cross references.
 	 */
-	private void resolveCrossReferences(Resource resource, EObject eObject) {
-		final Iterator<EObject> objectChildren = ((InternalEList<EObject>)eObject.eCrossReferences())
+	private Set<URI> resolveCrossReferences(EObject eObject) {
+		final Set<URI> crossReferencedResources = new LinkedHashSet<URI>();
+		final Iterator<EObject> objectCrossRefs = ((InternalEList<EObject>)eObject.eCrossReferences())
 				.basicIterator();
-		while (objectChildren.hasNext()) {
-			final EObject eObj = objectChildren.next();
-			if (eObj.eIsProxy()) {
-				resolveCrossReference(resource, eObj);
+		while (objectCrossRefs.hasNext()) {
+			final EObject crossRef = objectCrossRefs.next();
+			if (crossRef.eIsProxy()) {
+				final URI proxyURI = ((InternalEObject)crossRef).eProxyURI().trimFragment();
+				if (proxyURI.isPlatformResource()) {
+					crossReferencedResources.add(proxyURI);
+				}
 			}
 		}
+		return crossReferencedResources;
 	}
 
 	/**
-	 * This implementation of a {@link Runnable} will be used to load a given uri from the disk as an EMF
-	 * {@link Resource} and resolve all of its cross-resource links (these will be stored in
-	 * {@link #demandedURIs} as we go). Once done, it will spawn another thread in order to unload that
-	 * resource out of the memory.
+	 * {@inheritDoc}
 	 * 
-	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getResource(org.eclipse.emf.common.util.URI,
+	 *      boolean)
 	 */
-	private class ResourceLoader implements Runnable {
-		/** The uri of the EMF Resource we are to load from the disk. */
-		private final URI uri;
-
-		/** The monitor to which progress will be reported. */
-		private final SubMonitor subMonitor;
-
-		/**
-		 * Constructs our loader thread given its target URI.
-		 * 
-		 * @param uri
-		 *            The uri of the EMF Resource this thread is to load from the disk.
-		 * @param monitor
-		 *            The monitor to which progress will be reported.
-		 */
-		public ResourceLoader(URI uri, IProgressMonitor monitor) {
-			this.uri = uri;
-			this.subMonitor = SubMonitor.convert(monitor, 2);
+	@Override
+	public Resource getResource(URI uri, boolean loadOnDemand) {
+		// Never load resources from here, we only care for the EPackages to prevent the XMLHandler from going
+		// into a stackoverflow
+		Resource demanded = uriCache.get(uri);
+		if (demanded == null) {
+			final EPackage ePackage = getPackageRegistry().getEPackage(uri.toString());
+			if (ePackage != null) {
+				demanded = ePackage.eResource();
+				uriCache.put(uri, demanded);
+			} else {
+				// simply return null
+			}
 		}
+		return demanded;
+	}
 
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see java.lang.Runnable#run()
-		 */
-		public void run() {
-			final Resource newResource = loadResource(uri);
-			resolve(newResource, subMonitor.newChild(1));
-			unload(newResource, subMonitor.newChild(1));
-		}
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#createResource(org.eclipse.emf.common.util.URI)
+	 */
+	@Override
+	public synchronized Resource createResource(URI uri) {
+		final Resource created = super.createResource(uri);
+		return created;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#createResource(org.eclipse.emf.common.util.URI,
+	 *      java.lang.String)
+	 */
+	@Override
+	public synchronized Resource createResource(URI uri, String contentType) {
+		final Resource created = super.createResource(uri, contentType);
+		return created;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getResources()
+	 */
+	@Override
+	public EList<Resource> getResources() {
+		return resources;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getLoadOptions()
+	 */
+	@Override
+	public Map<Object, Object> getLoadOptions() {
+		return loadOptions;
 	}
 
 	/**
 	 * A synchronized implementation of {@link ResourcesEList}.
 	 * <p>
-	 * Note that this cannot be extracted out of the {@link SyncResourceSet} since the {@link ResourcesEList}
-	 * type is not visible.
+	 * Note that this cannot be extracted out of the {@link SynchronizedResourceSet} since the
+	 * {@link ResourcesEList} type is not visible.
 	 * </p>
 	 * 
 	 * @param <E>

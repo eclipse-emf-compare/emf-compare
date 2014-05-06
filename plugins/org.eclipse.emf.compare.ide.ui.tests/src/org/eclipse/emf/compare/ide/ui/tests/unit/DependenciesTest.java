@@ -17,7 +17,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.compare.ide.ui.internal.logical.ProjectModelResolver;
+import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.tests.CompareTestCase;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
@@ -42,6 +42,8 @@ public class DependenciesTest extends CompareTestCase {
 
 	private IFile iFile3;
 
+	private ResourceSet resourceSet;
+
 	private Resource resource1;
 
 	private Resource resource2;
@@ -56,12 +58,12 @@ public class DependenciesTest extends CompareTestCase {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		resolver = new ProjectModelResolver();
+		resolver = new ThreadedModelResolver();
 		resolver.initialize();
 		monitor = new NullProgressMonitor();
 
 		final IProject iProject = project.getProject();
-		final ResourceSet resourceSet = new ResourceSetImpl();
+		resourceSet = new ResourceSetImpl();
 
 		final File file1 = project.getOrCreateFile(iProject, "file1.ecore");
 		final File file2 = project.getOrCreateFile(iProject, "file2.ecore");
@@ -79,7 +81,7 @@ public class DependenciesTest extends CompareTestCase {
 		resource2.getContents().add(createBasicModel(FILE2_SUFFIX));
 		resource3.getContents().add(createBasicModel(FILE3_SUFFIX));
 
-		save(resource1, resource2, resource3);
+		save(resourceSet);
 	}
 
 	@Override
@@ -90,32 +92,32 @@ public class DependenciesTest extends CompareTestCase {
 	}
 
 	@Test
-	public void testScopeNoDependencies() {
+	public void testScopeNoDependencies() throws Exception {
 		StorageTraversal traversal = resolver.resolveLocalModel(iFile1, monitor);
-		assertEquals(traversal.getStorages().size(), 1);
+		assertEquals(1, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile1));
 
 		traversal = resolver.resolveLocalModel(iFile2, monitor);
-		assertEquals(traversal.getStorages().size(), 1);
+		assertEquals(1, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile2));
 
 		traversal = resolver.resolveLocalModel(iFile3, monitor);
-		assertEquals(traversal.getStorages().size(), 1);
+		assertEquals(1, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile3));
 	}
 
 	@Test
 	public void testScopeAddedDependency() throws Exception {
 		makeCrossReference(resource2, resource1);
-		save(resource2);
+		save(resourceSet);
 
 		StorageTraversal traversal = resolver.resolveLocalModel(iFile1, monitor);
-		assertEquals(traversal.getStorages().size(), 2);
+		assertEquals(2, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile1));
 		assertTrue(traversal.getStorages().contains(iFile2));
 
 		traversal = resolver.resolveLocalModel(iFile2, monitor);
-		assertEquals(traversal.getStorages().size(), 2);
+		assertEquals(2, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile1));
 		assertTrue(traversal.getStorages().contains(iFile2));
 	}
@@ -123,17 +125,17 @@ public class DependenciesTest extends CompareTestCase {
 	@Test
 	public void testScopeRemovedDependency() throws Exception {
 		makeCrossReference(resource2, resource1);
-		save(resource2);
+		save(resourceSet);
 
 		breakCrossReferences(resource2, resource1);
-		save(resource2);
+		save(resourceSet);
 
 		StorageTraversal traversal = resolver.resolveLocalModel(iFile1, monitor);
-		assertEquals(traversal.getStorages().size(), 1);
+		assertEquals(1, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile1));
 
 		traversal = resolver.resolveLocalModel(iFile2, monitor);
-		assertEquals(traversal.getStorages().size(), 1);
+		assertEquals(1, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile2));
 	}
 
@@ -141,22 +143,22 @@ public class DependenciesTest extends CompareTestCase {
 	public void testScopeDepth() throws Exception {
 		makeCrossReference(resource2, resource1);
 		makeCrossReference(resource3, resource2);
-		save(resource2, resource3);
+		save(resourceSet);
 
 		StorageTraversal traversal = resolver.resolveLocalModel(iFile1, monitor);
-		assertEquals(traversal.getStorages().size(), 3);
+		assertEquals(3, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile1));
 		assertTrue(traversal.getStorages().contains(iFile2));
 		assertTrue(traversal.getStorages().contains(iFile3));
 
 		traversal = resolver.resolveLocalModel(iFile2, monitor);
-		assertEquals(traversal.getStorages().size(), 3);
+		assertEquals(3, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile1));
 		assertTrue(traversal.getStorages().contains(iFile2));
 		assertTrue(traversal.getStorages().contains(iFile3));
 
 		traversal = resolver.resolveLocalModel(iFile3, monitor);
-		assertEquals(traversal.getStorages().size(), 3);
+		assertEquals(3, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile1));
 		assertTrue(traversal.getStorages().contains(iFile2));
 		assertTrue(traversal.getStorages().contains(iFile3));
@@ -166,41 +168,41 @@ public class DependenciesTest extends CompareTestCase {
 	public void testScopeUpdate() throws Exception {
 		makeCrossReference(resource2, resource1);
 		makeCrossReference(resource3, resource2);
-		save(resource2, resource3);
+		save(resourceSet);
 
 		StorageTraversal traversal = resolver.resolveLocalModel(iFile1, monitor);
-		assertEquals(traversal.getStorages().size(), 3);
+		assertEquals(3, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile1));
 		assertTrue(traversal.getStorages().contains(iFile2));
 		assertTrue(traversal.getStorages().contains(iFile3));
 
 		breakCrossReferences(resource2, resource1);
-		save(resource2);
+		save(resourceSet);
 
 		traversal = resolver.resolveLocalModel(iFile1, monitor);
-		assertEquals(traversal.getStorages().size(), 1);
+		assertEquals(1, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile1));
 
 		traversal = resolver.resolveLocalModel(iFile2, monitor);
-		assertEquals(traversal.getStorages().size(), 2);
+		assertEquals(2, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile2));
 		assertTrue(traversal.getStorages().contains(iFile3));
 
 		breakCrossReferences(resource3, resource2);
 		makeCrossReference(resource3, resource1);
-		save(resource3);
+		save(resourceSet);
 
 		traversal = resolver.resolveLocalModel(iFile1, monitor);
-		assertEquals(traversal.getStorages().size(), 2);
+		assertEquals(2, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile1));
 		assertTrue(traversal.getStorages().contains(iFile3));
 
 		traversal = resolver.resolveLocalModel(iFile2, monitor);
-		assertEquals(traversal.getStorages().size(), 1);
+		assertEquals(1, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile2));
 
 		traversal = resolver.resolveLocalModel(iFile3, monitor);
-		assertEquals(traversal.getStorages().size(), 2);
+		assertEquals(2, traversal.getStorages().size());
 		assertTrue(traversal.getStorages().contains(iFile1));
 		assertTrue(traversal.getStorages().contains(iFile3));
 	}

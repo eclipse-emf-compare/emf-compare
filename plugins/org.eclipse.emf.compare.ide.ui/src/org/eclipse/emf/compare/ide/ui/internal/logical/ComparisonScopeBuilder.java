@@ -132,13 +132,18 @@ public final class ComparisonScopeBuilder {
 	 */
 	public IComparisonScope build(ITypedElement left, ITypedElement right, ITypedElement origin,
 			IProgressMonitor monitor) {
-		final SynchronizationModel syncModel;
-		if (storageAccessor != null) {
-			syncModel = createSynchronizationModel(storageAccessor, left, right, origin, monitor);
-		} else {
-			syncModel = createSynchronizationModel(left, right, origin, monitor);
+		try {
+			final SynchronizationModel syncModel;
+			if (storageAccessor != null) {
+				syncModel = createSynchronizationModel(storageAccessor, left, right, origin, monitor);
+			} else {
+				syncModel = createSynchronizationModel(left, right, origin, monitor);
+			}
+			return createMinimizedScope(syncModel, monitor);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			return new ErrorComparisonScope();
 		}
-		return createMinimizedScope(syncModel, monitor);
 	}
 
 	/**
@@ -240,7 +245,8 @@ public final class ComparisonScopeBuilder {
 	 * @return The created synchronization model.
 	 */
 	private SynchronizationModel createSynchronizationModel(IStorageProviderAccessor accessor,
-			ITypedElement left, ITypedElement right, ITypedElement origin, IProgressMonitor monitor) {
+			ITypedElement left, ITypedElement right, ITypedElement origin, IProgressMonitor monitor)
+			throws InterruptedException {
 		SubMonitor progress = SubMonitor.convert(monitor, EMFCompareIDEUIMessages
 				.getString("EMFSynchronizationModel.resolving"), 100); //$NON-NLS-1$
 
@@ -280,7 +286,7 @@ public final class ComparisonScopeBuilder {
 	 * @return The created synchronization model.
 	 */
 	private SynchronizationModel createSynchronizationModel(ITypedElement left, ITypedElement right,
-			ITypedElement origin, IProgressMonitor monitor) {
+			ITypedElement origin, IProgressMonitor monitor) throws InterruptedException {
 		SubMonitor progress = SubMonitor.convert(monitor, EMFCompareIDEUIMessages
 				.getString("EMFSynchronizationModel.resolving"), 100); //$NON-NLS-1$
 		// Is this a local comparison?

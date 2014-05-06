@@ -17,10 +17,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
 import org.eclipse.emf.ecore.EClass;
@@ -171,9 +174,12 @@ public class CompareTestCase {
 
 	private void breakCrossReferences(EObject source, Resource target) {
 		for (EReference ref : source.eClass().getEAllReferences()) {
+			if (ref.isDerived()) {
+				continue;
+			}
 			final Object value = source.eGet(ref);
 			if (!ref.isMany()) {
-				if (value instanceof EObject && ((EObject)value).eResource() == target && !ref.isDerived()) {
+				if (value instanceof EObject && ((EObject)value).eResource() == target) {
 					source.eSet(ref, null);
 				}
 			} else if (value instanceof Collection<?>) {
@@ -231,9 +237,23 @@ public class CompareTestCase {
 		}
 	}
 
-	protected void save(Resource... resources) throws IOException {
-		for (Resource resource : resources) {
-			resource.save(Collections.emptyMap());
+	protected void save(ResourceSet resourceSet) throws IOException, CoreException {
+		for (Resource resource : resourceSet.getResources()) {
+			final HashMap<String, Object> options = new HashMap<String, Object>();
+			options.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+					Resource.OPTION_SAVE_ONLY_IF_CHANGED_FILE_BUFFER);
+			resource.save(options);
 		}
+		project.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+	}
+
+	protected void save(Resource... resources) throws IOException, CoreException {
+		for (Resource resource : resources) {
+			final HashMap<String, Object> options = new HashMap<String, Object>();
+			options.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+					Resource.OPTION_SAVE_ONLY_IF_CHANGED_FILE_BUFFER);
+			resource.save(options);
+		}
+		project.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 	}
 }

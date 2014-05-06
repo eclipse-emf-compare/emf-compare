@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.logical;
+package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +37,7 @@ import org.eclipse.emf.ecore.resource.URIConverter;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public final class RevisionedURIConverter extends StorageURIConverter {
+final class RevisionedURIConverter extends StorageURIConverter {
 	/** The accessor that will provide us with resource content. */
 	private IStorageProviderAccessor storageAccessor;
 

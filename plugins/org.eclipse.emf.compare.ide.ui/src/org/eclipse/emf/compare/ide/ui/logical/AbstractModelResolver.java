@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.ide.ui.logical;
 import com.google.common.annotations.Beta;
 
 /**
- * This can be subclassed instead of {@link IModelResolver} to avoid reimplementing common extension-realted
+ * This can be subclassed instead of {@link IModelResolver} to avoid reimplementing common extension-related
  * code.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>

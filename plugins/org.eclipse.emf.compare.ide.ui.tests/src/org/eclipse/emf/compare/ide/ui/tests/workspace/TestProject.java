@@ -122,6 +122,8 @@ public class TestProject {
 		if (!d.mkdirs()) {
 			if (skipExisting && d.isDirectory()) {
 				return;
+			} else {
+				throw new IOException();
 			}
 		}
 	}

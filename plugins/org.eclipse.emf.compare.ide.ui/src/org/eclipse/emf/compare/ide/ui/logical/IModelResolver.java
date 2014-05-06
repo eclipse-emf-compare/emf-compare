@@ -44,9 +44,11 @@ public interface IModelResolver {
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
 	 * @return A traversal corresponding to all resources composing the given file's logical model.
+	 * @throws InterruptedException
+	 *             Thrown if the resolution is cancelled or interrupted one way or another.
 	 */
 	SynchronizationModel resolveLocalModels(IResource left, IResource right, IResource origin,
-			IProgressMonitor monitor);
+			IProgressMonitor monitor) throws InterruptedException;
 
 	/**
 	 * This will be called by EMF Compare in order to resolve the whole logical models containing the given
@@ -66,9 +68,11 @@ public interface IModelResolver {
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
 	 * @return A traversal corresponding to all resources composing the given file's logical model.
+	 * @throws InterruptedException
+	 *             Thrown if the resolution is cancelled or interrupted one way or another.
 	 */
 	SynchronizationModel resolveModels(IStorageProviderAccessor storageAccessor, IStorage left,
-			IStorage right, IStorage origin, IProgressMonitor monitor);
+			IStorage right, IStorage origin, IProgressMonitor monitor) throws InterruptedException;
 
 	/**
 	 * This will be called by Team in order to determine whether a given file can be compared alone, or if it
@@ -80,8 +84,11 @@ public interface IModelResolver {
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
 	 * @return A traversal corresponding to all resources composing the given file's logical model.
+	 * @throws InterruptedException
+	 *             Thrown if the resolution is cancelled or interrupted one way or another.
 	 */
-	StorageTraversal resolveLocalModel(IResource resource, IProgressMonitor monitor);
+	StorageTraversal resolveLocalModel(IResource resource, IProgressMonitor monitor)
+			throws InterruptedException;
 
 	/**
 	 * Ranking of this model resolver. Will be used by EMF Compare to determine which resolver is best for

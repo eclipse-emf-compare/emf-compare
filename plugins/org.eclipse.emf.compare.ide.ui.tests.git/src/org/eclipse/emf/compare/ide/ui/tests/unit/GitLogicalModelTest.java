@@ -25,8 +25,8 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
-import org.eclipse.emf.compare.ide.ui.internal.logical.LogicalModelResolver;
 import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
+import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.tests.StorageTypedElement;
@@ -286,7 +286,7 @@ public class GitLogicalModelTest extends CompareGitTestCase {
 		final ITypedElement left = new StorageTypedElement(sourceProvider.getStorage(monitor), fullPath);
 		final ITypedElement right = new StorageTypedElement(remoteProvider.getStorage(monitor), fullPath);
 		final ITypedElement origin = new StorageTypedElement(ancestorProvider.getStorage(monitor), fullPath);
-		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(new LogicalModelResolver(),
+		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(new ThreadedModelResolver(),
 				new IdenticalResourceMinimizer(), storageAccessor);
 		final IComparisonScope scope = scopeBuilder.build(left, right, origin, monitor);
 
