@@ -53,7 +53,7 @@
             label="%model.compare.text.feature">
       </viewer>
       <viewer
-            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.WaitViewerCreator"
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.LabeledViewerCreator"
             extensions="org.eclipse.emf.compare.rcp.ui.eWait"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.WaitViewer"
             label="%emf.compare.wait.viewer">
