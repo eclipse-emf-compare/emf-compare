@@ -6,6 +6,10 @@
 <unit id="com.google.guava" version="11.0.2.v201303041551"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20131024145017/repository/"/>
 </location>
+<location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+<unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
+<repository location="http://download.eclipse.org/cbi/updates/license"/>
+</location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.emfstore.fuzzy.feature.feature.group" version="0.9.3.M6"/>
 <unit id="org.eclipse.emf.emfstore.modelmutator.feature.feature.group" version="0.9.3.M6"/>

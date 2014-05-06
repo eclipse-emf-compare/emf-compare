@@ -12,6 +12,10 @@ location "http://download.eclipse.org/releases/kepler" {
 	org.eclipse.egit.feature.group
 }
 
+location "http://download.eclipse.org/cbi/updates/license" {
+	org.eclipse.license.feature.group
+}
+
 location "http://download.eclipse.org/releases/helios" {
 	org.junit4
 }
