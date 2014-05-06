@@ -66,7 +66,7 @@ final class MergeRunnableImpl implements IMergeRunnable {
 				}
 			}
 			mergeAll(diffToCopy, leftToRight, mergerRegistry);
-			markAllAsMerged(diffToMarkAsMerged, mergeMode);
+			markAllAsMerged(diffToMarkAsMerged, mergeMode, leftToRight);
 		} else {
 			throw new IllegalStateException();
 		}
@@ -78,15 +78,28 @@ final class MergeRunnableImpl implements IMergeRunnable {
 	 * @param isLeftEditable
 	 * @param isRightEditable
 	 */
-	private void markAllAsMerged(Collection<Diff> diffToMarkAsMerged, MergeMode mode) {
+	private void markAllAsMerged(Collection<Diff> diffToMarkAsMerged, MergeMode mode, boolean leftToRight) {
 		for (Diff diff : diffToMarkAsMerged) {
-			markAsMerged(diff, mode);
+			markAsMerged(diff, mode, leftToRight);
 		}
 	}
 
-	private void markAsMerged(Diff diff, MergeMode mode) {
+	private void markAsMerged(Diff diff, MergeMode mode, boolean leftToRight) {
 		diff.setState(DifferenceState.MERGED);
 		addOrUpdateMergeData(diff, mode);
+
+		for (Diff req : DiffUtil.getRequires(diff, leftToRight)) {
+			req.setState(DifferenceState.MERGED);
+			addOrUpdateMergeData(req, mode);
+		}
+		for (Diff unm : DiffUtil.getUnmergeables(diff, leftToRight)) {
+			unm.setState(DifferenceState.MERGED);
+			if (mergeMode == MergeMode.LEFT_TO_RIGHT || mergeMode == MergeMode.RIGHT_TO_LEFT) {
+				addOrUpdateMergeData(unm, mode);
+			} else {
+				addOrUpdateMergeData(unm, mode.inverse());
+			}
+		}
 	}
 
 	private void addOrUpdateMergeData(Collection<Diff> differences, MergeMode mode) {
@@ -118,7 +131,11 @@ final class MergeRunnableImpl implements IMergeRunnable {
 		for (Diff difference : differences) {
 			addOrUpdateMergeData(difference, mergeMode);
 			addOrUpdateMergeData(DiffUtil.getRequires(difference, leftToRight), mergeMode);
-			addOrUpdateMergeData(DiffUtil.getUnmergeables(difference, leftToRight), mergeMode);
+			if (mergeMode == MergeMode.LEFT_TO_RIGHT || mergeMode == MergeMode.RIGHT_TO_LEFT) {
+				addOrUpdateMergeData(DiffUtil.getUnmergeables(difference, leftToRight), mergeMode);
+			} else {
+				addOrUpdateMergeData(DiffUtil.getUnmergeables(difference, leftToRight), mergeMode.inverse());
+			}
 		}
 	}
 }

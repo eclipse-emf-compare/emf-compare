@@ -352,7 +352,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			final Diff leftDiff = leftData.getDiff();
 			if (leftDiff != null) {
 				if (MergeViewerUtil.isVisibleInMergeViewer(leftDiff, getDifferenceGroupProvider(),
-						getDifferenceFilterPredicate())) {
+						getDifferenceFilterPredicate())
+						&& !MergeViewerUtil.isMarkAsMerged(leftDiff, leftData, getCompareConfiguration())) {
 					TreeItem rightItem = findRightTreeItemFromLeftDiff(rightItems, leftDiff, leftData);
 
 					if (rightItem != null) {
