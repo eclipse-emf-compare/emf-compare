@@ -26,11 +26,17 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.internal.merge.IMergeData;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.internal.merge.MergeOperation;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
@@ -38,6 +44,7 @@ import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
@@ -338,4 +345,36 @@ public final class MergeViewerUtil {
 			return false;
 		}
 	};
+
+	/**
+	 * Checks if the given diff is considered as a mark as merged diff.
+	 * 
+	 * @see MergeOperation
+	 * @param diff
+	 *            the given Diff..
+	 * @param item
+	 *            the given IMergeViewerItem associated with the diff.
+	 * @param compareConfiguration
+	 *            the compare configuration object to use with this viewer.
+	 * @return true, if the given diff is considered as a mark as merged diff, false otherwise.
+	 */
+	public static boolean isMarkAsMerged(Diff diff, IMergeViewerItem item,
+			IEMFCompareConfiguration compareConfiguration) {
+		final boolean markAsMerged;
+		if (diff.getState() == DifferenceState.MERGED) {
+			IMergeData mergeData = (IMergeData)EcoreUtil.getExistingAdapter(diff, IMergeData.class);
+			boolean leftEditable = compareConfiguration.isLeftEditable();
+			boolean rightEditable = compareConfiguration.isRightEditable();
+			MergeMode mergeMode = mergeData.getMergeMode();
+			MergeOperation mergeAction = mergeMode.getMergeAction(diff, leftEditable, rightEditable);
+			if (mergeAction == MergeOperation.MARK_AS_MERGE) {
+				markAsMerged = true;
+			} else {
+				markAsMerged = false;
+			}
+		} else {
+			markAsMerged = false;
+		}
+		return markAsMerged;
+	}
 }
