@@ -17,6 +17,10 @@ location "http://download.eclipse.org/releases/luna" {
 	org.eclipse.egit.feature.group
 }
 
+location "http://download.eclipse.org/cbi/updates/license" {
+	org.eclipse.license.feature.group
+}
+
 location "http://download.eclipse.org/releases/juno" {
 	/* Needed for the fuzzy testing */
 	org.junit4

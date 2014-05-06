@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Luna M6" sequenceNumber="1395929936">
+<target name="EMF Compare based on Luna M6" sequenceNumber="1399367158">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.sdk.ide" version="4.4.0.I20140306-1200"/>
@@ -17,6 +17,10 @@
       <unit id="org.eclipse.papyrus.uml.tools.feature.feature.group" version="1.0.0.v201403121345"/>
       <unit id="org.eclipse.egit.feature.group" version="3.3.0.201403021825-r"/>
       <repository location="http://download.eclipse.org/releases/luna"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
+      <repository location="http://download.eclipse.org/cbi/updates/license"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.junit4" version="4.8.1.v20120523-1257"/>
