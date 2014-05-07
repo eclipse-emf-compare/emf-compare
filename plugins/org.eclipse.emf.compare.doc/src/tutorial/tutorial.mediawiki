@@ -1,0 +1,472 @@
+= EMF Compare tutorial =
+
+The aim of this tutorial is to guide you through the basic mechanisms of EMF Compare. The first part of this tutorial will explain you how to set up your environment. The second will help you to have a better understanding of the main differences that EMF Compare detects. The third part will explain you how EGit can interoperate with EMF Compare to compare model from a git repository. 
+
+== Installation == 
+EMF Compare is part of the Eclipse release train. You will find all you need in the eclipse release update of your platform. You can also find newer version on [[http://www.eclipse.org/emf/compare/ | EMF Compare web site]] in the download section.
+
+In order to install EMF Compare:
+* Open the installation wizard : Help > "Install New Software..".
+* Select the update site from which you want to install EMF Compare. In this example we are using the Luna eclipse release update site:
+** http://download.eclipse.org/releases/luna
+* Check the feature called "EMF Compare IDE UI".
+[[Image:../images/EMF_Compare_Tuto_Install.png]]
+* Click on next.
+[[Image:../images/EMF_Compare_Tuto_Install2.png]]
+* Click on next.
+* Read and accept the terms of the license agreement.
+[[Image:../images/EMF_Compare_Tuto_Install3.png]]
+* Click on finish.
+* Once the installation is finished click on "Yes" to restart your platform.
+
+== Tutorial ==
+
+=== Set up ===
+
+==== Install custom ExtLibrary plugins ====
+
+This tutorial is based on the well know ExtLibrary meta-model (available from the EMF examples). However for the needs of this tutorial we have customized those plugins. We have:
+* Set up a XMI id serialization to create models in which each element will have a unique id. EMF Compare can compare both models with id and models without id. If no id are available in the model, EMF Compare uses a heuristic to define if two elements matches.
+* Removed the extendedLibrary content type to explain you how to set it up in your platform.
+* Added extra icons to make it look prettier
+
+===== Imports the plugins =====
+
+Those plugins are hosted in the [[http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git |EMF Compare repository]]. To import those plugins in your workspace you can follow the [[http://wiki.eclipse.org/EGit/User_Guide#Starting_from_existing_Git_Repositories | EGit tutorial]]. Here are the main steps:
+* Clone EMF Compare repository using the following URL (see [[http://wiki.eclipse.org/EGit/User_Guide#Cloning_Remote_Repositories | Clone a repository]] for further information):
+** http://git.eclipse.org/gitroot/emfcompare/org.eclipse.emf.compare.git 
+* Import the required plugins into your workspace:
+** Open the Git repository view (if not already opened): Window > "Show view" > "Other...".
+** Select "Git Repositories".
+**: [[Image:../images/EMF_Compare_Tutorial_Git_Repo_View.png]]
+** Select your clone of EMF Compare repository.
+** Open the contextual menu and click on "Imports Projects..."
+**: [[Image:../images/EMF_Compare_Tuto_Import_Project_Wizard.png]]
+** Select the "tutorial" folder and click on next.
+**: [[Image:../images/EMF_Compare_Tuto_Import_Project_Wizard1.png]]
+** Check that the 3 required plugins are checked:
+***: [[Image:../images/EMF_Compare_Tuto_Import_Project_Wizard2.png]]
+** Click on Finish.
+
+In the end you should have your workspace looking like this:
+
+[[Image:../images/EMF_Compare_Tuto_Workspace.png]]
+
+===== Launch runtime platform =====
+
+Now that you get all you need in your workspace, you need to create a runtime platform. A runtime platform is basically a new eclipse platform built upon your current platform with the new plugins of your workspace included. To do so:
+* Select one of the plugin in your workspace.
+* Click on the play button in the toolbar [[Image:../images/EMF_Compare_Tuto_Run_Button.png]]. If you do not have this button in the toolbar you might need to switch to the Java perspective.
+* Select "Eclipse Application" and then click on OK.
+*: [[Image:../images/EMF_Compare_Tuto_Runtime_Platform.png]]
+* A new eclipse platform should start. This is your runtime platform.
+
+'''All the following instructions should be done on the runtime platform.''' 
+
+==== Associate EXTLibrary models with EMF Compare Content type ====
+
+EMF Compare editor is based on Content types mechanism. Basically, EMF Compare will be used in a comparison if the Content type of the current resource is either one of the following type (or inherit from one of them):
+* XMI content type
+* Ecore content type
+* EMF Compare content type
+You can also use the "Content Types" preference page to associate your model files with EMF Compare content type.
+
+This is the first step of this tutorial. To do so:
+* Open the preference page : Window > Preferences.
+* Select the "Content Types" preference page: General > Content Types.
+* Select EMF Compare item.
+* Click on the "Add..." button.
+* Write the pattern matching all extlibrary files : "*.extlibrary".
+* Click on OK.
+
+[[Image:../images/Content_Types_Preference_Page.png]]
+
+If you are using the basic EXTLibrary plugins (imported from examples) this step is not mandatory since a content type is already defined and it inherits from XMI content type. However those plugins do not generate ids so we do not recommend you to use them.
+
+=== Tutorial ===
+
+==== Context ====
+
+If you have correctly followed the previous steps you should have the following environment:
+* The custom ExtLibray meta-model installed in your runtime
+* Associated the .extlibrary files with the EMF Compare content type
+* Using EMF Compare default preferences
+
+==== Compare with history (2-way comparison) ====
+
+Now that everything is set up, we are going to go through all major differences that EMF Compare detects and handles. To do so we are going to create step by step a library model. Each time that you will modify your library we are going to compare it with a previous version to see how EMF Compare handles each difference.
+
+===== Create a library model =====
+
+First we need to create our library model. To do so:
+* Create a project with the name "TutorialModel" for example.
+* Create an extlibrary model:
+** Click on: File > New > Other.
+** Select EXTLibrary Model.
+**: [[Image:../images/Create_Extlibrary_Model.png]]
+** Click on next.
+** Set its name to "TutorialModel.extlibrary" for example.
+**: [[Image:../images/Create_Extlibrary_Model_Set_Name.png]]
+** Click on next.
+** Select a Library element as root.
+**: [[Image:../images/Create_Extlibrary_Model_Root_Element.png]]
+** Click on finish.
+Your model is now open.
+
+[[Image:../images/EMF_Compare_Tuto_Model_Creation.png]]
+
+===== Create a new book =====
+
+We are now going to fill your library with your first book.
+* Select the library element in your opened editor (In this example TutorialModel.extlibrary).
+* Open the contextual menu.
+* Select "New Child" > "Book".
+* Save your model.
+
+[[Image:../images/EMF_Compare_Tuto_Book_Creation.png]]
+
+====== Compare with previous version ======
+Now that our library contains one book let's compare it with the previous state of our model:
+* Select your model file in project explorer (or package explorer) view.
+* Open the contextual menu.
+* Select "Compare With" > "Local History...".
+[[Image:../images/Compare_With_Local_History.png]]
+
+The history view is now open.
+
+[[Image:../images/Local_History_View.png]]
+
+This view will display each state of the file that Eclipse has saved for you. Each time you will save your model a new entry will appear. The item written in bold is the current version of your file. In the first part of this tutorial you will have to compare the current version of your model with it's previous version.
+
+To do so, double click on the entry just bellow the bold entry.
+
+The EMF Compare editor is now open.
+ 
+[[Image:../images/EMF_Compare_Editor_Tuto_New_Book.png]]
+
+This comparison is a 2-way comparison. That is to say the comparison is only between 2 inputs (the current version of your file and the previous version from your local history). You will see in the second part of this tutorial that there is also a 3-way comparison.
+
+Let's have a look at the user interface. The tool bar look like this:
+
+[[Image:../images/EMF_Compare_Tuto_Accept_Reject_Toolbar.png]]
+
+This toolbar appears when you are in accept/reject mode. This mode is activated when at least one of the input is not writable. In our example the current version of your file can be modified whereas the previous version of it can not (since it provided by the local history). In this mode you can accept or reject a difference. This is obvious but the only resource that is going to be modified is the current version of your model.
+
+The top of the editor is filled with the "Structure Merge viewer". In it, you will find a structured representation of all differences that EMF Compare has found.
+
+On the bottom of the editor you have a viewer called "Content viewer". This viewer displays the content of your input models. On the left, it displays the content of the current version of your model. On the right it displays the content of the previous version.
+
+To have a full understanding of the user interface please see [[./../user/user-guide.html#User_Interface_Breakdown|User Interface Breakdown]].
+
+Now let's have a look to the difference: [[Image:../images/EMF_Compare_Tuto_New_Book_Difference.png]]
+
+On this difference you find some pieces of information:
+* The "+" overlay icon indicates that the difference is an addition (see [[./../user/user-guide.html#Signification_of_icons_associated_with_differences | Signification of icons associated with differences]] for further information).
+* The enclosed suffix in brackets describes the nature of the difference and the name of feature which has been modified. In this case, the difference is an addition in the feature "Stock" (The modified feature is not "books" since it is derived feature. It is computed from the "real" feature "stock").
+
+'''In this tutorial, you should never save the EMF Compare editor except if it is explicitly asked. For the moment, EMF Compare does not allow undoing an action if the model has been saved. Since we are going to go through every possible action we are going to make a lot of undo.''' 
+
+====== Accept a difference ======
+
+First accept the modification we have just created. To do so:
+* Select the difference you want to accept.
+** One click on the difference will select it in the structure merge viewer (top viewer). Double click on it to open the content merge viewer related to this difference.
+* Click on the accept icon [[Image:../images/accept_change.gif]].
+Your editor should look like this:
+
+[[Image:../images/EMF_Compare_Tuto_New_Book_Difference_Accepted.png]]
+
+A new overlay icon has appeared on the difference. It means that the difference has been merged. You can also notice in the content viewer of the current model version that the book is no more framed. This also means that the difference has been merged.
+
+====== Reject a difference ======
+
+Let's try to reject the difference:
+* Undo the previous action using keyboard shortcut (Ctrl+z) or File menu (Edit > Undo).
+* Click on the reject icon [[Image:../images/reject_change.gif]].
+Your editor should look like this:
+
+[[Image:../images/EMF_Compare_Tuto_New_Book_Difference_Rejected.png]]
+
+The "x" overlay on the difference icon means that it has been rejected. In the content viewer of the current model version the book has disappeared. Indeed, since the modification has been rejected the previous version of this object is used.
+
+===== Set the name of the book =====
+
+We are now going to set the name of the book we have just created. This will change the value of the attribute "Title" to "Prelude to Foundation".
+* Close the compare editor (without saving).
+* Open the model editor.
+* Set the name of the book to "Prelude to Foundation".
+** Select the book.
+** Display the Properties view: Contextual menu > Show property view.
+** Fill the title field.
+* Save.
+
+[[Image:../images/EMF_Compare_Tuto_Setting_Book_Name.png]]
+
+Now let's compare it with previous version (see previous chapter for explanation [[#Compare with previous version]]).
+
+[[Image:../images/EMF_Compare_Tuto_Book_Name_Comparison.png]]
+
+On the difference you see the overlay indicating that this difference is a change. This difference is a set on the feature "Title". If you look on the content viewer of the current version, you will see the new value of the feature whereas in the previous version nothing is displayed.
+
+If you accept the difference you will notice the same effect than in the previous chapter (see [[#Accept a difference]]).
+
+[[Image:../images/EMF_Compare_Tuto_Book_Name_Accepted.png]]
+
+If you reject the difference the name of the book will be unset since it has not been set in the previous version (see [[#Reject a difference | Reject a difference]]).
+
+[[Image:../images/EMF_Compare_Tuto_Book_Name_Rejected.png]]
+
+===== Change the category of the book =====
+
+We are going to define that this book is a Science Fiction book. This will change the value of the "Category" feature of the book from its default value "Mystery" to "ScienceFiction".
+
+* Close the compare editor (without saving).
+* Open the model editor.
+* Change the category of the book to ScienceFiction:
+** Select the book.
+** Open the property view.
+** Change the value of the "Category" feature.
+* Save.
+
+[[Image:../images/EMF_Compare_Tuto_Setting_Book_Category.png]]
+
+Now let's compare it with its previous version (see previous chapter for explanation [[#Compare with previous version | Compare with previous version]]).
+
+[[Image:../images/EMF_Compare_Tuto_Book_Category_Comparison.png]]
+
+On the content viewer of the current version you see the new value of the feature "Category" whereas in the previous version the default value is displayed.
+
+Accept the difference and you obviously see (see [[#Accept a difference | Accept the difference]]):
+
+[[Image:../images/EMF_Compare_Tuto_Book_Category_Accepted.png]]
+
+Reject the difference to set the "Category" feature to it's default value (see [[#Reject a difference]]).
+
+[[Image:../images/EMF_Compare_Tuto_Book_Category_Rejected.png]]
+
+===== Fill the library with employees =====
+
+To fill your library we are going to add some employees.
+* Close the compare editor (without saving).
+* Open the model editor.
+* Create an employee name Chief.
+* Create an employee name Master.
+* Create an employee name Employee.
+* Save.
+
+[[Image:../images/EMF_Compare_Tuto_Fill_Employees.png]]
+
+For this step we are not going to compare with the previous version of the model. EXTLibrary stores persons in feature maps. For the moment feature maps are not correctly handled by EMF Compare. Features map comparison will be integrated for the next Eclipse release (Mars in 2015).
+
+===== Set a manager =====
+
+Let's set the manager of "Employee" to "Chief". This will set the reference "Manager" of "Employee" to "Chief".
+* Select the employee "Employee".
+* Open the Properties view.
+* Make the "Manager" feature point to "Chief".
+* Save.
+
+[[Image:../images/EMF_Compare_Tuto_Set_Manager_Chief.png]]
+
+Now let's compare it with its previous version (see previous chapter for explanation [[#Compare with previous version | Compare with previous version]]).
+
+[[Image:../images/EMF_Compare_Tuto_Set_Manager_Chief_Comparison.png]]
+
+You can notice the change in the content viewer. However it is slightly  different from the previous comparison. In the content viewer, you now have a new top image.
+
+[[Image:../images/EMF_Compare_Tuto_Top_Image_Reference.png]]
+
+It means that the current difference is a non containment reference. If you look back to [[#Compare with previous version]] the content viewer is not the same since the feature involved was a containment reference.
+
+Accept this difference and you will see the same type of result than [[#Accept_a_difference | Accept a difference]].
+
+[[Image:../images/EMF_Compare_Tuto_Set_Manager_Chief_Accepted.png]]
+
+Reject this difference and you will see the same type of result than [[#Reject_a_difference | Reject a difference]].
+
+[[Image:../images/EMF_Compare_Tuto_Set_Manager_Chief_Rejected.png]]
+
+===== Change of manager =====
+
+Let's say "Employee" has a new job and so he has a new manager. We have to change the feature "Manager" from "Chief" to "Master".
+* Close EMF Compare editor (without saving).
+* Open the model editor.
+* Select "Employee".
+* Set the feature "Manager" to "Master".
+* Save.
+* Compare with previous.
+
+[[Image:../images/EMF_Compare_Tuto_Change_Manager_Master_Comparison.png]]
+
+Accept the change to mark the difference as merged. Reject it to reset the manager of "Employee" to "Chief".
+
+[[Image:../images/EMF_Compare_Tuto_Change_Manager_Master_Reject.png]]
+
+===== No more manager =====
+
+Let's say that "Employee" has reached the top of the command chain. That is to say he has no more manager.
+* Close EMF Compare editor (without saving).
+* Open the model editor.
+* Select "Employee".
+* Unset the feature "Manager" of "Employee".
+** Open Properties view.
+** Select "Manager" field.
+** Use the "Restore Default Value" button in the toolbar.
+[[Image:../images/EMF_Compare_Tuto_Unset_Employee_Manager.png]]
+* Save.
+* Compare with previous.
+[[Image:../images/EMF_Compare_Tuto_Unset_Employee_Manager_Comparison.png]]
+
+The difference is the opposite of [[#Set_a_manager | set a manager]].
+* Accept the difference to get:
+[[Image:../images/EMF_Compare_Tuto_Unset_Employee_Manager_Comparison_Accepted.png]]
+
+* Reject the difference to get:
+[[Image:../images/EMF_Compare_Tuto_Unset_Employee_Manager_Comparison_Rejected.png]]
+
+===== Add borrowers =====
+
+Let's open the gates of your library to the public. We are going to add borrowers to this library.
+ 
+* Close EMF Compare Editor (without saving).
+* Open the model editor.
+* Add a new borrower named Will Graham.
+[[Image:../images/EMF_Compare_Tuto_Fill_Borrowers.png]]
+
+For the same reason explained in [[#Fill_the_library_with_employees | Fill the library with employees]] we are not going to compare the model this time.
+
+===== Borrowing a book =====
+
+We are going to use your newly created borrower by making him borrow "Prelude to foundation".
+* Open the model editor.
+* Select "Borrower Graham".
+* Add "Prelude to foundation" to the feature "Borrowed" of "Will Graham".
+* Save.
+[[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Setting.png]]
+* Compare with previous.
+[[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison.png]]
+
+In this comparison you can notice two differences: [[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison_Borrowers_Diff.png]] and [[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison_Borrowed_Diff.png]]. EMF Compare displays two differences whereas you have only made one modification in your model. The explanation is within the structure of the EXTlibrary metamodel. If you look on the feature "borrowed" in extlibrary.ecore you will see that the EOpposite field is set to "borrowers : Borrower".
+
+[[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison_EOpposite.png]]
+
+This means that each time you add/remove a book to a borrower EMF will automatically add/remove the borrower to the "borrower" features of the book (and the other way around). Modifying one feature will modify the other. It explains why EMF Compare see two differences. 
+
+Now you may wonder what happens when you accept one of the difference? EMF Compare give you a hint on this matter. First notice the consequences preview button [[Image:../images/EMF_Compare_Tuto_Consequences_Preview_Button.png]]. It can either have its icon set to [[Image:../images/accept.gif]] for "Accept preview mode" or [[Image:../images/reject.gif]] for "Reject preview mode". 
+
+When the "Accept preview mode" is activated ([[Image:../images/accept.gif]]), EMF Compare will help you to understand the consequences of accepting the current selected difference. Let's try it.
+* Activate the "accept preview mode" ([[Image:../images/accept.gif]]).
+* Select "Borrower Graham  <nowiki>[borrowers add]</nowiki>" difference.
+[[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison.png]]
+
+Notice that "Book Prelude to Foundation <nowiki>[borrower add]</nowiki>" difference is highlighted in green. This means that accepting the current difference will automatically accept this difference too. Those two differences are linked by an "Equivalence" element meaning that merging one is equivalent to merge the other. You can reproduce the same behavior by selecting the difference "Book Prelude to Foundation <nowiki>[borrower add]</nowiki>" instead of "Borrower Graham  <nowiki>[borrowers add]</nowiki>".
+
+* Accept the difference and check out the result.
+
+[[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison_Accepted.png]]
+
+Both differences have been accepted. 
+Now let's try to reject the difference. 
+* Undo the previous merge (Ctrl+z).
+* Switch to the reject preview mode([[Image:../images/reject.gif]]).
+[[Image:../images/EMF_Compare_Tuto_Switch_Reject_Preview_Mode.png]]
+* Select one difference.
+** Notice that the other difference is also highlighted in green. Since the two differences are "equivalent" both preview mode show the same consequences. You will see later in another use case that each preview mode can show different consequences.
+* Reject the difference.
+[[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison_Rejected.png]]
+
+Both differences have been rejected.
+
+===== Create a new library branch =====
+
+Now that's your library is growing, let's create a new branch in your library. This new library will be affiliated to the main entity but will have an independent live. 
+* Close EMF Compare Editor (without saving).
+* Open the model editor.
+* Create a new library under your main library.
+* Create a new book in this new element called "1984".
+* Save.
+[[Image:../images/EMF_Compare_Tuto_New_Library_Setting.png]]
+* Compare with previous.
+[[Image:../images/EMF_Compare_Tuto_New_Library_Comparison.png]]
+
+EMF Compare displays only one difference whereas you have made two modifications. You have created one sub library and one book. There must be a connection between those two differences... Indeed without the library it's impossible to create the book "1984" since it is included in the new library. That's why by default EMF Compare does not display the two differences.
+* Accept the difference.
+[[Image:../images/EMF_Compare_Tuto_New_Library_Comparison_Accepted.png]]
+
+EMF Compare has accepted both differences. It has created the new library and the new book. On the contrary if you reject the difference.
+* Reject the difference
+[[Image:../images/EMF_Compare_Tuto_New_Library_Comparison_Rejected.png]]
+
+EMF Compare rejects both differences.
+
+In some use cases it can be useful to display both differences. For example if we would like to accept the creation of the library but reject the creation of the book. To do so, you have to use the filter button ( see [[./../user/user-guide.html#Filtering_Differences | Filtering Differences]] for further information).
+* Undo the previous action (Ctrl+z).
+* Deactivate "Cascading difference" filter.
+[[Image:../images/EMF_Compare_Tuto_New_Library_Comparison_Cascading_Filter.png]]
+* Click on "No". It tells EMF Compare not to remember your choice for subsequent comparisons.
+
+[[Image:../images/EMF_Compare_Tuto_New_Library_Comparison_Cascading_Filter_Popup.png]]
+
+Once the filter has been deactivated you will see both differences. Now you can merge separately each difference.
+
+* Activate "Accept preview mode" ([[Image:../images/accept.gif]]).
+* Select the book difference "Book 1984 <nowiki>[stock add]</nowiki>".
+
+[[Image:../images/EMF_Compare_Tuto_New_Library_Comparison_Cascading_Filter2.png]]
+
+Notice that the library difference is highlighted. Indeed, merging the book difference will necessarily merge the library difference. 
+
+* Switch to "Reject preview mode" ([[Image:../images/reject.gif]]).
+
+[[Image:../images/EMF_Compare_Tuto_New_Library_Comparison_Cascading_Filter2.png]]
+
+In this mode the other difference is not highlighted. Indeed, you can reject the creation of the book without rejecting the creation of the library. In the same way, selecting the library difference while "Reject preview mode" is activated will highlight the book difference. If the library does not exist then the book can not exist.
+* Activate "Reject preview mode" ([[Image:../images/reject.gif]]).
+* Select the library difference.
+
+[[Image:../images/EMF_Compare_Tuto_New_Library_Comparison_Cascading_Filter_Reject_Mode.png]]
+
+===== Move a book =====
+
+In order to fill the new library we are going to give it one book from the main library. 
+* Close EMF Compare editor (without saving).
+* Open the model editor.
+* Move "Prelude to Foundation" to the new branch library (using drag and drop).
+* Save.
+[[Image:../images/EMF_Compare_Tuto_New_Library_Move_Setting.png]]
+* Compare with previous.
+[[Image:../images/EMF_Compare_Tuto_New_Library_Move_Comparison.png]]
+
+With this example we have introduced a new type of change: "moving an element". That is to say the element existed in the previous version but was located in a different place. In the content viewer you can see the location of this element in the current and previous versions of your model.
+
+* Accept the change to mark the difference as merged.
+
+[[Image:../images/EMF_Compare_Tuto_New_Library_Move_Accepted.png]]
+
+* Reject the difference to move back the element to its original location.
+
+[[Image:../images/EMF_Compare_Tuto_New_Library_Move_Rejected.png]]
+
+===== Remove a book =====
+
+After an accident the book "1984" has to be removed from the shelves.
+* Close EMF Compare editor (without saving).
+* Open the model editor.
+* Delete the book "1984".
+* Save.
+
+[[Image:../images/EMF_Compare_Tuto_Remove_Book_Setting.png]]
+
+* Compare with previous.
+
+[[Image:../images/EMF_Compare_Tuto_Remove_Book_Comparison.png]]
+
+This kind of change is the opposite of an addition. 
+Accept the change to mark the difference as merged.
+
+[[Image:../images/EMF_Compare_Tuto_Remove_Book_Accepted.png]]
+
+Reject it to add the book back into the library.
+
+[[Image:../images/EMF_Compare_Tuto_Remove_Book_Rejected.png]]
+
