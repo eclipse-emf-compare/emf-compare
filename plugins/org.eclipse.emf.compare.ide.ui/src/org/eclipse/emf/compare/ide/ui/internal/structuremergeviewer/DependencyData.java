@@ -70,11 +70,11 @@ public class DependencyData {
 			Iterable<Diff> selectedDiffs = filter(getSelectedComparisonObjects(selection), Diff.class);
 
 			MergeMode mergePreviewMode = compareConfiguration.getMergePreviewMode();
-			boolean leftToRight = mergePreviewMode.isLeftToRight(leftEditable, rightEditable);
 
 			requires = newHashSet();
 			unmergeables = newHashSet();
 			for (Diff diff : selectedDiffs) {
+				boolean leftToRight = mergePreviewMode.isLeftToRight(diff, leftEditable, rightEditable);
 				addAll(requires, DiffUtil.getRequires(diff, leftToRight));
 				addAll(unmergeables, DiffUtil.getUnmergeables(diff, leftToRight));
 			}
