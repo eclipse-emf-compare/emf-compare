@@ -246,6 +246,11 @@
                      property="org.eclipse.core.resources.contentTypeId"
                      value="org.eclipse.emf.ecore.xmi">
                </test>
+               <test
+                     args="kindOf"
+                     property="org.eclipse.core.resources.contentTypeId"
+                     value="org.eclipse.emf.compare.content.type">
+               </test>
             </or>
          </and>
       </enablement>
