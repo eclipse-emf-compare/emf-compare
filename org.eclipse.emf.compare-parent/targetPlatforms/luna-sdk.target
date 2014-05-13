@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Luna M6" sequenceNumber="1399367158">
+<target name="EMF Compare based on Luna M7" sequenceNumber="1399990869">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.sdk.ide" version="4.4.0.I20140306-1200"/>
-      <unit id="org.eclipse.emf.feature.group" version="2.10.0.v20140310-0546"/>
-      <unit id="org.eclipse.emf.transaction.feature.group" version="1.8.0.201403111732"/>
-      <unit id="org.eclipse.gmf.feature.group" version="1.8.0.201403111830"/>
-      <unit id="org.eclipse.gmf.runtime.notation.feature.group" version="1.8.0.201403111536"/>
-      <unit id="org.eclipse.uml2.feature.group" version="5.0.0.v20140310-0733"/>
-      <unit id="org.eclipse.papyrus.infra.core.feature.feature.group" version="1.0.0.v201403121345"/>
-      <unit id="org.eclipse.papyrus.infra.emf.feature.feature.group" version="1.0.0.v201403121345"/>
-      <unit id="org.eclipse.papyrus.infra.gmfdiag.feature.feature.group" version="1.0.0.v201403121345"/>
-      <unit id="org.eclipse.papyrus.uml.diagram.feature.feature.group" version="1.0.0.v201403121345"/>
-      <unit id="org.eclipse.papyrus.uml.tools.feature.feature.group" version="1.0.0.v201403121345"/>
-      <unit id="org.eclipse.egit.feature.group" version="3.3.0.201403021825-r"/>
+      <unit id="org.eclipse.sdk.ide" version="4.4.0.I20140501-0200"/>
+      <unit id="org.eclipse.emf.feature.group" version="2.10.0.v20140428-0403"/>
+      <unit id="org.eclipse.emf.transaction.feature.group" version="1.8.0.201405051603"/>
+      <unit id="org.eclipse.gmf.feature.group" version="1.8.0.201405052122"/>
+      <unit id="org.eclipse.gmf.runtime.notation.feature.group" version="1.8.0.201405051431"/>
+      <unit id="org.eclipse.uml2.feature.group" version="5.0.0.v20140505-0725"/>
+      <unit id="org.eclipse.papyrus.infra.core.feature.feature.group" version="1.0.0.v201405071611"/>
+      <unit id="org.eclipse.papyrus.infra.emf.feature.feature.group" version="1.0.0.v201405071611"/>
+      <unit id="org.eclipse.papyrus.infra.gmfdiag.feature.feature.group" version="1.0.0.v201405071611"/>
+      <unit id="org.eclipse.papyrus.uml.diagram.feature.feature.group" version="1.0.0.v201405071611"/>
+      <unit id="org.eclipse.papyrus.uml.tools.feature.feature.group" version="1.0.0.v201405071611"/>
+      <unit id="org.eclipse.egit.feature.group" version="3.4.0.201405051725-m7"/>
       <repository location="http://download.eclipse.org/releases/luna"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">

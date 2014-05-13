@@ -1,4 +1,4 @@
-target "EMF Compare based on Luna M6" 
+target "EMF Compare based on Luna M7" 
 
 with source, requirements
 
