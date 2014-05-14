@@ -3,6 +3,7 @@ package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 import com.google.common.collect.Maps;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -127,6 +128,10 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 				} else {
 					crossReferencedResources.addAll(resolveCrossReferences(child));
 				}
+
+				if (monitor.isCanceled()) {
+					return Collections.emptySet();
+				}
 			}
 		}
 
@@ -206,7 +211,7 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 			final EPackage ePackage = getPackageRegistry().getEPackage(uri.toString());
 			if (ePackage != null) {
 				demanded = ePackage.eResource();
-				uriCache.put(uri, demanded);
+				demanded = uriCache.putIfAbsent(uri, demanded);
 			} else {
 				// simply return null
 			}
@@ -268,7 +273,7 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 	 *            Type of this list's contents.
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
-	private class SynchronizedResourcesEList<E extends Object & Resource> extends ResourcesEList<E> {
+	private class SynchronizedResourcesEList<E extends Resource> extends ResourcesEList<E> {
 		/** Generated SUID. */
 		private static final long serialVersionUID = 7371376112881960414L;
 
