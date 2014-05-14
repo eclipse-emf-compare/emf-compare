@@ -30,7 +30,7 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 
 class SynchronizedResourceSet extends ResourceSetImpl {
 	/** Associates URIs with their resources. */
-	private final Map<URI, Resource> uriCache;
+	private final ConcurrentHashMap<URI, Resource> uriCache;
 
 	public SynchronizedResourceSet() {
 		this.uriCache = new ConcurrentHashMap<URI, Resource>();
@@ -89,13 +89,11 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 		final URI normalizedURI = theURIConverter.normalize(uri);
 
 		Resource result = null;
-		synchronized(uriCache) {
-			result = uriCache.get(normalizedURI);
-			if (result == null) {
-				result = delegatedGetResource(uri, true);
-				if (result != null) {
-					uriCache.put(uri, result);
-				}
+		result = uriCache.get(normalizedURI);
+		if (result == null) {
+			result = delegatedGetResource(uri, true);
+			if (result != null) {
+				result = uriCache.putIfAbsent(uri, result);
 			}
 		}
 
