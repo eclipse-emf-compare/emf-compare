@@ -10,13 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.not;
-import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -27,10 +22,8 @@ import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -172,68 +165,21 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 		@Override
 		public List<TreeNode> buildSubTree(Match parentMatch, Match match) {
 			final List<TreeNode> ret = Lists.newArrayList();
-			boolean isContainment = false;
-
-			if (parentMatch != null) {
-				Collection<Diff> containmentChanges = filter(parentMatch.getDifferences(),
-						containmentReferenceForMatch(match));
-				if (!containmentChanges.isEmpty()) {
-					isContainment = true;
-					for (Diff diff : containmentChanges) {
-						ret.add(wrap(diff));
-					}
-				}
-			} else {
-				Collection<Diff> resourceAttachmentChanges = filter(match.getDifferences(),
-						resourceAttachmentChange());
-				if (!resourceAttachmentChanges.isEmpty()) {
-					for (Diff diff : resourceAttachmentChanges) {
-						ret.add(wrap(diff));
-					}
+			Collection<Diff> resourceAttachmentChanges = filter(match.getDifferences(),
+					resourceAttachmentChange());
+			if (!resourceAttachmentChanges.isEmpty()) {
+				for (Diff diff : resourceAttachmentChanges) {
+					ret.add(wrap(diff));
 				}
 			}
-			if (ret.isEmpty() && !matchWithLeftAndRightInDifferentContainer(match)) {
+
+			if (ret.isEmpty()) {
 				ret.add(wrap(match));
 			}
 
-			Collection<TreeNode> toRemove = Lists.newArrayList();
 			for (TreeNode treeNode : ret) {
-				boolean hasDiff = false;
-				boolean hasNonEmptySubMatch = false;
-				for (Diff diff : filter(match.getDifferences(), and(filter, not(or(
-						CONTAINMENT_REFERENCE_CHANGE, resourceAttachmentChange()))))) {
-					hasDiff = true;
-					treeNode.getChildren().add(wrap(diff));
-				}
-				for (Match subMatch : match.getSubmatches()) {
-					List<TreeNode> buildSubTree = buildSubTree(match, subMatch);
-					if (!buildSubTree.isEmpty()) {
-						hasNonEmptySubMatch = true;
-						treeNode.getChildren().addAll(buildSubTree);
-					}
-				}
-				for (Diff diff : filter(match.getDifferences(), and(filter, and(CONTAINMENT_REFERENCE_CHANGE,
-						ofKind(DifferenceKind.MOVE))))) {
-					if (!containsChildrenWithDataEqualsToDiff(treeNode, diff)) {
-						TreeNode buildSubTree = buildSubTree(diff);
-						if (buildSubTree != null) {
-							hasDiff = true;
-							treeNode.getChildren().add(buildSubTree);
-							List<TreeNode> matchSubTree = buildSubTree((Match)null, getComparison().getMatch(
-									((ReferenceChange)diff).getValue()));
-							for (TreeNode matchSubTreeNode : matchSubTree) {
-								buildSubTree.getChildren().addAll(matchSubTreeNode.getChildren());
-							}
-						}
-					}
-				}
-				if (!(isContainment || hasDiff || hasNonEmptySubMatch || filter.equals(Predicates
-						.alwaysTrue()))) {
-					toRemove.add(treeNode);
-				}
+				treeNode.getChildren().addAll(buildSubTree(match, false, ChildrenSide.BOTH));
 			}
-
-			ret.removeAll(toRemove);
 
 			return ret;
 		}

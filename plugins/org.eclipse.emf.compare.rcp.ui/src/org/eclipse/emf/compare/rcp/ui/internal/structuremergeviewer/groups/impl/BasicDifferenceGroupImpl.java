@@ -12,15 +12,14 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Iterators.any;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.transform;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.newHashSet;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
@@ -31,6 +30,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -41,8 +41,11 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
@@ -330,82 +333,76 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 * @return the sub tree of the given Match.
 	 */
 	public List<TreeNode> buildSubTree(Match parentMatch, Match match) {
+		return buildSubTree(match, false, ChildrenSide.BOTH);
+	}
+
+	/**
+	 * Build the sub tree of the given {@link Match}.
+	 * 
+	 * @param match
+	 *            the given Match.
+	 * @param containment
+	 *            true if the current level represents a containment diff, false otherwise.
+	 * @param side
+	 *            the accepted side(s) for children of current level.
+	 * @return the sub tree of the given Match.
+	 */
+	protected List<TreeNode> buildSubTree(Match match, boolean containment, ChildrenSide side) {
 		final List<TreeNode> ret = Lists.newArrayList();
-		boolean isContainment = false;
+		final Set<TreeNode> nodeChildren = Sets.newLinkedHashSet();
+		final Set<Match> matchOfValues = Sets.newLinkedHashSet();
+		final TreeNode matchTreeNode = wrap(match);
 
-		// Manage containment reference changes
-		if (parentMatch != null) {
-			Collection<Diff> containmentChanges = filter(parentMatch.getDifferences(),
-					containmentReferenceForMatch(match));
-			if (!containmentChanges.isEmpty()) {
-				isContainment = true;
-				for (Diff diff : containmentChanges) {
-					ret.add(wrap(diff));
-					EList<Diff> refines = diff.getRefines();
+		if (!containment) {
+			ret.add(matchTreeNode);
+		}
 
-					for (Diff refine : refines) {
-						Diff mainDiff = refine.getPrimeRefining();
-						if (mainDiff != null && mainDiff == diff && !extensionDiffProcessed.contains(refine)) {
-							TreeNode buildSubTree2 = buildSubTree(refine);
-							if (buildSubTree2 != null) {
-								ret.add(buildSubTree2);
-								extensionDiffProcessed.add(refine);
-							}
-						}
-					}
+		boolean hasDiff = false;
+		for (Diff diff : filter(match.getDifferences(), and(filter, compatibleSide(side)))) {
+			if (CONTAINMENT_REFERENCE_CHANGE.apply(diff)) {
+				hasDiff = true;
+				final TreeNode node;
+				if (containment) {
+					node = wrap(diff);
+					ret.add(node);
+				} else {
+					node = buildSubTree(diff);
+					nodeChildren.add(node);
 				}
-			}
-		}
-		if (ret.isEmpty() && !matchWithLeftAndRightInDifferentContainer(match)) {
-			ret.add(wrap(match));
-		}
-
-		Collection<TreeNode> toRemove = Lists.newArrayList();
-		for (TreeNode treeNode : ret) {
-			boolean hasDiff = false;
-			boolean hasNonEmptySubMatch = false;
-			Set<Match> alreadyProcessedSubMatch = newHashSet();
-			// Manage non-containment changes
-			for (Diff diff : filter(match.getDifferences(), and(filter, not(or(CONTAINMENT_REFERENCE_CHANGE,
-					resourceAttachmentChange()))))) {
+				Match matchOfValue = match.getComparison().getMatch(((ReferenceChange)diff).getValue());
+				matchOfValues.add(matchOfValue);
+				node.getChildren().addAll(buildSubTree(matchOfValue, true, DIFF_TO_SIDE.apply(diff)));
+				ret.addAll(manageRefines(diff));
+			} else if (!(diff instanceof ResourceAttachmentChange)) {
 				if (diff.getPrimeRefining() != null && !extensionDiffProcessed.contains(diff)) {
 					continue;
 				}
 				hasDiff = true;
-				TreeNode buildSubTree = buildSubTree(diff);
-				if (buildSubTree != null) {
-					treeNode.getChildren().add(buildSubTree);
+				if (containment) {
+					ret.add(wrap(diff));
+				} else {
+					nodeChildren.add(buildSubTree(diff));
 				}
 			}
-			// Manage sub matches
-			for (Match subMatch : match.getSubmatches()) {
-				if (!alreadyProcessedSubMatch.contains(subMatch)) {
-					List<TreeNode> buildSubTree = buildSubTree(match, subMatch);
-					if (!buildSubTree.isEmpty()) {
-						hasNonEmptySubMatch = true;
-						treeNode.getChildren().addAll(buildSubTree);
-					}
+		}
+
+		Collection<TreeNode> toRemove = Lists.newArrayList();
+		for (TreeNode treeNode : ret) {
+			boolean hasNonEmptySubMatch = false;
+			// SubMatches first
+			for (Match subMatch : Sets
+					.difference(Sets.newLinkedHashSet(match.getSubmatches()), matchOfValues)) {
+				List<TreeNode> buildSubTree = buildSubTree(subMatch, containment, ChildrenSide.BOTH);
+				if (!buildSubTree.isEmpty()) {
+					hasNonEmptySubMatch = true;
+					treeNode.getChildren().addAll(buildSubTree);
 				}
 			}
-			// Manage move changes
-			for (Diff diff : filter(match.getDifferences(), and(filter, and(CONTAINMENT_REFERENCE_CHANGE,
-					ofKind(DifferenceKind.MOVE))))) {
-				if (!containsChildrenWithDataEqualsToDiff(treeNode, diff)) {
-					TreeNode buildSubTree = buildSubTree(diff);
-					if (buildSubTree != null) {
-						hasDiff = true;
-						treeNode.getChildren().add(buildSubTree);
-						List<TreeNode> matchSubTree = buildSubTree((Match)null, comparison
-								.getMatch(((ReferenceChange)diff).getValue()));
-						for (TreeNode matchSubTreeNode : matchSubTree) {
-							buildSubTree.getChildren().addAll(matchSubTreeNode.getChildren());
-						}
-					}
-				}
-			}
-			if (!(isContainment || hasDiff || hasNonEmptySubMatch || filter.equals(Predicates.alwaysTrue()))) {
+			// Differences last
+			treeNode.getChildren().addAll(nodeChildren);
+			if (!(containment || hasDiff || hasNonEmptySubMatch || filter.equals(Predicates.alwaysTrue()))) {
 				toRemove.add(treeNode);
-			} else if (!isContainment && isMatchWithOnlyResourceAttachmentChanges(match)) {
+			} else if (!containment && isMatchWithOnlyResourceAttachmentChanges(match)) {
 				toRemove.add(treeNode);
 			} else {
 				for (IDifferenceGroupExtender ext : registry.getExtenders()) {
@@ -418,6 +415,27 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 
 		ret.removeAll(toRemove);
 
+		return ret;
+	}
+
+	/**
+	 * Manage the addition of refines diffs of the given Diff.
+	 * 
+	 * @param diff
+	 *            the given Diff.
+	 * @return the sub tree of refines diffs.
+	 */
+	private List<TreeNode> manageRefines(Diff diff) {
+		final List<TreeNode> ret = Lists.newArrayList();
+		final EList<Diff> refines = diff.getRefines();
+		for (Diff refine : refines) {
+			Diff mainDiff = refine.getPrimeRefining();
+			if (mainDiff != null && mainDiff == diff && !extensionDiffProcessed.contains(refine)) {
+				TreeNode refineSubTree = buildSubTree(refine);
+				ret.add(refineSubTree);
+				extensionDiffProcessed.add(refine);
+			}
+		}
 		return ret;
 	}
 
@@ -559,5 +577,69 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			unregisterCrossReferenceAdapter(children);
 			children = null;
 		}
+	}
+
+	/**
+	 * An enum that represents, for a given diff, the accepted side(s) for its children and provides utilty
+	 * methods to manage sides.
+	 * 
+	 * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
+	 * @since 4.0
+	 */
+	protected enum ChildrenSide {
+		/** Values: both sides, left side. */
+		BOTH, LEFT, RIGHT;
+
+		public static ChildrenSide getValueFrom(DifferenceSource source) {
+			switch (source) {
+				case LEFT:
+					return LEFT;
+				case RIGHT:
+					return RIGHT;
+				default:
+					return BOTH;
+			}
+		}
+	}
+
+	/**
+	 * Get the accepted side(s) for children of a given Diff.
+	 */
+	protected static final Function<Diff, ChildrenSide> DIFF_TO_SIDE = new Function<Diff, ChildrenSide>() {
+		public ChildrenSide apply(Diff diff) {
+			final ChildrenSide side;
+			if (diff != null) {
+				final Conflict c = diff.getConflict();
+				if (c != null
+						&& or(hasConflict(ConflictKind.PSEUDO),
+								and(hasConflict(ConflictKind.REAL), ofKind(DifferenceKind.ADD))).apply(diff)) {
+					side = ChildrenSide.getValueFrom(diff.getSource());
+				} else {
+					side = ChildrenSide.BOTH;
+				}
+			} else {
+				side = ChildrenSide.BOTH;
+			}
+			return side;
+		}
+	};
+
+	/**
+	 * This can be used to check that a given Diff is compatible with the given side.
+	 * 
+	 * @param source
+	 *            The side for which we accept the given Diff.
+	 * @return The created predicate.
+	 */
+	protected static Predicate<? super Diff> compatibleSide(final ChildrenSide side) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				if (input != null && side != ChildrenSide.BOTH) {
+					return side == ChildrenSide.getValueFrom(input.getSource());
+				} else {
+					return side == ChildrenSide.BOTH;
+				}
+			}
+		};
 	}
 }
