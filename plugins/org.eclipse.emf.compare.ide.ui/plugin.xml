@@ -275,6 +275,9 @@
             </or>
          </and>
       </enablement>
+      <extends-model
+            id="org.eclipse.core.resources.modelProvider">
+      </extends-model>
    </extension>
    <extension
          point="org.eclipse.emf.compare.ide.ui.modelResolvers">
