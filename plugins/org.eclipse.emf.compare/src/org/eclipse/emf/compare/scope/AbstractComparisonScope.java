@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,8 @@ import com.google.common.collect.Sets;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.emf.compare.utils.IDiagnosable;
 
 /**
  * This implementation of {@link IComparisonScope} can be sub-classed in order to avoid re-implementing some
@@ -22,7 +24,7 @@ import org.eclipse.emf.common.notify.Notifier;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public abstract class AbstractComparisonScope implements IComparisonScope {
+public abstract class AbstractComparisonScope implements IComparisonScope, IDiagnosable {
 	/** The left root of this comparison. */
 	protected Notifier left;
 
@@ -37,6 +39,9 @@ public abstract class AbstractComparisonScope implements IComparisonScope {
 
 	/** The resource uris detected in the comparison. */
 	protected Set<String> resourceURIs;
+
+	/** The diagnostic of the notifiers. */
+	protected Diagnostic diagnostic;
 
 	/**
 	 * This will instantiate a scope with left, right and origin Notifiers defined.
@@ -99,5 +104,23 @@ public abstract class AbstractComparisonScope implements IComparisonScope {
 	 */
 	public Set<String> getResourceURIs() {
 		return resourceURIs;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.scope.IComparisonScope.Internal#getDiagnostic()
+	 */
+	public Diagnostic getDiagnostic() {
+		return diagnostic;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.scope.IComparisonScope.Internal#setDiagnostic(org.eclipse.emf.common.util.Diagnostic)
+	 */
+	public void setDiagnostic(Diagnostic diagnostic) {
+		this.diagnostic = diagnostic;
 	}
 }

@@ -36,6 +36,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.internal.postprocessor.factories.IChangeFactory;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareMessages;
+import org.eclipse.emf.compare.uml2.internal.UMLComparePlugin;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.UMLExtensionFactoryRegistry;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil;
@@ -153,8 +154,8 @@ public class UMLPostProcessor implements IPostProcessor {
 				message = UMLCompareMessages.getString("profile.definition.changed"); //$NON-NLS-1$
 			}
 
-			addDiagnostic(comparison,
-					new BasicDiagnostic(Diagnostic.ERROR, null, 0, message, new Object[] {}));
+			addDiagnostic(comparison, new BasicDiagnostic(Diagnostic.ERROR, UMLComparePlugin.PLUGIN_ID, 0,
+					message, new Object[] {}));
 
 			return false;
 		}

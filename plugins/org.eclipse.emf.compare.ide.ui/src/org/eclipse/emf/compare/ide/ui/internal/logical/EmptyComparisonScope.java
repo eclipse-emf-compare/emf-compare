@@ -23,15 +23,12 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 /**
  * This implementation of a comparison scope can be supplied to EMF Compare if there was an error beyond
  * repair during the creation of the scope.
- * <p>
- * Since this scope is completely empty, EMF Compare will display
- * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class ErrorComparisonScope extends AbstractComparisonScope {
+public class EmptyComparisonScope extends AbstractComparisonScope {
 	/** Default constructor. */
-	public ErrorComparisonScope() {
+	public EmptyComparisonScope() {
 		super(new ResourceSetImpl(), new ResourceSetImpl(), new ResourceSetImpl());
 	}
 

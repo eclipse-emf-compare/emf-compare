@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ide.utils;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 import java.util.LinkedHashSet;
@@ -22,6 +23,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.emf.common.util.BasicDiagnostic;
+import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.emf.compare.utils.IDiagnosable;
 
 /**
  * A Resource Traversal is no more than a set of resources used by the synchronization model to determine
@@ -30,9 +34,12 @@ import org.eclipse.core.runtime.IAdaptable;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @Beta
-public class StorageTraversal implements IAdaptable {
+public class StorageTraversal implements IAdaptable, IDiagnosable {
 	/** The set of storages that are part of this traversal. */
 	private Set<? extends IStorage> storages;
+
+	/** The diagnostic of the errors that may occur during loading of the storages. */
+	private Diagnostic diagnostic;
 
 	/**
 	 * Creates our traversal given its set of resources.
@@ -41,7 +48,20 @@ public class StorageTraversal implements IAdaptable {
 	 *            The set of resources that are part of this traversal.
 	 */
 	public StorageTraversal(Set<? extends IStorage> storages) {
+		this(storages, new BasicDiagnostic());
+	}
+
+	/**
+	 * Creates our traversal given its set of resources.
+	 * 
+	 * @param storages
+	 *            The set of resources that are part of this traversal.
+	 * @param diagnostic
+	 *            diagnostic of the errors that may occur during loading of the storages.
+	 */
+	public StorageTraversal(Set<? extends IStorage> storages, Diagnostic diagnostic) {
 		this.storages = storages;
+		this.diagnostic = Preconditions.checkNotNull(diagnostic);
 	}
 
 	/**
@@ -66,6 +86,24 @@ public class StorageTraversal implements IAdaptable {
 	 */
 	public void removeStorage(IStorage storage) {
 		storages.remove(storage);
+	}
+
+	/**
+	 * Returns the diagnostic of the storages of this traversal.
+	 * 
+	 * @return the diagnostic
+	 */
+	public Diagnostic getDiagnostic() {
+		return diagnostic;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.utils.IDiagnosable#setDiagnostic(org.eclipse.emf.common.util.Diagnostic)
+	 */
+	public void setDiagnostic(Diagnostic diagnostic) {
+		this.diagnostic = diagnostic;
 	}
 
 	/**

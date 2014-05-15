@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.conflict.DefaultConflictDetector;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
@@ -25,7 +26,6 @@ import org.eclipse.emf.compare.diff.DiffBuilder;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.equi.DefaultEquiEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
-import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
@@ -340,7 +340,8 @@ public class EMFCompare {
 	 * @return True if the comparison has to be stopped. False otherwise.
 	 */
 	private static boolean hasToStop(Comparison comparison, Monitor monitor) {
-		return monitor.isCanceled() || ComparisonUtil.containsErrors(comparison);
+		return monitor.isCanceled()
+				|| (comparison.getDiagnostic() != null && comparison.getDiagnostic().getSeverity() >= Diagnostic.ERROR);
 	}
 
 	/**

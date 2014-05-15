@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo and others.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,8 @@ import org.eclipse.core.resources.mapping.ResourceTraversal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.BasicDiagnostic;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 
@@ -90,15 +92,26 @@ public class EMFResourceMapping extends ResourceMapping {
 			throws CoreException {
 		if (cachedTraversals == null) {
 			try {
-				cachedTraversals = convertCompareTraversal(resolveEMFTraversal(context, monitor));
+				StorageTraversal emfTraversal = resolveEMFTraversal(context, monitor);
+				if (emfTraversal.getDiagnostic().getSeverity() >= Diagnostic.ERROR) {
+					EMFCompareIDEUIPlugin.getDefault().getLog().log(
+							BasicDiagnostic.toIStatus(emfTraversal.getDiagnostic()));
+					return createSingletonTraversal(file);
+				}
+
+				cachedTraversals = convertCompareTraversal(emfTraversal);
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
-				final ResourceTraversal singletonTraversal = new ResourceTraversal(new IResource[] {file, },
-						IResource.DEPTH_ONE, IResource.NONE);
-				return new ResourceTraversal[] {singletonTraversal, };
+				return createSingletonTraversal(file);
 			}
 		}
 		return cachedTraversals;
+	}
+
+	private ResourceTraversal[] createSingletonTraversal(IFile resource) {
+		final ResourceTraversal singletonTraversal = new ResourceTraversal(new IResource[] {resource, },
+				IResource.DEPTH_ONE, IResource.NONE);
+		return new ResourceTraversal[] {singletonTraversal, };
 	}
 
 	/**

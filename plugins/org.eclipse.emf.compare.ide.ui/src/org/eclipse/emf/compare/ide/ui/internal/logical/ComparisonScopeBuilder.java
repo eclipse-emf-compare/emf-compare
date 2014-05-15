@@ -30,7 +30,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.emf.common.util.BasicDiagnostic;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -45,6 +48,7 @@ import org.eclipse.emf.compare.scope.FilterComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberMergeContext;
 import org.eclipse.team.ui.synchronize.ISynchronizeParticipant;
@@ -142,10 +146,18 @@ public final class ComparisonScopeBuilder {
 			} else {
 				syncModel = createSynchronizationModel(left, right, origin, subMonitor.newChild(60));
 			}
-			return createMinimizedScope(syncModel, subMonitor.newChild(40));
+			if (syncModel.getDiagnostic().getSeverity() >= Diagnostic.ERROR) {
+				EmptyComparisonScope emptyComparisonScope = new EmptyComparisonScope();
+				emptyComparisonScope.setDiagnostic(syncModel.getDiagnostic());
+				return emptyComparisonScope;
+			} else {
+				return createMinimizedScope(syncModel, subMonitor.newChild(40));
+			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
-			return new ErrorComparisonScope();
+			EmptyComparisonScope scope = new EmptyComparisonScope();
+			scope.setDiagnostic(BasicDiagnostic.toDiagnostic(e));
+			return scope;
 		}
 	}
 
@@ -391,11 +403,69 @@ public final class ComparisonScopeBuilder {
 			}
 		}
 
+		final BasicDiagnostic originDiagnostic;
+		if (originResourceSet != null) {
+			originDiagnostic = getResourceSetDiagnostic(originResourceSet, null, true);
+		} else {
+			originDiagnostic = null;
+		}
+		BasicDiagnostic leftDiagnostic = getResourceSetDiagnostic(leftResourceSet, DifferenceSource.LEFT,
+				true);
+		BasicDiagnostic rightDiagnostic = getResourceSetDiagnostic(rightResourceSet, DifferenceSource.RIGHT,
+				true);
+
 		final FilterComparisonScope scope = new DefaultComparisonScope(leftResourceSet, rightResourceSet,
 				originResourceSet);
 		scope.setResourceSetContentFilter(isInScope(urisInScope));
 
+		BasicDiagnostic diagnostic = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, "", //$NON-NLS-1$
+				new Object[0]);
+		scope.setDiagnostic(diagnostic);
+
+		if (originDiagnostic != null && originDiagnostic.getSeverity() >= Diagnostic.WARNING) {
+			diagnostic.add(originDiagnostic);
+		}
+		if (leftDiagnostic.getSeverity() >= Diagnostic.WARNING) {
+			diagnostic.add(leftDiagnostic);
+		}
+		if (rightDiagnostic.getSeverity() >= Diagnostic.WARNING) {
+			diagnostic.add(rightDiagnostic);
+		}
+
 		return scope;
+	}
+
+	/**
+	 * Compute the diagnotic on each resource of the given resource set and return a diagnostic composed of
+	 * 
+	 * @param resourceSet
+	 *            the resource set
+	 * @param side
+	 *            the resource set's side. null means origin
+	 * @param includeWarning
+	 * @return the composite diagnostic
+	 */
+	private BasicDiagnostic getResourceSetDiagnostic(final ResourceSet resourceSet, DifferenceSource side,
+			boolean includeWarning) {
+		final String sideStr;
+		if (side == DifferenceSource.LEFT) {
+			sideStr = EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.left"); //$NON-NLS-1$
+		} else if (side == DifferenceSource.RIGHT) {
+			sideStr = EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.right"); //$NON-NLS-1$
+		} else {
+			sideStr = EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.ancesotr"); //$NON-NLS-1$
+		}
+		BasicDiagnostic diagnostic = new BasicDiagnostic(
+				EMFCompareIDEUIPlugin.PLUGIN_ID,
+				0,
+				EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.resourceSetDiagnostic", sideStr), new Object[0]); //$NON-NLS-1$
+		for (Resource resource : resourceSet.getResources()) {
+			Diagnostic resourceDiagnostic = EcoreUtil.computeDiagnostic(resource, includeWarning);
+			if (resourceDiagnostic.getSeverity() >= Diagnostic.WARNING) {
+				diagnostic.merge(resourceDiagnostic);
+			}
+		}
+		return diagnostic;
 	}
 
 	/**

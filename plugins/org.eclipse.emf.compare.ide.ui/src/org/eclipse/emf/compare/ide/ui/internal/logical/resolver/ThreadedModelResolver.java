@@ -47,6 +47,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.emf.common.util.BasicDiagnostic;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -59,6 +61,7 @@ import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * This implementation of an {@link IModelResolver} will look up all of the models located in a set container
@@ -115,6 +118,11 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	private Set<URI> resolvedResources;
 
 	/**
+	 * Will keep track of any error or warning that can arise during the loading of the resources.
+	 */
+	private BasicDiagnostic diagnostic;
+
+	/**
 	 * Keeps track of the URIs which we are currently resolving (or which are queued for resolution).
 	 * <p>
 	 * This along with {@link #resolvedResources} will prevent multiple "duplicate" resolution threads to be
@@ -132,8 +140,8 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 	/**
 	 * This will lock will prevent concurrent modifications of this resolver's fields. Most notably,
-	 * {@link #currentlyResolving} and {@link #resolvedResources} must not be accessed concurrently by two
-	 * threads at once.
+	 * {@link #currentlyResolving}, {@link #resolvedResources} and {@link #diagnostic} must not be accessed
+	 * concurrently by two threads at once.
 	 */
 	private final ReentrantLock lock;
 
@@ -228,6 +236,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			}
 
 			resolvedResources = new LinkedHashSet<URI>();
+			diagnostic = new BasicDiagnostic();
 
 			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
 				final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
@@ -239,12 +248,14 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 				resolutionEnd.await();
 			}
 
-			final Set<IStorage> traversal = resolveTraversal((IFile)start, Collections.<URI> emptySet());
+			final Set<IStorage> traversalSet = resolveTraversal((IFile)start, Collections.<URI> emptySet());
+			StorageTraversal traversal = new StorageTraversal(traversalSet, diagnostic);
 
+			return traversal;
+		} finally {
+			diagnostic = null;
 			resolvedResources = null;
 
-			return new StorageTraversal(traversal);
-		} finally {
 			notResolving.signal();
 			lock.unlock();
 		}
@@ -286,6 +297,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			}
 
 			resolvedResources = new LinkedHashSet<URI>();
+			diagnostic = new BasicDiagnostic();
 
 			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
 				final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
@@ -340,17 +352,21 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			logCoherenceThreats(Iterables.transform(startingPoints, AS_URI), Iterables.transform(
 					intersection, AS_URI));
 
-			resolvedResources = null;
-
 			final Set<IStorage> actualLeft = new LinkedHashSet<IStorage>(difference(leftTraversal,
 					intersection));
 			final Set<IStorage> actualRight = new LinkedHashSet<IStorage>(difference(rightTraversal,
 					intersection));
 			final Set<IStorage> actualOrigin = new LinkedHashSet<IStorage>(difference(originTraversal,
 					intersection));
-			return new SynchronizationModel(new StorageTraversal(actualLeft), new StorageTraversal(
-					actualRight), new StorageTraversal(actualOrigin));
+			final SynchronizationModel synchronizationModel = new SynchronizationModel(new StorageTraversal(
+					actualLeft), new StorageTraversal(actualRight), new StorageTraversal(actualOrigin),
+					diagnostic);
+
+			return synchronizationModel;
 		} finally {
+			diagnostic = null;
+			resolvedResources = null;
+
 			notResolving.signal();
 			lock.unlock();
 		}
@@ -373,6 +389,9 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 				notResolving.await();
 			}
 
+			resolvedResources = new LinkedHashSet<URI>();
+			diagnostic = new BasicDiagnostic();
+
 			final IFile leftFile = adaptAs(left, IFile.class);
 
 			/*
@@ -389,6 +408,9 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 			return synchronizationModel;
 		} finally {
+			resolvedResources = null;
+			diagnostic = null;
+
 			notResolving.signal();
 			lock.unlock();
 		}
@@ -421,7 +443,6 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			IStorage right, IStorage origin, IProgressMonitor monitor) throws InterruptedException {
 		// Update changes and compute dependencies for left
 		// Then load the same set of resources for the remote sides, completing it top-down
-		resolvedResources = new LinkedHashSet<URI>();
 
 		if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
 			final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
@@ -445,10 +466,11 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			originTraversal = Collections.emptySet();
 		}
 
-		resolvedResources = null;
+		final SynchronizationModel synchronizationModel = new SynchronizationModel(new StorageTraversal(
+				leftTraversal), new StorageTraversal(rightTraversal), new StorageTraversal(originTraversal),
+				diagnostic);
 
-		return new SynchronizationModel(new StorageTraversal(leftTraversal), new StorageTraversal(
-				rightTraversal), new StorageTraversal(originTraversal));
+		return synchronizationModel;
 	}
 
 	/**
@@ -472,6 +494,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	 */
 	private SynchronizationModel resolveRemoteModels(IStorageProviderAccessor storageAccessor, IStorage left,
 			IStorage right, IStorage origin, IProgressMonitor monitor) throws InterruptedException {
+
 		final Set<IStorage> leftTraversal = resolveRemoteTraversal(storageAccessor, left, Collections
 				.<IStorage> emptySet(), DiffSide.SOURCE, monitor);
 		final Set<IStorage> rightTraversal = resolveRemoteTraversal(storageAccessor, right, Collections
@@ -483,8 +506,11 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		} else {
 			originTraversal = Collections.emptySet();
 		}
-		return new SynchronizationModel(new StorageTraversal(leftTraversal), new StorageTraversal(
-				rightTraversal), new StorageTraversal(originTraversal));
+		final SynchronizationModel synchronizationModel = new SynchronizationModel(new StorageTraversal(
+				leftTraversal), new StorageTraversal(rightTraversal), new StorageTraversal(originTraversal),
+				diagnostic);
+
+		return synchronizationModel;
 	}
 
 	/**
@@ -828,6 +854,21 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	}
 
 	/**
+	 * Thread safely Add the given diagnostic to the {@link #diagnostic} field.
+	 * 
+	 * @param resourceDiagnostic
+	 *            the diagnostic to be added to the global diagnostic.
+	 */
+	private void safeAddDiagnostic(Diagnostic resourceDiagnostic) {
+		lock.lock();
+		try {
+			diagnostic.add(resourceDiagnostic);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
 	 * Implements a runnable that will load the EMF resource pointed at by a given URI, then resolve all of
 	 * its cross-referenced resources and update the dependency graph accordingly.
 	 * <p>
@@ -871,6 +912,10 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			 */
 			try {
 				final Resource resource = resourceSet.loadResource(uri);
+				Diagnostic resourceDiagnostic = EcoreUtil.computeDiagnostic(resource, true);
+				if (resourceDiagnostic.getSeverity() >= Diagnostic.WARNING) {
+					safeAddDiagnostic(resourceDiagnostic);
+				}
 				dependencyGraph.add(uri);
 				if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
 					final Set<URI> crossReferencedResources = resourceSet.discoverCrossReferences(resource,
@@ -931,6 +976,10 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		public void run() {
 			try {
 				final Resource resource = resourceSet.loadResource(uri);
+				Diagnostic resourceDiagnostic = EcoreUtil.computeDiagnostic(resource, true);
+				if (resourceDiagnostic.getSeverity() >= Diagnostic.WARNING) {
+					safeAddDiagnostic(resourceDiagnostic);
+				}
 				if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
 					final Set<URI> crossReferencedResources = resourceSet.discoverCrossReferences(resource,
 							monitor);

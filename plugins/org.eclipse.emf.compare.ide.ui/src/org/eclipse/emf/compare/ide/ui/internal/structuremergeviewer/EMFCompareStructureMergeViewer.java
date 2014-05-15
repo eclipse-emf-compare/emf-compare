@@ -39,6 +39,7 @@ import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -50,8 +51,10 @@ import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.common.ui.dialogs.DiagnosticDialog;
+import org.eclipse.emf.common.ui.CommonUIPlugin;
+import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
@@ -62,6 +65,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoDifferencesCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoVisibleItemCompareInput;
@@ -70,13 +74,12 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoActio
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
+import org.eclipse.emf.compare.ide.ui.internal.logical.EmptyComparisonScope;
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressInfoComposite;
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressMonitorWrapper;
 import org.eclipse.emf.compare.ide.ui.internal.util.CompareHandlerService;
-import org.eclipse.emf.compare.ide.ui.internal.util.ExceptionUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
-import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
@@ -91,6 +94,7 @@ import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFi
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProviderChange;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.utils.IDiagnosable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -106,13 +110,20 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -128,7 +139,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrapper<Composite, WrappableTreeViewer> implements CommandStackListener {
+public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrapper<CTabFolder, WrappableTreeViewer> implements CommandStackListener {
 
 	private final class CompareInputChangedJob extends Job {
 		private CompareInputChangedJob(String name) {
@@ -138,8 +149,21 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		@Override
 		public IStatus run(IProgressMonitor monitor) {
 			IProgressMonitor wrapper = new JobProgressMonitorWrapper(monitor, progressInfoItem);
-			SubMonitor subMonitor = SubMonitor.convert(wrapper, "Computing Model Differences", 100);
-			compareInputChanged((ICompareInput)getInput(), subMonitor.newChild(100));
+			SubMonitor subMonitor = SubMonitor.convert(wrapper, EMFCompareIDEUIMessages
+					.getString("EMFCompareStructureMergeViewer.computingModelDifferences"), 100); //$NON-NLS-1$
+			try {
+				compareInputChanged((ICompareInput)getInput(), subMonitor.newChild(100));
+			} catch (final Exception e) {
+				SWTUtil.safeAsyncExec(new Runnable() {
+					public void run() {
+						BasicDiagnostic d = new BasicDiagnostic();
+						d.add(BasicDiagnostic.toDiagnostic(e));
+						updateProblemIndication(d);
+					}
+				});
+			} finally {
+				subMonitor.done();
+			}
 			return Status.OK_STATUS;
 		}
 	}
@@ -309,7 +333,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		getCompareConfiguration().setAdapterFactory(fAdapterFactory);
 
-		inputChangedTask = new CompareInputChangedJob("Computing Model Differences");
+		inputChangedTask = new CompareInputChangedJob(EMFCompareIDEUIMessages
+				.getString("EMFCompareStructureMergeViewer.computingModelDifferences")); //$NON-NLS-1$
 	}
 
 	@Subscribe
@@ -326,8 +351,32 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 *      CompareConfiguration)
 	 */
 	@Override
-	protected ControlAndViewer<Composite, WrappableTreeViewer> createControlAndViewer(Composite parent) {
-		Composite control = new Composite(parent, SWT.NONE);
+	protected ControlAndViewer<CTabFolder, WrappableTreeViewer> createControlAndViewer(Composite parent) {
+		parent.setLayout(new FillLayout());
+		CTabFolder tabFolder = new CTabFolder(parent, SWT.BOTTOM | SWT.FLAT);
+		tabFolder.setLayout(new FillLayout());
+
+		// Ensures that this viewer will only display the page's tab
+		// area if there are more than one page
+		//
+		tabFolder.addControlListener(new ControlAdapter() {
+			boolean guard = false;
+
+			@Override
+			public void controlResized(ControlEvent event) {
+				if (!guard) {
+					guard = true;
+					hideTabs();
+					guard = false;
+				}
+			}
+		});
+
+		updateProblemIndication(Diagnostic.OK_INSTANCE);
+
+		Composite control = new Composite(tabFolder, SWT.NONE);
+		createItem(0, control);
+		tabFolder.setSelection(0);
 
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 		control.setLayoutData(data);
@@ -365,7 +414,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		dependencyData = new DependencyData(getCompareConfiguration(), treeViewer);
 
-		control.setData(CompareUI.COMPARE_VIEWER_TITLE, "Model differences");
+		tabFolder.setData(CompareUI.COMPARE_VIEWER_TITLE, EMFCompareIDEUIMessages
+				.getString("EMFCompareStructureMergeViewer.title")); //$NON-NLS-1$
 
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		final ITheme currentTheme;
@@ -374,7 +424,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		} else {
 			currentTheme = null;
 		}
-		boolean leftIsLocal = getCompareConfiguration().getBooleanProperty("LEFT_IS_LOCAL", false);
+		boolean leftIsLocal = getCompareConfiguration().getBooleanProperty("LEFT_IS_LOCAL", false); //$NON-NLS-1$
 		fColors = new EMFCompareColor(control.getDisplay(), leftIsLocal, currentTheme,
 				getCompareConfiguration().getEventBus());
 
@@ -385,7 +435,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		rulerLayoutData.minimumWidth = TREE_RULER_WIDTH;
 		treeRuler.setLayoutData(rulerLayoutData);
 
-		return ControlAndViewer.create(control, treeViewer);
+		return ControlAndViewer.create(tabFolder, treeViewer);
+	}
+
+	private CTabItem createItem(int index, Control control) {
+		CTabItem item = new CTabItem((CTabFolder)control.getParent(), SWT.NONE, index);
+		item.setControl(control);
+		return item;
 	}
 
 	@Subscribe
@@ -436,9 +492,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					differencesToMerge = size(Iterables.filter(differences,
 							hasState(DifferenceState.UNRESOLVED)));
 				}
-				((CompareViewerSwitchingPane)parent).setTitleArgument(differencesToMerge + " over "
-						+ computedDiff + " differences still to be merged — " + filteredDiff
-						+ " differences filtered from view");
+				((CompareViewerSwitchingPane)parent).setTitleArgument(EMFCompareIDEUIMessages.getString(
+						"EMFCompareStructureMergeViewer.titleDesc", differencesToMerge, computedDiff, //$NON-NLS-1$
+						filteredDiff));
 			}
 		}
 	}
@@ -506,11 +562,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		if (input instanceof ICompareInput) {
 			ICompareInput ci = (ICompareInput)input;
 			ci.addCompareInputChangeListener(fCompareInputChangeListener);
-
-			// Hack to display a message in the tree viewer while the differences are being computed.
-			TreeItem item = new TreeItem(getViewer().getTree(), SWT.NONE);
-			item.setText("Computing model differences...");
-
 			compareInputChanged(ci);
 		}
 	}
@@ -617,9 +668,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		EMFCompare comparator = getCompareConfiguration().getEMFComparator();
 
 		IComparisonScope comparisonScope = input.getComparisonScope();
-		Comparison comparison = comparator.compare(comparisonScope, BasicMonitor.toMonitor(monitor));
+		final Comparison comparison = comparator.compare(comparisonScope, BasicMonitor.toMonitor(monitor));
 
-		reportErrors(comparison);
+		SWTUtil.safeAsyncExec(new Runnable() {
+			public void run() {
+				updateProblemIndication(comparison.getDiagnostic());
+			}
+		});
 
 		compareInputChanged(input.getComparisonScope(), comparison);
 	}
@@ -729,29 +784,46 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					scope = ComparisonScopeBuilder.create(compareConfiguration.getContainer(), left, right,
 							origin, subMonitor.newChild(85));
 				} catch (Exception e) {
-					ExceptionUtil.handleException(e, compareConfiguration, true);
-					return;
+					scope = new EmptyComparisonScope();
+					((EmptyComparisonScope)scope).setDiagnostic(BasicDiagnostic.toDiagnostic(e));
 				}
 
-				final Builder comparisonBuilder = EMFCompare.builder().setPostProcessorRegistry(
-						EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
+				if (scope instanceof IDiagnosable
+						&& ((IDiagnosable)scope).getDiagnostic().getSeverity() >= Diagnostic.ERROR) {
+					monitor.done();
+					final Diagnostic scopeDiagnostic = ((IDiagnosable)scope).getDiagnostic();
+					SWTUtil.safeAsyncExec(new Runnable() {
+						public void run() {
+							updateProblemIndication(scopeDiagnostic);
+						}
+					});
+				} else {
+					final Builder comparisonBuilder = EMFCompare.builder().setPostProcessorRegistry(
+							EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
 
-				EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
+					EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
 
-				final Comparison compareResult = comparisonBuilder.build().compare(scope,
-						BasicMonitor.toMonitor(subMonitor.newChild(15)));
+					final Comparison compareResult = comparisonBuilder.build().compare(scope,
+							BasicMonitor.toMonitor(subMonitor.newChild(15)));
 
-				reportErrors(compareResult);
+					if (compareResult.getDiagnostic() != null) {
+						SWTUtil.safeAsyncExec(new Runnable() {
+							public void run() {
+								updateProblemIndication(compareResult.getDiagnostic());
+							}
+						});
+					}
 
-				final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
-				final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
-				final ResourceSet originResourceSet = (ResourceSet)scope.getOrigin();
+					final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
+					final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
+					final ResourceSet originResourceSet = (ResourceSet)scope.getOrigin();
 
-				ICompareEditingDomain editingDomain = EMFCompareEditingDomain.create(leftResourceSet,
-						rightResourceSet, originResourceSet);
-				compareConfiguration.setEditingDomain(editingDomain);
+					ICompareEditingDomain editingDomain = EMFCompareEditingDomain.create(leftResourceSet,
+							rightResourceSet, originResourceSet);
+					compareConfiguration.setEditingDomain(editingDomain);
 
-				compareInputChanged(scope, compareResult);
+					compareInputChanged(scope, compareResult);
+				}
 			}
 		} else {
 			compareInputChangedToNull();
@@ -883,15 +955,65 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		g.fillRectangle(areaBounds.x, itemBounds.y, areaBounds.width, itemBounds.height);
 	}
 
-	private void reportErrors(final Comparison comparison) {
-		if (ComparisonUtil.containsErrors(comparison)) {
-			SWTUtil.safeAsyncExec(new Runnable() {
-				public void run() {
-					DiagnosticDialog.open(getControl().getShell(), "Comparison report", //$NON-NLS-1$
-							"Some issues were detected.", comparison.getDiagnostic()); //$NON-NLS-1$
-				}
-			});
+	private void updateProblemIndication(Diagnostic diagnostic) {
+		int lastEditorPage = getPageCount() - 1;
+		if (lastEditorPage >= 0 && getItemControl(lastEditorPage) instanceof ProblemIndicationComposite) {
+			((ProblemIndicationComposite)getItemControl(lastEditorPage)).setDiagnostic(diagnostic);
+			if (diagnostic.getSeverity() != Diagnostic.OK) {
+				setActivePage(lastEditorPage);
+				updateLayout(false, true);
+			}
+		} else if (diagnostic.getSeverity() != Diagnostic.OK) {
+			ProblemIndicationComposite problemIndicationComposite = new ProblemIndicationComposite(
+					getControl(), SWT.NONE);
+			problemIndicationComposite.setDiagnostic(diagnostic);
+			createItem(++lastEditorPage, problemIndicationComposite);
+			getControl().getItem(lastEditorPage).setText(
+					CommonUIPlugin.getPlugin().getString("_UI_Problems_label")); //$NON-NLS-1$
+			setActivePage(lastEditorPage);
+			updateLayout(false, true);
+			showTabs();
 		}
+	}
+
+	private void showTabs() {
+		if (getPageCount() > 1) {
+			getControl().getItem(0).setText(
+					EMFCompareIDEUIMessages.getString("EMFCompareStructureMergeViewer.tabItem.0.title")); //$NON-NLS-1$
+			getControl().setTabHeight(SWT.DEFAULT);
+			Point point = getControl().getSize();
+			getControl().setSize(point.x, point.y - 6);
+		}
+	}
+
+	private void hideTabs() {
+		if (getPageCount() <= 1) {
+			getControl().getItem(0).setText(""); //$NON-NLS-1$
+			getControl().setTabHeight(1);
+			Point point = getControl().getSize();
+			getControl().setSize(point.x, point.y + 6);
+		}
+	}
+
+	private void setActivePage(int pageIndex) {
+		Assert.isTrue(pageIndex >= 0 && pageIndex < getPageCount());
+		getControl().setSelection(pageIndex);
+	}
+
+	private int getPageCount() {
+		// May not have been created yet, or may have been disposed.
+		if (getControl() != null && !getControl().isDisposed()) {
+			return getControl().getItemCount();
+		}
+		return 0;
+	}
+
+	private Control getItemControl(int itemIndex) {
+		CTabItem item = getControl().getItem(itemIndex);
+		if (item != null) {
+			return item.getControl();
+		}
+		return null;
 	}
 
 	private static void unload(ResourceSet resourceSet) {
