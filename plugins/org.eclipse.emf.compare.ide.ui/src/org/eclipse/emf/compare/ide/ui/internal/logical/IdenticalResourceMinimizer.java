@@ -48,8 +48,8 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void minimize(SynchronizationModel syncModel, IProgressMonitor monitor) {
-		SubMonitor progess = SubMonitor.convert(monitor, EMFCompareIDEUIMessages
-				.getString("EMFSynchronizationModel.minimizing"), 100); //$NON-NLS-1$
+		SubMonitor progess = SubMonitor.convert(monitor, 100);
+		progess.subTask(EMFCompareIDEUIMessages.getString("EMFSynchronizationModel.minimizing")); //$NON-NLS-1$
 
 		final StorageTraversal leftTraversal = syncModel.getLeftTraversal();
 		final StorageTraversal rightTraversal = syncModel.getRightTraversal();

@@ -132,14 +132,17 @@ public final class ComparisonScopeBuilder {
 	 */
 	public IComparisonScope build(ITypedElement left, ITypedElement right, ITypedElement origin,
 			IProgressMonitor monitor) {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+		subMonitor.subTask(EMFCompareIDEUIMessages.getString("EMFSynchronizationModel.resolving")); //$NON-NLS-1$
 		try {
 			final SynchronizationModel syncModel;
 			if (storageAccessor != null) {
-				syncModel = createSynchronizationModel(storageAccessor, left, right, origin, monitor);
+				syncModel = createSynchronizationModel(storageAccessor, left, right, origin, subMonitor
+						.newChild(60));
 			} else {
-				syncModel = createSynchronizationModel(left, right, origin, monitor);
+				syncModel = createSynchronizationModel(left, right, origin, subMonitor.newChild(60));
 			}
-			return createMinimizedScope(syncModel, monitor);
+			return createMinimizedScope(syncModel, subMonitor.newChild(40));
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 			return new ErrorComparisonScope();
@@ -247,8 +250,6 @@ public final class ComparisonScopeBuilder {
 	private SynchronizationModel createSynchronizationModel(IStorageProviderAccessor accessor,
 			ITypedElement left, ITypedElement right, ITypedElement origin, IProgressMonitor monitor)
 			throws InterruptedException {
-		SubMonitor progress = SubMonitor.convert(monitor, EMFCompareIDEUIMessages
-				.getString("EMFSynchronizationModel.resolving"), 100); //$NON-NLS-1$
 
 		// Can we find a local file to associate a proper path to our storages?
 		final IFile localFile = findFile(left);
@@ -266,8 +267,7 @@ public final class ComparisonScopeBuilder {
 			originStorage = null;
 		}
 
-		return resolver.resolveModels(accessor, leftStorage, rightStorage, originStorage, progress
-				.newChild(100));
+		return resolver.resolveModels(accessor, leftStorage, rightStorage, originStorage, monitor);
 	}
 
 	/**
@@ -287,14 +287,12 @@ public final class ComparisonScopeBuilder {
 	 */
 	private SynchronizationModel createSynchronizationModel(ITypedElement left, ITypedElement right,
 			ITypedElement origin, IProgressMonitor monitor) throws InterruptedException {
-		SubMonitor progress = SubMonitor.convert(monitor, EMFCompareIDEUIMessages
-				.getString("EMFSynchronizationModel.resolving"), 100); //$NON-NLS-1$
 		// Is this a local comparison?
 		final IFile leftFile = findFile(left);
 		final IFile rightFile = findFile(right);
 		if (leftFile != null && rightFile != null) {
 			// assume origin is local or null
-			return resolver.resolveLocalModels(leftFile, rightFile, findFile(origin), progress.newChild(100));
+			return resolver.resolveLocalModels(leftFile, rightFile, findFile(origin), monitor);
 		}
 
 		// This is not a local comparison, and we've got no info on how to load remote revisions.
@@ -307,7 +305,7 @@ public final class ComparisonScopeBuilder {
 			originStorage = null;
 		}
 
-		return loadSingleResource(leftStorage, rightStorage, originStorage, progress.newChild(3));
+		return loadSingleResource(leftStorage, rightStorage, originStorage);
 	}
 
 	/**
@@ -321,9 +319,7 @@ public final class ComparisonScopeBuilder {
 	 *            Common ancestor of left and right, if any.
 	 * @return The resolved synchronization model.
 	 */
-	private SynchronizationModel loadSingleResource(IStorage left, IStorage right, IStorage origin,
-			IProgressMonitor monitor) {
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+	private SynchronizationModel loadSingleResource(IStorage left, IStorage right, IStorage origin) {
 		final StorageTraversal leftTraversal = new StorageTraversal(new LinkedHashSet<IStorage>(Arrays
 				.asList(left)));
 		final StorageTraversal rightTraversal = new StorageTraversal(new LinkedHashSet<IStorage>(Arrays
@@ -335,7 +331,6 @@ public final class ComparisonScopeBuilder {
 			originTraversal = new StorageTraversal(Sets.<IStorage> newLinkedHashSet());
 		}
 
-		subMonitor.worked(100);
 		return new SynchronizationModel(leftTraversal, rightTraversal, originTraversal);
 	}
 
@@ -365,8 +360,8 @@ public final class ComparisonScopeBuilder {
 	 * @return The created comparison scope.
 	 */
 	private IComparisonScope createScope(SynchronizationModel syncModel, IProgressMonitor monitor) {
-		SubMonitor progress = SubMonitor.convert(monitor, EMFCompareIDEUIMessages
-				.getString("EMFSynchronizationModel.creatingScope"), 3); //$NON-NLS-1$
+		SubMonitor progress = SubMonitor.convert(monitor, 3);
+		progress.subTask(EMFCompareIDEUIMessages.getString("EMFSynchronizationModel.creatingScope")); //$NON-NLS-1$
 
 		final StorageTraversal leftTraversal = syncModel.getLeftTraversal();
 		final StorageTraversal rightTraversal = syncModel.getRightTraversal();

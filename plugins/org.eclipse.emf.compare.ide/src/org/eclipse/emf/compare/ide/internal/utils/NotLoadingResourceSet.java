@@ -60,8 +60,8 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	 * @return resource set to containing the resources described by the given traversals.
 	 */
 	public static NotLoadingResourceSet create(final StorageTraversal traversals, IProgressMonitor monitor) {
-		SubMonitor progress = SubMonitor.convert(monitor, EMFCompareIDEMessages
-				.getString("NotLoadingResourceSet.monitor.resolve"), 100); //$NON-NLS-1$
+		SubMonitor progress = SubMonitor.convert(monitor, 100);
+		progress.subTask(EMFCompareIDEMessages.getString("NotLoadingResourceSet.monitor.resolve")); //$NON-NLS-1$
 		final NotLoadingResourceSet resourceSet = new NotLoadingResourceSet();
 
 		resourceSet.setURIResourceMap(new HashMap<URI, Resource>(traversals.getStorages().size() << 1));

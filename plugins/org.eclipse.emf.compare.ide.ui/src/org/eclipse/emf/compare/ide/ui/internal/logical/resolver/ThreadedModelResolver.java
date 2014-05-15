@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -238,8 +239,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 				resolutionEnd.await();
 			}
 
-			final Set<IStorage> traversal = resolveTraversal((IFile)start, Collections.<URI> emptySet(),
-					monitor);
+			final Set<IStorage> traversal = resolveTraversal((IFile)start, Collections.<URI> emptySet());
 
 			resolvedResources = null;
 
@@ -261,16 +261,20 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	 */
 	public SynchronizationModel resolveLocalModels(IResource left, IResource right, IResource origin,
 			IProgressMonitor monitor) throws InterruptedException {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+		subMonitor.subTask(EMFCompareIDEUIMessages.getString("ModelResolver.resolvingLocalModel")); //$NON-NLS-1$
+
 		if (!(left instanceof IFile && right instanceof IFile && (origin == null || origin instanceof IFile))) {
 			// Sub-optimal implementation, we'll only try and resolve each side individually
-			final StorageTraversal leftTraversal = resolveLocalModel(left, monitor);
-			final StorageTraversal rightTraversal = resolveLocalModel(right, monitor);
+			final StorageTraversal leftTraversal = resolveLocalModel(left, subMonitor.newChild(33));
+			final StorageTraversal rightTraversal = resolveLocalModel(right, subMonitor.newChild(33));
 			final StorageTraversal originTraversal;
 			if (origin != null) {
-				originTraversal = resolveLocalModel(origin, monitor);
+				originTraversal = resolveLocalModel(origin, subMonitor.newChild(33));
 			} else {
 				originTraversal = new StorageTraversal(Sets.<IStorage> newLinkedHashSet());
 			}
+			subMonitor.setWorkRemaining(0);
 
 			return new SynchronizationModel(leftTraversal, rightTraversal, originTraversal);
 		}
@@ -285,12 +289,14 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
 				final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
-				updateDependencies(resourceSet, (IFile)left, monitor);
-				updateDependencies(resourceSet, (IFile)right, monitor);
+				updateDependencies(resourceSet, (IFile)left, subMonitor.newChild(30));
+				updateDependencies(resourceSet, (IFile)right, subMonitor.newChild(30));
 				if (origin instanceof IFile) {
-					updateDependencies(resourceSet, (IFile)origin, monitor);
+					updateDependencies(resourceSet, (IFile)origin, subMonitor.newChild(30));
+				} else {
+					subMonitor.setWorkRemaining(10);
 				}
-				updateChangedResources(resourceSet, monitor);
+				updateChangedResources(resourceSet, subMonitor.newChild(10));
 			}
 
 			final URI leftURI = createURIFor((IFile)left);
@@ -313,12 +319,12 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			final Set<IStorage> rightTraversal;
 			final Set<IStorage> originTraversal;
 			if (origin instanceof IFile) {
-				leftTraversal = resolveTraversal((IFile)left, ImmutableSet.of(rightURI, originURI), monitor);
-				rightTraversal = resolveTraversal((IFile)right, ImmutableSet.of(leftURI, originURI), monitor);
-				originTraversal = resolveTraversal((IFile)origin, ImmutableSet.of(leftURI, rightURI), monitor);
+				leftTraversal = resolveTraversal((IFile)left, ImmutableSet.of(rightURI, originURI));
+				rightTraversal = resolveTraversal((IFile)right, ImmutableSet.of(leftURI, originURI));
+				originTraversal = resolveTraversal((IFile)origin, ImmutableSet.of(leftURI, rightURI));
 			} else {
-				leftTraversal = resolveTraversal((IFile)left, Collections.singleton(rightURI), monitor);
-				rightTraversal = resolveTraversal((IFile)right, Collections.singleton(leftURI), monitor);
+				leftTraversal = resolveTraversal((IFile)left, Collections.singleton(rightURI));
+				rightTraversal = resolveTraversal((IFile)right, Collections.singleton(leftURI));
 				originTraversal = Collections.emptySet();
 			}
 
@@ -424,7 +430,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		}
 
 		final Set<IStorage> leftTraversal = resolveTraversal(left, Collections.<URI> emptySet(),
-				storageAccessor, monitor);
+				storageAccessor);
 		while (!currentlyResolving.isEmpty()) {
 			resolutionEnd.await();
 		}
@@ -579,7 +585,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		this.resolutionScope = resolutionScope;
 	}
 
-	private Set<IStorage> resolveTraversal(IFile file, Set<URI> bounds, IProgressMonitor monitor) {
+	private Set<IStorage> resolveTraversal(IFile file, Set<URI> bounds) {
 		final Set<IStorage> traversal = new LinkedHashSet<IStorage>();
 
 		final Iterable<URI> dependencies = getDependenciesOf(file, bounds);
@@ -590,7 +596,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	}
 
 	private Set<IStorage> resolveTraversal(IFile file, Set<URI> bounds,
-			IStorageProviderAccessor storageAccessor, IProgressMonitor monitor) {
+			IStorageProviderAccessor storageAccessor) {
 		final Set<IStorage> traversal = new LinkedHashSet<IStorage>();
 
 		final Iterable<URI> dependencies = getDependenciesOf(file, bounds);
@@ -609,6 +615,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 	private Set<IStorage> resolveRemoteTraversal(IStorageProviderAccessor storageAccessor, IStorage start,
 			Set<IStorage> localVariants, DiffSide side, IProgressMonitor monitor) throws InterruptedException {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, localVariants.size() + 1);
 		final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
 		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
 				storageAccessor, side);
@@ -622,11 +629,11 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			 * not use multiple thread to resolve the remote variants. For now, we'll use threads.
 			 */
 			final URI expectedURI = ResourceUtil.createURIFor(local);
-			demandRemoteResolve(resourceSet, expectedURI, monitor);
+			demandRemoteResolve(resourceSet, expectedURI, subMonitor.newChild(1));
 		}
 
 		final URI startURI = ResourceUtil.createURIFor(start);
-		demandRemoteResolve(resourceSet, startURI, monitor);
+		demandRemoteResolve(resourceSet, startURI, subMonitor.newChild(1));
 
 		while (!currentlyResolving.isEmpty()) {
 			resolutionEnd.await();
