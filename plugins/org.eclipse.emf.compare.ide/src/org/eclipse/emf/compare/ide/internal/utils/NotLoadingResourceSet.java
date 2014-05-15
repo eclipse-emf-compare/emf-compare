@@ -91,6 +91,23 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#handleDemandLoadException(org.eclipse.emf.ecore.resource.Resource,
+	 *      java.io.IOException)
+	 */
+	@Override
+	protected void handleDemandLoadException(Resource resource, IOException exception) {
+		try {
+			super.handleDemandLoadException(resource, exception);
+			// CHECKSTYLE:OFF
+		} catch (RuntimeException e) {
+			// CHECKSTYLE:ON
+			// do nothing. The errors are added to the Resource#getErrors() in super().
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getResource(org.eclipse.emf.common.util.URI,
 	 *      boolean)
 	 */

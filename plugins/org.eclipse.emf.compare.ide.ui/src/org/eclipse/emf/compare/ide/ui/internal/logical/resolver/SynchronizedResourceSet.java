@@ -2,6 +2,7 @@ package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
 import com.google.common.collect.Maps;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -108,6 +109,23 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 			demandLoadHelper(result);
 		}
 		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#handleDemandLoadException(org.eclipse.emf.ecore.resource.Resource,
+	 *      java.io.IOException)
+	 */
+	@Override
+	protected void handleDemandLoadException(Resource resource, IOException exception)
+			throws RuntimeException {
+		try {
+			super.handleDemandLoadException(resource, exception);
+		} catch (RuntimeException e) {
+			// do nothing, continue with loading, the exception has been added to the diagnostics of the
+			// resource
+		}
 	}
 
 	public Set<URI> discoverCrossReferences(Resource resource, IProgressMonitor monitor) {
