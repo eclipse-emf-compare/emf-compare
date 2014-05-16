@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.util.StyledStringConverter;
@@ -105,6 +106,8 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 			ret = super.getImage(element);
 		} else if (element instanceof Adapter) {
 			ret = super.getImage(((Adapter)element).getTarget());
+		} else if (element instanceof ICompareInput) {
+			ret = ((ICompareInput)element).getImage();
 		} else {
 			ret = super.getImage(element);
 		}
@@ -125,6 +128,8 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 			ret = getStyledTextFromObject(element);
 		} else if (element instanceof Adapter) {
 			ret = getStyledTextFromObject(((Adapter)element).getTarget());
+		} else if (element instanceof ICompareInput) {
+			ret = getStyledTextFromObject(((ICompareInput)element).getName());
 		} else {
 			ret = getStyledTextFromObject(element);
 		}
@@ -153,6 +158,11 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 			ret = getStyledStringConverter().toJFaceStyledString(
 					((IItemStyledLabelProvider)itemStyledLabelProvider).getStyledText(object));
 		}
+
+		if (ret == null) {
+			ret = new StyledString(object.toString());
+		}
+
 		return ret;
 	}
 

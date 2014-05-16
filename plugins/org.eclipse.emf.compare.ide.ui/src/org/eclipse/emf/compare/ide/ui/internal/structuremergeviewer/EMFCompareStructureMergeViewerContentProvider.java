@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,6 +49,8 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 		final Object ret;
 		if (element instanceof CompareInputAdapter) {
 			ret = super.getParent(((Adapter)element).getTarget());
+		} else if (element instanceof ICompareInput) {
+			ret = null;
 		} else {
 			ret = super.getParent(element);
 		}
@@ -65,6 +67,8 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 		final boolean ret;
 		if (element instanceof CompareInputAdapter) {
 			ret = super.hasChildren(((Adapter)element).getTarget());
+		} else if (element instanceof ICompareInput) {
+			ret = false;
 		} else {
 			ret = super.hasChildren(element);
 		}
@@ -81,6 +85,8 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 		final Object[] children;
 		if (element instanceof CompareInputAdapter) {
 			children = super.getChildren(((Adapter)element).getTarget());
+		} else if (element instanceof ICompareInput) {
+			children = new Object[] {};
 		} else {
 			children = super.getChildren(element);
 		}

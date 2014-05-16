@@ -70,6 +70,12 @@
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.NoVisibleItemViewer"
             label="%emf.compare.no.visible.item.viewer">
       </viewer>
+      <viewer
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.FallbackTextCompareViewerCreator"
+            extensions="org.eclipse.emf.compare.rcp.ui.fallbackText"
+            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.FallbackTextCompareViewerCreator"
+            label="%emf.compare.fallback.textcompare">
+      </viewer>
       <contentTypeBinding
             contentTypeId="org.eclipse.emf.ecore.xmi"
             contentMergeViewerId="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.WaitViewer">

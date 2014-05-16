@@ -36,6 +36,9 @@ public final class TypeConstants {
 	/** Used by accessors displaying matches. */
 	public static final String TYPE_EMATCH = EMFCompareRCPUIPlugin.PLUGIN_ID + ".eMatch"; //$NON-NLS-1$
 
+	/** Used when the comparison failed and we want to fallback to text merge. */
+	public static final String TYPE_FALLBACK_TEXT = EMFCompareRCPUIPlugin.PLUGIN_ID + ".fallbackText"; //$NON-NLS-1$
+
 	/**
 	 * Private constructor.
 	 */
