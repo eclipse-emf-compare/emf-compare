@@ -90,6 +90,13 @@ public class EMFResourceMapping extends ResourceMapping {
 	@Override
 	public ResourceTraversal[] getTraversals(ResourceMappingContext context, IProgressMonitor monitor)
 			throws CoreException {
+		final IProgressMonitor progressMonitor;
+		if (monitor == null) {
+			progressMonitor = new NullProgressMonitor();
+		} else {
+			progressMonitor = monitor;
+		}
+
 		if (cachedTraversals == null) {
 			try {
 				StorageTraversal emfTraversal = resolveEMFTraversal(context, monitor);
