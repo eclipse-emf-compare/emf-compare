@@ -1,22 +1,21 @@
 target "EMF Compare based on Luna SDK"
 
+with requirements
+
 location "http://download.eclipse.org/releases/luna" {
-	with requirements
 	org.eclipse.sdk.ide
 	org.eclipse.emf.feature.group
 	org.eclipse.uml2.feature.group
 	org.eclipse.egit.feature.group
-	org.junit4
+	org.junit
 }
 
 location "http://download.eclipse.org/tools/orbit/downloads/drops/S20131024145017/repository/" {
-	with requirements 
-	com.google.guava;version="[11.0.0,12.0.0)"
+	com.google.guava;version=[11.0.0,12.0.0)
 	org.apache.commons.logging
 }
 
 location "http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest" {
-	with requirements
 	org.eclipse.emf.compare.feature.group
 	org.eclipse.emf.compare.ide.ui.feature.group
 	org.eclipse.emf.compare.diagram.gmf.feature.group
@@ -25,6 +24,5 @@ location "http://download.eclipse.org/modeling/emf/compare/updates/nightly/lates
 }
 
 location "http://axelrichard.github.io/fr.obeo.performance/" {
-	with requirements
 	fr.obeo.performance
 }
