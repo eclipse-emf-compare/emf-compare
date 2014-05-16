@@ -99,7 +99,7 @@ public class EMFResourceMapping extends ResourceMapping {
 
 		if (cachedTraversals == null) {
 			try {
-				StorageTraversal emfTraversal = resolveEMFTraversal(context, monitor);
+				StorageTraversal emfTraversal = resolveEMFTraversal(context, progressMonitor);
 				if (emfTraversal.getDiagnostic().getSeverity() >= Diagnostic.ERROR) {
 					EMFCompareIDEUIPlugin.getDefault().getLog().log(
 							BasicDiagnostic.toIStatus(emfTraversal.getDiagnostic()));
