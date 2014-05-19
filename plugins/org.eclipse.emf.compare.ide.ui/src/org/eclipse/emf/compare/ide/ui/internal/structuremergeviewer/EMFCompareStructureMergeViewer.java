@@ -807,34 +807,35 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 								fallbackToTextComparison(input);
 							}
 						});
+						return;
 					}
-				} else {
-					final Builder comparisonBuilder = EMFCompare.builder().setPostProcessorRegistry(
-							EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
-
-					EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
-
-					final Comparison compareResult = comparisonBuilder.build().compare(scope,
-							BasicMonitor.toMonitor(subMonitor.newChild(15)));
-
-					if (compareResult.getDiagnostic() != null) {
-						SWTUtil.safeAsyncExec(new Runnable() {
-							public void run() {
-								updateProblemIndication(compareResult.getDiagnostic());
-							}
-						});
-					}
-
-					final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
-					final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
-					final ResourceSet originResourceSet = (ResourceSet)scope.getOrigin();
-
-					ICompareEditingDomain editingDomain = EMFCompareEditingDomain.create(leftResourceSet,
-							rightResourceSet, originResourceSet);
-					compareConfiguration.setEditingDomain(editingDomain);
-
-					compareInputChanged(scope, compareResult);
 				}
+
+				final Builder comparisonBuilder = EMFCompare.builder().setPostProcessorRegistry(
+						EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
+
+				EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
+
+				final Comparison compareResult = comparisonBuilder.build().compare(scope,
+						BasicMonitor.toMonitor(subMonitor.newChild(15)));
+
+				if (compareResult.getDiagnostic() != null) {
+					SWTUtil.safeAsyncExec(new Runnable() {
+						public void run() {
+							updateProblemIndication(compareResult.getDiagnostic());
+						}
+					});
+				}
+
+				final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
+				final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
+				final ResourceSet originResourceSet = (ResourceSet)scope.getOrigin();
+
+				ICompareEditingDomain editingDomain = EMFCompareEditingDomain.create(leftResourceSet,
+						rightResourceSet, originResourceSet);
+				compareConfiguration.setEditingDomain(editingDomain);
+
+				compareInputChanged(scope, compareResult);
 			}
 		} else {
 			compareInputChangedToNull();
