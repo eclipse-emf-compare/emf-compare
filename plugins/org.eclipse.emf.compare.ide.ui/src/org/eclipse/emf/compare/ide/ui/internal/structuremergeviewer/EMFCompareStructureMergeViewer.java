@@ -43,6 +43,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -153,6 +154,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					.getString("EMFCompareStructureMergeViewer.computingModelDifferences"), 100); //$NON-NLS-1$
 			try {
 				compareInputChanged((ICompareInput)getInput(), subMonitor.newChild(100));
+			} catch (final OperationCanceledException e) {
+				return Status.CANCEL_STATUS;
 			} catch (final Exception e) {
 				SWTUtil.safeAsyncExec(new Runnable() {
 					public void run() {
@@ -162,7 +165,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					}
 				});
 			} finally {
-				subMonitor.done();
+				wrapper.done();
 			}
 			return Status.OK_STATUS;
 		}
