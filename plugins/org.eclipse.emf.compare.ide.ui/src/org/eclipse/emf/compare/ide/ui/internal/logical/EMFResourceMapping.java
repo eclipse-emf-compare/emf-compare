@@ -121,6 +121,21 @@ public class EMFResourceMapping extends ResourceMapping {
 		return new ResourceTraversal[] {singletonTraversal, };
 	}
 
+	// FIXME delete once we have a true model object to return from #getModelObject()
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof EMFResourceMapping) {
+			return ((EMFResourceMapping)other).file.getFullPath().equals(file.getFullPath());
+		}
+		return false;
+	}
+
+	// FIXME delete once we have a true model object to return from #getModelObject()
+	@Override
+	public int hashCode() {
+		return file.getFullPath().hashCode();
+	}
+
 	/**
 	 * Resolve the traversal underlying this mapping. This will iterate over all resources needed by the
 	 * logical model of {@link #file} and return their list. Do note that the returned traversal might contain
