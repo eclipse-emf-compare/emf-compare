@@ -25,6 +25,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.utils.IDiagnosable;
 
 /**
@@ -48,7 +49,7 @@ public class StorageTraversal implements IAdaptable, IDiagnosable {
 	 *            The set of resources that are part of this traversal.
 	 */
 	public StorageTraversal(Set<? extends IStorage> storages) {
-		this(storages, new BasicDiagnostic());
+		this(storages, new BasicDiagnostic(EMFCompareIDEPlugin.PLUGIN_ID, 0, null, new Object[] {storages, }));
 	}
 
 	/**

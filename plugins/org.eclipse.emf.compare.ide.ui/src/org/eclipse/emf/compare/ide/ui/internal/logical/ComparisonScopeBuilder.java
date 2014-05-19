@@ -418,7 +418,7 @@ public final class ComparisonScopeBuilder {
 				originResourceSet);
 		scope.setResourceSetContentFilter(isInScope(urisInScope));
 
-		BasicDiagnostic diagnostic = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, "", //$NON-NLS-1$
+		BasicDiagnostic diagnostic = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null,
 				new Object[0]);
 		scope.setDiagnostic(diagnostic);
 

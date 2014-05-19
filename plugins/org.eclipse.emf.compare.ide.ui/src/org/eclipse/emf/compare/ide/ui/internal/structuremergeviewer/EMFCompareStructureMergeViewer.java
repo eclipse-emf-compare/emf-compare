@@ -159,9 +159,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			} catch (final Exception e) {
 				SWTUtil.safeAsyncExec(new Runnable() {
 					public void run() {
-						BasicDiagnostic d = new BasicDiagnostic();
-						d.add(BasicDiagnostic.toDiagnostic(e));
-						updateProblemIndication(d);
+						updateProblemIndication(BasicDiagnostic.toDiagnostic(e));
 					}
 				});
 			} finally {

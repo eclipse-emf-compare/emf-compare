@@ -291,7 +291,7 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 			}
 
 			resolvedResources = new LinkedHashSet<URI>();
-			diagnostic = new BasicDiagnostic();
+			diagnostic = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null, new Object[0]);
 
 			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
 				final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
@@ -352,7 +352,7 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 			}
 
 			resolvedResources = new LinkedHashSet<URI>();
-			diagnostic = new BasicDiagnostic();
+			diagnostic = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null, new Object[0]);
 
 			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
 				final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
@@ -445,7 +445,7 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 			}
 
 			resolvedResources = new LinkedHashSet<URI>();
-			diagnostic = new BasicDiagnostic();
+			diagnostic = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null, new Object[0]);
 
 			final IFile leftFile = adaptAs(left, IFile.class);
 
@@ -914,10 +914,10 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	 * @param resourceDiagnostic
 	 *            the diagnostic to be added to the global diagnostic.
 	 */
-	private void safeAddDiagnostic(Diagnostic resourceDiagnostic) {
+	private void safeMergeDiagnostic(Diagnostic resourceDiagnostic) {
 		lock.lock();
 		try {
-			diagnostic.add(resourceDiagnostic);
+			diagnostic.merge(resourceDiagnostic);
 		} finally {
 			lock.unlock();
 		}
@@ -969,7 +969,7 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 				final Resource resource = resourceSet.loadResource(uri);
 				Diagnostic resourceDiagnostic = EcoreUtil.computeDiagnostic(resource, true);
 				if (resourceDiagnostic.getSeverity() >= Diagnostic.WARNING) {
-					safeAddDiagnostic(resourceDiagnostic);
+					safeMergeDiagnostic(resourceDiagnostic);
 				}
 				dependencyGraph.add(uri);
 				if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
@@ -1033,7 +1033,7 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 				final Resource resource = resourceSet.loadResource(uri);
 				Diagnostic resourceDiagnostic = EcoreUtil.computeDiagnostic(resource, true);
 				if (resourceDiagnostic.getSeverity() >= Diagnostic.WARNING) {
-					safeAddDiagnostic(resourceDiagnostic);
+					safeMergeDiagnostic(resourceDiagnostic);
 				}
 				if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
 					final Set<URI> crossReferencedResources = resourceSet.discoverCrossReferences(resource,

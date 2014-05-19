@@ -56,7 +56,9 @@ public final class SynchronizationModel implements IDiagnosable {
 	 */
 	public SynchronizationModel(StorageTraversal leftTraversal, StorageTraversal rightTraversal,
 			StorageTraversal originTraversal) {
-		this(leftTraversal, rightTraversal, originTraversal, new BasicDiagnostic());
+		this(leftTraversal, rightTraversal, originTraversal, new BasicDiagnostic(
+				EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null, new Object[] {leftTraversal, rightTraversal,
+						originTraversal }));
 	}
 
 	/**
