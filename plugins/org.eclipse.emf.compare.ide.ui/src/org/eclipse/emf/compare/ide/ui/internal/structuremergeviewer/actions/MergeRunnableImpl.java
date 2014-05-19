@@ -33,8 +33,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @noreference
+ * @noextend
  */
-final class MergeRunnableImpl implements IMergeRunnable {
+// Visible for testing
+public final class MergeRunnableImpl implements IMergeRunnable {
 
 	private final boolean isLeftEditable;
 
@@ -90,6 +93,9 @@ final class MergeRunnableImpl implements IMergeRunnable {
 	}
 
 	private void markAsMerged(Diff diff, MergeMode mode, boolean leftToRight) {
+		if (diff.getState() == DifferenceState.MERGED) {
+			return;
+		}
 		diff.setState(DifferenceState.MERGED);
 		addOrUpdateMergeData(diff, mode);
 
