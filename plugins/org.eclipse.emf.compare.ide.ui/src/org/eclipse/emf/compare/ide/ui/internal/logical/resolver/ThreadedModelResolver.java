@@ -21,7 +21,9 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -44,6 +47,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
@@ -86,7 +90,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class ThreadedModelResolver extends AbstractModelResolver {
+public class ThreadedModelResolver extends AbstractModelResolver implements UncaughtExceptionHandler {
 	/** This can be used in order to convert an Iterable of IStorages to an Iterable over the storage's URIs. */
 	private static final Function<IStorage, URI> AS_URI = new Function<IStorage, URI>() {
 		public URI apply(IStorage input) {
@@ -182,8 +186,14 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		this.lock = new ReentrantLock(true);
 		this.notResolving = lock.newCondition();
 		this.resolutionEnd = lock.newCondition();
-		this.resolvingPool = Executors.newFixedThreadPool(availableProcessors);
-		this.unloadingPool = Executors.newFixedThreadPool(availableProcessors);
+		ThreadFactory resolvingThreadFactory = new ThreadFactoryBuilder().setNameFormat(
+				"EMFCompare-ResolvingThread-%d") //$NON-NLS-1$
+				.setUncaughtExceptionHandler(this).build();
+		this.resolvingPool = Executors.newFixedThreadPool(availableProcessors, resolvingThreadFactory);
+		ThreadFactory unloadingThreadFactory = new ThreadFactoryBuilder().setNameFormat(
+				"EMFCompare-UnloadingThread-%d") //$NON-NLS-1$
+				.setUncaughtExceptionHandler(this).build();
+		this.unloadingPool = Executors.newFixedThreadPool(availableProcessors, unloadingThreadFactory);
 		this.currentlyResolving = new HashSet<URI>();
 	}
 
@@ -203,6 +213,21 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		resolvingPool.shutdown();
 		unloadingPool.shutdown();
 		super.dispose();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Thread.UncaughtExceptionHandler#uncaughtException(java.lang.Thread, java.lang.Throwable)
+	 */
+	public void uncaughtException(Thread t, Throwable e) {
+		if (e instanceof OperationCanceledException) {
+			// TODO: handle cancellation
+		} else if (diagnostic != null) {
+			diagnostic.add(BasicDiagnostic.toDiagnostic(e));
+		} else {
+			EMFCompareIDEUIPlugin.getDefault().log(e);
+		}
 	}
 
 	/** {@inheritDoc} */
