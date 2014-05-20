@@ -101,8 +101,8 @@ public class JobProgressInfoComposite extends Composite {
 				JobProgressInfoComposite.this.job.cancel();
 			}
 		});
-		actionButton.setImage(EMFCompareIDEUIPlugin.getImage("icons/full/dobj16/stop.gif")); //$NON-NLS-1$
-		actionButton.setDisabledImage(EMFCompareIDEUIPlugin.getImage("icons/full/eobj16/stop.gif")); //$NON-NLS-1$
+		actionButton.setImage(EMFCompareIDEUIPlugin.getImage("icons/full/eobj16/stop.gif")); //$NON-NLS-1$
+		actionButton.setDisabledImage(EMFCompareIDEUIPlugin.getImage("icons/full/dobj16/stop.gif")); //$NON-NLS-1$
 
 		taskNameLabel = new Label(this, SWT.NONE);
 		gridData = new GridData();
