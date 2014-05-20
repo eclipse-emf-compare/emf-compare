@@ -26,7 +26,9 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.core.variants.CachedResourceVariant;
 import org.eclipse.team.core.variants.IResourceVariant;
@@ -126,6 +128,15 @@ public class StreamAccessorStorage implements IStorage {
 							.getAdapter(IResourceVariant.class);
 					if (variant instanceof CachedResourceVariant) {
 						tmp = ((CachedResourceVariant)variant).getDisplayPath().toString();
+					} else if (variant != null) {
+						try {
+							final IStorage storage = variant.getStorage(new NullProgressMonitor());
+							if (storage instanceof IFile) {
+								tmp = storage.getFullPath().toString();
+							}
+						} catch (TeamException e) {
+							// Swallow, this was a best effort...
+						}
 					}
 				}
 			}

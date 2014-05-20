@@ -262,11 +262,7 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 
 	/** {@inheritDoc} */
 	public boolean canResolve(IStorage sourceStorage) {
-		if (sourceStorage instanceof IFile) {
-			IFile file = (IFile)sourceStorage;
-			return file.getProject().isAccessible() && ((IFile)sourceStorage).exists();
-		}
-		return false;
+		return true;
 	}
 
 	/**
