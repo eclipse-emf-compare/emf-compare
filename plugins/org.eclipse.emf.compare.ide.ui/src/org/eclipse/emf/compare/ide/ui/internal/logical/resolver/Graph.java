@@ -68,6 +68,15 @@ final class Graph<E> {
 	}
 
 	/**
+	 * Clears this graph and goes back in a pristine state.
+	 */
+	public void clear() {
+		synchronized(nodes) {
+			nodes.clear();
+		}
+	}
+
+	/**
 	 * Adds a new element to this graph, if it does not exists yet. Elements will initially have no connection
 	 * to other elements, and can thus be considered "roots" of the graph.
 	 * 
