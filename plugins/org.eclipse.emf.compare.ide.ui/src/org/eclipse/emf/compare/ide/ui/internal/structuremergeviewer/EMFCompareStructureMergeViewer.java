@@ -67,6 +67,7 @@ import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoDifferencesCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoVisibleItemCompareInput;
@@ -785,6 +786,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				try {
 					scope = ComparisonScopeBuilder.create(compareConfiguration.getContainer(), left, right,
 							origin, subMonitor.newChild(85));
+				} catch (OperationCanceledException e) {
+					scope = new EmptyComparisonScope();
+					((EmptyComparisonScope)scope).setDiagnostic(new BasicDiagnostic(Diagnostic.CANCEL,
+							EMFCompareIDEUIPlugin.PLUGIN_ID, 0, EMFCompareIDEUIMessages
+									.getString("EMFCompareStructureMergeViewer.operationCancel"), //$NON-NLS-1$
+							new Object[] {e, }));
 				} catch (Exception e) {
 					scope = new EmptyComparisonScope();
 					((EmptyComparisonScope)scope).setDiagnostic(BasicDiagnostic.toDiagnostic(e));

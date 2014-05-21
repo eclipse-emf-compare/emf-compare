@@ -29,6 +29,7 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
@@ -356,6 +357,10 @@ public final class ComparisonScopeBuilder {
 	 * @return The created comparison scope.
 	 */
 	private IComparisonScope createMinimizedScope(SynchronizationModel syncModel, IProgressMonitor monitor) {
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+		
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 		// Minimize the traversals to non-read-only resources with no binary identical counterparts.
 		minimizer.minimize(syncModel, subMonitor.newChild(10));
