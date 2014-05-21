@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,15 +14,19 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
-import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeActionTest;
-import org.eclipse.emf.compare.ide.ui.tests.unit.DependenciesTest;
+import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TestBug434827;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+/**
+ * Aggregator of tests related to a bug described in bugzilla.
+ * 
+ * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
+ */
 @RunWith(Suite.class)
-@SuiteClasses({DependenciesTest.class, MergeActionTest.class, BugsTestSuite.class })
-public class AllTests {
+@SuiteClasses({TestBug434827.class })
+public class BugsTestSuite {
 	/**
 	 * Launches the test with the given arguments.
 	 * 
