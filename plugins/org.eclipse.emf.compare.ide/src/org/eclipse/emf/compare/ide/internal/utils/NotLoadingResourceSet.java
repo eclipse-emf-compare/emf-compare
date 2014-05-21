@@ -26,6 +26,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -71,6 +72,10 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 		SubMonitor subMonitor = progress.newChild(loadWorkPercentage).setWorkRemaining(
 				traversals.getStorages().size());
 		for (IStorage storage : traversals.getStorages()) {
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+
 			resourceSet.loadResource(storage, resourceSet.getLoadOptions());
 			subMonitor.worked(1);
 		}
@@ -81,6 +86,10 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 		// Then resolve all proxies between our "loaded" resources.
 		List<Resource> resourcesCopy = newArrayList(resourceSet.getResources());
 		for (Resource res : resourcesCopy) {
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+
 			resourceSet.resolve(res);
 			subMonitor.worked(1);
 		}

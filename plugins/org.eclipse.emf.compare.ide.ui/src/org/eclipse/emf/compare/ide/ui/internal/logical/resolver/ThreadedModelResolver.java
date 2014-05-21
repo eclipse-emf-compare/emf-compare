@@ -28,7 +28,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -62,6 +61,7 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.util.ThreadSafeProgressMonitor;
 import org.eclipse.emf.compare.ide.ui.logical.AbstractModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
@@ -96,7 +96,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class ThreadedModelResolver extends AbstractModelResolver implements UncaughtExceptionHandler {
+public class ThreadedModelResolver extends AbstractModelResolver {
+
 	/** This can be used in order to convert an Iterable of IStorages to an Iterable over the storage's URIs. */
 	private static final Function<IStorage, URI> AS_URI = new Function<IStorage, URI>() {
 		public URI apply(IStorage input) {
@@ -143,10 +144,13 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	private final Set<URI> currentlyResolving;
 
 	/** Thread pool for our resolving threads. */
-	private final ListeningExecutorService resolvingPool;
+	private ListeningExecutorService resolvingPool;
 
 	/** Thread pool for our unloading threads. */
-	private final ListeningExecutorService unloadingPool;
+	private ListeningExecutorService unloadingPool;
+
+	/** Executor for the callback on task completion from the other two pools */
+	private final ExecutorService callbackThreadPool;
 
 	/**
 	 * This will lock will prevent concurrent modifications of this resolver's fields. Most notably,
@@ -187,22 +191,31 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 
 	/** Default constructor. */
 	public ThreadedModelResolver() {
-		final int availableProcessors = Runtime.getRuntime().availableProcessors();
 		this.dependencyGraph = new Graph<URI>();
 		this.lock = new ReentrantLock(true);
 		this.notResolving = lock.newCondition();
 		this.resolutionEnd = lock.newCondition();
+		this.currentlyResolving = new HashSet<URI>();
+		this.callbackThreadPool = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat(
+				"EMFCompare-ModelResolver-Callback-%d").build()); //$NON-NLS-1$
+	}
+
+	/**
+	 * Creates the thread pools of this resolver. We cannot keep pools between resolving call because in case
+	 * of cancellation, we have to shutdown the pool to exit early.
+	 */
+	private void createThreadPools() {
+		final int availableProcessors = Runtime.getRuntime().availableProcessors();
 		ThreadFactory resolvingThreadFactory = new ThreadFactoryBuilder().setNameFormat(
 				"EMFCompare-ResolvingThread-%d") //$NON-NLS-1$
-				.setUncaughtExceptionHandler(this).build();
+				.build();
 		this.resolvingPool = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(
 				availableProcessors, resolvingThreadFactory));
 		ThreadFactory unloadingThreadFactory = new ThreadFactoryBuilder().setNameFormat(
 				"EMFCompare-UnloadingThread-%d") //$NON-NLS-1$
-				.setUncaughtExceptionHandler(this).build();
+				.build();
 		this.unloadingPool = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(
 				availableProcessors, unloadingThreadFactory));
-		this.currentlyResolving = new HashSet<URI>();
 	}
 
 	/**
@@ -218,9 +231,22 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	@Override
 	public void dispose() {
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceListener);
-		shutdownAndAwaitTermination(resolvingPool);
-		shutdownAndAwaitTermination(unloadingPool);
+		shutdownAndAwaitTermination(callbackThreadPool);
 		super.dispose();
+	}
+
+	/**
+	 * Shutdown the {@link #resolvingPool} and {@link #unloadingPool}
+	 */
+	private void shutdownThreadPools() {
+		if (resolvingPool != null) {
+			shutdownAndAwaitTermination(resolvingPool);
+			resolvingPool = null;
+		}
+		if (unloadingPool != null) {
+			shutdownAndAwaitTermination(unloadingPool);
+			unloadingPool = null;
+		}
 	}
 
 	/**
@@ -233,7 +259,7 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	 * @param pool
 	 *            the pool to shutdown
 	 */
-	private void shutdownAndAwaitTermination(ExecutorService pool) {
+	private static void shutdownAndAwaitTermination(ExecutorService pool) {
 		pool.shutdown(); // Disable new tasks from being submitted
 		try {
 			// Wait a while for existing tasks to terminate
@@ -249,21 +275,6 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 			pool.shutdownNow();
 			// Preserve interrupt status
 			Thread.currentThread().interrupt();
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.lang.Thread.UncaughtExceptionHandler#uncaughtException(java.lang.Thread, java.lang.Throwable)
-	 */
-	public void uncaughtException(Thread t, Throwable e) {
-		if (e instanceof OperationCanceledException) {
-			// TODO: handle cancellation
-		} else if (diagnostic != null) {
-			diagnostic.add(BasicDiagnostic.toDiagnostic(e));
-		} else {
-			EMFCompareIDEUIPlugin.getDefault().log(e);
 		}
 	}
 
@@ -283,19 +294,19 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	 */
 	public StorageTraversal resolveLocalModel(IResource start, IProgressMonitor monitor)
 			throws InterruptedException {
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 		if (!(start instanceof IFile)) {
 			return new StorageTraversal(new LinkedHashSet<IStorage>());
 		}
 
+		ThreadSafeProgressMonitor subMonitor = null;
 		lock.lockInterruptibly();
 		try {
+			subMonitor = new ThreadSafeProgressMonitor(SubMonitor.convert(monitor, 100));
 			while (!currentlyResolving.isEmpty()) {
 				notResolving.await();
 			}
 
-			resolvedResources = new LinkedHashSet<URI>();
-			diagnostic = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null, new Object[0]);
+			setupResolving();
 
 			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
 				final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
@@ -317,6 +328,11 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 
 			notResolving.signal();
 			lock.unlock();
+
+			shutdownThreadPools();
+			if (subMonitor != null) {
+				subMonitor.setWorkRemaining(0);
+			}
 		}
 	}
 
@@ -331,23 +347,36 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	 */
 	public SynchronizationModel resolveLocalModels(IResource left, IResource right, IResource origin,
 			IProgressMonitor monitor) throws InterruptedException {
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
-		subMonitor.subTask(EMFCompareIDEUIMessages.getString("ModelResolver.resolvingLocalModel")); //$NON-NLS-1$
 
-		if (!(left instanceof IFile && right instanceof IFile && (origin == null || origin instanceof IFile))) {
-			// Sub-optimal implementation, we'll only try and resolve each side individually
-			final StorageTraversal leftTraversal = resolveLocalModel(left, subMonitor);
-			final StorageTraversal rightTraversal = resolveLocalModel(right, subMonitor);
-			final StorageTraversal originTraversal;
-			if (origin != null) {
-				originTraversal = resolveLocalModel(origin, subMonitor);
+		ThreadSafeProgressMonitor subMonitor = new ThreadSafeProgressMonitor(SubMonitor.convert(monitor, 100));
+		try {
+			if (!(left instanceof IFile && right instanceof IFile && (origin == null || origin instanceof IFile))) {
+				return resolveNonFileLocalModels(left, right, origin, subMonitor);
 			} else {
-				originTraversal = new StorageTraversal(Sets.<IStorage> newLinkedHashSet());
+				return resolveFileLocalModel(left, right, origin, subMonitor);
 			}
+		} finally {
 			subMonitor.setWorkRemaining(0);
-
-			return new SynchronizationModel(leftTraversal, rightTraversal, originTraversal);
 		}
+	}
+
+	private SynchronizationModel resolveNonFileLocalModels(IResource left, IResource right, IResource origin,
+			ThreadSafeProgressMonitor subMonitor) throws InterruptedException {
+		// Sub-optimal implementation, we'll only try and resolve each side individually
+		final StorageTraversal leftTraversal = resolveLocalModel(left, subMonitor);
+		final StorageTraversal rightTraversal = resolveLocalModel(right, subMonitor);
+		final StorageTraversal originTraversal;
+		if (origin != null) {
+			originTraversal = resolveLocalModel(origin, subMonitor);
+		} else {
+			originTraversal = new StorageTraversal(Sets.<IStorage> newLinkedHashSet());
+		}
+
+		return new SynchronizationModel(leftTraversal, rightTraversal, originTraversal);
+	}
+
+	private SynchronizationModel resolveFileLocalModel(IResource left, IResource right, IResource origin,
+			ThreadSafeProgressMonitor subMonitor) throws InterruptedException {
 
 		lock.lockInterruptibly();
 		try {
@@ -355,8 +384,7 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 				notResolving.await();
 			}
 
-			resolvedResources = new LinkedHashSet<URI>();
-			diagnostic = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null, new Object[0]);
+			setupResolving();
 
 			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
 				final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
@@ -383,8 +411,6 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 			while (!currentlyResolving.isEmpty()) {
 				resolutionEnd.await();
 			}
-
-			subMonitor.setWorkRemaining(0);
 
 			final Set<IStorage> leftTraversal;
 			final Set<IStorage> rightTraversal;
@@ -428,6 +454,8 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 
 			notResolving.signal();
 			lock.unlock();
+
+			shutdownThreadPools();
 		}
 	}
 
@@ -442,14 +470,17 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	 */
 	public SynchronizationModel resolveModels(IStorageProviderAccessor storageAccessor, IStorage left,
 			IStorage right, IStorage origin, IProgressMonitor monitor) throws InterruptedException {
+
+		ThreadSafeProgressMonitor subMonitor = null;
 		lock.lockInterruptibly();
 		try {
+			subMonitor = new ThreadSafeProgressMonitor(SubMonitor.convert(monitor, 100));
+
 			while (!currentlyResolving.isEmpty()) {
 				notResolving.await();
 			}
 
-			resolvedResources = new LinkedHashSet<URI>();
-			diagnostic = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null, new Object[0]);
+			setupResolving();
 
 			final IFile leftFile = adaptAs(left, IFile.class);
 
@@ -460,9 +491,9 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 			final SynchronizationModel synchronizationModel;
 			if (leftFile != null) {
 				synchronizationModel = resolveModelsWithLocal(storageAccessor, leftFile, right, origin,
-						monitor);
+						subMonitor);
 			} else {
-				synchronizationModel = resolveRemoteModels(storageAccessor, left, right, origin, monitor);
+				synchronizationModel = resolveRemoteModels(storageAccessor, left, right, origin, subMonitor);
 			}
 
 			return synchronizationModel;
@@ -472,7 +503,22 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 
 			notResolving.signal();
 			lock.unlock();
+
+			shutdownThreadPools();
+			if (subMonitor != null) {
+				subMonitor.setWorkRemaining(0);
+			}
 		}
+	}
+
+	/**
+	 * This should be call before starting any model resolution but it must not be call if another resolution
+	 * is already running (i.e. it must be call after an {@link #notResolving}.await()).
+	 */
+	private void setupResolving() {
+		createThreadPools();
+		resolvedResources = new LinkedHashSet<URI>();
+		diagnostic = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null, new Object[0]);
 	}
 
 	/**
@@ -499,16 +545,15 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	 *             Thrown if the resolution is cancelled or interrupted one way or another.
 	 */
 	private SynchronizationModel resolveModelsWithLocal(IStorageProviderAccessor storageAccessor, IFile left,
-			IStorage right, IStorage origin, IProgressMonitor monitor) throws InterruptedException {
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+			IStorage right, IStorage origin, ThreadSafeProgressMonitor monitor) throws InterruptedException {
 
 		// Update changes and compute dependencies for left
 		// Then load the same set of resources for the remote sides, completing it top-down
 
 		if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
 			final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
-			updateDependencies(resourceSet, left, subMonitor);
-			updateChangedResources(resourceSet, subMonitor);
+			updateDependencies(resourceSet, left, monitor);
+			updateChangedResources(resourceSet, monitor);
 		}
 
 		final Set<IStorage> leftTraversal = resolveTraversal(left, Collections.<URI> emptySet(),
@@ -518,16 +563,14 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 		}
 
 		final Set<IStorage> rightTraversal = resolveRemoteTraversal(storageAccessor, right, leftTraversal,
-				DiffSide.REMOTE, subMonitor);
+				DiffSide.REMOTE, monitor);
 		final Set<IStorage> originTraversal;
 		if (origin != null) {
 			originTraversal = resolveRemoteTraversal(storageAccessor, origin, leftTraversal, DiffSide.ORIGIN,
-					subMonitor);
+					monitor);
 		} else {
 			originTraversal = Collections.emptySet();
 		}
-
-		subMonitor.setWorkRemaining(0);
 
 		final SynchronizationModel synchronizationModel = new SynchronizationModel(new StorageTraversal(
 				leftTraversal), new StorageTraversal(rightTraversal), new StorageTraversal(originTraversal),
@@ -556,7 +599,7 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	 *             Thrown if the resolution is cancelled or interrupted one way or another.
 	 */
 	private SynchronizationModel resolveRemoteModels(IStorageProviderAccessor storageAccessor, IStorage left,
-			IStorage right, IStorage origin, IProgressMonitor monitor) throws InterruptedException {
+			IStorage right, IStorage origin, ThreadSafeProgressMonitor monitor) throws InterruptedException {
 
 		final Set<IStorage> leftTraversal = resolveRemoteTraversal(storageAccessor, left, Collections
 				.<IStorage> emptySet(), DiffSide.SOURCE, monitor);
@@ -585,7 +628,7 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
 	 */
-	private void updateChangedResources(SynchronizedResourceSet resourceSet, SubMonitor monitor) {
+	private void updateChangedResources(SynchronizedResourceSet resourceSet, ThreadSafeProgressMonitor monitor) {
 		final Set<URI> removedURIs = difference(resourceListener.popRemovedURIs(), resolvedResources);
 		final Set<URI> changedURIs = difference(resourceListener.popChangedURIs(), resolvedResources);
 
@@ -617,7 +660,8 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
 	 */
-	private void updateDependencies(SynchronizedResourceSet resourceSet, IFile file, SubMonitor monitor) {
+	private void updateDependencies(SynchronizedResourceSet resourceSet, IFile file,
+			ThreadSafeProgressMonitor monitor) {
 		final URI expectedURI = createURIFor(file);
 		if (!dependencyGraph.contains(expectedURI)) {
 			final IResource startingPoint = getResolutionStartingPoint(file);
@@ -703,8 +747,8 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	}
 
 	private Set<IStorage> resolveRemoteTraversal(IStorageProviderAccessor storageAccessor, IStorage start,
-			Set<IStorage> localVariants, DiffSide side, IProgressMonitor monitor) throws InterruptedException {
-		SubMonitor subMonitor = SubMonitor.convert(monitor, localVariants.size() + 1);
+			Set<IStorage> localVariants, DiffSide side, ThreadSafeProgressMonitor monitor)
+			throws InterruptedException {
 		final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
 		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
 				storageAccessor, side);
@@ -718,11 +762,11 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 			 * not use multiple thread to resolve the remote variants. For now, we'll use threads.
 			 */
 			final URI expectedURI = ResourceUtil.createURIFor(local);
-			demandRemoteResolve(resourceSet, expectedURI, subMonitor.newChild(1));
+			demandRemoteResolve(resourceSet, expectedURI, monitor);
 		}
 
 		final URI startURI = ResourceUtil.createURIFor(start);
-		demandRemoteResolve(resourceSet, startURI, subMonitor.newChild(1));
+		demandRemoteResolve(resourceSet, startURI, monitor);
 
 		while (!currentlyResolving.isEmpty()) {
 			resolutionEnd.await();
@@ -835,6 +879,7 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 		}
 
 		if (!coherenceThreats.isEmpty()) {
+			// FIXME: should be added to diagnostic instead
 			final String message = EMFCompareIDEUIMessages.getString("ModelResolver.coherenceWarning"); //$NON-NLS-1$
 			final String details = Iterables.toString(coherenceThreats);
 			EMFCompareIDEUIPlugin.getDefault().getLog().log(
@@ -857,7 +902,12 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	 *            Monitor on which to report progress to the user.
 	 * @see ResourceResolver
 	 */
-	protected void demandResolve(SynchronizedResourceSet resourceSet, URI uri, final SubMonitor monitor) {
+	protected void demandResolve(SynchronizedResourceSet resourceSet, URI uri,
+			final ThreadSafeProgressMonitor monitor) {
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+
 		lock.lock();
 		try {
 			if (resolvedResources.add(uri) && currentlyResolving.add(uri)) {
@@ -873,8 +923,9 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 
 					public void onFailure(Throwable t) {
 						monitor.worked(1);
+						onFailureCallback(t);
 					}
-				});
+				}, callbackThreadPool);
 			}
 		} finally {
 			lock.unlock();
@@ -896,7 +947,12 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
 	 */
-	protected void demandRemoteResolve(SynchronizedResourceSet resourceSet, URI uri, final SubMonitor monitor) {
+	protected void demandRemoteResolve(SynchronizedResourceSet resourceSet, URI uri,
+			final ThreadSafeProgressMonitor monitor) {
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+
 		lock.lock();
 		try {
 			if (resolvedResources.add(uri) && currentlyResolving.add(uri)) {
@@ -912,8 +968,9 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 
 					public void onFailure(Throwable t) {
 						monitor.worked(1);
+						onFailureCallback(t);
 					}
-				});
+				}, callbackThreadPool);
 			}
 		} finally {
 			lock.unlock();
@@ -938,7 +995,11 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 	 * @see ResourceUnloader
 	 */
 	protected void demandUnload(SynchronizedResourceSet resourceSet, Resource resource,
-			final SubMonitor monitor) {
+			final ThreadSafeProgressMonitor monitor) {
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+
 		// Regardless of the amount of progress reported so far, use 0.1% of the space remaining in the
 		// monitor to process the next node.
 		monitor.setWorkRemaining(1000);
@@ -951,8 +1012,31 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 
 			public void onFailure(Throwable t) {
 				monitor.worked(1);
+				onFailureCallback(t);
 			}
-		});
+		}, callbackThreadPool);
+	}
+
+	/**
+	 * Callback method on failure of task spawn by
+	 * {@link #demandResolve(SynchronizedResourceSet, URI, ThreadSafeProgressMonitor) demandResolve},
+	 * {@link #demandUnload(SynchronizedResourceSet, Resource, ThreadSafeProgressMonitor) demandUnload} and
+	 * {@link #demandRemoteResolve(SynchronizedResourceSet, URI, ThreadSafeProgressMonitor)
+	 * demandRemoteResolve}. It will either shutdown the execution pools and clear the dependency graph or
+	 * just log the error to the {@link #diagnostic}.
+	 * 
+	 * @param e
+	 *            the thrown exception.
+	 */
+	private void onFailureCallback(Throwable e) {
+		if (e instanceof OperationCanceledException) {
+			// we do not log the cancel operation as it will be done by the caller thread, we are in a
+			// callback only here and #diagnostic may already be null.
+			shutdownThreadPools();
+			dependencyGraph.clear();
+		} else {
+			safeMergeDiagnostic(BasicDiagnostic.toDiagnostic(e));
+		}
 	}
 
 	/**
@@ -987,7 +1071,7 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 		private final URI uri;
 
 		/** Monitor on which to report progress to the user. */
-		private final SubMonitor monitor;
+		private final ThreadSafeProgressMonitor monitor;
 
 		/**
 		 * Default constructor.
@@ -999,7 +1083,8 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 		 * @param monitor
 		 *            Monitor on which to report progress to the user.
 		 */
-		public ResourceResolver(SynchronizedResourceSet resourceSet, URI uri, SubMonitor monitor) {
+		public ResourceResolver(SynchronizedResourceSet resourceSet, URI uri,
+				ThreadSafeProgressMonitor monitor) {
 			this.resourceSet = resourceSet;
 			this.uri = uri;
 			this.monitor = monitor;
@@ -1007,12 +1092,12 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 
 		/** {@inheritDoc} */
 		public void run() {
-			/*
-			 * FIXME the target resource might have been removed since this job was queued, or there could be
-			 * any kind of exception thrown. We must check for pre-caught exceptions (resource.getErrors()) as
-			 * well as unexpected exceptions (catch Exception?).
-			 */
 			try {
+				// must be in the try to eventually signal the #resolutionEnd
+				if (monitor.isCanceled()) {
+					throw new OperationCanceledException();
+				}
+
 				final Resource resource = resourceSet.loadResource(uri);
 				Diagnostic resourceDiagnostic = EcoreUtil.computeDiagnostic(resource, true);
 				if (resourceDiagnostic.getSeverity() >= Diagnostic.WARNING) {
@@ -1056,7 +1141,7 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 		private final URI uri;
 
 		/** Monitor on which to report progress to the user. */
-		private final SubMonitor monitor;
+		private final ThreadSafeProgressMonitor monitor;
 
 		/**
 		 * Constructs a resolver to load a resource from its URI.
@@ -1068,7 +1153,8 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 		 * @param monitor
 		 *            Monitor on which to report progress to the user.
 		 */
-		public RemoteResourceResolver(SynchronizedResourceSet resourceSet, URI uri, SubMonitor monitor) {
+		public RemoteResourceResolver(SynchronizedResourceSet resourceSet, URI uri,
+				ThreadSafeProgressMonitor monitor) {
 			this.resourceSet = resourceSet;
 			this.uri = uri;
 			this.monitor = monitor;
@@ -1077,6 +1163,11 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 		/** {@inheritDoc} */
 		public void run() {
 			try {
+				// must be in the try to eventually signal the #resolutionEnd
+				if (monitor.isCanceled()) {
+					throw new OperationCanceledException();
+				}
+
 				final Resource resource = resourceSet.loadResource(uri);
 				Diagnostic resourceDiagnostic = EcoreUtil.computeDiagnostic(resource, true);
 				if (resourceDiagnostic.getSeverity() >= Diagnostic.WARNING) {
@@ -1139,6 +1230,10 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 
 		/** {@inheritDoc} */
 		public void run() {
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+
 			resourceSet.unload(resource, monitor);
 		}
 	}
@@ -1155,7 +1250,7 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 		private final SynchronizedResourceSet resourceSet;
 
 		/** Monitor on which to report progress to the user. */
-		private final SubMonitor monitor;
+		private final ThreadSafeProgressMonitor monitor;
 
 		/**
 		 * Default constructor.
@@ -1165,13 +1260,17 @@ public class ThreadedModelResolver extends AbstractModelResolver implements Unca
 		 * @param monitor
 		 *            Monitor on which to report progress to the user.
 		 */
-		public ModelResourceVisitor(SynchronizedResourceSet resourceSet, SubMonitor monitor) {
+		public ModelResourceVisitor(SynchronizedResourceSet resourceSet, ThreadSafeProgressMonitor monitor) {
 			this.resourceSet = resourceSet;
 			this.monitor = monitor;
 		}
 
 		/** {@inheritDoc} */
 		public boolean visit(IResource resource) throws CoreException {
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+
 			if (resource instanceof IFile) {
 				final IFile file = (IFile)resource;
 				if (hasModelType(file)) {
