@@ -14,14 +14,22 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
+import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeActionTest;
+import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.PseudoConflictsMergeActionTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.DependenciesTest;
+import org.eclipse.emf.compare.tests.nodes.NodesPackage;
+import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({DependenciesTest.class, MergeActionTest.class, BugsTestSuite.class })
+@SuiteClasses({DependenciesTest.class, MergeActionTest.class, PseudoConflictsMergeActionTest.class,
+		BugsTestSuite.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.
@@ -40,5 +48,14 @@ public class AllTests {
 	 */
 	public static Test suite() {
 		return new JUnit4TestAdapter(AllTests.class);
+	}
+
+	@BeforeClass
+	public static void fillEMFRegistries() {
+		EPackage.Registry.INSTANCE.put(ComparePackage.eNS_URI, ComparePackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(NodesPackage.eNS_URI, NodesPackage.eINSTANCE);
+
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("nodes", //$NON-NLS-1$
+				new NodesResourceFactoryImpl());
 	}
 }

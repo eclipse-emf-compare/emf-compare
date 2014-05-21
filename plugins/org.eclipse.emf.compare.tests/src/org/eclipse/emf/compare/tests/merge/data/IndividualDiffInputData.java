@@ -341,4 +341,52 @@ public class IndividualDiffInputData extends AbstractInputData {
 	public Resource getLeftMoveRightDeleteRightConflictScope() throws IOException {
 		return loadFromClassLoader("conflictscope/leftmove_rightdelete/right.ecore");
 	}
+
+	public Resource getLeftPseudoConflictAddScope() throws IOException {
+		return loadFromClassLoader("pseudoconflictscope/add/left.nodes");
+	}
+
+	public Resource getOriginPseudoConflictAddScope() throws IOException {
+		return loadFromClassLoader("pseudoconflictscope/add/ancestor.nodes");
+	}
+
+	public Resource getRightPseudoConflictAddScope() throws IOException {
+		return loadFromClassLoader("pseudoconflictscope/add/right.nodes");
+	}
+
+	public Resource getLeftPseudoConflictChangeScope() throws IOException {
+		return loadFromClassLoader("pseudoconflictscope/change/left.nodes");
+	}
+
+	public Resource getOriginPseudoConflictChangeScope() throws IOException {
+		return loadFromClassLoader("pseudoconflictscope/change/ancestor.nodes");
+	}
+
+	public Resource getRightPseudoConflictChangeScope() throws IOException {
+		return loadFromClassLoader("pseudoconflictscope/change/right.nodes");
+	}
+
+	public Resource getLeftPseudoConflictDeleteScope() throws IOException {
+		return loadFromClassLoader("pseudoconflictscope/delete/left.nodes");
+	}
+
+	public Resource getOriginPseudoConflictDeleteScope() throws IOException {
+		return loadFromClassLoader("pseudoconflictscope/delete/ancestor.nodes");
+	}
+
+	public Resource getRightPseudoConflictDeleteScope() throws IOException {
+		return loadFromClassLoader("pseudoconflictscope/delete/right.nodes");
+	}
+
+	public Resource getLeftPseudoConflictFullScope() throws IOException {
+		return loadFromClassLoader("pseudoconflictscope/fullscope/left.nodes");
+	}
+
+	public Resource getOriginPseudoConflictFullScope() throws IOException {
+		return loadFromClassLoader("pseudoconflictscope/fullscope/ancestor.nodes");
+	}
+
+	public Resource getRightPseudoConflictFullScope() throws IOException {
+		return loadFromClassLoader("pseudoconflictscope/fullscope/right.nodes");
+	}
 }
