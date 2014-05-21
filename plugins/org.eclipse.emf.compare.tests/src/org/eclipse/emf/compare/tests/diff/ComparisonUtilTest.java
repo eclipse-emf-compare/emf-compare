@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -94,13 +94,13 @@ public class ComparisonUtilTest {
 		leftToRight = false;
 		subDiffs = ComparisonUtil.getSubDiffs(leftToRight).apply(leftPeriodicalDiff3Way);
 
-		assertEquals(11, Iterables.size(subDiffs));
+		assertEquals(7, Iterables.size(subDiffs));
 
 		// Left to right on a deleted element
 		leftToRight = true;
 		subDiffs = ComparisonUtil.getSubDiffs(leftToRight).apply(leftPeriodicalDiff3Way);
 
-		assertEquals(8, Iterables.size(subDiffs));
+		assertEquals(7, Iterables.size(subDiffs));
 
 		// Right to left on a added element
 		final Predicate<? super Diff> leftMagazine3Way = and(fromSide(DifferenceSource.LEFT),

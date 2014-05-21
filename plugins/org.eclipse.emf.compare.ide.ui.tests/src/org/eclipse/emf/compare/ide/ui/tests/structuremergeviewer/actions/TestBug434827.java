@@ -116,8 +116,9 @@ public class TestBug434827 {
 		Assert.assertNotNull(deletionDiff);
 		Assert.assertNotNull(oppositeDiff);
 
-		// Mocks the UI behavior of UI if the deleting diff is selected with cascading diff filter active
-		ArrayList<Diff> uiDiff = Lists.newArrayList(deletionDiff, subDiff);
+		// Mocks the UI behavior of UI if the deleting diff is selected with cascading diff filter active.
+		// The subDiff is not added in this list because it is not considered as a cascading diff.
+		ArrayList<Diff> uiDiff = Lists.newArrayList(deletionDiff);
 
 		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, MergeMode.ACCEPT);
 		mergeRunnable.merge(uiDiff, false, mergerRegistry);
@@ -150,7 +151,8 @@ public class TestBug434827 {
 		Assert.assertNotNull(deletionDiff);
 		Assert.assertNotNull(oppositeDiff);
 
-		// Mocks the UI behavior of UI if the deleting diff is selected with cascading diff filter active
+		// Mocks the UI behavior of UI if the deleting diff is selected with cascading diff filter active.
+		// The subDiff is not added in this list because it is not considered as a cascading diff.
 		ArrayList<Diff> uiDiff = Lists.newArrayList(deletionDiff);
 
 		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, MergeMode.REJECT);
