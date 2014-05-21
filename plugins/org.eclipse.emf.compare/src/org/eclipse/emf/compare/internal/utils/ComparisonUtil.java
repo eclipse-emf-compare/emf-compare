@@ -10,10 +10,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
 
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.addAll;
 import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.filter;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
@@ -22,11 +28,13 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -37,6 +45,13 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class ComparisonUtil {
+
+	/**
+	 * Predicate to know if the given diff respects the requirements of a cascading diff.
+	 */
+	private static Predicate<Diff> cascadingDiff = and(not(hasConflict(ConflictKind.REAL)),
+			not(instanceOf(ResourceAttachmentChange.class)));
+
 	/** Hides default constructor. */
 	private ComparisonUtil() {
 		// prevents instantiation
@@ -191,7 +206,8 @@ public final class ComparisonUtil {
 					Match matchOfValue = diff.getMatch().getComparison().getMatch(
 							((ReferenceChange)diff).getValue());
 					if (((ReferenceChange)diff).getReference().isContainment()) {
-						final Iterable<Diff> subDiffs = matchOfValue.getAllDifferences();
+						final Iterable<Diff> subDiffs = filter(matchOfValue.getAllDifferences(),
+								cascadingDiff);
 						addAll(processedDiffs, subDiffs);
 						final Iterable<Diff> associatedDiffs = getAssociatedDiffs(diff, subDiffs,
 								processedDiffs, leftToRight);
