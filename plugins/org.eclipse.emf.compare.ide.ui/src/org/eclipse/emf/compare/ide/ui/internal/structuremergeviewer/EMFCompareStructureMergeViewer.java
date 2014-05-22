@@ -20,6 +20,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 import com.google.common.eventbus.Subscribe;
 
@@ -894,6 +895,15 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	private void compareInputChangedToNull() {
+		if (!inputChangedTask.cancel()) {
+			try {
+				inputChangedTask.join();
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				Throwables.propagate(e);
+			}
+		}
+
 		ResourceSet leftResourceSet = null;
 		ResourceSet rightResourceSet = null;
 		ResourceSet originResourceSet = null;
