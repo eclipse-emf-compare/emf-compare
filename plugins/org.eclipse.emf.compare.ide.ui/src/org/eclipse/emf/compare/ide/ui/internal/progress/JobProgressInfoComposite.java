@@ -115,8 +115,10 @@ public class JobProgressInfoComposite extends Composite {
 	void init() {
 		SWTUtil.safeAsyncExec(new Runnable() {
 			public void run() {
-				actionButton.setEnabled(true);
-				progressBar.setSelection(0);
+				if (!taskNameLabel.isDisposed() && !progressBar.isDisposed()) {
+					actionButton.setEnabled(true);
+					progressBar.setSelection(0);
+				}
 			}
 		});
 	}
@@ -128,8 +130,10 @@ public class JobProgressInfoComposite extends Composite {
 	public void setTaskName(final String taskName) {
 		SWTUtil.safeAsyncExec(new Runnable() {
 			public void run() {
-				taskNameLabel.setText(taskName);
-				layout();
+				if (!taskNameLabel.isDisposed() && !JobProgressInfoComposite.this.isDisposed()) {
+					taskNameLabel.setText(taskName);
+					layout();
+				}
 			}
 		});
 	}
@@ -137,7 +141,9 @@ public class JobProgressInfoComposite extends Composite {
 	public void setPercentDone(final int percent) {
 		SWTUtil.safeAsyncExec(new Runnable() {
 			public void run() {
-				progressBar.setSelection(percent);
+				if (!progressBar.isDisposed()) {
+					progressBar.setSelection(percent);
+				}
 			}
 		});
 	}
