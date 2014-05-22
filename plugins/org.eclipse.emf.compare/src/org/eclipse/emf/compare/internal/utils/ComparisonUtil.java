@@ -17,9 +17,11 @@ import static com.google.common.collect.Iterables.addAll;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.filter;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
@@ -206,8 +208,13 @@ public final class ComparisonUtil {
 					Match matchOfValue = diff.getMatch().getComparison().getMatch(
 							((ReferenceChange)diff).getValue());
 					if (((ReferenceChange)diff).getReference().isContainment()) {
-						final Iterable<Diff> subDiffs = filter(matchOfValue.getAllDifferences(),
-								cascadingDiff);
+						final Iterable<Diff> subDiffs;
+						// if the diff is a Move diff, we don't want its children.
+						if (ofKind(DifferenceKind.MOVE).apply(diff)) {
+							subDiffs = ImmutableList.of();
+						} else {
+							subDiffs = filter(matchOfValue.getAllDifferences(), cascadingDiff);
+						}
 						addAll(processedDiffs, subDiffs);
 						final Iterable<Diff> associatedDiffs = getAssociatedDiffs(diff, subDiffs,
 								processedDiffs, leftToRight);

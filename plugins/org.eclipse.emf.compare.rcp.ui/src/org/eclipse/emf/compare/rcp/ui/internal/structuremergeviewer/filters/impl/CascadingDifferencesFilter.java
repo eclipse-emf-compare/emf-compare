@@ -15,6 +15,7 @@ import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterators.any;
 import static com.google.common.collect.Iterators.transform;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Predicate;
 
@@ -23,6 +24,7 @@ import java.util.Iterator;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.AbstractDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
@@ -54,8 +56,9 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 				} else {
 					parentData = null;
 				}
-				if (parentData instanceof Diff && !(parentData instanceof ResourceAttachmentChange)
-						&& data instanceof Diff) {
+				if (parentData instanceof Diff
+						&& !((parentData instanceof ResourceAttachmentChange) || ofKind(DifferenceKind.MOVE)
+								.apply((Diff)parentData)) && data instanceof Diff) {
 					Iterator<EObject> eAllDataContents = transform(treeNode.eAllContents(),
 							IDifferenceGroup.TREE_NODE_DATA);
 					return CASCADING_DIFF.apply(data) && !any(eAllDataContents, not(CASCADING_DIFF));
