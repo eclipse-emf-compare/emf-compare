@@ -34,10 +34,13 @@ public class ProblemIndicationComposite extends Composite {
 		 * @return a not null String
 		 */
 		public String getMessage(Diagnostic rootDiagnostic) {
-			return rootDiagnostic.getSeverity() == Diagnostic.OK ? EMFCompareIDEUIMessages
-					.getString("_UI_NoProblems_message") : //$NON-NLS-1$
-					rootDiagnostic.getMessage() != null ? rootDiagnostic.getMessage()
-							: EMFCompareIDEUIMessages.getString("_UI_DefaultProblem_message"); //$NON-NLS-1$
+			if (rootDiagnostic.getSeverity() == Diagnostic.OK) {
+				return EMFCompareIDEUIMessages.getString("_UI_NoProblems_message"); //$NON-NLS-1$
+			} else if (rootDiagnostic.getSeverity() == Diagnostic.CANCEL) {
+				return EMFCompareIDEUIMessages.getString("_UI_Cancel_message"); //$NON-NLS-1$				
+			} else {
+				return EMFCompareIDEUIMessages.getString("_UI_DefaultProblem_message"); //$NON-NLS-1$
+			}
 		}
 	}
 
@@ -142,6 +145,7 @@ public class ProblemIndicationComposite extends Composite {
 			case Diagnostic.ERROR:
 				return display.getSystemImage(SWT.ICON_ERROR);
 			case Diagnostic.WARNING:
+			case Diagnostic.CANCEL:
 				return display.getSystemImage(SWT.ICON_WARNING);
 			default:
 				return display.getSystemImage(SWT.ICON_INFORMATION);
