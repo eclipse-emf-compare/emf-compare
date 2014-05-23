@@ -15,6 +15,7 @@ import com.google.common.collect.Sets;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.utils.IDiagnosable;
 
@@ -59,6 +60,8 @@ public abstract class AbstractComparisonScope implements IComparisonScope, IDiag
 		this.origin = origin;
 		this.resourceURIs = Sets.newHashSet();
 		this.nsURIs = Sets.newHashSet();
+		this.diagnostic = new BasicDiagnostic(Diagnostic.OK, "org.eclipse.emf.compare", 0, null, //$NON-NLS-1$
+				new Object[] {this, });
 	}
 
 	/**
