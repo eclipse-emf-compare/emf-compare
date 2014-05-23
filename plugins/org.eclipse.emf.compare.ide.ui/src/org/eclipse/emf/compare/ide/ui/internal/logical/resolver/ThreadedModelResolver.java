@@ -556,11 +556,10 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			updateChangedResources(resourceSet, monitor);
 		}
 
-		final Set<IStorage> leftTraversal = resolveTraversal(left, Collections.<URI> emptySet(),
-				storageAccessor);
 		while (!currentlyResolving.isEmpty()) {
 			resolutionEnd.await();
 		}
+		final Set<IStorage> leftTraversal = resolveTraversal(left, Collections.<URI> emptySet());
 
 		final Set<IStorage> rightTraversal = resolveRemoteTraversal(storageAccessor, right, leftTraversal,
 				DiffSide.REMOTE, monitor);
@@ -726,24 +725,6 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		final Iterable<URI> dependencies = getDependenciesOf(file, bounds);
 		for (URI uri : dependencies) {
 			traversal.add(getFileAt(uri));
-		}
-		return traversal;
-	}
-
-	private Set<IStorage> resolveTraversal(IFile file, Set<URI> bounds,
-			IStorageProviderAccessor storageAccessor) {
-		final Set<IStorage> traversal = new LinkedHashSet<IStorage>();
-
-		final Iterable<URI> dependencies = getDependenciesOf(file, bounds);
-		for (URI uri : dependencies) {
-			final IFile dependencyFile = getFileAt(uri);
-			try {
-				if (!storageAccessor.isInSync(dependencyFile)) {
-					traversal.add(dependencyFile);
-				}
-			} catch (CoreException e) {
-				// FIXME how could this happen, and what to do then?
-			}
 		}
 		return traversal;
 	}

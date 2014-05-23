@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
@@ -49,7 +50,7 @@ public class StorageURIConverter extends DelegatingURIConverter {
 	 */
 	public StorageURIConverter(URIConverter delegate) {
 		super(delegate);
-		this.loadedRevisions = Sets.newLinkedHashSet();
+		this.loadedRevisions = Sets.newSetFromMap(new ConcurrentHashMap<IStorage, Boolean>());
 	}
 
 	/**
