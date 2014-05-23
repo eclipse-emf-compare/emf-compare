@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,23 +14,19 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
-import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemPseudoConflictTest;
-import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemTest;
-import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.TestBasicDifferenceGroupImpl;
-import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.TestComparisonTreeNodeItemProviderSpec;
-import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.TestMatchTreeNodeItemProviderSpec;
-import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.TestReferenceChangeTreeNodeItemProviderSpec;
+import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.filters.TestBug435365;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+/**
+ * Aggregator of tests related to a bug described in bugzilla.
+ * 
+ * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
+ */
 @RunWith(Suite.class)
-@SuiteClasses({TestComparisonTreeNodeItemProviderSpec.class, 
-			   TestMatchTreeNodeItemProviderSpec.class, 
-			   TestReferenceChangeTreeNodeItemProviderSpec.class,
-			   MergeViewerItemTest.class, MergeViewerItemPseudoConflictTest.class,
-			   TestBasicDifferenceGroupImpl.class, BugsTestSuite.class})
-public class AllTests {
+@SuiteClasses({TestBug435365.class })
+public class BugsTestSuite {
 	/**
 	 * Launches the test with the given arguments.
 	 * 
