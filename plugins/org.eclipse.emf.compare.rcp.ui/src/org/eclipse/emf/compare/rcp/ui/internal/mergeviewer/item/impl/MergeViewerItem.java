@@ -19,6 +19,7 @@ import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 
 import com.google.common.base.Objects;
@@ -302,13 +303,18 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		Iterable<? extends Diff> diffs = filter(fComparison.getDifferences(expectedValue),
 				CONTAINMENT_REFERENCE_CHANGE);
 		if (size(diffs) > 1) {
-			throw new IllegalStateException("Should not have more than one ReferenceChange on each Match"); //$NON-NLS-1$
-		} else {
-			Diff referenceChange = getFirst(diffs, null);
-			if (referenceChange == null) {
-				diffs = filter(parentMatch.getDifferences(), instanceOf(ResourceAttachmentChange.class));
+			diffs = filter(diffs, fromSide(fSide.convertToDifferenceSource()));
+			if (size(diffs) > 1) {
+				throw new IllegalStateException(
+						"Should not have more than one ReferenceChange on each Match for a side"); //$NON-NLS-1$
 			}
 		}
+
+		Diff referenceChange = getFirst(diffs, null);
+		if (referenceChange == null) {
+			diffs = filter(parentMatch.getDifferences(), instanceOf(ResourceAttachmentChange.class));
+		}
+
 		return diffs;
 	}
 
