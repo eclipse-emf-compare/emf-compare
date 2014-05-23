@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -135,10 +134,20 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 
 		final Set<URI> crossReferencedResources = new LinkedHashSet<URI>();
 		while (resourceContent.hasNext()) {
+
+			if (isInterruptedOrCanceled(monitor)) {
+				break;
+			}
+
 			final EObject eObject = resourceContent.next();
 			crossReferencedResources.addAll(resolveCrossReferences(eObject));
 			final TreeIterator<EObject> objectChildren = basicEAllContents(eObject);
 			while (objectChildren.hasNext()) {
+
+				if (isInterruptedOrCanceled(monitor)) {
+					break;
+				}
+
 				final EObject child = objectChildren.next();
 				if (child.eIsProxy()) {
 					final URI proxyURI = ((InternalEObject)child).eProxyURI().trimFragment();
@@ -146,14 +155,18 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 				} else {
 					crossReferencedResources.addAll(resolveCrossReferences(child));
 				}
-
-				if (monitor.isCanceled()) {
-					return Collections.emptySet();
-				}
 			}
 		}
 
+		if (isInterruptedOrCanceled(monitor)) {
+			crossReferencedResources.clear();
+		}
+
 		return crossReferencedResources;
+	}
+
+	private boolean isInterruptedOrCanceled(IProgressMonitor monitor) {
+		return monitor.isCanceled() || Thread.currentThread().isInterrupted();
 	}
 
 	public void unload(Resource resource, IProgressMonitor monitor) {
