@@ -14,6 +14,7 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
+import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemPseudoConflictTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemTest;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.TestBasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.TestComparisonTreeNodeItemProviderSpec;
@@ -27,7 +28,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({TestComparisonTreeNodeItemProviderSpec.class, 
 			   TestMatchTreeNodeItemProviderSpec.class, 
 			   TestReferenceChangeTreeNodeItemProviderSpec.class,
-			   MergeViewerItemTest.class,
+			   MergeViewerItemTest.class, MergeViewerItemPseudoConflictTest.class,
 			   TestBasicDifferenceGroupImpl.class})
 public class AllTests {
 	/**
