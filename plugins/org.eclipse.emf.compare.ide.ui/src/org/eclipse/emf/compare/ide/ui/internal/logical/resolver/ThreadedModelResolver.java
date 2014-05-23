@@ -37,6 +37,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -149,8 +150,14 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	/** Thread pool for our unloading threads. */
 	private ListeningExecutorService unloadingPool;
 
-	/** Executor for the callback on task completion from the other two pools */
-	private final ExecutorService callbackThreadPool;
+	/**
+	 * An executor service will be used to shut down the {@link #unloadingPool} and the {@link #resolvingPool}
+	 * .
+	 */
+	private ListeningExecutorService terminator;
+
+	/** Tracks if shutdown of {@link #unloadingPool} and {@link #resolvingPool} is currently in progress. */
+	private final AtomicBoolean shutdownInProgress;
 
 	/**
 	 * This will lock will prevent concurrent modifications of this resolver's fields. Most notably,
@@ -196,8 +203,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		this.notResolving = lock.newCondition();
 		this.resolutionEnd = lock.newCondition();
 		this.currentlyResolving = new HashSet<URI>();
-		this.callbackThreadPool = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat(
-				"EMFCompare-ModelResolver-Callback-%d").build()); //$NON-NLS-1$
+		this.shutdownInProgress = new AtomicBoolean(false);
 	}
 
 	/**
@@ -225,49 +231,54 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	public void initialize() {
 		this.resourceListener = new ModelResourceListener();
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceListener);
+
+		this.terminator = MoreExecutors.listeningDecorator(Executors
+				.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat(
+						"EMFCompare-ThreadPoolShutdowner-%d").setPriority(Thread.MAX_PRIORITY).build())); //$NON-NLS-1$
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void dispose() {
+		terminator.shutdown();
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceListener);
-		shutdownAndAwaitTermination(callbackThreadPool);
 		super.dispose();
 	}
 
 	/**
-	 * Shutdown the {@link #resolvingPool} and {@link #unloadingPool}
+	 * Shutdown {@link #resolvingPool} and {@link #unloadingPool} and set these two fields to null.
 	 */
-	private void shutdownThreadPools() {
-		if (resolvingPool != null) {
-			shutdownAndAwaitTermination(resolvingPool);
-			resolvingPool = null;
+	private void shutdownPools() {
+		if (!shutdownAndAwaitTermination(resolvingPool) || !shutdownAndAwaitTermination(unloadingPool)) {
+			EMFCompareIDEUIPlugin.getDefault().log(IStatus.WARNING,
+					"Thread pools have not been properly stopped"); //$NON-NLS-1$
 		}
-		if (unloadingPool != null) {
-			shutdownAndAwaitTermination(unloadingPool);
-			unloadingPool = null;
-		}
+		resolvingPool = null;
+		unloadingPool = null;
 	}
 
 	/**
 	 * Shuts down an {@link ExecutorService} in two phases, first by calling
 	 * {@link ExecutorService#shutdown() shutdown} to reject incoming tasks, and then calling
-	 * {@link ExecutorService#shutdownNow() shutdownNow}, if necessary, to cancel any lingering tasks
+	 * {@link ExecutorService#shutdownNow() shutdownNow}, if necessary, to cancel any lingering tasks. Returns
+	 * true if the pool has been properly shutdown, false otherwise.
 	 * <p>
 	 * Copy/pasted from {@link ExecutorService} javadoc.
 	 * 
 	 * @param pool
 	 *            the pool to shutdown
+	 * @return true if the pool has been properly shutdown, false otherwise.
 	 */
-	private static void shutdownAndAwaitTermination(ExecutorService pool) {
+	private static boolean shutdownAndAwaitTermination(ExecutorService pool) {
+		boolean ret = true;
 		pool.shutdown(); // Disable new tasks from being submitted
 		try {
 			// Wait a while for existing tasks to terminate
 			if (!pool.awaitTermination(5, TimeUnit.SECONDS)) {
 				pool.shutdownNow(); // Cancel currently executing tasks
-				// Wait a while for tasks to respond to being cancelled
+				// Wait a while for tasks to respond to being canceled
 				if (!pool.awaitTermination(5, TimeUnit.SECONDS)) {
-					EMFCompareIDEUIPlugin.getDefault().log(IStatus.ERROR, "Pool did not terminate");
+					ret = false;
 				}
 			}
 		} catch (InterruptedException ie) {
@@ -275,7 +286,9 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			pool.shutdownNow();
 			// Preserve interrupt status
 			Thread.currentThread().interrupt();
+			ret = false;
 		}
+		return ret;
 	}
 
 	/** {@inheritDoc} */
@@ -318,20 +331,24 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 				resolutionEnd.await();
 			}
 
+			if (subMonitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+
 			final Set<IStorage> traversalSet = resolveTraversal((IFile)start, Collections.<URI> emptySet());
 			StorageTraversal traversal = new StorageTraversal(traversalSet, diagnostic);
 
 			return traversal;
 		} finally {
-			diagnostic = null;
-			resolvedResources = null;
+			try {
+				finalizeResolving();
 
-			notResolving.signal();
-			lock.unlock();
-
-			shutdownThreadPools();
-			if (subMonitor != null) {
-				subMonitor.setWorkRemaining(0);
+				if (subMonitor != null) {
+					subMonitor.setWorkRemaining(0);
+				}
+			} finally {
+				notResolving.signal();
+				lock.unlock();
 			}
 		}
 	}
@@ -376,7 +393,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	}
 
 	private SynchronizationModel resolveFileLocalModel(IResource left, IResource right, IResource origin,
-			ThreadSafeProgressMonitor subMonitor) throws InterruptedException {
+			ThreadSafeProgressMonitor monitor) throws InterruptedException {
 
 		lock.lockInterruptibly();
 		try {
@@ -388,12 +405,12 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
 				final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
-				updateDependencies(resourceSet, (IFile)left, subMonitor);
-				updateDependencies(resourceSet, (IFile)right, subMonitor);
+				updateDependencies(resourceSet, (IFile)left, monitor);
+				updateDependencies(resourceSet, (IFile)right, monitor);
 				if (origin instanceof IFile) {
-					updateDependencies(resourceSet, (IFile)origin, subMonitor);
+					updateDependencies(resourceSet, (IFile)origin, monitor);
 				}
-				updateChangedResources(resourceSet, subMonitor);
+				updateChangedResources(resourceSet, monitor);
 			}
 
 			final URI leftURI = createURIFor((IFile)left);
@@ -410,6 +427,10 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 			while (!currentlyResolving.isEmpty()) {
 				resolutionEnd.await();
+			}
+
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
 			}
 
 			final Set<IStorage> leftTraversal;
@@ -449,13 +470,12 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 			return synchronizationModel;
 		} finally {
-			diagnostic = null;
-			resolvedResources = null;
-
-			notResolving.signal();
-			lock.unlock();
-
-			shutdownThreadPools();
+			try {
+				finalizeResolving();
+			} finally {
+				notResolving.signal();
+				lock.unlock();
+			}
 		}
 	}
 
@@ -498,15 +518,15 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 			return synchronizationModel;
 		} finally {
-			resolvedResources = null;
-			diagnostic = null;
+			try {
+				finalizeResolving();
 
-			notResolving.signal();
-			lock.unlock();
-
-			shutdownThreadPools();
-			if (subMonitor != null) {
-				subMonitor.setWorkRemaining(0);
+				if (subMonitor != null) {
+					subMonitor.setWorkRemaining(0);
+				}
+			} finally {
+				notResolving.signal();
+				lock.unlock();
 			}
 		}
 	}
@@ -519,6 +539,25 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		createThreadPools();
 		resolvedResources = new LinkedHashSet<URI>();
 		diagnostic = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null, new Object[0]);
+	}
+
+	/**
+	 * This is the counterpart of the {@link #setupResolving()} method. This should be called in a finally
+	 * block everywhere {@link #setupResolving()} is called.
+	 */
+	private void finalizeResolving() {
+		if (!shutdownInProgress.get()) {
+			shutdownPools();
+		}
+
+		if (diagnostic.getSeverity() >= Diagnostic.ERROR) {
+			// something bad (or a cancel request) happened during resolution, so we invalidate the
+			// dependency graph to avoid weird behavior next time the resolution is called.
+			dependencyGraph.clear();
+		}
+
+		resolvedResources = null;
+		diagnostic = null;
 	}
 
 	/**
@@ -558,6 +597,9 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 		while (!currentlyResolving.isEmpty()) {
 			resolutionEnd.await();
+		}
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
 		}
 		final Set<IStorage> leftTraversal = resolveTraversal(left, Collections.<URI> emptySet());
 
@@ -670,11 +712,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			try {
 				startingPoint.accept(modelVisitor);
 			} catch (CoreException e) {
-				/*
-				 * FIXME what to do with exceptions arising? We want neither to crash eclipse nor to fail the
-				 * comparison. For now, let's crash pitifully.
-				 */
-				throw new RuntimeException(e);
+				safeMergeDiagnostic(BasicDiagnostic.toDiagnostic(e));
 			}
 		}
 	}
@@ -753,6 +791,10 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 		while (!currentlyResolving.isEmpty()) {
 			resolutionEnd.await();
+		}
+
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
 		}
 
 		resolvedResources = null;
@@ -887,8 +929,9 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	 */
 	protected void demandResolve(SynchronizedResourceSet resourceSet, URI uri,
 			final ThreadSafeProgressMonitor monitor) {
-		if (monitor.isCanceled()) {
-			throw new OperationCanceledException();
+		if (isInterruptedOrCanceled(monitor)) {
+			demandResolvingAndUnloadingPoolShutdown();
+			return;
 		}
 
 		lock.lock();
@@ -899,16 +942,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 				monitor.setWorkRemaining(1000);
 				ListenableFuture<?> future = resolvingPool.submit(new ResourceResolver(resourceSet, uri,
 						monitor));
-				Futures.addCallback(future, new FutureCallback<Object>() {
-					public void onSuccess(Object result) {
-						monitor.worked(1);
-					}
-
-					public void onFailure(Throwable t) {
-						monitor.worked(1);
-						onFailureCallback(t);
-					}
-				}, callbackThreadPool);
+				Futures.addCallback(future, new ResolvingFutureCallback(monitor, uri));
 			}
 		} finally {
 			lock.unlock();
@@ -932,8 +966,9 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	 */
 	protected void demandRemoteResolve(SynchronizedResourceSet resourceSet, URI uri,
 			final ThreadSafeProgressMonitor monitor) {
-		if (monitor.isCanceled()) {
-			throw new OperationCanceledException();
+		if (isInterruptedOrCanceled(monitor)) {
+			demandResolvingAndUnloadingPoolShutdown();
+			return;
 		}
 
 		lock.lock();
@@ -944,16 +979,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 				monitor.setWorkRemaining(1000);
 				ListenableFuture<?> future = resolvingPool.submit(new RemoteResourceResolver(resourceSet,
 						uri, monitor));
-				Futures.addCallback(future, new FutureCallback<Object>() {
-					public void onSuccess(Object result) {
-						monitor.worked(1);
-					}
-
-					public void onFailure(Throwable t) {
-						monitor.worked(1);
-						onFailureCallback(t);
-					}
-				}, callbackThreadPool);
+				Futures.addCallback(future, new ResolvingFutureCallback(monitor, uri));
 			}
 		} finally {
 			lock.unlock();
@@ -979,9 +1005,6 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	 */
 	protected void demandUnload(SynchronizedResourceSet resourceSet, Resource resource,
 			final ThreadSafeProgressMonitor monitor) {
-		if (monitor.isCanceled()) {
-			throw new OperationCanceledException();
-		}
 
 		// Regardless of the amount of progress reported so far, use 0.1% of the space remaining in the
 		// monitor to process the next node.
@@ -990,40 +1013,22 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 				.submit(new ResourceUnloader(resourceSet, resource, monitor));
 		Futures.addCallback(future, new FutureCallback<Object>() {
 			public void onSuccess(Object result) {
-				monitor.worked(1);
+				if (!isInterruptedOrCanceled(monitor)) {
+					monitor.worked(1);
+				}
 			}
 
 			public void onFailure(Throwable t) {
-				monitor.worked(1);
-				onFailureCallback(t);
+				if (!isInterruptedOrCanceled(monitor)) {
+					monitor.worked(1);
+					safeMergeDiagnostic(BasicDiagnostic.toDiagnostic(t));
+				}
 			}
-		}, callbackThreadPool);
+		});
 	}
 
 	/**
-	 * Callback method on failure of task spawn by
-	 * {@link #demandResolve(SynchronizedResourceSet, URI, ThreadSafeProgressMonitor) demandResolve},
-	 * {@link #demandUnload(SynchronizedResourceSet, Resource, ThreadSafeProgressMonitor) demandUnload} and
-	 * {@link #demandRemoteResolve(SynchronizedResourceSet, URI, ThreadSafeProgressMonitor)
-	 * demandRemoteResolve}. It will either shutdown the execution pools and clear the dependency graph or
-	 * just log the error to the {@link #diagnostic}.
-	 * 
-	 * @param e
-	 *            the thrown exception.
-	 */
-	private void onFailureCallback(Throwable e) {
-		if (e instanceof OperationCanceledException) {
-			// we do not log the cancel operation as it will be done by the caller thread, we are in a
-			// callback only here and #diagnostic may already be null.
-			shutdownThreadPools();
-			dependencyGraph.clear();
-		} else {
-			safeMergeDiagnostic(BasicDiagnostic.toDiagnostic(e));
-		}
-	}
-
-	/**
-	 * Thread safely Add the given diagnostic to the {@link #diagnostic} field.
+	 * Thread safely merge the given diagnostic to the {@link #diagnostic} field.
 	 * 
 	 * @param resourceDiagnostic
 	 *            the diagnostic to be added to the global diagnostic.
@@ -1034,6 +1039,114 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			diagnostic.merge(resourceDiagnostic);
 		} finally {
 			lock.unlock();
+		}
+	}
+
+	/**
+	 * Checks if the current thread is interrupted or if the given monitor has been canceled.
+	 * 
+	 * @param monitor
+	 *            the monitor to check
+	 * @return true if the current thread has been canceled, false otherwise.
+	 */
+	private boolean isInterruptedOrCanceled(IProgressMonitor monitor) {
+		return Thread.currentThread().isInterrupted() || monitor.isCanceled();
+	}
+
+	/**
+	 * If {@link #shutdownInProgress shutdown has not been requested before}, it submits a new task to
+	 * {@link #shutdownPools() shut down} {@link #resolvingPool} and {@link #unloadingPool}. Do nothing if
+	 * current thread already is interrupted.
+	 */
+	private void demandResolvingAndUnloadingPoolShutdown() {
+		if (!Thread.currentThread().isInterrupted()) {
+			if (shutdownInProgress.compareAndSet(false, true)) {
+				Runnable runnable = new Runnable() {
+					public void run() {
+						shutdownPools();
+					}
+				};
+
+				ListenableFuture<?> listenableFuture = terminator.submit(runnable);
+				Futures.addCallback(listenableFuture, new FutureCallback<Object>() {
+					public void onSuccess(Object result) {
+						shutdownInProgress.set(false);
+					}
+
+					public void onFailure(Throwable t) {
+						shutdownInProgress.set(false);
+						EMFCompareIDEUIPlugin.getDefault().log(t);
+					}
+				});
+			}
+		}
+	}
+
+	/**
+	 * This will remove the given uri from the {@link #currentlyResolving} set and signal to
+	 * {@link #resolutionEnd} if the set is empty afterward. This method must be call by every callback of
+	 * resolving tasks.
+	 * 
+	 * @param uri
+	 *            the uri to remove.
+	 */
+	private void finalizeResolvingTask(URI uri) {
+		lock.lock();
+		try {
+			currentlyResolving.remove(uri);
+			if (currentlyResolving.isEmpty()) {
+				resolutionEnd.signal();
+			}
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * The callback for {@link ResourceResolver} and {@link RemoteResourceResolver} tasks. It will report
+	 * progress, log errors and finalize the resolving and as such, possibly signaling the end of the
+	 * resolution.
+	 * 
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 */
+	private final class ResolvingFutureCallback implements FutureCallback<Object> {
+
+		/** The monitor to which report progress. */
+		private final IProgressMonitor monitor;
+
+		private final URI uri;
+
+		/**
+		 * @param monitor
+		 */
+		private ResolvingFutureCallback(IProgressMonitor monitor, URI uri) {
+			this.monitor = monitor;
+			this.uri = uri;
+		}
+
+		public void onSuccess(Object result) {
+			try {
+				if (!isInterruptedOrCanceled(monitor)) {
+					// do not report progress anymore when the task has been interrupted of canceled. It
+					// speeds up the cancellation.
+					monitor.worked(1);
+				}
+			} finally {
+				finalizeResolvingTask(uri);
+			}
+		}
+
+		public void onFailure(Throwable t) {
+			try {
+				if (!isInterruptedOrCanceled(monitor)) {
+					// do not report progress or errors anymore when the task has been interrupted of
+					// canceled. It speeds up the cancellation.
+					monitor.worked(1);
+					safeMergeDiagnostic(BasicDiagnostic.toDiagnostic(t));
+				}
+			} finally {
+				finalizeResolvingTask(uri);
+			}
 		}
 	}
 
@@ -1075,38 +1188,31 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 		/** {@inheritDoc} */
 		public void run() {
-			try {
-				// must be in the try to eventually signal the #resolutionEnd
-				if (monitor.isCanceled()) {
-					throw new OperationCanceledException();
-				}
+			if (isInterruptedOrCanceled(monitor)) {
+				demandResolvingAndUnloadingPoolShutdown();
+				return;
+			}
 
-				final Resource resource = resourceSet.loadResource(uri);
-				Diagnostic resourceDiagnostic = EcoreUtil.computeDiagnostic(resource, true);
-				if (resourceDiagnostic.getSeverity() >= Diagnostic.WARNING) {
-					safeMergeDiagnostic(resourceDiagnostic);
-				}
-				dependencyGraph.add(uri);
-				if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
-					final Set<URI> crossReferencedResources = resourceSet.discoverCrossReferences(resource,
-							monitor);
-					dependencyGraph.addChildren(uri, crossReferencedResources);
-					for (URI crossRef : crossReferencedResources) {
-						demandResolve(resourceSet, crossRef, monitor);
+			final Resource resource = resourceSet.loadResource(uri);
+			Diagnostic resourceDiagnostic = EcoreUtil.computeDiagnostic(resource, true);
+			if (resourceDiagnostic.getSeverity() >= Diagnostic.WARNING) {
+				safeMergeDiagnostic(resourceDiagnostic);
+			}
+			dependencyGraph.add(uri);
+			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
+				final Set<URI> crossReferencedResources = resourceSet.discoverCrossReferences(resource,
+						monitor);
+				dependencyGraph.addChildren(uri, crossReferencedResources);
+				for (URI crossRef : crossReferencedResources) {
+					if (isInterruptedOrCanceled(monitor)) {
+						demandResolvingAndUnloadingPoolShutdown();
+						// do not return, we want to unload what we've already loaded to avoid leaks.
+						break;
 					}
-				}
-				demandUnload(resourceSet, resource, monitor);
-			} finally {
-				lock.lock();
-				try {
-					currentlyResolving.remove(uri);
-					if (currentlyResolving.isEmpty()) {
-						resolutionEnd.signal();
-					}
-				} finally {
-					lock.unlock();
+					demandResolve(resourceSet, crossRef, monitor);
 				}
 			}
+			demandUnload(resourceSet, resource, monitor);
 		}
 	}
 
@@ -1145,36 +1251,29 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 		/** {@inheritDoc} */
 		public void run() {
-			try {
-				// must be in the try to eventually signal the #resolutionEnd
-				if (monitor.isCanceled()) {
-					throw new OperationCanceledException();
-				}
+			if (isInterruptedOrCanceled(monitor)) {
+				demandResolvingAndUnloadingPoolShutdown();
+				return;
+			}
 
-				final Resource resource = resourceSet.loadResource(uri);
-				Diagnostic resourceDiagnostic = EcoreUtil.computeDiagnostic(resource, true);
-				if (resourceDiagnostic.getSeverity() >= Diagnostic.WARNING) {
-					safeMergeDiagnostic(resourceDiagnostic);
-				}
-				if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
-					final Set<URI> crossReferencedResources = resourceSet.discoverCrossReferences(resource,
-							monitor);
-					for (URI crossRef : crossReferencedResources) {
-						demandRemoteResolve(resourceSet, crossRef, monitor);
+			final Resource resource = resourceSet.loadResource(uri);
+			Diagnostic resourceDiagnostic = EcoreUtil.computeDiagnostic(resource, true);
+			if (resourceDiagnostic.getSeverity() >= Diagnostic.WARNING) {
+				safeMergeDiagnostic(resourceDiagnostic);
+			}
+			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
+				final Set<URI> crossReferencedResources = resourceSet.discoverCrossReferences(resource,
+						monitor);
+				for (URI crossRef : crossReferencedResources) {
+					if (isInterruptedOrCanceled(monitor)) {
+						demandResolvingAndUnloadingPoolShutdown();
+						// do not return, we want to unload what we've already loaded to avoid leaks.
+						break;
 					}
-				}
-				demandUnload(resourceSet, resource, monitor);
-			} finally {
-				lock.lock();
-				try {
-					currentlyResolving.remove(uri);
-					if (currentlyResolving.isEmpty()) {
-						resolutionEnd.signal();
-					}
-				} finally {
-					lock.unlock();
+					demandRemoteResolve(resourceSet, crossRef, monitor);
 				}
 			}
+			demandUnload(resourceSet, resource, monitor);
 		}
 	}
 
@@ -1213,10 +1312,6 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 		/** {@inheritDoc} */
 		public void run() {
-			if (monitor.isCanceled()) {
-				throw new OperationCanceledException();
-			}
-
 			resourceSet.unload(resource, monitor);
 		}
 	}
@@ -1250,7 +1345,9 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 		/** {@inheritDoc} */
 		public boolean visit(IResource resource) throws CoreException {
-			if (monitor.isCanceled()) {
+			if (isInterruptedOrCanceled(monitor)) {
+				demandResolvingAndUnloadingPoolShutdown();
+				// cancel the visit
 				throw new OperationCanceledException();
 			}
 
