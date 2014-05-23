@@ -637,9 +637,11 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		// We need to re-resolve the changed resources, along with their direct parents
 		final Set<URI> recompute = new LinkedHashSet<URI>(changedURIs);
 		for (URI changed : changedURIs) {
-			recompute.addAll(dependencyGraph.getDirectParents(changed));
+			if (dependencyGraph.contains(changed)) {
+				recompute.addAll(dependencyGraph.getDirectParents(changed));
+			}
 		}
-		dependencyGraph.removeAll(changedURIs);
+		dependencyGraph.removeAll(recompute);
 
 		for (URI changed : recompute) {
 			demandResolve(resourceSet, changed, monitor);
@@ -1393,10 +1395,15 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 					removedURIs.add(fileURI);
 					changedURIs.remove(fileURI);
 				} else if (hasModelType(file)) {
-					if ((delta.getKind() & (IResourceDelta.CHANGED | IResourceDelta.ADDED)) != 0) {
+					if ((delta.getKind() & IResourceDelta.CHANGED) != 0) {
 						changedURIs.add(fileURI);
-						// If a previously removed resource is changed, we can assume it's been re-added
+						// Probably can't happen, but let's stay on the safe side
 						removedURIs.remove(fileURI);
+					} else if ((delta.getKind() & IResourceDelta.ADDED) != 0) {
+						// If a previously removed resource is changed, we can assume it's been re-added
+						if (removedURIs.remove(fileURI)) {
+							changedURIs.add(fileURI);
+						}
 					}
 				}
 
