@@ -111,6 +111,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 		public List<? extends TreeNode> getChildren() {
 			if (children == null) {
 				children = newArrayList();
+				extensionDiffProcessed = newArrayList();
 				for (MatchResource matchResource : getComparison().getMatchedResources()) {
 					children.add(buildSubTree(matchResource));
 				}

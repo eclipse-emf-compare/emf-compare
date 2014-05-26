@@ -154,6 +154,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		public List<? extends TreeNode> getChildren() {
 			if (children == null) {
 				children = newArrayList();
+				extensionDiffProcessed = newArrayList();
 				for (Conflict conflict : getComparison().getConflicts()) {
 					TreeNode buildSubTree = buildSubTree(conflict);
 					if (buildSubTree != null) {
