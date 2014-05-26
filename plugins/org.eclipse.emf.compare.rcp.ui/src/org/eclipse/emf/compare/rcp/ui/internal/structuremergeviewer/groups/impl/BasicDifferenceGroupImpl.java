@@ -372,9 +372,13 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 				Match matchOfValue = match.getComparison().getMatch(((ReferenceChange)diff).getValue());
 				matchOfValues.add(matchOfValue);
 				node.getChildren().addAll(buildSubTree(matchOfValue, true, DIFF_TO_SIDE.apply(diff)));
-				ret.addAll(manageRefines(diff));
+				if (containment) {
+					ret.addAll(manageRefines(diff));
+				} else {
+					nodeChildren.addAll(manageRefines(diff));
+				}
 			} else if (!(diff instanceof ResourceAttachmentChange)) {
-				if (diff.getPrimeRefining() != null && !extensionDiffProcessed.contains(diff)) {
+				if (diff.getPrimeRefining() != null && extensionDiffProcessed.contains(diff)) {
 					continue;
 				}
 				hasDiff = true;
