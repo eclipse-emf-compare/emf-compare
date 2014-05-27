@@ -12,80 +12,52 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label;
 
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
-import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
-import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.ForwardingCompareInput;
 
 /**
  * A compare input whose purpose is to support a comparison with no differences.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-public class NoDifferencesCompareInput implements ICompareInput {
-
-	/** Listeners associated with this compare input. */
-	private final ListenerList listeners = new ListenerList(ListenerList.IDENTITY);
+public class NoDifferencesCompareInput extends ForwardingCompareInput {
 
 	/**
-	 * {@inheritDoc}
+	 * @param compareInput
 	 */
-	public String getName() {
-		return "NoDifferencesCompareInput"; //$NON-NLS-1$
+	public NoDifferencesCompareInput(ICompareInput compareInput) {
+		super(compareInput);
 	}
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.ForwardingCompareInput#createForwardingTypedElement(org.eclipse.compare.ITypedElement)
 	 */
-	public Image getImage() {
-		return null;
+	@Override
+	protected ForwardingTypedElement createForwardingTypedElement(ITypedElement typedElement) {
+		return new NoDifferencesTypedElement(typedElement);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * A specific {@link ITypedElement} to use with
+	 * {@link org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoDifferencesCompareInput}.
+	 * 
+	 * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
 	 */
-	public int getKind() {
-		return 0;
+	public class NoDifferencesTypedElement extends ForwardingTypedElement {
+
+		NoDifferencesTypedElement(ITypedElement typedElement) {
+			super(typedElement);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public String getType() {
+			return "org.eclipse.emf.compare.rcp.ui.eNoDiff"; //$NON-NLS-1$
+		}
+
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public ITypedElement getAncestor() {
-		return new NoDifferencesTypedElement();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public ITypedElement getLeft() {
-		return new NoDifferencesTypedElement();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public ITypedElement getRight() {
-		return new NoDifferencesTypedElement();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addCompareInputChangeListener(ICompareInputChangeListener listener) {
-		listeners.add(listener);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeCompareInputChangeListener(ICompareInputChangeListener listener) {
-		listeners.remove(listener);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void copy(boolean leftToRight) {
-		// Nothing to do.
-	}
 }

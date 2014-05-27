@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.CompareInputAdapter;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.ForwardingCompareInputAdapter;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.ForwardingCompareInput;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -59,8 +59,8 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 				if (comparison != null) {
 					ICompareInput compareInput = (ICompareInput)EcoreUtil.getAdapter(comparison.eAdapters(),
 							ICompareInput.class);
-					if (compareInput instanceof ForwardingCompareInputAdapter) {
-						super.setInput(((ForwardingCompareInputAdapter)compareInput).delegate());
+					if (compareInput instanceof ForwardingCompareInput) {
+						super.setInput(((ForwardingCompareInput)compareInput).delegate());
 					} else {
 						EMFCompareIDEUIPlugin.getDefault().log(IStatus.ERROR,
 								"Comparison cannot be adapted to ICompareInput.");
@@ -69,6 +69,8 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 					EMFCompareIDEUIPlugin.getDefault().log(IStatus.ERROR,
 							"Cannot find a comparison from input " + input);
 				}
+			} else if (input instanceof ForwardingCompareInput) {
+				super.setInput(((ForwardingCompareInput)input).delegate());
 			} else {
 				super.setInput(input);
 			}

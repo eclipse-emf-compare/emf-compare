@@ -103,6 +103,7 @@ import org.eclipse.emf.compare.utils.IDiagnosable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
@@ -826,6 +827,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				if (compareResult.getDiagnostic() != null) {
 					diagnostic.merge(compareResult.getDiagnostic());
 				}
+				// update diagnostic of the comparison with the global one.
+				compareResult.setDiagnostic(diagnostic);
 
 				SWTUtil.safeAsyncExec(new Runnable() {
 					public void run() {
@@ -857,11 +860,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 */
 	private void selectFirstDiffOrDisplayLabelViewer(final Comparison comparison) {
 		if (comparison != null) {
+			ICompareInput compareInput = (ICompareInput)EcoreUtil.getAdapter(comparison.eAdapters(),
+					ICompareInput.class);
 			List<Diff> differences = comparison.getDifferences();
 			if (differences.isEmpty()) {
-				navigatable.fireOpen(new NoDifferencesCompareInput());
+				navigatable.fireOpen(new NoDifferencesCompareInput(compareInput));
 			} else if (JFaceUtil.filterVisibleElement(getViewer(), IS_DIFF).isEmpty()) {
-				navigatable.fireOpen(new NoVisibleItemCompareInput());
+				navigatable.fireOpen(new NoVisibleItemCompareInput(compareInput));
 			} else {
 				navigatable.selectChange(INavigatable.FIRST_CHANGE);
 			}
