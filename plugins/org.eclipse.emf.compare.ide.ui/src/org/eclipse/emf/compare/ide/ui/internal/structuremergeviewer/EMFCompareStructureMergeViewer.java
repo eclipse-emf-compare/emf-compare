@@ -33,6 +33,7 @@ import java.util.Set;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.compare.CompareViewerSwitchingPane;
+import org.eclipse.compare.ICompareInputLabelProvider;
 import org.eclipse.compare.INavigatable;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.ResourceNode;
@@ -87,6 +88,7 @@ import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IMergePreviewModeChange;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.SideLabelProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IColorChangeEvent;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.PseudoConflictsFilter;
@@ -814,6 +816,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 						BasicMonitor.toMonitor(subMonitor.newChild(15)));
 
 				compareResult.eAdapters().add(new ForwardingCompareInputAdapter(input));
+				ICompareInputLabelProvider labelProvider = getCompareConfiguration().getLabelProvider();
+				SideLabelProvider sideLabelProvider = new SideLabelProvider(labelProvider
+						.getAncestorLabel(input), labelProvider.getLeftLabel(input), labelProvider
+						.getRightLabel(input), labelProvider.getAncestorImage(input), labelProvider
+						.getLeftImage(input), labelProvider.getRightImage(input));
+				compareResult.eAdapters().add(sideLabelProvider);
 
 				if (compareResult.getDiagnostic() != null) {
 					diagnostic.merge(compareResult.getDiagnostic());
