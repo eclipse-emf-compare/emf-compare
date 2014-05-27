@@ -18,24 +18,29 @@ import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.TypeConstants;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class CompareInputWrapper extends ForwardingObject implements ICompareInput {
+public class ForwardingCompareInputAdapter extends ForwardingObject implements ICompareInput, Adapter.Internal {
 
 	private final ListenerList listeners = new ListenerList(ListenerList.IDENTITY);
 
 	private final ICompareInput fDelegate;
+
+	private Notifier target;
 
 	@Override
 	public final ICompareInput delegate() {
 		return fDelegate;
 	}
 
-	CompareInputWrapper(ICompareInput delegate) {
+	ForwardingCompareInputAdapter(ICompareInput delegate) {
 		fDelegate = delegate;
 		fDelegate.addCompareInputChangeListener(new ICompareInputChangeListener() {
 			public void compareInputChanged(ICompareInput source) {
@@ -141,7 +146,7 @@ public class CompareInputWrapper extends ForwardingObject implements ICompareInp
 				final ICompareInputChangeListener listener = (ICompareInputChangeListener)allListeners[i];
 				SafeRunner.run(new ISafeRunnable() {
 					public void run() throws Exception {
-						listener.compareInputChanged(CompareInputWrapper.this);
+						listener.compareInputChanged(ForwardingCompareInputAdapter.this);
 					}
 
 					public void handleException(Throwable exception) {
@@ -159,6 +164,52 @@ public class CompareInputWrapper extends ForwardingObject implements ICompareInp
 	 */
 	public void copy(boolean leftToRight) {
 		delegate().copy(leftToRight);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.Adapter#notifyChanged(org.eclipse.emf.common.notify.Notification)
+	 */
+	public void notifyChanged(Notification notification) {
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.Adapter#getTarget()
+	 */
+	public Notifier getTarget() {
+		return target;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.Adapter#setTarget(org.eclipse.emf.common.notify.Notifier)
+	 */
+	public void setTarget(Notifier newTarget) {
+		target = newTarget;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.Adapter#isAdapterForType(java.lang.Object)
+	 */
+	public boolean isAdapterForType(Object type) {
+		return type == ICompareInput.class;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.Adapter.Internal#unsetTarget(org.eclipse.emf.common.notify.Notifier)
+	 */
+	public void unsetTarget(Notifier oldTarget) {
+		if (target == oldTarget) {
+			setTarget(null);
+		}
 	}
 
 	public static class TypedElementWrapper extends ForwardingObject implements ITypedElement {

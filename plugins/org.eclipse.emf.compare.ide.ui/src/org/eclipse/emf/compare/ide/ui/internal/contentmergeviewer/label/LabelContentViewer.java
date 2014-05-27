@@ -32,6 +32,8 @@ public class LabelContentViewer extends Viewer {
 	/** The Control as returned by {@link #getControl()}. */
 	private final Composite control;
 
+	private Object input;
+
 	/**
 	 * Creates a new viewer and its controls.
 	 * 
@@ -66,6 +68,7 @@ public class LabelContentViewer extends Viewer {
 	 */
 	@Override
 	public void setInput(Object input) {
+		this.input = input;
 	}
 
 	/**
@@ -94,7 +97,7 @@ public class LabelContentViewer extends Viewer {
 	 */
 	@Override
 	public Object getInput() {
-		return null;
+		return input;
 	}
 
 	/**

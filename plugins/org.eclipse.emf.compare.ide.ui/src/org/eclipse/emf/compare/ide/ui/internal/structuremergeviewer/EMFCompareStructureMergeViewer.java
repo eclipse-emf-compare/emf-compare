@@ -166,7 +166,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					}
 				});
 			} finally {
-				wrapper.done();
+				subMonitor.setWorkRemaining(0);
 			}
 			return Status.OK_STATUS;
 		}
@@ -370,7 +370,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			public void controlResized(ControlEvent event) {
 				if (!guard) {
 					guard = true;
-					hideTabs(false);
+					hideTabs();
 					guard = false;
 				}
 			}
@@ -708,13 +708,15 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 			SWTUtil.safeAsyncExec(new Runnable() {
 				public void run() {
-					updateLayout(false, true);
+					if (!getControl().isDisposed()) {
+						updateLayout(false, true);
 
-					// title is not initialized as the comparison was set in the configuration after the
-					// refresh caused by the initialization of the viewer filters and the group providers.
-					refreshTitle();
+						// title is not initialized as the comparison was set in the configuration after the
+						// refresh caused by the initialization of the viewer filters and the group providers.
+						refreshTitle();
 
-					selectFirstDiffOrDisplayLabelViewer(comparison);
+						selectFirstDiffOrDisplayLabelViewer(comparison);
+					}
 				}
 			});
 
@@ -789,13 +791,16 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 							origin, subMonitor.newChild(85));
 				} catch (OperationCanceledException e) {
 					scope = new EmptyComparisonScope();
-					((EmptyComparisonScope)scope).setDiagnostic(new BasicDiagnostic(Diagnostic.CANCEL,
-							EMFCompareIDEUIPlugin.PLUGIN_ID, 0, EMFCompareIDEUIMessages
-									.getString("EMFCompareStructureMergeViewer.operationCancel"), //$NON-NLS-1$
-							new Object[] {e, }));
+					((BasicDiagnostic)((EmptyComparisonScope)scope).getDiagnostic())
+							.merge(new BasicDiagnostic(Diagnostic.CANCEL, EMFCompareIDEUIPlugin.PLUGIN_ID, 0,
+									EMFCompareIDEUIMessages
+											.getString("EMFCompareStructureMergeViewer.operationCanceled"), //$NON-NLS-1$
+									new Object[] {e, }));
 				} catch (Exception e) {
 					scope = new EmptyComparisonScope();
-					((EmptyComparisonScope)scope).setDiagnostic(BasicDiagnostic.toDiagnostic(e));
+					((BasicDiagnostic)((EmptyComparisonScope)scope).getDiagnostic()).merge(BasicDiagnostic
+							.toDiagnostic(e));
+					EMFCompareIDEUIPlugin.getDefault().log(e);
 				}
 
 				if (scope instanceof IDiagnosable && ((IDiagnosable)scope).getDiagnostic() != null) {
@@ -804,18 +809,20 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 					SWTUtil.safeAsyncExec(new Runnable() {
 						public void run() {
-							updateProblemIndication(scopeDiagnostic);
+							if (!getControl().isDisposed()) {
+								updateProblemIndication(scopeDiagnostic);
+							}
 						}
 					});
 
-					if (scopeDiagnostic.getSeverity() >= Diagnostic.ERROR) {
+					if (scopeDiagnostic.getSeverity() >= Diagnostic.CANCEL) {
 						SWTUtil.safeAsyncExec(new Runnable() {
 							public void run() {
-								hideTabs(true);
-								fallbackToTextComparison(input);
+								if (!getControl().isDisposed()) {
+									fallbackToTextComparison(input);
+								}
 							}
 						});
-						return;
 					}
 				}
 
@@ -826,6 +833,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 				final Comparison compareResult = comparisonBuilder.build().compare(scope,
 						BasicMonitor.toMonitor(subMonitor.newChild(15)));
+
+				compareResult.eAdapters().add(new ForwardingCompareInputAdapter(input));
 
 				if (compareResult.getDiagnostic() != null) {
 					SWTUtil.safeAsyncExec(new Runnable() {
@@ -851,7 +860,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	private void fallbackToTextComparison(final ICompareInput input) {
-		CompareInputWrapper wrapper = new CompareInputWrapper(input);
+		ForwardingCompareInputAdapter wrapper = new ForwardingCompareInputAdapter(input);
 		getViewer().setInput(wrapper);
 
 		StructuredSelection newSelection = new StructuredSelection(wrapper);
@@ -1024,11 +1033,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 	}
 
-	private void hideTabs(boolean force) {
-		if (getPageCount() <= 1 || force) {
-			for (CTabItem item : getControl().getItems()) {
-				item.setText(""); //$NON-NLS-1$
-			}
+	private void hideTabs() {
+		if (getPageCount() <= 1) {
+			getControl().getItem(0).setText(""); //$NON-NLS-1$
 			getControl().setTabHeight(1);
 			Point point = getControl().getSize();
 			getControl().setSize(point.x, point.y + 6);

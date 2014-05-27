@@ -36,7 +36,14 @@
          point="org.eclipse.compare.contentMergeViewers">
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerCreator"
-            extensions="org.eclipse.emf.compare.rcp.ui.eTreeDiff,org.eclipse.emf.compare.rcp.ui.eMatch,org.eclipse.emf.compare.rcp.ui.eResourceDiff,NODE_TYPE__EMF_EOBJECT,NODE_TYPE__EMF_RESOURCE,NODE_TYPE__EMF_RESOURCESET,NODE_TYPE__EMF_COMPARISON"
+            extensions=
+            "org.eclipse.emf.compare.rcp.ui.eTreeDiff,
+            org.eclipse.emf.compare.rcp.ui.eMatch,
+            org.eclipse.emf.compare.rcp.ui.eResourceDiff,
+            NODE_TYPE__EMF_EOBJECT,
+            NODE_TYPE__EMF_RESOURCE,
+            NODE_TYPE__EMF_RESOURCESET,
+            NODE_TYPE__EMF_COMPARISON"
             id="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer"
             label="%model.compare.containment.feature">
       </viewer>
@@ -71,9 +78,17 @@
             label="%emf.compare.no.visible.item.viewer">
       </viewer>
       <viewer
-            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.FallbackTextCompareViewerCreator"
-            extensions="org.eclipse.emf.compare.rcp.ui.fallbackText"
-            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.FallbackTextCompareViewerCreator"
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.TextFallbackCompareViewerCreator"
+            extensions=
+            "org.eclipse.emf.compare.rcp.ui.fallbackText,
+            org.eclipse.emf.compare.rcp.ui.eTreeDiff,
+            org.eclipse.emf.compare.rcp.ui.eMatch,
+            org.eclipse.emf.compare.rcp.ui.eResourceDiff,
+            org.eclipse.emf.compare.rcp.ui.eListDiff,
+            org.eclipse.emf.compare.rcp.ui.eTextDiff,
+            org.eclipse.emf.compare.rcp.ui.eNoDiff,
+            org.eclipse.emf.compare.rcp.ui.eNoVisibleItem"
+            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.TextFallbackCompareViewer"
             label="%emf.compare.fallback.textcompare">
       </viewer>
       <contentTypeBinding

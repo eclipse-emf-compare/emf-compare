@@ -16,6 +16,7 @@ import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.addAll;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.getFirst;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
@@ -29,12 +30,17 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
@@ -51,7 +57,7 @@ public final class ComparisonUtil {
 	/**
 	 * Predicate to know if the given diff respects the requirements of a cascading diff.
 	 */
-	private static Predicate<Diff> cascadingDiff = and(not(hasConflict(ConflictKind.REAL)),
+	private static final Predicate<Diff> CASCADING_DIFF = and(not(hasConflict(ConflictKind.REAL)),
 			not(instanceOf(ResourceAttachmentChange.class)));
 
 	/** Hides default constructor. */
@@ -213,7 +219,7 @@ public final class ComparisonUtil {
 						if (ofKind(DifferenceKind.MOVE).apply(diff)) {
 							subDiffs = ImmutableList.of();
 						} else {
-							subDiffs = filter(matchOfValue.getAllDifferences(), cascadingDiff);
+							subDiffs = filter(matchOfValue.getAllDifferences(), CASCADING_DIFF);
 						}
 						addAll(processedDiffs, subDiffs);
 						final Iterable<Diff> associatedDiffs = getAssociatedDiffs(diff, subDiffs,
@@ -289,5 +295,53 @@ public final class ComparisonUtil {
 			}
 		}
 		return associatedDiffs;
+	}
+
+	/**
+	 * Returns the comparison associated with the given object. The given object is expected to be an instance
+	 * of one of the Class from the ComparePackage model.
+	 * 
+	 * @param object
+	 *            the object from which the comparison should be retrieved.
+	 * @return the comparison.
+	 */
+	public static Comparison getComparison(EObject object) {
+		final Comparison comparison;
+		if (object instanceof Match) {
+			comparison = ((Match)object).getComparison();
+		} else if (object instanceof Diff) {
+			comparison = ((Diff)object).getMatch().getComparison();
+		} else if (object instanceof MatchResource) {
+			comparison = ((MatchResource)object).getComparison();
+		} else if (object instanceof Equivalence) {
+			EObject eContainer = object.eContainer();
+			if (eContainer instanceof Comparison) {
+				comparison = (Comparison)eContainer;
+			} else {
+				EList<Diff> differences = ((Equivalence)object).getDifferences();
+				Diff first = getFirst(differences, null);
+				if (first != null) {
+					comparison = first.getMatch().getComparison();
+				} else {
+					comparison = null;
+				}
+			}
+		} else if (object instanceof Conflict) {
+			EObject eContainer = object.eContainer();
+			if (eContainer instanceof Comparison) {
+				comparison = (Comparison)eContainer;
+			} else {
+				EList<Diff> differences = ((Conflict)object).getDifferences();
+				Diff first = getFirst(differences, null);
+				if (first != null) {
+					comparison = first.getMatch().getComparison();
+				} else {
+					comparison = null;
+				}
+			}
+		} else {
+			comparison = null;
+		}
+		return comparison;
 	}
 }

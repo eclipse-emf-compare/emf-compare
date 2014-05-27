@@ -147,13 +147,8 @@ public final class ComparisonScopeBuilder {
 			} else {
 				syncModel = createSynchronizationModel(left, right, origin, subMonitor.newChild(60));
 			}
-			if (syncModel.getDiagnostic().getSeverity() >= Diagnostic.ERROR) {
-				EmptyComparisonScope emptyComparisonScope = new EmptyComparisonScope();
-				emptyComparisonScope.setDiagnostic(syncModel.getDiagnostic());
-				return emptyComparisonScope;
-			} else {
-				return createMinimizedScope(syncModel, subMonitor.newChild(40));
-			}
+
+			return createMinimizedScope(syncModel, subMonitor.newChild(40));
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 			EmptyComparisonScope scope = new EmptyComparisonScope();
