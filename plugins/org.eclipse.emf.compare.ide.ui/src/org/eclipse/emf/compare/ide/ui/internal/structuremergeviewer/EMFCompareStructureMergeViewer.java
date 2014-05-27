@@ -159,11 +159,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			} catch (final OperationCanceledException e) {
 				return Status.CANCEL_STATUS;
 			} catch (final Exception e) {
-				SWTUtil.safeAsyncExec(new Runnable() {
-					public void run() {
-						updateProblemIndication(BasicDiagnostic.toDiagnostic(e));
-					}
-				});
+				EMFCompareIDEUIPlugin.getDefault().log(e);
 			} finally {
 				subMonitor.setWorkRemaining(0);
 			}
