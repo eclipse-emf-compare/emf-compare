@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.AbstractTreeIterator;
@@ -333,6 +334,16 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 			synchronized(lock) {
 				return super.set(index, object);
 			}
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.common.notify.impl.NotifyingListImpl#dispatchNotification(org.eclipse.emf.common.notify.Notification)
+		 */
+		@Override
+		protected void dispatchNotification(Notification notification) {
+			// do nothing
 		}
 
 		/**
