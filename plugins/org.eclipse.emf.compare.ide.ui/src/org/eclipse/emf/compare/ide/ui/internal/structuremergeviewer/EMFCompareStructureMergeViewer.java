@@ -109,7 +109,6 @@ import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeViewerListener;
-import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
@@ -785,7 +784,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 				initToolbar();
 
+				final BasicDiagnostic diagnostic = new BasicDiagnostic(Diagnostic.OK,
+						EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null, new Object[0]);
 				IComparisonScope scope = null;
+
 				try {
 					scope = ComparisonScopeBuilder.create(compareConfiguration.getContainer(), left, right,
 							origin, subMonitor.newChild(85));
@@ -804,26 +806,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				}
 
 				if (scope instanceof IDiagnosable && ((IDiagnosable)scope).getDiagnostic() != null) {
-					monitor.done();
-					final Diagnostic scopeDiagnostic = ((IDiagnosable)scope).getDiagnostic();
-
-					SWTUtil.safeAsyncExec(new Runnable() {
-						public void run() {
-							if (!getControl().isDisposed()) {
-								updateProblemIndication(scopeDiagnostic);
-							}
-						}
-					});
-
-					if (scopeDiagnostic.getSeverity() >= Diagnostic.CANCEL) {
-						SWTUtil.safeAsyncExec(new Runnable() {
-							public void run() {
-								if (!getControl().isDisposed()) {
-									fallbackToTextComparison(input);
-								}
-							}
-						});
-					}
+					diagnostic.merge(((IDiagnosable)scope).getDiagnostic());
 				}
 
 				final Builder comparisonBuilder = EMFCompare.builder().setPostProcessorRegistry(
@@ -837,12 +820,14 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				compareResult.eAdapters().add(new ForwardingCompareInputAdapter(input));
 
 				if (compareResult.getDiagnostic() != null) {
-					SWTUtil.safeAsyncExec(new Runnable() {
-						public void run() {
-							updateProblemIndication(compareResult.getDiagnostic());
-						}
-					});
+					diagnostic.merge(compareResult.getDiagnostic());
 				}
+
+				SWTUtil.safeAsyncExec(new Runnable() {
+					public void run() {
+						updateProblemIndication(diagnostic);
+					}
+				});
 
 				final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
 				final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
@@ -857,15 +842,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		} else {
 			compareInputChangedToNull();
 		}
-	}
-
-	private void fallbackToTextComparison(final ICompareInput input) {
-		ForwardingCompareInputAdapter wrapper = new ForwardingCompareInputAdapter(input);
-		getViewer().setInput(wrapper);
-
-		StructuredSelection newSelection = new StructuredSelection(wrapper);
-		getViewer().setSelection(newSelection);
-		getViewer().fireOpen(new OpenEvent(getViewer(), newSelection));
 	}
 
 	/**

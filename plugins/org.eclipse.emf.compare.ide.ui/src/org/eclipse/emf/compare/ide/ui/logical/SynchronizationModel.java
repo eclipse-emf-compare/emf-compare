@@ -126,18 +126,11 @@ public final class SynchronizationModel implements IDiagnosable {
 	public Diagnostic getDiagnostic() {
 		BasicDiagnostic ret = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, EMFCompareIDEUIMessages
 				.getString("SynchronizationModel.diagnosticMesg"), new Object[] {this, }); //$NON-NLS-1$
-		if (diagnostic.getSeverity() >= Diagnostic.WARNING) {
-			ret.add(this.diagnostic);
-		}
-		if (leftTraversal.getDiagnostic().getSeverity() >= Diagnostic.WARNING) {
-			ret.add(leftTraversal.getDiagnostic());
-		}
-		if (originTraversal.getDiagnostic().getSeverity() >= Diagnostic.WARNING) {
-			ret.add(originTraversal.getDiagnostic());
-		}
-		if (rightTraversal.getDiagnostic().getSeverity() >= Diagnostic.WARNING) {
-			ret.add(rightTraversal.getDiagnostic());
-		}
+		ret.merge(this.diagnostic);
+
+		ret.add(leftTraversal.getDiagnostic());
+		ret.add(originTraversal.getDiagnostic());
+		ret.add(rightTraversal.getDiagnostic());
 		return ret;
 	}
 

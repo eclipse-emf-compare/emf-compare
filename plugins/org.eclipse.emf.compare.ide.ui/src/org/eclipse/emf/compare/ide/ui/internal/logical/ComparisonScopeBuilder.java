@@ -355,7 +355,7 @@ public final class ComparisonScopeBuilder {
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
-		
+
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 		// Minimize the traversals to non-read-only resources with no binary identical counterparts.
 		minimizer.minimize(syncModel, subMonitor.newChild(10));
@@ -403,6 +403,25 @@ public final class ComparisonScopeBuilder {
 			}
 		}
 
+		final FilterComparisonScope scope = new DefaultComparisonScope(leftResourceSet, rightResourceSet,
+				originResourceSet);
+		scope.setResourceSetContentFilter(isInScope(urisInScope));
+
+		Diagnostic syncModelDiagnostic = syncModel.getDiagnostic();
+		Diagnostic scopeDiagnostic = computeDiagnostics(originResourceSet, leftResourceSet, rightResourceSet);
+
+		BasicDiagnostic basicDiagnostic = new BasicDiagnostic(Diagnostic.OK, EMFCompareIDEUIPlugin.PLUGIN_ID,
+				0, null, new Object[0]);
+
+		basicDiagnostic.add(syncModelDiagnostic);
+		basicDiagnostic.add(scopeDiagnostic);
+
+		scope.setDiagnostic(basicDiagnostic);
+		return scope;
+	}
+
+	private Diagnostic computeDiagnostics(final ResourceSet originResourceSet,
+			final ResourceSet leftResourceSet, final ResourceSet rightResourceSet) {
 		final BasicDiagnostic originDiagnostic;
 		if (originResourceSet != null) {
 			originDiagnostic = getResourceSetDiagnostic(originResourceSet, null, true);
@@ -414,25 +433,19 @@ public final class ComparisonScopeBuilder {
 		BasicDiagnostic rightDiagnostic = getResourceSetDiagnostic(rightResourceSet, DifferenceSource.RIGHT,
 				true);
 
-		final FilterComparisonScope scope = new DefaultComparisonScope(leftResourceSet, rightResourceSet,
-				originResourceSet);
-		scope.setResourceSetContentFilter(isInScope(urisInScope));
+		BasicDiagnostic diagnostic = new BasicDiagnostic(
+				Diagnostic.OK,
+				EMFCompareIDEUIPlugin.PLUGIN_ID,
+				0,
+				EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.comparisonScopeDiagnostic"), new Object[0]); //$NON-NLS-1$
 
-		BasicDiagnostic diagnostic = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null,
-				new Object[0]);
-		scope.setDiagnostic(diagnostic);
-
-		if (originDiagnostic != null && originDiagnostic.getSeverity() >= Diagnostic.WARNING) {
+		if (originDiagnostic != null) {
 			diagnostic.add(originDiagnostic);
 		}
-		if (leftDiagnostic.getSeverity() >= Diagnostic.WARNING) {
-			diagnostic.add(leftDiagnostic);
-		}
-		if (rightDiagnostic.getSeverity() >= Diagnostic.WARNING) {
-			diagnostic.add(rightDiagnostic);
-		}
+		diagnostic.add(leftDiagnostic);
+		diagnostic.add(rightDiagnostic);
 
-		return scope;
+		return diagnostic;
 	}
 
 	/**
@@ -461,9 +474,7 @@ public final class ComparisonScopeBuilder {
 				EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.resourceSetDiagnostic", sideStr), new Object[0]); //$NON-NLS-1$
 		for (Resource resource : resourceSet.getResources()) {
 			Diagnostic resourceDiagnostic = EcoreUtil.computeDiagnostic(resource, includeWarning);
-			if (resourceDiagnostic.getSeverity() >= Diagnostic.WARNING) {
-				diagnostic.merge(resourceDiagnostic);
-			}
+			diagnostic.merge(resourceDiagnostic);
 		}
 		return diagnostic;
 	}

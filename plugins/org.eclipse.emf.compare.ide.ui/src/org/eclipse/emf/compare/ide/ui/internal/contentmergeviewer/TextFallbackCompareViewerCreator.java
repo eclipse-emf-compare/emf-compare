@@ -69,8 +69,6 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 					EMFCompareIDEUIPlugin.getDefault().log(IStatus.ERROR,
 							"Cannot find a comparison from input " + input);
 				}
-			} else if (input instanceof ForwardingCompareInputAdapter) {
-				super.setInput(((ForwardingCompareInputAdapter)input).delegate());
 			} else {
 				super.setInput(input);
 			}
