@@ -16,6 +16,7 @@ import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.filter;
 import static com.google.common.collect.Iterators.transform;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
@@ -154,7 +155,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		public List<? extends TreeNode> getChildren() {
 			if (children == null) {
 				children = newArrayList();
-				extensionDiffProcessed = newArrayList();
+				extensionDiffProcessed = newLinkedHashSet();
 				for (Conflict conflict : getComparison().getConflicts()) {
 					TreeNode buildSubTree = buildSubTree(conflict);
 					if (buildSubTree != null) {

@@ -18,6 +18,7 @@ import static com.google.common.collect.Iterators.any;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.transform;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
@@ -98,7 +99,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	protected List<TreeNode> children;
 
 	/** The list of already processed refined diffs. */
-	protected List<Diff> extensionDiffProcessed;
+	protected Set<Diff> extensionDiffProcessed;
 
 	/** The comparison that is the parent of this group. */
 	private final Comparison comparison;
@@ -237,7 +238,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	public List<? extends TreeNode> getChildren() {
 		if (children == null) {
 			children = newArrayList();
-			extensionDiffProcessed = newArrayList();
+			extensionDiffProcessed = newLinkedHashSet();
 			for (Match match : comparison.getMatches()) {
 				List<? extends TreeNode> buildSubTree = buildSubTree((Match)null, match);
 				if (buildSubTree != null) {
@@ -336,6 +337,10 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		return buildSubTree(match, false, ChildrenSide.BOTH);
 	}
 
+	public List<TreeNode> buildContainmentSubTree(Match match) {
+		return buildSubTree(match, true, ChildrenSide.BOTH);
+	}
+
 	/**
 	 * Build the sub tree of the given {@link Match}.
 	 * 
@@ -349,8 +354,8 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 */
 	protected List<TreeNode> buildSubTree(Match match, boolean containment, ChildrenSide side) {
 		final List<TreeNode> ret = Lists.newArrayList();
-		final Set<TreeNode> nodeChildren = Sets.newLinkedHashSet();
-		final Set<Match> matchOfValues = Sets.newLinkedHashSet();
+		final Set<TreeNode> nodeChildren = newLinkedHashSet();
+		final Set<Match> matchOfValues = newLinkedHashSet();
 		final TreeNode matchTreeNode = wrap(match);
 
 		if (!containment) {
@@ -394,8 +399,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		for (TreeNode treeNode : ret) {
 			boolean hasNonEmptySubMatch = false;
 			// SubMatches first
-			for (Match subMatch : Sets
-					.difference(Sets.newLinkedHashSet(match.getSubmatches()), matchOfValues)) {
+			for (Match subMatch : Sets.difference(newLinkedHashSet(match.getSubmatches()), matchOfValues)) {
 				List<TreeNode> buildSubTree = buildSubTree(subMatch, containment, ChildrenSide.BOTH);
 				if (!buildSubTree.isEmpty()) {
 					hasNonEmptySubMatch = true;
@@ -434,7 +438,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		final EList<Diff> refines = diff.getRefines();
 		for (Diff refine : refines) {
 			Diff mainDiff = refine.getPrimeRefining();
-			if (mainDiff != null && mainDiff == diff && !extensionDiffProcessed.contains(refine)) {
+			if (mainDiff != null && mainDiff == diff) {
 				TreeNode refineSubTree = buildSubTree(refine);
 				ret.add(refineSubTree);
 				extensionDiffProcessed.add(refine);

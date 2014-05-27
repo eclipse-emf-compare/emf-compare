@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,11 +45,9 @@ public class DiagramDiffExtender implements IDifferenceGroupExtender {
 			Match match = comparison.getMatch(view);
 			if (match != null) {
 				for (Match subMatch : match.getSubmatches()) {
-					List<TreeNode> buildSubTree = ((BasicDifferenceGroupImpl)group).buildSubTree(match,
-							subMatch);
-					for (TreeNode subTreeNode : buildSubTree) {
-						treeNode.getChildren().addAll(subTreeNode.getChildren());
-					}
+					List<TreeNode> buildSubTree = ((BasicDifferenceGroupImpl)group)
+							.buildContainmentSubTree(subMatch);
+					treeNode.getChildren().addAll(buildSubTree);
 				}
 			}
 		}

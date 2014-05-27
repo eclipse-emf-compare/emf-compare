@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl
 
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -111,7 +112,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 		public List<? extends TreeNode> getChildren() {
 			if (children == null) {
 				children = newArrayList();
-				extensionDiffProcessed = newArrayList();
+				extensionDiffProcessed = newLinkedHashSet();
 				for (MatchResource matchResource : getComparison().getMatchedResources()) {
 					children.add(buildSubTree(matchResource));
 				}
