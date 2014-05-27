@@ -35,6 +35,7 @@ import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
@@ -417,12 +418,18 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
+		fExecutorService.shutdown();
 		try {
-			fExecutorService.awaitTermination(1, TimeUnit.SECONDS);
+			if (!fExecutorService.awaitTermination(1, TimeUnit.SECONDS)) {
+				fExecutorService.shutdownNow();
+				if (!fExecutorService.awaitTermination(1, TimeUnit.SECONDS)) {
+					EMFCompareIDEUIPlugin.getDefault().log(IStatus.WARNING,
+							"The executor of EMFCompareTextMergeViewer did not shutdown properly."); //$NON-NLS-1$
+				}
+			}
 		} catch (InterruptedException e) {
 			EMFCompareIDEUIPlugin.getDefault().log(e);
 		}
-		fExecutorService.shutdown();
 
 		getCompareConfiguration().getEventBus().unregister(this);
 
