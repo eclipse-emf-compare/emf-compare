@@ -40,7 +40,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * Interactive content used for {@link IDifferenceGroupProvider} preferences.
@@ -49,8 +48,11 @@ import org.eclipse.swt.widgets.Text;
  */
 public class GroupsInteractiveContent {
 
-	/** Height hint for the description text. */
-	private static final int DESCRIPTION_TEXT_HEIGHT_HINT = 50;
+	/** Height hint for the description label. */
+	private static final int DESCRIPTION_LABEL_HEIGHT_HINT = 50;
+
+	/** Width hint for configuration composite. */
+	private static final int DESCRIPTION_LABEL_WIDTH_HINT = 400;
 
 	/** Down icon picture. */
 	private static final String ENABLE_DOWN_IMG = "icons/full/pref16/down.gif"; //$NON-NLS-1$
@@ -65,8 +67,8 @@ public class GroupsInteractiveContent {
 	/** Combo holding syncrhonization behavior preferences. */
 	private Combo combo;
 
-	/** Text that will display the viewer's description. */
-	private final Text descriptionText;
+	/** Label that will display the viewer's description. */
+	private final Label descriptionLabel;
 
 	/** List of descriptors. */
 	private ArrayList<IItemDescriptor<IDifferenceGroupProvider.Descriptor>> descriptors;
@@ -106,9 +108,9 @@ public class GroupsInteractiveContent {
 		this.viewerCompsite = new Composite(interactiveComposite, SWT.NONE);
 		viewerCompsite.setLayout(new GridLayout(1, true));
 		viewerCompsite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		// Descriptor engine Text
+		// Descriptor engine Label
 		createButtonComposite(interactiveComposite);
-		this.descriptionText = createDescriptionComposite(interactiveComposite);
+		this.descriptionLabel = createDescriptionComposite(interactiveComposite);
 		createSynchronizationBehaviorContent(containerComposite);
 	}
 
@@ -205,21 +207,22 @@ public class GroupsInteractiveContent {
 	 * 
 	 * @param composite
 	 *            Parent Composite.
-	 * @return Description composite.
+	 * @return Label holding the description.
 	 */
-	private Text createDescriptionComposite(Composite composite) {
+	private Label createDescriptionComposite(Composite composite) {
 		Group descriptionComposite = new Group(composite, SWT.NONE);
 		descriptionComposite.setText(EMFCompareRCPUIMessages
 				.getString("InteractiveUIContent.descriptionComposite.label")); //$NON-NLS-1$
 		descriptionComposite.setLayout(new GridLayout(1, false));
 		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
-		Text engineDescriptionText = new Text(descriptionComposite, SWT.WRAP | SWT.MULTI);
-		engineDescriptionText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+		Label engineDescriptionLabel = new Label(descriptionComposite, SWT.WRAP);
+		engineDescriptionLabel
+				.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
-		layoutData.heightHint = DESCRIPTION_TEXT_HEIGHT_HINT;
-		engineDescriptionText.setLayoutData(layoutData);
-		engineDescriptionText.setEditable(false);
-		return engineDescriptionText;
+		layoutData.heightHint = DESCRIPTION_LABEL_HEIGHT_HINT;
+		layoutData.widthHint = DESCRIPTION_LABEL_WIDTH_HINT;
+		engineDescriptionLabel.setLayoutData(layoutData);
+		return engineDescriptionLabel;
 	}
 
 	/**
@@ -370,7 +373,7 @@ public class GroupsInteractiveContent {
 	 */
 	private void updateLinkedElements(IItemDescriptor<IDifferenceGroupProvider.Descriptor> descriptor) {
 		// Update description
-		descriptionText.setText(descriptor.getDescription());
+		descriptionLabel.setText(descriptor.getDescription());
 	}
 
 	/**
@@ -391,7 +394,7 @@ public class GroupsInteractiveContent {
 				if (selected instanceof IItemDescriptor<?>) {
 					IItemDescriptor<?> desc = (IItemDescriptor<?>)selected;
 					String description = desc.getDescription();
-					descriptionText.setText(description);
+					descriptionLabel.setText(description);
 				}
 			}
 

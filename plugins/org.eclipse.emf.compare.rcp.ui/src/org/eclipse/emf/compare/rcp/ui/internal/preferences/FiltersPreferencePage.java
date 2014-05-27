@@ -54,7 +54,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
@@ -185,7 +184,7 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	private static class InteractiveFilterUIContent {
 
 		/** Text that will be updated with the description of the viewer. */
-		private final Text descriptionText;
+		private final Label descriptionText;
 
 		/** Viewer of {@link IDifferenceFilter}. */
 		private CheckboxTableViewer viewer;
@@ -342,20 +341,20 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		 * @param composite
 		 * @return
 		 */
-		private Text createDescriptionComposite(Composite composite) {
+		private Label createDescriptionComposite(Composite composite) {
 			Group descriptionComposite = new Group(composite, SWT.NONE);
 			descriptionComposite.setText(EMFCompareRCPUIMessages
 					.getString("InteractiveUIContent.descriptionComposite.label")); //$NON-NLS-1$
 			descriptionComposite.setLayout(new GridLayout(1, false));
 			descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-			Text engineDescriptionText = new Text(descriptionComposite, SWT.WRAP | SWT.MULTI);
-			engineDescriptionText.setBackground(Display.getCurrent().getSystemColor(
+			Label engineDescriptionLabel = new Label(descriptionComposite, SWT.WRAP);
+			engineDescriptionLabel.setBackground(Display.getCurrent().getSystemColor(
 					SWT.COLOR_WIDGET_BACKGROUND));
 			GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+			layoutData.widthHint = 400;
 			layoutData.heightHint = 50;
-			engineDescriptionText.setLayoutData(layoutData);
-			engineDescriptionText.setEditable(false);
-			return engineDescriptionText;
+			engineDescriptionLabel.setLayoutData(layoutData);
+			return engineDescriptionLabel;
 		}
 
 		/**
