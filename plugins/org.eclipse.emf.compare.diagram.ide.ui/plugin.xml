@@ -65,5 +65,11 @@
             id="org.eclipse.emf.compare.ui.diagram.contentviewer"
             label="Model Compare (Diagram)">
       </viewer>
+      <viewer
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.TextFallbackCompareViewerCreator"
+            extensions="diagramcompare_match, diagramcompare_diff"
+            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.TextFallbackCompareViewer"
+            label="Text Compare">
+      </viewer>
    </extension>
 </plugin>
