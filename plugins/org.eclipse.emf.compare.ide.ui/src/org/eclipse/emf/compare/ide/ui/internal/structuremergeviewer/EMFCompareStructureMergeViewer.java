@@ -672,12 +672,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		IComparisonScope comparisonScope = input.getComparisonScope();
 		final Comparison comparison = comparator.compare(comparisonScope, BasicMonitor.toMonitor(monitor));
 
-		SWTUtil.safeAsyncExec(new Runnable() {
-			public void run() {
-				updateProblemIndication(comparison.getDiagnostic());
-			}
-		});
-
 		compareInputChanged(input.getComparisonScope(), comparison);
 	}
 
@@ -692,6 +686,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			IDifferenceGroupProvider groupProvider = getCompareConfiguration()
 					.getStructureMergeViewerGrouper().getProvider();
 			treeNode.eAdapters().add(groupProvider);
+
+			// display problem tabs if any
+			SWTUtil.safeAsyncExec(new Runnable() {
+				public void run() {
+					updateProblemIndication(comparison.getDiagnostic());
+				}
+			});
 
 			// must set the input now in a synchronous mean. It will be used in the #setComparisonAndScope
 			// afterwards during the initialization of StructureMergeViewerFilter and
@@ -829,12 +830,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				}
 				// update diagnostic of the comparison with the global one.
 				compareResult.setDiagnostic(diagnostic);
-
-				SWTUtil.safeAsyncExec(new Runnable() {
-					public void run() {
-						updateProblemIndication(diagnostic);
-					}
-				});
 
 				final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
 				final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
