@@ -17,6 +17,7 @@ import junit.textui.TestRunner;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TestBug434822;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TestBug434827;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TestBug434828;
+import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TestBug434828_2;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -29,7 +30,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({TestBug434827.class,
 	TestBug434822.class,
-	TestBug434828.class })
+	TestBug434828.class,
+	TestBug434828_2.class})
 public class BugsTestSuite {
 	/**
 	 * Launches the test with the given arguments.

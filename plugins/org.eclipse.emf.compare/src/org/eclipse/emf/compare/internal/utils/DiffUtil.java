@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.internal.utils;
 
 import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.addAll;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
@@ -886,12 +885,10 @@ public final class DiffUtil {
 	 *            the original given difference.
 	 * @param leftToRight
 	 *            the way of merge.
-	 * @param processedDiffs
-	 *            the list of already processed diffs.
 	 * @return the list of all required differences.
 	 */
 	private static Set<Diff> getFirstLevelRequires(Diff currentDiff, final Diff originalDiff,
-			boolean leftToRight, Set<Object> processedDiffs) {
+			boolean leftToRight) {
 		Set<Diff> requires = Sets.newHashSet();
 		DifferenceSource originalDiffSource = originalDiff.getSource();
 		// Add requires or requiredBy according to the way of merge and the source of the diff.
@@ -922,8 +919,7 @@ public final class DiffUtil {
 		if (conflict != null && conflict.getKind() == ConflictKind.PSEUDO) {
 			addAll(requires, conflict.getDifferences());
 		}
-
-		addAll(processedDiffs, requires);
+		requires.remove(originalDiff);
 		requires.remove(currentDiff);
 
 		return requires;
@@ -945,11 +941,11 @@ public final class DiffUtil {
 	private static Set<Diff> getAllRequires(Diff currentDiff, final Diff originalDiff, boolean leftToRight,
 			Set<Object> processedDiffs) {
 		Set<Diff> requires = Sets.newHashSet();
-		Set<Diff> firstLevelRequires = getFirstLevelRequires(currentDiff, originalDiff, leftToRight,
-				processedDiffs);
+		Set<Diff> firstLevelRequires = getFirstLevelRequires(currentDiff, originalDiff, leftToRight);
 		addAll(requires, firstLevelRequires);
 		for (Diff require : firstLevelRequires) {
 			if (!originalDiff.equals(require) && !processedDiffs.contains(require)) {
+				processedDiffs.add(require);
 				addAll(requires, getAllRequires(require, originalDiff, leftToRight, processedDiffs));
 			}
 		}
@@ -977,12 +973,9 @@ public final class DiffUtil {
 	 *            the given difference.
 	 * @param leftToRight
 	 *            the way of merge.
-	 * @param processedDiffs
-	 *            the list of already processed diffs.
 	 * @return the list of unmergeable differences.
 	 */
-	private static Set<Diff> getFirstLevelUnmergeables(Diff diff, boolean leftToRight,
-			Set<Object> processedDiffs) {
+	private static Set<Diff> getFirstLevelUnmergeables(Diff diff, boolean leftToRight) {
 		Set<Diff> unmergeables = Sets.newHashSet();
 		Conflict conflict = diff.getConflict();
 		if (conflict != null && conflict.getKind() == ConflictKind.REAL) {
@@ -1006,8 +999,7 @@ public final class DiffUtil {
 				} else if (!leftToRight
 						&& and(fromSide(DifferenceSource.RIGHT),
 								or(ofKind(DifferenceKind.DELETE), ofKind(DifferenceKind.CHANGE))).apply(diff)) {
-					if (and(fromSide(DifferenceSource.LEFT), not(ofKind(DifferenceKind.DELETE))).apply(
-							diffConflict)) {
+					if (fromSide(DifferenceSource.LEFT).apply(diffConflict)) {
 						unmergeables.add(diffConflict);
 					}
 				} else if (!leftToRight
@@ -1023,7 +1015,6 @@ public final class DiffUtil {
 			}
 		}
 
-		addAll(processedDiffs, unmergeables);
 		unmergeables.remove(diff);
 
 		return unmergeables;
@@ -1042,11 +1033,17 @@ public final class DiffUtil {
 	 */
 	private static Set<Diff> getAllUnmergeables(Diff diff, boolean leftToRight, Set<Object> processedDiffs) {
 		Set<Diff> unmergeables = Sets.newHashSet();
-		Set<Diff> firstLevelUnmergeables = getFirstLevelUnmergeables(diff, leftToRight, processedDiffs);
+		Set<Diff> firstLevelUnmergeables = getFirstLevelUnmergeables(diff, leftToRight);
+		processedDiffs.add(diff);
 		addAll(unmergeables, firstLevelUnmergeables);
-		Set<Diff> firstLevelRequires = getFirstLevelRequires(diff, diff, leftToRight, processedDiffs);
+		for (Diff unmergeable : firstLevelUnmergeables) {
+			addAll(unmergeables, getFirstLevelRequires(unmergeable, diff, !leftToRight));
+		}
+		addAll(processedDiffs, firstLevelUnmergeables);
+		Set<Diff> firstLevelRequires = getFirstLevelRequires(diff, diff, leftToRight);
 		for (Diff require : firstLevelRequires) {
 			if (require != diff && !processedDiffs.contains(require)) {
+				processedDiffs.add(require);
 				addAll(unmergeables, getAllUnmergeables(require, leftToRight, processedDiffs));
 			}
 		}
