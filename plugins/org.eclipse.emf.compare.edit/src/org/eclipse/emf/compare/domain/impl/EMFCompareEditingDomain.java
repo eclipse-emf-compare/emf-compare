@@ -16,6 +16,8 @@ import com.google.common.collect.ImmutableSet;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
@@ -27,12 +29,14 @@ import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.command.impl.CompareCommandStack;
 import org.eclipse.emf.compare.command.impl.DualCompareCommandStack;
 import org.eclipse.emf.compare.command.impl.MergeCommand;
+import org.eclipse.emf.compare.command.impl.TransactionalDualCompareCommandStack;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
+import org.eclipse.emf.compare.provider.EMFCompareEditPlugin;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -40,6 +44,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.impl.AbstractTransactionalCommandStack;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 
 /**
@@ -134,12 +139,27 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 			CommandStack leftCommandStack = leftED.getCommandStack();
 			CommandStack rightCommandStack = rightED.getCommandStack();
 			ICompareCommandStack commandStack;
-			if (leftCommandStack instanceof BasicCommandStack
+			if (leftCommandStack instanceof AbstractTransactionalCommandStack
+					&& rightCommandStack instanceof AbstractTransactionalCommandStack) {
+				commandStack = new TransactionalDualCompareCommandStack(
+						(AbstractTransactionalCommandStack)leftCommandStack,
+						(AbstractTransactionalCommandStack)rightCommandStack);
+			} else if (leftCommandStack instanceof BasicCommandStack
 					&& rightCommandStack instanceof BasicCommandStack) {
 				commandStack = new DualCompareCommandStack((BasicCommandStack)leftCommandStack,
 						(BasicCommandStack)rightCommandStack);
 			} else {
-				// Shouldn't we raise an exception instead? The behavior will be strange.
+				EMFCompareEditPlugin
+						.getPlugin()
+						.getLog()
+						.log(new Status(
+								IStatus.WARNING,
+								EMFCompareEditPlugin.PLUGIN_ID,
+								"Command stacks of the editing domain of " //$NON-NLS-1$
+										+ left
+										+ " and " //$NON-NLS-1$
+										+ right
+										+ " are not instances of BasicCommandStack, nor AbstractTransactionalCommandStack, therefore, they will not be used as backing command stacks for the current merge session.")); //$NON-NLS-1$
 				commandStack = new CompareCommandStack(new BasicCommandStack());
 			}
 			return new EMFCompareEditingDomain(left, right, ancestor, commandStack);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.base.Preconditions;
 
+import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 
@@ -66,6 +67,9 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 	 */
 	private int saveIndex = -1;
 
+	/** The listener of this DualCompareCommandStack. */
+	private final List<CommandStackListener> listeners;
+
 	/**
 	 * Creates an instance that delegates to two given {@link BasicCommandStack}.
 	 * 
@@ -75,10 +79,22 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 	 *            the right command stack.
 	 */
 	public DualCompareCommandStack(BasicCommandStack leftCommandStack, BasicCommandStack rightCommandStack) {
+		Preconditions.checkArgument(leftCommandStack != rightCommandStack);
 		this.leftCommandStack = Preconditions.checkNotNull(leftCommandStack);
 		this.rightCommandStack = Preconditions.checkNotNull(rightCommandStack);
+		this.listeners = newArrayList();
 		this.commandStackStack = newArrayList();
 		this.top = -1;
+	}
+
+	/**
+	 * This is called to ensure that {@link CommandStackListener#commandStackChanged} is called for each
+	 * listener.
+	 */
+	protected void notifyListeners() {
+		for (CommandStackListener commandStackListener : listeners) {
+			commandStackListener.commandStackChanged(new EventObject(this));
+		}
 	}
 
 	/**
@@ -87,19 +103,32 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 	 * @see org.eclipse.emf.common.command.CommandStack#execute(org.eclipse.emf.common.command.Command)
 	 */
 	public void execute(Command command) {
-		// should do that AFTER delegate.execute, but in this this case, notifiers will not see change in
-		// side lists.
 		if (command instanceof ICompareCopyCommand) {
-			final BasicCommandStack commandStack;
-			final ICompareCopyCommand compareCommand = (ICompareCopyCommand)command;
-			if (compareCommand.isLeftToRight()) {
-				commandStack = rightCommandStack;
-			} else {
-				commandStack = leftCommandStack;
+			if (command.canExecute()) {
+				doExecute(command);
 			}
+		}
+	}
 
+	/**
+	 * Executes the given command.
+	 * 
+	 * @param command
+	 *            the command to execute
+	 */
+	private void doExecute(Command command) {
+		final BasicCommandStack commandStack;
+		final ICompareCopyCommand compareCommand = (ICompareCopyCommand)command;
+		if (compareCommand.isLeftToRight()) {
+			commandStack = rightCommandStack;
+		} else {
+			commandStack = leftCommandStack;
+		}
+
+		commandStack.execute(compareCommand);
+
+		if (commandStack.canUndo()) {
 			// Clear the list past the top.
-			//
 			Iterator<BasicCommandStack> commandStacks = commandStackStack.listIterator(top + 1);
 			while (commandStacks.hasNext()) {
 				commandStacks.next();
@@ -107,22 +136,21 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 			}
 
 			// Record the successfully executed command.
-			//
 			mostRecentCommandStack = commandStack;
 			commandStackStack.add(commandStack);
 			++top;
 
-			// This is kind of tricky.
-			// If the saveIndex was in the redo part of the command list which has now been wiped out,
-			// then we can never reach a point where a save is not necessary, not even if we undo all the
-			// way back to the beginning.
-			//
+			// This is kind of tricky. If the saveIndex was in the redo part of the command list which has now
+			// been wiped out, then we can never reach a point where a save is not necessary, not even if we
+			// undo all the way back to the beginning.
 			if (saveIndex >= top) {
 				saveIndex = IS_SAVE_NEEDED_WILL_BE_TRUE;
 			}
-
-			commandStack.execute(compareCommand);
+		} else {
+			mostRecentCommandStack = null;
 		}
+
+		notifyListeners();
 	}
 
 	/**
@@ -143,7 +171,13 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 		if (canUndo()) {
 			BasicCommandStack commandStack = commandStackStack.get(top--);
 			commandStack.undo();
-			mostRecentCommandStack = commandStack;
+			if (commandStack.canRedo()) {
+				mostRecentCommandStack = commandStack;
+			} else { // something bad happened
+				mostRecentCommandStack = null;
+				flush();
+			}
+			notifyListeners();
 		}
 	}
 
@@ -207,7 +241,15 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 		if (canRedo()) {
 			BasicCommandStack commandStack = commandStackStack.get(++top);
 			commandStack.redo();
-			mostRecentCommandStack = commandStack;
+			if (commandStack.canUndo()) {
+				mostRecentCommandStack = commandStack;
+			} else { // something bad happened.
+				mostRecentCommandStack = null;
+
+				// Clear the list past the top.
+				commandStackStack.subList(top--, commandStackStack.size()).clear();
+			}
+			notifyListeners();
 		}
 	}
 
@@ -217,15 +259,11 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 	 * @see org.eclipse.emf.common.command.CommandStack#flush()
 	 */
 	public void flush() {
-		Iterator<BasicCommandStack> commands = commandStackStack.listIterator();
-		while (commands.hasNext()) {
-			commands.next();
-			commands.remove();
-		}
 		commandStackStack.clear();
 		top = -1;
 		saveIndex = -1;
 		mostRecentCommandStack = null;
+		notifyListeners();
 	}
 
 	/**
@@ -234,8 +272,7 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 	 * @see org.eclipse.emf.common.command.CommandStack#addCommandStackListener(org.eclipse.emf.common.command.CommandStackListener)
 	 */
 	public void addCommandStackListener(CommandStackListener listener) {
-		leftCommandStack.addCommandStackListener(listener);
-		rightCommandStack.addCommandStackListener(listener);
+		listeners.add(listener);
 	}
 
 	/**
@@ -244,8 +281,7 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 	 * @see org.eclipse.emf.common.command.CommandStack#removeCommandStackListener(org.eclipse.emf.common.command.CommandStackListener)
 	 */
 	public void removeCommandStackListener(CommandStackListener listener) {
-		leftCommandStack.removeCommandStackListener(listener);
-		rightCommandStack.removeCommandStackListener(listener);
+		listeners.remove(listener);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -71,17 +71,27 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 	 */
 	@Override
 	public void execute(Command command) {
-		// should do that AFTER delegate.execute, but in this this case, notifiers will not see change in
-		// side lists.
 		if (command instanceof ICompareCopyCommand) {
-			ICompareCopyCommand compareCommand = (ICompareCopyCommand)command;
-			if (compareCommand.isLeftToRight()) {
-				rightCommandStack.executed(compareCommand);
-			} else {
-				leftCommandStack.executed(compareCommand);
+			if (command.canExecute()) {
+				ICompareCopyCommand compareCommand = (ICompareCopyCommand)command;
+				super.execute(command);
+
+				final CompareSideCommandStack commandStack;
+				if (compareCommand.isLeftToRight()) {
+					commandStack = rightCommandStack;
+				} else {
+					commandStack = leftCommandStack;
+				}
+
+				if (super.canUndo()) {
+					commandStack.executed(compareCommand);
+				} else {
+					commandStack.executedWithException(compareCommand);
+				}
+
+				notifyListeners();
 			}
 		}
-		super.execute(command);
 	}
 
 	/**
@@ -91,19 +101,27 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 	 */
 	@Override
 	public void undo() {
-		// should do that AFTER delegate.execute, but in this this case, notifiers will not see change in
-		// side lists.
 		if (canUndo()) {
 			if (getUndoCommand() instanceof ICompareCopyCommand) {
 				ICompareCopyCommand compareCommand = (ICompareCopyCommand)getUndoCommand();
+				super.undo();
+
+				final CompareSideCommandStack commandStack;
 				if (compareCommand.isLeftToRight()) {
-					rightCommandStack.undone();
+					commandStack = rightCommandStack;
 				} else {
-					leftCommandStack.undone();
+					commandStack = leftCommandStack;
 				}
+
+				if (super.canRedo()) {
+					commandStack.undone();
+				} else {
+					commandStack.undoneWithException();
+				}
+
+				notifyListeners();
 			}
 		}
-		super.undo();
 	}
 
 	/**
@@ -113,19 +131,27 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 	 */
 	@Override
 	public void redo() {
-		// should do that AFTER delegate.execute, but in this this case, notifiers will not see change in
-		// side lists.
 		if (canRedo()) {
 			if (getRedoCommand() instanceof ICompareCopyCommand) {
 				ICompareCopyCommand compareCommand = (ICompareCopyCommand)getRedoCommand();
+				super.redo();
+
+				final CompareSideCommandStack commandStack;
 				if (compareCommand.isLeftToRight()) {
-					rightCommandStack.redone();
+					commandStack = rightCommandStack;
 				} else {
-					leftCommandStack.redone();
+					commandStack = leftCommandStack;
 				}
+
+				if (super.canUndo()) {
+					commandStack.redone();
+				} else {
+					commandStack.redoneWithException();
+				}
+
+				notifyListeners();
 			}
 		}
-		super.redo();
 	}
 
 	/**
@@ -135,9 +161,10 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 	 */
 	@Override
 	public void flush() {
+		super.flush();
 		rightCommandStack.flushed();
 		leftCommandStack.flushed();
-		super.flush();
+		notifyListeners();
 	}
 
 	/**
@@ -218,6 +245,25 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 		}
 
 		/**
+		 * Record that the redo method has raised exceptions.
+		 */
+		public void redoneWithException() {
+			mostRecentCommand = null;
+
+			// Clear the list past the top.
+			commandList.subList(top + 1, commandList.size()).clear();
+		}
+
+		/**
+		 * Record that the undo method has raised exceptions.
+		 */
+		public void undoneWithException() {
+			top--;
+			mostRecentCommand = null;
+			flushed();
+		}
+
+		/**
 		 * Record the execution of the given command.
 		 * 
 		 * @param command
@@ -225,11 +271,9 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 		 */
 		public void executed(ICompareCopyCommand command) {
 			// If the command is executable, record it.
-			//
 			if (command != null) {
 				if (command.canExecute()) {
 					// Clear the list past the top.
-					//
 					Iterator<ICompareCopyCommand> commands = commandList.listIterator(top + 1);
 					while (commands.hasNext()) {
 						commands.next();
@@ -237,24 +281,29 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 					}
 
 					// Record the successfully executed command.
-					//
 					mostRecentCommand = command;
 					commandList.add(command);
 					++top;
 
-					// This is kind of tricky.
-					// If the saveIndex was in the redo part of the command list which has now been wiped
-					// out,
-					// then we can never reach a point where a save is not necessary, not even if we undo
-					// all the way back to the beginning.
-					//
+					// This is kind of tricky. If the saveIndex was in the redo part of the command list which
+					// has now been wiped out, then we can never reach a point where a save is not necessary,
+					// not even if we undo all the way back to the beginning.
 					if (saveIndex >= top) {
 						// This forces isSaveNeded to always be true.
-						//
 						saveIndex = IS_SAVE_NEEDED_WILL_BE_TRUE;
 					}
 				}
 			}
+		}
+
+		/**
+		 * Will be called if the execute method of the command did not end normally.
+		 * 
+		 * @param command
+		 *            the command that raised exceptions.
+		 */
+		public void executedWithException(ICompareCopyCommand command) {
+			mostRecentCommand = null;
 		}
 
 		/**
@@ -278,12 +327,6 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 		 */
 		public void flushed() {
 			// Clear the list.
-			//
-			Iterator<ICompareCopyCommand> commands = commandList.listIterator();
-			while (commands.hasNext()) {
-				commands.next();
-				commands.remove();
-			}
 			commandList.clear();
 			top = -1;
 			saveIndex = -1;
@@ -295,7 +338,6 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 		 */
 		public void saveIsDone() {
 			// Remember where we are now.
-			//
 			saveIndex = top;
 		}
 
