@@ -294,4 +294,10 @@
             name="Resolution strategy">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferencesInitializer">
+      </initializer>
+   </extension>
 </plugin>

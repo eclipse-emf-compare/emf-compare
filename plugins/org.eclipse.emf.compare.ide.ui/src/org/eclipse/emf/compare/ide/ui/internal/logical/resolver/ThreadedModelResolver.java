@@ -62,6 +62,7 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences;
 import org.eclipse.emf.compare.ide.ui.internal.util.ThreadSafeProgressMonitor;
 import org.eclipse.emf.compare.ide.ui.logical.AbstractModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
@@ -73,6 +74,7 @@ import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
  * This implementation of an {@link IModelResolver} will look up all of the models located in a set container
@@ -188,13 +190,6 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	 * </p>
 	 */
 	private ModelResourceListener resourceListener;
-
-	/**
-	 * Tells this resolver how much of the dependency graph should be created at once. Note that the value of
-	 * this field may change during a resolution, which sole "visible" effect would be to prevent resolution
-	 * of further outgoing references if the new value is "SELF".
-	 */
-	private volatile CrossReferenceResolutionScope resolutionScope = CrossReferenceResolutionScope.CONTAINER;
 
 	/** Default constructor. */
 	public ThreadedModelResolver() {
@@ -564,9 +559,9 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	 * The 'left' model we've been fed is a local file. We'll assume that the whole 'left' side of this
 	 * comparison is local and resolve everything for that side as we would for local comparisons : update the
 	 * dependency graph according to our resource listener, lookup for cross-references to/from the left
-	 * resource according to the {@link #resolutionScope}... Once we've resolved the local traversal, we'll
-	 * use that as a base to infer the two remote sides, then "augment" it with the outgoing references of the
-	 * remote variants of these resources.
+	 * resource according to the {@link #getResolutionScope() resolution scope}... Once we've resolved the
+	 * local traversal, we'll use that as a base to infer the two remote sides, then "augment" it with the
+	 * outgoing references of the remote variants of these resources.
 	 * 
 	 * @param storageAccessor
 	 *            The accessor that can be used to retrieve synchronization information between our resources.
@@ -693,7 +688,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	 * Update the dependency graph to make sure that it contains the given file.
 	 * <p>
 	 * If the graph does not yet contain this file, we'll try and find cross-references outgoing from and/or
-	 * incoming to the given file, depending on the current {@link #resolutionScope}.
+	 * incoming to the given file, depending on the current {@link #getResolutionScope() resolution scope}.
 	 * </p>
 	 * 
 	 * @param resourceSet
@@ -749,12 +744,20 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		return startingPoint;
 	}
 
+	/**
+	 * Tells this resolver how much of the dependency graph should be created at once. Note that this value
+	 * may change during a resolution, which sole "visible" effect would be to prevent resolution of further
+	 * outgoing references if the new value is "SELF".
+	 * 
+	 * @return The current resolution scope.
+	 */
 	private CrossReferenceResolutionScope getResolutionScope() {
-		return resolutionScope;
-	}
-
-	public void setResolutionScope(CrossReferenceResolutionScope resolutionScope) {
-		this.resolutionScope = resolutionScope;
+		final IPreferenceStore store = EMFCompareIDEUIPlugin.getDefault().getPreferenceStore();
+		if (store.getBoolean(EMFCompareUIPreferences.DISABLE_RESOLVERS_PREFERENCE)) {
+			return CrossReferenceResolutionScope.SELF;
+		}
+		final String stringValue = store.getString(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE);
+		return CrossReferenceResolutionScope.valueOf(stringValue);
 	}
 
 	private Set<IStorage> resolveTraversal(IFile file, Set<URI> bounds) {

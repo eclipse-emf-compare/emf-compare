@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.ide.ui.internal.editor.PropertySheetAdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverRegistryListener;
@@ -59,17 +58,6 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Instance scope for preferences.
-	 * <p>
-	 * Do not use singleton to respect Helios compatibility
-	 * </p>
-	 * 
-	 * @see org.eclipse.core.runtime.preferences.InstanceScope#INSTANCE
-	 */
-	@SuppressWarnings("deprecation")
-	private InstanceScope instanceScope = new InstanceScope();
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
@@ -80,7 +68,7 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		plugin = this;
 
 		final IExtensionRegistry globalRegistry = Platform.getExtensionRegistry();
-		modelResolverRegistry = new ModelResolverRegistry(instanceScope.getNode(PLUGIN_ID));
+		modelResolverRegistry = new ModelResolverRegistry();
 		modelResolverRegistryListener = new ModelResolverRegistryListener(PLUGIN_ID, MODEL_RESOLVER_PPID,
 				getLog(), modelResolverRegistry);
 		globalRegistry.addListener(modelResolverRegistryListener);

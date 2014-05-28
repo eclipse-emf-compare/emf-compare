@@ -17,10 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
+import org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
-import org.osgi.service.prefs.Preferences;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
  * This registry implements its own strategy to define the "best" resolver to use.
@@ -28,15 +29,6 @@ import org.osgi.service.prefs.Preferences;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class ModelResolverRegistry {
-	/** Preference key pointing at the "user resolver" id. */
-	private static final String USER_RESOLVER_PREF_KEY = "org.eclipse.emf.compare.ide.ui.user.resolver"; //$NON-NLS-1$
-
-	/** Preference key telling us whether the model resolution is currently enabled. */
-	private static final String ENABLE_RESOLVING_PREF_KEY = "org.eclipse.emf.compare.ide.ui.enable.resolving"; //$NON-NLS-1$
-
-	/** Preference store to query for model resolver information. */
-	private final Preferences preferenceStore;
-
 	/** Keeps track of the extensions providing model resolvers. */
 	private final Map<String, ModelResolverDescriptor> registeredDescriptors;
 
@@ -52,11 +44,15 @@ public final class ModelResolverRegistry {
 	 * @param preferenceStore
 	 *            Preference store this can query for resolver-related information.
 	 */
-	public ModelResolverRegistry(Preferences preferenceStore) {
-		this.preferenceStore = preferenceStore;
+	public ModelResolverRegistry() {
 		this.registeredDescriptors = new LinkedHashMap<String, ModelResolverDescriptor>();
 	}
 
+	/**
+	 * Returns a view of the descriptors registered in this registry.
+	 * 
+	 * @return A view of the descriptors registered in this registry.
+	 */
 	public List<ModelResolverDescriptor> getRegisteredDescriptors() {
 		return new ArrayList<ModelResolverDescriptor>(registeredDescriptors.values());
 	}
@@ -64,9 +60,7 @@ public final class ModelResolverRegistry {
 	/**
 	 * Returns a {@link IModelResolver} that handles the given IStorage.
 	 * <p>
-	 * First of all, a user-selected resolver will always take precedence over the other, unless it cannot be
-	 * used against the target models. If there are no user-selected resolver, or if that resolver cannot be
-	 * user, we iterate over all the registered resolvers, selecting the highest-ranking resolver that can
+	 * This will iterate over all the registered resolvers, selecting the highest-ranking resolver that can
 	 * resolve the target models.
 	 * </p>
 	 * 
@@ -79,14 +73,11 @@ public final class ModelResolverRegistry {
 			return defaultResolver;
 		}
 
-		ModelResolverDescriptor resolver = getSelectedResolver();
-
-		if (resolver == null || !resolver.getModelResolver().canResolve(sourceStorage)) {
-			for (ModelResolverDescriptor candidate : registeredDescriptors.values()) {
-				if (resolver == null || resolver.getRanking() < candidate.getRanking()) {
-					if (candidate.getModelResolver().canResolve(sourceStorage)) {
-						resolver = candidate;
-					}
+		ModelResolverDescriptor resolver = null;
+		for (ModelResolverDescriptor candidate : registeredDescriptors.values()) {
+			if (resolver == null || resolver.getRanking() < candidate.getRanking()) {
+				if (candidate.getModelResolver().canResolve(sourceStorage)) {
+					resolver = candidate;
 				}
 			}
 		}
@@ -94,55 +85,17 @@ public final class ModelResolverRegistry {
 		if (resolver != null) {
 			return resolver.getModelResolver();
 		}
-		return null;
+		return defaultResolver;
 	}
 
 	/**
-	 * Returns the resolver currently selected in the preferences, if any.
-	 * 
-	 * @return the resolver currently selected in the preferences, <code>null</code> if none.
-	 */
-	public ModelResolverDescriptor getSelectedResolver() {
-		final String selectedKey = preferenceStore.get(USER_RESOLVER_PREF_KEY, null);
-		return registeredDescriptors.get(selectedKey);
-	}
-
-	/**
-	 * Sets the resolver selected by the user in the preferences, if any.
-	 * 
-	 * @param selected
-	 *            The resolver selected by the user in the preferences, <code>null</code> if none.
-	 */
-	public void setSelectedResolver(String selected) {
-		preferenceStore.put(USER_RESOLVER_PREF_KEY, selected);
-	}
-
-	/**
-	 * This can be used to check whether model resolution is currently enabled. <code>true</code> by default.
+	 * This can be used to check whether model resolution is currently enabled.
 	 * 
 	 * @return <code>true</code> if the model resolution is enabled, <code>false</code> otherwise.
 	 */
 	public boolean isEnabled() {
-		return preferenceStore.getBoolean(ENABLE_RESOLVING_PREF_KEY, true);
-	}
-
-	/**
-	 * Disables or enables model resolution.
-	 * 
-	 * @param enabled
-	 *            <code>true</code> if model resolution should be enabled, <code>false</code> otherwise.
-	 */
-	public void toggleEnablement(boolean enabled) {
-		if (!enabled) {
-			defaultResolver.setResolutionScope(CrossReferenceResolutionScope.SELF);
-		} else {
-			/*
-			 * FIXME create and use a preference value, along with the proper preference page changes to allow
-			 * users to choose this.
-			 */
-			defaultResolver.setResolutionScope(CrossReferenceResolutionScope.CONTAINER);
-		}
-		preferenceStore.putBoolean(ENABLE_RESOLVING_PREF_KEY, enabled);
+		final IPreferenceStore store = EMFCompareIDEUIPlugin.getDefault().getPreferenceStore();
+		return !store.getBoolean(EMFCompareUIPreferences.DISABLE_RESOLVERS_PREFERENCE);
 	}
 
 	/**
