@@ -10,15 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
-import static com.google.common.collect.Iterables.filter;
-
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.EventObject;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,19 +23,15 @@ import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
-import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IAdapterFactoryChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
@@ -53,7 +45,6 @@ import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilterChange;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProviderChange;
-import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
@@ -367,33 +358,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	@Override
 	protected void copy(final boolean leftToRight) {
-		// TODO this is used from an action we delete from the view, so can probably be removed altogether
-		final List<Diff> differences;
-
-		if (getCompareConfiguration().getComparison().isThreeWay()) {
-			differences = ImmutableList.copyOf(filter(getCompareConfiguration().getComparison()
-					.getDifferences(), new Predicate<Diff>() {
-				public boolean apply(Diff diff) {
-					final boolean unresolved = diff.getState() == DifferenceState.UNRESOLVED;
-					final boolean nonConflictual = diff.getConflict() == null;
-					final boolean fromLeftToRight = leftToRight && diff.getSource() == DifferenceSource.LEFT;
-					final boolean fromRightToLeft = !leftToRight
-							&& diff.getSource() == DifferenceSource.RIGHT;
-					return unresolved && nonConflictual && (fromLeftToRight || fromRightToLeft);
-				}
-			}));
-		} else {
-			differences = ImmutableList.copyOf(filter(getCompareConfiguration().getComparison()
-					.getDifferences(), EMFComparePredicates.hasState(DifferenceState.UNRESOLVED)));
-		}
-
-		if (differences.size() > 0) {
-			final Command copyCommand = getCompareConfiguration().getEditingDomain().createCopyCommand(
-					differences, leftToRight, EMFCompareRCPPlugin.getDefault().getMergerRegistry());
-
-			getCompareConfiguration().getEditingDomain().getCommandStack().execute(copyCommand);
-			refresh();
-		}
+		// do nothing, merge is done through merge actions in structure merge viewer.
 	}
 
 	/**
