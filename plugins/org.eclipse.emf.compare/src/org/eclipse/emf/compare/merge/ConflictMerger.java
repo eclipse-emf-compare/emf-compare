@@ -56,9 +56,8 @@ public class ConflictMerger extends AbstractMerger {
 			Conflict conflict = target.getConflict();
 			for (Diff conflictedDiff : conflict.getDifferences()) {
 				if (target != conflictedDiff) {
-					IMerger highestRankingMerger = getHighestRankingMerger(conflictedDiff);
 					if (conflictedDiff.getSource() == DifferenceSource.RIGHT) {
-						highestRankingMerger.copyLeftToRight(conflictedDiff, monitor);
+						mergeConflictedDiff(conflictedDiff, true, monitor);
 					}
 				}
 			}
@@ -87,9 +86,8 @@ public class ConflictMerger extends AbstractMerger {
 			Conflict conflict = target.getConflict();
 			for (Diff conflictedDiff : conflict.getDifferences()) {
 				if (target != conflictedDiff) {
-					IMerger highestRankingMerger = getHighestRankingMerger(conflictedDiff);
 					if (conflictedDiff.getSource() == DifferenceSource.LEFT) {
-						highestRankingMerger.copyRightToLeft(conflictedDiff, monitor);
+						mergeConflictedDiff(conflictedDiff, false, monitor);
 					}
 				}
 			}
@@ -97,6 +95,29 @@ public class ConflictMerger extends AbstractMerger {
 
 		// Call the appropriate merger for the current diff
 		getHighestRankingMerger(target).copyRightToLeft(target, monitor);
+	}
+
+	/**
+	 * Manages the merge of the given conflicted diff.
+	 * 
+	 * @param conflictedDiff
+	 *            The given diff.
+	 * @param leftToRight
+	 *            The way of merge.
+	 * @param monitor
+	 *            Monitor.
+	 */
+	private void mergeConflictedDiff(Diff conflictedDiff, boolean leftToRight, Monitor monitor) {
+		if (conflictedDiff.getKind() != DifferenceKind.MOVE) {
+			IMerger highestRankingMerger = getHighestRankingMerger(conflictedDiff);
+			if (leftToRight) {
+				highestRankingMerger.copyLeftToRight(conflictedDiff, monitor);
+			} else {
+				highestRankingMerger.copyRightToLeft(conflictedDiff, monitor);
+			}
+		} else {
+			conflictedDiff.setState(DifferenceState.MERGED);
+		}
 	}
 
 	/**

@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.tests.merge;
 import static com.google.common.base.Predicates.not;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -32,6 +33,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.IMerger;
@@ -1029,6 +1031,11 @@ public class ConflictMergeTest {
 		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
 
 		final Diff diff = Iterators.find(differences.iterator(), fromSide(DifferenceSource.LEFT));
+		assertNotNull(diff);
+		assertNotNull(diff.getConflict());
+
+		final Diff move = Iterators.find(differences.iterator(), ofKind(DifferenceKind.MOVE));
+		assertNotNull(move);
 
 		// Merge EString [eStructuralFeatures move] from left to right : B[eClassifiers delete]
 		// will not be merge.
@@ -1066,6 +1073,11 @@ public class ConflictMergeTest {
 		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
 
 		final Diff diff = Iterators.find(differences.iterator(), fromSide(DifferenceSource.RIGHT));
+		assertNotNull(diff);
+		assertNotNull(diff.getConflict());
+
+		final Diff move = Iterators.find(differences.iterator(), ofKind(DifferenceKind.MOVE));
+		assertNotNull(move);
 
 		// Merge B[eClassifiers delete] from left to right : EString [eStructuralFeatures move]
 		// will not be merge.
@@ -1108,6 +1120,11 @@ public class ConflictMergeTest {
 		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
 
 		final Diff diff = Iterators.find(differences.iterator(), fromSide(DifferenceSource.LEFT));
+		assertNotNull(diff);
+		assertNotNull(diff.getConflict());
+
+		final Diff move = Iterators.find(differences.iterator(), ofKind(DifferenceKind.MOVE));
+		assertNotNull(move);
 
 		// Merge EString [eStructuralFeatures move] from right to left : B[eClassifiers delete]
 		// will not be merge.
@@ -1150,6 +1167,11 @@ public class ConflictMergeTest {
 		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
 
 		final Diff diff = Iterators.find(differences.iterator(), fromSide(DifferenceSource.RIGHT));
+		assertNotNull(diff);
+		assertNotNull(diff.getConflict());
+
+		final Diff move = Iterators.find(differences.iterator(), ofKind(DifferenceKind.MOVE));
+		assertNotNull(move);
 
 		// Merge B[eClassifiers delete] from right to left : EString [eStructuralFeatures move]
 		// will not be merge.
@@ -1165,7 +1187,7 @@ public class ConflictMergeTest {
 		assertNotNull(featureA);
 		final EStructuralFeature eStructuralFeatureNameA = ((EClass)leftEClassA)
 				.getEStructuralFeature("name");
-		assertNotNull(eStructuralFeatureNameA);
+		assertNull(eStructuralFeatureNameA);
 
 		Iterators.any(differences.iterator(), hasConflict(ConflictKind.REAL));
 

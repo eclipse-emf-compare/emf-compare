@@ -308,6 +308,7 @@ public class DefaultReqEngine implements IReqEngine {
 					for (ReferenceChange difference : filter(comparison.getDifferences(originObject),
 							ReferenceChange.class)) {
 						if (difference.getReference().isContainment()
+								&& difference.getSource() == sourceDifference.getSource()
 								&& difference.getKind() == DifferenceKind.MOVE) {
 							result.add(difference);
 						}

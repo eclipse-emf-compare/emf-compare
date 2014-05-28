@@ -29,7 +29,7 @@ public interface IMergeRunnable {
 	 * @param differences
 	 *            the differences to merge.
 	 * @param leftToRight
-	 *            whether the merge has to be merge from left to right or right to left.
+	 *            whether the differences have to be merge from left to right or right to left.
 	 * @param mergerRegistry
 	 *            the merger registry to query to get the appropriate mergers for each difference to be
 	 *            merged.
