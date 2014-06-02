@@ -296,7 +296,7 @@
         <module>../plugins/org.eclipse.emf.compare.uml2.rcp</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
-
+        <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui.tests</module>
         <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
         <module>../plugins/org.eclipse.emf.compare.diagram</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
