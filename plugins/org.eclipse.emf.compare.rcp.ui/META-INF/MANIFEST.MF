@@ -47,8 +47,8 @@ Export-Package: org.eclipse.emf.compare.rcp.ui,
  org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters,
  org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups,
  org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender
-Import-Package: com.google.common.base;version="[11.0.0,15.0.0)",
- com.google.common.cache;version="[11.0.0,15.0.0)",
- com.google.common.collect;version="[11.0.0,15.0.0)",
- com.google.common.eventbus;version="[11.0.0,15.0.0)",
- com.google.common.io;version="[11.0.0,15.0.0)"
+Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
+ com.google.common.cache;version="[11.0.0,16.0.0)",
+ com.google.common.collect;version="[11.0.0,16.0.0)",
+ com.google.common.eventbus;version="[11.0.0,16.0.0)",
+ com.google.common.io;version="[11.0.0,16.0.0)"
