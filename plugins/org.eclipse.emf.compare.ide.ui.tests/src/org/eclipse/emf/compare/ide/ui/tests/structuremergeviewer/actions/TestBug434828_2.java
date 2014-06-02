@@ -41,7 +41,7 @@ import org.junit.Test;
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
 @SuppressWarnings("restriction")
-public class TestBug434828 {
+public class TestBug434828_2 {
 
 	private IMerger.Registry mergerRegistry;
 
@@ -66,8 +66,8 @@ public class TestBug434828 {
 	 * </pre>
 	 * 
 	 * </li>
-	 * <li>Left that has an extra eopposite reference between "HoldingReference" and "ReferencedNode"</li>
-	 * <li>Right in which "DeletedNode" has been deleted"</li>
+	 * <li>Right that has an extra eopposite reference between "HoldingReference" and "ReferencedNode"</li>
+	 * <li>Left in which "DeletedNode" has been deleted"</li>
 	 * </ul>
 	 * </p>
 	 * 
@@ -76,8 +76,9 @@ public class TestBug434828 {
 	@Before
 	public void setUp() throws IOException {
 		Bug434828InputData inputData = new Bug434828InputData();
-		final Resource left = inputData.getResource("left.nodes"); //$NON-NLS-1$
-		final Resource right = inputData.getResource("right.nodes"); //$NON-NLS-1$
+		// Switch between left/right comparing to TestBug434828.java
+		final Resource left = inputData.getResource("right.nodes"); //$NON-NLS-1$
+		final Resource right = inputData.getResource("left.nodes"); //$NON-NLS-1$
 		final Resource origin = inputData.getResource("origin.nodes"); //$NON-NLS-1$
 		scope = new DefaultComparisonScope(left, right, origin);
 		final Comparison comparison = EMFCompare.builder().build().compare(scope);
@@ -88,19 +89,19 @@ public class TestBug434828 {
 		Assert.assertEquals(1, conflicts.size());
 		Conflict conflict = conflicts.get(0);
 
-		// Get the left diff of the conflict: change of eopposite reference
-		EList<Diff> leftConflicts = conflict.getLeftDifferences();
-		Assert.assertEquals(2, leftConflicts.size());
-		refChangeDiff = leftConflicts.get(0);// Both difference are equivalent.
-
-		// Get the right diff of the conflict; deletion of "ReferencedNode"
+		// Get the right diff of the conflict: change of eopposite reference
 		EList<Diff> rightConflicts = conflict.getRightDifferences();
-		Assert.assertEquals(1, rightConflicts.size());
-		holdingRefDeletionDiff = rightConflicts.get(0);
-		// Get the required by diff of the right conflict
-		EList<Diff> rightRequiredBy = holdingRefDeletionDiff.getRequiredBy();
-		Assert.assertEquals(1, rightRequiredBy.size());
-		deletedNodeDeletionDiff = rightRequiredBy.get(0);
+		Assert.assertEquals(2, rightConflicts.size());
+		refChangeDiff = rightConflicts.get(0);// Both difference are equivalent.
+
+		// Get the left diff of the conflict; deletion of "ReferencedNode"
+		EList<Diff> leftConflicts = conflict.getLeftDifferences();
+		Assert.assertEquals(1, leftConflicts.size());
+		holdingRefDeletionDiff = leftConflicts.get(0);
+		// Get the required by diff of the left conflict
+		EList<Diff> leftRequiredBy = holdingRefDeletionDiff.getRequiredBy();
+		Assert.assertEquals(1, leftRequiredBy.size());
+		deletedNodeDeletionDiff = leftRequiredBy.get(0);
 
 	}
 
@@ -128,9 +129,6 @@ public class TestBug434828 {
 		Assert.assertEquals(DifferenceState.MERGED, deletedNodeDeletionDiff.getState());
 		Assert.assertEquals(MergeMode.REJECT, getMergeData(deletedNodeDeletionDiff).getMergeMode());
 
-		// TODO The optimal way is to have the deletedNodeDeletionDiff unresolved
-		// Assert.assertEquals(DifferenceState.UNRESOLVED, deletedNodeDeletionDiff.getState());
-
 		// Checks that the content of the left resource is correct.
 		Resource leftResource = (Resource)scope.getLeft();
 
@@ -150,7 +148,7 @@ public class TestBug434828 {
 	 */
 	@Test
 	public void testAcceptConflictDiffWithConflictingDiffWithRequiredByProg() {
-		mergerRegistry.getHighestRankingMerger(refChangeDiff).copyLeftToRight(refChangeDiff,
+		mergerRegistry.getHighestRankingMerger(refChangeDiff).copyRightToLeft(refChangeDiff,
 				new BasicMonitor());
 
 		Assert.assertEquals(DifferenceState.MERGED, refChangeDiff.getState());
