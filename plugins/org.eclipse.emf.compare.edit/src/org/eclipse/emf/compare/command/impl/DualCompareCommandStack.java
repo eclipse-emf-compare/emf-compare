@@ -15,7 +15,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import com.google.common.base.Preconditions;
 
 import java.util.EventObject;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.command.BasicCommandStack;
@@ -129,11 +128,7 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 
 		if (commandStack.canUndo()) {
 			// Clear the list past the top.
-			Iterator<BasicCommandStack> commandStacks = commandStackStack.listIterator(top + 1);
-			while (commandStacks.hasNext()) {
-				commandStacks.next();
-				commandStacks.remove();
-			}
+			commandStackStack.subList(top + 1, commandStackStack.size()).clear();
 
 			// Record the successfully executed command.
 			mostRecentCommandStack = commandStack;
