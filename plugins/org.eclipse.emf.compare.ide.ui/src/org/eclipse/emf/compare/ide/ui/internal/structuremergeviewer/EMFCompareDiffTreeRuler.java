@@ -169,13 +169,13 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 		annotationsData.clear();
 		for (Diff diff : dependencyData.getRequires()) {
 			for (TreeItem item : dependencyData.getTreeItems(diff)) {
-				createAnnotation(e, diff, item, compareColor.getRequiredFillColor(), compareColor
+				createAnnotation(e, item, compareColor.getRequiredFillColor(), compareColor
 						.getRequiredStrokeColor());
 			}
 		}
 		for (Diff diff : dependencyData.getUnmergeables()) {
 			for (TreeItem item : dependencyData.getTreeItems(diff)) {
-				createAnnotation(e, diff, item, compareColor.getUnmergeableFillColor(), compareColor
+				createAnnotation(e, item, compareColor.getUnmergeableFillColor(), compareColor
 						.getUnmergeableStrokeColor());
 			}
 		}
@@ -247,8 +247,6 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 * 
 	 * @param e
 	 *            the PaintEvent.
-	 * @param diff
-	 *            the Diff for which we want to create the annotation.
 	 * @param treeItem
 	 *            the tree item associated with the diff.
 	 * @param fill
@@ -256,7 +254,7 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 * @param border
 	 *            the annotation's border color.
 	 */
-	private void createAnnotation(PaintEvent e, Diff diff, TreeItem treeItem, Color fill, Color border) {
+	private void createAnnotation(PaintEvent e, TreeItem treeItem, Color fill, Color border) {
 		TreeItem item = getDeepestVisibleTreeItem(treeItem, treeItem);
 		if (item != null) {
 			int y = item.getBounds().y;

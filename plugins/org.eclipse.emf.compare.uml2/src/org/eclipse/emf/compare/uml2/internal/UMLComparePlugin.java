@@ -27,13 +27,6 @@ public class UMLComparePlugin extends Plugin {
 	private static UMLComparePlugin plugin;
 
 	/**
-	 * Default constructor.
-	 */
-	public UMLComparePlugin() {
-		plugin = this;
-	}
-
-	/**
 	 * Returns the shared instance.
 	 * 
 	 * @return the shared instance
@@ -50,6 +43,7 @@ public class UMLComparePlugin extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		plugin = this;
 	}
 
 	/**

@@ -450,7 +450,7 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		 */
 		private static final class FilterDataHolder {
 
-			private static String FIELD_NAME = "filters"; //$NON-NLS-1$
+			private static final String FIELD_NAME = "filters"; //$NON-NLS-1$
 
 			private Set<IDifferenceFilter> filters;
 

@@ -50,7 +50,8 @@ public class SelectAncestorDialog extends MessageDialog {
 				CompareMessages.SelectAncestorDialog_message, MessageDialog.QUESTION, new String[] {
 						IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 		this.adapterFactory = adapterFactory;
-		this.notifiers = theResources;
+		this.notifiers = new Notifier[theResources.length];
+		System.arraycopy(theResources, 0, this.notifiers, 0, this.notifiers.length);
 	}
 
 	@Override

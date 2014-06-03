@@ -51,11 +51,13 @@ public class TreeNodeCompareInput extends CompareInputAdapter implements INotify
 				delegateItemProvider.removeListener(this);
 				delegateItemProvider = null;
 			}
-		} else {
+		} else if (target instanceof TreeNode) {
 			TreeNode treeNode = (TreeNode)target;
 			delegateItemProvider = (IChangeNotifier)(getRootAdapterFactory().adapt(treeNode.getData(),
 					IItemLabelProvider.class));
 			delegateItemProvider.addListener(this);
+		} else {
+			throw new IllegalArgumentException(target + " should have been a TreeNode"); //$NON-NLS-1$
 		}
 	}
 

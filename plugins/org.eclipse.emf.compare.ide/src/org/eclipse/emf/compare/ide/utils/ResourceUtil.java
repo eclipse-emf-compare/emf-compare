@@ -70,13 +70,6 @@ public final class ResourceUtil {
 	 * @return The loaded EMF Resource if {@code file} was a model, {@code null} otherwise.
 	 */
 	public static Resource loadResource(IStorage storage, ResourceSet resourceSet, Map<?, ?> options) {
-		final String resourceName = storage.getName();
-		String path = storage.getFullPath().toString();
-		if (!path.endsWith(resourceName)) {
-			final int endIndex = path.indexOf(resourceName) + resourceName.length();
-			path = path.substring(0, endIndex);
-		}
-
 		final URI uri = createURIFor(storage);
 
 		InputStream stream = null;

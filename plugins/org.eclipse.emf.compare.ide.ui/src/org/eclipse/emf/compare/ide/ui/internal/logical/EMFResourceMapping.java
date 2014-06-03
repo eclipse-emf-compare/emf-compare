@@ -112,7 +112,10 @@ public class EMFResourceMapping extends ResourceMapping {
 				return createSingletonTraversal(file);
 			}
 		}
-		return cachedTraversals;
+
+		final ResourceTraversal[] traversals = new ResourceTraversal[cachedTraversals.length];
+		System.arraycopy(cachedTraversals, 0, traversals, 0, traversals.length);
+		return traversals;
 	}
 
 	private ResourceTraversal[] createSingletonTraversal(IFile resource) {

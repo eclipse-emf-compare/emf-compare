@@ -118,7 +118,6 @@ public class ConfigurationUIRegistryEventListener extends AbstractRegistryEventL
 								.getString("ConfigurationUIRegistryEventListener.incorrectConfiguratorParameter.message")); //$NON-NLS-1$
 			}
 		} catch (CoreException e) {
-			e.printStackTrace();
 			log(element, e);
 		}
 		return true;

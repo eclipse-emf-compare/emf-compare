@@ -89,7 +89,8 @@ public class SaveComparisonModelAction extends Action {
 				MessageDialog messageDialog = new MessageDialog(parent, "File already exists", null,
 						"File \"" + file.toString()
 								+ "\" already exists. Do you want to replace the existing one?",
-						MessageDialog.WARNING, DIALOG_BUTTON_LABELS.toArray(new String[0]), 1);
+						MessageDialog.WARNING, DIALOG_BUTTON_LABELS.toArray(new String[DIALOG_BUTTON_LABELS
+								.size()]), 1);
 				int open = messageDialog.open();
 				if (open == DIALOG_BUTTON_LABELS.indexOf("Replace")) {
 					saveComparison(file);

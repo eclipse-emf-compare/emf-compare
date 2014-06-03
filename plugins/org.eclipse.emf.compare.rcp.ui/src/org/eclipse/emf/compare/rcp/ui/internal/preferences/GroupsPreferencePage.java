@@ -273,7 +273,7 @@ public class GroupsPreferencePage extends PreferencePage implements IWorkbenchPr
 	 */
 	public void setCurrentSynchronizationBehavior(String newBehavior, boolean isThreeWay) {
 		Preconditions.checkArgument(SYNC_VALUES.contains(newBehavior));
-		if (newBehavior != SYNC_DEFAULT_VALUE) {
+		if (!SYNC_DEFAULT_VALUE.equals(newBehavior)) {
 			getPreferenceStore().putValue(getGroupSynchronizationPreferenceKey(isThreeWay), newBehavior);
 		} else {
 			getPreferenceStore().setToDefault(getGroupSynchronizationPreferenceKey(isThreeWay));

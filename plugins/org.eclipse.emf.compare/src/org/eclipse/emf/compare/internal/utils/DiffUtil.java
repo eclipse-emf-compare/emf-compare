@@ -254,8 +254,8 @@ public final class DiffUtil {
 				start1++;
 				start2++;
 			} else {
-				boolean ignore1 = contains(comparison, equalityHelper, ignoredElements, first);
-				boolean ignore2 = contains(comparison, equalityHelper, ignoredElements, second);
+				boolean ignore1 = contains(equalityHelper, ignoredElements, first);
+				boolean ignore2 = contains(equalityHelper, ignoredElements, second);
 				if (ignore1) {
 					start1++;
 				}
@@ -312,8 +312,8 @@ public final class DiffUtil {
 				end1--;
 				end2--;
 			} else {
-				boolean ignore1 = contains(comparison, equalityHelper, ignoredElements, first);
-				boolean ignore2 = contains(comparison, equalityHelper, ignoredElements, second);
+				boolean ignore1 = contains(equalityHelper, ignoredElements, first);
+				boolean ignore2 = contains(equalityHelper, ignoredElements, second);
 				if (ignore1) {
 					end1--;
 				}
@@ -335,8 +335,6 @@ public final class DiffUtil {
 	 * Checks whether the given {@code sequence} contains the given {@code element} according to the semantics
 	 * of the given {@code equalityHelper}.
 	 * 
-	 * @param comparison
-	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
 	 * @param equalityHelper
 	 *            The {@link IEqualityHelper} gives us the necessary semantics for Object matching.
 	 * @param sequence
@@ -349,8 +347,7 @@ public final class DiffUtil {
 	 *         {@code false} otherwise.
 	 * @see IEqualityHelper#matchingValues(Comparison, Object, Object)
 	 */
-	private static <E> boolean contains(Comparison comparison, IEqualityHelper equalityHelper,
-			Iterable<E> sequence, E element) {
+	private static <E> boolean contains(IEqualityHelper equalityHelper, Iterable<E> sequence, E element) {
 		final Iterator<E> iterator = sequence.iterator();
 		while (iterator.hasNext()) {
 			E candidate = iterator.next();
@@ -399,7 +396,7 @@ public final class DiffUtil {
 				} else {
 					final E second = sequence2.get(j - 1);
 					if (equalityHelper.matchingValues(first, second)
-							&& !contains(comparison, equalityHelper, ignoredElements, second)) {
+							&& !contains(equalityHelper, ignoredElements, second)) {
 						matrix[i][j] = (short)(1 + current);
 					} else {
 						matrix[i][j] = nextIfNoMatch;
@@ -469,7 +466,7 @@ public final class DiffUtil {
 				} else {
 					final E second = sequence2.get(j - 1);
 					if (equalityHelper.matchingValues(first, second)
-							&& !contains(comparison, equalityHelper, ignoredElements, second)) {
+							&& !contains(equalityHelper, ignoredElements, second)) {
 						matrix[i][j] = 1 + current;
 					} else {
 						matrix[i][j] = nextIfNoMatch;

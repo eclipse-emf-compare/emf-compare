@@ -50,7 +50,7 @@ public abstract class AbstractCompareECrossReferencerAdapter extends ECrossRefer
 			}
 			case Notification.UNSET: {
 				Object oldValue = notification.getOldValue();
-				if (oldValue != Boolean.TRUE && oldValue != Boolean.FALSE) {
+				if (!(oldValue instanceof Boolean)) {
 					if (oldValue != null) {
 						removeAdapter((Notifier)oldValue);
 					}

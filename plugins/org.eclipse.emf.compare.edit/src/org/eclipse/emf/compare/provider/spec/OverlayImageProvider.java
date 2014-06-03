@@ -94,7 +94,7 @@ public class OverlayImageProvider {
 	 * @return a composed image with the image of the given match the appropriate overlay.
 	 */
 	public Object getComposedImage(Match match, Object imageToCompose) {
-		String overlay = getImageOverlay(match);
+		String overlay = getImageOverlay();
 		return getComposedImage(imageToCompose, overlay);
 	}
 
@@ -285,13 +285,11 @@ public class OverlayImageProvider {
 	/**
 	 * Returns the overlay path for the given match.
 	 * 
-	 * @param match
-	 *            the match we have to find an image for.
 	 * @return the overlay path for the given match.
 	 */
 	// Nothing here has to be externalized
 	@SuppressWarnings("nls")
-	private String getImageOverlay(Match match) {
+	private String getImageOverlay() {
 		return "full/ovr16/match_ov";
 	}
 

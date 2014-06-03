@@ -168,7 +168,7 @@ public class PostProcessorPreferencePage extends PreferencePage implements IWork
 						}
 					});
 			String descriptorsKey = Joiner.on(ItemUtil.PREFERENCE_DELIMITER).join(identifiers);
-			getPreferenceStore().setValue(preferenceKey, descriptorsKey.toString());
+			getPreferenceStore().setValue(preferenceKey, descriptorsKey);
 		} else {
 			getPreferenceStore().setToDefault(preferenceKey);
 		}

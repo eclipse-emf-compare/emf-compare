@@ -17,7 +17,6 @@ import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.resources.mapping.ResourceMappingContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 
 /**
  * This implementation of a {@link ModelProvider} will be used to provide the logical model associated with
@@ -45,12 +44,6 @@ public class EMFModelProvider extends ModelProvider {
 			IProgressMonitor monitor) throws CoreException {
 		if (resource instanceof IFile) {
 			final ResourceMapping mapping = new EMFResourceMapping((IFile)resource, PROVIDER_ID);
-			// Cache the traversals right off-the-bat
-			// Note that contrary to what's advertised in the javadoc, we can't pass null as a monitor.
-			IProgressMonitor actualMonitor = monitor;
-			if (actualMonitor == null) {
-				actualMonitor = new NullProgressMonitor();
-			}
 			return new ResourceMapping[] {mapping, };
 		}
 		return super.getMappings(resource, context, monitor);

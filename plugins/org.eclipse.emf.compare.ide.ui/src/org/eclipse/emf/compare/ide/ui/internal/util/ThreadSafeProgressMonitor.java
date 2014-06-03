@@ -74,16 +74,6 @@ public class ThreadSafeProgressMonitor extends ProgressMonitorWrapper {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.core.runtime.ProgressMonitorWrapper#getWrappedProgressMonitor()
-	 */
-	@Override
-	public IProgressMonitor getWrappedProgressMonitor() {
-		return super.getWrappedProgressMonitor();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.core.runtime.ProgressMonitorWrapper#internalWorked(double)
 	 */
 	@Override

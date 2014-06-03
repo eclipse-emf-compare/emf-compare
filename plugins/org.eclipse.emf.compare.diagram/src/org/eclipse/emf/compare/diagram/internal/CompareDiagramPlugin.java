@@ -27,13 +27,6 @@ public class CompareDiagramPlugin extends Plugin {
 	private static CompareDiagramPlugin plugin;
 
 	/**
-	 * Default constructor.
-	 */
-	public CompareDiagramPlugin() {
-		plugin = this;
-	}
-
-	/**
 	 * Returns the shared instance.
 	 * 
 	 * @return the shared instance
@@ -50,6 +43,7 @@ public class CompareDiagramPlugin extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		plugin = this;
 	}
 
 	/**

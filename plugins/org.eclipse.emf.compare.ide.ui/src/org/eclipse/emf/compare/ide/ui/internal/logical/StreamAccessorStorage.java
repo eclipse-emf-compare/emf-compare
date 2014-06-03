@@ -15,6 +15,7 @@ import static org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil.f
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 
@@ -255,9 +256,14 @@ public class StreamAccessorStorage implements IStorage {
 				if (value instanceof IFileRevision) {
 					revision = (IFileRevision)value;
 				}
-				// CHECKSTYLE:OFF this would require five "catch" for ignored exceptions...
-			} catch (Exception e) {
-				// CHECKSTYLE:ON
+			} catch (NoSuchMethodException e) {
+				// Ignore exceptions
+			} catch (IllegalAccessException e) {
+				// Ignore exceptions
+			} catch (IllegalArgumentException e) {
+				// Ignore exceptions
+			} catch (InvocationTargetException e) {
+				// Ignore exceptions
 			}
 		}
 

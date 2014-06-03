@@ -303,19 +303,19 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		if (TracingConstant.CONFIGURATION_TRACING_ACTIVATED) {
 			StringBuilder traceMessage = new StringBuilder("Engines preference serialization:\n"); //$NON-NLS-1$
 			String prefDelimiter = " :\n"; //$NON-NLS-1$
-			String new_line = "\n"; //$NON-NLS-1$
+			String newLine = "\n"; //$NON-NLS-1$
 			traceMessage.append(EMFComparePreferences.DIFF_ENGINES).append(prefDelimiter).append(
-					getPreferenceStore().getString(EMFComparePreferences.DIFF_ENGINES)).append(new_line);
+					getPreferenceStore().getString(EMFComparePreferences.DIFF_ENGINES)).append(newLine);
 			traceMessage.append(EMFComparePreferences.EQUI_ENGINES).append(prefDelimiter).append(
-					getPreferenceStore().getString(EMFComparePreferences.EQUI_ENGINES)).append(new_line);
+					getPreferenceStore().getString(EMFComparePreferences.EQUI_ENGINES)).append(newLine);
 			traceMessage.append(EMFComparePreferences.REQ_ENGINES).append(prefDelimiter).append(
-					getPreferenceStore().getString(EMFComparePreferences.REQ_ENGINES)).append(new_line);
+					getPreferenceStore().getString(EMFComparePreferences.REQ_ENGINES)).append(newLine);
 			traceMessage.append(EMFComparePreferences.CONFLICTS_DETECTOR).append(prefDelimiter).append(
 					getPreferenceStore().getString(EMFComparePreferences.CONFLICTS_DETECTOR))
-					.append(new_line);
+					.append(newLine);
 			traceMessage.append(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES).append(prefDelimiter)
 					.append(getPreferenceStore()
-							.getString(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES)).append(new_line);
+							.getString(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES)).append(newLine);
 
 			EMFCompareRCPPlugin.getDefault().log(IStatus.INFO, traceMessage.toString());
 		}
@@ -363,10 +363,10 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		if (TracingConstant.CONFIGURATION_TRACING_ACTIVATED) {
 			StringBuilder traceMessage = new StringBuilder("Configuration serialization:\n"); //$NON-NLS-1$
 			String prefDelimiter = " :\n"; //$NON-NLS-1$
-			String new_line = "\n"; //$NON-NLS-1$
-			String node_Label = "Node "; //$NON-NLS-1$
-			String double_dot_label = " : "; //$NON-NLS-1$
-			String empty_label = "EMPTY"; //$NON-NLS-1$
+			String newLine = "\n"; //$NON-NLS-1$
+			String nodeLabel = "Node "; //$NON-NLS-1$
+			String doubleDotLabel = " : "; //$NON-NLS-1$
+			String emptyLabel = "EMPTY"; //$NON-NLS-1$
 			for (Entry<String, InteractiveUIContent> interactiveContentEntry : interactiveUis.entrySet()) {
 				String itemTypeId = interactiveContentEntry.getKey();
 				for (Entry<String, AbstractConfigurationUI> configuratorEntry : interactiveContentEntry
@@ -374,11 +374,11 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 					String itemToConfigureId = configuratorEntry.getKey();
 					Preferences storeNode = ItemUtil.getConfigurationPreferenceNode(itemTypeId,
 							itemToConfigureId);
-					traceMessage.append(node_Label).append(storeNode.absolutePath()).append(prefDelimiter);
+					traceMessage.append(nodeLabel).append(storeNode.absolutePath()).append(prefDelimiter);
 					try {
 						for (String propertyKey : storeNode.keys()) {
-							traceMessage.append(propertyKey).append(double_dot_label).append(
-									storeNode.get(propertyKey, empty_label)).append(new_line);
+							traceMessage.append(propertyKey).append(doubleDotLabel).append(
+									storeNode.get(propertyKey, emptyLabel)).append(newLine);
 						}
 					} catch (BackingStoreException e) {
 						e.printStackTrace();
