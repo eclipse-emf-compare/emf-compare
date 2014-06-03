@@ -1,0 +1,13 @@
+target "EMF Compare based on Indigo SDK"
+
+include "fragments/licence.tpd"
+include "fragments/fuzzy-tests.tpd"
+include "fragments/orbit.tpd"
+
+with source, requirements
+
+location "http://download.eclipse.org/releases/indigo" {
+	org.eclipse.platform.sdk
+	org.eclipse.emf.sdk.feature.group
+	org.eclipse.emf.transaction.sdk.feature.group
+}

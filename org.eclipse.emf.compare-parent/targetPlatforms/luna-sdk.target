@@ -1,44 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Luna M7" sequenceNumber="1399990869">
+<target name="EMF Compare based on Luna SDK" sequenceNumber="1401787355">
   <locations>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.sdk.ide" version="4.4.0.I20140501-0200"/>
-      <unit id="org.eclipse.emf.feature.group" version="2.10.0.v20140428-0403"/>
-      <unit id="org.eclipse.emf.transaction.feature.group" version="1.8.0.201405051603"/>
-      <unit id="org.eclipse.gmf.feature.group" version="1.8.0.201405052122"/>
-      <unit id="org.eclipse.gmf.runtime.notation.feature.group" version="1.8.0.201405051431"/>
-      <unit id="org.eclipse.uml2.feature.group" version="5.0.0.v20140505-0725"/>
-      <unit id="org.eclipse.papyrus.infra.core.feature.feature.group" version="1.0.0.v201405071611"/>
-      <unit id="org.eclipse.papyrus.infra.emf.feature.feature.group" version="1.0.0.v201405071611"/>
-      <unit id="org.eclipse.papyrus.infra.gmfdiag.feature.feature.group" version="1.0.0.v201405071611"/>
-      <unit id="org.eclipse.papyrus.uml.diagram.feature.feature.group" version="1.0.0.v201405071611"/>
-      <unit id="org.eclipse.papyrus.uml.tools.feature.feature.group" version="1.0.0.v201405071611"/>
-      <unit id="org.eclipse.egit.feature.group" version="3.4.0.201405051725-m7"/>
-      <repository location="http://download.eclipse.org/releases/luna"/>
-    </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
       <repository location="http://download.eclipse.org/cbi/updates/license"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.junit4" version="4.8.1.v20120523-1257"/>
-      <repository location="http://download.eclipse.org/releases/juno"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="com.google.guava" version="11.0.2.v201303041551"/>
-      <unit id="com.google.guava.source" version="11.0.2.v201303041551"/>
-      <unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
-      <unit id="javaewah" version="0.7.9.v201401101600"/>
-      <unit id="org.apache.commons.compress" version="1.6.0.v201310281400"/>
-      <unit id="org.kohsuke.args4j" version="2.0.21.v201301150030"/>
-      <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20140114142710/repository/"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.emfstore.modelmutator.feature.feature.group" version="0.9.3.M6"/>
       <unit id="org.eclipse.emf.emfstore.fuzzy.feature.feature.group" version="0.9.3.M6"/>
       <repository location="http://download.eclipse.org/emf-store/milestones/archive/0.9.3.M6"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.junit4" version="4.8.1.v20100525"/>
+      <repository location="http://download.eclipse.org/releases/indigo"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="com.google.guava" version="11.0.2.v201303041551"/>
+      <unit id="org.junit" version="4.11.0.v201303080030"/>
+      <unit id="javaewah" version="0.7.9.v201401101600"/>
+      <unit id="org.apache.commons.compress" version="1.6.0.v201310281400"/>
+      <unit id="org.kohsuke.args4j" version="2.0.21.v201301150030"/>
+      <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.platform.sdk" version="4.4.0.I20140522-1330"/>
+      <unit id="org.eclipse.emf.sdk.feature.group" version="2.10.0.v20140519-0339"/>
+      <unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.8.0.201405281451"/>
+      <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.8.0.201405281433"/>
+      <unit id="org.eclipse.emf.ecoretools.feature.group" version="2.0.0.201405070841"/>
+      <unit id="org.eclipse.egit.feature.group" version="3.4.0.201405281120-rc2"/>
+      <unit id="org.eclipse.uml2.feature.group" version="5.0.0.v20140519-1951"/>
+      <unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="1.0.0.v201405211348"/>
+      <repository location="http://download.eclipse.org/releases/luna"/>
     </location>
   </locations>
 </target>

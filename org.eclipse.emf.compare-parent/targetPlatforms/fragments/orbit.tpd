@@ -1,0 +1,14 @@
+target "Orbit"
+
+with source, requirements
+
+location "http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/" {
+	com.google.guava;version=[11.0.2,11.0.3)
+	org.junit;version=[4,5)
+	
+	/* Egit/Jgit */
+	javaewah
+	org.apache.commons.compress
+	org.kohsuke.args4j
+	/* Egit/Jgit */
+}
