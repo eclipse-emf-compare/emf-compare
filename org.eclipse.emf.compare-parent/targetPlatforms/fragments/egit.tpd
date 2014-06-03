@@ -1,0 +1,7 @@
+target "EGit"
+
+with source, requirements
+
+location "http://download.eclipse.org/egit/updates" {
+	org.eclipse.egit.feature.group;version=lazy
+}

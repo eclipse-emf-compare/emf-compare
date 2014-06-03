@@ -3,6 +3,7 @@ target "EMF Compare based on Luna SDK"
 include "fragments/licence.tpd"
 include "fragments/fuzzy-tests.tpd"
 include "fragments/orbit.tpd"
+include "fragments/egit.tpd"
 
 with source, requirements
 
@@ -10,9 +11,8 @@ location "http://download.eclipse.org/releases/luna" {
 	org.eclipse.platform.sdk
 	org.eclipse.emf.sdk.feature.group
 	org.eclipse.emf.transaction.sdk.feature.group
+	org.eclipse.uml2.feature.group
 	org.eclipse.gmf.runtime.notation.sdk.feature.group
 	org.eclipse.emf.ecoretools.feature.group
-	org.eclipse.egit.feature.group
-	org.eclipse.uml2.feature.group
 	org.eclipse.papyrus.sdk.feature.feature.group
 }

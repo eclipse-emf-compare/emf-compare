@@ -302,11 +302,6 @@
         <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
 
-        <!--module>../packaging/org.eclipse.emf.compare.diagram.ecoretools-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module-->
-
         <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module>
@@ -341,13 +336,6 @@
       <modules>
         <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git</module>
 
-        <!--module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2.rcp</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2.tests</module-->
-
         <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
         <module>../plugins/org.eclipse.emf.compare.diagram</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
@@ -357,10 +345,6 @@
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module>
-
-        <!--module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module-->
       </modules>
     </profile>
 
@@ -392,13 +376,6 @@
       <modules>
         <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git</module>
 
-        <!--module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2.rcp</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2.tests</module-->
-
         <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
         <module>../plugins/org.eclipse.emf.compare.diagram</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
@@ -408,10 +385,6 @@
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.ecoretools</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ecoretools.tests</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ecoretools.tests</module>
-
-        <!--module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module-->
       </modules>
     </profile>
 

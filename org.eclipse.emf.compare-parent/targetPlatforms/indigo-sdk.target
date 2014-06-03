@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Indigo SDK" sequenceNumber="1401787329">
+<target name="EMF Compare based on Indigo SDK" sequenceNumber="1401790396">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -24,6 +24,7 @@
       <unit id="org.eclipse.platform.sdk" version="3.7.2.M20120208-0800"/>
       <unit id="org.eclipse.emf.sdk.feature.group" version="2.7.2.v20120130-0943"/>
       <unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.5.1.v20110823-1800-777T19A_WsXmjNatPxcrPm1rOKlH"/>
+      <unit id="org.eclipse.uml2.feature.group" version="3.2.1.v201109082252"/>
       <unit id="org.junit4" version="4.8.1.v20100525"/>
       <repository location="http://download.eclipse.org/releases/indigo"/>
     </location>

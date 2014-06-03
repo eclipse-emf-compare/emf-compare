@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Juno SDK" sequenceNumber="1401787353">
+<target name="EMF Compare based on Juno SDK" sequenceNumber="1401790430">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -25,12 +25,16 @@
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
+      <repository location="http://download.eclipse.org/egit/updates"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.platform.sdk" version="4.2.2.M20130204-1200"/>
       <unit id="org.eclipse.emf.sdk.feature.group" version="2.8.3.v20130125-0826"/>
       <unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.6.0.v20120328-0001-777Z-9A_WsZmcPluNecyPkvrPKlH"/>
+      <unit id="org.eclipse.uml2.feature.group" version="4.0.2.v20130114-0902"/>
       <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.6.0.v20120327-2213-47F08xGD6FxMBN7CJFV3CIKK9t84"/>
       <unit id="org.eclipse.emf.ecoretools.feature.group" version="1.1.0.201205150811"/>
-      <unit id="org.eclipse.egit.feature.group" version="2.2.0.201212191850-r"/>
       <repository location="http://download.eclipse.org/releases/juno"/>
     </location>
   </locations>

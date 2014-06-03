@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Helios SDK" sequenceNumber="1401787353">
+<target name="EMF Compare based on Helios SDK" sequenceNumber="1401791370">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
       <repository location="http://download.eclipse.org/cbi/updates/license"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.emf.emfstore.modelmutator.feature.feature.group" version="0.9.3.M6"/>
-      <unit id="org.eclipse.emf.emfstore.fuzzy.feature.feature.group" version="0.9.3.M6"/>
-      <repository location="http://download.eclipse.org/emf-store/milestones/archive/0.9.3.M6"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.junit4" version="4.8.1.v20100525"/>
-      <repository location="http://download.eclipse.org/releases/indigo"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="com.google.guava" version="11.0.2.v201303041551"/>
@@ -28,6 +19,7 @@
       <unit id="org.eclipse.platform.sdk" version="3.6.2.M20110210-1200"/>
       <unit id="org.eclipse.emf.sdk.feature.group" version="2.6.1.v20100914-1218"/>
       <unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.4.0.v20100428-2315-777N-9AZP-D1aQtjUklrYl0eU20D"/>
+      <unit id="org.eclipse.uml2.feature.group" version="3.1.2.v201010261927"/>
       <repository location="http://download.eclipse.org/releases/helios"/>
     </location>
   </locations>

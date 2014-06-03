@@ -10,4 +10,5 @@ location "http://download.eclipse.org/releases/indigo" {
 	org.eclipse.platform.sdk
 	org.eclipse.emf.sdk.feature.group
 	org.eclipse.emf.transaction.sdk.feature.group
+	org.eclipse.uml2.feature.group
 }
