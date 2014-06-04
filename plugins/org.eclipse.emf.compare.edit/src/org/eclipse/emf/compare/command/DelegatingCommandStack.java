@@ -152,10 +152,13 @@ public abstract class DelegatingCommandStack extends ForwardingObject implements
 	/**
 	 * This is called to ensure that {@link CommandStackListener#commandStackChanged} is called for each
 	 * listener.
+	 * 
+	 * @param source
+	 *            the source of the notification
 	 */
-	protected void notifyListeners() {
+	protected void notifyListeners(Object source) {
 		for (CommandStackListener commandStackListener : listeners) {
-			commandStackListener.commandStackChanged(new EventObject(this));
+			commandStackListener.commandStackChanged(new EventObject(source));
 		}
 	}
 

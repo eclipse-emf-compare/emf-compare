@@ -137,9 +137,11 @@ public abstract class AbstractTestCompareCommandStack {
 		final AtomicInteger changed = new AtomicInteger();
 		commandStack.addCommandStackListener(new CommandStackListener() {
 			public void commandStackChanged(EventObject event) {
-				assertTrue(commandStack.canUndo());
-				assertFalse(commandStack.canRedo());
-				changed.set(Integer.MAX_VALUE);
+				if (event.getSource() == commandStack) {
+					assertTrue(commandStack.canUndo());
+					assertFalse(commandStack.canRedo());
+					changed.set(Integer.MAX_VALUE);
+				}
 			}
 		});
 		commandStack.execute(leftToRight1);
@@ -906,10 +908,12 @@ public abstract class AbstractTestCompareCommandStack {
 
 		getCommandStack().addCommandStackListener(new CommandStackListener() {
 			public void commandStackChanged(EventObject event) {
-				assertFalse(getCommandStack().canUndo());
-				assertFalse(getCommandStack().canRedo());
-				assertNull(getCommandStack().getMostRecentCommand());
-				changed.set(Integer.MAX_VALUE);
+				if (event.getSource() == getCommandStack()) {
+					assertFalse(getCommandStack().canUndo());
+					assertFalse(getCommandStack().canRedo());
+					assertNull(getCommandStack().getMostRecentCommand());
+					changed.set(Integer.MAX_VALUE);
+				}
 			}
 		});
 		getCommandStack().undo();

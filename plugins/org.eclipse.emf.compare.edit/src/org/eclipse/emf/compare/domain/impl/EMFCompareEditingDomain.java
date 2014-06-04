@@ -43,6 +43,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.provider.IDisposable;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.AbstractTransactionalCommandStack;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -53,7 +54,7 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class EMFCompareEditingDomain implements ICompareEditingDomain {
+public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposable {
 
 	/** The change recorder instance. */
 	private final ChangeRecorder fChangeRecorder;
@@ -262,6 +263,9 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain {
 	 */
 	public void dispose() {
 		fChangeRecorder.dispose();
+		if (fCommandStack instanceof IDisposable) {
+			((IDisposable)fCommandStack).dispose();
+		}
 	}
 
 	/**

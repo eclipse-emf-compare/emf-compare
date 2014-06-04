@@ -105,6 +105,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.IDisposable;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.tree.TreeFactory;
@@ -227,6 +228,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	private Navigatable navigatable;
 
 	private EMFCompareColor fColors;
+
+	private boolean editingDomainNeedsToBeDisposed;
 
 	/**
 	 * Constructor.
@@ -588,6 +591,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		removeSelectionChangedListener(selectionChangeListener);
 		getViewer().removeSelectionChangedListener(toolBar);
 		getViewer().getTree().removeListener(SWT.EraseItem, fEraseItemListener);
+		if (editingDomainNeedsToBeDisposed) {
+			((IDisposable)getCompareConfiguration().getEditingDomain()).dispose();
+		}
 		compareInputChanged((ICompareInput)null);
 		treeRuler.handleDispose();
 		fAdapterFactory.dispose();
@@ -837,6 +843,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 				ICompareEditingDomain editingDomain = EMFCompareEditingDomain.create(leftResourceSet,
 						rightResourceSet, originResourceSet);
+				editingDomainNeedsToBeDisposed = true;
 				compareConfiguration.setEditingDomain(editingDomain);
 
 				compareInputChanged(scope, compareResult);

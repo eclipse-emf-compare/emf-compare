@@ -12,15 +12,18 @@ package org.eclipse.emf.compare.command.impl;
 
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.command.AbstractCommand;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
+import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.compare.command.DelegatingCommandStack;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
+import org.eclipse.emf.edit.provider.IDisposable;
 
 /**
  * A simple {@link ICompareCommandStack} that delegate execution to another command stack but keep
@@ -31,7 +34,7 @@ import org.eclipse.emf.compare.command.ICompareCopyCommand;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class CompareCommandStack extends DelegatingCommandStack implements ICompareCommandStack {
+public class CompareCommandStack extends DelegatingCommandStack implements ICompareCommandStack, IDisposable {
 
 	/** The data structure to keep info of command executed on the right side. */
 	private final CompareSideCommandStack rightCommandStack;
@@ -42,6 +45,9 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 	/** The command to which we delegate to. */
 	private final CommandStack delegate;
 
+	/** The listener of the wrapped command stacks. */
+	private final CommandStackListener delegateCommandStackListener;
+
 	/**
 	 * Creates a new instance that delegates to the given {@code commandStack}.
 	 * 
@@ -50,8 +56,23 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 	 */
 	public CompareCommandStack(CommandStack commandStack) {
 		this.delegate = commandStack;
+		this.delegateCommandStackListener = new CommandStackListener() {
+			public void commandStackChanged(EventObject event) {
+				notifyListeners(event.getSource());
+			}
+		};
+		this.delegate().addCommandStackListener(delegateCommandStackListener);
 		this.rightCommandStack = new CompareSideCommandStack();
 		this.leftCommandStack = new CompareSideCommandStack();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.IDisposable#dispose()
+	 */
+	public void dispose() {
+		delegate().removeCommandStackListener(delegateCommandStackListener);
 	}
 
 	/**
@@ -89,7 +110,7 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 					commandStack.executedWithException(compareCommand);
 				}
 
-				notifyListeners();
+				notifyListeners(this);
 			}
 		}
 	}
@@ -119,7 +140,7 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 					commandStack.undoneWithException();
 				}
 
-				notifyListeners();
+				notifyListeners(this);
 			}
 		}
 	}
@@ -149,7 +170,7 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 					commandStack.redoneWithException();
 				}
 
-				notifyListeners();
+				notifyListeners(this);
 			}
 		}
 	}
@@ -164,7 +185,7 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 		super.flush();
 		rightCommandStack.flushed();
 		leftCommandStack.flushed();
-		notifyListeners();
+		notifyListeners(this);
 	}
 
 	/**

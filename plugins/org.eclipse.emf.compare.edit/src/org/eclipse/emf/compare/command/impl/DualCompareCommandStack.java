@@ -22,6 +22,7 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
+import org.eclipse.emf.edit.provider.IDisposable;
 
 /**
  * {@link ICompareCommandStack} implementation that will delegates to two given command stacks; one for each
@@ -32,7 +33,7 @@ import org.eclipse.emf.compare.command.ICompareCopyCommand;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class DualCompareCommandStack implements ICompareCommandStack {
+public class DualCompareCommandStack implements ICompareCommandStack, IDisposable {
 
 	/**
 	 * This value forces isSaveNeded to always be true.
@@ -69,6 +70,9 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 	/** The listener of this DualCompareCommandStack. */
 	private final List<CommandStackListener> listeners;
 
+	/** The listener of the wrapped command stacks. */
+	private final CommandStackListener sideCommandStackListener;
+
 	/**
 	 * Creates an instance that delegates to two given {@link BasicCommandStack}.
 	 * 
@@ -81,18 +85,38 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 		Preconditions.checkArgument(leftCommandStack != rightCommandStack);
 		this.leftCommandStack = Preconditions.checkNotNull(leftCommandStack);
 		this.rightCommandStack = Preconditions.checkNotNull(rightCommandStack);
+		this.sideCommandStackListener = new CommandStackListener() {
+			public void commandStackChanged(EventObject event) {
+				notifyListeners(event.getSource());
+			}
+		};
+		this.leftCommandStack.addCommandStackListener(sideCommandStackListener);
+		this.rightCommandStack.addCommandStackListener(sideCommandStackListener);
 		this.listeners = newArrayList();
 		this.commandStackStack = newArrayList();
 		this.top = -1;
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.IDisposable#dispose()
+	 */
+	public void dispose() {
+		leftCommandStack.removeCommandStackListener(this.sideCommandStackListener);
+		rightCommandStack.removeCommandStackListener(this.sideCommandStackListener);
+	}
+
+	/**
 	 * This is called to ensure that {@link CommandStackListener#commandStackChanged} is called for each
 	 * listener.
+	 * 
+	 * @param source
+	 *            the source of the notification
 	 */
-	protected void notifyListeners() {
+	protected void notifyListeners(Object source) {
 		for (CommandStackListener commandStackListener : listeners) {
-			commandStackListener.commandStackChanged(new EventObject(this));
+			commandStackListener.commandStackChanged(new EventObject(source));
 		}
 	}
 
@@ -145,7 +169,7 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 			mostRecentCommandStack = null;
 		}
 
-		notifyListeners();
+		notifyListeners(this);
 	}
 
 	/**
@@ -172,7 +196,7 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 				mostRecentCommandStack = null;
 				flush();
 			}
-			notifyListeners();
+			notifyListeners(this);
 		}
 	}
 
@@ -244,7 +268,7 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 				// Clear the list past the top.
 				commandStackStack.subList(top--, commandStackStack.size()).clear();
 			}
-			notifyListeners();
+			notifyListeners(this);
 		}
 	}
 
@@ -258,7 +282,7 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 		top = -1;
 		saveIndex = -1;
 		mostRecentCommandStack = null;
-		notifyListeners();
+		notifyListeners(this);
 	}
 
 	/**
@@ -268,6 +292,8 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 	 */
 	public void addCommandStackListener(CommandStackListener listener) {
 		listeners.add(listener);
+		leftCommandStack.addCommandStackListener(listener);
+		rightCommandStack.addCommandStackListener(listener);
 	}
 
 	/**
@@ -277,6 +303,8 @@ public class DualCompareCommandStack implements ICompareCommandStack {
 	 */
 	public void removeCommandStackListener(CommandStackListener listener) {
 		listeners.remove(listener);
+		leftCommandStack.removeCommandStackListener(listener);
+		rightCommandStack.removeCommandStackListener(listener);
 	}
 
 	/**

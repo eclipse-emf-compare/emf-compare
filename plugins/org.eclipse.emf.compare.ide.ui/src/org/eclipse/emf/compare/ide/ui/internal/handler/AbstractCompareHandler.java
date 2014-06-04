@@ -48,6 +48,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
+import org.eclipse.emf.edit.provider.IDisposable;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -65,7 +66,7 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 			IEclipsePreferences enginePreferences) {
 		CompareEditorInput input = null;
 
-		ICompareEditingDomain editingDomain = createEMFCompareEditingDomain(part, left, right, origin);
+		final ICompareEditingDomain editingDomain = createEMFCompareEditingDomain(part, left, right, origin);
 
 		final EMFCompareConfiguration configuration = new EMFCompareConfiguration(new CompareConfiguration());
 		IMatchEngine.Factory eObjectMatchEngineFactory = new MatchEObjectEngineFactory();
@@ -94,6 +95,9 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 			@Override
 			protected void handleDispose() {
 				super.handleDispose();
+				if (editingDomain instanceof IDisposable) {
+					((IDisposable)editingDomain).dispose();
+				}
 				matchEngineFactoryRegistry.remove(MatchEObjectEngineFactory.class.getName());
 			}
 		};
