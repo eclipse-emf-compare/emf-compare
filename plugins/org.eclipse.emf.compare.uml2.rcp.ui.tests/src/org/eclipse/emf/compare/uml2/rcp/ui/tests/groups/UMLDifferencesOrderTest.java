@@ -42,7 +42,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
-import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.AbstractTestTreeNodeItemProviderAdapter;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.edit.data.ResourceScopeProvider;
@@ -75,7 +74,7 @@ import org.junit.Test;
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
 @SuppressWarnings("restriction")
-public class UMLDifferencesOrderTest extends AbstractTestTreeNodeItemProviderAdapter {
+public class UMLDifferencesOrderTest {
 	/**
 	 * Holds the expected result.
 	 */
@@ -144,10 +143,8 @@ public class UMLDifferencesOrderTest extends AbstractTestTreeNodeItemProviderAda
 
 	private StructureMergeViewerFilter filter;
 
-	@Override
 	@Before
 	public void before() throws IOException {
-		super.before();
 
 		final Collection<AdapterFactory> factories = Lists.newArrayList();
 		factories.add(new CompareItemProviderAdapterFactorySpec());
