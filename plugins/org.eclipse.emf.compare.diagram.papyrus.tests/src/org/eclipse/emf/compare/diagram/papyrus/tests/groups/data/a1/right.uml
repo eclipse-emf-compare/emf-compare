@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_EbOSQOWxEeOBKf64hQ5SMA" name="model">
+  <packagedElement xmi:type="uml:Package" xmi:id="_LRkfAOWxEeOBKf64hQ5SMA" name="OldHoldingPackage">
+    <packagedElement xmi:type="uml:Class" xmi:id="_MyvW0OWxEeOBKf64hQ5SMA" name="MovingNode"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_P3e6MOWxEeOBKf64hQ5SMA" name="NewHoldingPackage"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_ngB40OWxEeOBKf64hQ5SMA" name="AssociationSource"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_pOBrsOWxEeOBKf64hQ5SMA" name="AssociationOldTarget"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_rJ1REOWxEeOBKf64hQ5SMA" name="AssociationNewTarget"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_6K2ZMOWxEeOBKf64hQ5SMA" name="ChangingNameNode"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_AQdFgOWyEeOBKf64hQ5SMA" name="NodeToDelete"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_K5SscOWyEeOBKf64hQ5SMA" name="ConflictingNode_ConflictingName"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_NlHZgOWyEeOBKf64hQ5SMA" name="PseudoConflictingNode_NewName"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_fmruAOZhEeO4t6DpSp63uw" name="NewNode"/>
+</uml:Model>

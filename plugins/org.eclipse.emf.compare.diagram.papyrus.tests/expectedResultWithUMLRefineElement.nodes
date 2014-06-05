@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes">
+  <nodes:Node xmi:id="_HmnacOv3EeOJ757b_KHwtA" name="Diagram MovingNodeDiagram">
+    <containmentRef1 xmi:id="_HmxygOv3EeOJ757b_KHwtA" name="Shape 2007">
+      <containmentRef1 xmi:id="_Hmxygev3EeOJ757b_KHwtA" name="Decoration Node 5026"/>
+      <containmentRef1 xmi:id="_Hmxyguv3EeOJ757b_KHwtA" name="Decoration Node 7016">
+        <containmentRef1 xmi:id="_Hmxyg-v3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_HmxyhOv3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_Hmxyhev3EeOJ757b_KHwtA" name="Bounds 28"/>
+    </containmentRef1>
+    <containmentRef1 xmi:id="_Hmxyhuv3EeOJ757b_KHwtA" name="Shape 2007">
+      <containmentRef1 xmi:id="_Hmxyh-v3EeOJ757b_KHwtA" name="Decoration Node 5026"/>
+      <containmentRef1 xmi:id="_HmxyiOv3EeOJ757b_KHwtA" name="Decoration Node 7016">
+        <containmentRef1 xmi:id="_Hmxyiev3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_Hmxyiuv3EeOJ757b_KHwtA" name="Bounds 0"/>
+        <containmentRef1 xmi:id="_Hmxyi-v3EeOJ757b_KHwtA" name="Shape 3010 [children move]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HmxyjOv3EeOJ757b_KHwtA" name="Bounds 289"/>
+    </containmentRef1>
+    <containmentRef1 xmi:id="_Hmxyjev3EeOJ757b_KHwtA" name="Shape 2008">
+      <containmentRef1 xmi:id="_Hmxyjuv3EeOJ757b_KHwtA" name="Decoration Node 5029"/>
+      <containmentRef1 xmi:id="_Hmxyj-v3EeOJ757b_KHwtA" name="Basic Compartment 7017">
+        <containmentRef1 xmi:id="_HmxykOv3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_Hmxykev3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_Hmxykuv3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_Hmxyk-v3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HmxylOv3EeOJ757b_KHwtA" name="Basic Compartment 7018">
+        <containmentRef1 xmi:id="_Hmxylev3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_Hmxyluv3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_Hmxyl-v3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_HmxymOv3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_Hmxymev3EeOJ757b_KHwtA" name="Basic Compartment 7019">
+        <containmentRef1 xmi:id="_Hmxymuv3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_Hmxym-v3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_HmxynOv3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_Hmxynev3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_Hmxynuv3EeOJ757b_KHwtA" name="Bounds 537"/>
+    </containmentRef1>
+    <containmentRef1 xmi:id="_Hmxyn-v3EeOJ757b_KHwtA" name="Shape 2008">
+      <containmentRef1 xmi:id="_HmxyoOv3EeOJ757b_KHwtA" name="Decoration Node 5029"/>
+      <containmentRef1 xmi:id="_Hmxyoev3EeOJ757b_KHwtA" name="Basic Compartment 7017">
+        <containmentRef1 xmi:id="_Hmxyouv3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_Hmxyo-v3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_HmxypOv3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_HmyZkOv3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HmyZkev3EeOJ757b_KHwtA" name="Basic Compartment 7018">
+        <containmentRef1 xmi:id="_HmyZkuv3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_HmyZk-v3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_HmyZlOv3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_HmyZlev3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HmyZluv3EeOJ757b_KHwtA" name="Basic Compartment 7019">
+        <containmentRef1 xmi:id="_HmyZl-v3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_HmyZmOv3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_HmyZmev3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_HmyZmuv3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HmyZm-v3EeOJ757b_KHwtA" name="Bounds 772"/>
+    </containmentRef1>
+    <containmentRef1 xmi:id="_HmyZnOv3EeOJ757b_KHwtA" name="Shape 2008">
+      <containmentRef1 xmi:id="_HmyZnev3EeOJ757b_KHwtA" name="Decoration Node 5029"/>
+      <containmentRef1 xmi:id="_HmyZnuv3EeOJ757b_KHwtA" name="Basic Compartment 7017">
+        <containmentRef1 xmi:id="_HmyZn-v3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_HmyZoOv3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_HmyZoev3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_HmyZouv3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HmyZo-v3EeOJ757b_KHwtA" name="Basic Compartment 7018">
+        <containmentRef1 xmi:id="_HmyZpOv3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_HmyZpev3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_HmyZpuv3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_HmyZp-v3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HmyZqOv3EeOJ757b_KHwtA" name="Basic Compartment 7019">
+        <containmentRef1 xmi:id="_HmyZqev3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_HmyZquv3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_HmyZq-v3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_HmyZrOv3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HmyZrev3EeOJ757b_KHwtA" name="Bounds 772"/>
+    </containmentRef1>
+    <containmentRef1 xmi:id="_HmyZruv3EeOJ757b_KHwtA" name="Diagram Style "/>
+    <containmentRef1 xmi:id="_HmyZr-v3EeOJ757b_KHwtA" name="Papyrus View Style"/>
+    <containmentRef1 xmi:id="_HmyZsOv3EeOJ757b_KHwtA" name="Connector 4001 [edges delete]">
+      <containmentRef1 xmi:id="_HmyZsev3EeOJ757b_KHwtA" name="Decoration Node 6001 [children delete]">
+        <containmentRef1 xmi:id="_HmyZsuv3EeOJ757b_KHwtA" name="Location 0 [layoutConstraint delete]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HmyZs-v3EeOJ757b_KHwtA" name="Decoration Node 6002 [children delete]">
+        <containmentRef1 xmi:id="_HmyZtOv3EeOJ757b_KHwtA" name="Location 0 [layoutConstraint delete]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HmyZtev3EeOJ757b_KHwtA" name="Decoration Node 6003 [children delete]">
+        <containmentRef1 xmi:id="_HmyZtuv3EeOJ757b_KHwtA" name="Location 0 [layoutConstraint delete]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HmyZt-v3EeOJ757b_KHwtA" name="Decoration Node 6005 [children delete]">
+        <containmentRef1 xmi:id="_HmyZuOv3EeOJ757b_KHwtA" name="Location 0 [layoutConstraint delete]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HmyZuev3EeOJ757b_KHwtA" name="Decoration Node 6033 [children delete]">
+        <containmentRef1 xmi:id="_HmzAoOv3EeOJ757b_KHwtA" name="Location 0 [layoutConstraint delete]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HmzAoev3EeOJ757b_KHwtA" name="Decoration Node 6034 [children delete]">
+        <containmentRef1 xmi:id="_HmzAouv3EeOJ757b_KHwtA" name="Location 0 [layoutConstraint delete]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HmzAo-v3EeOJ757b_KHwtA" name="Font Style Tahoma [styles delete]"/>
+      <containmentRef1 xmi:id="_HmzApOv3EeOJ757b_KHwtA" name="&lt;Association> A_associationSource_associationOl... [element unset]"/>
+      <containmentRef1 xmi:id="_HmzApev3EeOJ757b_KHwtA" name="Shape 2008 [source unset]"/>
+      <containmentRef1 xmi:id="_HmzApuv3EeOJ757b_KHwtA" name="Shape 2008 [target unset]"/>
+      <containmentRef1 xmi:id="_HmzAp-v3EeOJ757b_KHwtA" name="Relative Bendpoints [org.eclipse.gmf.runtime.no... [bendpoints delete]"/>
+      <containmentRef1 xmi:id="_HmzAqOv3EeOJ757b_KHwtA" name="Identity Anchor (0.872,0.046875) [sourceAnchor delete]"/>
+      <containmentRef1 xmi:id="_HmzAqev3EeOJ757b_KHwtA" name="Identity Anchor (0.4405594405594406,0.09) [targetAnchor delete]"/>
+    </containmentRef1>
+  </nodes:Node>
+  <nodes:Node xmi:id="_HmzAquv3EeOJ757b_KHwtA" name="Model Style Sheets"/>
+  <nodes:Node xmi:id="_Hm5HQOv3EeOJ757b_KHwtA" name="Diagram ChangingDiagram">
+    <containmentRef1 xmi:id="_Hm5HQev3EeOJ757b_KHwtA" name="Shape 2008">
+      <containmentRef1 xmi:id="_Hm5HQuv3EeOJ757b_KHwtA" name="Decoration Node 5029"/>
+      <containmentRef1 xmi:id="_Hm5HQ-v3EeOJ757b_KHwtA" name="Basic Compartment 7017">
+        <containmentRef1 xmi:id="_Hm5HROv3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_Hm5HRev3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_Hm5HRuv3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_Hm5HR-v3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_Hm5HSOv3EeOJ757b_KHwtA" name="Basic Compartment 7018">
+        <containmentRef1 xmi:id="_Hm5HSev3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_Hm5HSuv3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_Hm5HS-v3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_Hm5HTOv3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_Hm5HTev3EeOJ757b_KHwtA" name="Basic Compartment 7019">
+        <containmentRef1 xmi:id="_Hm5HTuv3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_Hm5HT-v3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_Hm5HUOv3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_Hm5HUev3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_Hm5HUuv3EeOJ757b_KHwtA" name="Bounds 63"/>
+    </containmentRef1>
+    <containmentRef1 xmi:id="_Hm5HU-v3EeOJ757b_KHwtA" name="Diagram Style "/>
+    <containmentRef1 xmi:id="_Hm5HVOv3EeOJ757b_KHwtA" name="Papyrus View Style"/>
+  </nodes:Node>
+  <nodes:Node xmi:id="_HnHJsOv3EeOJ757b_KHwtA" name="Diagram DeletingDiagram">
+    <containmentRef1 xmi:id="_HnHJsev3EeOJ757b_KHwtA" name="Diagram Style "/>
+    <containmentRef1 xmi:id="_HnHJsuv3EeOJ757b_KHwtA" name="Papyrus View Style"/>
+    <containmentRef1 xmi:id="_HnHJs-v3EeOJ757b_KHwtA" name="Shape 2008 [children delete]">
+      <containmentRef1 xmi:id="_HnHJtOv3EeOJ757b_KHwtA" name="Decoration Node 5029 [children delete]"/>
+      <containmentRef1 xmi:id="_HnHJtev3EeOJ757b_KHwtA" name="Basic Compartment 7017 [children delete]">
+        <containmentRef1 xmi:id="_HnHJtuv3EeOJ757b_KHwtA" name="Title Style false [styles delete]"/>
+        <containmentRef1 xmi:id="_HnHJt-v3EeOJ757b_KHwtA" name="Sorting Style None [styles delete]"/>
+        <containmentRef1 xmi:id="_HnHJuOv3EeOJ757b_KHwtA" name="Filtering Style None [styles delete]"/>
+        <containmentRef1 xmi:id="_HnHJuev3EeOJ757b_KHwtA" name="Bounds 0 [layoutConstraint delete]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HnHJuuv3EeOJ757b_KHwtA" name="Basic Compartment 7018 [children delete]">
+        <containmentRef1 xmi:id="_HnHJu-v3EeOJ757b_KHwtA" name="Title Style false [styles delete]"/>
+        <containmentRef1 xmi:id="_HnHJvOv3EeOJ757b_KHwtA" name="Sorting Style None [styles delete]"/>
+        <containmentRef1 xmi:id="_HnHJvev3EeOJ757b_KHwtA" name="Filtering Style None [styles delete]"/>
+        <containmentRef1 xmi:id="_HnHJvuv3EeOJ757b_KHwtA" name="Bounds 0 [layoutConstraint delete]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HnHJv-v3EeOJ757b_KHwtA" name="Basic Compartment 7019 [children delete]">
+        <containmentRef1 xmi:id="_HnHJwOv3EeOJ757b_KHwtA" name="Title Style false [styles delete]"/>
+        <containmentRef1 xmi:id="_HnHJwev3EeOJ757b_KHwtA" name="Sorting Style None [styles delete]"/>
+        <containmentRef1 xmi:id="_HnHwwOv3EeOJ757b_KHwtA" name="Filtering Style None [styles delete]"/>
+        <containmentRef1 xmi:id="_HnHwwev3EeOJ757b_KHwtA" name="Bounds 0 [layoutConstraint delete]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HnHwwuv3EeOJ757b_KHwtA" name="&lt;Class> NodeToDelete [element unset]"/>
+      <containmentRef1 xmi:id="_HnHww-v3EeOJ757b_KHwtA" name="Bounds 370 [layoutConstraint delete]"/>
+    </containmentRef1>
+  </nodes:Node>
+  <nodes:Node xmi:id="_HnQToOv3EeOJ757b_KHwtA" name="Diagram AddingDiagram">
+    <containmentRef1 xmi:id="_HnQToev3EeOJ757b_KHwtA" name="Diagram Style "/>
+    <containmentRef1 xmi:id="_HnQTouv3EeOJ757b_KHwtA" name="Papyrus View Style"/>
+    <containmentRef1 xmi:id="_HnQTo-v3EeOJ757b_KHwtA" name="Shape 2008 [children add]">
+      <containmentRef1 xmi:id="_HnQTpOv3EeOJ757b_KHwtA" name="Decoration Node 5029 [children add]"/>
+      <containmentRef1 xmi:id="_HnQTpev3EeOJ757b_KHwtA" name="Basic Compartment 7017 [children add]">
+        <containmentRef1 xmi:id="_HnQ6sOv3EeOJ757b_KHwtA" name="Title Style false [styles add]"/>
+        <containmentRef1 xmi:id="_HnQ6sev3EeOJ757b_KHwtA" name="Sorting Style None [styles add]"/>
+        <containmentRef1 xmi:id="_HnQ6suv3EeOJ757b_KHwtA" name="Filtering Style None [styles add]"/>
+        <containmentRef1 xmi:id="_HnQ6s-v3EeOJ757b_KHwtA" name="Bounds 0 [layoutConstraint add]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HnQ6tOv3EeOJ757b_KHwtA" name="Basic Compartment 7018 [children add]">
+        <containmentRef1 xmi:id="_HnQ6tev3EeOJ757b_KHwtA" name="Title Style false [styles add]"/>
+        <containmentRef1 xmi:id="_HnQ6tuv3EeOJ757b_KHwtA" name="Sorting Style None [styles add]"/>
+        <containmentRef1 xmi:id="_HnQ6t-v3EeOJ757b_KHwtA" name="Filtering Style None [styles add]"/>
+        <containmentRef1 xmi:id="_HnQ6uOv3EeOJ757b_KHwtA" name="Bounds 0 [layoutConstraint add]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HnQ6uev3EeOJ757b_KHwtA" name="Basic Compartment 7019 [children add]">
+        <containmentRef1 xmi:id="_HnQ6uuv3EeOJ757b_KHwtA" name="Title Style false [styles add]"/>
+        <containmentRef1 xmi:id="_HnQ6u-v3EeOJ757b_KHwtA" name="Sorting Style None [styles add]"/>
+        <containmentRef1 xmi:id="_HnQ6vOv3EeOJ757b_KHwtA" name="Filtering Style None [styles add]"/>
+        <containmentRef1 xmi:id="_HnQ6vev3EeOJ757b_KHwtA" name="Bounds 0 [layoutConstraint add]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HnQ6vuv3EeOJ757b_KHwtA" name="&lt;Class> NewNode [element set]"/>
+      <containmentRef1 xmi:id="_HnQ6v-v3EeOJ757b_KHwtA" name="Bounds 271 [layoutConstraint add]"/>
+    </containmentRef1>
+  </nodes:Node>
+  <nodes:Node xmi:id="_Hncg4Ov3EeOJ757b_KHwtA" name="Diagram ConflictingDiagram">
+    <containmentRef1 xmi:id="_HndH8Ov3EeOJ757b_KHwtA" name="Shape 2008">
+      <containmentRef1 xmi:id="_HndH8ev3EeOJ757b_KHwtA" name="Decoration Node 5029"/>
+      <containmentRef1 xmi:id="_HndH8uv3EeOJ757b_KHwtA" name="Basic Compartment 7017">
+        <containmentRef1 xmi:id="_HndH8-v3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_HndH9Ov3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_HndH9ev3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_HndH9uv3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HndH9-v3EeOJ757b_KHwtA" name="Basic Compartment 7018">
+        <containmentRef1 xmi:id="_HndH-Ov3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_HndH-ev3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_HndH-uv3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_HndH--v3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HndH_Ov3EeOJ757b_KHwtA" name="Basic Compartment 7019">
+        <containmentRef1 xmi:id="_HndH_ev3EeOJ757b_KHwtA" name="Title Style false"/>
+        <containmentRef1 xmi:id="_HndH_uv3EeOJ757b_KHwtA" name="Sorting Style None"/>
+        <containmentRef1 xmi:id="_HndH_-v3EeOJ757b_KHwtA" name="Filtering Style None"/>
+        <containmentRef1 xmi:id="_HndIAOv3EeOJ757b_KHwtA" name="Bounds 0"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HndIAev3EeOJ757b_KHwtA" name="Bounds 305"/>
+    </containmentRef1>
+    <containmentRef1 xmi:id="_HndIAuv3EeOJ757b_KHwtA" name="Diagram Style "/>
+    <containmentRef1 xmi:id="_HndIA-v3EeOJ757b_KHwtA" name="Papyrus View Style"/>
+    <containmentRef1 xmi:id="_HndIBOv3EeOJ757b_KHwtA" name="Shape 2008 [children delete]">
+      <containmentRef1 xmi:id="_HndIBev3EeOJ757b_KHwtA" name="Decoration Node 5029 [children delete]"/>
+      <containmentRef1 xmi:id="_HndIBuv3EeOJ757b_KHwtA" name="Basic Compartment 7017 [children delete]">
+        <containmentRef1 xmi:id="_HndIB-v3EeOJ757b_KHwtA" name="Title Style false [styles delete]"/>
+        <containmentRef1 xmi:id="_HndICOv3EeOJ757b_KHwtA" name="Sorting Style None [styles delete]"/>
+        <containmentRef1 xmi:id="_HndICev3EeOJ757b_KHwtA" name="Filtering Style None [styles delete]"/>
+        <containmentRef1 xmi:id="_HndICuv3EeOJ757b_KHwtA" name="Bounds 0 [layoutConstraint delete]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HndIC-v3EeOJ757b_KHwtA" name="Basic Compartment 7018 [children delete]">
+        <containmentRef1 xmi:id="_HndIDOv3EeOJ757b_KHwtA" name="Title Style false [styles delete]"/>
+        <containmentRef1 xmi:id="_HndIDev3EeOJ757b_KHwtA" name="Sorting Style None [styles delete]"/>
+        <containmentRef1 xmi:id="_HndIDuv3EeOJ757b_KHwtA" name="Filtering Style None [styles delete]"/>
+        <containmentRef1 xmi:id="_HndID-v3EeOJ757b_KHwtA" name="Bounds 0 [layoutConstraint delete]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HndIEOv3EeOJ757b_KHwtA" name="Basic Compartment 7019 [children delete]">
+        <containmentRef1 xmi:id="_HndIEev3EeOJ757b_KHwtA" name="Title Style false [styles delete]"/>
+        <containmentRef1 xmi:id="_HndIEuv3EeOJ757b_KHwtA" name="Sorting Style None [styles delete]"/>
+        <containmentRef1 xmi:id="_HndIE-v3EeOJ757b_KHwtA" name="Filtering Style None [styles delete]"/>
+        <containmentRef1 xmi:id="_HndIFOv3EeOJ757b_KHwtA" name="Bounds 0 [layoutConstraint delete]"/>
+      </containmentRef1>
+      <containmentRef1 xmi:id="_HndIFev3EeOJ757b_KHwtA" name="&lt;Class> ConflictingNode [element unset]"/>
+      <containmentRef1 xmi:id="_HndvAOv3EeOJ757b_KHwtA" name="Bounds 68 [layoutConstraint delete]"/>
+    </containmentRef1>
+  </nodes:Node>
+  <nodes:Node xmi:id="_HngyUOv3EeOJ757b_KHwtA" name="left.notation &lt;-> right.notation (origin.notation)"/>
+</xmi:XMI>

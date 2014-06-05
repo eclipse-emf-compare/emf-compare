@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes">
+  <nodes:Node xmi:id="_CgJ7IOvwEeOe_vfK-oM2bA" name="&lt;Model> model">
+    <containmentRef1 xmi:id="_CgR28OvwEeOe_vfK-oM2bA" name="&lt;Package> OldHoldingPackage"/>
+    <containmentRef1 xmi:id="_CgR28evwEeOe_vfK-oM2bA" name="&lt;Package> NewHoldingPackage">
+      <containmentRef1 xmi:id="_CgR28uvwEeOe_vfK-oM2bA" name="&lt;Class> MovingNode [packagedElement move]"/>
+    </containmentRef1>
+    <containmentRef1 xmi:id="_CgR28-vwEeOe_vfK-oM2bA" name="&lt;Class> AssociationOldTarget"/>
+    <containmentRef1 xmi:id="_CgR29OvwEeOe_vfK-oM2bA" name="&lt;Class> AssociationNewTarget"/>
+    <containmentRef1 xmi:id="_CgR29evwEeOe_vfK-oM2bA" name="&lt;Class> ChangingNameNode_NewName">
+      <containmentRef1 xmi:id="_CgR29uvwEeOe_vfK-oM2bA" name="ChangingNameNode_NewName [name changed]"/>
+    </containmentRef1>
+    <containmentRef1 xmi:id="_CgR29-vwEeOe_vfK-oM2bA" name="&lt;Class> PseudoConflictingNode_NewName">
+      <containmentRef1 xmi:id="_CgR2-OvwEeOe_vfK-oM2bA" name="PseudoConflictingNode [name changed]"/>
+      <containmentRef1 xmi:id="_CgR2-evwEeOe_vfK-oM2bA" name="PseudoConflictingNode [name changed]"/>
+    </containmentRef1>
+    <containmentRef1 xmi:id="_CgR2-uvwEeOe_vfK-oM2bA" name="&lt;Class> NewNode [packagedElement add]"/>
+    <containmentRef1 xmi:id="_CgR2--vwEeOe_vfK-oM2bA" name="&lt;Association> A_associationSource_associationOl... [packagedElement delete]"/>
+    <containmentRef1 xmi:id="_CgR2_OvwEeOe_vfK-oM2bA" name="&lt;Class> NodeToDelete [packagedElement delete]"/>
+    <containmentRef1 xmi:id="_CgR2_evwEeOe_vfK-oM2bA" name="&lt;Class> ConflictingNode [packagedElement delete]">
+      <containmentRef1 xmi:id="_CgR2_uvwEeOe_vfK-oM2bA" name="ConflictingNode_ConflictingName [name set]"/>
+    </containmentRef1>
+  </nodes:Node>
+  <nodes:Node xmi:id="_CgU6QOvwEeOe_vfK-oM2bA" name="left.uml &lt;-> right.uml (origin.uml)"/>
+</xmi:XMI>
