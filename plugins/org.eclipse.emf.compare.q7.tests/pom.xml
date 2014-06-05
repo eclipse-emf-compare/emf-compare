@@ -98,5 +98,74 @@
       </plugins>
     </build>
   </profile>
+  <profile>
+    <id>kepler</id>
+    <activation>
+      <activeByDefault>true</activeByDefault>
+    </activation>
+    <build>
+      <plugins>
+		<plugin>
+		<groupId>com.xored.q7</groupId>
+		<artifactId>q7-maven-plugin</artifactId>
+		<version>${q7-maven-version}</version>
+		<extensions>true</extensions>
+		<configuration>
+		  <aut>
+			<groupId>org.eclipse</groupId>
+			<artifactId>sdk</artifactId>
+			<version>4.3.2</version>
+			<injections>
+			  <injection>
+				<site>http://download.eclipse.org/releases/kepler/</site>
+				<features>
+				 <feature>org.apache.commons.lang</feature>
+                 <feature>org.eclipse.jdt.feature.group</feature>
+                 <feature>org.eclipse.ocl.all.sdk.feature.group</feature>
+                 <feature>org.eclipse.uml2.feature.group</feature>
+				
+				 <feature>org.eclipse.emf.feature.group</feature>
+				 <feature>org.eclipse.emf.transaction.feature.group</feature>
+                 <feature>org.eclipse.emf.validation.sdk.feature.group</feature>
+                 <feature>org.eclipse.emf.workspace.feature.group</feature>
+				 <feature>org.eclipse.emf.facet.sdk.feature.feature.group</feature>
+				 
+				 <feature>org.eclipse.draw2d.feature.group</feature>
+                 <feature>org.eclipse.gef.sdk.feature.group</feature>
+                 <feature>org.eclipse.gmf.sdk.feature.group</feature>
+                 <feature>org.eclipse.gmf.runtime.sdk.feature.group</feature>
+                 <feature>org.eclipse.gmf.runtime.notation.sdk.feature.group</feature>
+                               
+                 <feature>org.eclipse.papyrus.sdk.feature.feature.group</feature>
+                 
+                 <feature>org.eclipse.xtend.sdk.feature.group</feature>
+                 <feature>org.eclipse.xtext.sdk.feature.group</feature>
+            	</features>
+			  </injection>
+			  <injection>
+				<site>http://download.eclipse.org/egit/updates-nightly</site>
+			  </injection>
+			  <injection>
+				<site>http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest</site>
+			  </injection>
+			</injections>
+		  </aut>
+		  <suites>
+		  	<suite>FullTestSuite</suite>
+		  </suites>
+		  <q7>
+			<version>${q7-runner-version}</version>
+            <licenseUrl>http://licensing.xored.com/pool/05bc9cc5-a261-0280-a50e-406c8f046395</licenseUrl>
+            <vmArgs>
+              <vmArg>-Dcom.xored.q7.runner.returnTestFailure=true</vmArg>
+              <vmArg>-Dhttp.proxyHost=proxy.eclipse.org</vmArg>
+              <vmArg>-Dhttp.proxyPort=9898</vmArg>
+            </vmArgs>
+		  </q7>
+		</configuration>
+	  </plugin>
+      </plugins>
+    </build>
+  </profile>
   </profiles>
 </project>
