@@ -1,0 +1,4 @@
+** Conflicting case **
+
+ADD edge on one side
+DELETE source on the other side

@@ -1,0 +1,40 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_jRtbsGrtEeK_JdLra2Bk5A
+Element-Name: ts002_tc001_3-way_comparison
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _8ZQgMGrzEeK_JdLra2Bk5A
+Save-Time: 2/7/13 3:34 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate the 3-way comparison.
+
+TEST STEPS
+	1) Select the 3 ecore models and run a 3-way comparison (select extlibraryOrigin.ecore as ancestor) //asserts that the 3 models are selected
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Package Explorer" | get-tree] {
+    select "Library/extlibraryLeft.ecore" "Library/extlibraryOrigin.ecore" "Library/extlibraryRight.ecore"
+    get-menu "Compare With/Each Other" | click
+    get-item "Library/extlibraryLeft.ecore" | get-property selected | equals true | verify-true
+    get-item "Library/extlibraryOrigin.ecore" | get-property selected | equals true | verify-true
+    get-item "Library/extlibraryRight.ecore" | get-property selected | equals true | verify-true
+}
+with [get-window "Select Common Ancestor"] {
+    get-button "\'/Library/extlibraryOrigin.ecore\'" | click
+    get-button OK | click
+}
+get-tab-folder -index 1 | get-property activePage | contains "Compare" | verify-true
+    
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

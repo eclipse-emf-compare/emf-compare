@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_1HIIoKzZEeKXdNRNQo8y5Q" name="model">
+  <packagedElement xmi:type="uml:Interaction" xmi:id="_1IxHYKzZEeKXdNRNQo8y5Q" name="Interaction1">
+    <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_XvTdkKzaEeKXdNRNQo8y5Q" name="BehaviorExecSpecStart" covered="_IdkY4KzaEeKXdNRNQo8y5Q" execution="_XvTdkazaEeKXdNRNQo8y5Q"/>
+    <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_RoB9UKzaEeKXdNRNQo8y5Q" name="ActionExecSpecStart" covered="_G0zrUKzaEeKXdNRNQo8y5Q" execution="_RooaQKzaEeKXdNRNQo8y5Q"/>
+    <fragment xmi:type="uml:ActionExecutionSpecification" xmi:id="_RooaQKzaEeKXdNRNQo8y5Q" name="ActionExecSpec" covered="_G0zrUKzaEeKXdNRNQo8y5Q" finish="_RooaQazaEeKXdNRNQo8y5Q" start="_RoB9UKzaEeKXdNRNQo8y5Q"/>
+    <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_XvTdkazaEeKXdNRNQo8y5Q" name="BehaviorExecSpec" covered="_IdkY4KzaEeKXdNRNQo8y5Q" finish="_XvTdkqzaEeKXdNRNQo8y5Q" start="_XvTdkKzaEeKXdNRNQo8y5Q"/>
+    <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_RooaQazaEeKXdNRNQo8y5Q" name="ActionExecSpecFinish" covered="_G0zrUKzaEeKXdNRNQo8y5Q" execution="_RooaQKzaEeKXdNRNQo8y5Q"/>
+    <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_XvTdkqzaEeKXdNRNQo8y5Q" name="BehaviorExecSpecFinish" covered="_IdkY4KzaEeKXdNRNQo8y5Q" execution="_XvTdkazaEeKXdNRNQo8y5Q"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_ZNerwKzaEeKXdNRNQo8y5Q" name="MessageSend" covered="_G0zrUKzaEeKXdNRNQo8y5Q" message="_ZL1tAKzaEeKXdNRNQo8y5Q"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_ZNxmsKzaEeKXdNRNQo8y5Q" name="MessageRecv" covered="_IdkY4KzaEeKXdNRNQo8y5Q" message="_ZL1tAKzaEeKXdNRNQo8y5Q"/>
+    <lifeline xmi:id="_G0zrUKzaEeKXdNRNQo8y5Q" name="Lifeline" coveredBy="_RoB9UKzaEeKXdNRNQo8y5Q _RooaQazaEeKXdNRNQo8y5Q _RooaQKzaEeKXdNRNQo8y5Q _ZNerwKzaEeKXdNRNQo8y5Q"/>
+    <lifeline xmi:id="_IdkY4KzaEeKXdNRNQo8y5Q" name="Lifeline0" coveredBy="_XvTdkKzaEeKXdNRNQo8y5Q _XvTdkqzaEeKXdNRNQo8y5Q _XvTdkazaEeKXdNRNQo8y5Q _ZNxmsKzaEeKXdNRNQo8y5Q"/>
+    <message xmi:id="_ZL1tAKzaEeKXdNRNQo8y5Q" name="Message" receiveEvent="_ZNxmsKzaEeKXdNRNQo8y5Q" sendEvent="_ZNerwKzaEeKXdNRNQo8y5Q"/>
+  </packagedElement>
+</uml:Model>

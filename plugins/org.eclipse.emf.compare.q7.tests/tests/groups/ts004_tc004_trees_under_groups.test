@@ -1,0 +1,193 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_jRtbsGrtEeK_JdLra2Bk5A
+Element-Name: ts004_tc004_trees_under_groups
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: http://wiki.eclipse.org/EMF_Compare/Specifications/ExtensionPointForFiltersAndGroups
+Id: _JMQgYYAjEeKoeMXPKKjx4w
+Q7-Runtime-Version: 1.3.10.201312200736
+Save-Time: 6/2/14 2:57 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate that the differences in each group are displayed as trees.
+
+TEST STEPS
+	1) Select the 3 ecore models and run a 3-way comparison (select extlibraryOrigin.ecore as ancestor).
+	//asserts that the 3 models are selected
+	2) Click on the menu Group and select "By Side".
+	//asserts that the group is selected
+	//asserts that each group (Conflicts, Left side, Right side) owns all its differences displayed as trees.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Package Explorer" | get-tree] {
+    select "Library/extlibraryLeft.ecore" "Library/extlibraryOrigin.ecore" "Library/extlibraryRight.ecore"
+    get-menu "Compare With/Each Other" | click
+    get-item "Library/extlibraryLeft.ecore" | get-property selected | equals true | verify-true
+    get-item "Library/extlibraryOrigin.ecore" | get-property selected | equals true | verify-true
+    get-item "Library/extlibraryRight.ecore" | get-property selected | equals true | verify-true
+}
+with [get-window "Select Common Ancestor"] {
+    get-button "\'/Library/extlibraryOrigin.ecore\'" | click
+    get-button OK | click
+}
+get-tab-folder -index 1 | get-property activePage | contains "Compare" | verify-true
+get-editor "Compare .*" 
+    | get-button Groups | click -arrow
+get-menu "By Side" | click | get-property enablement | equals true | verify-true
+
+get-window "Group preference" | get-button No | click
+
+get-editor "Compare .*" 
+    | get-tree | select "> Conflicts" | expand-all
+with [get-editor "Compare .*" 
+    | get-tree] {
+    get-item "> Conflicts" | get-property childCount | equals 3 | verify-true
+    get-item "> Conflicts" | get-property "getItems().length" 
+        | equals 3 | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals "length [name changed]" 
+        | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItemCount()" | equals 0 | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[0].getItems().TreeItem[1].getText()" | equals "minutes [name changed]" 
+        | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItemCount()" | equals 0 | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[0].getText()" | equals "> Conflict" | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "familyName [name set]" | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItemCount()" | equals 0 
+        | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[1].getItems().TreeItem[0].getText()" 
+        | equals "lastName : EString [eStructuralFeatures delete]" | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItemCount()" | equals 1 | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[1].getText()" | equals "> Conflict" | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[2].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "TitledItem [eSuperTypes add]" | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[2].getItems().TreeItem[0].getItems().TreeItem[0].getItemCount()" | equals 0 
+        | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[2].getItems().TreeItem[0].getText()" 
+        | equals "Periodical -> Item [eClassifiers delete]" | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[2].getItems().TreeItem[0].getItemCount()" | equals 1 | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[2].getItems().TreeItem[1].getText()" 
+        | equals "Periodical -> Item, TitledItem [eSuperTypes add]" | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[2].getItems().TreeItem[1].getItemCount()" | equals 0 | verify-true
+    get-item "> Conflicts" 
+        | get-property "getItems().TreeItem[2].getText()" | equals "> Conflict" | verify-true
+}
+get-editor "Compare .*" 
+    | get-tree | select "> Library\\/extlibraryLeft.ecore" | expand-all
+with [get-editor "Compare .*" 
+    | get-tree] {
+    get-item "> Library\\/extlibraryLeft.ecore" | get-property childCount | equals 1 | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary" | get-property childCount | equals 5 | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> BookCategory" | get-property index | equals 0 | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> BookCategory" | get-property childCount | equals 2 | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> BookCategory/Encyclopedia = 3 \\[eLiterals add\\]" | get-property index | equals 0 
+        | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> BookCategory/Encyclopedia = 3 \\[eLiterals add\\]" | get-property childCount 
+        | equals 0 | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> BookCategory/Dictionary = 4 \\[eLiterals add\\]" | get-property index | equals 1 
+        | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> BookCategory/Dictionary = 4 \\[eLiterals add\\]" | get-property childCount 
+        | equals 0 | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> Borrowable" | get-property index | equals 1 | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> Borrowable" | get-property childCount | equals 1 | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> Borrowable/Borrowable \\[name changed\\]" | get-property index | equals 0 
+        | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> Borrowable/Borrowable \\[name changed\\]" | get-property childCount | equals 0 
+        | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> Person -> Addressable" | get-property index | equals 2 | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> Person -> Addressable" | get-property childCount | equals 3 | verify-true
+     get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> Person -> Addressable/fullName : EString \\[eStructuralFeatures add\\]" 
+        | get-property index | equals 1 | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> Person -> Addressable/fullName : EString \\[eStructuralFeatures add\\]" 
+        | get-property childCount | equals 0 | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> Person -> Addressable/firstName : EString \\[eStructuralFeatures delete\\]" 
+        | get-property index | equals 2 | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/> Person -> Addressable/firstName : EString \\[eStructuralFeatures delete\\]" 
+        | get-property childCount | equals 0 | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/Magazine -> CirculatingItem \\[eClassifiers add\\]" | get-property index | equals 4 
+        | verify-true
+    get-item "> Library\\/extlibraryLeft.ecore/> extlibrary/Magazine -> CirculatingItem \\[eClassifiers add\\]" | get-property childCount 
+        | equals 0 | verify-true
+    
+}
+get-editor "Compare .*" 
+    | get-tree | select "> Library\\/extlibraryRight.ecore" | expand-all
+with [get-editor "Compare .*" 
+    | get-tree] {
+    get-item "> Library\\/extlibraryRight.ecore" | get-property index | equals 2 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore" | get-property childCount | equals 1 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary" | get-property childCount | equals 5 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> AudioVisualItem -> CirculatingItem" | get-property index | equals 2 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> AudioVisualItem -> CirculatingItem" | get-property childCount | equals 2 
+        | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> AudioVisualItem -> CirculatingItem/title : EString \\[eStructuralFeatures delete\\]" 
+        | get-property index | equals 1 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> AudioVisualItem -> CirculatingItem/title : EString \\[eStructuralFeatures delete\\]" 
+        | get-property childCount | equals 0 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> AudioVisualItem -> CirculatingItem/TitledItem \\[eSuperTypes add\\]" 
+        | get-property index | equals 0 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> AudioVisualItem -> CirculatingItem/TitledItem \\[eSuperTypes add\\]" 
+        | get-property childCount | equals 0 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> Book -> CirculatingItem" | get-property index | equals 0 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> Book -> CirculatingItem" | get-property childCount | equals 4 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> Book -> CirculatingItem/subtitle : EString \\[eStructuralFeatures add\\]" 
+        | get-property index | equals 1 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> Book -> CirculatingItem/subtitle : EString \\[eStructuralFeatures add\\]" 
+        | get-property childCount | equals 0 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> Book -> CirculatingItem/testMove : EString \\[eStructuralFeatures move\\]" 
+        | get-property index | equals 2 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> Book -> CirculatingItem/testMove : EString \\[eStructuralFeatures move\\]" 
+        | get-property childCount | equals 0 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> Book -> CirculatingItem/title : EString \\[eStructuralFeatures delete\\]" 
+        | get-property index | equals 3 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> Book -> CirculatingItem/title : EString \\[eStructuralFeatures delete\\]" 
+        | get-property childCount | equals 0 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> Book -> CirculatingItem/TitledItem \\[eSuperTypes add\\]" | get-property index 
+        | equals 0 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> Book -> CirculatingItem/TitledItem \\[eSuperTypes add\\]" | get-property childCount 
+        | equals 0 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> BookCategory" | get-property index | equals 1 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> BookCategory" | get-property childCount | equals 2 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> BookCategory/Manga = 3 \\[eLiterals add\\]" | get-property index | equals 0 
+        | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> BookCategory/Manga = 3 \\[eLiterals add\\]" | get-property childCount | equals 0 
+        | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> BookCategory/Manhwa = 5 \\[eLiterals add\\]" | get-property index | equals 1 
+        | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/> BookCategory/Manhwa = 5 \\[eLiterals add\\]" | get-property childCount | equals 0 
+        | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/Magazine -> Periodical \\[eClassifiers add\\]" | get-property index | equals 3 
+        | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/Magazine -> Periodical \\[eClassifiers add\\]" | get-property childCount | equals 0 
+        | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/TitledItem \\[eClassifiers add\\]" | get-property index | equals 4 | verify-true
+    get-item "> Library\\/extlibraryRight.ecore/> extlibrary/TitledItem \\[eClassifiers add\\]" | get-property childCount | equals 0 
+        | verify-true
+}
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

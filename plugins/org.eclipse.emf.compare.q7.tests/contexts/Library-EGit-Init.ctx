@@ -1,0 +1,74 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Context-Type: com.xored.q7.ecl.context
+Element-Name: Library-EGit-Init
+Element-Type: context
+Element-Version: 2.0
+Id: _pj0X4HBcEeKTzKjv1SXOgA
+Q7-Runtime-Version: 1.3.10.201312200736
+Save-Time: 6/2/14 5:04 PM
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This ecl script add the existing local Git Repository named "emf-compare-library-egit" that is contained in the "Library-Egit" project in the workspace previously import by the EgitWorkspaceContext to the Egit view.
+Then it imports from the repositiory the project named "library" in the workspace.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
+Content-Type: text/ecl
+Entry-Name: .ecl.context
+
+get-button "Open Perspective" | click
+with [get-window "Open Perspective"] {
+    get-table | select "Git"
+    get-button OK | click
+}
+//Removes all existing repositories if needed
+try {
+	if  [get-view "Git Repositories" | get-tree | is-empty] {
+		// Do nothing
+	} -else {
+		with [get-view "Git Repositories" | get-tree] {
+			get-items | foreach {
+				select-item
+    				| get-menu "Remove Repository from View" | click
+    			try {
+    				get-window "Confirm Project Deletion" | get-button Yes | click
+    			} -catch {
+					// Do nothing
+				}
+			}
+		}
+	}
+} -catch {
+	// Do nothing
+}
+
+get-button "Add an existing local Git Repository to this view" | click
+set-dialog-result Folder "platform:/resource/Library-EGit/emf-compare-library-egit"
+get-window "Add Git Repositories" | get-group "Search criteria" | get-button "Browse..." | click
+get-window "Add Git Repositories" | get-button Finish | click
+try -command {
+get-view "Git Repositories" | get-tree | get-property itemCount | equals 1 | verify-true
+} -catch {wait 500} -times 30
+
+get-view "Git Repositories" | get-tree 
+    | select "emf-compare-library-egit .*" 
+    | get-menu "Import Projects..." | click
+get-window "Import Projects from Git Repository .*" 
+    | get-button "Next >" | click
+get-window "Import Projects from Git Repository .*" 
+    | get-button Finish | click
+get-button "Open Perspective" | click
+with [get-window "Open Perspective"] {
+    get-table | select "Java \\(default\\)"
+    get-button OK | click
+}
+with [get-view "Package Explorer" | get-tree] {
+    get-item "(> )?library.*" | get-property "getItems().length" | equals 1 | verify-true
+    get-item "(> )?library.*" | get-property "getItems().TreeItem[0].getText()" 
+        | equals "(> )?library.ecore" | verify-true
+}
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_70VWwKz1EeKSJe71eLvNPA" name="model">
+  <packagedElement xmi:type="uml:Class" xmi:id="_enLqoKz2EeKSJe71eLvNPA" name="Class1">
+    <ownedAttribute xmi:type="uml:Port" xmi:id="_gTNuoKz2EeKSJe71eLvNPA" name="Port1" aggregation="composite"/>
+    <ownedAttribute xmi:id="_BOfK8Kz5EeKSJe71eLvNPA" name="Attribute1"/>
+    <ownedAttribute xmi:id="_KaAfUKz5EeKSJe71eLvNPA" name="Attribute2"/>
+    <ownedAttribute xmi:type="uml:Port" xmi:id="_WhcyQKz5EeKSJe71eLvNPA" name="Port2" aggregation="composite"/>
+    <ownedConnector xmi:id="_FnPT4Kz5EeKSJe71eLvNPA" name="Connector1">
+      <end xmi:id="_FnrYwKz5EeKSJe71eLvNPA" role="_BOfK8Kz5EeKSJe71eLvNPA">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_FnrYwaz5EeKSJe71eLvNPA" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_FnrYwqz5EeKSJe71eLvNPA" value="1"/>
+      </end>
+      <end xmi:id="_Fn1JwKz5EeKSJe71eLvNPA" role="_gTNuoKz2EeKSJe71eLvNPA">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Fn1Jwaz5EeKSJe71eLvNPA" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Fn1Jwqz5EeKSJe71eLvNPA" value="1"/>
+      </end>
+    </ownedConnector>
+    <ownedConnector xmi:id="_Lq9J0Kz5EeKSJe71eLvNPA" name="Connector2">
+      <end xmi:id="_LrQr0Kz5EeKSJe71eLvNPA" role="_BOfK8Kz5EeKSJe71eLvNPA">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_LrQr0az5EeKSJe71eLvNPA" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_LrQr0qz5EeKSJe71eLvNPA" value="1"/>
+      </end>
+      <end xmi:id="_LrZ1wKz5EeKSJe71eLvNPA" role="_KaAfUKz5EeKSJe71eLvNPA">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_LrZ1waz5EeKSJe71eLvNPA" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_LrZ1wqz5EeKSJe71eLvNPA" value="1"/>
+      </end>
+    </ownedConnector>
+    <ownedConnector xmi:id="_YKDHwKz5EeKSJe71eLvNPA" name="Connector3">
+      <end xmi:id="_YKWCsKz5EeKSJe71eLvNPA" role="_KaAfUKz5EeKSJe71eLvNPA">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_YKWCsaz5EeKSJe71eLvNPA" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_YKWCsqz5EeKSJe71eLvNPA" value="1"/>
+      </end>
+      <end xmi:id="_YKfzsKz5EeKSJe71eLvNPA" role="_WhcyQKz5EeKSJe71eLvNPA">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_YKfzsaz5EeKSJe71eLvNPA" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_YKfzsqz5EeKSJe71eLvNPA" value="1"/>
+      </end>
+    </ownedConnector>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_hOviwKz2EeKSJe71eLvNPA" name="Class2">
+    <ownedAttribute xmi:type="uml:Port" xmi:id="_imhOAKz2EeKSJe71eLvNPA" name="Port1" type="_LajoQKz3EeKSJe71eLvNPA" aggregation="composite"/>
+    <ownedAttribute xmi:id="_Qgjm0Kz5EeKSJe71eLvNPA" name="Attribute1"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Interface" xmi:id="_LajoQKz3EeKSJe71eLvNPA" name="Interface1">
+    <ownedOperation xmi:id="_FLlIEKz4EeKSJe71eLvNPA" name="Operation1"/>
+  </packagedElement>
+</uml:Model>

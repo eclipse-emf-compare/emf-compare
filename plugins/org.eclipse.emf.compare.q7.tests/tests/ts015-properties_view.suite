@@ -1,0 +1,21 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Element-Name: ts015-properties_view
+Element-Type: testsuite
+Element-Version: 2.0
+Id: _Sn8K8BxTEeOvMsdEm-eT7w
+Q7-Runtime-Version: 1.3.7.201309090800
+Save-Time: 9/13/13 11:03 AM
+
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8
+Content-Type: text/testcase
+Entry-Name: testcase-items
+
+_nr0vUOrNEeKHh5YNAPhy9Q	// kind: 'test' name: 'ts015_tc001_properties_view_tree_viewer' path: 'propertiesview/ts015_tc001_properties_view_tree_viewer.test'
+_BPcH8OrYEeKHh5YNAPhy9Q	// kind: 'test' name: 'ts015_tc002_properties_view_table_viewer' path: 'propertiesview/ts015_tc002_properties_view_table_viewer.test'
+_Dqmi0OrYEeKHh5YNAPhy9Q	// kind: 'test' name: 'ts015_tc003_properties_view_text_viewer' path: 'propertiesview/ts015_tc003_properties_view_text_viewer.test'
+_F_3xEOrYEeKHh5YNAPhy9Q	// kind: 'test' name: 'ts015_tc004_properties_view_egit' path: 'propertiesview/ts015_tc004_properties_view_egit.test'
+_7-llcOrvEeKHh5YNAPhy9Q	// kind: 'test' name: 'ts015_tc005_properties_view_edit' path: 'propertiesview/ts015_tc005_properties_view_edit.test'
+
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8--

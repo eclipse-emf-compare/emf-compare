@@ -1,0 +1,75 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Context-Type: com.xored.q7.workspace.context
+Element-Name: ts006_tc001_WorkspaceContext
+Element-Type: context
+Element-Version: 2.0
+Id: _fj_cIHRWEeKuJN51-cCI4Q
+Save-Time: 2/11/13 3:24 PM
+
+------=_contents/ChangeInFragmentsOnly/right/test.frag-d8ecdc3b-229a-38b2-a2eb-bc5a2e8e38c4
+Content-Type: q7/binary
+Entry-Name: contents/ChangeInFragmentsOnly/right/test.frag
+
+UEsDBBQACAAIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVzrEKgzAYBOC90HcI/wMkqWPQSikO
+DoXSLl1D/I1Bk0gMjY/fKLTQ9fjuuLJe7UTeGBbjXQUnyoGgU74zTldweV7bFurz8VCi8gFFc5dqlBrJ
+ao34tYqtlXfcInJewRDjLBhLKVFvNfVBs9et/ZJ96Q+hmsy84A7R9qzgvGDNxoA4aTPug9QWXcTuYfQQ
+geVLH1BLBwiBZUjJkgAAALsAAABQSwECFAAUAAgACAAAACEAgWVIyZIAAAC7AAAACAAAAAAAAAAAAAAA
+AAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAyAAAAAAA
+------=_contents/ChangeInFragmentsOnly/right/test.frag-d8ecdc3b-229a-38b2-a2eb-bc5a2e8e38c4--
+------=_contents/ChangeInFragmentsOnly/.project-ce0c800a-5a32-3e75-bc16-d5c1df2e2c1d
+Content-Type: q7/binary
+Entry-Name: contents/ChangeInFragmentsOnly/.project
+
+UEsDBBQACAAIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSzsa/IzVEoSy0qzszPs1Uy1DNQUkjN
+S85PycxLt1UKDXHTtVCyt+Plsikoys9KTS5xSS1OLsosKAGqBopy2uQl5qbaOWck5qWneua5FSWm56bm
+lRT75+VU2uiD5UCKkvNzQcJ2NvowFkgUamIxmKOPwksqzcxJCS5ITYbIoXLzEktKi1Kh2hAcuBGoTgQA
+UEsHCBf9+FaOAAAA4QAAAFBLAQIUABQACAAIAAAAIQAX/fhWjgAAAOEAAAAIAAAAAAAAAAAAAAAAAAAA
+AAAuY29udGVudFBLBQYAAAAAAQABADYAAADEAAAAAAA=
+------=_contents/ChangeInFragmentsOnly/.project-ce0c800a-5a32-3e75-bc16-d5c1df2e2c1d--
+------=_contents/ChangeInFragmentsOnly/left/My.ecore-7771e038-0cf5-33ba-a802-ff09abbd223d
+Content-Type: q7/binary
+Entry-Name: contents/ChangeInFragmentsOnly/left/My.ecore
+
+UEsDBBQACAAIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVjssOgjAQRfck/EMzrqXIyhAKK0xc
+mJioiVvEoRBpS9oqfL4tPhJmeXLunZsVk+jJC7XplGSwiWIgKGt17yRncDnv1lso8jDIsFYa0/JY1Y+K
+I5lEl/5TiU+5HmlSxxm01g4ppeM4RkrwSGlOr4f9T5mbFhLWfTcYnEUUDU3iOKGl1yAMiDtZCZcYPr8h
+9zDD0/P2JYa0GhsGFo2NGl3xFQXqR9PlaofeUEsHCKOgEhapAAAA8AAAAFBLAQIUABQACAAIAAAAIQCj
+oBIWqQAAAPAAAAAIAAAAAAAAAAAAAAAAAAAAAAAuY29udGVudFBLBQYAAAAAAQABADYAAADfAAAAAAA=
+
+------=_contents/ChangeInFragmentsOnly/left/My.ecore-7771e038-0cf5-33ba-a802-ff09abbd223d--
+------=_contents/ChangeInFragmentsOnly/right/My.ecore-dc678d60-acd8-3bf6-8da0-7e4985f1d556
+Content-Type: q7/binary
+Entry-Name: contents/ChangeInFragmentsOnly/right/My.ecore
+
+UEsDBBQACAAIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVjssOgjAQRfck/EMzrqXIyhAKK0xc
+mJioiVvEoRBpS9oqfL4tPhJmeXLunZsVk+jJC7XplGSwiWIgKGt17yRncDnv1lso8jDIsFYa0/JY1Y+K
+I5lEl/5TiU+5HmlSxxm01g4ppeM4RkrwSGlOr4f9T5mbFhLWfTcYnEUUDU3iOKGl1yAMiDtZCZcYPr8h
+9zDD0/P2JYa0GhsGFo2NGl3xFQXqR9PlaofeUEsHCKOgEhapAAAA8AAAAFBLAQIUABQACAAIAAAAIQCj
+oBIWqQAAAPAAAAAIAAAAAAAAAAAAAAAAAAAAAAAuY29udGVudFBLBQYAAAAAAQABADYAAADfAAAAAAA=
+
+------=_contents/ChangeInFragmentsOnly/right/My.ecore-dc678d60-acd8-3bf6-8da0-7e4985f1d556--
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf
+Content-Type: q7/binary
+Entry-Name: .q7.content
+
+UEsDBBQACAAIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnS1ksFOwzAMhu9IvEOU+5IWAUNVyw4V
+iIIGgsu4VVWaph1t0iUZ7d4eb0u7aWISF26x/8/+bSvhrG9q9M21qZSMsE88jLhkKq+kiPDaFpM7PLu/
+vAiZakivNM/Jako6pb9MmzEeLIZXrKTlvUV9UwVju6ttOzCQJoB8hEtr24DSruuIagRRWtDPeTIgv1uM
+VRR0utPpakpHnXAGOYxk1gBrjefdppZ5np+ezoZRlUc4LZYpS54+Fg/8Zf38euNPWJxcv2NYEiFYE1Bp
+dwGErVZLzqxx3eMyk4In8lFnogHMvMl6gx0MeFHVfGCJq8X0SFd1DrdxRM0Leyg+KZ9v3GL0HGG5saSA
+SY4dqLM456krUf63aUiHs+1vSg9H3b7/9I+A/QFQSwcIRRYsDiMBAACbAgAAUEsBAhQAFAAIAAgAAAAh
+AEUWLA4jAQAAmwIAAAgAAAAAAAAAAAAAAAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAFkBAAAA
+AA==
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf--
+------=_contents/ChangeInFragmentsOnly/left/test.frag-4a732a6c-ef62-3dec-a296-381d03dabcce
+Content-Type: q7/binary
+Entry-Name: contents/ChangeInFragmentsOnly/left/test.frag
+
+UEsDBBQACAAIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVztEKwiAYBeD7oHeQ/wF0eSlbI2IX
+QkHQTbfi/pk0dai0PX5uUNDt4TuHU7eLG8kbY7LBN3CgFRD0OvTWmwZO97OU0B73uxp1iCi6m9IvZZAs
+zopfi6+tsuOTKHkDz5wnwdg8zzQ4Q0M07HGVX7It/SHUo50SbhDdwHhVcdatDIhXruAhKuPQZ+wvOGRg
+5dEHUEsHCMXpM5iRAAAAugAAAFBLAQIUABQACAAIAAAAIQDF6TOYkQAAALoAAAAIAAAAAAAAAAAAAAAA
+AAAAAAAuY29udGVudFBLBQYAAAAAAQABADYAAADHAAAAAAA=
+------=_contents/ChangeInFragmentsOnly/left/test.frag-4a732a6c-ef62-3dec-a296-381d03dabcce--

@@ -1,0 +1,5 @@
+NODES
+
+Ecore
+
+Local HIDE with connected edges - 2way

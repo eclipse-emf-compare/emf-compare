@@ -1,0 +1,54 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_K5UUwHaDEeKMw-FYxgWKUg
+Element-Name: ts003_tc005_filter_empty_resource_mappings
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: http://wiki.eclipse.org/EMF_Compare/Specifications/ExtensionPointForFiltersAndGroups
+Id: _SAOigXaCEeKMw-FYxgWKUg
+Q7-Runtime-Version: 1.3.10.201312200736
+Save-Time: 4/3/14 3:37 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate that the filter "Empty Resource Mappings" works in the structure merge viewer.
+
+TEST STEPS
+	1) Select the 2 uml models and run a 2-way comparison (select left.uml and right.uml)
+	2) In the structure merge viewer, there must be only one match resource item matching the fragmented resources and containing one difference.
+		//asserts that the structure merge viewer contains one match resource item that contains one difference.
+	3) Unselect the filter "Empty Resource Mappings".
+	4) In the structure merge viewer, there must be two match resource items. One matching the fragmented resources and containing one difference, and one matching the left.uml and right.uml resources that is empty.
+		//asserts that the structure merge viewer contains the two match resource items: the first is empty and the last contains one difference.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Package Explorer" | get-tree] {
+    select "EmptyResourceMappings/left.uml" "EmptyResourceMappings/right.uml"
+    get-menu "Compare With/Each Other" | click
+}
+with [get-editor "Compare (\'EmptyResourceMappings/left.uml\' - \'EmptyResourceMappings/right.uml\')" | get-tree] {
+    get-property itemCount | equals 1 | verify-true
+    get-property "getItems().TreeItem[0].getText()" | equals "leftFragment.uml <-> rightFragment.uml" | verify-true
+    get-property "getItems().TreeItem[0].getItemCount()" | equals 1 | verify-true
+}
+get-editor "Compare (\'EmptyResourceMappings/left.uml\' - \'EmptyResourceMappings/right.uml\')" | get-button Filters 
+    | click -arrow
+get-menu "Empty resource mappings" | click
+
+get-window "Filters preference" | get-button No | click
+
+with [get-editor "Compare (\'EmptyResourceMappings/left.uml\' - \'EmptyResourceMappings/right.uml\')" | get-tree] {
+    get-property itemCount | equals 2 | verify-true
+    get-property "getItems().TreeItem[0].getText()" | equals "left.uml <-> right.uml" | verify-true
+    get-property "getItems().TreeItem[0].getItemCount()" | equals 0 | verify-true
+    get-property "getItems().TreeItem[1].getText()" | equals "leftFragment.uml <-> rightFragment.uml" | verify-true
+    get-property "getItems().TreeItem[1].getItemCount()" | equals 1 | verify-true
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

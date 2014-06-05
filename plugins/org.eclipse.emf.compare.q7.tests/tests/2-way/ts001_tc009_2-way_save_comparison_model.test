@@ -1,0 +1,55 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_jRtbsGrtEeK_JdLra2Bk5A
+Element-Name: ts001_tc009_2-way_save_comparison_model
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _xFUuEHaJEeKMw-FYxgWKUg
+Q7-Runtime-Version: 1.3.10.201312200736
+Save-Time: 5/23/14 11:06 AM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate the save comparison model action on a the 2-way comparison.
+
+TEST STEPS
+	1) Select the 2 ecore models and run a 2-way comparison (select extlibraryLeft.ecore and extLibraryRight.ecore)
+	//asserts that the 2 models are selected and the last one (extLibraryOrigin.ecore) is not.
+	2) Click on 'Save Comparison Model' button on the compare editor. Save the model with name results.xmi in the project Library.
+	3) Refresh the Library folder.
+	4) Select the results.xmi model and open with sample reflective ecore model editor.
+	//asserts that the editor opened contains  1 item.
+	5) Expand the item in the editor.
+	//asserts  that the editor opened contains 3 items.
+	
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+get-view "Package Explorer" | get-tree | select "Library/extlibraryLeft.ecore" "Library/extlibraryRight.ecore"
+with [get-view "Package Explorer" | get-tree] {
+    get-item "Library/extlibraryRight.ecore" | get-property selected | equals true | verify-true
+    get-item "Library/extlibraryLeft.ecore" | get-property selected | equals true | verify-true
+    get-item "Library/extlibraryOrigin.ecore" | get-property selected | equals false | verify-true
+    get-menu "Compare With/Each Other" | click
+}
+get-tab-folder -index 1 | get-property activePage | contains "Compare" | verify-true
+set-dialog-result File "platform:/resource/Library/results.xmi"
+get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" 
+    | get-button "Save Comparison Model" | click
+get-view "Package Explorer" | get-tree | select Library | get-menu Refresh | click
+get-view "Package Explorer" | get-tree | select "Library/results.xmi" 
+    | get-menu "Open With/Sample Reflective Ecore Model Editor" | click
+
+
+get-editor "results.xmi" | get-tree | get-item "platform:\\/resource\\/Library\\/results.xmi" | click
+get-editor "results.xmi" | get-tree | get-item "platform:\\/resource\\/Library\\/results.xmi" | expand-all
+get-editor "results.xmi" | get-tree | get-property itemCount | equals 3 | verify-true
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

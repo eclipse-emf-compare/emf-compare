@@ -1,0 +1,98 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_95qWYO0xEeKbEo9e9Onwdw
+Element-Name: ts010_tc009_3-way_conflicts_ChangeCoordEdge_ChangeCoordEdge
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _N0NRQO1jEeKbEo9e9Onwdw
+Save-Time: 7/15/13 5:40 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+TEST STEPS
+	1) Select the 3 UML models and run a 3-way comparison
+
+	2) Select the look CHANGE of the edge
+		-> A marker has to be drawn, on the left side:
+			RED POLYLINE
+ 			LOCATION: (299, 200)
+			SIZE (242, 40)
+			LINE WIDTH: 2
+
+		-> A marker has to be drawn, on the left side:
+			RED POLYLINE
+ 			LOCATION: (299, 231)
+			SIZE (241, 14)
+			LINE WIDTH: 2
+
+		-> A marker has to be drawn, on the left side:
+			RED POLYLINE
+ 			LOCATION: (298, 201)
+			SIZE (242, 44)
+			LINE WIDTH: 2
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Package Explorer" | get-tree] {
+    select "CompareDiagrams/ts010_tc009/ancestor.di" "CompareDiagrams/ts010_tc009/left.di" "CompareDiagrams/ts010_tc009/right.di"
+    get-menu "Compare With/Each Other" | click
+}
+get-window "Select Common Ancestor" | get-button OK | click
+with [get-editor "Compare (\'CompareDiagrams/ts010_tc009/right.di\' - \'CompareDiagrams/ts010_tc009/left.di\' - \'CompareDiagrams/ts010_tc009/right.di\')"] {
+    get-tree 
+        | select "> Diagram NewDiagram <Model> model/> Connector <Association> class1_class2_1/Connector <Association> class1_class2_1 \\[look change\\]" 
+        | double-click
+    get-button "Show Ancestor Pane" | click
+}
+with [get-editor "Compare (\'CompareDiagrams/ts010_tc009/right.di\' - \'CompareDiagrams/ts010_tc009/left.di\' - \'CompareDiagrams/ts010_tc009/right.di\')"] {
+    with [get-diagram -index 1 | get-edit-part -name model] {
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getLineWidth()" 
+            | equals 2 | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getForegroundColor()" 
+            | equals "#FF0000" | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getLocation().x" 
+            | equals 299 | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getLocation().y" 
+            | equals 200 | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getSize().width" 
+            | equals 242 | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getSize().height" 
+            | equals 40 | verify-true
+    }
+    with [get-diagram -index 2 | get-edit-part -name model] {
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getLineWidth()" 
+            | equals 2 | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getForegroundColor()" 
+            | equals "#FF0000" | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getLocation().x" 
+            | equals 299 | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getLocation().y" 
+            | equals 231 | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getSize().width" 
+            | equals 241 | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getSize().height" 
+            | equals 14 | verify-true
+    }
+    with [get-diagram | get-edit-part -name model] {
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getLineWidth()" 
+            | equals 2 | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getForegroundColor()" 
+            | equals "#FF0000" | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getLocation().x" 
+            | equals 298 | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getLocation().y" 
+            | equals 201 | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getSize().width" 
+            | equals 242 | verify-true
+        get-property "getViewport().getChildren().FreeformLayeredPane[0].getChildren().DiagramScalableFreeformLayeredPane[0].getChildren().FreeformLayeredPane[1].getChildren().ConnectionLayerEx[1].getChildren().Polygon[1].getSize().height" 
+            | equals 44 | verify-true
+    }
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

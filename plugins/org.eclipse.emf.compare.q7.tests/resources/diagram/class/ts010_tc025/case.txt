@@ -1,0 +1,3 @@
+NODES
+
+Local DELETE node with connected edges - 2way

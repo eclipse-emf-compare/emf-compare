@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_QJHXMJcAEeKJY-lwcQVsuw" type="PapyrusUMLClassDiagram" name="A" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="_fI_24JcAEeKJY-lwcQVsuw" type="2007" fontHeight="8" lineColor="0">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_fJSx0JcAEeKJY-lwcQVsuw" source="ShadowFigure">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_fJSx0ZcAEeKJY-lwcQVsuw" key="ShadowFigure_Value" value="false"/>
+    </eAnnotations>
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_fJSx0pcAEeKJY-lwcQVsuw" source="displayNameLabelIcon">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_fJSx05cAEeKJY-lwcQVsuw" key="displayNameLabelIcon_value" value="false"/>
+    </eAnnotations>
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_fJSx1JcAEeKJY-lwcQVsuw" source="QualifiedName">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_fJSx1ZcAEeKJY-lwcQVsuw" key="QualifiedNameDepth" value="1000"/>
+    </eAnnotations>
+    <children xmi:type="notation:DecorationNode" xmi:id="_fJSx1pcAEeKJY-lwcQVsuw" type="5026"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_fJSx15cAEeKJY-lwcQVsuw" type="7016">
+      <styles xmi:type="notation:TitleStyle" xmi:id="_fJSx2JcAEeKJY-lwcQVsuw"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_fJSx2ZcAEeKJY-lwcQVsuw"/>
+    </children>
+    <element xmi:type="uml:Package" href="right.uml#_fGxCQJcAEeKJY-lwcQVsuw"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_fI_24ZcAEeKJY-lwcQVsuw" x="186" y="149"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_QJHXMZcAEeKJY-lwcQVsuw"/>
+  <element xmi:type="uml:Model" href="right.uml#_QIhhUJcAEeKJY-lwcQVsuw"/>
+</notation:Diagram>

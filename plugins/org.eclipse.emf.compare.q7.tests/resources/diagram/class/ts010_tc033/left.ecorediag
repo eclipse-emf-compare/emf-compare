@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmi:id="_tp52YLuxEeK6VOXOz-rTUA" type="EcoreTools" name="right" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="_vDvXILuxEeK6VOXOz-rTUA" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_vD1dwLuxEeK6VOXOz-rTUA" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_vD1dwbuxEeK6VOXOz-rTUA" type="5001">
+      <children xmi:type="notation:Node" xmi:id="_wQ5GwLuxEeK6VOXOz-rTUA" type="2001">
+        <element xmi:type="ecore:EAttribute" href="left.ecore#//EClass0/a"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_wQ5GwbuxEeK6VOXOz-rTUA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_gpYw8LuyEeK6VOXOz-rTUA" type="2001">
+        <element xmi:type="ecore:EAttribute" href="left.ecore#//EClass0/d"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_gpYw8buyEeK6VOXOz-rTUA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_xr33ALuxEeK6VOXOz-rTUA" visible="false" type="2001">
+        <element xmi:type="ecore:EAttribute" href="left.ecore#//EClass0/b"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_xr33AbuxEeK6VOXOz-rTUA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_2B9tgLuxEeK6VOXOz-rTUA" type="2001">
+        <element xmi:type="ecore:EAttribute" href="left.ecore#//EClass0/c"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_2B9tgbuxEeK6VOXOz-rTUA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_kzdksLuyEeK6VOXOz-rTUA" type="2001">
+        <element xmi:type="ecore:EAttribute" href="left.ecore#//EClass0/f"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_kzdksbuyEeK6VOXOz-rTUA"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_vD1dwruxEeK6VOXOz-rTUA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_vD1dw7uxEeK6VOXOz-rTUA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_vD1dxLuxEeK6VOXOz-rTUA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vD1dxbuxEeK6VOXOz-rTUA" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_vD1dxruxEeK6VOXOz-rTUA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_vD1dx7uxEeK6VOXOz-rTUA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_vD1dyLuxEeK6VOXOz-rTUA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_vDvXIbuxEeK6VOXOz-rTUA" fontColor="4210752" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="left.ecore#//EClass0"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vDvXIruxEeK6VOXOz-rTUA" x="172" y="123" width="286" height="285"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_tp52YbuxEeK6VOXOz-rTUA"/>
+  <element xmi:type="ecore:EPackage" href="left.ecore#/"/>
+</notation:Diagram>

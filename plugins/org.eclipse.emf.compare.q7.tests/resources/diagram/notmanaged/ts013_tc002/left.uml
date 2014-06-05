@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_MOrU8MhjEeKtmrBQDDVaRg" name="model">
+  <packagedElement xmi:type="uml:Class" xmi:id="_N_TlEMhjEeKtmrBQDDVaRg" name="Class1">
+    <ownedAttribute xmi:id="_VQsvEMhjEeKtmrBQDDVaRg" name="class2" type="_RlVQkMhjEeKtmrBQDDVaRg" association="_VQ48UMhjEeKtmrBQDDVaRg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_VQsvEchjEeKtmrBQDDVaRg" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_VQsvEshjEeKtmrBQDDVaRg" value="1"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_RlVQkMhjEeKtmrBQDDVaRg" name="Class2"/>
+  <packagedElement xmi:type="uml:Association" xmi:id="_VQ48UMhjEeKtmrBQDDVaRg" name="class1_class2_1" memberEnd="_VQ48UchjEeKtmrBQDDVaRg _VQsvEMhjEeKtmrBQDDVaRg">
+    <ownedEnd xmi:id="_VQ48UchjEeKtmrBQDDVaRg" name="class1" type="_N_TlEMhjEeKtmrBQDDVaRg" association="_VQ48UMhjEeKtmrBQDDVaRg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_VQ48UshjEeKtmrBQDDVaRg" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_VQ48U8hjEeKtmrBQDDVaRg" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_YF5akMhjEeKtmrBQDDVaRg" name="Class3">
+    <ownedAttribute xmi:id="_h4XaMMhjEeKtmrBQDDVaRg" name="class1_class2_1" type="_VQ48UMhjEeKtmrBQDDVaRg" association="_h4XaM8hjEeKtmrBQDDVaRg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_h4XaMchjEeKtmrBQDDVaRg" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_h4XaMshjEeKtmrBQDDVaRg" value="1"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_h4XaM8hjEeKtmrBQDDVaRg" name="class3_class1_class2_1_1" memberEnd="_h4XaNMhjEeKtmrBQDDVaRg _h4XaMMhjEeKtmrBQDDVaRg">
+    <ownedEnd xmi:id="_h4XaNMhjEeKtmrBQDDVaRg" name="class3" type="_YF5akMhjEeKtmrBQDDVaRg" association="_h4XaM8hjEeKtmrBQDDVaRg">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_h4XaNchjEeKtmrBQDDVaRg" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_h4XaNshjEeKtmrBQDDVaRg" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+</uml:Model>

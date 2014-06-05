@@ -1,0 +1,27 @@
+** Nodes / ADD cases **
+
++ Cases: 
+	- ADD Class Node
+		- ADD Property Nodes
+		- ADD Operation Nodes
+	- ADD DataType Node
+	- ADD Model Node
+		- ADD Class Node
+	- ADD Package Node
+	 
++ Result:
+	- 4 graphical differences on the diagram:
+		- ADD Class Node (addClass1UnderDiagram.PNG)
+		- ADD DataType Node (addDataType1UnderDiagram.PNG)
+		- ADD Model Node (addModel1UnderDiagram.PNG)
+		- ADD Package Node (addPackage1UnderDiagram.PNG)
+		
++ Scenario:
+	- Uncheck "Sub diff elements" filter
+		-> 4 additional differences are displayed under the previous ones, in matches tree:
+			- 2 ADD Property Node under ADD Class Node (addProperty1UnderClass1.PNG and addProperty2UnderClass1.PNG)
+			- 1 ADD Operation Node under ADD Class Node (addOperation1UnderClass1.PNG)
+			- 1 ADD Class Node under ADD Model Node (addClass1UnderModel1.PNG)
+	- Check "Sub diff elements" filter while a sub-difference is selected
+		-> All is hidden in the content graphical merge viewer (no selection in the structure viewer).
+	

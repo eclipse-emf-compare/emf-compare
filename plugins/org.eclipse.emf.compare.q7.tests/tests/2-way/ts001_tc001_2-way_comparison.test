@@ -1,0 +1,35 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_jRtbsGrtEeK_JdLra2Bk5A
+Element-Name: ts001_tc001_2-way_comparison
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _p7kc4GrzEeK_JdLra2Bk5A
+Save-Time: 2/7/13 3:33 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate the 2-way comparison.
+
+TEST STEPS
+	1) Select the 2 ecore models and run a 2-way comparison (select extlibraryLeft.ecore and extLibraryRight.ecore) //asserts that the 2 models are selected and the last one (extLibraryOrigin.ecore) is not.
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+get-view "Package Explorer" | get-tree | select "Library/extlibraryLeft.ecore" "Library/extlibraryRight.ecore"
+with [get-view "Package Explorer" | get-tree] {
+    get-item "Library/extlibraryRight.ecore" | get-property selected | equals true | verify-true
+    get-item "Library/extlibraryLeft.ecore" | get-property selected | equals true | verify-true
+    get-item "Library/extlibraryOrigin.ecore" | get-property selected | equals false | verify-true
+    get-menu "Compare With/Each Other" | click
+}
+get-tab-folder -index 1 | get-property activePage | contains "Compare" | verify-true
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

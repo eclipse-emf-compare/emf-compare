@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_iCyeYMebEeKuBsFH8e83yA" name="model">
+  <packagedElement xmi:type="uml:Class" xmi:id="_l2pKgMebEeKuBsFH8e83yA" name="Class1">
+    <ownedAttribute xmi:id="_GmmAAMhAEeKsrNRL2CK8cg" name="prop2" visibility="public" isOrdered="true">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_LCaEAMhAEeKsrNRL2CK8cg" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_LCmRQMhAEeKsrNRL2CK8cg" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_LDK5AMhAEeKsrNRL2CK8cg">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_QA7zgMhAEeKsrNRL2CK8cg" name="prop1" visibility="public" isOrdered="true">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_RK8IgMhAEeKsrNRL2CK8cg" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_RLIVwMhAEeKsrNRL2CK8cg" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_RLs9gMhAEeKsrNRL2CK8cg">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_1v1o0MhAEeKsrNRL2CK8cg" name="Class2"/>
+</uml:Model>

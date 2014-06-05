@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_jFLEMMhmEeKY-_ysPtM4PA" name="model">
+  <packagedElement xmi:type="uml:Class" xmi:id="_lBuQcMhmEeKY-_ysPtM4PA" name="Class1">
+    <ownedAttribute xmi:id="_yKsR0MhmEeKY-_ysPtM4PA" name="class2" type="_lui6MMhmEeKY-_ysPtM4PA" association="_yKyYcshmEeKY-_ysPtM4PA">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_yKyYcMhmEeKY-_ysPtM4PA" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_yKyYcchmEeKY-_ysPtM4PA" value="1"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_lui6MMhmEeKY-_ysPtM4PA" name="Class2"/>
+  <packagedElement xmi:type="uml:AssociationClass" xmi:id="_yKyYcshmEeKY-_ysPtM4PA" name="AssociationClass1" memberEnd="_yKyYc8hmEeKY-_ysPtM4PA _yKsR0MhmEeKY-_ysPtM4PA">
+    <ownedEnd xmi:id="_yKyYc8hmEeKY-_ysPtM4PA" name="class1" type="_lBuQcMhmEeKY-_ysPtM4PA" association="_yKyYcshmEeKY-_ysPtM4PA">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_yKyYdMhmEeKY-_ysPtM4PA" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_yKyYdchmEeKY-_ysPtM4PA" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+</uml:Model>

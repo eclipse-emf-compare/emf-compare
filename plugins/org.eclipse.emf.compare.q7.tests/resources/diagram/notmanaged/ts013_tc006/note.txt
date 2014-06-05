@@ -1,0 +1,1 @@
+like ts013_tc004 but moving Class1 (force to compute and serialize size !)

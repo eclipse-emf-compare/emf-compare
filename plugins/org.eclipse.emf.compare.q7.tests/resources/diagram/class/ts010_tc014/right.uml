@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_QILKUHBkEeK-RrV7eVjvXA" name="model">
+  <packagedElement xmi:type="uml:Class" xmi:id="_YOr-cHBkEeK-RrV7eVjvXA" name="B">
+    <ownedAttribute xmi:id="_eFYsEHBkEeK-RrV7eVjvXA" name="feature1"/>
+    <ownedAttribute xmi:id="_gZCJsHBkEeK-RrV7eVjvXA" name="feature2"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_wFjF4HBkEeK-RrV7eVjvXA" name="D">
+    <packagedElement xmi:type="uml:Class" xmi:id="_zknNwHBkEeK-RrV7eVjvXA" name="E"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_3dhZAHBkEeK-RrV7eVjvXA" name="K">
+    <ownedAttribute xmi:id="_8iQeMHBkEeK-RrV7eVjvXA" name="feature1"/>
+    <ownedAttribute xmi:id="__ONuIHBkEeK-RrV7eVjvXA" name="feature2"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_HDeaMHBlEeK-RrV7eVjvXA" clientDependency="_jsHjsHBnEeK-RrV7eVjvXA" name="H">
+    <ownedAttribute xmi:id="_3tfAQHBnEeK-RrV7eVjvXA" name="feature4"/>
+    <ownedAttribute xmi:id="_8Kc60HBnEeK-RrV7eVjvXA" name="feature5"/>
+    <ownedAttribute xmi:id="_Pa4KAHBlEeK-RrV7eVjvXA" name="feature1"/>
+    <ownedAttribute xmi:id="_TVbUAHBlEeK-RrV7eVjvXA" name="feature3"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_XhzN0HBlEeK-RrV7eVjvXA" name="Class1"/>
+  <packagedElement xmi:type="uml:Package" xmi:id="_aqvUsHBlEeK-RrV7eVjvXA" name="F"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_jo8l0HBlEeK-RrV7eVjvXA" name="J"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_U5uGYHBnEeK-RrV7eVjvXA" name="I"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_jsHjsHBnEeK-RrV7eVjvXA" name="Dependency1" client="_HDeaMHBlEeK-RrV7eVjvXA" supplier="_aqvUsHBlEeK-RrV7eVjvXA"/>
+</uml:Model>

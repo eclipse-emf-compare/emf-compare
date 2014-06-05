@@ -1,0 +1,4 @@
+** Conflicting case **
+
+ADD child on one side
+DELETE parent on the other side

@@ -1,0 +1,42 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Element-Name: ts005-egit
+Element-Type: testsuite
+Element-Version: 2.0
+Id: _nfxl8G9_EeKmUfxl9qSLpg
+Q7-Runtime-Version: 1.3.10.201312200736
+Save-Time: 4/9/14 4:22 PM
+Tags: EGit
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Test suite for egit comparison tests.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8
+Content-Type: text/testcase
+Entry-Name: testcase-items
+
+_EbIXcG9_EeKmUfxl9qSLpg	// kind: 'test' name: 'ts005_tc001_compare_with_commit' path: 'egit/ts005_tc001_compare_with_commit.test'
+_yOSGQHBfEeKTzKjv1SXOgA	// kind: 'test' name: 'ts005_tc002_compare_with_previous_revision' path: 'egit/ts005_tc002_compare_with_previous_revision.test'
+_EPKxIXHGEeKdUID_O17CDg	// kind: 'test' name: 'ts005_tc004_compare_with_version_in_ancestor' path: 'egit/ts005_tc004_compare_with_version_in_ancestor.test'
+_2IeNUXHzEeKUuY9Bwmpkkw	// kind: 'test' name: 'ts005_tc005_commit_viewer_compare_with_version_in_ancestor' path: 'egit/ts005_tc005_commit_viewer_compare_with_version_in_ancestor.test'
+_wuFy0HH0EeKUuY9Bwmpkkw	// kind: 'test' name: 'ts005_tc006_compare_with_head_revision' path: 'egit/ts005_tc006_compare_with_head_revision.test'
+_MVy5MHH2EeKUuY9Bwmpkkw	// kind: 'test' name: 'ts005_tc007_compare_with_branch_master' path: 'egit/ts005_tc007_compare_with_branch_master.test'
+_we3ZIHH2EeKUuY9Bwmpkkw	// kind: 'test' name: 'ts005_tc008_compare_with_reference' path: 'egit/ts005_tc008_compare_with_reference.test'
+_NUNz0HH3EeKUuY9Bwmpkkw	// kind: 'test' name: 'ts005_tc009_compare_with_git_index' path: 'egit/ts005_tc009_compare_with_git_index.test'
+_egRlQHH5EeKUuY9Bwmpkkw	// kind: 'test' name: 'ts005_tc010_replace_with_local_history' path: 'egit/ts005_tc010_replace_with_local_history.test'
+_GWL7oHIAEeKUuY9Bwmpkkw	// kind: 'test' name: 'ts005_tc011_compare_with_working_tree' path: 'egit/ts005_tc011_compare_with_working_tree.test'
+_oJTQ0HIAEeKUuY9Bwmpkkw	// kind: 'test' name: 'ts005_tc012_compare_with_working_directory' path: 'egit/ts005_tc012_compare_with_working_directory.test'
+_CPeSAHINEeKUuY9Bwmpkkw	// kind: 'test' name: 'ts005_tc013_save_emfdiff_disable' path: 'egit/ts005_tc013_save_emfdiff_disable.test'
+_JayasL_tEeOYOO8-bD9VkQ	// kind: 'test' name: 'ts005_tc003_git_repositories_compare_with_head' path: 'egit/ts005_tc003_git_repositories_compare_with_head.test'
+_qEHsEb_nEeOYOO8-bD9VkQ	// kind: 'test' name: 'ts005_tc014_compare_with_commit_from_editor' path: 'egit/ts005_tc014_compare_with_commit_from_editor.test'
+_XJ7BAL_pEeOYOO8-bD9VkQ	// kind: 'test' name: 'ts005_tc015_compare_with_previous_revision_from_editor' path: 'egit/ts005_tc015_compare_with_previous_revision_from_editor.test'
+_EVe_sL_rEeOYOO8-bD9VkQ	// kind: 'test' name: 'ts005_tc016_compare_with_head_revision_from_editor' path: 'egit/ts005_tc016_compare_with_head_revision_from_editor.test'
+_AcvXEL_sEeOYOO8-bD9VkQ	// kind: 'test' name: 'ts005_tc017_compare_with_git_index_from_editor' path: 'egit/ts005_tc017_compare_with_git_index_from_editor.test'
+_cR-YkL_sEeOYOO8-bD9VkQ	// kind: 'test' name: 'ts005_tc018_compare_with_branch_master_from_editor' path: 'egit/ts005_tc018_compare_with_branch_master_from_editor.test'
+_qrJEQL_xEeOYOO8-bD9VkQ	// kind: 'test' name: 'ts005_tc019_commit_viewer_compare_with_workspace' path: 'egit/ts005_tc019_commit_viewer_compare_with_workspace.test'
+
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8--

@@ -1,0 +1,4 @@
+** Conflicting case **
+
+ADD AssociationClass on one side
+DELETE target on the other side

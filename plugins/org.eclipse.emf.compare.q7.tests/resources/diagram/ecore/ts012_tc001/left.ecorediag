@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmi:id="_1jGZIMoIEeKzmMEB5cba3g" type="EcoreTools" name="right" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="_214PoMoIEeKzmMEB5cba3g" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_21-WQMoIEeKzmMEB5cba3g" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_21-WQcoIEeKzmMEB5cba3g" type="5001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_21-WQsoIEeKzmMEB5cba3g"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_21-WQ8oIEeKzmMEB5cba3g"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_21-WRMoIEeKzmMEB5cba3g"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_21-WRcoIEeKzmMEB5cba3g" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_21-WRsoIEeKzmMEB5cba3g"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_21-WR8oIEeKzmMEB5cba3g"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_21-WSMoIEeKzmMEB5cba3g"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_214PocoIEeKzmMEB5cba3g" fontColor="4210752" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="left.ecore#//EClass0"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_214PosoIEeKzmMEB5cba3g" x="140" y="156"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_3ialgMoIEeKzmMEB5cba3g" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_3ialg8oIEeKzmMEB5cba3g" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_3igsIMoIEeKzmMEB5cba3g" type="5001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_3igsIcoIEeKzmMEB5cba3g"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_3igsIsoIEeKzmMEB5cba3g"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_3igsI8oIEeKzmMEB5cba3g"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_3igsJMoIEeKzmMEB5cba3g" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_3igsJcoIEeKzmMEB5cba3g"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_3igsJsoIEeKzmMEB5cba3g"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_3igsJ8oIEeKzmMEB5cba3g"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_3ialgcoIEeKzmMEB5cba3g" fontColor="4210752" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="left.ecore#//EClass1"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3ialgsoIEeKzmMEB5cba3g" x="457" y="240"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_1jGZIcoIEeKzmMEB5cba3g"/>
+  <element xmi:type="ecore:EPackage" href="left.ecore#/"/>
+  <edges xmi:type="notation:Edge" xmi:id="_NaaMgMoJEeKzmMEB5cba3g" type="3002" source="_214PoMoIEeKzmMEB5cba3g" target="_3ialgMoIEeKzmMEB5cba3g">
+    <children xmi:type="notation:Node" xmi:id="_NagTIMoJEeKzmMEB5cba3g" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_NagTIcoJEeKzmMEB5cba3g" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_NagTIsoJEeKzmMEB5cba3g" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_NagTI8oJEeKzmMEB5cba3g" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_NaaMgcoJEeKzmMEB5cba3g" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_NaaMgsoJEeKzmMEB5cba3g" fontColor="4210752" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="left.ecore#//EClass0/EReference0"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_NaaMg8oJEeKzmMEB5cba3g" points="[18, 6, -239, -81]$[258, 101, 1, 14]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_NbLBgMoJEeKzmMEB5cba3g" id="(0.8235294117647058,0.5952380952380952)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_NbLBgcoJEeKzmMEB5cba3g" id="(0.22549019607843138,0.6666666666666666)"/>
+  </edges>
+</notation:Diagram>

@@ -1,0 +1,1 @@
+- The marker is not exactly "attached" to the edge when unzoom is made (conflictOnAddEdge.PNG) because the location of the edge seems to change ! 

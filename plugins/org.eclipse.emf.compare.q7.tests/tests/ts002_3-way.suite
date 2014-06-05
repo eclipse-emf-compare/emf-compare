@@ -1,0 +1,26 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Element-Name: ts002_3-way
+Element-Type: testsuite
+Element-Version: 2.0
+Id: _AZgWkGvFEeKSKM5olA1H5Q
+Save-Time: 2/14/13 10:47 AM
+Tags: 3-way
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Test suite for 3-way comparison tests.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8
+Content-Type: text/testcase
+Entry-Name: testcase-items
+
+_8ZQgMGrzEeK_JdLra2Bk5A	// kind: 'test' name: 'ts002_tc001_3-way_comparison' path: '3-way/ts002_tc001_3-way_comparison.test'
+_FnMz0HUjEeKHfa7Gozlrbw	// kind: 'test' name: 'ts002_tc002_3-way_resource_attachment_change_multiple_uml' path: '3-way/ts002_tc002_3-way_resource_attachment_change_multiple_uml.test'
+_Ku_zwHaGEeKMw-FYxgWKUg	// kind: 'test' name: 'ts002_tc003_3-way_show_ancestor_pane' path: '3-way/ts002_tc003_3-way_show_ancestor_pane.test'
+_HBa8gHaLEeKMw-FYxgWKUg	// kind: 'test' name: 'ts002_tc004_3-way_save_comparison_model' path: '3-way/ts002_tc004_3-way_save_comparison_model.test'
+
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8--

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_UqTchchuEeKY-_ysPtM4PA" name="model">
+  <packagedElement xmi:type="uml:Class" xmi:id="_V9zEoMhuEeKY-_ysPtM4PA" name="Class1">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_ft4eoMhuEeKY-_ysPtM4PA" name="Attribute1" visibility="public">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_gDEEcMhuEeKY-_ysPtM4PA" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_gDWYUMhuEeKY-_ysPtM4PA" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_gD05cMhuEeKY-_ysPtM4PA">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_o5jkAMhuEeKY-_ysPtM4PA" name="Attribute2" visibility="public">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_pOocIMhuEeKY-_ysPtM4PA" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_pO0pYMhuEeKY-_ysPtM4PA" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_pPfXwMhuEeKY-_ysPtM4PA">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_phUuoMhuEeKY-_ysPtM4PA" name="Attribute3" visibility="public">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_pt6ZIMhuEeKY-_ysPtM4PA" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_puGmYMhuEeKY-_ysPtM4PA" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_purOIMhuEeKY-_ysPtM4PA">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_qBv7IMhuEeKY-_ysPtM4PA" name="Attribute4" visibility="public">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_qIVEQMhuEeKY-_ysPtM4PA" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_qIhRgMhuEeKY-_ysPtM4PA" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_qI_yoMhuEeKY-_ysPtM4PA">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_1TptMMhuEeKY-_ysPtM4PA" name="Operation1"/>
+  </packagedElement>
+</uml:Model>

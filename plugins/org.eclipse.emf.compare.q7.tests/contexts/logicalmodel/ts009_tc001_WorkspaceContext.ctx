@@ -1,0 +1,77 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Context-Type: com.xored.q7.workspace.context
+Element-Name: ts009_tc001_WorkspaceContext
+Element-Type: context
+Element-Version: 2.0
+Id: _gO-6QN2bEeKlP8eyY8UqWw
+Save-Time: 6/25/13 3:31 PM
+
+------=_contents/LogicalModels_001/.project-de49fa9a-528a-35a4-ae78-fea276a0a6e7
+Content-Type: q7/binary
+Entry-Name: contents/LogicalModels_001/.project
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVjrsOwjAMRWeQ+IcqOyTdGNJ0qZhg
+AmYUHKsKyktJivh82lJA2XyOr6/M25c11RNj0t41pN4xUqEDr7TrG3K9HLZ70orNmofoHwi5wwRRhzym
+R7viTloUR99rkObkFZp0Y6zmdPZTALy16LLg9DtNdmlLM9CC7oM26hwQPrsSncxDxOXsD7+K8r03UEsH
+CB09uz6LAAAA3QAAAFBLAQIUABQACAgIAAAAIQAdPbs+iwAAAN0AAAAIAAAAAAAAAAAAAAAAAAAAAAAu
+Y29udGVudFBLBQYAAAAAAQABADYAAADBAAAAAAA=
+------=_contents/LogicalModels_001/.project-de49fa9a-528a-35a4-ae78-fea276a0a6e7--
+------=_contents/LogicalModels_001/left.ecore-8999224b-50bb-3973-a513-c8dcbf2de3fc
+Content-Type: q7/binary
+Entry-Name: contents/LogicalModels_001/left.ecore
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVkNFKwzAUhu8He4dwvF7T1RsJ7YaM
+DQYKwhS8jfE0DTZJSaKdb+9pNgfN5cn3/fzn1Nuz7dkPhmi8a2BdlMDQKf9pnG7g7fWweoDtZrmoUfmA
+Yv8i1ZfUyM7WiJtVTRbluCho3kCX0iA4H8ex8FYXPmj+/ny8IXGOjPeZqMpyTdjTSXVo5cq4mKRTCMsF
+o3dRc4mZjKo3Q8ScgLadUiq+nzBgTlqCg/cJNlNKjbtexmhaQ8UZ1RDpdyDiulr+/LcegV+d0/fHcFk6
+si5g20CPbToEqYss3vGM1nx+IRr9AVBLBwgTy77i4AAAAFwBAABQSwECFAAUAAgICAAAACEAE8u+4uAA
+AABcAQAACAAAAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAFgEAAAAA
+------=_contents/LogicalModels_001/left.ecore-8999224b-50bb-3973-a513-c8dcbf2de3fc--
+------=_contents/LogicalModels_001/leftFrag.ecore-b3be8d09-4fcd-3ff4-8697-2204ab0ff6f1
+Content-Type: q7/binary
+Entry-Name: contents/LogicalModels_001/leftFrag.ecore
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVj80KwjAQhO+C7xD2btPWi4RWD6WC
+oCCo4DXEtQabpDTF6tu7qT/QPc5+M8xkq6ep2QNbr53NIYliYGiVu2hb5XA6rmcLWC2nkwyVa1GUe6nu
+skL2NFr8XWlwUY71gvQcbl3XCM77vo+cqSLXVvy82/wRP0b6+UCkcZwQtj2oGxo509Z30iqE6YTRfaxD
+iZEZVa0bj0MCmmtISXkZMGBWGoKbBJYhI8Oilt7rq6bajEqI7tXQ/ztseP48BfCwmY9Hk/QGUEsHCGWb
+0dPEAAAALwEAAFBLAQIUABQACAgIAAAAIQBlm9HTxAAAAC8BAAAIAAAAAAAAAAAAAAAAAAAAAAAuY29u
+dGVudFBLBQYAAAAAAQABADYAAAD6AAAAAAA=
+------=_contents/LogicalModels_001/leftFrag.ecore-b3be8d09-4fcd-3ff4-8697-2204ab0ff6f1--
+------=_contents/LogicalModels_001/rightFrag.ecore-c3420137-f866-3898-b416-1c8c797fafc1
+Content-Type: q7/binary
+Entry-Name: contents/LogicalModels_001/rightFrag.ecore
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSVkMsKwjAQRfeC/xBmb1PrRkJbFz5A
+UBBUcBviWINNUppi9e+dxgd0aZYz51zuJJ09TMnuWHvtbAbjKAaGVrmztkUGx8NqNIVZPhykqFyNYrmT
+6iYLZA+jxc9KOotyrBc0z+DaNJXgvG3byJkicnXBT9v1D/F9pJ0EIonjMWGbvbqikSNtfSOtQhgOGL23
+Gkr0ZFSlrjyGBDSXLiXhyw4DZqUhuEog7zJSnJfSe33RVJtRCdE8K9p/DgvLrzMH/rezCE7K+x9FoxdQ
+SwcI3ldmlMkAAABjAQAAUEsBAhQAFAAICAgAAAAhAN5XZpTJAAAAYwEAAAgAAAAAAAAAAAAAAAAAAAAA
+AC5jb250ZW50UEsFBgAAAAABAAEANgAAAP8AAAAAAA==
+------=_contents/LogicalModels_001/rightFrag.ecore-c3420137-f866-3898-b416-1c8c797fafc1--
+------=_contents/LogicalModels_001/right.ecore-b9e77e48-637d-3a65-9f4f-02e27b223928
+Content-Type: q7/binary
+Entry-Name: contents/LogicalModels_001/right.ecore
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSVkNFqwjAUhu8F3yFk1za1uxmhVaYo
+DCYM3GC3MZ6mYU1SkmzVt99p3Aq9NJcn3/fzn1OuL6YlP+CDdraiyyynBKx0Z21VRT/e94snul7NZyVI
+54Hv3oT8EgrIxWg+WsVgYY4NHOcVbWLsOGN932fOqMx5xT4PLyMSpkj/mIgiz5eIvR5lA0YstA1RWAl0
+PiP4bmoqMZFBtroLkBLA1ENKwXYDRokVBmHvXKSrIaWEbStC0LXG4gRr8HjtkPhbLX3+W8+U3e1sRuf4
+fepuhwqk8VBjC62auPdCZcl8YIkt2fSsOPoFUEsHCPmQ5yDlAAAAkQEAAFBLAQIUABQACAgIAAAAIQD5
+kOcg5QAAAJEBAAAIAAAAAAAAAAAAAAAAAAAAAAAuY29udGVudFBLBQYAAAAAAQABADYAAAAbAQAAAAA=
+
+------=_contents/LogicalModels_001/right.ecore-b9e77e48-637d-3a65-9f4f-02e27b223928--
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf
+Content-Type: q7/binary
+Entry-Name: .q7.content
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSNkU9PhDAQxe8mfoem923ZPbgrAfdg
+NDG6/jmY1RPBMnSrpYVSBb+9swiYGLJ6m+n7zZt5abRuC00+wNXKmpjOWUAJGGEzZWRM330+W9H12fFR
+JGzBWusgY9WSNda91WUqINwO1bk1HlpP2kKFo91ib4cLTB3ie0x33pch503TMFtIZp3kT5urAZleMU5x
+1Hmn82rJR52BwDdKTFog6+sgOE28CIJ58vs2SlQW00TezU4ebhcvF3Ct71fw+bx6rLYNxZCEYExEje8a
+bEtnX0H4une/sVKJVG9sBrpOcAftQURzpWHgWD9H+bSuIff93QeIS5fKw5RTcveHUYdMOEV8yPYdnP8k
+39f/+mxkvwBQSwcI037D6g4BAABAAgAAUEsBAhQAFAAICAgAAAAhANN+w+oOAQAAQAIAAAgAAAAAAAAA
+AAAAAAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAEQBAAAAAA==
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf--

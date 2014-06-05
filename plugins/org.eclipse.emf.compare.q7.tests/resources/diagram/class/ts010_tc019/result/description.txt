@@ -1,0 +1,10 @@
+** Nodes / conflict cases **
+
++ Case: CHANGE coordinates of a Node from one side - DELETE of the same Node from the other side.
+
++ Result: Conflict between the 2 differences
+	- DELETE of the package Node (children delete) -> markers on left and ancestor side + phantom on right side (same location as the ancestor).
+	(screen shot "conflictOnDelete.PNG")
+	- Coordinates CHANGE of the package Node (coordinates change) -> markers on left and ancestor side only.
+	(screen shot "conflictOnChange.PNG")
+	

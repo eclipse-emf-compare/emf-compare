@@ -1,0 +1,4 @@
+** Conflicting case **
+
+CHANGE Edge on one side
+DELETE target on the other side

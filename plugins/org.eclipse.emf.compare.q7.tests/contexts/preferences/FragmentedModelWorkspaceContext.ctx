@@ -1,0 +1,116 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Context-Type: com.xored.q7.workspace.context
+Element-Name: FragmentedModelWorkspaceContext
+Element-Type: context
+Element-Version: 2.0
+Id: _j3wW4L8rEeO668you7X_bw
+Q7-Runtime-Version: 1.3.10.201312200736
+Save-Time: 6/3/14 6:24 PM
+
+------=_contents/FragmentedModel/expectedResult/NoResolutionModelTree_frag.csv-f279e643-709a-392c-afd6-8805fa1ab15a
+Content-Type: q7/binary
+Entry-Name: contents/FragmentedModel/expectedResult/NoResolutionModelTree_frag.csv
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSLz8xLSc0r0SlJrSjhMtCxU0grSkzP
+BYqkpvikppVwGeqgCihE5yXmpiokZyTmpaemxHIBAFBLBwjKnZm8NQAAAEAAAABQSwECFAAUAAgICAAA
+ACEAyp2ZvDUAAABAAAAACAAAAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAawAA
+AAAA
+------=_contents/FragmentedModel/expectedResult/NoResolutionModelTree_frag.csv-f279e643-709a-392c-afd6-8805fa1ab15a--
+------=_contents/FragmentedModel/right/My.ecore-330dafba-1af0-3c72-b721-baa1256ceeba
+Content-Type: q7/binary
+Entry-Name: contents/FragmentedModel/right/My.ecore
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVjskOgjAQhu8kvEMznqXIyTQsJ0w8
+mBiXxGvFoTTSlrQoPL4Fl8Q5/vP9S1qMqiVPtE4ancEqioGgrsxNapHB+bRZrqHIwyDFylhk5Z5Xdy6Q
+jEqynyuZXD5HO+b1DJq+7xilwzBERonIWEEvu+0XmZP+IKxa2TmcQVQ1TeI4oeWEQRgQf5or7+je3Qcp
+mh7y6ZPi8XH9yI40FusMastFNHcsKNBpOv3f7qUXUEsHCIusoOGsAAAA9gAAAFBLAQIUABQACAgIAAAA
+IQCLrKDhrAAAAPYAAAAIAAAAAAAAAAAAAAAAAAAAAAAuY29udGVudFBLBQYAAAAAAQABADYAAADiAAAA
+AAA=
+------=_contents/FragmentedModel/right/My.ecore-330dafba-1af0-3c72-b721-baa1256ceeba--
+------=_contents/FragmentedModel/.project-1b702929-4aa1-3f38-bf66-c4aa504ba48f
+Content-Type: q7/binary
+Entry-Name: contents/FragmentedModel/.project
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVjrEOwiAQhmdNfIeGXdHN4UoX081J
+fQCES4OBgwA1Pr6lVg3bff939+egeznbPDEm46llh92eNUjKa0NDy27XfntkndisIUT/QJVPmFQ0IU/b
+U7oCkg5FH+XgkDLqs9dogc9p0cq7IgTw71TSpSvNwCu6j8bqS0D1cTWSzGPE5ewPv4r6uTdQSwcI5KT/
+8IcAAADbAAAAUEsBAhQAFAAICAgAAAAhAOSk//CHAAAA2wAAAAgAAAAAAAAAAAAAAAAAAAAAAC5jb250
+ZW50UEsFBgAAAAABAAEANgAAAL0AAAAAAA==
+------=_contents/FragmentedModel/.project-1b702929-4aa1-3f38-bf66-c4aa504ba48f--
+------=_contents/FragmentedModel/left/frag.ecore-484a853c-3781-335e-b53f-7774f1e5e651
+Content-Type: q7/binary
+Entry-Name: contents/FragmentedModel/left/frag.ecore
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVjrsKgzAUhnfBdwjpntiM4oVSHIQW
+Ci7dSqonUWoSiWn18RuVFjzjf77/kuSz6tEH7NgZneIjiTACXZum0zLFp+pcljjPwiCB2liIixuvX1wC
+mlUX/11scfkcPcZeT3Hr3BBTOk0TMUoSYyW9X8sfsibtIKj7bhhhBUEJyqKI0WLBcBggf5or7xCWSwXa
+QXMB4XC2/BKo3s9hGzWi1oLYuAcja8+BYrrMp/v9XvoCUEsHCF6cim+vAAAA+gAAAFBLAQIUABQACAgI
+AAAAIQBenIpvrwAAAPoAAAAIAAAAAAAAAAAAAAAAAAAAAAAuY29udGVudFBLBQYAAAAAAQABADYAAADl
+AAAAAAA=
+------=_contents/FragmentedModel/left/frag.ecore-484a853c-3781-335e-b53f-7774f1e5e651--
+------=_contents/FragmentedModel/right/frag.ecore-aae03cd5-2033-360b-afad-0d0231ff34b8
+Content-Type: q7/binary
+Entry-Name: contents/FragmentedModel/right/frag.ecore
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVj80OgjAQhO8kvENT7xQ5En5iDAcO
+JkYu3gyWpTTSlrRVeHxbiCbscfab2dmsXMSIPqANVzLHxyjGCCRVHZcsx6fmXNe4LMIgA6o0pNW1pa+W
+AVoET/+uxLtcjjSp03M8WDulhMzzHCnBIqUZuV/qH7Im7SCgI58MrCCIniRxnJDKYzgMkBvZCufodcsE
+SAvdjbPB4sIvM2jez2lrZdCgod/ARxKthw4EE9+f7B9w0hdQSwcIZLly1LEAAAD7AAAAUEsBAhQAFAAI
+CAgAAAAhAGS5ctSxAAAA+wAAAAgAAAAAAAAAAAAAAAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAA
+AOcAAAAAAA==
+------=_contents/FragmentedModel/right/frag.ecore-aae03cd5-2033-360b-afad-0d0231ff34b8--
+------=_contents/FragmentedModel/right/frag_2.ecore-e3a870d6-5dd6-37af-9198-0b504cf5f9b8
+Content-Type: q7/binary
+Entry-Name: contents/FragmentedModel/right/frag_2.ecore
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVjkEKgzAURPeCdwj/AMZmGbRSioss
+CqXddBviNwZNIjFUj98otNBZDu8NUzWbncgbw2K8q+FUlEDQKd8Zp2u4PK9CQHPOswqVD8jbu1Sj1Eg2
+a/jPYruVdtzCU1/DEOPMKV3XtfBWFz5o+rqJL3Is/UGoJjMveIBoe8rKktF2xyDPSIqTNhl9kNqii9g9
+jB4iA5qOfQBQSwcIDocKSZYAAADBAAAAUEsBAhQAFAAICAgAAAAhAA6HCkmWAAAAwQAAAAgAAAAAAAAA
+AAAAAAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAMwAAAAAAA==
+------=_contents/FragmentedModel/right/frag_2.ecore-e3a870d6-5dd6-37af-9198-0b504cf5f9b8--
+------=_contents/FragmentedModel/left/frag_2.ecore-c5ecdddf-1c61-321e-87e9-4fa61e5ac306
+Content-Type: q7/binary
+Entry-Name: contents/FragmentedModel/left/frag_2.ecore
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVjkEKgzAURPeCdwj/AMZmGbRSiguh
+hUI33Yb4k4aaRGJoPH6j0EJnObw3TNOtdiJvDIvxroVDVQNBJ/1onG7hdD8PA3THsmhQ+oC8vwn5EhrJ
+ag3/WWyz8o5beO5beMY4c0pTSpW3uvJB08d1+CL70h+EcjLzgjuIVlFW14z2GwZlQXKcsNlQQWiLLuJ4
+QRUZ0PzrA1BLBwhbGE3jlQAAAMAAAABQSwECFAAUAAgICAAAACEAWxhN45UAAADAAAAACAAAAAAAAAAA
+AAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAywAAAAAA
+------=_contents/FragmentedModel/left/frag_2.ecore-c5ecdddf-1c61-321e-87e9-4fa61e5ac306--
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf
+Content-Type: q7/binary
+Entry-Name: .q7.content
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnTNk1FPgzAUhd9N/A9N3211mm0h4GKM
+JiZOE2OyvRGkF8YsLStlsH/vHQO24Jb56Fvb+51zT8vFnVSpJGsweaKVR2/YNSWgQi0SFXu0sNHVmE7u
+Ly/cUKes0gYEW41Yqc13ngUhOLN29aiVhcqSKk2czm6wtcMGKnfw3KMLazOH87IsmU5jpk3M59OXFjne
+olNxrPO6zlcj3tUZhHhGiQpSZJ9NEKeAUcRUC5D9eJQkwqP+8rac3b2OzRO8D4fjjS5Gc/+rpHhPQvCm
+iCpbb3CbGb2E0ObHG9AGQzBKJLQUa1SUH9S1FPgwDQFVhnUQH5AX0u5tekYPUiKh5brp92kAWJivD4x7
+ijddCwqLX6CT+BHG7ulc3iQ6FVFCdDpYbbh7+pNRtow/OEdNN7+Is9FMEi/+STaXtxOyGx++n5/t+k9/
+DbI/UEsHCE9B6uNFAQAAiQMAAFBLAQIUABQACAgIAAAAIQBPQerjRQEAAIkDAAAIAAAAAAAAAAAAAAAA
+AAAAAAAuY29udGVudFBLBQYAAAAAAQABADYAAAB7AQAAAAA=
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf--
+------=_contents/FragmentedModel/expectedResult/AllResolvedModelTree.csv-159747cc-a74c-3211-b7a5-9aec616a6fa1
+Content-Type: q7/binary
+Entry-Name: contents/FragmentedModel/expectedResult/AllResolvedModelTree.csv
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSLz8xLSc0r0SlJrSjhMtCxUyhITM5O
+TE/1SU0r4TIE8tOKEtNzgSpSU8BCRhhCRlzGOmgiCtF5ibmpCskZiXnpqSmxQE2oCtDlDXWQbEWXBABQ
+SwcIsSWvo1EAAACiAAAAUEsBAhQAFAAICAgAAAAhALElr6NRAAAAogAAAAgAAAAAAAAAAAAAAAAAAAAA
+AC5jb250ZW50UEsFBgAAAAABAAEANgAAAIcAAAAAAA==
+------=_contents/FragmentedModel/expectedResult/AllResolvedModelTree.csv-159747cc-a74c-3211-b7a5-9aec616a6fa1--
+------=_contents/FragmentedModel/left/My.ecore-bc499c00-5231-32ba-a390-78c87576598c
+Content-Type: q7/binary
+Entry-Name: contents/FragmentedModel/left/My.ecore
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVjl0LgjAUhu8F/8M4XefMqxCnVwZB
+QVBBt2udTcltMi39+U37gM7le573IytG3ZAnuq62hsEqioGgEfZWG8XgfNos11DkYZChsA7T8sDFnSsk
+o67TnyuZXD7HdKnXGVR936aUDsMQWa0i6xS97LdfZE76g1A0ddvhDKKWNInjhJYTBmFA/BmuvaN9d+9Q
+9pBPjwyPj+tH7UjlUDKQjqtorlhQoNNy+j/dSy9QSwcIoDOawKsAAAD1AAAAUEsBAhQAFAAICAgAAAAh
+AKAzmsCrAAAA9QAAAAgAAAAAAAAAAAAAAAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAOEAAAAA
+AA==
+------=_contents/FragmentedModel/left/My.ecore-bc499c00-5231-32ba-a390-78c87576598c--

@@ -1,0 +1,72 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,__EnCYL8uEeO4RfFLR_NBfQ
+Element-Name: ts011_tc001_localhistory_workspace_compare_with
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _EqPDkb8uEeO4RfFLR_NBfQ
+Q7-Runtime-Version: 1.3.10.201312200736
+Save-Time: 4/9/14 10:22 AM
+Testcase-Type: ecl
+Verifications: _LQRcEL8xEeO4RfFLR_NBfQ
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate a comparison with the local history from a model in the workspace.
+
+TEST STEPS
+	1) Select the project and then open the library.ecore file.
+	2) Do some changes (delete, add...) and save.
+    3) Right-click on the library.ecore in the workspace and Compare With > Local History.
+	4) In the Local History view, select the previous revision.
+	3) The Compare editor must open with the toolbar in the Accept/Reject mode.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+get-view "Package Explorer" | get-tree | select "LocalHistory/library.ecore" | double-click
+with [get-editor "library.ecore"] {
+    with [get-tree] {
+        get-item "platform:\\/resource\\/LocalHistory\\/library.ecore/extlibrary/Magazine -> CirculatingItem" | click
+        key-type Del
+        get-item "platform:\\/resource\\/LocalHistory\\/library.ecore/extlibrary/Addressable" | click
+        key-type Del
+        get-item "platform:\\/resource\\/LocalHistory\\/library.ecore/extlibrary/Employee -> Person" | click
+        key-type Del
+        key-type "M1+s"
+    }
+    close
+}
+get-view "Package Explorer" | get-tree | select "LocalHistory/library.ecore" | get-menu "Compare With/Local History..." 
+    | click
+get-view History | get-tree | select [get-item ".*" -index 1] | double-click
+
+get-tab-folder -index 1 | get-property activePage | equals "Compare library.ecore Current and Local Revision" 
+    | verify-true
+with [get-editor "Compare library.ecore Current and Local Revision" | get-toolbar 
+    -after [get-label "Model differences  (16 over 16 differences still to be merged — 10 differences filtered from view)"]] {
+    get-property "getItems().ToolItem[0].getToolTipText()" | equals "Show consequences of accepting change" 
+        | verify-true
+    get-property "getItems().ToolItem[1].getToolTipText()" | equals "Accept Change" | verify-true
+    get-property "getItems().ToolItem[2].getToolTipText()" | equals "Reject Change" | verify-true
+    get-property "getItems().ToolItem[3].getToolTipText()" | equals "Accept All Non-Conflicting Changes" | verify-true
+    get-property "getItems().ToolItem[4].getToolTipText()" | equals "Reject All Non-Conflicting Changes" | verify-true
+    get-property "getItems().ToolItem[5].getStyle()" | equals "[SEPARATOR]" | verify-true
+    get-property "getItems().ToolItem[6].getToolTipText()" | equals "Next Difference" | verify-true
+    get-property "getItems().ToolItem[7].getToolTipText()" | equals "Previous Difference" | verify-true
+    get-property "getItems().ToolItem[8].getStyle()" | equals "[SEPARATOR]" | verify-true
+    get-property "getItems().ToolItem[9].getToolTipText()" | equals "Expand All" | verify-true
+    get-property "getItems().ToolItem[10].getToolTipText()" | equals "Collapse All" | verify-true
+    get-property "getItems().ToolItem[11].getStyle()" | equals "[SEPARATOR]" | verify-true
+    get-property "getItems().ToolItem[12].getToolTipText()" | equals Groups | verify-true
+    get-property "getItems().ToolItem[13].getToolTipText()" | equals Filters | verify-true
+    get-property "getItems().ToolItem[14].getStyle()" | equals "[SEPARATOR]" | verify-true
+    get-property "getItems().ToolItem[15].getToolTipText()" | equals "Save Comparison Model" | verify-true
+}
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

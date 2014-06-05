@@ -1,0 +1,5 @@
+NODES
+
+Ecore
+
+Local SHOW - 2way

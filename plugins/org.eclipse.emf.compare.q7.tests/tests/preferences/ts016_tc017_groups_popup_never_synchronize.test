@@ -1,0 +1,87 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_jRtbsGrtEeK_JdLra2Bk5A
+Element-Name: ts016_tc017_groups_popup_never_synchronize
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _qx7I0MCNEeO4Kq0OGaiB6A
+Q7-Runtime-Version: 1.3.10.201312200736
+Save-Time: 5/26/14 9:15 AM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate the non synchronization between the selected group in ui and the preference. The user as used "Do not ask me again in the popup and selected "No"
+
+1. Set the synchronization from the popup
+2. Starts a a 2-way comparison
+3. Change the group to "By Kind"
+4. Check in the preferences (Default group and synchronization behavior)
+5. Restart the comparison
+6. Checks that the group is "Default"
+7. Change the group to "By Resource"
+8. Check in the preferences (Default group and synchronization behavior)
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+//Starts comparison
+with [get-view "Package Explorer" | get-tree] {
+    select "Library/extlibraryLeft.ecore" "Library/extlibraryRight.ecore"
+    get-menu "Compare With/Each Other" | click
+}
+get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" | get-button Groups | click 
+    -arrow
+get-menu "By Kind" | click
+with [get-window "Group preference"] {
+    get-button "Do not ask me again." | check
+    get-button No | click
+}
+//Checks the preferences (No synchronization and Synchronization behavior = never)
+get-preferences-menu | click
+get-window Preferences | get-tree | select "EMF Compare/Groups"
+with [get-window Preferences] {
+    get-list | get-property "getItems().String[0]" | equals Default | verify-true
+    get-group "Automatic behavior" | get-combo -after [get-label "Synchronize current group selection:"] 
+        | get-property selection | equals never | verify-true
+}
+//Checks that nothing has changed in 3-way tab
+get-window Preferences | get-tab-folder | get-tab-item "3 way comparison" | click
+with [get-window Preferences] {
+    get-list | get-property "getItems().String[0]" | equals "By Side" | verify-true
+    get-group "Automatic behavior" | get-combo -after [get-label "Synchronize current group selection:"] 
+        | get-property selection | equals prompt | verify-true
+}
+get-window Preferences | get-button OK | click
+//Restarts the comparison
+get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" | close
+with [get-view "Package Explorer" | get-tree] {
+    select "Library/extlibraryLeft.ecore" "Library/extlibraryRight.ecore"
+    get-menu "Compare With/Each Other" | click
+}
+//Checks that the default is still "Default"
+get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" | get-button Groups | click 
+    -arrow
+get-menu "Default" | get-property enablement | equals true | verify-true
+//Changes to "By Resource" group
+get-menu "By Resource" | click
+//Checks the preferences (No synchronization and Synchronization behavior = never)
+get-preferences-menu | click
+with [get-window Preferences] {
+    get-list | get-property "getItems().String[0]" | equals Default | verify-true
+    get-group "Automatic behavior" | get-combo -after [get-label "Synchronize current group selection:"] 
+        | get-property selection | equals never | verify-true
+}
+get-window Preferences | get-tab-folder | get-tab-item "3 way comparison" | click
+with [get-window Preferences] {
+    get-list | get-property "getItems().String[0]" | equals "By Side" | verify-true
+    get-group "Automatic behavior" | get-combo -after [get-label "Synchronize current group selection:"] 
+        | get-property selection | equals prompt | verify-true
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

@@ -1,0 +1,2 @@
+- To be consistent, no macroscopic change for the look change of the edge (association class) should be created (associationClassEdgeLookChange.PNG).
+-> The predicate in the edge change factory should check if the container view of the bendpoints object is linked to a semantic one.

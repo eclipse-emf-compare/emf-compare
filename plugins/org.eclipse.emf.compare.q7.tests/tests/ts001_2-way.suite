@@ -1,0 +1,31 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Element-Name: ts001_2-way
+Element-Type: testsuite
+Element-Version: 2.0
+Id: _9VmgsGvEEeKSKM5olA1H5Q
+Save-Time: 2/14/13 10:48 AM
+Tags: 2-way
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Test suite for 2-way comparison tests.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8
+Content-Type: text/testcase
+Entry-Name: testcase-items
+
+_p7kc4GrzEeK_JdLra2Bk5A	// kind: 'test' name: 'ts001_tc001_2-way_comparison' path: '2-way/ts001_tc001_2-way_comparison.test'
+_9HotAGxPEeKJJKFtItru4Q	// kind: 'test' name: 'ts001_tc002_2-way_synchro_smv_cmv' path: '2-way/ts001_tc002_2-way_synchro_smv_cmv.test'
+_gtcGYXQoEeKuJN51-cCI4Q	// kind: 'test' name: 'ts001_tc003_2-way_textual_attribute_comparison' path: '2-way/ts001_tc003_2-way_textual_attribute_comparison.test'
+_FRPBMHQuEeKuJN51-cCI4Q	// kind: 'test' name: 'ts001_tc004_2-way_next_difference' path: '2-way/ts001_tc004_2-way_next_difference.test'
+_95M-sHRkEeKWCYZMhtD8rQ	// kind: 'test' name: 'ts001_tc005_2-way_compare_with_eobject_in_dialog' path: '2-way/ts001_tc005_2-way_compare_with_eobject_in_dialog.test'
+_BedVQXUBEeKHfa7Gozlrbw	// kind: 'test' name: 'ts001_tc006_2-way_compare_with_eobject_in_editor' path: '2-way/ts001_tc006_2-way_compare_with_eobject_in_editor.test'
+_CV2a0HUCEeKHfa7Gozlrbw	// kind: 'test' name: 'ts001_tc007_2-way_resource_attachment_change_uml' path: '2-way/ts001_tc007_2-way_resource_attachment_change_uml.test'
+_oh4VYHUgEeKHfa7Gozlrbw	// kind: 'test' name: 'ts001_tc008_2-way_resource_attachment_change_multiple_uml' path: '2-way/ts001_tc008_2-way_resource_attachment_change_multiple_uml.test'
+_xFUuEHaJEeKMw-FYxgWKUg	// kind: 'test' name: 'ts001_tc009_2-way_save_comparison_model' path: '2-way/ts001_tc009_2-way_save_comparison_model.test'
+
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8--

@@ -1,0 +1,52 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Context-Type: com.xored.q7.workspace.context
+Element-Name: ts001_tc005_WorkspaceContext
+Element-Type: context
+Element-Version: 2.0
+Id: _ROyIwHRkEeKWCYZMhtD8rQ
+Save-Time: 2/11/13 5:01 PM
+
+------=_contents/CompareWithEObject/.project-024d78b8-d0a0-3292-bf54-b16cb99ddfa2
+Content-Type: q7/binary
+Entry-Name: contents/CompareWithEObject/.project
+
+UEsDBBQACAAIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSzsa/IzVEoSy0qzszPs1Uy1DNQUkjN
+S85PycxLt1UKDXHTtVCyt+Plsikoys9KTS5xSS1OLsosKAGqBopy2uQl5qbaOefnFiQWpYZnlmS4+ieB
+lNnogyVAKpLzc3NT80rsbPRhLJAo1LhiMEcfhZdUmpmTElyQmgyRQ+XmJZaUFqVCtSE4cCNQ3QcAUEsH
+CIjOwAiLAAAA3gAAAFBLAQIUABQACAAIAAAAIQCIzsAIiwAAAN4AAAAIAAAAAAAAAAAAAAAAAAAAAAAu
+Y29udGVudFBLBQYAAAAAAQABADYAAADBAAAAAAA=
+------=_contents/CompareWithEObject/.project-024d78b8-d0a0-3292-bf54-b16cb99ddfa2--
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf
+Content-Type: q7/binary
+Entry-Name: .q7.content
+
+UEsDBBQACAAIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSNkcFugzAMhu+T9g6R70vopKkVgvVA
+K62aqmq9sPWCaEghLUloyAZ9+5kOmDT1sJvt/7P9Ww7mrSrJl7C1NDqECfWACM1NJnUewqc7PMxg/nx/
+F3CjaGusyOh5ShtjT3WVcuHHQxQZ7UTrSKukP4577MbhAl37WA+hcK7yGWuahhqVU2Nz9r5eDcjtFWMX
+Q51ddXaeslGngmMNiE4Vsq72vEniuOc9JX+9AZFZCMl2c1k1L9vTUrzG0cduXbjFzL4BHkkInomodtcE
+08qao+Cu7qdHRlWpFbF0xXKz7xToSWQPshQDSPtGYLf1Uu5tai+99wEK2LDvxwz7ddPF/3oAst9QSwcI
+h9+1kAIBAADUAQAAUEsBAhQAFAAIAAgAAAAhAIfftZACAQAA1AEAAAgAAAAAAAAAAAAAAAAAAAAAAC5j
+b250ZW50UEsFBgAAAAABAAEANgAAADgBAAAAAA==
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf--
+------=_contents/CompareWithEObject/library.ecore-2747ab26-c6af-3374-99f1-edf62e5d1ae1
+Content-Type: q7/binary
+Entry-Name: contents/CompareWithEObject/library.ecore
+
+UEsDBBQACAAIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnS1Vm1zmkAQ/p6Z/AeGfI6gsYl1NJm8
+oLVNmjTmrf2SOXDBG+GOuTtE++t7B0ogAU2N8YOMePvss7vP7l7nZBb42hQYx5R09XrN1DUgDh1h4nX1
++7vefks/Od7d6YBDGbStG+RMkAfaLMDtzKqhrCQO4W35vquPhQjbhhHHcY0GXo0yz3i6GmRHePFIfJCc
+aJhmXR67HDpjCNA+Jlwg4oC+u6PJT2qakCgYg+PjkEOCAIGrUBqGpY7pCUc86urP9Sa/s/qHpgX9yajp
+tVriz5N7qmsEBRLNxzZDbC5/8vvbQYZuJJApfAINMxSEPnBjYbB81hJWhkydTEPKlvAbBi6eJeD6sXrZ
+gXMfcY5dLLOmyRy0xTyU3hd5Tf4sUD588Copn1E6SWEV8FCwyBERQ34PkHxCCf6pEAzbkYDXPh7f+Ehh
+kzASZwILX5rBXR7vAgmkXmjvqsWeYViSpdSUbmyHdmMt7VDKlH+c9oCIHPQIXBT54gH5EVxiAZK8bBrT
+3E5Yrcn6ajhIgEeVXBeR7T3Xv/SOeIlWIsJBCGT7qogsgv8keQsuMFAtmCfZ+lHi6jVJFIkxZbrm0xjY
+GY2ItK0XGJ/f3r+NVYPrMKRc5jU9ZPVLWiANomPk+2mjDqvgkEbwyFR1t9BjykuwNmHqe2st9gI+pT4S
+OKu/JhgiHAMR2xNEeZFex2fLgSWTH4Vhpof9giAqxl1REOXi21QQFomCQiTlXfQycc+XrZdlbTECeB7l
+23ezEuVqzqXBPJf3UoS4WYkwdLCqQA87Qq5eXZuqSaSaay1kpdTPMPUYCsfzDK2xEu1pcNG86n8dSLSj
+h+fpz7/h7/g6XqJZxJk7Pg1hhFEGeCBHwXJaFg6s9mO5vyr9XKQZSBb3wktzlRSGkR2mdxe+3GvARXGR
+vmd+vF3AG4yHz1ysG9Mh9rX7KUvzHWtzgxG0atPkfa9bOh/OG4/sT7oilejYyAtZ3cuN4sVcvvoHUEsH
+CNP+l7TjAgAA0wsAAFBLAQIUABQACAAIAAAAIQDT/pe04wIAANMLAAAIAAAAAAAAAAAAAAAAAAAAAAAu
+Y29udGVudFBLBQYAAAAAAQABADYAAAAZAwAAAAA=
+------=_contents/CompareWithEObject/library.ecore-2747ab26-c6af-3374-99f1-edf62e5d1ae1--

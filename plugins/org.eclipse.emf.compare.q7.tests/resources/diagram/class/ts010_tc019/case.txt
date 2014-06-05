@@ -1,0 +1,5 @@
+** Conflicting cases **
+NODES
+
+Local CHANGE coordinates of node on one side
+Remote DELETE of node on the other side

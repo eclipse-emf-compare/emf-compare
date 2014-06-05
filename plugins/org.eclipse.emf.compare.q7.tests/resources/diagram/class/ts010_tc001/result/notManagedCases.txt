@@ -1,0 +1,5 @@
+- The unit ADD of the connector (associationClassEdgeAdd.PNG) is not part of the macroscopic ADD of the association class.
+- The unit unset of the reference "source" of this connector to the edge (between the 2 classes) is not part of the macroscopic DELETE of the assoiation class.
+
+-> This case has to be specifically managed by Papyrus.
+For i.e., add to "refined by" reference, the differences on edges going out from a Node on a UML AssociationClass.  

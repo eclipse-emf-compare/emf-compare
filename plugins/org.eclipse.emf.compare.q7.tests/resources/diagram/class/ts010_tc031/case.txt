@@ -1,0 +1,4 @@
+NODES
+
+Local CHANGE coordinates of node on one side
+Remote HIDE node on the other side

@@ -1,0 +1,82 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_jRtbsGrtEeK_JdLra2Bk5A
+Element-Name: ts007_tc001_merge_attribute_name_changed
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _F-i4YHXJEeKwK6X4DjDh0A
+Save-Time: 7/26/13 1:05 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate a merge of an attribute name changed.
+
+TEST STEPS
+	1) Select the 2 ecore models and run a 2-way comparison (select extlibraryLeft.ecore and extLibraryRight.ecore) 
+	//asserts that the 2 models are selected and the last one (extLibraryOrigin.ecore) is not.
+	2) Double-click on the attribute length of the AudioVisualItem
+	//asserts that the left part of the content merge viewer contains the text "length" and right part the text "minutes".
+	3) Click on "Copy Current Change from Right to Left" button, then double-click on the attribute length of the AudioVisualItem
+	//asserts that the left part of the content merge viewer contains the text "minutes" and right part the text "minutes".
+	4) Click on Ctrl+z. Double-click on the attribute length of the AudioVisualItem
+	//asserts that the left part of the content merge viewer contains the text "length" and right part the text "minutes".
+	5) Click on "Copy Current Change from Left to Right" button, then double-click on the attribute length of the AudioVisualItem
+	//asserts that the left part of the content merge viewer contains the text "length" and right part the text "length".
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+get-view "Package Explorer" | get-tree | select "Library/extlibraryLeft.ecore" "Library/extlibraryRight.ecore"
+with [get-view "Package Explorer" | get-tree] {
+    get-item "Library/extlibraryRight.ecore" | get-property selected | equals true | verify-true
+    get-item "Library/extlibraryLeft.ecore" | get-property selected | equals true | verify-true
+    get-item "Library/extlibraryOrigin.ecore" | get-property selected | equals false | verify-true
+    get-menu "Compare With/Each Other" | click
+}
+
+get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" | get-tree 
+    | select "> extlibrary/> AudioVisualItem -> CirculatingItem/> length : EInt/length \\[name changed\\]" | double-click
+with [get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')"] {
+    get-editbox -after [get-label "Library/extlibraryRight.ecore"] | get-property text | equals length | verify-true
+    get-editbox -after [get-label "Library/extlibraryRight.ecore"] -index 1 | get-property text | equals minutes 
+        | verify-true
+}
+
+get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" 
+    | get-button "Copy Current Change from Right to Left" | click
+
+get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" | get-tree 
+    | select "> extlibrary/> AudioVisualItem -> CirculatingItem/.* : EInt/length \\[name changed\\]" | double-click
+with [get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')"] {
+    get-editbox -after [get-label "Library/extlibraryRight.ecore"] | get-property text | equals minutes | verify-true
+    get-editbox -after [get-label "Library/extlibraryRight.ecore"] -index 1 | get-property text | equals minutes 
+        | verify-true
+}
+wait 1000
+get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" | get-tree | key-type "M1+z"
+
+with [get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')"] {
+    get-tree | select "> extlibrary/> AudioVisualItem -> CirculatingItem/> length : EInt/length \\[name changed\\]" 
+        | double-click
+    get-editbox -after [get-label "Library/extlibraryRight.ecore"] | get-property text | equals length | verify-true
+    get-editbox -after [get-label "Library/extlibraryRight.ecore"] -index 1 | get-property text | equals minutes 
+        | verify-true
+    get-button "Copy Current Change from Left to Right" | click
+    get-tree | select "> extlibrary/> AudioVisualItem -> CirculatingItem/.* : EInt/length \\[name changed\\]" 
+        | double-click
+}
+with [get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')"] {
+    get-editbox -after [get-label "Library/extlibraryRight.ecore"] | get-property text | equals length | verify-true
+    get-editbox -after [get-label "Library/extlibraryRight.ecore"] -index 1 | get-property text | equals length 
+        | verify-true
+}
+
+
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

@@ -1,0 +1,44 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_gO-6QN2bEeKlP8eyY8UqWw
+Element-Name: ts009_tc001_logicalmodel_with_fragments
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _XcTjsN2bEeKlP8eyY8UqWw
+Q7-Runtime-Version: 1.3.10.201312200736
+Save-Time: 4/3/14 4:40 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate that the logical model take into account the fragments of the models use for comparison.
+
+TEST STEPS
+	1) Select the 2 ecore models and run a 2-way comparison.
+	2) Disable the Empty resource mappings filter
+	3) Asserts that left.ecore and right.ecore are compared together
+	3) Asserts that leftFrag.ecore and rightFrag.ecore are compared together
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Package Explorer" | get-tree] {
+    select "LogicalModels_001/left.ecore" "LogicalModels_001/right.ecore"
+    get-menu "Compare With/Each Other" | click
+}
+get-editor "Compare (\'LogicalModels_001/left.ecore\' - \'LogicalModels_001/right.ecore\')" | get-button Filters 
+    | click -arrow
+get-menu "Empty resource mappings" | click
+
+get-window "Filters preference" | get-button No | click
+
+with [get-editor "Compare (\'LogicalModels_001/left.ecore\' - \'LogicalModels_001/right.ecore\')" | get-tree] {
+    get-item "left.ecore <-> right.ecore" | get-property childCount | equals 0 | verify-true
+    get-item "leftFrag.ecore <-> rightFrag.ecore" | get-property childCount | equals 0 | verify-true
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

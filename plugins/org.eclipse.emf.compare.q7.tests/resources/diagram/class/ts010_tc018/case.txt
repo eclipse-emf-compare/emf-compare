@@ -1,0 +1,2 @@
+** Multi-daigram case **
+ECORE

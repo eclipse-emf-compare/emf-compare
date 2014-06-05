@@ -1,0 +1,107 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,__EnCYL8uEeO4RfFLR_NBfQ
+Element-Name: ts011_tc004_localhistory_editor_replace_with
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _SP4skL_AEeOnsqx26fWf_w
+Q7-Runtime-Version: 1.3.10.201312200736
+Save-Time: 5/23/14 3:54 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate the Replace With > Local history action from a model item inside an editor.
+
+TEST STEPS
+	1) Select the project and then open the library.ecore file.
+	// The model must contains 15 elements under the root element extlibrary
+	2) Do some changes (delete, add...) and save.
+	// The model must contains 12 elements under the root element extlibrary
+    3) Right-click on the extlibrary item in the editor and Replace With > Local History.
+	4) In the Dialog, select the previous revision.
+	// The Compare dialog must have a toolbar with no accept/reject or merge buttons.
+	// The structure merge viewer must contains 5 elements under the root "> extlibrary"
+	5) Click on Replace
+	6) In the openned library.ecore model editor
+	// The model must contains 15 elements under the root element extlibrary
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+get-view "Package Explorer" | get-tree | select "LocalHistory/library.ecore" | double-click
+with [get-editor "library.ecore"] {
+    with [get-tree] {
+    	get-item "platform:\\/resource\\/LocalHistory\\/library.ecore" | click
+    	get-item "platform:\\/resource\\/LocalHistory\\/library.ecore" | expand
+    	get-item "platform:\\/resource\\/LocalHistory\\/library.ecore/extlibrary" | click
+    	get-item "platform:\\/resource\\/LocalHistory\\/library.ecore/extlibrary" | expand
+    	get-item "platform:\\/resource\\/LocalHistory\\/library.ecore" | get-property childCount | equals 1 | verify-true
+    	get-item "platform:\\/resource\\/LocalHistory\\/library.ecore" 
+        	| get-property "getItems().TreeItem[0].getItemCount()" | equals 15 | verify-true
+        
+        get-item "platform:\\/resource\\/LocalHistory\\/library.ecore/extlibrary/Magazine -> CirculatingItem" | click
+        key-type Del
+        get-item "platform:\\/resource\\/LocalHistory\\/library.ecore/extlibrary/Addressable" | click
+        key-type Del
+        get-item "platform:\\/resource\\/LocalHistory\\/library.ecore/extlibrary/Employee -> Person" | click
+        key-type Del
+        key-type "M1+s"
+        
+        get-item "platform:\\/resource\\/LocalHistory\\/library.ecore" 
+        	| get-property "getItems().TreeItem[0].getItemCount()" | equals 12 | verify-true
+        	
+        get-item "platform:\\/resource\\/LocalHistory\\/library.ecore/extlibrary" | click
+    	select "platform:\\/resource\\/LocalHistory\\/library.ecore/extlibrary" | get-menu "Replace With/Local History..." 
+        	| click
+    }
+}
+
+get-window Compare | get-tree | select ".*" | double-click
+with [get-window Compare] {
+    with [get-control Any -after [get-label "/LocalHistory/library.ecore"] -index 8] {
+        get-property "getTitleArgument()" 
+            | equals "16 over 16 differences still to be merged — 10 differences filtered from view" | verify-true
+        get-property "getChildren().Control[1].getClassName()" | equals "org.eclipse.swt.widgets.ToolBar" | verify-true
+        get-property "getChildren().Control[1].getItems().ToolItem[0].getToolTipText()" | equals "Next Difference" 
+            | verify-true
+        get-property "getChildren().Control[1].getItems().ToolItem[1].getToolTipText()" | equals "Previous Difference" 
+            | verify-true
+        get-property "getChildren().Control[1].getItems().ToolItem[2].getStyle()" | equals "[SEPARATOR]" | verify-true
+        get-property "getChildren().Control[1].getItems().ToolItem[3].getToolTipText()" | equals "Expand All" 
+            | verify-true
+        get-property "getChildren().Control[1].getItems().ToolItem[4].getToolTipText()" | equals "Collapse All" 
+            | verify-true
+        get-property "getChildren().Control[1].getItems().ToolItem[5].getStyle()" | equals "[SEPARATOR]" | verify-true
+        get-property "getChildren().Control[1].getItems().ToolItem[6].getToolTipText()" | equals Groups | verify-true
+        get-property "getChildren().Control[1].getItems().ToolItem[7].getToolTipText()" | equals Filters | verify-true
+        get-property "getChildren().Control[1].getItems().ToolItem[8].getStyle()" | equals "[SEPARATOR]" | verify-true
+        get-property "getChildren().Control[1].getItems().ToolItem[9].getToolTipText()" 
+            | equals "Save Comparison Model" | verify-true
+            
+    }
+}
+
+with [get-window Compare | get-tree 
+    -after [get-label "Model differences  (16 over 16 differences still to be merged — 10 differences filtered from view)"]] {
+    get-item "> extlibrary" | get-property caption | equals "> extlibrary" | verify-true
+    get-item "> extlibrary" | get-property childCount | equals 5 | verify-true
+}
+
+get-window Compare | get-button Replace | click
+
+with [get-editor "library.ecore" | get-tree] {
+    get-item "platform:\\/resource\\/LocalHistory\\/library.ecore" | click
+	get-item "platform:\\/resource\\/LocalHistory\\/library.ecore" | expand
+	get-item "platform:\\/resource\\/LocalHistory\\/library.ecore/extlibrary" | click
+	get-item "platform:\\/resource\\/LocalHistory\\/library.ecore/extlibrary" | expand
+    get-item "platform:\\/resource\\/LocalHistory\\/library.ecore" 
+        | get-property "getItems().TreeItem[0].getItemCount()" | equals 15 | verify-true
+    get-item "platform:\\/resource\\/LocalHistory\\/library.ecore" | get-property childCount | equals 1 | verify-true
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

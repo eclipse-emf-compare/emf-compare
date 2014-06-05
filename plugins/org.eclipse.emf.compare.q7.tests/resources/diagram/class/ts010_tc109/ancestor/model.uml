@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_W-ZxAP2rEeK-XfHkGNsHwA" name="My Model">
+  <packagedElement xmi:type="uml:Package" xmi:id="_eCNyAP2rEeK-XfHkGNsHwA" name="LibraryPackage">
+    <packageImport xmi:type="uml:PackageImport" xmi:id="_6_D70P2rEeK-XfHkGNsHwA">
+      <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+    </packageImport>
+    <packagedElement xmi:type="uml:Class" xmi:id="_kgjucP2rEeK-XfHkGNsHwA" name="Library">
+      <ownedAttribute xmi:type="uml:Property" xmi:id="_npYgkP2rEeK-XfHkGNsHwA" name="address" visibility="public">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_7xJgEP2rEeK-XfHkGNsHwA" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_7xQ00P2rEeK-XfHkGNsHwA" value="1"/>
+        <defaultValue xmi:type="uml:LiteralString" xmi:id="_7xjIsP2rEeK-XfHkGNsHwA">
+          <value xsi:nil="true"/>
+        </defaultValue>
+      </ownedAttribute>
+      <ownedAttribute xmi:type="uml:Property" xmi:id="_HYRewP2tEeK-XfHkGNsHwA" name="borrowable" type="_BGAr8P2sEeK-XfHkGNsHwA" aggregation="composite" association="_HYVJIP2tEeK-XfHkGNsHwA">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_HYRewf2tEeK-XfHkGNsHwA"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_HYRewv2tEeK-XfHkGNsHwA" value="*"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Interface" xmi:id="_BGAr8P2sEeK-XfHkGNsHwA" name="Borrowable">
+      <ownedAttribute xmi:type="uml:Property" xmi:id="_dp2f4P2sEeK-XfHkGNsHwA" name="title">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_DAKEcP2sEeK-XfHkGNsHwA" clientDependency="_Okki0P2sEeK-XfHkGNsHwA" name="Book">
+      <ownedAttribute xmi:type="uml:Property" xmi:id="_TdYE0P2sEeK-XfHkGNsHwA" name="isbn" visibility="public">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_XiHFkP2sEeK-XfHkGNsHwA" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_XiOaUP2sEeK-XfHkGNsHwA" value="1"/>
+        <defaultValue xmi:type="uml:LiteralString" xmi:id="_XifgEP2sEeK-XfHkGNsHwA">
+          <value xsi:nil="true"/>
+        </defaultValue>
+      </ownedAttribute>
+      <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_Okki0P2sEeK-XfHkGNsHwA" name="InterfaceRealization1" client="_DAKEcP2sEeK-XfHkGNsHwA" supplier="_BGAr8P2sEeK-XfHkGNsHwA" contract="_BGAr8P2sEeK-XfHkGNsHwA"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_EV9ZwP2sEeK-XfHkGNsHwA" name="BluRay"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_HWaTAP2sEeK-XfHkGNsHwA" clientDependency="_Ps6D4P2sEeK-XfHkGNsHwA" name="DVD">
+      <ownedAttribute xmi:type="uml:Property" xmi:id="_Wq24AP2tEeK-XfHkGNsHwA" name="resolution">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedAttribute>
+      <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_Ps6D4P2sEeK-XfHkGNsHwA" name="InterfaceRealization1" client="_HWaTAP2sEeK-XfHkGNsHwA" supplier="_BGAr8P2sEeK-XfHkGNsHwA" contract="_BGAr8P2sEeK-XfHkGNsHwA"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_Ix-SEP2sEeK-XfHkGNsHwA" clientDependency="_PCWrAP2sEeK-XfHkGNsHwA" name="VHS">
+      <ownedAttribute xmi:type="uml:Property" xmi:id="_1bxc8P2sEeK-XfHkGNsHwA" name="playKind" visibility="public" type="_oBozEP2sEeK-XfHkGNsHwA">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_383gsP2sEeK-XfHkGNsHwA" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_38-1cP2sEeK-XfHkGNsHwA" value="1"/>
+        <defaultValue xmi:type="uml:LiteralString" xmi:id="_39Wo4P2sEeK-XfHkGNsHwA">
+          <value xsi:nil="true"/>
+        </defaultValue>
+      </ownedAttribute>
+      <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_PCWrAP2sEeK-XfHkGNsHwA" name="InterfaceRealization1" client="_Ix-SEP2sEeK-XfHkGNsHwA" supplier="_BGAr8P2sEeK-XfHkGNsHwA" contract="_BGAr8P2sEeK-XfHkGNsHwA"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Enumeration" xmi:id="_oBozEP2sEeK-XfHkGNsHwA" name="PlayKind">
+      <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_wpL3sP2sEeK-XfHkGNsHwA" name="LP"/>
+      <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_xa1-IP2sEeK-XfHkGNsHwA" name="SP"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_HYVJIP2tEeK-XfHkGNsHwA" name="borrowables" memberEnd="_HYVJIf2tEeK-XfHkGNsHwA _HYRewP2tEeK-XfHkGNsHwA">
+      <ownedEnd xmi:type="uml:Property" xmi:id="_HYVJIf2tEeK-XfHkGNsHwA" name="library" type="_kgjucP2rEeK-XfHkGNsHwA" association="_HYVJIP2tEeK-XfHkGNsHwA">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_HYVJIv2tEeK-XfHkGNsHwA" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_HYVJI_2tEeK-XfHkGNsHwA" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>

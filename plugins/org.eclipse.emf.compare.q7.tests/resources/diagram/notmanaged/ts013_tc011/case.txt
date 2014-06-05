@@ -1,0 +1,1 @@
+Case: edge decorator

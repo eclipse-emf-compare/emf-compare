@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_q85D4CjwEeK_aIlPL2nMXA" name="model">
+  <packagedElement xmi:type="uml:Class" xmi:id="_vJKQACjwEeK_aIlPL2nMXA" name="Class1">
+    <ownedAttribute xmi:id="_0jqJ0CjwEeK_aIlPL2nMXA" name="Property1" visibility="public">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_4eMFsCjwEeK_aIlPL2nMXA" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_4eSMUCjwEeK_aIlPL2nMXA" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_4eSMUSjwEeK_aIlPL2nMXA">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_Lssg8Cj8EeK2yfTJGbHmzQ" name="Property2" visibility="public">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_NNgMYCj8EeK2yfTJGbHmzQ" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_NNgMYSj8EeK2yfTJGbHmzQ" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_NNgMYij8EeK2yfTJGbHmzQ">
+        <value xsi:nil="true"/>
+      </defaultValue>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_4-A1QCjwEeK_aIlPL2nMXA" name="Operation1"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_8CkLYCjwEeK_aIlPL2nMXA" name="Package1"/>
+  <packagedElement xmi:type="uml:Model" xmi:id="_Bw0usCjxEeK_aIlPL2nMXA" name="Model1">
+    <packagedElement xmi:type="uml:Package" xmi:id="_Z4GNEI_xEeK1r5Bh4EVjoA" name="Package1">
+      <packagedElement xmi:type="uml:Class" xmi:id="_ENrysCjxEeK_aIlPL2nMXA" name="Class1"/>
+    </packagedElement>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_KVO_wCjxEeK_aIlPL2nMXA" name="DataType1"/>
+</uml:Model>

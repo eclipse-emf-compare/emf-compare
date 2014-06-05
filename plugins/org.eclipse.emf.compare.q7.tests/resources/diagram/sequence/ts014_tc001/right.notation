@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_1Llx4KzZEeKXdNRNQo8y5Q" type="PapyrusUMLSequenceDiagram" name="NewDiagram" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="_1Llx4azZEeKXdNRNQo8y5Q" type="2001" fontHeight="8" lineColor="0">
+    <children xmi:type="notation:DecorationNode" xmi:id="_1Llx4qzZEeKXdNRNQo8y5Q" type="5001"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_1Llx46zZEeKXdNRNQo8y5Q" type="7001">
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_1Llx5KzZEeKXdNRNQo8y5Q"/>
+    </children>
+    <element xmi:type="uml:Interaction" href="right.uml#_1IxHYKzZEeKXdNRNQo8y5Q"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_1Llx5azZEeKXdNRNQo8y5Q"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_1Llx5qzZEeKXdNRNQo8y5Q"/>
+  <element xmi:type="uml:Interaction" href="right.uml#_1IxHYKzZEeKXdNRNQo8y5Q"/>
+</notation:Diagram>

@@ -1,0 +1,54 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Context-Type: com.xored.q7.workspace.context
+Element-Name: ts001_tc007_WorkspaceContext
+Element-Type: context
+Element-Version: 2.0
+Id: _FSekAHUCEeKHfa7Gozlrbw
+Save-Time: 2/12/13 11:51 AM
+
+------=_contents/SimpleResourceAttachmentChange/right.uml-9fdb909d-18c9-311f-b619-82fdd31d0ccb
+Content-Type: q7/binary
+Entry-Name: contents/SimpleResourceAttachmentChange/right.uml
+
+UEsDBBQACAAIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnR1j09rwkAQxc8Kfodl7t3ZBIs1ZCuC
+2habHiShvUlJhnVx/4Qkbfz4XYMIFjzNzHvvB2/Sxcka9ktNq72TEHEBjFzpK+2UhCLfPDzB4nkyTk9W
+J1/ZGzvPazwWUSRmIoIgG9cmwZRw6Lo6Qez7nnuruG8UtjWVGGj8D/xYcwNQaXTd0gAFL8YpF1xgkb1D
+KMFGaRCTzFdkhiK6krCff+b18TXfr2mb+4+lWj2+7GYKmPu2JKHxvgO8Czvqd+fEJR1OdiVSvDwd9j9Q
+SwcI6Cr1F8kAAAAoAQAAUEsBAhQAFAAIAAgAAAAhAOgq9RfJAAAAKAEAAAgAAAAAAAAAAAAAAAAAAAAA
+AC5jb250ZW50UEsFBgAAAAABAAEANgAAAP8AAAAAAA==
+------=_contents/SimpleResourceAttachmentChange/right.uml-9fdb909d-18c9-311f-b619-82fdd31d0ccb--
+------=_contents/SimpleResourceAttachmentChange/left.uml-a4aa6a9e-556b-3ea5-bc4e-bf36aefd1322
+Content-Type: q7/binary
+Entry-Name: contents/SimpleResourceAttachmentChange/left.uml
+
+UEsDBBQACAAIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRdjksLgkAYRfdB/0G+fTOjFNbgJEFP
+yhah1E5Ch2loHqKW/vwGF0Ft7+Hce6O418p787qR1jDwEQGPm8KW0ggGWbqdzCFejkfRSyua2JIrr9eS
+foWA+D4JiQ8uVqahDjJ4tG1FMe66DlktkK0Fbipe4FtywP+C6/0ReKFk1fBBcizAU0QQwVlygmFZlgzy
+xTWtnvs03/Bjas8rsZ7tLqEAz9w1Z1Bb2wJ2pz9QSwcIZf1CEKsAAADdAAAAUEsBAhQAFAAIAAgAAAAh
+AGX9QhCrAAAA3QAAAAgAAAAAAAAAAAAAAAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAOEAAAAA
+AA==
+------=_contents/SimpleResourceAttachmentChange/left.uml-a4aa6a9e-556b-3ea5-bc4e-bf36aefd1322--
+------=_contents/SimpleResourceAttachmentChange/.project-9838e2ec-628f-3653-b4ba-0cbc5c115947
+Content-Type: q7/binary
+Entry-Name: contents/SimpleResourceAttachmentChange/.project
+
+UEsDBBQACAAIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVjkEOwiAQRdeaeIeGvaI7F5TGaDyA
+1QPgdNJiYCBAjce31Krpbt6fNz8jqpc1xRND1I5KtttsWYEErtHUlux2Pa/3rJKrpfDBPRDSCSME7dNg
+D+lCkLIoa229wQtG1wfAQ0oKOouUjp2iFgUfpWyDszmXgn+nnE7VcQQ+o3uvTVN7hM9ujqRSH3A6+8Ov
+Yv7rG1BLBwjyZZEgkgAAAOoAAABQSwECFAAUAAgACAAAACEA8mWRIJIAAADqAAAACAAAAAAAAAAAAAAA
+AAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAyAAAAAAA
+------=_contents/SimpleResourceAttachmentChange/.project-9838e2ec-628f-3653-b4ba-0cbc5c115947--
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf
+Content-Type: q7/binary
+Entry-Name: .q7.content
+
+UEsDBBQACAAIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSNUUtPg0AQvpv4HzZ7d5d6wRCwaYha
+Y7zYGL0RXAZYuw+6DEL89W4rYGpq4m1mvsd8k4mXg1bkA1wrrUnoggWUgBG2kKZKaIflxRVdXp+fxcJq
+NlgHBduFrLdu2za5gOhlqlJrEAYkg5bRbHe5t/MLTBv5eUJrxCbivO97ZnXFrKv46+P9RDm9YlZxj/MD
+znchn3EGws8oMbn2XGyDYJGhCIIw+52NElkkNLvdwHa1fk5v4GFd5uGd/VTuraf+SEL8mZ5q8ND4tnH2
+HQS2o/tG6kbBE7S2cwJWiLmotaendW4qoKPK60qpYBKx0YTy07iCElmn1V+4k1V9TIj5lOs7NP9Jva//
+9SjP/QJQSwcI4Rn54AsBAAD8AQAAUEsBAhQAFAAIAAgAAAAhAOEZ+eALAQAA/AEAAAgAAAAAAAAAAAAA
+AAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAEEBAAAAAA==
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf--

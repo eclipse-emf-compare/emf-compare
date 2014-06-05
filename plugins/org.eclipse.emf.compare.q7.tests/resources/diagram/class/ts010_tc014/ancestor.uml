@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_QILKUHBkEeK-RrV7eVjvXA" name="model">
+  <packagedElement xmi:type="uml:Class" xmi:id="_YOr-cHBkEeK-RrV7eVjvXA" name="B">
+    <ownedAttribute xmi:id="_eFYsEHBkEeK-RrV7eVjvXA" name="feature1"/>
+    <ownedAttribute xmi:id="_gZCJsHBkEeK-RrV7eVjvXA" name="feature2"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_wFjF4HBkEeK-RrV7eVjvXA" name="D">
+    <packagedElement xmi:type="uml:Class" xmi:id="_zknNwHBkEeK-RrV7eVjvXA" name="E"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_3dhZAHBkEeK-RrV7eVjvXA" name="K">
+    <ownedAttribute xmi:id="_8iQeMHBkEeK-RrV7eVjvXA" name="feature1"/>
+    <ownedAttribute xmi:id="__ONuIHBkEeK-RrV7eVjvXA" name="feature2"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_EZJh8HBlEeK-RrV7eVjvXA" name="C"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_HDeaMHBlEeK-RrV7eVjvXA" name="H">
+    <ownedAttribute xmi:id="_Pa4KAHBlEeK-RrV7eVjvXA" name="feature1"/>
+    <ownedAttribute xmi:id="_RUk2kHBlEeK-RrV7eVjvXA" name="feature2"/>
+    <ownedAttribute xmi:id="_TVbUAHBlEeK-RrV7eVjvXA" name="feature3"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_XhzN0HBlEeK-RrV7eVjvXA" name="Class1"/>
+  <packagedElement xmi:type="uml:Package" xmi:id="_aqvUsHBlEeK-RrV7eVjvXA" clientDependency="_-qoqgHBlEeK-RrV7eVjvXA" name="F">
+    <packagedElement xmi:type="uml:Class" xmi:id="_fwIhMHBlEeK-RrV7eVjvXA" name="G"/>
+    <packagedElement xmi:type="uml:Dependency" xmi:id="_-qoqgHBlEeK-RrV7eVjvXA" name="Dependency1" client="_aqvUsHBlEeK-RrV7eVjvXA" supplier="_HDeaMHBlEeK-RrV7eVjvXA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_jo8l0HBlEeK-RrV7eVjvXA" name="J"/>
+  <packagedElement xmi:type="uml:Association" xmi:id="_vuYGk3BlEeK-RrV7eVjvXA" name="c_h_1" memberEnd="_vuYGlHBlEeK-RrV7eVjvXA _vuYGkHBlEeK-RrV7eVjvXA" navigableOwnedEnd="_vuYGkHBlEeK-RrV7eVjvXA">
+    <ownedEnd xmi:id="_vuYGlHBlEeK-RrV7eVjvXA" name="c" type="_EZJh8HBlEeK-RrV7eVjvXA" association="_vuYGk3BlEeK-RrV7eVjvXA">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vuYGlXBlEeK-RrV7eVjvXA" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vuYGlnBlEeK-RrV7eVjvXA" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_vuYGkHBlEeK-RrV7eVjvXA" name="h" type="_HDeaMHBlEeK-RrV7eVjvXA" aggregation="composite" association="_vuYGk3BlEeK-RrV7eVjvXA">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vuYGkXBlEeK-RrV7eVjvXA" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vuYGknBlEeK-RrV7eVjvXA" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+</uml:Model>

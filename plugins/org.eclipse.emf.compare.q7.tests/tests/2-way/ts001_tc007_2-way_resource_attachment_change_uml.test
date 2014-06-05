@@ -1,0 +1,64 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_FSekAHUCEeKHfa7Gozlrbw
+Element-Name: ts001_tc007_2-way_resource_attachment_change_uml
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: http://wiki.eclipse.org/EMF_Compare/Specifications/ProvideContentMergeViewerForResourceAttachmentChanges
+Id: _CV2a0HUCEeKHfa7Gozlrbw
+Save-Time: 7/22/13 11:54 AM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate, on a 2-way comparison with one resource attachment change difference, that the difference is displayed in the structure merge viewer under the match resource item, and is displayed in the content merge viewer.
+
+TEST STEPS
+	1) Select the 2 uml models and run a 2-way comparison (select left.uml and right.uml)
+	2) Double-click on the resource attachment change difference.
+		//asserts that the difference is displayed in the structure merge viewer under the match resource item
+		//asserts that the difference is displayed and selected in the content merge viewer. 
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Package Explorer" | get-tree] {
+    select "SimpleResourceAttachmentChange/left.uml" "SimpleResourceAttachmentChange/right.uml"
+    get-menu "Compare With/Each Other" | click
+}
+with [get-editor "Compare (\'SimpleResourceAttachmentChange/left.uml\' - \'SimpleResourceAttachmentChange/right.uml\')" 
+    | get-tree] {
+    get-property itemCount | equals 1 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "<Model> new root \\[uncontrolled from .*\\]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItemCount()" | equals 0 | verify-true
+    get-property "getItems().TreeItem[0].getText()" | equals "left.uml <-> right.uml" | verify-true
+    get-property "getItems().TreeItem[0].getItemCount()" | equals 1 | verify-true
+}
+get-editor "Compare (\'SimpleResourceAttachmentChange/left.uml\' - \'SimpleResourceAttachmentChange/right.uml\')" 
+    | get-tree | select "left.uml <-> right.uml/<Model> new root \\[uncontrolled from .*\\]" | double-click
+
+with [get-editor "Compare (\'SimpleResourceAttachmentChange/left.uml\' - \'SimpleResourceAttachmentChange/right.uml\')"] {
+    with [get-tree -after [get-label "SimpleResourceAttachmentChange/right.uml"]] {
+        get-item "platform:\\/resource\\/SimpleResourceAttachmentChange\\/left.uml" | get-property childCount 
+            | equals 1 | verify-true
+        get-item "platform:\\/resource\\/SimpleResourceAttachmentChange\\/left.uml/                                          " | get-property selected 
+            | equals true | verify-true
+        get-item "platform:\\/resource\\/SimpleResourceAttachmentChange\\/left.uml/                                          " | get-property childCount 
+            | equals 0 | verify-true
+    }
+    with [get-tree -after [get-label "SimpleResourceAttachmentChange/right.uml"] -index 1] {
+        get-item "platform:\\/resource\\/SimpleResourceAttachmentChange\\/right.uml" | get-property childCount 
+            | equals 1 | verify-true
+        get-item "platform:\\/resource\\/SimpleResourceAttachmentChange\\/right.uml/<Model> new root" 
+            | get-property selected | equals true | verify-true
+        get-item "platform:\\/resource\\/SimpleResourceAttachmentChange\\/right.uml/<Model> new root" 
+            | get-property childCount | equals 0 | verify-true
+    }
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

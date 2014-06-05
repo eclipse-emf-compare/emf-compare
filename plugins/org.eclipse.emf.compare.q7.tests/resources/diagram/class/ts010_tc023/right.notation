@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_f00G4IG-EeK_GKBCh3090g" type="PapyrusUMLClassDiagram" name="NewDiagram" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="_k77xsIG-EeK_GKBCh3090g" type="2007" fontHeight="8" lineColor="0">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_k8FisIG-EeK_GKBCh3090g" source="ShadowFigure">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_k8FisYG-EeK_GKBCh3090g" key="ShadowFigure_Value" value="false"/>
+    </eAnnotations>
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_k8FisoG-EeK_GKBCh3090g" source="displayNameLabelIcon">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_k8Fis4G-EeK_GKBCh3090g" key="displayNameLabelIcon_value" value="false"/>
+    </eAnnotations>
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_k8FitIG-EeK_GKBCh3090g" source="QualifiedName">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_k8FitYG-EeK_GKBCh3090g" key="QualifiedNameDepth" value="1000"/>
+    </eAnnotations>
+    <children xmi:type="notation:DecorationNode" xmi:id="_k8FitoG-EeK_GKBCh3090g" type="5026"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_k8Fit4G-EeK_GKBCh3090g" type="7016">
+      <styles xmi:type="notation:TitleStyle" xmi:id="_k8FiuIG-EeK_GKBCh3090g"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_k8FiuYG-EeK_GKBCh3090g"/>
+    </children>
+    <element xmi:type="uml:Package" href="right.uml#_k0DBAIG-EeK_GKBCh3090g"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_k77xsYG-EeK_GKBCh3090g" x="415" y="70" width="181" height="141"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_f00G4YG-EeK_GKBCh3090g"/>
+  <element xmi:type="uml:Model" href="right.uml#_fwNTsIG-EeK_GKBCh3090g"/>
+</notation:Diagram>

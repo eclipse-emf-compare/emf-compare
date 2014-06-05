@@ -1,0 +1,1 @@
+Case: Graphical objects non linked to a semantic one.

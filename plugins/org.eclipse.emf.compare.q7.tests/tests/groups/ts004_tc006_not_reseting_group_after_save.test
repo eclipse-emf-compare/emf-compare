@@ -1,0 +1,64 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_jRtbsGrtEeK_JdLra2Bk5A
+Element-Name: ts004_tc006_not_reseting_group_after_save
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _hHgs4OTHEeOeIpN_wsak0A
+Q7-Runtime-Version: 1.3.10.201312200736
+Save-Time: 5/26/14 6:08 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Checks that the active group is not reseted after saving (even if the groups are not synchronized with the preferences).
+
+1. Opens a comparison.
+2. Selects the "Default" group.
+3. Doesnot synchronize.
+4. Merges a diff.
+5. Saves.
+6. Checks that the "Default" group is still activated.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+//Starts the comparison
+with [get-view "Package Explorer" | get-tree] {
+    select "Library/extlibraryLeft.ecore" "Library/extlibraryOrigin.ecore" "Library/extlibraryRight.ecore"
+    get-menu "Compare With/Each Other" | click
+}
+with [get-window "Select Common Ancestor"] {
+    get-button "\'/Library/extlibraryOrigin.ecore\'" | click
+    get-button OK | click
+}
+//Sets the default group
+get-editor "Compare (\'Library/extlibraryRight.ecore\' - \'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" 
+    | get-button Groups | click -arrow
+ 
+get-menu "By Side" | get-property selection | equals true | verify-true
+get-menu "Default" | get-property selection | equals false | verify-true
+ 
+get-menu Default | click
+
+//Merges and saves
+get-window "Group preference" | get-button No | click
+with [get-editor "Compare (\'Library/extlibraryRight.ecore\' - \'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')"] {
+    get-button "Copy Current Change From Left To Right" | click
+    get-tree | select "> extlibrary/> Book -> CirculatingItem" | key-type "M1+s" //save
+}
+
+//Checks that "Default" is still activated
+get-editor "Compare (\'Library/extlibraryRight.ecore\' - \'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')"  | get-button Groups 
+    | click -arrow
+get-menu "By Side" | get-property selection | equals false | verify-true
+get-menu "Default" | get-property selection | equals true | verify-true
+//Checks the root of the tree
+get-editor "Compare (\'Library/extlibraryRight.ecore\' - \'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" 
+    | get-tree | get-item "> extlibrary" | get-property caption | equals "> extlibrary" | verify-true
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

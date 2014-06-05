@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmi:id="_TFreQMg9EeKsrNRL2CK8cg" type="EcoreTools" name="right" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="_ez9DQMg9EeKsrNRL2CK8cg" type="Note" description="My note" fillColor="13369343" transparency="0" lineColor="6737151" lineWidth="1">
+    <children xmi:type="notation:BasicDecorationNode" xmi:id="_ez9DRMg9EeKsrNRL2CK8cg" type="DiagramName">
+      <element xsi:nil="true"/>
+    </children>
+    <children xmi:type="notation:BasicDecorationNode" xmi:id="_ez9DRcg9EeKsrNRL2CK8cg" type="Description">
+      <element xsi:nil="true"/>
+    </children>
+    <styles xmi:type="notation:TextStyle" xmi:id="_ez9DQcg9EeKsrNRL2CK8cg"/>
+    <styles xmi:type="notation:LineTypeStyle" xmi:id="_ez9DQsg9EeKsrNRL2CK8cg"/>
+    <element xsi:nil="true"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ez9DQ8g9EeKsrNRL2CK8cg" x="127" y="97"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_gfJZwMg9EeKsrNRL2CK8cg" type="Text" description="My text">
+    <children xmi:type="notation:BasicDecorationNode" xmi:id="_gfJZwsg9EeKsrNRL2CK8cg" type="DiagramName">
+      <element xsi:nil="true"/>
+    </children>
+    <children xmi:type="notation:BasicDecorationNode" xmi:id="_gfJZw8g9EeKsrNRL2CK8cg" type="Description">
+      <element xsi:nil="true"/>
+    </children>
+    <element xsi:nil="true"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_gfJZwcg9EeKsrNRL2CK8cg" x="128" y="225"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_kepVMMg9EeKsrNRL2CK8cg" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_ke7pEMg9EeKsrNRL2CK8cg" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_ke7pEcg9EeKsrNRL2CK8cg" type="5001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_ke7pEsg9EeKsrNRL2CK8cg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_ke7pE8g9EeKsrNRL2CK8cg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_ke7pFMg9EeKsrNRL2CK8cg"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_ke7pFcg9EeKsrNRL2CK8cg" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_ke7pFsg9EeKsrNRL2CK8cg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_ke7pF8g9EeKsrNRL2CK8cg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_ke7pGMg9EeKsrNRL2CK8cg"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_kepVMcg9EeKsrNRL2CK8cg" fontColor="4210752" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="left.ecore#//EClass0"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kepVMsg9EeKsrNRL2CK8cg" x="175" y="341"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_n7Ow0Mg9EeKsrNRL2CK8cg" type="Note" description="My note attachment" fillColor="13369343" transparency="0" lineColor="6737151" lineWidth="1">
+    <children xmi:type="notation:BasicDecorationNode" xmi:id="_n7Ow1Mg9EeKsrNRL2CK8cg" type="DiagramName">
+      <element xsi:nil="true"/>
+    </children>
+    <children xmi:type="notation:BasicDecorationNode" xmi:id="_n7Ow1cg9EeKsrNRL2CK8cg" type="Description">
+      <element xsi:nil="true"/>
+    </children>
+    <styles xmi:type="notation:TextStyle" xmi:id="_n7Ow0cg9EeKsrNRL2CK8cg"/>
+    <styles xmi:type="notation:LineTypeStyle" xmi:id="_n7Ow0sg9EeKsrNRL2CK8cg"/>
+    <element xsi:nil="true"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_n7Ow08g9EeKsrNRL2CK8cg" x="400" y="313"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_TFreQcg9EeKsrNRL2CK8cg"/>
+  <element xmi:type="ecore:EPackage" href="left.ecore#/"/>
+  <edges xmi:type="notation:Connector" xmi:id="_n7U3cMg9EeKsrNRL2CK8cg" type="NoteAttachment" source="_kepVMMg9EeKsrNRL2CK8cg" target="_n7Ow0Mg9EeKsrNRL2CK8cg" lineWidth="1">
+    <styles xmi:type="notation:ArrowStyle" xmi:id="_n7U3ccg9EeKsrNRL2CK8cg"/>
+    <styles xmi:type="notation:LineTypeStyle" xmi:id="_n7U3csg9EeKsrNRL2CK8cg"/>
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_n7U3c8g9EeKsrNRL2CK8cg" points="[-13, -20, 212, 341]$[-225, -361, 0, 0]"/>
+  </edges>
+</notation:Diagram>

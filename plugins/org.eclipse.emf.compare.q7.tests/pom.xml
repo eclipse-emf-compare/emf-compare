@@ -1,0 +1,97 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.eclipse.emf.compare</groupId>
+  <artifactId>org.eclipse.emf.compare.q7.test</artifactId>
+  <version>3.0.0-SNAPSHOT</version>
+  <packaging>q7test</packaging>
+	
+  <pluginRepositories>
+
+	<pluginRepository>
+	  <id>q7-releases</id>
+	  <name>Xored Maven repository</name>
+	  <url>http://maven.xored.com/nexus/content/repositories/q7-releases/</url>
+	</pluginRepository>
+  </pluginRepositories>	
+  
+  <repositories>
+	<repository>
+		<id>thirdparty</id>
+		<name>Eclipse AUT repository</name>
+		<url>http://maven.obeo.fr/aut/</url>
+	</repository>
+  </repositories>
+  
+  <properties>
+	<q7-runner-version>1.3.11</q7-runner-version>
+	<q7-maven-version>1.3.11</q7-maven-version>
+  </properties>
+ 
+  <profiles>
+  <profile>
+    <id>luna</id>
+    <activation>
+      <activeByDefault>true</activeByDefault>
+    </activation>
+    <build>
+      <plugins>
+		<plugin>
+		<groupId>com.xored.q7</groupId>
+		<artifactId>q7-maven-plugin</artifactId>
+		<version>${q7-maven-version}</version>
+		<extensions>true</extensions>
+		<configuration>
+		  <aut>
+			<groupId>org.eclipse</groupId>
+			<artifactId>sdk</artifactId>
+			<version>4.4RC2</version>
+			<injections>
+			  <injection>
+				<site>http://download.eclipse.org/releases/luna/</site>
+				<features>
+				 <feature>org.apache.commons.lang</feature>
+                 <feature>org.eclipse.jdt.feature.group</feature>
+                 <feature>org.eclipse.ocl.all.sdk.feature.group</feature>
+                 <feature>org.eclipse.uml2.feature.group</feature>
+				
+				 <feature>org.eclipse.emf.feature.group</feature>
+				 <feature>org.eclipse.emf.transaction.feature.group</feature>
+                 <feature>org.eclipse.emf.validation.sdk.feature.group</feature>
+                 <feature>org.eclipse.emf.workspace.feature.group</feature>
+				 <feature>org.eclipse.emf.facet.sdk.feature.feature.group</feature>
+				 
+				 <feature>org.eclipse.draw2d.feature.group</feature>
+                 <feature>org.eclipse.gef.sdk.feature.group</feature>
+                 <feature>org.eclipse.gmf.sdk.feature.group</feature>
+                 <feature>org.eclipse.gmf.runtime.sdk.feature.group</feature>
+                 <feature>org.eclipse.gmf.runtime.notation.sdk.feature.group</feature>
+                               
+                 <feature>org.eclipse.papyrus.sdk.feature.feature.group</feature>
+                 
+                 <feature>org.eclipse.xtend.sdk.feature.group</feature>
+                 <feature>org.eclipse.xtext.sdk.feature.group</feature>
+            	</features>
+			  </injection>
+			  <injection>
+				<site>http://download.eclipse.org/egit/updates-nightly</site>
+			  </injection>
+			  <injection>
+				<site>http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest</site>
+			  </injection>
+			</injections>
+		  </aut>
+		  <suites>
+		  	<suite>FullTestSuite</suite>
+		  </suites>
+		  <q7>
+			<version>${q7-runner-version}</version>
+            <licenseUrl>http://licensing.xored.com/pool/05bc9cc5-a261-0280-a50e-406c8f046395</licenseUrl>
+		  </q7>
+		</configuration>
+	  </plugin>
+      </plugins>
+    </build>
+  </profile>
+  </profiles>
+</project>

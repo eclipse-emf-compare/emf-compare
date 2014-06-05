@@ -1,0 +1,4 @@
+** Conflicting case **
+
+CHANGE coordinates of child on one side
+DELETE parent on the other side

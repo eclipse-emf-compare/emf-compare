@@ -1,0 +1,16 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Element-Name: ts009-logicalmodel
+Element-Type: testsuite
+Element-Version: 2.0
+Id: _wHPGAN2TEeKlP8eyY8UqWw
+Save-Time: 6/25/13 5:22 PM
+
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8
+Content-Type: text/testcase
+Entry-Name: testcase-items
+
+_XcTjsN2bEeKlP8eyY8UqWw	// kind: 'test' name: 'ts009_tc001_logicalmodel_with_fragments' path: 'logicalmodel/ts009_tc001_logicalmodel_with_fragments.test'
+
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8--

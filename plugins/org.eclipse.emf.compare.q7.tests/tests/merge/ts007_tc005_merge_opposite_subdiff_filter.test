@@ -1,0 +1,46 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_Tl0x0KWqEeKzDIfu4QwfoQ
+Element-Name: ts007_tc005_merge_opposite_subdiff_filter
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: https://bugs.eclipse.org/bugs/show_bug.cgi?id=405274
+Id: _mJM4UaWoEeKzDIfu4QwfoQ
+Save-Time: 7/16/13 5:49 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate a merge of an opposite reference which is also a subdiff.
+TEST STEPS
+	1) Select the 2 uml models and run a 2-way comparison (select left.uml and right.uml) 
+	2) Double-click on the attribute title of the AudioVisualItem
+	//asserts that the left part of the content merge viewer contains the text "title : EString" and right part the text "".
+	3) Double-click on the difference under title, click on "Copy Current Change from Left to Right" button, then double-click on the attribute title of the AudioVisualItem
+	//asserts that the left part of the content merge viewer contains the text "title : EString" and right part the text "title : EString".
+	4) Click on Ctrl+z. Double-click on the attribute title of the AudioVisualItem
+	//asserts that the left part of the content merge viewer contains the text "title : EString" and right part the text "".
+	5) Double-click on the difference under title, click on "Copy Current Change from Right to Left" button, then double-click on the attribute title of the AudioVisualItem
+	//asserts that the left part of the content merge viewer contains the text "title" and right part the text "".
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Package Explorer" | get-tree] {
+    select "MergeOppositeRefWithSubDiffFilter/uml/left.uml" "MergeOppositeRefWithSubDiffFilter/uml/right.uml"
+    get-menu "Compare With/Each Other" | click
+}
+with [get-editor "Compare (\'MergeOppositeRefWithSubDiffFilter/uml/left.uml\' - \'MergeOppositeRefWithSubDiffFilter/uml/right.uml\')"] {
+    get-tree | select "> <Model> model/<Association> class1_class0_0 \\[packagedElement add\\]" | double-click
+    get-button "Copy Current Change From Right To Left" | click
+    get-tree | key-type "M1+z"
+    get-button "Copy Current Change From Left To Right" | click
+    get-tree | key-type "M1+z"
+    close
+}
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

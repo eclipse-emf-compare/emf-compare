@@ -1,0 +1,4 @@
+MIX
+
+DELETE edge
+CHANGE coordinates of the target
