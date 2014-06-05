@@ -158,8 +158,8 @@
             <licenseUrl>http://licensing.xored.com/pool/05bc9cc5-a261-0280-a50e-406c8f046395</licenseUrl>
             <vmArgs>
               <vmArg>-Dcom.xored.q7.runner.returnTestFailure=true</vmArg>
-              <vmArg>-Dhttp.proxyHost=proxy.eclipse.org</vmArg>
-              <vmArg>-Dhttp.proxyPort=9898</vmArg>
+              <vmArg>-Dhttp.proxyHost=${http.proxyHost}</vmArg>
+              <vmArg>-Dhttp.proxyPort=${http.proxyPort}</vmArg>
             </vmArgs>
 		  </q7>
 		</configuration>
