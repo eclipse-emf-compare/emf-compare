@@ -9,12 +9,12 @@ if [[ "$simrel" == "luna"* ]]; then
 	simrel_zip_name="eclipse-SDK-4.4RC3-linux-gtk-x86_64.tar.gz"
 	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/S-4.4RC3-201405282000/$simrel_zip_name"
 	p2_repositories="http://download.eclipse.org/releases/staging/,http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest,http://download.eclipse.org/egit/updates-nightly"
-	p2_installIUs="org.eclipse.emf.compare.ide.ui.feature.group,org.eclipse.egit.feature.group"
+	p2_installIUs="org.eclipse.emf.compare.ide.ui.feature.group,org.eclipse.egit.feature.group,org.eclipse.emf.compare.uml2.feature.group,org.eclipse.emf.compare.diagram.gmf.feature.group,org.eclipse.emf.compare.diagram.papyrus.feature.group"
 elif [[ "$simrel" == "kepler" ]]; then
 	simrel_zip_name="eclipse-SDK-4.3.2-linux-gtk-x86_64.tar.gz"
 	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/R-4.3.2-201402211700/$simrel_zip_name"	
 	p2_repositories="http://download.eclipse.org/releases/staging/,http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest,http://download.eclipse.org/egit/updates-nightly"
-	p2_installIUs="org.eclipse.emf.compare.ide.ui.feature.group,org.eclipse.egit.feature.group,org.eclipse.emf.compare.uml2.feature.group,org.eclipse.emf.compare.diagram.gmf.feature.group,org.eclipse.emf.compare.diagram.papyrus.feature.group"
+	p2_installIUs="org.eclipse.emf.compare.ide.ui.feature.group,org.eclipse.egit.feature.group"	
 else
 	echo "Unknown 'simrel'=$simrel."
 	exit -1
