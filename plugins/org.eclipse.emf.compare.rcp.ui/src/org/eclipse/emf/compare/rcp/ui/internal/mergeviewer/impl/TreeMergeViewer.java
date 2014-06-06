@@ -110,6 +110,11 @@ public class TreeMergeViewer extends AbstractTableOrTreeMergeViewer {
 	protected void inputChanged(Object input, Object oldInput) {
 		if (input instanceof ICompareAccessor) {
 			fInput = input;
+			/*
+			 * Sets the selection to null to prevent memory in the tree viewer. See
+			 * StructuredViewer#preservingSelection(Runnable updateCode, boolean reveal)
+			 */
+			getStructuredViewer().setSelection(null);
 			getStructuredViewer().setInput(input);
 		} else {
 			getStructuredViewer().setInput(null);
