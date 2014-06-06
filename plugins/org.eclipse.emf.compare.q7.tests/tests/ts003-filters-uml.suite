@@ -1,0 +1,19 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Element-Name: ts003-filters-uml
+Element-Type: testsuite
+Element-Version: 2.0
+Id: _v7KfMO1eEeOGobrROiM5Sw
+Q7-Runtime-Version: 1.3.11.201403141124
+Save-Time: 6/6/14 11:42 AM
+
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8
+Content-Type: text/testcase
+Entry-Name: testcase-items
+
+_OrwU4N1rEeKlP8eyY8UqWw	// kind: 'test' name: 'ts003_tc004_filter_uml_refined_elements_cmv' path: 'filters/ts003_tc004_filter_uml_refined_elements_cmv.test'
+__QqOYIAsEeKoeMXPKKjx4w	// kind: 'test' name: 'ts003_tc010_filter_uml_refined_elements' path: 'filters/ts003_tc010_filter_uml_refined_elements.test'
+_aL3J0SXfEeO6ha-5fW2kEg	// kind: 'test' name: 'ts003_tc011_filter_uml_refined_elements_check_order' path: 'filters/ts003_tc011_filter_uml_refined_elements_check_order.test'
+
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8--

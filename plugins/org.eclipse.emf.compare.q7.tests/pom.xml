@@ -28,9 +28,34 @@
 	<q7-maven-version>1.3.11</q7-maven-version>
   </properties>
  
+  <build>
+   <plugins>
+    <plugin>
+	  <artifactId>exec-maven-plugin</artifactId>
+	  <groupId>org.codehaus.mojo</groupId>
+	  <executions>
+	    <execution><!-- Run our version calculation script -->
+	      <id>AUT Generation</id>
+	      <phase>generate-sources</phase>
+	      <goals>
+	        <goal>exec</goal>
+	      </goals>
+	      <configuration>
+	        <executable>${basedir}/createAUT.sh</executable>
+	        <commandlineArgs>${profile-id}</commandlineArgs>
+	      </configuration>
+	    </execution>
+	  </executions>
+	</plugin>
+	</plugins>
+  </build>
+ 
   <profiles>
   <profile>
     <id>luna</id>
+    <properties>
+      <profile-id>luna</profile-id>
+    </properties>
     <activation>
       <activeByDefault>true</activeByDefault>
     </activation>
@@ -43,54 +68,18 @@
 		<extensions>true</extensions>
 		<configuration>
 		  <aut>
-			<groupId>org.eclipse</groupId>
-			<artifactId>sdk</artifactId>
-			<version>4.4RC2</version>
-			<injections>
-			  <injection>
-				<site>http://download.eclipse.org/releases/luna/</site>
-				<features>
-				 <feature>org.apache.commons.lang</feature>
-                 <feature>org.eclipse.jdt.feature.group</feature>
-                 <feature>org.eclipse.ocl.all.sdk.feature.group</feature>
-                 <feature>org.eclipse.uml2.feature.group</feature>
-				
-				 <feature>org.eclipse.emf.feature.group</feature>
-				 <feature>org.eclipse.emf.transaction.feature.group</feature>
-                 <feature>org.eclipse.emf.validation.sdk.feature.group</feature>
-                 <feature>org.eclipse.emf.workspace.feature.group</feature>
-				 <feature>org.eclipse.emf.facet.sdk.feature.feature.group</feature>
-				 
-				 <feature>org.eclipse.draw2d.feature.group</feature>
-                 <feature>org.eclipse.gef.sdk.feature.group</feature>
-                 <feature>org.eclipse.gmf.sdk.feature.group</feature>
-                 <feature>org.eclipse.gmf.runtime.sdk.feature.group</feature>
-                 <feature>org.eclipse.gmf.runtime.notation.sdk.feature.group</feature>
-                               
-                 <feature>org.eclipse.papyrus.sdk.feature.feature.group</feature>
-                 
-                 <feature>org.eclipse.xtend.sdk.feature.group</feature>
-                 <feature>org.eclipse.xtext.sdk.feature.group</feature>
-            	</features>
-			  </injection>
-			  <injection>
-				<site>http://download.eclipse.org/egit/updates-nightly</site>
-			  </injection>
-			  <injection>
-				<site>http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest</site>
-			  </injection>
-			</injections>
+			<explicit>AUT.zip</explicit>
 		  </aut>
 		  <suites>
-		  	<suite>FullTestSuite</suite>
+		  	<suite>TestSuite.Full</suite>
 		  </suites>
 		  <q7>
 			<version>${q7-runner-version}</version>
             <licenseUrl>http://licensing.xored.com/pool/05bc9cc5-a261-0280-a50e-406c8f046395</licenseUrl>
             <vmArgs>
               <vmArg>-Dcom.xored.q7.runner.returnTestFailure=true</vmArg>
-              <vmArg>-Dhttp.proxyHost=proxy.eclipse.org</vmArg>
-              <vmArg>-Dhttp.proxyPort=9898</vmArg>
+              <vmArg>-Dhttp.proxyHost=${http.proxyHost}</vmArg>
+              <vmArg>-Dhttp.proxyPort=${http.proxyPort}</vmArg>
             </vmArgs>
 		  </q7>
 		</configuration>
@@ -100,6 +89,9 @@
   </profile>
   <profile>
     <id>kepler</id>
+    <properties>
+      <profile-id>kepler</profile-id>
+    </properties>
     <activation>
       <activeByDefault>true</activeByDefault>
     </activation>
@@ -112,46 +104,10 @@
 		<extensions>true</extensions>
 		<configuration>
 		  <aut>
-			<groupId>org.eclipse</groupId>
-			<artifactId>sdk</artifactId>
-			<version>4.3.2</version>
-			<injections>
-			  <injection>
-				<site>http://download.eclipse.org/releases/kepler/</site>
-				<features>
-				 <feature>org.apache.commons.lang</feature>
-                 <feature>org.eclipse.jdt.feature.group</feature>
-                 <feature>org.eclipse.ocl.all.sdk.feature.group</feature>
-                 <feature>org.eclipse.uml2.feature.group</feature>
-				
-				 <feature>org.eclipse.emf.feature.group</feature>
-				 <feature>org.eclipse.emf.transaction.feature.group</feature>
-                 <feature>org.eclipse.emf.validation.sdk.feature.group</feature>
-                 <feature>org.eclipse.emf.workspace.feature.group</feature>
-				 <feature>org.eclipse.emf.facet.sdk.feature.feature.group</feature>
-				 
-				 <feature>org.eclipse.draw2d.feature.group</feature>
-                 <feature>org.eclipse.gef.sdk.feature.group</feature>
-                 <feature>org.eclipse.gmf.sdk.feature.group</feature>
-                 <feature>org.eclipse.gmf.runtime.sdk.feature.group</feature>
-                 <feature>org.eclipse.gmf.runtime.notation.sdk.feature.group</feature>
-                               
-                 <feature>org.eclipse.papyrus.sdk.feature.feature.group</feature>
-                 
-                 <feature>org.eclipse.xtend.sdk.feature.group</feature>
-                 <feature>org.eclipse.xtext.sdk.feature.group</feature>
-            	</features>
-			  </injection>
-			  <injection>
-				<site>http://download.eclipse.org/egit/updates-nightly</site>
-			  </injection>
-			  <injection>
-				<site>http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest</site>
-			  </injection>
-			</injections>
+			<explicit>AUT.zip</explicit>
 		  </aut>
 		  <suites>
-		  	<suite>FullTestSuite</suite>
+		  	<suite>TestSuite.Core</suite>
 		  </suites>
 		  <q7>
 			<version>${q7-runner-version}</version>
