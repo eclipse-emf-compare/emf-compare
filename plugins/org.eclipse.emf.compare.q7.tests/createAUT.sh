@@ -31,4 +31,4 @@ fi
 wget -q "$simrel_zip_url"
 tar zxf "$simrel_zip_name"
 p2-director -repository "$p2_repositories" -installIU "$p2_installIUs" -tag Q7_AUT -destination "./eclipse" -profile SDKProfile
-zip -qr AUT.zip eclipse
+zip -qr AUT-linux.gtk.x86_64.zip eclipse

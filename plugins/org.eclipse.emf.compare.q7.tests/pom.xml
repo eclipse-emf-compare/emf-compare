@@ -15,14 +15,6 @@
 	</pluginRepository>
   </pluginRepositories>	
   
-  <repositories>
-	<repository>
-		<id>thirdparty</id>
-		<name>Eclipse AUT repository</name>
-		<url>http://maven.obeo.fr/aut/</url>
-	</repository>
-  </repositories>
-  
   <properties>
 	<q7-runner-version>1.3.11</q7-runner-version>
 	<q7-maven-version>1.3.11</q7-maven-version>
@@ -70,7 +62,7 @@
 		<extensions>true</extensions>
 		<configuration>
 		  <aut>
-			<explicit>AUT.zip</explicit>
+			<explicit>AUT-[platform].zip</explicit>
 		  </aut>
 		  <suites>
 		  	<suite>TestSuite.Full</suite>
@@ -106,7 +98,7 @@
 		<extensions>true</extensions>
 		<configuration>
 		  <aut>
-			<explicit>AUT.zip</explicit>
+			<explicit>AUT-[platform].zip</explicit>
 		  </aut>
 		  <suites>
 		  	<suite>TestSuite.Core</suite>
