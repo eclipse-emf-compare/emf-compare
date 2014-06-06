@@ -7,7 +7,6 @@
   <packaging>q7test</packaging>
 	
   <pluginRepositories>
-
 	<pluginRepository>
 	  <id>q7-releases</id>
 	  <name>Xored Maven repository</name>
@@ -18,7 +17,7 @@
   <properties>
 	<q7-runner-version>1.3.11</q7-runner-version>
 	<q7-maven-version>1.3.11</q7-maven-version>
-	<exec-maven-plugin-version>1.3.1</exec-maven-plugin-version>
+	<exec-maven-plugin-version>1.2.1</exec-maven-plugin-version>
   </properties>
  
   <build>
@@ -62,7 +61,7 @@
 		<extensions>true</extensions>
 		<configuration>
 		  <aut>
-			<explicit>AUT-[platform].zip</explicit>
+			<explicit>AUT.zip</explicit>
 		  </aut>
 		  <suites>
 		  	<suite>TestSuite.Full</suite>
@@ -98,7 +97,7 @@
 		<extensions>true</extensions>
 		<configuration>
 		  <aut>
-			<explicit>AUT-[platform].zip</explicit>
+			<explicit>AUT.zip</explicit>
 		  </aut>
 		  <suites>
 		  	<suite>TestSuite.Core</suite>
