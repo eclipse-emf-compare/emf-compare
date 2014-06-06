@@ -61,7 +61,7 @@
 		<extensions>true</extensions>
 		<configuration>
 		  <aut>
-			<explicit>AUT.zip</explicit>
+			<explicit>AUT-[platform].zip</explicit>
 		  </aut>
 		  <suites>
 		  	<suite>TestSuite.Full</suite>
@@ -97,7 +97,7 @@
 		<extensions>true</extensions>
 		<configuration>
 		  <aut>
-			<explicit>AUT.zip</explicit>
+			<explicit>AUT-[platform].zip</explicit>
 		  </aut>
 		  <suites>
 		  	<suite>TestSuite.Core</suite>
