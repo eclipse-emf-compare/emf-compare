@@ -8,22 +8,6 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/emf/compare/ide/ui/internal/logical/ForwardingFile.java" type="org.eclipse.emf.compare.ide.ui.internal.logical.ForwardingFile">
-        <filter id="574619656">
-            <message_arguments>
-                <message_argument value="IFile"/>
-                <message_argument value="ForwardingFile"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/org/eclipse/emf/compare/ide/ui/internal/logical/ForwardingResource.java" type="org.eclipse.emf.compare.ide.ui.internal.logical.ForwardingResource">
-        <filter id="574619656">
-            <message_arguments>
-                <message_argument value="IResource"/>
-                <message_argument value="ForwardingResource"/>
-            </message_arguments>
-        </filter>
-    </resource>
     <resource path="src/org/eclipse/emf/compare/ide/ui/internal/structuremergeviewer/WrappableTreeViewer.java" type="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.WrappableTreeViewer">
         <filter id="571473929">
             <message_arguments>

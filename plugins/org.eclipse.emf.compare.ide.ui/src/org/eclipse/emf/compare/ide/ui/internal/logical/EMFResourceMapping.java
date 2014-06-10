@@ -16,15 +16,14 @@ import com.google.common.collect.Sets;
 
 import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.resources.mapping.ResourceMappingContext;
 import org.eclipse.core.resources.mapping.ResourceTraversal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -38,8 +37,11 @@ import org.eclipse.emf.compare.ide.utils.StorageTraversal;
  * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
  */
 public class EMFResourceMapping extends ResourceMapping {
-	/** The physical resource underlying this mapping. */
-	private ForwardingFile file;
+	/** The resource from which this mapping has been initialized. */
+	private final IResource resource;
+
+	/** The set of files composing this mapping's logical model. */
+	private final StorageTraversal traversal;
 
 	/** The Model provider for which this mapping has been created. */
 	private String providerId;
@@ -50,14 +52,16 @@ public class EMFResourceMapping extends ResourceMapping {
 	/**
 	 * Instantiates our mapping given its underlying physical {@link IResource}.
 	 * 
-	 * @param file
+	 * @param resource
 	 *            The physical resource of this mapping.
+	 * @param traversal
+	 *            The pre-computed local traversal composing this resource's logical model.
 	 * @param providerId
 	 *            The Model provider for which this mapping should be created.
 	 */
-	public EMFResourceMapping(IFile file, String providerId) {
-		checkNotNull(file);
-		this.file = new ForwardingFile(file);
+	public EMFResourceMapping(IResource resource, StorageTraversal traversal, String providerId) {
+		this.resource = checkNotNull(resource);
+		this.traversal = checkNotNull(traversal);
 		this.providerId = providerId;
 	}
 
@@ -68,7 +72,7 @@ public class EMFResourceMapping extends ResourceMapping {
 	 */
 	@Override
 	public Object getModelObject() {
-		return file;
+		return traversal;
 	}
 
 	/**
@@ -90,27 +94,22 @@ public class EMFResourceMapping extends ResourceMapping {
 	@Override
 	public ResourceTraversal[] getTraversals(ResourceMappingContext context, IProgressMonitor monitor)
 			throws CoreException {
-		final IProgressMonitor progressMonitor;
-		if (monitor == null) {
-			progressMonitor = new NullProgressMonitor();
-		} else {
-			progressMonitor = monitor;
-		}
-
+		/*
+		 * FIXME in time, the ResourceMappingContext will have to be used to invalidate the previously cached
+		 * traversal if it changes in any way (assume a Cache<ResourceMappingContext, StorageTraversal>). EMF
+		 * Compare itself will re-compute an accurate traversal, taking remote versions into account, later on
+		 * in the comparison process. Other consumers of this mapping might not (for example, "replace with"
+		 * or "move" actions might only use the info available from our cached "local" mapping, potentially
+		 * causing issues. Needs to be investigated further.
+		 */
 		if (cachedTraversals == null) {
-			try {
-				StorageTraversal emfTraversal = resolveEMFTraversal(context, progressMonitor);
-				if (emfTraversal.getDiagnostic().getSeverity() >= Diagnostic.ERROR) {
-					EMFCompareIDEUIPlugin.getDefault().getLog().log(
-							BasicDiagnostic.toIStatus(emfTraversal.getDiagnostic()));
-					return createSingletonTraversal(file.getDelegate());
-				}
-
-				cachedTraversals = convertCompareTraversal(emfTraversal);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-				return createSingletonTraversal(file.getDelegate());
+			if (traversal.getDiagnostic().getSeverity() >= Diagnostic.ERROR) {
+				EMFCompareIDEUIPlugin.getDefault().getLog().log(
+						BasicDiagnostic.toIStatus(traversal.getDiagnostic()));
+				return createSingletonTraversal(resource);
 			}
+
+			cachedTraversals = convertCompareTraversal(traversal);
 		}
 
 		final ResourceTraversal[] traversals = new ResourceTraversal[cachedTraversals.length];
@@ -118,61 +117,36 @@ public class EMFResourceMapping extends ResourceMapping {
 		return traversals;
 	}
 
-	private ResourceTraversal[] createSingletonTraversal(IFile resource) {
-		final ResourceTraversal singletonTraversal = new ResourceTraversal(new IResource[] {resource, },
+	private static ResourceTraversal[] createSingletonTraversal(IResource aResource) {
+		final ResourceTraversal singletonTraversal = new ResourceTraversal(new IResource[] {aResource, },
 				IResource.DEPTH_ONE, IResource.NONE);
 		return new ResourceTraversal[] {singletonTraversal, };
 	}
 
-	// FIXME delete once we have a true model object to return from #getModelObject()
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object other) {
 		if (other instanceof EMFResourceMapping) {
-			return ((EMFResourceMapping)other).file.getFullPath().equals(file.getFullPath());
+			return traversal.getStorages().equals(((EMFResourceMapping)other).traversal.getStorages());
 		}
 		return false;
 	}
 
-	// FIXME delete once we have a true model object to return from #getModelObject()
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
-		return file.getFullPath().hashCode();
+		return traversal.getStorages().hashCode();
 	}
 
 	/**
-	 * Resolve the traversal underlying this mapping. This will iterate over all resources needed by the
-	 * logical model of {@link #file} and return their list. Do note that the returned traversal might contain
-	 * references to files that do not exist in the workspace (in case of remote file revisions that have been
-	 * locally deleted).
-	 * 
-	 * @param context
-	 *            The context that may be used to resolve remote file revisions.
-	 * @param monitor
-	 *            Used to display progress information to the user.
-	 * @return The resolved traversal.
-	 */
-	private StorageTraversal resolveEMFTraversal(ResourceMappingContext context, IProgressMonitor monitor)
-			throws InterruptedException {
-		/*
-		 * Using the context (if it is an instance of RemoteResourceMappingContext) would give better
-		 * results... but would also be far longer. This is mainly used prior to synchronization, and
-		 * detecting a traversal for a file that's been removed locally but is present on the repository is
-		 * not necessary at this point.
-		 */
-		return EMFCompareIDEUIPlugin.getDefault().getModelResolverRegistry().getBestResolverFor(file)
-				.resolveLocalModel(file, monitor);
-	}
-
-	/**
-	 * Convert EMF Compare's traversals to Team ones. Extracted here to avoid usage of
-	 * org.eclipse.emf.compare.ide.utils.ResourceTraversal anywhere else.
+	 * Convert EMF Compare's traversals to Team ones.
 	 * 
 	 * @param traversal
 	 *            The traversal to convert to Team.
 	 * @return The converted traversals.
 	 */
-	private ResourceTraversal[] convertCompareTraversal(StorageTraversal traversal) {
-		final ResourceTraversal converted = (ResourceTraversal)traversal.getAdapter(ResourceTraversal.class);
+	private static ResourceTraversal[] convertCompareTraversal(StorageTraversal aTraversal) {
+		final ResourceTraversal converted = (ResourceTraversal)aTraversal.getAdapter(ResourceTraversal.class);
 		return new ResourceTraversal[] {converted, };
 	}
 
@@ -184,30 +158,13 @@ public class EMFResourceMapping extends ResourceMapping {
 	@Override
 	public IProject[] getProjects() {
 		final Set<IProject> projects = Sets.newLinkedHashSet();
-		if (cachedTraversals == null) {
-			// We need to resolve our traversals with no real info, assume local
-			try {
-				final ResourceTraversal[] traversals = getTraversals(ResourceMappingContext.LOCAL_CONTEXT,
-						new NullProgressMonitor());
-				for (int i = 0; i < traversals.length; i++) {
-					final IResource[] resources = traversals[i].getResources();
-					for (int j = 0; j < resources.length; j++) {
-						projects.add(resources[j].getProject());
-					}
-				}
-			} catch (CoreException e) {
-				// FIXME log.
-				// only use the underlying resource's project
-				projects.add(file.getProject());
-			}
-		} else {
-			// use cached information
-			final ResourceTraversal[] traversals = this.cachedTraversals;
-			for (int i = 0; i < traversals.length; i++) {
-				final IResource[] resources = traversals[i].getResources();
-				for (int j = 0; j < resources.length; j++) {
-					projects.add(resources[j].getProject());
-				}
+		if (traversal.getDiagnostic().getSeverity() >= Diagnostic.ERROR) {
+			return new IProject[] {resource.getProject(), };
+		}
+
+		for (IStorage storage : traversal.getStorages()) {
+			if (storage instanceof IResource) {
+				projects.add(((IResource)storage).getProject());
 			}
 		}
 		final IProject[] projectArray = projects.toArray(new IProject[projects.size()]);
