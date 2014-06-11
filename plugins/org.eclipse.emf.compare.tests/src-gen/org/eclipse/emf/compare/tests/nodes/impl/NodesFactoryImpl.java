@@ -42,7 +42,7 @@ public class NodesFactoryImpl extends EFactoryImpl implements NodesFactory {
 	 */
 	public static NodesFactory init() {
 		try {
-			NodesFactory theNodesFactory = (NodesFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/emf/compare/tests/nodes"); //$NON-NLS-1$ 
+			NodesFactory theNodesFactory = (NodesFactory)EPackage.Registry.INSTANCE.getEFactory(NodesPackage.eNS_URI);
 			if (theNodesFactory != null) {
 				return theNodesFactory;
 			}
@@ -81,6 +81,8 @@ public class NodesFactoryImpl extends EFactoryImpl implements NodesFactory {
 			case NodesPackage.NODE_OPPOSITE_REF_ONE_TO_ONE: return createNodeOppositeRefOneToOne();
 			case NodesPackage.NODE_OPPOSITE_REF_ONE_TO_MANY: return createNodeOppositeRefOneToMany();
 			case NodesPackage.NODE_OPPOSITE_REF_MANY_TO_MANY: return createNodeOppositeRefManyToMany();
+			case NodesPackage.NODE_FEATURE_MAP_CONTAINMENT: return createNodeFeatureMapContainment();
+			case NodesPackage.NODE_FEATURE_MAP_NON_CONTAINMENT: return createNodeFeatureMapNonContainment();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -184,6 +186,26 @@ public class NodesFactoryImpl extends EFactoryImpl implements NodesFactory {
 	public NodeOppositeRefManyToMany createNodeOppositeRefManyToMany() {
 		NodeOppositeRefManyToManyImpl nodeOppositeRefManyToMany = new NodeOppositeRefManyToManyImpl();
 		return nodeOppositeRefManyToMany;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NodeFeatureMapContainment createNodeFeatureMapContainment() {
+		NodeFeatureMapContainmentImpl nodeFeatureMapContainment = new NodeFeatureMapContainmentImpl();
+		return nodeFeatureMapContainment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NodeFeatureMapNonContainment createNodeFeatureMapNonContainment() {
+		NodeFeatureMapNonContainmentImpl nodeFeatureMapNonContainment = new NodeFeatureMapNonContainmentImpl();
+		return nodeFeatureMapNonContainment;
 	}
 
 	/**

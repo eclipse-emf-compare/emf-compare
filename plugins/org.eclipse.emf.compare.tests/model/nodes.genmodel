@@ -43,5 +43,15 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeOppositeRefManyToMany/source"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeOppositeRefManyToMany/destination"/>
     </genClasses>
+    <genClasses ecoreClass="nodes.ecore#//NodeFeatureMapContainment">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute nodes.ecore#//NodeFeatureMapContainment/map"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference nodes.ecore#//NodeFeatureMapContainment/firstKey"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference nodes.ecore#//NodeFeatureMapContainment/secondKey"/>
+    </genClasses>
+    <genClasses ecoreClass="nodes.ecore#//NodeFeatureMapNonContainment">
+      <genFeatures property="None" createChild="false" ecoreFeature="ecore:EAttribute nodes.ecore#//NodeFeatureMapNonContainment/mapNC"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeFeatureMapNonContainment/firstKeyNC"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeFeatureMapNonContainment/secondKeyNC"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

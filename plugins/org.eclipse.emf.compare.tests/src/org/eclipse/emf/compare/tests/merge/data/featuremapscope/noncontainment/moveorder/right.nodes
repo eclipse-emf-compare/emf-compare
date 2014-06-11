@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes:Node xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" xmi:id="_CEv4EM7REeOlS6AUBGqBsw" name="root">
+  <containmentRef1 xsi:type="nodes:NodeFeatureMapNonContainment" xmi:id="_7aUIsNRoEeOZ_K3DPNcuBQ" name="mapNC1">
+    <firstKeyNC href="#__CBPMNRoEeOZ_K3DPNcuBQ"/>
+    <firstKeyNC href="#__TQwMNRoEeOZ_K3DPNcuBQ"/>
+  </containmentRef1>
+  <containmentRef1 xsi:type="nodes:NodeFeatureMapNonContainment" xmi:id="_9ecjoNRoEeOZ_K3DPNcuBQ" name="mapNC2">
+    <firstKeyNC href="#__3DZwNRoEeOZ_K3DPNcuBQ"/>
+    <firstKeyNC href="#__j0UsNRoEeOZ_K3DPNcuBQ"/>
+  </containmentRef1>
+  <containmentRef1 xmi:id="__CBPMNRoEeOZ_K3DPNcuBQ" name="node1"/>
+  <containmentRef1 xmi:id="__TQwMNRoEeOZ_K3DPNcuBQ" name="node2"/>
+  <containmentRef1 xmi:id="__j0UsNRoEeOZ_K3DPNcuBQ" name="node3"/>
+  <containmentRef1 xmi:id="__3DZwNRoEeOZ_K3DPNcuBQ" name="node4"/>
+</nodes:Node>

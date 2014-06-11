@@ -127,6 +127,24 @@ public interface NodesFactory extends EFactory {
 	NodeOppositeRefManyToMany createNodeOppositeRefManyToMany();
 
 	/**
+	 * Returns a new object of class '<em>Node Feature Map Containment</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Node Feature Map Containment</em>'.
+	 * @generated
+	 */
+	NodeFeatureMapContainment createNodeFeatureMapContainment();
+
+	/**
+	 * Returns a new object of class '<em>Node Feature Map Non Containment</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Node Feature Map Non Containment</em>'.
+	 * @generated
+	 */
+	NodeFeatureMapNonContainment createNodeFeatureMapNonContainment();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

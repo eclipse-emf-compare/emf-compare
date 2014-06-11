@@ -21,6 +21,13 @@
             genModel="model/nodes.genmodel"/>
    </extension>
 
+   <extension point="org.eclipse.emf.ecore.content_parser">
+      <!-- @generated nodes -->
+      <parser
+            contentTypeIdentifier="org.eclipse.emf.compare.test.nodes.contenttype"
+            class="org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl"/>
+   </extension>
+
    <extension point="org.eclipse.emf.ecore.extension_parser">
       <parser
             type="nodes"

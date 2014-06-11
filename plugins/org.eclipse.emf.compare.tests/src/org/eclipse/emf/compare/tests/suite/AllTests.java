@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,10 @@ import org.eclipse.emf.compare.tests.match.MatchEngineFactoryRegistryTest;
 import org.eclipse.emf.compare.tests.match.ProximityIndexTest;
 import org.eclipse.emf.compare.tests.merge.ConflictMergeTest;
 import org.eclipse.emf.compare.tests.merge.ExtensionMergeTest;
+import org.eclipse.emf.compare.tests.merge.FeatureMaps2wayMergeTest;
+import org.eclipse.emf.compare.tests.merge.FeatureMaps3wayMergeTest;
+import org.eclipse.emf.compare.tests.merge.FeatureMapsConflictsMergeTest;
+import org.eclipse.emf.compare.tests.merge.FeatureMapsPseudoConflictsMergeTest;
 import org.eclipse.emf.compare.tests.merge.IndividualMergeOutOfScopeValuesTest;
 import org.eclipse.emf.compare.tests.merge.IndividualMergeTest;
 import org.eclipse.emf.compare.tests.merge.MultipleMergeTest;
@@ -62,7 +66,9 @@ import org.junit.runners.Suite.SuiteClasses;
 		IndividualMergeOutOfScopeValuesTest.class, ProximityComparisonTest.class,
 		DynamicInstanceComparisonTest.class, URIDistanceTest.class, FragmentationTest.class,
 		AllEditTests.class, CommandStackTestSuite.class, MatchEngineFactoryRegistryTest.class,
-		ConflictMergeTest.class, PseudoConflictMergeTest.class, ProximityIndexTest.class, AllRCPTests.class })
+		ConflictMergeTest.class, PseudoConflictMergeTest.class, ProximityIndexTest.class, AllRCPTests.class,
+		FeatureMaps2wayMergeTest.class, FeatureMaps3wayMergeTest.class, FeatureMapsConflictsMergeTest.class,
+		FeatureMapsPseudoConflictsMergeTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

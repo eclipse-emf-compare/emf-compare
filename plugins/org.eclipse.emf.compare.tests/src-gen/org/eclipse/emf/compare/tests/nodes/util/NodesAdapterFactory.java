@@ -123,6 +123,14 @@ public class NodesAdapterFactory extends AdapterFactoryImpl {
 				return createNodeOppositeRefManyToManyAdapter();
 			}
 			@Override
+			public Adapter caseNodeFeatureMapContainment(NodeFeatureMapContainment object) {
+				return createNodeFeatureMapContainmentAdapter();
+			}
+			@Override
+			public Adapter caseNodeFeatureMapNonContainment(NodeFeatureMapNonContainment object) {
+				return createNodeFeatureMapNonContainmentAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -279,6 +287,34 @@ public class NodesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createNodeOppositeRefManyToManyAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment <em>Node Feature Map Containment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment
+	 * @generated
+	 */
+	public Adapter createNodeFeatureMapContainmentAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.tests.nodes.NodeFeatureMapNonContainment <em>Node Feature Map Non Containment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeFeatureMapNonContainment
+	 * @generated
+	 */
+	public Adapter createNodeFeatureMapNonContainmentAdapter() {
 		return null;
 	}
 

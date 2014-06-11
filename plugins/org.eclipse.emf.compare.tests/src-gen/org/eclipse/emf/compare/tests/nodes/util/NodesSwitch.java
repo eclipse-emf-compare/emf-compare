@@ -169,6 +169,20 @@ public class NodesSwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case NodesPackage.NODE_FEATURE_MAP_CONTAINMENT: {
+				NodeFeatureMapContainment nodeFeatureMapContainment = (NodeFeatureMapContainment)theEObject;
+				T result = caseNodeFeatureMapContainment(nodeFeatureMapContainment);
+				if (result == null) result = caseNode(nodeFeatureMapContainment);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case NodesPackage.NODE_FEATURE_MAP_NON_CONTAINMENT: {
+				NodeFeatureMapNonContainment nodeFeatureMapNonContainment = (NodeFeatureMapNonContainment)theEObject;
+				T result = caseNodeFeatureMapNonContainment(nodeFeatureMapNonContainment);
+				if (result == null) result = caseNode(nodeFeatureMapNonContainment);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -320,6 +334,36 @@ public class NodesSwitch<T> {
 	 * @generated
 	 */
 	public T caseNodeOppositeRefManyToMany(NodeOppositeRefManyToMany object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Node Feature Map Containment</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Node Feature Map Containment</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNodeFeatureMapContainment(NodeFeatureMapContainment object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Node Feature Map Non Containment</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Node Feature Map Non Containment</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNodeFeatureMapNonContainment(NodeFeatureMapNonContainment object) {
 		return null;
 	}
 
