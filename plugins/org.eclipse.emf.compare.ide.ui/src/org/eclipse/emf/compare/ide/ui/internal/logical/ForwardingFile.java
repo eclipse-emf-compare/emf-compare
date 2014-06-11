@@ -136,6 +136,10 @@ public class ForwardingFile extends ForwardingResource implements IFile {
 		delegate().setContents(source, updateFlags, monitor);
 	}
 
+	public IFile getDelegate() {
+		return delegate;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 

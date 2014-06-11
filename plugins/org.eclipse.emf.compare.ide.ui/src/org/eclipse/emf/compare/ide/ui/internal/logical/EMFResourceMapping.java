@@ -39,7 +39,7 @@ import org.eclipse.emf.compare.ide.utils.StorageTraversal;
  */
 public class EMFResourceMapping extends ResourceMapping {
 	/** The physical resource underlying this mapping. */
-	private IFile file;
+	private ForwardingFile file;
 
 	/** The Model provider for which this mapping has been created. */
 	private String providerId;
@@ -103,13 +103,13 @@ public class EMFResourceMapping extends ResourceMapping {
 				if (emfTraversal.getDiagnostic().getSeverity() >= Diagnostic.ERROR) {
 					EMFCompareIDEUIPlugin.getDefault().getLog().log(
 							BasicDiagnostic.toIStatus(emfTraversal.getDiagnostic()));
-					return createSingletonTraversal(file);
+					return createSingletonTraversal(file.getDelegate());
 				}
 
 				cachedTraversals = convertCompareTraversal(emfTraversal);
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
-				return createSingletonTraversal(file);
+				return createSingletonTraversal(file.getDelegate());
 			}
 		}
 
