@@ -85,8 +85,12 @@ public class PostProcessorRegistryImpl implements IPostProcessor.Descriptor.Regi
 	 * {@inheritDoc}
 	 */
 	public List<IPostProcessor.Descriptor> getDescriptors() {
+		List<IItemDescriptor<Descriptor>> itemDescriptors = baseRegisty.getItemDescriptors();
+		Collections.sort(itemDescriptors);
+
 		Collection<IItemDescriptor<IPostProcessor.Descriptor>> activeDescriptor = Collections2.filter(
-				baseRegisty.getItemDescriptors(), not(in(getDisabledEngines())));
+				itemDescriptors, not(in(getDisabledEngines())));
+
 		Collection<IPostProcessor.Descriptor> descriptors = Collections2.transform(activeDescriptor,
 				AbstractItemDescriptor.<IPostProcessor.Descriptor> getItemFunction());
 		return Lists.newArrayList(descriptors);
