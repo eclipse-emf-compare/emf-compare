@@ -41,7 +41,7 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	 */
 	public static UMLCompareFactory init() {
 		try {
-			UMLCompareFactory theUMLCompareFactory = (UMLCompareFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/emf/compare/uml2/2.0"); //$NON-NLS-1$ 
+			UMLCompareFactory theUMLCompareFactory = (UMLCompareFactory)EPackage.Registry.INSTANCE.getEFactory(UMLComparePackage.eNS_URI);
 			if (theUMLCompareFactory != null) {
 				return theUMLCompareFactory;
 			}
