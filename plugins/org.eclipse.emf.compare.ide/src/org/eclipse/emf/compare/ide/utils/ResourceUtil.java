@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -240,14 +241,15 @@ public final class ResourceUtil {
 		}
 
 		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		if (root != null) {
-			if (root.getFile(new Path(path)).exists()) {
+		final IPath iPath = new Path(path);
+		if (root != null && iPath.segmentCount() >= 2) {
+			if (root.getFile(iPath).exists()) {
 				uri = URI.createPlatformResourceURI(path, true);
 			} else {
 				// is it a file coming from a Git repository?
-				final int indexOfSeparator = path.indexOf('/');
-				if (indexOfSeparator > 0 && root.getFile(new Path(path.substring(indexOfSeparator))).exists()) {
-					uri = URI.createPlatformResourceURI(path.substring(indexOfSeparator), true);
+				final IPath trimmed = iPath.removeFirstSegments(1);
+				if (trimmed.segmentCount() >= 2 && root.getFile(trimmed).exists()) {
+					uri = URI.createPlatformResourceURI(trimmed.toString(), true);
 				}
 			}
 		}
