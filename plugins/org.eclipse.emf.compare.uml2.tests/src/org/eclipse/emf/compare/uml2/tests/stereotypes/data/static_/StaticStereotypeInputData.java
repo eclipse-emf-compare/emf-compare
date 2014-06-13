@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.stereotypes.data.static_;
 
 import java.io.IOException;
@@ -85,6 +95,26 @@ public class StaticStereotypeInputData extends AbstractUMLInputData {
 
 	public Resource getB10Right() throws IOException {
 		return loadFromClassLoader("b10/right.uml"); //$NON-NLS-1$
+	}
+
+	public Resource getB12Left() throws IOException {
+		return loadFromClassLoader("b12/left.uml"); //$NON-NLS-1$
+	}
+
+	public Resource getB12Right() throws IOException {
+		return loadFromClassLoader("b12/right.uml"); //$NON-NLS-1$
+	}
+
+	public Resource getB13Left() throws IOException {
+		return loadFromClassLoader("b13/left.uml"); //$NON-NLS-1$
+	}
+
+	public Resource getB13Right() throws IOException {
+		return loadFromClassLoader("b13/right.uml"); //$NON-NLS-1$
+	}
+
+	public Resource getB13Ancestor() throws IOException {
+		return loadFromClassLoader("b13/origin.uml"); //$NON-NLS-1$
 	}
 
 }

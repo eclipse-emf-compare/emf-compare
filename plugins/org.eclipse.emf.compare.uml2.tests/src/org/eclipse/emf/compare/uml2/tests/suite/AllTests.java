@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,9 @@ import org.eclipse.emf.compare.uml2.tests.message.AddMessageTest;
 import org.eclipse.emf.compare.uml2.tests.profiles.DynamicProfileTest;
 import org.eclipse.emf.compare.uml2.tests.profiles.StaticProfileTest;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.DynamicStereotypeTest;
+import org.eclipse.emf.compare.uml2.tests.stereotypes.DynamicStereotypedElementChangeTests;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.StaticStereotypeTest;
+import org.eclipse.emf.compare.uml2.tests.stereotypes.StaticStereotypedElementChangeTests;
 import org.eclipse.emf.compare.uml2.tests.timeConstraint.AddTimeConstraintTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -58,7 +60,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		AddSubstitutionTest.class, AddUsageTest.class, AddMessageTest.class,
 		AddActionExecutionSpecificationTest.class, AddBehaviorExecutionSpecificationTest.class,
 		AddIncludeTest.class, AddTimeConstraintTest.class, StaticProfileTest.class, DynamicProfileTest.class,
-		StaticStereotypeTest.class, DynamicStereotypeTest.class, ImplicationsAssociationTest.class,
+		StaticStereotypeTest.class, StaticStereotypedElementChangeTests.class, DynamicStereotypeTest.class,
+		DynamicStereotypedElementChangeTests.class, ImplicationsAssociationTest.class,
 		ImplicationsTransitionTest.class, ImplicationsInterfaceRealizationTest.class })
 public class AllTests {
 

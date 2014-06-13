@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  */
 package org.eclipse.emf.compare.uml2.tests;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterators.all;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.junit.Assert.assertFalse;
@@ -43,6 +45,7 @@ import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
+import org.eclipse.emf.compare.uml2.internal.StereotypedElementChange;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.merge.UMLMerger;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor;
@@ -104,16 +107,26 @@ public abstract class AbstractUMLTest {
 		// post-processor and merger registry is not filled in runtime (org.eclipse.emf.compare.rcp not
 		// loaded)
 		final IPostProcessor.Descriptor.Registry<String> postProcessorRegistry = new PostProcessorDescriptorRegistryImpl<String>();
-		postProcessorRegistry.put(UMLPostProcessor.class.getName(),
-				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
-						.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null,
-						new UMLPostProcessor(), 20));
+		registerPostProcessors(postProcessorRegistry);
 		builder.setPostProcessorRegistry(postProcessorRegistry);
 		mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
 		final IMerger umlMerger = new UMLMerger();
 		umlMerger.setRanking(11);
 		mergerRegistry.add(umlMerger);
 		emfCompare = builder.build();
+	}
+
+	/**
+	 * Used to register new post processors.
+	 * 
+	 * @param postProcessorRegistry
+	 */
+	protected void registerPostProcessors(
+			final IPostProcessor.Descriptor.Registry<String> postProcessorRegistry) {
+		postProcessorRegistry.put(UMLPostProcessor.class.getName(),
+				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
+						.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null,
+						new UMLPostProcessor(), 20));
 	}
 
 	@After
@@ -246,11 +259,16 @@ public abstract class AbstractUMLTest {
 	}
 
 	protected void testIntersections(Comparison comparison) {
-		assertFalse(Iterables.any(comparison.getDifferences(), new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				return input.getRefines().size() > 1;
-			}
-		}));
-	}
+		for (Diff diff : comparison.getDifferences()) {
+			int realRefinesSize = Iterables.size(Iterables.filter(diff.getRefines(),
+					not(instanceOf(StereotypedElementChange.class))));
+			assertFalse("Wrong number of refines (without StereotypedElementChange) on" + diff,
+					realRefinesSize > 1);
+			int stereotypedElementChangeRefines = Iterables.size(Iterables.filter(diff.getRefines(),
+					instanceOf(StereotypedElementChange.class)));
+			assertFalse("Wrong number of refines (of type StereotypedElementChange) on " + diff,
+					stereotypedElementChangeRefines > 1);
 
+		}
+	}
 }
