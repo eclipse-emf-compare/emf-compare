@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2011, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,22 @@ public interface UML2CompareTestProfileFactory extends EFactory {
 	 * @generated
 	 */
 	ACliche createACliche();
+
+	/**
+	 * Returns a new object of class '<em>ACliche2</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>ACliche2</em>'.
+	 * @generated
+	 */
+	ACliche2 createACliche2();
+
+	/**
+	 * Returns a new object of class '<em>ACliche3</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>ACliche3</em>'.
+	 * @generated
+	 */
+	ACliche3 createACliche3();
 
 	/**
 	 * Returns the package supported by this factory. <!-- begin-user-doc --> <!-- end-user-doc -->

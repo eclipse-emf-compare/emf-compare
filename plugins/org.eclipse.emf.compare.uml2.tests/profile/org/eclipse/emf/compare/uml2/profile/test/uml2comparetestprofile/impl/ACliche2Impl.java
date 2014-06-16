@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Obeo.
+ * Copyright (c) 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,7 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche;
+import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2;
 import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -24,31 +24,32 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>ACliche</b></em>'. <!-- end-user-doc
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>ACliche2</b></em>'. <!-- end-user-doc
  * -->
  * <p>
  * The following features are implemented:
  * <ul>
  * <li>
- * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.AClicheImpl#getSingleValuedAttribute
+ * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.ACliche2Impl#getSingleValuedAttribute
  * <em>Single Valued Attribute</em>}</li>
  * <li>
- * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.AClicheImpl#getManyValuedAttribute
+ * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.ACliche2Impl#getManyValuedAttribute
  * <em>Many Valued Attribute</em>}</li>
  * <li>
- * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.AClicheImpl#getSingleValuedReference
+ * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.ACliche2Impl#getSingleValuedReference
  * <em>Single Valued Reference</em>}</li>
  * <li>
- * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.AClicheImpl#getManyValuedReference
+ * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.ACliche2Impl#getManyValuedReference
  * <em>Many Valued Reference</em>}</li>
- * <li>{@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.AClicheImpl#getBase_Class
+ * <li>
+ * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.ACliche2Impl#getBase_Class
  * <em>Base Class</em>}</li>
  * </ul>
  * </p>
  * 
  * @generated
  */
-public class AClicheImpl extends EObjectImpl implements ACliche {
+public class ACliche2Impl extends EObjectImpl implements ACliche2 {
 	/**
 	 * The default value of the '{@link #getSingleValuedAttribute() <em>Single Valued Attribute</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -114,7 +115,7 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 	 * 
 	 * @generated
 	 */
-	protected AClicheImpl() {
+	protected ACliche2Impl() {
 		super();
 	}
 
@@ -125,7 +126,7 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return UML2CompareTestProfilePackage.Literals.ACLICHE;
+		return UML2CompareTestProfilePackage.Literals.ACLICHE2;
 	}
 
 	/**
@@ -145,10 +146,11 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 	public void setSingleValuedAttribute(String newSingleValuedAttribute) {
 		String oldSingleValuedAttribute = singleValuedAttribute;
 		singleValuedAttribute = newSingleValuedAttribute;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					UML2CompareTestProfilePackage.ACLICHE__SINGLE_VALUED_ATTRIBUTE, oldSingleValuedAttribute,
-					singleValuedAttribute));
+					UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_ATTRIBUTE,
+					oldSingleValuedAttribute, singleValuedAttribute));
+		}
 	}
 
 	/**
@@ -159,7 +161,7 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 	public EList<String> getManyValuedAttribute() {
 		if (manyValuedAttribute == null) {
 			manyValuedAttribute = new EDataTypeUniqueEList<String>(String.class, this,
-					UML2CompareTestProfilePackage.ACLICHE__MANY_VALUED_ATTRIBUTE);
+					UML2CompareTestProfilePackage.ACLICHE2__MANY_VALUED_ATTRIBUTE);
 		}
 		return manyValuedAttribute;
 	}
@@ -174,10 +176,11 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 			InternalEObject oldSingleValuedReference = (InternalEObject)singleValuedReference;
 			singleValuedReference = (org.eclipse.uml2.uml.Class)eResolveProxy(oldSingleValuedReference);
 			if (singleValuedReference != oldSingleValuedReference) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							UML2CompareTestProfilePackage.ACLICHE__SINGLE_VALUED_REFERENCE,
+							UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_REFERENCE,
 							oldSingleValuedReference, singleValuedReference));
+				}
 			}
 		}
 		return singleValuedReference;
@@ -200,10 +203,11 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 	public void setSingleValuedReference(org.eclipse.uml2.uml.Class newSingleValuedReference) {
 		org.eclipse.uml2.uml.Class oldSingleValuedReference = singleValuedReference;
 		singleValuedReference = newSingleValuedReference;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					UML2CompareTestProfilePackage.ACLICHE__SINGLE_VALUED_REFERENCE, oldSingleValuedReference,
-					singleValuedReference));
+					UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_REFERENCE,
+					oldSingleValuedReference, singleValuedReference));
+		}
 	}
 
 	/**
@@ -215,7 +219,7 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 		if (manyValuedReference == null) {
 			manyValuedReference = new EObjectResolvingEList<org.eclipse.uml2.uml.Class>(
 					org.eclipse.uml2.uml.Class.class, this,
-					UML2CompareTestProfilePackage.ACLICHE__MANY_VALUED_REFERENCE);
+					UML2CompareTestProfilePackage.ACLICHE2__MANY_VALUED_REFERENCE);
 		}
 		return manyValuedReference;
 	}
@@ -236,12 +240,14 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 	 */
 	public org.eclipse.uml2.uml.Class getManyValuedReference(String name, boolean ignoreCase, EClass eClass) {
 		manyValuedReferenceLoop: for (org.eclipse.uml2.uml.Class manyValuedReference : getManyValuedReference()) {
-			if (eClass != null && !eClass.isInstance(manyValuedReference))
+			if (eClass != null && !eClass.isInstance(manyValuedReference)) {
 				continue manyValuedReferenceLoop;
+			}
 			if (name != null
 					&& !(ignoreCase ? name.equalsIgnoreCase(manyValuedReference.getName()) : name
-							.equals(manyValuedReference.getName())))
+							.equals(manyValuedReference.getName()))) {
 				continue manyValuedReferenceLoop;
+			}
 			return manyValuedReference;
 		}
 		return null;
@@ -257,9 +263,10 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 			InternalEObject oldBase_Class = (InternalEObject)base_Class;
 			base_Class = (org.eclipse.uml2.uml.Class)eResolveProxy(oldBase_Class);
 			if (base_Class != oldBase_Class) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							UML2CompareTestProfilePackage.ACLICHE__BASE_CLASS, oldBase_Class, base_Class));
+							UML2CompareTestProfilePackage.ACLICHE2__BASE_CLASS, oldBase_Class, base_Class));
+				}
 			}
 		}
 		return base_Class;
@@ -282,9 +289,10 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 	public void setBase_Class(org.eclipse.uml2.uml.Class newBase_Class) {
 		org.eclipse.uml2.uml.Class oldBase_Class = base_Class;
 		base_Class = newBase_Class;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					UML2CompareTestProfilePackage.ACLICHE__BASE_CLASS, oldBase_Class, base_Class));
+					UML2CompareTestProfilePackage.ACLICHE2__BASE_CLASS, oldBase_Class, base_Class));
+		}
 	}
 
 	/**
@@ -295,19 +303,21 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case UML2CompareTestProfilePackage.ACLICHE__SINGLE_VALUED_ATTRIBUTE:
+			case UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_ATTRIBUTE:
 				return getSingleValuedAttribute();
-			case UML2CompareTestProfilePackage.ACLICHE__MANY_VALUED_ATTRIBUTE:
+			case UML2CompareTestProfilePackage.ACLICHE2__MANY_VALUED_ATTRIBUTE:
 				return getManyValuedAttribute();
-			case UML2CompareTestProfilePackage.ACLICHE__SINGLE_VALUED_REFERENCE:
-				if (resolve)
+			case UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_REFERENCE:
+				if (resolve) {
 					return getSingleValuedReference();
+				}
 				return basicGetSingleValuedReference();
-			case UML2CompareTestProfilePackage.ACLICHE__MANY_VALUED_REFERENCE:
+			case UML2CompareTestProfilePackage.ACLICHE2__MANY_VALUED_REFERENCE:
 				return getManyValuedReference();
-			case UML2CompareTestProfilePackage.ACLICHE__BASE_CLASS:
-				if (resolve)
+			case UML2CompareTestProfilePackage.ACLICHE2__BASE_CLASS:
+				if (resolve) {
 					return getBase_Class();
+				}
 				return basicGetBase_Class();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -322,21 +332,21 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case UML2CompareTestProfilePackage.ACLICHE__SINGLE_VALUED_ATTRIBUTE:
+			case UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_ATTRIBUTE:
 				setSingleValuedAttribute((String)newValue);
 				return;
-			case UML2CompareTestProfilePackage.ACLICHE__MANY_VALUED_ATTRIBUTE:
+			case UML2CompareTestProfilePackage.ACLICHE2__MANY_VALUED_ATTRIBUTE:
 				getManyValuedAttribute().clear();
 				getManyValuedAttribute().addAll((Collection<? extends String>)newValue);
 				return;
-			case UML2CompareTestProfilePackage.ACLICHE__SINGLE_VALUED_REFERENCE:
+			case UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_REFERENCE:
 				setSingleValuedReference((org.eclipse.uml2.uml.Class)newValue);
 				return;
-			case UML2CompareTestProfilePackage.ACLICHE__MANY_VALUED_REFERENCE:
+			case UML2CompareTestProfilePackage.ACLICHE2__MANY_VALUED_REFERENCE:
 				getManyValuedReference().clear();
 				getManyValuedReference().addAll((Collection<? extends org.eclipse.uml2.uml.Class>)newValue);
 				return;
-			case UML2CompareTestProfilePackage.ACLICHE__BASE_CLASS:
+			case UML2CompareTestProfilePackage.ACLICHE2__BASE_CLASS:
 				setBase_Class((org.eclipse.uml2.uml.Class)newValue);
 				return;
 		}
@@ -351,19 +361,19 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case UML2CompareTestProfilePackage.ACLICHE__SINGLE_VALUED_ATTRIBUTE:
+			case UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_ATTRIBUTE:
 				setSingleValuedAttribute(SINGLE_VALUED_ATTRIBUTE_EDEFAULT);
 				return;
-			case UML2CompareTestProfilePackage.ACLICHE__MANY_VALUED_ATTRIBUTE:
+			case UML2CompareTestProfilePackage.ACLICHE2__MANY_VALUED_ATTRIBUTE:
 				getManyValuedAttribute().clear();
 				return;
-			case UML2CompareTestProfilePackage.ACLICHE__SINGLE_VALUED_REFERENCE:
+			case UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_REFERENCE:
 				setSingleValuedReference((org.eclipse.uml2.uml.Class)null);
 				return;
-			case UML2CompareTestProfilePackage.ACLICHE__MANY_VALUED_REFERENCE:
+			case UML2CompareTestProfilePackage.ACLICHE2__MANY_VALUED_REFERENCE:
 				getManyValuedReference().clear();
 				return;
-			case UML2CompareTestProfilePackage.ACLICHE__BASE_CLASS:
+			case UML2CompareTestProfilePackage.ACLICHE2__BASE_CLASS:
 				setBase_Class((org.eclipse.uml2.uml.Class)null);
 				return;
 		}
@@ -378,16 +388,16 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case UML2CompareTestProfilePackage.ACLICHE__SINGLE_VALUED_ATTRIBUTE:
+			case UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_ATTRIBUTE:
 				return SINGLE_VALUED_ATTRIBUTE_EDEFAULT == null ? singleValuedAttribute != null
 						: !SINGLE_VALUED_ATTRIBUTE_EDEFAULT.equals(singleValuedAttribute);
-			case UML2CompareTestProfilePackage.ACLICHE__MANY_VALUED_ATTRIBUTE:
+			case UML2CompareTestProfilePackage.ACLICHE2__MANY_VALUED_ATTRIBUTE:
 				return manyValuedAttribute != null && !manyValuedAttribute.isEmpty();
-			case UML2CompareTestProfilePackage.ACLICHE__SINGLE_VALUED_REFERENCE:
+			case UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_REFERENCE:
 				return singleValuedReference != null;
-			case UML2CompareTestProfilePackage.ACLICHE__MANY_VALUED_REFERENCE:
+			case UML2CompareTestProfilePackage.ACLICHE2__MANY_VALUED_REFERENCE:
 				return manyValuedReference != null && !manyValuedReference.isEmpty();
-			case UML2CompareTestProfilePackage.ACLICHE__BASE_CLASS:
+			case UML2CompareTestProfilePackage.ACLICHE2__BASE_CLASS:
 				return base_Class != null;
 		}
 		return super.eIsSet(featureID);
@@ -400,8 +410,9 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (singleValuedAttribute: "); //$NON-NLS-1$
@@ -412,4 +423,4 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 		return result.toString();
 	}
 
-} // AClicheImpl
+} // ACliche2Impl

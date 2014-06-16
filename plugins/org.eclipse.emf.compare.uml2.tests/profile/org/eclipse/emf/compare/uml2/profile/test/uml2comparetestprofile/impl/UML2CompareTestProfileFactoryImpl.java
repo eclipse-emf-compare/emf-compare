@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2011, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl;
 
+import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.*;
 import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche;
 import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfileFactory;
 import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage;
@@ -33,7 +34,7 @@ public class UML2CompareTestProfileFactoryImpl extends EFactoryImpl implements U
 	public static UML2CompareTestProfileFactory init() {
 		try {
 			UML2CompareTestProfileFactory theUML2CompareTestProfileFactory = (UML2CompareTestProfileFactory)EPackage.Registry.INSTANCE
-					.getEFactory("http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile"); //$NON-NLS-1$
+					.getEFactory(UML2CompareTestProfilePackage.eNS_URI);
 			if (theUML2CompareTestProfileFactory != null) {
 				return theUML2CompareTestProfileFactory;
 			}
@@ -62,9 +63,13 @@ public class UML2CompareTestProfileFactoryImpl extends EFactoryImpl implements U
 		switch (eClass.getClassifierID()) {
 			case UML2CompareTestProfilePackage.ACLICHE:
 				return createACliche();
+			case UML2CompareTestProfilePackage.ACLICHE2:
+				return createACliche2();
+			case UML2CompareTestProfilePackage.ACLICHE3:
+				return createACliche3();
 			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() //$NON-NLS-1$
-						+ "' is not a valid classifier"); //$NON-NLS-1$
+				throw new IllegalArgumentException(
+						"The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -76,6 +81,26 @@ public class UML2CompareTestProfileFactoryImpl extends EFactoryImpl implements U
 	public ACliche createACliche() {
 		AClicheImpl aCliche = new AClicheImpl();
 		return aCliche;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ACliche2 createACliche2() {
+		ACliche2Impl aCliche2 = new ACliche2Impl();
+		return aCliche2;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ACliche3 createACliche3() {
+		ACliche3Impl aCliche3 = new ACliche3Impl();
+		return aCliche3;
 	}
 
 	/**

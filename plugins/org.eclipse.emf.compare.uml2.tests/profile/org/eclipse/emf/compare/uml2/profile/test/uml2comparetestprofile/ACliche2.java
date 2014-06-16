@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Obeo.
+ * Copyright (c) 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,31 +15,33 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>ACliche</b></em>'. <!-- end-user-doc
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>ACliche2</b></em>'. <!-- end-user-doc
  * -->
  * <p>
  * The following features are supported:
  * <ul>
  * <li>
- * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche#getSingleValuedAttribute
+ * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getSingleValuedAttribute
  * <em>Single Valued Attribute</em>}</li>
- * <li>{@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche#getManyValuedAttribute
+ * <li>
+ * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getManyValuedAttribute
  * <em>Many Valued Attribute</em>}</li>
  * <li>
- * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche#getSingleValuedReference
+ * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getSingleValuedReference
  * <em>Single Valued Reference</em>}</li>
- * <li>{@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche#getManyValuedReference
+ * <li>
+ * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getManyValuedReference
  * <em>Many Valued Reference</em>}</li>
- * <li>{@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche#getBase_Class <em>Base
+ * <li>{@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getBase_Class <em>Base
  * Class</em>}</li>
  * </ul>
  * </p>
  * 
- * @see org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage#getACliche()
+ * @see org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage#getACliche2()
  * @model
  * @generated
  */
-public interface ACliche extends EObject {
+public interface ACliche2 extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Single Valued Attribute</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
@@ -50,7 +52,7 @@ public interface ACliche extends EObject {
 	 * 
 	 * @return the value of the '<em>Single Valued Attribute</em>' attribute.
 	 * @see #setSingleValuedAttribute(String)
-	 * @see org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage#getACliche_SingleValuedAttribute()
+	 * @see org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage#getACliche2_SingleValuedAttribute()
 	 * @model dataType="org.eclipse.uml2.types.String" ordered="false"
 	 * @generated
 	 */
@@ -58,7 +60,7 @@ public interface ACliche extends EObject {
 
 	/**
 	 * Sets the value of the '
-	 * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche#getSingleValuedAttribute
+	 * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getSingleValuedAttribute
 	 * <em>Single Valued Attribute</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
@@ -78,7 +80,7 @@ public interface ACliche extends EObject {
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the value of the '<em>Many Valued Attribute</em>' attribute list.
-	 * @see org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage#getACliche_ManyValuedAttribute()
+	 * @see org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage#getACliche2_ManyValuedAttribute()
 	 * @model dataType="org.eclipse.uml2.types.String"
 	 * @generated
 	 */
@@ -94,7 +96,7 @@ public interface ACliche extends EObject {
 	 * 
 	 * @return the value of the '<em>Single Valued Reference</em>' reference.
 	 * @see #setSingleValuedReference(org.eclipse.uml2.uml.Class)
-	 * @see org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage#getACliche_SingleValuedReference()
+	 * @see org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage#getACliche2_SingleValuedReference()
 	 * @model ordered="false"
 	 * @generated
 	 */
@@ -102,7 +104,7 @@ public interface ACliche extends EObject {
 
 	/**
 	 * Sets the value of the '
-	 * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche#getSingleValuedReference
+	 * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getSingleValuedReference
 	 * <em>Single Valued Reference</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
@@ -122,7 +124,7 @@ public interface ACliche extends EObject {
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the value of the '<em>Many Valued Reference</em>' reference list.
-	 * @see org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage#getACliche_ManyValuedReference()
+	 * @see org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage#getACliche2_ManyValuedReference()
 	 * @model
 	 * @generated
 	 */
@@ -172,7 +174,7 @@ public interface ACliche extends EObject {
 	 * 
 	 * @return the value of the '<em>Base Class</em>' reference.
 	 * @see #setBase_Class(org.eclipse.uml2.uml.Class)
-	 * @see org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage#getACliche_Base_Class()
+	 * @see org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage#getACliche2_Base_Class()
 	 * @model required="true" ordered="false"
 	 * @generated
 	 */
@@ -180,7 +182,7 @@ public interface ACliche extends EObject {
 
 	/**
 	 * Sets the value of the '
-	 * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche#getBase_Class
+	 * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getBase_Class
 	 * <em>Base Class</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
@@ -190,4 +192,4 @@ public interface ACliche extends EObject {
 	 */
 	void setBase_Class(org.eclipse.uml2.uml.Class value);
 
-} // ACliche
+} // ACliche2
