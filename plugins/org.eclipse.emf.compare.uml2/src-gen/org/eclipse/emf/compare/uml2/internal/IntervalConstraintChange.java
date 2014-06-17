@@ -10,13 +10,10 @@
  */
 package org.eclipse.emf.compare.uml2.internal;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Interval Constraint Change</b></em>'.
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Interval Constraint Change</b></em>'.
  * <!-- end-user-doc -->
- *
- *
+ * 
  * @see org.eclipse.emf.compare.uml2.internal.UMLComparePackage#getIntervalConstraintChange()
  * @model
  * @generated

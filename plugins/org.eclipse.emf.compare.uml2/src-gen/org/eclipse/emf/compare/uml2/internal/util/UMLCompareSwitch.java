@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeReferenceChange;
+import org.eclipse.emf.compare.uml2.internal.StereotypedElementChange;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.ecore.EClass;
@@ -185,6 +186,14 @@ public class UMLCompareSwitch<T> {
 				UMLDiff umlDiff = (UMLDiff)theEObject;
 				T result = caseUMLDiff(umlDiff);
 				if (result == null) result = caseDiff(umlDiff);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UMLComparePackage.STEREOTYPED_ELEMENT_CHANGE: {
+				StereotypedElementChange stereotypedElementChange = (StereotypedElementChange)theEObject;
+				T result = caseStereotypedElementChange(stereotypedElementChange);
+				if (result == null) result = caseUMLDiff(stereotypedElementChange);
+				if (result == null) result = caseDiff(stereotypedElementChange);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -355,6 +364,21 @@ public class UMLCompareSwitch<T> {
 	 * @generated
 	 */
 	public T caseUMLDiff(UMLDiff object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Stereotyped Element Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Stereotyped Element Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStereotypedElementChange(StereotypedElementChange object) {
 		return null;
 	}
 

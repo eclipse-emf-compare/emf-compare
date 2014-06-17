@@ -10,13 +10,10 @@
  */
 package org.eclipse.emf.compare.uml2.internal;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Association Change</b></em>'.
- * <!-- end-user-doc -->
- *
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Association Change</b></em>'. <!--
+ * end-user-doc -->
+ * 
  * @see org.eclipse.emf.compare.uml2.internal.UMLComparePackage#getAssociationChange()
  * @model
  * @generated

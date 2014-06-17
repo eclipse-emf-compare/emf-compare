@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeReferenceChange;
+import org.eclipse.emf.compare.uml2.internal.StereotypedElementChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
 import org.eclipse.emf.ecore.EClass;
@@ -79,6 +80,7 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 			case UMLComparePackage.STEREOTYPE_REFERENCE_CHANGE: return createStereotypeReferenceChange();
 			case UMLComparePackage.PROFILE_APPLICATION_CHANGE: return createProfileApplicationChange();
 			case UMLComparePackage.DIRECTED_RELATIONSHIP_CHANGE: return createDirectedRelationshipChange();
+			case UMLComparePackage.STEREOTYPED_ELEMENT_CHANGE: return createStereotypedElementChange();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -139,8 +141,7 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public StereotypeAttributeChange createStereotypeAttributeChange() {
@@ -182,6 +183,15 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	public DirectedRelationshipChange createDirectedRelationshipChange() {
 		DirectedRelationshipChangeImpl directedRelationshipChange = new DirectedRelationshipChangeImpl();
 		return directedRelationshipChange;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public StereotypedElementChange createStereotypedElementChange() {
+		StereotypedElementChangeImpl stereotypedElementChange = new StereotypedElementChangeImpl();
+		return stereotypedElementChange;
 	}
 
 	/**

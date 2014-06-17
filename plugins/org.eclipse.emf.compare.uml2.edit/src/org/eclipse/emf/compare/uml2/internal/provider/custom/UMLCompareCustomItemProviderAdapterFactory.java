@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -75,6 +75,12 @@ public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapte
 	private UMLDiffCustomItemProvider umlDiffExtendedItemProvider;
 
 	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link org.eclipse.emf.compare.uml2.internal.StereotypedElementChange} instances.
+	 */
+	private StereotypedElementChangeCustomItemProvider stereotypedElementChangeExtendedItemProvider;
+
+	/**
 	 * This constructs an instance.
 	 */
 	public UMLCompareCustomItemProviderAdapterFactory() {
@@ -95,6 +101,15 @@ public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapte
 		}
 
 		return stereotypeApplicationChangeExtendedItemProvider;
+	}
+
+	@Override
+	public Adapter createStereotypedElementChangeAdapter() {
+		if (stereotypedElementChangeExtendedItemProvider == null) {
+			stereotypedElementChangeExtendedItemProvider = new StereotypedElementChangeCustomItemProvider(
+					this);
+		}
+		return stereotypedElementChangeExtendedItemProvider;
 	}
 
 	/**

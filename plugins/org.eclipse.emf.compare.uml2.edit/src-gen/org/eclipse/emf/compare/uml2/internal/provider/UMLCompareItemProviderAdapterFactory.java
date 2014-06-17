@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -329,6 +329,29 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.StereotypedElementChange} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected StereotypedElementChangeItemProvider stereotypedElementChangeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.StereotypedElementChange}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createStereotypedElementChangeAdapter() {
+		if (stereotypedElementChangeItemProvider == null) {
+			stereotypedElementChangeItemProvider = new StereotypedElementChangeItemProvider(this);
+		}
+
+		return stereotypedElementChangeItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -434,6 +457,7 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 		if (stereotypeReferenceChangeItemProvider != null) stereotypeReferenceChangeItemProvider.dispose();
 		if (profileApplicationChangeItemProvider != null) profileApplicationChangeItemProvider.dispose();
 		if (directedRelationshipChangeItemProvider != null) directedRelationshipChangeItemProvider.dispose();
+		if (stereotypedElementChangeItemProvider != null) stereotypedElementChangeItemProvider.dispose();
 	}
 
 }

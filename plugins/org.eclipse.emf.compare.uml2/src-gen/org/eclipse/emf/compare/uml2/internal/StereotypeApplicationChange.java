@@ -13,30 +13,29 @@ package org.eclipse.emf.compare.uml2.internal;
 import org.eclipse.uml2.uml.Stereotype;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Stereotype Application Change</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Stereotype Application Change</b></em>
+ * '. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange#getStereotype <em>Stereotype</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange#getStereotype <em>Stereotype
+ * </em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see org.eclipse.emf.compare.uml2.internal.UMLComparePackage#getStereotypeApplicationChange()
  * @model
  * @generated
  */
 public interface StereotypeApplicationChange extends UMLDiff {
 	/**
-	 * Returns the value of the '<em><b>Stereotype</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Stereotype</b></em>' reference. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Stereotype</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Stereotype</em>' reference isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Stereotype</em>' reference.
 	 * @see #setStereotype(Stereotype)
 	 * @see org.eclipse.emf.compare.uml2.internal.UMLComparePackage#getStereotypeApplicationChange_Stereotype()
@@ -46,10 +45,12 @@ public interface StereotypeApplicationChange extends UMLDiff {
 	Stereotype getStereotype();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange#getStereotype <em>Stereotype</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Stereotype</em>' reference.
+	 * Sets the value of the '
+	 * {@link org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange#getStereotype
+	 * <em>Stereotype</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Stereotype</em>' reference.
 	 * @see #getStereotype()
 	 * @generated
 	 */

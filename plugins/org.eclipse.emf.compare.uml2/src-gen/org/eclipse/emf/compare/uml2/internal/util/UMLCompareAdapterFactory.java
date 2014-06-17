@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -115,6 +115,10 @@ public class UMLCompareAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseUMLDiff(UMLDiff object) {
 				return createUMLDiffAdapter();
+			}
+			@Override
+			public Adapter caseStereotypedElementChange(StereotypedElementChange object) {
+				return createStereotypedElementChangeAdapter();
 			}
 			@Override
 			public Adapter caseDiff(Diff object) {
@@ -293,6 +297,20 @@ public class UMLCompareAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createUMLDiffAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2.internal.StereotypedElementChange <em>Stereotyped Element Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.uml2.internal.StereotypedElementChange
+	 * @generated
+	 */
+	public Adapter createStereotypedElementChangeAdapter() {
 		return null;
 	}
 

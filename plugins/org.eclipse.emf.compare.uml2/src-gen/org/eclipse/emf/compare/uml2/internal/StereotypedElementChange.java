@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,12 +11,12 @@
 package org.eclipse.emf.compare.uml2.internal;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Message Change</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Stereotyped Element Change</b></em>'.
+ * <!-- end-user-doc -->
  * 
- * @see org.eclipse.emf.compare.uml2.internal.UMLComparePackage#getMessageChange()
+ * @see org.eclipse.emf.compare.uml2.internal.UMLComparePackage#getStereotypedElementChange()
  * @model
  * @generated
  */
-public interface MessageChange extends UMLDiff {
-} // MessageChange
+public interface StereotypedElementChange extends UMLDiff {
+} // StereotypedElementChange
