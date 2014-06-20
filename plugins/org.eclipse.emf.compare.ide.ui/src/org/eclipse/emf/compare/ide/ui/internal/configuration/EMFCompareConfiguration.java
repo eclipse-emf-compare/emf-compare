@@ -75,10 +75,12 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	}
 
 	private void setDefaultValues() {
-		if (isLeftEditable() && isRightEditable()) {
-			setProperty(PREVIEW_MERGE_MODE, MergeMode.RIGHT_TO_LEFT);
-		} else {
-			setProperty(PREVIEW_MERGE_MODE, MergeMode.ACCEPT);
+		if (getProperty(PREVIEW_MERGE_MODE) == null) {
+			if (isLeftEditable() && isRightEditable()) {
+				setProperty(PREVIEW_MERGE_MODE, MergeMode.RIGHT_TO_LEFT);
+			} else {
+				setProperty(PREVIEW_MERGE_MODE, MergeMode.ACCEPT);
+			}
 		}
 
 		EventBus eventBus = new EventBus();
