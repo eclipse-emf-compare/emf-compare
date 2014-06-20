@@ -303,4 +303,14 @@
             class="org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferencesInitializer">
       </initializer>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.emf.compare.ide.ui.internal.logical.EMFModelProvider"
+            class="org.eclipse.emf.compare.ide.ui.internal.logical.EMFLogicalModelAdapterFactory">
+         <adapter
+               type="org.eclipse.team.core.mapping.IResourceMappingMerger">
+         </adapter>
+      </factory>
+   </extension>
 </plugin>

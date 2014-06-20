@@ -158,6 +158,69 @@ public final class ComparisonScopeBuilder {
 	}
 
 	/**
+	 * Builds the comparison scope with no further operation on the given synchronization model.
+	 * <p>
+	 * This internal API is only intended for use by the resource mapping mergers.
+	 * </p>
+	 * 
+	 * @param synchronizationModel
+	 *            The synchronization model describing the traversals for which a comparison scope is needed.
+	 * @param monitor
+	 *            Monitor on which to report progress information to the user.
+	 * @return The created comparison scope.
+	 * @throws OperationCanceledException
+	 *             if the user cancels (or has already canceled) the operation through the given
+	 *             {@code monitor}.
+	 */
+	/* package */IComparisonScope build(SynchronizationModel synchronizationModel, IProgressMonitor monitor)
+			throws OperationCanceledException {
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+
+		return createScope(synchronizationModel, monitor);
+	}
+
+	/**
+	 * Resolves and minimizes the logical model for the given three typed element as would be done by
+	 * {@link #build(ITypedElement, ITypedElement, ITypedElement, IProgressMonitor)}, but returns directly the
+	 * SynchronizationModel DTO instead of the actual IComparisonScope.
+	 * <p>
+	 * This internal API is only intended for use by the resource mapping mergers.
+	 * </p>
+	 * 
+	 * @param left
+	 *            The element that will be used as the starting point to resolve the left logical model.
+	 * @param right
+	 *            Element that will be used as the starting point to resolve the left logical model.
+	 * @param origin
+	 *            The origin resource, starting point of the logical model we are to resolve as the origin
+	 *            one. Can be <code>null</code>.
+	 * @param monitor
+	 *            The monitor on which to report progress information to the user.
+	 * @return The newly created SynchronizationModel, <code>null</code> in case of user interruption.
+	 */
+	/* package */SynchronizationModel buildSynchronizationModel(ITypedElement left, ITypedElement right,
+			ITypedElement origin, IProgressMonitor monitor) {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+		subMonitor.subTask(EMFCompareIDEUIMessages.getString("EMFSynchronizationModel.resolving")); //$NON-NLS-1$
+		try {
+			final SynchronizationModel syncModel;
+			if (storageAccessor != null) {
+				syncModel = createSynchronizationModel(storageAccessor, left, right, origin, subMonitor
+						.newChild(90));
+			} else {
+				syncModel = createSynchronizationModel(left, right, origin, subMonitor.newChild(90));
+			}
+			minimizer.minimize(syncModel, subMonitor.newChild(10));
+			return syncModel;
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			return null;
+		}
+	}
+
+	/**
 	 * Constructs the comparison scope corresponding to the given typed elements.
 	 * 
 	 * @param left

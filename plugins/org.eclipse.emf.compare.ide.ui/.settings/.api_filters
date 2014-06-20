@@ -8,6 +8,14 @@
             </message_arguments>
         </filter>
     </resource>
+    <resource path="src/org/eclipse/emf/compare/ide/ui/internal/logical/EMFResourceMappingMerger.java" type="org.eclipse.emf.compare.ide.ui.internal.logical.EMFResourceMappingMerger">
+        <filter comment="The EMFResourceMappingMerger needs none of the behavior from the abstract ResourceMappingMerger." id="574619656">
+            <message_arguments>
+                <message_argument value="IResourceMappingMerger"/>
+                <message_argument value="EMFResourceMappingMerger"/>
+            </message_arguments>
+        </filter>
+    </resource>
     <resource path="src/org/eclipse/emf/compare/ide/ui/internal/structuremergeviewer/WrappableTreeViewer.java" type="org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.WrappableTreeViewer">
         <filter id="571473929">
             <message_arguments>
