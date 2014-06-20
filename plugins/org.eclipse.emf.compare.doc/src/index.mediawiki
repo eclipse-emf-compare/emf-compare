@@ -11,6 +11,10 @@
 * [developer/logical-model.html|Logical model]
 * [developer/how-to-open-compare-dialog.html|How to open compare dialog]
 
+== Tutorial ==
+
+* [tutorial/tutorial.html|Tutorial]
+
 == FAQ ==
 
 * [FAQ.html|FAQ]
