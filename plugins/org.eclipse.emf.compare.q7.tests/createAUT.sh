@@ -1,6 +1,6 @@
 export P2_ADMIN_PATH="/jobs/genie.modeling.emfcompare/p2-admin/lastStable/archive/org.eclipselabs.equinox.p2.admin.product/target/products/org.eclipse.equinox.p2.admin.rcp.product/linux/gtk/x86_64/p2-admin"
 
-alias p2-admin="${JAVA_HOME}/bin/java -jar $P2_ADMIN_PATH/plugins/org.eclipse.equinox.launcher_*.jar"
+alias p2-admin="$P2_ADMIN_PATH/p2-admin"
 alias p2-director="p2-admin -application org.eclipse.equinox.p2.director"
 
 simrel=$1
