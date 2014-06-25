@@ -20,6 +20,19 @@ Contributors:
             class="org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage"
             genModel="model/UML2CompareTestProfile.genmodel"/>
    </extension>
+
+   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+      <!-- @generated UML2CompareTestProfile -->
+      <factory
+            uri="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile"
+            class="org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.provider.UML2CompareTestProfileItemProviderAdapterFactory"
+            supportedTypes=
+              "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
+               org.eclipse.emf.edit.provider.IStructuredItemContentProvider
+               org.eclipse.emf.edit.provider.ITreeItemContentProvider
+               org.eclipse.emf.edit.provider.IItemLabelProvider
+               org.eclipse.emf.edit.provider.IItemPropertySource"/>
+   </extension>
    
    <extension point="org.eclipse.uml2.uml.generated_package">
 	   <profile

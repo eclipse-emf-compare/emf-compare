@@ -9,19 +9,23 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile,
  org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl,
+ org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.provider,
  org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.util,
  org.eclipse.emf.compare.uml2.tests
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.uml2.uml;bundle-version="5.0.0";visibility:=reexport,
  org.eclipse.uml2.types;visibility:=reexport,
+ org.eclipse.emf.edit;visibility:=reexport,
+ org.eclipse.emf.ecore.edit;visibility:=reexport,
  org.eclipse.uml2.uml.resources;bundle-version="5.0.0",
  org.junit,
  org.eclipse.emf.compare,
  org.eclipse.emf.compare.uml2,
  org.eclipse.emf.compare.tests;bundle-version="2.0.1",
- org.eclipse.uml2.uml.edit;bundle-version="5.0.0"
+ org.eclipse.uml2.uml.edit;bundle-version="5.0.0";visibility:=reexport,
+ org.eclipse.uml2.common.edit;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
  com.google.common.collect;version="[11.0.0,16.0.0)"
-Bundle-Activator: org.eclipse.emf.compare.uml2.tests.EMFCompareUML2TestsPlugin
+Bundle-Activator: org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.provider.UML2CompareTestProfileEditPlugin$Implementation
