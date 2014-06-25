@@ -36,4 +36,21 @@ Contributors:
               "org.eclipse.emf.compare.provider.IItemStyledLabelProvider
                org.eclipse.emf.compare.provider.IItemDescriptionProvider"/>
    </extension>
+   
+    <extension
+         point="org.eclipse.emf.compare.edit.adapterFactory">
+      <factory
+            class="org.eclipse.emf.compare.uml2.internal.provider.decorator.UMLProfileItemProviderAdapterFactoryDecorator"
+            supportedTypes=
+              "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
+               org.eclipse.emf.edit.provider.IStructuredItemContentProvider
+               org.eclipse.emf.edit.provider.ITreeItemContentProvider
+               org.eclipse.emf.edit.provider.IItemLabelProvider
+               org.eclipse.emf.edit.provider.IItemPropertySource
+               org.eclipse.emf.compare.provider.IItemStyledLabelProvider
+               org.eclipse.emf.compare.provider.IItemDescriptionProvider"
+            ranking="60"
+            uri="http://www.eclipse.org/uml2/5.0.0/UML">
+      </factory>
+   </extension>
 </plugin>
