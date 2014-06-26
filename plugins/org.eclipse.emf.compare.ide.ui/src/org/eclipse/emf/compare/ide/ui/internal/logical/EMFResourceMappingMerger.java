@@ -35,6 +35,8 @@ import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
@@ -140,7 +142,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 
 		final Comparison comparison = EMFCompare.builder().build().compare(scope,
 				BasicMonitor.toMonitor(monitor));
-		if (!comparison.getConflicts().isEmpty()) {
+		if (hasRealConflict(comparison)) {
 			return new MergeStatus(EMFCompareIDEUIPlugin.PLUGIN_ID, EMFCompareIDEUIMessages
 					.getString("EMFResourceMappingMerger.mergeFailedConflicts"), emfMappings); //$NON-NLS-1$
 		}
@@ -149,7 +151,8 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 		final IBatchMerger merger = new BatchMerger(mergerRegistry);
 		final Predicate<Diff> filter = new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				return input != null && input.getSource() != DifferenceSource.LEFT;
+				return input != null && input.getConflict() == null
+						&& input.getSource() != DifferenceSource.LEFT;
 			}
 		};
 		merger.copyAllRightToLeft(Iterables.filter(comparison.getDifferences(), filter), BasicMonitor
@@ -252,6 +255,15 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 					.saveResource((Resource)notifier, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
 							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
 		}
+	}
+
+	private boolean hasRealConflict(Comparison comparison) {
+		for (Conflict conflict : comparison.getConflicts()) {
+			if (conflict.getKind() != ConflictKind.PSEUDO) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** {@inheritDoc} */
