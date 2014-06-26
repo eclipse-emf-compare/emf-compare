@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:testProfile="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml#_59tLoPU0EeOznPU7N6uHbQ">
+  <uml:Model xmi:id="_haH48P0HEeOFKa_oRgmYkg" name="model">
+    <packagedElement xmi:type="uml:Class" xmi:id="_5PjdAP0HEeOFKa_oRgmYkg" name="NormalClass"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_0tcuUP0IEeOFKa_oRgmYkg" name="NewAcliche"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_0tcuUf0IEeOFKa_oRgmYkg" name="NewAcliche2"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_0tcuUv0IEeOFKa_oRgmYkg" name="NewAcliche3"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_ieOWEP0OEeOFKa_oRgmYkg" name="MultipleStereotypeElement1"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_uJY8sP0OEeOFKa_oRgmYkg" name="MultipleStereotypeElement1"/>
+    <profileApplication xmi:id="_Qw-f8P0IEeOFKa_oRgmYkg">
+      <eAnnotations xmi:id="_QxF0sP0IEeOFKa_oRgmYkg" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml#_59tLoPU0EeOznPU7N6uHbQ"/>
+      </eAnnotations>
+      <appliedProfile href="pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml#_hZFTgIwkEeC_FYHMbTTxXw"/>
+    </profileApplication>
+  </uml:Model>
+  <testProfile:ACliche xmi:id="_0tdVYP0IEeOFKa_oRgmYkg" base_Class="_0tcuUP0IEeOFKa_oRgmYkg"/>
+  <testProfile:ACliche2 xmi:id="_0td8cP0IEeOFKa_oRgmYkg" base_Class="_0tcuUf0IEeOFKa_oRgmYkg"/>
+  <testProfile:ACliche3 xmi:id="_0td8cf0IEeOFKa_oRgmYkg" base_Class="_0tcuUv0IEeOFKa_oRgmYkg"/>
+  <testProfile:ACliche xmi:id="_ieOWEf0OEeOFKa_oRgmYkg" base_Class="_ieOWEP0OEeOFKa_oRgmYkg"/>
+  <testProfile:ACliche2 xmi:id="_nVp_EP0OEeOFKa_oRgmYkg" base_Class="_ieOWEP0OEeOFKa_oRgmYkg"/>
+  <testProfile:ACliche2 xmi:id="_uJY8sf0OEeOFKa_oRgmYkg" base_Class="_uJY8sP0OEeOFKa_oRgmYkg"/>
+  <testProfile:ACliche xmi:id="_xlFngP0OEeOFKa_oRgmYkg" base_Class="_uJY8sP0OEeOFKa_oRgmYkg"/>
+</xmi:XMI>

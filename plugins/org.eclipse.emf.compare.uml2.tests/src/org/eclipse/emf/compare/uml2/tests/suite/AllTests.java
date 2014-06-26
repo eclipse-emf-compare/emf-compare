@@ -26,6 +26,8 @@ import org.eclipse.emf.compare.uml2.tests.dependency.AddSubstitutionTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.AddUsageTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.ChangeDependencyTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.ChangeUsageTest;
+import org.eclipse.emf.compare.uml2.tests.edit.provider.DynamicStereotypedElementItemProviderTest;
+import org.eclipse.emf.compare.uml2.tests.edit.provider.StaticStereotypedElementItemProviderTest;
 import org.eclipse.emf.compare.uml2.tests.executionSpecification.AddActionExecutionSpecificationTest;
 import org.eclipse.emf.compare.uml2.tests.executionSpecification.AddBehaviorExecutionSpecificationTest;
 import org.eclipse.emf.compare.uml2.tests.extend.AddExtendTest;
@@ -62,7 +64,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		AddIncludeTest.class, AddTimeConstraintTest.class, StaticProfileTest.class, DynamicProfileTest.class,
 		StaticStereotypeTest.class, StaticStereotypedElementChangeTests.class, DynamicStereotypeTest.class,
 		DynamicStereotypedElementChangeTests.class, ImplicationsAssociationTest.class,
-		ImplicationsTransitionTest.class, ImplicationsInterfaceRealizationTest.class })
+		ImplicationsTransitionTest.class, ImplicationsInterfaceRealizationTest.class,
+		StaticStereotypedElementItemProviderTest.class, DynamicStereotypedElementItemProviderTest.class })
 public class AllTests {
 
 	/**
