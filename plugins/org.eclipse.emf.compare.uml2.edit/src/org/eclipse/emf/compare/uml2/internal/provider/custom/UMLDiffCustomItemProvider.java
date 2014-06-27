@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,6 +65,7 @@ public class UMLDiffCustomItemProvider extends UMLDiffItemProvider implements II
 	 * 
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
+	@Override
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		final UMLDiff umlDiff = (UMLDiff)object;
 
@@ -105,9 +106,9 @@ public class UMLDiffCustomItemProvider extends UMLDiffItemProvider implements II
 	private String getValueText(final UMLDiff umlDiff) {
 		String value = itemDelegator.getText(umlDiff.getDiscriminant());
 		if (value == null) {
-			value = "<null>";
+			value = "<null>"; //$NON-NLS-1$
 		} else {
-			value = Strings.elide(value, MAX_LENGTH, "...");
+			value = Strings.elide(value, MAX_LENGTH, "..."); //$NON-NLS-1$
 		}
 		return value;
 	}
@@ -120,7 +121,7 @@ public class UMLDiffCustomItemProvider extends UMLDiffItemProvider implements II
 	 * @return the reference text.
 	 */
 	private static String getReferenceText(final UMLDiff umlDiff) {
-		String ret = "";
+		String ret = ""; //$NON-NLS-1$
 		switch (umlDiff.getKind()) {
 			case ADD:
 			case DELETE:
@@ -131,10 +132,19 @@ public class UMLDiffCustomItemProvider extends UMLDiffItemProvider implements II
 			case CHANGE:
 				break;
 			default:
-				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName()
-						+ " value: " + umlDiff.getKind());
+				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$
+						+ " value: " + umlDiff.getKind()); //$NON-NLS-1$
 		}
 		return ret;
+	}
+
+	/**
+	 * Gets the item delegator.
+	 * 
+	 * @return {@link ExtendedAdapterFactoryItemDelegator}.
+	 */
+	protected ExtendedAdapterFactoryItemDelegator getItemDelegator() {
+		return itemDelegator;
 	}
 
 }

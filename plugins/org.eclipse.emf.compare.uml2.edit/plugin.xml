@@ -53,4 +53,14 @@ Contributors:
             uri="http://www.eclipse.org/uml2/5.0.0/UML">
       </factory>
    </extension>
+    <extension
+          point="org.eclipse.emf.compare.edit.adapterFactory">
+       <factory
+             class="org.eclipse.emf.compare.uml2.internal.provider.profile.ProfiledUMLCompareItemProviderAdapterFactory"
+             ranking="60"
+             uri="http://www.eclipse.org/emf/compare/uml2/2.0"
+              supportedTypes=
+              "org.eclipse.emf.compare.provider.IItemStyledLabelProvider
+               org.eclipse.emf.compare.provider.IItemDescriptionProvider"/>
+    </extension>
 </plugin>

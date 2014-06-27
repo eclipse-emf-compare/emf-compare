@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,18 @@ public class UMLCompareItemProviderDecoratorAdapterFactory extends DecoratorAdap
 		}
 
 		@Override
+		public IItemProviderDecorator caseStereotypeAttributeChange(
+				org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange object) {
+			return createStereotypeAttributeChangeItemProviderDecorator();
+		}
+
+		@Override
+		public IItemProviderDecorator caseStereotypeReferenceChange(
+				org.eclipse.emf.compare.uml2.internal.StereotypeReferenceChange object) {
+			return createStereotyeReferenceChangeItemProviderDecorator();
+		}
+
+		@Override
 		public IItemProviderDecorator caseUMLDiff(UMLDiff object) {
 			return createUMLDiffItemProviderDecorator();
 		}
@@ -46,6 +58,28 @@ public class UMLCompareItemProviderDecoratorAdapterFactory extends DecoratorAdap
 	 */
 	public UMLCompareItemProviderDecoratorAdapterFactory() {
 		super(new UMLCompareItemProviderAdapterFactory());
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.emf.compare.uml2.internal.StereotypeReferenceChange
+	 * <em>Stereotype Reference Change</em>}'.
+	 * 
+	 * @return the new adapter.
+	 */
+	protected IItemProviderDecorator createStereotyeReferenceChangeItemProviderDecorator() {
+		return new StereotypeReferenceChangeItemProviderDecorator(this);
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange
+	 * <em>Stereotype Attribute Change</em>}'.
+	 * 
+	 * @return the new adapter.
+	 */
+	protected IItemProviderDecorator createStereotypeAttributeChangeItemProviderDecorator() {
+		return new StereotypeAttributeChangeItemProviderDecorator(this);
 	}
 
 	/**
