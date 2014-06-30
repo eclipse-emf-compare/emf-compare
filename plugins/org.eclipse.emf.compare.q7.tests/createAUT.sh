@@ -1,3 +1,5 @@
+#!/bin/bash
+env
 export P2_ADMIN_PATH="/jobs/genie.modeling.emfcompare/p2-admin/lastStable/archive/org.eclipselabs.equinox.p2.admin.product/target/products/org.eclipse.equinox.p2.admin.rcp.product/linux/gtk/x86_64/p2-admin"
 
 alias p2-admin="$P2_ADMIN_PATH/p2-admin"
