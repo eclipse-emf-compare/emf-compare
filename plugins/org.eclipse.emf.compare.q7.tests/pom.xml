@@ -34,8 +34,8 @@
 	        <goal>exec</goal>
 	      </goals>
 	      <configuration>
-	        <executable>${basedir}/createAUT.sh</executable>
-	        <commandlineArgs>${profile-id}</commandlineArgs>
+	        <executable>bash</executable>
+	        <commandlineArgs>${basedir}/createAUT.sh ${profile-id}</commandlineArgs>
 	      </configuration>
 	    </execution>
 	  </executions>
