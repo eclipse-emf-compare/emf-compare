@@ -48,7 +48,7 @@ else
 	exit -1
 fi
 
-if [[ ! -f "$simrel_zip_url" ]]; then 
+if [[ ! -f "$simrel_zip_name" ]]; then 
 	wget --no-check-certificate -q "$simrel_zip_url"
 fi
 
