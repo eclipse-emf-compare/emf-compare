@@ -1,20 +1,19 @@
 #!/bin/bash
-set -vx
-
 os=$1
 ws=$2
 arch=$3
 simrel=$4
 
-if [[ ! -f "p2-admin-1.0.0-$os.$ws.$arch.tar.gz" ]]; then 
-	wget --no-check-certificate -q "http://github.com/mbarbero/p2-admin/releases/download/v1.0/p2-admin-1.0.0-$os.$ws.$arch.tar.gz"
+if [[ ! -f "p2-admin-1.0.1-$os.$ws.$arch.tar.gz" ]]; then 
+	echo "Downloading http://github.com/mbarbero/p2-admin/releases/download/v1.0.1/p2-admin-1.0.1-$os.$ws.$arch.tar.gz"
+	wget --no-check-certificate -q "http://github.com/mbarbero/p2-admin/releases/download/v1.0.1/p2-admin-1.0.1-$os.$ws.$arch.tar.gz"
 fi
 if [[ -d "p2-admin" ]]; then
+	echo "Removing old p2-admin folder"
 	rm -rf "p2-admin"
 fi
-tar zxf "p2-admin-1.0.0-$os.$ws.$arch.tar.gz"
-
-alias p2-director="$(pwd)/p2-admin/p2-admin -application org.eclipse.equinox.p2.director"
+echo "Unzipping p2-admin-1.0.1-$os.$ws.$arch.tar.gz"
+tar zxf "p2-admin-1.0.1-$os.$ws.$arch.tar.gz"
 
 target_env=$os
 if [[ $ws != $os ]]; then
@@ -49,13 +48,22 @@ else
 fi
 
 if [[ ! -f "$simrel_zip_name" ]]; then 
+	echo "Downloading $simrel_zip_url"
 	wget --no-check-certificate -q "$simrel_zip_url"
 fi
 
 if [[ -d "eclipse" ]]; then
+  echo "Removing old eclipse folder"
   rm -rf "eclipse"
 fi
 
+echo "Unzipping $simrel_zip_name"
 tar zxf "$simrel_zip_name"
-p2-director -repository "$p2_repositories" -installIU "$p2_installIUs" -tag Q7_AUT -destination "$(pwd)/eclipse" -profile SDKProfile
+
+echo "Provisioning AUT"
+echo "  Repositories: $p2_repositories"
+echo "  IUs: $p2_installIUs"
+$(pwd)/p2-admin/p2-admin -application org.eclipse.equinox.p2.director -repository "$p2_repositories" -installIU "$p2_installIUs" -tag Q7_AUT -destination "$(pwd)/eclipse" -profile SDKProfile
+
+echo "Zipping AUT AUT-$os.$ws.$arch.zip"
 zip -qr "AUT-$os.$ws.$arch.zip" eclipse
