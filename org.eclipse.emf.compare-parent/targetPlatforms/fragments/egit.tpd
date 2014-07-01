@@ -1,7 +1,7 @@
 target "EGit"
 
-with source, requirements
+with source requirements
 
 location "http://download.eclipse.org/egit/updates" {
-	org.eclipse.egit.feature.group;version=lazy
+	org.eclipse.egit.feature.group lazy
 }

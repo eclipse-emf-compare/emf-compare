@@ -5,7 +5,7 @@ include "fragments/fuzzy-tests.tpd"
 include "fragments/orbit.tpd"
 include "fragments/egit.tpd"
 
-with source, requirements
+with source requirements
 
 location "http://download.eclipse.org/releases/luna" {
 	org.eclipse.platform.sdk
