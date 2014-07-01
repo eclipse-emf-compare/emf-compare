@@ -131,8 +131,23 @@ public class StorageTraversal implements IAdaptable, IDiagnosable {
 			}
 			final IResource[] resourceArray = resources.toArray(new IResource[resources.size()]);
 			return new org.eclipse.core.resources.mapping.ResourceTraversal(resourceArray,
-					IResource.DEPTH_ONE, IResource.NONE);
+					IResource.DEPTH_ZERO, IResource.NONE);
 		}
 		return null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof StorageTraversal) {
+			return storages.equals(((StorageTraversal)obj).storages);
+		}
+		return false;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return storages.hashCode();
 	}
 }

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
-import static com.google.common.collect.Sets.difference;
 import static com.google.common.collect.Sets.intersection;
 import static org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil.adaptAs;
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.createURIFor;
@@ -85,7 +84,10 @@ import org.eclipse.jface.preference.IPreferenceStore;
  * inferred from the same traversal of resources, though this time expanded with a "top-down" approach : load
  * all models of the traversal from the remote side, then resolve their containment tree to check whether
  * there are other remote resources in the logical model that do not (or "that no longer) exist locally and
- * thus couldn't be discovered in the first resolution phase.
+ * thus couldn't be discovered in the first resolution phase. <b>Note</b> that this will be looped in order to
+ * determine whether the resource is really inexistent locally, or if on the contrary, it is a new dependency
+ * that's been added remotely; in which case we need to start from the local resolution again : the local
+ * resource may have changed locally and depend on other again.
  * </p>
  * <p>
  * All model loading will happen concurrently. At first, a distinct thread will be launched to resolve every
@@ -453,11 +455,11 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			logCoherenceThreats(Iterables.transform(startingPoints, AS_URI), Iterables.transform(
 					intersection, AS_URI));
 
-			final Set<IStorage> actualLeft = new LinkedHashSet<IStorage>(difference(leftTraversal,
+			final Set<IStorage> actualLeft = new LinkedHashSet<IStorage>(Sets.difference(leftTraversal,
 					intersection));
-			final Set<IStorage> actualRight = new LinkedHashSet<IStorage>(difference(rightTraversal,
+			final Set<IStorage> actualRight = new LinkedHashSet<IStorage>(Sets.difference(rightTraversal,
 					intersection));
-			final Set<IStorage> actualOrigin = new LinkedHashSet<IStorage>(difference(originTraversal,
+			final Set<IStorage> actualOrigin = new LinkedHashSet<IStorage>(Sets.difference(originTraversal,
 					intersection));
 			final SynchronizationModel synchronizationModel = new SynchronizationModel(new StorageTraversal(
 					actualLeft), new StorageTraversal(actualRight), new StorageTraversal(actualOrigin),
@@ -499,10 +501,6 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 			final IFile leftFile = adaptAs(left, IFile.class);
 
-			/*
-			 * If we have a local side to this comparison, resolve it first, then use this result to infer the
-			 * remote sides' traversal. Otherwise, resolve all three side in a simple top-down approach.
-			 */
 			final SynchronizationModel synchronizationModel;
 			if (leftFile != null) {
 				synchronizationModel = resolveModelsWithLocal(storageAccessor, leftFile, right, origin,
@@ -524,6 +522,369 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 				lock.unlock();
 			}
 		}
+	}
+
+	/**
+	 * The 'left' model we've been fed is a local file. We'll assume that the whole 'left' side of this
+	 * comparison is local and resolve everything for that side as we would for local comparisons : update the
+	 * dependency graph according to our resource listener, lookup for cross-references to/from the left
+	 * resource according to the {@link #getResolutionScope() resolution scope}... Once we've resolved the
+	 * local traversal, we'll use that as a base to infer the two remote sides, then "augment" it with the
+	 * cross-references of the remote variants of these resources.
+	 * 
+	 * @param storageAccessor
+	 *            The accessor that can be used to retrieve synchronization information between our resources.
+	 * @param left
+	 *            File corresponding to the left side of this comparison.
+	 * @param right
+	 *            "starting point" of the traversal to resolve as the right logical model.
+	 * @param origin
+	 *            "starting point" of the traversal to resolve as the origin logical model (common ancestor of
+	 *            left and right). Can be <code>null</code>.
+	 * @param monitor
+	 *            Monitor on which to report progress to the user.
+	 * @return The SynchronizationModel describing the traversals of all three sides of this logical model.
+	 * @throws InterruptedException
+	 *             Thrown if the resolution is cancelled or interrupted one way or another.
+	 */
+	private SynchronizationModel resolveModelsWithLocal(IStorageProviderAccessor storageAccessor, IFile left,
+			IStorage right, IStorage origin, ThreadSafeProgressMonitor monitor) throws InterruptedException {
+		// Update changes and compute dependencies for left
+		// Then load the same set of resources for the remote sides, completing it top-down
+
+		if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
+			final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
+			updateDependencies(resourceSet, left, monitor);
+			updateChangedResources(resourceSet, monitor);
+		}
+
+		while (!currentlyResolving.isEmpty()) {
+			resolutionEnd.await();
+		}
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+
+		final Set<IStorage> leftTraversal = resolveTraversal(left, Collections.<URI> emptySet());
+
+		return resolveRemoteTraversals(storageAccessor, leftTraversal, right, origin, monitor);
+	}
+
+	/**
+	 * All three sides we've been fed are remote. We'll resolve all three with a simple a top-down algorithm
+	 * (detect only outgoing cross-references).
+	 * 
+	 * @param storageAccessor
+	 *            The accessor that can be used to retrieve synchronization information between our resources.
+	 * @param left
+	 *            "starting point" of the traversal to resolve as the left logical model.
+	 * @param right
+	 *            "starting point" of the traversal to resolve as the right logical model.
+	 * @param origin
+	 *            "starting point" of the traversal to resolve as the origin logical model (common ancestor of
+	 *            left and right). Can be <code>null</code>.
+	 * @param monitor
+	 *            Monitor on which to report progress to the user.
+	 * @return The SynchronizationModel describing the traversals of all three sides of this logical model.
+	 * @throws InterruptedException
+	 *             Thrown if the resolution is cancelled or interrupted one way or another.
+	 */
+	private SynchronizationModel resolveRemoteModels(IStorageProviderAccessor storageAccessor, IStorage left,
+			IStorage right, IStorage origin, ThreadSafeProgressMonitor monitor) throws InterruptedException {
+		final Set<IStorage> leftTraversal = resolveRemoteTraversal(storageAccessor, left, Collections
+				.<URI> emptySet(), DiffSide.SOURCE, monitor);
+
+		return resolveRemoteTraversals(storageAccessor, leftTraversal, right, origin, monitor);
+	}
+
+	/**
+	 * Resolve the remote sides (right and origin, or right alone in case of two-way) of this comparison,
+	 * inferring a "starting traversal" from the left side.
+	 * <p>
+	 * Do note that {@code leftTraversal} <b>will be changed</b> as a result of this call if the right and/or
+	 * origin sides contain a reference to another resource that was not found from the left
+	 * cross-referencing, yet does exist in the left side.
+	 * </p>
+	 * 
+	 * @param storageAccessor
+	 *            The accessor that can be used to retrieve synchronization information between our resources.
+	 * @param leftTraversal
+	 *            The already resolved left traversal, to be augmented if right and/or origin have some new
+	 *            resources in their logical model.
+	 * @param right
+	 *            "starting point" of the traversal to resolve as the right logical model.
+	 * @param origin
+	 *            "starting point" of the traversal to resolve as the origin logical model (common ancestor of
+	 *            left and right). Can be <code>null</code>.
+	 * @param monitor
+	 *            Monitor on which to report progress to the user.
+	 * @return The SynchronizationModel describing the traversals of all three sides of this logical model.
+	 * @throws InterruptedException
+	 *             Thrown if the resolution is cancelled or interrupted one way or another.
+	 */
+	private SynchronizationModel resolveRemoteTraversals(IStorageProviderAccessor storageAccessor,
+			Set<IStorage> leftTraversal, IStorage right, IStorage origin, ThreadSafeProgressMonitor monitor)
+			throws InterruptedException {
+		final Set<IStorage> rightTraversal = resolveRemoteTraversal(storageAccessor, right, Iterables
+				.transform(leftTraversal, AS_URI), DiffSide.REMOTE, monitor);
+		final Set<IStorage> differenceRightLeft = difference(rightTraversal, asURISet(leftTraversal));
+		loadAdditionalRemoteStorages(storageAccessor, leftTraversal, rightTraversal, differenceRightLeft,
+				monitor);
+
+		final Set<IStorage> originTraversal;
+		if (origin != null) {
+			final Set<URI> unionLeftRight = Sets.newLinkedHashSet(Iterables.transform(Sets.union(
+					leftTraversal, rightTraversal), AS_URI));
+			originTraversal = resolveRemoteTraversal(storageAccessor, origin, unionLeftRight,
+					DiffSide.ORIGIN, monitor);
+			Set<IStorage> differenceOriginLeft = difference(originTraversal, asURISet(leftTraversal));
+			Set<IStorage> differenceOriginRight = difference(originTraversal, asURISet(rightTraversal));
+			Set<IStorage> additional = symmetricDifference(differenceOriginLeft, differenceOriginRight);
+			loadAdditionalRemoteStorages(storageAccessor, leftTraversal, rightTraversal, originTraversal,
+					additional, monitor);
+		} else {
+			originTraversal = Collections.emptySet();
+		}
+		final SynchronizationModel synchronizationModel = new SynchronizationModel(new StorageTraversal(
+				leftTraversal), new StorageTraversal(rightTraversal), new StorageTraversal(originTraversal),
+				diagnostic);
+
+		return synchronizationModel;
+	}
+
+	/**
+	 * If we found some storages in the right traversal that were not part of the left traversal, we need to
+	 * check whether they exist in the left, since in such a case they must be considered as part of the same
+	 * logical model.
+	 * <p>
+	 * <b>Important</b> : note that the input {@code left} and {@code right} sets <b>will be modified</b> as a
+	 * result of this call if there are any additional storages to load on these sides.
+	 * </p>
+	 * 
+	 * @param storageAccessor
+	 *            The accessor that can be used to retrieve synchronization information between our resources.
+	 * @param left
+	 *            Traversal of the left logical model.
+	 * @param right
+	 *            Traversal of the right logical model.
+	 * @param additional
+	 *            the addition storages we are to lookup in left.
+	 * @param monitor
+	 *            Monitor on which to report progress to the user.
+	 * @return The set of all additional resources (both on left and right) that have been loaded as a result
+	 *         of this call.
+	 * @throws InterruptedException
+	 *             Thrown if the resolution is cancelled or interrupted one way or another.
+	 */
+	private Set<IStorage> loadAdditionalRemoteStorages(IStorageProviderAccessor storageAccessor,
+			Set<IStorage> left, Set<IStorage> right, Set<IStorage> additional,
+			ThreadSafeProgressMonitor monitor) throws InterruptedException {
+		/*
+		 * This loop will be extremely costly at best, but we hope the case to be sufficiently rare (and the
+		 * new resources well spread when it happens) not to pose an issue in the most frequent cases.
+		 */
+
+		final Set<IStorage> additionalStorages = new LinkedHashSet<IStorage>();
+		final Set<URI> additionalURIs = new LinkedHashSet<URI>();
+		// Have we found new resources in the right as compared to the left?
+		Set<IStorage> differenceRightLeft = additional;
+		while (!differenceRightLeft.isEmpty()) {
+			// There's at least one resource in the right that was not found in the left.
+			/*
+			 * This might be a new resource added on the right side... but it might also be a cross-reference
+			 * that's been either removed from left or added in right. In this second case, we need the
+			 * resource to be present in both traversals to make sure we'll be able to properly detect
+			 * potential conflicts. However, since this resource could itself be a part of a larger logical
+			 * model, we need to start the resolving again with it.
+			 */
+			final Set<IStorage> additionalLeft = findAdditionalRemoteTraversal(storageAccessor, left,
+					differenceRightLeft, DiffSide.SOURCE, monitor);
+			left.addAll(additionalLeft);
+			for (IStorage storage : additionalLeft) {
+				final URI newURI = AS_URI.apply(storage);
+				if (additionalURIs.add(newURI)) {
+					additionalStorages.add(storage);
+				}
+			}
+			/*
+			 * have we only loaded the resources that were present in the right but not in the left, or have
+			 * we found even more?
+			 */
+			final Set<IStorage> differenceAdditionalLeftRight = difference(additionalLeft, asURISet(right));
+			// If so, we once more need to augment the right traversal
+			final Set<IStorage> additionalRight = findAdditionalRemoteTraversal(storageAccessor, right,
+					differenceAdditionalLeftRight, DiffSide.REMOTE, monitor);
+			right.addAll(additionalRight);
+			for (IStorage storage : additionalRight) {
+				final URI newURI = AS_URI.apply(storage);
+				if (additionalURIs.add(newURI)) {
+					additionalStorages.add(storage);
+				}
+			}
+			// Start this loop anew if we once again augmented the right further than what we had in left
+			differenceRightLeft = difference(additionalRight, asURISet(left));
+		}
+		return additionalStorages;
+	}
+
+	/**
+	 * If we found some storages in the origin traversal that were part of neither the left nor the right
+	 * traversals, we need to check whether they exist in them, since in such a case they must be considered
+	 * as part of the same logical model.
+	 * <p>
+	 * <b>Important</b> : note that the input {@code left}, {@code right} and {@code origin} sets <b>will be
+	 * modified</b> as a result of this call if there are any additional storages to load on either side.
+	 * </p>
+	 * 
+	 * @param storageAccessor
+	 *            The accessor that can be used to retrieve synchronization information between our resources.
+	 * @param left
+	 *            Traversal of the left logical model.
+	 * @param right
+	 *            Traversal of the right logical model.
+	 * @param origin
+	 *            Traversal of the origin logical model.
+	 * @param additional
+	 *            the set of additional storages we are to lookup in right and left.
+	 * @param monitor
+	 *            Monitor on which to report progress to the user.
+	 * @throws InterruptedException
+	 *             Thrown if the resolution is cancelled or interrupted one way or another.
+	 */
+	private void loadAdditionalRemoteStorages(IStorageProviderAccessor storageAccessor, Set<IStorage> left,
+			Set<IStorage> right, Set<IStorage> origin, Set<IStorage> additional,
+			ThreadSafeProgressMonitor monitor) throws InterruptedException {
+		/*
+		 * This loop will be extremely costly at best, but we hope the case to be sufficiently rare (and the
+		 * new resources well spread when it happens) not to pose an issue in the most frequent cases.
+		 */
+
+		Set<IStorage> additionalStorages = additional;
+		while (!additionalStorages.isEmpty()) {
+			// There's at least one resource that is in the origin set yet neither in left nor in right.
+			final Set<IStorage> additionalLeftRightComparedToOrigin = loadAdditionalRemoteStorages(
+					storageAccessor, left, right, additionalStorages, monitor);
+			/*
+			 * Have we found even more resources to add to the traversal? If so, augment the origin
+			 * accordingly.
+			 */
+			final Set<IStorage> additionalOrigin = findAdditionalRemoteTraversal(storageAccessor, origin,
+					additionalLeftRightComparedToOrigin, DiffSide.ORIGIN, monitor);
+			origin.addAll(additionalOrigin);
+			// If we once again found new storages in the origin, restart the loop.
+			final Set<IStorage> differenceOriginLeft = difference(additionalOrigin, asURISet(left));
+			final Set<IStorage> differenceOriginRight = difference(additionalOrigin, asURISet(right));
+			additionalStorages = symmetricDifference(differenceOriginRight, differenceOriginLeft);
+		}
+	}
+
+	/**
+	 * Tries and resolve the given set of additional storages (as compared to {@code alreadyLoaded}) on the
+	 * given side.
+	 * <p>
+	 * If the storages from {@code additionalStorages} do not (or no longer) exist on the given side, this
+	 * will have no effect. Otherwise, they'll be loaded and resolved in order to determine whether they are
+	 * part of a larger model. Whether they're part of a larger model or not, they will be returned by this
+	 * method as long as they exist on the given side.
+	 * </p>
+	 * 
+	 * @param storageAccessor
+	 *            The accessor that can be used to retrieve synchronization information between our resources.
+	 * @param alreadyLoaded
+	 *            All storages that have already been loaded on the given side. This will prevent us from
+	 *            resolving the same model more than once.
+	 * @param additionalStorages
+	 *            The set of additional storages we are to find and resolve on the given side.
+	 * @param side
+	 *            Side on which we seek to load additional storages in the traversal.
+	 * @param monitor
+	 *            Monitor on which to report progress to the user.
+	 * @return The set of additional storages that are to be added to the traversal of the given side.
+	 * @throws InterruptedException
+	 *             Thrown if the resolution is cancelled or interrupted one way or another.
+	 */
+	private Set<IStorage> findAdditionalRemoteTraversal(IStorageProviderAccessor storageAccessor,
+			Set<IStorage> alreadyLoaded, Set<IStorage> additionalStorages, DiffSide side,
+			ThreadSafeProgressMonitor monitor) throws InterruptedException {
+		final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
+		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
+				storageAccessor, side);
+		resourceSet.setURIConverter(converter);
+
+		resolvedResources = Sets
+				.newLinkedHashSet(Iterables.transform(converter.getLoadedRevisions(), AS_URI));
+
+		for (IStorage additional : additionalStorages) {
+			final URI expectedURI = ResourceUtil.createURIFor(additional);
+			demandRemoteResolve(resourceSet, expectedURI, monitor);
+		}
+
+		while (!currentlyResolving.isEmpty()) {
+			resolutionEnd.await();
+		}
+
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+
+		resolvedResources = null;
+
+		return converter.getLoadedRevisions();
+	}
+
+	/**
+	 * Returns the set of all elements that are contained neither in set1 nor in set2.
+	 * 
+	 * @param set1
+	 *            First of the two sets.
+	 * @param set2
+	 *            Second of the two sets.
+	 * @return The set of all elements that are contained neither in set1 nor in set2.
+	 */
+	private Set<IStorage> symmetricDifference(Set<IStorage> set1, Set<IStorage> set2) {
+		final Set<URI> uris1 = Sets.newLinkedHashSet(Iterables.transform(set1, AS_URI));
+		final Set<URI> uris2 = Sets.newLinkedHashSet(Iterables.transform(set2, AS_URI));
+
+		final Set<IStorage> symmetricDifference = new LinkedHashSet<IStorage>();
+		for (IStorage storage1 : set1) {
+			if (!uris2.contains(AS_URI.apply(storage1))) {
+				symmetricDifference.add(storage1);
+			}
+		}
+		for (IStorage storage2 : set2) {
+			if (!uris1.contains(AS_URI.apply(storage2))) {
+				symmetricDifference.add(storage2);
+			}
+		}
+		return symmetricDifference;
+	}
+
+	/**
+	 * Returns the set of all elements that are contained in {@code set1} but not in {@code set2}.
+	 * 
+	 * @param set1
+	 *            First of the two sets.
+	 * @param set2
+	 *            Second of the two sets.
+	 * @return The set of all elements that are contained in {@code set1} but not in {@code set2}.
+	 */
+	private Set<IStorage> difference(Set<IStorage> set1, Set<URI> set2) {
+		final Set<IStorage> difference = new LinkedHashSet<IStorage>();
+		for (IStorage storage1 : set1) {
+			final URI uri = AS_URI.apply(storage1);
+			if (!set2.contains(uri)) {
+				difference.add(storage1);
+			}
+		}
+		return difference;
+	}
+
+	private Set<URI> asURISet(Set<IStorage> storages) {
+		final Set<URI> uris = new LinkedHashSet<URI>();
+		for (IStorage storage : storages) {
+			uris.add(AS_URI.apply(storage));
+		}
+		return uris;
 	}
 
 	/**
@@ -556,106 +917,6 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	}
 
 	/**
-	 * The 'left' model we've been fed is a local file. We'll assume that the whole 'left' side of this
-	 * comparison is local and resolve everything for that side as we would for local comparisons : update the
-	 * dependency graph according to our resource listener, lookup for cross-references to/from the left
-	 * resource according to the {@link #getResolutionScope() resolution scope}... Once we've resolved the
-	 * local traversal, we'll use that as a base to infer the two remote sides, then "augment" it with the
-	 * outgoing references of the remote variants of these resources.
-	 * 
-	 * @param storageAccessor
-	 *            The accessor that can be used to retrieve synchronization information between our resources.
-	 * @param left
-	 *            File corresponding to the left side of this comparison.
-	 * @param right
-	 *            "starting point" of the traversal to resolve as the right logical model.
-	 * @param origin
-	 *            "starting point" of the traversal to resolve as the origin logical model (common ancestor of
-	 *            left and right). Can be <code>null</code>.
-	 * @param monitor
-	 *            Monitor on which to report progress to the user.
-	 * @return A traversal corresponding to all resources composing the given file's logical model.
-	 * @throws InterruptedException
-	 *             Thrown if the resolution is cancelled or interrupted one way or another.
-	 */
-	private SynchronizationModel resolveModelsWithLocal(IStorageProviderAccessor storageAccessor, IFile left,
-			IStorage right, IStorage origin, ThreadSafeProgressMonitor monitor) throws InterruptedException {
-
-		// Update changes and compute dependencies for left
-		// Then load the same set of resources for the remote sides, completing it top-down
-
-		if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
-			final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
-			updateDependencies(resourceSet, left, monitor);
-			updateChangedResources(resourceSet, monitor);
-		}
-
-		while (!currentlyResolving.isEmpty()) {
-			resolutionEnd.await();
-		}
-		if (monitor.isCanceled()) {
-			throw new OperationCanceledException();
-		}
-		final Set<IStorage> leftTraversal = resolveTraversal(left, Collections.<URI> emptySet());
-
-		final Set<IStorage> rightTraversal = resolveRemoteTraversal(storageAccessor, right, leftTraversal,
-				DiffSide.REMOTE, monitor);
-		final Set<IStorage> originTraversal;
-		if (origin != null) {
-			originTraversal = resolveRemoteTraversal(storageAccessor, origin, leftTraversal, DiffSide.ORIGIN,
-					monitor);
-		} else {
-			originTraversal = Collections.emptySet();
-		}
-
-		final SynchronizationModel synchronizationModel = new SynchronizationModel(new StorageTraversal(
-				leftTraversal), new StorageTraversal(rightTraversal), new StorageTraversal(originTraversal),
-				diagnostic);
-
-		return synchronizationModel;
-	}
-
-	/**
-	 * All three sides we've been fed are remote. We'll resolve all three with a simple a top-down algorithm
-	 * (detect only outgoing cross-references).
-	 * 
-	 * @param storageAccessor
-	 *            The accessor that can be used to retrieve synchronization information between our resources.
-	 * @param left
-	 *            "starting point" of the traversal to resolve as the left logical model.
-	 * @param right
-	 *            "starting point" of the traversal to resolve as the right logical model.
-	 * @param origin
-	 *            "starting point" of the traversal to resolve as the origin logical model (common ancestor of
-	 *            left and right). Can be <code>null</code>.
-	 * @param monitor
-	 *            Monitor on which to report progress to the user.
-	 * @return A traversal corresponding to all resources composing the given file's logical model.
-	 * @throws InterruptedException
-	 *             Thrown if the resolution is cancelled or interrupted one way or another.
-	 */
-	private SynchronizationModel resolveRemoteModels(IStorageProviderAccessor storageAccessor, IStorage left,
-			IStorage right, IStorage origin, ThreadSafeProgressMonitor monitor) throws InterruptedException {
-
-		final Set<IStorage> leftTraversal = resolveRemoteTraversal(storageAccessor, left, Collections
-				.<IStorage> emptySet(), DiffSide.SOURCE, monitor);
-		final Set<IStorage> rightTraversal = resolveRemoteTraversal(storageAccessor, right, Collections
-				.<IStorage> emptySet(), DiffSide.REMOTE, monitor);
-		final Set<IStorage> originTraversal;
-		if (origin != null) {
-			originTraversal = resolveRemoteTraversal(storageAccessor, origin, Collections
-					.<IStorage> emptySet(), DiffSide.ORIGIN, monitor);
-		} else {
-			originTraversal = Collections.emptySet();
-		}
-		final SynchronizationModel synchronizationModel = new SynchronizationModel(new StorageTraversal(
-				leftTraversal), new StorageTraversal(rightTraversal), new StorageTraversal(originTraversal),
-				diagnostic);
-
-		return synchronizationModel;
-	}
-
-	/**
 	 * Checks the current state of our {@link #resourceListener} and updates the dependency graph for all
 	 * resources that have been changed since we last checked.
 	 * 
@@ -665,8 +926,8 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	 *            Monitor on which to report progress to the user.
 	 */
 	private void updateChangedResources(SynchronizedResourceSet resourceSet, ThreadSafeProgressMonitor monitor) {
-		final Set<URI> removedURIs = difference(resourceListener.popRemovedURIs(), resolvedResources);
-		final Set<URI> changedURIs = difference(resourceListener.popChangedURIs(), resolvedResources);
+		final Set<URI> removedURIs = Sets.difference(resourceListener.popRemovedURIs(), resolvedResources);
+		final Set<URI> changedURIs = Sets.difference(resourceListener.popChangedURIs(), resolvedResources);
 
 		dependencyGraph.removeAll(removedURIs);
 
@@ -771,7 +1032,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	}
 
 	private Set<IStorage> resolveRemoteTraversal(IStorageProviderAccessor storageAccessor, IStorage start,
-			Set<IStorage> localVariants, DiffSide side, ThreadSafeProgressMonitor monitor)
+			Iterable<URI> knownVariants, DiffSide side, ThreadSafeProgressMonitor monitor)
 			throws InterruptedException {
 		final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
 		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
@@ -780,13 +1041,8 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 		resolvedResources = new LinkedHashSet<URI>();
 
-		for (IStorage local : localVariants) {
-			/*
-			 * FIXME check that the IResourceVariantTrees support parallel accesses... or make sure that we do
-			 * not use multiple thread to resolve the remote variants. For now, we'll use threads.
-			 */
-			final URI expectedURI = ResourceUtil.createURIFor(local);
-			demandRemoteResolve(resourceSet, expectedURI, monitor);
+		for (URI known : knownVariants) {
+			demandRemoteResolve(resourceSet, known, monitor);
 		}
 
 		final URI startURI = ResourceUtil.createURIFor(start);

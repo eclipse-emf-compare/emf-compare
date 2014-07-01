@@ -11,10 +11,19 @@
 package org.eclipse.emf.compare.ide.ui.logical;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
@@ -42,6 +51,8 @@ public final class SynchronizationModel implements IDiagnosable {
 
 	/** The diagnostic that may have been issued for this synchronization model */
 	private Diagnostic diagnostic;
+
+	private ImmutableSet<IResource> resources;
 
 	/**
 	 * Constructs our logical model given the three traversal for our sides.
@@ -141,5 +152,71 @@ public final class SynchronizationModel implements IDiagnosable {
 	 */
 	public void setDiagnostic(Diagnostic diagnostic) {
 		this.diagnostic = diagnostic;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof SynchronizationModel) {
+			final SynchronizationModel other = (SynchronizationModel)obj;
+			return Objects.equal(leftTraversal, other.leftTraversal)
+					&& Objects.equal(rightTraversal, other.rightTraversal)
+					&& Objects.equal(originTraversal, other.originTraversal);
+		}
+		return false;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(new Object[] {leftTraversal, rightTraversal, originTraversal, });
+	}
+
+	/**
+	 * Returns the set of resources this synchronization model spans. The returned set may contain resources
+	 * that do not exist locally.
+	 * 
+	 * @return The set of resources this synchronization model spans.
+	 * @since 4.0
+	 */
+	public Set<IResource> getResources() {
+		if (resources == null) {
+			final Set<IResource> leftResources = collectResources(getLeftTraversal());
+			final Set<IResource> rightResources = collectResources(getRightTraversal());
+			final Set<IResource> originResources = collectResources(getOriginTraversal());
+			resources = ImmutableSet.<IResource> builder().addAll(leftResources).addAll(rightResources)
+					.addAll(originResources).build();
+		}
+		return resources;
+	}
+
+	/**
+	 * Collect the set of IResources the given storage traversal spans.
+	 * 
+	 * @param traversal
+	 *            The traversal from which to collect IResources. Might be <code>null</code>, in which case an
+	 *            empty set will be returned.
+	 * @return The converted traversal.
+	 */
+	private static Set<IResource> collectResources(StorageTraversal aTraversal) {
+		final Set<IResource> resources = new LinkedHashSet<IResource>();
+		if (aTraversal == null) {
+			return resources;
+		}
+
+		for (IStorage storage : aTraversal.getStorages()) {
+			if (storage instanceof IFile) {
+				resources.add((IFile)storage);
+			} else {
+				/*
+				 * Use a file handle. Since files can be both local and remote, they might not even exist in
+				 * the current workspace. It will be the responsibility of the user to either get the remote
+				 * or local content. The traversal itself only tells "all" potential resources linked to the
+				 * current.
+				 */
+				resources.add(ResourcesPlugin.getWorkspace().getRoot().getFile(storage.getFullPath()));
+			}
+		}
+		return resources;
 	}
 }
