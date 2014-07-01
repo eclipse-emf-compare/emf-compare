@@ -4,16 +4,20 @@ ws=$2
 arch=$3
 simrel=$4
 
-if [[ ! -f "p2-admin-1.0.1-$os.$ws.$arch.tar.gz" ]]; then 
-	echo "Downloading http://github.com/mbarbero/p2-admin/releases/download/v1.0.1/p2-admin-1.0.1-$os.$ws.$arch.tar.gz"
-	wget --no-check-certificate -q "http://github.com/mbarbero/p2-admin/releases/download/v1.0.1/p2-admin-1.0.1-$os.$ws.$arch.tar.gz"
+P2_ADMIN_VERSION="1.0.2"
+P2_ADMIN_ZIPNAME="p2-admin-$P2_ADMIN_VERSION-$os.$ws.$arch.tar.gz"
+P2_ADMIN_URL="http://github.com/mbarbero/p2-admin/releases/download/v$P2_ADMIN_VERSION/$P2_ADMIN_ZIPNAME"
+
+if [[ ! -f "$P2_ADMIN_ZIPNAME" ]]; then 
+	echo "Downloading $P2_ADMIN_URL"
+	wget --no-check-certificate -q $P2_ADMIN_URL -O - > $P2_ADMIN_ZIPNAME
 fi
 if [[ -d "p2-admin" ]]; then
 	echo "Removing old p2-admin folder"
 	rm -rf "p2-admin"
 fi
-echo "Unzipping p2-admin-1.0.1-$os.$ws.$arch.tar.gz"
-tar zxf "p2-admin-1.0.1-$os.$ws.$arch.tar.gz"
+echo "Unzipping $P2_ADMIN_ZIPNAME"
+tar zxf "$P2_ADMIN_ZIPNAME"
 
 target_env=$os
 if [[ $ws != $os ]]; then
