@@ -8,30 +8,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.unit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.io.File;
-import java.util.List;
 
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.common.util.BasicMonitor;
-import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
-import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
-import org.eclipse.emf.compare.ide.ui.internal.logical.StorageTypedElement;
-import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
-import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
-import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
-import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.tests.egit.CompareGitTestCase;
-import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -40,7 +21,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.team.core.subscribers.Subscriber;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -232,72 +212,5 @@ public class GitLogicalModelTest extends CompareGitTestCase {
 		compareBothDirectionsAndCheck(iFile1, masterCommit, branchCommit, 0, 1, 2);
 	}
 
-	private void compareBothDirectionsAndCheck(IFile file, String source, String destination,
-			int expectedConflicts, int diffsInSource, int diffsInDestination) throws Exception {
-		Comparison compareResult = compare(source, destination, file);
-
-		assertEquals(expectedConflicts, compareResult.getConflicts().size());
-		assertDiffCount(compareResult.getDifferences(), diffsInSource, diffsInDestination);
-
-		compareResult = compare(destination, source, file);
-
-		assertEquals(expectedConflicts, compareResult.getConflicts().size());
-		assertDiffCount(compareResult.getDifferences(), diffsInDestination, diffsInSource);
-	}
-
-	private void assertDiffCount(List<Diff> differences, int expectedOutgoing, int expectedIncoming) {
-		assertEquals(expectedOutgoing + expectedIncoming, differences.size());
-
-		int outgoingCount = 0;
-		int incomingCount = 0;
-		for (Diff diff : differences) {
-			switch (diff.getSource()) {
-				case LEFT:
-					outgoingCount++;
-					break;
-				case RIGHT:
-					incomingCount++;
-					break;
-				default:
-					break;
-			}
-		}
-
-		assertEquals(expectedOutgoing, outgoingCount);
-		assertEquals(expectedIncoming, incomingCount);
-	}
-
-	private Comparison compare(String sourceRev, String targetRev, IFile file) throws Exception {
-		final String fullPath = file.getFullPath().toString();
-		final Subscriber subscriber = repository.createSubscriberForComparison(sourceRev, targetRev, file);
-		final IStorageProviderAccessor accessor = new SubscriberStorageAccessor(subscriber);
-		final IStorageProvider sourceProvider = accessor.getStorageProvider(iFile1,
-				IStorageProviderAccessor.DiffSide.SOURCE);
-		final IStorageProvider remoteProvider = accessor.getStorageProvider(iFile1,
-				IStorageProviderAccessor.DiffSide.REMOTE);
-		final IStorageProvider ancestorProvider = accessor.getStorageProvider(iFile1,
-				IStorageProviderAccessor.DiffSide.ORIGIN);
-		assertNotNull(sourceProvider);
-		assertNotNull(remoteProvider);
-		assertNotNull(ancestorProvider);
-
-		final IProgressMonitor monitor = new NullProgressMonitor();
-		final IStorageProviderAccessor storageAccessor = new SubscriberStorageAccessor(subscriber);
-		final ITypedElement left = new StorageTypedElement(sourceProvider.getStorage(monitor), fullPath);
-		final ITypedElement right = new StorageTypedElement(remoteProvider.getStorage(monitor), fullPath);
-		final ITypedElement origin = new StorageTypedElement(ancestorProvider.getStorage(monitor), fullPath);
-		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(new ThreadedModelResolver(),
-				new IdenticalResourceMinimizer(), storageAccessor);
-		final IComparisonScope scope = scopeBuilder.build(left, right, origin, monitor);
-
-		final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
-		final ResourceSet rightResourceSet = (ResourceSet)scope.getRight();
-		final ResourceSet originResourceSet = (ResourceSet)scope.getOrigin();
-
-		assertEquals(2, leftResourceSet.getResources().size());
-		assertEquals(2, rightResourceSet.getResources().size());
-		assertEquals(2, originResourceSet.getResources().size());
-
-		return EMFCompare.builder().build().compare(scope, new BasicMonitor());
-	}
+	
 }

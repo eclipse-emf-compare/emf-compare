@@ -22,11 +22,14 @@ import org.eclipse.core.resources.mapping.RemoteResourceMappingContext;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.resources.mapping.ResourceMappingContext;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
+import org.eclipse.egit.core.op.IgnoreOperation;
+import org.eclipse.egit.core.op.MergeOperation;
 import org.eclipse.egit.core.synchronize.GitResourceVariantTreeSubscriber;
 import org.eclipse.egit.core.synchronize.GitSubscriberMergeContext;
 import org.eclipse.egit.core.synchronize.GitSubscriberResourceMappingContext;
@@ -35,12 +38,14 @@ import org.eclipse.egit.core.synchronize.dto.GitSynchronizeDataSet;
 import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.merge.MergeStrategy;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberScopeManager;
@@ -77,6 +82,11 @@ public class GitTestRepository {
 			workdirPrefix += "/";
 		}
 	}
+	
+	public RevCommit addAllAndCommit(String commitMessage) throws Exception {
+		new Git(repository).add().addFilepattern(".").call();
+		return commit(commitMessage);
+	}
 
 	/**
 	 * Track, add to index and finally commit the given files.
@@ -91,22 +101,16 @@ public class GitTestRepository {
 	 */
 	public RevCommit addAndCommit(TestProject testProject, String commitMessage, File... files)
 			throws Exception {
-		track(files);
 		addToIndex(testProject, files);
 		return commit(commitMessage);
 	}
 
-	/**
-	 * Adds The given files to version control.
-	 * 
-	 * @param files
-	 *            The files to add.
-	 */
-	public void track(File... files) throws IOException, NoFilepatternException, GitAPIException {
+	public void ignore(File... files) throws Exception {
+		final Set<IPath> paths = new LinkedHashSet<IPath>();
 		for (File file : files) {
-			String repoPath = getRepoRelativePath(new Path(file.getPath()).toString());
-			new Git(repository).add().addFilepattern(repoPath).call();
+			paths.add(new Path(file.getPath()));
 		}
+		new IgnoreOperation(paths).execute(new NullProgressMonitor());
 	}
 
 	/**
@@ -132,7 +136,7 @@ public class GitTestRepository {
 	public void addToIndex(IResource... resources) throws CoreException, IOException, NoFilepatternException,
 			GitAPIException {
 		for (IResource resource : resources) {
-			String repoPath = getRepoRelativePath(resource.getLocation().toOSString());
+			String repoPath = getRepoRelativePath(resource.getLocation().toString());
 			new Git(repository).add().addFilepattern(repoPath).call();
 		}
 	}
@@ -198,6 +202,31 @@ public class GitTestRepository {
 	public void checkoutBranch(String refName) throws CoreException {
 		new BranchOperation(repository, refName).execute(null);
 	}
+	
+	/**
+	 * Merge the given ref with the current HEAD, using the default (logical) strategy.
+	 * @param refName Name of a commit to merge with the current HEAD.
+	 */
+	public void mergeLogical(String refName) throws CoreException {
+		new MergeOperation(repository, refName).execute(null);
+	}
+	
+	/**
+	 * Merge the given ref with the current HEAD, using the textual "recursive" strategy.
+	 * @param refName Name of a commit to merge with the current HEAD.
+	 */
+	public void mergeTextual(String refName) throws CoreException {
+		new MergeOperation(repository, refName, MergeStrategy.RECURSIVE.getName()).execute(null);
+	}
+	
+	/**
+	 * Returns the status of this repository's files as would "git status".
+	 * @return
+	 * @throws Exception
+	 */
+	public Status status() throws Exception {
+		return new Git(repository).status().call();
+	}
 
 	/**
 	 * Dispose of this wrapper along with its underlying repository.
@@ -235,6 +264,10 @@ public class GitTestRepository {
 				subscriber, remoteContext, true);
 		final GitSubscriberMergeContext context = new GitSubscriberMergeContext(subscriber, manager, dataSet);
 		return context.getSubscriber();
+	}
+	
+	public String getRepoRelativePath(File file) {
+		return getRepoRelativePath(new Path(file.getPath()).toString());
 	}
 
 	private String getRepoRelativePath(String path) {
