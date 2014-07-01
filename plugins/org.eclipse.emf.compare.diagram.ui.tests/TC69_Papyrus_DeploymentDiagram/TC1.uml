@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_GPUAoeB1EeCyE_-ZHij4Gw" name="model">
-  <packagedElement xmi:type="uml:Node" xmi:id="_HfYhYOB1EeCyE_-ZHij4Gw" name="Node0" clientDependency="_KAZsoOB1EeCyE_-ZHij4Gw">
-    <deployment xmi:id="_KAZsoOB1EeCyE_-ZHij4Gw" name="Deployment0" supplier="_JeQo4OB1EeCyE_-ZHij4Gw" client="_HfYhYOB1EeCyE_-ZHij4Gw"/>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Device" xmi:id="_JeQo4OB1EeCyE_-ZHij4Gw" name="Device0"/>
-</uml:Model>

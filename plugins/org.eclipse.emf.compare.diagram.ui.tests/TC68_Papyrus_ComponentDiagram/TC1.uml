@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_Ox3icOBzEeCnY_qWxW0LrA" name="model">
-  <packagedElement xmi:type="uml:Package" xmi:id="_PkVhMOBzEeCnY_qWxW0LrA" name="Package" clientDependency="_S2P94OBzEeCnY_qWxW0LrA">
-    <packagedElement xmi:type="uml:ComponentRealization" xmi:id="_S2P94OBzEeCnY_qWxW0LrA" name="ComponentRealization0" supplier="_QeGawOBzEeCnY_qWxW0LrA" client="_PkVhMOBzEeCnY_qWxW0LrA"/>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Component" xmi:id="_QeGawOBzEeCnY_qWxW0LrA" name="Component0" clientDependency="_UUzmkOBzEeCnY_qWxW0LrA"/>
-  <packagedElement xmi:type="uml:Interface" xmi:id="_Tk_6QOBzEeCnY_qWxW0LrA" name="Interface0"/>
-  <packagedElement xmi:type="uml:InterfaceRealization" xmi:id="_UUzmkOBzEeCnY_qWxW0LrA" name="InterfaceRealization0" supplier="_Tk_6QOBzEeCnY_qWxW0LrA" client="_QeGawOBzEeCnY_qWxW0LrA"/>
-</uml:Model>
