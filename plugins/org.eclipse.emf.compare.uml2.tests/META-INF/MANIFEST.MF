@@ -11,7 +11,8 @@ Export-Package: org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile
  org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl,
  org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.provider,
  org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.util,
- org.eclipse.emf.compare.uml2.tests
+ org.eclipse.emf.compare.uml2.tests,
+ org.eclipse.emf.compare.uml2.tests.edit.provider
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.uml2.uml;bundle-version="5.0.0";visibility:=reexport,

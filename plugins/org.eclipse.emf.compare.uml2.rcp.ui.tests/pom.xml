@@ -23,8 +23,8 @@
             <includes>
 			  <include>org/eclipse/emf/compare/uml2/rcp/ui/tests/suite/AllTests.class</include>
             </includes>     
-            <useUIHarness>false</useUIHarness>
-            <useUIThread>false</useUIThread>
+            <useUIHarness>true</useUIHarness>
+            <useUIThread>true</useUIThread>
 			<appArgLine>-Xmx1024m -XX:MaxPermSize=256m</appArgLine>
           </configuration>
         </plugin>

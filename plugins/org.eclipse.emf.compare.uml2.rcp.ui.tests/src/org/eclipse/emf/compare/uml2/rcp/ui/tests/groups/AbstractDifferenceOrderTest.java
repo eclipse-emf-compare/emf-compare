@@ -38,8 +38,10 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.Stru
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.nodes.Node;
+import org.eclipse.emf.compare.tests.nodes.NodeSingleValueAttribute;
 import org.eclipse.emf.compare.tests.nodes.NodesFactory;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
+import org.eclipse.emf.compare.uml2.tests.edit.provider.StereotypedElementItemProviderTestUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -121,8 +123,11 @@ public abstract class AbstractDifferenceOrderTest {
 	 *            Resource holding a Nodes models. This "nodes" model represent the expected.
 	 * @param actualTrees
 	 *            Actual trees that the viewer would display (without any filter being applied).
+	 * @param testIcons
+	 *            Set to true if the icon of each element should be checked.
 	 */
-	protected void compareTree(Resource expectedResult, List<? extends TreeNode> actualTrees) {
+	protected void compareTree(Resource expectedResult, List<? extends TreeNode> actualTrees,
+			boolean testIcons) {
 		List<? extends TreeNode> nonFilteredActualRoot = Lists.newArrayList(Collections2.filter(actualTrees,
 				viewerFilterPredicate));
 		EList<EObject> expectedContent = expectedResult.getContents();
@@ -136,12 +141,13 @@ public abstract class AbstractDifferenceOrderTest {
 			final Iterator<EObject> realIterator = Iterators.filter(actualRoot.eAllContents(),
 					viewerFilterPredicate);
 			// Compares
-			compareTree(expectedIterator, realIterator);
+			compareTree(expectedIterator, realIterator, testIcons);
 		}
 
 	}
 
-	private void compareTree(TreeIterator<EObject> expectedIterator, final Iterator<EObject> realIterator) {
+	private void compareTree(TreeIterator<EObject> expectedIterator, final Iterator<EObject> realIterator,
+			boolean testIcons) {
 		while (expectedIterator.hasNext()) {
 			Node expectedElement = (Node)expectedIterator.next();
 			Assert.assertTrue("No match for element " + expectedElement.getName(), realIterator.hasNext()); //$NON-NLS-1$
@@ -150,6 +156,15 @@ public abstract class AbstractDifferenceOrderTest {
 			// Checks same name.
 			Assert.assertEquals(getErrorMessage(actualElem), expectedElement.getName(), itemDelegator
 					.getText(actualElem));
+			if (testIcons) {
+				// Checks correct icon
+				Assert.assertTrue(expectedElement instanceof NodeSingleValueAttribute);
+				List<String> actualIcons = StereotypedElementItemProviderTestUtil
+						.getIconsLocation(itemDelegator.getImage(actualElem));
+				Assert.assertEquals("Wrong icon on " + expectedElement.getName(), //$NON-NLS-1$
+						((NodeSingleValueAttribute)expectedElement).getSingleValuedAttribute(), Joiner
+								.on(',').join(actualIcons));
+			}
 			if (expectedElement.eContainer() != null) {
 				final Collection<Node> expectedChildren = expectedElement.getContainmentRef1();
 				// Checks same number of children.
@@ -288,13 +303,15 @@ public abstract class AbstractDifferenceOrderTest {
 		 *            Location of newly created file will be serialized.
 		 * @param roots
 		 *            Lists of roots to serialize in the model.
+		 * @param fillIcon
+		 *            Set to true if the generated model should keep track of the element icons.
 		 */
-		public void createExpectedModel(String fileLocation, List<? extends TreeNode> roots) {
+		public void createExpectedModel(String fileLocation, List<? extends TreeNode> roots, boolean fillIcon) {
 			URI fileURI = URI.createFileURI(fileLocation);
 			Resource.Factory resourceFactory = new NodesResourceFactoryImpl();
 			// resourceFactory cannot be null
 			Resource res = resourceFactory.createResource(fileURI);
-			fillTree(res, roots);
+			fillTree(res, roots, fillIcon);
 			try {
 				res.save(Collections.EMPTY_MAP);
 			} catch (IOException e) {
@@ -310,26 +327,38 @@ public abstract class AbstractDifferenceOrderTest {
 		 * </p>
 		 * 
 		 * @param n
+		 * @param saveIcon
+		 *            Set to true if the icon name should be serialized in the model
 		 * @return
 		 */
-		private Node createNode(TreeNode n) {
+		private Node createNode(TreeNode n, boolean saveIcon) {
 			Node newNode = null;
 			if (viewerFilterPredicate.apply(n)) {
-				newNode = NodesFactory.eINSTANCE.createNode();
+				if (saveIcon) {
+					newNode = NodesFactory.eINSTANCE.createNodeSingleValueAttribute();
+				} else {
+					newNode = NodesFactory.eINSTANCE.createNode();
+				}
 				newNode.setName(itemDelegator.getText(n));
 				for (TreeNode child : n.getChildren()) {
-					Node createNode = createNode(child);
+					Node createNode = createNode(child, saveIcon);
 					if (createNode != null) {
 						newNode.getContainmentRef1().add(createNode);
 					}
+				}
+				if (saveIcon) {
+					// Save the icon name to test the picture
+					Object icon = itemDelegator.getImage(n);
+					((NodeSingleValueAttribute)newNode).setSingleValuedAttribute(Joiner.on(',').join(
+							StereotypedElementItemProviderTestUtil.getIconsLocation(icon)));
 				}
 			}
 			return newNode;
 		}
 
-		private void fillTree(Resource resource, List<? extends TreeNode> roots) {
+		private void fillTree(Resource resource, List<? extends TreeNode> roots, boolean fillIcon) {
 			for (TreeNode n : roots) {
-				Node createNode = createNode(n);
+				Node createNode = createNode(n, fillIcon);
 				if (createNode != null) {
 					resource.getContents().add(createNode);
 				}

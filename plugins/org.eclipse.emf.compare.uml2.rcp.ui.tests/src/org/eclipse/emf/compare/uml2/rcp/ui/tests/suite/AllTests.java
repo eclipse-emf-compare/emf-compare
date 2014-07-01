@@ -15,6 +15,8 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.uml2.rcp.ui.tests.groups.UMLDifferencesOrderTest;
+import org.eclipse.emf.compare.uml2.rcp.ui.tests.profile.DynamicProfileIntegrationDisplayTest;
+import org.eclipse.emf.compare.uml2.rcp.ui.tests.profile.StaticProfileIntegrationDisplayTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -25,7 +27,8 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses(UMLDifferencesOrderTest.class)
+@SuiteClasses({UMLDifferencesOrderTest.class, DynamicProfileIntegrationDisplayTest.class,
+		StaticProfileIntegrationDisplayTest.class })
 public class AllTests {
 
 	/**

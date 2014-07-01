@@ -37,7 +37,9 @@ import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Stereotype;
 
 /**
- * Util class for testing the {@link org.eclipse.emf.compare.uml2.internal.provider.decorator.UMLProfileItemProviderAdapterFactoryDecorator}.
+ * Util class for testing the
+ * {@link org.eclipse.emf.compare.uml2.internal.provider.decorator.UMLProfileItemProviderAdapterFactoryDecorator}
+ * .
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
@@ -70,8 +72,7 @@ public class StereotypedElementItemProviderTestUtil {
 					assertEquals(1, actualIcons.size());
 					assertEquals(
 							"Wrong icon for stereotypes :" + generateExpectedIconKey(appliedStereotypes), //$NON-NLS-1$
-							getExpectedIcon(appliedStereotypes, expectedStaticIcons), actualIcons
-									.get(0));
+							getExpectedIcon(appliedStereotypes, expectedStaticIcons), actualIcons.get(0));
 				} else {
 					assertNotNull(itemLabelProvider);
 					assertTrue("Wrong item provider for object " + itemLabelProvider.getText(eObject), //$NON-NLS-1$
@@ -95,7 +96,17 @@ public class StereotypedElementItemProviderTestUtil {
 		return Joiner.on(',').join(Iterables.transform(stereotypes, TO_NAME_FUNCTION));
 	}
 
-	private static List<String> getIconsLocation(Object icon) {
+	/**
+	 * Retrieves the name of each icon from the object returned by an item provider.
+	 * <p>
+	 * The name of an icon is only the last segment of its full path location
+	 * </p>
+	 * 
+	 * @param icon
+	 *            Object returned by the {@link org.eclipse.emf.edit.provider.ItemProvider#getImage()} method.
+	 * @return A list of name of icon.
+	 */
+	public static List<String> getIconsLocation(Object icon) {
 		final List<String> result = Lists.newArrayList();
 		if (icon instanceof ComposedImage) {
 			for (Object image : ((ComposedImage)icon).getImages()) {

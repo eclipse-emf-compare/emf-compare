@@ -131,9 +131,9 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 
 		// Uncomment the following lines to reserialize the expected model
 		// TestWriterHelper writerHelper = createTestHelper();
-		// writerHelper.createExpectedModel(PATH_TO_MODEL_FILE+"/expectedResult_DiagRefineOff.nodes", roots);
+		// writerHelper.createExpectedModel(PATH_TO_MODEL_FILE+"/expectedResult_DiagRefineOff.nodes", roots,false);
 
-		compareTree(expectedResultData.getExpectedReseultWithFilterOff(), roots);
+		compareTree(expectedResultData.getExpectedReseultWithFilterOff(), roots, false);
 	}
 
 	@Test
@@ -149,7 +149,7 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 		// TestWriterHelper writerHelper = createTestHelper();
 		// writerHelper.createExpectedModel(PATH_TO_MODEL_FILE+"/expectedResult_DiagRefineOn.nodes", roots);
 
-		compareTree(expectedResultData.getExpectedReseultWithFilterOn(), roots);
+		compareTree(expectedResultData.getExpectedReseultWithFilterOn(), roots,false);
 	}
 
 	/**

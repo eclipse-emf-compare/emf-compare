@@ -28,7 +28,7 @@ Export-Package: org.eclipse.emf.compare.uml2.internal;
    org.eclipse.emf.compare.uml2.rcp.ui,
    org.eclipse.emf.compare.uml2.tests",
  org.eclipse.emf.compare.uml2.internal.merge;x-internal:=true,
- org.eclipse.emf.compare.uml2.internal.postprocessor;x-friends:="org.eclipse.emf.compare.diagram.papyrus.tests,org.eclipse.emf.compare.uml2.tests",
+ org.eclipse.emf.compare.uml2.internal.postprocessor;x-friends:="org.eclipse.emf.compare.diagram.papyrus.tests,org.eclipse.emf.compare.uml2.tests,org.eclipse.emf.compare.uml2.rcp.ui.tests",
  org.eclipse.emf.compare.uml2.internal.postprocessor.extension;x-internal:=true,
  org.eclipse.emf.compare.uml2.internal.postprocessor.extension.clazz;x-internal:=true,
  org.eclipse.emf.compare.uml2.internal.postprocessor.extension.profile;x-internal:=true,

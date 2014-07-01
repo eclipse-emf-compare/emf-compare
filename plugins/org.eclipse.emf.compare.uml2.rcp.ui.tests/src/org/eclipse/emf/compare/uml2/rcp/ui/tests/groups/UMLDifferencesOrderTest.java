@@ -48,7 +48,6 @@ import org.junit.Test;
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
-@SuppressWarnings("restriction")
 public class UMLDifferencesOrderTest extends AbstractDifferenceOrderTest {
 
 	private ExpectedResultData expectedResult;
@@ -101,9 +100,9 @@ public class UMLDifferencesOrderTest extends AbstractDifferenceOrderTest {
 		List<? extends TreeNode> roots = group.getChildren();
 		// Uncomment the following lines to reserialize the expected model
 		// TestWriterHelper writerHelper = createTestHelper();
-		// writerHelper.createExpectedModel("PATH_TO_MODEL_FILE/expectedResult.nodes", roots);
+		// writerHelper.createExpectedModel("PATH_TO_MODEL_FILE/expectedResult.nodes", roots,false);
 
-		compareTree(expectedResult.getExpectedResultWithoutFilter(), roots);
+		compareTree(expectedResult.getExpectedResultWithoutFilter(), roots, false);
 
 	}
 
@@ -125,7 +124,7 @@ public class UMLDifferencesOrderTest extends AbstractDifferenceOrderTest {
 		// writerHelper.createExpectedModel("PATH_TO_MODEL_FILE/expectedResultWithUMLRefineElement.nodes",
 		// roots);
 
-		compareTree(expectedResult.getExpectedResultWithFilter(), roots);
+		compareTree(expectedResult.getExpectedResultWithFilter(), roots, false);
 
 	}
 
