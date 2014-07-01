@@ -4,6 +4,8 @@ ws=$2
 arch=$3
 simrel=$4
 
+env > env.txt
+
 P2_ADMIN_VERSION="1.0.2"
 P2_ADMIN_ZIPNAME="p2-admin-$P2_ADMIN_VERSION-$os.$ws.$arch.tar.gz"
 P2_ADMIN_URL="https://github.com/mbarbero/p2-admin/releases/download/v$P2_ADMIN_VERSION/$P2_ADMIN_ZIPNAME"
