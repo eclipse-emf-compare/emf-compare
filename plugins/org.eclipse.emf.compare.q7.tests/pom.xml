@@ -35,10 +35,6 @@
 	        <goal>exec</goal>
 	      </goals>
 	      <configuration>
-	        <environmentVariables>
-	          <PATH>${PATH}:${JAVA_HOME}</PATH>
-	          <JAVA_HOME>${JAVA_HOME}</JAVA_HOME>
-	        </environmentVariables>
 	        <executable>bash</executable>
 	        <commandlineArgs>${basedir}/createAUT.sh ${os-ws-arch} ${profile-id}</commandlineArgs>
 	      </configuration>

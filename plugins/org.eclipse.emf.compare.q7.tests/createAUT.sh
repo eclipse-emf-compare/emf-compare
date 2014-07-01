@@ -69,7 +69,7 @@ tar zxf "$simrel_zip_name"
 echo "Provisioning AUT"
 echo "  Repositories: $p2_repositories"
 echo "  IUs: $p2_installIUs"
-$(pwd)/p2-admin/p2-admin -application org.eclipse.equinox.p2.director -repository "$p2_repositories" -installIU "$p2_installIUs" -tag Q7_AUT -destination "$(pwd)/eclipse" -profile SDKProfile
+$(pwd)/p2-admin/p2-admin -vm $JAVA_HOME/bin/java -application org.eclipse.equinox.p2.director -repository "$p2_repositories" -installIU "$p2_installIUs" -tag Q7_AUT -destination "$(pwd)/eclipse" -profile SDKProfile
 
 echo "Zipping AUT AUT-$os.$ws.$arch.zip"
 zip -qr "AUT-$os.$ws.$arch.zip" eclipse
