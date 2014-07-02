@@ -91,12 +91,12 @@ public class CompareGitTestCase extends CompareTestCase {
 	@Override
 	@After
 	public void tearDown() throws Exception {
-		super.tearDown();
 		repository.dispose();
 		Activator.getDefault().getRepositoryCache().clear();
 		if (gitDir.exists()) {
 			FileUtils.delete(gitDir, FileUtils.RECURSIVE | FileUtils.RETRY);
 		}
+		super.tearDown();
 	}
 	
 	protected void compareBothDirectionsAndCheck(IFile file, String source, String destination,

@@ -10,7 +10,9 @@ package org.eclipse.emf.compare.ide.ui.tests.egit.fixture;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -56,6 +58,8 @@ import org.eclipse.team.core.subscribers.SubscriberScopeManager;
  */
 @SuppressWarnings({"nls", "restriction" })
 public class GitTestRepository {
+	private final List<Runnable> disposers;
+	
 	Repository repository;
 
 	String workdirPrefix;
@@ -81,6 +85,8 @@ public class GitTestRepository {
 		if (!workdirPrefix.endsWith("/")) {
 			workdirPrefix += "/";
 		}
+		
+		this.disposers = new ArrayList<Runnable>();
 	}
 	
 	public RevCommit addAllAndCommit(String commitMessage) throws Exception {
@@ -236,6 +242,10 @@ public class GitTestRepository {
 			repository.close();
 			repository = null;
 		}
+		for (Runnable disposer : disposers) {
+			disposer.run();
+		}
+		disposers.clear();
 	}
 
 	/**
@@ -255,7 +265,7 @@ public class GitTestRepository {
 		final GitSynchronizeData data = new GitSynchronizeData(repository, sourceRef, targetRef, false);
 		final GitSynchronizeDataSet dataSet = new GitSynchronizeDataSet(data);
 		final ResourceMapping[] mappings = getResourceMappings(comparedFile);
-		GitResourceVariantTreeSubscriber subscriber = new GitResourceVariantTreeSubscriber(dataSet);
+		final GitResourceVariantTreeSubscriber subscriber = new GitResourceVariantTreeSubscriber(dataSet);
 		subscriber.init(new NullProgressMonitor());
 
 		final RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(
@@ -263,6 +273,13 @@ public class GitTestRepository {
 		final SubscriberScopeManager manager = new SubscriberScopeManager(subscriber.getName(), mappings,
 				subscriber, remoteContext, true);
 		final GitSubscriberMergeContext context = new GitSubscriberMergeContext(subscriber, manager, dataSet);
+		disposers.add(new Runnable() {
+			public void run() {
+				manager.dispose();
+				context.dispose();
+				subscriber.dispose();
+			}
+		});
 		return context.getSubscriber();
 	}
 	
