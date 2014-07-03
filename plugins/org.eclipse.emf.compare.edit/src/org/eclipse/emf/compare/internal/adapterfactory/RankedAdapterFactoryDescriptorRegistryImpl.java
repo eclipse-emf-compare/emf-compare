@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.adapterfactory;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ForwardingListMultimap;
-import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Multimaps;
+import com.google.common.collect.Multimap;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,25 +26,27 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory.Descriptor;
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-public class RankedAdapterFactoryDescriptorRegistryImpl extends ForwardingListMultimap<Collection<?>, ComposedAdapterFactory.Descriptor> implements RankedAdapterFactoryDescriptor.Registry {
+public class RankedAdapterFactoryDescriptorRegistryImpl implements RankedAdapterFactoryDescriptor.Registry {
 
 	/** The delegate registry. */
 	private final ComposedAdapterFactory.Descriptor.Registry delegateRegistry;
 
 	/** The store of registered adapter factory descriptors. */
-	private final ListMultimap<Collection<?>, ComposedAdapterFactory.Descriptor> map;
+	private final Multimap<Collection<?>, RankedAdapterFactoryDescriptor> emfCompareAdapterFactoryRegistry;
 
 	/**
 	 * Creates an instance.
 	 * 
 	 * @param delegateRegistry
 	 *            <code>null</code> or a registration that should act as the delegate.
+	 * @param adapterFactoryRegistryBackingMultimap
+	 *            Multimap backing all {@link RankedAdapterFactoryDescriptor} registered into EMF Compare.
 	 */
 	public RankedAdapterFactoryDescriptorRegistryImpl(
-			ComposedAdapterFactory.Descriptor.Registry delegateRegistry) {
+			ComposedAdapterFactory.Descriptor.Registry delegateRegistry,
+			Multimap<Collection<?>, RankedAdapterFactoryDescriptor> adapterFactoryRegistryBackingMultimap) {
 		this.delegateRegistry = delegateRegistry;
-		map = Multimaps.synchronizedListMultimap(ArrayListMultimap
-				.<Collection<?>, ComposedAdapterFactory.Descriptor> create());
+		this.emfCompareAdapterFactoryRegistry = adapterFactoryRegistryBackingMultimap;
 	}
 
 	/**
@@ -60,9 +59,24 @@ public class RankedAdapterFactoryDescriptorRegistryImpl extends ForwardingListMu
 	 * @return the appropriate Descriptor for the given types.
 	 */
 	public Descriptor getDescriptor(Collection<?> types) {
-		ComposedAdapterFactory.Descriptor ret = null;
 
-		List<Object> stringTypes = new ArrayList<Object>(types.size());
+		ComposedAdapterFactory.Descriptor ret = getRankedDescriptor(types);
+
+		if (ret == null) {
+			ret = delegatedGetDescriptor(types);
+		}
+		return ret;
+	}
+
+	/**
+	 * Gets the {@link ComposedAdapterFactory.Descriptor} that handles the given types.
+	 * 
+	 * @param types
+	 *            Types that the {@link ComposedAdapterFactory.Descriptor} should handle.
+	 * @return {@link ComposedAdapterFactory.Descriptor}
+	 */
+	private RankedAdapterFactoryDescriptor getRankedDescriptor(Collection<?> types) {
+		List<String> stringTypes = new ArrayList<String>(types.size());
 		for (Object key : types) {
 			if (key instanceof EPackage) {
 				stringTypes.add(((EPackage)key).getNsURI());
@@ -72,34 +86,37 @@ public class RankedAdapterFactoryDescriptorRegistryImpl extends ForwardingListMu
 				stringTypes.add(((Class<?>)key).getName());
 			}
 		}
-		Iterator<ComposedAdapterFactory.Descriptor> descriptors = get(stringTypes).iterator();
+		return getHighestRankedDescriptor(stringTypes);
+	}
+
+	/**
+	 * Gets the highest ranked {@link ComposedAdapterFactory.Descriptor} registered in
+	 * emfCompareAdapterFactoryRegistry.
+	 * 
+	 * @param stringTypes
+	 *            Types that the {@link ComposedAdapterFactory.Descriptor} should handle.
+	 * @return {@link RankedAdapterFactoryDescriptor}
+	 */
+	private RankedAdapterFactoryDescriptor getHighestRankedDescriptor(List<String> stringTypes) {
+		final RankedAdapterFactoryDescriptor result;
+
+		Iterator<? extends RankedAdapterFactoryDescriptor> descriptors = emfCompareAdapterFactoryRegistry
+				.get(stringTypes).iterator();
 
 		if (descriptors.hasNext()) {
-			ComposedAdapterFactory.Descriptor highestRanking = descriptors.next();
+			RankedAdapterFactoryDescriptor highestRanking = descriptors.next();
 			while (descriptors.hasNext()) {
-				ComposedAdapterFactory.Descriptor descriptor = descriptors.next();
-				if (descriptor instanceof RankedAdapterFactoryDescriptor
-						&& highestRanking instanceof RankedAdapterFactoryDescriptor) {
-					if (((RankedAdapterFactoryDescriptor)descriptor).getRanking() > ((RankedAdapterFactoryDescriptor)highestRanking)
-							.getRanking()) {
-						highestRanking = descriptor;
-					}
-				} else if (descriptor instanceof RankedAdapterFactoryDescriptor) {
-					// previous highestRanking was not ranked, so it is overriden by any
-					// RankedAdapterFactoryDescriptor.
+				RankedAdapterFactoryDescriptor descriptor = descriptors.next();
+				if (descriptor.getRanking() > highestRanking.getRanking()) {
 					highestRanking = descriptor;
 				}
 			}
-			ret = highestRanking;
-		}
-
-		if (ret != null) {
-			put(types, ret);
+			result = highestRanking;
 		} else {
-			ret = delegatedGetDescriptor(types);
+			result = null;
 		}
+		return result;
 
-		return ret;
 	}
 
 	/**
@@ -114,16 +131,6 @@ public class RankedAdapterFactoryDescriptorRegistryImpl extends ForwardingListMu
 			return delegateRegistry.getDescriptor(types);
 		}
 		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see com.google.common.collect.ForwardingListMultimap#delegate()
-	 */
-	@Override
-	protected ListMultimap<Collection<?>, ComposedAdapterFactory.Descriptor> delegate() {
-		return map;
 	}
 
 }

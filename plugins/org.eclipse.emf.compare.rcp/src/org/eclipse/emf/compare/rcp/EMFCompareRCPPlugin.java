@@ -10,6 +10,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
+
+import java.util.Collection;
+import java.util.List;
+
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
@@ -40,6 +51,7 @@ import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryImp
 import org.eclipse.emf.compare.rcp.internal.policy.LoadOnDemandPolicyRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.postprocessor.PostProcessorFactoryRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.postprocessor.PostProcessorRegistryImpl;
+import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -133,8 +145,11 @@ public class EMFCompareRCPPlugin extends Plugin {
 	/** The registry listener that will be used to react to match engine changes. */
 	private MatchEngineFactoryRegistryListener matchEngineFactoryRegistryListener;
 
-	/** The registry that will hold references to all adapter factory descriptors. */
-	private RankedAdapterFactoryDescriptorRegistryImpl adapterFactoryRegistry;
+	/** Backing multimap that will hold references to all adapter factory descriptors. */
+	private Multimap<Collection<?>, RankedAdapterFactoryDescriptor> adapterFactoryRegistryBackingMultimap;
+
+	/** Adapter factory registry that references all the EMF Compare adapter factories descriptors. */
+	private RankedAdapterFactoryDescriptorRegistryImpl rankedAdapterFactoryRegistry;
 
 	/** The registry listener that will be used to react to adapter factory descriptor changes. */
 	private AbstractRegistryEventListener adapterFactoryRegistryListener;
@@ -205,12 +220,15 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 *            {@link IExtensionRegistry} to listen in order to fill the registry
 	 */
 	private void setUpAdapterFactoryRegistry(final IExtensionRegistry registry) {
-		adapterFactoryRegistry = new RankedAdapterFactoryDescriptorRegistryImpl(
-				ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+		adapterFactoryRegistryBackingMultimap = Multimaps.synchronizedListMultimap(ArrayListMultimap
+				.<Collection<?>, RankedAdapterFactoryDescriptor> create());
 		adapterFactoryRegistryListener = new AdapterFactoryDescriptorRegistryListener(
-				EMFCompareEditPlugin.PLUGIN_ID, FACTORY_PPID, getLog(), adapterFactoryRegistry);
+				EMFCompareEditPlugin.PLUGIN_ID, FACTORY_PPID, getLog(), adapterFactoryRegistryBackingMultimap);
 		registry.addListener(adapterFactoryRegistryListener, PLUGIN_ID + "." + FACTORY_PPID); //$NON-NLS-1$
 		adapterFactoryRegistryListener.readRegistry(registry);
+		rankedAdapterFactoryRegistry = new RankedAdapterFactoryDescriptorRegistryImpl(
+				ComposedAdapterFactory.Descriptor.Registry.INSTANCE, Multimaps
+						.unmodifiableMultimap(adapterFactoryRegistryBackingMultimap));
 	}
 
 	/**
@@ -442,9 +460,10 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 *            IExtensionRegistry to remove listener
 	 */
 	private void discardAdapterFactoryRegistry(final IExtensionRegistry registry) {
+		rankedAdapterFactoryRegistry = null;
 		registry.removeListener(adapterFactoryRegistryListener);
 		adapterFactoryRegistryListener = null;
-		adapterFactoryRegistry = null;
+		adapterFactoryRegistryBackingMultimap = null;
 	}
 
 	/**
@@ -504,7 +523,33 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * @since 3.0
 	 */
 	public RankedAdapterFactoryDescriptor.Registry getAdapterFactoryRegistry() {
-		return adapterFactoryRegistry;
+		return rankedAdapterFactoryRegistry;
+	}
+
+	/**
+	 * Returns a new instance of EMF Compare adapter factory descriptor registry to which extension will be
+	 * registered. It filters available adapter factories using preferences.
+	 * 
+	 * @return the the adapter factory descriptor registry to which extension will be registered
+	 * @since 3.1
+	 */
+	public RankedAdapterFactoryDescriptor.Registry createFilteredAdapterFactoryRegistry() {
+		String disabledAdapterFactoriesString = getEMFComparePreferences().get(
+				EMFComparePreferences.DISABLED_ADAPTER_FACTORY, ""); //$NON-NLS-1$
+
+		final List<String> disabledAdapterFactories = Lists.newArrayList(Splitter.on(';').omitEmptyStrings()
+				.trimResults().split(disabledAdapterFactoriesString));
+		// Filters disabled adapter factories
+		Multimap<Collection<?>, RankedAdapterFactoryDescriptor> filteredBackingMultimap = ImmutableMultimap
+				.copyOf(Multimaps.filterValues(adapterFactoryRegistryBackingMultimap,
+						new Predicate<RankedAdapterFactoryDescriptor>() {
+
+							public boolean apply(RankedAdapterFactoryDescriptor input) {
+								return !disabledAdapterFactories.contains(input.getId());
+							}
+						}));
+		return new RankedAdapterFactoryDescriptorRegistryImpl(
+				ComposedAdapterFactory.Descriptor.Registry.INSTANCE, filteredBackingMultimap);
 	}
 
 	/**

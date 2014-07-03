@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.internal.adapterfactory;
 
+import com.google.common.collect.Multimap;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -18,7 +22,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor;
-import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptorRegistryImpl;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 
 /**
@@ -45,7 +48,7 @@ public class AdapterFactoryDescriptorRegistryListener extends AbstractRegistryEv
 	static final String ATT_RANKING = "ranking"; //$NON-NLS-1$
 
 	/** The adapter factory descriptor registry against which extension will be registered. */
-	private final RankedAdapterFactoryDescriptorRegistryImpl adapterFactoryRegistry;
+	private final Multimap<Collection<?>, RankedAdapterFactoryDescriptor> adapterFactoryRegistry;
 
 	/**
 	 * Creates a new registry event listener.
@@ -56,13 +59,13 @@ public class AdapterFactoryDescriptorRegistryListener extends AbstractRegistryEv
 	 *            The extension point ID to be monitored
 	 * @param log
 	 *            The log object to be used to log error and/or warning.
-	 * @param adapterFactoryRegistry
-	 *            the adapter factory descriptor registry against which extension will be registered.
+	 * @param adapterFactoryRegistryBackingMultimap
+	 *            Multimap holding the registered extensions.
 	 */
 	public AdapterFactoryDescriptorRegistryListener(String namespace, String extensionPointID, ILog log,
-			RankedAdapterFactoryDescriptorRegistryImpl adapterFactoryRegistry) {
+			Multimap<Collection<?>, RankedAdapterFactoryDescriptor> adapterFactoryRegistryBackingMultimap) {
 		super(namespace, extensionPointID, log);
-		this.adapterFactoryRegistry = adapterFactoryRegistry;
+		this.adapterFactoryRegistry = adapterFactoryRegistryBackingMultimap;
 	}
 
 	/**
@@ -151,10 +154,16 @@ public class AdapterFactoryDescriptorRegistryListener extends AbstractRegistryEv
 			List<Object> key = new ArrayList<Object>();
 			key.add(element.getAttribute(ATT_URI));
 			key.add(supportedType);
-			adapterFactoryRegistry.removeAll(key);
+			Iterator<RankedAdapterFactoryDescriptor> composedAdapterFactoryIterator = adapterFactoryRegistry
+					.get(key).iterator();
+			while (composedAdapterFactoryIterator.hasNext()) {
+				RankedAdapterFactoryDescriptor next = composedAdapterFactoryIterator.next();
+				if (next.getId() != null && next.getId().equals(element.getAttribute(ATT_CLASS))) {
+					composedAdapterFactoryIterator.remove();
+				}
+			}
 		}
 
 		return true;
 	}
-
 }

@@ -13,6 +13,9 @@ package org.eclipse.emf.compare.tests.adapterfactory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,8 +43,10 @@ public class EMFCompareAdapterFactoryTest {
 	@Test
 	public void testEMFCompareAdapterFactory() throws IOException {
 
-		final RankedAdapterFactoryDescriptorRegistryImpl registry = new RankedAdapterFactoryDescriptorRegistryImpl(
-				ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+		Multimap<Collection<?>, RankedAdapterFactoryDescriptor> registry = ArrayListMultimap.create();
+
+		final RankedAdapterFactoryDescriptorRegistryImpl rankedRegistry = new RankedAdapterFactoryDescriptorRegistryImpl(
+				ComposedAdapterFactory.Descriptor.Registry.INSTANCE, registry);
 
 		final Collection<String> key = new ArrayList<String>();
 		key.add("http://www.eclipse.org/emf/compare");
@@ -58,7 +63,7 @@ public class EMFCompareAdapterFactoryTest {
 		registry.put(keyIItemLabelProvider, new TestEMFCompareAdapterFactoryDescriptor(
 				new CompareItemProviderAdapterFactorySpec2(), 30));
 
-		final AdapterFactory fAdapterFactory = new ComposedAdapterFactory(registry);
+		final AdapterFactory fAdapterFactory = new ComposedAdapterFactory(rankedRegistry);
 
 		final Comparison comparison = CompareFactory.eINSTANCE.createComparison();
 		Adapter adapter = fAdapterFactory.adapt(comparison, IItemStyledLabelProvider.class);
@@ -91,6 +96,10 @@ public class EMFCompareAdapterFactoryTest {
 
 		public int getRanking() {
 			return ranking;
+		}
+
+		public String getId() {
+			return this.adapterFactory.getClass().getName();
 		}
 
 	}

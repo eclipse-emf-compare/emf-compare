@@ -35,6 +35,8 @@ public final class EMFComparePreferences {
 	/** Disabled post processors preference. */
 	public static final String DISABLED_POST_PROCESSOR = "org.eclipse.emf.compare.preference.postprocessor.disabled"; //$NON-NLS-1$
 
+	/** Disabled adapter factories preference.*/
+	public static final String DISABLED_ADAPTER_FACTORY = "org.eclipse.emf.compare.preference.disabled.adapter.factories"; //$NON-NLS-1$
 	/**
 	 * Private constructor. Not to be called.
 	 */

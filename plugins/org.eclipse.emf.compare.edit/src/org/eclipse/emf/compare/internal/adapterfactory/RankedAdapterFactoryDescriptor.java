@@ -28,6 +28,13 @@ public interface RankedAdapterFactoryDescriptor extends ComposedAdapterFactory.D
 	int getRanking();
 
 	/**
+	 * Gets a unique id for this descriptor.
+	 * 
+	 * @return an unique id.
+	 */
+	String getId();
+
+	/**
 	 * A registry is an index that takes a collection of keys, typically a pair consisting of an EPackage or
 	 * java.lang.Package, and a java.lang.Class, and maps it to a {@link RankedAdapterFactoryDescriptor
 	 * descriptor}.

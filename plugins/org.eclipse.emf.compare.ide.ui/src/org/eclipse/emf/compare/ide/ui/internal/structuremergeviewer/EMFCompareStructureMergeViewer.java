@@ -330,8 +330,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	@Override
 	protected void preHookCreateControlAndViewer() {
 		fAdapterFactory = new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault()
-				.getAdapterFactoryRegistry());
-
+				.createFilteredAdapterFactoryRegistry());
 		fAdapterFactory.addAdapterFactory(new TreeItemProviderAdapterFactorySpec());
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());

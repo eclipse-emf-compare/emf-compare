@@ -28,6 +28,9 @@ public class RankedAdapterFactoryDescriptorImpl extends PluginClassDescriptor<Ad
 	/** Ranking of this adapter factory. */
 	private final int ranking;
 
+	/** Holds the id of this descriptor. */
+	private final String id;
+
 	/**
 	 * Creates a descriptor corresponding to the information of the given <em>element</em>.
 	 * 
@@ -39,6 +42,7 @@ public class RankedAdapterFactoryDescriptorImpl extends PluginClassDescriptor<Ad
 	public RankedAdapterFactoryDescriptorImpl(IConfigurationElement element, int ranking) {
 		super(element, AdapterFactoryDescriptorRegistryListener.ATT_CLASS);
 		this.ranking = ranking;
+		this.id = element.getAttribute(AdapterFactoryDescriptorRegistryListener.ATT_CLASS);
 	}
 
 	/**
@@ -60,6 +64,15 @@ public class RankedAdapterFactoryDescriptorImpl extends PluginClassDescriptor<Ad
 	 */
 	public int getRanking() {
 		return ranking;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see RankedAdapterFactoryDescriptor#getId()
+	 */
+	public String getId() {
+		return id;
 	}
 
 }
