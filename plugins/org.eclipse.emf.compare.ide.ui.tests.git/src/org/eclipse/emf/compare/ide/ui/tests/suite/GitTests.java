@@ -15,17 +15,26 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
+import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeWithCustomDependenciesTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalModelTest;
+import org.eclipse.emf.compare.tests.nodes.NodesPackage;
+import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({GitLogicalModelTest.class, GitLogicalMergeTest.class,
-		GitLogicalMergeWithCustomDependenciesTest.class, })
-public class AllTests {
+@SuiteClasses({GitLogicalModelTest.class,
+	// FIXME
+	// GitLogicalMergeTest.class, Uncomment when all logical model contributions to EGit will be merged.
+	// GitLogicalMergeWithCustomDependenciesTest.class, 
+	})
+public class GitTests {
 	/**
 	 * Launches the test with the given arguments.
 	 * 
@@ -42,6 +51,15 @@ public class AllTests {
 	 * @return The test suite containing all the tests
 	 */
 	public static Test suite() {
-		return new JUnit4TestAdapter(AllTests.class);
+		return new JUnit4TestAdapter(GitTests.class);
+	}
+	
+	@BeforeClass
+	public static void fillEMFRegistries() {
+		EPackage.Registry.INSTANCE.put(ComparePackage.eNS_URI, ComparePackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(NodesPackage.eNS_URI, NodesPackage.eINSTANCE);
+
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("nodes", //$NON-NLS-1$
+				new NodesResourceFactoryImpl());
 	}
 }

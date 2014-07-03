@@ -15,7 +15,9 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.ide.ui.tests.compareconfiguration.EMFCompareConfigurationTest;
 import org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.notloadedfragment.NotLoadedFragmentItemTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.GraphResolutionTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverGraphTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverWithCustomDependencyProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.NavigatableTest;
@@ -33,10 +35,10 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({DependenciesTest.class, MergeActionTest.class, PseudoConflictsMergeActionTest.class,
-		BugsTestSuite.class, NavigatableTest.class, NotLoadedFragmentNodeTest.class,
-		NotLoadedFragmentItemTest.class, ThreadedModelResolverGraphTest.class,
-		ThreadedModelResolverWithCustomDependencyProviderTest.class })
+@SuiteClasses({EMFCompareConfigurationTest.class, DependenciesTest.class, MergeActionTest.class,
+		PseudoConflictsMergeActionTest.class, BugsTestSuite.class, NavigatableTest.class,
+		NotLoadedFragmentNodeTest.class, NotLoadedFragmentItemTest.class, GraphResolutionTest.class,
+		ThreadedModelResolverGraphTest.class, ThreadedModelResolverWithCustomDependencyProviderTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

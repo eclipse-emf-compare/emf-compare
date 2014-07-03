@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TestBug
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TestBug434827;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TestBug434828;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TestBug434828_2;
+import org.eclipse.emf.compare.ide.ui.tests.unit.TestBug459131;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -31,7 +32,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({TestBug434827.class,
 	TestBug434822.class,
 	TestBug434828.class,
-	TestBug434828_2.class})
+	TestBug434828_2.class,
+	TestBug459131.class})
 public class BugsTestSuite {
 	/**
 	 * Launches the test with the given arguments.
