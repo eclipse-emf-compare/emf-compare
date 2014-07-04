@@ -40,6 +40,8 @@
                org.eclipse.emf.compare.provider.IItemStyledLabelProvider
                org.eclipse.emf.compare.provider.IItemDescriptionProvider"
             ranking="10"
+            label="Notation item provider"
+            description="Customizes the way notation elements are displayed in EMF Compare."
             uri="http://www.eclipse.org/gmf/runtime/1.0.2/notation">
       </factory>
    </extension>

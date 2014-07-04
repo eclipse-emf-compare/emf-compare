@@ -49,7 +49,10 @@ Contributors:
                org.eclipse.emf.edit.provider.IItemPropertySource
                org.eclipse.emf.compare.provider.IItemStyledLabelProvider
                org.eclipse.emf.compare.provider.IItemDescriptionProvider"
+            description="This provider displays stereotyped elements like they were a new kind of UML element (it uses stereotype's icon and a custom label)."
             ranking="60"
+            optional="true"
+            label="Stereotyped element item provider"
             uri="http://www.eclipse.org/uml2/5.0.0/UML">
       </factory>
    </extension>
@@ -58,6 +61,9 @@ Contributors:
        <factory
              class="org.eclipse.emf.compare.uml2.internal.provider.profile.ProfiledUMLCompareItemProviderAdapterFactory"
              ranking="60"
+             optional="true"
+             description="This providers displays the properties of a stereotype the same way the properties of the base element are."
+             label="Stereotyped element property item provider"
              uri="http://www.eclipse.org/emf/compare/uml2/2.0"
               supportedTypes=
               "org.eclipse.emf.compare.provider.IItemStyledLabelProvider
