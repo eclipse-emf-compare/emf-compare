@@ -39,6 +39,7 @@
   <properties>
     <tycho-version>0.20.0</tycho-version>
     <tycho-extras-version>0.20.0</tycho-extras-version>
+    <os-jvm-flags/>
   </properties>
 
   <!--
@@ -180,6 +181,14 @@
               <encoding>UTF-8</encoding>
               <source>1.5</source>
               <target>1.5</target>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>tycho-surefire-plugin</artifactId>
+            <version>${tycho-version}</version>
+            <configuration>
+              <argLine>-Xms40m -Xmx1G ${os-jvm-flags}</argLine>
             </configuration>
           </plugin>
               <plugin>
@@ -641,6 +650,15 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <id>macosx-jvm-flags</id>
+      <activation>
+        <os><family>mac</family></os>
+      </activation>
+      <properties>
+        <os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
+      </properties>
     </profile>
   </profiles>
 
