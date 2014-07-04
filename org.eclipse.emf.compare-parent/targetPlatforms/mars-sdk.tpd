@@ -7,7 +7,7 @@ include "fragments/egit.tpd"
 
 with source requirements
 
-location "http://download.eclipse.org/releases/staging" {
+location "http://download.eclipse.org/releases/luna" {
 	org.eclipse.platform.sdk lazy
 	org.eclipse.emf.sdk.feature.group lazy
 	org.eclipse.emf.transaction.sdk.feature.group lazy
