@@ -10,12 +10,14 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.adapterfactory;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -131,6 +133,16 @@ public class RankedAdapterFactoryDescriptorRegistryImpl implements RankedAdapter
 			return delegateRegistry.getDescriptor(types);
 		}
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see {org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor.Registry.Registry#
+	 *      getDescriptors()}
+	 */
+	public Set<RankedAdapterFactoryDescriptor> getDescriptors() {
+		return ImmutableSet.copyOf(emfCompareAdapterFactoryRegistry.values());
 	}
 
 }

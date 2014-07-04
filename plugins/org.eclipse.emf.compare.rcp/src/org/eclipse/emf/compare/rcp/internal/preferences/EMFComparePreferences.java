@@ -10,6 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.internal.preferences;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
+
+import java.util.List;
+
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+
 /**
  * All preferences constant for EMF Compare.
  * 
@@ -35,13 +42,30 @@ public final class EMFComparePreferences {
 	/** Disabled post processors preference. */
 	public static final String DISABLED_POST_PROCESSOR = "org.eclipse.emf.compare.preference.postprocessor.disabled"; //$NON-NLS-1$
 
-	/** Disabled adapter factories preference.*/
+	/** Disabled adapter factories preference. */
 	public static final String DISABLED_ADAPTER_FACTORY = "org.eclipse.emf.compare.preference.disabled.adapter.factories"; //$NON-NLS-1$
+
 	/**
 	 * Private constructor. Not to be called.
 	 */
 	private EMFComparePreferences() {
 		// Hide default constructor.
+	}
+
+	/**
+	 * Gets the ids of all disabled EMF Compare adapter factory descriptors.
+	 * 
+	 * @param preferenceStore
+	 *            {@link IEclipsePreferences} where are stored the preferences.
+	 * @return List of ids;
+	 */
+	public static List<String> getDisabledAdapterFacotryDescriptorIds(IEclipsePreferences preferenceStore) {
+		String disabledAdapterFactoriesString = preferenceStore.get(
+				EMFComparePreferences.DISABLED_ADAPTER_FACTORY, ""); //$NON-NLS-1$
+
+		final List<String> disabledAdapterFactories = Lists.newArrayList(Splitter.on(';').omitEmptyStrings()
+				.trimResults().split(disabledAdapterFactoriesString));
+		return disabledAdapterFactories;
 	}
 
 }

@@ -102,6 +102,18 @@ public class EMFCompareAdapterFactoryTest {
 			return this.adapterFactory.getClass().getName();
 		}
 
+		public String getLabel() {
+			return "";
+		}
+
+		public String getDescription() {
+			return null;
+		}
+
+		public boolean isOptional() {
+			return false;
+		}
+
 	}
 
 	/**

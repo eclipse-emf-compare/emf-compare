@@ -81,6 +81,28 @@ With this mechanism you will able to provide, for example, your own CompareItemP
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="label" type="string">
+            <annotation>
+               <documentation>
+                  A human readable label.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  A human readable description of this adapter factory.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="optional" type="boolean">
+            <annotation>
+               <documentation>
+                  Optional factories can be disabled using preferences. 
+Default value: false
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

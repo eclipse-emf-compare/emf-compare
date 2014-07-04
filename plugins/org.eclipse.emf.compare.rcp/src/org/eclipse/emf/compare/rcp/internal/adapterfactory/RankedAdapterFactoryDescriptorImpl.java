@@ -22,6 +22,15 @@ import org.eclipse.emf.compare.rcp.extension.PluginClassDescriptor;
  */
 public class RankedAdapterFactoryDescriptorImpl extends PluginClassDescriptor<AdapterFactory> implements RankedAdapterFactoryDescriptor {
 
+	/** Optional attribute in extension point. */
+	private static final String ATT_OPTIONAL = "optional"; //$NON-NLS-1$
+
+	/** Label attribute in extension point. */
+	private static final String ATT_LABEL = "label"; //$NON-NLS-1$
+
+	/** Description attribute in extension point. */
+	private static final String ATT_DESCRIPTION = "description"; //$NON-NLS-1$
+
 	/** The wrapped adapter factory. */
 	private AdapterFactory factory;
 
@@ -73,6 +82,37 @@ public class RankedAdapterFactoryDescriptorImpl extends PluginClassDescriptor<Ad
 	 */
 	public String getId() {
 		return id;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see {org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor#getLabel()}
+	 */
+	public String getLabel() {
+		String label = element.getAttribute(ATT_LABEL);
+		if (label == null) {
+			label = element.getAttribute(AdapterFactoryDescriptorRegistryListener.ATT_CLASS);
+		}
+		return label;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see {@link org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor#getDescription()}
+	 */
+	public String getDescription() {
+		return element.getAttribute(ATT_DESCRIPTION);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see {@link org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor#isOptional()}
+	 */
+	public boolean isOptional() {
+		return Boolean.parseBoolean(element.getAttribute(ATT_OPTIONAL));
 	}
 
 }

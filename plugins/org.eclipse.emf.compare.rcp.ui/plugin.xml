@@ -219,6 +219,12 @@
             id="org.eclipse.emf.compare.rcp.ui.preferencePage.groups"
             name="Groups">
       </page>
+      <page
+            category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
+            class="org.eclipse.emf.compare.rcp.ui.internal.preferences.AdapterFactoriesPreferencePage"
+            id="org.eclipse.emf.compare.rcp.ui.preferencePage.adapterfactories"
+            name="Item providers">
+      </page>
    </extension>
    <extension
        point="org.eclipse.emf.compare.rcp.ui.matchEngineFactoryConfigurationUI">

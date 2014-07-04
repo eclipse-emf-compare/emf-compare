@@ -11,10 +11,8 @@
 package org.eclipse.emf.compare.rcp;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
@@ -534,11 +532,8 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * @since 3.1
 	 */
 	public RankedAdapterFactoryDescriptor.Registry createFilteredAdapterFactoryRegistry() {
-		String disabledAdapterFactoriesString = getEMFComparePreferences().get(
-				EMFComparePreferences.DISABLED_ADAPTER_FACTORY, ""); //$NON-NLS-1$
-
-		final List<String> disabledAdapterFactories = Lists.newArrayList(Splitter.on(';').omitEmptyStrings()
-				.trimResults().split(disabledAdapterFactoriesString));
+		final List<String> disabledAdapterFactories = EMFComparePreferences
+				.getDisabledAdapterFacotryDescriptorIds(getEMFComparePreferences());
 		// Filters disabled adapter factories
 		Multimap<Collection<?>, RankedAdapterFactoryDescriptor> filteredBackingMultimap = ImmutableMultimap
 				.copyOf(Multimaps.filterValues(adapterFactoryRegistryBackingMultimap,

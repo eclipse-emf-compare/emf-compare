@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.adapterfactory;
 
+import java.util.Set;
+
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 
 /**
@@ -35,11 +37,39 @@ public interface RankedAdapterFactoryDescriptor extends ComposedAdapterFactory.D
 	String getId();
 
 	/**
+	 * Returns a human readable label for this adapter factory.
+	 * 
+	 * @return a label.
+	 */
+	String getLabel();
+
+	/**
+	 * Returns a human readable description for this adapter factory.
+	 * 
+	 * @return a description or null if none.
+	 */
+	String getDescription();
+
+	/**
+	 * Returns <code>true</code> if the adapter factory is optional.
+	 * 
+	 * @return <code>true</code> if optional or <code>false</code> otherwise.
+	 */
+	boolean isOptional();
+
+	/**
 	 * A registry is an index that takes a collection of keys, typically a pair consisting of an EPackage or
 	 * java.lang.Package, and a java.lang.Class, and maps it to a {@link RankedAdapterFactoryDescriptor
 	 * descriptor}.
 	 */
 	interface Registry extends ComposedAdapterFactory.Descriptor.Registry {
+
+		/**
+		 * Returns all {@link RankedAdapterFactoryDescriptor} of the registry.
+		 * 
+		 * @return an immutable {@link Set} of {@link RankedAdapterFactoryDescriptor}
+		 */
+		Set<RankedAdapterFactoryDescriptor> getDescriptors();
 
 	}
 }
