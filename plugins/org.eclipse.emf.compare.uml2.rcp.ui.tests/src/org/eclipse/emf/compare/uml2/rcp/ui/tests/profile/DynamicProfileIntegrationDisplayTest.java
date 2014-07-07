@@ -34,10 +34,10 @@ import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGro
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.StereotypedElementChangePostProcessor;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor;
-import org.eclipse.emf.compare.uml2.internal.provider.custom.ProfileIntegrationItemProviderAdapterFactory;
 import org.eclipse.emf.compare.uml2.internal.provider.custom.UMLCompareCustomItemProviderAdapterFactory;
 import org.eclipse.emf.compare.uml2.internal.provider.decorator.UMLCompareItemProviderDecoratorAdapterFactory;
 import org.eclipse.emf.compare.uml2.internal.provider.decorator.UMLProfileItemProviderAdapterFactoryDecorator;
+import org.eclipse.emf.compare.uml2.internal.provider.profile.ProfiledUMLCompareItemProviderAdapterFactory;
 import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage;
 import org.eclipse.emf.compare.uml2.rcp.ui.internal.structuremergeviewer.filters.UMLRefinedElementsFilter;
 import org.eclipse.emf.compare.uml2.rcp.ui.tests.groups.AbstractDifferenceOrderTest;
@@ -101,7 +101,7 @@ public class DynamicProfileIntegrationDisplayTest extends AbstractDifferenceOrde
 
 	@Override
 	protected List<AdapterFactory> getAdaptersFactory() {
-		return Lists.<AdapterFactory> newArrayList(new ProfileIntegrationItemProviderAdapterFactory(),
+		return Lists.<AdapterFactory> newArrayList(new ProfiledUMLCompareItemProviderAdapterFactory(),
 				new UMLProfileItemProviderAdapterFactoryDecorator(),
 				new CompareItemProviderAdapterFactorySpec(), new TreeItemProviderAdapterFactorySpec(),
 				new UMLCompareCustomItemProviderAdapterFactory(), new UMLItemProviderAdapterFactory(),
