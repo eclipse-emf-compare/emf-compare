@@ -13,11 +13,11 @@ package org.eclipse.emf.compare.diagram.internal.matchs.provider.spec;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.provider.Disposable;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Style;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.runtime.notation.provider.NotationItemProviderAdapterFactory;
-import org.eclipse.gmf.runtime.notation.provider.ViewItemProvider;
 import org.eclipse.gmf.runtime.notation.util.NotationSwitch;
 
 /**
@@ -29,22 +29,9 @@ import org.eclipse.gmf.runtime.notation.util.NotationSwitch;
 public class DiagramCompareItemProviderAdapterFactorySpec extends NotationItemProviderAdapterFactory {
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.gmf.runtime.notation.View}
-	 * instances.
+	 * This keeps track of all the item providers created, so that they can be {@link #dispose disposed}. 
 	 */
-	protected ViewItemProvider viewItemProviderSpec;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.gmf.runtime.notation.Diagram}
-	 * instances.
-	 */
-	protected ViewItemProvider diagramItemProviderSpec;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.gmf.runtime.notation.Diagram}
-	 * instances.
-	 */
-	protected Adapter styleItemProviderSpec;
+	protected Disposable disposable = new Disposable();
 
 	/** The Specific switch to create adapters for ALL views and diagrams. */
 	// CHECKSTYLE:OFF
@@ -53,33 +40,18 @@ public class DiagramCompareItemProviderAdapterFactorySpec extends NotationItemPr
 
 		@Override
 		public Object caseView(View object) {
-			// For all instances of View
-			if (viewItemProviderSpec == null) {
-				viewItemProviderSpec = new ViewItemProviderSpec(
-						DiagramCompareItemProviderAdapterFactorySpec.this);
-			}
-			return viewItemProviderSpec;
+			return new ViewItemProviderSpec(DiagramCompareItemProviderAdapterFactorySpec.this);
 		}
 
 		@Override
 		public Object caseDiagram(Diagram object) {
-			// For all instances of Diagram
-			if (diagramItemProviderSpec == null) {
-				diagramItemProviderSpec = new DiagramItemProviderSpec(
-						DiagramCompareItemProviderAdapterFactorySpec.this);
-			}
-			return diagramItemProviderSpec;
+			return new DiagramItemProviderSpec(DiagramCompareItemProviderAdapterFactorySpec.this);
 		}
 
 		@Override
 		public Object defaultCase(EObject object) {
 			if (object instanceof Style) {
-				// For all instances of Style
-				if (styleItemProviderSpec == null) {
-					styleItemProviderSpec = new StyleItemProviderSpec(
-							DiagramCompareItemProviderAdapterFactorySpec.this);
-				}
-				return styleItemProviderSpec;
+				return new StyleItemProviderSpec(DiagramCompareItemProviderAdapterFactorySpec.this);
 			}
 
 			// delegate to the default notational switch
@@ -102,5 +74,29 @@ public class DiagramCompareItemProviderAdapterFactorySpec extends NotationItemPr
 	@Override
 	public Adapter createAdapter(Notifier target) {
 		return (Adapter)modelSwitchSpec.doSwitch((EObject)target);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see NotationItemProviderAdapterFactory#dispose()
+	 */
+	@Override
+	public void dispose() {
+		disposable.dispose();
+		super.dispose();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see NotationItemProviderAdapterFactory#associate(Adapter adapter, Notifier target)
+	 */
+	@Override
+	protected void associate(Adapter adapter, Notifier target) {
+		super.associate(adapter, target);
+		if (adapter != null) {
+			disposable.add(adapter);
+		}
 	}
 }

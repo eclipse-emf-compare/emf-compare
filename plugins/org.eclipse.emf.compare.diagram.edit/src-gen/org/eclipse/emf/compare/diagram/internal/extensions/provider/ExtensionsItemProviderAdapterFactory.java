@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.diagram.internal.extensions.util.ExtensionsAdapte
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.Disposable;
 import org.eclipse.emf.edit.provider.IChangeNotifier;
 import org.eclipse.emf.edit.provider.IDisposable;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -58,6 +59,14 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 	protected IChangeNotifier changeNotifier = new ChangeNotifier();
 
 	/**
+	 * This keeps track of all the item providers created, so that they can be {@link #dispose disposed}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected Disposable disposable = new Disposable();
+
+	/**
 	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -82,14 +91,6 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diagram.internal.extensions.Show} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ShowItemProvider showItemProvider;
-
-	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.diagram.internal.extensions.Show}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -97,20 +98,8 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 	 */
 	@Override
 	public Adapter createShowAdapter() {
-		if (showItemProvider == null) {
-			showItemProvider = new ShowItemProvider(this);
-		}
-
-		return showItemProvider;
+		return new ShowItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diagram.internal.extensions.Hide} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected HideItemProvider hideItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.diagram.internal.extensions.Hide}.
@@ -120,20 +109,8 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 	 */
 	@Override
 	public Adapter createHideAdapter() {
-		if (hideItemProvider == null) {
-			hideItemProvider = new HideItemProvider(this);
-		}
-
-		return hideItemProvider;
+		return new HideItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diagram.internal.extensions.NodeChange} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected NodeChangeItemProvider nodeChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.diagram.internal.extensions.NodeChange}.
@@ -143,20 +120,8 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 	 */
 	@Override
 	public Adapter createNodeChangeAdapter() {
-		if (nodeChangeItemProvider == null) {
-			nodeChangeItemProvider = new NodeChangeItemProvider(this);
-		}
-
-		return nodeChangeItemProvider;
+		return new NodeChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected CoordinatesChangeItemProvider coordinatesChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange}.
@@ -166,20 +131,8 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 	 */
 	@Override
 	public Adapter createCoordinatesChangeAdapter() {
-		if (coordinatesChangeItemProvider == null) {
-			coordinatesChangeItemProvider = new CoordinatesChangeItemProvider(this);
-		}
-
-		return coordinatesChangeItemProvider;
+		return new CoordinatesChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diagram.internal.extensions.EdgeChange} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected EdgeChangeItemProvider edgeChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.diagram.internal.extensions.EdgeChange}.
@@ -189,20 +142,8 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 	 */
 	@Override
 	public Adapter createEdgeChangeAdapter() {
-		if (edgeChangeItemProvider == null) {
-			edgeChangeItemProvider = new EdgeChangeItemProvider(this);
-		}
-
-		return edgeChangeItemProvider;
+		return new EdgeChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diagram.internal.extensions.DiagramChange} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected DiagramChangeItemProvider diagramChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.diagram.internal.extensions.DiagramChange}.
@@ -212,11 +153,7 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 	 */
 	@Override
 	public Adapter createDiagramChangeAdapter() {
-		if (diagramChangeItemProvider == null) {
-			diagramChangeItemProvider = new DiagramChangeItemProvider(this);
-		}
-
-		return diagramChangeItemProvider;
+		return new DiagramChangeItemProvider(this);
 	}
 
 	/**
@@ -278,6 +215,20 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 	}
 
 	/**
+	 * Associates an adapter with a notifier via the base implementation, then records it to ensure it will be disposed.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected void associate(Adapter adapter, Notifier target) {
+		super.associate(adapter, target);
+		if (adapter != null) {
+			disposable.add(adapter);
+		}
+	}
+
+	/**
 	 * This adds a listener.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -318,12 +269,7 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 	 * @generated
 	 */
 	public void dispose() {
-		if (showItemProvider != null) showItemProvider.dispose();
-		if (hideItemProvider != null) hideItemProvider.dispose();
-		if (nodeChangeItemProvider != null) nodeChangeItemProvider.dispose();
-		if (coordinatesChangeItemProvider != null) coordinatesChangeItemProvider.dispose();
-		if (edgeChangeItemProvider != null) edgeChangeItemProvider.dispose();
-		if (diagramChangeItemProvider != null) diagramChangeItemProvider.dispose();
+		disposable.dispose();
 	}
 
 }
