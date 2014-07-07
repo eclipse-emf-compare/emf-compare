@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.uml2.internal.util.UMLCompareAdapterFactory;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.Disposable;
 import org.eclipse.emf.edit.provider.IChangeNotifier;
 import org.eclipse.emf.edit.provider.IDisposable;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -57,6 +58,14 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	protected IChangeNotifier changeNotifier = new ChangeNotifier();
 
 	/**
+	 * This keeps track of all the item providers created, so that they can be {@link #dispose disposed}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected Disposable disposable = new Disposable();
+
+	/**
 	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -80,14 +89,6 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.AssociationChange} instances.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	protected AssociationChangeItemProvider associationChangeItemProvider;
-
-	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.AssociationChange}. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -95,20 +96,8 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	 */
 	@Override
 	public Adapter createAssociationChangeAdapter() {
-		if (associationChangeItemProvider == null) {
-			associationChangeItemProvider = new AssociationChangeItemProvider(this);
-		}
-
-		return associationChangeItemProvider;
+		return new AssociationChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.ExtendChange} instances.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	protected ExtendChangeItemProvider extendChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.ExtendChange}. <!--
@@ -118,20 +107,8 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	 */
 	@Override
 	public Adapter createExtendChangeAdapter() {
-		if (extendChangeItemProvider == null) {
-			extendChangeItemProvider = new ExtendChangeItemProvider(this);
-		}
-
-		return extendChangeItemProvider;
+		return new ExtendChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.GeneralizationSetChange} instances.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected GeneralizationSetChangeItemProvider generalizationSetChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.GeneralizationSetChange}.
@@ -140,21 +117,8 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	 */
 	@Override
 	public Adapter createGeneralizationSetChangeAdapter() {
-		if (generalizationSetChangeItemProvider == null) {
-			generalizationSetChangeItemProvider = new GeneralizationSetChangeItemProvider(this);
-		}
-
-		return generalizationSetChangeItemProvider;
+		return new GeneralizationSetChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all
-	 * {@link org.eclipse.emf.compare.uml2.internal.ExecutionSpecificationChange} instances. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected ExecutionSpecificationChangeItemProvider executionSpecificationChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.ExecutionSpecificationChange}.
@@ -164,20 +128,8 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	 */
 	@Override
 	public Adapter createExecutionSpecificationChangeAdapter() {
-		if (executionSpecificationChangeItemProvider == null) {
-			executionSpecificationChangeItemProvider = new ExecutionSpecificationChangeItemProvider(this);
-		}
-
-		return executionSpecificationChangeItemProvider;
+		return new ExecutionSpecificationChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.IntervalConstraintChange} instances.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected IntervalConstraintChangeItemProvider intervalConstraintChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.IntervalConstraintChange}.
@@ -186,20 +138,8 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	 */
 	@Override
 	public Adapter createIntervalConstraintChangeAdapter() {
-		if (intervalConstraintChangeItemProvider == null) {
-			intervalConstraintChangeItemProvider = new IntervalConstraintChangeItemProvider(this);
-		}
-
-		return intervalConstraintChangeItemProvider;
+		return new IntervalConstraintChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.MessageChange} instances.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	protected MessageChangeItemProvider messageChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.MessageChange}. <!--
@@ -209,20 +149,8 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	 */
 	@Override
 	public Adapter createMessageChangeAdapter() {
-		if (messageChangeItemProvider == null) {
-			messageChangeItemProvider = new MessageChangeItemProvider(this);
-		}
-
-		return messageChangeItemProvider;
+		return new MessageChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected StereotypeAttributeChangeItemProvider stereotypeAttributeChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange}.
@@ -232,21 +160,8 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	 */
 	@Override
 	public Adapter createStereotypeAttributeChangeAdapter() {
-		if (stereotypeAttributeChangeItemProvider == null) {
-			stereotypeAttributeChangeItemProvider = new StereotypeAttributeChangeItemProvider(this);
-		}
-
-		return stereotypeAttributeChangeItemProvider;
+		return new StereotypeAttributeChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all
-	 * {@link org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange} instances. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected StereotypeApplicationChangeItemProvider stereotypeApplicationChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange}.
@@ -255,20 +170,8 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	 */
 	@Override
 	public Adapter createStereotypeApplicationChangeAdapter() {
-		if (stereotypeApplicationChangeItemProvider == null) {
-			stereotypeApplicationChangeItemProvider = new StereotypeApplicationChangeItemProvider(this);
-		}
-
-		return stereotypeApplicationChangeItemProvider;
+		return new StereotypeApplicationChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.StereotypeReferenceChange} instances.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected StereotypeReferenceChangeItemProvider stereotypeReferenceChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.StereotypeReferenceChange}.
@@ -277,20 +180,8 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	 */
 	@Override
 	public Adapter createStereotypeReferenceChangeAdapter() {
-		if (stereotypeReferenceChangeItemProvider == null) {
-			stereotypeReferenceChangeItemProvider = new StereotypeReferenceChangeItemProvider(this);
-		}
-
-		return stereotypeReferenceChangeItemProvider;
+		return new StereotypeReferenceChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange} instances.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ProfileApplicationChangeItemProvider profileApplicationChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange}.
@@ -299,20 +190,8 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	 */
 	@Override
 	public Adapter createProfileApplicationChangeAdapter() {
-		if (profileApplicationChangeItemProvider == null) {
-			profileApplicationChangeItemProvider = new ProfileApplicationChangeItemProvider(this);
-		}
-
-		return profileApplicationChangeItemProvider;
+		return new ProfileApplicationChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange} instances.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected DirectedRelationshipChangeItemProvider directedRelationshipChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange}.
@@ -321,20 +200,8 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	 */
 	@Override
 	public Adapter createDirectedRelationshipChangeAdapter() {
-		if (directedRelationshipChangeItemProvider == null) {
-			directedRelationshipChangeItemProvider = new DirectedRelationshipChangeItemProvider(this);
-		}
-
-		return directedRelationshipChangeItemProvider;
+		return new DirectedRelationshipChangeItemProvider(this);
 	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.StereotypedElementChange} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected StereotypedElementChangeItemProvider stereotypedElementChangeItemProvider;
 
 	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.StereotypedElementChange}.
@@ -344,11 +211,7 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	 */
 	@Override
 	public Adapter createStereotypedElementChangeAdapter() {
-		if (stereotypedElementChangeItemProvider == null) {
-			stereotypedElementChangeItemProvider = new StereotypedElementChangeItemProvider(this);
-		}
-
-		return stereotypedElementChangeItemProvider;
+		return new StereotypedElementChangeItemProvider(this);
 	}
 
 	/**
@@ -408,6 +271,20 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	}
 
 	/**
+	 * Associates an adapter with a notifier via the base implementation, then records it to ensure it will be disposed.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected void associate(Adapter adapter, Notifier target) {
+		super.associate(adapter, target);
+		if (adapter != null) {
+			disposable.add(adapter);
+		}
+	}
+
+	/**
 	 * This adds a listener.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
@@ -446,18 +323,7 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	 * @generated
 	 */
 	public void dispose() {
-		if (associationChangeItemProvider != null) associationChangeItemProvider.dispose();
-		if (extendChangeItemProvider != null) extendChangeItemProvider.dispose();
-		if (generalizationSetChangeItemProvider != null) generalizationSetChangeItemProvider.dispose();
-		if (executionSpecificationChangeItemProvider != null) executionSpecificationChangeItemProvider.dispose();
-		if (intervalConstraintChangeItemProvider != null) intervalConstraintChangeItemProvider.dispose();
-		if (messageChangeItemProvider != null) messageChangeItemProvider.dispose();
-		if (stereotypeAttributeChangeItemProvider != null) stereotypeAttributeChangeItemProvider.dispose();
-		if (stereotypeApplicationChangeItemProvider != null) stereotypeApplicationChangeItemProvider.dispose();
-		if (stereotypeReferenceChangeItemProvider != null) stereotypeReferenceChangeItemProvider.dispose();
-		if (profileApplicationChangeItemProvider != null) profileApplicationChangeItemProvider.dispose();
-		if (directedRelationshipChangeItemProvider != null) directedRelationshipChangeItemProvider.dispose();
-		if (stereotypedElementChangeItemProvider != null) stereotypedElementChangeItemProvider.dispose();
+		disposable.dispose();
 	}
 
 }

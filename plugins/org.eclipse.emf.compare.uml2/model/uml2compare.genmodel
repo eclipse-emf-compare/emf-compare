@@ -12,25 +12,25 @@
       utilityPackageSuffix="internal.util" providerPackageSuffix="internal.provider"
       presentationPackageSuffix="internal.presentation" testsPackageSuffix="internal.tests"
       ecorePackage="uml2compare.ecore#/">
-    <genClasses ecoreClass="uml2compare.ecore#//AssociationChange"/>
-    <genClasses ecoreClass="uml2compare.ecore#//ExtendChange"/>
-    <genClasses ecoreClass="uml2compare.ecore#//GeneralizationSetChange"/>
-    <genClasses ecoreClass="uml2compare.ecore#//ExecutionSpecificationChange"/>
-    <genClasses ecoreClass="uml2compare.ecore#//IntervalConstraintChange"/>
-    <genClasses ecoreClass="uml2compare.ecore#//MessageChange"/>
-    <genClasses ecoreClass="uml2compare.ecore#//StereotypeAttributeChange"/>
-    <genClasses ecoreClass="uml2compare.ecore#//StereotypeApplicationChange">
+    <genClasses provider="Stateful" ecoreClass="uml2compare.ecore#//AssociationChange"/>
+    <genClasses provider="Stateful" ecoreClass="uml2compare.ecore#//ExtendChange"/>
+    <genClasses provider="Stateful" ecoreClass="uml2compare.ecore#//GeneralizationSetChange"/>
+    <genClasses provider="Stateful" ecoreClass="uml2compare.ecore#//ExecutionSpecificationChange"/>
+    <genClasses provider="Stateful" ecoreClass="uml2compare.ecore#//IntervalConstraintChange"/>
+    <genClasses provider="Stateful" ecoreClass="uml2compare.ecore#//MessageChange"/>
+    <genClasses provider="Stateful" ecoreClass="uml2compare.ecore#//StereotypeAttributeChange"/>
+    <genClasses provider="Stateful" ecoreClass="uml2compare.ecore#//StereotypeApplicationChange">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference uml2compare.ecore#//StereotypeApplicationChange/stereotype"/>
     </genClasses>
-    <genClasses ecoreClass="uml2compare.ecore#//StereotypeReferenceChange"/>
-    <genClasses ecoreClass="uml2compare.ecore#//ProfileApplicationChange">
+    <genClasses provider="Stateful" ecoreClass="uml2compare.ecore#//StereotypeReferenceChange"/>
+    <genClasses provider="Stateful" ecoreClass="uml2compare.ecore#//ProfileApplicationChange">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference uml2compare.ecore#//ProfileApplicationChange/profile"/>
     </genClasses>
-    <genClasses ecoreClass="uml2compare.ecore#//DirectedRelationshipChange"/>
-    <genClasses image="false" ecoreClass="uml2compare.ecore#//UMLDiff">
+    <genClasses provider="Stateful" ecoreClass="uml2compare.ecore#//DirectedRelationshipChange"/>
+    <genClasses provider="Stateful" image="false" ecoreClass="uml2compare.ecore#//UMLDiff">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference uml2compare.ecore#//UMLDiff/discriminant"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference uml2compare.ecore#//UMLDiff/eReference"/>
     </genClasses>
-    <genClasses ecoreClass="uml2compare.ecore#//StereotypedElementChange"/>
+    <genClasses provider="Stateful" ecoreClass="uml2compare.ecore#//StereotypedElementChange"/>
   </genPackages>
 </genmodel:GenModel>

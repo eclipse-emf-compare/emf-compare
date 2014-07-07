@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.uml2.internal.util.UMLCompareAdapterFactory;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.Disposable;
 import org.eclipse.emf.edit.provider.IChangeNotifier;
 import org.eclipse.emf.edit.provider.IDisposable;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
@@ -46,33 +47,14 @@ public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapte
 	private IChangeNotifier changeNotifier = new ChangeNotifier();
 
 	/**
+	 * This keeps track of all the item providers created, so that they can be {@link #dispose disposed}.
+	 */
+	protected Disposable disposable = new Disposable();
+
+	/**
 	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
 	 */
 	private Collection<Object> supportedTypes = new ArrayList<Object>();
-
-	/**
-	 * This keeps track of the one adapter used for all
-	 * {@link org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange} instances.
-	 */
-	private StereotypeApplicationChangeCustomItemProvider stereotypeApplicationChangeExtendedItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all
-	 * {@link org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange} instances.
-	 */
-	private StereotypeAttributeChangeCustomItemProvider stereotypeAttributeChangeExtendedItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all
-	 * {@link org.eclipse.emf.compare.uml2.internal.StereotypeReferenceChange} instances.
-	 */
-	private StereotypeReferenceChangeCustomItemProvider stereotypeReferenceChangeExtendedItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.UMLDiff}
-	 * instances.
-	 */
-	private UMLDiffCustomItemProvider umlDiffExtendedItemProvider;
 
 	/**
 	 * This constructs an instance.
@@ -89,12 +71,7 @@ public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapte
 	 */
 	@Override
 	public Adapter createStereotypeApplicationChangeAdapter() {
-		if (stereotypeApplicationChangeExtendedItemProvider == null) {
-			stereotypeApplicationChangeExtendedItemProvider = new StereotypeApplicationChangeCustomItemProvider(
-					this);
-		}
-
-		return stereotypeApplicationChangeExtendedItemProvider;
+		return new StereotypeApplicationChangeCustomItemProvider(this);
 	}
 
 	/**
@@ -104,12 +81,7 @@ public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapte
 	 */
 	@Override
 	public Adapter createStereotypeAttributeChangeAdapter() {
-		if (stereotypeAttributeChangeExtendedItemProvider == null) {
-			stereotypeAttributeChangeExtendedItemProvider = new StereotypeAttributeChangeCustomItemProvider(
-					this);
-		}
-
-		return stereotypeAttributeChangeExtendedItemProvider;
+		return new StereotypeAttributeChangeCustomItemProvider(this);
 	}
 
 	/**
@@ -119,12 +91,7 @@ public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapte
 	 */
 	@Override
 	public Adapter createStereotypeReferenceChangeAdapter() {
-		if (stereotypeReferenceChangeExtendedItemProvider == null) {
-			stereotypeReferenceChangeExtendedItemProvider = new StereotypeReferenceChangeCustomItemProvider(
-					this);
-		}
-
-		return stereotypeReferenceChangeExtendedItemProvider;
+		return new StereotypeReferenceChangeCustomItemProvider(this);
 	}
 
 	/**
@@ -134,11 +101,7 @@ public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapte
 	 */
 	@Override
 	public Adapter createUMLDiffAdapter() {
-		if (umlDiffExtendedItemProvider == null) {
-			umlDiffExtendedItemProvider = new UMLDiffCustomItemProvider(this);
-		}
-
-		return umlDiffExtendedItemProvider;
+		return new UMLDiffCustomItemProvider(this);
 	}
 
 	/**
@@ -233,17 +196,24 @@ public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapte
 	}
 
 	/**
+	 * Associates an adapter with a notifier via the base implementation, then records it to ensure it will be
+	 * disposed.
+	 */
+	@Override
+	protected void associate(Adapter adapter, Notifier target) {
+		super.associate(adapter, target);
+		if (adapter != null) {
+			disposable.add(adapter);
+		}
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.edit.provider.IDisposable#dispose()
 	 */
 	public void dispose() {
-		if (stereotypeApplicationChangeExtendedItemProvider != null) {
-			stereotypeApplicationChangeExtendedItemProvider.dispose();
-		}
-		if (umlDiffExtendedItemProvider != null) {
-			umlDiffExtendedItemProvider.dispose();
-		}
+		disposable.dispose();
 	}
 
 }
