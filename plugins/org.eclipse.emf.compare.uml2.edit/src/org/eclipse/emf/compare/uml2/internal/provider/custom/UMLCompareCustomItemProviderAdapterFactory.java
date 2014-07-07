@@ -36,6 +36,12 @@ import org.eclipse.emf.edit.provider.INotifyChangedListener;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
+
+	/**
+	 * This keeps track of all the item providers created, so that they can be {@link #dispose disposed}.
+	 */
+	protected Disposable disposable = new Disposable();
+
 	/**
 	 * This keeps track of the root adapter factory that delegates to this adapter factory.
 	 */
@@ -45,11 +51,6 @@ public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapte
 	 * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
 	 */
 	private IChangeNotifier changeNotifier = new ChangeNotifier();
-
-	/**
-	 * This keeps track of all the item providers created, so that they can be {@link #dispose disposed}.
-	 */
-	protected Disposable disposable = new Disposable();
 
 	/**
 	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
@@ -196,8 +197,9 @@ public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapte
 	}
 
 	/**
-	 * Associates an adapter with a notifier via the base implementation, then records it to ensure it will be
-	 * disposed.
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.impl.AdapterFactoryImpl#associate(Adapter, Notifier)
 	 */
 	@Override
 	protected void associate(Adapter adapter, Notifier target) {

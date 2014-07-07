@@ -202,6 +202,15 @@ public class StereotypedElementItemProviderDecorator extends ExtendedItemProvide
 		return images;
 	}
 
+	/**
+	 * Gets an icon from its location.
+	 * 
+	 * @param eResource
+	 *            Resource holding the {@link org.eclipse.uml2.uml.Image} element.
+	 * @param location
+	 *            Location of the icon
+	 * @return an icon or <code>null</code> otherwise.
+	 */
 	private Object getIconFromLocation(Resource eResource, String location) {
 		Object img = null;
 		if (eResource != null) {
