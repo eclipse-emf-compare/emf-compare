@@ -101,6 +101,10 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//AttributeChange/attribute"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//AttributeChange/value"/>
     </genClasses>
+    <genClasses provider="Stateful" ecoreClass="compare.ecore#//FeatureMapChange">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//FeatureMapChange/attribute"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//FeatureMapChange/value"/>
+    </genClasses>
     <genClasses provider="Stateful" ecoreClass="compare.ecore#//Conflict">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//Conflict/kind"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compare.ecore#//Conflict/differences"/>

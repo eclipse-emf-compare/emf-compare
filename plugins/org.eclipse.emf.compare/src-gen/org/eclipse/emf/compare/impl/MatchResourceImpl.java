@@ -333,7 +333,7 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 	public Comparison getComparison() {
 		if (eContainerFeatureID() != ComparePackage.MATCH_RESOURCE__COMPARISON)
 			return null;
-		return (Comparison)eContainer();
+		return (Comparison)eInternalContainer();
 	}
 
 	/**

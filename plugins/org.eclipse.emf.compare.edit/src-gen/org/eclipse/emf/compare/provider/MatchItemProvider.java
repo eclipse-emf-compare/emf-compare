@@ -222,6 +222,9 @@ public class MatchItemProvider extends ItemProviderAdapter implements IEditingDo
 
 		newChildDescriptors.add(createChildParameter(ComparePackage.Literals.MATCH__DIFFERENCES,
 				CompareFactory.eINSTANCE.createAttributeChange()));
+
+		newChildDescriptors.add(createChildParameter(ComparePackage.Literals.MATCH__DIFFERENCES,
+				CompareFactory.eINSTANCE.createFeatureMapChange()));
 	}
 
 	/**

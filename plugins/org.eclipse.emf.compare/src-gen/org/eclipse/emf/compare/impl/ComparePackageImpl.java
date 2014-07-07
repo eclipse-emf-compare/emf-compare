@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Equivalence;
+import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -99,6 +100,13 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * @generated
 	 */
 	private EClass attributeChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass featureMapChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -286,7 +294,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 3.1
 	 * @generated
 	 */
 	public EAttribute getComparison_Diagnostic() {
@@ -458,7 +465,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 3.1
 	 * @generated
 	 */
 	public EReference getDiff_Implies() {
@@ -468,7 +474,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 3.1
 	 * @generated
 	 */
 	public EReference getDiff_ImpliedBy() {
@@ -496,7 +501,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 3.1
 	 * @generated
 	 */
 	public EReference getDiff_PrimeRefining() {
@@ -625,6 +629,33 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * 
 	 * @generated
 	 */
+	public EClass getFeatureMapChange() {
+		return featureMapChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getFeatureMapChange_Attribute() {
+		return (EReference)featureMapChangeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getFeatureMapChange_Value() {
+		return (EAttribute)featureMapChangeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EClass getConflict() {
 		return conflictEClass;
 	}
@@ -722,7 +753,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @since 3.1
 	 * @generated
 	 */
 	public EDataType getDiagnostic() {
@@ -808,6 +838,10 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		createEReference(attributeChangeEClass, ATTRIBUTE_CHANGE__ATTRIBUTE);
 		createEAttribute(attributeChangeEClass, ATTRIBUTE_CHANGE__VALUE);
 
+		featureMapChangeEClass = createEClass(FEATURE_MAP_CHANGE);
+		createEReference(featureMapChangeEClass, FEATURE_MAP_CHANGE__ATTRIBUTE);
+		createEAttribute(featureMapChangeEClass, FEATURE_MAP_CHANGE__VALUE);
+
 		conflictEClass = createEClass(CONFLICT);
 		createEAttribute(conflictEClass, CONFLICT__KIND);
 		createEReference(conflictEClass, CONFLICT__DIFFERENCES);
@@ -864,6 +898,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		resourceAttachmentChangeEClass.getESuperTypes().add(this.getDiff());
 		referenceChangeEClass.getESuperTypes().add(this.getDiff());
 		attributeChangeEClass.getESuperTypes().add(this.getDiff());
+		featureMapChangeEClass.getESuperTypes().add(this.getDiff());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(comparisonEClass, Comparison.class,
@@ -1084,6 +1119,18 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				getAttributeChange_Value(),
 				theEcorePackage.getEJavaObject(),
 				"value", null, 0, 1, AttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(featureMapChangeEClass, FeatureMapChange.class,
+				"FeatureMapChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getFeatureMapChange_Attribute(),
+				theEcorePackage.getEAttribute(),
+				null,
+				"attribute", null, 1, 1, FeatureMapChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getFeatureMapChange_Value(),
+				theEcorePackage.getEJavaObject(),
+				"value", null, 0, 1, FeatureMapChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(conflictEClass, Conflict.class,
 				"Conflict", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
