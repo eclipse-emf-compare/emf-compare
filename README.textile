@@ -2,7 +2,7 @@ h1. EMF Compare
 
 h2. Installation
 
-* The latest version of EMF Compare can be installed from http://download.eclipse.org/modeling/emf/compare/updates/releases/2.1
+* The latest version of EMF Compare can be installed from http://download.eclipse.org/modeling/emf/compare/updates/releases/3.0
 * More detailed installation instructions on http://www.eclipse.org/emf/compare/documentation/latest/user/user-guide.html#Installing_EMF_Compare
 
 h3. Prerequesites
@@ -37,13 +37,13 @@ h2. Build
 
 EMF Compare can be built using maven from within the org.eclipse.emf.compare-parent sub-folder of this repository :
 
-@mvn clean package -Pluna@
+@mvn clean package -Pmars@
 
-The above example will build the EMF Compare binaries against a Luna platform. Select the appropriate profile according to the platform you wish to install EMF Compare on, one in [luna, kepler, juno, indigo, helios, galileo].
+The above example will build the EMF Compare binaries against a Mars platform. Select the appropriate profile according to the platform you wish to install EMF Compare on, one in [mars, luna, kepler, juno, indigo, helios, galileo].
 
 You can also check the tests using
 
-@mvn verify -Pluna --fail-at-end -Dmaven.test.failure.ignore=true@
+@mvn verify -Pmars --fail-at-end -Dmaven.test.failure.ignore=true@
 
 h2. Contributing
 
