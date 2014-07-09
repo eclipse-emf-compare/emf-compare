@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,7 +63,6 @@ public class PlatformElementUtil {
 	 *            Class to which we are to adapt <em>object</em>.
 	 * @return <em>object</em> cast to type <em>T</em> if possible, <code>null</code> if not.
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T adaptAs(Object object, Class<T> clazz) {
 		if (object == null) {
 			return null;
@@ -71,13 +70,13 @@ public class PlatformElementUtil {
 
 		T result = null;
 		if (clazz.isInstance(object)) {
-			result = (T)object;
+			result = clazz.cast(object);
 		} else if (object instanceof IAdaptable) {
-			result = (T)((IAdaptable)object).getAdapter(clazz);
+			result = clazz.cast(((IAdaptable)object).getAdapter(clazz));
 		}
 
 		if (result == null) {
-			result = (T)Platform.getAdapterManager().getAdapter(object, clazz);
+			result = clazz.cast(Platform.getAdapterManager().loadAdapter(object, clazz.getName()));
 		}
 
 		return result;
