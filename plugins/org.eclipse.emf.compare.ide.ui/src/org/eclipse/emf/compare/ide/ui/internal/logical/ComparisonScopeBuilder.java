@@ -158,30 +158,6 @@ public final class ComparisonScopeBuilder {
 	}
 
 	/**
-	 * Builds the comparison scope with no further operation on the given synchronization model.
-	 * <p>
-	 * This internal API is only intended for use by the resource mapping mergers.
-	 * </p>
-	 * 
-	 * @param synchronizationModel
-	 *            The synchronization model describing the traversals for which a comparison scope is needed.
-	 * @param monitor
-	 *            Monitor on which to report progress information to the user.
-	 * @return The created comparison scope.
-	 * @throws OperationCanceledException
-	 *             if the user cancels (or has already canceled) the operation through the given
-	 *             {@code monitor}.
-	 */
-	/* package */IComparisonScope build(SynchronizationModel synchronizationModel, IProgressMonitor monitor)
-			throws OperationCanceledException {
-		if (monitor.isCanceled()) {
-			throw new OperationCanceledException();
-		}
-
-		return createScope(synchronizationModel, monitor);
-	}
-
-	/**
 	 * Resolves and minimizes the logical model for the given three typed element as would be done by
 	 * {@link #build(ITypedElement, ITypedElement, ITypedElement, IProgressMonitor)}, but returns directly the
 	 * SynchronizationModel DTO instead of the actual IComparisonScope.
@@ -249,6 +225,33 @@ public final class ComparisonScopeBuilder {
 		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
 				new IdenticalResourceMinimizer(), storageAccessor);
 		return scopeBuilder.build(left, right, origin, monitor);
+	}
+
+	/**
+	 * Creates the comparison scope corresponding to the given synchronization model, with no further
+	 * operation on it.
+	 * <p>
+	 * This internal API is only intended for use by the resource mapping mergers and is not meant to be
+	 * referenced.
+	 * </p>
+	 * 
+	 * @param synchronizationModel
+	 *            The synchronization model describing the traversals for which a comparison scope is needed.
+	 * @param monitor
+	 *            Monitor on which to report progress information to the user.
+	 * @return The created comparison scope.
+	 * @throws OperationCanceledException
+	 *             if the user cancels (or has already canceled) the operation through the given
+	 *             {@code monitor}.
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
+	public static IComparisonScope create(SynchronizationModel synchronizationModel, IProgressMonitor monitor)
+			throws OperationCanceledException {
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+
+		return createScope(synchronizationModel, monitor);
 	}
 
 	/**
@@ -434,7 +437,7 @@ public final class ComparisonScopeBuilder {
 	 *            Monitor on which to report progress information to the user.
 	 * @return The created comparison scope.
 	 */
-	private IComparisonScope createScope(SynchronizationModel syncModel, IProgressMonitor monitor) {
+	private static IComparisonScope createScope(SynchronizationModel syncModel, IProgressMonitor monitor) {
 		SubMonitor progress = SubMonitor.convert(monitor, 3);
 		progress.subTask(EMFCompareIDEUIMessages.getString("EMFSynchronizationModel.creatingScope")); //$NON-NLS-1$
 
@@ -483,7 +486,7 @@ public final class ComparisonScopeBuilder {
 		return scope;
 	}
 
-	private Diagnostic computeDiagnostics(final ResourceSet originResourceSet,
+	private static Diagnostic computeDiagnostics(final ResourceSet originResourceSet,
 			final ResourceSet leftResourceSet, final ResourceSet rightResourceSet) {
 		final BasicDiagnostic originDiagnostic;
 		if (originResourceSet != null) {
@@ -521,8 +524,8 @@ public final class ComparisonScopeBuilder {
 	 * @param includeWarning
 	 * @return the composite diagnostic
 	 */
-	private BasicDiagnostic getResourceSetDiagnostic(final ResourceSet resourceSet, DifferenceSource side,
-			boolean includeWarning) {
+	private static BasicDiagnostic getResourceSetDiagnostic(final ResourceSet resourceSet,
+			DifferenceSource side, boolean includeWarning) {
 		final String sideStr;
 		if (side == DifferenceSource.LEFT) {
 			sideStr = EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.left"); //$NON-NLS-1$

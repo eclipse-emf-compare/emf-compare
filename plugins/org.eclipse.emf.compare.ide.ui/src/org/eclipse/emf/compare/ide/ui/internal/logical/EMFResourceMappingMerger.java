@@ -40,9 +40,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
-import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.merge.BatchMerger;
@@ -56,7 +54,6 @@ import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.mapping.IMergeContext;
 import org.eclipse.team.core.mapping.IResourceMappingMerger;
 import org.eclipse.team.core.mapping.provider.MergeStatus;
-import org.eclipse.team.core.subscribers.SubscriberMergeContext;
 
 /**
  * A customized merger for the EMFResourceMappings. This will use EMF Compare to recompute the logical model
@@ -79,7 +76,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	/** {@inheritDoc} */
 	public IStatus merge(IMergeContext mergeContext, IProgressMonitor monitor) throws CoreException {
 		final ResourceMapping[] emfMappings = getEMFMappings(mergeContext);
-		if (emfMappings.length <= 0 || !(mergeContext instanceof SubscriberMergeContext)) {
+		if (emfMappings.length <= 0) {
 			return new Status(IStatus.ERROR, EMFCompareIDEUIPlugin.PLUGIN_ID, EMFCompareIDEUIMessages
 					.getString("EMFResourceMappingMerger.mergeFailedGeneric")); //$NON-NLS-1$
 		}
@@ -90,18 +87,12 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 
 		final Set<ResourceMapping> failingMappings = new HashSet<ResourceMapping>();
 		for (ResourceMapping mapping : emfMappings) {
-			/*
-			 * These two won't be used by the builder in our case since we retrieve the already created
-			 * syncModel from the resource mapping.
-			 */
-			final IModelResolver resolver = new ThreadedModelResolver();
-			final IModelMinimizer minimizer = new IdenticalResourceMinimizer();
-			final ComparisonScopeBuilder builder = new ComparisonScopeBuilder(resolver, minimizer);
-
 			// validateMappings() has made sure we only have EMFResourceMappings
 			final SynchronizationModel syncModel = ((EMFResourceMapping)mapping).getLatestModel();
+
+			final IModelMinimizer minimizer = new IdenticalResourceMinimizer();
 			minimizer.minimize(syncModel, monitor);
-			final IComparisonScope scope = builder.build(syncModel, monitor);
+			final IComparisonScope scope = ComparisonScopeBuilder.create(syncModel, monitor);
 
 			final Comparison comparison = EMFCompare.builder().build().compare(scope,
 					BasicMonitor.toMonitor(monitor));

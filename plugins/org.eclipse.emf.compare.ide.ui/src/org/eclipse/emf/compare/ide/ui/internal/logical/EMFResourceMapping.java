@@ -140,7 +140,22 @@ public class EMFResourceMapping extends ResourceMapping {
 		return new ResourceTraversal[] {singletonTraversal, };
 	}
 
-	SynchronizationModel getLatestModel() {
+	/**
+	 * Returns the latest synchronization model built from a call to
+	 * {@link #getTraversals(ResourceMappingContext, IProgressMonitor)}.
+	 * <p>
+	 * Note that this will return <code>null</code> until
+	 * {@link #getTraversals(ResourceMappingContext, IProgressMonitor)} has been called at least once.
+	 * </p>
+	 * <p>
+	 * This internal API is not meant to be used outside of EMF Compare.
+	 * </p>
+	 * 
+	 * @return The latest synchronization model built from a call to
+	 *         {@link #getTraversals(ResourceMappingContext, IProgressMonitor)}.
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
+	public final SynchronizationModel getLatestModel() {
 		return latestModel;
 	}
 
