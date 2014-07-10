@@ -175,12 +175,12 @@ public class EMFModelProvider extends ModelProvider {
 			ITypedElement right = null;
 			ITypedElement origin = null;
 			if (((RemoteResourceMappingContext)context).isThreeWay()) {
-				left = findTypedElement(localTraversal, accessor, monitor, DiffSide.SOURCE);
-				right = findTypedElement(localTraversal, accessor, monitor, DiffSide.REMOTE);
-				origin = findTypedElement(localTraversal, accessor, monitor, DiffSide.ORIGIN);
+				left = findTypedElement(localTraversal, accessor, actualMonitor, DiffSide.SOURCE);
+				right = findTypedElement(localTraversal, accessor, actualMonitor, DiffSide.REMOTE);
+				origin = findTypedElement(localTraversal, accessor, actualMonitor, DiffSide.ORIGIN);
 			} else {
-				left = findTypedElement(localTraversal, accessor, monitor, DiffSide.SOURCE);
-				right = findTypedElement(localTraversal, accessor, monitor, DiffSide.REMOTE);
+				left = findTypedElement(localTraversal, accessor, actualMonitor, DiffSide.SOURCE);
+				right = findTypedElement(localTraversal, accessor, actualMonitor, DiffSide.REMOTE);
 			}
 
 			IStorage leftStorage = null;
@@ -197,7 +197,7 @@ public class EMFModelProvider extends ModelProvider {
 			final IModelMinimizer minimizer = new IdenticalResourceMinimizer();
 			final ComparisonScopeBuilder builder = new ComparisonScopeBuilder(remoteResolver, minimizer,
 					accessor);
-			syncModel = builder.buildSynchronizationModel(left, right, origin, monitor);
+			syncModel = builder.buildSynchronizationModel(left, right, origin, actualMonitor);
 		} else {
 			syncModel = new SynchronizationModel(localTraversal, new StorageTraversal(Collections
 					.<IStorage> emptySet()), new StorageTraversal(Collections.<IStorage> emptySet()));
