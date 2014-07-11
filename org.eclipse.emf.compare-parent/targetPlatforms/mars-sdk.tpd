@@ -16,4 +16,5 @@ location "http://download.eclipse.org/releases/luna" {
 	org.eclipse.gmf.runtime.notation.sdk.feature.group lazy
 	org.eclipse.emf.ecoretools.feature.group lazy
 	org.eclipse.papyrus.sdk.feature.feature.group lazy
+	org.eclipse.team.svn.feature.group lazy
 }

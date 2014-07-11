@@ -40,6 +40,7 @@
       <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.ecoretools.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.team.svn.feature.group" version="0.0.0"/>
       <repository location="http://download.eclipse.org/releases/luna"/>
     </location>
   </locations>

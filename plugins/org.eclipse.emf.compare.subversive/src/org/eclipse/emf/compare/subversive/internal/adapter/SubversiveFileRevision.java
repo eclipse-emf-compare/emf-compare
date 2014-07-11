@@ -58,22 +58,18 @@ public class SubversiveFileRevision extends FileRevision {
 		return null;
 	}
 
-	@Override
 	public IFileRevision withAllProperties(IProgressMonitor monitor) throws CoreException {
 		return this;
 	}
 
-	@Override
 	public boolean isPropertyMissing() {
 		return false;
 	}
 
-	@Override
 	public String getName() {
 		return resourceElement.getName();
 	}
 
-	@Override
 	public IStorage getStorage(IProgressMonitor monitor) throws CoreException {
 		return new IStorage() {
 
