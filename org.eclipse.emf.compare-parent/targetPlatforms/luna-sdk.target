@@ -36,6 +36,7 @@
       <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.8.0.201405281433"/>
       <unit id="org.eclipse.emf.ecoretools.feature.group" version="2.0.0.201406112035"/>
       <unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="1.0.0.v201406111317"/>
+      <unit id="org.eclipse.team.svn.feature.group" version="2.0.0.I20140609-1700"/>
       <repository location="http://download.eclipse.org/releases/luna"/>
     </location>
   </locations>

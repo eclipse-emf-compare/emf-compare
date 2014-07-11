@@ -305,6 +305,9 @@
         <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module>
+        
+        <module>../plugins/org.eclipse.emf.compare.subversive</module>
+        <module>../packaging/org.eclipse.emf.compare.subversive-feature</module>
       </modules>
     </profile>
 
