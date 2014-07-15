@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:StateMachine xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_Nmu35PSyEeC7b93Q5ZPZDw" name="StateMachine_14">
+  <ownedOperation xmi:id="_NmwGA_SyEeC7b93Q5ZPZDw" name="Operation_0">
+    <ownedParameter xmi:id="_NmwGBPSyEeC7b93Q5ZPZDw" name="Parameter_0">
+      <type xmi:type="uml:DataType" href="package_0_26.uml#_NdjtxPSyEeC7b93Q5ZPZDw"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_NmwGBfSyEeC7b93Q5ZPZDw" name="Parameter_1">
+      <type xmi:type="uml:PrimitiveType" href="package_0_20.uml#_NbROxvSyEeC7b93Q5ZPZDw"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_NmwGBvSyEeC7b93Q5ZPZDw" name="Parameter_2">
+      <type xmi:type="uml:DataType" href="package_1_8.uml#_NhADV_SyEeC7b93Q5ZPZDw"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_NmwGB_SyEeC7b93Q5ZPZDw" name="Parameter_3">
+      <type xmi:type="uml:PrimitiveType" href="package_0_17.uml#_NaUzkvSyEeC7b93Q5ZPZDw"/>
+    </ownedParameter>
+  </ownedOperation>
+  <ownedOperation xmi:id="_NmwtEPSyEeC7b93Q5ZPZDw" name="Operation_1">
+    <ownedParameter xmi:id="_NmwtEfSyEeC7b93Q5ZPZDw" name="Parameter_0">
+      <type xmi:type="uml:PrimitiveType" href="package_1_23.uml#_NlN09PSyEeC7b93Q5ZPZDw"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_NmwtEvSyEeC7b93Q5ZPZDw" name="Parameter_1">
+      <type xmi:type="uml:DataType" href="package_1_22.uml#_NlF5IvSyEeC7b93Q5ZPZDw"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_NmwtE_SyEeC7b93Q5ZPZDw" name="Parameter_2">
+      <type xmi:type="uml:Class" href="package_0_6.uml#_NXKK0fSyEeC7b93Q5ZPZDw"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_NmwtFPSyEeC7b93Q5ZPZDw" name="Parameter_3">
+      <type xmi:type="uml:DataType" href="package_1_27.uml#_NmJpEvSyEeC7b93Q5ZPZDw"/>
+    </ownedParameter>
+  </ownedOperation>
+  <ownedOperation xmi:id="_NmwtFfSyEeC7b93Q5ZPZDw" name="Operation_2">
+    <ownedParameter xmi:id="_NmwtFvSyEeC7b93Q5ZPZDw" name="Parameter_0">
+      <type xmi:type="uml:StateMachine" href="package_1_9.uml#_NhJ0U_SyEeC7b93Q5ZPZDw"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_NmwtF_SyEeC7b93Q5ZPZDw" name="Parameter_1">
+      <type xmi:type="uml:PrimitiveType" href="package_1_5.uml#_NgcCovSyEeC7b93Q5ZPZDw"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_NmwtGPSyEeC7b93Q5ZPZDw" direction="return">
+      <type xmi:type="uml:Class" href="package_0_15.uml#_NaB4oPSyEeC7b93Q5ZPZDw"/>
+    </ownedParameter>
+  </ownedOperation>
+  <region xmi:id="_Nmu35fSyEeC7b93Q5ZPZDw" name="Region_0">
+    <subvertex xmi:type="uml:Pseudostate" xmi:id="_Nmu35_SyEeC7b93Q5ZPZDw" name="InitialState"/>
+    <subvertex xmi:type="uml:FinalState" xmi:id="_Nmve8PSyEeC7b93Q5ZPZDw" name="FinalState"/>
+    <subvertex xmi:type="uml:State" xmi:id="_Nmve8vSyEeC7b93Q5ZPZDw" name="State_2"/>
+    <transition xmi:id="_Nmve9PSyEeC7b93Q5ZPZDw" name="Transition_0" source="_Nmve8PSyEeC7b93Q5ZPZDw" target="_Nmve8vSyEeC7b93Q5ZPZDw"/>
+    <transition xmi:id="_Nmve-PSyEeC7b93Q5ZPZDw" name="Transition_1" source="_Nmve8vSyEeC7b93Q5ZPZDw" target="_Nmve8vSyEeC7b93Q5ZPZDw"/>
+    <transition xmi:id="_Nmve-fSyEeC7b93Q5ZPZDw" name="Transition_2" source="_Nmve8PSyEeC7b93Q5ZPZDw" target="_Nmve8PSyEeC7b93Q5ZPZDw"/>
+    <transition xmi:id="_NmwGAPSyEeC7b93Q5ZPZDw" name="Transition_3" source="_Nmve8PSyEeC7b93Q5ZPZDw" target="_Nmu35_SyEeC7b93Q5ZPZDw"/>
+  </region>
+  <region xmi:id="_Nmu35vSyEeC7b93Q5ZPZDw" name="Region_1">
+    <subvertex xmi:type="uml:State" xmi:id="_Nmve8fSyEeC7b93Q5ZPZDw" name="State_0"/>
+    <subvertex xmi:type="uml:State" xmi:id="_Nmve8_SyEeC7b93Q5ZPZDw" name="State_1"/>
+    <transition xmi:id="_Nmve9fSyEeC7b93Q5ZPZDw" name="Transition_0" source="_Nmve8fSyEeC7b93Q5ZPZDw" target="_Nmve8fSyEeC7b93Q5ZPZDw"/>
+    <transition xmi:id="_Nmve9vSyEeC7b93Q5ZPZDw" name="Transition_1" source="_Nmve8fSyEeC7b93Q5ZPZDw" target="_Nmve8_SyEeC7b93Q5ZPZDw"/>
+    <transition xmi:id="_Nmve9_SyEeC7b93Q5ZPZDw" name="Transition_2" source="_Nmve8fSyEeC7b93Q5ZPZDw" target="_Nmve8fSyEeC7b93Q5ZPZDw"/>
+    <transition xmi:id="_NmwGAfSyEeC7b93Q5ZPZDw" name="Transition_3" source="_Nmve8fSyEeC7b93Q5ZPZDw" target="_Nmve8_SyEeC7b93Q5ZPZDw"/>
+    <transition xmi:id="_NmwGAvSyEeC7b93Q5ZPZDw" name="Transition_4" source="_Nmve8fSyEeC7b93Q5ZPZDw" target="_Nmve8_SyEeC7b93Q5ZPZDw"/>
+  </region>
+</uml:StateMachine>

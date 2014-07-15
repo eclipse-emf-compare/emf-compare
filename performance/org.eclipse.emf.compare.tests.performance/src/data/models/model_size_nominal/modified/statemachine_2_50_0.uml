@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:StateMachine xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_rtMcwvSvEeCjvIxB4eFIVw" name="StateMachine_31">
+  <ownedOperation xmi:id="_rtMcyPSvEeCjvIxB4eFIVw" name="Operation_0">
+    <ownedParameter xmi:id="_rtMcyfSvEeCjvIxB4eFIVw" name="Parameter_0">
+      <type xmi:type="uml:PrimitiveType" href="package_1_38.uml#_ri6fMfSvEeCjvIxB4eFIVw"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_rtMcyvSvEeCjvIxB4eFIVw" name="Parameter_1">
+      <type xmi:type="uml:PrimitiveType" href="package_0_39.uml#_rXAKO_SvEeCjvIxB4eFIVw"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_rtMcy_SvEeCjvIxB4eFIVw" name="Parameter_2">
+      <type xmi:type="uml:DataType" href="package_2_43.uml#_rsl_yvSvEeCjvIxB4eFIVw"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_rtMczPSvEeCjvIxB4eFIVw" name="Parameter_3">
+      <type xmi:type="uml:DataType" href="package_0_29.uml#_rUBuwPSvEeCjvIxB4eFIVw"/>
+    </ownedParameter>
+    <ownedParameter xmi:id="_rtMczfSvEeCjvIxB4eFIVw" name="Parameter_4"/>
+    <ownedParameter xmi:id="_rtMczvSvEeCjvIxB4eFIVw" direction="return">
+      <type xmi:type="uml:Class" href="package_2_22.uml#_rpLfMfSvEeCjvIxB4eFIVw"/>
+    </ownedParameter>
+  </ownedOperation>
+  <region xmi:id="_rtMcw_SvEeCjvIxB4eFIVw" name="Region_0">
+    <subvertex xmi:type="uml:Pseudostate" xmi:id="_rtMcxPSvEeCjvIxB4eFIVw" name="InitialState"/>
+    <subvertex xmi:type="uml:FinalState" xmi:id="_rtMcxfSvEeCjvIxB4eFIVw" name="FinalState"/>
+    <subvertex xmi:type="uml:State" xmi:id="_rtMcxvSvEeCjvIxB4eFIVw" name="State_2"/>
+    <transition xmi:id="_rtMcx_SvEeCjvIxB4eFIVw" name="Transition_0" source="_rtMcxPSvEeCjvIxB4eFIVw" target="_rtMcxPSvEeCjvIxB4eFIVw"/>
+  </region>
+</uml:StateMachine>
