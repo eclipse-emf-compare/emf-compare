@@ -64,6 +64,10 @@
 		  <aut>
 			<explicit>AUT-[platform].zip</explicit>
 		  </aut>
+		  <testOptions>
+			<autStartupTimeout>600</autStartupTimeout>
+			<execTimeout>7200</execTimeout>
+		  </testOptions>
 		  <suites>
 		  	<suite>TestSuite.Full</suite>
 		  </suites>
@@ -97,6 +101,10 @@
 		  <aut>
 			<explicit>AUT-[platform].zip</explicit>
 		  </aut>
+		  <testOptions>
+			<autStartupTimeout>600</autStartupTimeout>
+			<execTimeout>7200</execTimeout>
+		  </testOptions>		  
 		  <suites>
 		  	<suite>TestSuite.Core</suite>
 		  </suites>
