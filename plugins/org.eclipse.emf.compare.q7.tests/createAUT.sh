@@ -3,23 +3,29 @@ os=$1
 ws=$2
 arch=$3
 simrel=$4
+workdir=$5
+
+mkdir -p $workdir
 
 env > env.txt
 
 P2_ADMIN_VERSION="1.1.0"
 P2_ADMIN_ZIPNAME="p2-admin-$P2_ADMIN_VERSION-$os.$ws.$arch.tar.gz"
 P2_ADMIN_URL="https://github.com/mbarbero/p2-admin/releases/download/v$P2_ADMIN_VERSION/$P2_ADMIN_ZIPNAME"
+P2_ADMIN_ZIPPATH=$workdir/$P2_ADMIN_ZIPNAME
+P2_ADMIN_PATH=$workdir/p2-admin
 
 if [[ ! -f "$P2_ADMIN_ZIPNAME" ]]; then 
 	echo "Downloading $P2_ADMIN_URL"
-	wget --no-check-certificate -q $P2_ADMIN_URL -O - > $P2_ADMIN_ZIPNAME
+	wget --no-check-certificate -q $P2_ADMIN_URL -O - > $P2_ADMIN_ZIPPATH
 fi
-if [[ -d "p2-admin" ]]; then
+
+if [[ -d $P2_ADMIN_PATH ]]; then
 	echo "Removing old p2-admin folder"
 	rm -rf "p2-admin"
 fi
 echo "Unzipping $P2_ADMIN_ZIPNAME"
-tar zxf "$P2_ADMIN_ZIPNAME"
+tar zxf "$P2_ADMIN_ZIPPATH" -C $workdir
 
 target_env=$os
 if [[ $ws != $os ]]; then
@@ -57,9 +63,11 @@ else
 	exit -1
 fi
 
+
+simrel_zip_path=$workdir/$simrel_zip_name
 if [[ ! -f "$simrel_zip_name" ]]; then 
 	echo "Downloading $simrel_zip_url"
-	wget --no-check-certificate -q "$simrel_zip_url"
+	wget --no-check-certificate -q "$simrel_zip_url" -O - > $simrel_zip_path
 fi
 
 if [[ -d "eclipse" ]]; then
@@ -67,13 +75,13 @@ if [[ -d "eclipse" ]]; then
   rm -rf "eclipse"
 fi
 
+simrel_path=$workdir/$simrel
+mkdir -p $simrel_path
+
 echo "Unzipping $simrel_zip_name"
-tar zxf "$simrel_zip_name"
+tar zxf "$simrel_zip_path" -C $simrel_path
 
 echo "Provisioning AUT"
 echo "  Repositories: $p2_repositories"
 echo "  IUs: $p2_installIUs"
-$(pwd)/p2-admin/p2-admin -vm $JAVA_HOME/bin/java -application org.eclipse.equinox.p2.director -repository "$p2_repositories" -installIU "$p2_installIUs" -tag Q7_AUT -destination "$(pwd)/eclipse" -profile SDKProfile
-
-echo "Zipping AUT AUT-$os.$ws.$arch.zip"
-zip -qr "AUT-$os.$ws.$arch.zip" eclipse
+$P2_ADMIN_PATH/p2-admin -vm $JAVA_HOME/bin/java -application org.eclipse.equinox.p2.director -repository "$p2_repositories" -installIU "$p2_installIUs" -tag Q7_AUT -destination "$simrel_path/eclipse" -profile SDKProfile

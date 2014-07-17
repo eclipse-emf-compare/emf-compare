@@ -36,7 +36,7 @@
 	      </goals>
 	      <configuration>
 	        <executable>bash</executable>
-	        <commandlineArgs>${basedir}/createAUT.sh ${os-ws-arch} ${profile-id}</commandlineArgs>
+	        <commandlineArgs>${basedir}/createAUT.sh ${os-ws-arch} ${profile-id} ${project.build.directory}</commandlineArgs>
 	      </configuration>
 	    </execution>
 	  </executions>
@@ -62,7 +62,7 @@
 		<extensions>true</extensions>
 		<configuration>
 		  <aut>
-			<explicit>AUT-[platform].zip</explicit>
+			<explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
 		  </aut>
 		  <testOptions>
 			<autStartupTimeout>600</autStartupTimeout>
@@ -99,7 +99,7 @@
 		<extensions>true</extensions>
 		<configuration>
 		  <aut>
-			<explicit>AUT-[platform].zip</explicit>
+			<explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
 		  </aut>
 		  <testOptions>
 			<autStartupTimeout>600</autStartupTimeout>
