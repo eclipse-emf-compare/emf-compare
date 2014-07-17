@@ -14,7 +14,10 @@ import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.util.StyledStringConverter;
+import org.eclipse.emf.compare.provider.EMFCompareEditPlugin;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.spec.OverlayImageProvider;
+import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
@@ -23,6 +26,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.progress.PendingUpdateAdapter;
 
 /**
  * A specialized {@link AdapterFactoryLabelProvider.FontAndColorProvider} for the structure merge viewer.
@@ -32,6 +36,8 @@ import org.eclipse.swt.graphics.Image;
 class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelProvider.FontAndColorProvider implements IStyledLabelProvider {
 
 	protected StyledStringConverter styledStringConverter;
+
+	private OverlayImageProvider overlayImageProvider;
 
 	/**
 	 * Constructor calling super {@link #FontAndColorProvider(AdapterFactory, Viewer)}.
@@ -43,6 +49,7 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 	 */
 	public EMFCompareStructureMergeViewerLabelProvider(AdapterFactory adapterFactory, Viewer viewer) {
 		super(adapterFactory, viewer);
+		overlayImageProvider = new OverlayImageProvider(EMFCompareEditPlugin.getPlugin());
 	}
 
 	/**
@@ -108,6 +115,9 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 			ret = super.getImage(((Adapter)element).getTarget());
 		} else if (element instanceof ICompareInput) {
 			ret = ((ICompareInput)element).getImage();
+		} else if (element instanceof PendingUpdateAdapter) {
+			ret = super.getImageFromObject(overlayImageProvider.getComposedImage(element,
+					EMFCompareRCPUIPlugin.getImage("icons/full/toolb16/group.gif"))); //$NON-NLS-1$
 		} else {
 			ret = super.getImage(element);
 		}
@@ -130,6 +140,8 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 			ret = getStyledTextFromObject(((Adapter)element).getTarget());
 		} else if (element instanceof ICompareInput) {
 			ret = getStyledTextFromObject(((ICompareInput)element).getName());
+		} else if (element instanceof PendingUpdateAdapter) {
+			ret = new StyledString("Please wait while computing the element to display...");
 		} else {
 			ret = getStyledTextFromObject(element);
 		}

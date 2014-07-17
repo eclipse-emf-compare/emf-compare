@@ -16,10 +16,10 @@ import com.google.common.base.Predicate;
 
 import java.util.Set;
 
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.widgets.TreeItem;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -55,9 +55,7 @@ public class JFaceUtil {
 	 */
 	public static Set<?> filterVisibleElement(TreeViewer treeViewer, Predicate<? super Object> predicate) {
 		Set<Object> acc = newHashSet();
-		ITreeContentProvider contentProvider = (ITreeContentProvider)treeViewer.getContentProvider();
-		Object[] elements = contentProvider.getElements(treeViewer.getInput());
-		appendNonFilteredChildren(treeViewer, elements, null, predicate, acc);
+		appendNonFilteredChildren(treeViewer, treeViewer.getTree().getItems(), null, predicate, acc);
 		return acc;
 	}
 
@@ -67,14 +65,13 @@ public class JFaceUtil {
 	 * @param diffs
 	 * @return
 	 */
-	private static void appendNonFilteredChildren(TreeViewer treeViewer, Object[] elements, Object parent,
+	private static void appendNonFilteredChildren(TreeViewer treeViewer, TreeItem[] elements, Object parent,
 			Predicate<? super Object> predicate, Set<Object> acc) {
-		final ITreeContentProvider cp = (ITreeContentProvider)treeViewer.getContentProvider();
-		for (Object element : elements) {
-			if (!isFiltered(treeViewer, element, parent) && predicate.apply(element)) {
-				acc.add(element);
+		for (TreeItem element : elements) {
+			if (!isFiltered(treeViewer, element.getData(), parent) && predicate.apply(element.getData())) {
+				acc.add(element.getData());
 			}
-			Object[] children = cp.getChildren(element);
+			TreeItem[] children = element.getItems();
 			appendNonFilteredChildren(treeViewer, children, element, predicate, acc);
 		}
 	}

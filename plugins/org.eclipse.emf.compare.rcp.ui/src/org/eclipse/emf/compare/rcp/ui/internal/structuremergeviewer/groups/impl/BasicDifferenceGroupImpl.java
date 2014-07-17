@@ -237,21 +237,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 */
 	public List<? extends TreeNode> getChildren() {
 		if (children == null) {
-			children = newArrayList();
-			extensionDiffProcessed = newLinkedHashSet();
-			for (Match match : comparison.getMatches()) {
-				List<? extends TreeNode> buildSubTree = buildSubTree((Match)null, match);
-				if (buildSubTree != null) {
-					children.addAll(buildSubTree);
-				}
-			}
-			for (MatchResource matchResource : comparison.getMatchedResources()) {
-				TreeNode buildSubTree = buildSubTree(matchResource);
-				if (buildSubTree != null) {
-					children.add(buildSubTree);
-				}
-			}
-			registerCrossReferenceAdapter(children);
+			buildSubTree();
 		}
 		return children;
 	}
@@ -649,5 +635,27 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 				}
 			}
 		};
+	}
+
+	/**
+	 * Builds the sub tree for this group.
+	 */
+	public void buildSubTree() {
+		children = newArrayList();
+		extensionDiffProcessed = newLinkedHashSet();
+		for (Match match : comparison.getMatches()) {
+			List<? extends TreeNode> buildSubTree = buildSubTree((Match)null, match);
+			if (buildSubTree != null) {
+				children.addAll(buildSubTree);
+			}
+		}
+		for (MatchResource matchResource : comparison.getMatchedResources()) {
+			TreeNode buildSubTree = buildSubTree(matchResource);
+			if (buildSubTree != null) {
+				children.add(buildSubTree);
+			}
+		}
+		registerCrossReferenceAdapter(children);
+
 	}
 }

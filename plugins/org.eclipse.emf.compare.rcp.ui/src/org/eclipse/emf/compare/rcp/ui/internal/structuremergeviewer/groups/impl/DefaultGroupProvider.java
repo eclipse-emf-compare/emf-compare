@@ -30,36 +30,17 @@ import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGro
  */
 public class DefaultGroupProvider extends AbstractDifferenceGroupProvider {
 
-	/** The unique group provided by this provider. */
-	private IDifferenceGroup group;
-
-	/** The comparison object. */
-	private Comparison comparison;
-
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.AbstractBuildingDifferenceGroupProvider#buildGroups(org.eclipse.emf.compare.Comparison)
 	 */
-	public Collection<? extends IDifferenceGroup> getGroups(Comparison aComparison) {
-		if (group == null || !aComparison.equals(this.comparison)) {
-			dispose();
-			this.comparison = aComparison;
-			group = new BasicDifferenceGroupImpl(aComparison, alwaysTrue(), getCrossReferenceAdapter());
-		}
+	@Override
+	protected Collection<? extends IDifferenceGroup> buildGroups(Comparison comparison2) {
+		BasicDifferenceGroupImpl group = new BasicDifferenceGroupImpl(getComparison(), alwaysTrue(),
+				getCrossReferenceAdapter());
+
+		group.buildSubTree();
 		return ImmutableList.of(group);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
-	 */
-	public void dispose() {
-		this.comparison = null;
-		if (this.group != null) {
-			this.group.dispose();
-			this.group = null;
-		}
 	}
 }

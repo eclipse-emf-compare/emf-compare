@@ -12,6 +12,8 @@ package org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups;
 
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -31,7 +33,7 @@ import org.eclipse.emf.edit.tree.TreePackage;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  * @since 4.0
  */
-public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implements IDifferenceGroupProvider {
+public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implements IDifferenceGroupProvider2 {
 
 	/** The cross reference adapter used by the difference group provider. */
 	private final ECrossReferenceAdapter crossReferenceAdapter;
@@ -41,6 +43,13 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 
 	/** The initial activation state of the group provider. */
 	protected boolean activeByDefault;
+
+	/**
+	 * Groups held by this {@link IDifferenceGroupProvider}.
+	 */
+	private Collection<? extends IDifferenceGroup> groups;
+
+	private Comparison comparison;
 
 	/**
 	 * Default constructor.
@@ -137,5 +146,69 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 	@Override
 	public boolean isAdapterForType(Object type) {
 		return type == IDifferenceGroupProvider.class;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
+	 * @since 4.0
+	 */
+	public Collection<? extends IDifferenceGroup> getGroups(Comparison aComparison) {
+		if (!groupsAreBuilt()) {
+			dispose();
+			this.comparison = aComparison;
+			groups = buildGroups(comparison);
+		}
+		return groups;
+	}
+
+	/**
+	 * Builds the groups for this comparison. The framework expects that all groups are fully initialized (
+	 * their sub tree should be built). Extending {@link IDifferenceGroupProvider2} needs to override this
+	 * method to provid groups.
+	 * 
+	 * @param aComparison
+	 *            comparison against which the groups will be built.
+	 * @return Newly built collections of {@link IDifferenceGroup}.
+	 * @since 4.0
+	 */
+	protected Collection<? extends IDifferenceGroup> buildGroups(Comparison aComparison) {
+		return ImmutableList.of();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider2#groupsAreBuilt()
+	 * @since 4.0
+	 */
+	public boolean groupsAreBuilt() {
+		return groups != null && comparison != null;
+	}
+
+	/**
+	 * @return comparison against which the groups has been built.
+	 * @since 4.0
+	 */
+	protected Comparison getComparison() {
+		return comparison;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
+	 * @since 4.0
+	 */
+	public void dispose() {
+		comparison = null;
+		if (groups != null) {
+			for (IDifferenceGroup group : groups) {
+				group.dispose();
+			}
+			groups = null;
+		}
+
 	}
 }

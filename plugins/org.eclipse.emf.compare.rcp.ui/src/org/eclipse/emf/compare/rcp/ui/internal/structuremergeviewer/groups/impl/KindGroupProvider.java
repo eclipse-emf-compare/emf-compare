@@ -33,63 +33,43 @@ import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGro
  */
 public class KindGroupProvider extends AbstractDifferenceGroupProvider {
 
-	/** The groups provided by this provider. */
-	private ImmutableList<IDifferenceGroup> differenceGroups;
-
-	/** The comparison object. */
-	private Comparison comp;
-
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.AbstractBuildingDifferenceGroupProvider#buildGroups(org.eclipse.emf.compare.Comparison)
 	 */
-	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
-		if (differenceGroups == null || !comparison.equals(comp)) {
-			dispose();
-			this.comp = comparison;
-			final IDifferenceGroup additions = new BasicDifferenceGroupImpl(comparison,
-					ofKind(DifferenceKind.ADD), EMFCompareRCPUIMessages
-							.getString("KindGroupProvider.addition.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
-			final IDifferenceGroup deletions = new BasicDifferenceGroupImpl(comparison,
-					ofKind(DifferenceKind.DELETE), EMFCompareRCPUIMessages
-							.getString("KindGroupProvider.deletion.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
-			final IDifferenceGroup changes = new BasicDifferenceGroupImpl(comparison,
-					ofKind(DifferenceKind.CHANGE), EMFCompareRCPUIMessages
-							.getString("KindGroupProvider.change.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
-			final IDifferenceGroup moves = new BasicDifferenceGroupImpl(comparison,
-					ofKind(DifferenceKind.MOVE), EMFCompareRCPUIMessages
-							.getString("KindGroupProvider.move.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
-			Collection<IDifferenceGroup> groups = Lists.newArrayList();
-			if (!additions.getChildren().isEmpty()) {
-				groups.add(additions);
-			}
-			if (!deletions.getChildren().isEmpty()) {
-				groups.add(deletions);
-			}
-			if (!changes.getChildren().isEmpty()) {
-				groups.add(changes);
-			}
-			if (!moves.getChildren().isEmpty()) {
-				groups.add(moves);
-			}
-			differenceGroups = ImmutableList.copyOf(groups);
-		}
-		return differenceGroups;
-	}
+	@Override
+	protected Collection<? extends IDifferenceGroup> buildGroups(Comparison comparison2) {
+		final IDifferenceGroup additions = new BasicDifferenceGroupImpl(getComparison(),
+				ofKind(DifferenceKind.ADD), EMFCompareRCPUIMessages
+						.getString("KindGroupProvider.addition.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+		((BasicDifferenceGroupImpl)additions).buildSubTree();
+		final IDifferenceGroup deletions = new BasicDifferenceGroupImpl(getComparison(),
+				ofKind(DifferenceKind.DELETE), EMFCompareRCPUIMessages
+						.getString("KindGroupProvider.deletion.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+		((BasicDifferenceGroupImpl)deletions).buildSubTree();
+		final IDifferenceGroup changes = new BasicDifferenceGroupImpl(getComparison(),
+				ofKind(DifferenceKind.CHANGE), EMFCompareRCPUIMessages
+						.getString("KindGroupProvider.change.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+		((BasicDifferenceGroupImpl)changes).buildSubTree();
+		final IDifferenceGroup moves = new BasicDifferenceGroupImpl(getComparison(),
+				ofKind(DifferenceKind.MOVE), EMFCompareRCPUIMessages
+						.getString("KindGroupProvider.move.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+		((BasicDifferenceGroupImpl)moves).buildSubTree();
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
-	 */
-	public void dispose() {
-		this.comp = null;
-		if (differenceGroups != null) {
-			for (IDifferenceGroup group : differenceGroups) {
-				group.dispose();
-			}
-			differenceGroups = null;
+		Collection<IDifferenceGroup> groups = Lists.newArrayList();
+		if (!additions.getChildren().isEmpty()) {
+			groups.add(additions);
 		}
+		if (!deletions.getChildren().isEmpty()) {
+			groups.add(deletions);
+		}
+		if (!changes.getChildren().isEmpty()) {
+			groups.add(changes);
+		}
+		if (!moves.getChildren().isEmpty()) {
+			groups.add(moves);
+		}
+		return ImmutableList.copyOf(groups);
 	}
 }

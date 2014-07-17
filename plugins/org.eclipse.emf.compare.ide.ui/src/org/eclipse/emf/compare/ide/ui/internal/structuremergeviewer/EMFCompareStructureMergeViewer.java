@@ -16,6 +16,8 @@ import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.size;
+import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_ASYNC;
+import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_SYNC;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
@@ -81,6 +83,7 @@ import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.EmptyComparisonScope;
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressInfoComposite;
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressMonitorWrapper;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.FetchListener;
 import org.eclipse.emf.compare.ide.ui.internal.util.CompareHandlerService;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
@@ -138,6 +141,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.progress.PendingUpdateAdapter;
 import org.eclipse.ui.themes.ITheme;
 import org.eclipse.ui.themes.IThemeManager;
 
@@ -231,6 +235,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	private boolean editingDomainNeedsToBeDisposed;
 
+	private FetchListener toolbarUpdaterContentProviderListener;
+
 	/**
 	 * Constructor.
 	 * 
@@ -258,7 +264,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			}
 		};
 
-		navigatable = new Navigatable(getViewer());
+		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(getCompareConfiguration()
+				.getAdapterFactory(), getViewer()));
+
+		navigatable = new Navigatable(getViewer(), getContentProvider());
 
 		toolBar = new CompareToolBar(CompareViewerPane.getToolBarManager(parent),
 				structureMergeViewerGrouper, structureMergeViewerFilter, getCompareConfiguration());
@@ -292,8 +301,21 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		fHandlerService = CompareHandlerService.createFor(getCompareConfiguration().getContainer(),
 				getControl().getShell());
 
-		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(getCompareConfiguration()
-				.getAdapterFactory()));
+		toolbarUpdaterContentProviderListener = new FetchListener() {
+
+			@Override
+			public void startFetching() {
+				toolBar.setEnabled(false);
+			}
+
+			@Override
+			public void doneFetching() {
+				toolBar.setEnabled(true);
+			}
+		};
+
+		getContentProvider().addFetchingListener(toolbarUpdaterContentProviderListener);
+
 		setLabelProvider(new DelegatingStyledCellLabelProvider(
 				new EMFCompareStructureMergeViewerLabelProvider(
 						getCompareConfiguration().getAdapterFactory(), this)));
@@ -406,6 +428,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			 */
 			@Override
 			public boolean isExpandable(Object element) {
+				if (element instanceof PendingUpdateAdapter) {
+					// Prevents requesting the content provider if the object is a PendingUpdateAdapter
+					return false;
+				}
 				if (hasFilters()) {
 					// workaround for 65762
 					return getFilteredChildren(element).length > 0;
@@ -440,6 +466,16 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		treeRuler.setLayoutData(rulerLayoutData);
 
 		return ControlAndViewer.create(tabFolder, treeViewer);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.ContentViewer#getContentProvider()
+	 */
+	@Override
+	public EMFCompareStructureMergeViewerContentProvider getContentProvider() {
+		return (EMFCompareStructureMergeViewerContentProvider)super.getContentProvider();
 	}
 
 	private CTabItem createItem(int index, Control control) {
@@ -529,7 +565,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		pseudoConflictsFilterEnabled = any(event.getSelectedDifferenceFilters(),
 				instanceOf(PseudoConflictsFilter.class));
 		SWTUtil.safeRefresh(this, false, true);
-		SWTUtil.safeAsyncExec(new Runnable() {
+		getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
 			public void run() {
 				if (navigatable != null
 						&& (navigatable.getViewer().getSelection() == null || navigatable.getViewer()
@@ -544,7 +580,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	public void handleDifferenceGroupProviderChange(
 			@SuppressWarnings("unused") IDifferenceGroupProviderChange event) {
 		SWTUtil.safeRefresh(this, false, true);
-		SWTUtil.safeAsyncExec(new Runnable() {
+		getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
 			public void run() {
 				selectFirstDiffOrDisplayLabelViewer(getCompareConfiguration().getComparison());
 			}
@@ -714,11 +750,18 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				public void run() {
 					if (!getControl().isDisposed()) {
 						updateLayout(false, true);
+					}
+				}
+			});
 
+			getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
+				public void run() {
+					if (!getControl().isDisposed()) {
 						// title is not initialized as the comparison was set in the configuration after the
 						// refresh caused by the initialization of the viewer filters and the group providers.
 						refreshTitle();
 
+						// Selects the first difference once the tree has been filled.
 						selectFirstDiffOrDisplayLabelViewer(comparison);
 					}
 				}
@@ -1075,14 +1118,32 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 */
 	@Override
 	protected void internalRefresh(Object element) {
-		getViewer().refresh();
+		// Postpones the refresh if the content provider is in pending mode
+		getContentProvider().runWhenReady(IN_UI_SYNC, new Runnable() {
 
-		dependencyData.updateTreeItemMappings();
-		dependencyData.updateDependencies(getSelection());
+			public void run() {
+				getViewer().refresh();
 
-		internalRedraw();
+			}
+		});
+		// Updates dependency data when the viewer has been refreshed and the content provider is ready.
+		getContentProvider().runWhenReady(IN_UI_SYNC, new Runnable() {
+			public void run() {
+				dependencyData.updateTreeItemMappings();
+				dependencyData.updateDependencies(getSelection());
 
-		refreshTitle();
+				internalRedraw();
+
+			}
+		});
+		// Needs dependency data however do not need to be run in UI thread
+		getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
+
+			public void run() {
+				refreshTitle();
+			}
+		});
+
 	}
 
 	private void handleSelectionChangedEvent(SelectionChangedEvent event) {

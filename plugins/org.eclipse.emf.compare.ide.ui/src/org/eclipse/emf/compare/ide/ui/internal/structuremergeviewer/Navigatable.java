@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_ASYNC;
+
 import java.util.Arrays;
 
 import org.eclipse.compare.INavigatable;
@@ -27,14 +29,29 @@ public class Navigatable implements INavigatable {
 
 	private final WrappableTreeViewer viewer;
 
+	private final EMFCompareStructureMergeViewerContentProvider contentProvider;
+
 	/**
-	 * @param adapterFactory
+	 * @param viewer
+	 * @param contentProvider
 	 */
-	public Navigatable(WrappableTreeViewer viewer) {
+	public Navigatable(WrappableTreeViewer viewer,
+			EMFCompareStructureMergeViewerContentProvider contentProvider) {
 		this.viewer = viewer;
+		this.contentProvider = contentProvider;
 	}
 
-	public boolean selectChange(int flag) {
+	public boolean selectChange(final int flag) {
+		contentProvider.runWhenReady(IN_UI_ASYNC, new Runnable() {
+
+			public void run() {
+				internalSelectChange(flag);
+			}
+		});
+		return false;
+	}
+
+	private boolean internalSelectChange(int flag) {
 		Object nextOrPrev = null;
 		Item[] selection = viewer.getSelection(viewer.getTree());
 		Item firstSelectedItem = selection.length > 0 ? selection[0] : null;

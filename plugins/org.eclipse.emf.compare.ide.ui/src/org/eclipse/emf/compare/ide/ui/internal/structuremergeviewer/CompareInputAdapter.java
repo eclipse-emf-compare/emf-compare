@@ -14,6 +14,7 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -35,11 +36,12 @@ import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.progress.IDeferredWorkbenchAdapter;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public abstract class CompareInputAdapter extends AdapterImpl implements ICompareInput, IDisposable {
+public abstract class CompareInputAdapter extends AdapterImpl implements ICompareInput, IDisposable, IAdaptable {
 
 	/**
 	 * Store the listeners for notifications.
@@ -53,6 +55,9 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 
 	/** The item delegator to use to retrieve item */
 	private final ExtendedAdapterFactoryItemDelegator itemDelegator;
+
+	/** A {@link IDeferredWorkbenchAdapter} to which this compareInput can adapt to. */
+	private IDeferredWorkbenchAdapter deferredWorkbenchAdapter;
 
 	/**
 	 * Simple constructor storing the given {@link AdapterFactory}.
@@ -214,23 +219,23 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 	public ITypedElement getAncestor() {
 		final ITypedElement ret;
 		Notifier notifier = getComparisonObject();
-			boolean isThreeWay = isThreeWay(notifier);
-			if (isThreeWay) {
-				IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
-				if (accessorFactory != null) {
-					org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
-							.createAncestor(getAdapterFactory(), getComparisonObject());
-					if (typedElement != null) {
-						ret = AccessorAdapter.adapt(typedElement);
-					} else {
-						ret = null;
-					}
+		boolean isThreeWay = isThreeWay(notifier);
+		if (isThreeWay) {
+			IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
+			if (accessorFactory != null) {
+				org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
+						.createAncestor(getAdapterFactory(), getComparisonObject());
+				if (typedElement != null) {
+					ret = AccessorAdapter.adapt(typedElement);
 				} else {
 					ret = null;
 				}
 			} else {
 				ret = null;
 			}
+		} else {
+			ret = null;
+		}
 		return ret;
 	}
 
@@ -307,5 +312,28 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 		if (oldTarget != null) {
 			oldTarget.eAdapters().remove(this);
 		}
+		deferredWorkbenchAdapter = null;
+	}
+
+	/**
+	 * Set a {@link IDeferredWorkbenchAdapter} for this.
+	 * 
+	 * @param deferredWorkbenchAdapter
+	 */
+	public void setDeferredAdapter(IDeferredWorkbenchAdapter deferredWorkbenchAdapter) {
+		this.deferredWorkbenchAdapter = deferredWorkbenchAdapter;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see IAdaptable#getAdapter(Class)
+	 */
+	@SuppressWarnings("rawtypes")
+	public Object getAdapter(Class adapter) {
+		if (adapter == IDeferredWorkbenchAdapter.class) {
+			return deferredWorkbenchAdapter;
+		}
+		return null;
 	}
 }

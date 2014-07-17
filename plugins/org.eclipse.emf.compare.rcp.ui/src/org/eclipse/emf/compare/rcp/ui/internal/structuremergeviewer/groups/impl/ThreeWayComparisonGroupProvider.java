@@ -30,7 +30,6 @@ import com.google.common.collect.UnmodifiableIterator;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Comparison;
@@ -64,49 +63,6 @@ import org.eclipse.emf.edit.tree.TreeNode;
  * @since 4.0
  */
 public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProvider {
-
-	/** The groups provided by this provider. */
-	private ImmutableList<IDifferenceGroup> differenceGroups;
-
-	/** The comparison object. */
-	private Comparison comp;
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
-	 */
-	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
-		if (differenceGroups == null || !comparison.equals(comp)) {
-			dispose();
-			this.comp = comparison;
-
-			Adapter adapter = EcoreUtil.getAdapter(comparison.eAdapters(), SideLabelProvider.class);
-
-			final String leftLabel, rightLabel;
-			if (adapter instanceof SideLabelProvider) {
-				SideLabelProvider labelProvider = (SideLabelProvider)adapter;
-				leftLabel = labelProvider.getLeftLabel();
-				rightLabel = labelProvider.getRightLabel();
-			} else {
-				leftLabel = EMFCompareRCPUIMessages.getString("ThreeWayComparisonGroupProvider.left.label"); //$NON-NLS-1$
-				rightLabel = EMFCompareRCPUIMessages.getString("ThreeWayComparisonGroupProvider.right.label"); //$NON-NLS-1$
-			}
-
-			final IDifferenceGroup conflicts = new ConflictsGroupImpl(comparison, hasConflict(
-					ConflictKind.REAL, ConflictKind.PSEUDO), EMFCompareRCPUIMessages
-					.getString("ThreeWayComparisonGroupProvider.conflicts.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
-			final IDifferenceGroup leftSide = new BasicDifferenceGroupImpl(comparison, Predicates.and(
-					fromSide(DifferenceSource.LEFT), Predicates.not(hasConflict(ConflictKind.REAL,
-							ConflictKind.PSEUDO))), leftLabel, getCrossReferenceAdapter());
-			final IDifferenceGroup rightSide = new BasicDifferenceGroupImpl(comparison, Predicates.and(
-					fromSide(DifferenceSource.RIGHT), Predicates.not(hasConflict(ConflictKind.REAL,
-							ConflictKind.PSEUDO))), rightLabel, getCrossReferenceAdapter());
-
-			differenceGroups = ImmutableList.of(conflicts, leftSide, rightSide);
-		}
-		return differenceGroups;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -164,22 +120,19 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#getChildren()
+		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#buildSubTree()
 		 */
 		@Override
-		public List<? extends TreeNode> getChildren() {
-			if (children == null) {
-				children = newArrayList();
-				extensionDiffProcessed = newLinkedHashSet();
-				for (Conflict conflict : getComparison().getConflicts()) {
-					TreeNode buildSubTree = buildSubTree(conflict);
-					if (buildSubTree != null) {
-						children.add(buildSubTree);
-					}
+		public synchronized void buildSubTree() {
+			children = newArrayList();
+			extensionDiffProcessed = newLinkedHashSet();
+			for (Conflict conflict : getComparison().getConflicts()) {
+				TreeNode buildSubTree = buildSubTree(conflict);
+				if (buildSubTree != null) {
+					children.add(buildSubTree);
 				}
-				registerCrossReferenceAdapter(children);
 			}
-			return children;
+			registerCrossReferenceAdapter(children);
 		}
 
 		/**
@@ -301,15 +254,37 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.AbstractBuildingDifferenceGroupProvider#buildGroups(org.eclipse.emf.compare.Comparison)
 	 */
-	public void dispose() {
-		this.comp = null;
-		if (differenceGroups != null) {
-			for (IDifferenceGroup group : differenceGroups) {
-				group.dispose();
-			}
-			differenceGroups = null;
+	@Override
+	protected Collection<? extends IDifferenceGroup> buildGroups(Comparison comparison2) {
+		Adapter adapter = EcoreUtil.getAdapter(getComparison().eAdapters(), SideLabelProvider.class);
+
+		final String leftLabel, rightLabel;
+		if (adapter instanceof SideLabelProvider) {
+			SideLabelProvider labelProvider = (SideLabelProvider)adapter;
+			leftLabel = labelProvider.getLeftLabel();
+			rightLabel = labelProvider.getRightLabel();
+		} else {
+			leftLabel = EMFCompareRCPUIMessages.getString("ThreeWayComparisonGroupProvider.left.label"); //$NON-NLS-1$
+			rightLabel = EMFCompareRCPUIMessages.getString("ThreeWayComparisonGroupProvider.right.label"); //$NON-NLS-1$
 		}
+
+		final BasicDifferenceGroupImpl conflicts = new ConflictsGroupImpl(getComparison(), hasConflict(
+				ConflictKind.REAL, ConflictKind.PSEUDO), EMFCompareRCPUIMessages
+				.getString("ThreeWayComparisonGroupProvider.conflicts.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+		conflicts.buildSubTree();
+
+		final BasicDifferenceGroupImpl leftSide = new BasicDifferenceGroupImpl(getComparison(), Predicates
+				.and(fromSide(DifferenceSource.LEFT), Predicates.not(hasConflict(ConflictKind.REAL,
+						ConflictKind.PSEUDO))), leftLabel, getCrossReferenceAdapter());
+		leftSide.buildSubTree();
+
+		final BasicDifferenceGroupImpl rightSide = new BasicDifferenceGroupImpl(getComparison(), Predicates
+				.and(fromSide(DifferenceSource.RIGHT), Predicates.not(hasConflict(ConflictKind.REAL,
+						ConflictKind.PSEUDO))), rightLabel, getCrossReferenceAdapter());
+		rightSide.buildSubTree();
+
+		return ImmutableList.of(conflicts, leftSide, rightSide);
 	}
 }

@@ -10,13 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
-import com.google.common.collect.ImmutableList;
-
-import java.util.Collection;
-
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 
 /**
  * An empty difference group provider.
@@ -25,23 +19,5 @@ import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGro
  * @since 4.0
  */
 public class EmptyDifferenceGroupProvider extends AbstractDifferenceGroupProvider {
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
-	 */
-	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
-		return ImmutableList.of();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
-	 */
-	public void dispose() {
-		// do nothing;
-	}
 
 }

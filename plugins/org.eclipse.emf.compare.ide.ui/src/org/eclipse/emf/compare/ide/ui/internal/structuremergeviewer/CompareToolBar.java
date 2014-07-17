@@ -217,4 +217,14 @@ public class CompareToolBar implements ISelectionChangedListener {
 		}
 	}
 
+	/**
+	 * Enables or disables the toolbar.
+	 * 
+	 * @param enable
+	 *            Set to <code>true</code> to enable, <code>false</code> otherwise.
+	 */
+	public void setEnabled(boolean enable) {
+		toolbarManager.getControl().setEnabled(enable);
+	}
+
 }

@@ -36,6 +36,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.ui.progress.PendingUpdateAdapter;
 
 /**
  * This will be used by the structure viewer to filter out its list of differences according to a number of
@@ -129,7 +130,9 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 		if (element instanceof GroupItemProviderAdapter) {
 			Collection<?> children = ((GroupItemProviderAdapter)element).getChildren(element);
 			result = any(Iterables.filter(children, EObject.class), viewerPredicate);
-		} else if (element instanceof Adapter) {
+		} else if (element instanceof PendingUpdateAdapter){
+			result = true;
+		}else if (element instanceof Adapter) {
 			Notifier notifier = ((Adapter)element).getTarget();
 			if (notifier instanceof EObject) {
 				EObject eObject = (EObject)notifier;

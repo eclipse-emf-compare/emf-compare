@@ -40,39 +40,6 @@ import org.eclipse.emf.edit.tree.TreeNode;
  */
 public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 
-	/** The unique group provided by this provider. */
-	private IDifferenceGroup group;
-
-	/** The comparison object. */
-	private Comparison comp;
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
-	 */
-	public Collection<? extends IDifferenceGroup> getGroups(Comparison comparison) {
-		if (group == null || !comparison.equals(comp)) {
-			dispose();
-			this.comp = comparison;
-			group = new ResourceGroup(comparison, getCrossReferenceAdapter());
-		}
-		return ImmutableList.of(group);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
-	 */
-	public void dispose() {
-		this.comp = null;
-		if (this.group != null) {
-			this.group.dispose();
-			this.group = null;
-		}
-	}
-
 	/**
 	 * Specialized {@link BasicDifferenceGroupImpl} for Resources.
 	 * 
@@ -89,22 +56,14 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 			super(comparison, Predicates.<Diff> alwaysTrue(), crossReferenceAdapter);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#getChildren()
-		 */
 		@Override
-		public List<? extends TreeNode> getChildren() {
-			if (children == null) {
-				children = newArrayList();
-				extensionDiffProcessed = newLinkedHashSet();
-				for (MatchResource matchResource : getComparison().getMatchedResources()) {
-					children.add(buildSubTree(matchResource));
-				}
-				registerCrossReferenceAdapter(children);
+		public synchronized void buildSubTree() {
+			children = newArrayList();
+			extensionDiffProcessed = newLinkedHashSet();
+			for (MatchResource matchResource : getComparison().getMatchedResources()) {
+				children.add(buildSubTree(matchResource));
 			}
-			return children;
+			registerCrossReferenceAdapter(children);
 		}
 
 		/**
@@ -171,5 +130,17 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 
 			return ret;
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.AbstractBuildingDifferenceGroupProvider#buildGroups(org.eclipse.emf.compare.Comparison)
+	 */
+	@Override
+	protected Collection<? extends IDifferenceGroup> buildGroups(Comparison comparison2) {
+		ResourceGroup group = new ResourceGroup(comparison2, getCrossReferenceAdapter());
+		((BasicDifferenceGroupImpl)group).buildSubTree();
+		return ImmutableList.of(group);
 	}
 }
