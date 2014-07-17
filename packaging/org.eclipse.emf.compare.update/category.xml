@@ -21,13 +21,25 @@
    <feature id="org.eclipse.emf.compare.uml2" version="0.0.0">
       <category name="compare_integration"/>
    </feature>
+   <feature id="org.eclipse.emf.compare.uml2.source" version="0.0.0">
+      <category name="compare_integration"/>
+   </feature>
    <feature id="org.eclipse.emf.compare.diagram.gmf" version="0.0.0">
+      <category name="compare_integration"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.diagram.gmf.source" version="0.0.0">
       <category name="compare_integration"/>
    </feature>
    <feature id="org.eclipse.emf.compare.diagram.papyrus" version="0.0.0">
       <category name="compare_integration"/>
    </feature>
+   <feature id="org.eclipse.emf.compare.diagram.papyrus.source" version="0.0.0">
+      <category name="compare_integration"/>
+   </feature>
    <feature id="org.eclipse.emf.compare.subversive" version="0.0.0">
+      <category name="compare_integration"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.subversive.source" version="0.0.0">
       <category name="compare_integration"/>
    </feature>
    <category-def name="compare" label="EMF Compare">
