@@ -15,7 +15,7 @@ P2_ADMIN_URL="https://github.com/mbarbero/p2-admin/releases/download/v$P2_ADMIN_
 P2_ADMIN_ZIPPATH=$workdir/$P2_ADMIN_ZIPNAME
 P2_ADMIN_PATH=$workdir/p2-admin
 
-if [[ ! -f "$P2_ADMIN_ZIPNAME" ]]; then 
+if [[ ! -f "$P2_ADMIN_ZIPPATH" ]]; then 
 	echo "Downloading $P2_ADMIN_URL"
 	wget --no-check-certificate -q $P2_ADMIN_URL -O - > $P2_ADMIN_ZIPPATH
 fi
@@ -56,27 +56,27 @@ elif [[ "$simrel" == "kepler"* ]]; then
 http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest/,\
 http://download.eclipse.org/egit/updates-nightly"
 	p2_installIUs="org.eclipse.emf.compare.ide.ui.feature.group,\
-org.eclipse.egit.feature.group,
+org.eclipse.egit.feature.group,\
 org.eclipse.emf.sdk.feature.group"
 else
 	echo "Unknown 'simrel'=$simrel."
-	exit -1
+	exit 1
 fi
 
 
 simrel_zip_path=$workdir/$simrel_zip_name
-if [[ ! -f "$simrel_zip_name" ]]; then 
+if [[ ! -f "$simrel_zip_path" ]]; then 
 	echo "Downloading $simrel_zip_url"
 	wget --no-check-certificate -q "$simrel_zip_url" -O - > $simrel_zip_path
 fi
 
-if [[ -d "eclipse" ]]; then
-  echo "Removing old eclipse folder"
-  rm -rf "eclipse"
-fi
-
 simrel_path=$workdir/$simrel
 mkdir -p $simrel_path
+
+if [[ -d "$simrel_path/eclipse" ]]; then
+  echo "Removing old eclipse folder"
+  rm -rf "$simrel_path/eclipse"
+fi
 
 echo "Unzipping $simrel_zip_name"
 tar zxf "$simrel_zip_path" -C $simrel_path
