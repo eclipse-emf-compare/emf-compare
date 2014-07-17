@@ -18,14 +18,12 @@
   	  <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-surefire-plugin</artifactId>
-        <version>${tycho-version}</version>
         <configuration>
           <includes>
             <include>org/eclipse/emf/compare/rcp/ui/tests/suite/AllTests.class</include>
           </includes>	
           <useUIHarness>true</useUIHarness>
           <useUIThread>false</useUIThread>
-          <appArgLine>-Xmx1024m -XX:MaxPermSize=256m</appArgLine>
 		</configuration>
 	  </plugin>
     </plugins>

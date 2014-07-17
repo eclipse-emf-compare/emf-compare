@@ -3,6 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
 	http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<parent>
+	    <artifactId>emf.compare-parent</artifactId>
+	    <groupId>org.eclipse.emf.compare</groupId>
+	    <version>3.1.0-SNAPSHOT</version>
+	    <relativePath>../../org.eclipse.emf.compare-parent</relativePath>
+  	</parent>
 	<groupId>org.eclipse.emf.compare</groupId>
 	<artifactId>org.eclipse.emf.compare.gendoc</artifactId>
 	<packaging>jar</packaging>
@@ -44,15 +50,14 @@
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-antrun-plugin</artifactId>
-			<version>1.6</version>
 			<executions>
 				<execution>
 					<id>prepare</id>
 					<phase>validate</phase>
 					<configuration>
-						<tasks> 
+						<target> 
 							<unzip src="lib/jar-in-jar-loader.zip" dest="${project.build.outputDirectory}/" />
-						</tasks>
+						</target>
 					</configuration>
 					<goals>
 						<goal>run</goal>
@@ -63,7 +68,6 @@
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-compiler-plugin</artifactId>
-			<version>3.1</version>
 			<configuration>
 				<source>${jdk.version}</source>
 				<target>${jdk.version}</target>
@@ -72,9 +76,9 @@
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-jar-plugin</artifactId>
-			<version>2.4</version>
 		</plugin>
 		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-assembly-plugin</artifactId>
 			<executions>
 				<execution>
