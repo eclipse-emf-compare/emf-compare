@@ -14,14 +14,6 @@
   <packaging>eclipse-test-plugin</packaging>
   
   <build>
-    <resources>
-	      <resource>
-	        <directory>src</directory>
-	        <excludes>
-	          <exclude>**/*.java</exclude>
-	        </excludes>
-	      </resource>
-	</resources>
     <plugins>
   	<plugin>
 		<groupId>org.eclipse.tycho</groupId>
@@ -34,7 +26,6 @@
 			<useUIHarness>false</useUIHarness>
 			<useUIThread>false</useUIThread>
 			<appArgLine>-Xmx1024m -XX:MaxPermSize=256m</appArgLine>
-			<testFailureIgnore>true</testFailureIgnore>							
 		</configuration>
 	</plugin>
     </plugins>

@@ -14,20 +14,6 @@
   <packaging>eclipse-test-plugin</packaging>
   
   <build>
-    <resources>
-	      <resource>
-	        <directory>src</directory>
-	        <excludes>
-	          <exclude>**/*.java</exclude>
-	        </excludes>
-	      </resource>
-	      <resource>
-	        <directory>src-gen</directory>
-	        <excludes>
-	          <exclude>**/*.java</exclude>
-	        </excludes>
-	      </resource>
-	</resources>
     <plugins>
   	<plugin>
 		<groupId>org.eclipse.tycho</groupId>
@@ -36,9 +22,6 @@
 		<configuration>
 			<includes>
 				<include>org/eclipse/emf/compare/tests/suite/AllTests.class</include>
-                <!--
-                <include>org/eclipse/emf/compare/tests/suite/AllPluginTests.class</include>
-                -->
 			</includes>	
 			<useUIHarness>false</useUIHarness>
 			<useUIThread>false</useUIThread>
