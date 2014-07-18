@@ -24,7 +24,6 @@
             </includes>     
             <useUIHarness>true</useUIHarness>
             <useUIThread>true</useUIThread>
-			<appArgLine>-Xmx1024m -XX:MaxPermSize=256m</appArgLine>
           </configuration>
         </plugin>
     </plugins>

@@ -22,8 +22,6 @@
             <includes>
 			  <include>org/eclipse/emf/compare/diagram/papyrus/tests/suite/AllTests.class</include>
             </includes>     
-            <useUIHarness>false</useUIHarness>
-            <useUIThread>false</useUIThread>
           </configuration>
         </plugin>
     </plugins>

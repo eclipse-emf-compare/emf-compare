@@ -22,9 +22,6 @@
 			<includes>
 				<include>org/eclipse/emf/compare/tests/suite/AllTests.class</include>
 			</includes>	
-			<useUIHarness>false</useUIHarness>
-			<useUIThread>false</useUIThread>
-			<appArgLine>-Xmx1024m -XX:MaxPermSize=256m</appArgLine>
 		</configuration>
 	</plugin>
     </plugins>
