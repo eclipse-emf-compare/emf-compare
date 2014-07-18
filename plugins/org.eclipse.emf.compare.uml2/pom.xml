@@ -3,22 +3,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>emf.compare-parent</artifactId>
     <groupId>org.eclipse.emf.compare</groupId>
-    <version>3.1.0-SNAPSHOT</version>
-     <relativePath>../../org.eclipse.emf.compare-parent</relativePath>
+    <artifactId>emf.compare-bundle-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../../org.eclipse.emf.compare-parent/bundle-parent</relativePath>
   </parent>
   <groupId>org.eclipse.emf.compare</groupId>
   <artifactId>org.eclipse.emf.compare.uml2</artifactId>
   <version>2.2.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-source-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
 </project>

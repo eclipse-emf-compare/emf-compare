@@ -333,7 +333,6 @@
             <groupId>org.eclipse.tycho</groupId>
             <artifactId>target-platform-configuration</artifactId>
             <configuration>
-              <includePackedArtifacts>true</includePackedArtifacts>
               <target>
                 <artifact>
                   <groupId>org.eclipse.emf.compare</groupId>
@@ -379,7 +378,6 @@
             <groupId>org.eclipse.tycho</groupId>
             <artifactId>target-platform-configuration</artifactId>
             <configuration>
-              <includePackedArtifacts>true</includePackedArtifacts>
               <target>
                 <artifact>
                   <groupId>org.eclipse.emf.compare</groupId>
@@ -424,7 +422,6 @@
             <groupId>org.eclipse.tycho</groupId>
             <artifactId>target-platform-configuration</artifactId>
             <configuration>
-              <includePackedArtifacts>true</includePackedArtifacts>
               <target>
                 <artifact>
                   <groupId>org.eclipse.emf.compare</groupId>
@@ -460,7 +457,6 @@
             <groupId>org.eclipse.tycho</groupId>
             <artifactId>target-platform-configuration</artifactId>
             <configuration>
-              <includePackedArtifacts>true</includePackedArtifacts>
               <target>
                 <artifact>
                   <groupId>org.eclipse.emf.compare</groupId>
@@ -496,7 +492,6 @@
             <groupId>org.eclipse.tycho</groupId>
             <artifactId>target-platform-configuration</artifactId>
             <configuration>
-              <includePackedArtifacts>true</includePackedArtifacts>
               <target>
                 <artifact>
                   <groupId>org.eclipse.emf.compare</groupId>
@@ -521,7 +516,6 @@
             <groupId>org.eclipse.tycho</groupId>
             <artifactId>target-platform-configuration</artifactId>
             <configuration>
-              <includePackedArtifacts>true</includePackedArtifacts>
               <target>
                 <artifact>
                   <groupId>org.eclipse.emf.compare</groupId>
@@ -546,7 +540,6 @@
             <groupId>org.eclipse.tycho</groupId>
             <artifactId>target-platform-configuration</artifactId>
             <configuration>
-              <includePackedArtifacts>true</includePackedArtifacts>
               <target>
                 <artifact>
                   <groupId>org.eclipse.emf.compare</groupId>
@@ -737,7 +730,6 @@
             <groupId>org.eclipse.tycho</groupId>
             <artifactId>target-platform-configuration</artifactId>
             <configuration>
-              <includePackedArtifacts>true</includePackedArtifacts>
               <target>
                 <artifact>
                   <groupId>org.eclipse.emf.compare</groupId>
