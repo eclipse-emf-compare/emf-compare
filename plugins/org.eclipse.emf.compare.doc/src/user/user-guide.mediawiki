@@ -473,6 +473,15 @@ The bottom panel (2) is used to define a synchronization behavior between select
 ** If your answer is "No", nothing will be synchronized. Next time you will start a comparison, the default group will be defined by the preferences.
 ** If you check "Do not ask me again", the above behaviors will be executed and the synchronization behavior will change. It will be set to "Always" if you have selected "Yes". It will be set to "Never" if you have selected "No".
 
+==== Items providers ====
+
+In EMF item providers are used to define how elements are displayed (label, icon etc..). They belong to the [http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.emf.doc%2Freferences%2Foverview%2FEMF.Edit.html EMF.Edit] framework. Item providers are generally contributed to EMF however it can happen that some of them are directly contributed to EMF Compare. In general, it's done if you want to customize the way elements are displayed in EMF Compare without impacting other editors. If you go to the preferences of EMF Compare you will find a page named "Item providers".
+
+[[Image:../images/Item_Providers_Preference_Page.png]]
+
+In this page, you will find all item providers that have been directly contributed to EMF Compare. Some elements are displayed in grayed meaning that can not be disabled. In our example you can see that "Notation item provider" is grayed. Indeed disabling it would produce incomprehensible results in EMF Compare UI on diagram comparisons. That's why its provider decided to prevents user from disabling it. All other elements can be enabled/disabled using the checkbox on the left of each label. For example the two other item providers can be disabled. If you want to know what an item provider is for, you can select it and a short description will appear in the "Description" field. For example, if you select "Stereotyped element item provider" you would read "This provider displays stereotyped elements like they were a new kind of UML element (it uses stereotype's icon and custom label)". This one can be disabled since without it a comparison result in EMF Compare UI would still be understandable for a user.
+
+
 == Features ==
 
 === Grouping Differences  ===
