@@ -129,8 +129,10 @@ final class RevisionedURIConverter extends StorageURIConverter {
 
 				if (provider != null) {
 					final IStorage storage = provider.getStorage(new NullProgressMonitor());
-					getLoadedRevisions().add(storage);
-					return storage.getContents();
+					if (storage != null) {
+						getLoadedRevisions().add(storage);
+						return storage.getContents();
+					}
 				}
 			} catch (CoreException e) {
 				logError(e);
