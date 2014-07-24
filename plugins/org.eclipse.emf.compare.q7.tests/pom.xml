@@ -1,47 +1,55 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse.emf.compare</groupId>
   <artifactId>org.eclipse.emf.compare.q7.test</artifactId>
   <version>3.0.0-SNAPSHOT</version>
   <packaging>q7test</packaging>
-	
+    
   <pluginRepositories>
-	<pluginRepository>
-	  <id>q7-releases</id>
-	  <name>Xored Maven repository</name>
-	  <url>http://maven.xored.com/nexus/content/repositories/q7-releases/</url>
-	</pluginRepository>
-  </pluginRepositories>	
+    <pluginRepository>
+      <id>q7-releases</id>
+      <name>Xored Maven repository</name>
+      <url>http://maven.xored.com/nexus/content/repositories/q7-releases/</url>
+    </pluginRepository>
+    <pluginRepository>
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <id>q7-snapshots</id>
+      <name>Xored Maven repository</name>
+      <url>http://maven.xored.com/nexus/content/repositories/q7-snapshots/</url>
+    </pluginRepository>
+  </pluginRepositories> 
   
   <properties>
-	<q7-runner-version>1.3.13-RC1</q7-runner-version>
-	<q7-maven-version>1.4.0-B1</q7-maven-version>
-	<exec-maven-plugin-version>1.2.1</exec-maven-plugin-version>
-	<os-ws-arch>linux gtk x86_64</os-ws-arch>
+    <q7-runner-version>1.3.13-SNAPSHOT</q7-runner-version>
+    <q7-maven-version>1.4.0-B1</q7-maven-version>
+    <exec-maven-plugin-version>1.2.1</exec-maven-plugin-version>
+    <os-ws-arch>linux gtk x86_64</os-ws-arch>
   </properties>
  
   <build>
    <plugins>
      <plugin>
-	  <artifactId>exec-maven-plugin</artifactId>
-	  <groupId>org.codehaus.mojo</groupId>
-	  <version>${exec-maven-plugin-version}</version>
-	  <executions>
-	    <execution><!-- Run our version calculation script -->
-	      <id>AUT Generation</id>
-	      <phase>generate-sources</phase>
-	      <goals>
-	        <goal>exec</goal>
-	      </goals>
-	      <configuration>
-	        <executable>bash</executable>
-	        <commandlineArgs>${basedir}/createAUT.sh ${os-ws-arch} ${profile-id} ${project.build.directory}</commandlineArgs>
-	      </configuration>
-	    </execution>
-	  </executions>
-	  </plugin>
-	</plugins>
+      <artifactId>exec-maven-plugin</artifactId>
+      <groupId>org.codehaus.mojo</groupId>
+      <version>${exec-maven-plugin-version}</version>
+      <executions>
+        <execution><!-- Run our version calculation script -->
+          <id>AUT Generation</id>
+          <phase>generate-sources</phase>
+          <goals>
+            <goal>exec</goal>
+          </goals>
+          <configuration>
+            <executable>bash</executable>
+            <commandlineArgs>${basedir}/createAUT.sh ${os-ws-arch} ${profile-id} ${project.build.directory}</commandlineArgs>
+          </configuration>
+        </execution>
+      </executions>
+      </plugin>
+    </plugins>
   </build>
  
   <profiles>
@@ -55,33 +63,33 @@
     </activation>
     <build>
       <plugins>
-		<plugin>
-		<groupId>com.xored.q7</groupId>
-		<artifactId>q7-maven-plugin</artifactId>
-		<version>${q7-maven-version}</version>
-		<extensions>true</extensions>
-		<configuration>
-		  <aut>
-			<explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
-		  </aut>
-		  <testOptions>
-			<autStartupTimeout>600</autStartupTimeout>
-			<execTimeout>7200</execTimeout>
-		  </testOptions>
-		  <suites>
-		  	<suite>TestSuite.Full</suite>
-		  </suites>
-		  <q7>
-			<version>${q7-runner-version}</version>
+        <plugin>
+        <groupId>com.xored.q7</groupId>
+        <artifactId>q7-maven-plugin</artifactId>
+        <version>${q7-maven-version}</version>
+        <extensions>true</extensions>
+        <configuration>
+          <aut>
+            <explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
+          </aut>
+          <testOptions>
+            <autStartupTimeout>600</autStartupTimeout>
+            <execTimeout>7200</execTimeout>
+          </testOptions>
+          <suites>
+            <suite>TestSuite.Full</suite>
+          </suites>
+          <q7>
+            <version>${q7-runner-version}</version>
             <licenseUrl>http://licensing.xored.com/pool/05bc9cc5-a261-0280-a50e-406c8f046395</licenseUrl>
             <vmArgs>
               <vmArg>-Dcom.xored.q7.runner.returnTestFailure=true</vmArg>
               <vmArg>-Dhttp.proxyHost=${http.proxyHost}</vmArg>
               <vmArg>-Dhttp.proxyPort=${http.proxyPort}</vmArg>
             </vmArgs>
-		  </q7>
-		</configuration>
-	  </plugin>
+          </q7>
+        </configuration>
+      </plugin>
       </plugins>
     </build>
   </profile>
@@ -92,33 +100,33 @@
     </properties>
     <build>
       <plugins>
-		<plugin>
-		<groupId>com.xored.q7</groupId>
-		<artifactId>q7-maven-plugin</artifactId>
-		<version>${q7-maven-version}</version>
-		<extensions>true</extensions>
-		<configuration>
-		  <aut>
-			<explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
-		  </aut>
-		  <testOptions>
-			<autStartupTimeout>600</autStartupTimeout>
-			<execTimeout>7200</execTimeout>
-		  </testOptions>		  
-		  <suites>
-		  	<suite>TestSuite.Core</suite>
-		  </suites>
-		  <q7>
-			<version>${q7-runner-version}</version>
+        <plugin>
+        <groupId>com.xored.q7</groupId>
+        <artifactId>q7-maven-plugin</artifactId>
+        <version>${q7-maven-version}</version>
+        <extensions>true</extensions>
+        <configuration>
+          <aut>
+            <explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
+          </aut>
+          <testOptions>
+            <autStartupTimeout>600</autStartupTimeout>
+            <execTimeout>7200</execTimeout>
+          </testOptions>          
+          <suites>
+            <suite>TestSuite.Core</suite>
+          </suites>
+          <q7>
+            <version>${q7-runner-version}</version>
             <licenseUrl>http://licensing.xored.com/pool/05bc9cc5-a261-0280-a50e-406c8f046395</licenseUrl>
             <vmArgs>
               <vmArg>-Dcom.xored.q7.runner.returnTestFailure=true</vmArg>
               <vmArg>-Dhttp.proxyHost=${http.proxyHost}</vmArg>
               <vmArg>-Dhttp.proxyPort=${http.proxyPort}</vmArg>
             </vmArgs>
-		  </q7>
-		</configuration>
-	  </plugin>
+          </q7>
+        </configuration>
+      </plugin>
       </plugins>
     </build>
   </profile>
