@@ -63,6 +63,7 @@ else
 	exit 1
 fi
 
+
 simrel_zip_path=$workdir/$simrel_zip_name
 if [[ ! -f "$simrel_zip_path" ]]; then 
 	echo "Downloading $simrel_zip_url"
@@ -84,19 +85,3 @@ echo "Provisioning AUT"
 echo "  Repositories: $p2_repositories"
 echo "  IUs: $p2_installIUs"
 $P2_ADMIN_PATH/p2-admin -vm $JAVA_HOME/bin/java -application org.eclipse.equinox.p2.director -repository "$p2_repositories" -installIU "$p2_installIUs" -tag Q7_AUT -destination "$simrel_path/eclipse" -profile SDKProfile
-
-
-$simrel_path/eclipse/eclipse -data $workdir/workspace-without-q7 &
-eclipse_pid=$!
-# make sure java process started
-sleep 2
-
-# grab java pid
-java_pid=`ps x | grep java | grep $simrel | awk '{print $1}'`
-
-# wait a bit to make sure workbench is running
-sleep 30
-
-# shutdown aut
-kill $eclipse_pid
-kill $java_pid
