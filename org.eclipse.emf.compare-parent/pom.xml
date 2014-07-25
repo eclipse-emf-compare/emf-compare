@@ -40,8 +40,8 @@
 
     <!-- plugins versions -->
     <!-- use 'mvn versions:display-plugin-updates' to check for the latest -->
-    <tycho-version>0.20.0</tycho-version>
-    <tycho-extras-version>0.20.0</tycho-extras-version>
+    <tycho-version>0.21.0</tycho-version>
+    <tycho-extras-version>0.21.0</tycho-extras-version>
     <maven-resources-version>2.6</maven-resources-version>
     <maven-antrun-version>1.7</maven-antrun-version>
     <findbugs-maven-version>2.5.4</findbugs-maven-version>
