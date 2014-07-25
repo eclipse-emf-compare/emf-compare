@@ -593,7 +593,6 @@ The first thing to understand is that this comparison is a 3-way comparison. Thi
 
 Both scenario 1 and 2 used the master branch as starting point. This is why it has being used as common ancestor. We will see later on this tutorial how EMF Compare uses this third input. You can display its content in the user interface by clicking on "Show ancestor button" ([[Image:../images/EMF_Compare_Tuto_Show_Ancestor_Button.png]]).
 
-<div id="EMF_Compare_Tuto_Scenario2_Common_Ancestor_Img"></div>
 [[Image:../images/EMF_Compare_Tuto_Scenario2_Common_Ancestor2.png | Common Ancestor 2]]
 
 * Let's have a look on the differences.
@@ -615,7 +614,7 @@ You can notice that there is nothing highlighted in red. It seems that rejecting
 * Reject the difference named "375 <nowiki>[page changed]</nowiki>".
 [[Image:../images/EMF_Compare_Tuto_Scenario2_Reject_375.png]]
 
-In this case it has only rejected the current difference. If you look at the value of the attribute you will see that the number of page has been set to 100. This value is the value of the same attribute in the common ancestor model (see [[#EMF_Compare_Tuto_Scenario2_Common_Ancestor_Img | Common ancestor model]]). In 3-way comparison you can either accept the version of an attribute from one of the two input version (Scenario 1 or Scenario 2) or return the version to its common ancestor value (master).
+In this case it has only rejected the current difference. If you look at the value of the attribute you will see that the number of page has been set to 100. This value is the value of the same attribute in the common ancestor model (see picture "Common Ancestor 2"). In 3-way comparison you can either accept the version of an attribute from one of the two input version (Scenario 1 or Scenario 2) or return the version to its common ancestor value (master).
 
 Obviously you can do the same actions on the difference named "374 <nowiki>[page changed]</nowiki>". It will:
 * Set the value of the attribute to 374 and reject the other difference if you accept it.

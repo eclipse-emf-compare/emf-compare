@@ -23,7 +23,35 @@
   <artifactId>org.eclipse.emf.compare.doc</artifactId>
   <version>3.1.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
-  
+
+  <properties>
+    <simrel>luna</simrel>
+    <platform-isv>org.eclipse.platform.doc.isv/reference/api</platform-isv>
+    <javadoc-args>
+      -quiet
+      -breakiterator
+      -use
+      -splitIndex
+      -windowtitle "EMF Compare API Specification"
+      -doctitle "EMF Compare API Specification"
+      -header "&lt;span style='font-size:small'&gt;&lt;b&gt;EMF Compare&lt;/b&gt;&lt;br&gt;${unqualifiedVersion}.${buildQualifier}&lt;/span&gt;"
+      -bottom "&lt;br&gt;&lt;span style='font-size:small;float:right'&gt;Copyright (c) 2006, 2014 Obeo and others. All rights reserved.&lt;/span&gt;"
+      -tag 'noimplement:a:Restriction:'
+      -tag 'noextend:a:Restriction:'
+      -tag 'noreference:a:Restriction:'
+      -tag 'noinstantiate:a:Restriction:'
+      -tag 'nooverride:a:Restriction:'
+      -tag 'category:a:Category:'
+      -tag 'generated:a:Generated:'
+      -tag 'model:X'
+      -tag 'ordered:X'
+      -link http://download.oracle.com/javase/8/docs/api/
+      -link http://www.osgi.org/javadoc/r5/core/
+      -link http://www.osgi.org/javadoc/r5/enterprise/
+      -link http://download.eclipse.org/modeling/emf/emf/javadoc/2.9.0/
+    </javadoc-args>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
@@ -75,7 +103,11 @@
                 <argument>-location</argument>
                 <argument>${project.basedir}</argument>
                 <argument>-eclipsehelp</argument>
+                <argument>${project.basedir}/help</argument>
                 <argument>-website</argument>
+                <argument>${project.build.directory}/website</argument>
+                <argument>-version</argument>
+                <argument>${unqualifiedVersion}.${buildQualifier}</argument>
               </arguments>
             </configuration>
           </execution>
@@ -83,4 +115,61 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <!--
+        Do the javadoc generation in a profile to keep standard builds (e.g. gerrit) fast.
+      -->
+      <id>javadoc</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho.extras</groupId>
+            <artifactId>tycho-document-bundle-plugin</artifactId>
+            <version>${tycho-version}</version>
+            <executions>
+              <execution>
+                <id>eclipse-javadoc</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>javadoc</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.basedir}/help/developer/javadoc</outputDirectory>
+                  <tocFile>${project.basedir}/help/developer/toc-javadoc.xml</tocFile>
+                  <javadocOptions>
+                    <additionalArguments>
+                      <additionalArgument>${javadoc-args}</additionalArgument>
+                      <additionalArgument>
+                        -linkoffline ./../../../${platform-isv} http://help.eclipse.org/${simrel}/topic/${platform-isv}
+                      </additionalArgument>
+                    </additionalArguments>
+                  </javadocOptions>
+                </configuration>
+              </execution>
+              <execution>
+                <id>website-javadoc</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>javadoc</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/website/developer/javadoc</outputDirectory>
+                  <tocFile>${project.build.directory}/toc-javadoc.xml</tocFile>
+                  <javadocOptions>
+                    <additionalArguments>
+                      <additionalArgument>${javadoc-args}</additionalArgument>
+                      <additionalArgument>
+                        -link http://help.eclipse.org/${simrel}/topic/${platform-isv}
+                      </additionalArgument>
+                    </additionalArguments>
+                  </javadocOptions>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

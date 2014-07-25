@@ -37,11 +37,6 @@
 			<artifactId>org.eclipse.mylyn.wikitext.mediawiki.core</artifactId>
 			<version>1.9.0.20131007-2055</version>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jgit</groupId>
-			<artifactId>org.eclipse.jgit</artifactId>
-			<version>3.2.0.201312181205-r</version>
-		</dependency>
 	</dependencies>
  
 	<build>
@@ -99,7 +94,7 @@
 					<manifestEntries>
 						<Class-Path>.</Class-Path>
 						<Rsrc-Main-Class>org.eclipse.emf.compare.doc.WikiTextToHTML</Rsrc-Main-Class>
-						<Rsrc-Class-Path>./ org.eclipse.jgit-3.2.0.201312181205-r.jar org.eclipse.mylyn.wikitext.core-1.9.0.20131007-2055.jar org.eclipse.mylyn.wikitext.mediawiki.core-1.9.0.20131007-2055.jar</Rsrc-Class-Path>
+						<Rsrc-Class-Path>./ org.eclipse.mylyn.wikitext.core-1.9.0.20131007-2055.jar org.eclipse.mylyn.wikitext.mediawiki.core-1.9.0.20131007-2055.jar</Rsrc-Class-Path>
 					</manifestEntries>
 				</archive>
 			</configuration>

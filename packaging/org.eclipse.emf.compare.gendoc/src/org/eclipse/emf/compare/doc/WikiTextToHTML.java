@@ -32,16 +32,10 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jgit.api.DescribeCommand;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.DefaultSplittingStrategy;
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.NoSplittingStrategy;
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplitOutlineItem;
@@ -116,8 +110,8 @@ public class WikiTextToHTML {
 	private boolean genEclipseHelp;
 
 	private boolean genWebsite;
-	
-	private static java.util.Date NOW = Calendar.getInstance().getTime();
+
+	private String version;
 	
 	public static void main(String[] args) throws Exception {
 		WikiTextToHTML wikiTextToHTML = new WikiTextToHTML();
@@ -129,6 +123,11 @@ public class WikiTextToHTML {
 		
 		if (targetRootFolder == null) {
 			System.err.println("Error: unable to find -location argument");
+			usage();
+			System.exit(1);
+		}
+		if (version == null || "".equals(version.trim())) {
+			System.err.println("Error: unable to find -version argument");
 			usage();
 			System.exit(1);
 		}
@@ -160,8 +159,6 @@ public class WikiTextToHTML {
 		foldersToCopy.add(targetRootFolder.resolve(sourceFolder).resolve("images"));
 		foldersToCopy.add(targetRootFolder.resolve(sourceFolder).resolve("resources"));
 		
-		targetWebsiteFolder = DEFAULT_FS.getPath("target", "website").resolve(gitDescribe());
-		targetHelpFolder = DEFAULT_FS.getPath("help");
 		final Path resolvedTargetHelpFolder = targetRootFolder.resolve(targetHelpFolder);
 
 		if (genEclipseHelp) {
@@ -178,7 +175,11 @@ public class WikiTextToHTML {
 	        @Override
 	        public FileVisitResult visitFile(Path markupPath, BasicFileAttributes attrs) throws IOException {
 	            if (mediawikiPattern.matches(markupPath)) {
-	            	processFile(sourceFolder, targetWebsiteFolder, targetHelpFolder, markupPath);
+	            	if ("~javadoc.mediawiki".equals(markupPath.getFileName().toString())) {
+	            		processJavadoc(sourceFolder, targetWebsiteFolder, targetHelpFolder, markupPath);
+	            	} else {
+	            		processFile(sourceFolder, targetWebsiteFolder, targetHelpFolder, markupPath);
+	            	}
 	            }
 	            return FileVisitResult.CONTINUE;
 	        }
@@ -237,7 +238,7 @@ public class WikiTextToHTML {
 	 * 
 	 */
 	private void usage() {
-		System.out.println("Usage: wikiTextToHTML -location path [-eclipsehelp] [-website]");
+		System.out.println("Usage: wikiTextToHTML -location path -version version [-eclipsehelp path] [-website path]");
 	}
 
 	private void processCommandLineArgs(String[] args) throws Exception {
@@ -258,11 +259,25 @@ public class WikiTextToHTML {
 
 			if (option.equalsIgnoreCase("-eclipsehelp")) { //$NON-NLS-1$
 				genEclipseHelp = true;
+				targetHelpFolder = DEFAULT_FS.getPath(arg);
 			}
 
 			if (option.equalsIgnoreCase("-website")) { //$NON-NLS-1$
 				genWebsite = true;
+				targetWebsiteFolder = DEFAULT_FS.getPath(arg);
 			}
+			
+			if (option.equalsIgnoreCase("-version")) { //$NON-NLS-1$
+				version = arg.trim();
+			}
+		}
+		
+		if (targetHelpFolder.isAbsolute()) {
+			targetHelpFolder = targetRootFolder.relativize(targetHelpFolder);
+		}
+		
+		if (targetWebsiteFolder.isAbsolute()) {
+			targetWebsiteFolder = targetRootFolder.relativize(targetWebsiteFolder);
 		}
 	}
 	
@@ -289,6 +304,35 @@ public class WikiTextToHTML {
 			}
 		}
 		return sb.toString().trim();
+	}
+	
+	private void processJavadoc(final Path sourceFolder,
+			final Path targetWebsiteFolder,
+			final Path targetHelpFolder, Path markupPath)
+			throws IOException, FileNotFoundException,
+			UnsupportedEncodingException {
+		System.out.println("Processing " + markupPath);
+		
+		Path relativeMarkupPath = targetRootFolder.resolve(sourceFolder).relativize(markupPath);
+		
+		Path relativeTOCPath = relativeMarkupPath.getParent().resolve("toc-javadoc.xml");
+		Path targetTOC = targetHelpFolder.resolve(relativeTOCPath);
+		Path targetHelp = targetHelpFolder.resolve(changeFilename(relativeMarkupPath, ".html"));
+
+		if (genEclipseHelp) {
+			mkdirs(targetRootFolder.resolve(targetTOC));
+			mkdirs(targetRootFolder.resolve(targetHelp));
+		}
+
+		// for eclipse help
+		if (genEclipseHelp) {
+			final PathMatcher indexPattern = DEFAULT_FS.getPathMatcher("glob:**/index.mediawiki");
+			if (!indexPattern.matches(markupPath)) {
+				primaryTOCWriter.startTopic("Reference", null);
+				primaryTOCWriter.createLink(relativeTOCPath);
+				primaryTOCWriter.endTopic();
+			}
+		}
 	}
 	
 	private void processFile(final Path sourceFolder,
@@ -318,15 +362,13 @@ public class WikiTextToHTML {
 		
 		final String markupContentWithTOC;
 		if ("index.mediawiki".equals(markupPath.getFileName().toString())) {
-			markupContentWithTOC = markupContent.replaceFirst("=(.*)=", "=EMF Compare — $1=\n\nVersion " + gitDescribe() +"\n\n") + 
-					"\n\nVersion " + gitDescribe() +
-					"\n\nLast updated " + NOW;
+			markupContentWithTOC = markupContent.replaceFirst("=(.*)=", "=EMF Compare — $1=\n\nVersion " + version +"\n\n") + 
+					"\n\nVersion " + version;
 		} else {
 			Path relativeToRoot = targetHTML.getParent().relativize(targetWebsiteFolder.resolve("index.html"));
-			markupContentWithTOC = markupContent.replaceFirst("=(.*)=", "=EMF Compare — $1=\n\nVersion " + gitDescribe() +"\n\n__TOC__\n\n") + 
+			markupContentWithTOC = markupContent.replaceFirst("=(.*)=", "=EMF Compare — $1=\n\nVersion " + version +"\n\n__TOC__\n\n") + 
 					"\n\nPart of ["+relativeToRoot+" EMF Compare Documentation]" +
-					"\n\nVersion " + gitDescribe() +
-					"\n\nLast updated " + NOW;
+					"\n\nVersion " + version;
 		}
 
 		if (performValidation(markupPath, markupContent)) {
@@ -350,6 +392,8 @@ public class WikiTextToHTML {
 					primaryTOCWriter.endTopic();
 				}
 			}
+		} else {
+			System.exit(1);
 		}
 	}
 
@@ -530,24 +574,6 @@ public class WikiTextToHTML {
 			parser.setBuilder(splittingBuilder);
 			parser.parse(markupContent);
 		}
-	}
-
-	private String gitDescribe() {
-		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		try {
-			Repository repo = builder.setWorkTree(new File("."))
-					.readEnvironment() // scan environment GIT_* variables
-					.findGitDir() // scan up the file system tree
-					.build();
-			Git git = new Git(repo);
-			DescribeCommand command = git.describe();
-			return command.call();
-		} catch (IOException e) {
-			new RuntimeException(e);
-		} catch (GitAPIException e) {
-			new RuntimeException(e);
-		}
-		return "";
 	}
 
 	private void copy(final Path sourceFolder,

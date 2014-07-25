@@ -10,6 +10,7 @@
 * [developer/developer-guide.html|Developer guide]
 * [developer/logical-model.html|Logical model]
 * [developer/how-to-open-compare-dialog.html|How to open compare dialog]
+* [developer/javadoc/index.html|API reference (Javadoc)]
 
 == Tutorial ==
 
