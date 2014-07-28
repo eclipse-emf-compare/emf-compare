@@ -45,11 +45,10 @@
       -tag 'generated:a:Generated:'
       -tag 'model:X'
       -tag 'ordered:X'
-      -link http://download.oracle.com/javase/8/docs/api/
-      -link http://www.osgi.org/javadoc/r5/core/
-      -link http://www.osgi.org/javadoc/r5/enterprise/
-      -link http://download.eclipse.org/modeling/emf/emf/javadoc/2.9.0/
-      ${JAVADOC_OPTS}
+      -linkoffline http://download.oracle.com/javase/8/docs/api/ ${basedir}/javadoc-offline-package-lists/javase-8
+      -linkoffline http://www.osgi.org/javadoc/r5/core/ ${basedir}/javadoc-offline-package-lists/osgi-core-r5
+      -linkoffline http://www.osgi.org/javadoc/r5/enterprise/ ${basedir}/javadoc-offline-package-lists/osgi-enterprise-r5
+      -linkoffline http://download.eclipse.org/modeling/emf/emf/javadoc/2.9.0/ ${basedir}/javadoc-offline-package-lists/emf-2.9
     </javadoc-args>
   </properties>
 
@@ -142,7 +141,7 @@
                     <additionalArguments>
                       <additionalArgument>${javadoc-args}</additionalArgument>
                       <additionalArgument>
-                        -linkoffline ./../../../${platform-isv} http://help.eclipse.org/${simrel}/topic/${platform-isv}
+                        -linkoffline ./../../../${platform-isv} ${basedir}/javadoc-offline-package-lists/eclipse-platform-${simrel}
                       </additionalArgument>
                     </additionalArguments>
                   </javadocOptions>
@@ -161,7 +160,7 @@
                     <additionalArguments>
                       <additionalArgument>${javadoc-args}</additionalArgument>
                       <additionalArgument>
-                        -link http://help.eclipse.org/${simrel}/topic/${platform-isv}
+                        -linkoffline http://help.eclipse.org/${simrel}/topic/${platform-isv} ${basedir}/javadoc-offline-package-lists/eclipse-platform-${simrel}
                       </additionalArgument>
                     </additionalArguments>
                   </javadocOptions>
@@ -172,15 +171,51 @@
         </plugins>
       </build>
     </profile>
-    <profile>
+    <!--profile>
+      These should be reactivated when Tycho 0.22 will be used. We will be able to use
+      jvmOptions to add these properties to the javadoc options.
+      <id>env.http.proxyHost</id>
       <activation>
         <property>
-          <name>!env.JAVADOC_OPTS</name>
+          <name>!env.http.proxyHost</name>
         </property>
       </activation>
       <properties>
-         <JAVADOC_OPTS></JAVADOC_OPTS>
+         <http.proxyHost>proxy.eclipse.org</http.proxyHost>
       </properties>
     </profile>
+    <profile>
+      <id>env.http.proxyPort</id>
+      <activation>
+        <property>
+          <name>!env.http.proxyPort</name>
+        </property>
+      </activation>
+      <properties>
+         <http.proxyPort>proxy.eclipse.org</http.proxyPort>
+      </properties>
+    </profile>
+    <profile>
+      <id>env.https.proxyHost</id>
+      <activation>
+        <property>
+          <name>!env.https.proxyHost</name>
+        </property>
+      </activation>
+      <properties>
+         <https.proxyHost>proxy.eclipse.org</https.proxyHost>
+      </properties>
+    </profile>
+    <profile>
+      <id>env.https.proxyPort</id>
+      <activation>
+        <property>
+          <name>!env.https.proxyPort</name>
+        </property>
+      </activation>
+      <properties>
+         <https.proxyPort>proxy.eclipse.org</https.proxyPort>
+      </properties>
+    </profile-->
   </profiles>
 </project>
