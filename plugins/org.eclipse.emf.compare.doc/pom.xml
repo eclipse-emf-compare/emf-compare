@@ -49,6 +49,7 @@
       -link http://www.osgi.org/javadoc/r5/core/
       -link http://www.osgi.org/javadoc/r5/enterprise/
       -link http://download.eclipse.org/modeling/emf/emf/javadoc/2.9.0/
+      ${JAVADOC_OPTS}
     </javadoc-args>
   </properties>
 
@@ -170,6 +171,16 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <activation>
+        <property>
+          <name>!env.JAVADOC_OPTS</name>
+        </property>
+      </activation>
+      <properties>
+         <JAVADOC_OPTS></JAVADOC_OPTS>
+      </properties>
     </profile>
   </profiles>
 </project>
