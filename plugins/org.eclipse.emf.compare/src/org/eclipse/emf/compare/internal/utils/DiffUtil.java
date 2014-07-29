@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - Fixes for bug 440679
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
 
@@ -801,14 +802,31 @@ public final class DiffUtil {
 	 * @see #findInsertionIndex(Comparison, Iterable, List, List, Object)
 	 */
 	public static int findInsertionIndex(Comparison comparison, Diff diff, boolean rightToLeft) {
+		final List<Object> sourceList = getSourceList(diff, rightToLeft);
+		final List<Object> targetList = getTargetList(comparison, diff, rightToLeft);
+		final Object changedValue = getChangedValue(diff);
+
+		Iterable<Object> ignoredElements = Iterables.concat(computeIgnoredElements(targetList, diff),
+				Collections.singleton(changedValue));
+		// We know we'll have to iterate quite a number of times on this one.
+		ignoredElements = Lists.newArrayList(ignoredElements);
+
+		return DiffUtil.findInsertionIndex(comparison, ignoredElements, sourceList, targetList, changedValue);
+	}
+
+	/**
+	 * Get the changed feature of the given difference.
+	 * 
+	 * @param diff
+	 *            the given difference.
+	 * @return the feature of the difference.
+	 */
+	private static EStructuralFeature getChangedFeature(Diff diff) {
 		final EStructuralFeature feature;
-		final Object value;
 		if (diff instanceof AttributeChange) {
 			feature = ((AttributeChange)diff).getAttribute();
-			value = ((AttributeChange)diff).getValue();
 		} else if (diff instanceof ReferenceChange) {
 			feature = ((ReferenceChange)diff).getReference();
-			value = ((ReferenceChange)diff).getValue();
 		} else {
 			throw new IllegalArgumentException(EMFCompareMessages.getString(
 					"DiffUtil.IllegalDiff", diff.eClass().getName())); //$NON-NLS-1$
@@ -817,45 +835,27 @@ public final class DiffUtil {
 			throw new IllegalArgumentException(EMFCompareMessages.getString(
 					"DiffUtil.IllegalFeature", feature.getName())); //$NON-NLS-1$
 		}
-		final Match match = diff.getMatch();
+		return feature;
+	}
 
-		final EObject expectedContainer;
-		if (feature instanceof EReference && ((EReference)feature).isContainment()
-				&& diff.getKind() == DifferenceKind.MOVE) {
-			// The value can only be an EObject, and its match cannot be null.
-			// If any of these two assumptions is wrong, something went horribly awry beforehand.
-			final Match valueMatch = comparison.getMatch((EObject)value);
-
-			final Match targetContainerMatch;
-			// If it exists, use the source side's container as reference
-			if (rightToLeft && valueMatch.getRight() != null) {
-				targetContainerMatch = comparison.getMatch(valueMatch.getRight().eContainer());
-			} else if (!rightToLeft && valueMatch.getLeft() != null) {
-				targetContainerMatch = comparison.getMatch(valueMatch.getLeft().eContainer());
-			} else {
-				// Otherwise, the value we're moving on one side has been removed from its source side.
-				targetContainerMatch = comparison.getMatch(valueMatch.getOrigin().eContainer());
-			}
-			if (rightToLeft) {
-				expectedContainer = targetContainerMatch.getLeft();
-			} else {
-				expectedContainer = targetContainerMatch.getRight();
-			}
-		} else if (rightToLeft) {
-			expectedContainer = match.getLeft();
+	/**
+	 * Get the value of the given difference.
+	 * 
+	 * @param diff
+	 *            the given difference.
+	 * @return the value of the difference.
+	 */
+	private static Object getChangedValue(Diff diff) {
+		final Object value;
+		if (diff instanceof AttributeChange) {
+			value = ((AttributeChange)diff).getValue();
+		} else if (diff instanceof ReferenceChange) {
+			value = ((ReferenceChange)diff).getValue();
 		} else {
-			expectedContainer = match.getRight();
+			throw new IllegalArgumentException(EMFCompareMessages.getString(
+					"DiffUtil.IllegalDiff", diff.eClass().getName())); //$NON-NLS-1$
 		}
-
-		final List<Object> sourceList = getSourceList(diff, feature, rightToLeft);
-		final List<Object> targetList = ReferenceUtil.getAsList(expectedContainer, feature);
-
-		Iterable<Object> ignoredElements = Iterables.concat(computeIgnoredElements(targetList, diff),
-				Collections.singleton(value));
-		// We know we'll have to iterate quite a number of times on this one.
-		ignoredElements = Lists.newArrayList(ignoredElements);
-
-		return DiffUtil.findInsertionIndex(comparison, ignoredElements, sourceList, targetList, value);
+		return value;
 	}
 
 	/**
@@ -1070,18 +1070,15 @@ public final class DiffUtil {
 	 * 
 	 * @param diff
 	 *            The diff for which merging we need a 'source'.
-	 * @param feature
-	 *            The feature on which the merging is actually taking place.
 	 * @param rightToLeft
 	 *            Direction of the merging. {@code true} if the merge is to be done on the left side, making
 	 *            'source' the right side, {@code false} otherwise.
 	 * @return The list that should be used as a source for this merge. May be empty, but never
 	 *         <code>null</code>.
 	 */
-	private static List<Object> getSourceList(Diff diff, EStructuralFeature feature, boolean rightToLeft) {
-		final Match match = diff.getMatch();
-		final List<Object> sourceList;
+	private static List<Object> getSourceList(Diff diff, boolean rightToLeft) {
 		final EObject expectedContainer;
+		final Match match = diff.getMatch();
 
 		if (diff.getKind() == DifferenceKind.MOVE) {
 			final boolean undoingLeft = rightToLeft && diff.getSource() == DifferenceSource.LEFT;
@@ -1105,9 +1102,72 @@ public final class DiffUtil {
 			}
 		}
 
-		sourceList = ReferenceUtil.getAsList(expectedContainer, feature);
+		return ReferenceUtil.getAsList(expectedContainer, getChangedFeature(diff));
+	}
 
-		return sourceList;
+	/**
+	 * Retrieves the "target" list of the given {@code diff}. This will be different according to the kind of
+	 * change and the direction of the merging.
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param diff
+	 *            The diff for which merging we need a 'target'.
+	 * @param rightToLeft
+	 *            Direction of the merging. {@code true} if the merge is to be done on the left side, making
+	 *            'target' the right side, {@code false} otherwise.
+	 * @return The list that should be used as a target for this merge. May be empty, but never
+	 *         <code>null</code>.
+	 */
+	private static List<Object> getTargetList(Comparison comparison, Diff diff, boolean rightToLeft) {
+		final EStructuralFeature diffFeature = getChangedFeature(diff);
+		final Object value = getChangedValue(diff);
+		final Match match = diff.getMatch();
+		final EStructuralFeature targetFeature;
+		final EObject expectedContainer;
+
+		if (diffFeature instanceof EReference && ((EReference)diffFeature).isContainment()
+				&& diff.getKind() == DifferenceKind.MOVE) {
+			// The value can only be an EObject, and its match cannot be null.
+			// If any of these two assumptions is wrong, something went horribly awry beforehand.
+			final Match valueMatch = comparison.getMatch((EObject)value);
+
+			final Match targetContainerMatch;
+			// If it exists, use the source side's container as reference
+			if (rightToLeft && valueMatch.getRight() != null) {
+				targetContainerMatch = comparison.getMatch(valueMatch.getRight().eContainer());
+				// targetFeature = valueMatch.getRight().eContainingFeature();
+				if (DifferenceSource.RIGHT == diff.getSource()) {
+					targetFeature = diffFeature;
+				} else {
+					targetFeature = valueMatch.getRight().eContainingFeature();
+				}
+			} else if (!rightToLeft && valueMatch.getLeft() != null) {
+				targetContainerMatch = comparison.getMatch(valueMatch.getLeft().eContainer());
+				if (DifferenceSource.LEFT == diff.getSource()) {
+					targetFeature = diffFeature;
+				} else {
+					targetFeature = valueMatch.getRight().eContainingFeature();
+				}
+			} else {
+				// Otherwise, the value we're moving on one side has been removed from its source side.
+				targetContainerMatch = comparison.getMatch(valueMatch.getOrigin().eContainer());
+				targetFeature = valueMatch.getOrigin().eContainingFeature();
+			}
+			if (rightToLeft) {
+				expectedContainer = targetContainerMatch.getLeft();
+			} else {
+				expectedContainer = targetContainerMatch.getRight();
+			}
+		} else if (rightToLeft) {
+			expectedContainer = match.getLeft();
+			targetFeature = diffFeature;
+		} else {
+			expectedContainer = match.getRight();
+			targetFeature = diffFeature;
+		}
+
+		return ReferenceUtil.getAsList(expectedContainer, targetFeature);
 	}
 
 	/**
