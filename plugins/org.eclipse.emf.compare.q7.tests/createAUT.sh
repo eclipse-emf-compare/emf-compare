@@ -1,17 +1,42 @@
 #!/bin/bash
-os=$1
-ws=$2
-arch=$3
-simrel=$4
-workdir=$5
+simrel=$1
+workdir=$2
 
 mkdir -p $workdir
 
-env > env.txt
+env > ${workdir}/env.txt
+
+PLATFORM_SHORT_SPECIFIER=""
+if [[ "${OSTYPE}" == "linux"* || "${OSTYPE}" == "freebsd"* ]]; then
+	OSWS="linux.gtk"
+	PLATFORM_SHORT_SPECIFIER="linux-gtk"
+	FILE_EXT="tar.gz"
+elif [[ "${OSTYPE}" == "cygwin"* ]]; then
+	OSWS="win32.win32"
+	PLATFORM_SHORT_SPECIFIER="win32"
+	FILE_EXT="zip"
+elif [[ "${OSTYPE}" == "darwin"* ]]; then
+	OSWS="macosx.cocoa"
+	PLATFORM_SHORT_SPECIFIER="macosx-cocoa"
+	FILE_EXT="tar.gz"
+else
+	LSCRITICAL "Unknown 'OSTYPE'=${OSTYPE}."
+	exit -1
+fi
+
+if [[ $(uname -m) == *"64"* ]]; then
+	ARCH="x86_64"
+	PLATFORM_SHORT_SPECIFIER="${PLATFORM_SHORT_SPECIFIER}-${ARCH}"
+else
+	ARCH="x86"
+fi
+
+PLATFORM_SPECIFIER="${OSWS}.${ARCH}"
 
 P2_ADMIN_VERSION="1.1.0"
-P2_ADMIN_ZIPNAME="p2-admin-$P2_ADMIN_VERSION-$os.$ws.$arch.tar.gz"
-P2_ADMIN_URL="https://github.com/mbarbero/p2-admin/releases/download/v$P2_ADMIN_VERSION/$P2_ADMIN_ZIPNAME"
+LSDEBUG "Platform specifier is '${PLATFORM_SPECIFIER}'"
+P2_ADMIN_ZIPNAME="p2-admin-${P2_ADMIN_VERSION}-${PLATFORM_SPECIFIER}.${FILE_EXT}"
+P2_ADMIN_URL="https://github.com/mbarbero/p2-admin/releases/download/v${P2_ADMIN_VERSION}/${P2_ADMIN_ZIPNAME}"
 P2_ADMIN_ZIPPATH=$workdir/$P2_ADMIN_ZIPNAME
 P2_ADMIN_PATH=$workdir/p2-admin
 
@@ -27,16 +52,8 @@ fi
 echo "Unzipping $P2_ADMIN_ZIPNAME"
 tar zxf "$P2_ADMIN_ZIPPATH" -C $workdir
 
-target_env=$os
-if [[ $ws != $os ]]; then
-	target_env="$target_env-$ws"
-fi
-if [[ $arch != "x86" ]]; then
-	target_env="$target_env-$arch"
-fi
-
 if [[ "$simrel" == "luna"* ]]; then
-	simrel_zip_name="eclipse-SDK-4.4-${target_env}.tar.gz"
+	simrel_zip_name="eclipse-SDK-4.4-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
 	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/R-4.4-201406061215/$simrel_zip_name"
 	p2_repositories="http://download.eclipse.org/releases/luna/,\
 http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest/,\
@@ -50,7 +67,7 @@ org.eclipse.emf.compare.uml2.feature.group,\
 org.eclipse.emf.compare.diagram.gmf.feature.group,\
 org.eclipse.emf.compare.diagram.papyrus.feature.group"
 elif [[ "$simrel" == "kepler"* ]]; then
-	simrel_zip_name="eclipse-SDK-4.3.2-${target_env}.tar.gz"
+	simrel_zip_name="eclipse-SDK-4.3.2-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
 	simrel_zip_url="http://archive.eclipse.org/eclipse/downloads/drops4/R-4.3.2-201402211700/$simrel_zip_name"	
 	p2_repositories="http://download.eclipse.org/releases/kepler/,\
 http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest/,\
