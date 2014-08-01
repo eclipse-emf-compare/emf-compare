@@ -32,4 +32,12 @@ public class TwoWayMergeInputData extends AbstractInputData {
 	public Resource getMoveToDifferentContainmentFeatureL2RRight() throws IOException {
 		return loadFromClassLoader("twoway/movedifferentcontainmentfeature/ltr/right.nodes");
 	}
+
+	public Resource getOppositeReferenceChangeWithoutMatchingOrignalContainerL2RLeft() throws IOException {
+		return loadFromClassLoader("twoway/oppositereferencechangewithoutmatchingorignalcontainer/ltr/left.nodes");
+	}
+
+	public Resource getOppositeReferenceChangeWithoutMatchingOrignalContainerL2RRight() throws IOException {
+		return loadFromClassLoader("twoway/oppositereferencechangewithoutmatchingorignalcontainer/ltr/right.nodes");
+	}
 }

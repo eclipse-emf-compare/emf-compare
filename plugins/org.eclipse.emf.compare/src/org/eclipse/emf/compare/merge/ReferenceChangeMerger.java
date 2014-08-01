@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - fixes for bug 413520
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
@@ -610,10 +611,66 @@ public class ReferenceChangeMerger extends AbstractMerger {
 		while (impliedReferenceChanges.hasNext()) {
 			final ReferenceChange implied = impliedReferenceChanges.next();
 			if (implied != diff && implied.getState() == DifferenceState.MERGED) {
-				if (implied.getReference().isMany() && implied.getKind() != DifferenceKind.MOVE) {
+				if (implied.getReference().isMany() && isAdd(implied, rightToLeft)) {
 					internalCheckOrdering(implied, rightToLeft);
 				}
 			}
+		}
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} will add a value in the target model for the current merging.
+	 * <p>
+	 * To check whether the {@code diff} is an addition, we have to check the direction of the merge,
+	 * specified in {@code rightToLeft} and the {@link Diff#getSource() source of the diff}. Therefore, this
+	 * method delegates to {@link #isLeftAddOrRightDelete(ReferenceChange)} and
+	 * {@link #isLeftDeleteOrRightAdd(ReferenceChange)}.
+	 * </p>
+	 * 
+	 * @param diff
+	 *            The difference to check.
+	 * @param rightToLeft
+	 *            Direction of the merge.
+	 * @return <code>true</code> if {@code diff} will add a value with this merge, <code>false</code>
+	 *         otherwise.
+	 */
+	private boolean isAdd(ReferenceChange diff, boolean rightToLeft) {
+		if (rightToLeft) {
+			return isLeftDeleteOrRightAdd(diff);
+		} else {
+			return isLeftAddOrRightDelete(diff);
+		}
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} is either an addition on the left-hand side or a deletion on
+	 * the right-hand side.
+	 * 
+	 * @param diff
+	 *            The difference to check.
+	 * @return <code>true</code> if it is a left addition or a right deletion.
+	 */
+	private boolean isLeftAddOrRightDelete(ReferenceChange diff) {
+		if (diff.getSource() == DifferenceSource.LEFT) {
+			return diff.getKind() == DifferenceKind.ADD;
+		} else {
+			return diff.getKind() == DifferenceKind.DELETE;
+		}
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} is either a deletion on the left-hand side or an addition on
+	 * the right-hand side.
+	 * 
+	 * @param diff
+	 *            The difference to check.
+	 * @return <code>true</code> if it is a left deletion or a right addition.
+	 */
+	private boolean isLeftDeleteOrRightAdd(ReferenceChange diff) {
+		if (diff.getSource() == DifferenceSource.LEFT) {
+			return diff.getKind() == DifferenceKind.DELETE;
+		} else {
+			return diff.getKind() == DifferenceKind.ADD;
 		}
 	}
 
