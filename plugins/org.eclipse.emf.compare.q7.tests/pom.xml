@@ -26,7 +26,7 @@
     <q7-runner-version>1.5.0-SNAPSHOT</q7-runner-version>
     <q7-maven-version>1.5.1-SNAPSHOT</q7-maven-version>
     <exec-maven-plugin-version>1.2.1</exec-maven-plugin-version>
-    <returnTestFailure>false</returnTestFailure>
+    <testFailureIgnore>true</testFailureIgnore>
   </properties>
  
   <build>
@@ -72,15 +72,12 @@
               <aut>
                 <explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
               </aut>
-              <testFailureIgnore>true</testFailureIgnore>
+              <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
               <suites>
                 <suite>TestSuite.Full</suite>
               </suites>
               <q7>
                 <version>${q7-runner-version}</version>
-                <vmArgs>
-                  <vmArg>-Dcom.xored.q7.runner.returnTestFailure=${returnTestFailure}</vmArg>
-                </vmArgs>
               </q7>
             </configuration>
           </plugin>
@@ -103,15 +100,12 @@
               <aut>
                 <explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
               </aut>
-              <testFailureIgnore>true</testFailureIgnore>
+              <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
               <suites>
                 <suite>TestSuite.Core</suite>
               </suites>
               <q7>
                 <version>${q7-runner-version}</version>
-                <vmArgs>
-                  <vmArg>-Dcom.xored.q7.runner.returnTestFailure=${returnTestFailure}</vmArg>
-                </vmArgs>
               </q7>
             </configuration>
           </plugin>
