@@ -26,7 +26,7 @@
     <q7-runner-version>1.5.0-SNAPSHOT</q7-runner-version>
     <q7-maven-version>1.5.1-SNAPSHOT</q7-maven-version>
     <exec-maven-plugin-version>1.2.1</exec-maven-plugin-version>
-    <returnTestFailure>true</returnTestFailure>
+    <returnTestFailure>false</returnTestFailure>
   </properties>
  
   <build>
