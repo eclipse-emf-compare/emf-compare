@@ -15,18 +15,24 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.merge.ReferenceChangeMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.merge.data.TwoWayMergeInputData;
 import org.eclipse.emf.compare.tests.nodes.Node;
 import org.eclipse.emf.compare.tests.nodes.NodeMultipleContainment;
+import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
@@ -38,6 +44,10 @@ import org.junit.Test;
  */
 public class TwoWayBatchMergingTest {
 
+	private enum Direction {
+		LEFT_TO_RIGHT, RIGHT_TO_LEFT;
+	}
+
 	private TwoWayMergeInputData input = new TwoWayMergeInputData();
 
 	private IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
@@ -46,11 +56,14 @@ public class TwoWayBatchMergingTest {
 	 * Tests a scenario in which an element is moved from one container to another, whereas the containment
 	 * reference in the original container (left) is not available in the target container (right). This lead
 	 * to a NPE in {@link DiffUtil#findInsertionIndex(Comparison, org.eclipse.emf.compare.Diff, boolean)} (cf.
-	 * Bug #440679). In particular, we have two differences: (1) Deletion of {@link NodeMultipleContainment}
-	 * "A" and (2) Move of {@link Node} "B" from {@link NodeMultipleContainment} "A" (reference
-	 * "containmentRef2") to {@link Node} "Root" into reference "containmentRef1". As a result, we move node
-	 * "B" originally contained through "containmentRef2" into a {@link Node}, which does not have the feature
+	 * Bug #440679).
+	 * <p>
+	 * In this test case we have two differences: (1) Deletion of {@link NodeMultipleContainment} "A" and (2)
+	 * Move of {@link Node} "B" from {@link NodeMultipleContainment} "A" (reference "containmentRef2") to
+	 * {@link Node} "Root" into reference "containmentRef1". As a result, we move node "B" originally
+	 * contained through "containmentRef2" into a {@link Node}, which does not have the feature
 	 * "containmentRef2".
+	 * </p>
 	 * 
 	 * @throws IOException
 	 *             if {@link TwoWayMergeInputData} fails to load the test models.
@@ -59,18 +72,7 @@ public class TwoWayBatchMergingTest {
 	public void mergingMoveToDifferentContainmentFeatureR2L() throws IOException {
 		final Resource left = input.getMoveToDifferentContainmentFeatureRTLLeft();
 		final Resource right = input.getMoveToDifferentContainmentFeatureRTLRight();
-
-		// perform comparison
-		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
-
-		// batch merging of all detected differences:
-		final IBatchMerger merger = new BatchMerger(mergerRegistry);
-		merger.copyAllRightToLeft(comparison.getDifferences(), new BasicMonitor());
-
-		// check that models are equal after batch merging
-		Comparison assertionComparison = EMFCompare.builder().build().compare(scope);
-		assertEquals(0, assertionComparison.getDifferences().size());
+		batchMergeAndAssertEquality(left, right, Direction.RIGHT_TO_LEFT);
 	}
 
 	/**
@@ -84,14 +86,59 @@ public class TwoWayBatchMergingTest {
 	public void mergingMoveToDifferentContainmentFeatureL2R() throws IOException {
 		final Resource left = input.getMoveToDifferentContainmentFeatureL2RLeft();
 		final Resource right = input.getMoveToDifferentContainmentFeatureL2RRight();
+		batchMergeAndAssertEquality(left, right, Direction.LEFT_TO_RIGHT);
+	}
 
+	/**
+	 * Tests a scenario in which an opposite one-to-many reference is changed, whereas the original object on
+	 * the single-valued side of the one-to-many reference has no match. This lead to an
+	 * {@link IndexOutOfBoundsException} (cf. Bug #413520), because in the
+	 * {@link ReferenceChangeMerger#internalCheckOrdering(ReferenceChange, boolean) ordering check of the
+	 * equivalent changes}, the source container is <code>null</code> leading to an empty source list. This
+	 * leads to an invocation of {@link EList#move(int, EObject)} on an empty list.
+	 * <p>
+	 * In this test case, we have the following differences: (1) the deletion of {@link Node} "C" (only
+	 * available on the right-hand side), as a result, (2) the deletion of the reference to {@link Node} "C"
+	 * from {@link NodeOppositeRefOneToMany} "A" at its feature
+	 * {@link NodeOppositeRefOneToMany#getDestination() destination}, and (3 & 4) the change of the opposite
+	 * references {@link NodeOppositeRefOneToMany#getSource() source} and
+	 * {@link NodeOppositeRefOneToMany#getDestination() destination} between {@link NodeOppositeRefOneToMany
+	 * nodes} "A" and "B" (both have a match in the left and right model version).
+	 * </p>
+	 * 
+	 * @throws IOException
+	 *             if {@link TwoWayMergeInputData} fails to load the test models.
+	 */
+	@Test
+	public void mergingOppositeReferenceChangeWithoutMatchingOriginalL2R() throws IOException {
+		final Resource left = input.getOppositeReferenceChangeWithoutMatchingOrignalContainerL2RLeft();
+		final Resource right = input.getOppositeReferenceChangeWithoutMatchingOrignalContainerL2RRight();
+		batchMergeAndAssertEquality(left, right, Direction.LEFT_TO_RIGHT);
+	}
+
+	/**
+	 * Merges the given resources {@code left} and {@code right} using the {@link BatchMerger} in the
+	 * specified {@code direction}, re-compares left and right, and assert their equality in the end.
+	 * 
+	 * @param left
+	 *            left resource.
+	 * @param right
+	 *            right resource.
+	 */
+	private void batchMergeAndAssertEquality(Resource left, Resource right, Direction direction) {
 		// perform comparison
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final EList<Diff> differences = comparison.getDifferences();
 
 		// batch merging of all detected differences:
 		final IBatchMerger merger = new BatchMerger(mergerRegistry);
-		merger.copyAllLeftToRight(comparison.getDifferences(), new BasicMonitor());
+		switch (direction) {
+			case LEFT_TO_RIGHT:
+				merger.copyAllLeftToRight(differences, new BasicMonitor());
+			case RIGHT_TO_LEFT:
+				merger.copyAllRightToLeft(differences, new BasicMonitor());
+		}
 
 		// check that models are equal after batch merging
 		Comparison assertionComparison = EMFCompare.builder().build().compare(scope);
