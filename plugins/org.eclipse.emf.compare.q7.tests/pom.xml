@@ -72,6 +72,7 @@
               <aut>
                 <explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
               </aut>
+              <testFailureIgnore>true</testFailureIgnore>
               <suites>
                 <suite>TestSuite.Full</suite>
               </suites>
@@ -102,6 +103,7 @@
               <aut>
                 <explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
               </aut>
+              <testFailureIgnore>true</testFailureIgnore>
               <suites>
                 <suite>TestSuite.Core</suite>
               </suites>
