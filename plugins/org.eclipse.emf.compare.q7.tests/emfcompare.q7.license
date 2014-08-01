@@ -1,0 +1,8 @@
+#
+#Thu Jul 31 16:06:02 NOVT 2014
+Signature=6f96190f170d895e2e42300a35643e103ce0159e22d0b36552559b6f1a7721c71dbeb723b83aa016ca33568fbeef760ee10e7519242c617b04823a5185ec14c1ca5a8152b27ab05acbdf749b3bcb2fec14668110cc9a852edfcfc786ab7a46a5a5373c0443c5ddf3a0fe4ad5c3dc3672b40c1f162c6ec3f4e6c283344628e3a8
+Type=Opensource
+Allowed-Bundles=*.source,ch.qos.logback*,com.google.guava,com.google.inject,com.ibm.icu*,com.jcraft.jsch,com.sun.*,javaewah,javax.*,lpg.runtime.java,org.apache.*,org.eclipse.*,org.h2,org.hamcrest*,org.jdom,org.jsoup,org.junit*,org.mortbay.jetty*,org.objectweb.asm,org.sat4j*,org.slf4j*,org.w3c,org.w3c.*,com.xored.*,com.google.gson,org.aspectj.*,org.fantom*,net.sourceforge.*,java_cup.*,com.jcraft.jzlib,org.xmlpull,org.custommonkey.xmlunit*,org.restlet*,org.json,com.vaadin,com.thoughtworks.xstream,com.thoughtworks.selenium,org.uddi4j,org.mozilla*,org.antlr*,ch.ethz.iks.slp,org.easymock,com.thoughtworks.qdox,edu.emory.mathcs*,org.xbill.dns,org.codehaus.jackson*,org.opensaml*,org.aopalliance*,commonj.sdo*,org.dojotoolkit*,com.lowagie.text*,org.kohsuke.args4j,com.google.gwt*,com.google.gerrit*,com.google.protobuf*,net.miginfocom.layout*,org.prefuse*,org.objenesis*,org.mockito*,org.cyberneko*,org.openid4java*,org.quartz*,me.prettyprint*,osgi.enterprise*,org.cliffc.high_scale_lib*,org.jmock,com.novell.ldap,org.swtchart,org.ccil.cowan.tagsoup,org.ow2*,cdi.api,javassist,scannotation,org.glassfish*,bcprov,bcpg,ca.odell.glazedlists,org.pushingpixels.trident,org.tukaani.xz,edu.umd.cs.findbugs.*,net.sf.eclipsecs*,net.sf.jautodoc*,org.objectweb.asm*,com.ning.async-http-client*,org.jboss.netty*,org.sonatype.m2e.buildhelper*
+Version=1.0
+Email=mikael.barbero@obeo.fr
+Opensource-Project=EMF Compare

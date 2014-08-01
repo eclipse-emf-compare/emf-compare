@@ -23,10 +23,9 @@
   </pluginRepositories> 
   
   <properties>
-    <q7-runner-version>1.3.13-SNAPSHOT</q7-runner-version>
-    <q7-maven-version>1.5.0</q7-maven-version>
+    <q7-runner-version>1.5.0-SNAPSHOT</q7-runner-version>
+    <q7-maven-version>1.5.1-SNAPSHOT</q7-maven-version>
     <exec-maven-plugin-version>1.2.1</exec-maven-plugin-version>
-    <licenseUrl>http://licensing.xored.com/pool/05bc9cc5-a261-0280-a50e-406c8f046395</licenseUrl>
     <returnTestFailure>true</returnTestFailure>
   </properties>
  
@@ -78,11 +77,8 @@
               </suites>
               <q7>
                 <version>${q7-runner-version}</version>
-                <licenseUrl>${licenseUrl}</licenseUrl>
                 <vmArgs>
                   <vmArg>-Dcom.xored.q7.runner.returnTestFailure=${returnTestFailure}</vmArg>
-                  <vmArg>-Dhttp.proxyHost=${http.proxyHost}</vmArg>
-                  <vmArg>-Dhttp.proxyPort=${http.proxyPort}</vmArg>
                 </vmArgs>
               </q7>
             </configuration>
@@ -111,11 +107,8 @@
               </suites>
               <q7>
                 <version>${q7-runner-version}</version>
-                <licenseUrl>${licenseUrl}</licenseUrl>
                 <vmArgs>
                   <vmArg>-Dcom.xored.q7.runner.returnTestFailure=${returnTestFailure}</vmArg>
-                  <vmArg>-Dhttp.proxyHost=${http.proxyHost}</vmArg>
-                  <vmArg>-Dhttp.proxyPort=${http.proxyPort}</vmArg>
                 </vmArgs>
               </q7>
             </configuration>
