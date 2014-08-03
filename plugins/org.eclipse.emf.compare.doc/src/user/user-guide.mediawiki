@@ -298,7 +298,7 @@ This shows us all differences between our local copy and the master branch that 
 Same as previously, you can navigate through the differences via the top panel, the structural view. There are three main kind of elements displayed here. '''Regular''' elements, that mimic the containment tree of your input models, are there to separate the various differences and let you know where they were actually detected. Then there are '''incoming''' differences, decorated with a blue arrow ([[Image:./../images/EMF_Compare_Incoming_Change.gif]]) or a derived icon, and '''outgoing''' differences decorated with a gray arrow ([[Image:./../images/EMF_Compare_Outgoing_Change.gif]]) or a derived icon.
 
 '''Incoming''' differences are changes that were made in the remote branch (here, ''master'') since the branching point (common ancestor).
-'''Outgoing''' differences are changes taht were made in the local copy (here, the ''borrowables'' branch) since the branching point.
+'''Outgoing''' differences are changes that were made in the local copy (here, the ''borrowables'' branch) since the branching point.
 
 There are no conflicts here, since UML uses computed identifiers (XMI ID) for the model elements. Thus, what looks like a conflict (the "Date" type that's been added on both branch in the types packages) is actually two distinct differences.
 
@@ -440,13 +440,13 @@ First open the filters preference page:
 
 [[File:../images/EMF_Compare_Filters_Preference_Page.png]]
 
-The first panel (1) is used to define which filters should be activated by default. Checked elements will be activated for later comparisons. Of course, only filters that can handle the comparison will be activated (for futher explanations see [[./../developer/developer-guide.html#Add_your_own_filter|Add you own filter]]).
+The first panel (1) is used to define which filters should be activated by default. Checked elements will be activated for later comparisons. Of course, only filters that can handle the comparison will be activated (for further explanations see [[./../developer/developer-guide.html#Add_your_own_filter|Add you own filter]]).
 
 The second panel (2) is used to define the synchronization behavior between the filters selection in UI and the preferences. The combobox in the preference page has 3 distinct values:
 * Always: Each time you will modify the filters selection in UI, the selected set of filters will be synchronized with the preferences. This way the filters that you have selected will be kept between comparisons.
 * Never: The selection of filters in UI will never be synchronized with the preferences.
 * Prompt: You will be asked each time that filters selection is modified if you want to synchronize the new set of filters with the preferences. If this option is set, a popup will appear just after each filter activation or deactivation. This popup proposes several ways to handle the newly selected set of filters: [[File:../images/EMF_Compare_Filters_Synchronization_Dialog.png]]
-** If your answer is "Yes", the current set of selected filters will be synchronized with the preferences. In other word, it will become your default actived set of filters.
+** If your answer is "Yes", the current set of selected filters will be synchronized with the preferences. In other word, it will become your default activated set of filters.
 ** If your answer is "No", nothing will be synchronized. Next time you will launch a comparison, the activated filters will be defined by the preferences.
 ** If you check "Do not ask me again", the above behaviors will be executed and the synchronization behavior will change. It will be set to "Always" if you have selected "Yes". It will be set to "Never" if you have selected "No".
 
@@ -519,7 +519,7 @@ New filters can be provided to EMF Compare through extension points. See [[./../
 
 === Handling Conflicts  ===
 
-When a 3-way comparison has conflicts, all differences involved in the same conflict are grouped under a Confict node.
+When a 3-way comparison has conflicts, all differences involved in the same conflict are grouped under a Conflict node.
 
 In the following case, the Employee Green has his manager reference in conflict. The left side of the comparison shows that the manager of the Employee Green is the employee Smith while the right side side shows that the manager is the Employee Johnson.
 The consequences of a merge from right to left of the selected difference are displayed.
@@ -606,18 +606,18 @@ PENDING UPDATE
 
 === UML Specialization  ===
 
-A specific work has been done with EMF Compare for UML. It consists in an additionnal filter named '''UML refined elements'''. This filter is active by default when a comparison involves UML resources.
+A specific work has been done with EMF Compare for UML. It consists in an additional filter named '''UML refined elements'''. This filter is active by default when a comparison involves UML resources.
 
 [[Image:./../images/EMF_Compare_UML_Filter.png]]
 
-The filter groups UML consistant differences together in one difference. For example, a UML association is modeled by an association element and several sub-elements:
+The filter groups UML consistent differences together in one difference. For example, a UML association is modeled by an association element and several sub-elements:
 
 [[Image:./../images/EMF_Compare_UML_Association.png]]
 
-If EMF Compare detects a change on an element of type association, it will group all changes on the sub-elements of the assocation to the association difference.
+If EMF Compare detects a change on an element of type association, it will group all changes on the sub-elements of the association to the association difference.
 The goal of this filter is to ease the merge of differences. Indeed, all you have to do is to merge the association difference and it will merge all the sub-differences with it.
 
-Here is the comparison of two UML model, one with an association (the left side), another whithout (the right side). The '''UML refined elements''' filter has been deactivated:
+Here is the comparison of two UML model, one with an association (the left side), another without (the right side). The '''UML refined elements''' filter has been deactivated:
 
 [[Image:./../images/EMF_Compare_UML_Association_2.png]]
 
@@ -668,7 +668,7 @@ Note that this only applies to comparisons launched from within Eclipse, which w
 
 ==== Observed Symptoms ====
 
-Symptoms are mostly the same here as they would be with the limitation mentionned above regarding project names, and they usually include the same NullPointerException:
+Symptoms are mostly the same here as they would be with the limitation mentioned above regarding project names, and they usually include the same NullPointerException:
 
  Caused by: java.lang.NullPointerException
  at org.eclipse.emf.compare.ide.ui.logical.RevisionedURIConverter.<init>(RevisionedURIConverter.java:108)
