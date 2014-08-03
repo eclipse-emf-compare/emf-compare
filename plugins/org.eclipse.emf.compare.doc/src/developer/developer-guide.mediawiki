@@ -82,13 +82,13 @@ Whatever their type, the differences share a number of common elements:
 
 In order to ensure that the model stays coherent through individual merge operations, we've also decided to link differences together through a number of associations and references. For example, there are times when one difference cannot be merged without first merging another, or some differences which are exactly equivalent to one another. In no specific order:
 
-* ''dependency'': EMF Compare uses two oppposite references in order to track dependencies between differences. Namely, ''requires'' and ''requiredBy'' represent the two ends of this association. If the user has added a package ''P1'', then added a new Class ''C1'' within this package, we will detect both differences. However the addition of ''C1'' cannot be merged without first adding its container ''P1''. In such a case, the addition of ''C1'' '''requires''' the addition of ''P1'', and the later is '''requiredBy''' the former.
+* ''dependency'': EMF Compare uses two opposite references in order to track dependencies between differences. Namely, ''requires'' and ''requiredBy'' represent the two ends of this association. If the user has added a package ''P1'', then added a new Class ''C1'' within this package, we will detect both differences. However the addition of ''C1'' cannot be merged without first adding its container ''P1''. In such a case, the addition of ''C1'' '''requires''' the addition of ''P1'', and the later is '''requiredBy''' the former.
 * ''refinement'': this link is mainly used by extensions of EMF Compare in order to create high-level differences to hide the complexity of the comparison model. For example, this is used by the UML extension of EMF Compare to tell that the three differences "adding an association ''A1''", "adding a property ''P1'' in association ''A1''" and "adding a property ''P2'' in association ''A1''" is actually one single high-level difference, "adding an association ''A1''". This high-level difference is '''refinedBy''' the others, which all '''refines''' it.
 * ''equivalence'': this association is used by the comparison engine in order to link together differences which are equivalent in terms of merging. For example, Ecore has a concept of '''eOpposite''' references. Updating one of the two sides of an ''eOpposite'' will automatically update the other. In such an event, EMF Compare will detect both sides as an individual difference. However, merging one of the two will trigger the update of the other side of the ''eOpposite'' as well. In such cases, the two differences are set to be ''equivalent'' to one another. Merging one difference part of an equivalence relationship will automatically mark all of the others as ''merged'' (see ''state'' above).
 * ''implication'': implications are a special kind of "directed equivalence". A difference D1 that is linked as "implied by" another D2 means that merging D1 requires us to merge D1 instead. In other words, D2 will be automatically merged if we merge D1, but D1 will not be automatically merged if we merge D2. Implications are mostly used with UML models, where subsets and supersets may trigger such linked changes.
 * ''conflict'': during three-way comparisons, we compare two versions of a given model with their common ancestor. We can thus detect changes that were made in either left or right side (see the description of ''source'' above). However, there are cases when changes in the left conflict with changes in the right. For example, a class named "Book" in the origin model can have been renamed to "Novel" in the left model whereas it has been renamed to "Essay" in the right model. In such a case, the two differences will be marked as being in conflict with one another.
 
-As mentionned above, there are only three kind of differences that we will detect through EMF Compare, which will be sufficient for all use cases. ''ReferenceChange'' differences will be detected for every value of a reference for which we detect a change. Either the value was added, deleted, or moved (within the reference or between distinct references). ''AttributeChange'' differences are the same, but for attributes instead of references. Lastly, the ''ResourceAttachmentChange'' differences, though very much alike the ReferenceChanges we create for containment references, are specifically aimed at describing changes within the roots of one of the compared resources.
+As mentioned above, there are only three kind of differences that we will detect through EMF Compare, which will be sufficient for all use cases. ''ReferenceChange'' differences will be detected for every value of a reference for which we detect a change. Either the value was added, deleted, or moved (within the reference or between distinct references). ''AttributeChange'' differences are the same, but for attributes instead of references. Lastly, the ''ResourceAttachmentChange'' differences, though very much alike the ReferenceChanges we create for containment references, are specifically aimed at describing changes within the roots of one of the compared resources.
 
 ==== Conflict ====
 
@@ -125,7 +125,7 @@ At the time of writing, the user interface will never resolve any proxies either
 
 The equality helper is a very central concept of EMF Compare. Of course, EMF Compare's aim is to be able to compare objects together, objects which comparison is not trivial and cannot be done through a mere "equal or not" concept. However, we still need to be able to compare these objects at all time and, whenever possible, without a full-fledged comparison.
 
-The equality helper will be used in all phases of the comparison, from matching to merging (please see the [[#Comparison Process|comparison process]] for a bird's eye view of the different comparison phases, or their detailled descriptions down below). The matching phase is precisely the time when EMF Compare is trying to match two-by-two the elements from one side to the elements from the other side. As such, we do not have -yet- the knowledge of whichi element matches with which other. However, for all subsequent phases, the equality helper will rely on information from the comparison itself (the ''Match'' elements) to make a fail-fast test for element 'equality'.
+The equality helper will be used in all phases of the comparison, from matching to merging (please see the [[#Comparison Process|comparison process]] for a bird's eye view of the different comparison phases, or their detailed descriptions down below). The matching phase is precisely the time when EMF Compare is trying to match two-by-two the elements from one side to the elements from the other side. As such, we do not have -yet- the knowledge of which element matches with which other. However, for all subsequent phases, the equality helper will rely on information from the comparison itself (the ''Match'' elements) to make a fail-fast test for element 'equality'.
 
 When we do not have this information, the equality helper will resort to less optimal algorithms. For any object that is not an EMF EObject, we will use strict equality through ''=='' and ''Object#equals()'' calls. One of the cause for EMF Compare failing to match attribute values together is in fact the lack of implementation of the ''equals'' method on custom datatypes (see the [[./../FAQ.html#Custom data types are always marked as modified by EMF Compare|FAQ]] for more on that particular issue).
 
@@ -171,7 +171,7 @@ This behavior can be customized in a number of ways.
 
 ==== Overriding the Match engine ====
 
-The most powerful (albeit most cumbersome) customization you can implement is to override the match engine EMF Compare uses. To this end you can either [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/match/IMatchEngine.java implement the whole contract, ''IMatchEngine''], in which case you will have to carefully follow the javadoc's recommandations, or extend the [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/match/DefaultMatchEngine.java default implementation, ''DefaultMatchEngine''].
+The most powerful (albeit most cumbersome) customization you can implement is to override the match engine EMF Compare uses. To this end you can either [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/match/IMatchEngine.java implement the whole contract, ''IMatchEngine''], in which case you will have to carefully follow the javadoc's recommendations, or extend the [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/match/DefaultMatchEngine.java default implementation, ''DefaultMatchEngine''].
 
 A custom match engine can be used for your model comparison needs:
 
@@ -297,7 +297,7 @@ Customizations of this phase usually aim at ignoring specific differences.
 
 ==== Overriding the Diff engine ====
 
-As is the case for the Match phase, the most powerful customization you can implement for the differencing process is to override the diff engine EMF Compare uses. To this end you can either [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/diff/IDiffEngine.java implement the whole contract, ''IDiffEngine''], in which case you will have to carefully follow the javadoc's recommandations, or extend the [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/diff/DefaultDiffEngine.java default implementation, ''DefaultDiffEngine''].
+As is the case for the Match phase, the most powerful customization you can implement for the differencing process is to override the diff engine EMF Compare uses. To this end you can either [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/diff/IDiffEngine.java implement the whole contract, ''IDiffEngine''], in which case you will have to carefully follow the javadoc's recommendations, or extend the [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/diff/DefaultDiffEngine.java default implementation, ''DefaultDiffEngine''].
 
 A custom diff engine can then be used for your comparisons:
 
@@ -340,7 +340,7 @@ You could also [[#Changing the Diff Processor|change the diff processor]] to ach
 
 The diff engine browses over all of the objects that have been matched, and checks all of their features in order to check for changes between the two (or three) versions' feature values. When it detects a change, it delegates all of the corresponding information to its associated ''Diff Processor'', which is in charge of actually creating the ''Diff'' object and appending it to the resulting ''Comparison''.
 
-Replacing the ''Diff Processor'' gives you a simple entry point to ignore some of the differences the default engine detects, or to slightly alter the ''Diff'' information. You might want to ignore the differences detected on some references for example. Or you might want to react to the detected diff without actually creating the ''Comparison'' model... The implementation is up to you. You can either reimplement the [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/diff/IDiffProcessor.java whole contract] or extend the default implementation, [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/diff/DiffBuilder.java ''DiffBuilder'']
+Replacing the ''Diff Processor'' gives you a simple entry point to ignore some of the differences the default engine detects, or to slightly alter the ''Diff'' information. You might want to ignore the differences detected on some references for example. Or you might want to react to the detected diff without actually creating the ''Comparison'' model... The implementation is up to you. You can either re-implement the [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/diff/IDiffProcessor.java whole contract] or extend the default implementation, [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/diff/DiffBuilder.java ''DiffBuilder'']
 
 Here is a simple example that provides EMF Compare with a diff processor that will ignore all differences detected on the "name" attribute of our objects, yet keep the default behavior for all other differences.
 
@@ -806,7 +806,7 @@ Most of these examples are set-up as "standalone" examples, and will include ext
 
 ==== Loading your models ====
 
-Whether you wish to compare two or three models, the first thing you need is to load them. We won't detail in-depth how to do that as this is standard EMF practice, you might want to look at EMF tutorial for detailled instructions on this point. Here, we'll use a simple method that loads an xmi file at a given URL into a resourceSet, expecting the given URL to be an absolute file URL:
+Whether you wish to compare two or three models, the first thing you need is to load them. We won't detail in-depth how to do that as this is standard EMF practice, you might want to look at EMF tutorial for detailed instructions on this point. Here, we'll use a simple method that loads an xmi file at a given URL into a resourceSet, expecting the given URL to be an absolute file URL:
 
 <source lang="java">
 public void load(String absolutePath, ResourceSet resourceSet) {
@@ -833,7 +833,7 @@ IComparisonScope scope === EMFCompare.createDefaultScope(resourceSet1, resourceS
 
 ==== Configuring the comparison ====
 
-EMF Compare can be customized in a number of ways, the most important of which were described [[#Default Behavior and Extensibility|above]]. Most of them re-use the same entry point, the ''org.eclipse.emf.compare.EMFCompare'' class. We won't customize much here, please see the afore-mentionned section for extensibility means.
+EMF Compare can be customized in a number of ways, the most important of which were described [[#Default Behavior and Extensibility|above]]. Most of them re-use the same entry point, the ''org.eclipse.emf.compare.EMFCompare'' class. We won't customize much here, please see the aforementioned section for extensibility means.
 
 All we will tell EMF Compare is not to use identifiers, and rely on its proximity algorithms instead (after all, we're comparing plain XMI files):
 
@@ -973,13 +973,13 @@ In other words, this method will return differences '''under''' the target (here
 
 ==== Filtering differences ====
 
-EMF Compare depends on guava for many of its internals. A number of "common" difference filtering predicates have been extracted to the ''org.eclipse.emf.compare.utils.EMFComparePredicates'' utility class. Using this class, it is trivial to filter the list of differences so as to keep only those we are interested in. For example, what if we wish to retrieve the list of all '''non-conflictual''' differences that originate from the '''left''' side? (This is the case when you use the "copy all non-conflicting from left to right" action from the comparison editor for example.)
+EMF Compare depends on guava for many of its internals. A number of "common" difference filtering predicates have been extracted to the ''org.eclipse.emf.compare.utils.EMFComparePredicates'' utility class. Using this class, it is trivial to filter the list of differences so as to keep only those we are interested in. For example, what if we wish to retrieve the list of all '''non-conflicting''' differences that originate from the '''left''' side? (This is the case when you use the "copy all non-conflicting from left to right" action from the comparison editor for example.)
 
 <source lang="java">
 // Construct the predicate
 Predicate<? super Diff> predicate === and(fromSide(DifferenceSource.LEFT), not(hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO));
-// Filter out the diff that do not satisfy the predicate
-Iterable<Diff> nonConflictualDifferencesFromLeft === filter(comparison.getDifferences(), predicate);
+// Filter out the differences that do not satisfy the predicate
+Iterable<Diff> nonConflictingDifferencesFromLeft === filter(comparison.getDifferences(), predicate);
 </source>
 
 Note that for clarity, we've made static references to a number of methods here. This particular snippet requires the following imports:

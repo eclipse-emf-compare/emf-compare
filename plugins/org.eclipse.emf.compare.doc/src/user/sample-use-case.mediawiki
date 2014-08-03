@@ -10,7 +10,7 @@ The name of our sample project will be "library". It contains a single folder "m
 * library_Types.uml will contain our primitive types,
 * library.uml will contain our actual model.
 
-The two models will be commited to our git clone. The whole thing looks like this :
+The two models will be committed to our git clone. The whole thing looks like this :
 
 [[Image:../images/EMF_Compare_Use_Setup.png]]
 
@@ -104,7 +104,7 @@ This shows us all differences between our local copy and the master branch that 
 Same as previously, you can navigate through the differences via the top panel, the structural view. There are three main kind of elements displayed here. '''Regular''' elements, that mimic the containment tree of your input models, are there to separate the various differences and let you know where they were actually detected. Then there are '''incoming''' differences, decorated with a blue arrow ([[Image:../images/EMF_Compare_Incoming_Change.gif]]) or a derived icon, and '''outgoing''' differences decorated with a green arrow ([[Image:../images/EMF_Compare_Outgoing_Change.gif]]) or a derived icon.
 
  * '''Incoming''' differences are changes that were made in the remote branch (here, ''master'') since the branching point (common ancestor).
- * '''Outgoing''' differences are changes taht were made in the local copy (here, the ''borrowables'' branch) since the branching point.
+ * '''Outgoing''' differences are changes that were made in the local copy (here, the ''borrowables'' branch) since the branching point.
 
 There are no conflicts here, since UML uses computed identifiers (XMI ID) for the model elements. Thus, what looks like a conflict (the "Date" type that's been added on both branch in the types packages) is actually two distinct differences.
 
