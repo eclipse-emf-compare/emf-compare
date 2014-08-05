@@ -19,8 +19,10 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.compare.merge.AbstractMerger;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
@@ -117,8 +119,27 @@ public class TwoWayBatchMergingTest {
 	}
 
 	/**
+	 * Tests a scenario in which an opposite one-to-many reference is changed, whereas there is one deletion
+	 * and one addition on the multi-valued side of the opposite references. This correctly leads to three
+	 * differences: (1) a change of the single-valued reference, (2) an addition of a value in the
+	 * multi-valued opposite reference, and (3) a deletion of a value in the multi-valued opposite reference.
+	 * However, all three of them end up in the same {@link Equivalence object}, which caused the
+	 * {@link AbstractMerger} to merge only one of them; that is, in this scenario, the deletion. This
+	 * ultimately lead to unmerged differences (cf. Bug #441172).
+	 * 
+	 * @throws IOException
+	 *             if {@link TwoWayMergeInputData} fails to load the test models.
+	 */
+	@Test
+	public void mergingOppositeReferenceChangeWithAddAndDeleteOnMultivaluedSideR2L() throws IOException {
+		final Resource left = input.getOppositeReferenceChangeWithAddAndDeleteOnMultivaluedSideLeft();
+		final Resource right = input.getOppositeReferenceChangeWithAddAndDeleteOnMultivaluedSideRight();
+		batchMergeAndAssertEquality(left, right, Direction.RIGHT_TO_LEFT);
+	}
+
+	/**
 	 * Merges the given resources {@code left} and {@code right} using the {@link BatchMerger} in the
-	 * specified {@code direction}, re-compares left and right, and assert their equality in the end.
+	 * specified {@code direction}, re-compares left and right, and asserts their equality in the end.
 	 * 
 	 * @param left
 	 *            left resource.
