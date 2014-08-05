@@ -11,11 +11,22 @@
 package org.eclipse.emf.compare.merge;
 
 import static com.google.common.base.Predicates.in;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.any;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.Monitor;
+import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -34,7 +45,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @since 3.0
  */
-public abstract class AbstractMerger implements IMerger {
+public abstract class AbstractMerger implements IMerger2 {
 	/** Ranking of this merger. */
 	private int ranking;
 
@@ -78,6 +89,160 @@ public abstract class AbstractMerger implements IMerger {
 			throw new IllegalStateException("The registry has to be set only once."); //$NON-NLS-1$
 		}
 		this.registry = registry;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @since 3.1
+	 */
+	public Set<Diff> getResultingMerges(Diff diff, boolean mergeLeftToRight, Set<Diff> knownImplications) {
+		final Set<Diff> relations = new LinkedHashSet<Diff>();
+		relations.add(diff);
+		if (mergeLeftToRight) {
+			if (DifferenceSource.LEFT == diff.getSource()) {
+				relations.addAll(getImpliedDiffsOf(diff.getRequires(), mergeLeftToRight, Sets.union(
+						relations, knownImplications)));
+				relations.addAll(getRecursiveImplies(diff));
+			} else {
+				relations.addAll(getImpliedDiffsOf(diff.getRequiredBy(), mergeLeftToRight, Sets.union(
+						relations, knownImplications)));
+				relations.addAll(getRecursiveImpliedBy(diff));
+			}
+		} else {
+			if (DifferenceSource.LEFT == diff.getSource()) {
+				relations.addAll(getImpliedDiffsOf(diff.getRequiredBy(), mergeLeftToRight, Sets.union(
+						relations, knownImplications)));
+				relations.addAll(getRecursiveImpliedBy(diff));
+			} else {
+				relations.addAll(getImpliedDiffsOf(diff.getRequires(), mergeLeftToRight, Sets.union(
+						relations, knownImplications)));
+				relations.addAll(getRecursiveImplies(diff));
+			}
+		}
+		relations.addAll(getImpliedDiffsOf(diff.getRefinedBy(), mergeLeftToRight, Sets.union(relations,
+				knownImplications)));
+		if (diff.getEquivalence() != null) {
+			relations.addAll(diff.getEquivalence().getDifferences());
+		}
+		if (diff.getConflict() != null && diff.getConflict().getKind() == ConflictKind.PSEUDO) {
+			relations.addAll(diff.getConflict().getDifferences());
+		}
+		return relations;
+	}
+
+	/**
+	 * Prompt the merger of each of the given diffs to tell us what will be implied by their merge. This will
+	 * recursively call {@link #getImpliedDiffs(Diff, boolean)}.
+	 * <p>
+	 * Note that the diffs themselves are included in the returned set (i.e. a diff is considered to be
+	 * implying itself as far as the merge is concerned).
+	 * </p>
+	 * 
+	 * @param subDiffs
+	 *            The diffs for which merges we need the implications.
+	 * @param mergeLeftToRight
+	 *            The direction in which we're considering a merge.
+	 * @param knownImplications
+	 *            The set of Diffs already known as being implied by our starting point. Since there may be
+	 *            implication cycles, this can be used to break free. This method is not supposed to add
+	 *            anything to this set.
+	 * @return All of the recursive implications of merging the given differences in the given direction.
+	 */
+	private Set<Diff> getImpliedDiffsOf(Iterable<Diff> subDiffs, boolean mergeLeftToRight,
+			Set<Diff> knownImplications) {
+		final Set<Diff> relations = new LinkedHashSet<Diff>();
+		for (Diff dependency : Iterables.filter(subDiffs, not(in(knownImplications)))) {
+			IMerger dependencyMerger = getRegistry().getHighestRankingMerger(dependency);
+			if (dependencyMerger instanceof IMerger2) {
+				relations.addAll(((IMerger2)dependencyMerger).getResultingMerges(dependency, mergeLeftToRight,
+						Sets.union(relations, knownImplications)));
+			} else {
+				relations.add(dependency);
+			}
+		}
+		return relations;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @since 3.1
+	 */
+	public Set<Diff> getResultingRejections(Diff diff, boolean mergeLeftToRight, Set<Diff> knownRejections) {
+		final Set<Diff> impliedRejections = new LinkedHashSet<Diff>();
+
+		/*
+		 * Consider that we are merging "diff" from left to right. For all the diffs implied by this merge
+		 * (including "diff"), we need to look at possible conflicts. For any of these diffs that does have a
+		 * real conflict, we are in essence rejecting the diffs from the opposite side (say we are merging a
+		 * diff detected on the left side, all diffs from the right side conflicting with it won't be
+		 * mergeable once all is said and done). Transitively, a diff that was requiring one of the rejected
+		 * ones will also be rejected. We do not need to check for conflicts on the rejected ones though :
+		 * "rejecting" a diff in conflict means nothing for the other diffs of said conflict, except that they
+		 * can now be merged on demand.
+		 */
+		/*
+		 * "accepting" a diff is merging a diff from the DifferenceSource#LEFT side from left to right, or a
+		 * diff from the DifferenceSource#RIGHT side from right to left. Rejecting a diff is ... the reverse
+		 * of that.
+		 */
+
+		final Set<Diff> impliedDiffs = getResultingMerges(diff, mergeLeftToRight, Collections.<Diff> emptySet());
+		for (Diff implied : impliedDiffs) {
+			final Conflict conflict = implied.getConflict();
+			if (conflict != null && conflict.getKind() == ConflictKind.REAL) {
+				final Iterable<Diff> directlyImpliedRejections;
+				if (mergeLeftToRight && implied.getSource() == DifferenceSource.LEFT) {
+					directlyImpliedRejections = Iterables.filter(conflict.getDifferences(),
+							fromSide(DifferenceSource.RIGHT));
+				} else if (!mergeLeftToRight && implied.getSource() == DifferenceSource.RIGHT) {
+					directlyImpliedRejections = Iterables.filter(conflict.getDifferences(),
+							fromSide(DifferenceSource.LEFT));
+				} else {
+					directlyImpliedRejections = new HashSet<Diff>();
+				}
+				// And the diffs requiring our rejections are, in turn, rejected.
+				Iterables.addAll(impliedRejections, getImpliedDiffsOf(directlyImpliedRejections,
+						mergeLeftToRight, knownRejections));
+			}
+		}
+
+		return impliedRejections;
+	}
+
+	/**
+	 * Returns all of the differences "implied" as in {@link Diff#getImplies()} differences of the given
+	 * starting point, recursively.
+	 * 
+	 * @param diff
+	 *            The diff for which we need all recursive implications.
+	 * @return all of the differences implied by the given starting point.
+	 */
+	private Set<Diff> getRecursiveImplies(Diff diff) {
+		final Set<Diff> implies = new LinkedHashSet<Diff>();
+		implies.addAll(diff.getImplies());
+		for (Diff implied : diff.getImplies()) {
+			implies.addAll(getRecursiveImplies(implied));
+		}
+		return implies;
+	}
+
+	/**
+	 * Returns all of the differences "impliedBy" as in {@link Diff#getImpliedBY()} differences of the given
+	 * starting point, recursively.
+	 * 
+	 * @param diff
+	 *            The diff for which we need all recursive implying diffs.
+	 * @return all of the differences implying the given starting point.
+	 */
+	private Set<Diff> getRecursiveImpliedBy(Diff diff) {
+		final Set<Diff> implying = new LinkedHashSet<Diff>();
+		implying.addAll(diff.getImpliedBy());
+		for (Diff impliedBy : diff.getImpliedBy()) {
+			implying.addAll(getRecursiveImpliedBy(impliedBy));
+		}
+		return implying;
 	}
 
 	/**
@@ -227,9 +392,8 @@ public abstract class AbstractMerger implements IMerger {
 	 * @since 3.1
 	 */
 	protected void handleImplies(Diff diff, boolean rightToLeft, Monitor monitor) {
-		for (Diff implied : diff.getImplies()) {
+		for (Diff implied : getRecursiveImplies(diff)) {
 			implied.setState(DifferenceState.MERGED);
-			handleImplies(implied, rightToLeft, monitor);
 		}
 	}
 
@@ -246,9 +410,8 @@ public abstract class AbstractMerger implements IMerger {
 	 * @since 3.1
 	 */
 	protected void handleImpliedBy(Diff diff, boolean rightToLeft, Monitor monitor) {
-		for (Diff impliedBy : diff.getImpliedBy()) {
+		for (Diff impliedBy : getRecursiveImpliedBy(diff)) {
 			impliedBy.setState(DifferenceState.MERGED);
-			handleImpliedBy(impliedBy, rightToLeft, monitor);
 		}
 	}
 

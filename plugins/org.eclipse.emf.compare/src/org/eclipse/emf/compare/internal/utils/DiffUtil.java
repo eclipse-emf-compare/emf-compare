@@ -11,13 +11,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.not;
-import static com.google.common.base.Predicates.or;
-import static com.google.common.collect.Iterables.addAll;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
-
 import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Iterables;
@@ -29,21 +22,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Conflict;
-import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompareMessages;
-import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -864,221 +853,6 @@ public final class DiffUtil {
 					"DiffUtil.IllegalDiff", diff.eClass().getName())); //$NON-NLS-1$
 		}
 		return value;
-	}
-
-	/**
-	 * Get the list of all required differences for merge of the given difference (required, required of
-	 * required..., equivalences and pseudo conflicts).
-	 * 
-	 * @param diff
-	 *            the given difference.
-	 * @param leftToRight
-	 *            the way of merge.
-	 * @return the list of all required differences.
-	 * @since 3.0
-	 */
-	public static Set<Diff> getRequires(Diff diff, boolean leftToRight) {
-		return getAllRequires(diff, diff, leftToRight, Sets.newHashSet());
-	}
-
-	/**
-	 * Get the list of required differences (only the first level) for merge of the given original difference.
-	 * 
-	 * @param currentDiff
-	 *            the current difference being processed.
-	 * @param originalDiff
-	 *            the original given difference.
-	 * @param leftToRight
-	 *            the way of merge.
-	 * @return the list of all required differences.
-	 */
-	private static Set<Diff> getFirstLevelRequires(Diff currentDiff, final Diff originalDiff,
-			boolean leftToRight) {
-		Set<Diff> requires = Sets.newHashSet();
-		DifferenceSource originalDiffSource = originalDiff.getSource();
-		// Add requires or requiredBy according to the way of merge and the source of the diff.
-		if (leftToRight) {
-			if (DifferenceSource.LEFT == originalDiffSource) {
-				addAll(requires, currentDiff.getRequires());
-			} else if (DifferenceSource.RIGHT == originalDiffSource) {
-				addAll(requires, currentDiff.getRequiredBy());
-			} else {
-				// Do nothing.
-			}
-		} else {
-			if (DifferenceSource.RIGHT == originalDiffSource) {
-				addAll(requires, currentDiff.getRequires());
-			} else if (DifferenceSource.LEFT == originalDiffSource) {
-				addAll(requires, currentDiff.getRequiredBy());
-			} else {
-				// Do nothing.
-			}
-		}
-
-		// Add the refined differences.
-		addAll(requires, currentDiff.getRefinedBy());
-		// Add the equivalences.
-		addAll(requires, getEquivalences(currentDiff));
-		// Add the pseudo conflicted differences.
-		Conflict conflict = currentDiff.getConflict();
-		if (conflict != null && conflict.getKind() == ConflictKind.PSEUDO) {
-			addAll(requires, conflict.getDifferences());
-		}
-		requires.remove(originalDiff);
-		requires.remove(currentDiff);
-
-		return requires;
-	}
-
-	/**
-	 * Get the list of required differences (only the first level) for merge of the given original difference.
-	 * 
-	 * @param currentDiff
-	 *            the current difference being processed.
-	 * @param originalDiff
-	 *            the original given difference.
-	 * @param leftToRight
-	 *            the way of merge.
-	 * @param processedDiffs
-	 *            the list of already processed diffs.
-	 * @return the list of all required differences.
-	 */
-	private static Set<Diff> getAllRequires(Diff currentDiff, final Diff originalDiff, boolean leftToRight,
-			Set<Object> processedDiffs) {
-		Set<Diff> requires = Sets.newHashSet();
-		Set<Diff> firstLevelRequires = getFirstLevelRequires(currentDiff, originalDiff, leftToRight);
-		addAll(requires, firstLevelRequires);
-		for (Diff require : firstLevelRequires) {
-			if (!originalDiff.equals(require) && !processedDiffs.contains(require)) {
-				processedDiffs.add(require);
-				addAll(requires, getAllRequires(require, originalDiff, leftToRight, processedDiffs));
-			}
-		}
-		return requires;
-	}
-
-	/**
-	 * Get the list of all unmergeable differences after the merge of the given difference.
-	 * 
-	 * @param diff
-	 *            the given difference.
-	 * @param leftToRight
-	 *            the way of merge.
-	 * @return the list of all unmergeable differences.
-	 * @since 3.0
-	 */
-	public static Set<Diff> getUnmergeables(Diff diff, boolean leftToRight) {
-		return getAllUnmergeables(diff, leftToRight, Sets.newHashSet());
-	}
-
-	/**
-	 * Get the list of unmergeable differences (only the first level) after the merge of the given difference.
-	 * 
-	 * @param diff
-	 *            the given difference.
-	 * @param leftToRight
-	 *            the way of merge.
-	 * @return the list of unmergeable differences.
-	 */
-	private static Set<Diff> getFirstLevelUnmergeables(Diff diff, boolean leftToRight) {
-		Set<Diff> unmergeables = Sets.newHashSet();
-		Conflict conflict = diff.getConflict();
-		if (conflict != null && conflict.getKind() == ConflictKind.REAL) {
-			for (Diff diffConflict : conflict.getDifferences()) {
-				if (leftToRight
-						&& and(fromSide(DifferenceSource.LEFT),
-								or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.CHANGE))).apply(diff)) {
-					if (and(fromSide(DifferenceSource.RIGHT), not(ofKind(DifferenceKind.MOVE))).apply(
-							diffConflict)) {
-						unmergeables.add(diffConflict);
-					}
-				} else if (leftToRight
-						&& and(fromSide(DifferenceSource.LEFT),
-								or(ofKind(DifferenceKind.DELETE), ofKind(DifferenceKind.CHANGE))).apply(diff)) {
-					if (and(fromSide(DifferenceSource.RIGHT),
-							or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.CHANGE)))
-							.apply(diffConflict)) {
-						unmergeables.add(diffConflict);
-					}
-				} else if (leftToRight
-						&& and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.MOVE)).apply(diff)) {
-					if (and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.MOVE))
-							.apply(diffConflict)) {
-						unmergeables.add(diffConflict);
-					}
-				} else if (!leftToRight
-						&& and(fromSide(DifferenceSource.RIGHT),
-								or(ofKind(DifferenceKind.DELETE), ofKind(DifferenceKind.CHANGE))).apply(diff)) {
-					if (fromSide(DifferenceSource.LEFT).apply(diffConflict)) {
-						unmergeables.add(diffConflict);
-					}
-				} else if (!leftToRight
-						&& and(fromSide(DifferenceSource.RIGHT),
-								or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.CHANGE))).apply(diff)) {
-					if (and(fromSide(DifferenceSource.LEFT), not(ofKind(DifferenceKind.MOVE))).apply(
-							diffConflict)) {
-						unmergeables.add(diffConflict);
-					}
-				} else if (!leftToRight
-						&& and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.MOVE)).apply(diff)) {
-					if (and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.MOVE)).apply(diffConflict)) {
-						unmergeables.add(diffConflict);
-					}
-				}
-			}
-		}
-
-		unmergeables.remove(diff);
-
-		return unmergeables;
-	}
-
-	/**
-	 * Get the list of all unmergeable differences after the merge of the given difference.
-	 * 
-	 * @param diff
-	 *            the given difference.
-	 * @param leftToRight
-	 *            the way of merge.
-	 * @param processedDiffs
-	 *            the list of already processed diffs.
-	 * @return the list of all unmergeable differences.
-	 */
-	private static Set<Diff> getAllUnmergeables(Diff diff, boolean leftToRight, Set<Object> processedDiffs) {
-		Set<Diff> unmergeables = Sets.newHashSet();
-		Set<Diff> firstLevelUnmergeables = getFirstLevelUnmergeables(diff, leftToRight);
-		processedDiffs.add(diff);
-		addAll(unmergeables, firstLevelUnmergeables);
-		for (Diff unmergeable : firstLevelUnmergeables) {
-			addAll(unmergeables, getFirstLevelRequires(unmergeable, diff, !leftToRight));
-		}
-		addAll(processedDiffs, firstLevelUnmergeables);
-		Set<Diff> firstLevelRequires = getFirstLevelRequires(diff, diff, leftToRight);
-		for (Diff require : firstLevelRequires) {
-			if (require != diff && !processedDiffs.contains(require)) {
-				processedDiffs.add(require);
-				addAll(unmergeables, getAllUnmergeables(require, leftToRight, processedDiffs));
-			}
-		}
-		unmergeables.remove(diff);
-		return unmergeables;
-	}
-
-	/**
-	 * Get the list of equivalent differences of the given difference.
-	 * 
-	 * @param diff
-	 *            the given Diff.
-	 * @return the list of equivalent differences.
-	 */
-	private static Set<Diff> getEquivalences(Diff diff) {
-		LinkedHashSet<Diff> equivalences = Sets.newLinkedHashSet();
-		Equivalence equivalence = diff.getEquivalence();
-		if (equivalence != null) {
-			equivalences.addAll(equivalence.getDifferences());
-			equivalences.remove(diff);
-		}
-		return equivalences;
 	}
 
 	/**

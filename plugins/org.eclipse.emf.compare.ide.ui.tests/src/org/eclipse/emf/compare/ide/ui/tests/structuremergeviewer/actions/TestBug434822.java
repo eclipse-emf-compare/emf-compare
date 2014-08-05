@@ -170,9 +170,10 @@ public class TestBug434822 {
 		// Assert merge data
 		Assert.assertEquals(DifferenceState.MERGED, movingDiff.getState());
 		Assert.assertEquals(MergeMode.ACCEPT, getMergeData(movingDiff).getMergeMode());
-		Assert.assertEquals(DifferenceState.UNRESOLVED, deletionDiff.getState());
+		Assert.assertEquals(DifferenceState.MERGED, deletionDiff.getState());
 		IMergeData mergeData = getMergeData(deletionDiff);
-		Assert.assertNull(mergeData);
+		Assert.assertNotNull(mergeData);
+		Assert.assertEquals(MergeMode.REJECT, mergeData.getMergeMode());
 
 	}
 

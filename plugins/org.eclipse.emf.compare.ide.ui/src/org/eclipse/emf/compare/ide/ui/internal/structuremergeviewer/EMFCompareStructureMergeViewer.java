@@ -87,6 +87,7 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareSt
 import org.eclipse.emf.compare.ide.ui.internal.util.CompareHandlerService;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
@@ -552,9 +553,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	@Subscribe
 	public void mergePreviewModeChange(@SuppressWarnings("unused") IMergePreviewModeChange event) {
+		final IMerger.Registry registry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 		SWTUtil.safeAsyncExec(new Runnable() {
 			public void run() {
-				dependencyData.updateDependencies(getSelection());
+				dependencyData.updateDependencies(getSelection(), registry);
 				internalRedraw();
 			}
 		});
@@ -1123,14 +1125,14 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 			public void run() {
 				getViewer().refresh();
-
 			}
 		});
 		// Updates dependency data when the viewer has been refreshed and the content provider is ready.
 		getContentProvider().runWhenReady(IN_UI_SYNC, new Runnable() {
 			public void run() {
 				dependencyData.updateTreeItemMappings();
-				dependencyData.updateDependencies(getSelection());
+				dependencyData.updateDependencies(getSelection(), EMFCompareRCPPlugin.getDefault()
+						.getMergerRegistry());
 
 				internalRedraw();
 
@@ -1147,7 +1149,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	private void handleSelectionChangedEvent(SelectionChangedEvent event) {
-		dependencyData.updateDependencies(event.getSelection());
+		dependencyData.updateDependencies(event.getSelection(), EMFCompareRCPPlugin.getDefault()
+				.getMergerRegistry());
 		internalRedraw();
 	}
 

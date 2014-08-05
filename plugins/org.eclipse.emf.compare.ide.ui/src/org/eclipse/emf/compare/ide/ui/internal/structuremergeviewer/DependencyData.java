@@ -23,12 +23,14 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
-import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.merge.IMerger2;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
@@ -63,7 +65,7 @@ public class DependencyData {
 	/**
 	 * @param selection
 	 */
-	public void updateDependencies(ISelection selection) {
+	public void updateDependencies(ISelection selection, IMerger.Registry mergerRegistry) {
 		boolean leftEditable = compareConfiguration.isLeftEditable();
 		boolean rightEditable = compareConfiguration.isRightEditable();
 		if (leftEditable || rightEditable) {
@@ -75,8 +77,15 @@ public class DependencyData {
 			unmergeables = newHashSet();
 			for (Diff diff : selectedDiffs) {
 				boolean leftToRight = mergePreviewMode.isLeftToRight(diff, leftEditable, rightEditable);
-				addAll(requires, DiffUtil.getRequires(diff, leftToRight));
-				addAll(unmergeables, DiffUtil.getUnmergeables(diff, leftToRight));
+				final IMerger diffMerger = mergerRegistry.getHighestRankingMerger(diff);
+				if (diffMerger instanceof IMerger2) {
+					addAll(requires, ((IMerger2)diffMerger).getResultingMerges(diff, leftToRight, Collections
+							.<Diff> emptySet()));
+					requires.remove(diff);
+					addAll(unmergeables, ((IMerger2)diffMerger).getResultingRejections(diff, leftToRight,
+							Collections.<Diff> emptySet()));
+					unmergeables.remove(diff);
+				}
 			}
 		}
 	}
