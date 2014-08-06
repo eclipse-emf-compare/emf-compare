@@ -638,6 +638,7 @@
       </activation>
       <properties>
         <!-- Sonar properties -->
+        <jacoco.reportDir>../../org.eclipse.emf.compare-parent/target/jacoco/</jacoco.reportDir>
         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <!-- Points to the target folder of the global parent project -->
@@ -650,12 +651,25 @@
             <artifactId>jacoco-maven-plugin</artifactId>
             <executions>
               <execution>
+                <id>prepare-agent</id>
                 <goals>
                   <goal>prepare-agent</goal>
                 </goals>
                 <configuration>
+                  <!-- Where to put jacoco coverage report -->
                   <append>true</append>
                   <destFile>${sonar.jacoco.reportPath}</destFile>
+                </configuration>
+              </execution>
+              <execution>
+                <id>report</id>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+                <configuration>
+                  <!-- Where to put jacoco coverage report -->
+                  <dataFile>${sonar.jacoco.reportPath}</dataFile>
+                  <outputDirectory>${jacoco.reportDir}</outputDirectory>
                 </configuration>
               </execution>
             </executions>
@@ -665,14 +679,13 @@
             <artifactId>maven-checkstyle-plugin</artifactId>
             <executions>
               <execution>
-                <id>check my sources</id>
                 <goals>
                   <goal>checkstyle</goal>
                 </goals>
-                <phase>verify</phase>
                 <configuration>
                   <failOnErrors>false</failOnErrors>
                   <consoleOutput>true</consoleOutput>
+                  <configLocation>codeStyle/EMFCompareCheckstyle5Configuration.xml</configLocation>
                 </configuration>
               </execution>
             </executions>
