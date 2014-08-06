@@ -702,7 +702,6 @@
             <executions>
               <execution>
                 <id>findbugs</id>
-                <phase>validate</phase>
                 <goals>
                   <goal>findbugs</goal>
                 </goals>
