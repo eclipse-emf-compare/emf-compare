@@ -681,13 +681,13 @@
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>findbugs-maven-plugin</artifactId>
             <configuration>
-              <findbugsXmlOutput>true</findbugsXmlOutput>
+              <xmlOutput>true</xmlOutput>
               <failOnError>false</failOnError>
             </configuration>
             <executions>
               <execution>
                 <goals>
-                  <goal>check</goal>
+                  <goal>findbugs</goal>
                 </goals>
               </execution>
             </executions>
