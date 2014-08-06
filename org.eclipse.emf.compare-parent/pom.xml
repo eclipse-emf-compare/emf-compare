@@ -680,7 +680,6 @@
             <executions>
               <execution>
                 <id>checkstyle</id>
-                <phase>validate</phase>
                 <goals>
                   <goal>checkstyle</goal>
                 </goals>
