@@ -636,14 +636,6 @@
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
-      <properties>
-        <!-- Sonar properties -->
-        <jacoco.reportDir>../../org.eclipse.emf.compare-parent/target/jacoco/</jacoco.reportDir>
-        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <!-- Points to the target folder of the global parent project -->
-        <sonar.jacoco.reportPath>../../org.eclipse.emf.compare-parent/target/jacoco.exec</sonar.jacoco.reportPath>
-      </properties>
       <build>
         <plugins>
           <plugin>
@@ -651,26 +643,17 @@
             <artifactId>jacoco-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>prepare-agent</id>
+                <id>default-prepare-agent</id>
                 <goals>
                   <goal>prepare-agent</goal>
                 </goals>
-                <configuration>
-                  <!-- Where to put jacoco coverage report -->
-                  <append>true</append>
-                  <destFile>${sonar.jacoco.reportPath}</destFile>
-                </configuration>
               </execution>
               <execution>
-                <id>report</id>
+                <id>default-report</id>
+                <phase>prepare-package</phase>
                 <goals>
                   <goal>report</goal>
                 </goals>
-                <configuration>
-                  <!-- Where to put jacoco coverage report -->
-                  <dataFile>${sonar.jacoco.reportPath}</dataFile>
-                  <outputDirectory>${jacoco.reportDir}</outputDirectory>
-                </configuration>
               </execution>
             </executions>
           </plugin>
