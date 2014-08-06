@@ -727,7 +727,8 @@
                   <goal>cpd</goal>
                 </goals>
               </execution>
-              <id>pmd</id>
+              <execution>
+                <id>pmd</id>
                 <phase>validate</phase>
                 <goals>
                   <goal>pmd</goal>
