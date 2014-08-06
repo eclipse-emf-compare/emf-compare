@@ -679,6 +679,8 @@
             <artifactId>maven-checkstyle-plugin</artifactId>
             <executions>
               <execution>
+                <id>checkstyle</id>
+                <phase>validate</phase>
                 <goals>
                   <goal>checkstyle</goal>
                 </goals>
@@ -699,6 +701,8 @@
             </configuration>
             <executions>
               <execution>
+                <id>findbugs</id>
+                <phase>validate</phase>
                 <goals>
                   <goal>findbugs</goal>
                 </goals>
@@ -717,9 +721,16 @@
             </configuration>
             <executions>
               <execution>
+                <id>cpd</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>cpd</goal>
+                </goals>
+              </execution>
+              <id>pmd</id>
+                <phase>validate</phase>
                 <goals>
                   <goal>pmd</goal>
-                  <goal>cpd</goal>
                 </goals>
               </execution>
             </executions>
