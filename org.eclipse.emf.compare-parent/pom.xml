@@ -705,7 +705,8 @@
             <executions>
               <execution>
                 <goals>
-                  <goal>cpd-check</goal>
+                  <goal>pmd</goal>
+                  <goal>cpd</goal>
                 </goals>
               </execution>
             </executions>
