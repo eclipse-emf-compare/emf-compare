@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - Fixes for bug 440679
+ *     Philip Langer - Fixes for bug 440679, 441258, and refactorings
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
 
@@ -804,6 +804,12 @@ public final class DiffUtil {
 	 * @see #findInsertionIndex(Comparison, Iterable, List, List, Object)
 	 */
 	public static int findInsertionIndex(Comparison comparison, Diff diff, boolean rightToLeft) {
+		final EStructuralFeature targetFeature = getTargetFeature(comparison, diff, rightToLeft);
+		if (!targetFeature.isMany()) {
+			throw new IllegalArgumentException(EMFCompareMessages.getString(
+					"DiffUtil.IllegalFeature", targetFeature.getName())); //$NON-NLS-1$
+		}
+
 		final List<Object> sourceList = getSourceList(diff, rightToLeft);
 		final List<Object> targetList = getTargetList(comparison, diff, rightToLeft);
 		final Object changedValue = getChangedValue(diff);
@@ -834,10 +840,6 @@ public final class DiffUtil {
 		} else {
 			throw new IllegalArgumentException(EMFCompareMessages.getString(
 					"DiffUtil.IllegalDiff", diff.eClass().getName())); //$NON-NLS-1$
-		}
-		if (!feature.isMany()) {
-			throw new IllegalArgumentException(EMFCompareMessages.getString(
-					"DiffUtil.IllegalFeature", feature.getName())); //$NON-NLS-1$
 		}
 		return feature;
 	}
@@ -1135,58 +1137,117 @@ public final class DiffUtil {
 	 *         <code>null</code>.
 	 */
 	private static List<Object> getTargetList(Comparison comparison, Diff diff, boolean rightToLeft) {
-		final EStructuralFeature diffFeature = getChangedFeature(diff);
-		final Object value = getChangedValue(diff);
+		final EStructuralFeature targetFeature = getTargetFeature(comparison, diff, rightToLeft);
+		final EObject expectedContainer = getTargetContainer(comparison, diff, rightToLeft);
+		return ReferenceUtil.getAsList(expectedContainer, targetFeature);
+	}
+
+	/**
+	 * Retrieves the "target" container, that is the object containing the value to be changed by the given
+	 * {@code diff}. This container will be different according to the kind of change and the direction of the
+	 * merging.
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param diff
+	 *            The diff for which we need the target container in the current merging.
+	 * @param rightToLeft
+	 *            Direction of the merging. {@code true} if the merge is to be done on the left side, making
+	 *            'target' the right side, {@code false} otherwise.
+	 * @return The container that should be used as a target for this merge.
+	 */
+	private static EObject getTargetContainer(Comparison comparison, Diff diff, boolean rightToLeft) {
+		final EObject targetContainer;
+
 		final Match match = diff.getMatch();
-		final EStructuralFeature targetFeature;
-		final EObject expectedContainer;
 
 		if (ComparisonUtil.isFeatureMapContainment(diff) && diff.getKind() == DifferenceKind.MOVE) {
-			expectedContainer = ComparisonUtil.moveElementGetExpectedContainer(comparison,
+			targetContainer = ComparisonUtil.moveElementGetExpectedContainer(comparison,
 					(FeatureMapChange)diff, rightToLeft);
-			targetFeature = diffFeature;
-		} else if (diffFeature instanceof EReference && ((EReference)diffFeature).isContainment()
-				&& diff.getKind() == DifferenceKind.MOVE) {
+		} else if (isContainmentReferenceMove(diff)) {
+			final Match targetContainerMatch;
+
 			// The value can only be an EObject, and its match cannot be null.
 			// If any of these two assumptions is wrong, something went horribly awry beforehand.
+			final Object value = getChangedValue(diff);
 			final Match valueMatch = comparison.getMatch((EObject)value);
 
-			final Match targetContainerMatch;
 			// If it exists, use the source side's container as reference
 			if (rightToLeft && valueMatch.getRight() != null) {
 				targetContainerMatch = comparison.getMatch(valueMatch.getRight().eContainer());
-				// targetFeature = valueMatch.getRight().eContainingFeature();
-				if (DifferenceSource.RIGHT == diff.getSource()) {
-					targetFeature = diffFeature;
-				} else {
-					targetFeature = valueMatch.getRight().eContainingFeature();
-				}
 			} else if (!rightToLeft && valueMatch.getLeft() != null) {
 				targetContainerMatch = comparison.getMatch(valueMatch.getLeft().eContainer());
-				if (DifferenceSource.LEFT == diff.getSource()) {
-					targetFeature = diffFeature;
-				} else {
-					targetFeature = valueMatch.getRight().eContainingFeature();
-				}
 			} else {
 				// Otherwise, the value we're moving on one side has been removed from its source side.
 				targetContainerMatch = comparison.getMatch(valueMatch.getOrigin().eContainer());
-				targetFeature = valueMatch.getOrigin().eContainingFeature();
 			}
 			if (rightToLeft) {
-				expectedContainer = targetContainerMatch.getLeft();
+				targetContainer = targetContainerMatch.getLeft();
 			} else {
-				expectedContainer = targetContainerMatch.getRight();
+				targetContainer = targetContainerMatch.getRight();
 			}
 		} else if (rightToLeft) {
-			expectedContainer = match.getLeft();
-			targetFeature = diffFeature;
+			targetContainer = match.getLeft();
 		} else {
-			expectedContainer = match.getRight();
+			targetContainer = match.getRight();
+		}
+
+		return targetContainer;
+	}
+
+	/**
+	 * Retrieves the "target" feature, that is the feature at which the value to be changed by the given
+	 * {@code diff} is contained by the {@link #getTargetContainer(Comparison, Diff, boolean) target
+	 * container}. This feature might be different according to the kind of change and the direction of the
+	 * merging.
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param diff
+	 *            The diff for which we need the target feature in the current merging.
+	 * @param rightToLeft
+	 *            Direction of the merging. {@code true} if the merge is to be done on the left side, making
+	 *            'target' the right side, {@code false} otherwise.
+	 * @return The feature that should be used as a target for this merge.
+	 */
+	private static EStructuralFeature getTargetFeature(Comparison comparison, Diff diff, boolean rightToLeft) {
+		final EStructuralFeature targetFeature;
+
+		final EStructuralFeature diffFeature = getChangedFeature(diff);
+		final Object diffValue = getChangedValue(diff);
+
+		if (isContainmentReferenceMove(diff)) {
+			final Match valueMatch = comparison.getMatch((EObject)diffValue);
+			if (rightToLeft && DifferenceSource.LEFT == diff.getSource() && valueMatch.getRight() != null) {
+				targetFeature = valueMatch.getRight().eContainingFeature();
+			} else if (!rightToLeft && DifferenceSource.RIGHT == diff.getSource()
+					&& valueMatch.getLeft() != null) {
+				targetFeature = valueMatch.getRight().eContainingFeature();
+			} else if (valueMatch.getOrigin() != null) {
+				targetFeature = valueMatch.getOrigin().eContainingFeature();
+			} else {
+				targetFeature = diffFeature;
+			}
+		} else {
 			targetFeature = diffFeature;
 		}
 
-		return ReferenceUtil.getAsList(expectedContainer, targetFeature);
+		return targetFeature;
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} represents a move of an {@link EObject}; that is, whether the
+	 * changed feature of the given {@code diff} is a containment reference.
+	 * 
+	 * @param diff
+	 *            The diff to check.
+	 * @return <code>true</code> if {@code diff} represents a move of an {@link EObject}, <code>false</code>
+	 *         otherwise.
+	 */
+	private static boolean isContainmentReferenceMove(Diff diff) {
+		final EStructuralFeature diffFeature = getChangedFeature(diff);
+		return diffFeature instanceof EReference && ((EReference)diffFeature).isContainment()
+				&& diff.getKind() == DifferenceKind.MOVE;
 	}
 
 	/**

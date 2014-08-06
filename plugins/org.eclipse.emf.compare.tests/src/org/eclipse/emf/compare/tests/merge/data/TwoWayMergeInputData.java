@@ -48,4 +48,12 @@ public class TwoWayMergeInputData extends AbstractInputData {
 	public Resource getOppositeReferenceChangeWithAddAndDeleteOnMultivaluedSideRight() throws IOException {
 		return loadFromClassLoader("twoway/oppositereferencechangewithaddanddeleteonmultivaluedside/rtl/right.nodes");
 	}
+
+	public Resource getMoveFromSingleValueReferenceToMultiValueReferenceR2LLeft() throws IOException {
+		return loadFromClassLoader("twoway/movefromsinglevaluereferencetomultivaluereference/rtl/left.nodes");
+	}
+
+	public Resource getMoveFromSingleValueReferenceToMultiValueReferenceR2LRight() throws IOException {
+		return loadFromClassLoader("twoway/movefromsinglevaluereferencetomultivaluereference/rtl/right.nodes");
+	}
 }

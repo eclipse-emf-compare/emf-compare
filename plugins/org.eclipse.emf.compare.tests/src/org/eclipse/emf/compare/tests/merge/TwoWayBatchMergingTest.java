@@ -138,6 +138,20 @@ public class TwoWayBatchMergingTest {
 	}
 
 	/**
+	 * Tests a scenario in which an element is moved from a single-valued containment reference to a
+	 * multi-valued containment reference. This lead to an {@link IllegalArgumentException} (cf. Bug #441258).
+	 * 
+	 * @throws IOException
+	 *             if {@link TwoWayMergeInputData} fails to load the test models.
+	 */
+	@Test
+	public void mergingMoveFromSingleValueReferenceToMultiValueReferenceR2L() throws IOException {
+		final Resource left = input.getMoveFromSingleValueReferenceToMultiValueReferenceR2LLeft();
+		final Resource right = input.getMoveFromSingleValueReferenceToMultiValueReferenceR2LRight();
+		batchMergeAndAssertEquality(left, right, Direction.RIGHT_TO_LEFT);
+	}
+
+	/**
 	 * Merges the given resources {@code left} and {@code right} using the {@link BatchMerger} in the
 	 * specified {@code direction}, re-compares left and right, and asserts their equality in the end.
 	 * 
