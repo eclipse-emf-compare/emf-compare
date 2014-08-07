@@ -58,6 +58,7 @@
     <maven-surefire-version>2.17</maven-surefire-version>
     <jacoco-maven-version>0.7.1.201405082137</jacoco-maven-version>
     <eclipse-jarsigner-version>1.0.5</eclipse-jarsigner-version>
+    <maven-jxr-version>2.3</maven-jxr-version>
 
     <!-- Sonar properties -->
     <sonar.language>java</sonar.language>
@@ -266,11 +267,18 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-pmd-plugin</artifactId>
           <version>${maven-pmd-version}</version>
+          <configuration>
+            <sourceEncoding>${java-source-encoding}</sourceEncoding>
+            <targetJdk>${target-java-version}</targetJdk>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
           <version>${maven-checkstyle-version}</version>
+          <configuration>
+            <encoding>${java-source-encoding}</encoding>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -321,6 +329,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${maven-surefire-version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jxr-plugin</artifactId>
+          <version>${maven-jxr-version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -682,7 +695,6 @@
                   <goal>checkstyle</goal>
                 </goals>
                 <configuration>
-                  <encoding>${java-source-encoding}</encoding>
                   <configLocation>${project.basedir}/../../org.eclipse.emf.compare-parent/codeStyle/EMFCompareCheckstyle5Configuration.xml</configLocation>
                 </configuration>
               </execution>
@@ -708,10 +720,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-pmd-plugin</artifactId>
-            <configuration>
-              <sourceEncoding>${java-source-encoding}</sourceEncoding>
-              <targetJdk>${target-java-version}</targetJdk>
-            </configuration>
             <executions>
               <execution>
                 <id>pmd-cpd</id>
@@ -725,6 +733,14 @@
           </plugin>
         </plugins>
       </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jxr-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </reporting>
     </profile>
     <!-- use this profile to test performance of EMF Compare -->
     <profile>
