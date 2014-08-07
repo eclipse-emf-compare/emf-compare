@@ -44,7 +44,7 @@
     <tycho-extras-version>0.21.0</tycho-extras-version>
     <maven-resources-version>2.6</maven-resources-version>
     <maven-antrun-version>1.7</maven-antrun-version>
-    <findbugs-maven-version>2.5.4</findbugs-maven-version>
+    <findbugs-maven-version>3.0.0</findbugs-maven-version>
     <maven-pmd-version>3.1</maven-pmd-version>
     <exec-maven-version>1.3.1</exec-maven-version>
     <maven-compiler-version>3.1</maven-compiler-version>
@@ -58,6 +58,14 @@
     <maven-surefire-version>2.17</maven-surefire-version>
     <jacoco-maven-version>0.7.1.201405082137</jacoco-maven-version>
     <eclipse-jarsigner-version>1.0.5</eclipse-jarsigner-version>
+
+    <!-- Sonar properties -->
+    <sonar.language>java</sonar.language>
+    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+    <sonar.jacoco.reportPath>${project.basedir}/../../org.eclipse.emf.compare-parent/target/jacoco.exec</sonar.jacoco.reportPath>
+    <!--sonar.junit.reportsPath>../${project.artifactId}.tests/target/surefire-reports/</sonar.junit.reportsPath>
+    <sonar.skippedModules>plugin.tests</sonar.skippedModules-->
   </properties>
   <!--
     Platform-specific modules will be activated from the related profiles.
@@ -84,6 +92,14 @@
     <module>../plugins/org.eclipse.emf.compare.rcp.ui.tests</module>
   </modules>
   <build>
+    <resources>
+     <resource>
+       <directory>codeStyle</directory>
+     </resource>
+   </resources>
+   <!-- This is for checkstyle and PMD -->
+   <sourceDirectory>src</sourceDirectory>
+
     <plugins>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
@@ -205,7 +221,7 @@
           <artifactId>tycho-surefire-plugin</artifactId>
           <version>${tycho-version}</version>
           <configuration>
-            <argLine>-Xms40m -Xmx1G ${os-jvm-flags}</argLine>
+            <argLine>${tycho.testArgLine} -Xms40m -Xmx1G ${os-jvm-flags}</argLine>
           </configuration>
         </plugin>
         <plugin>
@@ -641,16 +657,19 @@
           <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
+            <configuration>
+              <destFile>${sonar.jacoco.reportPath}</destFile>
+            </configuration>
             <executions>
               <execution>
-                <id>default-prepare-agent</id>
+                <id>jacoco-prepare-agent</id>
                 <goals>
                   <goal>prepare-agent</goal>
                 </goals>
               </execution>
               <execution>
-                <id>default-report</id>
-                <phase>prepare-package</phase>
+                <id>jacoco-report</id>
+                <phase>verify</phase>
                 <goals>
                   <goal>report</goal>
                 </goals>
@@ -663,13 +682,12 @@
             <executions>
               <execution>
                 <id>checkstyle</id>
+                <phase>verify</phase>
                 <goals>
                   <goal>checkstyle</goal>
                 </goals>
                 <configuration>
                   <failOnErrors>false</failOnErrors>
-                  <consoleOutput>true</consoleOutput>
-                  <configLocation>codeStyle/EMFCompareCheckstyle5Configuration.xml</configLocation>
                 </configuration>
               </execution>
             </executions>
@@ -684,6 +702,7 @@
             <executions>
               <execution>
                 <id>findbugs</id>
+                <phase>verify</phase>
                 <goals>
                   <goal>findbugs</goal>
                 </goals>
@@ -695,30 +714,33 @@
             <artifactId>maven-pmd-plugin</artifactId>
             <configuration>
               <sourceEncoding>${java-source-encoding}</sourceEncoding>
-              <minimumTokens>100</minimumTokens>
               <targetJdk>${target-java-version}</targetJdk>
-              <format>xml</format>
-              <failOnViolation>false</failOnViolation>
             </configuration>
             <executions>
               <execution>
-                <id>cpd</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>cpd</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>pmd</id>
-                <phase>validate</phase>
+                <id>pmd-cpd</id>
+                <phase>verify</phase>
                 <goals>
                   <goal>pmd</goal>
+                  <goal>cpd</goal>
                 </goals>
               </execution>
             </executions>
           </plugin>
         </plugins>
       </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <configuration>
+              <configLocation>codeStyle/EMFCompareCheckstyle5Configuration.xml</configLocation>
+              <headerLocation>codeStyle/LICENSE.txt</headerLocation>
+            </configuration>
+          </plugin>
+        </plugins>
+      </reporting>
     </profile>
     <!-- use this profile to test performance of EMF Compare -->
     <profile>
