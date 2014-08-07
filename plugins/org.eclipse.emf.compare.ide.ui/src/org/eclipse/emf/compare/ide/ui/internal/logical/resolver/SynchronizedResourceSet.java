@@ -117,6 +117,16 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 
 		if (result == null) {
 			result = demandCreateResource(uri);
+			if (getURIConverter() instanceof RevisionedURIConverter) {
+				try {
+					if (!((RevisionedURIConverter)getURIConverter()).prefetchStream(uri, getLoadOptions())) {
+						// Don't try and load. This resource doesn't exist on that side
+						return result;
+					}
+				} catch (IOException e) {
+					// Let EMF handle this one.
+				}
+			}
 			if (result == null) {
 				// copy/pasted from super.getResource
 				throw new RuntimeException("Cannot create a resource for '" + uri //$NON-NLS-1$

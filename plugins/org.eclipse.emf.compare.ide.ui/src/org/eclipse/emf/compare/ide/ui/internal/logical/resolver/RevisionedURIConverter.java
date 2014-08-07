@@ -13,6 +13,8 @@ package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
@@ -45,6 +47,16 @@ final class RevisionedURIConverter extends StorageURIConverter {
 	private DiffSide side;
 
 	/**
+	 * We can have <code>null</code> input streams from here (if the resource does not exist on the remote
+	 * sides). However, this is not supported by the resource implementations (Resource#load(...)), which
+	 * would fail in NPEs. Since we can only detect that late (when actually trying for the input stream), we
+	 * have to "prefetch" this input stream from the resource set and check, from there, before creating the
+	 * resource, that we will actually be able to load it. This field will be used to keep track of the
+	 * prefetched stream so that we can avoid loading it twice.
+	 */
+	private ConcurrentMap<URI, InputStream> prefetchedStreams = new ConcurrentHashMap<URI, InputStream>();
+
+	/**
 	 * Instantiates our URI converter given its delegate.
 	 * 
 	 * @param delegate
@@ -62,6 +74,35 @@ final class RevisionedURIConverter extends StorageURIConverter {
 	}
 
 	/**
+	 * Prefetches the input stream for the given URI if any. Note that the stream will be left opened and
+	 * cached by this URIConverter, only to be closed when the associated "load resource" is called.
+	 * <p>
+	 * See comments on {@link #prefetchedStreams}. This is used to avoid loading a single URI more than once.
+	 * </p>
+	 * 
+	 * @param uri
+	 *            see {@link #createInputStream(URI, Map)}
+	 * @param options
+	 *            see {@link #createInputStream(URI, Map)}
+	 * @return <code>true</code> if there is an input stream accessible for the given uri, <code>false</code>
+	 *         otherwise.
+	 * @see #createInputStream(URI, Map)
+	 * @see #prefetchedStreams
+	 */
+	/*
+	 * Suppressing the warning. It is the responsibility of the caller to then use #createInputStream(...)
+	 * somehow and close the stream then.
+	 */
+	@SuppressWarnings("resource")
+	public boolean prefetchStream(URI uri, Map<?, ?> options) throws IOException {
+		InputStream stream = createInputStream(uri, options);
+		if (stream != null) {
+			prefetchedStreams.put(uri, stream);
+		}
+		return stream != null;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.ide.utils.StorageURIConverter#createInputStream(org.eclipse.emf.common.util.URI,
@@ -69,7 +110,10 @@ final class RevisionedURIConverter extends StorageURIConverter {
 	 */
 	@Override
 	public InputStream createInputStream(URI uri, Map<?, ?> options) throws IOException {
-		InputStream stream = null;
+		InputStream stream = prefetchedStreams.remove(uri);
+		if (stream != null) {
+			return stream;
+		}
 
 		final URI normalizedUri = normalize(uri);
 		// If this uri points to the plugins directory, load it directly
@@ -102,7 +146,7 @@ final class RevisionedURIConverter extends StorageURIConverter {
 			if (targetFile != null) {
 				stream = openRevisionStream(targetFile);
 			} else {
-				return super.createInputStream(uri, options);
+				stream = super.createInputStream(uri, options);
 			}
 		}
 
