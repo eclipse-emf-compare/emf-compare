@@ -92,11 +92,6 @@
     <module>../plugins/org.eclipse.emf.compare.rcp.ui.tests</module>
   </modules>
   <build>
-    <resources>
-     <resource>
-       <directory>codeStyle</directory>
-     </resource>
-   </resources>
    <!-- This is for checkstyle and PMD -->
    <sourceDirectory>src</sourceDirectory>
 
@@ -687,7 +682,8 @@
                   <goal>checkstyle</goal>
                 </goals>
                 <configuration>
-                  <failOnErrors>false</failOnErrors>
+                  <encoding>${java-source-encoding}</encoding>
+                  <configLocation>${project.basedir}/../../org.eclipse.emf.compare-parent/codeStyle/EMFCompareCheckstyle5Configuration.xml</configLocation>
                 </configuration>
               </execution>
             </executions>
@@ -729,18 +725,6 @@
           </plugin>
         </plugins>
       </build>
-      <reporting>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <configuration>
-              <configLocation>codeStyle/EMFCompareCheckstyle5Configuration.xml</configLocation>
-              <headerLocation>codeStyle/LICENSE.txt</headerLocation>
-            </configuration>
-          </plugin>
-        </plugins>
-      </reporting>
     </profile>
     <!-- use this profile to test performance of EMF Compare -->
     <profile>
