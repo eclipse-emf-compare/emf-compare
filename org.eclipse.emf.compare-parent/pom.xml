@@ -37,6 +37,7 @@
     <java-source-encoding>UTF-8</java-source-encoding>
     <resource-encoding>UTF-8</resource-encoding>
     <os-jvm-flags/>
+    <tycho.testArgLine/>
 
     <!-- plugins versions -->
     <!-- use 'mvn versions:display-plugin-updates' to check for the latest -->
