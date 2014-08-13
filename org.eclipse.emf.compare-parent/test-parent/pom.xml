@@ -48,16 +48,5 @@
         </plugins>
       </build>
     </profile>
-    <profile>
-      <id>no.code.coverage</id>
-      <activation>
-        <property>
-          <name>!code.coverage</name>
-        </property>
-      </activation>
-      <properties>
-        <tycho.testArgLine/>
-      </properties>
-    </profile>
   </profiles>
 </project>

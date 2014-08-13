@@ -762,5 +762,19 @@
         <os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
       </properties>
     </profile>
+    <!-- This profile is activated when the code.coverage property is not set. 
+    Another profile is defined in test-parent where jacoco is triggerred and will set testArgLine to 
+    its desired value. -->
+    <profile>
+      <id>no.code.coverage</id>
+      <activation>
+        <property>
+          <name>!code.coverage</name>
+        </property>
+      </activation>
+      <properties>
+        <tycho.testArgLine/>
+      </properties>
+    </profile>
   </profiles>
 </project>
