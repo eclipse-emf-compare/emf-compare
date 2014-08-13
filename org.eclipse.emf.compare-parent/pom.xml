@@ -205,6 +205,7 @@
             <encoding>${java-source-encoding}</encoding>
             <source>${source-java-version}</source>
             <target>${target-java-version}</target>
+            <showWarnings>true</showWarnings>
           </configuration>
         </plugin>
         <plugin>
