@@ -11,10 +11,10 @@
 package org.eclipse.emf.compare.tests.diff;
 
 import static com.google.common.base.Predicates.and;
-import static junit.framework.Assert.assertEquals;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.referenceValueMatch;
+import static org.junit.Assert.assertEquals;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;

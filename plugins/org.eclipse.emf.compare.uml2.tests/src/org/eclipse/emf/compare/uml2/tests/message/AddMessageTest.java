@@ -3,16 +3,17 @@ package org.eclipse.emf.compare.uml2.tests.message;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -26,8 +27,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.uml2.internal.MessageChange;
-import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.message.data.MessageInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
@@ -233,7 +234,7 @@ public class AddMessageTest extends AbstractUMLTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 12 differences
-		assertSame(Integer.valueOf(12), Integer.valueOf(differences.size()));
+		assertEquals(12, differences.size());
 
 		Predicate<? super Diff> addMessageDescription = null;
 		Predicate<? super Diff> addCoveredInMessage0Send0Description = null;
@@ -332,7 +333,7 @@ public class AddMessageTest extends AbstractUMLTest {
 					ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLMessage);
-		assertSame(Integer.valueOf(11), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+		assertEquals(11, addUMLMessage.getRefinedBy().size());
 		assertTrue(addUMLMessage.getRefinedBy().contains(addReceiveEventInMessage));
 		assertTrue(addUMLMessage.getRefinedBy().contains(addSendEventInMessage));
 		assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInMessage0Recv0));
@@ -350,70 +351,70 @@ public class AddMessageTest extends AbstractUMLTest {
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMessage.getRequires().size()));
+			assertEquals(0, addMessage.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addCoveredInMessage0Send0.getRequires().size()));
+			assertEquals(1, addCoveredInMessage0Send0.getRequires().size());
 			assertTrue(addCoveredInMessage0Send0.getRequires().contains(addMessageSend));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addMessageInMessage0Send0.getRequires().size()));
+			assertEquals(2, addMessageInMessage0Send0.getRequires().size());
 			assertTrue(addMessageInMessage0Send0.getRequires().contains(addMessageSend));
 			assertTrue(addMessageInMessage0Send0.getRequires().contains(addMessage));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addCoveredInMessage0Recv0.getRequires().size()));
+			assertEquals(1, addCoveredInMessage0Recv0.getRequires().size());
 			assertTrue(addCoveredInMessage0Recv0.getRequires().contains(addMessageRecv));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addMessageInMessage0Recv0.getRequires().size()));
+			assertEquals(2, addMessageInMessage0Recv0.getRequires().size());
 			assertTrue(addMessageInMessage0Recv0.getRequires().contains(addMessageRecv));
 			assertTrue(addMessageInMessage0Recv0.getRequires().contains(addMessage));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addReceiveEventInMessage.getRequires().size()));
+			assertEquals(2, addReceiveEventInMessage.getRequires().size());
 			assertTrue(addReceiveEventInMessage.getRequires().contains(addMessage));
 			assertTrue(addReceiveEventInMessage.getRequires().contains(addMessageRecv));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addSendEventInMessage.getRequires().size()));
+			assertEquals(2, addSendEventInMessage.getRequires().size());
 			assertTrue(addSendEventInMessage.getRequires().contains(addMessage));
 			assertTrue(addSendEventInMessage.getRequires().contains(addMessageSend));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addCoveredByInLifeline0.getRequires().size()));
+			assertEquals(1, addCoveredByInLifeline0.getRequires().size());
 			assertTrue(addCoveredByInLifeline0.getRequires().contains(addMessageSend));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addCoveredByInLifeline1.getRequires().size()));
+			assertEquals(1, addCoveredByInLifeline1.getRequires().size());
 			assertTrue(addCoveredByInLifeline1.getRequires().contains(addMessageRecv));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMessageSend.getRequires().size()));
+			assertEquals(0, addMessageSend.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMessageRecv.getRequires().size()));
+			assertEquals(0, addMessageRecv.getRequires().size());
 
 		} else {
-			assertSame(Integer.valueOf(4), Integer.valueOf(addMessage.getRequires().size()));
+			assertEquals(4, addMessage.getRequires().size());
 			assertTrue(addMessage.getRequires().contains(addReceiveEventInMessage));
 			assertTrue(addMessage.getRequires().contains(addSendEventInMessage));
 			assertTrue(addMessage.getRequires().contains(addMessageInMessage0Recv0));
 			assertTrue(addMessage.getRequires().contains(addMessageInMessage0Send0));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addCoveredInMessage0Send0.getRequires().size()));
+			assertEquals(0, addCoveredInMessage0Send0.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMessageInMessage0Send0.getRequires().size()));
+			assertEquals(0, addMessageInMessage0Send0.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addCoveredInMessage0Recv0.getRequires().size()));
+			assertEquals(0, addCoveredInMessage0Recv0.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMessageInMessage0Recv0.getRequires().size()));
+			assertEquals(0, addMessageInMessage0Recv0.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addReceiveEventInMessage.getRequires().size()));
+			assertEquals(0, addReceiveEventInMessage.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addSendEventInMessage.getRequires().size()));
+			assertEquals(0, addSendEventInMessage.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addCoveredByInLifeline0.getRequires().size()));
+			assertEquals(0, addCoveredByInLifeline0.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addCoveredByInLifeline1.getRequires().size()));
+			assertEquals(0, addCoveredByInLifeline1.getRequires().size());
 
-			assertSame(Integer.valueOf(4), Integer.valueOf(addMessageSend.getRequires().size()));
+			assertEquals(4, addMessageSend.getRequires().size());
 			assertTrue(addMessageSend.getRequires().contains(addSendEventInMessage));
 			assertTrue(addMessageSend.getRequires().contains(addCoveredByInLifeline0));
 			assertTrue(addMessageSend.getRequires().contains(addCoveredInMessage0Send0));
 			assertTrue(addMessageSend.getRequires().contains(addMessageInMessage0Send0));
 
-			assertSame(Integer.valueOf(4), Integer.valueOf(addMessageRecv.getRequires().size()));
+			assertEquals(4, addMessageRecv.getRequires().size());
 			assertTrue(addMessageRecv.getRequires().contains(addReceiveEventInMessage));
 			assertTrue(addMessageRecv.getRequires().contains(addCoveredByInLifeline1));
 			assertTrue(addMessageRecv.getRequires().contains(addCoveredInMessage0Recv0));
@@ -421,7 +422,7 @@ public class AddMessageTest extends AbstractUMLTest {
 		}
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getEquivalences().size()));
+		assertEquals(2, comparison.getEquivalences().size());
 
 		assertNotNull(addCoveredInMessage0Send0.getEquivalence());
 		assertSame(Integer.valueOf(2), Integer.valueOf(addCoveredInMessage0Send0.getEquivalence()
@@ -455,7 +456,7 @@ public class AddMessageTest extends AbstractUMLTest {
 			useFullDiffs.add(diff);
 		}
 
-		assertSame(Integer.valueOf(7), Integer.valueOf(useFullDiffs.size()));
+		assertEquals(7, useFullDiffs.size());
 
 		Predicate<? super Diff> addMessageDescription = null;
 		Predicate<? super Diff> addCoveredInMessage0Recv0Description = null;
@@ -517,7 +518,7 @@ public class AddMessageTest extends AbstractUMLTest {
 					ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLMessage);
-		assertSame(Integer.valueOf(6), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+		assertEquals(6, addUMLMessage.getRefinedBy().size());
 		assertTrue(addUMLMessage.getRefinedBy().contains(addReceiveEventInMessage));
 		assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInMessage0Recv0));
 		assertTrue(addUMLMessage.getRefinedBy().contains(addMessageRecv));
@@ -528,38 +529,38 @@ public class AddMessageTest extends AbstractUMLTest {
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMessage.getRequires().size()));
+			assertEquals(0, addMessage.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addCoveredInMessage0Recv0.getRequires().size()));
+			assertEquals(1, addCoveredInMessage0Recv0.getRequires().size());
 			assertTrue(addCoveredInMessage0Recv0.getRequires().contains(addMessageRecv));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addMessageInMessage0Recv0.getRequires().size()));
+			assertEquals(2, addMessageInMessage0Recv0.getRequires().size());
 			assertTrue(addMessageInMessage0Recv0.getRequires().contains(addMessageRecv));
 			assertTrue(addMessageInMessage0Recv0.getRequires().contains(addMessage));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addReceiveEventInMessage.getRequires().size()));
+			assertEquals(2, addReceiveEventInMessage.getRequires().size());
 			assertTrue(addReceiveEventInMessage.getRequires().contains(addMessage));
 			assertTrue(addReceiveEventInMessage.getRequires().contains(addMessageRecv));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addCoveredByInLifeline0.getRequires().size()));
+			assertEquals(1, addCoveredByInLifeline0.getRequires().size());
 			assertTrue(addCoveredByInLifeline0.getRequires().contains(addMessageRecv));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMessageRecv.getRequires().size()));
+			assertEquals(0, addMessageRecv.getRequires().size());
 
 		} else {
-			assertSame(Integer.valueOf(2), Integer.valueOf(addMessage.getRequires().size()));
+			assertEquals(2, addMessage.getRequires().size());
 			assertTrue(addMessage.getRequires().contains(addReceiveEventInMessage));
 			assertTrue(addMessage.getRequires().contains(addMessageInMessage0Recv0));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addCoveredInMessage0Recv0.getRequires().size()));
+			assertEquals(0, addCoveredInMessage0Recv0.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMessageInMessage0Recv0.getRequires().size()));
+			assertEquals(0, addMessageInMessage0Recv0.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addReceiveEventInMessage.getRequires().size()));
+			assertEquals(0, addReceiveEventInMessage.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addCoveredByInLifeline0.getRequires().size()));
+			assertEquals(0, addCoveredByInLifeline0.getRequires().size());
 
-			assertSame(Integer.valueOf(4), Integer.valueOf(addMessageRecv.getRequires().size()));
+			assertEquals(4, addMessageRecv.getRequires().size());
 			assertTrue(addMessageRecv.getRequires().contains(addReceiveEventInMessage));
 			assertTrue(addMessageRecv.getRequires().contains(addCoveredInMessage0Recv0));
 			assertTrue(addMessageRecv.getRequires().contains(addMessageInMessage0Recv0));
@@ -567,7 +568,7 @@ public class AddMessageTest extends AbstractUMLTest {
 		}
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getEquivalences().size()));
+		assertEquals(1, comparison.getEquivalences().size());
 
 		assertNotNull(addCoveredInMessage0Recv0.getEquivalence());
 		assertSame(Integer.valueOf(2), Integer.valueOf(addCoveredInMessage0Recv0.getEquivalence()
@@ -595,7 +596,7 @@ public class AddMessageTest extends AbstractUMLTest {
 			useFullDiffs.add(diff);
 		}
 
-		assertSame(Integer.valueOf(7), Integer.valueOf(useFullDiffs.size()));
+		assertEquals(7, useFullDiffs.size());
 
 		Predicate<? super Diff> addMessageDescription = null;
 		Predicate<? super Diff> addCoveredInMessage0Recv0Description = null;
@@ -657,7 +658,7 @@ public class AddMessageTest extends AbstractUMLTest {
 					ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLMessage);
-		assertSame(Integer.valueOf(6), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+		assertEquals(6, addUMLMessage.getRefinedBy().size());
 		assertTrue(addUMLMessage.getRefinedBy().contains(addReceiveEventInMessage));
 		assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInMessage0Recv0));
 		assertTrue(addUMLMessage.getRefinedBy().contains(addMessageRecv));
@@ -668,38 +669,38 @@ public class AddMessageTest extends AbstractUMLTest {
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMessage.getRequires().size()));
+			assertEquals(0, addMessage.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addCoveredInMessage0Recv0.getRequires().size()));
+			assertEquals(1, addCoveredInMessage0Recv0.getRequires().size());
 			assertTrue(addCoveredInMessage0Recv0.getRequires().contains(addMessageRecv));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addMessageInMessage0Recv0.getRequires().size()));
+			assertEquals(2, addMessageInMessage0Recv0.getRequires().size());
 			assertTrue(addMessageInMessage0Recv0.getRequires().contains(addMessageRecv));
 			assertTrue(addMessageInMessage0Recv0.getRequires().contains(addMessage));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addReceiveEventInMessage.getRequires().size()));
+			assertEquals(2, addReceiveEventInMessage.getRequires().size());
 			assertTrue(addReceiveEventInMessage.getRequires().contains(addMessage));
 			assertTrue(addReceiveEventInMessage.getRequires().contains(addMessageRecv));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addCoveredByInLifeline0.getRequires().size()));
+			assertEquals(1, addCoveredByInLifeline0.getRequires().size());
 			assertTrue(addCoveredByInLifeline0.getRequires().contains(addMessageRecv));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMessageRecv.getRequires().size()));
+			assertEquals(0, addMessageRecv.getRequires().size());
 
 		} else {
-			assertSame(Integer.valueOf(2), Integer.valueOf(addMessage.getRequires().size()));
+			assertEquals(2, addMessage.getRequires().size());
 			assertTrue(addMessage.getRequires().contains(addReceiveEventInMessage));
 			assertTrue(addMessage.getRequires().contains(addMessageInMessage0Recv0));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addCoveredInMessage0Recv0.getRequires().size()));
+			assertEquals(0, addCoveredInMessage0Recv0.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMessageInMessage0Recv0.getRequires().size()));
+			assertEquals(0, addMessageInMessage0Recv0.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addReceiveEventInMessage.getRequires().size()));
+			assertEquals(0, addReceiveEventInMessage.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addCoveredByInLifeline0.getRequires().size()));
+			assertEquals(0, addCoveredByInLifeline0.getRequires().size());
 
-			assertSame(Integer.valueOf(4), Integer.valueOf(addMessageRecv.getRequires().size()));
+			assertEquals(4, addMessageRecv.getRequires().size());
 			assertTrue(addMessageRecv.getRequires().contains(addReceiveEventInMessage));
 			assertTrue(addMessageRecv.getRequires().contains(addCoveredInMessage0Recv0));
 			assertTrue(addMessageRecv.getRequires().contains(addMessageInMessage0Recv0));
@@ -707,7 +708,7 @@ public class AddMessageTest extends AbstractUMLTest {
 		}
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getEquivalences().size()));
+		assertEquals(1, comparison.getEquivalences().size());
 
 		assertNotNull(addCoveredInMessage0Recv0.getEquivalence());
 		assertSame(Integer.valueOf(2), Integer.valueOf(addCoveredInMessage0Recv0.getEquivalence()

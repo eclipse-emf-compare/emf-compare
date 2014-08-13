@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.diff;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 import com.google.common.collect.Lists;
 
@@ -135,25 +135,25 @@ public class DiffUtilTest {
 		List<Integer> right = Lists.newArrayList(6, 2, 9, 3, 0, 4, 7);
 		int insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(1));
 		// Inserted just before "0"
-		assertSame(Integer.valueOf(4), Integer.valueOf(insertionIndex));
+		assertEquals(4, insertionIndex);
 
 		// Merge the move of "9" (assume 9 already removed from right)
 		right = Lists.newArrayList(6, 2, 3, 1, 0, 4, 7);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(9));
 		// Inserted just before "2"
-		assertSame(Integer.valueOf(1), Integer.valueOf(insertionIndex));
+		assertEquals(1, insertionIndex);
 
 		// Merge the move of "0" (assume 0 already removed from right)
 		right = Lists.newArrayList(6, 9, 2, 3, 1, 4, 7);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
 		// Inserted just before "4"
-		assertSame(Integer.valueOf(5), Integer.valueOf(insertionIndex));
+		assertEquals(5, insertionIndex);
 
 		// merge the addition of "8"
 		right = Lists.newArrayList(6, 9, 2, 3, 1, 0, 4, 7);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(8));
 		// Inserted just before "9"
-		assertSame(Integer.valueOf(1), Integer.valueOf(insertionIndex));
+		assertEquals(1, insertionIndex);
 
 		// remove "7"... right = {6, 8, 9, 2, 3, 1, 0, 4}
 
@@ -161,13 +161,13 @@ public class DiffUtilTest {
 		right = Lists.newArrayList(6, 8, 9, 2, 3, 1, 0);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(4));
 		// Inserted just after "3"
-		assertSame(Integer.valueOf(5), Integer.valueOf(insertionIndex));
+		assertEquals(5, insertionIndex);
 
 		// merge the move of "6" (assume already removed from right)
 		right = Lists.newArrayList(8, 9, 2, 3, 4, 1, 0);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(6));
 		// Inserted just after "0"
-		assertSame(Integer.valueOf(7), Integer.valueOf(insertionIndex));
+		assertEquals(7, insertionIndex);
 	}
 
 	@Test
@@ -478,10 +478,12 @@ public class DiffUtilTest {
 				1d / 2d, 1d / 3d, 1d, 0d, 0d, };
 		for (int i = 0; i < data.length; i += 2) {
 			assertEquals("Unexpected result of the dice coefficient for str1 = " + data[i] + " and str2 = "
-					+ data[i + 1], similarities[i / 2], DiffUtil.diceCoefficient(data[i], data[i + 1]));
+					+ data[i + 1], similarities[i / 2], DiffUtil.diceCoefficient(data[i], data[i + 1]),
+					Double.MIN_VALUE);
 			// Make sure that the result is symmetric
 			assertEquals("Dice coefficient was not symmetric for str1 = " + data[i] + " and str2 = "
-					+ data[i + 1], similarities[i / 2], DiffUtil.diceCoefficient(data[i + 1], data[i]));
+					+ data[i + 1], similarities[i / 2], DiffUtil.diceCoefficient(data[i + 1], data[i]),
+					Double.MIN_VALUE);
 		}
 	}
 
@@ -517,7 +519,7 @@ public class DiffUtilTest {
 	 */
 	private static <T> void assertEqualContents(List<T> list1, List<T> list2) {
 		final int size = list1.size();
-		assertSame(Integer.valueOf(size), Integer.valueOf(list2.size()));
+		assertEquals(size, list2.size());
 
 		for (int i = 0; i < size; i++) {
 			assertEquals(list1.get(i), list2.get(i));

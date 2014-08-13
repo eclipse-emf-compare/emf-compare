@@ -11,9 +11,12 @@
 package org.eclipse.emf.compare.diagram.papyrus.tests.merge;
 
 import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.not;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 import java.io.IOException;
 
@@ -32,11 +35,7 @@ import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.uml2.uml.UMLPackage;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 
 @SuppressWarnings("nls")
 public class EdgeMergeTest extends AbstractTest {

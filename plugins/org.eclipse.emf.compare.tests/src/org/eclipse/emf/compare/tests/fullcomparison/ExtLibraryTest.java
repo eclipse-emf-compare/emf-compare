@@ -16,6 +16,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribut
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -66,7 +67,7 @@ public class ExtLibraryTest {
 
 		final Conflict audiovisualNameConflict = rightAudiovisualNameDiff.getConflict();
 		assertNotNull(audiovisualNameConflict);
-		assertSame(Integer.valueOf(2), Integer.valueOf(audiovisualNameConflict.getDifferences().size()));
+		assertEquals(2, audiovisualNameConflict.getDifferences().size());
 		assertTrue(audiovisualNameConflict.getDifferences().contains(rightAudiovisualNameDiff));
 		assertTrue(audiovisualNameConflict.getDifferences().contains(leftAudiovisualNameDiff));
 		assertSame(audiovisualNameConflict, leftAudiovisualNameDiff.getConflict());
@@ -88,7 +89,7 @@ public class ExtLibraryTest {
 
 		final Conflict readerConflict = rightRemovedReaderDiff.getConflict();
 		assertNotNull(readerConflict);
-		assertSame(Integer.valueOf(4), Integer.valueOf(readerConflict.getDifferences().size()));
+		assertEquals(4, readerConflict.getDifferences().size());
 		assertTrue(readerConflict.getDifferences().contains(rightRemovedReaderDiff));
 		assertTrue(readerConflict.getDifferences().contains(rightUnsetReaderTypeDiff));
 		assertTrue(readerConflict.getDifferences().contains(leftRemovedReaderDiff));
@@ -109,7 +110,7 @@ public class ExtLibraryTest {
 
 		final Conflict familyNameConflict = leftRemovedLastNameDiff.getConflict();
 		assertNotNull(familyNameConflict);
-		assertSame(Integer.valueOf(2), Integer.valueOf(familyNameConflict.getDifferences().size()));
+		assertEquals(2, familyNameConflict.getDifferences().size());
 		assertTrue(familyNameConflict.getDifferences().contains(leftRemovedLastNameDiff));
 		assertTrue(familyNameConflict.getDifferences().contains(rightRenamedFamilyNameDiff));
 		assertSame(familyNameConflict, rightRenamedFamilyNameDiff.getConflict());
@@ -130,7 +131,7 @@ public class ExtLibraryTest {
 
 		final Conflict periodicalConflict = rightSetPeriodicalSupertypeDiff.getConflict();
 		assertNotNull(periodicalConflict);
-		assertSame(Integer.valueOf(3), Integer.valueOf(periodicalConflict.getDifferences().size()));
+		assertEquals(3, periodicalConflict.getDifferences().size());
 		assertTrue(periodicalConflict.getDifferences().contains(leftRemovedPeriodicalDiff));
 		assertTrue(periodicalConflict.getDifferences().contains(rightSetPeriodicalSupertypeDiff));
 		assertTrue(periodicalConflict.getDifferences().contains(rightSetTitledItemSupertypeDiff));
@@ -152,13 +153,13 @@ public class ExtLibraryTest {
 
 		final Conflict titleConflict = leftRemovedTitleDiff.getConflict();
 		assertNotNull(titleConflict);
-		assertSame(Integer.valueOf(4), Integer.valueOf(titleConflict.getDifferences().size()));
+		assertEquals(4, titleConflict.getDifferences().size());
 		assertTrue(titleConflict.getDifferences().contains(leftRemovedTitleDiff));
 		assertTrue(titleConflict.getDifferences().contains(leftUnsetTitleTypeDiff));
 		assertTrue(titleConflict.getDifferences().contains(rightRemovedTitleDiff));
 		assertTrue(titleConflict.getDifferences().contains(rightUnsetTitleTypeDiff));
 		assertSame(ConflictKind.PSEUDO, titleConflict.getKind());
 
-		assertSame(Integer.valueOf(5), Integer.valueOf(comparison.getConflicts().size()));
+		assertEquals(5, comparison.getConflicts().size());
 	}
 }

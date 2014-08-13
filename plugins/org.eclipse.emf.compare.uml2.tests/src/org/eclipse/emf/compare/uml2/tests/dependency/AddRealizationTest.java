@@ -129,31 +129,31 @@ public class AddRealizationTest extends AbstractUMLTest {
 					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLDependency);
-		assertSame(Integer.valueOf(3), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
+		assertEquals(3, addUMLDependency.getRefinedBy().size());
 		assertTrue(addUMLDependency.getRefinedBy().contains(addRefClass0InDependency));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addRefClass1InDependency));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addDependency));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(1), Integer.valueOf(addRefClass0InDependency.getRequires().size()));
+			assertEquals(1, addRefClass0InDependency.getRequires().size());
 			assertTrue(addRefClass0InDependency.getRequires().contains(addDependency));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addRefClass1InDependency.getRequires().size()));
+			assertEquals(1, addRefClass1InDependency.getRequires().size());
 			assertTrue(addRefClass1InDependency.getRequires().contains(addDependency));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addDependency.getRequires().size()));
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
+			assertEquals(0, addDependency.getRequires().size());
+			assertEquals(0, addUMLDependency.getRequires().size());
 		} else {
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefClass0InDependency.getRequires().size()));
+			assertEquals(0, addRefClass0InDependency.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefClass1InDependency.getRequires().size()));
+			assertEquals(0, addRefClass1InDependency.getRequires().size());
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addDependency.getRequires().size()));
+			assertEquals(2, addDependency.getRequires().size());
 			assertTrue(addDependency.getRequires().contains(addRefClass0InDependency));
 			assertTrue(addDependency.getRequires().contains(addRefClass1InDependency));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
+			assertEquals(0, addUMLDependency.getRequires().size());
 		}
 
 		// CHECK EQUIVALENCE

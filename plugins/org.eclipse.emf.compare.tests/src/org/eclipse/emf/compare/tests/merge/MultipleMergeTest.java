@@ -463,7 +463,7 @@ public class MultipleMergeTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// Initially 6 differences, equivalent by pairs
-		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
+		assertEquals(6, differences.size());
 
 		// diff1 is equivalent to diff2
 		// diff3 is equivalent to diff4
@@ -501,7 +501,7 @@ public class MultipleMergeTest {
 		assertMerged(comparison, diff6, false, false);
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -515,7 +515,7 @@ public class MultipleMergeTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// Initially 6 differences, equivalent by pairs
-		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
+		assertEquals(6, differences.size());
 
 		// diff1 is equivalent to diff2
 		// diff3 is equivalent to diff4
@@ -549,7 +549,7 @@ public class MultipleMergeTest {
 		assertMerged(comparison, diff6, true, true);
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -563,7 +563,7 @@ public class MultipleMergeTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// Initially 4 differences, equivalent by pairs
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		// diff1 is equivalent to diff2
 		// diff3 is equivalent to diff4
@@ -586,7 +586,7 @@ public class MultipleMergeTest {
 		assertMerged(comparison, diff4, false, false);
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -600,7 +600,7 @@ public class MultipleMergeTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// Initially 4 differences, equivalent by pairs
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		// diff1 is equivalent to diff2
 		// diff3 is equivalent to diff4
@@ -623,7 +623,7 @@ public class MultipleMergeTest {
 		assertMerged(comparison, diff4, true, true);
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -637,7 +637,7 @@ public class MultipleMergeTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// Initially 12 differences, 3 equivalent pairs, some dependencies
-		assertSame(Integer.valueOf(12), Integer.valueOf(differences.size()));
+		assertEquals(12, differences.size());
 
 		// diff1 is equivalent to diff2
 		// diff3 is equivalent to diff4
@@ -692,7 +692,7 @@ public class MultipleMergeTest {
 		assertSame(DifferenceState.MERGED, diff12.getState());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -706,7 +706,7 @@ public class MultipleMergeTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// Initially 12 differences, 3 equivalent pairs, some dependencies
-		assertSame(Integer.valueOf(12), Integer.valueOf(differences.size()));
+		assertEquals(12, differences.size());
 
 		// diff1 is equivalent to diff2
 		// diff3 is equivalent to diff4
@@ -771,7 +771,7 @@ public class MultipleMergeTest {
 		mergerRegistry.getHighestRankingMerger(diff12).copyRightToLeft(diff12, new BasicMonitor());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -791,7 +791,7 @@ public class MultipleMergeTest {
 		// 4 : changed reference "source" of C to A
 		// 2, 3 and 4 are equivalent
 		// 2 and 4 require 1
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final ReferenceChange diff1 = (ReferenceChange)Iterators.find(differences.iterator(),
 				addedToReference("Requirements", "containmentRef1", "Requirements.C"));
@@ -809,7 +809,7 @@ public class MultipleMergeTest {
 		assertMerged(comparison, diff4, false, false);
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -829,7 +829,7 @@ public class MultipleMergeTest {
 		// 4 : changed reference "source" of C to A
 		// 2, 3 and 4 are equivalent
 		// 2 and 4 require 1
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final ReferenceChange diff1 = (ReferenceChange)Iterators.find(differences.iterator(),
 				addedToReference("Requirements", "containmentRef1", "Requirements.C"));
@@ -852,7 +852,7 @@ public class MultipleMergeTest {
 		assertMerged(comparison, diff4, false, false);
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -872,7 +872,7 @@ public class MultipleMergeTest {
 		// 4 : changed reference "source" of C to A
 		// 2, 3 and 4 are equivalent
 		// 2 and 4 require 1
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final ReferenceChange diff1 = (ReferenceChange)Iterators.find(differences.iterator(),
 				addedToReference("Requirements", "containmentRef1", "Requirements.C"));
@@ -900,7 +900,7 @@ public class MultipleMergeTest {
 		mergerRegistry.getHighestRankingMerger(diff1).copyRightToLeft(diff1, new BasicMonitor());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -922,7 +922,7 @@ public class MultipleMergeTest {
 		// 3, 4 and 5 are equivalent
 		// 2 requires 3 and 4
 		// 3 and 5 require 1
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
+		assertEquals(5, differences.size());
 
 		final ReferenceChange diff1 = (ReferenceChange)Iterators.find(differences.iterator(),
 				addedToReference("Requirements", "containmentRef1", "Requirements.C"));
@@ -955,7 +955,7 @@ public class MultipleMergeTest {
 		assertMerged(comparison, diff5, false, false);
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -977,7 +977,7 @@ public class MultipleMergeTest {
 		// 3, 4 and 5 are equivalent
 		// 2 requires 3 and 4
 		// 3 and 5 require 1
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
+		assertEquals(5, differences.size());
 
 		final ReferenceChange diff1 = (ReferenceChange)Iterators.find(differences.iterator(),
 				addedToReference("Requirements", "containmentRef1", "Requirements.C"));
@@ -1009,7 +1009,7 @@ public class MultipleMergeTest {
 		assertNull(diff5.getMatch().getRight());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	/**
@@ -1024,7 +1024,7 @@ public class MultipleMergeTest {
 	private static <T extends EObject> void assertEqualContents(Comparison comparison, List<T> list1,
 			List<T> list2) {
 		final int size = list1.size();
-		assertSame(Integer.valueOf(size), Integer.valueOf(list2.size()));
+		assertEquals(size, list2.size());
 
 		for (int i = 0; i < size; i++) {
 			final EObject eObject1 = list1.get(i);
@@ -1089,7 +1089,7 @@ public class MultipleMergeTest {
 				assertSame(containerMatch.getLeft().eResource(), valueMatch.getLeft().eResource());
 				final EObject addedToLeft = valueMatch.getLeft();
 				final List<EObject> values = getAsList(containerMatch.getLeft(), diff.getReference());
-				assertSame(Integer.valueOf(expectedIndex), Integer.valueOf(values.indexOf(addedToLeft)));
+				assertEquals(expectedIndex, values.indexOf(addedToLeft));
 			} else {
 				assertTrue(valueMatch == null || valueMatch.getLeft() == null);
 			}
@@ -1099,7 +1099,7 @@ public class MultipleMergeTest {
 				assertSame(containerMatch.getRight().eResource(), valueMatch.getRight().eResource());
 				final EObject addedToRight = valueMatch.getRight();
 				final List<EObject> values = getAsList(containerMatch.getRight(), diff.getReference());
-				assertSame(Integer.valueOf(expectedIndex), Integer.valueOf(values.indexOf(addedToRight)));
+				assertEquals(expectedIndex, values.indexOf(addedToRight));
 			} else {
 				assertTrue(valueMatch == null || valueMatch.getRight() == null);
 			}

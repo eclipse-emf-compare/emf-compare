@@ -2,14 +2,15 @@ package org.eclipse.emf.compare.uml2.tests.generalizationSet;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onEObject;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.referenceValueMatch;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -21,8 +22,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.uml2.internal.GeneralizationSetChange;
-import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.generalizationSet.data.GeneralizationSetInputData;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -86,7 +87,7 @@ public class AddGeneralizationSetTest extends AbstractUMLTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 6 differences
-		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
+		assertEquals(6, differences.size());
 
 		Predicate<? super Diff> addGeneralizationSetDescription = null;
 		Predicate<? super Diff> addRefGeneralizationSetInClass2Description = null;
@@ -152,7 +153,7 @@ public class AddGeneralizationSetTest extends AbstractUMLTest {
 					instanceOf(GeneralizationSetChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLGeneralizationSet);
-		assertSame(Integer.valueOf(5), Integer.valueOf(addUMLGeneralizationSet.getRefinedBy().size()));
+		assertEquals(5, addUMLGeneralizationSet.getRefinedBy().size());
 		assertTrue(addUMLGeneralizationSet.getRefinedBy().contains(addRefGeneralizationInGeneralizationSet1));
 		assertTrue(addUMLGeneralizationSet.getRefinedBy().contains(addRefGeneralizationInGeneralizationSet2));
 		assertTrue(addUMLGeneralizationSet.getRefinedBy().contains(addGeneralizationSet));
@@ -177,8 +178,8 @@ public class AddGeneralizationSetTest extends AbstractUMLTest {
 					.size()));
 			assertTrue(addRefGeneralizationSetInClass2.getRequires().contains(addGeneralizationSet));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addGeneralizationSet.getRequires().size()));
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLGeneralizationSet.getRequires().size()));
+			assertEquals(0, addGeneralizationSet.getRequires().size());
+			assertEquals(0, addUMLGeneralizationSet.getRequires().size());
 		} else {
 			assertSame(Integer.valueOf(0), Integer.valueOf(addRefGeneralizationInGeneralizationSet1
 					.getRequires().size()));
@@ -192,17 +193,17 @@ public class AddGeneralizationSetTest extends AbstractUMLTest {
 			assertSame(Integer.valueOf(0), Integer.valueOf(addRefGeneralizationSetInClass2.getRequires()
 					.size()));
 
-			assertSame(Integer.valueOf(4), Integer.valueOf(addGeneralizationSet.getRequires().size()));
+			assertEquals(4, addGeneralizationSet.getRequires().size());
 			assertTrue(addGeneralizationSet.getRequires().contains(addRefGeneralizationInGeneralizationSet1));
 			assertTrue(addGeneralizationSet.getRequires().contains(addRefGeneralizationInGeneralizationSet2));
 			assertTrue(addGeneralizationSet.getRequires().contains(addRefGeneralizationSetInClass0));
 			assertTrue(addGeneralizationSet.getRequires().contains(addRefGeneralizationSetInClass2));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLGeneralizationSet.getRequires().size()));
+			assertEquals(0, addUMLGeneralizationSet.getRequires().size());
 		}
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getEquivalences().size()));
+		assertEquals(2, comparison.getEquivalences().size());
 
 		assertNotNull(addRefGeneralizationInGeneralizationSet1.getEquivalence());
 		assertSame(Integer.valueOf(2), Integer.valueOf(addRefGeneralizationInGeneralizationSet1

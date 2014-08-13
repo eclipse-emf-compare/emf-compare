@@ -17,7 +17,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.Iterators;
@@ -70,7 +69,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 doesn't exists in the ancestor, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.ADD), instanceOf(ReferenceChange.class)));
@@ -116,7 +115,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -130,7 +129,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 doesn't exists in the ancestor, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.ADD), instanceOf(FeatureMapChange.class)));
@@ -176,7 +175,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -190,7 +189,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 doesn't exists in the ancestor, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.ADD), instanceOf(ReferenceChange.class)));
@@ -236,7 +235,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -250,7 +249,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 doesn't exists in the ancestor, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.ADD), instanceOf(FeatureMapChange.class)));
@@ -296,7 +295,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -310,7 +309,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 exists in the ancestor under mapNode1, but not in left and right .
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.DELETE), instanceOf(ReferenceChange.class)));
@@ -353,7 +352,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -367,7 +366,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 exists in the ancestor under mapNode1, but not in left and right .
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.DELETE), instanceOf(FeatureMapChange.class)));
@@ -410,7 +409,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -424,7 +423,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 exists in the ancestor under mapNode1, but not in left and right .
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.DELETE), instanceOf(ReferenceChange.class)));
@@ -467,7 +466,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -481,7 +480,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 exists in the ancestor under mapNode1, but not in left and right .
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.DELETE), instanceOf(FeatureMapChange.class)));
@@ -524,7 +523,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -539,7 +538,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		// the node1 exists in the ancestor under mapNode1 with key secondKey, exists in left and right under
 		// mapNode1 with key fisrtKey.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
@@ -585,7 +584,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -600,7 +599,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		// the node1 exists in the ancestor under mapNode1 with key secondKey, exists in left and right under
 		// mapNode1 with key fisrtKey.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.CHANGE), instanceOf(FeatureMapChange.class)));
@@ -646,7 +645,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -661,7 +660,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		// the node1 exists in the ancestor under mapNode1 with key secondKey, exists in left and right under
 		// mapNode1 with key fisrtKey.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
@@ -707,7 +706,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -722,7 +721,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		// the node1 exists in the ancestor under mapNode1 with key secondKey, exists in left and right under
 		// mapNode1 with key fisrtKey.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.CHANGE), instanceOf(FeatureMapChange.class)));
@@ -768,7 +767,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -783,7 +782,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
@@ -829,7 +828,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -844,7 +843,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.MOVE), instanceOf(FeatureMapChange.class)));
@@ -890,7 +889,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -905,7 +904,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
@@ -951,7 +950,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -966,7 +965,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.MOVE), instanceOf(FeatureMapChange.class)));
@@ -1012,7 +1011,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1026,7 +1025,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 exists in the ancestor under mapNode2, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
@@ -1072,7 +1071,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1086,7 +1085,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 exists in the ancestor under mapNode2, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.MOVE), instanceOf(FeatureMapChange.class)));
@@ -1132,7 +1131,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1146,7 +1145,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 exists in the ancestor under mapNode2, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
@@ -1192,7 +1191,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1206,7 +1205,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 exists in the ancestor under mapNode2, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.MOVE), instanceOf(FeatureMapChange.class)));
@@ -1252,7 +1251,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1267,7 +1266,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 doesn't referenced by mapNC1 in the ancestor, referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.ADD), instanceOf(ReferenceChange.class)));
@@ -1313,7 +1312,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1328,7 +1327,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 doesn't referenced by mapNC1 in the ancestor, referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.ADD), instanceOf(FeatureMapChange.class)));
@@ -1374,7 +1373,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1389,7 +1388,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 doesn't referenced by mapNC1 in the ancestor, referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.ADD), instanceOf(ReferenceChange.class)));
@@ -1435,7 +1434,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1450,7 +1449,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 doesn't referenced by mapNC1 in the ancestor, referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.ADD), instanceOf(FeatureMapChange.class)));
@@ -1496,7 +1495,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1511,7 +1510,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 is referenced by mapNC1 in the ancestor, not referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.DELETE), instanceOf(ReferenceChange.class)));
@@ -1554,7 +1553,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1569,7 +1568,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 is referenced by mapNC1 in the ancestor, not referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.DELETE), instanceOf(FeatureMapChange.class)));
@@ -1612,7 +1611,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1627,7 +1626,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 is referenced by mapNC1 in the ancestor, not referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.DELETE), instanceOf(ReferenceChange.class)));
@@ -1670,7 +1669,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1685,7 +1684,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 
 		// the node1 is referenced by mapNC1 in the ancestor, not referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.DELETE), instanceOf(FeatureMapChange.class)));
@@ -1728,7 +1727,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1744,7 +1743,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
@@ -1790,7 +1789,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1806,7 +1805,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.MOVE), instanceOf(FeatureMapChange.class)));
@@ -1852,7 +1851,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1868,7 +1867,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
@@ -1914,7 +1913,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1930,7 +1929,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.MOVE), instanceOf(FeatureMapChange.class)));
@@ -1976,7 +1975,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	private EObject getNodeNamed(Resource res, String name) {

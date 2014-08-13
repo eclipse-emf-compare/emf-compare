@@ -10,14 +10,24 @@
  */
 package org.eclipse.emf.compare.tests.nodes.impl;
 
-import org.eclipse.emf.compare.tests.nodes.*;
-
+import org.eclipse.emf.compare.tests.nodes.Node;
+import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment;
+import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapNonContainment;
+import org.eclipse.emf.compare.tests.nodes.NodeMultiValueReference;
+import org.eclipse.emf.compare.tests.nodes.NodeMultiValuedAttribute;
+import org.eclipse.emf.compare.tests.nodes.NodeMultipleContainment;
+import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany;
+import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany;
+import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToOne;
+import org.eclipse.emf.compare.tests.nodes.NodeSingleValueAttribute;
+import org.eclipse.emf.compare.tests.nodes.NodeSingleValueContainment;
+import org.eclipse.emf.compare.tests.nodes.NodeSingleValueReference;
+import org.eclipse.emf.compare.tests.nodes.NodesFactory;
+import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**

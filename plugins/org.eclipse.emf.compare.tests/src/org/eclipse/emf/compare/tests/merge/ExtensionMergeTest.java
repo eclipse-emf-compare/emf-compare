@@ -15,7 +15,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribut
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.Iterators;
@@ -52,7 +51,7 @@ public class ExtensionMergeTest {
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+		assertEquals(1, differences.size());
 
 		final String featureName = "singleValuedAttribute";
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
@@ -70,7 +69,7 @@ public class ExtensionMergeTest {
 		assertEquals("leftValue", originNode.eGet(feature));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	public static IMerger getMerger(final IMerger.Registry registry, final Diff diff,

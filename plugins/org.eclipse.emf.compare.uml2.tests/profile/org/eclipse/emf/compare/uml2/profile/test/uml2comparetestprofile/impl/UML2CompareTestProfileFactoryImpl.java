@@ -10,8 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl;
 
-import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.*;
 import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche;
+import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2;
+import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche3;
 import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfileFactory;
 import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage;
 import org.eclipse.emf.ecore.EClass;

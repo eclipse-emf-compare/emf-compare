@@ -2,15 +2,16 @@ package org.eclipse.emf.compare.uml2.tests.timeConstraint;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -22,8 +23,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.uml2.internal.IntervalConstraintChange;
-import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.timeConstraint.data.TimeConstraintInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
@@ -85,7 +86,7 @@ public class AddTimeConstraintTest extends AbstractUMLTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 10 differences
-		assertSame(Integer.valueOf(10), Integer.valueOf(differences.size()));
+		assertEquals(10, differences.size());
 
 		Predicate<? super Diff> addTimeConstraintDescription = null;
 		Predicate<? super Diff> addTimeIntervalDescription = null;
@@ -163,7 +164,7 @@ public class AddTimeConstraintTest extends AbstractUMLTest {
 					instanceOf(IntervalConstraintChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLMessage);
-		assertSame(Integer.valueOf(9), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+		assertEquals(9, addUMLMessage.getRefinedBy().size());
 		assertTrue(addUMLMessage.getRefinedBy().contains(addConstrainedElementInTimeConstraint));
 		assertTrue(addUMLMessage.getRefinedBy().contains(addTimeInterval));
 		assertTrue(addUMLMessage.getRefinedBy().contains(addMinInTimeInterval));
@@ -177,63 +178,63 @@ public class AddTimeConstraintTest extends AbstractUMLTest {
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addTimeConstraint.getRequires().size()));
+			assertEquals(0, addTimeConstraint.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addTimeInterval.getRequires().size()));
+			assertEquals(1, addTimeInterval.getRequires().size());
 			assertTrue(addTimeInterval.getRequires().contains(addTimeConstraint));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addTimeExpressionMin.getRequires().size()));
-			assertSame(Integer.valueOf(0), Integer.valueOf(addTimeExpressionMax.getRequires().size()));
+			assertEquals(0, addTimeExpressionMin.getRequires().size());
+			assertEquals(0, addTimeExpressionMax.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addMinValue.getRequires().size()));
+			assertEquals(1, addMinValue.getRequires().size());
 			assertTrue(addMinValue.getRequires().contains(addTimeExpressionMin));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addMaxValue.getRequires().size()));
+			assertEquals(1, addMaxValue.getRequires().size());
 			assertTrue(addMaxValue.getRequires().contains(addTimeExpressionMax));
 
 			assertSame(Integer.valueOf(1), Integer.valueOf(addConstrainedElementInTimeConstraint
 					.getRequires().size()));
 			assertTrue(addTimeInterval.getRequires().contains(addTimeConstraint));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addMinInTimeInterval.getRequires().size()));
+			assertEquals(2, addMinInTimeInterval.getRequires().size());
 			assertTrue(addMinInTimeInterval.getRequires().contains(addTimeInterval));
 			assertTrue(addMinInTimeInterval.getRequires().contains(addTimeExpressionMin));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addMaxInTimeInterval.getRequires().size()));
+			assertEquals(2, addMaxInTimeInterval.getRequires().size());
 			assertTrue(addMaxInTimeInterval.getRequires().contains(addTimeInterval));
 			assertTrue(addMaxInTimeInterval.getRequires().contains(addTimeExpressionMax));
 
 		} else {
-			assertSame(Integer.valueOf(2), Integer.valueOf(addTimeConstraint.getRequires().size()));
+			assertEquals(2, addTimeConstraint.getRequires().size());
 			assertTrue(addTimeConstraint.getRequires().contains(addConstrainedElementInTimeConstraint));
 			assertTrue(addTimeConstraint.getRequires().contains(addTimeInterval));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addTimeInterval.getRequires().size()));
+			assertEquals(2, addTimeInterval.getRequires().size());
 			assertTrue(addTimeInterval.getRequires().contains(addMinInTimeInterval));
 			assertTrue(addTimeInterval.getRequires().contains(addMaxInTimeInterval));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addTimeExpressionMin.getRequires().size()));
+			assertEquals(2, addTimeExpressionMin.getRequires().size());
 			assertTrue(addTimeExpressionMin.getRequires().contains(addMinValue));
 			assertTrue(addTimeExpressionMin.getRequires().contains(addMinInTimeInterval));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addTimeExpressionMax.getRequires().size()));
+			assertEquals(2, addTimeExpressionMax.getRequires().size());
 			assertTrue(addTimeExpressionMax.getRequires().contains(addMaxValue));
 			assertTrue(addTimeExpressionMax.getRequires().contains(addMaxInTimeInterval));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMinValue.getRequires().size()));
+			assertEquals(0, addMinValue.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMaxValue.getRequires().size()));
+			assertEquals(0, addMaxValue.getRequires().size());
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addConstrainedElementInTimeConstraint
 					.getRequires().size()));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMinInTimeInterval.getRequires().size()));
+			assertEquals(0, addMinInTimeInterval.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addMaxInTimeInterval.getRequires().size()));
+			assertEquals(0, addMaxInTimeInterval.getRequires().size());
 		}
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getEquivalences().size()));
+		assertEquals(0, comparison.getEquivalences().size());
 
 		testIntersections(comparison);
 

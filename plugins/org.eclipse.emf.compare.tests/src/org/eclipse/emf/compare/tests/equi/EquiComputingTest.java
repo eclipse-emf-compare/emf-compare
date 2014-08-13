@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.tests.equi;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -54,7 +55,7 @@ public class EquiComputingTest {
 		List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 6 differences
-		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
+		assertEquals(6, differences.size());
 
 		Predicate<? super Diff> changeRefA2BDiffDescription = null;
 		Predicate<? super Diff> changeRefB2ADiffDescription = null;
@@ -130,7 +131,7 @@ public class EquiComputingTest {
 		List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 8 differences
-		assertSame(Integer.valueOf(8), Integer.valueOf(differences.size()));
+		assertEquals(8, differences.size());
 
 		Predicate<? super Diff> changeRefC2D1DiffDescription = null;
 		Predicate<? super Diff> changeRefC2D2DiffDescription = null;
@@ -230,7 +231,7 @@ public class EquiComputingTest {
 		List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 8 differences
-		assertSame(Integer.valueOf(8), Integer.valueOf(differences.size()));
+		assertEquals(8, differences.size());
 
 		Predicate<? super Diff> C1toD1DiffDescription = null;
 		Predicate<? super Diff> C1toD2DiffDescription = null;
@@ -317,7 +318,7 @@ public class EquiComputingTest {
 		List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 8 differences
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		Predicate<? super Diff> AtoBdestDiffDescription = null;
 		Predicate<? super Diff> AtoBsourceDiffDescription = null;
@@ -374,7 +375,7 @@ public class EquiComputingTest {
 		List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 12 differences
-		assertSame(Integer.valueOf(12), Integer.valueOf(differences.size()));
+		assertEquals(12, differences.size());
 
 		Predicate<? super Diff> changeRefA2BDiffDescription = null;
 		Predicate<? super Diff> changeRefB2ADiffDescription = null;
@@ -534,7 +535,7 @@ public class EquiComputingTest {
 		List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 3 differences
-		assertSame(Integer.valueOf(3), Integer.valueOf(differences.size()));
+		assertEquals(3, differences.size());
 
 		Predicate<? super Diff> changeRefA2BDiffDescription = null;
 		Predicate<? super Diff> changeRefB2ADiffDescription = null;
@@ -584,7 +585,7 @@ public class EquiComputingTest {
 		List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 4 differences
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		Predicate<? super Diff> changeRefA2BDiffDescription = null;
 		Predicate<? super Diff> changeRefB2ADiffDescription = null;
@@ -639,7 +640,7 @@ public class EquiComputingTest {
 		List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 4 differences
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		Predicate<? super Diff> changeRefA2CDiffDescription = null;
 		Predicate<? super Diff> deleteBDiffDescription = null;
@@ -694,7 +695,7 @@ public class EquiComputingTest {
 		List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
+		assertEquals(5, differences.size());
 
 		Predicate<? super Diff> changeRefA2CDiffDescription = null;
 		Predicate<? super Diff> deleteBDiffDescription = null;
@@ -754,7 +755,7 @@ public class EquiComputingTest {
 		List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 16 differences
-		assertSame(Integer.valueOf(16), Integer.valueOf(differences.size()));
+		assertEquals(16, differences.size());
 
 		Predicate<? super Diff> delBonADiffDescription = null;
 		Predicate<? super Diff> delAonBDiffDescription = null;

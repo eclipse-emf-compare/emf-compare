@@ -12,11 +12,20 @@ package org.eclipse.emf.compare.tests.nodes.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
-import org.eclipse.emf.compare.tests.nodes.*;
-
+import org.eclipse.emf.compare.tests.nodes.Node;
+import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment;
+import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapNonContainment;
+import org.eclipse.emf.compare.tests.nodes.NodeMultiValueReference;
+import org.eclipse.emf.compare.tests.nodes.NodeMultiValuedAttribute;
+import org.eclipse.emf.compare.tests.nodes.NodeMultipleContainment;
+import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany;
+import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany;
+import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToOne;
+import org.eclipse.emf.compare.tests.nodes.NodeSingleValueAttribute;
+import org.eclipse.emf.compare.tests.nodes.NodeSingleValueContainment;
+import org.eclipse.emf.compare.tests.nodes.NodeSingleValueReference;
+import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.ecore.EObject;
 
 /**

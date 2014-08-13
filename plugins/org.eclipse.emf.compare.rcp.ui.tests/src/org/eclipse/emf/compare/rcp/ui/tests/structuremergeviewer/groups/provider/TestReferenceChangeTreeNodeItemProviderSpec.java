@@ -10,12 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.get;
-import static com.google.common.collect.Iterables.transform;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -36,7 +30,12 @@ import org.eclipse.emf.edit.tree.TreeNode;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.base.Predicate;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.get;
+import static com.google.common.collect.Iterables.transform;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>

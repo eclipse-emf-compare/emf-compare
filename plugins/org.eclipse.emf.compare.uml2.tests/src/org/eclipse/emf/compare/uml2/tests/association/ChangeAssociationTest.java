@@ -2,16 +2,17 @@ package org.eclipse.emf.compare.uml2.tests.association;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onEObject;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -23,8 +24,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
-import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.association.data.AssociationInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
@@ -138,7 +139,7 @@ public class ChangeAssociationTest extends AbstractUMLTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
-		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
+		assertEquals(6, differences.size());
 
 		Predicate<? super Diff> addPropertyClass2Description = null;
 		Predicate<? super Diff> addRefAssociationInPropertyClass2Description = null;
@@ -197,7 +198,7 @@ public class ChangeAssociationTest extends AbstractUMLTest {
 				instanceOf(AssociationChange.class), ofKind(DifferenceKind.CHANGE)), null);
 		assertNull(changeUMLAssociation);
 		// assertNotNull(changeUMLAssociation);
-		// assertSame(Integer.valueOf(5), Integer.valueOf(changeUMLAssociation.getRefinedBy().size()));
+		// assertEquals(5, changeUMLAssociation.getRefinedBy().size());
 		// assertTrue(changeUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass2));
 		// assertTrue(changeUMLAssociation.getRefinedBy().contains(addLiteralIntegerInClass2));
 		// assertTrue(changeUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass2));
@@ -206,24 +207,24 @@ public class ChangeAssociationTest extends AbstractUMLTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(0), Integer.valueOf(addPropertyClass2.getRequires().size()));
+			assertEquals(0, addPropertyClass2.getRequires().size());
 
 			assertSame(Integer.valueOf(1), Integer.valueOf(addRefAssociationInPropertyClass2.getRequires()
 					.size()));
 			assertTrue(addRefAssociationInPropertyClass2.getRequires().contains(addPropertyClass2));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addRefTypeInPropertyClass2.getRequires().size()));
+			assertEquals(1, addRefTypeInPropertyClass2.getRequires().size());
 			assertTrue(addRefTypeInPropertyClass2.getRequires().contains(addPropertyClass2));
 
-			// assertSame(Integer.valueOf(0), Integer.valueOf(changeUMLAssociation.getRequires().size()));
+			// assertEquals(0, changeUMLAssociation.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addLiteralIntegerInClass2.getRequires().size()));
+			assertEquals(1, addLiteralIntegerInClass2.getRequires().size());
 			assertTrue(addLiteralIntegerInClass2.getRequires().contains(addPropertyClass2));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUnlimitedNaturalInClass2.getRequires().size()));
+			assertEquals(1, addUnlimitedNaturalInClass2.getRequires().size());
 			assertTrue(addUnlimitedNaturalInClass2.getRequires().contains(addPropertyClass2));
 		} else {
-			assertSame(Integer.valueOf(5), Integer.valueOf(addPropertyClass2.getRequires().size()));
+			assertEquals(5, addPropertyClass2.getRequires().size());
 			assertTrue(addPropertyClass2.getRequires().contains(addLiteralIntegerInClass2));
 			assertTrue(addPropertyClass2.getRequires().contains(addUnlimitedNaturalInClass2));
 			assertTrue(addPropertyClass2.getRequires().contains(addRefAssociationInPropertyClass2));
@@ -232,10 +233,10 @@ public class ChangeAssociationTest extends AbstractUMLTest {
 
 			assertSame(Integer.valueOf(0), Integer.valueOf(addRefAssociationInPropertyClass2.getRequires()
 					.size()));
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefTypeInPropertyClass2.getRequires().size()));
-			// assertSame(Integer.valueOf(0), Integer.valueOf(changeUMLAssociation.getRequires().size()));
-			assertSame(Integer.valueOf(0), Integer.valueOf(addLiteralIntegerInClass2.getRequires().size()));
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUnlimitedNaturalInClass2.getRequires().size()));
+			assertEquals(0, addRefTypeInPropertyClass2.getRequires().size());
+			// assertEquals(0, changeUMLAssociation.getRequires().size());
+			assertEquals(0, addLiteralIntegerInClass2.getRequires().size());
+			assertEquals(0, addUnlimitedNaturalInClass2.getRequires().size());
 		}
 
 		testIntersections(comparison);

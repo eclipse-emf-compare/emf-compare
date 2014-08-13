@@ -140,7 +140,7 @@ public class AddInterfaceRealizationTest extends AbstractUMLTest {
 					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLDependency);
-		assertSame(Integer.valueOf(4), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
+		assertEquals(4, addUMLDependency.getRefinedBy().size());
 		assertTrue(addUMLDependency.getRefinedBy().contains(addInterfaceRealization));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addClientInInterfaceRealization));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addSupplierInInterfaceRealization));
@@ -158,8 +158,8 @@ public class AddInterfaceRealizationTest extends AbstractUMLTest {
 					.size()));
 			assertTrue(addContractInInterfaceRealization.getRequires().contains(addInterfaceRealization));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addInterfaceRealization.getRequires().size()));
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
+			assertEquals(0, addInterfaceRealization.getRequires().size());
+			assertEquals(0, addUMLDependency.getRequires().size());
 		} else {
 			assertSame(Integer.valueOf(0), Integer.valueOf(addClientInInterfaceRealization.getRequires()
 					.size()));
@@ -168,12 +168,12 @@ public class AddInterfaceRealizationTest extends AbstractUMLTest {
 			assertSame(Integer.valueOf(0), Integer.valueOf(addContractInInterfaceRealization.getRequires()
 					.size()));
 
-			assertSame(Integer.valueOf(3), Integer.valueOf(addInterfaceRealization.getRequires().size()));
+			assertEquals(3, addInterfaceRealization.getRequires().size());
 			assertTrue(addInterfaceRealization.getRequires().contains(addClientInInterfaceRealization));
 			assertTrue(addInterfaceRealization.getRequires().contains(addSupplierInInterfaceRealization));
 			assertTrue(addInterfaceRealization.getRequires().contains(addContractInInterfaceRealization));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
+			assertEquals(0, addUMLDependency.getRequires().size());
 		}
 
 		// CHECK EQUIVALENCE

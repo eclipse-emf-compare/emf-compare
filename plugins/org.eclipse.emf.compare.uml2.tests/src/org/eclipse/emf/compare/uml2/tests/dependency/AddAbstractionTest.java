@@ -129,31 +129,31 @@ public class AddAbstractionTest extends AbstractUMLTest {
 					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLDependency);
-		assertSame(Integer.valueOf(3), Integer.valueOf(addUMLDependency.getRefinedBy().size()));
+		assertEquals(3, addUMLDependency.getRefinedBy().size());
 		assertTrue(addUMLDependency.getRefinedBy().contains(addRefClass1InAbstraction));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addRefClass0InAbstraction));
 		assertTrue(addUMLDependency.getRefinedBy().contains(addAbstraction));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(1), Integer.valueOf(addRefClass1InAbstraction.getRequires().size()));
+			assertEquals(1, addRefClass1InAbstraction.getRequires().size());
 			assertTrue(addRefClass1InAbstraction.getRequires().contains(addAbstraction));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addRefClass0InAbstraction.getRequires().size()));
+			assertEquals(1, addRefClass0InAbstraction.getRequires().size());
 			assertTrue(addRefClass0InAbstraction.getRequires().contains(addAbstraction));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addAbstraction.getRequires().size()));
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
+			assertEquals(0, addAbstraction.getRequires().size());
+			assertEquals(0, addUMLDependency.getRequires().size());
 		} else {
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefClass1InAbstraction.getRequires().size()));
+			assertEquals(0, addRefClass1InAbstraction.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefClass0InAbstraction.getRequires().size()));
+			assertEquals(0, addRefClass0InAbstraction.getRequires().size());
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addAbstraction.getRequires().size()));
+			assertEquals(2, addAbstraction.getRequires().size());
 			assertTrue(addAbstraction.getRequires().contains(addRefClass1InAbstraction));
 			assertTrue(addAbstraction.getRequires().contains(addRefClass0InAbstraction));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLDependency.getRequires().size()));
+			assertEquals(0, addUMLDependency.getRequires().size());
 		}
 
 		// CHECK EQUIVALENCE

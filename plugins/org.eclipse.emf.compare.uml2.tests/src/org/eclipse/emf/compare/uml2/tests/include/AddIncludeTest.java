@@ -2,13 +2,14 @@ package org.eclipse.emf.compare.uml2.tests.include;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -20,8 +21,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
-import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.include.data.IncludeInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
@@ -83,7 +84,7 @@ public class AddIncludeTest extends AbstractUMLTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 3 differences
-		assertSame(Integer.valueOf(3), Integer.valueOf(differences.size()));
+		assertEquals(3, differences.size());
 
 		Predicate<? super Diff> addExtendDescription = null;
 		Predicate<? super Diff> changeRefExtendedCaseInExtendDescription = null;
@@ -116,28 +117,28 @@ public class AddIncludeTest extends AbstractUMLTest {
 					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLExtend);
-		assertSame(Integer.valueOf(2), Integer.valueOf(addUMLExtend.getRefinedBy().size()));
+		assertEquals(2, addUMLExtend.getRefinedBy().size());
 		assertTrue(addUMLExtend.getRefinedBy().contains(addRefExtendedCaseInExtend));
 		assertTrue(addUMLExtend.getRefinedBy().contains(addExtend));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(1), Integer.valueOf(addRefExtendedCaseInExtend.getRequires().size()));
+			assertEquals(1, addRefExtendedCaseInExtend.getRequires().size());
 			assertTrue(addRefExtendedCaseInExtend.getRequires().contains(addExtend));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addExtend.getRequires().size()));
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLExtend.getRequires().size()));
+			assertEquals(0, addExtend.getRequires().size());
+			assertEquals(0, addUMLExtend.getRequires().size());
 		} else {
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefExtendedCaseInExtend.getRequires().size()));
+			assertEquals(0, addRefExtendedCaseInExtend.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addExtend.getRequires().size()));
+			assertEquals(1, addExtend.getRequires().size());
 			assertTrue(addExtend.getRequires().contains(addRefExtendedCaseInExtend));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLExtend.getRequires().size()));
+			assertEquals(0, addUMLExtend.getRequires().size());
 		}
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getEquivalences().size()));
+		assertEquals(0, comparison.getEquivalences().size());
 
 		testIntersections(comparison);
 

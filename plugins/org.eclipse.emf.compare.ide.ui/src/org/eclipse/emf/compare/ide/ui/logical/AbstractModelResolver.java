@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.logical;
 
-import com.google.common.annotations.Beta;
 
 /**
  * This can be subclassed instead of {@link IModelResolver} to avoid reimplementing common extension-related

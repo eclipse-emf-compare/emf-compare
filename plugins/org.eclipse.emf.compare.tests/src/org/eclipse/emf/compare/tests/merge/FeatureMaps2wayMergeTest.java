@@ -16,7 +16,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.Iterators;
@@ -68,7 +67,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 add diffs, 2 delete diffs (delete diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the right add detected in 3-way is a delete in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
 				instanceOf(ReferenceChange.class)));
@@ -99,7 +98,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -113,7 +112,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 add diffs, 2 delete diffs (delete diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the right add detected in 3-way is a delete in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
 				instanceOf(FeatureMapChange.class)));
@@ -144,7 +143,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -158,7 +157,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 add diffs, 2 delete diffs (delete diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the right add detected in 3-way is a delete in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
 				instanceOf(ReferenceChange.class)));
@@ -189,7 +188,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(0, ((BasicFeatureMap)map).size(eSFFirstKey));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -203,7 +202,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 add diffs, 2 delete diffs (delete diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the right add detected in 3-way is a delete in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
 				instanceOf(FeatureMapChange.class)));
@@ -234,7 +233,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(0, ((BasicFeatureMap)map).size(eSFFirstKey));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -248,7 +247,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 delete diffs, 2 add diffs (add diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the right delete detected in 3-way is a add in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
 				instanceOf(ReferenceChange.class)));
@@ -279,7 +278,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(0, ((BasicFeatureMap)map).size(eSFFirstKey));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -293,7 +292,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 delete diffs, 2 add diffs (add diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the right delete detected in 3-way is a add in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
 				instanceOf(FeatureMapChange.class)));
@@ -324,7 +323,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(0, ((BasicFeatureMap)map).size(eSFFirstKey));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -338,7 +337,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 delete diffs, 2 add diffs (add diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the right delete detected in 3-way is a add in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
 				instanceOf(ReferenceChange.class)));
@@ -369,7 +368,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, leftNode2));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -383,7 +382,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 delete diffs, 2 add diffs (add diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the right delete detected in 3-way is a add in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
 				instanceOf(FeatureMapChange.class)));
@@ -414,7 +413,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, leftNode2));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -429,7 +428,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right move/key changes detected in 3-way are a simple move/key changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(ReferenceChange.class)));
@@ -460,7 +459,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -475,7 +474,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right move/key changes detected in 3-way are a simple move/key changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.CHANGE),
 				instanceOf(FeatureMapChange.class)));
@@ -506,7 +505,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -521,7 +520,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right move/key changes detected in 3-way are a simple move/key changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(ReferenceChange.class)));
@@ -552,7 +551,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFSecondKey, leftNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -567,7 +566,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right move/key changes detected in 3-way are a simple move/key changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.CHANGE),
 				instanceOf(FeatureMapChange.class)));
@@ -598,7 +597,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFSecondKey, leftNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -613,7 +612,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(ReferenceChange.class)));
@@ -644,7 +643,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -659,7 +658,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(FeatureMapChange.class)));
@@ -690,7 +689,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -705,7 +704,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(ReferenceChange.class)));
@@ -736,7 +735,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, leftNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -751,7 +750,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(FeatureMapChange.class)));
@@ -782,7 +781,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, leftNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -797,7 +796,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(ReferenceChange.class)));
@@ -830,7 +829,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)map).get(eSFFirstKey, 1, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -845,7 +844,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(FeatureMapChange.class)));
@@ -878,7 +877,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)map).get(eSFFirstKey, 1, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -893,7 +892,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(ReferenceChange.class)));
@@ -926,7 +925,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(leftNode1, ((BasicFeatureMap)map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -941,7 +940,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(FeatureMapChange.class)));
@@ -974,7 +973,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(leftNode1, ((BasicFeatureMap)map).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -989,7 +988,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(ReferenceChange.class)));
@@ -1020,7 +1019,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1035,7 +1034,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(FeatureMapChange.class)));
@@ -1066,7 +1065,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1081,7 +1080,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(ReferenceChange.class)));
@@ -1112,7 +1111,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFSecondKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1127,7 +1126,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(FeatureMapChange.class)));
@@ -1158,7 +1157,7 @@ public class FeatureMaps2wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFSecondKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(4, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1173,7 +1172,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 add diffs, 2 delete diffs (delete diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the right add detected in 3-way is a delete in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
 				instanceOf(ReferenceChange.class)));
@@ -1216,7 +1215,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 1, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1231,7 +1230,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 add diffs, 2 delete diffs (delete diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the right add detected in 3-way is a delete in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
 				instanceOf(FeatureMapChange.class)));
@@ -1274,7 +1273,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 1, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1289,7 +1288,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 add diffs, 2 delete diffs (delete diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the right add detected in 3-way is a delete in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
 				instanceOf(ReferenceChange.class)));
@@ -1328,7 +1327,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMap).size());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1343,7 +1342,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 add diffs, 2 delete diffs (delete diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the right add detected in 3-way is a delete in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
 				instanceOf(FeatureMapChange.class)));
@@ -1382,7 +1381,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMap).size());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1397,7 +1396,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 add diffs, 2 delete diffs (add diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the left delete detected in 3-way is a add in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
 				instanceOf(ReferenceChange.class)));
@@ -1436,7 +1435,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(0, ((BasicFeatureMap)rightMap).size());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1451,7 +1450,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 add diffs, 2 delete diffs (add diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the left delete detected in 3-way is a add in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
 				instanceOf(FeatureMapChange.class)));
@@ -1490,7 +1489,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(0, ((BasicFeatureMap)rightMap).size());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1505,7 +1504,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 add diffs, 2 delete diffs (add diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the left delete detected in 3-way is a add in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
 				instanceOf(ReferenceChange.class)));
@@ -1548,7 +1547,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(rightNode2, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1563,7 +1562,7 @@ public class FeatureMaps2wayMergeTest {
 		// 2 add diffs, 2 delete diffs (add diffs are detected because same models are used for 2-way
 		// and 3-way comparison, so the left delete detected in 3-way is a add in 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
 				instanceOf(FeatureMapChange.class)));
@@ -1606,7 +1605,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(rightNode2, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1622,7 +1621,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(ReferenceChange.class)));
@@ -1665,7 +1664,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 1, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1681,7 +1680,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(FeatureMapChange.class)));
@@ -1724,7 +1723,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 1, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1740,7 +1739,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(ReferenceChange.class)));
@@ -1783,7 +1782,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1799,7 +1798,7 @@ public class FeatureMaps2wayMergeTest {
 		// comparison, so the right moves changes detected in 3-way are the same changes in
 		// 2-way).
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
 				instanceOf(FeatureMapChange.class)));
@@ -1842,7 +1841,7 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	private EObject getNodeNamed(Resource res, String name) {

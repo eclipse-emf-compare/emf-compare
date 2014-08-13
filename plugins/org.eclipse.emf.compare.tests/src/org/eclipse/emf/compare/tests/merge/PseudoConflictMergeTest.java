@@ -19,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.Iterators;
@@ -68,7 +67,7 @@ public class PseudoConflictMergeTest {
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.ADD)));
@@ -108,7 +107,7 @@ public class PseudoConflictMergeTest {
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				ofKind(DifferenceKind.ADD)));
@@ -148,7 +147,7 @@ public class PseudoConflictMergeTest {
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.ADD)));
@@ -188,7 +187,7 @@ public class PseudoConflictMergeTest {
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				ofKind(DifferenceKind.ADD)));
@@ -228,7 +227,7 @@ public class PseudoConflictMergeTest {
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.DELETE)));
@@ -268,7 +267,7 @@ public class PseudoConflictMergeTest {
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				ofKind(DifferenceKind.DELETE)));
@@ -308,7 +307,7 @@ public class PseudoConflictMergeTest {
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.DELETE)));
@@ -348,7 +347,7 @@ public class PseudoConflictMergeTest {
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				ofKind(DifferenceKind.DELETE)));
@@ -388,7 +387,7 @@ public class PseudoConflictMergeTest {
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.CHANGE)));
@@ -430,7 +429,7 @@ public class PseudoConflictMergeTest {
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				ofKind(DifferenceKind.CHANGE)));
@@ -472,7 +471,7 @@ public class PseudoConflictMergeTest {
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				ofKind(DifferenceKind.CHANGE)));
@@ -514,7 +513,7 @@ public class PseudoConflictMergeTest {
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
 				ofKind(DifferenceKind.CHANGE)));

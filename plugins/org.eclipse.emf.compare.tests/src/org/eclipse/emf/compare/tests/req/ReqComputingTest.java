@@ -18,8 +18,8 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReferenc
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.movedInReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -624,7 +624,7 @@ public class ReqComputingTest {
 
 		EList<Diff> differences = comparison.getDifferences();
 
-		assertSame(Integer.valueOf(3), Integer.valueOf(differences.size()));
+		assertEquals(3, differences.size());
 		Diff added1 = getOnlyElement(filter(differences, added(node1)), null);
 		assertNotNull(added1);
 		Diff added2 = getOnlyElement(filter(differences, added(node2)), null);
@@ -641,10 +641,10 @@ public class ReqComputingTest {
 		// Happy compiler
 		assert singleChange != null;
 		assertTrue(singleChange.getValue().eIsProxy());
-		assertSame(Integer.valueOf(0), Integer.valueOf(added1.getRequires().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(added2.getRequires().size()));
+		assertEquals(0, added1.getRequires().size());
+		assertEquals(1, added2.getRequires().size());
 		assertTrue(added2.getRequires().contains(added1));
-		assertSame(Integer.valueOf(1), Integer.valueOf(singleChange.getRequires().size()));
+		assertEquals(1, singleChange.getRequires().size());
 		assertTrue(singleChange.getRequires().contains(added2));
 	}
 
@@ -652,7 +652,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 3 differences
-		assertSame(Integer.valueOf(3), Integer.valueOf(differences.size()));
+		assertEquals(3, differences.size());
 
 		Predicate<? super Diff> deleteSourceDiffDescription = null;
 		Predicate<? super Diff> deleteDestinationDiffDescription = null;
@@ -688,19 +688,19 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteSourceDiff.getRequires().size()));
+			assertEquals(0, deleteSourceDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteDestinationDiff.getRequires().size()));
+			assertEquals(0, deleteDestinationDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(changedSingleValuedRefDiff.getRequires().size()));
+			assertEquals(2, changedSingleValuedRefDiff.getRequires().size());
 			assertTrue(changedSingleValuedRefDiff.getRequires().contains(deleteDestinationDiff));
 			assertTrue(changedSingleValuedRefDiff.getRequires().contains(deleteSourceDiff));
 		} else {
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteSourceDiff.getRequires().size()));
+			assertEquals(1, deleteSourceDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteDestinationDiff.getRequires().size()));
+			assertEquals(1, deleteDestinationDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(changedSingleValuedRefDiff.getRequires().size()));
+			assertEquals(0, changedSingleValuedRefDiff.getRequires().size());
 		}
 	}
 
@@ -708,7 +708,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 3 differences
-		assertSame(Integer.valueOf(3), Integer.valueOf(differences.size()));
+		assertEquals(3, differences.size());
 
 		Predicate<? super Diff> deleteSourceDiffDescription = null;
 		Predicate<? super Diff> deleteDestinationDiffDescription = null;
@@ -739,21 +739,21 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteSourceDiff.getRequires().size()));
+			assertEquals(0, deleteSourceDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteDestinationDiff.getRequires().size()));
+			assertEquals(0, deleteDestinationDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(deleteMultiValuedRefDiff.getRequires().size()));
+			assertEquals(2, deleteMultiValuedRefDiff.getRequires().size());
 			assertTrue(deleteMultiValuedRefDiff.getRequires().contains(deleteDestinationDiff));
 			assertTrue(deleteMultiValuedRefDiff.getRequires().contains(deleteSourceDiff));
 		} else {
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteSourceDiff.getRequires().size()));
+			assertEquals(1, deleteSourceDiff.getRequires().size());
 			assertTrue(deleteSourceDiff.getRequires().contains(deleteMultiValuedRefDiff));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteDestinationDiff.getRequires().size()));
+			assertEquals(1, deleteDestinationDiff.getRequires().size());
 			assertTrue(deleteDestinationDiff.getRequires().contains(deleteMultiValuedRefDiff));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteMultiValuedRefDiff.getRequires().size()));
+			assertEquals(0, deleteMultiValuedRefDiff.getRequires().size());
 		}
 	}
 
@@ -761,7 +761,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		Predicate<? super Diff> deleteDestinationDiffDescription = null;
 		Predicate<? super Diff> changedSingleValuedRefDiffDescription = null;
@@ -788,15 +788,15 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteDestinationDiff.getRequires().size()));
+			assertEquals(0, deleteDestinationDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(changedSingleValuedRefDiff.getRequires().size()));
+			assertEquals(1, changedSingleValuedRefDiff.getRequires().size());
 			assertTrue(changedSingleValuedRefDiff.getRequires().contains(deleteDestinationDiff));
 		} else {
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteDestinationDiff.getRequires().size()));
+			assertEquals(1, deleteDestinationDiff.getRequires().size());
 			assertTrue(deleteDestinationDiff.getRequires().contains(changedSingleValuedRefDiff));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(changedSingleValuedRefDiff.getRequires().size()));
+			assertEquals(0, changedSingleValuedRefDiff.getRequires().size());
 		}
 	}
 
@@ -804,7 +804,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 3 differences
-		assertSame(Integer.valueOf(3), Integer.valueOf(differences.size()));
+		assertEquals(3, differences.size());
 
 		Predicate<? super Diff> deleteDestinationDiffDescription = null;
 		Predicate<? super Diff> deletedMultiValuedRefDiffDescription = null;
@@ -839,19 +839,19 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteDestinationDiff.getRequires().size()));
+			assertEquals(0, deleteDestinationDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(deletedMultiValuedRefDiff.getRequires().size()));
+			assertEquals(1, deletedMultiValuedRefDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addedMultiValuedRefDiff.getRequires().size()));
+			assertEquals(0, addedMultiValuedRefDiff.getRequires().size());
 			assertTrue(deletedMultiValuedRefDiff.getRequires().contains(deleteDestinationDiff));
 		} else {
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteDestinationDiff.getRequires().size()));
+			assertEquals(1, deleteDestinationDiff.getRequires().size());
 			assertTrue(deleteDestinationDiff.getRequires().contains(deletedMultiValuedRefDiff));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deletedMultiValuedRefDiff.getRequires().size()));
+			assertEquals(0, deletedMultiValuedRefDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addedMultiValuedRefDiff.getRequires().size()));
+			assertEquals(0, addedMultiValuedRefDiff.getRequires().size());
 		}
 
 	}
@@ -860,7 +860,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 8 differences
-		assertSame(Integer.valueOf(8), Integer.valueOf(differences.size()));
+		assertEquals(8, differences.size());
 
 		Predicate<? super Diff> addDest4Description = null;
 		Predicate<? super Diff> delDest2Description = null;
@@ -924,44 +924,44 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(1), Integer.valueOf(addDest4.getRequires().size()));
+			assertEquals(1, addDest4.getRequires().size());
 			assertTrue(addDest4.getRequires().contains(addRefDest4));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delDest2.getRequires().size()));
+			assertEquals(0, delDest2.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delDest3.getRequires().size()));
+			assertEquals(0, delDest3.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefDest1.getRequires().size()));
+			assertEquals(0, addRefDest1.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefDest4.getRequires().size()));
+			assertEquals(0, addRefDest4.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(delRefDest2.getRequires().size()));
+			assertEquals(1, delRefDest2.getRequires().size());
 			assertTrue(delRefDest2.getRequires().contains(delDest2));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(delRefDest3.getRequires().size()));
+			assertEquals(1, delRefDest3.getRequires().size());
 			assertTrue(delRefDest3.getRequires().contains(delDest3));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delRefDest5.getRequires().size()));
+			assertEquals(0, delRefDest5.getRequires().size());
 
 		} else {
-			assertSame(Integer.valueOf(0), Integer.valueOf(addDest4.getRequires().size()));
+			assertEquals(0, addDest4.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(delDest2.getRequires().size()));
+			assertEquals(1, delDest2.getRequires().size());
 			assertTrue(delDest2.getRequires().contains(delRefDest2));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(delDest3.getRequires().size()));
+			assertEquals(1, delDest3.getRequires().size());
 			assertTrue(delDest3.getRequires().contains(delRefDest3));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefDest1.getRequires().size()));
+			assertEquals(0, addRefDest1.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addRefDest4.getRequires().size()));
+			assertEquals(1, addRefDest4.getRequires().size());
 			assertTrue(addRefDest4.getRequires().contains(addDest4));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delRefDest2.getRequires().size()));
+			assertEquals(0, delRefDest2.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delRefDest3.getRequires().size()));
+			assertEquals(0, delRefDest3.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delRefDest5.getRequires().size()));
+			assertEquals(0, delRefDest5.getRequires().size());
 		}
 
 	}
@@ -970,7 +970,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 7 differences
-		assertSame(Integer.valueOf(7), Integer.valueOf(differences.size()));
+		assertEquals(7, differences.size());
 
 		Predicate<? super Diff> delDestDescription = null;
 		Predicate<? super Diff> delContainerDescription = null;
@@ -1022,47 +1022,47 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(0), Integer.valueOf(delDest.getRequires().size()));
+			assertEquals(0, delDest.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delContainer.getRequires().size()));
+			assertEquals(0, delContainer.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(delSubContainer.getRequires().size()));
+			assertEquals(1, delSubContainer.getRequires().size());
 			assertTrue(delSubContainer.getRequires().contains(delContainer));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(delSource1.getRequires().size()));
+			assertEquals(1, delSource1.getRequires().size());
 			assertTrue(delSource1.getRequires().contains(delSubContainer));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(delSource2.getRequires().size()));
+			assertEquals(1, delSource2.getRequires().size());
 			assertTrue(delSource2.getRequires().contains(delSubContainer));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(delRefSource1.getRequires().size()));
+			assertEquals(2, delRefSource1.getRequires().size());
 			assertTrue(delRefSource1.getRequires().contains(delSource1));
 			assertTrue(delRefSource2.getRequires().contains(delSource2));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(delRefSource2.getRequires().size()));
+			assertEquals(2, delRefSource2.getRequires().size());
 			assertTrue(delRefSource1.getRequires().contains(delDest));
 			assertTrue(delRefSource2.getRequires().contains(delDest));
 		} else {
-			assertSame(Integer.valueOf(2), Integer.valueOf(delDest.getRequires().size()));
+			assertEquals(2, delDest.getRequires().size());
 			assertTrue(delDest.getRequires().contains(delRefSource1));
 			assertTrue(delDest.getRequires().contains(delRefSource2));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(delContainer.getRequires().size()));
+			assertEquals(1, delContainer.getRequires().size());
 			assertTrue(delContainer.getRequires().contains(delSubContainer));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(delSubContainer.getRequires().size()));
+			assertEquals(2, delSubContainer.getRequires().size());
 			assertTrue(delSubContainer.getRequires().contains(delSource1));
 			assertTrue(delSubContainer.getRequires().contains(delSource2));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(delSource1.getRequires().size()));
+			assertEquals(1, delSource1.getRequires().size());
 			assertTrue(delSource1.getRequires().contains(delRefSource1));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(delSource2.getRequires().size()));
+			assertEquals(1, delSource2.getRequires().size());
 			assertTrue(delSource2.getRequires().contains(delRefSource2));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delRefSource1.getRequires().size()));
+			assertEquals(0, delRefSource1.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delRefSource2.getRequires().size()));
+			assertEquals(0, delRefSource2.getRequires().size());
 		}
 
 	}
@@ -1071,7 +1071,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 4 differences
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		Predicate<? super Diff> addBDescription = null;
 		Predicate<? super Diff> delCDescription = null;
@@ -1102,23 +1102,23 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(1), Integer.valueOf(addB.getRequires().size()));
+			assertEquals(1, addB.getRequires().size());
 			assertTrue(addB.getRequires().contains(delC));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delC.getRequires().size()));
+			assertEquals(0, delC.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addE.getRequires().size()));
+			assertEquals(0, addE.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delF.getRequires().size()));
+			assertEquals(0, delF.getRequires().size());
 		} else {
-			assertSame(Integer.valueOf(0), Integer.valueOf(addB.getRequires().size()));
+			assertEquals(0, addB.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(delC.getRequires().size()));
+			assertEquals(1, delC.getRequires().size());
 			assertTrue(delC.getRequires().contains(addB));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addE.getRequires().size()));
+			assertEquals(0, addE.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delF.getRequires().size()));
+			assertEquals(0, delF.getRequires().size());
 		}
 
 	}
@@ -1127,7 +1127,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 7 differences
-		assertSame(Integer.valueOf(7), Integer.valueOf(differences.size()));
+		assertEquals(7, differences.size());
 
 		Predicate<? super Diff> addBDescription = null;
 		Predicate<? super Diff> delCDescription = null;
@@ -1177,40 +1177,40 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(0), Integer.valueOf(addB.getRequires().size()));
+			assertEquals(0, addB.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(delC.getRequires().size()));
+			assertEquals(1, delC.getRequires().size());
 			assertTrue(delC.getRequires().contains(changeRefB));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(changeRefB.getRequires().size()));
+			assertEquals(1, changeRefB.getRequires().size());
 			assertTrue(changeRefB.getRequires().contains(addB));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addE.getRequires().size()));
+			assertEquals(0, addE.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(delF.getRequires().size()));
+			assertEquals(1, delF.getRequires().size());
 			assertTrue(delF.getRequires().contains(delRefF));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addRefE.getRequires().size()));
+			assertEquals(1, addRefE.getRequires().size());
 			assertTrue(addRefE.getRequires().contains(addE));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delRefF.getRequires().size()));
+			assertEquals(0, delRefF.getRequires().size());
 		} else {
-			assertSame(Integer.valueOf(1), Integer.valueOf(addB.getRequires().size()));
+			assertEquals(1, addB.getRequires().size());
 			assertTrue(addB.getRequires().contains(changeRefB));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delC.getRequires().size()));
+			assertEquals(0, delC.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(changeRefB.getRequires().size()));
+			assertEquals(1, changeRefB.getRequires().size());
 			assertTrue(changeRefB.getRequires().contains(delC));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addE.getRequires().size()));
+			assertEquals(1, addE.getRequires().size());
 			assertTrue(addE.getRequires().contains(addRefE));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(delF.getRequires().size()));
+			assertEquals(0, delF.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefE.getRequires().size()));
+			assertEquals(0, addRefE.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(delRefF.getRequires().size()));
+			assertEquals(1, delRefF.getRequires().size());
 			assertTrue(delRefF.getRequires().contains(delF));
 		}
 
@@ -1220,7 +1220,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		Predicate<? super Diff> addBDescription = null;
 		Predicate<? super Diff> addCDescription = null;
@@ -1241,15 +1241,15 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(0), Integer.valueOf(addB.getRequires().size()));
+			assertEquals(0, addB.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addC.getRequires().size()));
+			assertEquals(1, addC.getRequires().size());
 			assertTrue(addC.getRequires().contains(addB));
 		} else {
-			assertSame(Integer.valueOf(1), Integer.valueOf(addB.getRequires().size()));
+			assertEquals(1, addB.getRequires().size());
 			assertTrue(addB.getRequires().contains(addC));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addC.getRequires().size()));
+			assertEquals(0, addC.getRequires().size());
 		}
 
 	}
@@ -1258,7 +1258,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 4 differences
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		Predicate<? super Diff> addADescription = null;
 		Predicate<? super Diff> addCDescription = null;
@@ -1292,25 +1292,25 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(0), Integer.valueOf(addA.getRequires().size()));
+			assertEquals(0, addA.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addC.getRequires().size()));
+			assertEquals(0, addC.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(changeRefB.getRequires().size()));
+			assertEquals(1, changeRefB.getRequires().size());
 			assertTrue(changeRefB.getRequires().contains(addA));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addRefB.getRequires().size()));
+			assertEquals(1, addRefB.getRequires().size());
 			assertTrue(addRefB.getRequires().contains(addC));
 		} else {
-			assertSame(Integer.valueOf(1), Integer.valueOf(addA.getRequires().size()));
+			assertEquals(1, addA.getRequires().size());
 			assertTrue(addA.getRequires().contains(changeRefB));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addC.getRequires().size()));
+			assertEquals(1, addC.getRequires().size());
 			assertTrue(addC.getRequires().contains(addRefB));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(changeRefB.getRequires().size()));
+			assertEquals(0, changeRefB.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefB.getRequires().size()));
+			assertEquals(0, addRefB.getRequires().size());
 		}
 
 	}
@@ -1319,7 +1319,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 4 differences
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		Predicate<? super Diff> delBDescription = null;
 		Predicate<? super Diff> moveCDescription = null;
@@ -1350,25 +1350,25 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(1), Integer.valueOf(delB.getRequires().size()));
+			assertEquals(1, delB.getRequires().size());
 			assertTrue(delB.getRequires().contains(moveC));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(moveC.getRequires().size()));
+			assertEquals(0, moveC.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(moveD.getRequires().size()));
+			assertEquals(0, moveD.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(moveE.getRequires().size()));
+			assertEquals(1, moveE.getRequires().size());
 			assertTrue(moveE.getRequires().contains(moveD));
 		} else {
-			assertSame(Integer.valueOf(0), Integer.valueOf(delB.getRequires().size()));
+			assertEquals(0, delB.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(moveC.getRequires().size()));
+			assertEquals(1, moveC.getRequires().size());
 			assertTrue(moveC.getRequires().contains(delB));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(moveD.getRequires().size()));
+			assertEquals(1, moveD.getRequires().size());
 			assertTrue(moveD.getRequires().contains(moveE));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(moveE.getRequires().size()));
+			assertEquals(0, moveE.getRequires().size());
 		}
 
 	}
@@ -1377,7 +1377,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
+		assertEquals(5, differences.size());
 
 		Predicate<? super Diff> deleteADiffDescription = null;
 		Predicate<? super Diff> deleteBDiffDescription = null;
@@ -1417,33 +1417,33 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteADiff.getRequires().size()));
+			assertEquals(0, deleteADiff.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteBDiff.getRequires().size()));
+			assertEquals(0, deleteBDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteCDiff.getRequires().size()));
+			assertEquals(0, deleteCDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(deleteRefBDiff.getRequires().size()));
+			assertEquals(2, deleteRefBDiff.getRequires().size());
 			assertTrue(deleteRefBDiff.getRequires().contains(deleteBDiff));
 			assertTrue(deleteRefBDiff.getRequires().contains(deleteADiff));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(deleteRefCDiff.getRequires().size()));
+			assertEquals(2, deleteRefCDiff.getRequires().size());
 			assertTrue(deleteRefCDiff.getRequires().contains(deleteCDiff));
 			assertTrue(deleteRefCDiff.getRequires().contains(deleteADiff));
 		} else {
-			assertSame(Integer.valueOf(2), Integer.valueOf(deleteADiff.getRequires().size()));
+			assertEquals(2, deleteADiff.getRequires().size());
 			assertTrue(deleteADiff.getRequires().contains(deleteRefBDiff));
 			assertTrue(deleteADiff.getRequires().contains(deleteRefCDiff));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteBDiff.getRequires().size()));
+			assertEquals(1, deleteBDiff.getRequires().size());
 			assertTrue(deleteBDiff.getRequires().contains(deleteRefBDiff));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteCDiff.getRequires().size()));
+			assertEquals(1, deleteCDiff.getRequires().size());
 			assertTrue(deleteCDiff.getRequires().contains(deleteRefCDiff));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteRefBDiff.getRequires().size()));
+			assertEquals(0, deleteRefBDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteRefCDiff.getRequires().size()));
+			assertEquals(0, deleteRefCDiff.getRequires().size());
 		}
 
 	}
@@ -1452,7 +1452,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		Predicate<? super Diff> deleteADiffDescription = null;
 		Predicate<? super Diff> deleteCDiffDescription = null;
@@ -1487,27 +1487,27 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteADiff.getRequires().size()));
+			assertEquals(0, deleteADiff.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteCDiff.getRequires().size()));
+			assertEquals(0, deleteCDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteRefBDiff.getRequires().size()));
+			assertEquals(1, deleteRefBDiff.getRequires().size());
 			assertTrue(deleteRefBDiff.getRequires().contains(deleteADiff));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(deleteRefCDiff.getRequires().size()));
+			assertEquals(2, deleteRefCDiff.getRequires().size());
 			assertTrue(deleteRefCDiff.getRequires().contains(deleteCDiff));
 			assertTrue(deleteRefCDiff.getRequires().contains(deleteADiff));
 		} else {
-			assertSame(Integer.valueOf(2), Integer.valueOf(deleteADiff.getRequires().size()));
+			assertEquals(2, deleteADiff.getRequires().size());
 			assertTrue(deleteADiff.getRequires().contains(deleteRefBDiff));
 			assertTrue(deleteADiff.getRequires().contains(deleteRefCDiff));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteCDiff.getRequires().size()));
+			assertEquals(1, deleteCDiff.getRequires().size());
 			assertTrue(deleteCDiff.getRequires().contains(deleteRefCDiff));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteRefBDiff.getRequires().size()));
+			assertEquals(0, deleteRefBDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteRefCDiff.getRequires().size()));
+			assertEquals(0, deleteRefCDiff.getRequires().size());
 		}
 
 	}
@@ -1516,7 +1516,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		Predicate<? super Diff> deleteBDiffDescription = null;
 		Predicate<? super Diff> deleteCDiffDescription = null;
@@ -1551,25 +1551,25 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteBDiff.getRequires().size()));
+			assertEquals(0, deleteBDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteCDiff.getRequires().size()));
+			assertEquals(0, deleteCDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteRefBDiff.getRequires().size()));
+			assertEquals(1, deleteRefBDiff.getRequires().size());
 			assertTrue(deleteRefBDiff.getRequires().contains(deleteBDiff));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteRefCDiff.getRequires().size()));
+			assertEquals(1, deleteRefCDiff.getRequires().size());
 			assertTrue(deleteRefCDiff.getRequires().contains(deleteCDiff));
 		} else {
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteBDiff.getRequires().size()));
+			assertEquals(1, deleteBDiff.getRequires().size());
 			assertTrue(deleteBDiff.getRequires().contains(deleteRefBDiff));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteCDiff.getRequires().size()));
+			assertEquals(1, deleteCDiff.getRequires().size());
 			assertTrue(deleteCDiff.getRequires().contains(deleteRefCDiff));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteRefBDiff.getRequires().size()));
+			assertEquals(0, deleteRefBDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteRefCDiff.getRequires().size()));
+			assertEquals(0, deleteRefCDiff.getRequires().size());
 		}
 
 	}
@@ -1578,7 +1578,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
-		assertSame(Integer.valueOf(3), Integer.valueOf(differences.size()));
+		assertEquals(3, differences.size());
 
 		Predicate<? super Diff> deleteCDiffDescription = null;
 		Predicate<? super Diff> deleteRefBDiffDescription = null;
@@ -1608,19 +1608,19 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteCDiff.getRequires().size()));
+			assertEquals(0, deleteCDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteRefBDiff.getRequires().size()));
+			assertEquals(0, deleteRefBDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteRefCDiff.getRequires().size()));
+			assertEquals(1, deleteRefCDiff.getRequires().size());
 			assertTrue(deleteRefCDiff.getRequires().contains(deleteCDiff));
 		} else {
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteCDiff.getRequires().size()));
+			assertEquals(1, deleteCDiff.getRequires().size());
 			assertTrue(deleteCDiff.getRequires().contains(deleteRefCDiff));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteRefBDiff.getRequires().size()));
+			assertEquals(0, deleteRefBDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteRefCDiff.getRequires().size()));
+			assertEquals(0, deleteRefCDiff.getRequires().size());
 		}
 
 	}
@@ -1629,7 +1629,7 @@ public class ReqComputingTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		Predicate<? super Diff> deleteCDiffDescription = null;
 		Predicate<? super Diff> deleteRefCDiffDescription = null;
@@ -1652,15 +1652,15 @@ public class ReqComputingTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteCDiff.getRequires().size()));
+			assertEquals(0, deleteCDiff.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteRefCDiff.getRequires().size()));
+			assertEquals(1, deleteRefCDiff.getRequires().size());
 			assertTrue(deleteRefCDiff.getRequires().contains(deleteCDiff));
 		} else {
-			assertSame(Integer.valueOf(1), Integer.valueOf(deleteCDiff.getRequires().size()));
+			assertEquals(1, deleteCDiff.getRequires().size());
 			assertTrue(deleteCDiff.getRequires().contains(deleteRefCDiff));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(deleteRefCDiff.getRequires().size()));
+			assertEquals(0, deleteRefCDiff.getRequires().size());
 		}
 
 	}

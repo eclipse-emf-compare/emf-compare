@@ -11,9 +11,7 @@
 package org.eclipse.emf.compare.diagram.internal.extensions.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
 import org.eclipse.emf.compare.impl.DiffImpl;
@@ -28,8 +26,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diagram.internal.extensions.impl.DiagramDiffImpl#getSemanticDiff <em>Semantic Diff</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diagram.internal.extensions.impl.DiagramDiffImpl#getView <em>View</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diagram.internal.extensions.impl.DiagramDiffImpl#getSemanticDiff <em>
+ * Semantic Diff</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diagram.internal.extensions.impl.DiagramDiffImpl#getView <em>View</em>}</li>
  * </ul>
  * </p>
  *
@@ -47,9 +46,9 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 	protected Diff semanticDiff;
 
 	/**
-	 * The cached value of the '{@link #getView() <em>View</em>}' reference.
-	 * <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getView() <em>View</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @see #getView()
 	 * @generated
 	 * @ordered
@@ -58,6 +57,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected DiagramDiffImpl() {
@@ -66,6 +66,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -75,6 +76,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Diff getSemanticDiff() {
@@ -82,8 +84,10 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 			InternalEObject oldSemanticDiff = (InternalEObject)semanticDiff;
 			semanticDiff = (Diff)eResolveProxy(oldSemanticDiff);
 			if (semanticDiff != oldSemanticDiff) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ExtensionsPackage.DIAGRAM_DIFF__SEMANTIC_DIFF, oldSemanticDiff, semanticDiff));
+				if (eNotificationRequired()) {
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ExtensionsPackage.DIAGRAM_DIFF__SEMANTIC_DIFF, oldSemanticDiff, semanticDiff));
+				}
 			}
 		}
 		return semanticDiff;
@@ -91,6 +95,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Diff basicGetSemanticDiff() {
@@ -99,17 +104,21 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setSemanticDiff(Diff newSemanticDiff) {
 		Diff oldSemanticDiff = semanticDiff;
 		semanticDiff = newSemanticDiff;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ExtensionsPackage.DIAGRAM_DIFF__SEMANTIC_DIFF, oldSemanticDiff, semanticDiff));
+		if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					ExtensionsPackage.DIAGRAM_DIFF__SEMANTIC_DIFF, oldSemanticDiff, semanticDiff));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getView() {
@@ -117,8 +126,10 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 			InternalEObject oldView = (InternalEObject)view;
 			view = eResolveProxy(oldView);
 			if (view != oldView) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ExtensionsPackage.DIAGRAM_DIFF__VIEW, oldView, view));
+				if (eNotificationRequired()) {
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ExtensionsPackage.DIAGRAM_DIFF__VIEW, oldView, view));
+				}
 			}
 		}
 		return view;
@@ -126,6 +137,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetView() {
@@ -134,27 +146,35 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setView(EObject newView) {
 		EObject oldView = view;
 		view = newView;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ExtensionsPackage.DIAGRAM_DIFF__VIEW, oldView, view));
+		if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET, ExtensionsPackage.DIAGRAM_DIFF__VIEW,
+					oldView, view));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ExtensionsPackage.DIAGRAM_DIFF__SEMANTIC_DIFF:
-				if (resolve) return getSemanticDiff();
+				if (resolve) {
+					return getSemanticDiff();
+				}
 				return basicGetSemanticDiff();
 			case ExtensionsPackage.DIAGRAM_DIFF__VIEW:
-				if (resolve) return getView();
+				if (resolve) {
+					return getView();
+				}
 				return basicGetView();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -162,6 +182,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -179,6 +200,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -196,6 +218,7 @@ public abstract class DiagramDiffImpl extends DiffImpl implements DiagramDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

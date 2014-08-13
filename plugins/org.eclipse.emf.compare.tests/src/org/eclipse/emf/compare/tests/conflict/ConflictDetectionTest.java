@@ -23,6 +23,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.movedInReferenc
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -63,8 +64,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", "origin", "left");
@@ -82,7 +83,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -105,8 +106,8 @@ public class ConflictDetectionTest {
 		 * unset, and that same reference has been changed on the left to a new value. The two diffs on the
 		 * right are in conflict with the only diff on the left.
 		 */
-		assertSame(Integer.valueOf(3), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(3, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftReferenceDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", "root.origin", "root.left");
@@ -129,7 +130,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(3), Integer.valueOf(conflictDiff.size()));
+		assertEquals(3, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftReferenceDiff));
 		assertTrue(conflictDiff.contains(rightReferenceDiff));
 		assertTrue(conflictDiff.contains(rightDeleteDiff));
@@ -148,8 +149,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", null, "left");
@@ -167,7 +168,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -186,8 +187,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", null, "root.left");
@@ -205,7 +206,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -224,8 +225,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", "origin", null);
@@ -243,7 +244,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.PSEUDO, conflict.getKind());
@@ -266,8 +267,8 @@ public class ConflictDetectionTest {
 		 * unset, and that same reference has been unset on the left. All three diffs are in pseudo-conflict
 		 * with each other.
 		 */
-		assertSame(Integer.valueOf(3), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(3, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftReferenceDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", "root.origin", null);
@@ -290,7 +291,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(3), Integer.valueOf(conflictDiff.size()));
+		assertEquals(3, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftReferenceDiff));
 		assertTrue(conflictDiff.contains(rightReferenceDiff));
 		assertTrue(conflictDiff.contains(rightDeleteDiff));
@@ -310,8 +311,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", "origin", "left");
@@ -330,7 +331,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -349,8 +350,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", "root.origin", "root.left");
@@ -369,7 +370,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -388,8 +389,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", "origin", "left");
@@ -408,7 +409,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -427,8 +428,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", "root.origin", "root.left");
@@ -447,7 +448,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -466,8 +467,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", null, "left");
@@ -486,7 +487,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -505,8 +506,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", null, "root.left");
@@ -525,7 +526,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -544,8 +545,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", "origin", null);
@@ -564,7 +565,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -583,8 +584,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", "root.origin", null);
@@ -603,7 +604,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -622,8 +623,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", null, "leftAndRight");
@@ -642,7 +643,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.PSEUDO, conflict.getKind());
@@ -661,8 +662,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", null, "root.leftAndRight");
@@ -681,7 +682,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.PSEUDO, conflict.getKind());
@@ -700,8 +701,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", "origin", null);
@@ -720,7 +721,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.PSEUDO, conflict.getKind());
@@ -739,8 +740,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", "root.origin", null);
@@ -759,7 +760,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.PSEUDO, conflict.getKind());
@@ -778,8 +779,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = addedToAttribute("root.conflictHolder",
 				"multiValuedAttribute", "left1");
@@ -797,7 +798,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -821,8 +822,8 @@ public class ConflictDetectionTest {
 		 * reference on the left side. The addition of a value into the reference conflicts with the removal
 		 * of the container from the right. The three other diffs do not conflict.
 		 */
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(5, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftReferenceDiffDescription = addedToReference("root.conflictHolder",
 				"multiValuedReference", "root.left1");
@@ -855,7 +856,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftReferenceDiff));
 		assertTrue(conflictDiff.contains(rightDeleteDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -874,8 +875,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = removedFromAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin1");
@@ -893,7 +894,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.PSEUDO, conflict.getKind());
@@ -918,8 +919,8 @@ public class ConflictDetectionTest {
 		 * removal of the container from the right. It is also in pseudo-conflict with the deletion of this
 		 * same value on the right.
 		 */
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(5, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftReferenceDiffDescription = removedFromReference(
 				"root.conflictHolder", "multiValuedReference", "root.origin1");
@@ -952,7 +953,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(3), Integer.valueOf(conflictDiff.size()));
+		assertEquals(3, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftReferenceDiff));
 		assertTrue(conflictDiff.contains(rightDeleteDiff));
 		assertTrue(conflictDiff.contains(rightReferenceDiff1));
@@ -972,8 +973,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = addedToAttribute("root.conflictHolder",
 				"multiValuedAttribute", "left1");
@@ -991,7 +992,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -1010,8 +1011,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftReferenceDiffDescription = addedToReference("root.conflictHolder",
 				"multiValuedReference", "root.left1");
@@ -1029,7 +1030,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftReferenceDiff));
 		assertTrue(conflictDiff.contains(rightDeleteDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -1052,8 +1053,8 @@ public class ConflictDetectionTest {
 		 * three values of one of this element's features have been removed. All three diffs on the left are
 		 * in conflict with the right diff.
 		 */
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(4, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftAttributeDiff1Description = removedFromAttribute(
 				"root.conflictHolder", "multiValuedAttribute", "origin1");
@@ -1081,7 +1082,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(4), Integer.valueOf(conflictDiff.size()));
+		assertEquals(4, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftAttributeDiff1));
 		assertTrue(conflictDiff.contains(leftAttributeDiff2));
 		assertTrue(conflictDiff.contains(leftAttributeDiff3));
@@ -1106,8 +1107,8 @@ public class ConflictDetectionTest {
 		 * element's reference have been removed. On the left, we've also removed all three values of that
 		 * same reference. All 7 differences are in pseudo-conflict with each other.
 		 */
-		assertSame(Integer.valueOf(7), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(7, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> referenceDiff1Description = removedFromReference("root.conflictHolder",
 				"multiValuedReference", "root.origin1");
@@ -1144,7 +1145,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(7), Integer.valueOf(conflictDiff.size()));
+		assertEquals(7, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftReferenceDiff1));
 		assertTrue(conflictDiff.contains(leftReferenceDiff2));
 		assertTrue(conflictDiff.contains(leftReferenceDiff3));
@@ -1168,8 +1169,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = movedInAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin1");
@@ -1187,7 +1188,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -1210,8 +1211,8 @@ public class ConflictDetectionTest {
 		 * of its reference have been deleted too. In the left, we've moved one of these values to another
 		 * index. The MOVE conflicts with both the container deletion and the value's removal.
 		 */
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(5, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftReferenceDiffDescription = movedInReference("root.conflictHolder",
 				"multiValuedReference", "root.origin1");
@@ -1244,7 +1245,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(3), Integer.valueOf(conflictDiff.size()));
+		assertEquals(3, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftReferenceDiff));
 		assertTrue(conflictDiff.contains(rightDeleteDiff));
 		assertTrue(conflictDiff.contains(rightReferenceDiff1));
@@ -1264,8 +1265,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = removedFromAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin1");
@@ -1284,7 +1285,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -1303,8 +1304,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = removedFromReference("root.conflictHolder",
 				"multiValuedReference", "root.origin1");
@@ -1323,7 +1324,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -1342,8 +1343,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = movedInAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin1");
@@ -1362,7 +1363,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -1381,8 +1382,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = movedInReference("root.conflictHolder",
 				"multiValuedReference", "root.origin1");
@@ -1401,7 +1402,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -1420,8 +1421,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = movedInAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin1");
@@ -1440,7 +1441,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -1459,8 +1460,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = movedInReference("root.conflictHolder",
 				"multiValuedReference", "root.origin1");
@@ -1479,7 +1480,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -1501,8 +1502,8 @@ public class ConflictDetectionTest {
 		 * We expect 6 differences here. On both right and left, we've emptied an attribute from its 3 values.
 		 * This should give use 3 pseudo-conflict, each removal conflicting with its other side.
 		 */
-		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(3), Integer.valueOf(conflicts.size()));
+		assertEquals(6, differences.size());
+		assertEquals(3, conflicts.size());
 
 		final Predicate<? super Diff> AttributeDiff1Description = removedFromAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin1");
@@ -1536,7 +1537,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict1 = conflicts.get(0);
 
 		final List<Diff> conflictDiffs1 = conflict1.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiffs1.size()));
+		assertEquals(2, conflictDiffs1.size());
 		assertTrue(conflictDiffs1.contains(leftAttributeDiff1));
 		assertTrue(conflictDiffs1.contains(rightAttributeDiff1));
 		assertSame(ConflictKind.PSEUDO, conflict1.getKind());
@@ -1544,7 +1545,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict2 = conflicts.get(1);
 
 		final List<Diff> conflictDiffs2 = conflict2.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiffs2.size()));
+		assertEquals(2, conflictDiffs2.size());
 		assertTrue(conflictDiffs2.contains(leftAttributeDiff2));
 		assertTrue(conflictDiffs2.contains(rightAttributeDiff2));
 		assertSame(ConflictKind.PSEUDO, conflict2.getKind());
@@ -1552,7 +1553,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict3 = conflicts.get(2);
 
 		final List<Diff> conflictDiffs3 = conflict3.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiffs3.size()));
+		assertEquals(2, conflictDiffs3.size());
 		assertTrue(conflictDiffs3.contains(leftAttributeDiff3));
 		assertTrue(conflictDiffs3.contains(rightAttributeDiff3));
 		assertSame(ConflictKind.PSEUDO, conflict3.getKind());
@@ -1574,8 +1575,8 @@ public class ConflictDetectionTest {
 		 * We expect 6 differences here. On both right and left, we've emptied a reference from its 3 values.
 		 * This should give use 3 pseudo-conflict, each removal conflicting with its other side.
 		 */
-		assertSame(Integer.valueOf(6), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(3), Integer.valueOf(conflicts.size()));
+		assertEquals(6, differences.size());
+		assertEquals(3, conflicts.size());
 
 		final Predicate<? super Diff> referenceDiff1Description = removedFromReference("root.conflictHolder",
 				"multiValuedReference", "root.origin1");
@@ -1609,7 +1610,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict1 = conflicts.get(0);
 
 		final List<Diff> conflictDiffs1 = conflict1.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiffs1.size()));
+		assertEquals(2, conflictDiffs1.size());
 		assertTrue(conflictDiffs1.contains(leftReferenceDiff1));
 		assertTrue(conflictDiffs1.contains(rightReferenceDiff1));
 		assertSame(ConflictKind.PSEUDO, conflict1.getKind());
@@ -1617,7 +1618,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict2 = conflicts.get(1);
 
 		final List<Diff> conflictDiffs2 = conflict2.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiffs2.size()));
+		assertEquals(2, conflictDiffs2.size());
 		assertTrue(conflictDiffs2.contains(leftReferenceDiff2));
 		assertTrue(conflictDiffs2.contains(rightReferenceDiff2));
 		assertSame(ConflictKind.PSEUDO, conflict2.getKind());
@@ -1625,7 +1626,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict3 = conflicts.get(2);
 
 		final List<Diff> conflictDiffs3 = conflict3.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiffs3.size()));
+		assertEquals(2, conflictDiffs3.size());
 		assertTrue(conflictDiffs3.contains(leftReferenceDiff3));
 		assertTrue(conflictDiffs3.contains(rightReferenceDiff3));
 		assertSame(ConflictKind.PSEUDO, conflict3.getKind());
@@ -1644,8 +1645,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> diffDescription = removedFromAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin1");
@@ -1662,7 +1663,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.PSEUDO, conflict.getKind());
@@ -1681,8 +1682,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> diffDescription = removedFromReference("root.conflictHolder",
 				"multiValuedReference", "root.origin1");
@@ -1699,7 +1700,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.PSEUDO, conflict.getKind());
@@ -1718,8 +1719,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> diffDescription = movedInAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin1");
@@ -1736,7 +1737,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.PSEUDO, conflict.getKind());
@@ -1755,8 +1756,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> diffDescription = movedInReference("root.conflictHolder",
 				"multiValuedReference", "root.origin1");
@@ -1773,7 +1774,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.PSEUDO, conflict.getKind());
@@ -1792,8 +1793,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", null, "root.origin");
@@ -1811,7 +1812,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -1830,8 +1831,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = addedToReference("root.conflictHolder",
 				"multiValuedReference", "root.origin");
@@ -1849,7 +1850,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -1868,8 +1869,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = moved("root.conflictHolder.origin",
 				"containmentRef2");
@@ -1888,7 +1889,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -1907,8 +1908,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = moved("root.leftContainer.conflictNode",
 				"containmentRef1");
@@ -1927,7 +1928,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -1946,8 +1947,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = moved("root.left.conflictNode",
 				"singleValueContainment");
@@ -1965,7 +1966,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -1984,8 +1985,8 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		// We should have no less and no more than 2 differences, composing a single conflict
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
 
 		final Predicate<? super Diff> leftDiffDescription = moved("root.leftContainer.conflictNode",
 				"containmentRef1");
@@ -2003,7 +2004,7 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiff.size()));
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
 		assertSame(ConflictKind.REAL, conflict.getKind());
@@ -2021,8 +2022,8 @@ public class ConflictDetectionTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
 
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(5, differences.size());
+		assertEquals(1, conflicts.size());
 
 		Conflict soleConflict = conflicts.get(0);
 		assertSame(ConflictKind.PSEUDO, soleConflict.getKind());
@@ -2040,8 +2041,8 @@ public class ConflictDetectionTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
 
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(conflicts.size()));
+		assertEquals(5, differences.size());
+		assertEquals(1, conflicts.size());
 
 		Conflict soleConflict = conflicts.get(0);
 		assertSame(ConflictKind.PSEUDO, soleConflict.getKind());
@@ -2084,8 +2085,8 @@ public class ConflictDetectionTest {
 
 		// Pseudo conflict : 5 and 12 (Removing the same value on both sides)
 
-		assertSame(Integer.valueOf(12), Integer.valueOf(differences.size()));
-		assertSame(Integer.valueOf(5), Integer.valueOf(conflicts.size()));
+		assertEquals(12, differences.size());
+		assertEquals(5, conflicts.size());
 
 		final Predicate<? super Diff> leftDiff1Description = added("Root.Node8");
 		final Predicate<? super Diff> leftDiff2Description = added("Root.Node9");
@@ -2144,7 +2145,7 @@ public class ConflictDetectionTest {
 		// We know there are 5 conflicts here
 		for (Conflict conflict : conflicts) {
 			final List<Diff> conflictDiffs = conflict.getDifferences();
-			assertSame(Integer.valueOf(2), Integer.valueOf(conflictDiffs.size()));
+			assertEquals(2, conflictDiffs.size());
 			if (conflictDiffs.contains(leftDiff6)) {
 				assertTrue(conflictDiffs.contains(rightDiff8));
 				assertSame(ConflictKind.REAL, conflict.getKind());

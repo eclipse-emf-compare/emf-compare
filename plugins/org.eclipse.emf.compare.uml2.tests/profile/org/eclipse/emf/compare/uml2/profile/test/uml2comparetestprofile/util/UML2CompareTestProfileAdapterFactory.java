@@ -13,8 +13,9 @@ package org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.util;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.*;
 import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche;
+import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2;
+import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche3;
 import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage;
 import org.eclipse.emf.ecore.EObject;
 

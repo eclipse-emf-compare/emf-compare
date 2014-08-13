@@ -2,15 +2,16 @@ package org.eclipse.emf.compare.uml2.tests.executionSpecification;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -22,8 +23,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.uml2.internal.ExecutionSpecificationChange;
-import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.executionSpecification.data.ExecutionSpecificationInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
@@ -85,7 +86,7 @@ public class AddActionExecutionSpecificationTest extends AbstractUMLTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 14 differences
-		assertSame(Integer.valueOf(14), Integer.valueOf(differences.size()));
+		assertEquals(14, differences.size());
 
 		Predicate<? super Diff> addActionExecSpecDescription = null;
 		Predicate<? super Diff> addCoveredInStartDescription = null;
@@ -198,7 +199,7 @@ public class AddActionExecutionSpecificationTest extends AbstractUMLTest {
 					instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLMessage);
-		assertSame(Integer.valueOf(13), Integer.valueOf(addUMLMessage.getRefinedBy().size()));
+		assertEquals(13, addUMLMessage.getRefinedBy().size());
 		assertTrue(addUMLMessage.getRefinedBy().contains(addFinishInActionExecSpec));
 		assertTrue(addUMLMessage.getRefinedBy().contains(addStartInActionExecSpec));
 		assertTrue(addUMLMessage.getRefinedBy().contains(addCoveredInFinish));
@@ -216,48 +217,48 @@ public class AddActionExecutionSpecificationTest extends AbstractUMLTest {
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addActionExecSpec.getRequires().size()));
+			assertEquals(0, addActionExecSpec.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addCoveredInStart.getRequires().size()));
+			assertEquals(1, addCoveredInStart.getRequires().size());
 			assertTrue(addCoveredInStart.getRequires().contains(addStart));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addExecutionInStart.getRequires().size()));
+			assertEquals(2, addExecutionInStart.getRequires().size());
 			assertTrue(addExecutionInStart.getRequires().contains(addStart));
 			assertTrue(addExecutionInStart.getRequires().contains(addActionExecSpec));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addCoveredInFinish.getRequires().size()));
+			assertEquals(1, addCoveredInFinish.getRequires().size());
 			assertTrue(addCoveredInFinish.getRequires().contains(addFinish));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addExecutionInFinish.getRequires().size()));
+			assertEquals(2, addExecutionInFinish.getRequires().size());
 			assertTrue(addExecutionInFinish.getRequires().contains(addFinish));
 			assertTrue(addExecutionInFinish.getRequires().contains(addActionExecSpec));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addFinishInActionExecSpec.getRequires().size()));
+			assertEquals(2, addFinishInActionExecSpec.getRequires().size());
 			assertTrue(addFinishInActionExecSpec.getRequires().contains(addActionExecSpec));
 			assertTrue(addFinishInActionExecSpec.getRequires().contains(addFinish));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addStartInActionExecSpec.getRequires().size()));
+			assertEquals(2, addStartInActionExecSpec.getRequires().size());
 			assertTrue(addStartInActionExecSpec.getRequires().contains(addActionExecSpec));
 			assertTrue(addStartInActionExecSpec.getRequires().contains(addStart));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addCoveredByInLifeline1_1.getRequires().size()));
+			assertEquals(1, addCoveredByInLifeline1_1.getRequires().size());
 			assertTrue(addCoveredByInLifeline1_1.getRequires().contains(addStart));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addCoveredByInLifeline1_2.getRequires().size()));
+			assertEquals(1, addCoveredByInLifeline1_2.getRequires().size());
 			assertTrue(addCoveredByInLifeline1_2.getRequires().contains(addFinish));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addCoveredByInLifeline1_3.getRequires().size()));
+			assertEquals(1, addCoveredByInLifeline1_3.getRequires().size());
 			assertTrue(addCoveredByInLifeline1_3.getRequires().contains(addActionExecSpec));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addStart.getRequires().size()));
+			assertEquals(0, addStart.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addFinish.getRequires().size()));
+			assertEquals(0, addFinish.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addCoveredInActionExecSpec.getRequires().size()));
+			assertEquals(1, addCoveredInActionExecSpec.getRequires().size());
 			assertTrue(addCoveredInActionExecSpec.getRequires().contains(addActionExecSpec));
 
 		} else {
-			assertSame(Integer.valueOf(6), Integer.valueOf(addActionExecSpec.getRequires().size()));
+			assertEquals(6, addActionExecSpec.getRequires().size());
 			assertTrue(addActionExecSpec.getRequires().contains(addFinishInActionExecSpec));
 			assertTrue(addActionExecSpec.getRequires().contains(addStartInActionExecSpec));
 			assertTrue(addActionExecSpec.getRequires().contains(addCoveredInActionExecSpec));
@@ -265,41 +266,41 @@ public class AddActionExecutionSpecificationTest extends AbstractUMLTest {
 			assertTrue(addActionExecSpec.getRequires().contains(addExecutionInStart));
 			assertTrue(addActionExecSpec.getRequires().contains(addCoveredByInLifeline1_3));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addCoveredInStart.getRequires().size()));
+			assertEquals(0, addCoveredInStart.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addExecutionInStart.getRequires().size()));
+			assertEquals(0, addExecutionInStart.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addCoveredInFinish.getRequires().size()));
+			assertEquals(0, addCoveredInFinish.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addExecutionInFinish.getRequires().size()));
+			assertEquals(0, addExecutionInFinish.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addFinishInActionExecSpec.getRequires().size()));
+			assertEquals(0, addFinishInActionExecSpec.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addStartInActionExecSpec.getRequires().size()));
+			assertEquals(0, addStartInActionExecSpec.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addCoveredByInLifeline1_1.getRequires().size()));
+			assertEquals(0, addCoveredByInLifeline1_1.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addCoveredByInLifeline1_2.getRequires().size()));
+			assertEquals(0, addCoveredByInLifeline1_2.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addCoveredByInLifeline1_3.getRequires().size()));
+			assertEquals(0, addCoveredByInLifeline1_3.getRequires().size());
 
-			assertSame(Integer.valueOf(4), Integer.valueOf(addStart.getRequires().size()));
+			assertEquals(4, addStart.getRequires().size());
 			assertTrue(addStart.getRequires().contains(addStartInActionExecSpec));
 			assertTrue(addStart.getRequires().contains(addCoveredByInLifeline1_1));
 			assertTrue(addStart.getRequires().contains(addCoveredInStart));
 			assertTrue(addStart.getRequires().contains(addExecutionInStart));
 
-			assertSame(Integer.valueOf(4), Integer.valueOf(addFinish.getRequires().size()));
+			assertEquals(4, addFinish.getRequires().size());
 			assertTrue(addFinish.getRequires().contains(addFinishInActionExecSpec));
 			assertTrue(addFinish.getRequires().contains(addCoveredByInLifeline1_2));
 			assertTrue(addFinish.getRequires().contains(addCoveredInFinish));
 			assertTrue(addFinish.getRequires().contains(addExecutionInFinish));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addCoveredInActionExecSpec.getRequires().size()));
+			assertEquals(0, addCoveredInActionExecSpec.getRequires().size());
 		}
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(3), Integer.valueOf(comparison.getEquivalences().size()));
+		assertEquals(3, comparison.getEquivalences().size());
 
 		assertNotNull(addCoveredInStart.getEquivalence());
 		assertSame(Integer.valueOf(2), Integer.valueOf(addCoveredInStart.getEquivalence().getDifferences()

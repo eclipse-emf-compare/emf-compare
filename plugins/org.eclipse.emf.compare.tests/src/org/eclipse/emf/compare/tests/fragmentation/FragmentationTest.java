@@ -71,15 +71,15 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(leftSet.getResources().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(originSet.getResources().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(rightSet.getResources().size()));
+		assertEquals(1, leftSet.getResources().size());
+		assertEquals(2, originSet.getResources().size());
+		assertEquals(2, rightSet.getResources().size());
 
 		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+		assertEquals(1, differences.size());
 
 		final Diff diff = differences.get(0);
 		assertTrue(diff instanceof ResourceAttachmentChange);
@@ -112,10 +112,10 @@ public class FragmentationTest {
 		final Diff diff = differences.get(0);
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
-		assertSame(Integer.valueOf(1), Integer.valueOf(leftSet.getResources().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(originSet.getResources().size()));
+		assertEquals(1, leftSet.getResources().size());
+		assertEquals(2, originSet.getResources().size());
 		// Still two resources, though one is empty
-		assertSame(Integer.valueOf(2), Integer.valueOf(rightSet.getResources().size()));
+		assertEquals(2, rightSet.getResources().size());
 
 		for (Resource resource : rightSet.getResources()) {
 			if (resource != right) {
@@ -134,12 +134,12 @@ public class FragmentationTest {
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
 				new DefaultComparisonScope(leftSet, rightSet, null));
-		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be two diffs (a pseudo conflict resource change) when compared with origin
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getConflicts().size()));
+		assertEquals(2, comparison.getDifferences().size());
+		assertEquals(1, comparison.getConflicts().size());
 		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(0).getKind());
 	}
 
@@ -167,9 +167,9 @@ public class FragmentationTest {
 		final Diff diff = differences.get(0);
 
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
-		assertSame(Integer.valueOf(2), Integer.valueOf(leftSet.getResources().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(originSet.getResources().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(rightSet.getResources().size()));
+		assertEquals(2, leftSet.getResources().size());
+		assertEquals(2, originSet.getResources().size());
+		assertEquals(2, rightSet.getResources().size());
 
 		final EObject leftFragmentedNode = getNodeNamed(leftSet, "fragmented");
 		final EObject originFragmentedNode = getNodeNamed(originSet, "fragmented");
@@ -200,7 +200,7 @@ public class FragmentationTest {
 
 		// At the resource level, we cannot match an object with the 'proxy' root.
 		final List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		// There's one addition, and one deletion (the proxy root)
 		final Diff addition;
@@ -259,9 +259,9 @@ public class FragmentationTest {
 		final List<EObject> rightRootContent = ((InternalEList<EObject>)getNodeNamed(right, "root")
 				.eContents()).basicList();
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(leftRootContent.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(originRootContent.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(rightRootContent.size()));
+		assertEquals(1, leftRootContent.size());
+		assertEquals(1, originRootContent.size());
+		assertEquals(1, rightRootContent.size());
 
 		assertTrue(leftRootContent.get(0) == leftFragmentedNode);
 		assertTrue(originRootContent.get(0).eIsProxy());
@@ -270,13 +270,13 @@ public class FragmentationTest {
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
 				new DefaultComparisonScope(left, right, null));
-		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be four diffs (conflicting 2-by-2) when compared with origin :
 		// two deletions (the proxies) and two additions (the previously fragmented root)
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getConflicts().size()));
+		assertEquals(4, comparison.getDifferences().size());
+		assertEquals(2, comparison.getConflicts().size());
 		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(0).getKind());
 		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(1).getKind());
 	}
@@ -311,9 +311,9 @@ public class FragmentationTest {
 		final List<EObject> rightRootContent = ((InternalEList<EObject>)getNodeNamed(right, "root")
 				.eContents()).basicList();
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(leftRootContent.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(originRootContent.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(rightRootContent.size()));
+		assertEquals(1, leftRootContent.size());
+		assertEquals(1, originRootContent.size());
+		assertEquals(1, rightRootContent.size());
 
 		assertTrue(leftRootContent.get(0).eIsProxy());
 		assertTrue(originRootContent.get(0).eIsProxy());
@@ -322,7 +322,7 @@ public class FragmentationTest {
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
 				new DefaultComparisonScope(left, right, null));
-		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+		assertEquals(0, lrCompare.getDifferences().size());
 
 		// And since we've undone the changes, there are no diffs with origin either
 		comparison = EMFCompare.builder().build().compare(scope);
@@ -347,15 +347,15 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		assertSame(Integer.valueOf(2), Integer.valueOf(leftSet.getResources().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(rightSet.getResources().size()));
+		assertEquals(2, leftSet.getResources().size());
+		assertEquals(1, originSet.getResources().size());
+		assertEquals(1, rightSet.getResources().size());
 
 		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+		assertEquals(1, differences.size());
 
 		final Diff diff = differences.get(0);
 		assertTrue(diff instanceof ResourceAttachmentChange);
@@ -390,9 +390,9 @@ public class FragmentationTest {
 		final Diff diff = differences.get(0);
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
-		assertSame(Integer.valueOf(2), Integer.valueOf(leftSet.getResources().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(rightSet.getResources().size()));
+		assertEquals(2, leftSet.getResources().size());
+		assertEquals(1, originSet.getResources().size());
+		assertEquals(2, rightSet.getResources().size());
 
 		final EObject leftFragmentedNode = getNodeNamed(leftSet, "fragmented");
 		final EObject originFragmentedNode = getNodeNamed(originSet, "fragmented");
@@ -405,12 +405,12 @@ public class FragmentationTest {
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
 				new DefaultComparisonScope(leftSet, rightSet, null));
-		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be two diffs (a pseudo conflict resource change) when compared with origin
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getConflicts().size()));
+		assertEquals(2, comparison.getDifferences().size());
+		assertEquals(1, comparison.getConflicts().size());
 		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(0).getKind());
 	}
 
@@ -437,9 +437,9 @@ public class FragmentationTest {
 
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// Note : we still have 2 resources there, though one is empty
-		assertSame(Integer.valueOf(2), Integer.valueOf(leftSet.getResources().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(rightSet.getResources().size()));
+		assertEquals(2, leftSet.getResources().size());
+		assertEquals(1, originSet.getResources().size());
+		assertEquals(1, rightSet.getResources().size());
 
 		for (Resource res : leftSet.getResources()) {
 			if (res != left) {
@@ -476,7 +476,7 @@ public class FragmentationTest {
 
 		// At the resource level, we cannot match an object with the 'proxy' root.
 		final List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		// There's one deletion, and one addition (the proxy root)
 		final Diff addition;
@@ -535,9 +535,9 @@ public class FragmentationTest {
 		final List<EObject> rightRootContent = ((InternalEList<EObject>)getNodeNamed(right, "root")
 				.eContents()).basicList();
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(leftRootContent.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(originRootContent.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(rightRootContent.size()));
+		assertEquals(1, leftRootContent.size());
+		assertEquals(1, originRootContent.size());
+		assertEquals(1, rightRootContent.size());
 
 		assertTrue(leftRootContent.get(0).eIsProxy());
 		assertTrue(originRootContent.get(0) == originFragmentedNode);
@@ -546,13 +546,13 @@ public class FragmentationTest {
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
 				new DefaultComparisonScope(left, right, null));
-		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be four diffs (conflicting 2-by-2) when compared with origin :
 		// two additions (the proxies) and two deletions (the old root)
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getConflicts().size()));
+		assertEquals(4, comparison.getDifferences().size());
+		assertEquals(2, comparison.getConflicts().size());
 		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(0).getKind());
 		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(1).getKind());
 	}
@@ -587,9 +587,9 @@ public class FragmentationTest {
 		final List<EObject> rightRootContent = ((InternalEList<EObject>)getNodeNamed(right, "root")
 				.eContents()).basicList();
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(leftRootContent.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(originRootContent.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(rightRootContent.size()));
+		assertEquals(1, leftRootContent.size());
+		assertEquals(1, originRootContent.size());
+		assertEquals(1, rightRootContent.size());
 
 		assertTrue(leftRootContent.get(0) == leftFragmentedNode);
 		assertTrue(originRootContent.get(0) == originFragmentedNode);
@@ -598,7 +598,7 @@ public class FragmentationTest {
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
 				new DefaultComparisonScope(left, right, null));
-		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+		assertEquals(0, lrCompare.getDifferences().size());
 
 		// And since we've undone the changes, there are no diffs with origin either
 		comparison = EMFCompare.builder().build().compare(scope);
@@ -623,15 +623,15 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		assertSame(Integer.valueOf(2), Integer.valueOf(leftSet.getResources().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(rightSet.getResources().size()));
+		assertEquals(2, leftSet.getResources().size());
+		assertEquals(1, originSet.getResources().size());
+		assertEquals(1, rightSet.getResources().size());
 
 		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+		assertEquals(1, differences.size());
 
 		final Diff diff = differences.get(0);
 		assertTrue(diff instanceof ResourceAttachmentChange);
@@ -664,9 +664,9 @@ public class FragmentationTest {
 		final Diff diff = differences.get(0);
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
-		assertSame(Integer.valueOf(2), Integer.valueOf(leftSet.getResources().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(rightSet.getResources().size()));
+		assertEquals(2, leftSet.getResources().size());
+		assertEquals(1, originSet.getResources().size());
+		assertEquals(2, rightSet.getResources().size());
 
 		final EObject leftFragmentedNode = getNodeNamed(leftSet, "fragmented");
 		final EObject originFragmentedNode = getNodeNamed(originSet, "fragmented");
@@ -679,12 +679,12 @@ public class FragmentationTest {
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
 				new DefaultComparisonScope(leftSet, rightSet, null));
-		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be two diffs (a pseudo conflict resource change) when compared with origin
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getConflicts().size()));
+		assertEquals(2, comparison.getDifferences().size());
+		assertEquals(1, comparison.getConflicts().size());
 		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(0).getKind());
 	}
 
@@ -711,9 +711,9 @@ public class FragmentationTest {
 
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		// Note : we still have 2 resources there, though one is empty
-		assertSame(Integer.valueOf(2), Integer.valueOf(leftSet.getResources().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(rightSet.getResources().size()));
+		assertEquals(2, leftSet.getResources().size());
+		assertEquals(1, originSet.getResources().size());
+		assertEquals(1, rightSet.getResources().size());
 
 		for (Resource res : leftSet.getResources()) {
 			if (res != left) {
@@ -750,7 +750,7 @@ public class FragmentationTest {
 
 		// At the resource level, we cannot match an object with the 'proxy' root.
 		final List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		// There's one deletion, and one addition (the proxy root)
 		final Diff addition;
@@ -809,9 +809,9 @@ public class FragmentationTest {
 		final List<EObject> rightRootContent = ((InternalEList<EObject>)getNodeNamed(right, "root")
 				.eContents()).basicList();
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(leftRootContent.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(originRootContent.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(rightRootContent.size()));
+		assertEquals(1, leftRootContent.size());
+		assertEquals(1, originRootContent.size());
+		assertEquals(1, rightRootContent.size());
 
 		assertTrue(leftRootContent.get(0).eIsProxy());
 		assertTrue(originRootContent.get(0) == originFragmentedNode);
@@ -820,13 +820,13 @@ public class FragmentationTest {
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
 				new DefaultComparisonScope(left, right, null));
-		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be four diffs (conflicting 2-by-2) when compared with origin :
 		// two additions (the proxies) and two deletions (the old root)
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(4), Integer.valueOf(comparison.getDifferences().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getConflicts().size()));
+		assertEquals(4, comparison.getDifferences().size());
+		assertEquals(2, comparison.getConflicts().size());
 		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(0).getKind());
 		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(1).getKind());
 	}
@@ -861,9 +861,9 @@ public class FragmentationTest {
 		final List<EObject> rightRootContent = ((InternalEList<EObject>)getNodeNamed(right, "root")
 				.eContents()).basicList();
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(leftRootContent.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(originRootContent.size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(rightRootContent.size()));
+		assertEquals(1, leftRootContent.size());
+		assertEquals(1, originRootContent.size());
+		assertEquals(1, rightRootContent.size());
 
 		assertTrue(leftRootContent.get(0) == leftFragmentedNode);
 		assertTrue(originRootContent.get(0) == originFragmentedNode);
@@ -872,7 +872,7 @@ public class FragmentationTest {
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
 				new DefaultComparisonScope(left, right, null));
-		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+		assertEquals(0, lrCompare.getDifferences().size());
 
 		// And since we've undone the changes, there are no diffs with origin either
 		comparison = EMFCompare.builder().build().compare(scope);
@@ -897,15 +897,15 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(leftSet.getResources().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(rightSet.getResources().size()));
+		assertEquals(1, leftSet.getResources().size());
+		assertEquals(1, originSet.getResources().size());
+		assertEquals(1, rightSet.getResources().size());
 
 		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+		assertEquals(1, differences.size());
 
 		final Diff diff = differences.get(0);
 		assertTrue(diff instanceof ResourceAttachmentChange);
@@ -938,19 +938,19 @@ public class FragmentationTest {
 		final Diff diff = differences.get(0);
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
-		assertSame(Integer.valueOf(1), Integer.valueOf(left.getContents().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(origin.getContents().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));
+		assertEquals(1, left.getContents().size());
+		assertEquals(2, origin.getContents().size());
+		assertEquals(1, right.getContents().size());
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
 				new DefaultComparisonScope(leftSet, rightSet, null));
-		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be two diffs (a pseudo conflict deletion) when compared with origin
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getConflicts().size()));
+		assertEquals(2, comparison.getDifferences().size());
+		assertEquals(1, comparison.getConflicts().size());
 		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(0).getKind());
 	}
 
@@ -976,12 +976,12 @@ public class FragmentationTest {
 		final Diff diff = differences.get(0);
 
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
-		assertSame(Integer.valueOf(2), Integer.valueOf(left.getContents().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(origin.getContents().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(right.getContents().size()));
+		assertEquals(2, left.getContents().size());
+		assertEquals(2, origin.getContents().size());
+		assertEquals(2, right.getContents().size());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -994,7 +994,7 @@ public class FragmentationTest {
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+		assertEquals(1, differences.size());
 
 		final Diff diff = differences.get(0);
 		assertTrue(diff instanceof ResourceAttachmentChange);
@@ -1019,19 +1019,19 @@ public class FragmentationTest {
 		final Diff diff = differences.get(0);
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
-		assertSame(Integer.valueOf(1), Integer.valueOf(left.getContents().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(origin.getContents().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));
+		assertEquals(1, left.getContents().size());
+		assertEquals(2, origin.getContents().size());
+		assertEquals(1, right.getContents().size());
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
 				new DefaultComparisonScope(left, right, null));
-		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be two diffs (a pseudo conflict deletion) when compared with origin
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getConflicts().size()));
+		assertEquals(2, comparison.getDifferences().size());
+		assertEquals(1, comparison.getConflicts().size());
 		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(0).getKind());
 	}
 
@@ -1049,12 +1049,12 @@ public class FragmentationTest {
 		final Diff diff = differences.get(0);
 
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
-		assertSame(Integer.valueOf(2), Integer.valueOf(left.getContents().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(origin.getContents().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(right.getContents().size()));
+		assertEquals(2, left.getContents().size());
+		assertEquals(2, origin.getContents().size());
+		assertEquals(2, right.getContents().size());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1075,19 +1075,19 @@ public class FragmentationTest {
 		EcoreUtil.resolveAll(originSet);
 		EcoreUtil.resolveAll(rightSet);
 
-		assertSame(Integer.valueOf(2), Integer.valueOf(left.getContents().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));
+		assertEquals(2, left.getContents().size());
+		assertEquals(1, origin.getContents().size());
+		assertEquals(1, right.getContents().size());
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(leftSet.getResources().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(originSet.getResources().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(rightSet.getResources().size()));
+		assertEquals(1, leftSet.getResources().size());
+		assertEquals(1, originSet.getResources().size());
+		assertEquals(1, rightSet.getResources().size());
 
 		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+		assertEquals(1, differences.size());
 
 		final Diff diff = differences.get(0);
 		assertTrue(diff instanceof ResourceAttachmentChange);
@@ -1120,19 +1120,19 @@ public class FragmentationTest {
 		final Diff diff = differences.get(0);
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
-		assertSame(Integer.valueOf(2), Integer.valueOf(left.getContents().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(right.getContents().size()));
+		assertEquals(2, left.getContents().size());
+		assertEquals(1, origin.getContents().size());
+		assertEquals(2, right.getContents().size());
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
 				new DefaultComparisonScope(leftSet, rightSet, null));
-		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be two diffs (a pseudo conflict addition) when compared with origin
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getConflicts().size()));
+		assertEquals(2, comparison.getDifferences().size());
+		assertEquals(1, comparison.getConflicts().size());
 		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(0).getKind());
 	}
 
@@ -1158,12 +1158,12 @@ public class FragmentationTest {
 		final Diff diff = differences.get(0);
 
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
-		assertSame(Integer.valueOf(1), Integer.valueOf(left.getContents().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));
+		assertEquals(1, left.getContents().size());
+		assertEquals(1, origin.getContents().size());
+		assertEquals(1, right.getContents().size());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1172,15 +1172,15 @@ public class FragmentationTest {
 		final Resource origin = input.getNewRootOrigin();
 		final Resource right = input.getNewRootRight();
 
-		assertSame(Integer.valueOf(2), Integer.valueOf(left.getContents().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));
+		assertEquals(2, left.getContents().size());
+		assertEquals(1, origin.getContents().size());
+		assertEquals(1, right.getContents().size());
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
-		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+		assertEquals(1, differences.size());
 
 		final Diff diff = differences.get(0);
 		assertTrue(diff instanceof ResourceAttachmentChange);
@@ -1205,19 +1205,19 @@ public class FragmentationTest {
 		final Diff diff = differences.get(0);
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
-		assertSame(Integer.valueOf(2), Integer.valueOf(left.getContents().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
-		assertSame(Integer.valueOf(2), Integer.valueOf(right.getContents().size()));
+		assertEquals(2, left.getContents().size());
+		assertEquals(1, origin.getContents().size());
+		assertEquals(2, right.getContents().size());
 
 		// there should be no diff between left and right
 		final Comparison lrCompare = EMFCompare.builder().build().compare(
 				new DefaultComparisonScope(left, right, null));
-		assertSame(Integer.valueOf(0), Integer.valueOf(lrCompare.getDifferences().size()));
+		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be two diffs (a pseudo conflict addition) when compared with origin
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getDifferences().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getConflicts().size()));
+		assertEquals(2, comparison.getDifferences().size());
+		assertEquals(1, comparison.getConflicts().size());
 		assertSame(ConflictKind.PSEUDO, comparison.getConflicts().get(0).getKind());
 	}
 
@@ -1235,12 +1235,12 @@ public class FragmentationTest {
 		final Diff diff = differences.get(0);
 
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
-		assertSame(Integer.valueOf(1), Integer.valueOf(left.getContents().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(origin.getContents().size()));
-		assertSame(Integer.valueOf(1), Integer.valueOf(right.getContents().size()));
+		assertEquals(1, left.getContents().size());
+		assertEquals(1, origin.getContents().size());
+		assertEquals(1, right.getContents().size());
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	private EObject getNodeNamed(Notifier notifier, String name) {

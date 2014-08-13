@@ -2,12 +2,13 @@ package org.eclipse.emf.compare.uml2.tests.dependency;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertSame;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -19,8 +20,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
-import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
+import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.data.DependencyInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
@@ -83,7 +84,7 @@ public class ChangeUsageTest extends AbstractUMLTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
-		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
+		assertEquals(1, differences.size());
 
 		Predicate<? super Diff> addSupplierInDependencyDescription = null;
 
@@ -106,14 +107,14 @@ public class ChangeUsageTest extends AbstractUMLTest {
 				instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.CHANGE)), null);
 		assertNull(changeUMLDependency);
 		// assertNotNull(changeUMLDependency);
-		// assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLDependency.getRefinedBy().size()));
+		// assertEquals(1, changeUMLDependency.getRefinedBy().size());
 		// assertTrue(changeUMLDependency.getRefinedBy().contains(addSupplierInDependency));
 
 		// CHECK REQUIREMENT
-		assertSame(Integer.valueOf(0), Integer.valueOf(addSupplierInDependency.getRequires().size()));
+		assertEquals(0, addSupplierInDependency.getRequires().size());
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getEquivalences().size()));
+		assertEquals(0, comparison.getEquivalences().size());
 
 		testIntersections(comparison);
 

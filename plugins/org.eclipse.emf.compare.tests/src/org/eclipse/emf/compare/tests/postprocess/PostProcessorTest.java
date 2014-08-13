@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.tests.postprocess;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class PostProcessorTest {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		final Comparison comparison = EMFCompare.builder().build().compare(scope);
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getMatches().size()));
+		assertEquals(1, comparison.getMatches().size());
 	}
 
 	@Test
@@ -65,7 +64,7 @@ public class PostProcessorTest {
 		final Comparison comparison = compareWithPostProcessing(left, right, Pattern
 				.compile("http://www.eclipse.org/emf/compare/tests/nodes"), null);
 
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getMatches().size()));
+		assertEquals(2, comparison.getMatches().size());
 
 	}
 
@@ -79,7 +78,7 @@ public class PostProcessorTest {
 		final Comparison comparison = compareWithPostProcessing(left, right, Pattern.compile(".*/nodes"),
 				null);
 
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getMatches().size()));
+		assertEquals(2, comparison.getMatches().size());
 
 	}
 
@@ -92,7 +91,7 @@ public class PostProcessorTest {
 		final Comparison comparison = compareWithPostProcessing(left, right, Pattern.compile(".*/nides"),
 				null);
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getMatches().size()));
+		assertEquals(1, comparison.getMatches().size());
 
 	}
 
@@ -104,7 +103,7 @@ public class PostProcessorTest {
 		// No post processes if the regex matches no scanned namespace URIs (null value case)
 		final Comparison comparison = compareWithPostProcessing(left, right, null, null);
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getMatches().size()));
+		assertEquals(1, comparison.getMatches().size());
 
 	}
 
@@ -116,7 +115,7 @@ public class PostProcessorTest {
 		// No post processes if the regex matches no scanned namespace URIs (empty value cas)
 		final Comparison comparison = compareWithPostProcessing(left, right, Pattern.compile(""), null);
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getMatches().size()));
+		assertEquals(1, comparison.getMatches().size());
 
 	}
 
@@ -128,7 +127,7 @@ public class PostProcessorTest {
 		// No post processes if the regex matches no scanned namespace URIs (blank value cas)
 		final Comparison comparison = compareWithPostProcessing(left, right, Pattern.compile(" "), null);
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getMatches().size()));
+		assertEquals(1, comparison.getMatches().size());
 
 	}
 
@@ -142,7 +141,7 @@ public class PostProcessorTest {
 		final Comparison comparison = compareWithPostProcessing(left, right, null, Pattern.compile(left
 				.getURI().toString()));
 
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getMatches().size()));
+		assertEquals(2, comparison.getMatches().size());
 
 	}
 
@@ -156,7 +155,7 @@ public class PostProcessorTest {
 		final Comparison comparison = compareWithPostProcessing(left, right, null, Pattern
 				.compile(".*.nodes"));
 
-		assertSame(Integer.valueOf(2), Integer.valueOf(comparison.getMatches().size()));
+		assertEquals(2, comparison.getMatches().size());
 
 	}
 
@@ -169,7 +168,7 @@ public class PostProcessorTest {
 		final Comparison comparison = compareWithPostProcessing(left, right, null, Pattern
 				.compile(".*.nides"));
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getMatches().size()));
+		assertEquals(1, comparison.getMatches().size());
 
 	}
 
@@ -181,7 +180,7 @@ public class PostProcessorTest {
 		// No post processes if the regex matches no scanned resource URIs (empty value)
 		final Comparison comparison = compareWithPostProcessing(left, right, null, Pattern.compile(""));
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getMatches().size()));
+		assertEquals(1, comparison.getMatches().size());
 
 	}
 
@@ -193,7 +192,7 @@ public class PostProcessorTest {
 		// No post processes if the regex matches no scanned resource URIs (blank value)
 		final Comparison comparison = compareWithPostProcessing(left, right, null, Pattern.compile(" "));
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getMatches().size()));
+		assertEquals(1, comparison.getMatches().size());
 
 	}
 

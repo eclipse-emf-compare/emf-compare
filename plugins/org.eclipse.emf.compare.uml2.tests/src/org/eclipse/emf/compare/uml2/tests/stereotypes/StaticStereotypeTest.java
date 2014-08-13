@@ -12,15 +12,16 @@ package org.eclipse.emf.compare.uml2.tests.stereotypes;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueNameMatches;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -692,7 +693,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 6 differences
-		assertSame(Integer.valueOf(8), Integer.valueOf(differences.size()));
+		assertEquals(8, differences.size());
 
 		Predicate<? super Diff> addProfileApplicationDescription = null;
 		Predicate<? super Diff> addAppliedProfileInProfileApplicationDescription = null;
@@ -776,52 +777,52 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 					instanceOf(StereotypeApplicationChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLProfileApplication);
-		assertSame(Integer.valueOf(4), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
+		assertEquals(4, addUMLProfileApplication.getRefinedBy().size());
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addReferencesInUMLAnnotation));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addAppliedProfileInProfileApplication));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addProfileApplication));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addUMLAnnotation));
 
 		assertNotNull(addUMLStereotypeApplication);
-		assertSame(Integer.valueOf(2), Integer.valueOf(addUMLStereotypeApplication.getRefinedBy().size()));
+		assertEquals(2, addUMLStereotypeApplication.getRefinedBy().size());
 		assertTrue(addUMLStereotypeApplication.getRefinedBy().contains(addStereotypeApplication));
 		assertTrue(addUMLStereotypeApplication.getRefinedBy().contains(addRefBaseClass));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addProfileApplication.getRequires().size()));
+			assertEquals(0, addProfileApplication.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLAnnotation.getRequires().size()));
+			assertEquals(1, addUMLAnnotation.getRequires().size());
 			assertTrue(addUMLAnnotation.getRequires().contains(addProfileApplication));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addReferencesInUMLAnnotation.getRequires().size()));
+			assertEquals(1, addReferencesInUMLAnnotation.getRequires().size());
 			assertTrue(addReferencesInUMLAnnotation.getRequires().contains(addUMLAnnotation));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLProfileApplication.getRequires().size()));
+			assertEquals(0, addUMLProfileApplication.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLStereotypeApplication.getRequires().size()));
+			assertEquals(1, addUMLStereotypeApplication.getRequires().size());
 			assertTrue(addUMLStereotypeApplication.getRequires().contains(addUMLProfileApplication));
 
 		} else {
-			assertSame(Integer.valueOf(2), Integer.valueOf(addProfileApplication.getRequires().size()));
+			assertEquals(2, addProfileApplication.getRequires().size());
 			assertTrue(addProfileApplication.getRequires().contains(addAppliedProfileInProfileApplication));
 			assertTrue(addProfileApplication.getRequires().contains(addUMLAnnotation));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLAnnotation.getRequires().size()));
+			assertEquals(1, addUMLAnnotation.getRequires().size());
 			assertTrue(addUMLAnnotation.getRequires().contains(addReferencesInUMLAnnotation));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addReferencesInUMLAnnotation.getRequires().size()));
+			assertEquals(0, addReferencesInUMLAnnotation.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLProfileApplication.getRequires().size()));
+			assertEquals(1, addUMLProfileApplication.getRequires().size());
 			assertTrue(addUMLProfileApplication.getRequires().contains(addUMLStereotypeApplication));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLStereotypeApplication.getRequires().size()));
+			assertEquals(0, addUMLStereotypeApplication.getRequires().size());
 
 		}
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getEquivalences().size()));
+		assertEquals(0, comparison.getEquivalences().size());
 
 		testIntersections(comparison);
 
@@ -831,7 +832,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		Predicate<? super Diff> addAttributeDescription = null;
 
@@ -853,7 +854,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 	private void testAB3(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		assertSame(Integer.valueOf(10), Integer.valueOf(differences.size()));
+		assertEquals(10, differences.size());
 
 		Predicate<? super Diff> addProfileApplicationDescription = null;
 		Predicate<? super Diff> addAppliedProfileInProfileApplicationDescription = null;
@@ -948,53 +949,53 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 					instanceOf(StereotypeApplicationChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLProfileApplication);
-		assertSame(Integer.valueOf(4), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
+		assertEquals(4, addUMLProfileApplication.getRefinedBy().size());
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addReferencesInUMLAnnotation));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addAppliedProfileInProfileApplication));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addProfileApplication));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addUMLAnnotation));
 
 		assertNotNull(addUMLStereotypeApplication);
-		assertSame(Integer.valueOf(2), Integer.valueOf(addUMLStereotypeApplication.getRefinedBy().size()));
+		assertEquals(2, addUMLStereotypeApplication.getRefinedBy().size());
 		assertTrue(addUMLStereotypeApplication.getRefinedBy().contains(addStereotypeApplication));
 		assertTrue(addUMLStereotypeApplication.getRefinedBy().contains(addRefBaseClass));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addProfileApplication.getRequires().size()));
+			assertEquals(1, addProfileApplication.getRequires().size());
 			assertTrue(addProfileApplication.getRequires().contains(addModel));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLAnnotation.getRequires().size()));
+			assertEquals(1, addUMLAnnotation.getRequires().size());
 			assertTrue(addUMLAnnotation.getRequires().contains(addProfileApplication));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addReferencesInUMLAnnotation.getRequires().size()));
+			assertEquals(1, addReferencesInUMLAnnotation.getRequires().size());
 			assertTrue(addReferencesInUMLAnnotation.getRequires().contains(addUMLAnnotation));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLProfileApplication.getRequires().size()));
+			assertEquals(1, addUMLProfileApplication.getRequires().size());
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addUMLStereotypeApplication.getRequires().size()));
+			assertEquals(2, addUMLStereotypeApplication.getRequires().size());
 			assertTrue(addUMLStereotypeApplication.getRequires().contains(addUMLProfileApplication));
 
 		} else {
-			assertSame(Integer.valueOf(2), Integer.valueOf(addProfileApplication.getRequires().size()));
+			assertEquals(2, addProfileApplication.getRequires().size());
 			assertTrue(addProfileApplication.getRequires().contains(addAppliedProfileInProfileApplication));
 			assertTrue(addProfileApplication.getRequires().contains(addUMLAnnotation));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLAnnotation.getRequires().size()));
+			assertEquals(1, addUMLAnnotation.getRequires().size());
 			assertTrue(addUMLAnnotation.getRequires().contains(addReferencesInUMLAnnotation));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addReferencesInUMLAnnotation.getRequires().size()));
+			assertEquals(0, addReferencesInUMLAnnotation.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLProfileApplication.getRequires().size()));
+			assertEquals(1, addUMLProfileApplication.getRequires().size());
 			assertTrue(addUMLProfileApplication.getRequires().contains(addUMLStereotypeApplication));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addUMLStereotypeApplication.getRequires().size()));
+			assertEquals(0, addUMLStereotypeApplication.getRequires().size());
 
 		}
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getEquivalences().size()));
+		assertEquals(0, comparison.getEquivalences().size());
 
 		testIntersections(comparison);
 	}
@@ -1003,7 +1004,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 4 differences
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		Predicate<? super Diff> addStereotypeApplicationDescription = null;
 		Predicate<? super Diff> addClassDescription = null;
@@ -1035,7 +1036,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 4 differences
-		assertSame(Integer.valueOf(4), Integer.valueOf(differences.size()));
+		assertEquals(4, differences.size());
 
 		Predicate<? super Diff> changeAttributeDescription1 = null;
 		Predicate<? super Diff> changeAttributeDescription2 = null;
@@ -1060,9 +1061,9 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		assertNotNull(changeUMLStereotypeProperty1);
 		assertNotNull(changeUMLStereotypeProperty2);
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotypeProperty1.getRefinedBy().size()));
+		assertEquals(1, changeUMLStereotypeProperty1.getRefinedBy().size());
 		assertTrue(changeUMLStereotypeProperty1.getRefinedBy().contains(changeAttribute1));
-		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotypeProperty2.getRefinedBy().size()));
+		assertEquals(1, changeUMLStereotypeProperty2.getRefinedBy().size());
 		assertTrue(changeUMLStereotypeProperty2.getRefinedBy().contains(changeAttribute2));
 
 		testIntersections(comparison);
@@ -1073,7 +1074,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		Predicate<? super Diff> addStereotypeRefDescription = null;
 		Predicate<? super Diff> changeUMLStereotypeDescription = null;
@@ -1095,7 +1096,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		assertNotNull(addStereotypeRef);
 		assertNotNull(changeUMLStereotype);
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotype.getRefinedBy().size()));
+		assertEquals(1, changeUMLStereotype.getRefinedBy().size());
 		assertTrue(changeUMLStereotype.getRefinedBy().contains(addStereotypeRef));
 
 		testIntersections(comparison);
@@ -1105,7 +1106,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		Predicate<? super Diff> moveStereotypeRefDescription = null;
 		Predicate<? super Diff> changeUMLStereotypeDescription = null;
@@ -1122,7 +1123,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		assertNotNull(moveStereotypeRef);
 		assertNotNull(changeUMLStereotype);
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotype.getRefinedBy().size()));
+		assertEquals(1, changeUMLStereotype.getRefinedBy().size());
 		assertTrue(changeUMLStereotype.getRefinedBy().contains(moveStereotypeRef));
 
 		testIntersections(comparison);
@@ -1132,7 +1133,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		Predicate<? super Diff> changeStereotypeRefDescription = null;
 		Predicate<? super Diff> changeUMLStereotypeDescription = null;
@@ -1157,7 +1158,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		assertNotNull(changeStereotypeRef);
 		assertNotNull(changeUMLStereotype);
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotype.getRefinedBy().size()));
+		assertEquals(1, changeUMLStereotype.getRefinedBy().size());
 		assertTrue(changeUMLStereotype.getRefinedBy().contains(changeStereotypeRef));
 
 		testIntersections(comparison);
@@ -1167,7 +1168,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		Predicate<? super Diff> changeStereotypeRefDescription = null;
 		Predicate<? super Diff> changeUMLStereotypeDescription = null;
@@ -1186,7 +1187,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		assertNotNull(changeStereotypeRef);
 		assertNotNull(changeUMLStereotype);
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotype.getRefinedBy().size()));
+		assertEquals(1, changeUMLStereotype.getRefinedBy().size());
 		assertTrue(changeUMLStereotype.getRefinedBy().contains(changeStereotypeRef));
 
 		testIntersections(comparison);
@@ -1196,7 +1197,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
-		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
+		assertEquals(2, differences.size());
 
 		Predicate<? super Diff> changeStereotypeRefDescription = null;
 		Predicate<? super Diff> changeUMLStereotypeDescription = null;
@@ -1220,7 +1221,7 @@ public class StaticStereotypeTest extends AbstractStaticProfileTest {
 		assertNotNull(changeStereotypeRef);
 		assertNotNull(changeUMLStereotype);
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(changeUMLStereotype.getRefinedBy().size()));
+		assertEquals(1, changeUMLStereotype.getRefinedBy().size());
 		assertTrue(changeUMLStereotype.getRefinedBy().contains(changeStereotypeRef));
 
 		testIntersections(comparison);

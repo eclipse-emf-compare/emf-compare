@@ -2,11 +2,12 @@ package org.eclipse.emf.compare.uml2.tests.profiles;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -146,7 +147,7 @@ public class DynamicProfileTest extends AbstractDynamicProfileTest {
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 5 differences
-		assertSame(Integer.valueOf(5), Integer.valueOf(differences.size()));
+		assertEquals(5, differences.size());
 
 		Predicate<? super Diff> addProfileApplicationDescription = null;
 		Predicate<? super Diff> addAppliedProfileInProfileApplicationDescription = null;
@@ -213,37 +214,37 @@ public class DynamicProfileTest extends AbstractDynamicProfileTest {
 					instanceOf(ProfileApplicationChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLProfileApplication);
-		assertSame(Integer.valueOf(4), Integer.valueOf(addUMLProfileApplication.getRefinedBy().size()));
+		assertEquals(4, addUMLProfileApplication.getRefinedBy().size());
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addReferencesInUMLAnnotation));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addAppliedProfileInProfileApplication));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addProfileApplication));
 		assertTrue(addUMLProfileApplication.getRefinedBy().contains(addUMLAnnotation));
 
 		// CHECK REQUIREMENT
-		assertSame(Integer.valueOf(0), Integer.valueOf(addUMLProfileApplication.getRequires().size()));
+		assertEquals(0, addUMLProfileApplication.getRequires().size());
 		if (kind.equals(TestKind.ADD)) {
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addProfileApplication.getRequires().size()));
+			assertEquals(0, addProfileApplication.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLAnnotation.getRequires().size()));
+			assertEquals(1, addUMLAnnotation.getRequires().size());
 			assertTrue(addUMLAnnotation.getRequires().contains(addProfileApplication));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addReferencesInUMLAnnotation.getRequires().size()));
+			assertEquals(1, addReferencesInUMLAnnotation.getRequires().size());
 			assertTrue(addReferencesInUMLAnnotation.getRequires().contains(addUMLAnnotation));
 
 		} else {
-			assertSame(Integer.valueOf(2), Integer.valueOf(addProfileApplication.getRequires().size()));
+			assertEquals(2, addProfileApplication.getRequires().size());
 			assertTrue(addProfileApplication.getRequires().contains(addAppliedProfileInProfileApplication));
 			assertTrue(addProfileApplication.getRequires().contains(addUMLAnnotation));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addUMLAnnotation.getRequires().size()));
+			assertEquals(1, addUMLAnnotation.getRequires().size());
 			assertTrue(addUMLAnnotation.getRequires().contains(addReferencesInUMLAnnotation));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addReferencesInUMLAnnotation.getRequires().size()));
+			assertEquals(0, addReferencesInUMLAnnotation.getRequires().size());
 		}
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getEquivalences().size()));
+		assertEquals(0, comparison.getEquivalences().size());
 
 		testIntersections(comparison);
 

@@ -87,7 +87,7 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 		final Resource origin = (Resource)scope.getOrigin();
 		assertSame(Boolean.valueOf(origin != null), Boolean.valueOf(comparison.isThreeWay()));
 
-		assertSame(Integer.valueOf(1), Integer.valueOf(comparison.getMatchedResources().size()));
+		assertEquals(1, comparison.getMatchedResources().size());
 		final MatchResource matchedResource = comparison.getMatchedResources().get(0);
 		assertEquals(left.getURI().toString(), matchedResource.getLeftURI());
 		assertEquals(right.getURI().toString(), matchedResource.getRightURI());

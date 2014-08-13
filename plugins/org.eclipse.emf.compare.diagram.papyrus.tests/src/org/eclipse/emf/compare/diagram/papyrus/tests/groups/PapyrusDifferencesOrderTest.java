@@ -12,6 +12,8 @@ package org.eclipse.emf.compare.diagram.papyrus.tests.groups;
 
 import static com.google.common.base.Predicates.alwaysTrue;
 
+import com.google.common.collect.Lists;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -61,8 +63,6 @@ import org.eclipse.uml2.uml.edit.providers.UMLItemProviderAdapterFactory;
 import org.eclipse.uml2.uml.internal.resource.UMLResourceFactoryImpl;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.collect.Lists;
 
 /**
  * Tests the order of the differences they would be displayed in the structure merge viewer for MDT Papyrus
