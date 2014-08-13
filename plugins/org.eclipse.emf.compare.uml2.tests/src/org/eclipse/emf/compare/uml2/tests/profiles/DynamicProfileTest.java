@@ -6,7 +6,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -204,7 +203,7 @@ public class DynamicProfileTest extends AbstractDynamicProfileTest {
 		assertNotNull(addReferencesInUMLAnnotation);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(ProfileApplicationChange.class)));
+		assertEquals(1, count(differences, instanceOf(ProfileApplicationChange.class)));
 		Diff addUMLProfileApplication = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLProfileApplication = Iterators.find(differences.iterator(), and(

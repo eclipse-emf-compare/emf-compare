@@ -20,7 +20,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueNameMatches;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -618,8 +617,8 @@ public class DynamicStereotypeTest extends AbstractDynamicProfileTest {
 		assertNotNull(addRefBaseClass);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(ProfileApplicationChange.class)));
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(StereotypeApplicationChange.class)));
+		assertEquals(1, count(differences, instanceOf(ProfileApplicationChange.class)));
+		assertEquals(1, count(differences, instanceOf(StereotypeApplicationChange.class)));
 		Diff addUMLProfileApplication = null;
 		Diff addUMLStereotypeApplication = null;
 		if (kind.equals(TestKind.ADD)) {
@@ -790,8 +789,8 @@ public class DynamicStereotypeTest extends AbstractDynamicProfileTest {
 		assertNotNull(addRefBaseClass);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(ProfileApplicationChange.class)));
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(StereotypeApplicationChange.class)));
+		assertEquals(1, count(differences, instanceOf(ProfileApplicationChange.class)));
+		assertEquals(1, count(differences, instanceOf(StereotypeApplicationChange.class)));
 		Diff addUMLProfileApplication = null;
 		Diff addUMLStereotypeApplication = null;
 		if (kind.equals(TestKind.ADD)) {

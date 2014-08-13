@@ -10,7 +10,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromRefe
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -119,7 +118,7 @@ public class AddAbstractionTest extends AbstractUMLTest {
 		assertNotNull(addRefClass0InAbstraction);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(DirectedRelationshipChange.class)));
+		assertEquals(1, count(differences, instanceOf(DirectedRelationshipChange.class)));
 		Diff addUMLDependency = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLDependency = Iterators.find(differences.iterator(), and(

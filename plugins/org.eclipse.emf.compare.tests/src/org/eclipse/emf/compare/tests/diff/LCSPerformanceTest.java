@@ -85,8 +85,8 @@ public class LCSPerformanceTest {
 			}
 		}
 
-		assertEquals(Integer.valueOf(1900), Integer.valueOf(additions.size()));
-		assertEquals(Integer.valueOf(100), Integer.valueOf(deletions.size()));
+		assertEquals(1900, additions.size());
+		assertEquals(100, deletions.size());
 	}
 
 	/**

@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.tests.diff;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 import com.google.common.collect.Lists;
@@ -176,19 +175,19 @@ public class DiffUtilTest {
 		final List<Integer> right = Lists.newArrayList(4, 5, 6);
 		final Comparison emptyComparison = createEmptyComparison();
 		// We'll add "0" in right and expect it to be added at the end wherever its location in left
-		final Integer expectedIndex = Integer.valueOf(right.size());
+		final int expectedIndex = right.size();
 
 		List<Integer> left = Lists.newArrayList(0, 1, 2, 3);
 		int insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(1, 0, 2, 3);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(1, 2, 3, 0);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 	}
 
 	@Test
@@ -197,35 +196,35 @@ public class DiffUtilTest {
 		final List<Integer> right = Lists.newArrayList(1, 2, 3);
 		final Comparison emptyComparison = createEmptyComparison();
 		// We'll add "0" in right and expect it to be added at the beginning
-		final Integer expectedIndex = Integer.valueOf(0);
+		final int expectedIndex = 0;
 
 		List<Integer> left = Lists.newArrayList(0, 1, 2, 3);
 		int insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(0, 4, 1, 2, 3);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(4, 0, 1, 2, 3);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(4, 0, 5, 1, 2, 3);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(4, 0, 5, 1, 2, 3, 6);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(4, 0, 5, 1, 6, 2, 3);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(4, 0, 5, 1, 6, 2, 7, 8, 3, 9);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 	}
 
 	@Test
@@ -237,23 +236,23 @@ public class DiffUtilTest {
 		List<Integer> left = Lists.newArrayList(0, 1, 2, 3);
 		List<Integer> right = Lists.newArrayList(4, 1, 2, 3);
 		// Start of LCS is 1
-		Integer expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(1)));
+		int expectedIndex = right.indexOf(Integer.valueOf(1));
 		int insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(0, 6, 1, 5, 2, 4, 3);
 		right = Lists.newArrayList(7, 4, 1, 2, 3, 8);
 		// Start of LCS is 1
-		expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(1)));
+		expectedIndex = right.indexOf(Integer.valueOf(1));
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(5, 0, 6, 7, 1, 2, 4, 3);
 		right = Lists.newArrayList(7, 4, 1, 2, 9, 3, 8);
 		// Start of LCS is 7
-		expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(7)));
+		expectedIndex = right.indexOf(Integer.valueOf(7));
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 	}
 
 	@Test
@@ -262,35 +261,35 @@ public class DiffUtilTest {
 		final List<Integer> right = Lists.newArrayList(1, 2, 3);
 		final Comparison emptyComparison = createEmptyComparison();
 		// We'll add "0" in right and expect it to be added at the end
-		final Integer expectedIndex = Integer.valueOf(right.size());
+		final int expectedIndex = right.size();
 
 		List<Integer> left = Lists.newArrayList(1, 2, 3, 0);
 		int insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(1, 2, 3, 4, 0);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(1, 2, 3, 0, 4);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(1, 2, 3, 5, 0, 4);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(6, 1, 2, 3, 5, 0, 4);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(1, 6, 2, 3, 5, 0, 4);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(9, 1, 6, 2, 7, 8, 3, 5, 0, 4);
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 	}
 
 	@Test
@@ -302,23 +301,23 @@ public class DiffUtilTest {
 		List<Integer> left = Lists.newArrayList(1, 2, 3, 0);
 		List<Integer> right = Lists.newArrayList(1, 2, 3, 4);
 		// End of LCS is 3
-		Integer expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(3)) + 1);
+		int expectedIndex = right.indexOf(Integer.valueOf(3)) + 1;
 		int insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(1, 5, 2, 4, 3, 6, 0);
 		right = Lists.newArrayList(8, 1, 2, 3, 4, 7);
 		// End of LCS is 3
-		expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(3)) + 1);
+		expectedIndex = right.indexOf(Integer.valueOf(3)) + 1;
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(1, 2, 4, 3, 7, 6, 0, 5);
 		right = Lists.newArrayList(8, 1, 2, 9, 3, 4, 7);
 		// End of LCS is 7
-		expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(7)) + 1);
+		expectedIndex = right.indexOf(Integer.valueOf(7)) + 1;
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 	}
 
 	@Test
@@ -330,33 +329,33 @@ public class DiffUtilTest {
 
 		List<Integer> left = Lists.newArrayList(1, 0, 2, 3);
 		// Closest LCS element "before" is 1
-		int expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(1)) + 1);
+		int expectedIndex = right.indexOf(Integer.valueOf(1)) + 1;
 		int insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(1, 2, 0, 3, 4);
 		// Closest LCS element "before" is 2
-		expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(2)) + 1);
+		expectedIndex = right.indexOf(Integer.valueOf(2)) + 1;
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(1, 0, 4, 2, 3);
 		// Closest LCS element "before" is 1
-		expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(1)) + 1);
+		expectedIndex = right.indexOf(Integer.valueOf(1)) + 1;
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(5, 1, 4, 2, 0, 3);
 		// Closest LCS element "before" is 2
-		expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(2)) + 1);
+		expectedIndex = right.indexOf(Integer.valueOf(2)) + 1;
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(6, 1, 7, 8, 0, 9, 2, 10, 3, 5, 4);
 		// Closest LCS element "before" is 1
-		expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(1)) + 1);
+		expectedIndex = right.indexOf(Integer.valueOf(1)) + 1;
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 	}
 
 	@Test
@@ -368,16 +367,16 @@ public class DiffUtilTest {
 		List<Integer> left = Lists.newArrayList(1, 2, 0, 3);
 		List<Integer> right = Lists.newArrayList(1, 2, 3, 4);
 		// Closest LCS element is 2
-		Integer expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(2)) + 1);
+		int expectedIndex = right.indexOf(Integer.valueOf(2)) + 1;
 		int insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		left = Lists.newArrayList(1, 5, 2, 4, 0, 3, 6);
 		right = Lists.newArrayList(8, 1, 2, 3, 4, 7);
 		// Closest LCS element is 2
-		expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(2)) + 1);
+		expectedIndex = right.indexOf(Integer.valueOf(2)) + 1;
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 
 		/*
 		 * This is documented in {@link DefaultDiffEngine#findInsertionIndex(Comparison, List, List, Object)}.
@@ -386,9 +385,9 @@ public class DiffUtilTest {
 		left = Lists.newArrayList(1, 2, 4, 6, 8, 3, 0, 7, 5);
 		right = Lists.newArrayList(8, 1, 2, 9, 3, 4, 7);
 		// Closest LCS element is 3
-		expectedIndex = Integer.valueOf(right.indexOf(Integer.valueOf(3)) + 1);
+		expectedIndex = right.indexOf(Integer.valueOf(3)) + 1;
 		insertionIndex = DiffUtil.findInsertionIndex(emptyComparison, left, right, Integer.valueOf(0));
-		assertSame(expectedIndex, Integer.valueOf(insertionIndex));
+		assertEquals(expectedIndex, insertionIndex);
 	}
 
 	/**

@@ -11,7 +11,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromRefe
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -193,7 +192,7 @@ public class ChangeAssociationTest extends AbstractUMLTest {
 
 		// CHECK EXTENSION
 		// No extension anymore
-		assertSame(Integer.valueOf(0), count(differences, instanceOf(AssociationChange.class)));
+		assertEquals(0, count(differences, instanceOf(AssociationChange.class)));
 		Diff changeUMLAssociation = Iterators.find(differences.iterator(), and(
 				instanceOf(AssociationChange.class), ofKind(DifferenceKind.CHANGE)), null);
 		assertNull(changeUMLAssociation);
@@ -209,8 +208,7 @@ public class ChangeAssociationTest extends AbstractUMLTest {
 		if (kind.equals(TestKind.ADD)) {
 			assertEquals(0, addPropertyClass2.getRequires().size());
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addRefAssociationInPropertyClass2.getRequires()
-					.size()));
+			assertEquals(1, addRefAssociationInPropertyClass2.getRequires().size());
 			assertTrue(addRefAssociationInPropertyClass2.getRequires().contains(addPropertyClass2));
 
 			assertEquals(1, addRefTypeInPropertyClass2.getRequires().size());
@@ -231,8 +229,7 @@ public class ChangeAssociationTest extends AbstractUMLTest {
 			assertTrue(addPropertyClass2.getRequires().contains(addRefTypeInPropertyClass2));
 			assertTrue(addPropertyClass2.getRequires().contains(addPropertyClass2InAssociation));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefAssociationInPropertyClass2.getRequires()
-					.size()));
+			assertEquals(0, addRefAssociationInPropertyClass2.getRequires().size());
 			assertEquals(0, addRefTypeInPropertyClass2.getRequires().size());
 			// assertEquals(0, changeUMLAssociation.getRequires().size());
 			assertEquals(0, addLiteralIntegerInClass2.getRequires().size());

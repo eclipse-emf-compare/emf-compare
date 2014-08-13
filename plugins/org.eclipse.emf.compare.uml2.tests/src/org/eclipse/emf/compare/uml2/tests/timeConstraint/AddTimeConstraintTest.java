@@ -10,7 +10,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -154,7 +153,7 @@ public class AddTimeConstraintTest extends AbstractUMLTest {
 		assertNotNull(addMaxInTimeInterval);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(IntervalConstraintChange.class)));
+		assertEquals(1, count(differences, instanceOf(IntervalConstraintChange.class)));
 		Diff addUMLMessage = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLMessage = Iterators.find(differences.iterator(), and(
@@ -192,8 +191,7 @@ public class AddTimeConstraintTest extends AbstractUMLTest {
 			assertEquals(1, addMaxValue.getRequires().size());
 			assertTrue(addMaxValue.getRequires().contains(addTimeExpressionMax));
 
-			assertSame(Integer.valueOf(1), Integer.valueOf(addConstrainedElementInTimeConstraint
-					.getRequires().size()));
+			assertEquals(1, addConstrainedElementInTimeConstraint.getRequires().size());
 			assertTrue(addTimeInterval.getRequires().contains(addTimeConstraint));
 
 			assertEquals(2, addMinInTimeInterval.getRequires().size());
@@ -225,8 +223,7 @@ public class AddTimeConstraintTest extends AbstractUMLTest {
 
 			assertEquals(0, addMaxValue.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addConstrainedElementInTimeConstraint
-					.getRequires().size()));
+			assertEquals(0, addConstrainedElementInTimeConstraint.getRequires().size());
 
 			assertEquals(0, addMinInTimeInterval.getRequires().size());
 

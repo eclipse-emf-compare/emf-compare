@@ -8,7 +8,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromRefe
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -102,7 +101,7 @@ public class ChangeUsageTest extends AbstractUMLTest {
 
 		// CHECK EXTENSION
 		// no extension any more
-		assertSame(Integer.valueOf(0), count(differences, instanceOf(DirectedRelationshipChange.class)));
+		assertEquals(0, count(differences, instanceOf(DirectedRelationshipChange.class)));
 		Diff changeUMLDependency = Iterators.find(differences.iterator(), and(
 				instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.CHANGE)), null);
 		assertNull(changeUMLDependency);

@@ -15,7 +15,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReferenc
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -98,20 +97,20 @@ public class EquiComputingTest {
 		assertNotNull(changeRefF2EDiff);
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(3), comparison.getEquivalences().size());
+		assertEquals(3, comparison.getEquivalences().size());
 
 		assertNotNull(changeRefA2BDiff.getEquivalence());
-		assertSame(Integer.valueOf(2), changeRefA2BDiff.getEquivalence().getDifferences().size());
+		assertEquals(2, changeRefA2BDiff.getEquivalence().getDifferences().size());
 		assertTrue(changeRefA2BDiff.getEquivalence().getDifferences().contains(changeRefA2BDiff));
 		assertTrue(changeRefA2BDiff.getEquivalence().getDifferences().contains(changeRefB2ADiff));
 
 		assertNotNull(changeRefC2DDiff.getEquivalence());
-		assertSame(Integer.valueOf(2), changeRefC2DDiff.getEquivalence().getDifferences().size());
+		assertEquals(2, changeRefC2DDiff.getEquivalence().getDifferences().size());
 		assertTrue(changeRefC2DDiff.getEquivalence().getDifferences().contains(changeRefC2DDiff));
 		assertTrue(changeRefC2DDiff.getEquivalence().getDifferences().contains(changeRefD2CDiff));
 
 		assertNotNull(changeRefE2FDiff.getEquivalence());
-		assertSame(Integer.valueOf(2), changeRefE2FDiff.getEquivalence().getDifferences().size());
+		assertEquals(2, changeRefE2FDiff.getEquivalence().getDifferences().size());
 		assertTrue(changeRefE2FDiff.getEquivalence().getDifferences().contains(changeRefE2FDiff));
 		assertTrue(changeRefE2FDiff.getEquivalence().getDifferences().contains(changeRefF2EDiff));
 	}
@@ -193,25 +192,25 @@ public class EquiComputingTest {
 		assertNotNull(changeRefF22EDiff);
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(4), comparison.getEquivalences().size());
+		assertEquals(4, comparison.getEquivalences().size());
 
 		assertNotNull(changeRefC2D1Diff.getEquivalence());
-		assertSame(Integer.valueOf(2), changeRefC2D1Diff.getEquivalence().getDifferences().size());
+		assertEquals(2, changeRefC2D1Diff.getEquivalence().getDifferences().size());
 		assertTrue(changeRefC2D1Diff.getEquivalence().getDifferences().contains(changeRefC2D1Diff));
 		assertTrue(changeRefC2D1Diff.getEquivalence().getDifferences().contains(changeRefD12CDiff));
 
 		assertNotNull(changeRefC2D2Diff.getEquivalence());
-		assertSame(Integer.valueOf(2), changeRefC2D2Diff.getEquivalence().getDifferences().size());
+		assertEquals(2, changeRefC2D2Diff.getEquivalence().getDifferences().size());
 		assertTrue(changeRefC2D2Diff.getEquivalence().getDifferences().contains(changeRefC2D2Diff));
 		assertTrue(changeRefC2D2Diff.getEquivalence().getDifferences().contains(changeRefD22CDiff));
 
 		assertNotNull(changeRefE2F1Diff.getEquivalence());
-		assertSame(Integer.valueOf(2), changeRefE2F1Diff.getEquivalence().getDifferences().size());
+		assertEquals(2, changeRefE2F1Diff.getEquivalence().getDifferences().size());
 		assertTrue(changeRefE2F1Diff.getEquivalence().getDifferences().contains(changeRefE2F1Diff));
 		assertTrue(changeRefE2F1Diff.getEquivalence().getDifferences().contains(changeRefF12EDiff));
 
 		assertNotNull(changeRefE2F2Diff.getEquivalence());
-		assertSame(Integer.valueOf(2), changeRefE2F2Diff.getEquivalence().getDifferences().size());
+		assertEquals(2, changeRefE2F2Diff.getEquivalence().getDifferences().size());
 		assertTrue(changeRefE2F2Diff.getEquivalence().getDifferences().contains(changeRefE2F2Diff));
 		assertTrue(changeRefE2F2Diff.getEquivalence().getDifferences().contains(changeRefF22EDiff));
 	}
@@ -281,25 +280,25 @@ public class EquiComputingTest {
 		assertNotNull(D2toC1Diff);
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(4), comparison.getEquivalences().size());
+		assertEquals(4, comparison.getEquivalences().size());
 
 		assertNotNull(C1toD1Diff.getEquivalence());
-		assertSame(Integer.valueOf(2), C1toD1Diff.getEquivalence().getDifferences().size());
+		assertEquals(2, C1toD1Diff.getEquivalence().getDifferences().size());
 		assertTrue(C1toD1Diff.getEquivalence().getDifferences().contains(C1toD1Diff));
 		assertTrue(C1toD1Diff.getEquivalence().getDifferences().contains(D1toC1Diff));
 
 		assertNotNull(C1toD2Diff.getEquivalence());
-		assertSame(Integer.valueOf(2), C1toD2Diff.getEquivalence().getDifferences().size());
+		assertEquals(2, C1toD2Diff.getEquivalence().getDifferences().size());
 		assertTrue(C1toD2Diff.getEquivalence().getDifferences().contains(C1toD2Diff));
 		assertTrue(C1toD2Diff.getEquivalence().getDifferences().contains(D2toC1Diff));
 
 		assertNotNull(C2toD1Diff.getEquivalence());
-		assertSame(Integer.valueOf(2), C2toD1Diff.getEquivalence().getDifferences().size());
+		assertEquals(2, C2toD1Diff.getEquivalence().getDifferences().size());
 		assertTrue(C2toD1Diff.getEquivalence().getDifferences().contains(C2toD1Diff));
 		assertTrue(C2toD1Diff.getEquivalence().getDifferences().contains(D1toC2Diff));
 
 		assertNotNull(C2toD2Diff.getEquivalence());
-		assertSame(Integer.valueOf(2), C2toD2Diff.getEquivalence().getDifferences().size());
+		assertEquals(2, C2toD2Diff.getEquivalence().getDifferences().size());
 		assertTrue(C2toD2Diff.getEquivalence().getDifferences().contains(C2toD2Diff));
 		assertTrue(C2toD2Diff.getEquivalence().getDifferences().contains(D2toC2Diff));
 	}
@@ -348,15 +347,15 @@ public class EquiComputingTest {
 		assertNotNull(BtoAsourceDiff);
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(2), comparison.getEquivalences().size());
+		assertEquals(2, comparison.getEquivalences().size());
 
 		assertNotNull(AtoBdestDiff.getEquivalence());
-		assertSame(Integer.valueOf(2), AtoBdestDiff.getEquivalence().getDifferences().size());
+		assertEquals(2, AtoBdestDiff.getEquivalence().getDifferences().size());
 		assertTrue(AtoBdestDiff.getEquivalence().getDifferences().contains(AtoBdestDiff));
 		assertTrue(AtoBdestDiff.getEquivalence().getDifferences().contains(BtoAsourceDiff));
 
 		assertNotNull(AtoBsourceDiff.getEquivalence());
-		assertSame(Integer.valueOf(2), AtoBsourceDiff.getEquivalence().getDifferences().size());
+		assertEquals(2, AtoBsourceDiff.getEquivalence().getDifferences().size());
 		assertTrue(AtoBsourceDiff.getEquivalence().getDifferences().contains(AtoBsourceDiff));
 		assertTrue(AtoBsourceDiff.getEquivalence().getDifferences().contains(BtoAdestDiff));
 	}
@@ -453,20 +452,20 @@ public class EquiComputingTest {
 		assertNotNull(addFDiff);
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(3), comparison.getEquivalences().size());
+		assertEquals(3, comparison.getEquivalences().size());
 
 		assertNotNull(changeRefA2BDiff.getEquivalence());
-		assertSame(Integer.valueOf(2), changeRefA2BDiff.getEquivalence().getDifferences().size());
+		assertEquals(2, changeRefA2BDiff.getEquivalence().getDifferences().size());
 		assertTrue(changeRefA2BDiff.getEquivalence().getDifferences().contains(changeRefA2BDiff));
 		assertTrue(changeRefA2BDiff.getEquivalence().getDifferences().contains(changeRefB2ADiff));
 
 		assertNotNull(changeRefC2DDiff.getEquivalence());
-		assertSame(Integer.valueOf(2), changeRefC2DDiff.getEquivalence().getDifferences().size());
+		assertEquals(2, changeRefC2DDiff.getEquivalence().getDifferences().size());
 		assertTrue(changeRefC2DDiff.getEquivalence().getDifferences().contains(changeRefC2DDiff));
 		assertTrue(changeRefC2DDiff.getEquivalence().getDifferences().contains(changeRefD2CDiff));
 
 		assertNotNull(changeRefE2FDiff.getEquivalence());
-		assertSame(Integer.valueOf(2), changeRefE2FDiff.getEquivalence().getDifferences().size());
+		assertEquals(2, changeRefE2FDiff.getEquivalence().getDifferences().size());
 		assertTrue(changeRefE2FDiff.getEquivalence().getDifferences().contains(changeRefE2FDiff));
 		assertTrue(changeRefE2FDiff.getEquivalence().getDifferences().contains(changeRefF2EDiff));
 	}
@@ -561,10 +560,10 @@ public class EquiComputingTest {
 		assertNotNull(changeRefC2ADiff);
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(1), comparison.getEquivalences().size());
+		assertEquals(1, comparison.getEquivalences().size());
 
 		assertNotNull(changeRefA2BDiff.getEquivalence());
-		assertSame(Integer.valueOf(3), changeRefA2BDiff.getEquivalence().getDifferences().size());
+		assertEquals(3, changeRefA2BDiff.getEquivalence().getDifferences().size());
 		assertTrue(changeRefA2BDiff.getEquivalence().getDifferences().contains(changeRefA2BDiff));
 		assertTrue(changeRefA2BDiff.getEquivalence().getDifferences().contains(changeRefB2ADiff));
 		assertTrue(changeRefA2BDiff.getEquivalence().getDifferences().contains(changeRefC2ADiff));
@@ -616,10 +615,10 @@ public class EquiComputingTest {
 		assertNotNull(addCDiff);
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(1), comparison.getEquivalences().size());
+		assertEquals(1, comparison.getEquivalences().size());
 
 		assertNotNull(changeRefA2BDiff.getEquivalence());
-		assertSame(Integer.valueOf(3), changeRefA2BDiff.getEquivalence().getDifferences().size());
+		assertEquals(3, changeRefA2BDiff.getEquivalence().getDifferences().size());
 		assertTrue(changeRefA2BDiff.getEquivalence().getDifferences().contains(changeRefA2BDiff));
 		assertTrue(changeRefA2BDiff.getEquivalence().getDifferences().contains(changeRefB2ADiff));
 		assertTrue(changeRefA2BDiff.getEquivalence().getDifferences().contains(changeRefC2ADiff));
@@ -671,10 +670,10 @@ public class EquiComputingTest {
 		assertNotNull(changeRefB2ADiff);
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(1), comparison.getEquivalences().size());
+		assertEquals(1, comparison.getEquivalences().size());
 
 		assertNotNull(changeRefA2CDiff.getEquivalence());
-		assertSame(Integer.valueOf(3), changeRefA2CDiff.getEquivalence().getDifferences().size());
+		assertEquals(3, changeRefA2CDiff.getEquivalence().getDifferences().size());
 		assertTrue(changeRefA2CDiff.getEquivalence().getDifferences().contains(changeRefA2CDiff));
 		assertTrue(changeRefA2CDiff.getEquivalence().getDifferences().contains(changeRefC2ADiff));
 		assertTrue(changeRefA2CDiff.getEquivalence().getDifferences().contains(changeRefB2ADiff));
@@ -731,10 +730,10 @@ public class EquiComputingTest {
 		assertNotNull(addCDiff);
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(1), comparison.getEquivalences().size());
+		assertEquals(1, comparison.getEquivalences().size());
 
 		assertNotNull(changeRefA2CDiff.getEquivalence());
-		assertSame(Integer.valueOf(3), changeRefA2CDiff.getEquivalence().getDifferences().size());
+		assertEquals(3, changeRefA2CDiff.getEquivalence().getDifferences().size());
 		assertTrue(changeRefA2CDiff.getEquivalence().getDifferences().contains(changeRefA2CDiff));
 		assertTrue(changeRefA2CDiff.getEquivalence().getDifferences().contains(changeRefC2ADiff));
 		assertTrue(changeRefA2CDiff.getEquivalence().getDifferences().contains(changeRefB2ADiff));
@@ -844,40 +843,40 @@ public class EquiComputingTest {
 		assertNotNull(addEDiff);
 
 		// CHECK EQUIVALENCE
-		assertSame(Integer.valueOf(7), comparison.getEquivalences().size());
+		assertEquals(7, comparison.getEquivalences().size());
 
 		assertNotNull(delBonADiff.getEquivalence());
-		assertSame(Integer.valueOf(2), delBonADiff.getEquivalence().getDifferences().size());
+		assertEquals(2, delBonADiff.getEquivalence().getDifferences().size());
 		assertTrue(delBonADiff.getEquivalence().getDifferences().contains(delBonADiff));
 		assertTrue(delBonADiff.getEquivalence().getDifferences().contains(delAonBDiff));
 
 		assertNotNull(addDonADiff.getEquivalence());
-		assertSame(Integer.valueOf(2), addDonADiff.getEquivalence().getDifferences().size());
+		assertEquals(2, addDonADiff.getEquivalence().getDifferences().size());
 		assertTrue(addDonADiff.getEquivalence().getDifferences().contains(addDonADiff));
 		assertTrue(addDonADiff.getEquivalence().getDifferences().contains(addAonDDiff));
 
 		assertNotNull(addEonADiff.getEquivalence());
-		assertSame(Integer.valueOf(2), addEonADiff.getEquivalence().getDifferences().size());
+		assertEquals(2, addEonADiff.getEquivalence().getDifferences().size());
 		assertTrue(addEonADiff.getEquivalence().getDifferences().contains(addEonADiff));
 		assertTrue(addEonADiff.getEquivalence().getDifferences().contains(addAonEDiff));
 
 		assertNotNull(delFonBDiff.getEquivalence());
-		assertSame(Integer.valueOf(2), delFonBDiff.getEquivalence().getDifferences().size());
+		assertEquals(2, delFonBDiff.getEquivalence().getDifferences().size());
 		assertTrue(delFonBDiff.getEquivalence().getDifferences().contains(delFonBDiff));
 		assertTrue(delFonBDiff.getEquivalence().getDifferences().contains(delBonFDiff));
 
 		assertNotNull(addFonCDiff.getEquivalence());
-		assertSame(Integer.valueOf(2), addFonCDiff.getEquivalence().getDifferences().size());
+		assertEquals(2, addFonCDiff.getEquivalence().getDifferences().size());
 		assertTrue(addFonCDiff.getEquivalence().getDifferences().contains(addFonCDiff));
 		assertTrue(addFonCDiff.getEquivalence().getDifferences().contains(addConFDiff));
 
 		assertNotNull(delFonDDiff.getEquivalence());
-		assertSame(Integer.valueOf(2), delFonDDiff.getEquivalence().getDifferences().size());
+		assertEquals(2, delFonDDiff.getEquivalence().getDifferences().size());
 		assertTrue(delFonDDiff.getEquivalence().getDifferences().contains(delFonDDiff));
 		assertTrue(delFonDDiff.getEquivalence().getDifferences().contains(delDonFDiff));
 
 		assertNotNull(addFonEDiff.getEquivalence());
-		assertSame(Integer.valueOf(2), addFonEDiff.getEquivalence().getDifferences().size());
+		assertEquals(2, addFonEDiff.getEquivalence().getDifferences().size());
 		assertTrue(addFonEDiff.getEquivalence().getDifferences().contains(addFonEDiff));
 		assertTrue(addFonEDiff.getEquivalence().getDifferences().contains(addEonFDiff));
 

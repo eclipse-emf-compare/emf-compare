@@ -12,7 +12,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -241,7 +240,7 @@ public class AddAssociation3Test extends AbstractUMLTest {
 		assertNotNull(addPropertyClass0InAssociation);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(AssociationChange.class)));
+		assertEquals(1, count(differences, instanceOf(AssociationChange.class)));
 		Diff addUMLAssociation = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLAssociation = Iterators.find(differences.iterator(), and(
@@ -273,21 +272,18 @@ public class AddAssociation3Test extends AbstractUMLTest {
 
 			assertEquals(0, addPropertyClass1.getRequires().size());
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addPropertyClass1InAssociation.getRequires()
-					.size()));
+			assertEquals(2, addPropertyClass1InAssociation.getRequires().size());
 			assertTrue(addPropertyClass1InAssociation.getRequires().contains(addPropertyClass1));
 			assertTrue(addPropertyClass1InAssociation.getRequires().contains(addAssociation));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addRefAssociationInPropertyClass1.getRequires()
-					.size()));
+			assertEquals(2, addRefAssociationInPropertyClass1.getRequires().size());
 			assertTrue(addRefAssociationInPropertyClass1.getRequires().contains(addPropertyClass1));
 			assertTrue(addRefAssociationInPropertyClass1.getRequires().contains(addAssociation));
 
 			assertEquals(1, addRefTypeInPropertyClass1.getRequires().size());
 			assertTrue(addRefTypeInPropertyClass1.getRequires().contains(addPropertyClass1));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addRefAssociationInPropertyClass0.getRequires()
-					.size()));
+			assertEquals(2, addRefAssociationInPropertyClass0.getRequires().size());
 			assertTrue(addRefAssociationInPropertyClass0.getRequires().contains(addPropertyClass0));
 			assertTrue(addRefAssociationInPropertyClass0.getRequires().contains(addAssociation));
 
@@ -323,11 +319,9 @@ public class AddAssociation3Test extends AbstractUMLTest {
 			assertTrue(addPropertyClass0.getRequires().contains(addRefTypeInPropertyClass0));
 			assertTrue(addPropertyClass0.getRequires().contains(addPropertyClass0InAssociation));
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefAssociationInPropertyClass1.getRequires()
-					.size()));
+			assertEquals(0, addRefAssociationInPropertyClass1.getRequires().size());
 			assertEquals(0, addRefTypeInPropertyClass1.getRequires().size());
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefAssociationInPropertyClass0.getRequires()
-					.size()));
+			assertEquals(0, addRefAssociationInPropertyClass0.getRequires().size());
 			assertEquals(0, addRefTypeInPropertyClass0.getRequires().size());
 
 			assertEquals(5, addAssociation.getRequires().size());

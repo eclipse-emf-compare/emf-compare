@@ -10,7 +10,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -122,7 +121,7 @@ public class AddExtendTest extends AbstractUMLTest {
 		assertNotNull(addExtensionPoint);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(ExtendChange.class)));
+		assertEquals(1, count(differences, instanceOf(ExtendChange.class)));
 		Diff addUMLExtend = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
@@ -143,8 +142,7 @@ public class AddExtendTest extends AbstractUMLTest {
 			assertEquals(1, addRefExtendedCaseInExtend.getRequires().size());
 			assertTrue(addRefExtendedCaseInExtend.getRequires().contains(addExtend));
 
-			assertSame(Integer.valueOf(2), Integer.valueOf(addRefExtensionLocationInExtend.getRequires()
-					.size()));
+			assertEquals(2, addRefExtensionLocationInExtend.getRequires().size());
 			assertTrue(addRefExtensionLocationInExtend.getRequires().contains(addExtend));
 			assertTrue(addRefExtensionLocationInExtend.getRequires().contains(addExtensionPoint));
 
@@ -153,8 +151,7 @@ public class AddExtendTest extends AbstractUMLTest {
 		} else {
 			assertEquals(0, addRefExtendedCaseInExtend.getRequires().size());
 
-			assertSame(Integer.valueOf(0), Integer.valueOf(addRefExtensionLocationInExtend.getRequires()
-					.size()));
+			assertEquals(0, addRefExtensionLocationInExtend.getRequires().size());
 
 			assertEquals(2, addExtend.getRequires().size());
 			assertTrue(addExtend.getRequires().contains(addRefExtendedCaseInExtend));

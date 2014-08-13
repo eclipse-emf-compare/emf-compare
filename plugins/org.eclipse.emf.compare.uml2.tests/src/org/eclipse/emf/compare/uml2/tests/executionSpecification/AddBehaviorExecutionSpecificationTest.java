@@ -10,7 +10,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -189,7 +188,7 @@ public class AddBehaviorExecutionSpecificationTest extends AbstractUMLTest {
 		assertNotNull(addCoveredInActionExecSpec);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(ExecutionSpecificationChange.class)));
+		assertEquals(1, count(differences, instanceOf(ExecutionSpecificationChange.class)));
 		Diff addUMLMessage = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLMessage = Iterators.find(differences.iterator(), and(
@@ -303,20 +302,17 @@ public class AddBehaviorExecutionSpecificationTest extends AbstractUMLTest {
 		assertEquals(3, comparison.getEquivalences().size());
 
 		assertNotNull(addCoveredInStart.getEquivalence());
-		assertSame(Integer.valueOf(2), Integer.valueOf(addCoveredInStart.getEquivalence().getDifferences()
-				.size()));
+		assertEquals(2, addCoveredInStart.getEquivalence().getDifferences().size());
 		assertTrue(addCoveredInStart.getEquivalence().getDifferences().contains(addCoveredInStart));
 		assertTrue(addCoveredInStart.getEquivalence().getDifferences().contains(addCoveredByInLifeline1_1));
 
 		assertNotNull(addCoveredInFinish.getEquivalence());
-		assertSame(Integer.valueOf(2), Integer.valueOf(addCoveredInFinish.getEquivalence().getDifferences()
-				.size()));
+		assertEquals(2, addCoveredInFinish.getEquivalence().getDifferences().size());
 		assertTrue(addCoveredInFinish.getEquivalence().getDifferences().contains(addCoveredInFinish));
 		assertTrue(addCoveredInFinish.getEquivalence().getDifferences().contains(addCoveredByInLifeline1_2));
 
 		assertNotNull(addCoveredInActionExecSpec.getEquivalence());
-		assertSame(Integer.valueOf(2), Integer.valueOf(addCoveredInActionExecSpec.getEquivalence()
-				.getDifferences().size()));
+		assertEquals(2, addCoveredInActionExecSpec.getEquivalence().getDifferences().size());
 		assertTrue(addCoveredInActionExecSpec.getEquivalence().getDifferences().contains(
 				addCoveredInActionExecSpec));
 		assertTrue(addCoveredInActionExecSpec.getEquivalence().getDifferences().contains(

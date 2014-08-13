@@ -10,7 +10,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromRefe
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -118,7 +117,7 @@ public class AddDependencyTest extends AbstractUMLTest {
 		assertNotNull(addRefClass1InDependency);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(DirectedRelationshipChange.class)));
+		assertEquals(1, count(differences, instanceOf(DirectedRelationshipChange.class)));
 		Diff addUMLDependency = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLDependency = Iterators.find(differences.iterator(), and(
@@ -162,8 +161,8 @@ public class AddDependencyTest extends AbstractUMLTest {
 
 		// Was not null with UML 4.0 but NamedElement::clientDependency has been made derived in UML 5.0
 		assertNull(addRefClass0InDependency.getEquivalence());
-		// assertSame(Integer.valueOf(2), Integer.valueOf(addRefClass0InDependency.getEquivalence()
-		// .getDifferences().size()));
+		// assertEquals(2, addRefClass0InDependency.getEquivalence()
+		// .getDifferences().size());
 
 		testIntersections(comparison);
 

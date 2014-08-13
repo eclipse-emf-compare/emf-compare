@@ -9,7 +9,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromRefe
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -130,7 +129,7 @@ public class AddSubstitutionTest extends AbstractUMLTest {
 		assertNotNull(addContractInInterfaceRealization);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(DirectedRelationshipChange.class)));
+		assertEquals(1, count(differences, instanceOf(DirectedRelationshipChange.class)));
 		Diff addUMLDependency = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLDependency = Iterators.find(differences.iterator(), and(
@@ -148,25 +147,19 @@ public class AddSubstitutionTest extends AbstractUMLTest {
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
-			assertSame(Integer.valueOf(1), Integer.valueOf(addClientInInterfaceRealization.getRequires()
-					.size()));
+			assertEquals(1, addClientInInterfaceRealization.getRequires().size());
 			assertTrue(addClientInInterfaceRealization.getRequires().contains(addInterfaceRealization));
-			assertSame(Integer.valueOf(1), Integer.valueOf(addSupplierInInterfaceRealization.getRequires()
-					.size()));
+			assertEquals(1, addSupplierInInterfaceRealization.getRequires().size());
 			assertTrue(addSupplierInInterfaceRealization.getRequires().contains(addInterfaceRealization));
-			assertSame(Integer.valueOf(1), Integer.valueOf(addContractInInterfaceRealization.getRequires()
-					.size()));
+			assertEquals(1, addContractInInterfaceRealization.getRequires().size());
 			assertTrue(addContractInInterfaceRealization.getRequires().contains(addInterfaceRealization));
 
 			assertEquals(0, addInterfaceRealization.getRequires().size());
 			assertEquals(0, addUMLDependency.getRequires().size());
 		} else {
-			assertSame(Integer.valueOf(0), Integer.valueOf(addClientInInterfaceRealization.getRequires()
-					.size()));
-			assertSame(Integer.valueOf(0), Integer.valueOf(addSupplierInInterfaceRealization.getRequires()
-					.size()));
-			assertSame(Integer.valueOf(0), Integer.valueOf(addContractInInterfaceRealization.getRequires()
-					.size()));
+			assertEquals(0, addClientInInterfaceRealization.getRequires().size());
+			assertEquals(0, addSupplierInInterfaceRealization.getRequires().size());
+			assertEquals(0, addContractInInterfaceRealization.getRequires().size());
 
 			assertEquals(3, addInterfaceRealization.getRequires().size());
 			assertTrue(addInterfaceRealization.getRequires().contains(addClientInInterfaceRealization));

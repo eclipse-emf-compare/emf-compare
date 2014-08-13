@@ -162,14 +162,14 @@ public abstract class AbstractUMLTest {
 		ADD, DELETE;
 	}
 
-	protected static Integer count(List<Diff> differences, Predicate<Object> p) {
+	protected static int count(List<Diff> differences, Predicate<Object> p) {
 		int count = 0;
 		final Iterator<Diff> result = Iterators.filter(differences.iterator(), p);
 		while (result.hasNext()) {
 			count++;
 			result.next();
 		}
-		return Integer.valueOf(count);
+		return count;
 	}
 
 	public static Predicate<? super Diff> onRealFeature(final EStructuralFeature feature) {

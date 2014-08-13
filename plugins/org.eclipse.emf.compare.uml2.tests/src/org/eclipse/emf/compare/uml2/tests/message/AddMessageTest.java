@@ -12,7 +12,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromRefe
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -323,7 +322,7 @@ public class AddMessageTest extends AbstractUMLTest {
 		assertNotNull(addMessageRecv);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(differences, instanceOf(MessageChange.class)));
+		assertEquals(1, count(differences, instanceOf(MessageChange.class)));
 		Diff addUMLMessage = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLMessage = Iterators.find(differences.iterator(), and(instanceOf(MessageChange.class),
@@ -425,16 +424,14 @@ public class AddMessageTest extends AbstractUMLTest {
 		assertEquals(2, comparison.getEquivalences().size());
 
 		assertNotNull(addCoveredInMessage0Send0.getEquivalence());
-		assertSame(Integer.valueOf(2), Integer.valueOf(addCoveredInMessage0Send0.getEquivalence()
-				.getDifferences().size()));
+		assertEquals(2, addCoveredInMessage0Send0.getEquivalence().getDifferences().size());
 		assertTrue(addCoveredInMessage0Send0.getEquivalence().getDifferences().contains(
 				addCoveredInMessage0Send0));
 		assertTrue(addCoveredInMessage0Send0.getEquivalence().getDifferences().contains(
 				addCoveredByInLifeline0));
 
 		assertNotNull(addCoveredInMessage0Recv0.getEquivalence());
-		assertSame(Integer.valueOf(2), Integer.valueOf(addCoveredInMessage0Recv0.getEquivalence()
-				.getDifferences().size()));
+		assertEquals(2, addCoveredInMessage0Recv0.getEquivalence().getDifferences().size());
 		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
 				addCoveredInMessage0Recv0));
 		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
@@ -508,7 +505,7 @@ public class AddMessageTest extends AbstractUMLTest {
 		assertNotNull(addMessageRecv);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(useFullDiffs, instanceOf(MessageChange.class)));
+		assertEquals(1, count(useFullDiffs, instanceOf(MessageChange.class)));
 		Diff addUMLMessage = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
@@ -571,8 +568,7 @@ public class AddMessageTest extends AbstractUMLTest {
 		assertEquals(1, comparison.getEquivalences().size());
 
 		assertNotNull(addCoveredInMessage0Recv0.getEquivalence());
-		assertSame(Integer.valueOf(2), Integer.valueOf(addCoveredInMessage0Recv0.getEquivalence()
-				.getDifferences().size()));
+		assertEquals(2, addCoveredInMessage0Recv0.getEquivalence().getDifferences().size());
 		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
 				addCoveredInMessage0Recv0));
 		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
@@ -648,7 +644,7 @@ public class AddMessageTest extends AbstractUMLTest {
 		assertNotNull(addMessageRecv);
 
 		// CHECK EXTENSION
-		assertSame(Integer.valueOf(1), count(useFullDiffs, instanceOf(MessageChange.class)));
+		assertEquals(1, count(useFullDiffs, instanceOf(MessageChange.class)));
 		Diff addUMLMessage = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
@@ -711,8 +707,7 @@ public class AddMessageTest extends AbstractUMLTest {
 		assertEquals(1, comparison.getEquivalences().size());
 
 		assertNotNull(addCoveredInMessage0Recv0.getEquivalence());
-		assertSame(Integer.valueOf(2), Integer.valueOf(addCoveredInMessage0Recv0.getEquivalence()
-				.getDifferences().size()));
+		assertEquals(2, addCoveredInMessage0Recv0.getEquivalence().getDifferences().size());
 		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
 				addCoveredInMessage0Recv0));
 		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
