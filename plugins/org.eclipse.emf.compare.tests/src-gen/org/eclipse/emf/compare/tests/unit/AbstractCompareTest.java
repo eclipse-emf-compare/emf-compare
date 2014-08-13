@@ -206,21 +206,22 @@ public class AbstractCompareTest {
 	protected Object getValueDistinctFromDefault(EStructuralFeature feature) {
 		final Object defaultValue = feature.getDefaultValue();
 		if (feature.getEType() == EcorePackage.Literals.EBOOLEAN_OBJECT) {
-			return defaultValue == Boolean.TRUE ? Boolean.FALSE : Boolean.TRUE;
+			return defaultValue.equals(Boolean.TRUE) ? Boolean.FALSE : Boolean.TRUE;
 		} else if (feature.getEType() == EcorePackage.Literals.EINTEGER_OBJECT) {
-			return defaultValue == Integer.valueOf(0) ? Integer.valueOf(-1) : Integer.valueOf(0);
+			return defaultValue.equals(Integer.valueOf(0)) ? Integer.valueOf(-1) : Integer.valueOf(0);
 		} else if (feature.getEType() == EcorePackage.Literals.EBYTE_OBJECT) {
-			return defaultValue == Byte.valueOf("0") ? Byte.valueOf("-1") : Byte.valueOf("0");
+			return defaultValue.equals(Byte.valueOf("0")) ? Byte.valueOf("-1") : Byte.valueOf("0");
 		} else if (feature.getEType() == EcorePackage.Literals.ECHARACTER_OBJECT) {
-			return defaultValue == Character.valueOf('a') ? Character.valueOf('b') : Character.valueOf('a');
+			return defaultValue.equals(Character.valueOf('a')) ? Character.valueOf('b') : Character
+					.valueOf('a');
 		} else if (feature.getEType() == EcorePackage.Literals.EDOUBLE_OBJECT) {
-			return defaultValue == Double.valueOf(0) ? Double.valueOf(-1) : Double.valueOf(0);
+			return defaultValue.equals(Double.valueOf(0)) ? Double.valueOf(-1) : Double.valueOf(0);
 		} else if (feature.getEType() == EcorePackage.Literals.EFLOAT_OBJECT) {
-			return defaultValue == Float.valueOf(0) ? Float.valueOf(-1) : Float.valueOf(0);
+			return defaultValue.equals(Float.valueOf(0)) ? Float.valueOf(-1) : Float.valueOf(0);
 		} else if (feature.getEType() == EcorePackage.Literals.ELONG_OBJECT) {
-			return defaultValue == Long.valueOf(0) ? Long.valueOf(-1) : Long.valueOf(0);
+			return defaultValue.equals(Long.valueOf(0)) ? Long.valueOf(-1) : Long.valueOf(0);
 		} else if (feature.getEType() == EcorePackage.Literals.ESHORT_OBJECT) {
-			return defaultValue == Short.valueOf((short)0) ? Short.valueOf((short)-1) : Short
+			return defaultValue.equals(Short.valueOf((short)0)) ? Short.valueOf((short)-1) : Short
 					.valueOf((short)0);
 		} else if (feature.getEType() == EcorePackage.Literals.ESTRING) {
 			return "".equals(defaultValue) ? "notdefault" : "";
