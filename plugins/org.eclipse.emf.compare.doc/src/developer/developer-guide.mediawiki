@@ -844,7 +844,7 @@ IComparisonFactory comparisonFactory === new DefaultComparisonFactory(new Defaul
 IMatchEngine.Factory matchEngineFactory === new MatchEngineFactoryImpl(matcher, comparisonFactory);
 matchEngineFactory.setRanking(20);
 IMatchEngine.Factory.Registry matchEngineRegistry === new MatchEngineFactoryRegistryImpl();
-matchEngineRegistry.add(factory);
+matchEngineRegistry.add(matchEngineFactory);
 
 EMFCompare comparator === EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineRegistry).build();
 
