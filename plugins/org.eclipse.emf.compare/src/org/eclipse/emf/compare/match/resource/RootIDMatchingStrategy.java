@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -112,7 +112,10 @@ public class RootIDMatchingStrategy implements IResourceMatchingStrategy {
 
 		for (EObject root : resource.getContents()) {
 			if (resource instanceof XMIResource) {
-				identifiers.add(((XMIResource)resource).getID(root));
+				String resourceId = ((XMIResource)resource).getID(root);
+				if (resourceId != null) {
+					identifiers.add(resourceId);
+				}
 			}
 			identifiers.add(EcoreUtil.getID(root));
 		}
