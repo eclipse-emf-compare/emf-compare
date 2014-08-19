@@ -23,7 +23,6 @@
             <include>org/eclipse/emf/compare/ide/ui/tests/suite/AllTests.class</include>
           </includes>	
           <useUIHarness>true</useUIHarness>
-          <useUIThread>false</useUIThread>
 		</configuration>
 	  </plugin>
     </plugins>

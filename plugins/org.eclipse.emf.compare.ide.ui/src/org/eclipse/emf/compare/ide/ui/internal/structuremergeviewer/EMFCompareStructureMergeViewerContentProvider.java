@@ -51,10 +51,14 @@ import org.eclipse.ui.progress.PendingUpdateAdapter;
 
 /**
  * Specialized AdapterFactoryContentProvider for the emf compare structure merge viewer.
+ * <p>
+ * <i>This class is not intended to be used outside of its package. It has been set to public for testing
+ * purpose only.</i>
+ * </p>
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryContentProvider implements IJobChangeListener {
+public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryContentProvider implements IJobChangeListener {
 
 	/**
 	 * Class to listen the state of the content provider.

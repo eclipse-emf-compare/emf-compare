@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.NavigatableTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeActionTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.PseudoConflictsMergeActionTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.DependenciesTest;
@@ -29,7 +30,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({DependenciesTest.class, MergeActionTest.class, PseudoConflictsMergeActionTest.class,
-		BugsTestSuite.class })
+		BugsTestSuite.class, NavigatableTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

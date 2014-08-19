@@ -12,7 +12,9 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_ASYNC;
 
-import java.util.Arrays;
+import com.google.common.collect.Lists;
+
+import java.util.List;
 
 import org.eclipse.compare.INavigatable;
 import org.eclipse.emf.compare.Diff;
@@ -21,6 +23,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -146,123 +150,223 @@ public class Navigatable implements INavigatable {
 	 * @return the next TreeNode that contains a diff.
 	 */
 	private Object getNextDiff(Item item) {
-		Object ret = null;
-
-		Item[] children = getChildren(item);
-		ret = getFirstDiffChild(children);
-
-		if (ret == null) {
-			ret = getNextSiblingDiff(item);
+		final Item startingItem;
+		if (item != null) {
+			startingItem = item;
+		} else {
+			startingItem = getStartingItem();
 		}
 
-		return ret;
+		if (startingItem == null) {
+			return null;
+		}
+
+		Item nextItem = getNextItem(startingItem);
+		Object result = null;
+		while (nextItem != null && result == null) {
+			EObject data = EMFCompareStructureMergeViewer.getDataOfTreeNodeOfAdapter(nextItem.getData());
+			if (data instanceof Diff) {
+				result = nextItem.getData();
+			} else {
+				nextItem = getNextItem(nextItem);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the first item of the tree.
+	 * 
+	 * @return
+	 */
+	private TreeItem getStartingItem() {
+		final TreeItem startingItem;
+		TreeItem[] roots = viewer.getTree().getItems();
+		if (roots != null && roots.length > 0) {
+			startingItem = roots[0];
+		} else {
+			startingItem = null;
+		}
+		return startingItem;
 	}
 
 	private Object getPreviousDiff(Item item) {
-		Object ret = null;
-
-		if (item == null) {
-			ret = getDeepestDiffChild(null);
-		} else {
-			ret = getPreviousSiblingDeepestDiff(item);
-		}
-
-		return ret;
-	}
-
-	private Object getNextSiblingDiff(Item item) {
-		if (item == null) {
-			return null;
-		}
-		Object ret = null;
-		Item parentItem = viewer.getParentItem(item);
-		final Item[] siblings = getChildren(parentItem);
-		int indexOfItem = Arrays.asList(siblings).indexOf(item);
-		if (indexOfItem + 1 < siblings.length) {
-			for (int i = indexOfItem + 1; i < siblings.length && ret == null; i++) {
-				Item followingSibling = siblings[i];
-				ret = getDataOrNextDiff(followingSibling);
-			}
-		} else if (parentItem != null) {
-			ret = getNextSiblingDiff(parentItem);
-		}
-		return ret;
-	}
-
-	private Object getPreviousSiblingDeepestDiff(Item item) {
-		if (item == null) {
-			return null;
-		}
-		Object ret = null;
-		Item parentItem = viewer.getParentItem(item);
-		final Item[] siblings = getChildren(parentItem);
-		int indexOfItem = Arrays.asList(siblings).indexOf(item);
-		if (indexOfItem - 1 >= 0) {
-			for (int i = indexOfItem - 1; i >= 0 && ret == null; i--) {
-				Item previousSibling = siblings[i];
-				ret = getDeepestDiffChild(previousSibling);
-			}
-		} else if (parentItem != null) {
-			EObject eObject = EMFCompareStructureMergeViewer.getDataOfTreeNodeOfAdapter(parentItem.getData());
-			if (eObject instanceof Diff) {
-				ret = parentItem.getData();
-			} else {
-				ret = getPreviousDiff(parentItem);
-			}
-		}
-		return ret;
-	}
-
-	private Object getDataOrNextDiff(Item item) {
-		Object ret;
-		EObject eObject = EMFCompareStructureMergeViewer.getDataOfTreeNodeOfAdapter(item.getData());
-		if (eObject instanceof Diff) {
-			ret = item.getData();
-		} else {
-			ret = getNextDiff(item);
-		}
-		return ret;
-	}
-
-	private Object getFirstDiffChild(Item[] children) {
-		Object ret = null;
-		for (int i = 0; i < children.length && ret == null; i++) {
-			Item child = children[i];
-			ret = getDataOrNextDiff(child);
-		}
-		return ret;
-	}
-
-	private Item[] getChildren(Item item) {
-		final Item[] children;
+		final Item startingItem;
 		if (item != null) {
-			children = viewer.getChildren(item);
+			startingItem = item;
 		} else {
-			children = viewer.getChildren(viewer.getTree());
+			startingItem = getStartingItem();
 		}
-		return children;
+
+		if (startingItem == null) {
+			return null;
+		}
+		Item previousItem = getPreviousItem(startingItem);
+		Object result = null;
+		while (previousItem != null && result == null) {
+			EObject data = EMFCompareStructureMergeViewer.getDataOfTreeNodeOfAdapter(previousItem.getData());
+			if (data instanceof Diff) {
+				result = previousItem.getData();
+			} else {
+				previousItem = getPreviousItem(previousItem);
+			}
+		}
+		return result;
 	}
 
-	private Object getDeepestDiffChild(Item item) {
-		Object ret = null;
-		Item[] children = getChildren(item);
-		for (int i = children.length - 1; i >= 0 && ret == null; i--) {
-			Item child = children[i];
-			ret = getDeepestDiffChild(child);
-			if (ret == null) {
-				EObject eObject = EMFCompareStructureMergeViewer.getDataOfTreeNodeOfAdapter(child.getData());
-				if (eObject instanceof Diff) {
-					ret = child.getData();
-				}
+	// Protected for testing purpose
+	protected Item getNextItem(Item previousItem) {
+		final TreeItem result;
+		TreeItem firstChild = getFirstChild(previousItem);
+		if (firstChild != null) {
+			result = firstChild;
+		} else {
+			TreeItem sibling = getSibling(previousItem);
+			if (sibling != null) {
+				result = sibling;
+			} else {
+				result = getAncestorSibling(previousItem);
 			}
 		}
-		if (ret == null) {
-			EObject eObject = EMFCompareStructureMergeViewer.getDataOfTreeNodeOfAdapter(item.getData());
-			if (eObject instanceof Diff) {
-				ret = item.getData();
-			}
-		}
+		return result;
+	}
 
-		return ret;
+	// Protected for testing purpose
+	protected Item getPreviousItem(Item previousItem) {
+		final Item result;
+		TreeItem previousSibling = getPreviousSibling(previousItem);
+		if (previousSibling != null) {
+			result = getDeepestChild(previousSibling);
+		} else {
+			Object parent = getParent(previousItem);
+			if (parent instanceof TreeItem) {
+				result = (TreeItem)parent;
+			} else {
+				result = null;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Gets the previous sibling element.
+	 * 
+	 * @param item
+	 *            input element.
+	 * @return the first previous sibling of the input element.
+	 */
+	private TreeItem getPreviousSibling(Item item) {
+		TreeItem previsousSibling = null;
+		final Object parent;
+		parent = getParent(item);
+		if (parent != null) {
+			List<TreeItem> sibling = getChildren(parent);
+			int indexOfCurrent = sibling.indexOf(item);
+			if (indexOfCurrent > 0) {
+				previsousSibling = sibling.get(indexOfCurrent - 1);
+			}
+		}
+		return previsousSibling;
+	}
+
+	/**
+	 * Get the deepest child of this item in the tree. If this item has several deepest child then the first
+	 * one is returned.
+	 * 
+	 * @param input
+	 * @return
+	 */
+	private TreeItem getDeepestChild(TreeItem input) {
+		List<TreeItem> children = getChildren(input);
+		TreeItem deepestChild = input;
+		while (!children.isEmpty()) {
+			deepestChild = children.get(children.size() - 1);
+			children = getChildren(deepestChild);
+		}
+		return deepestChild;
+	}
+
+	/**
+	 * Gets the first child of the input item.
+	 * 
+	 * @return
+	 */
+	private TreeItem getFirstChild(Item item) {
+		List<TreeItem> children = getChildren(item);
+		if (!children.isEmpty()) {
+			return children.get(0);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Gets the children of the input item.
+	 * 
+	 * @param item
+	 *            can be a {@link TreeItem} or a {@link Tree}
+	 * @return the children.
+	 */
+	private List<TreeItem> getChildren(Object item) {
+		final TreeItem[] children;
+		if (item instanceof TreeItem) {
+			children = ((TreeItem)item).getItems();
+		} else if (item instanceof Tree) {
+			children = ((Tree)item).getItems();
+		} else {
+			children = new TreeItem[] {};
+		}
+		return Lists.newArrayList(children);
+	}
+
+	/**
+	 * Gets the parent of the input item. The parent can either be a {@link TreeItem} or a {@link Tree}.
+	 * 
+	 * @param item
+	 *            input item
+	 * @return a {@link TreeItem} or a {@link Tree}.
+	 */
+	private Object getParent(Item item) {
+		final Object parent;
+		Item parentItem = viewer.getParentItem(item);
+		if (parentItem != null) {
+			parent = parentItem;
+		} else {
+			parent = viewer.getTree();
+		}
+		return parent;
+	}
+
+	/**
+	 * Returns the first sibling of one of the ancestor of the input item.
+	 * 
+	 * @param inputItem
+	 * @return the sibling of one ancestor of the input item or <code>null</code> otherwise.
+	 */
+	private TreeItem getAncestorSibling(Item inputItem) {
+		Object parent = getParent(inputItem);
+		TreeItem ancestorSibling = null;
+		while (parent instanceof TreeItem && ancestorSibling == null) {
+			ancestorSibling = getSibling((TreeItem)parent);
+			parent = getParent((TreeItem)parent);
+		}
+		return ancestorSibling;
+	}
+
+	/**
+	 * Gets the next sibling item of the input item.
+	 * 
+	 * @return
+	 */
+	private TreeItem getSibling(Item item) {
+		Object parent = getParent(item);
+		if (parent != null) {
+			List<TreeItem> children = getChildren(parent);
+			int indexOfCurrent = children.indexOf(item);
+			if (indexOfCurrent != children.size() - 1) {
+				return children.get(indexOfCurrent + 1);
+			}
+		}
+		return null;
 	}
 }
