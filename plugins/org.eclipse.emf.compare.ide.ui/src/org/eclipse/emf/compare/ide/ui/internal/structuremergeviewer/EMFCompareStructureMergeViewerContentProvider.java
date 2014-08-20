@@ -214,14 +214,14 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 	private final List<FetchListener> listeners;
 
 	/** List of current callbacks. Callbacks are only run once. */
-	private final List<CallbackHolder> callbacks;
+	private List<CallbackHolder> callbacks;
 
 	/** Pending object displayed in the tree. */
 	private Object[] pending;
 
 	/**
-	 * Holds listeners that need to run the next time the content provider is ready. If this attribute holds
-	 * null then all listeners needs to be run.
+	 * Holds listeners that need to be run the next time the content provider is ready. If this attribute
+	 * holds null then all listeners needs to be run.
 	 */
 	private List<FetchListener> listenerLeftToRun = null;
 
@@ -575,21 +575,26 @@ class EMFCompareStructureMergeViewerContentProvider extends AdapterFactoryConten
 						}
 					}
 
-					Iterator<CallbackHolder> callbacksIterator = callbacks.iterator();
+					final Iterator<CallbackHolder> callbacksIterator = callbacks.iterator();
+
 					while (callbacksIterator.hasNext()) {
 						CallbackHolder callbackHolder = callbacksIterator.next();
 						run(callbackHolder.getCallback(), callbackHolder.getType());
-						callbacksIterator.remove();
 						// If the callback has started to fetch again the stop running callbacks and wait for
 						// the content provider to be ready.
 						if (isFetchingGroup) {
 							// Means that all listeners have already been run
 							listenerLeftToRun = Collections.emptyList();
+							List<CallbackHolder> remainingCallBack = Lists.newArrayList(callbacksIterator);
+							callbacks = new CopyOnWriteArrayList<EMFCompareStructureMergeViewerContentProvider.CallbackHolder>(
+									remainingCallBack);
 							return;
 						}
 					}
+
 					// Back to normal state all listener needs to be run.
 					listenerLeftToRun = null;
+					callbacks.clear();
 				}
 			} finally {
 				lock.unlock();
