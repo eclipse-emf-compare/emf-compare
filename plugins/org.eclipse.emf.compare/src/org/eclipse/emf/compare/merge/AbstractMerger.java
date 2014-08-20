@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -326,7 +327,8 @@ public abstract class AbstractMerger implements IMerger {
 						&& equivalent.getState() == DifferenceState.UNRESOLVED) {
 					// This equivalence is on our eOpposite. Should we merge it instead of 'this'?
 					final boolean mergeEquivalence = !reference.isMany()
-							&& ((ReferenceChange)equivalent).getReference().isMany();
+							&& ((ReferenceChange)equivalent).getReference().isMany()
+							&& isAdd((ReferenceChange)equivalent, rightToLeft);
 					if (mergeEquivalence) {
 						mergeDiff(equivalent, rightToLeft, monitor);
 						continueMerge = false;
@@ -356,6 +358,62 @@ public abstract class AbstractMerger implements IMerger {
 			equivalent.setState(DifferenceState.MERGED);
 		}
 		return continueMerge;
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} will add a value in the target model for the current merging.
+	 * <p>
+	 * To check whether the {@code diff} is an addition, we have to check the direction of the merge,
+	 * specified in {@code rightToLeft} and the {@link Diff#getSource() source of the diff}. Therefore, this
+	 * method delegates to {@link #isLeftAddOrRightDelete(ReferenceChange)} and
+	 * {@link #isLeftDeleteOrRightAdd(ReferenceChange)}.
+	 * </p>
+	 * 
+	 * @param diff
+	 *            The difference to check.
+	 * @param rightToLeft
+	 *            Direction of the merge.
+	 * @return <code>true</code> if {@code diff} will add a value with this merge, <code>false</code>
+	 *         otherwise.
+	 */
+	protected boolean isAdd(ReferenceChange diff, boolean rightToLeft) {
+		if (rightToLeft) {
+			return isLeftDeleteOrRightAdd(diff);
+		} else {
+			return isLeftAddOrRightDelete(diff);
+		}
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} is either an addition on the left-hand side or a deletion on
+	 * the right-hand side.
+	 * 
+	 * @param diff
+	 *            The difference to check.
+	 * @return <code>true</code> if it is a left addition or a right deletion.
+	 */
+	private boolean isLeftAddOrRightDelete(ReferenceChange diff) {
+		if (diff.getSource() == DifferenceSource.LEFT) {
+			return diff.getKind() == DifferenceKind.ADD;
+		} else {
+			return diff.getKind() == DifferenceKind.DELETE;
+		}
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} is either a deletion on the left-hand side or an addition on
+	 * the right-hand side.
+	 * 
+	 * @param diff
+	 *            The difference to check.
+	 * @return <code>true</code> if it is a left deletion or a right addition.
+	 */
+	private boolean isLeftDeleteOrRightAdd(ReferenceChange diff) {
+		if (diff.getSource() == DifferenceSource.LEFT) {
+			return diff.getKind() == DifferenceKind.DELETE;
+		} else {
+			return diff.getKind() == DifferenceKind.ADD;
+		}
 	}
 
 	/**
