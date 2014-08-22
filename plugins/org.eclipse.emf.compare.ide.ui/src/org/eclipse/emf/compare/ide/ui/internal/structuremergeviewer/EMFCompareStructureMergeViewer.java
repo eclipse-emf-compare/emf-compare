@@ -759,6 +759,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
 				public void run() {
 					if (!getControl().isDisposed()) {
+						// Needs all to build all treeItem to compute the label
+						dependencyData.updateTreeItemMappings();
+
 						// title is not initialized as the comparison was set in the configuration after the
 						// refresh caused by the initialization of the viewer filters and the group providers.
 						refreshTitle();
