@@ -1,14 +1,14 @@
 --- Q7 testcase ---
 Format-Version: 1.0
 Q7-vendor: www.xored.com/q7
-Contexts: _LOMGYGrvEeK_JdLra2Bk5A,_6ooSEMCpEeO8eNTYV1NAnA
+Contexts: _LOMGYGrvEeK_JdLra2Bk5A,_6ooSEMCpEeO8eNTYV1NAnA,_jRtbsGrtEeK_JdLra2Bk5A
 Element-Name: ts016_tc021_filters_preference_page_reset_to_default
 Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _WYvVQMClEeO8eNTYV1NAnA
 Q7-Runtime-Version: 1.3.10.201312200736
-Save-Time: 4/10/14 4:43 PM
+Save-Time: 8/22/14 12:22 PM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -26,26 +26,47 @@ Content-Type: text/ecl
 Entry-Name: .content
 
 get-preferences-menu | click
-get-window Preferences | get-group "Automatic behavior" | get-combo 
-    -after [get-label "Synchronize current filter selection:"] | get-property selection | equals never | verify-true
-//Checks preference from context
-with [get-window Preferences | get-table] {
-    get-property "getItems().TableItem[0].getText()" | equals "Cascading differences" | verify-true
-    get-property "getItems().TableItem[1].getText()" | equals "Diagram Refined elements" | verify-true
-    get-property "getItems().TableItem[2].getText()" | equals "Empty resource mappings" | verify-true
-    get-property "getItems().TableItem[3].getText()" | equals "Identical elements" | verify-true
-    get-property "getItems().TableItem[4].getText()" | equals "Pseudo conflicts differences" | verify-true
+
+with [get-window Preferences] {
+    with [get-table] {
+        get-property "getItems().TableItem[0].getText()" | equals "Cascading differences" | verify-true
+        get-property "getItems().TableItem[0].getChecked()" | equals false | verify-true
+        get-property "getItems().TableItem[1].getText()" | equals "Diagram Refined elements" | verify-true
+        get-property "getItems().TableItem[1].getChecked()" | equals false | verify-true
+        get-property "getItems().TableItem[2].getText()" | equals "Empty resource mappings" | verify-true
+        get-property "getItems().TableItem[2].getChecked()" | equals false | verify-true
+        get-property "getItems().TableItem[3].getText()" | equals "Feature map differences" | verify-true
+        get-property "getItems().TableItem[3].getChecked()" | equals true | verify-true
+        get-property "getItems().TableItem[4].getText()" | equals "Identical elements" | verify-true
+        get-property "getItems().TableItem[4].getChecked()" | equals false | verify-true
+        get-property "getItems().TableItem[5].getText()" | equals "Pseudo conflicts differences" | verify-true
+        get-property "getItems().TableItem[5].getChecked()" | equals false | verify-true
+        get-property "getItems().TableItem[6].getText()" | equals "UML refined elements" | verify-true
+        get-property "getItems().TableItem[6].getChecked()" | equals true | verify-true
+    }
+    get-group "Automatic behavior" | get-combo -after [get-label "Synchronize current filter selection:"] 
+        | get-property selection | equals never | verify-true
 }
+
 //Resets to default
 get-window Preferences | get-button "Restore Defaults" | click
 //Checks defaults parameters
 with [get-window Preferences] {
     with [get-table] {
         get-property "getItems().TableItem[0].getText()" | equals "Cascading differences" | verify-true
+        get-property "getItems().TableItem[0].getChecked()" | equals true | verify-true
         get-property "getItems().TableItem[1].getText()" | equals "Diagram Refined elements" | verify-true
+        get-property "getItems().TableItem[1].getChecked()" | equals true | verify-true
         get-property "getItems().TableItem[2].getText()" | equals "Empty resource mappings" | verify-true
-        get-property "getItems().TableItem[3].getText()" | equals "Identical elements" | verify-true
-        get-property "getItems().TableItem[4].getText()" | equals "Pseudo conflicts differences" | verify-true
+        get-property "getItems().TableItem[2].getChecked()" | equals true | verify-true
+        get-property "getItems().TableItem[3].getText()" | equals "Feature map differences" | verify-true
+        get-property "getItems().TableItem[3].getChecked()" | equals true | verify-true
+        get-property "getItems().TableItem[4].getText()" | equals "Identical elements" | verify-true
+        get-property "getItems().TableItem[4].getChecked()" | equals true | verify-true
+        get-property "getItems().TableItem[5].getText()" | equals "Pseudo conflicts differences" | verify-true
+        get-property "getItems().TableItem[5].getChecked()" | equals true | verify-true
+        get-property "getItems().TableItem[6].getText()" | equals "UML refined elements" | verify-true
+        get-property "getItems().TableItem[6].getChecked()" | equals true | verify-true
     }
     get-group "Automatic behavior" | get-combo -after [get-label "Synchronize current filter selection:"] 
         | get-property selection | equals prompt | verify-true
