@@ -152,6 +152,22 @@ public class TwoWayBatchMergingTest {
 	}
 
 	/**
+	 * Tests a scenario in which two elements are moved from a container into another container but in a
+	 * different order. In case of a right-to-left merge, this resulted in a wrong order of elements in the
+	 * container's list, because the resolution of source list, which is used for finding the LCS when
+	 * determining the insertion index, was returning the list of the wrong container (cf. Bug #442439).
+	 * 
+	 * @throws IOException
+	 *             if {@link TwoWayMergeInputData} fails to load the test models.
+	 */
+	@Test
+	public void mergingMoveToNewContainerInADifferentOrderR2L() throws IOException {
+		final Resource left = input.getMoveToNewContainerInADifferentOrderR2LLeft();
+		final Resource right = input.getMoveToNewContainerInADifferentOrderR2LRight();
+		batchMergeAndAssertEquality(left, right, Direction.RIGHT_TO_LEFT);
+	}
+
+	/**
 	 * Merges the given resources {@code left} and {@code right} using the {@link BatchMerger} in the
 	 * specified {@code direction}, re-compares left and right, and asserts their equality in the end.
 	 * 
@@ -177,7 +193,8 @@ public class TwoWayBatchMergingTest {
 
 		// check that models are equal after batch merging
 		Comparison assertionComparison = EMFCompare.builder().build().compare(scope);
-		assertEquals(0, assertionComparison.getDifferences().size());
+		EList<Diff> assertionDifferences = assertionComparison.getDifferences();
+		assertEquals(0, assertionDifferences.size());
 	}
 
 }

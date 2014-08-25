@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - Fixes for bug 440679, 441258, and refactorings
+ *     Philip Langer - Fixes for bug 440679, 441258, 442439, and refactorings
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
 
@@ -799,7 +799,7 @@ public final class DiffUtil {
 					"DiffUtil.IllegalFeature", targetFeature.getName())); //$NON-NLS-1$
 		}
 
-		final List<Object> sourceList = getSourceList(diff, rightToLeft);
+		final List<Object> sourceList = getSourceList(comparison, diff, rightToLeft);
 		final List<Object> targetList = getTargetList(comparison, diff, rightToLeft);
 		final Object changedValue = getChangedValue(diff);
 
@@ -857,8 +857,12 @@ public final class DiffUtil {
 
 	/**
 	 * Retrieves the "source" list of the given {@code diff}. This will be different according to the kind of
-	 * change and the direction of the merging.
+	 * change and the direction of the merging. Note that, e.g., in case of a move, the source list is not
+	 * necessarily the list of values which originally contained the moved value; it is the target list of the
+	 * move on the source side, which is retrieved through the comparison's match.
 	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
 	 * @param diff
 	 *            The diff for which merging we need a 'source'.
 	 * @param rightToLeft
@@ -867,24 +871,25 @@ public final class DiffUtil {
 	 * @return The list that should be used as a source for this merge. May be empty, but never
 	 *         <code>null</code>.
 	 */
-	private static List<Object> getSourceList(Diff diff, boolean rightToLeft) {
+	private static List<Object> getSourceList(Comparison comparison, Diff diff, boolean rightToLeft) {
 		final EObject expectedContainer;
 		final Match match = diff.getMatch();
 
 		if (diff.getKind() == DifferenceKind.MOVE) {
 			final boolean undoingLeft = rightToLeft && diff.getSource() == DifferenceSource.LEFT;
 			final boolean undoingRight = !rightToLeft && diff.getSource() == DifferenceSource.RIGHT;
-
 			if ((undoingLeft || undoingRight) && match.getOrigin() != null) {
 				expectedContainer = match.getOrigin();
-			} else if (rightToLeft) {
-				expectedContainer = match.getRight();
 			} else {
-				expectedContainer = match.getLeft();
+				final EObject targetContainer = getTargetContainer(comparison, diff, rightToLeft);
+				if (rightToLeft) {
+					expectedContainer = comparison.getMatch(targetContainer).getRight();
+				} else {
+					expectedContainer = comparison.getMatch(targetContainer).getLeft();
+				}
 			}
-
 		} else {
-			if (match.getOrigin() != null && diff.getKind() == DifferenceKind.DELETE) {
+			if (diff.getKind() == DifferenceKind.DELETE && match.getOrigin() != null) {
 				expectedContainer = match.getOrigin();
 			} else if (rightToLeft) {
 				expectedContainer = match.getRight();
@@ -893,7 +898,8 @@ public final class DiffUtil {
 			}
 		}
 
-		return ReferenceUtil.getAsList(expectedContainer, getChangedFeature(diff));
+		final EStructuralFeature feature = getTargetFeature(comparison, diff, rightToLeft);
+		return ReferenceUtil.getAsList(expectedContainer, feature);
 	}
 
 	/**
