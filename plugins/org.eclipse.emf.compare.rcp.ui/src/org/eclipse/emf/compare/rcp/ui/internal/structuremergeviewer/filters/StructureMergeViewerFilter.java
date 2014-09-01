@@ -130,9 +130,9 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 		if (element instanceof GroupItemProviderAdapter) {
 			Collection<?> children = ((GroupItemProviderAdapter)element).getChildren(element);
 			result = any(Iterables.filter(children, EObject.class), viewerPredicate);
-		} else if (element instanceof PendingUpdateAdapter){
+		} else if (element instanceof PendingUpdateAdapter) {
 			result = true;
-		}else if (element instanceof Adapter) {
+		} else if (element instanceof Adapter) {
 			Notifier notifier = ((Adapter)element).getTarget();
 			if (notifier instanceof EObject) {
 				EObject eObject = (EObject)notifier;

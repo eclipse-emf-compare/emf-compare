@@ -14,7 +14,6 @@ import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.size;
 import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_ASYNC;
 import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_SYNC;
@@ -727,32 +726,39 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			if (!affectedObjects.isEmpty()) {
 				// MUST NOT call a setSelection with a list, o.e.compare does not handle it (cf
 				// org.eclipse.compare.CompareEditorInput#getElement(ISelection))
-				Object first = getFirst(affectedObjects, null);
-				if (first instanceof EObject) {
-					IDifferenceGroupProvider groupProvider = getCompareConfiguration()
-							.getStructureMergeViewerGrouper().getProvider();
-					Iterable<TreeNode> treeNodes = groupProvider.getTreeNodes((EObject)first);
-					TreeNode treeNode = getFirst(treeNodes, null);
-					if (treeNode != null) {
-						final Object adaptedAffectedObject = fAdapterFactory.adapt(treeNode,
-								ICompareInput.class);
-						// execute synchronously the set selection to be sure the MergeAction#run() will
-						// select next diff after.
-						SWTUtil.safeSyncExec(new Runnable() {
-							public void run() {
-								refresh();
-								StructuredSelection selection = new StructuredSelection(adaptedAffectedObject);
-								// allows to call CompareToolBar#selectionChanged(SelectionChangedEvent)
-								getViewer().setSelection(selection);
-							}
-						});
-						// update content viewers with the new selection
-						SWTUtil.safeAsyncExec(new Runnable() {
-							public void run() {
-								navigatable.openSelectedChange();
-							}
-						});
+				final Iterator<EObject> affectedIterator = Iterables.filter(affectedObjects, EObject.class)
+						.iterator();
+				IDifferenceGroupProvider groupProvider = getCompareConfiguration()
+						.getStructureMergeViewerGrouper().getProvider();
+				TreeNode unfilteredNode = null;
+				while (affectedIterator.hasNext() && unfilteredNode == null) {
+					EObject affected = affectedIterator.next();
+					Iterable<TreeNode> treeNodes = groupProvider.getTreeNodes(affected);
+					for (TreeNode node : treeNodes) {
+						if (!JFaceUtil.isFiltered(getViewer(), node, node.getParent())) {
+							unfilteredNode = node;
+						}
 					}
+				}
+				if (unfilteredNode != null) {
+					final Object adaptedAffectedObject = fAdapterFactory.adapt(unfilteredNode,
+							ICompareInput.class);
+					// execute synchronously the set selection to be sure the MergeAction#run() will
+					// select next diff after.
+					SWTUtil.safeSyncExec(new Runnable() {
+						public void run() {
+							refresh();
+							StructuredSelection selection = new StructuredSelection(adaptedAffectedObject);
+							// allows to call CompareToolBar#selectionChanged(SelectionChangedEvent)
+							getViewer().setSelection(selection);
+						}
+					});
+					// update content viewers with the new selection
+					SWTUtil.safeAsyncExec(new Runnable() {
+						public void run() {
+							navigatable.openSelectedChange();
+						}
+					});
 				}
 			}
 		} else {
