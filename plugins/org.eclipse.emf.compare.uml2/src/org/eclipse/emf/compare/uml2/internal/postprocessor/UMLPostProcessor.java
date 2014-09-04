@@ -45,6 +45,9 @@ import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.uml.ProfileApplication;
 
@@ -140,9 +143,9 @@ public class UMLPostProcessor implements IPostProcessor {
 	 */
 	private boolean checkProfileVersion(Comparison comparison, ProfileApplication profileApplication,
 			EAnnotation leftAnnot, EAnnotation rightAnnot) {
-		Collection<URI> leftUris = getURIs(ReferenceUtil.getAsList(leftAnnot,
+		Collection<URI> leftUris = getNormalizedURIs(ReferenceUtil.getAsList(leftAnnot,
 				EcorePackage.Literals.EANNOTATION__REFERENCES));
-		Collection<URI> rightUris = getURIs(ReferenceUtil.getAsList(rightAnnot,
+		Collection<URI> rightUris = getNormalizedURIs(ReferenceUtil.getAsList(rightAnnot,
 				EcorePackage.Literals.EANNOTATION__REFERENCES));
 		if (leftUris.size() != rightUris.size() || !leftUris.containsAll(rightUris)) {
 			org.eclipse.uml2.uml.Package impactedPackage = profileApplication.getApplyingPackage();
@@ -179,17 +182,33 @@ public class UMLPostProcessor implements IPostProcessor {
 	}
 
 	/**
-	 * Get the URI of the given ecore objects.
+	 * Get the normalized URI of the given ecore objects.
 	 * 
 	 * @param eObjects
 	 *            The ecore objects.
 	 * @return the list of the URI.
 	 */
-	private Collection<URI> getURIs(List<Object> eObjects) {
+	private Collection<URI> getNormalizedURIs(List<Object> eObjects) {
 		Function<Object, URI> eObjectToURI = new Function<Object, URI>() {
 			public URI apply(Object input) {
 				if (input instanceof EObject) {
-					return EcoreUtil.getURI((EObject)input);
+					URI uri = EcoreUtil.getURI((EObject)input);
+					URIConverter uriConverter = getURIConverter((EObject)input);
+					if (uriConverter != null) {
+						uri = uriConverter.normalize(uri);
+					}
+					return uri;
+				}
+				return null;
+			}
+
+			private URIConverter getURIConverter(EObject eObject) {
+				Resource resource = eObject.eResource();
+				if (resource != null) {
+					ResourceSet resourceSet = resource.getResourceSet();
+					if (resourceSet != null) {
+						return resourceSet.getURIConverter();
+					}
 				}
 				return null;
 			}
