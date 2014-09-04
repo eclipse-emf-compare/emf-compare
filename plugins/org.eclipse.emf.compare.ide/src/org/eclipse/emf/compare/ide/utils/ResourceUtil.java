@@ -234,7 +234,9 @@ public final class ResourceUtil {
 		// Furthermore, "ws" could be a git repository, in which case we would be here with
 		// ws/project/test.ecore
 		URI uri;
-		if (path.startsWith("file:/")) { //$NON-NLS-1$
+		if (path.startsWith("platform:/plugin/")) { //$NON-NLS-1$
+			uri = URI.createURI(path);
+		} else if (path.startsWith("file:/")) { //$NON-NLS-1$
 			uri = URI.createURI(path);
 		} else {
 			uri = URI.createFileURI(path);

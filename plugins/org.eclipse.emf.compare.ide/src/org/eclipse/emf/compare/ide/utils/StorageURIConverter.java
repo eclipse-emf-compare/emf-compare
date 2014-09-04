@@ -163,7 +163,7 @@ public class StorageURIConverter extends DelegatingURIConverter {
 			final String path;
 			if (uri.isRelative()) {
 				path = uri.toString();
-			} else if (uri.isPlatform()) {
+			} else if (uri.isPlatformResource()) {
 				path = uri.toPlatformString(true);
 			} else {
 				path = uri.toString();
