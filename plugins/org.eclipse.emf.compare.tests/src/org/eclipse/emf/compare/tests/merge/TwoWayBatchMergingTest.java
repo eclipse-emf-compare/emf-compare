@@ -168,6 +168,25 @@ public class TwoWayBatchMergingTest {
 	}
 
 	/**
+	 * Tests a scenario in which a new node is added as a new value in two many-to-many references, each at
+	 * index 0. This resulted in a wrong order of elements in the many-to-many references, because the values
+	 * have been filtered out in {@link DiffUtil#findInsertionIndex(Comparison, Diff, boolean)}, in particular
+	 * in {@link DiffUtil#computeIgnoredElements(Iterable<E>, Diff, boolean)}, since there is for each of the
+	 * diff elements another diff element in the comparison that concerns the same value and the same feature.
+	 * However, the target container of the other diff element is different and, therefore, the value should
+	 * not be ignored when computing the insertion index (cf. Bug #443504).
+	 * 
+	 * @throws IOException
+	 *             if {@link TwoWayMergeInputData} fails to load the test models.
+	 */
+	@Test
+	public void mergingManyToManyReferenceChangesR2L() throws IOException {
+		final Resource left = input.getManyToManyReferenceChangesR2LLeft();
+		final Resource right = input.getManyToManyReferenceChangesR2LRight();
+		batchMergeAndAssertEquality(left, right, Direction.RIGHT_TO_LEFT);
+	}
+
+	/**
 	 * Merges the given resources {@code left} and {@code right} using the {@link BatchMerger} in the
 	 * specified {@code direction}, re-compares left and right, and asserts their equality in the end.
 	 * 

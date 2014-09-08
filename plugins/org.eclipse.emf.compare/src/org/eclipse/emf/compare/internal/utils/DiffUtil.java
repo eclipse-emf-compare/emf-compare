@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - Fixes for bug 440679, 441258, 442439, and refactorings
+ *     Philip Langer - Fixes for bug 440679, 441258, 442439, 443504, and refactorings
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
 
@@ -803,8 +803,8 @@ public final class DiffUtil {
 		final List<Object> targetList = getTargetList(comparison, diff, rightToLeft);
 		final Object changedValue = getChangedValue(diff);
 
-		Iterable<Object> ignoredElements = Iterables.concat(computeIgnoredElements(targetList, diff),
-				Collections.singleton(changedValue));
+		Iterable<Object> ignoredElements = computeIgnoredElements(targetList, diff, rightToLeft);
+		ignoredElements = Iterables.concat(ignoredElements, Collections.singleton(changedValue));
 		// We know we'll have to iterate quite a number of times on this one.
 		ignoredElements = Lists.newArrayList(ignoredElements);
 
@@ -1040,33 +1040,28 @@ public final class DiffUtil {
 	 *            The diff we are computing an insertion index for.
 	 * @param <E>
 	 *            Type of the list's content.
+	 * @param rightToLeft
+	 *            Direction of the merging. {@code true} if the merge is to be done on the left side, making
+	 *            'target' the right side, {@code false} otherwise.
 	 * @return The list of elements that should be ignored when computing the insertion index for a new
 	 *         element in {@code candidates}.
 	 */
-	private static <E> Iterable<E> computeIgnoredElements(Iterable<E> candidates, final Diff diff) {
+	private static <E> Iterable<E> computeIgnoredElements(Iterable<E> candidates, final Diff diff,
+			boolean rightToLeft) {
 		final Match match = diff.getMatch();
 		final Iterable<? extends Diff> filteredCandidates = Lists.newArrayList(match.getDifferences());
-		final EStructuralFeature feature;
-		if (diff instanceof AttributeChange) {
-			feature = ((AttributeChange)diff).getAttribute();
-		} else if (diff instanceof ReferenceChange) {
-			feature = ((ReferenceChange)diff).getReference();
-		} else if (diff instanceof FeatureMapChange) {
-			feature = ((FeatureMapChange)diff).getAttribute();
-		} else {
-			return Collections.emptyList();
-		}
 
 		final Set<E> ignored = Sets.newLinkedHashSet();
 		for (E candidate : candidates) {
 			if (candidate instanceof EObject) {
 				final Iterable<? extends Diff> differences = match.getComparison().getDifferences(
 						(EObject)candidate);
-				if (Iterables.any(differences, new UnresolvedDiffMatching(feature, candidate))) {
+				if (Iterables.any(differences, new UnresolvedDiffMatching(diff, candidate, rightToLeft))) {
 					ignored.add(candidate);
 				}
 			} else {
-				if (Iterables.any(filteredCandidates, new UnresolvedDiffMatching(feature, candidate))) {
+				if (Iterables.any(filteredCandidates,
+						new UnresolvedDiffMatching(diff, candidate, rightToLeft))) {
 					ignored.add(candidate);
 				}
 			}
@@ -1081,24 +1076,63 @@ public final class DiffUtil {
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private static class UnresolvedDiffMatching implements Predicate<Diff> {
-		/** Feature on which we expect an unresolved diff. */
-		private final EStructuralFeature feature;
+		/** Diff to compare against. */
+		private final Diff referenceDiff;
 
-		/** Element for which we expect an unresolved diff. */
-		private final Object element;
+		/** The value changed by {@link #referenceDiff} to compare against. */
+		private final Object referenceValue;
+
+		/** The comparison of the {@link #referenceDiff diff's} {@link Diff#getMatch() match}. */
+		private final Comparison comparison;
+
+		/** The equality helper of the {@link #referenceDiff diff's} {@link Diff#getMatch() match}. */
+		private final IEqualityHelper equalityHelper;
+
+		/** The direction of the merge. */
+		private final boolean rightToLeft;
 
 		/**
-		 * Constructs a predicate that can be used to retrieve all unresolved diffs that apply to the given
-		 * {@code feature} and {@code element}.
+		 * Constructs a predicate that can be used to retrieve all unresolved diffs that apply to the target
+		 * feature and container of the given {@code diff} and that affect the same value as the given
+		 * {@code value}.
 		 * 
-		 * @param feature
-		 *            The feature which our diffs must concern.
-		 * @param element
-		 *            The element which must be our diffs' target.
+		 * @param diff
+		 *            to compare against this diff's target feature and container.
+		 * @param value
+		 *            to compare against this value.
+		 * @param rightToLeft
+		 *            the direction of the merging, which is used to obtain the diff's target feature and
+		 *            container.
 		 */
-		public UnresolvedDiffMatching(EStructuralFeature feature, Object element) {
-			this.feature = feature;
-			this.element = element;
+		public UnresolvedDiffMatching(Diff diff, Object value, boolean rightToLeft) {
+			this.referenceDiff = diff;
+			this.referenceValue = value;
+			this.comparison = getComparison(diff);
+			this.equalityHelper = getEqualityHelper(diff);
+			this.rightToLeft = rightToLeft;
+		}
+
+		/**
+		 * Returns the {@link Comparison} of the given {@code diff} element.
+		 * 
+		 * @param diff
+		 *            the diff element to get its comparison.
+		 * @return the {@link Comparison} of {@code diff}.
+		 */
+		private static Comparison getComparison(Diff diff) {
+			return diff.getMatch().getComparison();
+		}
+
+		/**
+		 * Returns the {@link IEqualityHelper} of the given {@code diff}'s {@link #getComparison(Diff)
+		 * comparison} element.
+		 * 
+		 * @param diff
+		 *            the diff element to get its comparison's equality helper.
+		 * @return the {@link Comparison} of {@code diff}.
+		 */
+		private static IEqualityHelper getEqualityHelper(Diff diff) {
+			return getComparison(diff).getEqualityHelper();
 		}
 
 		/**
@@ -1107,80 +1141,83 @@ public final class DiffUtil {
 		 * @see com.google.common.base.Predicate#apply(java.lang.Object)
 		 */
 		public boolean apply(Diff input) {
-			boolean apply = false;
-			if (input instanceof AttributeChange) {
-				apply = input.getState() == DifferenceState.UNRESOLVED
-						&& ((AttributeChange)input).getAttribute() == feature
-						&& matchingValues((AttributeChange)input, element);
+			return isUnresolved(input) && matchesTarget(input) && matchesValue(input);
+		}
+
+		/**
+		 * Specifies whether the given {@code diff} is unresolved (i.e., has not been merged yet).
+		 * 
+		 * @param input
+		 *            diff to check.
+		 * @return <code>true</code> if it is unresolved, otherwise <code>false</code>.
+		 */
+		private boolean isUnresolved(Diff input) {
+			return input.getState() == DifferenceState.UNRESOLVED;
+		}
+
+		/**
+		 * Specifies whether the given {@code diff} matches the target container and feature of the
+		 * {@link #referenceDiff reference diff} of this predicate.
+		 * 
+		 * @param input
+		 *            diff to check.
+		 * @return <code>true</code> if it matches the target container and feature, <code>false</code>
+		 *         otherwise.
+		 */
+		private boolean matchesTarget(Diff input) {
+			return matchesTargetFeature(input) && matchesTargetContainer(input);
+		}
+
+		/**
+		 * Specifies whether the given {@code diff} matches the target feature of the {@link #referenceDiff
+		 * reference diff} of this predicate.
+		 * 
+		 * @param input
+		 *            diff to check.
+		 * @return <code>true</code> if it matches the target feature, <code>false</code> otherwise.
+		 */
+		private boolean matchesTargetFeature(Diff input) {
+			final EStructuralFeature refFeature = getTargetFeature(comparison, referenceDiff, rightToLeft);
+			final EStructuralFeature inputFeature = getTargetFeature(comparison, input, rightToLeft);
+			return refFeature == inputFeature;
+		}
+
+		/**
+		 * Specifies whether the given {@code diff} matches the target container of the {@link #referenceDiff
+		 * reference diff} of this predicate.
+		 * 
+		 * @param input
+		 *            diff to check.
+		 * @return <code>true</code> if it matches the target container, <code>false</code> otherwise.
+		 */
+		private boolean matchesTargetContainer(Diff input) {
+			final EObject refContainer = getTargetContainer(comparison, referenceDiff, rightToLeft);
+			final EObject inputContainer = getTargetContainer(comparison, input, rightToLeft);
+			return refContainer == inputContainer;
+		}
+
+		/**
+		 * Specifies whether the affected value of the given {@code diff} matches the {@link #referenceValue
+		 * reference value} of this predicate.
+		 * 
+		 * @param input
+		 *            diff to check.
+		 * @return <code>true</code> if the affected value matches the reference value, <code>false</code>
+		 *         otherwise.
+		 */
+		private boolean matchesValue(Diff input) {
+			final boolean matchesValue;
+			final Object inputValue = getChangedValue(input);
+			if (inputValue == referenceValue) {
+				matchesValue = true;
+			} else if (input instanceof AttributeChange || input instanceof FeatureMapChange) {
+				matchesValue = equalityHelper.matchingAttributeValues(inputValue, referenceValue);
 			} else if (input instanceof ReferenceChange) {
-				apply = input.getState() == DifferenceState.UNRESOLVED
-						&& ((ReferenceChange)input).getReference() == feature
-						&& matchingValues((ReferenceChange)input, element);
-			} else if (input instanceof FeatureMapChange) {
-				apply = input.getState() == DifferenceState.UNRESOLVED
-						&& ((FeatureMapChange)input).getAttribute() == feature
-						&& matchingValues((FeatureMapChange)input, element);
+				matchesValue = equalityHelper.matchingValues(inputValue, referenceValue);
 			} else {
-				apply = false;
+				matchesValue = false;
 			}
-			return apply;
-		}
-
-		/**
-		 * Checks that the value of the given diff matches <code>value</code>, resorting to the equality
-		 * helper if needed.
-		 * 
-		 * @param diff
-		 *            The diff which value we need to check.
-		 * @param value
-		 *            The expected value of <code>diff</code>
-		 * @return <code>true</code> if the value matches.
-		 */
-		private boolean matchingValues(AttributeChange diff, Object value) {
-			if (diff.getValue() == value) {
-				return true;
-			}
-			// Only resort to the equality helper as "last resort"
-			final IEqualityHelper helper = diff.getMatch().getComparison().getEqualityHelper();
-			return helper.matchingAttributeValues(diff.getValue(), value);
-		}
-
-		/**
-		 * Checks that the value of the given diff matches <code>value</code>, resorting to the equality
-		 * helper if needed.
-		 * 
-		 * @param diff
-		 *            The diff which value we need to check.
-		 * @param value
-		 *            The expected value of <code>diff</code>
-		 * @return <code>true</code> if the value matches.
-		 */
-		private boolean matchingValues(FeatureMapChange diff, Object value) {
-			if (diff.getValue() == value) {
-				return true;
-			}
-			// Only resort to the equality helper as "last resort"
-			final IEqualityHelper helper = diff.getMatch().getComparison().getEqualityHelper();
-			return helper.matchingAttributeValues(diff.getValue(), value);
-		}
-
-		/**
-		 * Checks that the value of the given diff matches <code>value</code>, resorting to the equality
-		 * helper if needed.
-		 * 
-		 * @param diff
-		 *            The diff which value we need to check.
-		 * @param value
-		 *            The expected value of <code>diff</code>
-		 * @return <code>true</code> if the value matches.
-		 */
-		private boolean matchingValues(ReferenceChange diff, Object value) {
-			if (diff.getValue() == value) {
-				return true;
-			}
-			// Only resort to the equality helper as "last resort"
-			final IEqualityHelper helper = diff.getMatch().getComparison().getEqualityHelper();
-			return helper.matchingValues(diff.getValue(), value);
+			return matchesValue;
 		}
 	}
 }

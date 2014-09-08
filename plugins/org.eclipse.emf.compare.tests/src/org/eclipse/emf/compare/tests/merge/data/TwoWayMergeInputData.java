@@ -64,4 +64,12 @@ public class TwoWayMergeInputData extends AbstractInputData {
 	public Resource getMoveToNewContainerInADifferentOrderR2LRight() throws IOException {
 		return loadFromClassLoader("twoway/movetonewcontainerinadifferentorder/rtl/right.nodes");
 	}
+
+	public Resource getManyToManyReferenceChangesR2LLeft() throws IOException {
+		return loadFromClassLoader("twoway/manytomanyreferencechanges/rtl/left.nodes");
+	}
+
+	public Resource getManyToManyReferenceChangesR2LRight() throws IOException {
+		return loadFromClassLoader("twoway/manytomanyreferencechanges/rtl/right.nodes");
+	}
 }
