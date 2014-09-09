@@ -11,6 +11,10 @@
 package org.eclipse.emf.compare.provider.spec;
 
 import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Iterables.size;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
+
+import com.google.common.collect.Iterables;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Conflict;
@@ -60,11 +64,23 @@ public class ConflictItemProviderSpec extends ConflictItemProvider implements II
 	 */
 	@Override
 	public Object getImage(Object object) {
-		if (((Conflict)object).getKind() == ConflictKind.PSEUDO) {
-			return overlayImage(object, getResourceLocator().getImage("full/obj16/PseudoConflict")); //$NON-NLS-1$
+		final Object image;
+		Conflict conflict = (Conflict)object;
+		if (conflict.getKind() == ConflictKind.PSEUDO) {
+			if (any(conflict.getDifferences(), EMFComparePredicates.hasState(DifferenceState.UNRESOLVED))) {
+				image = overlayImage(object, getResourceLocator().getImage("full/obj16/PseudoConflict")); //$NON-NLS-1$
+			} else {
+				image = overlayImage(object, getResourceLocator().getImage(
+						"full/obj16/PseudoConflictResolved")); //$NON-NLS-1$
+			}
 		} else {
-			return overlayImage(object, getResourceLocator().getImage("full/obj16/Conflict")); //$NON-NLS-1$
+			if (any(conflict.getDifferences(), EMFComparePredicates.hasState(DifferenceState.UNRESOLVED))) {
+				image = overlayImage(object, getResourceLocator().getImage("full/obj16/Conflict")); //$NON-NLS-1$
+			} else {
+				image = overlayImage(object, getResourceLocator().getImage("full/obj16/ConflictResolved")); //$NON-NLS-1$
+			}
 		}
+		return image;
 	}
 
 	/**
@@ -76,14 +92,23 @@ public class ConflictItemProviderSpec extends ConflictItemProvider implements II
 		Conflict conflict = (Conflict)object;
 		ComposedStyledString ret = new ComposedStyledString();
 
-		if (any(conflict.getDifferences(), EMFComparePredicates.hasState(DifferenceState.UNRESOLVED))) {
+		int unresolvedDiffCount = size(Iterables.filter(conflict.getDifferences(),
+				hasState(DifferenceState.UNRESOLVED)));
+		if (unresolvedDiffCount > 0) {
 			ret.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 		}
 
 		if (conflict.getKind() == ConflictKind.PSEUDO) {
 			ret.append(EMFCompareEditMessages.getString("pseudoconflict")); //$NON-NLS-1$
 		} else {
-			ret.append(EMFCompareEditMessages.getString("conflict")); //$NON-NLS-1$ 
+			ret.append(EMFCompareEditMessages.getString("conflict")); //$NON-NLS-1$
+		}
+
+		if (unresolvedDiffCount > 0) {
+			ret.append(
+					" ["	+ EMFCompareEditMessages.getString("unresolved", unresolvedDiffCount, conflict.getDifferences().size()) + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		} else {
+			ret.append(" [" + EMFCompareEditMessages.getString("resolved") + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		return ret;
