@@ -1,0 +1,71 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_jRtbsGrtEeK_JdLra2Bk5A
+Element-Name: ts007_tc006_merge_from_contextual_menu
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _ChSK8Tj8EeSNdsot8z1bfw
+Q7-Runtime-Version: 1.3.10.201312200736
+Save-Time: 9/10/14 5:33 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate that a contextual menu offers to merge a diff  from left to right or right to left.
+
+TEST STEPS
+	1) Select the 2 ecore models and run a 2-way comparison (select extlibraryLeft.ecore and extLibraryRight.ecore) 
+	2) Select a diff, right click and merge
+	//asserts that menu is available
+    //asserts the diff is merged after click
+	3) Select a match
+	//asserts the menu isn't available
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Package Explorer" | get-tree] {
+    select "Library/extlibraryLeft.ecore" "Library/extlibraryRight.ecore"
+    get-menu "Compare With/Each Other" | click
+}
+get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" | get-tree 
+    | select "> extlibrary/> Book -> CirculatingItem/TitledItem \\[eSuperTypes delete\\]" 
+    | get-menu "Copy Current Change From Left To Right" | click
+
+with [get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" | get-tree] {
+    get-item "> extlibrary/> Book -> CirculatingItem/TitledItem \\[eSuperTypes delete\\]" 
+        | get-property "image.decorations[0].path" 
+        | equals "org.eclipse.emf.compare.edit/icons/full/ovr16/merged_right_ov.gif" | verify-true
+    get-item "> extlibrary/> Book -> CirculatingItem/TitledItem \\[eSuperTypes delete\\]" 
+        | get-property "getData().getTarget().getData().getState().getName()" | equals MERGED | verify-true
+}
+
+get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" | get-tree
+    | select "> extlibrary/> Book -> CirculatingItem/title : EString \\[eStructuralFeatures add\\]" 
+    | get-menu "Copy Current Change From Right To Left" | click
+
+
+with [get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" | get-tree] {
+    get-item "> extlibrary/> Book -> CirculatingItem/title \\[eStructuralFeatures add\\]" 
+        | get-property "image.decorations[0].path" 
+        | equals "org.eclipse.emf.compare.edit/icons/full/ovr16/merged_left_ov.gif" | verify-true
+    get-item "> extlibrary/> Book -> CirculatingItem/title \\[eStructuralFeatures add\\]" 
+        | get-property "getData().getTarget().getData().getState().getName()" | equals MERGED | verify-true
+}
+
+get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" | get-tree 
+    | select "> extlibrary"
+    | verify-error {get-menu "Copy Current Change From Right To Left"}
+    
+get-editor "Compare (\'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')" | get-tree 
+    | select "> extlibrary/> Book -> CirculatingItem"
+    | verify-error {get-menu "Copy Current Change From Right To Left"}
+    
+
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

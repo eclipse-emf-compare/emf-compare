@@ -102,6 +102,13 @@ public class MergeAction extends BaseSelectionListenerAction {
 		initToolTipAndImage(mode);
 	}
 
+	public MergeAction(ICompareEditingDomain editingDomain, IMerger.Registry mergerRegistry, MergeMode mode,
+			boolean isLeftEditable, boolean isRightEditable, INavigatable navigatable,
+			IStructuredSelection selection) {
+		this(editingDomain, mergerRegistry, mode, isLeftEditable, isRightEditable, navigatable);
+		updateSelection(selection);
+	}
+
 	protected IMergeRunnable createMergeRunnable(MergeMode mode, boolean isLeftEditable,
 			boolean isRightEditable) {
 		return new MergeRunnableImpl(isLeftEditable, isRightEditable, mode);
@@ -110,21 +117,25 @@ public class MergeAction extends BaseSelectionListenerAction {
 	protected void initToolTipAndImage(MergeMode mode) {
 		switch (mode) {
 			case LEFT_TO_RIGHT:
+				setText(EMFCompareIDEUIMessages.getString("merged.to.right.tooltip")); //$NON-NLS-1$
 				setToolTipText(EMFCompareIDEUIMessages.getString("merged.to.right.tooltip")); //$NON-NLS-1$
 				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
 						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/merge_to_right.gif")); //$NON-NLS-1$
 				break;
 			case RIGHT_TO_LEFT:
+				setText(EMFCompareIDEUIMessages.getString("merged.to.left.tooltip")); //$NON-NLS-1$
 				setToolTipText(EMFCompareIDEUIMessages.getString("merged.to.left.tooltip")); //$NON-NLS-1$
 				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
 						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/merge_to_left.gif")); //$NON-NLS-1$
 				break;
 			case ACCEPT:
+				setText(EMFCompareIDEUIMessages.getString("accept.change.tooltip")); //$NON-NLS-1$
 				setToolTipText(EMFCompareIDEUIMessages.getString("accept.change.tooltip")); //$NON-NLS-1$
 				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
 						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/accept_change.gif")); //$NON-NLS-1$
 				break;
 			case REJECT:
+				setText(EMFCompareIDEUIMessages.getString("reject.change.tooltip")); //$NON-NLS-1$
 				setToolTipText(EMFCompareIDEUIMessages.getString("reject.change.tooltip")); //$NON-NLS-1$
 				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
 						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/reject_change.gif")); //$NON-NLS-1$
