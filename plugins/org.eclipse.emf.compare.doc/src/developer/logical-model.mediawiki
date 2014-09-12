@@ -8,7 +8,7 @@ We name "logical model" a set of '''physical resources''' that form a coherent b
 
 In the case of EMF, we name a ''logical resource'' (or ''model'') the EMF resource loaded in memory, as opposed to a ''physical resource'' (or ''file'') that is merely the serialization of this model on disk. A given EMF model can reference a number of other models, and it will be incoherent, or even sometimes corrupted, if these other models are not loaded in memory. In EMF, a given model can be serialized as a single file, ''fragmented'' in multiple files on disk, or ''reference'' multiple files. The logical model is only coherent when the whole set of its physical files is accessible.
 
-If we take it in reverse, a logical model is a set of elements that reference each other :
+If we take it in reverse, a logical model is a set of elements that reference each other:
 
 {|
 |- 
@@ -17,7 +17,7 @@ If we take it in reverse, a logical model is a set of elements that reference ea
 | align="center" | A Logical Model is a set of inter-related elements.
 |}
 
-When these elements are serialized on disk, they may be split across multiple files, as long as the references between these files can be resolved :
+When these elements are serialized on disk, they may be split across multiple files, as long as the references between these files can be resolved:
 
 {|
 |- 
@@ -29,7 +29,7 @@ When these elements are serialized on disk, they may be split across multiple fi
 
 === Eclipse Team ===
 
-The Eclipse Team project (referred as "Team" in this document) provides an API named "model providers". This API allows implementers to define the semantics of what is a "logical model" in his case. In short, it allows us to link any number of physical resources to a given "starting" file.
+The Eclipse Team project (referred as "Team" in this document) provides an API named "model providers". This API allows implementers to define the semantics of what is a "logical model" in their case. In short, it allows us to link any number of physical resources to a given "starting" file.
 
 Technically, this is done through an extension point that can be implemented by anyone and that will adapt a file (a workspace ''IResource'') to a set of files (a Team ''ResourceTraversal''). The model providers can be queried by anyone who calls actions on workspace files in order to determine if this action can be done against a single file or if it should be executed against a set of files.
 
@@ -48,7 +48,7 @@ In the case of EMF Compare, the above limitations were a show-stopper. EMF model
 
 EMF Compare now uses its own implementation aiming at this same goal, that we named ''synchronization model''. In short, instead of expecting the repository providers to query the model providers, EMF Compare will take the file (or set of files) that it is fed and expand it to the full logical model by querying the synchronization model.
 
-This custom implementation also allows us to not only resolve the whole logical model of a given physical file, but also to determine which '''parts''' of this model should be included in the comparison scope. Indeed, under the semantics of EMF, if we can determine that two physical files are binary identical in their two distinct revisions, then we also know that the part of the logical model they represent are identical themselves. There would be no need to compare them. This allows us to save both time and memory, killing two birds with one stone.
+This custom implementation also allows us to not only resolve the whole logical model of a given physical file, but also to determine which '''parts''' of this model should be included in the comparison scope. Indeed, under the semantics of EMF, if we can determine that two physical files are binary identical in their two distinct revisions, then we also know that the parts of the logical model they represent are identical themselves. There would be no need to compare them. This allows us to save both time and memory, killing two birds with one stone.
 
 === How it works ===
 
@@ -62,7 +62,7 @@ Once the full logical model is resolved, EMF Compare can properly do the compari
 
 However, even if we can launch EMF Compare at this point, the synchronization model also offers us one more possibility. EMF models can span thousands of physical files sometimes amounting to such a huge number of elements that it would not fit into the machine's memory if we tried to load it as a whole. The synchronization model knows how to retrieve the content of all of these files; it can also be used to ''minimize'' the set to only those which really did change. Indeed, we consider that files that are binary identical wield yield fragments of the logical model that will also be strictly identical. By removing these "identical" fragments, we can drastically limit the size of the logical model we'll load into memory, compacting it to a size that will fit before we launch the comparison on the remaining fragments.
 
-In other words, the synchronization model allows us to compare models with a time and memory cost that is relative to the size of the actual changeset instead of having it depend on the input models size.
+In other words, the synchronization model allows us to compare models with a time and memory cost that is relative to the size of the actual changeset instead of having it depend on the input models' size.
 
 ==== Example ====
 
