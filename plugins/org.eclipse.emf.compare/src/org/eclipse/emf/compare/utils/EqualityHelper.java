@@ -273,7 +273,7 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 		boolean equal = true;
 		final int length1 = Array.getLength(object1);
 		if (length1 != Array.getLength(object2)) {
-			equal = true;
+			equal = false;
 		} else {
 			for (int i = 0; i < length1 && equal; i++) {
 				final Object element1 = Array.get(object1, i);

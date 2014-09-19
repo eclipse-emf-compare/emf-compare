@@ -47,6 +47,7 @@ import org.eclipse.emf.compare.tests.postprocess.PostProcessorTest;
 import org.eclipse.emf.compare.tests.rcp.AllRCPTests;
 import org.eclipse.emf.compare.tests.req.ReqComputingTest;
 import org.eclipse.emf.compare.tests.scope.DefaultComparisonScopeTest;
+import org.eclipse.emf.compare.tests.utils.EqualityHelperTest;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.BeforeClass;
@@ -69,7 +70,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		AllEditTests.class, CommandStackTestSuite.class, MatchEngineFactoryRegistryTest.class,
 		ConflictMergeTest.class, PseudoConflictMergeTest.class, ProximityIndexTest.class, AllRCPTests.class,
 		FeatureMaps2wayMergeTest.class, FeatureMaps3wayMergeTest.class, FeatureMapsConflictsMergeTest.class,
-		FeatureMapsPseudoConflictsMergeTest.class, TwoWayBatchMergingTest.class })
+		FeatureMapsPseudoConflictsMergeTest.class, TwoWayBatchMergingTest.class, EqualityHelperTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
