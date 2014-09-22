@@ -338,8 +338,10 @@ public final class ComparisonUtil {
 						// if the diff is a Move diff, we don't want its children.
 						if (ofKind(DifferenceKind.MOVE).apply(diff)) {
 							subDiffs = ImmutableList.of();
-						} else {
+						} else if (matchOfValue != null) {
 							subDiffs = filter(matchOfValue.getAllDifferences(), CASCADING_DIFF);
+						} else {
+							subDiffs = ImmutableList.of();
 						}
 						addAll(processedDiffs, subDiffs);
 						final Iterable<Diff> associatedDiffs = getAssociatedDiffs(diff, subDiffs,
