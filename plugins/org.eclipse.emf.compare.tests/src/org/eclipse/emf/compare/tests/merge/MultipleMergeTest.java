@@ -19,6 +19,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.moved;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -39,11 +40,13 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.conflict.data.ConflictInputData;
 import org.eclipse.emf.compare.tests.equi.data.EquiInputData;
+import org.eclipse.emf.compare.tests.fullcomparison.data.identifier.IdentifierMatchInputData;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -1010,6 +1013,28 @@ public class MultipleMergeTest {
 
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertSame(Integer.valueOf(0), Integer.valueOf(comparison.getDifferences().size()));
+	}
+
+	@Test
+	public void testMergeAllDiffsTwice() throws IOException {
+		final IdentifierMatchInputData inputData = new IdentifierMatchInputData();
+		final Resource left = inputData.getExtlibraryLeft();
+		final Resource origin = inputData.getExtlibraryOrigin();
+		final Resource right = inputData.getExtlibraryRight();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final List<Diff> differences = comparison.getDifferences();
+
+		assertFalse(differences.isEmpty());
+
+		// Just test no NPE is raising
+		for (Diff diff : differences) {
+			ComparisonUtil.getSubDiffs(true).apply(diff);
+			mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+			ComparisonUtil.getSubDiffs(true).apply(diff);
+			mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		}
 	}
 
 	/**
