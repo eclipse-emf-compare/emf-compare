@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2011, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,8 +30,6 @@ import org.eclipse.emf.ecore.EReference;
  * @model kind="package"
  * @generated
  */
-//Generated code, suppressing all warnings
-@SuppressWarnings("all")
 public interface NodesPackage extends EPackage {
 	/**
 	 * <!-- begin-user-doc -->
@@ -402,7 +400,6 @@ public interface NodesPackage extends EPackage {
 	 */
 	int NODE_MULTI_VALUE_REFERENCE_FEATURE_COUNT = NODE_FEATURE_COUNT + 1;
 
-
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefOneToOneImpl <em>Node Opposite Ref One To One</em>}' class.
 	 * <!-- begin-user-doc -->
@@ -695,6 +692,71 @@ public interface NodesPackage extends EPackage {
 	 * @ordered
 	 */
 	int NODE_FEATURE_MAP_NON_CONTAINMENT_FEATURE_COUNT = NODE_FEATURE_COUNT + 3;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeFeatureMapContainment2Impl <em>Node Feature Map Containment2</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodeFeatureMapContainment2Impl
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeFeatureMapContainment2()
+	 * @generated
+	 */
+	int NODE_FEATURE_MAP_CONTAINMENT2 = 12;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_FEATURE_MAP_CONTAINMENT2__NAME = NODE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Containment Ref1</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_FEATURE_MAP_CONTAINMENT2__CONTAINMENT_REF1 = NODE__CONTAINMENT_REF1;
+
+	/**
+	 * The feature id for the '<em><b>Map2</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_FEATURE_MAP_CONTAINMENT2__MAP2 = NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Multiple</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_FEATURE_MAP_CONTAINMENT2__MULTIPLE = NODE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Single</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_FEATURE_MAP_CONTAINMENT2__SINGLE = NODE_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Node Feature Map Containment2</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_FEATURE_MAP_CONTAINMENT2_FEATURE_COUNT = NODE_FEATURE_COUNT + 3;
+
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.tests.nodes.Node <em>Node</em>}'.
@@ -1048,6 +1110,49 @@ public interface NodesPackage extends EPackage {
 	EReference getNodeFeatureMapNonContainment_SecondKeyNC();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2 <em>Node Feature Map Containment2</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Node Feature Map Containment2</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2
+	 * @generated
+	 */
+	EClass getNodeFeatureMapContainment2();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2#getMap2 <em>Map2</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Map2</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2#getMap2()
+	 * @see #getNodeFeatureMapContainment2()
+	 * @generated
+	 */
+	EAttribute getNodeFeatureMapContainment2_Map2();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2#getMultiple <em>Multiple</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Multiple</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2#getMultiple()
+	 * @see #getNodeFeatureMapContainment2()
+	 * @generated
+	 */
+	EReference getNodeFeatureMapContainment2_Multiple();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2#getSingle <em>Single</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Single</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2#getSingle()
+	 * @see #getNodeFeatureMapContainment2()
+	 * @generated
+	 */
+	EReference getNodeFeatureMapContainment2_Single();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1356,6 +1461,40 @@ public interface NodesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference NODE_FEATURE_MAP_NON_CONTAINMENT__SECOND_KEY_NC = eINSTANCE.getNodeFeatureMapNonContainment_SecondKeyNC();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeFeatureMapContainment2Impl <em>Node Feature Map Containment2</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodeFeatureMapContainment2Impl
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeFeatureMapContainment2()
+		 * @generated
+		 */
+		EClass NODE_FEATURE_MAP_CONTAINMENT2 = eINSTANCE.getNodeFeatureMapContainment2();
+
+		/**
+		 * The meta object literal for the '<em><b>Map2</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NODE_FEATURE_MAP_CONTAINMENT2__MAP2 = eINSTANCE.getNodeFeatureMapContainment2_Map2();
+
+		/**
+		 * The meta object literal for the '<em><b>Multiple</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NODE_FEATURE_MAP_CONTAINMENT2__MULTIPLE = eINSTANCE.getNodeFeatureMapContainment2_Multiple();
+
+		/**
+		 * The meta object literal for the '<em><b>Single</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NODE_FEATURE_MAP_CONTAINMENT2__SINGLE = eINSTANCE.getNodeFeatureMapContainment2_Single();
 
 	}
 

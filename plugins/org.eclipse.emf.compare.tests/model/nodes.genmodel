@@ -53,5 +53,10 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeFeatureMapNonContainment/firstKeyNC"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeFeatureMapNonContainment/secondKeyNC"/>
     </genClasses>
+    <genClasses ecoreClass="nodes.ecore#//NodeFeatureMapContainment2">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute nodes.ecore#//NodeFeatureMapContainment2/map2"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeFeatureMapContainment2/multiple"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeFeatureMapContainment2/single"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

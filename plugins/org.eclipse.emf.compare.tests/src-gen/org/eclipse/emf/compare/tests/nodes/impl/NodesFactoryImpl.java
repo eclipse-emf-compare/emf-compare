@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2011, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,24 +10,14 @@
  */
 package org.eclipse.emf.compare.tests.nodes.impl;
 
-import org.eclipse.emf.compare.tests.nodes.Node;
-import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment;
-import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapNonContainment;
-import org.eclipse.emf.compare.tests.nodes.NodeMultiValueReference;
-import org.eclipse.emf.compare.tests.nodes.NodeMultiValuedAttribute;
-import org.eclipse.emf.compare.tests.nodes.NodeMultipleContainment;
-import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany;
-import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany;
-import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToOne;
-import org.eclipse.emf.compare.tests.nodes.NodeSingleValueAttribute;
-import org.eclipse.emf.compare.tests.nodes.NodeSingleValueContainment;
-import org.eclipse.emf.compare.tests.nodes.NodeSingleValueReference;
-import org.eclipse.emf.compare.tests.nodes.NodesFactory;
-import org.eclipse.emf.compare.tests.nodes.NodesPackage;
+import org.eclipse.emf.compare.tests.nodes.*;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
@@ -93,6 +83,7 @@ public class NodesFactoryImpl extends EFactoryImpl implements NodesFactory {
 			case NodesPackage.NODE_OPPOSITE_REF_MANY_TO_MANY: return createNodeOppositeRefManyToMany();
 			case NodesPackage.NODE_FEATURE_MAP_CONTAINMENT: return createNodeFeatureMapContainment();
 			case NodesPackage.NODE_FEATURE_MAP_NON_CONTAINMENT: return createNodeFeatureMapNonContainment();
+			case NodesPackage.NODE_FEATURE_MAP_CONTAINMENT2: return createNodeFeatureMapContainment2();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -216,6 +207,16 @@ public class NodesFactoryImpl extends EFactoryImpl implements NodesFactory {
 	public NodeFeatureMapNonContainment createNodeFeatureMapNonContainment() {
 		NodeFeatureMapNonContainmentImpl nodeFeatureMapNonContainment = new NodeFeatureMapNonContainmentImpl();
 		return nodeFeatureMapNonContainment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NodeFeatureMapContainment2 createNodeFeatureMapContainment2() {
+		NodeFeatureMapContainment2Impl nodeFeatureMapContainment2 = new NodeFeatureMapContainment2Impl();
+		return nodeFeatureMapContainment2;
 	}
 
 	/**

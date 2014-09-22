@@ -129,12 +129,12 @@ public class FeatureFilter {
 		final String featureName = reference.getName();
 		if (match.getRight() != null) {
 			final EStructuralFeature rightRef = match.getRight().eClass().getEStructuralFeature(featureName);
-			isSet = match.getRight().eIsSet(rightRef);
+			isSet = rightRef != null && match.getRight().eIsSet(rightRef);
 		}
 		if (!isSet && match.getOrigin() != null) {
 			final EStructuralFeature originRef = match.getOrigin().eClass()
 					.getEStructuralFeature(featureName);
-			isSet = match.getOrigin().eIsSet(originRef);
+			isSet = originRef != null && match.getOrigin().eIsSet(originRef);
 		}
 		return isSet;
 	}

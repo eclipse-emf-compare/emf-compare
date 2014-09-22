@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2011, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,19 +12,8 @@ package org.eclipse.emf.compare.tests.nodes.util;
 
 import java.util.List;
 
-import org.eclipse.emf.compare.tests.nodes.Node;
-import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment;
-import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapNonContainment;
-import org.eclipse.emf.compare.tests.nodes.NodeMultiValueReference;
-import org.eclipse.emf.compare.tests.nodes.NodeMultiValuedAttribute;
-import org.eclipse.emf.compare.tests.nodes.NodeMultipleContainment;
-import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany;
-import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany;
-import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToOne;
-import org.eclipse.emf.compare.tests.nodes.NodeSingleValueAttribute;
-import org.eclipse.emf.compare.tests.nodes.NodeSingleValueContainment;
-import org.eclipse.emf.compare.tests.nodes.NodeSingleValueReference;
-import org.eclipse.emf.compare.tests.nodes.NodesPackage;
+import org.eclipse.emf.compare.tests.nodes.*;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
@@ -41,8 +30,6 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.emf.compare.tests.nodes.NodesPackage
  * @generated
  */
-//Generated code, suppressing all warnings
-@SuppressWarnings("all")
 public class NodesSwitch<T> {
 	/**
 	 * <!-- begin-user-doc -->
@@ -191,6 +178,13 @@ public class NodesSwitch<T> {
 				NodeFeatureMapNonContainment nodeFeatureMapNonContainment = (NodeFeatureMapNonContainment)theEObject;
 				T result = caseNodeFeatureMapNonContainment(nodeFeatureMapNonContainment);
 				if (result == null) result = caseNode(nodeFeatureMapNonContainment);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case NodesPackage.NODE_FEATURE_MAP_CONTAINMENT2: {
+				NodeFeatureMapContainment2 nodeFeatureMapContainment2 = (NodeFeatureMapContainment2)theEObject;
+				T result = caseNodeFeatureMapContainment2(nodeFeatureMapContainment2);
+				if (result == null) result = caseNode(nodeFeatureMapContainment2);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -375,6 +369,21 @@ public class NodesSwitch<T> {
 	 * @generated
 	 */
 	public T caseNodeFeatureMapNonContainment(NodeFeatureMapNonContainment object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Node Feature Map Containment2</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Node Feature Map Containment2</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNodeFeatureMapContainment2(NodeFeatureMapContainment2 object) {
 		return null;
 	}
 

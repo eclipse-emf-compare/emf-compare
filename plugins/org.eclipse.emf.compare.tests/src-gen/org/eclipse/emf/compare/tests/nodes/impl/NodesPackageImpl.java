@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2011, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.tests.nodes.impl;
 
 import org.eclipse.emf.compare.tests.nodes.Node;
 import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment;
+import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2;
 import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapNonContainment;
 import org.eclipse.emf.compare.tests.nodes.NodeMultiValueReference;
 import org.eclipse.emf.compare.tests.nodes.NodeMultiValuedAttribute;
@@ -24,79 +25,94 @@ import org.eclipse.emf.compare.tests.nodes.NodeSingleValueContainment;
 import org.eclipse.emf.compare.tests.nodes.NodeSingleValueReference;
 import org.eclipse.emf.compare.tests.nodes.NodesFactory;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
+ * <!-- begin-user-doc -->
+ * An implementation of the model <b>Package</b>.
+ * <!-- end-user-doc -->
  * @generated
  */
 public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public static final String copyright = "Copyright (c) 2011, 2012 Obeo.\r\nAll rights reserved. This program and the accompanying materials\r\nare made available under the terms of the Eclipse Public License v1.0\r\nwhich accompanies this distribution, and is available at\r\nhttp://www.eclipse.org/legal/epl-v10.html\r\n\r\nContributors:\r\n    Obeo - initial API and implementation"; //$NON-NLS-1$
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass nodeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass nodeMultipleContainmentEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass nodeSingleValueContainmentEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass nodeSingleValueAttributeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass nodeMultiValuedAttributeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass nodeSingleValueReferenceEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass nodeMultiValueReferenceEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass nodeOppositeRefOneToOneEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass nodeOppositeRefOneToManyEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass nodeOppositeRefManyToManyEClass = null;
@@ -116,6 +132,13 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	private EClass nodeFeatureMapNonContainmentEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass nodeFeatureMapContainment2EClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -123,7 +146,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	 * factory method {@link #init init()}, which also performs
 	 * initialization of the package, or returns the registered package,
 	 * if one already exists.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.emf.compare.tests.nodes.NodesPackage#eNS_URI
 	 * @see #init()
@@ -134,7 +158,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private static boolean isInited = false;
@@ -144,7 +169,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	 * 
 	 * <p>This method is used to initialize {@link NodesPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #eNS_URI
 	 * @see #createPackageContents()
 	 * @see #initializePackageContents()
@@ -174,7 +200,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getNode() {
@@ -182,7 +209,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getNode_Name() {
@@ -190,7 +218,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getNode_ContainmentRef1() {
@@ -198,7 +227,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getNodeMultipleContainment() {
@@ -206,7 +236,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getNodeMultipleContainment_ContainmentRef2() {
@@ -214,7 +245,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getNodeMultipleContainment_ContainmentRef3() {
@@ -222,7 +254,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getNodeSingleValueContainment() {
@@ -230,7 +263,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getNodeSingleValueContainment_SingleValueContainment() {
@@ -238,7 +272,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getNodeSingleValueAttribute() {
@@ -246,7 +281,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getNodeSingleValueAttribute_SingleValuedAttribute() {
@@ -254,7 +290,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getNodeMultiValuedAttribute() {
@@ -262,7 +299,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getNodeMultiValuedAttribute_MultiValuedAttribute() {
@@ -270,7 +308,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getNodeSingleValueReference() {
@@ -278,7 +317,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getNodeSingleValueReference_SingleValuedReference() {
@@ -286,7 +326,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getNodeMultiValueReference() {
@@ -294,7 +335,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getNodeMultiValueReference_MultiValuedReference() {
@@ -302,7 +344,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getNodeOppositeRefOneToOne() {
@@ -310,7 +353,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getNodeOppositeRefOneToOne_Source() {
@@ -318,7 +362,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getNodeOppositeRefOneToOne_Destination() {
@@ -326,7 +371,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getNodeOppositeRefOneToMany() {
@@ -334,7 +380,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getNodeOppositeRefOneToMany_Source() {
@@ -342,7 +389,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getNodeOppositeRefOneToMany_Destination() {
@@ -350,7 +398,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getNodeOppositeRefManyToMany() {
@@ -358,7 +407,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getNodeOppositeRefManyToMany_Source() {
@@ -366,7 +416,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getNodeOppositeRefManyToMany_Destination() {
@@ -446,7 +497,44 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getNodeFeatureMapContainment2() {
+		return nodeFeatureMapContainment2EClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getNodeFeatureMapContainment2_Map2() {
+		return (EAttribute)nodeFeatureMapContainment2EClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getNodeFeatureMapContainment2_Multiple() {
+		return (EReference)nodeFeatureMapContainment2EClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getNodeFeatureMapContainment2_Single() {
+		return (EReference)nodeFeatureMapContainment2EClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public NodesFactory getNodesFactory() {
@@ -454,7 +542,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private boolean isCreated = false;
@@ -462,7 +551,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	/**
 	 * Creates the meta-model objects for the package.  This method is
 	 * guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void createPackageContents() {
@@ -514,10 +604,16 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 		createEAttribute(nodeFeatureMapNonContainmentEClass, NODE_FEATURE_MAP_NON_CONTAINMENT__MAP_NC);
 		createEReference(nodeFeatureMapNonContainmentEClass, NODE_FEATURE_MAP_NON_CONTAINMENT__FIRST_KEY_NC);
 		createEReference(nodeFeatureMapNonContainmentEClass, NODE_FEATURE_MAP_NON_CONTAINMENT__SECOND_KEY_NC);
+
+		nodeFeatureMapContainment2EClass = createEClass(NODE_FEATURE_MAP_CONTAINMENT2);
+		createEAttribute(nodeFeatureMapContainment2EClass, NODE_FEATURE_MAP_CONTAINMENT2__MAP2);
+		createEReference(nodeFeatureMapContainment2EClass, NODE_FEATURE_MAP_CONTAINMENT2__MULTIPLE);
+		createEReference(nodeFeatureMapContainment2EClass, NODE_FEATURE_MAP_CONTAINMENT2__SINGLE);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private boolean isInitialized = false;
@@ -525,7 +621,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	/**
 	 * Complete the initialization of the package and its meta-model.  This
 	 * method is guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void initializePackageContents() {
@@ -553,6 +650,7 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 		nodeOppositeRefManyToManyEClass.getESuperTypes().add(this.getNode());
 		nodeFeatureMapContainmentEClass.getESuperTypes().add(this.getNode());
 		nodeFeatureMapNonContainmentEClass.getESuperTypes().add(this.getNode());
+		nodeFeatureMapContainment2EClass.getESuperTypes().add(this.getNode());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(nodeEClass, Node.class, "Node", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -599,6 +697,11 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 		initEAttribute(getNodeFeatureMapNonContainment_MapNC(), ecorePackage.getEFeatureMapEntry(), "mapNC", null, 0, -1, NodeFeatureMapNonContainment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getNodeFeatureMapNonContainment_FirstKeyNC(), this.getNode(), null, "firstKeyNC", null, 0, -1, NodeFeatureMapNonContainment.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getNodeFeatureMapNonContainment_SecondKeyNC(), this.getNode(), null, "secondKeyNC", null, 0, -1, NodeFeatureMapNonContainment.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(nodeFeatureMapContainment2EClass, NodeFeatureMapContainment2.class, "NodeFeatureMapContainment2", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getNodeFeatureMapContainment2_Map2(), ecorePackage.getEFeatureMapEntry(), "map2", null, 0, -1, NodeFeatureMapContainment2.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getNodeFeatureMapContainment2_Multiple(), this.getNodeMultipleContainment(), null, "multiple", null, 0, -1, NodeFeatureMapContainment2.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getNodeFeatureMapContainment2_Single(), this.getNodeSingleValueContainment(), null, "single", null, 0, -1, NodeFeatureMapContainment2.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);
@@ -651,7 +754,25 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 		   source, 
 		   new String[] {
 			 "group", "#mapNC" //$NON-NLS-1$ //$NON-NLS-2$
+		   });		
+		addAnnotation
+		  (getNodeFeatureMapContainment2_Map2(), 
+		   source, 
+		   new String[] {
+			 "kind", "group" //$NON-NLS-1$ //$NON-NLS-2$
+		   });		
+		addAnnotation
+		  (getNodeFeatureMapContainment2_Multiple(), 
+		   source, 
+		   new String[] {
+			 "group", "#map2" //$NON-NLS-1$ //$NON-NLS-2$
+		   });		
+		addAnnotation
+		  (getNodeFeatureMapContainment2_Single(), 
+		   source, 
+		   new String[] {
+			 "group", "#map2" //$NON-NLS-1$ //$NON-NLS-2$
 		   });
 	}
 
-} // NodesPackageImpl
+} //NodesPackageImpl

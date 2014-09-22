@@ -342,6 +342,9 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			EStructuralFeature eStructuralFeature, final List<? extends IMergeViewerItem> values,
 			List<? extends Diff> differences) {
 		final List<IMergeViewerItem> ret = newArrayList(values);
+		if (differences.isEmpty()) {
+			return ret;
+		}
 		final List<Object> sideContent = ReferenceUtil.getAsList((EObject)getSideValue(getSide()),
 				eStructuralFeature);
 		final List<Object> oppositeContent = ReferenceUtil.getAsList((EObject)getSideValue(getSide()
@@ -660,9 +663,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			if (getSide() != MergeViewerSide.ANCESTOR) {
 				List<? extends Diff> differencesOnFeature = ImmutableList.copyOf(filter(differences,
 						onFeature(reference.getName())));
-				ret.addAll(createInsertionPoints(getComparison(), reference, mergeViewerItem, filteredDiffs(
-						differencesOnFeature, predicate, group)));
-
+				List<? extends Diff> filteredDiffs = filteredDiffs(differencesOnFeature, predicate, group);
+				ret.addAll(createInsertionPoints(getComparison(), reference, mergeViewerItem, filteredDiffs));
 			} else {
 				ret.addAll(mergeViewerItem);
 			}
@@ -703,8 +705,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 					differencesOnFeature.addAll(ImmutableList.copyOf(filter(differences,
 							onFeature(derivedFeature.getName()))));
 				}
-				ret.addAll(createInsertionPoints(getComparison(), featureMap, mergeViewerItem, filteredDiffs(
-						differencesOnFeature, predicate, group)));
+				List<? extends Diff> filteredDiffs = filteredDiffs(differencesOnFeature, predicate, group);
+				ret.addAll(createInsertionPoints(getComparison(), featureMap, mergeViewerItem, filteredDiffs));
 			} else {
 				ret.addAll(mergeViewerItem);
 			}

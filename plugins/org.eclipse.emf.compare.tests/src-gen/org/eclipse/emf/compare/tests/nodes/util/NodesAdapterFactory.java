@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2011, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,20 +12,11 @@ package org.eclipse.emf.compare.tests.nodes.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
+
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-import org.eclipse.emf.compare.tests.nodes.Node;
-import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment;
-import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapNonContainment;
-import org.eclipse.emf.compare.tests.nodes.NodeMultiValueReference;
-import org.eclipse.emf.compare.tests.nodes.NodeMultiValuedAttribute;
-import org.eclipse.emf.compare.tests.nodes.NodeMultipleContainment;
-import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany;
-import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany;
-import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToOne;
-import org.eclipse.emf.compare.tests.nodes.NodeSingleValueAttribute;
-import org.eclipse.emf.compare.tests.nodes.NodeSingleValueContainment;
-import org.eclipse.emf.compare.tests.nodes.NodeSingleValueReference;
-import org.eclipse.emf.compare.tests.nodes.NodesPackage;
+
+import org.eclipse.emf.compare.tests.nodes.*;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -138,6 +129,10 @@ public class NodesAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseNodeFeatureMapNonContainment(NodeFeatureMapNonContainment object) {
 				return createNodeFeatureMapNonContainmentAdapter();
+			}
+			@Override
+			public Adapter caseNodeFeatureMapContainment2(NodeFeatureMapContainment2 object) {
+				return createNodeFeatureMapContainment2Adapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -324,6 +319,20 @@ public class NodesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createNodeFeatureMapNonContainmentAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2 <em>Node Feature Map Containment2</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2
+	 * @generated
+	 */
+	public Adapter createNodeFeatureMapContainment2Adapter() {
 		return null;
 	}
 
