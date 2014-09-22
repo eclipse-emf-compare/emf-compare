@@ -48,6 +48,17 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class DiffUtil {
+	/**
+	 * There are cases where two strings are found to be equal by the {@link #diceCoefficient(String, String)}
+	 * even though they're not "strictly" equal. For example, "pascale pierre" and "pierre pascale" would be
+	 * seen as "1.0" similarity. We'll use this constant instead of a plain "1d" in such cases.
+	 * <p>
+	 * This is the closest double to "1d" that is not equal to 1d (floating point arithmetics, IEEE-754).
+	 * We're using this as a java 5 equivalent to java 6 <code>Math.nextAfter(1d, 0d)</code>.
+	 * </p>
+	 */
+	private static final double SIMILAR = Double.longBitsToDouble(0x3fefffffffffffffL);
+
 	/** This utility class does not need to be instantiated. */
 	private DiffUtil() {
 		// Hides default constructor
@@ -58,22 +69,36 @@ public final class DiffUtil {
 	 * <p>
 	 * This implementation is case sensitive.
 	 * </p>
+	 * <p>
+	 * <b>Note</b> that this implementation handles two- (or less) character-long strings specifically,
+	 * degrading into a "char-by-char" comparison instead of using the bigram unit of the dice coefficient. We
+	 * want the similarity between <code>"v1"</code> and <code>"v2"</code> to be <code>0.5</code> and not
+	 * <code>0</code>. However, we also want <code>"v1"</code> and <code>"v2"</code> to be "more similar" to
+	 * each other than <code>"v"</code> and <code>"v2"</code> and <code>"v1"</code> and <code>"v11"</code> to
+	 * be "more similar" than <code>"v"</code> and <code>"v11"</code> while this latter also needs to be
+	 * "less similar" than <code>"v1"</code> and <code>"v2"</code>. This requires a slightly different
+	 * handling for comparisons with a "single character"-long string than for "two character"-long ones. A
+	 * set of invariants we wish to meet can be found in the unit tests.
+	 * </p>
 	 * 
 	 * @param first
 	 *            First of the two Strings to compare.
 	 * @param second
 	 *            Second of the two Strings to compare.
-	 * @return The dice coefficient of the two given String's bigrams, ranging from 0 to 1.
+	 * @return The dice coefficient of the two given String's bigrams, ranging from 0d to 1d.
 	 */
 	public static double diceCoefficient(String first, String second) {
 		final char[] str1 = first.toCharArray();
 		final char[] str2 = second.toCharArray();
 
-		final double coefficient;
-
 		if (Arrays.equals(str1, str2)) {
-			coefficient = 1d;
-		} else if (str1.length <= 2 || str2.length <= 2) {
+			return 1d;
+		}
+
+		final double coefficient;
+		if (str1.length == 0 || str2.length == 0) {
+			coefficient = 0d;
+		} else if (str1.length == 1 || str2.length == 1 || (str1.length == 2 && str2.length == 2)) {
 			int equalChars = 0;
 
 			for (int i = 0; i < Math.min(str1.length, str2.length); i++) {
@@ -84,28 +109,61 @@ public final class DiffUtil {
 
 			int union = str1.length + str2.length;
 			if (str1.length != str2.length) {
+				// one of the two is one (or 0) character long, don't double the matches
 				coefficient = (double)equalChars / union;
 			} else {
 				coefficient = ((double)equalChars * 2) / union;
 			}
 		} else {
-			Set<String> s1Bigrams = Sets.newHashSet();
-			Set<String> s2Bigrams = Sets.newHashSet();
+			final List<String> s1Bigrams = toBigrams(str1);
+			final List<String> s2Bigrams = toBigrams(str2);
 
-			for (int i = 0; i < str1.length - 1; i++) {
-				char[] chars = new char[] {str1[i], str1[i + 1], };
-				s1Bigrams.add(String.valueOf(chars));
-			}
-			for (int i = 0; i < str2.length - 1; i++) {
-				char[] chars = new char[] {str2[i], str2[i + 1], };
-				s2Bigrams.add(String.valueOf(chars));
+			Collections.sort(s1Bigrams);
+			Collections.sort(s2Bigrams);
+
+			int matchingBigrams = 0;
+			int index1 = 0;
+			int index2 = 0;
+			while (index1 < s1Bigrams.size() && index2 < s2Bigrams.size()) {
+				final int comparison = s1Bigrams.get(index1).compareTo(s2Bigrams.get(index2));
+				if (comparison == 0) {
+					matchingBigrams++;
+					index1++;
+					index2++;
+				} else if (comparison < 0) {
+					index1++;
+				} else {
+					index2++;
+				}
 			}
 
-			Set<String> intersection = Sets.intersection(s1Bigrams, s2Bigrams);
-			coefficient = (2d * intersection.size()) / (s1Bigrams.size() + s2Bigrams.size());
+			coefficient = (2d * matchingBigrams) / (s1Bigrams.size() + s2Bigrams.size());
 		}
 
-		return coefficient;
+		// If the two Strings were equal, we'd have caught it in the first if of this method. On the contrary,
+		// if we're here, we know the two aren't exactly the same. However, since we're comparing through
+		// bigrams, we "may" end up with "1.0" similarity, which would make further comparisons hazardous. We
+		// might for example say that "Pascale Pierre" matches with "Pierre Pascale" even if there is another
+		// "Pascale Pierre" somewhere (since these strings' bigrams are the same). Reduce the end number to a
+		// value "close to one, but not equal to one".
+		return Math.min(coefficient, SIMILAR);
+	}
+
+	/**
+	 * Converts the array representation of a String into its individual bigrams. Should only be used on
+	 * arrays with size greater than or equal to 2.
+	 * 
+	 * @param strArray
+	 *            The array representation of the string which bigrams we seek.
+	 * @return The individual bigrams of strArray, including potential duplicates.
+	 */
+	private static List<String> toBigrams(char[] strArray) {
+		final List<String> bigrams = new ArrayList<String>(strArray.length - 1);
+		for (int i = 0; i < strArray.length - 1; i++) {
+			final char[] chars = new char[] {strArray[i], strArray[i + 1], };
+			bigrams.add(String.valueOf(chars));
+		}
+		return bigrams;
 	}
 
 	/**

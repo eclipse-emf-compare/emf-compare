@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.tests.diff;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.common.collect.Lists;
@@ -472,9 +473,10 @@ public class DiffUtilTest {
 	public void diceCoefficient() {
 		final String[] data = new String[] {"ceString", "ceString", "classe", "Classe", "Classe",
 				"UneClasse", "package", "packagedeux", "", "MaClasse", "package", "packageASupprimer",
-				"attribut", "reference", "aa", "aaaa", "v1", "v2", "v", "v1", "a", "a", "a", "b", "a", "A" };
-		final double[] similarities = new double[] {1d, 0.8d, 10d / 13d, 3d / 4d, 0d, 6d / 11d, 0d, 1d / 3d,
-				1d / 2d, 1d / 3d, 1d, 0d, 0d, };
+				"attribut", "reference", "aa", "aaaa", "aaa", "aaaa", "v1", "v2", "v", "v1", "a", "a", "a",
+				"b", "a", "A", "GGG", "GGGGGG", "night", "nacht", };
+		final double[] similarities = new double[] {1d, 0.8d, 10d / 13d, 12d / 16d, 0d, 12d / 22d, 0d,
+				2d / 4d, 4d / 5d, 1d / 2d, 1d / 3d, 1d, 0d, 0d, 4d / 7d, 2d / 8d };
 		for (int i = 0; i < data.length; i += 2) {
 			assertEquals("Unexpected result of the dice coefficient for str1 = " + data[i] + " and str2 = "
 					+ data[i + 1], similarities[i / 2], DiffUtil.diceCoefficient(data[i], data[i + 1]),
@@ -486,6 +488,42 @@ public class DiffUtilTest {
 		}
 	}
 
+	@Test
+	public void diceCoefficientInvariants() {
+		final double sVV1 = DiffUtil.diceCoefficient("v", "v1");
+		final double sVV11 = DiffUtil.diceCoefficient("v", "v11");
+		final double sVV111 = DiffUtil.diceCoefficient("v", "v111");
+		assertTrue(sVV1 > sVV11 && sVV11 > sVV111);
+
+		final double sV1V2 = DiffUtil.diceCoefficient("v1", "v2");
+		final double sVV2 = DiffUtil.diceCoefficient("v", "v2");
+		assertTrue(sV1V2 > sVV2);
+
+		final double sV1V11 = DiffUtil.diceCoefficient("v1", "v11");
+		assertTrue(sV1V11 > sVV11 && sV1V2 > sVV11);
+	}
+
+	@Test
+	public void diceCoefficient_444712() {
+		final double sT11T11 = DiffUtil.diceCoefficient("thing 11", "thing 11");
+		final double sT11T111 = DiffUtil.diceCoefficient("thing 11", "thing 111");
+		assertTrue(sT11T11 > sT11T111);
+
+		// kinda redundant... check anyway for potential "strange" values
+		assertTrue(sT11T11 <= 1d);
+		assertTrue(sT11T111 < 1d);
+	}
+
+	@Test
+	public void diceCoefficientSameBigramsDifferentStrings() {
+		final double identical = DiffUtil.diceCoefficient("pierre pascale", "pierre pascale");
+		final double distinctButSameBigrams = DiffUtil.diceCoefficient("pierre pascale", "pascale pierre");
+		assertTrue(identical > distinctButSameBigrams);
+		assertTrue(distinctButSameBigrams < 1d);
+		assertTrue(distinctButSameBigrams > 0.95d);
+	}
+
+	@Test
 	public void diceCoefficientFailure() {
 		try {
 			DiffUtil.diceCoefficient(null, null);
