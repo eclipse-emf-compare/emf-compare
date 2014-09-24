@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.uml2.uml.dynamic_package">
+      <profile
+            location="pathmap://ProfileLoadingTest/model.profile.uml#_JSwPQEIyEeSXpd1NJW5urA"
+            uri="http:///schemas/LoadingProfileTest">
+      </profile>
+   </extension>
+    <extension
+         point="org.eclipse.uml2.uml.dynamic_package">
+      <profile
+            location="pathmap://ProfileLoadingTest/registered/model_profile.uml#_JSwPQEIyEeSXpd1NJW5urA"
+            uri="http:///schemas/LoadingProfileTestRegistered">
+      </profile>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.uri_mapping">
+      <mapping
+            source="pathmap://ProfileLoadingTest/"
+            target="platform:/plugin/org.eclipse.emf.compare.uml2.ide.tests/src/org/eclipse/emf/compare/uml2/ide/tests/profile/data/loading/">
+      </mapping>
+   </extension>
+   <extension
+         point="org.eclipse.papyrus.uml.extensionpoints.UMLProfile">
+      <profile
+            name="ProfileLoadingTest"
+            path="pathmap://ProfileLoadingTest/model.profile.uml">
+      </profile>
+   </extension>
+ 
+</plugin>

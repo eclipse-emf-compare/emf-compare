@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:testProfile="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML">
+  <uml:Model xmi:id="_j1L8kEJoEeScjtYU9A8LTw" name="model">
+    <packagedElement xmi:type="uml:Class" xmi:id="_mg1YkEJqEeSsE-f8QjqLJA" name="Class1"/>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_l74RYEJqEeSsE-f8QjqLJA">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_l9ASwEJqEeSsE-f8QjqLJA" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile#/"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml#_hZFTgIwkEeC_FYHMbTTxXw"/>
+    </profileApplication>
+  </uml:Model>
+  <testProfile:ACliche xmi:id="_oEIXUEJqEeSsE-f8QjqLJA" base_Class="_mg1YkEJqEeSsE-f8QjqLJA"/>
+</xmi:XMI>

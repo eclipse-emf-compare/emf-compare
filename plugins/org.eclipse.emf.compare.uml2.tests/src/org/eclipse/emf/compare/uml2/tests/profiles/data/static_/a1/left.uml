@@ -5,6 +5,6 @@
     <eAnnotations xmi:id="_WsrGcfNPEeG0ipjyqWM1zA" source="http://www.eclipse.org/uml2/2.0.0/UML">
       <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile#//uml2comparetestprofile"/>
     </eAnnotations>
-    <appliedProfile href="pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml#_hZFTgIwkEeC_FYHMbTTxXw"/>
+    <appliedProfile xmi:type="uml:Profile" href="pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml#_hZFTgIwkEeC_FYHMbTTxXw"/>
   </profileApplication>
 </uml:Model>

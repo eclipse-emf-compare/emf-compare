@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:profile="http:///schemas/profile/_JSnsYEIyEeSXpd1NJW5urA/0" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/profile/_JSnsYEIyEeSXpd1NJW5urA/0 platform:/plugin/org.eclipse.emf.compare.uml2.ide.tests/src/org/eclipse/emf/compare/uml2/ide/tests/profile/data/loading/registered/model_profile.uml#_JSwPQEIyEeSXpd1NJW5urA">
+  <uml:Model xmi:id="_WphcEEIyEeSXpd1NJW5urA" name="model">
+    <packagedElement xmi:type="uml:Class" xmi:id="_XzoewEIyEeSXpd1NJW5urA" name="Class1"/>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_VCr58EJaEeScjtYU9A8LTw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_VDt0sEJaEeScjtYU9A8LTw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/org.eclipse.emf.compare.uml2.ide.tests/src/org/eclipse/emf/compare/uml2/ide/tests/profile/data/loading/registered/model_profile.uml#_JSwPQEIyEeSXpd1NJW5urA"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="platform:/plugin/org.eclipse.emf.compare.uml2.ide.tests/src/org/eclipse/emf/compare/uml2/ide/tests/profile/data/loading/registered/model_profile.uml#_oFrmYEIxEeSXpd1NJW5urA"/>
+    </profileApplication>
+  </uml:Model>
+  <profile:St1 xmi:id="_pfy3UEJaEeScjtYU9A8LTw" base_Class="_XzoewEIyEeSXpd1NJW5urA"/>
+</xmi:XMI>
