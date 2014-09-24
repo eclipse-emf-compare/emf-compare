@@ -64,19 +64,22 @@ public class GroupAction extends Action {
 	 * @param structureMergeViewerGrouper
 	 * @param dgp
 	 *            The group provider descriptor.
+	 * @param gp
+	 *            The group provider created by the group provider descriptor.
 	 * @param groupManager
 	 *            {@link DifferenceGroupManager}
 	 * @param isThreeWay
 	 *            Set to true if the current comparison is a Three way comparison.
 	 */
 	public GroupAction(StructureMergeViewerGrouper structureMergeViewerGrouper,
-			IDifferenceGroupProvider.Descriptor dgp, DifferenceGroupManager groupManager, boolean isThreeWay) {
+			IDifferenceGroupProvider.Descriptor dgp, IDifferenceGroupProvider gp,
+			DifferenceGroupManager groupManager, boolean isThreeWay) {
 		super(dgp.getLabel(), IAction.AS_RADIO_BUTTON);
 		this.structureMergeViewerGrouper = structureMergeViewerGrouper;
 		this.descriptorGroupProvider = dgp;
 		this.groupManager = groupManager;
 		this.isThreeWay = isThreeWay;
-		this.provider = descriptorGroupProvider.createGroupProvider();
+		this.provider = gp;
 		this.preferences = EMFCompareRCPUIPlugin.getDefault().getEMFCompareUIPreferences();
 	}
 

@@ -77,12 +77,16 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 		for (IDifferenceGroupProvider.Descriptor dgp : registry.getGroupProviders(scope, comparison)) {
 			IDifferenceGroupProvider gp = dgp.createGroupProvider();
 			if (gp != null) {
-				IAction action = new GroupAction(structureMergeViewerGrouper, dgp, groupManager, comparison
-						.isThreeWay());
-				menuManager.add(action);
+				final IAction action;
 				if (gp.getClass() == structureMergeViewerGrouper.getProvider().getClass()) {
+					action = new GroupAction(structureMergeViewerGrouper, dgp, structureMergeViewerGrouper
+							.getProvider(), groupManager, comparison.isThreeWay());
 					action.setChecked(true);
+				} else {
+					action = new GroupAction(structureMergeViewerGrouper, dgp, gp, groupManager, comparison
+							.isThreeWay());
 				}
+				menuManager.add(action);
 			}
 		}
 	}
