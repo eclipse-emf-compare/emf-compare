@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 import java.util.List;
 
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.GroupItemProviderAdapter;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -24,6 +25,8 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -102,8 +105,19 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 
 		fWrappedViewerDoubleClickListener = new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				fireDoubleClick(new DoubleClickEvent(AbstractStructuredViewerWrapper.this, event
-						.getSelection()));
+				if (event.getSelection() instanceof TreeSelection
+						&& ((TreeSelection)event.getSelection()).getFirstElement() instanceof GroupItemProviderAdapter
+						&& fViewer instanceof TreeViewer) {
+					// In case of double-click on a group item, expand this group to the second level (in
+					// mostly cases, the second level is the level under the root elements of the models
+					// involved in comparison)
+					GroupItemProviderAdapter groupItem = (GroupItemProviderAdapter)((TreeSelection)event
+							.getSelection()).getFirstElement();
+					((TreeViewer)fViewer).expandToLevel(groupItem, 2);
+				} else {
+					fireDoubleClick(new DoubleClickEvent(AbstractStructuredViewerWrapper.this, event
+							.getSelection()));
+				}
 			}
 		};
 		fViewer.addDoubleClickListener(fWrappedViewerDoubleClickListener);
@@ -118,7 +132,15 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 
 		fWrappedViewerOpenListener = new IOpenListener() {
 			public void open(OpenEvent event) {
-				fireOpen(new OpenEvent(AbstractStructuredViewerWrapper.this, event.getSelection()));
+				if (event.getSelection() instanceof TreeSelection
+						&& ((TreeSelection)event.getSelection()).getFirstElement() instanceof GroupItemProviderAdapter
+						&& fViewer instanceof TreeViewer) {
+					// In case of double-click on a group item, Do nothing. The panes below this structured
+					// viewer will still display the content of the previous selection. The merge action will
+					// be deactivated.
+				} else {
+					fireOpen(new OpenEvent(AbstractStructuredViewerWrapper.this, event.getSelection()));
+				}
 			}
 		};
 		fViewer.addOpenListener(fWrappedViewerOpenListener);
