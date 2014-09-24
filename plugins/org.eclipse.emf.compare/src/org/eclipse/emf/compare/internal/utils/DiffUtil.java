@@ -115,29 +115,31 @@ public final class DiffUtil {
 				coefficient = ((double)equalChars * 2) / union;
 			}
 		} else {
-			final List<String> s1Bigrams = toBigrams(str1);
-			final List<String> s2Bigrams = toBigrams(str2);
+			final int[] s1Bigrams = toBigrams(str1);
+			final int[] s2Bigrams = toBigrams(str2);
 
-			Collections.sort(s1Bigrams);
-			Collections.sort(s2Bigrams);
+			// We've converted our bigrams to integers. Note that we do not care about the ordering of these
+			// integers, even if "bj" comes after "za" and before "az", this will pose no threat since we only
+			// use their ordering to hasten the comparisons thereafter.
+			Arrays.sort(s1Bigrams);
+			Arrays.sort(s2Bigrams);
 
 			int matchingBigrams = 0;
 			int index1 = 0;
 			int index2 = 0;
-			while (index1 < s1Bigrams.size() && index2 < s2Bigrams.size()) {
-				final int comparison = s1Bigrams.get(index1).compareTo(s2Bigrams.get(index2));
-				if (comparison == 0) {
+			while (index1 < s1Bigrams.length && index2 < s2Bigrams.length) {
+				if (s1Bigrams[index1] == s2Bigrams[index2]) {
 					matchingBigrams++;
 					index1++;
 					index2++;
-				} else if (comparison < 0) {
+				} else if (s1Bigrams[index1] < s2Bigrams[index2]) {
 					index1++;
 				} else {
 					index2++;
 				}
 			}
 
-			coefficient = (2d * matchingBigrams) / (s1Bigrams.size() + s2Bigrams.size());
+			coefficient = (2d * matchingBigrams) / (s1Bigrams.length + s2Bigrams.length);
 		}
 
 		// If the two Strings were equal, we'd have caught it in the first if of this method. On the contrary,
@@ -152,16 +154,25 @@ public final class DiffUtil {
 	/**
 	 * Converts the array representation of a String into its individual bigrams. Should only be used on
 	 * arrays with size greater than or equal to 2.
+	 * <p>
+	 * Note that we're storing the individual bigrams into ints along the way, the first of a pair in the
+	 * least-significant 16 bits. <code>"ab"</code> would thus be converted to <code>6422625</code> or, as
+	 * seen bit-wise, <code>0000 0000 0110 0010 0000 0000 0110 0001</code>.
+	 * </p>
+	 * <p>
+	 * We're ignoring the sign of these objects since they do not influence the unicity of the mapping bigram
+	 * <-> int.
+	 * </p>
 	 * 
 	 * @param strArray
 	 *            The array representation of the string which bigrams we seek.
 	 * @return The individual bigrams of strArray, including potential duplicates.
 	 */
-	private static List<String> toBigrams(char[] strArray) {
-		final List<String> bigrams = new ArrayList<String>(strArray.length - 1);
+	private static int[] toBigrams(char[] strArray) {
+		final int[] bigrams = new int[strArray.length - 1];
+		final int charBitLength = 16;
 		for (int i = 0; i < strArray.length - 1; i++) {
-			final char[] chars = new char[] {strArray[i], strArray[i + 1], };
-			bigrams.add(String.valueOf(chars));
+			bigrams[i] = strArray[i] | (strArray[i + 1] << charBitLength);
 		}
 		return bigrams;
 	}
