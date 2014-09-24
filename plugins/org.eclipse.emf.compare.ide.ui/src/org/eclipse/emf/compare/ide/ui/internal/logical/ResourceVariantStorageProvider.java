@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,8 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
+
+import com.google.common.base.Objects;
 
 import java.io.InputStream;
 
@@ -131,6 +133,34 @@ public class ResourceVariantStorageProvider implements IStorageProvider {
 		 */
 		public boolean isReadOnly() {
 			return storage.isReadOnly();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(fullPath, storage);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+
+			if (obj instanceof StorageWrapper) {
+				StorageWrapper other = (StorageWrapper)obj;
+				return Objects.equal(fullPath, other.fullPath) && Objects.equal(storage, other.storage);
+			}
+			return false;
 		}
 	}
 }
