@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemFeatureMapsTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemPseudoConflictTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemTest;
+import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.filters.TestFeatureMapDifferencesFilter;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.TestBasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.TestComparisonTreeNodeItemProviderSpec;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.TestMatchTreeNodeItemProviderSpec;
@@ -36,7 +37,8 @@ import org.junit.runners.Suite.SuiteClasses;
 			   TestMatchTreeNodeItemProviderSpec.class, 
 			   TestReferenceChangeTreeNodeItemProviderSpec.class,
 			   MergeViewerItemTest.class, MergeViewerItemPseudoConflictTest.class, MergeViewerItemFeatureMapsTest.class,
-			   TestBasicDifferenceGroupImpl.class, BugsTestSuite.class})
+			   TestBasicDifferenceGroupImpl.class, BugsTestSuite.class,
+			   TestFeatureMapDifferencesFilter.class})
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

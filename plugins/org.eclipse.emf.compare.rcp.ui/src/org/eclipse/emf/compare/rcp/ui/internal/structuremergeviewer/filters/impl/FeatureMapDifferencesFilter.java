@@ -33,7 +33,9 @@ public class FeatureMapDifferencesFilter extends AbstractDifferenceFilter {
 			boolean ret = false;
 			if (input instanceof TreeNode) {
 				EObject data = ((TreeNode)input).getData();
-				ret = data instanceof FeatureMapChange;
+				if (data instanceof FeatureMapChange) {
+					ret = ((FeatureMapChange)data).getEquivalence() != null;
+				}
 			}
 			return ret;
 		}
