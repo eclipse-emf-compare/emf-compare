@@ -863,11 +863,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			if (input instanceof CompareInputAdapter) {
 				resourcesShouldBeUnload = false;
 				compareInputChanged((CompareInputAdapter)input, monitor);
-				initToolbar();
 			} else if (input instanceof ComparisonScopeInput) {
 				resourcesShouldBeUnload = false;
 				compareInputChanged((ComparisonScopeInput)input, monitor);
-				initToolbar();
 			} else {
 				resourcesShouldBeUnload = true;
 				SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
@@ -906,8 +904,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				} else {
 					compareConfiguration.setMergePreviewMode(MergeMode.ACCEPT);
 				}
-
-				initToolbar();
 
 				final BasicDiagnostic diagnostic = new BasicDiagnostic(Diagnostic.OK,
 						EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null, new Object[0]);
@@ -967,6 +963,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 				compareInputChanged(scope, compareResult);
 			}
+			initToolbar();
 		} else {
 			compareInputChangedToNull();
 		}
