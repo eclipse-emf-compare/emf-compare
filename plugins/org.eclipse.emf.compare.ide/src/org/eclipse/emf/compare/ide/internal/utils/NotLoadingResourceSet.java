@@ -10,15 +10,20 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal.utils;
 
+import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.createURIFor;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -36,7 +41,9 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
+import org.eclipse.emf.compare.ide.hook.IResourceSetHook;
 import org.eclipse.emf.compare.ide.internal.EMFCompareIDEMessages;
+import org.eclipse.emf.compare.ide.internal.hook.ResourceSetHookRegistry;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
@@ -94,27 +101,45 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	 *            All traversals we are to load.
 	 * @param monitor
 	 *            the monitor to which progress will be reported.
+	 * @param resourceSetHookRegistry
+	 *            A registry of {@link IResourceSetHook}s that potentialy can hook on the new
+	 *            {@link org.eclipse.emf.ecore.resource.ResourceSet} (can be <code>null</code> if none).
 	 * @return resource set containing the resources described by the given traversals.
 	 */
-	public static NotLoadingResourceSet create(final StorageTraversal traversals, IProgressMonitor monitor) {
+	public static NotLoadingResourceSet create(final StorageTraversal traversals, IProgressMonitor monitor,
+			ResourceSetHookRegistry resourceSetHookRegistry) {
 		SubMonitor progress = SubMonitor.convert(monitor, 100);
 		progress.subTask(EMFCompareIDEMessages.getString("NotLoadingResourceSet.monitor.resolve")); //$NON-NLS-1$
 		final NotLoadingResourceSet resourceSet = new NotLoadingResourceSet(traversals);
 
-		resourceSet.setURIResourceMap(new HashMap<URI, Resource>(traversals.getStorages().size() << 1));
 		final Set<? extends IStorage> storages = traversals.getStorages();
+
+		resourceSet.setURIResourceMap(new HashMap<URI, Resource>(storages.size() << 1));
+
+		final Collection<URI> urisToLoad = ImmutableList.copyOf(transform(storages, TO_URI));
+
+		final Collection<IResourceSetHook> hooks = getMatchingHooks(resourceSetHookRegistry, urisToLoad);
+
+		for (IResourceSetHook hook : hooks) {
+			hook.preLoadingHook(resourceSet, urisToLoad);
+		}
 
 		// loading is 60% of the total work?
 		final int loadWorkPercentage = 60;
 		SubMonitor subMonitor = progress.newChild(loadWorkPercentage).setWorkRemaining(
 				traversals.getStorages().size());
-		for (URI uri : Iterables.transform(storages, TO_URI)) {
+
+		for (URI uri : urisToLoad) {
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
 			// Forces the loading of the selected resources.
 			resourceSet.loadResource(uri);
 			subMonitor.worked(1);
+		}
+
+		for (IResourceSetHook hook : hooks) {
+			hook.postLoadingHook(resourceSet, urisToLoad);
 		}
 
 		final int resolveWorkPercentage = 40;
@@ -135,7 +160,33 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Retrieves the hooks that need to be hooked on this resource set.
+	 * 
+	 * @param resourceSetHookRegistry
+	 *            Registry holding the hooks.
+	 * @param urisToLoad
+	 *            The collection of uris that will be loaded.
+	 * @return {@link Collection} of {@link IResourceSetHook}s that need to be hocked.
+	 */
+	private static Collection<IResourceSetHook> getMatchingHooks(
+			ResourceSetHookRegistry resourceSetHookRegistry, final Collection<URI> urisToLoad) {
+		final Collection<IResourceSetHook> hooks;
+		if (resourceSetHookRegistry == null) {
+			hooks = Collections.emptyList();
+		} else {
+			hooks = Collections2.filter(resourceSetHookRegistry.getResourceSetHooks(),
+					new Predicate<IResourceSetHook>() {
+
+						public boolean apply(IResourceSetHook input) {
+							return input.isHookFor(urisToLoad);
+						}
+					});
+		}
+		return hooks;
+	}
+
+	/**
+	 * Adds ResourceSetHook extension point. {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#demandLoadHelper(org.eclipse.emf.ecore.resource.Resource)
 	 */

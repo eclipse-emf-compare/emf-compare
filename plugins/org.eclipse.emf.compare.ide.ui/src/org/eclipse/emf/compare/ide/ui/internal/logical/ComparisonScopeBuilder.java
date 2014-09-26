@@ -35,6 +35,8 @@ import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
+import org.eclipse.emf.compare.ide.internal.hook.ResourceSetHookRegistry;
 import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -446,15 +448,19 @@ public final class ComparisonScopeBuilder {
 		final StorageTraversal originTraversal = syncModel.getOriginTraversal();
 
 		final ResourceSet originResourceSet;
+		ResourceSetHookRegistry resourceSetHookRegistry = EMFCompareIDEPlugin.getDefault()
+				.getResourceSetHookRegistry();
 		if (originTraversal == null || originTraversal.getStorages().isEmpty()) {
 			originResourceSet = null;
 			progress.setWorkRemaining(2);
 		} else {
-			originResourceSet = NotLoadingResourceSet.create(originTraversal, progress.newChild(1));
+			originResourceSet = NotLoadingResourceSet.create(originTraversal, progress.newChild(1),
+					resourceSetHookRegistry);
 		}
-		final ResourceSet leftResourceSet = NotLoadingResourceSet.create(leftTraversal, progress.newChild(1));
+		final ResourceSet leftResourceSet = NotLoadingResourceSet.create(leftTraversal, progress.newChild(1),
+				resourceSetHookRegistry);
 		final ResourceSet rightResourceSet = NotLoadingResourceSet.create(rightTraversal, progress
-				.newChild(1));
+				.newChild(1), resourceSetHookRegistry);
 
 		final Set<URI> urisInScope = Sets.newLinkedHashSet();
 		for (IStorage left : leftTraversal.getStorages()) {

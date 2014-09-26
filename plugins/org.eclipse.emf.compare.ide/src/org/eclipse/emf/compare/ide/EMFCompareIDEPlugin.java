@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2013 Obeo.
+ * Copyright (c) 2011, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide;
 
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.compare.ide.internal.hook.ResourceSetHookRegistry;
+import org.eclipse.emf.compare.ide.internal.hook.ResourceSetHookRegistryListener;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -27,6 +31,12 @@ public class EMFCompareIDEPlugin extends Plugin {
 	/** This plugin's shared instance. */
 	private static EMFCompareIDEPlugin plugin;
 
+	/** Registry of {@link org.eclipse.emf.compare.rcp.internal.hook.IResourceSetHook}. */
+	private ResourceSetHookRegistry resourceSetHookRegistry;
+
+	/** The registry listener that will fill the {@link ResourceSetHookRegistry}. */
+	private ResourceSetHookRegistryListener resourceSetHookRegistryListener;
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -36,6 +46,10 @@ public class EMFCompareIDEPlugin extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		plugin = this;
 		super.start(context);
+
+		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+		setUpResourceSetHookRegistry(registry);
 
 	}
 
@@ -47,6 +61,11 @@ public class EMFCompareIDEPlugin extends Plugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+
+		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+		discardResourceSetHookRegistry(registry);
+
 		super.stop(context);
 	}
 
@@ -80,4 +99,48 @@ public class EMFCompareIDEPlugin extends Plugin {
 	public static EMFCompareIDEPlugin getDefault() {
 		return plugin;
 	}
+
+	/**
+	 * Returns the {@link ResourceSetHookRegistry}.
+	 * <p>
+	 * It contains all hooks registered against the ResourceSetHook extension point.
+	 * </p>
+	 * 
+	 * @return {@link ResourceSetHookRegistry}.
+	 * @since 3.1
+	 */
+	public ResourceSetHookRegistry getResourceSetHookRegistry() {
+		return resourceSetHookRegistry;
+	}
+
+	/**
+	 * Sets up the {@link ResourceSetHookRegistry}.
+	 * 
+	 * @param registry
+	 *            {@link IExtensionRegistry} to listen in order to fill the registry
+	 */
+	private void setUpResourceSetHookRegistry(IExtensionRegistry registry) {
+		// Sets up the resource set hook registry
+		resourceSetHookRegistry = new ResourceSetHookRegistry();
+		resourceSetHookRegistryListener = new ResourceSetHookRegistryListener(getLog(),
+				resourceSetHookRegistry);
+		registry.addListener(resourceSetHookRegistryListener, PLUGIN_ID + '.'
+				+ ResourceSetHookRegistryListener.EXT_ID);
+		resourceSetHookRegistryListener.readRegistry(registry);
+
+	}
+
+	/**
+	 * Discards the resource set hook registry.
+	 * 
+	 * @param registry
+	 *            IExtensionRegistry to remove listener
+	 */
+	private void discardResourceSetHookRegistry(IExtensionRegistry registry) {
+		// Unregisters the resource set hook registry
+		registry.removeListener(resourceSetHookRegistryListener);
+		resourceSetHookRegistryListener = null;
+		resourceSetHookRegistry = null;
+	}
+
 }

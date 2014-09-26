@@ -260,7 +260,7 @@ public class ProfileLoadingTest {
 				toStorage(new ExtensibleURIConverterImpl()));
 		StorageTraversal storageTraversal = new StorageTraversal(Sets.newHashSet(storages));
 		NotLoadingResourceSet newResourceSet = NotLoadingResourceSet.create(storageTraversal,
-				new NullProgressMonitor());
+				new NullProgressMonitor(), null);
 
 		return newResourceSet;
 
