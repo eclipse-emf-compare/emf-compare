@@ -10,9 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
-import com.google.common.base.Predicate;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
+
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,17 +33,22 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
+import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
+import org.eclipse.emf.compare.internal.utils.Graph;
+import org.eclipse.emf.compare.internal.utils.PruningIterator;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
@@ -96,19 +102,35 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 
 			final Comparison comparison = EMFCompare.builder().build().compare(scope,
 					BasicMonitor.toMonitor(monitor));
+			// TODO measure performance gain/cost : is there a real advantage of checking for conflicts
+			// beforehand? "hasConflict" is at worst a full iteration over the differences tree (no conflicts
+			// case).
+			final IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 			if (hasRealConflict(comparison)) {
+				// pre-merge what can be
+				final Graph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison, mergerRegistry,
+						true);
+				final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
+				final Monitor emfMonitor = BasicMonitor.toMonitor(monitor);
+
+				while (iterator.hasNext()) {
+					final Diff next = iterator.next();
+					if (hasConflict(ConflictKind.REAL).apply(next)) {
+						iterator.prune();
+					} else {
+						if (next.getState() != DifferenceState.MERGED) {
+							final IMerger merger = mergerRegistry.getHighestRankingMerger(next);
+							merger.copyRightToLeft(next, emfMonitor);
+						}
+					}
+				}
+
+				save(scope.getLeft());
+
 				failingMappings.add(mapping);
 			} else {
-				final IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
-				final IBatchMerger merger = new BatchMerger(mergerRegistry);
-				final Predicate<Diff> filter = new Predicate<Diff>() {
-					public boolean apply(Diff input) {
-						return input != null && input.getConflict() == null
-								&& input.getSource() != DifferenceSource.LEFT;
-					}
-				};
-				merger.copyAllRightToLeft(Iterables.filter(comparison.getDifferences(), filter), BasicMonitor
-						.toMonitor(monitor));
+				final IBatchMerger merger = new BatchMerger(mergerRegistry, fromSide(DifferenceSource.RIGHT));
+				merger.copyAllRightToLeft(comparison.getDifferences(), BasicMonitor.toMonitor(monitor));
 				save(scope.getLeft());
 
 				for (IStorage storage : syncModel.getLeftTraversal().getStorages()) {

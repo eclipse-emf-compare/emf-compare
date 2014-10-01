@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
+package org.eclipse.emf.compare.internal.utils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterators.concat;
@@ -20,12 +20,14 @@ import com.google.common.collect.Iterators;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 
@@ -44,13 +46,33 @@ import org.eclipse.emf.common.util.AbstractTreeIterator;
  *            Kind of elements used as this graph's nodes.
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-final class Graph<E> {
+public final class Graph<E> {
 	/** Keeps track of this graph's individual nodes. */
 	private final Map<E, Node<E>> nodes;
+
+	/**
+	 * keeps track of this graph's roots. This will reference all nodes with no parents themselves, whether
+	 * they are part of the same subgraph or totally unrelated to each other.
+	 */
+	private final Set<Node<E>> roots;
+
+	/**
+	 * All operations affecting the graph will be synchronized so that changes to {@link #nodes} and
+	 * {@link #roots} are consistent with each other.
+	 */
+	private final ReentrantLock lock;
+
+	/**
+	 * This will be incremented each time this graph is structurally modified by an operation, ensuring
+	 * fail-fast iterations from our returned iterators.
+	 */
+	private transient int modcount;
 
 	/** Constructs an empty graph. */
 	public Graph() {
 		this.nodes = new LinkedHashMap<E, Node<E>>();
+		this.roots = new LinkedHashSet<Node<E>>();
+		this.lock = new ReentrantLock();
 	}
 
 	/**
@@ -62,17 +84,23 @@ final class Graph<E> {
 	 *         otherwise.
 	 */
 	public boolean contains(E element) {
-		synchronized(nodes) {
+		lock.lock();
+		try {
 			return nodes.containsKey(element);
+		} finally {
+			lock.unlock();
 		}
 	}
 
-	/**
-	 * Clears this graph and goes back in a pristine state.
-	 */
+	/** Clears this graph and goes back to a pristine state. */
 	public void clear() {
-		synchronized(nodes) {
+		lock.lock();
+		try {
 			nodes.clear();
+			roots.clear();
+			modcount++;
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -85,14 +113,19 @@ final class Graph<E> {
 	 * @return <code>true</code> if this element did not previously exist in the graph.
 	 */
 	public boolean add(E element) {
-		synchronized(nodes) {
+		lock.lock();
+		try {
 			Node<E> node = nodes.get(element);
 			if (node == null) {
 				node = new Node<E>(element);
 				nodes.put(element, node);
+				roots.add(node);
+				modcount++;
 				return true;
 			}
 			return false;
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -104,11 +137,16 @@ final class Graph<E> {
 	 *            The element which is to be removed from this graph.
 	 */
 	public void remove(E element) {
-		synchronized(nodes) {
+		lock.lock();
+		try {
 			final Node<E> node = nodes.remove(element);
 			if (node != null) {
 				node.breakConnections();
+				roots.remove(node);
+				modcount++;
 			}
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -120,10 +158,13 @@ final class Graph<E> {
 	 *            The elements which are to be removed from this graph.
 	 */
 	public void removeAll(Collection<E> elements) {
-		synchronized(nodes) {
+		lock.lock();
+		try {
 			for (E e : elements) {
 				remove(e);
 			}
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -137,11 +178,14 @@ final class Graph<E> {
 	 *            The set of elements to connect to the given parent.
 	 */
 	public void addChildren(E element, Set<E> newChildren) {
-		synchronized(nodes) {
+		lock.lock();
+		try {
 			Node<E> node = nodes.get(element);
 			if (node == null) {
 				node = new Node<E>(element);
 				nodes.put(element, node);
+				roots.add(node);
+				modcount++;
 			}
 
 			for (E newChild : newChildren) {
@@ -149,9 +193,14 @@ final class Graph<E> {
 				if (childNode == null) {
 					childNode = new Node<E>(newChild);
 					nodes.put(newChild, childNode);
+				} else {
+					roots.remove(childNode);
 				}
+				modcount++;
 				node.connectChild(childNode);
 			}
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -162,20 +211,26 @@ final class Graph<E> {
 	 *            Element that could be a parent of <code>potentialChild</code>.
 	 * @param potentialChild
 	 *            The potential child of <code>parent</code>.
+	 * @return <code>true</code> if <code>parent</code> is an ancestor of <code>potentialChild</code>.
 	 */
 	public boolean hasChild(E parent, E potentialChild) {
-		synchronized(nodes) {
+		lock.lock();
+		try {
 			final Node<E> node = nodes.get(potentialChild);
 			if (node != null) {
 				return Iterables.any(node.getAllParents(), is(parent));
 			}
 			return false;
+		} finally {
+			lock.unlock();
 		}
 	}
 
 	/**
 	 * This predicate will be used to check if a Node's element is the given one.
 	 * 
+	 * @param element
+	 *            the element we expect a node for.
 	 * @return The constructed predicate.
 	 */
 	private Predicate<? super Node<E>> is(final E element) {
@@ -186,21 +241,43 @@ final class Graph<E> {
 		};
 	}
 
+	/**
+	 * Returns the <u>direct</u> parents of the given <code>element</code>.
+	 * <p>
+	 * <b>Note</b> that the returned set is a view over a sub-graph of this graph, and that changes to it will
+	 * not be reflected within the graph itself.
+	 * </p>
+	 * 
+	 * @param element
+	 *            The element which parents we seek.
+	 * @return The set of <u>direct</u> parents for the given <code>element</code>.
+	 */
 	public Set<E> getDirectParents(E element) {
 		final Set<E> parents = new LinkedHashSet<E>();
-		synchronized(nodes) {
+		lock.lock();
+		try {
 			final Node<E> node = nodes.get(element);
 			if (node != null) {
 				for (Node<E> parent : node.getParents()) {
 					parents.add(parent.getElement());
 				}
 			}
+		} finally {
+			lock.unlock();
 		}
 		return parents;
 	}
 
 	/**
 	 * Returns the tree starting from the given root element if it is contained in the graph.
+	 * <p>
+	 * Contrarily to {@link #getSubgraphContaining(Object)}, this will only iterate over the children (and
+	 * recursively) of the given node, without ever "going up" to parents of these children.
+	 * </p>
+	 * <p>
+	 * <b>Note</b> that the returned set is a view over a sub-graph of this graph, and that changes to it will
+	 * not be reflected within the graph itself.
+	 * </p>
 	 * 
 	 * @param root
 	 *            The element we are to consider as the root of a tree.
@@ -213,6 +290,14 @@ final class Graph<E> {
 
 	/**
 	 * Returns the tree starting from the given root element and ending at the given boundaries..
+	 * <p>
+	 * Contrarily to {@link #getSubgraphContaining(Object, Set)}, this will only iterate over the children
+	 * (and recursively) of the given node, without ever "going up" to parents of these children.
+	 * </p>
+	 * <p>
+	 * <b>Note</b> that the returned set is a view over a sub-graph of this graph, and that changes to it will
+	 * not be reflected within the graph itself.
+	 * </p>
 	 * 
 	 * @param root
 	 *            The element we are to consider as the root of a tree.
@@ -222,7 +307,8 @@ final class Graph<E> {
 	 *         otherwise.
 	 */
 	public Set<E> getTreeFrom(E root, Set<E> endPoints) {
-		synchronized(nodes) {
+		lock.lock();
+		try {
 			final Node<E> node = nodes.get(root);
 			if (node != null) {
 				Set<E> boundaries = endPoints;
@@ -231,12 +317,18 @@ final class Graph<E> {
 				}
 				return new SubgraphBuilder<E>(node, boundaries).buildTree();
 			}
+		} finally {
+			lock.unlock();
 		}
 		return Collections.emptySet();
 	}
 
 	/**
 	 * Returns the set of all elements of the subgraph containing the given element.
+	 * <p>
+	 * <b>Note</b> that the returned set is a view over a sub-graph of this graph, and that changes to it will
+	 * not be reflected within the graph itself.
+	 * </p>
 	 * 
 	 * @param element
 	 *            Element we need the subgraph of.
@@ -250,16 +342,21 @@ final class Graph<E> {
 	/**
 	 * Returns the set of all elements of the subgraph containing the given element and ending at the given
 	 * boundaries.
+	 * <p>
+	 * <b>Note</b> that the returned set is a view over a sub-graph of this graph, and that changes to it will
+	 * not be reflected within the graph itself.
+	 * </p>
 	 * 
 	 * @param element
 	 *            Element we need the subgraph of.
 	 * @param endPoints
 	 *            Boundaries of the needed subgraph.
-	 * @return An iterable over all elements of the subgraph containing the given element, an empty list if
+	 * @return An iterable over all elements of the subgraph containing the given element, an empty set if
 	 *         that element is not present in this graph.
 	 */
 	public Set<E> getSubgraphContaining(E element, Set<E> endPoints) {
-		synchronized(nodes) {
+		lock.lock();
+		try {
 			final Node<E> node = nodes.get(element);
 			if (node != null) {
 				Set<E> boundaries = endPoints;
@@ -269,7 +366,25 @@ final class Graph<E> {
 				return new SubgraphBuilder<E>(node, boundaries).buildSubgraph();
 			}
 			return Collections.emptySet();
+		} finally {
+			lock.unlock();
 		}
+	}
+
+	/**
+	 * Returns a breadth-first iterator over this whole graph. This will begin iteration on this graph's roots
+	 * (whether they are linked together (directly or indirectly) or not), then carry on over each depth
+	 * level. This will never visit the same element twice, nor will it ever visit an element which parents
+	 * haven't all been iterated over yet.
+	 * <p>
+	 * The returned iterator does not support removal, and will fail or returned undefined results if this
+	 * graph is modified after the iterator's creation.
+	 * </p>
+	 * 
+	 * @return A breadth-first iterator over this whole graph.
+	 */
+	public PruningIterator<E> breadthFirstIterator() {
+		return new BreadthFirstIterator();
 	}
 
 	/**
@@ -331,8 +446,8 @@ final class Graph<E> {
 		/**
 		 * Registers the given element as a child of this one.
 		 * 
-		 * @param other
-		 *            The Node that is to be connected to this one.
+		 * @param child
+		 *            The Node that is to be connected as a child of this one.
 		 */
 		public void connectChild(Node<K> child) {
 			this.children.add(child);
@@ -371,14 +486,14 @@ final class Graph<E> {
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private static class SubgraphBuilder<L> {
-		/** The Node that will be used as a starting point of the iteration. */
-		private final Node<L> start;
-
 		/** Keeps track of the elements we've already iterated over. */
 		protected final Set<L> set;
 
 		/** Nodes that will be considered as boundaries for this subgraph. */
 		protected final Set<L> endPoints;
+
+		/** The Node that will be used as a starting point of the iteration. */
+		private final Node<L> start;
 
 		/**
 		 * Constructs a new iterable given the starting point the target subgraph and the elements that will
@@ -464,6 +579,8 @@ final class Graph<E> {
 			 * Creates the iterator over the nodes connected to the current. By default, this will iterate
 			 * over all parents, then all children.
 			 * 
+			 * @param node
+			 *            the starting node for this iteration.
 			 * @return Iterator over the connected nodes we are to iterate over.
 			 */
 			protected Iterator<Node<L>> createConnectedNodesIterator(Node<L> node) {
@@ -598,6 +715,154 @@ final class Graph<E> {
 		@Override
 		protected Iterator<? extends Node<P>> getChildren(Object obj) {
 			return ((Node<P>)obj).getParents().iterator();
+		}
+	}
+
+	/**
+	 * A custom iterator implementing a breadth-first iteration algorithm over the underlying graph. This will
+	 * start from the graph's {@link Graph#roots roots} and carry the iteration downward to each individual
+	 * node, never iterating twice on the same node, and never iterating over a node which parents have yet to
+	 * be iterated over.
+	 * <p>
+	 * <b>Note</b> that this iterator doesn't allow clients to structurally change the graph after its
+	 * creation. Any attempt at doing so will make the next call to {@link #next()} fail in
+	 * ConcurrentModificationException.
+	 * </p>
+	 * <p>
+	 * This iterator does not support removal of values from its underlying graph.
+	 * </p>
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private class BreadthFirstIterator implements PruningIterator<E> {
+		/**
+		 * The current depth-level iterator (first, an iterator over all roots, then, an iterator over all of
+		 * these roots' direct children, and so on). See also {@link #nextIterable}.
+		 */
+		private Iterator<Node<E>> currentIterator;
+
+		/**
+		 * The set of all children found for the current depth level. This will be used in conjunction with
+		 * {@link #consumedNodes} in order to determine the iterator we'll use when {@link #currentIterator}
+		 * is exhausted.
+		 */
+		private Set<Node<E>> nextIterable;
+
+		/**
+		 * The set of all nodes from the underlying graph we've already iterated over. This will prevent us
+		 * from cycling over nodes if there are cycles in our graph, and will also prevent us from iterating
+		 * twice over the same node (when a node has multiple parents).
+		 */
+		private Set<Node<E>> consumedNodes;
+
+		/**
+		 * The node we've last returned from a call to {@link #next()}. This will be <code>null</code>ed out
+		 * by a call to {@link #prune()}.
+		 */
+		private Node<E> lastReturned;
+
+		/**
+		 * The node we'll next return from a call to {@link #next()}. <code>null</code> when we've reached the
+		 * end of our iteration.
+		 */
+		private Node<E> next;
+
+		/**
+		 * The expected {@link Graph#modcount} for this iterator. Any attempt at calling {@link #next()} after
+		 * the underlying graph has been modified will fail in {@link ConcurrentModificationException}.
+		 */
+		private int expectedModCount;
+
+		/** Default constructor. */
+		public BreadthFirstIterator() {
+			this.currentIterator = Graph.this.roots.iterator();
+			this.nextIterable = new LinkedHashSet<Node<E>>();
+			this.consumedNodes = new LinkedHashSet<Node<E>>();
+			this.expectedModCount = Graph.this.modcount;
+			prepareNext();
+		}
+
+		/** {@inheritDoc} */
+		public boolean hasNext() {
+			return next != null || currentIterator.hasNext() || !consumedNodes.containsAll(nextIterable);
+		}
+
+		/** {@inheritDoc} */
+		public E next() {
+			if (Graph.this.modcount != expectedModCount) {
+				throw new ConcurrentModificationException();
+			}
+			if (next == null) {
+				throw new NoSuchElementException();
+			}
+			final E result = next.getElement();
+			consumedNodes.add(next);
+			lastReturned = next;
+			prepareNext();
+			return result;
+		}
+
+		/** {@inheritDoc} */
+		public void prune() {
+			// do not accept successive pruning calls, and don't fail when trying to prune before even
+			// starting the iteration.
+			if (lastReturned == null) {
+				return;
+			}
+			// the current has already been added to the "consumed" set.
+			// All direct and indirect children of this path must be pruned as well.
+			// TODO any effective way of achieving this without iterating?
+			Set<Node<E>> children = lastReturned.getChildren();
+			lastReturned = null;
+			while (!children.isEmpty()) {
+				consumedNodes.addAll(children);
+				final Set<Node<E>> copy = children;
+				children = new LinkedHashSet<Node<E>>();
+				for (Node<E> child : copy) {
+					children.addAll(child.getChildren());
+				}
+			}
+		}
+
+		/**
+		 * Unsupported.
+		 * 
+		 * @throws UnsupportedOperationException
+		 */
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+
+		/** This will prepare this iterator for a subsequent call to {@link #next()}. */
+		private void prepareNext() {
+			if (!currentIterator.hasNext()) {
+				prepareNextIterator();
+			}
+			if (currentIterator.hasNext()) {
+				next = currentIterator.next();
+				nextIterable.addAll(next.getChildren());
+			} else {
+				next = null;
+			}
+		}
+
+		/**
+		 * Whenever we've consumed all of the current depth's nodes, this will create a new iterator for the
+		 * next depth level out of {@link #nextIterable} and {@link #consumedNodes}.
+		 */
+		private void prepareNextIterator() {
+			final Set<Node<E>> difference = new LinkedHashSet<Node<E>>();
+			for (Node<E> node : nextIterable) {
+				if (!consumedNodes.contains(node)) {
+					difference.add(node);
+				}
+			}
+			currentIterator = Iterators.filter(difference.iterator(), new Predicate<Node<E>>() {
+				public boolean apply(Node<E> input) {
+					return consumedNodes.containsAll(input.getParents());
+				}
+			});
+			nextIterable.clear();
 		}
 	}
 }

@@ -10,13 +10,20 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.merge;
 
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.internal.utils.Graph;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger2;
 
@@ -29,6 +36,54 @@ public final class MergeDependenciesUtil {
 	/** Hides default constructor. */
 	private MergeDependenciesUtil() {
 		// Hides default constructor
+	}
+
+	/**
+	 * This will map all the differences from the given comparison in a dependency graph, enabling EMF Compare
+	 * to differentiate what can be safely merged from what cannot.
+	 * <p>
+	 * Typically, all differences that are not in a real conflict with another and that do not depend,
+	 * directly or indirectly, on a conflicting difference can be pre-merged without corrupting the models.
+	 * For example, if adding a reference "ref1" to an added class "C1" depends on the addition of a package
+	 * "P1" (i.e. three additions in a row), but "C1" has also been added in another place in the other model
+	 * (a conflict between two "same" elements added into different containers), then we can safely pre-merge
+	 * the addition of P1, but not the addition of its contained class C1, nor the addition of ref1.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            The comparison which differences are to be mapped into a dependency graph.
+	 * @param mergerRegistry
+	 *            The {@link IMerger.Registry merger registry} currently in use.
+	 * @param mergeRightToLeft
+	 *            The direction in which we're preparing a merge.
+	 * @return The dependency graph of this comparison's differences.
+	 */
+	public static Graph<Diff> mapDifferences(Comparison comparison, IMerger.Registry mergerRegistry,
+			boolean mergeRightToLeft) {
+		Graph<Diff> differencesGraph = new Graph<Diff>();
+		final Predicate<? super Diff> filter;
+		if (mergeRightToLeft) {
+			filter = fromSide(DifferenceSource.RIGHT);
+		} else {
+			filter = fromSide(DifferenceSource.LEFT);
+		}
+		for (Diff diff : Iterables.filter(comparison.getDifferences(), filter)) {
+			final IMerger merger = mergerRegistry.getHighestRankingMerger(diff);
+			final Set<Diff> directParents;
+			if (merger instanceof IMerger2) {
+				directParents = ((IMerger2)merger).getDirectMergeDependencies(diff, mergeRightToLeft);
+			} else {
+				directParents = Collections.emptySet();
+			}
+			if (directParents.isEmpty()) {
+				differencesGraph.add(diff);
+			} else {
+				for (Diff parent : directParents) {
+					differencesGraph.addChildren(parent, Collections.singleton(diff));
+				}
+			}
+		}
+		return differencesGraph;
 	}
 
 	/**
