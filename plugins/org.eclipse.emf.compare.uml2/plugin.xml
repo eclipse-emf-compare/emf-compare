@@ -47,6 +47,10 @@ Contributors:
             class="org.eclipse.emf.compare.uml2.internal.merge.UMLMerger"
             ranking="20">
       </merger>
+      <merger
+            class="org.eclipse.emf.compare.uml2.internal.merge.UMLReferenceChangeMerger"
+            ranking="25">
+      </merger>
    </extension>
 
 </plugin>

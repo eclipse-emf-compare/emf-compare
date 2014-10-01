@@ -1082,11 +1082,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		EObject dataItem = EMFCompareStructureMergeViewer.getDataOfTreeNodeOfAdapter(item.getData());
 		if (dataItem != null) {
 			final Set<Diff> requires = dependencyData.getRequires();
-			final Set<Diff> unmergeables = dependencyData.getUnmergeables();
+			final Set<Diff> rejectedDiffs = dependencyData.getRejections();
 			final GC g = event.gc;
 			if (requires.contains(dataItem)) {
 				paintItemBackground(g, item, fColors.getRequiredFillColor());
-			} else if (unmergeables.contains(dataItem)) {
+			} else if (rejectedDiffs.contains(dataItem)) {
 				paintItemBackground(g, item, fColors.getUnmergeableFillColor());
 			}
 		}

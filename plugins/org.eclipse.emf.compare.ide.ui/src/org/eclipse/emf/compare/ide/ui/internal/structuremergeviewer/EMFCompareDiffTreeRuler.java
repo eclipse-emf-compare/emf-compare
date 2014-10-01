@@ -173,7 +173,7 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 						.getRequiredStrokeColor());
 			}
 		}
-		for (Diff diff : dependencyData.getUnmergeables()) {
+		for (Diff diff : dependencyData.getRejections()) {
 			for (TreeItem item : dependencyData.getTreeItems(diff)) {
 				createAnnotation(e, item, compareColor.getUnmergeableFillColor(), compareColor
 						.getUnmergeableStrokeColor());

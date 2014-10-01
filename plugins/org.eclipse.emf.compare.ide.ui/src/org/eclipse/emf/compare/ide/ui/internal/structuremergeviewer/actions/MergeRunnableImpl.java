@@ -25,6 +25,7 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.internal.merge.IMergeData;
 import org.eclipse.emf.compare.internal.merge.MergeDataImpl;
+import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
 import org.eclipse.emf.compare.merge.BatchMerger;
@@ -91,27 +92,19 @@ public final class MergeRunnableImpl implements IMergeRunnable {
 	private void markAllAsMerged(Collection<Diff> diffToMarkAsMerged, MergeMode mode, Registry mergerRegistry) {
 		for (Diff diff : diffToMarkAsMerged) {
 			boolean isLeftToRight = mode.isLeftToRight(diff, isLeftEditable, isRightEditable);
-			markAsMerged(diff, mode, isLeftToRight, mergerRegistry);
+			markAsMerged(diff, mode, !isLeftToRight, mergerRegistry);
 		}
 	}
 
-	private void markAsMerged(Diff diff, MergeMode mode, boolean leftToRight, Registry mergerRegistry) {
+	private void markAsMerged(Diff diff, MergeMode mode, boolean mergeRightToLeft, Registry mergerRegistry) {
 		if (diff.getState() == DifferenceState.MERGED) {
 			return;
 		}
 
-		IMerger diffMerger = mergerRegistry.getHighestRankingMerger(diff);
-		final Set<Diff> implied;
-		final Set<Diff> rejections;
-		if (diffMerger instanceof IMerger2) {
-			implied = ((IMerger2)diffMerger)
-					.getResultingMerges(diff, leftToRight, Collections.<Diff> emptySet());
-			rejections = ((IMerger2)diffMerger).getResultingRejections(diff, leftToRight, Collections
-					.<Diff> emptySet());
-		} else {
-			implied = Collections.singleton(diff);
-			rejections = Collections.emptySet();
-		}
+		final Set<Diff> implied = MergeDependenciesUtil.getAllResultingMerges(diff, mergerRegistry,
+				mergeRightToLeft);
+		final Set<Diff> rejections = MergeDependenciesUtil.getAllResultingRejections(diff, mergerRegistry,
+				mergeRightToLeft);
 		for (Diff req : implied) {
 			req.setState(DifferenceState.MERGED);
 			addOrUpdateMergeData(req, mode);
@@ -155,14 +148,15 @@ public final class MergeRunnableImpl implements IMergeRunnable {
 		for (Diff difference : differences) {
 			final IMerger diffMerger = mergerRegistry.getHighestRankingMerger(difference);
 			if (diffMerger instanceof IMerger2) {
-				addOrUpdateMergeData(((IMerger2)diffMerger).getResultingMerges(difference, leftToRight,
-						Collections.<Diff> emptySet()), mergeMode);
+				final Set<Diff> resultingMerges = MergeDependenciesUtil.getAllResultingMerges(difference,
+						mergerRegistry, !leftToRight);
+				final Set<Diff> resultingRejections = MergeDependenciesUtil.getAllResultingRejections(
+						difference, mergerRegistry, !leftToRight);
+				addOrUpdateMergeData(resultingMerges, mergeMode);
 				if (mergeMode == MergeMode.LEFT_TO_RIGHT || mergeMode == MergeMode.RIGHT_TO_LEFT) {
-					addOrUpdateMergeData(((IMerger2)diffMerger).getResultingRejections(difference, leftToRight,
-							Collections.<Diff> emptySet()), mergeMode);
+					addOrUpdateMergeData(resultingRejections, mergeMode);
 				} else {
-					addOrUpdateMergeData(((IMerger2)diffMerger).getResultingRejections(difference, leftToRight,
-							Collections.<Diff> emptySet()), mergeMode.inverse());
+					addOrUpdateMergeData(resultingRejections, mergeMode.inverse());
 				}
 			} else {
 				addOrUpdateMergeData(Collections.singleton(difference), mergeMode);

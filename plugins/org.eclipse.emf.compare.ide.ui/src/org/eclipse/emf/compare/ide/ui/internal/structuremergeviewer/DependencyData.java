@@ -23,14 +23,13 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IMerger;
-import org.eclipse.emf.compare.merge.IMerger2;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
@@ -47,7 +46,7 @@ public class DependencyData {
 
 	private Set<Diff> requires;
 
-	private Set<Diff> unmergeables;
+	private Set<Diff> rejectedDiffs;
 
 	private final WrappableTreeViewer treeViewer;
 
@@ -58,7 +57,7 @@ public class DependencyData {
 		this.compareConfiguration = compareConfiguration;
 		this.treeViewer = treeViewer;
 		requires = newHashSet();
-		unmergeables = newHashSet();
+		rejectedDiffs = newHashSet();
 		diffToItemsMappings = HashMultimap.create();
 	}
 
@@ -74,18 +73,15 @@ public class DependencyData {
 			MergeMode mergePreviewMode = compareConfiguration.getMergePreviewMode();
 
 			requires = newHashSet();
-			unmergeables = newHashSet();
+			rejectedDiffs = newHashSet();
 			for (Diff diff : selectedDiffs) {
 				boolean leftToRight = mergePreviewMode.isLeftToRight(diff, leftEditable, rightEditable);
-				final IMerger diffMerger = mergerRegistry.getHighestRankingMerger(diff);
-				if (diffMerger instanceof IMerger2) {
-					addAll(requires, ((IMerger2)diffMerger).getResultingMerges(diff, leftToRight, Collections
-							.<Diff> emptySet()));
-					requires.remove(diff);
-					addAll(unmergeables, ((IMerger2)diffMerger).getResultingRejections(diff, leftToRight,
-							Collections.<Diff> emptySet()));
-					unmergeables.remove(diff);
-				}
+				requires.addAll(MergeDependenciesUtil.getAllResultingMerges(diff, mergerRegistry,
+						!leftToRight));
+				requires.remove(diff);
+				rejectedDiffs.addAll(MergeDependenciesUtil.getAllResultingRejections(diff, mergerRegistry,
+						!leftToRight));
+				rejectedDiffs.remove(diff);
 			}
 		}
 	}
@@ -160,8 +156,8 @@ public class DependencyData {
 	/**
 	 * @return the unmergeables
 	 */
-	public Set<Diff> getUnmergeables() {
-		return unmergeables;
+	public Set<Diff> getRejections() {
+		return rejectedDiffs;
 	}
 
 	public Collection<TreeItem> getTreeItems(Diff diff) {

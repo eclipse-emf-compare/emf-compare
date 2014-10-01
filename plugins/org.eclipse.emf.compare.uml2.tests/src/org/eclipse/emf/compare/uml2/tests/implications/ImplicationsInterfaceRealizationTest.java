@@ -7,6 +7,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReferenc
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -654,15 +655,18 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, kind);
 
 		if (kind.equals(TestKind.DELETE)) {
-			// there were tests for UML4, no longer valid for 5.0 with clientDependency being
-			// marked as derived.
+			assertEquals(1, diffs.addInterfaceRealization.getImpliedBy().size());
+			assertTrue(diffs.addInterfaceRealization.getImpliedBy().contains(
+					diffs.addClientInInterfaceRealization));
+			assertEquals(1, diffs.addSubstitution.getImpliedBy().size());
+			assertTrue(diffs.addSubstitution.getImpliedBy().contains(diffs.addClientInSubstitution));
 		} else {
-			assertEquals(0, diffs.addInterfaceRealization.getImplies().size());
-			assertEquals(0, diffs.addSubstitution.getImplies().size());
+			assertEquals(1, diffs.addInterfaceRealization.getImplies().size());
+			assertTrue(diffs.addInterfaceRealization.getImplies().contains(
+					diffs.addClientInInterfaceRealization));
+			assertEquals(1, diffs.addSubstitution.getImplies().size());
+			assertTrue(diffs.addSubstitution.getImplies().contains(diffs.addClientInSubstitution));
 		}
-		assertEquals(0, diffs.addClientInInterfaceRealization.getImplies().size());
-		assertEquals(0, diffs.addClientInSubstitution.getImplies().size());
-
 	}
 
 	@Override

@@ -48,6 +48,7 @@ import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.compare.uml2.internal.StereotypedElementChange;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.merge.UMLMerger;
+import org.eclipse.emf.compare.uml2.internal.merge.UMLReferenceChangeMerger;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor;
 import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
@@ -111,8 +112,11 @@ public abstract class AbstractUMLTest {
 		builder.setPostProcessorRegistry(postProcessorRegistry);
 		mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
 		final IMerger umlMerger = new UMLMerger();
+		final IMerger umlReferenceChangeMerger = new UMLReferenceChangeMerger();
 		umlMerger.setRanking(11);
+		umlReferenceChangeMerger.setRanking(25);
 		mergerRegistry.add(umlMerger);
+		mergerRegistry.add(umlReferenceChangeMerger);
 		emfCompare = builder.build();
 	}
 
