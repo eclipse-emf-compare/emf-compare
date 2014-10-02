@@ -170,7 +170,7 @@ On this difference you find some pieces of information:
 
 First accept the modification we have just created. To do so:
 * Select the difference you want to accept.
-** One click on the difference will select it in the structure merge viewer (top viewer). Double click on it to open the content merge viewer related to this difference.
+** Click on the difference within the structure merge viewer (top viewer). Double click on it to open the content merge viewer related to this difference.
 * Click on the accept icon [[Image:../images/accept_change.gif]].
 Your editor should look like this:
 
@@ -249,9 +249,9 @@ Reject the difference to set the "Category" feature to it's default value (see [
 To fill your library we are going to add some employees.
 * Close the compare editor (without saving).
 * Open the model editor.
-* Create an employee name Chief.
-* Create an employee name Master.
-* Create an employee name Employee.
+* Create an employee and set last name to Chief.
+* Create an employee and set last name to Master.
+* Create an employee and set last name to Employee.
 * Save.
 
 [[Image:../images/EMF_Compare_Tuto_Fill_Employees.png]]
@@ -291,7 +291,7 @@ Reject this difference and you will see the same type of result than [[#Reject_a
 Let's say "Employee" has a new job and so he has a new manager. We have to change the feature "Manager" from "Chief" to "Master".
 * Close EMF Compare editor (without saving).
 * Open the model editor.
-* Select "Employee".
+* Select the employee "Employee".
 * Set the feature "Manager" to "Master".
 * Save.
 * Compare with previous.
@@ -307,7 +307,7 @@ Accept the change to mark the difference as merged. Reject it to reset the manag
 Let's say that "Employee" has reached the top of the command chain. That is to say he has no more manager.
 * Close EMF Compare editor (without saving).
 * Open the model editor.
-* Select "Employee".
+* Select the employee "Employee".
 * Unset the feature "Manager" of "Employee".
 ** Open Properties view.
 ** Select "Manager" field.
@@ -339,30 +339,31 @@ For the same reason explained in [[#Fill_the_library_with_employees | Fill the l
 
 We are going to use your newly created borrower by making him borrow "Prelude to foundation".
 * Open the model editor.
-* Select "Borrower Graham".
-* Add "Prelude to foundation" to the feature "Borrowed" of "Will Graham".
+* Select the borrower "Graham".
+* Add "Prelude to Foundation" to the feature "Borrowed" in the Properties view.
 * Save.
 [[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Setting.png]]
 * Compare with previous.
 [[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison.png]]
 
 In this comparison you can notice two differences: [[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison_Borrowers_Diff.png]] and [[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison_Borrowed_Diff.png]].
-EMF Compare displays two differences whereas you have only made one modification in your model. The explanation is within the structure of the EXTlibrary metamodel. If you look on the feature "borrowed" in extlibrary.ecore you will see that the EOpposite field is set to "borrowers : Borrower".
+
+EMF Compare displays two differences whereas you have only made one modification in your model. The explanation is within the structure of the EXTlibrary metamodel. If you look at the feature "borrowed" in extlibrary.ecore you will see that the EOpposite field is set to "borrowers : Borrower".
 
 [[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison_EOpposite.png]]
 
-This means that each time you add/remove a book to a borrower EMF will automatically add/remove the borrower to the "borrower" features of the book (and the other way around). Modifying one feature will modify the other. It explains why EMF Compare sees two differences.
+This means that each time you add/remove a book to a borrower EMF will automatically add/remove the borrower to the "borrower" feature of the book (and the other way around). Modifying one feature will modify the other. It explains why EMF Compare sees two differences.
 
 Now you may wonder what happens when you accept one of the differences? EMF Compare will give you a hint on this matter. First notice the consequences preview button [[Image:../images/EMF_Compare_Tuto_Consequences_Preview_Button.png]]. It can either have its icon set to [[Image:../images/accept.gif]] for "Accept preview mode" or [[Image:../images/reject.gif]] for "Reject preview mode".
 
 When the "Accept preview mode" is activated ([[Image:../images/accept.gif]]), EMF Compare will help you to understand the consequences of accepting the current selected difference. Let's try it.
-* Activate the "accept preview mode" ([[Image:../images/accept.gif]]).
+* Activate the "Accept preview mode" ([[Image:../images/accept.gif]]).
 * Select "Borrower Graham  <nowiki>[borrowers add]</nowiki>" difference.
 [[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison.png]]
 
-Notice that "Book Prelude to Foundation <nowiki>[borrower add]</nowiki>" difference is highlighted in green. This means that accepting the current difference will automatically accept this difference too. Those two differences are linked by an "Equivalence" element meaning that merging one is equivalent to merging the other. You can reproduce the same behavior by selecting the difference "Book Prelude to Foundation <nowiki>[borrower add]</nowiki>" instead of "Borrower Graham  <nowiki>[borrowers add]</nowiki>".
+Notice that the "Book Prelude to Foundation <nowiki>[borrower add]</nowiki>" difference is highlighted in green. This means that accepting the current difference will automatically accept this difference too. Those two differences are linked by an "Equivalence" element meaning that merging one is equivalent to merging the other. You can reproduce the same behavior by selecting the difference "Book Prelude to Foundation <nowiki>[borrower add]</nowiki>" instead of "Borrower Graham  <nowiki>[borrowers add]</nowiki>".
 
-* Accept the difference and check out the result.
+* Accept the difference and check the result.
 
 [[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison_Accepted.png]]
 
@@ -372,7 +373,7 @@ Now let's try to reject the difference.
 * Switch to the reject preview mode([[Image:../images/reject.gif]]).
 [[Image:../images/EMF_Compare_Tuto_Switch_Reject_Preview_Mode.png]]
 * Select one difference.
-** Notice that the other difference is also highlighted in green. Since the two differences are "equivalent" both preview mode show the same consequences. You will see later in another use case that each preview mode can show different consequences.
+** Notice that the other difference is also highlighted in green. Since the two differences are "equivalent" both preview modes show the same consequences. You will see later in another use case that each preview mode can show different consequences.
 * Reject the difference.
 [[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison_Rejected.png]]
 
@@ -384,18 +385,19 @@ Now that's your library is growing, let's create a new branch in your library. T
 * Close EMF Compare Editor (without saving).
 * Open the model editor.
 * Create a new library under your main library.
-* Create a new book in this new element called "1984".
+* Create a new book within the new library called "1984".
 * Save.
 [[Image:../images/EMF_Compare_Tuto_New_Library_Setting.png]]
 * Compare with previous.
 [[Image:../images/EMF_Compare_Tuto_New_Library_Comparison.png]]
 
-EMF Compare displays only one difference whereas you have made two modifications. You have created one sub library and one book. There must be a connection between those two differences... Indeed without the library it's impossible to create the book "1984" since it is included in the new library. That's why by default EMF Compare does not display the two differences.
+EMF Compare displays only one difference whereas you have made two modifications. You have created one sub library and one book. There must be a connection between those two differences... Indeed without the library it's impossible to create the book "1984" since it is included in the new library. For clarity purposes EMF Compare only shows one difference and hides the other one.
 * Accept the difference.
 [[Image:../images/EMF_Compare_Tuto_New_Library_Comparison_Accepted.png]]
 
-EMF Compare has accepted both differences. It has created the new library and the new book. On the contrary if you reject the difference.
-* Reject the difference
+EMF Compare has accepted both differences. It has created the new library and the new book. On the contrary let's try to reject the difference.
+* Undo the previous action (Ctrl+z).
+* Reject the difference.
 [[Image:../images/EMF_Compare_Tuto_New_Library_Comparison_Rejected.png]]
 
 EMF Compare rejects both differences.
@@ -421,7 +423,7 @@ Notice that the library difference is highlighted. Indeed, merging the book diff
 
 [[Image:../images/EMF_Compare_Tuto_New_Library_Comparison_Cascading_Filter3.png]]
 
-In this mode the other difference is not highlighted. Indeed, you can reject the creation of the book without rejecting the creation of the library. In the same way, selecting the library difference while "Reject preview mode" is activated will highlight the book difference. If the library does not exist then the book can not exist.
+In this mode the other difference is not highlighted. Indeed, you can reject the creation of the book without rejecting the creation of the library. In the same way, selecting the library difference while "Reject preview mode" is activated will highlight the book difference. If the library does not exist then the book can also not exist.
 * Activate "Reject preview mode" ([[Image:../images/reject.gif]]).
 * Select the library difference.
 
@@ -438,12 +440,13 @@ In order to fill the new library we are going to give it one book from the main 
 * Compare with previous.
 [[Image:../images/EMF_Compare_Tuto_New_Library_Move_Comparison.png]]
 
-With this example we have introduced a new type of change: "moving an element". That is to say the element existed in the previous version but was located in a different place. In the content viewer you can see the location of this element in the current and previous versions of your model.
+With this example we have introduced a new type of change: "moving an element". This means the element already existed in the previous version but was located in a different place. In the content viewer you can see the location of this element in the current and previous versions of your model.
 
 * Accept the change to mark the difference as merged.
 
 [[Image:../images/EMF_Compare_Tuto_New_Library_Move_Accepted.png]]
 
+* Undo the previous action (Ctrl+z).
 * Reject the difference to move back the element to its original location.
 
 [[Image:../images/EMF_Compare_Tuto_New_Library_Move_Rejected.png]]
@@ -463,11 +466,13 @@ After an accident the book "1984" has to be removed from the shelves.
 [[Image:../images/EMF_Compare_Tuto_Remove_Book_Comparison.png]]
 
 This kind of change is the opposite of an addition. 
-Accept the change to mark the difference as merged.
+
+* Accept the change to delete the book.
 
 [[Image:../images/EMF_Compare_Tuto_Remove_Book_Accepted.png]]
 
-Reject it to add the book back into the library.
+* Undo the previous action (Ctrl+z).
+* Reject the change to add the book back into the library.
 
 [[Image:../images/EMF_Compare_Tuto_Remove_Book_Rejected.png]]
 
@@ -475,7 +480,9 @@ Reject it to add the book back into the library.
 
 ===== Set up =====
 
-In this part of the tutorial we are going to continue building our model. The only difference is that we are going create different scenarios for each new modification. To do this we need a tool called Git. It is a free and open source distributed version control system. In Eclipse world we are going to talk about [[http://www.eclipse.org/jgit/ |JGit]] and [[http://www.eclipse.org/egit/ |EGit]]. JGit is a java implementation of Git. EGit is the integration of JGit in Eclipse. 
+In this part of the tutorial we will continue building our model. The only difference is that we are going to create different scenarios for each new modification. To do this we need a tool called Git. It is a free and open source distributed version control system. In Eclipse world we are going to talk about [[http://www.eclipse.org/jgit/ |JGit]] and [[http://www.eclipse.org/egit/ |EGit]]. JGit is a java implementation of Git. EGit is the integration of JGit in Eclipse. 
+
+Attention: Remove the book "Prelude to Foundation" from the "Borrowed" feature of borrower "Graham" before continuing. The following examples assume this relation is not set!
 
 ====== Create a Git repository ======
 
@@ -484,7 +491,7 @@ First of all we need a Git repository. You can either use a clone of an existing
 ** Select "Git Repositories".
 **: [[Image:../images/EMF_Compare_Tutorial_Git_Repo_View.png]]
 * Then click on the new repository button [[Image:../images/EMF_Compare_Tuto_Create_Git_Repo_Button.png]].
-* Set the location of your new repository and give it a name.
+* Set the location of your new repository. If prompted give it a name. 
 *: [[Image:../images/EMF_Compare_Tuto_Create_Git_Repo_Wizard.png]]
 * Click on finish.
 *: [[Image:../images/EMF_Compare_Tuto_Repository_View.png]]
@@ -493,52 +500,50 @@ First of all we need a Git repository. You can either use a clone of an existing
 
 Now that your repository is ready. Let's put your model in it.
 * Select the project holding your model.
-* Open the contextual menu: Team > "Share project...".
+* Open the contextual menu: "Team" > "Share project...".
 *: [[Image:../images/EMF_Compare_Tuto_Share_Project.png]]
 * Select "Git" and click next.
 *: [[Image:../images/EMF_Compare_Tuto_Share_Project_Wizard.png]]
-* Choose the repository you have just created and click on finish.
+* Choose the repository you previously created and click on finish.
 *: [[Image:../images/EMF_Compare_Tuto_Share_Project_Wizard2.png]]
 
 ====== Commit your changes ======
 
-Your project has just been moved into the repository. However your work has not been committed yet. Committing a model is like taking a snapshot of it and save it for later (see [[http://wiki.eclipse.org/EGit/User_Guide#Committing_Changes | Commiting Changes]] for further information). To do so:
-
+Your project has now been moved into the repository. However your work has not been committed yet. Committing a model is like taking a snapshot of it and saving it for later (see [[http://wiki.eclipse.org/EGit/User_Guide#Committing_Changes | Commiting Changes]] for further information). To do so:
 * Select the project holding your model.
-* Open the contextual menu: Team > "Commit...".
-* Enter a message for this commit describing what has been done. In this example we wrote "First commit."
+* Open the contextual menu (right click): "Team" > "Commit...".
+* Enter a message for this commit describing what has been done. For this example "First commit." will do.
 * Select the files you want to commit. In our example select all files.
 *: [[Image:../images/EMF_Compare_Tuto_First_Commit.png]]
-* Click on commit button.
+* Click on the commit button.
 
 Your project has just been committed into your repository. 
 Let's have a look at your repository and its history.
-* Select your repository in the "Git Repositories view".
-* Open the the "History view":
-** Open the history view: Window > "Show view" > "Other...".
-** Select "History".
-**: [[Image:../images/EMF_Compare_Tuto_History_View.png]]
+* Select your repository in the "Git Repositories" view.
+* Open the "History" view:
+** Open the contextual menu by right clicking on the repository.
+** Choose "Show In" > "History"
 
-It should look like this.
+It should look like this:
 [[Image:../images/EMF_Compare_Repository_State1.png]]
 
-Expand your repository tree in the "Git repository" view. In it you can see a folder named "Local". This folder contains all the branches of you Git repository. You can picture yourself that each branch is a scenario of your model. You can notice that your repository has already a "master" branch. This is your main scenario. 
+Expand your repository tree in the "Git Repositories" view. In it you can see a folder named "Local" located within "Branches". This folder contains all the branches of your Git repository. In this example each branch will represent a scenario of your model. You can notice that your repository has already a "master" branch. This is your main scenario.
 
-On the history view you will be displayed the graph of all your commit. Currently the only entry available is the first commit you have made earlier. To better understand the changes that we are going to make in the repository, We advice you to click on "Synchronize" button ([[Image:../images/EMF_Compare_Tuto_Sync_Button.png]]) and on "Show all branches" button ([[Image:../images/EMF_Compare_Tuto_Show_All_Branches_Button.png]]). This will give you a global point of your repository.
+In the history view you can see the graph of all your commits. Currently the only entry available is the first commit you have made earlier. To better understand the changes that we are going to make in the repository, we advice you to click on the "Synchronize" button ([[Image:../images/EMF_Compare_Tuto_Sync_Button.png]]) and on the "Show all branches" button ([[Image:../images/EMF_Compare_Tuto_Show_All_Branches_Button.png]]). This will give you a global point of your repository.
 
 ===== Create Scenario 1 =====
 
 Let's create our first scenario. To do so:
-* Select the branch that will be used as start point your new branch. In this case, master.
-* Open the contextual menu: "Create new branch...".
+* Select the branch within the "Git Repositories" view that will be used as start point your new branch. In this case: master.
+* Open the contextual menu: "Create Branch...".
 [[Image:../images/EMF_Compare_Tuto_Create_New_Branch.png]]
 * Set its name to "Scenario1". The button "Checkout new branch" must be checked.
 [[Image:../images/EMF_Compare_Tuto_Create_New_Branch_Wizard.png]]
 * Click on finish.
 
-You have just created a new scenario that will use the last commit from master branch as starting point.
+You have just created a new scenario that will use the last commit from the master branch as starting point.
 
-====== Change the number of page ======
+====== Change the number of pages ======
 
 You have now two branches in your repository. Let's modify our model to write our first scenario.
 * Open the model editor.
@@ -552,7 +557,7 @@ You have now two branches in your repository. Let's modify our model to write ou
 ** Open the contextual menu: "Compare With" > "Head Revision".
 [[Image:../images/EMF_Compare_Tuto_Scenario1_Comparison.png]]
 
-This is a comparison between the current version of your model and the snapshot that you have committed earlier. Let's save this version. To do so we are going to commit it. Follow the step described in [[#Commit_your_changes | Commit your changes]].
+This is a comparison between the current version of your model and the snapshot that you have committed earlier. Let's save this version. To do so we are going to commit it. Follow the steps as described in [[#Commit_your_changes | Commit your changes]]:
 * Select the project holding your model.
 * Open the contextual menu: Team > "Commit...".
 [[Image:../images/EMF_Compare_Tuto_Scenario1_Commit.png]]
@@ -563,20 +568,20 @@ This is a comparison between the current version of your model and the snapshot 
 ===== Scenario 2: Conflict =====
 
 Let's create a different scenario. Follow the step described in [[#Create_Scenario_1 | Create Scenario 1]] to create a new scenario called "Scenario2" from the master branch.
-* Click on the master branch in the "Git Repositories view".
-* Open the contextual menu: "Create new Branch...".
+* Click on the master branch in the "Git Repositories" view.
+* Open the contextual menu: "Create Branch...".
 * Set the name of the new branch to "Scenario2".
 * Click on finish.
 [[Image:../images/EMF_Compare_Tuto_Scenario2_Creation.png]]
 
 In this scenario we are going to set the number of pages of "Prelude to Foundation" to 375.
-* Open your model editor.
-* Set the number of page of "Prelude to Foundation" to 375 (see [[#Change_the_number_of_page | Change the number of page]] for further information)
+* Refresh the model editor by double clicking on the "TutorialModel.extlibrary".
+* Set the number of page of "Prelude to Foundation" to 375 (see [[#Change_the_number_of_pages | Change the number of pages]] for further information)
 * Save.
 *: [[Image:../images/EMF_Compare_Tuto_Scenario2_Setting.png]]
 * Commit your changes (see [[#Commit_your_changes | Commit your changes]] for further information).
 * Set the commit message to "Set page number to 375."
-* Compare your model with the scenario 1:
+* Compare your model with "Scenario1":
 ** Select the model file.
 ** Open the contextual menu: "Compare with" > "Commit...". 
 **: [[Image:../images/EMF_Compare_Tuto_Scenario2_Compare_With_Commit.png]]
@@ -587,19 +592,19 @@ You should now have an EMF Compare editor open.
 
 [[Image:../images/EMF_Compare_Tuto_Scenario2_Comparison.png]]
 
-The first thing to understand is that this comparison is a 3-way comparison. This means that EMF Compare has used 3 inputs to compute the differences. The first one (on the bottom left) is the local version of your model (Scenario2). The second one (on the bottom right) is the version of your model from Scenario 1. And the third one is a common ancestor of the two other versions. The history view gives a picture of the situation.
+The first thing to understand is that this comparison is a 3-way comparison. This means that EMF Compare has used 3 inputs to compute the differences. The first one (in the bottom left) is the local version of your model ("Scenario2"). The second one (in the bottom right) is the version of your model from "Scenario1". And the third one is a common ancestor of the two other versions. The history view gives a picture of the situation.
 * Have a look on the history view of your repository.
 
 [[Image:../images/EMF_Compare_Tuto_Scenario2_Common_Ancestor.png]]
 
-Both scenario 1 and 2 used the master branch as starting point. This is why it has being used as common ancestor. We will see later on this tutorial how EMF Compare uses this third input. You can display its content in the user interface by clicking on "Show ancestor button" ([[Image:../images/EMF_Compare_Tuto_Show_Ancestor_Button.png]]).
+Both scenario 1 and 2 used the master branch as starting point. This is why it has being used as common ancestor. We will see later on this tutorial how EMF Compare uses this third input. You can display its content in EMF Compare by clicking on the "Show Ancestor Pane" button ([[Image:../images/EMF_Compare_Tuto_Show_Ancestor_Button.png]]).
 
 [[Image:../images/EMF_Compare_Tuto_Scenario2_Common_Ancestor2.png | Common Ancestor 2]]
 
-* Let's have a look on the differences.
+* Let's have a look at the differences.
 [[Image:../images/EMF_Compare_Tuto_Scenario2_Conflict_Differences.png]]
 
-You can notice a new type of difference: conflicts. Indeed in scenario 1 we have set number of page to 374 whereas we have set it to 375 in scenario2. EMF Compare is telling us that it can not be both. If you select one of the difference you will see that the other is highlighted in red. This means that if you merge this difference EMF Compare will not be able to merge the other one.
+You can notice a new type of difference: conflicts. Indeed in Scenario1 we set the number of pages to 374 whereas we set it to 375 in Scenario2. EMF Compare is telling us that it can not be both. If you select one of the difference you will see that the other is highlighted in red. This means that if you merge this difference EMF Compare will not be able to merge the other one.
 
 We are now going to see what will be the impact of accepting or rejecting each difference.
 * Select the difference named "375 <nowiki>[page changed]</nowiki>".
@@ -607,54 +612,54 @@ We are now going to see what will be the impact of accepting or rejecting each d
 
 [[Image:../images/EMF_Compare_Tuto_Scenario2_Accept_375.png]]
 
-In this case EMF Compare has accepted the selected difference and rejected the other since they can not be accepted both. Let's try to reject this difference.
-* Undo the previous action (Ctlr+z)
-* First switch to "Reject preview mode" ([[Image:../images/reject.gif]]).
+In this case EMF Compare has accepted the selected difference and rejected the other one since they can not be accepted simultaneously. Let's try to reject this difference.
+* Undo the previous action (Ctrl+z).
+* Switch to "Reject preview mode" ([[Image:../images/reject.gif]]).
 [[Image:../images/EMF_Compare_Tuto_Scenario2_Reject_Preview_Mode.png]]
-You can notice that there is nothing highlighted in red. It seems that rejecting this difference has no consequence on other differences. Let's find out.
+Notice that nothing is highlighted in red. It seems that rejecting this difference has no consequence on other differences. Let's find out.
 * Reject the difference named "375 <nowiki>[page changed]</nowiki>".
 [[Image:../images/EMF_Compare_Tuto_Scenario2_Reject_375.png]]
 
-In this case it has only rejected the current difference. If you look at the value of the attribute you will see that the number of page has been set to 100. This value is the value of the same attribute in the common ancestor model (see picture "Common Ancestor 2"). In 3-way comparison you can either accept the version of an attribute from one of the two input version (Scenario 1 or Scenario 2) or return the version to its common ancestor value (master).
+In this case EMF Compare only rejected the current difference. When you look at the value of the attribute you will see that the number of page has been set to 100. This value is the value of the same attribute in the common ancestor model (see picture "Common Ancestor 2"). In 3-way comparison you can either accept the version of an attribute from one of the two input version (Scenario 1 or Scenario 2) or return the version to its common ancestor value (master).
 
 Obviously you can do the same actions on the difference named "374 <nowiki>[page changed]</nowiki>". It will:
 * Set the value of the attribute to 374 and reject the other difference if you accept it.
-* Set the value of the attribute to 100 if your reject it.
+* Set the value of the attribute to 100 if you reject it.
+
+Note that after rejecting one scenario you still have to handle the remaining difference. Depending on if you accept or reject it, the final value of the attribute will be the one of the common ancestor or the one of the remaining scenario.
 
 ===== Scenario 3: Pseudo conflict =====
 
-In the previous chapter you have seen how EMF Compare handles two conflicting changes between two scenarios. In this chapter we are going to see how it handles two changes that are semantically the same. Let's create the scenario 3.
-* Create a new branch named scenario 3 from master (see [[#Create_Scenario_1 | Create Scenario 1]] to see how to create a new scenario).
-* Open your model editor.
-* Set the number of page of "Prelude to foundation" to 375 (see [[#Scenario_2:_Conflict | Scenario 2]] for further explanation).
+In the previous chapter you have seen how EMF Compare handles two conflicting changes between two scenarios. In this chapter we are going to see how it handles two changes that are semantically the same. Let's create a third scenario:
+* Create a new branch named "Scenario3" from the master branch (see [[#Create_Scenario_1 | Create Scenario 1]] to see how to create a new scenario).
+* Open the model editor.
+* Set the number of pages of "Prelude to Foundation" to 375 (see [[#Scenario_2:_Conflict | Scenario 2]] for further explanation).
 * Save.
 * Commit your changes (see [[#Commit_your_changes | Commit your changes]]). Set the commit message to "Set page number to 375".
-* Compare this version with the scenario 2 :
+* Compare this version with Scenario2 :
 ** Select your model file.
 ** Open the contextual menu: "Compare with" > "Branch, Tag or Reference...".
 **: [[Image:../images/EMF_Compare_Tuto_Scenario3_Compare_With_Branch.png]]
-** Select scenario 2.
+** Select "Scenario2".
 **: [[Image:../images/EMF_Compare_Tuto_Scenario3_Compare_With_Scenario2.png]]
 ** Click on Compare.
 
 [[Image:../images/EMF_Compare_Tuto_Scenario3_Comparison.png]]
 
-At first glance it's seems that nothing has been done. This would not really be surprising since the two input models are semantically identical. However you will see that EMF Compare has done some work. To see it:
+At first glance it seems that no difference was detected. This is not really surprising since the two input models are semantically identical. However you will see that EMF Compare has done some work:
 * Deactivate the "Pseudo Conflict" filter.
-* Handle the filter popup. Select "Yes" if you want to deactivate the "Pseudo conflict" filter by default for all subsequent comparisons. Select "No" if you prefer deactivating it only for the current comparison. You can also ask EMF Compare to remember your choice by checking the checkbox in the bottom left corner.
-* [[Image:../images/EMF_Compare_Tuto_New_Library_Comparison_Cascading_Filter_Popup.png]]
+* Handle the filter popup. Select "Yes" if you want to deactivate the "Pseudo conflict" filter by default for all subsequent comparisons. Select "No" if you prefer deactivating it only for the current comparison. You can also ask EMF Compare to remember your choice by checking the checkbox in the bottom left corner. [[Image:../images/EMF_Compare_Tuto_New_Library_Comparison_Cascading_Filter_Popup.png]]
 ''' Blocked  by https://bugs.eclipse.org/bugs/show_bug.cgi?id=435051 '''
 [[Image:../images/EMF_Compare_Tuto_Scenario3_Pseudo_Conflict_Filter.png]]
 
-EMF Compare has detected two differences. The first difference has been detected between the common ancestor and the scenario 2. The second has been detected between the common ancestor and the scenario 3. However EMF Compare was clever enough to consider that those two differences were the same. 
+EMF Compare has detected two differences. The first difference has been detected between the common ancestor and Scenario2. The second has been detected between the common ancestor and Scenario3. However EMF Compare is clever enough to consider that these two differences are the same. 
 
- 
-'' TODO Create a new scenario - Scenario 4 and 5 Advanced conflict (Compare with another branch + Advanced conflict)''
+
 ===== Scenario 4 and 5: Advanced conflict =====
 
-Now that you have understood how conflicts works we are going to create a more complex conflict. Let's create a conflict between a book that we are going to delete in a scenario (Scenario4) and the same book that we are going to borrow in another scenario (Scenario 5). 
-* Create a new scenario named "Scenario4" from master (see [[#Create_Scenario_1 | Create Scenario 1]] to see how to create a new scenario).
-* Delete the book "Prelude to foundation".
+Now that you have understood how conflicts works we are going to create a more complex conflict. Let's create a conflict between a book that we are going to delete in a scenario (Scenario4) and the same book that we are going to borrow in another scenario (Scenario5). 
+* Create a new scenario named "Scenario4" from the master branch (see [[#Create_Scenario_1 | Create Scenario 1]] to see how to create a new scenario).
+* Delete the book "Prelude to Foundation".
 * Save.
 *:[[Image:../images/EMF_Compare_Tuto_Scenario4_Setting.png]]
 * Commit with the message "Deletion of prelude to foundation" (see [[#Commit_your_changes | Commit your changes]]).
@@ -679,17 +684,17 @@ If you select each differences you will see that:
 **: Rejecting it does not automatically accept the other differences. Indeed you can prevent the deletion of the book but still want to choose to accept or reject the other difference.
 * "Borrower Graham<nowiki>[borrowers add]</nowiki>" and "Book Prelude to foundation<nowiki>[borrowed add]</nowiki>" are equivalent and they can not be merged with the third difference.
 *: [[Image:../images/EMF_Compare_Tuto_Scenario5_Diff_Dependencies2.png]]
-** Accept one of the of them to get:
+** Accept one of them to get:
 **: [[Image:../images/EMF_Compare_Tuto_Scenario5_Set_Ref_Accepted.png]]
-** Reject one of the them to get:
+** Reject one of them to get:
 **: [[Image:../images/EMF_Compare_Tuto_Scenario5_Set_Ref_Rejected.png]]
 **: The same conclusion goes here. You can reject the setting of the reference and still want to choose what to do with the "delete" difference.
 
 ===== Fragment your model =====
 
-Let's say that you want to delegate the work on the sub library to one of your colleague. To do so you want to give him a file with in it the sub library and only this. Let's extract our new branch library into a new file. In this part of the tutorial we are going to discuss the fragmentation of a model (also called control). The following steps will show you how EMF Compare reacts with model split among several files. 
+Let's say you want to delegate the work on the sub library to one of your colleagues. To do so you want to give him a file with the sub library and nothing else. Let's extract our new branch library into a new file. In this part of the tutorial we are going to discuss the fragmentation of a model (also called control). The following steps will show you how EMF Compare reacts with models split among several files. 
 
-* Create scenario 6 from master (see [[#Create_Scenario_1 | Create Scenario 1]] to see how to create a new scenario).
+* Create "Scenario6" from the master branch (see [[#Create_Scenario_1 | Create Scenario 1]] to see how to create a new scenario).
 * Open the model editor.
 * Control the branch library:
 ** Select the sub library.
@@ -702,7 +707,7 @@ Let's say that you want to delegate the work on the sub library to one of your c
 * Open the model editor (it needs to be reloaded to see the control decorator).
 [[Image:../images/EMF_Compare_Tuto_Controled_Model.png]]
 In your new model you can see that two resources have been loaded (NewLibraryFile.extlibrary and TutorialModel.extlibrary). You can also notice a new overlay icon on the sub library. This means this element is stored in another file (resource).
-* Compare with HEAD (see [[#Change_the_number_of_page | Compare with HEAD]]).
+* Compare with HEAD (see [[#Change_the_number_of_pages | Compare with HEAD]]).
 Eclipse asks you to switch to the "Team Synchronize" perspective, accept.
 
 
