@@ -183,6 +183,39 @@ public class ProfileLoadingTest {
 	}
 
 	/**
+	 * Tests loading a dynamic profile referenced using a relative path. This profile is not registered in the
+	 * platform but uses the xxx.profile.uml convention. This time the profile model belong the list of
+	 * IStorage that the resource set will load.
+	 */
+	@Test
+	public void loadDynamicRelativeProfile2() {
+		String umlResourceURI = BASE_URI + "relative/model.uml"; //$NON-NLS-1$
+		resourceSet = createNotLoadingResourceSet(umlResourceURI, PROFILE_URI);
+		Set<String> expectedLoadedResource = Sets.newHashSet(PROFILE_URI, umlResourceURI);
+		assertLoadeResources(expectedLoadedResource);
+		EObject stereotypeApplication = getStereotype(umlResourceURI + "#_XzoewEIyEeSXpd1NJW5urA", //$NON-NLS-1$
+				ST1_PROFILE_QUALIFIED_NAME);
+		assertTrue(stereotypeApplication instanceof DynamicEObjectImpl);
+
+	}
+
+	/**
+	 * Same as {@link #loadDynamicRelativeProfile2()} but changes the order in wich the IStorages are loaded
+	 * in the resource set.
+	 */
+	@Test
+	public void loadDynamicRelativeProfile3() {
+		String umlResourceURI = BASE_URI + "relative/model.uml"; //$NON-NLS-1$
+		resourceSet = createNotLoadingResourceSet(PROFILE_URI, umlResourceURI);
+		Set<String> expectedLoadedResource = Sets.newHashSet(PROFILE_URI, umlResourceURI);
+		assertLoadeResources(expectedLoadedResource);
+		EObject stereotypeApplication = getStereotype(umlResourceURI + "#_XzoewEIyEeSXpd1NJW5urA", //$NON-NLS-1$
+				ST1_PROFILE_QUALIFIED_NAME);
+		assertTrue(stereotypeApplication instanceof DynamicEObjectImpl);
+
+	}
+
+	/**
 	 * Tests loading a static profile referenced using a pathmap URI. This profile is registered in the
 	 * platform against org.eclipse.uml2.uml.generated_package UML extension point.
 	 */

@@ -14,6 +14,8 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.createURIFor;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,16 +23,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.internal.EMFCompareIDEMessages;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
@@ -38,6 +43,7 @@ import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -45,11 +51,41 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * This implementation of a resource set will be created from a {@link StorageTraversal}, and only those
  * resources that are part of the traversal will be loaded. This will allow us to resolve the proxies between
  * these "traversed" resources.
+ * <p>
+ * This resource set will prevent loading any resources that is not part of the initial traversal. The only
+ * exception to this rule is if one of the registered {@link ILoadOnDemandPolicy} says otherwise. Users should
+ * not try to add more resources into this resource set using any of the createResource methods.
+ * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @Beta
 public final class NotLoadingResourceSet extends ResourceSetImpl {
+
+	/**
+	 * Function to transform a {@link IStorage} in an {@link URI}.
+	 */
+	private static final Function<IStorage, URI> TO_URI = new Function<IStorage, URI>() {
+
+		public URI apply(IStorage input) {
+			return createURIFor(input);
+		}
+	};
+
+	/**
+	 * Storage traversal used to load specific resources from {@link IStorage}.
+	 */
+	private final StorageTraversal storageTranversal;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param storageTranversal
+	 *            see {@link #storageTranversal}.
+	 */
+	private NotLoadingResourceSet(StorageTraversal storageTranversal) {
+		this.storageTranversal = storageTranversal;
+	}
 
 	/**
 	 * Constructs a resource set to contain the resources described by the given traversals.
@@ -58,25 +94,26 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	 *            All traversals we are to load.
 	 * @param monitor
 	 *            the monitor to which progress will be reported.
-	 * @return resource set to containing the resources described by the given traversals.
+	 * @return resource set containing the resources described by the given traversals.
 	 */
 	public static NotLoadingResourceSet create(final StorageTraversal traversals, IProgressMonitor monitor) {
 		SubMonitor progress = SubMonitor.convert(monitor, 100);
 		progress.subTask(EMFCompareIDEMessages.getString("NotLoadingResourceSet.monitor.resolve")); //$NON-NLS-1$
-		final NotLoadingResourceSet resourceSet = new NotLoadingResourceSet();
+		final NotLoadingResourceSet resourceSet = new NotLoadingResourceSet(traversals);
 
 		resourceSet.setURIResourceMap(new HashMap<URI, Resource>(traversals.getStorages().size() << 1));
+		final Set<? extends IStorage> storages = traversals.getStorages();
 
 		// loading is 60% of the total work?
 		final int loadWorkPercentage = 60;
 		SubMonitor subMonitor = progress.newChild(loadWorkPercentage).setWorkRemaining(
 				traversals.getStorages().size());
-		for (IStorage storage : traversals.getStorages()) {
+		for (URI uri : Iterables.transform(storages, TO_URI)) {
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
-
-			resourceSet.loadResource(storage, resourceSet.getLoadOptions());
+			// Forces the loading of the selected resources.
+			resourceSet.loadResource(uri);
 			subMonitor.worked(1);
 		}
 
@@ -95,6 +132,104 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 		}
 
 		return resourceSet;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#demandLoadHelper(org.eclipse.emf.ecore.resource.Resource)
+	 */
+	@Override
+	protected void demandLoadHelper(Resource resource) {
+		if (storageTranversal != null) {
+			// Checks if there is IStorage that should be used to fill this ressource.
+			IStorage storage = getMatchingStorage(resource);
+			if (storage != null) {
+				try {
+					loadFromStorage(resource, storage);
+				} catch (IOException e) {
+					logLoadingFromStorageFailed(resource, storage, e);
+				}
+			} else {
+				super.demandLoadHelper(resource);
+			}
+		} else {
+			super.demandLoadHelper(resource);
+		}
+	}
+
+	/**
+	 * Logs a error on a {@link Resource} that has failed loading.
+	 * 
+	 * @param resource
+	 *            The {@link Resource} to be loaded.
+	 * @param storage
+	 *            The {@link IStorage} providing the content of the resource.
+	 * @param e
+	 *            The raised exception.
+	 */
+	private void logLoadingFromStorageFailed(Resource resource, IStorage storage, Exception e) {
+		Status errorStatus = new Status(IStatus.ERROR, EMFCompareIDEPlugin.PLUGIN_ID, EMFCompareIDEMessages
+				.getString("StorageResourceWrapper.failToLoad", resource.getURI().toString(), storage //$NON-NLS-1$
+						.getName()), e);
+		EMFCompareIDEPlugin.getDefault().getLog().log(errorStatus);
+	}
+
+	/**
+	 * Gets the {@link IStorage} that should be used to fill the passed {@link Resource}.
+	 * 
+	 * @param resource
+	 *            The {@link Resource} to load.
+	 * @return A {@link IStorage} to use for loading the resource or <code>null</code> if there is no
+	 *         {@link IStorage} for this {@link Resource}.
+	 */
+	private IStorage getMatchingStorage(Resource resource) {
+		URIConverter theURIConverter = getURIConverter();
+		URI resourceNormalizedUri = theURIConverter.normalize(resource.getURI());
+		for (IStorage storage : storageTranversal.getStorages()) {
+			URI storageNormalizedURI = getURIConverter().normalize(createURIFor(storage));
+			if (storageNormalizedURI.equals(resourceNormalizedUri)) {
+				return storage;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Loads a {@link Resource} using a the content of {@link IStorage}.
+	 * 
+	 * @param resource
+	 *            The {@link Resource} to be loaded.
+	 * @param storage
+	 *            The {@link IStorage} providing the content.
+	 * @throws IOException
+	 *             Exception raised if there is an error with the {@link IStorage}.
+	 */
+	private void loadFromStorage(Resource resource, IStorage storage) throws IOException {
+		InputStream stream = null;
+		try {
+			stream = storage.getContents();
+			resource.load(stream, getLoadOptions());
+		} catch (CoreException e) {
+			logLoadingFromStorageFailed(resource, storage, e);
+		} catch (WrappedException e) {
+			logLoadingFromStorageFailed(resource, storage, e);
+		} finally {
+			if (stream != null) {
+				stream.close();
+			}
+		}
+	}
+
+	/**
+	 * Loads a resource the way a basic {@link ResourceSetImpl} would do it.
+	 * 
+	 * @param uri
+	 *            same as {@link ResourceSetImpl#getResource(URI, boolean)}.
+	 * @return same as {@link ResourceSetImpl#getResource(URI, boolean)}.
+	 */
+	private Resource loadResource(URI uri) {
+		return super.getResource(uri, true);
 	}
 
 	/**
@@ -128,42 +263,6 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 			return super.getResource(uri, true);
 		}
 		return super.getResource(uri, false);
-	}
-
-	/**
-	 * This will try and load the given file as an EMF model, and return the corresponding {@link Resource} if
-	 * at all possible.
-	 * 
-	 * @param storage
-	 *            The file we need to try and load as a model.
-	 * @param options
-	 *            The options to pass to {@link Resource#load(java.util.Map)}.
-	 * @return The loaded EMF Resource if {@code file} was a model, {@code null} otherwise.
-	 */
-	public Resource loadResource(IStorage storage, Map<?, ?> options) {
-		InputStream stream = null;
-		Resource resource = null;
-		try {
-			resource = createResource(createURIFor(storage));
-			stream = storage.getContents();
-			resource.load(stream, options);
-		} catch (IOException e) {
-			// return null
-		} catch (CoreException e) {
-			// return null
-		} catch (WrappedException e) {
-			// return null
-		} finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					// Should have been caught by the outer try
-				}
-			}
-		}
-
-		return resource;
 	}
 
 	/**
