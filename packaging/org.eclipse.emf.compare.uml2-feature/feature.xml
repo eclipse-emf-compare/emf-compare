@@ -21,8 +21,8 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.emf.compare" version="3.0.0.qualifier"/>
-      <import feature="org.eclipse.emf.compare.ide.ui" version="3.0.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare" version="3.1.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare.ide.ui" version="3.1.0.qualifier"/>
       <import plugin="org.eclipse.uml2.uml" version="3.2.0" match="greaterOrEqual"/>
    </requires>
 
