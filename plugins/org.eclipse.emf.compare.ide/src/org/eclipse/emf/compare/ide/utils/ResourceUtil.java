@@ -454,7 +454,7 @@ public final class ResourceUtil {
 				result = false;
 			} else {
 				for (int i = 0; i < length1 && result; i++) {
-					result = array1[i] == array2[i] && array1[1] == array3[i];
+					result = array1[i] == array2[i] && array1[i] == array3[i];
 				}
 			}
 			return result;
