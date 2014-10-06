@@ -389,6 +389,7 @@
         <module>../plugins/org.eclipse.emf.compare.uml2.edit.papyrus</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.ide.tests</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.ide.ui.tests</module>
         
         <module>../plugins/org.eclipse.emf.compare.subversive</module>
         <module>../packaging/org.eclipse.emf.compare.subversive-feature</module>
@@ -435,6 +436,7 @@
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.ide.tests</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.ide.ui.tests</module>
         
         <module>../plugins/org.eclipse.emf.compare.subversive</module>
         <module>../packaging/org.eclipse.emf.compare.subversive-feature</module>

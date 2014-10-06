@@ -562,7 +562,23 @@ public final class ComparisonScopeBuilder {
 	private static Predicate<Resource> isInScope(final Set<URI> uris) {
 		return new Predicate<Resource>() {
 			public boolean apply(Resource input) {
-				return input != null && uris.contains(input.getURI());
+				final boolean result;
+				if (input != null) {
+					URI inputUri = input.getURI();
+					if (uris.contains(inputUri)) {
+						result = true;
+					} else if (input.getResourceSet() != null
+							&& input.getResourceSet().getURIConverter() != null) {
+						// Tries to normalize the URI in case it is a pathmap uri that needs to be resolved
+						URI normalizedInputUri = input.getResourceSet().getURIConverter().normalize(inputUri);
+						result = uris.contains(normalizedInputUri);
+					} else {
+						result = false;
+					}
+				} else {
+					result = false;
+				}
+				return result;
 			}
 		};
 	}
