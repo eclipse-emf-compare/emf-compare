@@ -21,10 +21,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
-import org.eclipse.emf.compare.internal.merge.IMergeData;
-import org.eclipse.emf.compare.internal.merge.MergeDataImpl;
 import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
@@ -33,7 +30,6 @@ import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.merge.IMerger2;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -41,36 +37,29 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @noextend
  */
 // Visible for testing
-public final class MergeRunnableImpl implements IMergeRunnable {
-
-	private final boolean isLeftEditable;
-
-	private final boolean isRightEditable;
-
-	private final MergeMode mergeMode;
-
+public final class MergeRunnableImpl extends AbstractMergeRunnable implements IMergeRunnable {
 	public MergeRunnableImpl(boolean isLeftEditable, boolean isRightEditable, MergeMode mergeMode) {
-		this.isLeftEditable = isLeftEditable;
-		this.isRightEditable = isRightEditable;
-		this.mergeMode = mergeMode;
+		super(isLeftEditable, isRightEditable, mergeMode);
 	}
 
 	public void merge(List<? extends Diff> differences, boolean leftToRight, Registry mergerRegistry) {
-		Preconditions.checkState(mergeMode.isLeftToRight(isLeftEditable, isRightEditable) == leftToRight);
+		Preconditions
+				.checkState(getMergeMode().isLeftToRight(isLeftEditable(), isRightEditable()) == leftToRight);
 
 		// Execute merge
-		if (mergeMode == MergeMode.LEFT_TO_RIGHT || mergeMode == MergeMode.RIGHT_TO_LEFT) {
+		if (getMergeMode() == MergeMode.LEFT_TO_RIGHT || getMergeMode() == MergeMode.RIGHT_TO_LEFT) {
 			mergeAll(differences, leftToRight, mergerRegistry);
-		} else if (mergeMode == MergeMode.ACCEPT || mergeMode == MergeMode.REJECT) {
+		} else if (getMergeMode() == MergeMode.ACCEPT || getMergeMode() == MergeMode.REJECT) {
 			List<Diff> diffToMarkAsMerged = newArrayList();
 			List<Diff> diffToCopyFromLeftToRight = newArrayList();
 			List<Diff> diffToCopyFromRightToLeft = newArrayList();
 			for (Diff diff : differences) {
-				MergeOperation mergeAction = mergeMode.getMergeAction(diff, isLeftEditable, isRightEditable);
+				MergeOperation mergeAction = getMergeMode().getMergeAction(diff, isLeftEditable(),
+						isRightEditable());
 				if (mergeAction == MergeOperation.MARK_AS_MERGE) {
 					diffToMarkAsMerged.add(diff);
 				} else {
-					if (isLeftEditable && leftToRight) {
+					if (isLeftEditable() && leftToRight) {
 						diffToCopyFromRightToLeft.add(diff);
 					} else {
 						diffToCopyFromLeftToRight.add(diff);
@@ -79,61 +68,9 @@ public final class MergeRunnableImpl implements IMergeRunnable {
 			}
 			mergeAll(diffToCopyFromLeftToRight, leftToRight, mergerRegistry);
 			mergeAll(diffToCopyFromRightToLeft, !leftToRight, mergerRegistry);
-			markAllAsMerged(diffToMarkAsMerged, mergeMode, mergerRegistry);
+			markAllAsMerged(diffToMarkAsMerged, getMergeMode(), mergerRegistry);
 		} else {
 			throw new IllegalStateException();
-		}
-	}
-
-	/**
-	 * @param diffToMarkAsMerged
-	 * @param mode
-	 */
-	private void markAllAsMerged(Collection<Diff> diffToMarkAsMerged, MergeMode mode, Registry mergerRegistry) {
-		for (Diff diff : diffToMarkAsMerged) {
-			boolean isLeftToRight = mode.isLeftToRight(diff, isLeftEditable, isRightEditable);
-			markAsMerged(diff, mode, !isLeftToRight, mergerRegistry);
-		}
-	}
-
-	private void markAsMerged(Diff diff, MergeMode mode, boolean mergeRightToLeft, Registry mergerRegistry) {
-		if (diff.getState() == DifferenceState.MERGED) {
-			return;
-		}
-
-		final Set<Diff> implied = MergeDependenciesUtil.getAllResultingMerges(diff, mergerRegistry,
-				mergeRightToLeft);
-		final Set<Diff> rejections = MergeDependenciesUtil.getAllResultingRejections(diff, mergerRegistry,
-				mergeRightToLeft);
-		for (Diff req : implied) {
-			req.setState(DifferenceState.MERGED);
-			addOrUpdateMergeData(req, mode);
-		}
-		for (Diff rejected : rejections) {
-			rejected.setState(DifferenceState.MERGED);
-			if (mergeMode == MergeMode.LEFT_TO_RIGHT || mergeMode == MergeMode.RIGHT_TO_LEFT) {
-				addOrUpdateMergeData(rejected, mode);
-			} else {
-				addOrUpdateMergeData(rejected, mode.inverse());
-			}
-		}
-	}
-
-	private void addOrUpdateMergeData(Collection<Diff> differences, MergeMode mode) {
-		for (Diff difference : differences) {
-			addOrUpdateMergeData(difference, mode);
-		}
-	}
-
-	private void addOrUpdateMergeData(Diff diff, MergeMode mode) {
-		IMergeData mergeData = (IMergeData)EcoreUtil.getExistingAdapter(diff, IMergeData.class);
-		if (mergeData != null) {
-			mergeData.setMergeMode(mode);
-			mergeData.setLeftEditable(isLeftEditable);
-			mergeData.setRightEditable(isRightEditable);
-		} else {
-			mergeData = new MergeDataImpl(mode, isLeftEditable, isRightEditable);
-			diff.eAdapters().add(mergeData);
 		}
 	}
 
@@ -150,16 +87,17 @@ public final class MergeRunnableImpl implements IMergeRunnable {
 			if (diffMerger instanceof IMerger2) {
 				final Set<Diff> resultingMerges = MergeDependenciesUtil.getAllResultingMerges(difference,
 						mergerRegistry, !leftToRight);
+				addOrUpdateMergeData(resultingMerges, getMergeMode());
+
 				final Set<Diff> resultingRejections = MergeDependenciesUtil.getAllResultingRejections(
 						difference, mergerRegistry, !leftToRight);
-				addOrUpdateMergeData(resultingMerges, mergeMode);
-				if (mergeMode == MergeMode.LEFT_TO_RIGHT || mergeMode == MergeMode.RIGHT_TO_LEFT) {
-					addOrUpdateMergeData(resultingRejections, mergeMode);
+				if (getMergeMode() == MergeMode.LEFT_TO_RIGHT || getMergeMode() == MergeMode.RIGHT_TO_LEFT) {
+					addOrUpdateMergeData(resultingRejections, getMergeMode());
 				} else {
-					addOrUpdateMergeData(resultingRejections, mergeMode.inverse());
+					addOrUpdateMergeData(resultingRejections, getMergeMode().inverse());
 				}
 			} else {
-				addOrUpdateMergeData(Collections.singleton(difference), mergeMode);
+				addOrUpdateMergeData(Collections.singleton(difference), getMergeMode());
 			}
 		}
 	}

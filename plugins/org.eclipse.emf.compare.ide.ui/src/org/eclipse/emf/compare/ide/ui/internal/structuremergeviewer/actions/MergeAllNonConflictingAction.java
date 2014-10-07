@@ -10,20 +10,21 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Lists.newArrayList;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.WITHOUT_CONFLICT;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
+import com.google.common.base.Preconditions;
 
+import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.internal.domain.IMergeAllNonConflictingRunnable;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -40,6 +41,8 @@ public class MergeAllNonConflictingAction extends MergeAction {
 
 	private Comparison comparison;
 
+	private IMergeAllNonConflictingRunnable runnable;
+
 	/**
 	 * Constructor.
 	 * 
@@ -49,7 +52,21 @@ public class MergeAllNonConflictingAction extends MergeAction {
 	public MergeAllNonConflictingAction(ICompareEditingDomain editingDomain, Comparison comparison,
 			IMerger.Registry mergerRegistry, MergeMode mode, boolean isLeftEditable, boolean isRightEditable) {
 		super(editingDomain, mergerRegistry, mode, isLeftEditable, isRightEditable, null);
+
+		Preconditions.checkNotNull(mode);
+		Preconditions.checkState(isLeftEditable || isRightEditable);
+		// if left and right editable, the only accepted mode are LtR or RtL
+		if (isLeftEditable && isRightEditable) {
+			Preconditions.checkState(mode == MergeMode.LEFT_TO_RIGHT || mode == MergeMode.RIGHT_TO_LEFT);
+		}
+		// if mode is accept or reject, left and right can't be both read only (no action should be created in
+		// this case) and can't be both editable.
+		if (isLeftEditable != isRightEditable) {
+			Preconditions.checkState(mode == MergeMode.ACCEPT || mode == MergeMode.REJECT);
+		}
+
 		this.comparison = comparison;
+		this.runnable = new MergeAllNonConflictingRunnable(isLeftEditable, isRightEditable, mode);
 	}
 
 	@Override
@@ -87,6 +104,20 @@ public class MergeAllNonConflictingAction extends MergeAction {
 		setEnabled(comparison != null);
 	}
 
+	@Override
+	public void run() {
+		if (editingDomain instanceof EMFCompareEditingDomain) {
+			ICompareCopyCommand mergeCommand = ((EMFCompareEditingDomain)editingDomain)
+					.createCopyAllNonConflictingCommand(comparison, isLeftToRight(), mergerRegistry, runnable);
+			editingDomain.getCommandStack().execute(mergeCommand);
+		} else {
+			// FIXME remove this once we have pulled "createCopyAllNonConflictingCommand" up as API.
+			EMFCompareIDEUIPlugin.getDefault().getLog().log(
+					new Status(IStatus.ERROR, EMFCompareIDEUIPlugin.PLUGIN_ID,
+							"Couldn't create the copy all command.")); //$NON-NLS-1$
+		}
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -94,9 +125,8 @@ public class MergeAllNonConflictingAction extends MergeAction {
 	 */
 	@Override
 	protected List<Diff> getDifferencesToMerge() {
-		Iterable<Diff> differences = filter(comparison.getDifferences(), and(WITHOUT_CONFLICT,
-				hasState(DifferenceState.UNRESOLVED)));
-		return newArrayList(differences);
+		// We're overriding #run(), so this has no effect
+		return Collections.emptyList();
 	}
 
 	/**

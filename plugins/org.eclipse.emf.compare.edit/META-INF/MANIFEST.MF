@@ -13,6 +13,7 @@ Export-Package: org.eclipse.emf.compare.command,
  org.eclipse.emf.compare.domain,
  org.eclipse.emf.compare.domain.impl,
  org.eclipse.emf.compare.internal.adapterfactory;x-friends:="org.eclipse.emf.compare.rcp,org.eclipse.emf.compare.rcp.ui",
+ org.eclipse.emf.compare.internal.domain;x-friends:="org.eclipse.emf.compare.ide.ui",
  org.eclipse.emf.compare.provider,
  org.eclipse.emf.compare.provider.spec,
  org.eclipse.emf.compare.provider.utils
@@ -23,5 +24,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.edit;visibility:=reexport,
  org.eclipse.emf.transaction;bundle-version="1.3.0"
 Bundle-ActivationPolicy: lazy
-Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
+Import-Package: com.google.common.annotations;version="[11.0.0,16.0.0)",
+ com.google.common.base;version="[11.0.0,16.0.0)",
  com.google.common.collect;version="[11.0.0,16.0.0)"

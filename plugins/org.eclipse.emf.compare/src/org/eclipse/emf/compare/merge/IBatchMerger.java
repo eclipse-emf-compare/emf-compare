@@ -26,6 +26,10 @@ import org.eclipse.emf.compare.Diff;
 public interface IBatchMerger {
 	/**
 	 * This will be called to copy all of the differences from the given list from the left to the right side.
+	 * <p>
+	 * <b>Note</b> that this may end up merging differences that are not in the given list if one of the diffs
+	 * to be merged depends on (or results in) the merging of that 'out of list' difference.
+	 * </p>
 	 * 
 	 * @param differences
 	 *            The differences that will be merged.
@@ -36,6 +40,10 @@ public interface IBatchMerger {
 
 	/**
 	 * This will be called to copy all of the differences from the given list from the right to the left side.
+	 * <p>
+	 * <b>Note</b> that this may end up merging differences that are not in the given list if one of the diffs
+	 * to be merged depends on (or results in) the merging of that 'out of list' difference.
+	 * </p>
 	 * 
 	 * @param differences
 	 *            The differences that will be merged.

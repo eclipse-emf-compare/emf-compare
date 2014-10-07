@@ -55,13 +55,13 @@ public class MergeAction extends BaseSelectionListenerAction {
 		}
 	};
 
-	private final Registry mergerRegistry;
+	protected final Registry mergerRegistry;
+
+	protected ICompareEditingDomain editingDomain;
 
 	private final boolean leftToRight;
 
 	private final IMergeRunnable mergeRunnable;
-
-	private ICompareEditingDomain editingDomain;
 
 	private boolean cascadingDifferencesFilterEnabled;
 

@@ -102,14 +102,11 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 
 			final Comparison comparison = EMFCompare.builder().build().compare(scope,
 					BasicMonitor.toMonitor(monitor));
-			// TODO measure performance gain/cost : is there a real advantage of checking for conflicts
-			// beforehand? "hasConflict" is at worst a full iteration over the differences tree (no conflicts
-			// case).
 			final IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 			if (hasRealConflict(comparison)) {
 				// pre-merge what can be
-				final Graph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison, mergerRegistry,
-						true);
+				final Graph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison,
+						mergerRegistry, true);
 				final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
 				final Monitor emfMonitor = BasicMonitor.toMonitor(monitor);
 
@@ -202,9 +199,17 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 		}
 	}
 
+	/**
+	 * Checks whether this comparison presents a real conflict.
+	 * 
+	 * @param comparison
+	 *            The comparison to check for conflicts.
+	 * @return <code>true</code> if there's at least one {@link ConflictKind#REAL real conflict} within this
+	 *         comparison.
+	 */
 	private boolean hasRealConflict(Comparison comparison) {
 		for (Conflict conflict : comparison.getConflicts()) {
-			if (conflict.getKind() != ConflictKind.PSEUDO) {
+			if (conflict.getKind() == ConflictKind.REAL) {
 				return true;
 			}
 		}

@@ -23,15 +23,18 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.command.impl.CompareCommandStack;
 import org.eclipse.emf.compare.command.impl.DualCompareCommandStack;
+import org.eclipse.emf.compare.command.impl.MergeAllNonConflictingCommand;
 import org.eclipse.emf.compare.command.impl.MergeCommand;
 import org.eclipse.emf.compare.command.impl.TransactionalDualCompareCommandStack;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
+import org.eclipse.emf.compare.internal.domain.IMergeAllNonConflictingRunnable;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
@@ -322,6 +325,34 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 		ImmutableSet<Notifier> notifiers = notifiersBuilder.addAll(fNotifiers).build();
 
 		return new MergeCommand(fChangeRecorder, notifiers, differences, leftToRight, mergerRegistry,
+				runnable);
+	}
+
+	/**
+	 * Creates a command that will merge all non-conflicting differences in the given direction.
+	 * <p>
+	 * A "non-conflicting" difference is any difference that is not in a real conflict with another <u>and</u>
+	 * that does not, directly or indirectly, depend on the merge of a difference that is in conflict itself.
+	 * </p>
+	 * <p>
+	 * Note that only the differences originating from the "source" side of the chosen merge direction will be
+	 * considered.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            The comparison which differences to merge.
+	 * @param leftToRight
+	 *            The direction in which we should merge the differences.
+	 * @param mergerRegistry
+	 *            The registry to query for specific mergers for each difference.
+	 * @param runnable
+	 *            the runnable to execute for the actual merge operation.
+	 * @return The copy command, ready for use.
+	 */
+	public ICompareCopyCommand createCopyAllNonConflictingCommand(Comparison comparison, boolean leftToRight,
+			IMerger.Registry mergerRegistry, IMergeAllNonConflictingRunnable runnable) {
+		ImmutableSet<Notifier> notifiers = ImmutableSet.<Notifier> of(comparison);
+		return new MergeAllNonConflictingCommand(fChangeRecorder, notifiers, comparison, leftToRight, mergerRegistry,
 				runnable);
 	}
 
