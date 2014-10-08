@@ -4,6 +4,7 @@
 
 * [user/user-guide.html|User guide]
 * [user/sample-use-case.html|Sample use case]
+* [user/git-commands-involving-models.html|Git commands involving models]
 
 == Developer documentation ==
 

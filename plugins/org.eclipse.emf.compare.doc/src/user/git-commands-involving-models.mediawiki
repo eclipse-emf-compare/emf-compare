@@ -1,0 +1,168 @@
+= Git commands involving models =
+
+When a user wants to compare or merge EMF models from the git command line interface, the operation is doing in a textual way. 
+If he wants to compare or merge EMF models the needs in a logical way, he needs to do that in an Eclipse environment similar to the one he used to create these models.
+As such, the environment requires some plugins to be installed but it may also requires some preferences to be set, some perspective to be activated etc..
+Among these plugins, there are the mandatory ones that will be use to do the compare/merge operation: EMF Compare and EGit.
+
+EMF Compare provides additional git commands in order to compare and merge models on the command line. These commands will use an Eclipse as an headless application (no Graphical User Interface) including EMF Compare and Egit to compare models in a logical way. To provisioned such Eclipse environment, the new git commands will call a program using Oomph.
+
+Oomph [https://wiki.eclipse.org/Eclipse_Oomph_Installer Oomph] is a technology that provisions a set of plugins in an Eclipse IDE, clones Git repositories, binds Git repositories to this IDE, checks projects, sets workspace preferences... The configuration is model driven, with files called Oomph setup model files.
+
+== Add new Git commands in you system ==
+
+The basics git commands don't allow to compare or merge EMF models in a logical way. Additional git commands must be added to your system. Each git command is a shell script describing its behaviour. So, to add a new git command, a new script has to be developed.
+The new scripts corresponding to the git commands are:
+* git logicalmerge: the "models compatible" version of the git merge command
+* git logicaldiff: the "models compatible" version of the git diff command
+* git logicalmergetool: the "models compatible" version of the git mergtool command
+These scripts must be added on each computer that need to do "models compatible" git operations from command line interface, to enable them.
+
+You can find the scripts at the following address: [https://hudson.eclipse.org/emfcompare/job/cli-master-nightly/lastSuccessfulBuild/artifact/packaging/org.eclipse.emf.compare.git.pgm.scripts/scripts/ EMF Compare Git Scripts].
+
+Note that the location of these scripts must be on your PATH environment variable. Also, they must have execution permission.
+
+These scripts will execute a program named ''emfcompare-git-pgm''. You also have to retrieve this program on your system.
+Once retrieved, you will have to export a variable named EMF_COMPARE_GIT_PGM_PATH with the path of folder containing the program ''emfcompare-git-pgm'' as value.
+
+You can find the program at the following address: [https://hudson.eclipse.org/emfcompare/job/cli-master-nightly/lastSuccessfulBuild/artifact/packaging/org.eclipse.emf.compare.git.pgm.products/target/products/ EMF Compare Git PGM]. Download the one corresponding to your system.
+
+== Create a setup file ==
+
+=== Installation ===
+
+The setup file will allow you to configure the headless application used by your command. To create a setup file you need an Eclipse environment with the Setup Model for EMF Compare's Git commands Wizard plugin installed. 
+Add the following p2 repository (update-site) in your update manager (in Eclipse, ''Help Menu > Install New Software...'', ''Add...'' button on the top right corner): 
+[https://hudson.eclipse.org/emfcompare/job/cli-master-nightly/lastSuccessfulBuild/artifact/packaging/org.eclipse.emf.compare.git.pgm.update/target/repository/ EMF Compare's Git commands Wizard plugin update-site]
+
+Then, select the ''EMF Compare Git PGM Wizards > EMF Compare Git PGM Oomph Wizard Feature'' and click on ''Finish''.
+
+This tool requires Oomph 1.0.0 or later. You may need to add the Oomph update site to the list of the available update sites to be able install and/or update Oomph:
+[http://download.eclipse.org/oomph/updates]
+
+=== Basic usage ===
+
+To create a new setup model for EMF Compare's git commands, select ''File > New > Other ... > Oomph > Setup Model for EMF Compare's Git commands''. Then click ''Next >''.
+
+[[Image:./../images/EMF_Compare_GitPGM_NewWizard_01.png|center|Setup Model for EMF Compare's Git commands wizard]]
+
+The first page of the wizard asks you to select the project that will contain the setup model, and name that setup model. Then click ''Next >''.
+
+[[Image:./../images/EMF_Compare_GitPGM_NewWizard_02.png|center|Setup Model for EMF Compare's Git commands wizard]]
+
+The last page of the wizard asks you to set:
+* The model's root object name.
+* The workspace location (absolute or relative to the setup file). If you select the ''Default'' checkbox, a workspace will be created in the temporary folder of your system.
+* The installation location (absolute or relative to the setup file). If you select the ''Default'' checkbox, the Eclipse environment will be created in the temporary folder of your system.
+* The projects to import in the workspace. You have to import in the workspace all project holding [[./../developer/logical-model.html#What_is_a_logical_model_.3F|interconnected models]] in the git command you want to execute. The ''Import All Projects found In Current Repository'' checkbox is selected by default. If you unchecked it, you will have to specify in the setup model which projects you want to import.
+
+Once all parameters have been set, click ''Finish''.
+
+[[Image:./../images/EMF_Compare_GitPGM_NewWizard_03.png|center|Setup Model for EMF Compare's Git commands wizard]]
+
+Once created, you will able to modify the setup model. You can also create a setup model file from scratch if you prefer. This setup model can contains:
+
+* The path (absolute or relative to the setup file) where the workspace will be created. It corresponds to a ''Variable task'' in the setup model editor. To create a ''Variable task'', right-click on the ''Project element'' (the root element) and then select ''New Child > Variable''. In the Properties View, you have to fill the ''Name'' field with the value "workspace.location" and the ''Value'' field with the path. If you don't provide such ''Variable task'' in your setup model, a workspace will be created in the temporary folder of your system.
+
+* The path (absolute or relative to the setup file) where the Eclipse environment will be provisioned. To create an ''Variable task'', right-click on the ''Project element'' (the root element) and then select ''New Child > Variable''. In the Properties View, you have to fill the ''Name'' field with the value "installation.location" and the ''Value'' field with the path. If you don't provide such ''Variable task'' in your setup model, the Eclipse environment will be created in the temporary folder of your system.
+
+* The paths (absolute or relative to the setup file) of the projects involved in the git command to execute. These projects will be imported in the workspace. First, you have to create a ''Projects Import task''. Right-click on the root element and then select ''New Child > Projects Import''. Then, right-click on the newly created ''Projects Import task'' and then select ''New Child > Source Locator''. In the Properties View, you have to fill the ''Root Folder'' field with the path of the project to import. If you don't give any projects, then all projects found in the git repository will be imported in the workspace. In the example below, two projects will be imported: ''/your/project/location'' and ''/another/project/location''. Note that the ''Locate Nested Projects'' allows to import every projects found under the given location."
+[[Image:./../images/EMF_Compare_GitPGM_Edit_01.png|center|Setup Model for EMF Compare's Git commands wizard]]
+* The additional plugins to install in the provisioned Eclipse environment. By default, only EMF Compare and EGit are provisioned in the Eclipse environment because it is the minimum and mandatory set of plugins required to execute the git command. But, you may have to add additionnal set of plugins/features. For example, you might need GMF for merging diagrams, UML2 or any specific metamodel implementation, Papyrus, etc... To do that, you have to create a ''P2 Director task''. Right-click on the root element and then select ''New Child > P2 Director''. Then, right-click on the newly created ''P2 Director task'' and then select ''New Child > Repository'' to add a new repository or ''New Child > Requirement'' to add a new plugin/feature. In the example below, the repository ''http://download.eclipse.org/releases/luna/201406250900'' allows to add ''org.eclipse.uml2.feature.group'' and ''org.eclipse.papyrus.sdk.feature.feature.group'' (UML2 and Papyrus). The repository ''http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest/'' has been added. It allows to add the ''org.eclipse.emf.compare.uml2.feature.group'' and ''org.eclipse.emf.compare.diagram.papyrus.feature.group'' features (EMF compare's extensions to handle UML2 models and Papyrus Diagrams).
+
+[[Image:./../images/EMF_Compare_GitPGM_Edit_02.png|center|Setup Model for EMF Compare's Git commands wizard]]
+
+Please visit [http://www.eclipse.org/oomph Oomph website] for more details about Oomph.
+
+You can find an example of setup model file for EMF compare's Git commands here: [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare-cli.git/tree/examples/SetupExamples Setup Example]
+This example contains a workspace location to edit, an installation location to edit, and additional plugins to take into account for the git command to execute. These additional plugins are Papyrus, UML2, GMF, and EMF Compare extensions.
+
+== Git diff command with models : git logicaldiff ==
+
+The logicaldiff command is the "models compatible" version of the git diff command. To see a full description of the git diff command, please visit [http://git-scm.com/docs/git-diff].
+
+The command is specified as below:
+
+<span style="background:#dcdcdc">
+git logicaldiff <nowiki>[</nowiki>--git-dir ''<path>''<nowiki>]</nowiki> ''<setup>'' ''<commit>'' <nowiki>[</nowiki>''<commit>''<nowiki>]</nowiki> <nowiki>[</nowiki>-- ''<path>''<nowiki>]</nowiki>
+</span>
+
+To see the changes between a revision and the HEAD revision, you should omit the second commit.
+
+<span style="background:#dcdcdc">
+git logicaldiff <nowiki>[</nowiki>--git-dir ''<path>''] ''<setup>'' ''<commit>'' <nowiki>[</nowiki>--<nowiki>]</nowiki> <nowiki>[</nowiki>''<path>''...<nowiki>]</nowiki>
+</span>
+
+In all cases, ''<commit>''  can refers to a branch name or a commit id.
+In all cases, <nowiki>[</nowiki>-- ''<path>''<nowiki>]</nowiki> option allows to filter the diff command only on files that match the <path>.
+In all cases, <nowiki>[</nowiki>--git-dir ''<path>''<nowiki>]</nowiki> option allows to specify a git repository (if the command is not run inside a repository)
+
+=== Others options available ===
+
+<span style="background:#dcdcdc"> <nowiki>[</nowiki>--show-stack-trace<nowiki>]</nowiki> </span>
+
+Use this option to display java stack trace in console on error.
+
+<span style="background:#dcdcdc"> <nowiki>[</nowiki>--help (or -h)<nowiki>]</nowiki> </span>
+
+Dispays help for this command.
+
+== Git merge command with models : git logicalmerge ==
+
+The logicalmerge command is the "models compatible" version of the git merge command. To see a full description of the git merge command, please visit [http://git-scm.com/docs/git-merge].
+
+The command is specified as below:
+
+<span style="background:#dcdcdc">
+git logicalmerge <nowiki>[</nowiki>--git-dir ''<path>''<nowiki>]</nowiki> ''<setup>'' ''<commit>''
+</span>
+
+Assume the following history exists and the current branch is master:
+
+<span style="background:#dcdcdc">
+         A---B---C      topic  
+        /                      
+   D---E---F---G        master 
+</span>
+
+Then git logicalmerge mySetupModel.setup topic will replay the changes made on the topic branch since it diverged from master (i.e., E) until its current commit (C) on top of master, and record the result in a new commit along with the names of the two parent commits and a log message from the user describing the changes.
+
+<span style="background:#dcdcdc">
+         A---B---C       topic  
+        /         \             
+   D---E---F---G---H     master 
+</span>
+
+You can also replace the topic branch name by his commit id: 
+
+<span style="background:#dcdcdc">
+git logicalmerge ''mySetupModel.setup'' ''87ad5ff''
+</span>
+
+In all cases, ''<commit>''  can refers to a branch name or a commit id.
+In all cases, <nowiki>[</nowiki>--git-dir ''<path>''<nowiki>]</nowiki> option allows to specify a git repository (if the command is not run inside a repository)
+
+=== Others options available ===
+<span style="background:#dcdcdc"> <nowiki>[</nowiki>-m message<nowiki>]</nowiki> </span>
+
+Set the commit message to be used for the merge commit (in case one is created).
+				                
+<span style="background:#dcdcdc"> <nowiki>[</nowiki>--show-stack-trace<nowiki>]</nowiki> </span>
+
+Use this option to display java stack trace in console on error.
+
+<span style="background:#dcdcdc"> <nowiki>[</nowiki>--help (or -h)<nowiki>]</nowiki> </span>
+
+Dispays help for this command.
+
+== Git mergetool command with models : git logicalmergetool ==
+
+The logicalmergetool command is the "models compatible" version of the git mergetool command. To see a full description of the git mergetool command, please visit [http://git-scm.com/docs/git-mergetool].
+
+Here is the constructions allowed for the git logicalmergetool:
+
+<span style="background:#dcdcdc">
+git logicalmergetool ''<setup>''
+</span>
+
+Run logical merge conflict resolution tools to resolve logical merge conflicts. In our case, it will launch an Eclipse platform with all the tools needed to resolve the conflict(s) induced by the merge. To do so, in the Eclipse environment, select the conflicting file(s) and open the contextual menu ''Team > Merge Tool''. Once the conflict has been resolved, add the file to the index (staged area). And then commit.
