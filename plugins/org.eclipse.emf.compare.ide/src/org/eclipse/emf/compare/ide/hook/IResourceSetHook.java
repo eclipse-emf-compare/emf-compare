@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ide.hook;
 import java.util.Collection;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 /**
@@ -55,5 +56,19 @@ public interface IResourceSetHook {
 	 *            {@link URI} is not modifiable.
 	 */
 	void postLoadingHook(ResourceSet resourceSet, Collection<? extends URI> uris);
+
+	/**
+	 * This will be called when the resource set is disposed (if it is).
+	 * <p>
+	 * By default, EMF Compare will not unload any resource. Still some resources might need to be unloaded.
+	 * This method could be a good way to do it. Hooks are called in unspecified order, so resources may
+	 * already have been unloaded by other hooks when yours is called.
+	 * </p>
+	 * 
+	 * @see org.eclipse.emf.compare.ide.internal.utils.DisposableResourceSet
+	 * @param resources
+	 *            List of {@link Resource}s currently in the resource set.
+	 */
+	void onDispose(Iterable<Resource> resources);
 
 }

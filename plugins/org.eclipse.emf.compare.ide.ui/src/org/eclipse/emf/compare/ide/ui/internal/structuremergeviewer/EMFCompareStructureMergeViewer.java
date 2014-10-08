@@ -70,6 +70,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
+import org.eclipse.emf.compare.ide.internal.utils.DisposableResourceSet;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
@@ -221,7 +222,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * When comparing EObjects from a resource, the resource involved doesn't need to be unload by EMF
 	 * Compare.
 	 */
-	private boolean resourcesShouldBeUnload;
+	private boolean resourceSetShouldBeDisposed;
 
 	private DependencyData dependencyData;
 
@@ -867,13 +868,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	void compareInputChanged(final ICompareInput input, IProgressMonitor monitor) {
 		if (input != null) {
 			if (input instanceof CompareInputAdapter) {
-				resourcesShouldBeUnload = false;
+				resourceSetShouldBeDisposed = false;
 				compareInputChanged((CompareInputAdapter)input, monitor);
 			} else if (input instanceof ComparisonScopeInput) {
-				resourcesShouldBeUnload = false;
+				resourceSetShouldBeDisposed = false;
 				compareInputChanged((ComparisonScopeInput)input, monitor);
 			} else {
-				resourcesShouldBeUnload = true;
+				resourceSetShouldBeDisposed = true;
 				SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 
 				final ITypedElement left = input.getLeft();
@@ -1058,16 +1059,30 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
 
-		if (resourcesShouldBeUnload) {
-			unload(leftResourceSet);
-			unload(rightResourceSet);
-			unload(originResourceSet);
+		if (resourceSetShouldBeDisposed) {
+			disposeResourceSet(leftResourceSet);
+			disposeResourceSet(rightResourceSet);
+			disposeResourceSet(originResourceSet);
 		}
 
 		if (getCompareConfiguration() != null) {
 			getCompareConfiguration().dispose();
 		}
 		getViewer().setInput(null);
+	}
+
+	/**
+	 * Disposes the {@link ResourceSet}.
+	 * 
+	 * @param resourceSet
+	 *            that need to be disposed.
+	 */
+	protected void disposeResourceSet(ResourceSet resourceSet) {
+		if (resourceSet instanceof DisposableResourceSet) {
+			((DisposableResourceSet)resourceSet).dispose();
+		} else {
+			unload(resourceSet);
+		}
 	}
 
 	/**

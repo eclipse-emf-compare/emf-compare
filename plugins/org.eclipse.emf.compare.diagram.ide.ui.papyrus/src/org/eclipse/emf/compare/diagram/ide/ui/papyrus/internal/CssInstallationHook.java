@@ -13,22 +13,24 @@ package org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal;
 import java.util.Collection;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.ide.hook.IResourceSetHook;
+import org.eclipse.emf.compare.ide.hook.AbstractResourceSetHooks;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.papyrus.infra.gmfdiag.css.helper.CSSHelper;
 
 /**
- * Hook in the EMF Compare {@link ResourceSet} in order to make it able to handle papyrus CSS features.
+ * Hook in the EMF Compare {@link org.eclipse.emf.ecore.resource.ResourceSet} in order to make it able to
+ * handle papyrus CSS features.
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
-public class CssInstallationHook implements IResourceSetHook {
+public class CssInstallationHook extends AbstractResourceSetHooks {
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.ide.internal.utils.IResourceSetHook#handle(java.lang.Iterable)
 	 */
+	@Override
 	public boolean isHookFor(Collection<? extends URI> uris) {
 		// Looks for a papyrus notation file.
 		for (URI uri : uris) {
@@ -46,24 +48,14 @@ public class CssInstallationHook implements IResourceSetHook {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.hook.IResourceSetHook#preLoadingHook(org.eclipse.emf.ecore.resource.ResourceSet,
+	 * @see org.eclipse.emf.compare.ide.hook.AbstractResourceSetHooks#preLoadingHook(org.eclipse.emf.ecore.resource.ResourceSet,
 	 *      java.util.Collection)
 	 */
+	@Override
 	public void preLoadingHook(ResourceSet resourceSet, Collection<? extends URI> uris) {
 		if (!CSSHelper.isCSSSupported(resourceSet)) {
 			CSSHelper.installCSSSupport(resourceSet);
 		}
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.hook.IResourceSetHook#postLoadingHook(org.eclipse.emf.ecore.resource.ResourceSet,
-	 *      java.util.Collection)
-	 */
-	public void postLoadingHook(ResourceSet resourceSet, Collection<? extends URI> uris) {
-		// Nothing to do
 	}
 
 }

@@ -37,7 +37,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
@@ -67,7 +69,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @Beta
-public final class NotLoadingResourceSet extends ResourceSetImpl {
+public final class NotLoadingResourceSet extends ResourceSetImpl implements DisposableResourceSet {
 
 	/**
 	 * Function to transform a {@link IStorage} in an {@link URI}.
@@ -85,13 +87,26 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	private final StorageTraversal storageTranversal;
 
 	/**
+	 * Registry holding {@link IResourceSetHook}s.
+	 */
+	private final ResourceSetHookRegistry hookRegistry;
+
+	/**
+	 * Holds <code>true</code> if the resource set has been disposed.
+	 */
+	private boolean isDisposed;
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param storageTranversal
 	 *            see {@link #storageTranversal}.
+	 * @param hookRegistry
+	 *            Registry holding {@link IResourceSetHook}s.
 	 */
-	private NotLoadingResourceSet(StorageTraversal storageTranversal) {
+	private NotLoadingResourceSet(StorageTraversal storageTranversal, ResourceSetHookRegistry hookRegistry) {
 		this.storageTranversal = storageTranversal;
+		this.hookRegistry = hookRegistry;
 	}
 
 	/**
@@ -110,41 +125,24 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 			ResourceSetHookRegistry resourceSetHookRegistry) {
 		SubMonitor progress = SubMonitor.convert(monitor, 100);
 		progress.subTask(EMFCompareIDEMessages.getString("NotLoadingResourceSet.monitor.resolve")); //$NON-NLS-1$
-		final NotLoadingResourceSet resourceSet = new NotLoadingResourceSet(traversals);
+		final NotLoadingResourceSet resourceSet = new NotLoadingResourceSet(traversals,
+				resourceSetHookRegistry);
 
 		final Set<? extends IStorage> storages = traversals.getStorages();
 
 		resourceSet.setURIResourceMap(new HashMap<URI, Resource>(storages.size() << 1));
-
-		final Collection<URI> urisToLoad = ImmutableList.copyOf(transform(storages, TO_URI));
-
-		final Collection<IResourceSetHook> hooks = getMatchingHooks(resourceSetHookRegistry, urisToLoad);
-
-		for (IResourceSetHook hook : hooks) {
-			hook.preLoadingHook(resourceSet, urisToLoad);
-		}
 
 		// loading is 60% of the total work?
 		final int loadWorkPercentage = 60;
 		SubMonitor subMonitor = progress.newChild(loadWorkPercentage).setWorkRemaining(
 				traversals.getStorages().size());
 
-		for (URI uri : urisToLoad) {
-			if (monitor.isCanceled()) {
-				throw new OperationCanceledException();
-			}
-			// Forces the loading of the selected resources.
-			resourceSet.loadResource(uri);
-			subMonitor.worked(1);
-		}
-
-		for (IResourceSetHook hook : hooks) {
-			hook.postLoadingHook(resourceSet, urisToLoad);
-		}
+		resourceSet.load(subMonitor);
 
 		final int resolveWorkPercentage = 40;
 		subMonitor = progress.newChild(resolveWorkPercentage).setWorkRemaining(
 				resourceSet.getResources().size());
+
 		// Then resolve all proxies between our "loaded" resources.
 		List<Resource> resourcesCopy = newArrayList(resourceSet.getResources());
 		for (Resource res : resourcesCopy) {
@@ -162,19 +160,16 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	/**
 	 * Retrieves the hooks that need to be hooked on this resource set.
 	 * 
-	 * @param resourceSetHookRegistry
-	 *            Registry holding the hooks.
 	 * @param urisToLoad
 	 *            The collection of uris that will be loaded.
 	 * @return {@link Collection} of {@link IResourceSetHook}s that need to be hocked.
 	 */
-	private static Collection<IResourceSetHook> getMatchingHooks(
-			ResourceSetHookRegistry resourceSetHookRegistry, final Collection<URI> urisToLoad) {
+	private Collection<IResourceSetHook> getMatchingHooks(final Collection<URI> urisToLoad) {
 		final Collection<IResourceSetHook> hooks;
-		if (resourceSetHookRegistry == null) {
+		if (hookRegistry == null) {
 			hooks = Collections.emptyList();
 		} else {
-			hooks = Collections2.filter(resourceSetHookRegistry.getResourceSetHooks(),
+			hooks = Collections2.filter(hookRegistry.getResourceSetHooks(),
 					new Predicate<IResourceSetHook>() {
 
 						public boolean apply(IResourceSetHook input) {
@@ -186,7 +181,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	}
 
 	/**
-	 * Adds ResourceSetHook extension point. {@inheritDoc}
+	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#demandLoadHelper(org.eclipse.emf.ecore.resource.Resource)
 	 */
@@ -308,6 +303,8 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 	 */
 	@Override
 	public Resource getResource(URI uri, boolean loadOnDemand) {
+		checkNotDisposed();
+
 		ILoadOnDemandPolicy.Registry registry = EMFCompareRCPPlugin.getDefault()
 				.getLoadOnDemandPolicyRegistry();
 		if (registry.hasAnyAuthorizingPolicy(uri)) {
@@ -381,4 +378,118 @@ public final class NotLoadingResourceSet extends ResourceSetImpl {
 			}
 		}
 	}
+
+	/**
+	 * Loads resources from the {@link StorageTraversal}.
+	 * 
+	 * @see #storageTranversal
+	 * @param monitor
+	 *            {@link IProgressMonitor} reporting progress.
+	 */
+	private void load(IProgressMonitor monitor) {
+		checkNotDisposed();
+
+		final Collection<URI> urisToLoad = ImmutableList.copyOf(transform(storageTranversal.getStorages(),
+				TO_URI));
+
+		final Collection<IResourceSetHook> hooks = getMatchingHooks(urisToLoad);
+
+		for (IResourceSetHook hook : hooks) {
+			hook.preLoadingHook(this, urisToLoad);
+		}
+
+		for (URI uri : urisToLoad) {
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+			// Forces the loading of the selected resources.
+			loadResource(uri);
+			monitor.worked(1);
+		}
+
+		for (IResourceSetHook hook : hooks) {
+			hook.postLoadingHook(this, urisToLoad);
+		}
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.internal.utils.DisposableResourceSet#dispose()
+	 */
+	public void dispose() {
+		ImmutableList<Resource> currentResources = ImmutableList.copyOf(getResources());
+		isDisposed = true;
+		Collection<URI> resourceSetUris = newArrayList(transform(currentResources,
+				new Function<Resource, URI>() {
+
+					public URI apply(Resource input) {
+						return input.getURI();
+					}
+				}));
+		for (IResourceSetHook hook : getMatchingHooks(resourceSetUris)) {
+			hook.onDispose(currentResources);
+		}
+		getResources().clear();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#createResource(org.eclipse.emf.common.util.URI,
+	 *      java.lang.String)
+	 */
+	@Override
+	public Resource createResource(URI uri, String contentType) {
+		checkNotDisposed();
+		return super.createResource(uri, contentType);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getEObject(org.eclipse.emf.common.util.URI,
+	 *      boolean)
+	 */
+	@Override
+	public EObject getEObject(URI uri, boolean loadOnDemand) {
+		checkNotDisposed();
+		return super.getEObject(uri, loadOnDemand);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getAllContents()
+	 */
+	@Override
+	public TreeIterator<Notifier> getAllContents() {
+		checkNotDisposed();
+		return super.getAllContents();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#getResources()
+	 */
+	@Override
+	public EList<Resource> getResources() {
+		checkNotDisposed();
+		return super.getResources();
+	}
+
+	/**
+	 * Checks that the resource set is not disposed. If it is throws an {@link IllegalStateException}.
+	 * 
+	 * @throws IllegalStateException
+	 *             If the resource set is disposed.
+	 */
+	private void checkNotDisposed() {
+		if (isDisposed) {
+			throw new IllegalStateException("The resource set is disposed"); //$NON-NLS-1$
+		}
+	}
+
 }
