@@ -51,7 +51,21 @@ fi
 echo "Unzipping $P2_ADMIN_ZIPNAME"
 tar zxf "$P2_ADMIN_ZIPPATH" -C $workdir
 
-if [[ "$simrel" == "luna"* ]]; then
+if [[ "$simrel" == "mars"* ]]; then
+	simrel_zip_name="eclipse-SDK-4.5M2-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
+	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/S-4.5M2-201409180330/$simrel_zip_name"	
+	p2_repositories="http://download.eclipse.org/releases/mars/,\
+http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest/,\
+http://download.eclipse.org/modeling/emf/compare/updates/egit-logical/nightly/"
+	p2_installIUs="org.eclipse.emf.compare.ide.ui.feature.group,\
+org.eclipse.egit.feature.group,\
+org.eclipse.emf.sdk.feature.group,\
+org.eclipse.uml2.uml.feature.group,\
+org.eclipse.papyrus.sdk.feature.feature.group,\
+org.eclipse.emf.compare.uml2.feature.group,\
+org.eclipse.emf.compare.diagram.gmf.feature.group,\
+org.eclipse.emf.compare.diagram.papyrus.feature.group"
+elif [[ "$simrel" == "luna"* ]]; then
 	simrel_zip_name="eclipse-SDK-4.4-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
 	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/R-4.4-201406061215/$simrel_zip_name"
 	p2_repositories="http://download.eclipse.org/releases/luna/,\
