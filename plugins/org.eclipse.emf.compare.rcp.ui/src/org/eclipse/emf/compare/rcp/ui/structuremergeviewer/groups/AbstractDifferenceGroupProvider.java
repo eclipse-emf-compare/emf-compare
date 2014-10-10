@@ -155,7 +155,7 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 	 * @since 4.0
 	 */
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison aComparison) {
-		if (!groupsAreBuilt()) {
+		if (!groupsAreBuilt() || comparison != aComparison) {
 			dispose();
 			this.comparison = aComparison;
 			groups = buildGroups(comparison);
