@@ -181,7 +181,7 @@ public class StereotypedElementItemProviderDecorator extends ExtendedItemProvide
 	 * @return List of icons to use for this stereotype or <code>null</code> if no icon has been found.
 	 * @see Stereotype#getIcons()
 	 */
-	private List<Object> getStereotypeIconsFromProfile(Stereotype appliedStereotype) {
+	protected List<Object> getStereotypeIconsFromProfile(Stereotype appliedStereotype) {
 		List<Object> images = new ArrayList<Object>();
 
 		for (org.eclipse.uml2.uml.Image icon : appliedStereotype.getIcons()) {
@@ -211,7 +211,7 @@ public class StereotypedElementItemProviderDecorator extends ExtendedItemProvide
 	 *            Location of the icon
 	 * @return an icon or <code>null</code> otherwise.
 	 */
-	private Object getIconFromLocation(Resource eResource, String location) {
+	protected Object getIconFromLocation(Resource eResource, String location) {
 		Object img = null;
 		if (eResource != null) {
 			ResourceSet resourceSet = eResource.getResourceSet();

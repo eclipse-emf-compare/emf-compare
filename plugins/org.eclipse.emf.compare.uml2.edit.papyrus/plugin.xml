@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension
+         point="org.eclipse.emf.compare.edit.adapterFactory">
+      <factory
+            class="org.eclipse.emf.compre.uml2.edit.papyrus.internal.decorator.PapyrusProfileItemProviderAdapterFactoryDecorator"
+            supportedTypes=
+              "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
+               org.eclipse.emf.edit.provider.IStructuredItemContentProvider
+               org.eclipse.emf.edit.provider.ITreeItemContentProvider
+               org.eclipse.emf.edit.provider.IItemLabelProvider
+               org.eclipse.emf.edit.provider.IItemPropertySource
+               org.eclipse.emf.compare.provider.IItemStyledLabelProvider
+               org.eclipse.emf.compare.provider.IItemDescriptionProvider"
+            description="This provider displays stereotyped elements like they were a new kind of UML element. It uses stereotype's icon and a custom label. It prevents the use of shapes (icon of kind 'Shape') in the structure merge viewer."
+            ranking="70"
+            optional="true"
+            label="Papyrus Stereotyped element item provider"
+            uri="http://www.eclipse.org/uml2/5.0.0/UML">
+      </factory>
+   </extension>
+
+</plugin>

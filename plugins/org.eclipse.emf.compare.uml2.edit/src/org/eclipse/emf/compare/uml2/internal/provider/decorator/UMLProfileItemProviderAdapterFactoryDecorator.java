@@ -47,7 +47,7 @@ public class UMLProfileItemProviderAdapterFactoryDecorator extends DecoratorAdap
 			if (adapter instanceof IChangeNotifier) {
 				IItemProviderDecorator itemProviderDecorator = stereotypeItemProviderDecorators.get(adapter);
 				if (itemProviderDecorator == null) {
-					itemProviderDecorator = new StereotypedElementItemProviderDecorator(this);
+					itemProviderDecorator = createStereotypeElementItemProvider();
 					stereotypeItemProviderDecorators.put(adapter, itemProviderDecorator);
 					itemProviderDecorator.setDecoratedItemProvider((IChangeNotifier)adapter);
 				}
@@ -55,6 +55,15 @@ public class UMLProfileItemProviderAdapterFactoryDecorator extends DecoratorAdap
 			}
 		}
 		return super.adapt(target, type);
+	}
+
+	/**
+	 * Creates a new {@link IItemProviderDecorator} for a stereotyped element.
+	 * 
+	 * @return {@link IItemProviderDecorator}.
+	 */
+	protected IItemProviderDecorator createStereotypeElementItemProvider() {
+		return new StereotypedElementItemProviderDecorator(this);
 	}
 
 	/**
