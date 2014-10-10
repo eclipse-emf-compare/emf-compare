@@ -344,5 +344,27 @@ public class UMLPostProcessor implements IPostProcessor {
 				}
 			}
 		}
+		// If we have an eOpposite and we are a containment reference, then we also imply/are implied by the
+		// changes to this opposite's subset-superset reference.
+		// "interfaceRealization" is an eOpposite of "implementingClassifier" which in turn is a super set of
+		// "InterfaceRealization#client". Adding the InterfaceRealization into a Class#interfaceRealizations
+		// reference implies the setting of this particular realization's "client" reference.
+		if (reference.isContainment() && reference.getEOpposite() != null) {
+			for (EReference superSet : UMLCompareUtil.getNonUnionSupersetReferences(reference.getEOpposite())) {
+				Comparison comparison = diff.getMatch().getComparison();
+				for (Diff superSetDiff : comparison.getDifferences(superSet)) {
+					if (superSetDiff instanceof ReferenceChange
+							&& ((ReferenceChange)superSetDiff).getReference() == superSet
+							&& ((ReferenceChange)superSetDiff).getMatch() == comparison.getMatch(diff
+									.getValue())) {
+						if (isAddOrSetDiff(diff) && isAddOrSetDiff(superSetDiff)) {
+							diff.getImplies().add(superSetDiff);
+						} else if (isDeleteOrUnsetDiff(diff) && isDeleteOrUnsetDiff(superSetDiff)) {
+							diff.getImpliedBy().add(superSetDiff);
+						}
+					}
+				}
+			}
+		}
 	}
 }

@@ -160,8 +160,10 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 	}
 
 	private void checkMergeDeletePrecondition(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 1, comparison.getDifferences().size());
+		assertEquals(NB_DIFFS - 3, comparison.getDifferences().size());
 		assertNull(diffs.addPrecondition);
+		assertNull(diffs.addGuard);
+		assertNull(diffs.addOwnedRule);
 	}
 
 	@Test
@@ -184,9 +186,10 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 	}
 
 	private void checkMergeAddGuard(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 3, comparison.getDifferences().size());
+		assertEquals(NB_DIFFS - 4, comparison.getDifferences().size());
 		assertNull(diffs.addGuard);
 		assertNull(diffs.addOwnedRule);
+		assertNull(diffs.addPrecondition);
 		assertNull(diffs.addTransition);
 	}
 
@@ -229,9 +232,10 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 	}
 
 	private void checkMergeDeleteGuard(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 2, comparison.getDifferences().size());
+		assertEquals(NB_DIFFS - 3, comparison.getDifferences().size());
 		assertNull(diffs.addGuard);
 		assertNull(diffs.addPrecondition);
+		assertNull(diffs.addOwnedRule);
 	}
 
 	@Test
@@ -254,9 +258,11 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 	}
 
 	private void checkMergeAddOwnedRule(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 2, comparison.getDifferences().size());
+		assertEquals(NB_DIFFS - 4, comparison.getDifferences().size());
 		assertNull(diffs.addOwnedRule);
+		assertNull(diffs.addGuard);
 		assertNull(diffs.addTransition);
+		assertNull(diffs.addPrecondition);
 	}
 
 	@Test

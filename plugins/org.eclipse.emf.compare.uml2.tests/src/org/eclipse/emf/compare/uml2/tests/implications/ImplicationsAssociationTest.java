@@ -243,8 +243,14 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 	}
 
 	private void checkMergeDeleteNavigableOwnedEnd(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 1, comparison.getDifferences().size());
+		assertEquals(NB_DIFFS - 7, comparison.getDifferences().size());
 		assertNull(diffs.addNavigableOwnedEndClass1InAssociation);
+		assertNull(diffs.addOwnedEndClass1InAssociation);
+		assertNull(diffs.addMemberEndClass1InAssociation);
+		assertNull(diffs.addRefAssociationInPropertyClass1);
+		assertNull(diffs.addLiteralIntegerInClass1);
+		assertNull(diffs.addUnlimitedNaturalInClass1);
+		assertNull(diffs.addRefTypeInPropertyClass1);
 	}
 
 	@Test
@@ -267,9 +273,10 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 	}
 
 	private void checkMergeAddOwnedEnd(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 5, comparison.getDifferences().size());
+		assertEquals(NB_DIFFS - 6, comparison.getDifferences().size());
 		assertNull(diffs.addOwnedEndClass1InAssociation);
 		assertNull(diffs.addMemberEndClass1InAssociation);
+		assertNull(diffs.addNavigableOwnedEndClass1InAssociation);
 		assertNull(diffs.addRefAssociationInPropertyClass1);
 		assertNull(diffs.addAssociation);
 		assertNull(diffs.addUMLAssociation);
@@ -344,10 +351,11 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 	}
 
 	private void checkMergeAddMemberEnd(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 5, comparison.getDifferences().size());
+		assertEquals(NB_DIFFS - 6, comparison.getDifferences().size());
 		assertNull(diffs.addMemberEndClass1InAssociation);
 		assertNull(diffs.addRefAssociationInPropertyClass1);
 		assertNull(diffs.addOwnedEndClass1InAssociation);
+		assertNull(diffs.addNavigableOwnedEndClass1InAssociation);
 		assertNull(diffs.addAssociation);
 		assertNull(diffs.addUMLAssociation);
 	}
@@ -949,9 +957,11 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 			assertEquals(1, diffs.addOwnedEndClass1InAssociation.getImplies().size());
 			assertTrue(diffs.addOwnedEndClass1InAssociation.getImplies().contains(
 					diffs.addNavigableOwnedEndClass1InAssociation));
-			assertEquals(1, diffs.addOwnedEndClass1InAssociation.getImpliedBy().size());
+			assertEquals(2, diffs.addOwnedEndClass1InAssociation.getImpliedBy().size());
 			assertTrue(diffs.addOwnedEndClass1InAssociation.getImpliedBy().contains(
 					diffs.addMemberEndClass1InAssociation));
+			assertTrue(diffs.addOwnedEndClass1InAssociation.getImpliedBy().contains(
+					diffs.addRefAssociationInPropertyClass1));
 
 			assertEquals(1, diffs.addMemberEndClass1InAssociation.getImplies().size());
 			assertTrue(diffs.addMemberEndClass1InAssociation.getImplies().contains(
@@ -963,9 +973,11 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 					diffs.addOwnedEndClass1InAssociation));
 			assertEquals(0, diffs.addNavigableOwnedEndClass1InAssociation.getImpliedBy().size());
 
-			assertEquals(1, diffs.addOwnedEndClass1InAssociation.getImplies().size());
+			assertEquals(2, diffs.addOwnedEndClass1InAssociation.getImplies().size());
 			assertTrue(diffs.addOwnedEndClass1InAssociation.getImplies().contains(
 					diffs.addMemberEndClass1InAssociation));
+			assertTrue(diffs.addOwnedEndClass1InAssociation.getImplies().contains(
+					diffs.addRefAssociationInPropertyClass1));
 			assertEquals(1, diffs.addOwnedEndClass1InAssociation.getImpliedBy().size());
 			assertTrue(diffs.addOwnedEndClass1InAssociation.getImpliedBy().contains(
 					diffs.addNavigableOwnedEndClass1InAssociation));

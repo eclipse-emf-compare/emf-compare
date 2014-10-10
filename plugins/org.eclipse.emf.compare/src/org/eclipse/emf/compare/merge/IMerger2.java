@@ -31,45 +31,39 @@ import org.eclipse.emf.compare.Diff;
  */
 public interface IMerger2 extends IMerger {
 	/**
-	 * Retrieves the set of all diffs related to the given <code>diff</code> when merging in the given
-	 * direction.
-	 * <p>
-	 * This is expected to return the set of all differences that will be merged along when a user wishes to
-	 * merge <code>diff</code>, either because they are related or because they are equivalent one way or
-	 * another.
-	 * </p>
-	 * <p>
-	 * Note that as far as the merged is concerned a given diff is considered to be implying itself.
-	 * <code>diff</code> will thus be included in the returned set.
-	 * </p>
+	 * Retrieves the set of <b>directly</b> required diffs in order to merge the current one. This may
+	 * includes the diff's {@link Diff#getRequires() requirements}, its {@link Diff#getImpliedBy() implying
+	 * diff}, or any other diff that we need to merge <u>before</u> the given one.
 	 * 
 	 * @param diff
-	 *            The difference for which we seek all related ones.
+	 *            The diff which direct requirements we need.
 	 * @param mergeLeftToRight
 	 *            The direction in which we're considering a merge.
-	 * @param knownImplications
-	 *            The set of Diffs already known as being implied by our starting point. Since there may be
-	 *            implication cycles, this can be used to break free. Callees are not supposed to add the new
-	 *            implications they find within this set.
-	 * @return The set of all diffs related to the given <code>diff</code> when merging in the given
-	 *         direction.
+	 * @return The set of <b>directly</b> required diffs in order to merge the current one.
 	 */
-	Set<Diff> getResultingMerges(Diff diff, boolean mergeLeftToRight, Set<Diff> knownImplications);
+	Set<Diff> getDirectMergeDependencies(Diff diff, boolean mergeLeftToRight);
 
 	/**
-	 * Retrieves the set of all diffs that will be rejected if the given <code>diff</code> is merged, either
-	 * because of unresolveable conflicts or because of unreachable requirements.
+	 * Returns all differences that will be merged because of our merging the given <code>target</code>
+	 * difference.
 	 * 
-	 * @param diff
-	 *            The difference for which we seek all opposite ones.
-	 * @param mergeLeftToRight
+	 * @param target
+	 *            The difference we're considering merging.
+	 * @param mergeRightToLeft
 	 *            The direction in which we're considering a merge.
-	 * @param knownRejections
-	 *            The set of Diffs already known as being rejected by our starting point. Since there may be
-	 *            rejection cycles, this can be used to break free. Callees are not supposed to add the new
-	 *            rejections they find within this set.
-	 * @return The set of all diffs that will be rejected if the given <code>diff</code> is merged in the
-	 *         given direction.
+	 * @return The Set of all differences that will be merged because we've merged <code>target</code>.
 	 */
-	Set<Diff> getResultingRejections(Diff diff, boolean mergeLeftToRight, Set<Diff> knownRejections);
+	Set<Diff> getDirectResultingMerges(Diff target, boolean mergeRightToLeft);
+
+	/**
+	 * Returns the set of all differences that need to be rejected if <code>target</code> is merged in the
+	 * given direction.
+	 * 
+	 * @param target
+	 *            The difference we're considering merging.
+	 * @param mergeRightToLeft
+	 *            The direction in which we're considering a merge.
+	 * @return The Set of all differences that will be rejected if we are to merge merged <code>target</code>.
+	 */
+	Set<Diff> getDirectResultingRejections(Diff target, boolean mergeRightToLeft);
 }

@@ -17,9 +17,12 @@ import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEIsSet;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.safeESet;
 
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Sets;
 
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
@@ -405,14 +408,14 @@ public class ReferenceChangeMerger extends AbstractMerger {
 				expectedValue = diff.getValue();
 			}
 		} else if (rightToLeft) {
-			if (reference.isContainment()) {
+			if (reference.isContainment() || isImplyingContainmentAddition(diff, rightToLeft)) {
 				expectedValue = createCopy(diff.getValue());
 				valueMatch.setLeft(expectedValue);
 			} else {
 				expectedValue = valueMatch.getLeft();
 			}
 		} else {
-			if (reference.isContainment()) {
+			if (reference.isContainment() || isImplyingContainmentAddition(diff, rightToLeft)) {
 				expectedValue = createCopy(diff.getValue());
 				valueMatch.setRight(expectedValue);
 			} else {
@@ -430,7 +433,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 			safeESet(expectedContainer, reference, expectedValue);
 		}
 
-		if (reference.isContainment()) {
+		if (reference.isContainment() || isImplyingContainmentAddition(diff, rightToLeft)) {
 			// Copy XMI ID when applicable.
 			final Resource initialResource = diff.getValue().eResource();
 			final Resource targetResource = expectedValue.eResource();
@@ -441,6 +444,35 @@ public class ReferenceChangeMerger extends AbstractMerger {
 		}
 
 		checkImpliedDiffsOrdering(diff, rightToLeft);
+	}
+
+	/**
+	 * Checks whether the given diff implies the merge of a containment reference, in which case we need to
+	 * create the object (it hasn't been created through our requirements yet).
+	 * 
+	 * @param target
+	 *            The diff we're merging.
+	 * @param mergeRightToLeft
+	 *            The direction in which we're merging.
+	 * @return <code>true</code> if this diff implies the merge of a containment reference.
+	 */
+	private boolean isImplyingContainmentAddition(Diff target, boolean mergeRightToLeft) {
+		final Set<Diff> implications = new LinkedHashSet<Diff>();
+		Set<Diff> newImplications = getDirectResultingMerges(target, mergeRightToLeft);
+		while (!newImplications.isEmpty()) {
+			final Set<Diff> copy = new LinkedHashSet<Diff>(newImplications);
+			implications.addAll(newImplications);
+			newImplications = new LinkedHashSet<Diff>();
+			for (Diff implied : copy) {
+				if (implied instanceof ReferenceChange
+						&& ((ReferenceChange)implied).getReference().isContainment()) {
+					return true;
+				}
+				newImplications.addAll(getDirectResultingMerges(implied, mergeRightToLeft));
+			}
+			newImplications = Sets.difference(newImplications, implications);
+		}
+		return false;
 	}
 
 	/**
