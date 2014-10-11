@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - Fixes for bug 440679, 441258, 442439, 443504, and refactorings
+ *     Philip Langer - Fixes for bug 440679, 441258, 442439, 443504, 446739, and refactorings
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
 
@@ -1065,18 +1065,9 @@ public final class DiffUtil {
 		final EStructuralFeature diffFeature = getChangedFeature(diff);
 		final Object diffValue = getChangedValue(diff);
 
-		if (isContainmentReferenceMove(diff)) {
+		if (isContainmentReferenceMove(diff) && isTargetOnTheRight(diff, rightToLeft)) {
 			final Match valueMatch = comparison.getMatch((EObject)diffValue);
-			if (rightToLeft && DifferenceSource.LEFT == diff.getSource() && valueMatch.getRight() != null) {
-				targetFeature = valueMatch.getRight().eContainingFeature();
-			} else if (!rightToLeft && DifferenceSource.RIGHT == diff.getSource()
-					&& valueMatch.getLeft() != null) {
-				targetFeature = valueMatch.getRight().eContainingFeature();
-			} else if (valueMatch.getOrigin() != null) {
-				targetFeature = valueMatch.getOrigin().eContainingFeature();
-			} else {
-				targetFeature = diffFeature;
-			}
+			targetFeature = valueMatch.getRight().eContainingFeature();
 		} else {
 			targetFeature = diffFeature;
 		}
@@ -1097,6 +1088,23 @@ public final class DiffUtil {
 		final EStructuralFeature diffFeature = getChangedFeature(diff);
 		return diffFeature instanceof EReference && ((EReference)diffFeature).isContainment()
 				&& diff.getKind() == DifferenceKind.MOVE;
+	}
+
+	/**
+	 * Specifies whether the target container, target feature, and target value of the current merging is the
+	 * right-hand side. This depends on the source of the {@code diff} and the direction of merging as
+	 * specified in {@code rightToLeft}.
+	 * 
+	 * @param diff
+	 *            The diff to check.
+	 * @param rightToLeft
+	 *            Direction of the merging. {@code true} if the merge is to be done on the left side, making
+	 *            'target' the right side, {@code false} otherwise.
+	 * @return <code>true</code> if the target is on the right side, <code>false</code> otherwise.
+	 */
+	private static boolean isTargetOnTheRight(Diff diff, boolean rightToLeft) {
+		return (rightToLeft && DifferenceSource.LEFT == diff.getSource())
+				|| (!rightToLeft && DifferenceSource.RIGHT == diff.getSource());
 	}
 
 	/**
