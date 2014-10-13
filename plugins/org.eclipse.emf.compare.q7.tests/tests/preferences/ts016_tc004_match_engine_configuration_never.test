@@ -50,9 +50,6 @@ get-editor "Compare (\'Models/WithId/extlibraryRight.ecore\' - \'Models/WithId/e
     | click
     
 get-editor "Compare (\'Models/WithId/extlibraryRight.ecore\' - \'Models/WithId/extlibraryLeft.ecore\' - \'Models/WithId/extlibraryRight.ecore\')" | get-tree 
-     | get-table-data |  write-csv-file "workspace:/Models/WithId/ExpectedResult_ConfUsingContentWrite.csv"
-    
-get-editor "Compare (\'Models/WithId/extlibraryRight.ecore\' - \'Models/WithId/extlibraryLeft.ecore\' - \'Models/WithId/extlibraryRight.ecore\')" | get-tree 
      | get-table-data |  eq[read-csv-file "workspace:/Models/WithId/ExpectedResult_ConfUsingContent.csv"] | assert-true "Unexpected diff tree"
      
 get-editor "Compare (\'Models/WithId/extlibraryRight.ecore\' - \'Models/WithId/extlibraryLeft.ecore\' - \'Models/WithId/extlibraryRight.ecore\')" 

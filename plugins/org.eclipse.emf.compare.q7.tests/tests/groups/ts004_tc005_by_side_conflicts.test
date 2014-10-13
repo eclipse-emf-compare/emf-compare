@@ -62,7 +62,7 @@ with [get-editor "Compare .*"
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItemCount()" | equals 0 | verify-true
     get-item "> Conflicts" 
-        | get-property "getItems().TreeItem[0].getText()" | equals "> Conflict" | verify-true
+        | get-property "getItems().TreeItem[0].getText()" | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[0].getItemCount()" | equals 2 | verify-true
     get-item "> Conflicts" 
@@ -80,7 +80,7 @@ with [get-editor "Compare .*"
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[2].getItems().TreeItem[1].getItemCount()" | equals 0 | verify-true
     get-item "> Conflicts" 
-        | get-property "getItems().TreeItem[2].getText()" | equals "> Conflict" | verify-true
+        | get-property "getItems().TreeItem[2].getText()" | equals "> Conflict [3 out of 3 conflicts unresolved]" | verify-true
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[2].getItemCount()" | equals 2 | verify-true
 }
@@ -101,7 +101,7 @@ get-editor "Compare .*"
 with [get-editor "Compare .*" 
     | get-tree] {
     get-item "> Conflicts" 
-        | get-property "getItems().TreeItem[1].getText()" | equals "> Pseudo Conflict" | verify-true
+        | get-property "getItems().TreeItem[1].getText()" | equals "> Pseudo Conflict [4 out of 4 conflicts unresolved]" | verify-true
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[1].getItemCount()" | equals 2 | verify-true
     get-item "> Conflicts" 
@@ -115,7 +115,7 @@ with [get-editor "Compare .*"
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[1].getItems().TreeItem[1].getItemCount()" | equals 1 | verify-true
     get-item "> Conflicts" 
-        | get-property "getItems().TreeItem[0].getText()" | equals "> Conflict" | verify-true
+        | get-property "getItems().TreeItem[0].getText()" | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[0].getItemCount()" | equals 2 | verify-true
     get-item "> Conflicts" 
@@ -123,7 +123,7 @@ with [get-editor "Compare .*"
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItemCount()" | equals 0 | verify-true
     get-item "> Conflicts" 
-        | get-property "getItems().TreeItem[2].getText()" | equals "> Conflict" | verify-true
+        | get-property "getItems().TreeItem[2].getText()" | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[2].getItemCount()" | equals 1 | verify-true
     get-item "> Conflicts" 
@@ -132,7 +132,7 @@ with [get-editor "Compare .*"
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[2].getItems().TreeItem[0].getItemCount()" | equals 1 | verify-true
     get-item "> Conflicts" 
-        | get-property "getItems().TreeItem[4].getText()" | equals "> Conflict" | verify-true
+        | get-property "getItems().TreeItem[4].getText()" | equals "> Conflict [3 out of 3 conflicts unresolved]" | verify-true
     get-item "> Conflicts" | get-property "getItemCount()" | equals 5  | verify-true
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[4].getItems().TreeItem[0].getItems().TreeItem[0].getItemCount()" | equals 0 
