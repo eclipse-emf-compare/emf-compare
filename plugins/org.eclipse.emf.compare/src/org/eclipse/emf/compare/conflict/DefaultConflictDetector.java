@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - [446947] Adds support for mergeable String attributes
  *******************************************************************************/
 package org.eclipse.emf.compare.conflict;
 
@@ -44,8 +45,10 @@ import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.SubMatchIterator;
+import org.eclipse.emf.compare.internal.ThreeWayTextDiff;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -418,11 +421,116 @@ public class DefaultConflictDetector implements IConflictDetector {
 				if (equalityHelper.matchingValues(changedValue, candidateValue)) {
 					// Same value added on both side in the same container
 					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
-				} else if (!(diff instanceof FeatureMapChange)) {
+				} else if (!isFeatureMapChangeOrMergeableStringAttributeChange(diff, candidate)) {
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 				}
 			}
 		}
+	}
+
+	/**
+	 * Specifies whether the given {@code diff1} and {@code diff2} are either {@link FeatureMapChange feature
+	 * map changes} or mergeable {@link AttributeChange attribute changes} of String attributes.
+	 * 
+	 * @param diff1
+	 *            One of the diffs to check.
+	 * @param diff2
+	 *            The other diff to check.
+	 * @return <code>true</code> if it is a {@link FeatureMapChange} or a mergeable {@link AttributeChange},
+	 *         <code>false</code> otherwise.
+	 */
+	private boolean isFeatureMapChangeOrMergeableStringAttributeChange(Diff diff1, Diff diff2) {
+		return isFeatureMapChange(diff1) || areMergeableStringAttributeChanges(diff1, diff2);
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} is a {@link FeatureMapChange}.
+	 * 
+	 * @param diff
+	 *            The diff to check.
+	 * @return <code>true</code> if it is a {@link FeatureMapChange}, <code>false</code> otherwise.
+	 */
+	private boolean isFeatureMapChange(Diff diff) {
+		return diff instanceof FeatureMapChange;
+	}
+
+	/**
+	 * Specifies whether the two given diffs, {@code diff1} and {@code diff2}, are both
+	 * {@link AttributeChange attribute changes} of String attributes and can be merged with a line-based
+	 * three-way merge.
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ThreeWayTextDiff
+	 * @param diff1
+	 *            One of the diffs to check.
+	 * @param diff2
+	 *            The other diff to check.
+	 * @return <code>true</code> if the diffs are mergeable changes of a string attribute, <code>false</code>
+	 *         otherwise.
+	 */
+	private boolean areMergeableStringAttributeChanges(Diff diff1, Diff diff2) {
+		final boolean mergeableStringAttributeChange;
+		if (isStringAttributeChange(diff1)) {
+			final AttributeChange attributeChange1 = (AttributeChange)diff1;
+			final AttributeChange attributeChange2 = (AttributeChange)diff2;
+			mergeableStringAttributeChange = isMergeable(attributeChange1, attributeChange2);
+		} else {
+			mergeableStringAttributeChange = false;
+		}
+		return mergeableStringAttributeChange;
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} is a {@link AttributeChange} of a String attribute.
+	 * 
+	 * @param diff
+	 *            The diff to check.
+	 * @return <code>true</code> if it is a {@link AttributeChange} of a String attribute, <code>false</code>
+	 *         otherwise.
+	 */
+	private boolean isStringAttributeChange(Diff diff) {
+		return diff instanceof AttributeChange
+				&& ((AttributeChange)diff).getAttribute().getEAttributeType().getInstanceClass() == String.class;
+	}
+
+	/**
+	 * Specifies whether the two given attribute changes, {@code diff1} and {@code diff2}, can be merged with
+	 * a line-based three-way merge.
+	 * 
+	 * @see org.eclipse.emf.compare.internal.ThreeWayTextDiff
+	 * @param diff1
+	 *            One of the attribute changes to check.
+	 * @param diff2
+	 *            The other attribute change to check.
+	 * @return <code>true</code> if the attribute changes are mergeable, <code>false</code> otherwise.
+	 */
+	private boolean isMergeable(final AttributeChange diff1, final AttributeChange diff2) {
+		final String changedValue1 = getChangedValue(diff1);
+		final String changedValue2 = getChangedValue(diff2);
+		final EObject originalContainer = diff1.getMatch().getOrigin();
+		final EAttribute changedAttribute = diff1.getAttribute();
+		final String originalValue = (String)originalContainer.eGet(changedAttribute);
+		ThreeWayTextDiff textDiff = new ThreeWayTextDiff(originalValue, changedValue1, changedValue2);
+		return !textDiff.isConflicting();
+	}
+
+	/**
+	 * Returns the changed attribute value denoted by the given {@code diff}.
+	 * 
+	 * @param diff
+	 *            The attribute change for which the changed value is requested.
+	 * @return The changed attribute value.
+	 */
+	private String getChangedValue(final AttributeChange diff) {
+		final String changedValue;
+		Match match = diff.getMatch();
+		if (DifferenceSource.LEFT.equals(diff.getSource())) {
+			changedValue = (String)match.getLeft().eGet(diff.getAttribute());
+		} else if (DifferenceSource.RIGHT.equals(diff.getSource())) {
+			changedValue = (String)match.getRight().eGet(diff.getAttribute());
+		} else {
+			changedValue = (String)diff.getValue();
+		}
+		return changedValue;
 	}
 
 	/**

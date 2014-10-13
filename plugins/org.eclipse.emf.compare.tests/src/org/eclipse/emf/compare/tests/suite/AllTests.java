@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - Adds additional test classes
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.suite;
 
@@ -17,10 +18,12 @@ import junit.textui.TestRunner;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.tests.command.CommandStackTestSuite;
 import org.eclipse.emf.compare.tests.conflict.ConflictDetectionTest;
+import org.eclipse.emf.compare.tests.conflict.MultiLineAttributeConflictDetectionTest;
 import org.eclipse.emf.compare.tests.diff.ComparisonUtilTest;
 import org.eclipse.emf.compare.tests.diff.DiffUtilTest;
 import org.eclipse.emf.compare.tests.diff.FeatureFilterTest;
 import org.eclipse.emf.compare.tests.diff.LCSPerformanceTest;
+import org.eclipse.emf.compare.tests.diff.ThreeWayTextDiffTest;
 import org.eclipse.emf.compare.tests.diff.URIDistanceTest;
 import org.eclipse.emf.compare.tests.edit.AllEditTests;
 import org.eclipse.emf.compare.tests.equi.EquiComputingTest;
@@ -39,6 +42,7 @@ import org.eclipse.emf.compare.tests.merge.FeatureMapsConflictsMergeTest;
 import org.eclipse.emf.compare.tests.merge.FeatureMapsPseudoConflictsMergeTest;
 import org.eclipse.emf.compare.tests.merge.IndividualMergeOutOfScopeValuesTest;
 import org.eclipse.emf.compare.tests.merge.IndividualMergeTest;
+import org.eclipse.emf.compare.tests.merge.MultiLineAttributeMergeTest;
 import org.eclipse.emf.compare.tests.merge.MultipleMergeTest;
 import org.eclipse.emf.compare.tests.merge.PseudoConflictMergeTest;
 import org.eclipse.emf.compare.tests.merge.ThreeWayBatchMergingTest;
@@ -73,7 +77,9 @@ import org.junit.runners.Suite.SuiteClasses;
 		ConflictMergeTest.class, PseudoConflictMergeTest.class, ProximityIndexTest.class, AllRCPTests.class,
 		FeatureMaps2wayMergeTest.class, FeatureMaps3wayMergeTest.class, FeatureMapsConflictsMergeTest.class,
 		FeatureMapsPseudoConflictsMergeTest.class, TwoWayBatchMergingTest.class, EqualityHelperTest.class,
-		FeatureFilterTest.class, ThreeWayBatchMergingTest.class })
+		FeatureFilterTest.class, ThreeWayBatchMergingTest.class,
+		MultiLineAttributeConflictDetectionTest.class, ThreeWayTextDiffTest.class,
+		MultiLineAttributeMergeTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

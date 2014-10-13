@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - [446947] Adds support for three-way text merging 
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
@@ -22,7 +23,9 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.internal.ThreeWayTextDiff;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.ENamedElement;
@@ -368,6 +371,8 @@ public class AttributeChangeMerger extends AbstractMerger {
 		if (expectedContainer instanceof DynamicEObjectImpl && value instanceof EEnumLiteral) {
 			targetValue = ((EEnum)((EEnumLiteral)safeEGet(expectedContainer, attribute)).eContainer())
 					.getEEnumLiteral(((ENamedElement)value).getName());
+		} else if (requireThreeWayTextMerge(diff, rightToLeft)) {
+			targetValue = performThreeWayTextMerge(diff);
 		} else {
 			targetValue = value;
 		}
@@ -382,6 +387,75 @@ public class AttributeChangeMerger extends AbstractMerger {
 		} else {
 			safeESet(expectedContainer, attribute, targetValue);
 		}
+	}
+
+	/**
+	 * Specifies whether a three-way text merge is required for applying the given {@code diff} in the
+	 * direction indicated in {@code rightToLeft}.
+	 * <p>
+	 * Three-way text merging is required when applying the changes of a String attribute of one side to the
+	 * other side; that is, accepting changes as opposed to rejecting changes.
+	 * </p>
+	 * 
+	 * @param diff
+	 *            The diff to be applied.
+	 * @param rightToLeft
+	 *            The direction of applying the {@code diff}.
+	 * @return <code>true</code> if three-way text merging is required, <code>false</code> otherwise.
+	 */
+	private boolean requireThreeWayTextMerge(AttributeChange diff, boolean rightToLeft) {
+		return diff.getMatch().getComparison().isThreeWay() && isStringAttribute(diff.getAttribute())
+				&& isAcceptingChange(diff, rightToLeft);
+	}
+
+	/**
+	 * Specifies whether the given {@code attribute} is an attribute of type String.
+	 * 
+	 * @param attribute
+	 *            The attribute to be checked.
+	 * @return <code>true</code> if it is a String attribute, <code>false</code> otherwise.
+	 */
+	private boolean isStringAttribute(EAttribute attribute) {
+		return attribute.getEAttributeType().getInstanceClass() == String.class;
+	}
+
+	/**
+	 * Specifies whether applying the given {@code diff} in the direction indicated in {@code rightToLeft}
+	 * means accepting the change as opposed to rejecting the change.
+	 * 
+	 * @param diff
+	 *            The diff to be checked.
+	 * @param rightToLeft
+	 *            The direction of applying {@code diff}.
+	 * @return <code>true</code> if it means accepting the change, <code>false</code> otherwise.
+	 */
+	private boolean isAcceptingChange(AttributeChange diff, boolean rightToLeft) {
+		return (DifferenceSource.LEFT.equals(diff.getSource()) && !rightToLeft)
+				|| (DifferenceSource.RIGHT.equals(diff.getSource()) && rightToLeft);
+	}
+
+	/**
+	 * Performs a three-way text merge for the given {@code diff} and returns the merged text.
+	 * <p>
+	 * This method must only be called for {@link #isStringAttribute(EAttribute) String attributes}. As the
+	 * three-way text merging is symmetric, the result is equal irrespectively of the direction of merging as
+	 * long as applying the change {@link #isAcceptingChange(AttributeChange, boolean) means accepting it} as
+	 * opposed to rejecting it.
+	 * </p>
+	 * 
+	 * @param diff
+	 *            The diff for which a three-way text diff is to be performed.
+	 * @return The merged text.
+	 */
+	private String performThreeWayTextMerge(AttributeChange diff) {
+		final Match match = diff.getMatch();
+		final EAttribute attribute = diff.getAttribute();
+		final String originValue = (String)safeEGet(match.getOrigin(), attribute);
+		final String leftValue = (String)safeEGet(match.getLeft(), attribute);
+		final String rightValue = (String)safeEGet(match.getRight(), attribute);
+
+		ThreeWayTextDiff textDiff = new ThreeWayTextDiff(originValue, leftValue, rightValue);
+		return textDiff.getMerged();
 	}
 
 	/**
