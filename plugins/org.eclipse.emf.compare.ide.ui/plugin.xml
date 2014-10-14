@@ -14,6 +14,7 @@
 
 <plugin>
    <extension-point id="modelResolvers" name="Model Resolvers" schema="schema/modelResolvers.exsd"/>
+   <extension-point id="logicalModelViewHandlers" name="Logical Model View Handlers" schema="schema/logicalModelViewHandlers.exsd"/>
    
    <extension
          point="org.eclipse.compare.structureMergeViewers">
@@ -107,6 +108,106 @@
             supportedTypes="org.eclipse.compare.structuremergeviewer.ICompareInput"
             uri="http://www.eclipse.org/emf/2002/Tree">
       </factory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="org.eclipse.emf.compare.category"
+            name="EMF Compare">
+      </category>
+      <view
+            allowMultiple="false"
+            category="org.eclipse.emf.compare.category"
+            class="org.eclipse.emf.compare.ide.ui.internal.logical.view.LogicalModelView"
+            icon="icons/full/eobj16/emfcompare-icon.gif"
+            id="org.eclipse.emf.compare.ide.ui.logicalmodel.view"
+            name="Logical Model View"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewer
+            viewerId="org.eclipse.emf.compare.ide.ui.logicalmodel.view">
+         <popupMenu
+               allowsPlatformContributions="true"
+               id="org.eclipse.emf.compare.ide.ui.logicalmodel.view#PopupMenu">
+            <insertionPoint
+                  name="group.open"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.openWith">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.show"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="additions"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.properties"
+                  separator="true">
+            </insertionPoint>
+         </popupMenu>
+         <options>
+            <property
+                  name="org.eclipse.ui.navigator.hideLinkWithEditorAction"
+                  value="true">
+            </property>
+            <property
+                  name="org.eclipse.ui.navigator.hideCollapseAllAction"
+                  value="true">
+            </property>
+            <property
+                  name="org.eclipse.ui.navigator.customizeViewDialogHelpContext"
+                  value="false">
+            </property>
+         </options>
+      </viewer>
+      <viewerActionBinding
+            viewerId="org.eclipse.emf.compare.ide.ui.logicalmodel.view">
+         <includes>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.OpenActions">
+            </actionExtension>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.PropertiesActionProvider">
+            </actionExtension>
+         </includes>
+         <excludes>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.GotoActions">
+            </actionExtension>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.PortingActions">
+            </actionExtension>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.NewActions">
+            </actionExtension>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.WorkManagementActionProvider">
+            </actionExtension>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.ResourceMgmtActions">
+            </actionExtension>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.UndoRedoActionProvider">
+            </actionExtension>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.WorkingSetActions">
+            </actionExtension></excludes>
+      </viewerActionBinding>
+      <viewerContentBinding
+            viewerId="org.eclipse.emf.compare.ide.ui.logicalmodel.view">
+         <includes>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resourceContent">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
    </extension>
       <extension
          point="org.eclipse.ui.menus">
@@ -312,5 +413,20 @@
                type="org.eclipse.team.core.mapping.IResourceMappingMerger">
          </adapter>
       </factory>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.ide.ui.logicalModelViewHandlers">
+      <handler
+            class="org.eclipse.emf.compare.ide.ui.internal.logical.view.EMFCompareEditorLMVHandler"
+            ranking="20">
+      </handler>
+      <handler
+            class="org.eclipse.emf.compare.ide.ui.internal.logical.view.EMFReflectiveEditorLMVHandler"
+            ranking="10">
+      </handler>
+      <handler
+            class="org.eclipse.emf.compare.ide.ui.internal.logical.view.ExplorersViewSelectionLMVHandler"
+            ranking="10">
+      </handler>
    </extension>
 </plugin>

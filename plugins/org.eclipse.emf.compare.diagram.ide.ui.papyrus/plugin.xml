@@ -25,4 +25,11 @@
             class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.CssInstallationHook">
       </resourceSetHook>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.ide.ui.logicalModelViewHandlers">
+      <handler
+            class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.logical.view.PapyrusFilesSelectionLMVHandler"
+            ranking="20">
+      </handler>
+   </extension>
 </plugin>

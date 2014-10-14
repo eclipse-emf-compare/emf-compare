@@ -22,6 +22,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.ide.ui.internal.editor.PropertySheetAdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverRegistryListener;
+import org.eclipse.emf.compare.ide.ui.internal.logical.view.registry.LogicalModelViewHandlerRegistry;
+import org.eclipse.emf.compare.ide.ui.internal.logical.view.registry.LogicalModelViewHandlerRegistryListener;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -43,11 +45,20 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	/** Model resolvers extension point. */
 	private static final String MODEL_RESOLVER_PPID = "modelResolvers"; //$NON-NLS-1$
 
+	/** Logical Model Editors Handlers extension point. */
+	private static final String LOGICAL_MODEL_VIEW_HANDLERS_PPID = "logicalModelViewHandlers"; //$NON-NLS-1$
+
 	/** Listener for the model resolver extension point. */
 	private AbstractRegistryEventListener modelResolverRegistryListener;
 
 	/** Registry of model resolvers. */
 	private ModelResolverRegistry modelResolverRegistry;
+
+	/** Listener for the Logical Model View Handlers extension point. */
+	private AbstractRegistryEventListener logicalModelViewHandlerRegistryListener;
+
+	/** Registry of Logical Model View Handlers. */
+	private LogicalModelViewHandlerRegistry logicalModelViewHandlerRegistry;
 
 	/** keep track of resources that should be freed when exiting. */
 	private static Map<String, Image> resourcesMapper = new HashMap<String, Image>();
@@ -74,6 +85,12 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		globalRegistry.addListener(modelResolverRegistryListener);
 		modelResolverRegistryListener.readRegistry(globalRegistry);
 
+		logicalModelViewHandlerRegistry = new LogicalModelViewHandlerRegistry();
+		logicalModelViewHandlerRegistryListener = new LogicalModelViewHandlerRegistryListener(PLUGIN_ID,
+				LOGICAL_MODEL_VIEW_HANDLERS_PPID, getLog(), logicalModelViewHandlerRegistry);
+		globalRegistry.addListener(logicalModelViewHandlerRegistryListener);
+		logicalModelViewHandlerRegistryListener.readRegistry(globalRegistry);
+
 		Platform.getAdapterManager().registerAdapters(new PropertySheetAdapterFactory(), CompareEditor.class);
 	}
 
@@ -85,6 +102,8 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		final IExtensionRegistry globalRegistry = Platform.getExtensionRegistry();
+		globalRegistry.removeListener(logicalModelViewHandlerRegistryListener);
+		logicalModelViewHandlerRegistry.clear();
 		globalRegistry.removeListener(modelResolverRegistryListener);
 		modelResolverRegistry.clear();
 		plugin = null;
@@ -163,6 +182,15 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	 */
 	public ModelResolverRegistry getModelResolverRegistry() {
 		return modelResolverRegistry;
+	}
+
+	/**
+	 * Returns the registry containing all known Logical Model View handlers.
+	 * 
+	 * @return The registry containing all known Logical Model View handlers.
+	 */
+	public LogicalModelViewHandlerRegistry getLogicalModelViewHandlerRegistry() {
+		return logicalModelViewHandlerRegistry;
 	}
 
 	/**
