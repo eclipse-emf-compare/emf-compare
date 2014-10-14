@@ -257,6 +257,24 @@ public final class EMFComparePredicates {
 	}
 
 	/**
+	 * This predicate can be used to check whether a given Diff is a {@link ReferenceChange} representing the
+	 * eOpposite of the {@code diff} argument.
+	 *
+	 * @param diff
+	 *            The {@link ReferenceChange} against which is checked if an eOpposite relation exists.
+	 * @return The created predicate.
+	 * @since 3.2
+	 */
+	public static Predicate<Diff> isDiffOnEOppositeOf(final ReferenceChange diff) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input instanceof ReferenceChange
+						&& diff.getReference().getEOpposite() == ((ReferenceChange)input).getReference();
+			}
+		};
+	}
+
+	/**
 	 * This predicate can be used to check whether a given Diff represents the deletion of a value from a
 	 * multi-valued attribute going by {@code attributeName} on an EObject which name matches
 	 * {@code qualifiedName}.

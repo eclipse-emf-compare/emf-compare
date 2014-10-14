@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 441172
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.equi.data;
 
@@ -86,6 +87,22 @@ public class EquiInputData extends AbstractInputData {
 
 	public Resource getC4Right() throws IOException {
 		return loadFromClassLoader("c4/right.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getC5Left() throws IOException {
+		return loadFromClassLoader("c5/left.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getC5Right() throws IOException {
+		return loadFromClassLoader("c5/right.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getC6Left() throws IOException {
+		return loadFromClassLoader("c6/left.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getC6Right() throws IOException {
+		return loadFromClassLoader("c6/right.nodes"); //$NON-NLS-1$
 	}
 
 	public Resource getD1Left() throws IOException {

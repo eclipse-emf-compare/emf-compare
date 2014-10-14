@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,14 +7,19 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 441172
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
 import static com.google.common.base.Predicates.in;
 import static com.google.common.collect.Iterables.any;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.isDiffOnEOppositeOf;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -28,10 +33,11 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -177,12 +183,17 @@ public abstract class AbstractMerger implements IMerger2 {
 	 * Even within 'equivalent' differences, there might be one that we need to consider as the "master", one
 	 * part of the equivalence that should take precedence over the others when merging.
 	 * <p>
-	 * There are two main cases for which this happens :
+	 * There are three main cases in which this happens :
 	 * <ol>
-	 * <li>Equivalent differences regarding two "eOpposite" sides, with one side being a multiple valued
-	 * reference while the other side is a single valued reference. In such a case, we need the 'many' side of
-	 * that equivalence to be merged over the 'single' side, so as to avoid potential ordering issues.</li>
-	 * <li>Equivalent differences with conflicts. Basically, if one of the diffs of an equivalence relation is
+	 * <li>Equivalent differences regarding two "eOpposite" sides, with one side being a single-valued
+	 * reference while the other side is a multi-valued reference (one-to-many). In such a case, we need the
+	 * 'many' side of that equivalence to be merged over the 'single' side, so as to avoid potential ordering
+	 * issues. Additionally, to avoid losing information, equivalent differences with
+	 * {@link DifferenceKind.ADD} instead of {@link DifferenceKind.REMOVE} must be merged first.</li>
+	 * <li>Equivalent differences regarding two "eOpposite" sides, with both sides being a single-valued
+	 * reference (one-to-one). In such a case, we need to merge the difference that results in setting a
+	 * feature value over the difference unsetting a feature. This is needed to prevent information loss.</li>
+	 * <li>Equivalent differences with conflicts: basically, if one of the diffs of an equivalence relation is
 	 * in conflict while the others are not, then none of the equivalent differences can be automatically
 	 * merged. We need to consider the conflict to be taking precedence over the others to make sure that the
 	 * conflict is resolved before even trying to merge anything.</li>
@@ -196,23 +207,25 @@ public abstract class AbstractMerger implements IMerger2 {
 	 * @return The master difference of this equivalence relation. May be <code>null</code> if there are none.
 	 */
 	private Diff findMasterEquivalence(Diff diff, boolean mergeRightToLeft) {
-		Diff masterDiff = null;
-		final Iterator<Diff> equivalentDiffs = diff.getEquivalence().getDifferences().iterator();
-		while (masterDiff == null && equivalentDiffs.hasNext()) {
-			final Diff candidate = equivalentDiffs.next();
-			if (hasRealConflict(candidate)) {
-				masterDiff = candidate;
-			} else if (diff instanceof ReferenceChange && candidate instanceof ReferenceChange) {
-				final EReference reference = ((ReferenceChange)diff).getReference();
-				final EReference equivalentReference = ((ReferenceChange)candidate).getReference();
+		final List<Diff> equivalentDiffs = diff.getEquivalence().getDifferences();
+		final Optional<Diff> firstConflicting = Iterables.tryFind(equivalentDiffs,
+				hasConflict(ConflictKind.REAL));
+		if (firstConflicting.isPresent()) {
+			return firstConflicting.get();
+		}
 
-				if (reference.getEOpposite() == equivalentReference
-						&& candidate.getState() == DifferenceState.UNRESOLVED) {
-					// This equivalence is on our eOpposite. Is it an addition in a multivalued reference?
-					if (!reference.isMany() && equivalentReference.isMany()
-							&& isAdd((ReferenceChange)candidate, mergeRightToLeft)) {
-						masterDiff = candidate;
-					}
+		Diff masterDiff = null;
+		if (diff instanceof ReferenceChange) {
+			final ReferenceChange diffRC = (ReferenceChange)diff;
+			final Iterator<Diff> eOppositeDiffs = Iterators.filter(equivalentDiffs.iterator(),
+					isDiffOnEOppositeOf(diffRC));
+			while (masterDiff == null && eOppositeDiffs.hasNext()) {
+				final ReferenceChange candidate = (ReferenceChange)eOppositeDiffs.next();
+				if (isOneToManyAndAdd(diffRC, candidate, mergeRightToLeft)) {
+					masterDiff = candidate;
+				} else if (!isSet(diffRC, mergeRightToLeft)
+						&& isOneToOneAndSet(diffRC, candidate, mergeRightToLeft)) {
+					masterDiff = candidate;
 				}
 			}
 		}
@@ -220,14 +233,42 @@ public abstract class AbstractMerger implements IMerger2 {
 	}
 
 	/**
-	 * Returns <code>true</code> if this diff is in a <u>real</u> conflict with another.
-	 * 
+	 * Specifies whether the given reference changes, {@code diff} and {@code equivalent}, affect references
+	 * constituting an one-to-many relationship and whether {@code equivalent} is an addition in the current
+	 * merging.
+	 *
 	 * @param diff
-	 *            The diff we are to check for conflicts.
-	 * @return <code>true</code> if this diff is in a <u>real</u> conflict with another.
+	 *            The difference to check. One-side of the relation.
+	 * @param equivalent
+	 *            The equivalent to the {@code diff}. Many-side of the relation.
+	 * @param mergeRightToLeft
+	 *            Direction of the merge.
+	 * @return <code>true</code> if {@code diff} and {@code equivalent} are one-to-many eOpposites with
+	 *         {@code equivalent} resulting in an Add-operation, <code>false</code> otherwise.
 	 */
-	private boolean hasRealConflict(Diff diff) {
-		return diff.getConflict() != null && diff.getConflict().getKind() == ConflictKind.REAL;
+	private boolean isOneToManyAndAdd(ReferenceChange diff, ReferenceChange equivalent,
+			boolean mergeRightToLeft) {
+		return !diff.getReference().isMany() && equivalent.getReference().isMany()
+				&& isAdd(equivalent, mergeRightToLeft);
+	}
+
+	/**
+	 * Specifies whether the given reference changes, {@code diff} and {@code equivalent}, affect references
+	 * constituting an one-to-one relationship and whether {@code equivalent} is a set in the current merging.
+	 *
+	 * @param diff
+	 *            The difference to check.
+	 * @param equivalent
+	 *            The equivalent to the {@code diff}.
+	 * @param mergeRightToLeft
+	 *            Direction of the merge.
+	 * @return <code>true</code> if {@code diff} and {@code equivalent} are one-to-many eOpposites with
+	 *         {@code equivalent} resulting in an Add-operation, <code>false</code> otherwise.
+	 */
+	private boolean isOneToOneAndSet(ReferenceChange diff, ReferenceChange equivalent,
+			boolean mergeRightToLeft) {
+		return !diff.getReference().isMany() && !equivalent.getReference().isMany()
+				&& isSet(equivalent, mergeRightToLeft);
 	}
 
 	/**
@@ -247,6 +288,13 @@ public abstract class AbstractMerger implements IMerger2 {
 		target.setState(DifferenceState.MERGED);
 
 		final Set<Diff> dependencies = getDirectMergeDependencies(target, false);
+
+		// We'll redo some of the work from getDirectMergeDependencies here in order to ensure we haven't been
+		// merged by another diff (equivalence or implication).
+		// requiresMerging must be executed before actually merging the dependencies because
+		// findMasterEquivalence may return a different result after merging.
+		boolean requiresMerging = requiresMerging(target, false);
+
 		for (Diff mergeMe : dependencies) {
 			mergeDiff(mergeMe, false, monitor);
 		}
@@ -254,10 +302,6 @@ public abstract class AbstractMerger implements IMerger2 {
 		for (Diff transitiveMerge : getDirectResultingMerges(target, false)) {
 			transitiveMerge.setState(DifferenceState.MERGED);
 		}
-
-		// We'll redo some of the work from getDirectMergeDependencies here in order to ensure we haven't been
-		// merged by another diff (equivalence or implication)
-		boolean requiresMerging = requiresMerging(target, false);
 
 		if (requiresMerging) {
 			if (target.getSource() == DifferenceSource.LEFT) {
@@ -285,6 +329,13 @@ public abstract class AbstractMerger implements IMerger2 {
 		target.setState(DifferenceState.MERGED);
 
 		final Set<Diff> dependencies = getDirectMergeDependencies(target, true);
+
+		// We'll redo some of the work from getDirectMergeDependencies here in order to ensure we haven't been
+		// merged by another diff (equivalence or implication).
+		// requiresMerging must be executed before actually merging the dependencies because
+		// findMasterEquivalence may return a different result after merging.
+		boolean requiresMerging = requiresMerging(target, true);
+
 		for (Diff mergeMe : dependencies) {
 			mergeDiff(mergeMe, true, monitor);
 		}
@@ -292,10 +343,6 @@ public abstract class AbstractMerger implements IMerger2 {
 		for (Diff transitiveMerge : getDirectResultingMerges(target, true)) {
 			transitiveMerge.setState(DifferenceState.MERGED);
 		}
-
-		// We'll redo some of the work from getDirectMergeDependencies here in order to ensure we haven't been
-		// merged by another diff (equivalence or implication)
-		boolean requiresMerging = requiresMerging(target, true);
 
 		if (requiresMerging) {
 			if (target.getSource() == DifferenceSource.LEFT) {
@@ -323,7 +370,7 @@ public abstract class AbstractMerger implements IMerger2 {
 			// first, if we are implied by something, then we're already merged
 			requiresMerging = false;
 		} else if (target.getEquivalence() != null) {
-			final Diff masterEquivalence = findMasterEquivalence(target, false);
+			final Diff masterEquivalence = findMasterEquivalence(target, mergeRightToLeft);
 			if (masterEquivalence != null && masterEquivalence != target) {
 				// If we have a "master" equivalence (see doc on findMasterEquivalence) then we've been merged
 				// along with it
@@ -537,9 +584,11 @@ public abstract class AbstractMerger implements IMerger2 {
 	/**
 	 * Handles the equivalences of this difference.
 	 * <p>
-	 * Note that in certain cases, we'll merge our opposite instead of merging this diff. Specifically, we'll
-	 * do that for one-to-many eOpposites : we'll merge the 'many' side instead of the 'unique' one. This
-	 * allows us not to worry about the order of the references on that 'many' side.
+	 * Note that in certain cases, we'll merge our opposite instead of merging this diff. This is done to
+	 * avoid merge orders where merging differences of kind {@link DifferenceKind.REMOVE} or
+	 * {@link DifferenceKind.CHANGE} (resulting in an unset) first can lead to information loss. Additionally
+	 * in case of one-to-many eOpposites this allows us not to worry about the order of the references on the
+	 * 'many' side.
 	 * </p>
 	 * <p>
 	 * This is called before the merge of <code>this</code>. In short, if this returns <code>false</code>, we
@@ -561,17 +610,19 @@ public abstract class AbstractMerger implements IMerger2 {
 	protected boolean handleEquivalences(Diff diff, boolean rightToLeft, Monitor monitor) {
 		boolean continueMerge = true;
 		for (Diff equivalent : diff.getEquivalence().getDifferences()) {
-			// For 1..*, merge diff on many-valued to preserve ordering
-			if (diff instanceof ReferenceChange && equivalent instanceof ReferenceChange) {
-				final EReference reference = ((ReferenceChange)diff).getReference();
-				final EReference equivalentReference = ((ReferenceChange)equivalent).getReference();
 
-				if (reference.getEOpposite() == equivalentReference
+			if (diff instanceof ReferenceChange && equivalent instanceof ReferenceChange) {
+
+				final ReferenceChange diffRC = (ReferenceChange)diff;
+				final ReferenceChange equivalentRC = (ReferenceChange)equivalent;
+
+				if (diffRC.getReference().getEOpposite() == equivalentRC.getReference()
 						&& equivalent.getState() == DifferenceState.UNRESOLVED) {
+
 					// This equivalence is on our eOpposite. Should we merge it instead of 'this'?
-					final boolean mergeEquivalence = !reference.isMany()
-							&& ((ReferenceChange)equivalent).getReference().isMany()
-							&& isAdd((ReferenceChange)equivalent, rightToLeft);
+					final boolean mergeEquivalence = isOneToManyAndAdd(diffRC, equivalentRC, rightToLeft)
+							|| isOneToOneAndSet(diffRC, equivalentRC, rightToLeft);
+
 					if (mergeEquivalence) {
 						mergeDiff(equivalent, rightToLeft, monitor);
 						continueMerge = false;
@@ -657,6 +708,88 @@ public abstract class AbstractMerger implements IMerger2 {
 			return diff.getKind() == DifferenceKind.DELETE;
 		} else {
 			return diff.getKind() == DifferenceKind.ADD;
+		}
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} will set a value in the target model for the current merging.
+	 * <p>
+	 * To check whether the {@code diff} is a set, we have to check the direction of the merge, specified in
+	 * {@code rightToLeft} and the {@link Diff#getSource() source of the diff}. Therefore, this method
+	 * delegates to {@link #isLeftSetOrRightUnset(ReferenceChange)} and
+	 * {@link #isLeftUnsetOrRightSet(ReferenceChange)}.
+	 * </p>
+	 *
+	 * @param diff
+	 *            The difference to check.
+	 * @param mergeRightToLeft
+	 *            Direction of the merge.
+	 * @return <code>true</code> if {@code diff} will set a value with this merge, <code>false</code> if it
+	 *         will unset.
+	 */
+	private boolean isSet(ReferenceChange diff, boolean mergeRightToLeft) {
+		if (diff.getKind() != DifferenceKind.CHANGE) {
+			return false;
+		}
+
+		boolean isSet = false;
+		final Match match = diff.getMatch();
+		final EObject container;
+		if (diff.getSource() == DifferenceSource.LEFT) {
+			container = match.getLeft();
+		} else {
+			container = match.getRight();
+		}
+
+		if (container == null) {
+			// This is an unset diff. However, if we're merging towards the source, we're actually "rejecting"
+			// the unset, and the merge operation will be a "set"
+			isSet = isRejecting(diff, mergeRightToLeft);
+		} else {
+			if (!ReferenceUtil.safeEIsSet(container, diff.getReference())) {
+				// No value on the source side, this is an unset
+				// Same case as above, if we are rejecting the diff, it is a "set" operation
+				isSet = isRejecting(diff, mergeRightToLeft);
+			} else {
+				// The feature is set on the source side. If we're merging towards the other side, it can only
+				// be a "set" operation.
+				// Otherwise we're going to reset this reference to its previous value. That will end as an
+				// "unset" if the "previous value" is unset itself.
+				if (isRejecting(diff, mergeRightToLeft)) {
+					final EObject originContainer;
+					if (match.getComparison().isThreeWay()) {
+						originContainer = match.getOrigin();
+					} else if (mergeRightToLeft) {
+						originContainer = match.getRight();
+					} else {
+						originContainer = match.getLeft();
+					}
+
+					isSet = originContainer != null
+							&& ReferenceUtil.safeEIsSet(originContainer, diff.getReference());
+				} else {
+					isSet = true;
+				}
+			}
+		}
+
+		return isSet;
+	}
+
+	/**
+	 * Checks whether the given merge direction will result in rejecting this difference.
+	 *
+	 * @param diff
+	 *            The difference we're merging.
+	 * @param mergeRightToLeft
+	 *            Direction of the merge operation.
+	 * @return <code>true</code> if we're rejecting this diff.
+	 */
+	private boolean isRejecting(Diff diff, boolean mergeRightToLeft) {
+		if (diff.getSource() == DifferenceSource.LEFT) {
+			return mergeRightToLeft;
+		} else {
+			return !mergeRightToLeft;
 		}
 	}
 

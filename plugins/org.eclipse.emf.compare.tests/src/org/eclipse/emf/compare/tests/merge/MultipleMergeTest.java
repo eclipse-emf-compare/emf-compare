@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 441172
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.merge;
 
@@ -1011,6 +1012,159 @@ public class MultipleMergeTest {
 		assertNull(diff5.getMatch().getLeft());
 		assertNull(diff5.getMatch().getRight());
 
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertEquals(0, comparison.getDifferences().size());
+	}
+
+	@Test
+	public void testEquivalenceC5LtoR() throws IOException {
+		final Resource left = equivalenceInput.getC5Left();
+		final Resource right = equivalenceInput.getC5Right();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+
+		// Initially 5 differences
+		// 1 : Change: Set Node1.source to Node3
+		// 2 : Change: Set Node3.destination to Node1
+		// 3 : Change: Unset Node4.destination
+		// 4 : Add: Node3
+		// 5 : Delete Node4
+		// 1-2-3 are equivalent
+
+		assertEquals(5, differences.size());
+
+		final ReferenceChange diff1 = (ReferenceChange)Iterators.find(differences.iterator(),
+				changedReference("Root.Node1", "source", "Root.Node4", "Root.Node3"));
+		final ReferenceChange diff2 = (ReferenceChange)Iterators.find(differences.iterator(),
+				changedReference("Root.Node3", "destination", null, "Root.Node1"));
+		final ReferenceChange diff3 = (ReferenceChange)Iterators.find(differences.iterator(),
+				changedReference("Root.Node4", "destination", "Root.Node1", null));
+		final ReferenceChange diff4 = (ReferenceChange)Iterators.find(differences.iterator(),
+				added("Root.Node3"));
+		final ReferenceChange diff5 = (ReferenceChange)Iterators.find(differences.iterator(),
+				removed("Root.Node4"));
+
+		/*
+		 * Merge diff3 first. If the merger blindly merges diff3 without proper looking at the equivalences,
+		 * diff1 and diff2 will also be set to status "merged" although the reference to be set is still
+		 * missing.
+		 */
+		mergerRegistry.getHighestRankingMerger(diff3).copyLeftToRight(diff3, new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(diff1).copyLeftToRight(diff1, new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(diff2).copyLeftToRight(diff2, new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(diff4).copyLeftToRight(diff4, new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(diff5).copyLeftToRight(diff5, new BasicMonitor());
+
+		// check if no differences between models are left
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertEquals(0, comparison.getDifferences().size());
+	}
+
+	@Test
+	public void testEquivalenceC5RtoL() throws IOException {
+		final Resource left = equivalenceInput.getC5Left();
+		final Resource right = equivalenceInput.getC5Right();
+
+		// test the other way by reusing the models from C5LtoR
+		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+
+		final ReferenceChange unsetDiff = (ReferenceChange)Iterators.find(differences.iterator(),
+				changedReference("Root.Node4", "destination", null, "Root.Node1"));
+
+		/*
+		 * Merge the unsetDiff first. If the merger blindly merges the unsetDiff without proper looking at its
+		 * equivalences, the equivalences will also be set to status "merged" although the reference to be set
+		 * is still missing.
+		 */
+		mergerRegistry.getHighestRankingMerger(unsetDiff).copyRightToLeft(unsetDiff, new BasicMonitor());
+
+		// merge the remaining diffs
+		for (Diff diff : differences) {
+			if (diff != unsetDiff) {
+				mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+			}
+		}
+
+		// check if no differences between models are left
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertEquals(0, comparison.getDifferences().size());
+	}
+
+	@Test
+	public void testEquivalenceC6LtoR() throws IOException {
+		final Resource left = equivalenceInput.getC6Left();
+		final Resource right = equivalenceInput.getC6Right();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertEquals(3, differences.size());
+
+		// Initially 3 differences
+		// 1 : Change: Set Node1.source to Node3
+		// 2 : Change: Set Node3.destination to Node1
+		// 3 : Change: Unset Node4.destination
+		// 1-2-3 are equivalent
+
+		final ReferenceChange unsetDiff = (ReferenceChange)Iterators.find(differences.iterator(),
+				changedReference("Root.Node4", "destination", "Root.Node1", null));
+
+		/*
+		 * Merge the unsetDiff first. If the merger blindly merges the unsetDiff without proper looking at its
+		 * equivalences, the equivalences will also be set to status "merged" although the reference to be set
+		 * is still missing.
+		 */
+		mergerRegistry.getHighestRankingMerger(unsetDiff).copyLeftToRight(unsetDiff, new BasicMonitor());
+
+		// merge the remaining diffsS
+		for (Diff diff : differences) {
+			if (diff != unsetDiff) {
+				mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+			}
+		}
+
+		// check if no differences between models are left
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertEquals(0, comparison.getDifferences().size());
+	}
+
+	@Test
+	public void testEquivalenceC6RtoL() throws IOException {
+		final Resource left = equivalenceInput.getC6Left();
+		final Resource right = equivalenceInput.getC6Right();
+
+		// test the other way by reusing the models from C6LtoR
+		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertEquals(3, differences.size());
+
+		final ReferenceChange unsetDiff = (ReferenceChange)Iterators.find(differences.iterator(),
+				changedReference("Root.Node4", "destination", null, "Root.Node1"));
+
+		/*
+		 * Merge the unsetDiff first. If the merger blindly merges the unsetDiff without proper looking at its
+		 * equivalences, the equivalences will also be set to status "merged" although the reference to be set
+		 * is still missing.
+		 */
+		mergerRegistry.getHighestRankingMerger(unsetDiff).copyRightToLeft(unsetDiff, new BasicMonitor());
+
+		// merge the remaining diffsS
+		for (Diff diff : differences) {
+			if (diff != unsetDiff) {
+				mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+			}
+		}
+
+		// check if no differences between models are left
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertEquals(0, comparison.getDifferences().size());
 	}

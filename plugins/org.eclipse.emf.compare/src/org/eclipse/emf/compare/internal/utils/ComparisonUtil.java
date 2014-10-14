@@ -126,7 +126,7 @@ public final class ComparisonUtil {
 				if (source == null) {
 					result = true;
 				} else {
-					result = equalToDefault(source, feature);
+					result = isEqualToDefault(source, feature);
 				}
 			}
 		}
@@ -135,14 +135,14 @@ public final class ComparisonUtil {
 
 	/**
 	 * Checks whether the given feature of the given EObject is set to its default value or the empty String.
-	 * 
+	 *
 	 * @param object
 	 *            The object which feature value we need to check.
 	 * @param feature
 	 *            The feature which value we need to check.
 	 * @return <code>true</code> is this object's feature is set to a value equal to its default.
 	 */
-	private static boolean equalToDefault(EObject object, EStructuralFeature feature) {
+	private static boolean isEqualToDefault(EObject object, EStructuralFeature feature) {
 		final Object value = ReferenceUtil.safeEGet(object, feature);
 		final Object defaultValue = feature.getDefaultValue();
 		if (value == null) {
@@ -186,7 +186,7 @@ public final class ComparisonUtil {
 				if (expectedContainer == null) {
 					result = true;
 				} else {
-					result = equalToDefault(expectedContainer, feature);
+					result = isEqualToDefault(expectedContainer, feature);
 				}
 			}
 		}
