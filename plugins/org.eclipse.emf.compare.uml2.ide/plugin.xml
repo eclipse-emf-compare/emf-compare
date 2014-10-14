@@ -13,5 +13,10 @@
 -->
 
 <plugin>
-   <extension-point id="resourceSetHook" name="Resource Set Hook" schema="schema/resourceSetHook.exsd"/>
+   <extension
+         point="org.eclipse.emf.compare.ide.resourceSetHook">
+      <resourceSetHook
+            class="org.eclipse.emf.compare.uml2.ide.hook.UnloadingUMLResourceHook">
+      </resourceSetHook>
+   </extension>
 </plugin>
