@@ -53,7 +53,7 @@ public class JFaceUtil {
 	 * @param predicate
 	 * @return
 	 */
-	public static Set<?> filterVisibleElement(TreeViewer treeViewer, Predicate<? super Object> predicate) {
+	public static Set<?> visibleElements(TreeViewer treeViewer, Predicate<? super Object> predicate) {
 		Set<Object> acc = newHashSet();
 		appendNonFilteredChildren(treeViewer, treeViewer.getTree().getItems(), null, predicate, acc);
 		return acc;

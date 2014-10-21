@@ -20,9 +20,12 @@ import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCo
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Collection;
@@ -580,34 +583,26 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	private void refreshTitle() {
 		Composite parent = getControl().getParent();
 		if (parent instanceof CompareViewerSwitchingPane) {
-			int displayedDiff = JFaceUtil.filterVisibleElement(getViewer(), IS_DIFF).size();
+			final Set<Adapter> visibleElement = ImmutableSet.copyOf(Iterables.filter(JFaceUtil
+					.visibleElements(getViewer(), IS_DIFF), Adapter.class));
+			final Set<Diff> visibleDiff = ImmutableSet.copyOf(Iterables.filter(Iterables.transform(
+					visibleElement, new Function<Adapter, Notifier>() {
+						public Notifier apply(Adapter input) {
+							return getDataOfTreeNodeOfAdapter(input);
+						}
+					}), Diff.class));
+
 			Comparison comparison = getCompareConfiguration().getComparison();
 			if (comparison != null) {
-				List<Diff> differences = comparison.getDifferences();
-				final int computedDiff;
-				if (pseudoConflictsFilterEnabled) {
-					computedDiff = size(Iterables.filter(differences, not(hasConflict(ConflictKind.PSEUDO))));
-				} else {
-					computedDiff = differences.size();
-				}
-				int filteredDiff = differences.size() - displayedDiff;
-				if (filteredDiff < 0) {
-					// some differences (conflicts in default view) are displayed twice,
-					// use this workaround to avoid displayed negative numbers, but we have
-					// to know that we display wrong number.
-					filteredDiff = 0;
-				}
-				final int differencesToMerge;
-				if (pseudoConflictsFilterEnabled) {
-					differencesToMerge = size(Iterables.filter(differences,
-							UNRESOLVED_AND_WITHOUT_PSEUDO_CONFLICT));
-				} else {
-					differencesToMerge = size(Iterables.filter(differences,
-							hasState(DifferenceState.UNRESOLVED)));
-				}
-				((CompareViewerSwitchingPane)parent).setTitleArgument(EMFCompareIDEUIMessages.getString(
-						"EMFCompareStructureMergeViewer.titleDesc", differencesToMerge, computedDiff, //$NON-NLS-1$
-						filteredDiff));
+				final Set<Diff> differences = ImmutableSet.copyOf(comparison.getDifferences());
+				final int filteredDiff = Sets.difference(differences, visibleDiff).size();
+				final int differencesToMerge = size(Iterables.filter(visibleDiff,
+						hasState(DifferenceState.UNRESOLVED)));
+				((CompareViewerSwitchingPane)parent)
+						.setTitleArgument(EMFCompareIDEUIMessages
+								.getString(
+										"EMFCompareStructureMergeViewer.titleDesc", differencesToMerge, visibleElement.size(), //$NON-NLS-1$
+										filteredDiff));
 			}
 		}
 	}
@@ -990,7 +985,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			List<Diff> differences = comparison.getDifferences();
 			if (differences.isEmpty()) {
 				navigatable.fireOpen(new NoDifferencesCompareInput(compareInput));
-			} else if (JFaceUtil.filterVisibleElement(getViewer(), IS_DIFF).isEmpty()) {
+			} else if (JFaceUtil.visibleElements(getViewer(), IS_DIFF).isEmpty()) {
 				navigatable.fireOpen(new NoVisibleItemCompareInput(compareInput));
 			} else {
 				navigatable.selectChange(INavigatable.FIRST_CHANGE);
