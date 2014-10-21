@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - adds feature map change spec (bug #448120)
  */
 package org.eclipse.emf.compare.impl;
 
@@ -17,6 +18,7 @@ import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.compare.internal.spec.AttributeChangeSpec;
 import org.eclipse.emf.compare.internal.spec.ComparisonSpec;
 import org.eclipse.emf.compare.internal.spec.ConflictSpec;
+import org.eclipse.emf.compare.internal.spec.FeatureMapChangeSpec;
 import org.eclipse.emf.compare.internal.spec.MatchSpec;
 import org.eclipse.emf.compare.internal.spec.ReferenceChangeSpec;
 import org.eclipse.emf.compare.internal.spec.ResourceAttachmentChangeSpec;
@@ -207,11 +209,10 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public FeatureMapChange createFeatureMapChange() {
-		FeatureMapChangeImpl featureMapChange = new FeatureMapChangeImpl();
-		return featureMapChange;
+		return new FeatureMapChangeSpec();
 	}
 
 	/**
