@@ -112,6 +112,10 @@ public class WikiTextToHTML {
 	private boolean genWebsite;
 
 	private String version;
+
+	private String projectName;
+
+	private String projectId;
 	
 	public static void main(String[] args) throws Exception {
 		WikiTextToHTML wikiTextToHTML = new WikiTextToHTML();
@@ -137,14 +141,26 @@ public class WikiTextToHTML {
 			System.exit(1);
 		}
 		
+		if (projectName == null || "".equals(projectName)) {
+			System.err.println("Error: unable to find -projectname argument");
+			usage();
+			System.exit(1);
+		}
+		
+		if (genEclipseHelp && (projectId == null || "".equals(projectId.trim()))) {
+			System.err.println("Error: -projectid is mandatory when using -eclipsehelp");
+			usage();
+			System.exit(1);
+		}
+		
 		markupLanguage = new CustomMediaWikiLanguage();
 		markupLanguage.setInternalLinkPattern("{0}");
 
 		Stylesheet ss1 = new Stylesheet();
-		ss1.setUrl("/help/topic/org.eclipse.emf.compare.doc/help/resources/bootstrap.css");
+		ss1.setUrl("/help/topic/"+projectId+"/help/resources/bootstrap.css");
 		helpStylesheets.add(ss1);
 		Stylesheet ss2 = new Stylesheet();
-		ss2.setUrl("/help/topic/org.eclipse.emf.compare.doc/help/resources/custom.css");
+		ss2.setUrl("/help/topic/"+projectId+"/help/resources/custom.css");
 		helpStylesheets.add(ss2);
 		
 		ss1 = new Stylesheet();
@@ -166,7 +182,7 @@ public class WikiTextToHTML {
 				System.out.println("Deleting "+ resolvedTargetHelpFolder + " before regenerating Eclipse help");
 				removeRecursiveContent(resolvedTargetHelpFolder);
 			}
-			primaryTOCWriter.startPrimaryTOC(targetHelpFolder.resolve("index.html"), "EMF Compare Documentation");
+			primaryTOCWriter.startPrimaryTOC(targetHelpFolder.resolve("index.html"), projectName+" Documentation");
 		}
 		
 		final PathMatcher mediawikiPattern = DEFAULT_FS.getPathMatcher("glob:**/*.mediawiki");
@@ -238,7 +254,7 @@ public class WikiTextToHTML {
 	 * 
 	 */
 	private void usage() {
-		System.out.println("Usage: wikiTextToHTML -location path -version version [-eclipsehelp path] [-website path]");
+		System.out.println("Usage: wikiTextToHTML -projectname \"Name of the Project\" -projectid org.eclipse.emf.compare.doc -location path -version version [-eclipsehelp path] [-website path]");
 	}
 
 	private void processCommandLineArgs(String[] args) throws Exception {
@@ -269,6 +285,14 @@ public class WikiTextToHTML {
 			
 			if (option.equalsIgnoreCase("-version")) { //$NON-NLS-1$
 				version = arg.trim();
+			}
+			
+			if (option.equalsIgnoreCase("-projectname")) { //$NON-NLS-1$
+				projectName = arg.trim();
+			}
+			
+			if (option.equalsIgnoreCase("-projectid")) { //$NON-NLS-1$
+				projectId = arg.trim();
 			}
 		}
 		
@@ -362,12 +386,12 @@ public class WikiTextToHTML {
 		
 		final String markupContentWithTOC;
 		if ("index.mediawiki".equals(markupPath.getFileName().toString())) {
-			markupContentWithTOC = markupContent.replaceFirst("=(.*)=", "=EMF Compare — $1=\n\nVersion " + version +"\n\n") + 
+			markupContentWithTOC = markupContent.replaceFirst("=(.*)=", "="+projectName+" — $1=\n\nVersion " + version +"\n\n") + 
 					"\n\nVersion " + version;
 		} else {
 			Path relativeToRoot = targetHTML.getParent().relativize(targetWebsiteFolder.resolve("index.html"));
-			markupContentWithTOC = markupContent.replaceFirst("=(.*)=", "=EMF Compare — $1=\n\nVersion " + version +"\n\n__TOC__\n\n") + 
-					"\n\nPart of ["+relativeToRoot+" EMF Compare Documentation]" +
+			markupContentWithTOC = markupContent.replaceFirst("=(.*)=", "="+projectName+" — $1=\n\nVersion " + version +"\n\n__TOC__\n\n") + 
+					"\n\nPart of ["+relativeToRoot+" "+projectName+" Documentation]" +
 					"\n\nVersion " + version;
 		}
 

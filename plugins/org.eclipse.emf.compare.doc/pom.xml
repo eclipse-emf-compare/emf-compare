@@ -111,6 +111,10 @@
                 <argument>${project.basedir}/../../packaging/org.eclipse.emf.compare.gendoc/target/org.eclipse.emf.compare.gendoc-1.0-uberjar.jar</argument>
                 <argument>-location</argument>
                 <argument>${project.basedir}</argument>
+                <argument>-projectid</argument>
+                <argument>${project.artifactId}</argument>
+                <argument>-projectname</argument>
+                <argument>EMF Compare</argument>
                 <argument>-eclipsehelp</argument>
                 <argument>${project.basedir}/help</argument>
                 <argument>-website</argument>
