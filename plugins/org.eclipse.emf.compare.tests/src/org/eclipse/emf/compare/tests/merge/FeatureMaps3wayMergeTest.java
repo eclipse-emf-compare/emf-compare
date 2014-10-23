@@ -999,7 +999,8 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertEquals(4, comparison.getDifferences().size());
+		// after correctly merging one change and it's equivalent diff, we should have 2 more differences left
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1044,7 +1045,8 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertEquals(4, comparison.getDifferences().size());
+		// after correctly merging one change and it's equivalent diff, we should have 2 more differences left
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -1502,7 +1504,8 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertEquals(4, comparison.getDifferences().size());
+		// after correctly merging one diff and it's equivalent, we should have 2 equivalent differences left
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
