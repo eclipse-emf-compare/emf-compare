@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 441172
+ *     Alexandra Buzila - Fixes for Bug 446252
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
@@ -18,6 +19,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.isDiffOnEOppositeOf;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
@@ -33,6 +35,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
@@ -183,7 +186,7 @@ public abstract class AbstractMerger implements IMerger2 {
 	 * Even within 'equivalent' differences, there might be one that we need to consider as the "master", one
 	 * part of the equivalence that should take precedence over the others when merging.
 	 * <p>
-	 * There are three main cases in which this happens :
+	 * There are four main cases in which this happens :
 	 * <ol>
 	 * <li>Equivalent differences regarding two "eOpposite" sides, with one side being a single-valued
 	 * reference while the other side is a multi-valued reference (one-to-many). In such a case, we need the
@@ -197,6 +200,10 @@ public abstract class AbstractMerger implements IMerger2 {
 	 * in conflict while the others are not, then none of the equivalent differences can be automatically
 	 * merged. We need to consider the conflict to be taking precedence over the others to make sure that the
 	 * conflict is resolved before even trying to merge anything.</li>
+	 * <li>Equivalent {@link ReferenceChange} and {@link FeatureMapChange} differences: in this case the
+	 * {@link FeatureMapChange} difference will take precedence over the {@link ReferenceChange}. This happens
+	 * in order to prevent special cases in which the {@link ReferenceChangeMerger} cannot ensure the correct	 
+	 * order of the feature map attribute.</li>
 	 * </ol>
 	 * </p>
 	 * 
@@ -207,29 +214,77 @@ public abstract class AbstractMerger implements IMerger2 {
 	 * @return The master difference of this equivalence relation. May be <code>null</code> if there are none.
 	 */
 	private Diff findMasterEquivalence(Diff diff, boolean mergeRightToLeft) {
+		final Diff masterDiff;
 		final List<Diff> equivalentDiffs = diff.getEquivalence().getDifferences();
 		final Optional<Diff> firstConflicting = Iterables.tryFind(equivalentDiffs,
 				hasConflict(ConflictKind.REAL));
 		if (firstConflicting.isPresent()) {
-			return firstConflicting.get();
+			masterDiff = firstConflicting.get();
+		} else if (diff instanceof ReferenceChange) {
+			final ReferenceChange referenceChange = (ReferenceChange)diff;
+			masterDiff = getMasterEquivalenceForReferenceChange(referenceChange, mergeRightToLeft);
+		} else {
+			masterDiff = null;
 		}
+		return masterDiff;
+	}
 
+	/**
+	 * Returns the master equivalence for a {@link ReferenceChange}.
+	 * 
+	 * @see AbstractMerger#findMasterEquivalence(Diff, boolean)
+	 * @param diff
+	 *            The {@link Diff} we need to check the equivalence for a 'master' difference.
+	 * @param mergeRightToLeft
+	 *            Direction of the current merging.
+	 * @return The master difference of {@code diff} and its equivalent diffs. This method may return <code>null</code> if there is no master diff.
+	 */
+	private Diff getMasterEquivalenceForReferenceChange(ReferenceChange diff, boolean mergeRightToLeft) {
+		Diff masterDiff = getMasterEquivalenceOnEOpposite(diff, mergeRightToLeft);
+		if (masterDiff == null) {
+			masterDiff = getMasterEquivalenceFeatureMap(diff);
+		}
+		return masterDiff;
+	}
+
+	/**
+	 * Returns the master equivalence for a {@link ReferenceChange} from among its {@code eOpposites}.
+	 * 
+	 * @see AbstractMerger#findMasterEquivalence(Diff, boolean)
+	 * @param diff
+	 *            The {@link Diff} we need to check the equivalence for a 'master' difference.
+	 * @param mergeRightToLeft
+	 *            Direction of the current merging.
+	 * @return The master difference of {@code diff} and its equivalent diffs. This method may return
+	 *         <code>null</code> if there is no master diff.
+	 */
+	private Diff getMasterEquivalenceOnEOpposite(ReferenceChange diff, boolean mergeRightToLeft) {
 		Diff masterDiff = null;
-		if (diff instanceof ReferenceChange) {
-			final ReferenceChange diffRC = (ReferenceChange)diff;
-			final Iterator<Diff> eOppositeDiffs = Iterators.filter(equivalentDiffs.iterator(),
-					isDiffOnEOppositeOf(diffRC));
-			while (masterDiff == null && eOppositeDiffs.hasNext()) {
-				final ReferenceChange candidate = (ReferenceChange)eOppositeDiffs.next();
-				if (isOneToManyAndAdd(diffRC, candidate, mergeRightToLeft)) {
-					masterDiff = candidate;
-				} else if (!isSet(diffRC, mergeRightToLeft)
-						&& isOneToOneAndSet(diffRC, candidate, mergeRightToLeft)) {
-					masterDiff = candidate;
-				}
+		final Iterator<Diff> equivalentDiffs = diff.getEquivalence().getDifferences().iterator();
+		final Iterator<Diff> eOppositeDiffs = Iterators.filter(equivalentDiffs, isDiffOnEOppositeOf(diff));
+		while (masterDiff == null && eOppositeDiffs.hasNext()) {
+			final ReferenceChange candidate = (ReferenceChange)eOppositeDiffs.next();
+			if (isOneToManyAndAdd(diff, candidate, mergeRightToLeft)) {
+				masterDiff = candidate;
+			} else if (!isSet(diff, mergeRightToLeft) && isOneToOneAndSet(diff, candidate, mergeRightToLeft)) {
+				masterDiff = candidate;
 			}
 		}
 		return masterDiff;
+	}
+
+	/**
+	 * Returns the master equivalence of type {@link FeatureMapChange}, for a {@link ReferenceChange}.
+	 * 
+	 * @see AbstractMerger#findMasterEquivalence(Diff, boolean)
+	 * @param diff
+	 *            The {@link Diff} we need to check the equivalence for a 'master' difference.
+	 * @return The master difference of {@code diff} and its equivalent diffs. This method may return
+	 *         <code>null</code> if there is no master diff.
+	 */
+	private Diff getMasterEquivalenceFeatureMap(ReferenceChange diff) {
+		return Iterators.tryFind(diff.getEquivalence().getDifferences().iterator(),
+				Predicates.instanceOf(FeatureMapChange.class)).orNull();
 	}
 
 	/**
@@ -628,6 +683,13 @@ public abstract class AbstractMerger implements IMerger2 {
 						continueMerge = false;
 					}
 				}
+			}
+
+			// in the case of a ReferenceChange-FeatureMapChange equivalence, the FeatureMapChange is
+			// preferred to the ReferenceChange - cf. Bug 446252
+			if (diff instanceof ReferenceChange && equivalent instanceof FeatureMapChange) {
+				mergeDiff(equivalent, rightToLeft, monitor);
+				continueMerge = false;
 			}
 
 			/*

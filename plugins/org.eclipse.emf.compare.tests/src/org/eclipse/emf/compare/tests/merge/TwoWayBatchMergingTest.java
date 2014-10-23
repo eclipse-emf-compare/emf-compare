@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Philip Langer - initial API and implementation
+ *     Alexandra Buzila - Test case for bug 446252
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.merge;
 
@@ -184,6 +185,20 @@ public class TwoWayBatchMergingTest {
 		final Resource left = input.getManyToManyReferenceChangesR2LLeft();
 		final Resource right = input.getManyToManyReferenceChangesR2LRight();
 		batchMergeAndAssertEquality(left, right, Direction.RIGHT_TO_LEFT);
+	}
+
+	/**
+	 * Tests a scenario in which multiple nodes are moved inside a feature map. It tests whether the order of
+	 * the nodes inside the feature map is correct after the merge.
+	 * 
+	 * @throws IOException
+	 *             if {@link TwoWayMergeInputData} fails to load the test models.
+	 */
+	@Test
+	public void mergingMoveToFeatureMapL2R() throws IOException {
+		final Resource left = input.getMoveToFeatureMapL2RLeft();
+		final Resource right = input.getMoveToFeatureMapL2RRight();
+		batchMergeAndAssertEquality(left, right, Direction.LEFT_TO_RIGHT);
 	}
 
 	/**
