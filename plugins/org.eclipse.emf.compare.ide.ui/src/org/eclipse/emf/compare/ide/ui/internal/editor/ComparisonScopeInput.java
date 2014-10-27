@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,10 @@ public class ComparisonScopeInput implements ICompareInput {
 	private final AdapterFactory adapterFactory;
 
 	private final ListenerList listeners;
+
+	private boolean leftEditable = true;
+
+	private boolean rightEditable = true;
 
 	public ComparisonScopeInput(IComparisonScope scope, AdapterFactory adapterFactory) {
 		this.scope = scope;
@@ -134,6 +138,22 @@ public class ComparisonScopeInput implements ICompareInput {
 			return null;
 		}
 		return AccessorAdapter.adapt(new TypedNotifier(adapterFactory, scope.getRight()));
+	}
+
+	public void setLeftEditable(boolean leftEditable) {
+		this.leftEditable = leftEditable;
+	}
+
+	public void setRightEditable(boolean rightEditable) {
+		this.rightEditable = rightEditable;
+	}
+
+	public boolean isLeftEditable() {
+		return leftEditable;
+	}
+
+	public boolean isRightEditable() {
+		return rightEditable;
 	}
 
 	/**

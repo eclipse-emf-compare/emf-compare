@@ -830,6 +830,21 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		EMFCompare comparator = getCompareConfiguration().getEMFComparator();
 
 		IComparisonScope comparisonScope = input.getComparisonScope();
+		EMFCompareConfiguration compareConfiguration = getCompareConfiguration();
+		compareConfiguration.setLeftEditable(input.isLeftEditable());
+		compareConfiguration.setRightEditable(input.isRightEditable());
+		// setup defaults
+		if (compareConfiguration.getEditingDomain() == null) {
+			ICompareEditingDomain domain = EMFCompareEditingDomain.create(comparisonScope.getLeft(),
+					comparisonScope.getRight(), comparisonScope.getOrigin());
+			compareConfiguration.setEditingDomain(domain);
+		}
+		if (comparator == null) {
+			Builder builder = EMFCompare.builder();
+			EMFCompareBuilderConfigurator.createDefault().configure(builder);
+			comparator = builder.build();
+		}
+
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
 		final Comparison comparison = comparator.compare(comparisonScope, BasicMonitor.toMonitor(subMonitor
 				.newChild(10)));

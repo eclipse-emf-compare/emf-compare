@@ -438,6 +438,9 @@
          <adapter
                type="org.eclipse.team.core.mapping.IResourceMappingMerger">
          </adapter>
+         <adapter
+               type="org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter">
+         </adapter>
       </factory>
    </extension>
    <extension
