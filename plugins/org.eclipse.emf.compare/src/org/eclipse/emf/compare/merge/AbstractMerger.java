@@ -13,12 +13,15 @@
 package org.eclipse.emf.compare.merge;
 
 import static com.google.common.base.Predicates.in;
+import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.any;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasSameReferenceAs;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.isDiffOnEOppositeOf;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
@@ -241,7 +244,7 @@ public abstract class AbstractMerger implements IMerger2 {
 	 *         <code>null</code> if there is no master diff.
 	 */
 	private Diff getMasterEquivalenceForReferenceChange(ReferenceChange diff, boolean mergeRightToLeft) {
-		Diff masterDiff = getMasterEquivalenceOnEOpposite(diff, mergeRightToLeft);
+		Diff masterDiff = getMasterEquivalenceOnReference(diff, mergeRightToLeft);
 		if (masterDiff == null) {
 			masterDiff = getMasterEquivalenceFeatureMap(diff);
 		}
@@ -249,7 +252,8 @@ public abstract class AbstractMerger implements IMerger2 {
 	}
 
 	/**
-	 * Returns the master equivalence for a {@link ReferenceChange} from among its {@code eOpposites}.
+	 * Returns the master equivalence for a {@link ReferenceChange} from among its equivalents with the same
+	 * or {@code eOpposite} reference.
 	 * 
 	 * @see AbstractMerger#findMasterEquivalence(Diff, boolean)
 	 * @param diff
@@ -259,18 +263,63 @@ public abstract class AbstractMerger implements IMerger2 {
 	 * @return The master difference of {@code diff} and its equivalent diffs. This method may return
 	 *         <code>null</code> if there is no master diff.
 	 */
-	private Diff getMasterEquivalenceOnEOpposite(ReferenceChange diff, boolean mergeRightToLeft) {
+	private Diff getMasterEquivalenceOnReference(ReferenceChange diff, final boolean mergeRightToLeft) {
 		Diff masterDiff = null;
-		final Iterator<Diff> equivalentDiffs = diff.getEquivalence().getDifferences().iterator();
-		final Iterator<Diff> eOppositeDiffs = Iterators.filter(equivalentDiffs, isDiffOnEOppositeOf(diff));
-		while (masterDiff == null && eOppositeDiffs.hasNext()) {
-			final ReferenceChange candidate = (ReferenceChange)eOppositeDiffs.next();
-			if (isOneToManyAndAdd(diff, candidate, mergeRightToLeft)) {
-				masterDiff = candidate;
-			} else if (!isSet(diff, mergeRightToLeft) && isOneToOneAndSet(diff, candidate, mergeRightToLeft)) {
-				masterDiff = candidate;
+		/*
+		 * For the following, we'll only consider diffs that are either on the same reference as "diff", or on
+		 * its eopposite.
+		 */
+		final Predicate<Diff> candidateFilter = or(isDiffOnEOppositeOf(diff), hasSameReferenceAs(diff));
+		final List<Diff> equivalentDiffs = diff.getEquivalence().getDifferences();
+
+		// We need to lookup the first multi-valued addition
+		final Optional<Diff> multiValuedAddition = Iterators.tryFind(Iterators.filter(equivalentDiffs
+				.iterator(), candidateFilter), new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input instanceof ReferenceChange && ((ReferenceChange)input).getReference().isMany()
+						&& isAdd((ReferenceChange)input, mergeRightToLeft);
+			}
+		});
+
+		final Iterator<Diff> candidateDiffs = Iterators.filter(equivalentDiffs.iterator(), candidateFilter);
+		if (multiValuedAddition.isPresent()) {
+			// We have at least one multi-valued addition. It will take precedence if there is any
+			// single-valued reference change or multi-valued deletion
+			while (masterDiff == null && candidateDiffs.hasNext()) {
+				final ReferenceChange next = (ReferenceChange)candidateDiffs.next();
+				if (!next.getReference().isMany() || !isAdd(next, mergeRightToLeft)) {
+					masterDiff = multiValuedAddition.get();
+				}
+			}
+		} else {
+			// The only diff that could take precedence is a single-valued set, _if_ there is any multi-valued
+			// deletion or single-valued unset in the list.
+			ReferenceChange candidate = null;
+			if (candidateDiffs.hasNext()) {
+				candidate = (ReferenceChange)candidateDiffs.next();
+			}
+			while (masterDiff == null && candidateDiffs.hasNext()) {
+				assert candidate != null;
+				final ReferenceChange next = (ReferenceChange)candidateDiffs.next();
+				if (candidate.getReference().isMany() || isUnset(candidate, mergeRightToLeft)) {
+					// candidate is a multi-valued deletion or an unset. Do we have a single-valued set in the
+					// list?
+					if (!next.getReference().isMany() && isSet(next, mergeRightToLeft)) {
+						masterDiff = next;
+					}
+				} else if (isSet(candidate, mergeRightToLeft)) {
+					// candidate is a set. Is it our master diff?
+					if (next.getReference().isMany() || isUnset(next, mergeRightToLeft)) {
+						masterDiff = candidate;
+					}
+				} else {
+					// candidate is a change on a single-valued reference. This has no influence over the
+					// 'master' lookup. Go on to the next.
+					candidate = next;
+				}
 			}
 		}
+
 		return masterDiff;
 	}
 
@@ -301,7 +350,9 @@ public abstract class AbstractMerger implements IMerger2 {
 	 *            Direction of the merge.
 	 * @return <code>true</code> if {@code diff} and {@code equivalent} are one-to-many eOpposites with
 	 *         {@code equivalent} resulting in an Add-operation, <code>false</code> otherwise.
+	 * @deprecated
 	 */
+	@Deprecated
 	private boolean isOneToManyAndAdd(ReferenceChange diff, ReferenceChange equivalent,
 			boolean mergeRightToLeft) {
 		return !diff.getReference().isMany() && equivalent.getReference().isMany()
@@ -320,7 +371,9 @@ public abstract class AbstractMerger implements IMerger2 {
 	 *            Direction of the merge.
 	 * @return <code>true</code> if {@code diff} and {@code equivalent} are one-to-many eOpposites with
 	 *         {@code equivalent} resulting in an Add-operation, <code>false</code> otherwise.
+	 * @deprecated
 	 */
+	@Deprecated
 	private boolean isOneToOneAndSet(ReferenceChange diff, ReferenceChange equivalent,
 			boolean mergeRightToLeft) {
 		return !diff.getReference().isMany() && !equivalent.getReference().isMany()
@@ -775,20 +828,73 @@ public abstract class AbstractMerger implements IMerger2 {
 	}
 
 	/**
-	 * Specifies whether the given {@code diff} will set a value in the target model for the current merging.
-	 * <p>
-	 * To check whether the {@code diff} is a set, we have to check the direction of the merge, specified in
-	 * {@code rightToLeft} and the {@link Diff#getSource() source of the diff}. Therefore, this method
-	 * delegates to {@link #isLeftSetOrRightUnset(ReferenceChange)} and
-	 * {@link #isLeftUnsetOrRightSet(ReferenceChange)}.
-	 * </p>
+	 * Checks whether the given diff will result in the unsetting of a reference in the given merge direction.
 	 *
 	 * @param diff
 	 *            The difference to check.
 	 * @param mergeRightToLeft
 	 *            Direction of the merge.
-	 * @return <code>true</code> if {@code diff} will set a value with this merge, <code>false</code> if it
-	 *         will unset.
+	 * @return <code>true</code> if {@code diff} will unset a value with this merge, <code>false</code> if
+	 *         this will either "set" or "change" values... or if the given diff is affecting a multi-valued
+	 *         reference.
+	 */
+	private boolean isUnset(ReferenceChange diff, boolean mergeRightToLeft) {
+		if (diff.getKind() != DifferenceKind.CHANGE) {
+			return false;
+		}
+
+		boolean isUnset = false;
+		final Match match = diff.getMatch();
+		final EObject container;
+		if (diff.getSource() == DifferenceSource.LEFT) {
+			container = match.getLeft();
+		} else {
+			container = match.getRight();
+		}
+
+		if (container == null) {
+			// This is an unset diff. However, if we're merging towards the source, we're actually "rejecting"
+			// the unset, and the merge operation will be a "set"
+			isUnset = !isRejecting(diff, mergeRightToLeft);
+		} else {
+			if (!ReferenceUtil.safeEIsSet(container, diff.getReference())) {
+				// No value on the source side, this is an unset
+				// Same case as above, if we are rejecting the diff, it is a "set" operation
+				isUnset = !isRejecting(diff, mergeRightToLeft);
+			} else {
+				// The feature is set on the source side. If we're merging towards the other side, this cannot
+				// be an unset.
+				// Otherwise we're going to reset this reference to its previous value. That will end as an
+				// "unset" if the "previous value" is unset itself.
+				if (isRejecting(diff, mergeRightToLeft)) {
+					final EObject originContainer;
+					if (match.getComparison().isThreeWay()) {
+						originContainer = match.getOrigin();
+					} else if (mergeRightToLeft) {
+						originContainer = match.getRight();
+					} else {
+						originContainer = match.getLeft();
+					}
+
+					isUnset = originContainer == null
+							|| !ReferenceUtil.safeEIsSet(originContainer, diff.getReference());
+				}
+			}
+		}
+
+		return isUnset;
+	}
+
+	/**
+	 * Checks whether the given diff will result in the setting of a reference in the given merge direction.
+	 *
+	 * @param diff
+	 *            The difference to check.
+	 * @param mergeRightToLeft
+	 *            Direction of the merge.
+	 * @return <code>true</code> if {@code diff} will set a value with this merge, <code>false</code> if this
+	 *         will either "unset" or "change" values... or if the given diff is affecting a multi-valued
+	 *         reference.
 	 */
 	private boolean isSet(ReferenceChange diff, boolean mergeRightToLeft) {
 		if (diff.getKind() != DifferenceKind.CHANGE) {
@@ -814,8 +920,8 @@ public abstract class AbstractMerger implements IMerger2 {
 				// Same case as above, if we are rejecting the diff, it is a "set" operation
 				isSet = isRejecting(diff, mergeRightToLeft);
 			} else {
-				// The feature is set on the source side. If we're merging towards the other side, it can only
-				// be a "set" operation.
+				// The feature is set on the source side. If we're merging towards the other side, this is a
+				// "set" operation if the feature is not set on the target side.
 				// Otherwise we're going to reset this reference to its previous value. That will end as an
 				// "unset" if the "previous value" is unset itself.
 				if (isRejecting(diff, mergeRightToLeft)) {
@@ -831,7 +937,15 @@ public abstract class AbstractMerger implements IMerger2 {
 					isSet = originContainer != null
 							&& ReferenceUtil.safeEIsSet(originContainer, diff.getReference());
 				} else {
-					isSet = true;
+					final EObject targetContainer;
+					if (mergeRightToLeft) {
+						targetContainer = match.getLeft();
+					} else {
+						targetContainer = match.getRight();
+					}
+
+					isSet = targetContainer == null
+							|| !ReferenceUtil.safeEIsSet(targetContainer, diff.getReference());
 				}
 			}
 		}

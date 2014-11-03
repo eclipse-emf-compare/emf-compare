@@ -1123,7 +1123,7 @@ public class MultipleMergeTest {
 		 */
 		mergerRegistry.getHighestRankingMerger(unsetDiff).copyLeftToRight(unsetDiff, new BasicMonitor());
 
-		// merge the remaining diffsS
+		// merge the remaining differences
 		for (Diff diff : differences) {
 			if (diff != unsetDiff) {
 				mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
@@ -1157,9 +1157,75 @@ public class MultipleMergeTest {
 		 */
 		mergerRegistry.getHighestRankingMerger(unsetDiff).copyRightToLeft(unsetDiff, new BasicMonitor());
 
-		// merge the remaining diffsS
+		// merge the remaining differences
 		for (Diff diff : differences) {
 			if (diff != unsetDiff) {
+				mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+			}
+		}
+
+		// check if no differences between models are left
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertEquals(0, comparison.getDifferences().size());
+	}
+
+	@Test
+	public void testEquivalenceC7LtoR() throws IOException {
+		final Resource left = equivalenceInput.getC7Left();
+		final Resource right = equivalenceInput.getC7Right();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertEquals(4, differences.size());
+
+		final ReferenceChange deleteDiff = (ReferenceChange)Iterators.find(differences.iterator(),
+				removedFromReference("Root.a", "destination", "Root.a"));
+
+		/*
+		 * Merge the deleteDiff first. If the merger blindly merges the deleteDiff without proper looking at
+		 * its equivalences, the equivalences will also be set to status "merged" although the reference to be
+		 * added is still missing.
+		 */
+		mergerRegistry.getHighestRankingMerger(deleteDiff).copyLeftToRight(deleteDiff, new BasicMonitor());
+
+		// merge the remaining differences
+		for (Diff diff : differences) {
+			if (diff != deleteDiff) {
+				mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+			}
+		}
+
+		// check if no differences between models are left
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertEquals(0, comparison.getDifferences().size());
+	}
+
+	@Test
+	public void testEquivalenceC7RtoL() throws IOException {
+		final Resource left = equivalenceInput.getC7Left();
+		final Resource right = equivalenceInput.getC7Right();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertEquals(4, differences.size());
+
+		final ReferenceChange deleteDiff = (ReferenceChange)Iterators.find(differences.iterator(),
+				addedToReference("Root.b", "destination", "Root.a"));
+
+		/*
+		 * Merge the diff resulting in a delete first. If the merger blindly merges the deleteDiff without
+		 * proper looking at its equivalences, the equivalences will also be set to status "merged" although
+		 * the reference to be added is still missing.
+		 */
+		mergerRegistry.getHighestRankingMerger(deleteDiff).copyRightToLeft(deleteDiff, new BasicMonitor());
+
+		// merge the remaining differences
+		for (Diff diff : differences) {
+			if (diff != deleteDiff) {
 				mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 			}
 		}

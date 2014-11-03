@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 441172
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
@@ -270,6 +271,24 @@ public final class EMFComparePredicates {
 			public boolean apply(Diff input) {
 				return input instanceof ReferenceChange
 						&& diff.getReference().getEOpposite() == ((ReferenceChange)input).getReference();
+			}
+		};
+	}
+
+	/**
+	 * This predicate can be used to check whether a given Diff is a {@link ReferenceChange} with the same
+	 * reference as the {@code diff} argument.
+	 *
+	 * @param diff
+	 *            The {@link ReferenceChange} against which is checked whether it has the same reference.
+	 * @return The created predicate.
+	 * @since 3.2
+	 */
+	public static Predicate<Diff> hasSameReferenceAs(final ReferenceChange diff) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input instanceof ReferenceChange
+						&& diff.getReference() == ((ReferenceChange)input).getReference();
 			}
 		};
 	}
