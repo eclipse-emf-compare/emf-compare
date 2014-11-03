@@ -639,6 +639,54 @@ PENDING
 
 [[http://www.eclipse.org/emf/compare/doc/features/videos/UML%20comparison/compareUml.htm | Demo : Specific support to encapsulate profiles and stereotypes diffs]]
 
+== Logical Model View ==
+
+EMF Compare does not act simply on the selected files, but on their whole logical model (a given model can be split through multiple files through EMF control action). Thanks to that, if you try and compare a model file that reference other model files, the comparison will still be able to take these "other" files into account. For example, if you try and compare a genmodel file (that depends on its underlying ecore file), then both files will be taken into account for the comparison.
+
+For more details about the logical model, please visit the [developer/logical-model.html|Logical model] page.
+
+The EMF compare Logical Model View allows to see, for a given model (or set of models), the resulting logical model computed by EMF Compare.
+
+The view is accessible from ''Window > Show View > Other ... > EMF Compare > Logical Model View''.
+
+[[Image:./../images/EMF_Compare_LogicalModelView_ShowView.png]]
+
+When  you click on a model in the Package Explorer view or the Project Explorer view, or the focus is on an opened model editor, then the Logical Model view shows this model and all models linked with this one. 
+
+[[Image:./../images/EMF_Compare_LogicalModelView.png]]
+
+While computing the logical model for a given model, the view shows the progression of computing.
+
+[[Image:./../images/EMF_Compare_LogicalModelView_Computing.png]]
+
+=== Toolbar ===
+
+[[Image:./../images/EMF_Compare_LogicalModelView_Toolbar.png]]
+
+1. The button ''Link with Editor and Selection'' synchronize the Logical Model View to the active editor or the selected element in the Package Explorer View.
+*The editors taken into account to populate the View will be: EMF Compare's comparison models editor, Papyrus editors, and EMF Reflective Model editors.
+*Any EMF model selected in the Package Explorer View will populate the View.
+*This button will be disabled by default.
+*When the Logical Model View is opened for the first time, the button is disabled, and '''no model is displayed''' in the view, '''even if one is selected''' in the Package/Project Explorer View or the active editor.
+*When the button is enabled, the synchronization becomes active.
+*When the button is disabled, the synchronization becomes inactive. The last logical model computed and displayed in the View will remains until the button was enabled again and a new editor be active or a model was selected, or else the View was closed.
+
+2. The button ''View Menu'' 
+
+[[Image:./../images/EMF_Compare_LogicalModelView_Toolbar_ViewMenu.png]]
+
+* Flat list presentation: all models contained in the logical model are displayed as a flat list. Each item is followed by his relative path to the workspace.
+[[Image:./../images/EMF_Compare_LogicalModelView_List.png]]
+* Tree presentation: all models contained in the logical model are displayed as a tree, relative to the workspace.
+[[Image:./../images/EMF_Compare_LogicalModelView_Tree.png]]
+
+=== Contextual Menu ===
+
+A contextual menu is accessible on each item displayed in the view.
+Through this menu, you will able to open the item selected, access to its properties, compare it, etc...
+
+[[Image:./../images/EMF_Compare_LogicalModelView_ContextMenu.png]]
+
 == Known Bugs and Limitations ==
 
 === Project names and location ===
