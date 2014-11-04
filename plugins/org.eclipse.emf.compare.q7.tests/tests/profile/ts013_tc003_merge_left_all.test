@@ -1,0 +1,66 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_r_QpAFLlEeS4zYvVAxx5Mg
+Element-Name: ts013_tc003_merge_left_all
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _qwClUFPAEeSorJcpi4oQKA
+Q7-Runtime-Version: 1.3.15.201412220512
+Save-Time: 5/28/15 5:16 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Cheks that merging all non conflicting differences at once to left works well.
+
+1. Compare the two models
+2. Merge All to left
+3. Undo
+4. Checks that none differences has been merged
+5. Redo
+6. Checks that all differences has been merged
+7. Save
+8. Checks there nothing left to merge
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Package Explorer" | get-tree] {
+    select "SysMLModel/left/model.uml" "SysMLModel/right/model.uml"
+    get-menu "Compare With/Each Other" | click
+}
+with [get-editor "Compare (\'SysMLModel/left/model.uml\' - \'SysMLModel/right/model.uml\')"] {
+    get-button "Expand All" | click
+}
+
+with [get-editor "Compare (\'SysMLModel/left/model.uml\' - \'SysMLModel/right/model.uml\')"] {
+    get-button "Copy All Non-Conflicting Changes From Right To Left" | click
+    get-tree | select "<Model> SysMLmodel/<Package> Blocks" 
+}
+
+get-menu "Edit/Undo Merge" | click
+
+get-editor "Compare (\'SysMLModel/left/model.uml\' - \'SysMLModel/right/model.uml\')" 
+    | get-label "Model differences  (28 of 28 differences are not merged — 15 differences filtered from view)" 
+    | get-property caption 
+    | equals "Model differences  (28 of 28 differences are not merged — 15 differences filtered from view)" 
+    | verify-true
+    
+get-menu "Edit/Redo Merge" | click
+
+get-editor "Compare (\'SysMLModel/left/model.uml\' - \'SysMLModel/right/model.uml\')" | get-control Any -index 8 
+    | get-property "getTitleArgument()" 
+    | equals "0 of 28 differences are not merged — 15 differences filtered from view" | verify-true
+
+get-menu "File/Save" | click
+
+
+get-editor "Compare (\'SysMLModel/left/model.uml\' - \'SysMLModel/right/model.uml\')" | get-control Any -index 8 
+    | get-property "getTitleArgument()" 
+    | equals "0 of 0 differences are not merged — 0 differences filtered from view" | verify-true
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

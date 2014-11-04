@@ -1,0 +1,177 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Context-Type: com.xored.q7.ecl.context
+Element-Name: MergingLibrary
+Element-Type: context
+Element-Version: 2.0
+Id: _SM1VQVPAEeSorJcpi4oQKA
+Q7-Runtime-Version: 1.3.13.201408151228
+Save-Time: 10/15/14 11:26 AM
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Provides procedures to merge items and checks that those items has been merge correctly.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
+Content-Type: text/ecl
+Entry-Name: .ecl.context
+
+// Asserts that an item has been merged to left.
+//  Checks that the decorating icon is correct.
+//  Checks that the data has the state set to MERGE.
+// Input:
+//		itemPath: Path to the item to test
+proc "assertMergedToLeft" [val itemPath] {
+	get-item $itemPath
+		| get-property "image.decorations[0].path" -raw
+        | eq "org.eclipse.emf.compare.edit/icons/full/ovr16/merged_left_ov.gif" | assert-true -message "Should be the merge to left overlay"
+    get-item $itemPath
+        | get-property "getData().getTarget().getData().getState().getLiteral()" | equals "MERGED" | verify-true
+}
+
+// Asserts that an item has been merged to right.
+//  Checks that the decorating icon is correct.
+//  Checks that the data has the state set to MERGE.
+// Input:
+//		itemPath: Path to the item to test
+proc "assertMergedToRight" [val itemPath] {
+	get-item $itemPath
+		| get-property "image.decorations[0].path" -raw
+        | eq "org.eclipse.emf.compare.edit/icons/full/ovr16/merged_right_ov.gif" | assert-true -message "Should be the merge to right overlay"
+    get-item $itemPath
+        | get-property "getData().getTarget().getData().getState().getLiteral()" | equals "MERGED" | verify-true
+}
+
+
+// Asserts that an item has not been merged
+//  Checks that the icon is either an added/removed/change icon.
+//  Checks that the data has the state set to UNRESOLVED.
+// Input:
+//		itemPath: Path to the item to test
+proc "assertNotMerged" [val itemPath] {
+	get-item $itemPath
+        | or
+        	[get-property "image.decorations[0].path" -raw| eq "org.eclipse.emf.compare.edit/icons/full/ovr16/chg_ov.gif"]
+        	[get-property "image.decorations[0].path" -raw| eq "org.eclipse.emf.compare.edit/icons/full/ovr16/add_ov.gif"]
+        	[get-property "image.decorations[0].path" -raw| eq "org.eclipse.emf.compare.edit/icons/full/ovr16/del_ov.gif"]
+        | assert-true -message "Should be the added/removed/changed overlay"
+    get-item $itemPath
+        | get-property "getData().getTarget().getData().getState().getLiteral()" | equals "UNRESOLVED" | verify-true
+}
+// Undo the previous action
+proc "undo" {
+	get-menu "Edit/Undo Merge" | click
+}
+// Redo the previous action
+proc "redo" {
+	get-menu "Edit/Redo Merge" | click
+}
+// Merges an item right to left.
+// Input:
+//		editor: -input current editor
+//		itemPath: Path to the item to test
+proc "mergeRightToLeft" [val editor -input] [val itemPath]{
+	with $editor{
+	    get-tree 
+	    	|select $itemPath
+	    get-button "Copy Current Change From Right To Left" | click
+	}
+}
+
+// Merges an item left to right.
+// Input:
+//		editor: -input current editor
+//		itemPath: Path to the item to test
+proc "mergeLeftToRight" [val editor -input] [val itemPath]{
+	with $editor{
+	    get-tree 
+	    	|select $itemPath
+	    get-button "Copy Current Change From Left To Right" | click
+	}
+}
+
+
+
+// Checks that an item can be merged, that the merge can be undone and then that the merge can be redone.
+// Inputs:
+//		editor: -input current editor
+//		itemPath: Path of item to merge
+//		itemPathAfterMerge: Path of the item after the merge
+proc "assertUndoRedoRightToLeft" [val editor -input] [val itemPath] [val itemPathAfterMerge] {
+	with $editor{
+		mergeRightToLeft $itemPath
+	}
+	with [$editor | get-tree] {
+		assertMergedToLeft $itemPathAfterMerge
+	}
+	undo
+	with [$editor | get-tree]{
+		assertNotMerged $itemPath
+	}
+	redo
+	with [$editor | get-tree]{
+		assertMergedToLeft $itemPathAfterMerge
+	}
+}
+
+// Checks that an item can be merged, that the merge can be undone and then that the merge can be redone.
+// Inputs:
+//		editor: -input current editor
+//		itemPath: Path of item to merge
+//		itemPathAfterMerge: Path of the item after the merge
+proc "assertUndoRedoLeftToRight" [val editor -input] [val itemPath] [val itemPathAfterMerge] {
+	with $editor{
+		mergeLeftToRight $itemPath
+	}
+	with [$editor | get-tree] {
+		assertMergedToRight $itemPathAfterMerge
+	}
+	undo
+	with [$editor | get-tree]{
+		assertNotMerged $itemPath
+	}
+	redo
+	with [$editor | get-tree]{
+		assertMergedToRight $itemPathAfterMerge
+	}
+}
+
+// Helper to call assertUndoRedoRightToLeft with one or two parameters depending of the use case.
+// 	If only one parameter is provided then the path should not change after merging.
+// 	If two parameters are used then the second parameter represents the expected path of the item after merging.
+proc "assertMergeRightToLeft" [val editor -input] [val itemPath] [val itemPathAfterMerge ""]{
+if[$itemPathAfterMerge | eq ""] {
+		// If $itemPathAfterMerge is not specified the path of the item should not change after merging
+		with $editor{
+				assertUndoRedoRightToLeft $itemPath $itemPath
+			}
+	} -else {
+		// If $itemPathAfterMerge is specified then path of the item should change when the merge is done
+		with $editor{
+				assertUndoRedoRightToLeft $itemPath $itemPathAfterMerge
+			}
+		}
+}
+
+// Helper to call assertUndoRedoLeftToRight with one or two parameters depending of the use case.
+//  If only one parameter is provided then the path should not change after merging.
+//  If two parameters are used then the second parameter represents the expected of the item after merging.
+proc "assertMergeLeftToRight" [val editor -input] [val itemPath] [val itemPathAfterMerge ""]{
+if[$itemPathAfterMerge | eq ""] {
+		// If $itemPathAfterMerge is not specified the path of the item should not change after the merge
+		with $editor{
+				assertUndoRedoLeftToRight $itemPath $itemPath
+			}
+	} -else {
+		// If $itemPathAfterMerge is specified then path of the item should change when the merge is done
+		with $editor{
+				assertUndoRedoLeftToRight $itemPath $itemPathAfterMerge
+			}
+		}
+}
+
+
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--
