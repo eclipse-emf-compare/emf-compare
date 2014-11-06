@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -103,8 +103,7 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	 */
 	private IStorageProvider getOriginVariant(IResource resource) throws CoreException {
 		if (originTree != null) {
-			return wrapStorageProvider(resource.getFullPath().toString(), originTree
-					.getResourceVariant(resource));
+			return wrapStorageProvider(originTree.getResourceVariant(resource));
 		}
 
 		final IDiff diff = subscriber.getDiff(resource);
@@ -121,8 +120,7 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	 */
 	private IStorageProvider getSourceVariant(IResource resource) throws CoreException {
 		if (sourceTree != null) {
-			return wrapStorageProvider(resource.getFullPath().toString(), sourceTree
-					.getResourceVariant(resource));
+			return wrapStorageProvider(sourceTree.getResourceVariant(resource));
 		}
 
 		final IDiff diff = subscriber.getDiff(resource);
@@ -139,8 +137,7 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	 */
 	private IStorageProvider getRemoteVariant(IResource resource) throws CoreException {
 		if (remoteTree != null) {
-			return wrapStorageProvider(resource.getFullPath().toString(), remoteTree
-					.getResourceVariant(resource));
+			return wrapStorageProvider(remoteTree.getResourceVariant(resource));
 		}
 
 		final IDiff diff = subscriber.getDiff(resource);
@@ -164,15 +161,13 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	/**
 	 * Wraps the given resource variant as an {@link IStorageProvider}.
 	 * 
-	 * @param path
-	 *            Path of that storage.
 	 * @param revision
 	 *            The wrapped resource variant.
 	 * @return The wrapping storage provider.
 	 */
-	private static IStorageProvider wrapStorageProvider(String path, IResourceVariant variant) {
+	private static IStorageProvider wrapStorageProvider(IResourceVariant variant) {
 		if (variant != null) {
-			return new ResourceVariantStorageProvider(path, variant);
+			return new ResourceVariantStorageProvider(variant);
 		}
 		return null;
 	}

@@ -42,6 +42,12 @@
    <feature id="org.eclipse.emf.compare.subversive.source" version="0.0.0">
       <category name="compare_integration"/>
    </feature>
+   <feature id="org.eclipse.emf.compare.egit" version="0.0.0">
+      <category name="compare_integration"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.egit.source" version="0.0.0">
+      <category name="compare_integration"/>
+   </feature>
    <category-def name="compare" label="EMF Compare">
       <description>
          EMF Compare main features.

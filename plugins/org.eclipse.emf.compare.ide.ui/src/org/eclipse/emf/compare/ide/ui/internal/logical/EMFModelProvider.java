@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,7 @@ import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor.DiffSide;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
+import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 
 /**
@@ -267,8 +268,8 @@ public class EMFModelProvider extends ModelProvider {
 					final IStorageProvider storageProvider = storageAccessor.getStorageProvider(
 							(IFile)storage, side);
 					if (storageProvider != null) {
-						return new StorageTypedElement(storageProvider.getStorage(monitor), storage
-								.getFullPath().toString());
+						return new StorageTypedElement(storageProvider.getStorage(monitor), ResourceUtil
+								.getFixedPath(storage).toString());
 					}
 				}
 			}

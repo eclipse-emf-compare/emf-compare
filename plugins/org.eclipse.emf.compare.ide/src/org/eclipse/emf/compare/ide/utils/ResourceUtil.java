@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -220,43 +220,66 @@ public final class ResourceUtil {
 			return createURIFor((IFile)storage);
 		}
 
-		final String resourceName = storage.getName();
-		String path = storage.getFullPath().toString();
-		if (!path.endsWith(resourceName)) {
-			final int endIndex = path.indexOf(resourceName) + resourceName.length();
-			path = path.substring(0, endIndex);
-		}
+		String path = getFixedPath(storage).toString();
 
 		// Given the two paths
 		// "g:/ws/project/test.ecore"
 		// "/project/test.ecore"
 		// We have no way to determine which is absolute and which should be platform:/resource
-		// Furthermore, "ws" could be a git repository, in which case we would be here with
-		// ws/project/test.ecore
 		URI uri;
 		if (path.startsWith("platform:/plugin/")) { //$NON-NLS-1$
 			uri = URI.createURI(path);
 		} else if (path.startsWith("file:/")) { //$NON-NLS-1$
 			uri = URI.createURI(path);
+		} else if (hasStoragePathProvider(storage)) {
+			uri = URI.createPlatformResourceURI(path, true);
 		} else {
 			uri = URI.createFileURI(path);
 		}
 
 		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		final IPath iPath = new Path(path);
-		if (root != null && iPath.segmentCount() >= 2) {
-			if (root.getFile(iPath).exists()) {
-				uri = URI.createPlatformResourceURI(path, true);
-			} else {
-				// is it a file coming from a Git repository?
-				final IPath trimmed = iPath.removeFirstSegments(1);
-				if (trimmed.segmentCount() >= 2 && root.getFile(trimmed).exists()) {
-					uri = URI.createPlatformResourceURI(trimmed.toString(), true);
-				}
-			}
+		if (root != null && iPath.segmentCount() >= 2 && root.getFile(iPath).exists()) {
+			uri = URI.createPlatformResourceURI(path, true);
 		}
 
 		return uri;
+	}
+
+	/**
+	 * Returns a path for this storage after fixing from an {@link IStoragePathProvider} if one exists.
+	 * 
+	 * @param storage
+	 *            The storage for which we need a fixed full path.
+	 * @return The full path to this storage, fixed if need be.
+	 * @since 3.2
+	 */
+	public static IPath getFixedPath(IStorage storage) {
+		final Object adapter = Platform.getAdapterManager().loadAdapter(storage,
+				IStoragePathProvider.class.getName());
+		if (adapter instanceof IStoragePathProvider) {
+			return ((IStoragePathProvider)adapter).computeFixedPath(storage);
+		}
+		return storage.getFullPath();
+	}
+
+	/**
+	 * Checks if an {@link IStoragePathProvider} exists for the given storage.
+	 * 
+	 * @param storage
+	 *            the given storage.
+	 * @return true if exists, false otherwise.
+	 */
+	private static boolean hasStoragePathProvider(IStorage storage) {
+		final boolean hasProvider;
+		final Object adapter = Platform.getAdapterManager().loadAdapter(storage,
+				IStoragePathProvider.class.getName());
+		if (adapter instanceof IStoragePathProvider) {
+			hasProvider = true;
+		} else {
+			hasProvider = false;
+		}
+		return hasProvider;
 	}
 
 	/**
