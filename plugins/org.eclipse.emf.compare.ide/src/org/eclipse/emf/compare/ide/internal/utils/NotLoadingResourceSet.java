@@ -420,7 +420,6 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	 */
 	public void dispose() {
 		ImmutableList<Resource> currentResources = ImmutableList.copyOf(getResources());
-		isDisposed = true;
 		Collection<URI> resourceSetUris = newArrayList(transform(currentResources,
 				new Function<Resource, URI>() {
 
@@ -431,7 +430,8 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 		for (IResourceSetHook hook : getMatchingHooks(resourceSetUris)) {
 			hook.onDispose(currentResources);
 		}
-		super.getResources().clear();
+		getResources().clear();
+		isDisposed = true;
 	}
 
 	/**
