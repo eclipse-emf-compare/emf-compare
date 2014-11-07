@@ -1,6 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Test
+Bundle-Name: %pluginName
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
 Bundle-SymbolicName: org.eclipse.emf.compare.uml2.ide.tests;singleton:=true
 Bundle-Version: 3.1.0.qualifier
 Bundle-Activator: org.eclipse.emf.compare.uml2.ide.tests.Activator
@@ -13,7 +15,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.compare.tests,
  org.eclipse.emf.compare.ide,
  org.eclipse.emf.compare.uml2.rcp
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
  com.google.common.collect;version="[11.0.0,16.0.0)"
