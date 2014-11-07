@@ -431,7 +431,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 		for (IResourceSetHook hook : getMatchingHooks(resourceSetUris)) {
 			hook.onDispose(currentResources);
 		}
-		getResources().clear();
+		super.getResources().clear();
 	}
 
 	/**
