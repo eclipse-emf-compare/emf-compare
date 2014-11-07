@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * model.
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
+ * @since 3.2
  */
 public interface IResourceSetHook {
 

@@ -83,6 +83,7 @@ public class ConflictItemProviderSpec extends ConflictItemProvider implements II
 		return image;
 	}
 
+	/* Missing override : only for EMF 2.10 and later. Do not tag. */
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -105,8 +106,10 @@ public class ConflictItemProviderSpec extends ConflictItemProvider implements II
 		}
 
 		if (unresolvedDiffCount > 0) {
-			ret.append(
-					" ["	+ EMFCompareEditMessages.getString("unresolved", unresolvedDiffCount, conflict.getDifferences().size()) + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			ret.append(" [" //$NON-NLS-1$
+					+ EMFCompareEditMessages.getString("unresolved", Integer.valueOf(unresolvedDiffCount), //$NON-NLS-1$
+							Integer.valueOf(conflict.getDifferences().size())) + "]", //$NON-NLS-1$
+					Style.DECORATIONS_STYLER);
 		} else {
 			ret.append(" [" + EMFCompareEditMessages.getString("resolved") + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}

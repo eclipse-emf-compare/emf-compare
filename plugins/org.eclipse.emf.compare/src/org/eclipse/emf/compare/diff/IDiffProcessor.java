@@ -87,6 +87,7 @@ public interface IDiffProcessor {
 	 *            Source of the difference. For two way comparisons, this will always be
 	 *            {@link DifferenceSource#LEFT}. Otherwise, this will indicate the side on which this
 	 *            difference has been detected.
+	 * @since 3.2
 	 */
 	void featureMapChange(Match match, EAttribute attribute, Object value, DifferenceKind kind,
 			DifferenceSource source);

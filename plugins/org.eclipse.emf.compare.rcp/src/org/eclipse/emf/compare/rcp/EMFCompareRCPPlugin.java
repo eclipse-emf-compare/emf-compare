@@ -529,7 +529,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * registered. It filters available adapter factories using preferences.
 	 * 
 	 * @return the the adapter factory descriptor registry to which extension will be registered
-	 * @since 3.1
+	 * @since 2.3
 	 */
 	public RankedAdapterFactoryDescriptor.Registry createFilteredAdapterFactoryRegistry() {
 		final List<String> disabledAdapterFactories = EMFComparePreferences

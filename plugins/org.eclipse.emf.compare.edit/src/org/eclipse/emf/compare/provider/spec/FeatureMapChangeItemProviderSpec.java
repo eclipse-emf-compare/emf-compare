@@ -33,6 +33,7 @@ import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
  * {@link #getImage(Object)}.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
+ * @since 4.1
  */
 public class FeatureMapChangeItemProviderSpec extends FeatureMapChangeItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
 
@@ -140,6 +141,7 @@ public class FeatureMapChangeItemProviderSpec extends FeatureMapChangeItemProvid
 		}
 	}
 
+	/* Missing override : only for EMF 2.10 and later. Do not tag. */
 	/**
 	 * {@inheritDoc}
 	 * 

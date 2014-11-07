@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.EAttribute;
  * @see org.eclipse.emf.compare.ComparePackage#getFeatureMapChange()
  * @model
  * @generated
+ * @since 3.2
  */
 public interface FeatureMapChange extends Diff {
 	/**

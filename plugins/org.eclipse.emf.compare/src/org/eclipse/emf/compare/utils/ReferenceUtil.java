@@ -149,6 +149,7 @@ public final class ReferenceUtil {
 	 * @param reference
 	 *            the given EReference.
 	 * @return true if the given reference is a FeatureMap-derived feature, false otherwise.
+	 * @since 3.2
 	 */
 	public static boolean isFeatureMapDerivedFeature(EReference reference) {
 		if (reference.isDerived() && reference.isTransient() && reference.isVolatile()) {

@@ -100,7 +100,7 @@ public abstract class AbstractMerger implements IMerger2 {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @since 3.1
+	 * @since 3.2
 	 */
 	public Set<Diff> getDirectMergeDependencies(Diff diff, boolean mergeRightToLeft) {
 		final Set<Diff> dependencies = new LinkedHashSet<Diff>();
@@ -134,7 +134,7 @@ public abstract class AbstractMerger implements IMerger2 {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @since 3.1
+	 * @since 3.2
 	 */
 	public Set<Diff> getDirectResultingMerges(Diff target, boolean mergeRightToLeft) {
 		final Set<Diff> resulting = new LinkedHashSet<Diff>();
@@ -165,7 +165,7 @@ public abstract class AbstractMerger implements IMerger2 {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @since 3.1
+	 * @since 3.2
 	 */
 	public Set<Diff> getDirectResultingRejections(Diff target, boolean mergeRightToLeft) {
 		final Set<Diff> directlyImpliedRejections = new LinkedHashSet<Diff>();
@@ -202,7 +202,7 @@ public abstract class AbstractMerger implements IMerger2 {
 	 * conflict is resolved before even trying to merge anything.</li>
 	 * <li>Equivalent {@link ReferenceChange} and {@link FeatureMapChange} differences: in this case the
 	 * {@link FeatureMapChange} difference will take precedence over the {@link ReferenceChange}. This happens
-	 * in order to prevent special cases in which the {@link ReferenceChangeMerger} cannot ensure the correct	 
+	 * in order to prevent special cases in which the {@link ReferenceChangeMerger} cannot ensure the correct
 	 * order of the feature map attribute.</li>
 	 * </ol>
 	 * </p>
@@ -237,7 +237,8 @@ public abstract class AbstractMerger implements IMerger2 {
 	 *            The {@link Diff} we need to check the equivalence for a 'master' difference.
 	 * @param mergeRightToLeft
 	 *            Direction of the current merging.
-	 * @return The master difference of {@code diff} and its equivalent diffs. This method may return <code>null</code> if there is no master diff.
+	 * @return The master difference of {@code diff} and its equivalent diffs. This method may return
+	 *         <code>null</code> if there is no master diff.
 	 */
 	private Diff getMasterEquivalenceForReferenceChange(ReferenceChange diff, boolean mergeRightToLeft) {
 		Diff masterDiff = getMasterEquivalenceOnEOpposite(diff, mergeRightToLeft);
@@ -731,7 +732,7 @@ public abstract class AbstractMerger implements IMerger2 {
 	 *            Direction of the merge.
 	 * @return <code>true</code> if {@code diff} will add a value with this merge, <code>false</code>
 	 *         otherwise.
-	 * @since 3.1
+	 * @since 3.2
 	 */
 	protected boolean isAdd(ReferenceChange diff, boolean rightToLeft) {
 		if (rightToLeft) {

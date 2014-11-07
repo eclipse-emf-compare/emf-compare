@@ -169,6 +169,7 @@ public class DefaultEquiEngine implements IEquiEngine {
 	 *            The comparison this engine is expected to complete.
 	 * @param featureMapChange
 	 *            The difference that is to be checked
+	 * @since 3.2
 	 */
 	protected void checkForEquivalences(final Comparison comparison, final FeatureMapChange featureMapChange) {
 		Equivalence equivalence = featureMapChange.getEquivalence();

@@ -250,11 +250,11 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 *            The feature map change for which we are to try and determine conflicts.
 	 * @param candidates
 	 *            An iterable over the FeatureMapChanges that are possible candidates for conflicts.
+	 * @since 3.2
 	 */
 	protected void checkContainmentFeatureMapConflict(Comparison comparison, FeatureMapChange diff,
 			Iterable<FeatureMapChange> candidates) {
 		final FeatureMap.Entry entry = (FeatureMap.Entry)diff.getValue();
-		final EStructuralFeature key = entry.getEStructuralFeature();
 		final Object value = entry.getValue();
 		final Match valueMatch;
 		if (value instanceof EObject) {
@@ -305,6 +305,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 *            Containment feature map changes for which we need to check possible conflicts.
 	 * @param candidate
 	 *            A feature map change that point to the same value as {@code diff}.
+	 * @since 3.2
 	 */
 	protected void checkContainmentFeatureMapConflict(Comparison comparison, FeatureMapChange diff,
 			FeatureMapChange candidate) {

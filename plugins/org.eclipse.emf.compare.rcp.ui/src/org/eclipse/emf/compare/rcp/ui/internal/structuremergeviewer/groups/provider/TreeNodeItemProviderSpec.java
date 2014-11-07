@@ -141,6 +141,7 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 		}
 	}
 
+	/* Missing override : only for EMF 2.10 and later. Do not tag. */
 	/**
 	 * {@inheritDoc}
 	 * 

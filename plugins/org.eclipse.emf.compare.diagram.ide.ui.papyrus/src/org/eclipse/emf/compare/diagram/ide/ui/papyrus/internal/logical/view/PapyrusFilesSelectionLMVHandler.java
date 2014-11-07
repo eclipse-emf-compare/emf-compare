@@ -26,6 +26,7 @@ import org.eclipse.papyrus.infra.onefile.model.ISubResourceFile;
  * Handle, for the Logical Model View, the Papyrus files selection.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
+ * @since 2.4
  */
 public class PapyrusFilesSelectionLMVHandler extends AbstractLogicalModelViewHandler {
 

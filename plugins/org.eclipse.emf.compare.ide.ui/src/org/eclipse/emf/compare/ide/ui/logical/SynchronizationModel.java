@@ -177,7 +177,7 @@ public final class SynchronizationModel implements IDiagnosable {
 	 * that do not exist locally.
 	 * 
 	 * @return The set of resources this synchronization model spans.
-	 * @since 4.0
+	 * @since 4.1
 	 */
 	public Set<IResource> getResources() {
 		if (resources == null) {

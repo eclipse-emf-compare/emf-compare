@@ -38,10 +38,18 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 	/** The cross reference adapter used by the difference group provider. */
 	private final ECrossReferenceAdapter crossReferenceAdapter;
 
-	/** A human-readable label for this group provider. This will be displayed in the EMF Compare UI. */
+	/**
+	 * A human-readable label for this group provider. This will be displayed in the EMF Compare UI.
+	 * 
+	 * @since 4.1
+	 */
 	protected String label;
 
-	/** The initial activation state of the group provider. */
+	/**
+	 * The initial activation state of the group provider.
+	 * 
+	 * @since 4.1
+	 */
 	protected boolean activeByDefault;
 
 	/**
@@ -72,6 +80,7 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getLabel()
+	 * @since 4.1
 	 */
 	public String getLabel() {
 		return label;
@@ -81,6 +90,7 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setLabel(java.lang.String)
+	 * @since 4.1
 	 */
 	public void setLabel(String label) {
 		this.label = label;
@@ -90,6 +100,7 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#defaultSelected()
+	 * @since 4.1
 	 */
 	public boolean defaultSelected() {
 		return activeByDefault;
@@ -99,6 +110,7 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#setDefaultSelected(boolean)
+	 * @since 4.1
 	 */
 	public void setDefaultSelected(boolean active) {
 		this.activeByDefault = active;
@@ -109,6 +121,7 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(org
 	 *      .eclipse.emf.compare.scope.IComparisonScope, org.eclipse.emf.compare.Comparison)
+	 * @since 4.1
 	 */
 	public boolean isEnabled(IComparisonScope scope, Comparison comparison) {
 		return true;
@@ -152,7 +165,7 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#getGroups(org.eclipse.emf.compare.Comparison)
-	 * @since 4.0
+	 * @since 4.1
 	 */
 	public Collection<? extends IDifferenceGroup> getGroups(Comparison aComparison) {
 		if (!groupsAreBuilt() || comparison != aComparison) {
@@ -171,7 +184,7 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 	 * @param aComparison
 	 *            comparison against which the groups will be built.
 	 * @return Newly built collections of {@link IDifferenceGroup}.
-	 * @since 4.0
+	 * @since 4.1
 	 */
 	protected Collection<? extends IDifferenceGroup> buildGroups(Comparison aComparison) {
 		return ImmutableList.of();
@@ -181,7 +194,7 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider2#groupsAreBuilt()
-	 * @since 4.0
+	 * @since 4.1
 	 */
 	public boolean groupsAreBuilt() {
 		return groups != null && comparison != null;
@@ -189,7 +202,7 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 
 	/**
 	 * @return comparison against which the groups has been built.
-	 * @since 4.0
+	 * @since 4.1
 	 */
 	protected Comparison getComparison() {
 		return comparison;
@@ -199,7 +212,7 @@ public abstract class AbstractDifferenceGroupProvider extends AdapterImpl implem
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#dispose()
-	 * @since 4.0
+	 * @since 4.1
 	 */
 	public void dispose() {
 		comparison = null;

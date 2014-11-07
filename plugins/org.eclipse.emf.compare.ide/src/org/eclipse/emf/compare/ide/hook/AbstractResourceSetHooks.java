@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * Abstract implementation of {@link IResourceSetHook}.
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
+ * @since 3.2
  */
 public abstract class AbstractResourceSetHooks implements IResourceSetHook {
 

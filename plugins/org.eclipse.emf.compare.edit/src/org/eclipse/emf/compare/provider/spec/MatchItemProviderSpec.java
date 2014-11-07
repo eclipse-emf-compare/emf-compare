@@ -99,6 +99,7 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 		return ret;
 	}
 
+	/* Missing override : only for EMF 2.10 and later. Do not tag. */
 	/**
 	 * {@inheritDoc}
 	 * 

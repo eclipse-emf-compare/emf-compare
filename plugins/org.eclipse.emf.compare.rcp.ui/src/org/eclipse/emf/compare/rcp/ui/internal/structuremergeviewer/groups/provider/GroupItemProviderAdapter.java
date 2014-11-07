@@ -95,6 +95,7 @@ public class GroupItemProviderAdapter extends ItemProviderAdapter implements IEd
 		return group.getName();
 	}
 
+	/* Missing override : only for EMF 2.10 and later. Do not tag. */
 	/**
 	 * {@inheritDoc}
 	 * 

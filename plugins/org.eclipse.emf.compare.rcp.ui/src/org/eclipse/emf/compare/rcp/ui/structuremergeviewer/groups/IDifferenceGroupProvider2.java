@@ -10,13 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups;
 
-
 /**
  * Extended interface of {@link IDifferenceGroupProvider} that gives information on the building status of its
  * groups.
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
- * @since 4.0
+ * @since 4.1
  */
 public interface IDifferenceGroupProvider2 extends IDifferenceGroupProvider {
 

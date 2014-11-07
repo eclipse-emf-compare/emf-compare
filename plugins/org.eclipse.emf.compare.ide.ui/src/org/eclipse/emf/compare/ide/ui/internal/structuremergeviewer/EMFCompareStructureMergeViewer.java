@@ -10,14 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.not;
-import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.size;
 import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_ASYNC;
 import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_SYNC;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.base.Function;
@@ -64,7 +59,6 @@ import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
@@ -100,7 +94,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.configuration.IMergePreviewModeCh
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.SideLabelProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IColorChangeEvent;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.PseudoConflictsFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
@@ -187,9 +180,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 	}
 
-	private static final Predicate<Diff> UNRESOLVED_AND_WITHOUT_PSEUDO_CONFLICT = and(
-			hasState(DifferenceState.UNRESOLVED), not(hasConflict(ConflictKind.PSEUDO)));
-
 	/** The width of the tree ruler. */
 	private static final int TREE_RULER_WIDTH = 17;
 
@@ -238,8 +228,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	private Job inputChangedTask;
 
 	private CompareToolBar toolBar;
-
-	private boolean pseudoConflictsFilterEnabled;
 
 	private Navigatable navigatable;
 
@@ -631,8 +619,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	@Subscribe
 	public void handleDifferenceFilterChange(IDifferenceFilterChange event) {
-		pseudoConflictsFilterEnabled = any(event.getSelectedDifferenceFilters(),
-				instanceOf(PseudoConflictsFilter.class));
 		SWTUtil.safeRefresh(this, false, true);
 		getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
 			public void run() {

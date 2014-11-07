@@ -55,7 +55,6 @@ import org.eclipse.uml2.uml.util.UMLUtil;
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLProfileTest {
 
 	@Override
