@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.tests.command.CommandStackTestSuite;
 import org.eclipse.emf.compare.tests.conflict.ConflictDetectionTest;
 import org.eclipse.emf.compare.tests.conflict.MultiLineAttributeConflictDetectionTest;
 import org.eclipse.emf.compare.tests.diff.ComparisonUtilTest;
+import org.eclipse.emf.compare.tests.diff.FeatureMapMoveDiffTest;
 import org.eclipse.emf.compare.tests.diff.DiffUtilTest;
 import org.eclipse.emf.compare.tests.diff.FeatureFilterTest;
 import org.eclipse.emf.compare.tests.diff.LCSPerformanceTest;
@@ -69,9 +70,9 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({CompareTestSuite.class, DefaultComparisonScopeTest.class, IdentifierComparisonTest.class,
 		ExtLibraryTest.class, ConflictDetectionTest.class, ReqComputingTest.class, EquiComputingTest.class,
-		DiffUtilTest.class, ComparisonUtilTest.class, LCSPerformanceTest.class, MultipleMergeTest.class,
-		PostProcessorTest.class, IndividualMergeTest.class, ExtensionMergeTest.class,
-		IndividualMergeOutOfScopeValuesTest.class, ProximityComparisonTest.class,
+		DiffUtilTest.class, FeatureMapMoveDiffTest.class, ComparisonUtilTest.class, LCSPerformanceTest.class,
+		MultipleMergeTest.class, PostProcessorTest.class, IndividualMergeTest.class,
+		ExtensionMergeTest.class, IndividualMergeOutOfScopeValuesTest.class, ProximityComparisonTest.class,
 		DynamicInstanceComparisonTest.class, URIDistanceTest.class, FragmentationTest.class,
 		AllEditTests.class, CommandStackTestSuite.class, MatchEngineFactoryRegistryTest.class,
 		ConflictMergeTest.class, PseudoConflictMergeTest.class, ProximityIndexTest.class, AllRCPTests.class,

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 450949
  *******************************************************************************/
 package org.eclipse.emf.compare.diff;
 
@@ -492,6 +493,15 @@ public class DefaultDiffEngine implements IDiffEngine {
 		} else {
 			shortcut = match.getLeft() == null || match.getRight() == null;
 		}
+
+		// Do not shortcut when manyvalued FeatureMaps are affected to keep their ordering intact
+		if (shortcut && FeatureMapUtil.isFeatureMap(attribute)) {
+			final EObject owner = getOwner(match);
+			if (owner != null && FeatureMapUtil.isMany(owner, attribute)) {
+				shortcut = false;
+			}
+		}
+
 		if (shortcut) {
 			return;
 		}
@@ -505,6 +515,25 @@ public class DefaultDiffEngine implements IDiffEngine {
 		} else {
 			computeSingleValuedAttributeDifferences(match, attribute);
 		}
+	}
+
+	/**
+	 * Returns one side of the match if any exist. The order of the checked sides is Origin, Left and Right.
+	 *
+	 * @param match
+	 *            The match whose sides are checked.
+	 * @return Either Origin, Left or Right if one of them exists, {@code null} otherwise.
+	 */
+	private EObject getOwner(Match match) {
+		EObject owner = null;
+		if (match.getOrigin() != null) {
+			owner = match.getOrigin();
+		} else if (match.getLeft() != null) {
+			owner = match.getLeft();
+		} else if (match.getRight() != null) {
+			owner = match.getRight();
+		}
+		return owner;
 	}
 
 	/**
