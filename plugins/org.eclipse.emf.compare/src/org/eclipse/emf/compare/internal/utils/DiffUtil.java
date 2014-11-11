@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - Fixes for bug 440679, 441258, 442439, 443504, 446739, and refactorings
+ *     Philip Langer - Bugs 440679, 441258, 442439, 443504, 446739, 451048 and refactorings
  *     Alexandra Buzila - Fixes for bug 448464
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
@@ -1243,7 +1243,9 @@ public final class DiffUtil {
 		 *         otherwise.
 		 */
 		private boolean matchesTarget(Diff input) {
-			return matchesTargetFeature(input) && matchesTargetContainer(input);
+			final boolean isSupportedDiff = input instanceof AttributeChange
+					|| input instanceof ReferenceChange || input instanceof FeatureMapChange;
+			return isSupportedDiff && matchesTargetFeature(input) && matchesTargetContainer(input);
 		}
 
 		/**
