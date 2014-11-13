@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.uml2.internal;
 
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -2063,6 +2064,168 @@ public interface UMLComparePackage extends EPackage {
 	int STEREOTYPED_ELEMENT_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '
+	 * {@link org.eclipse.emf.compare.uml2.internal.impl.OpaqueElementBodyChangeImpl
+	 * <em>Opaque Element Body Change</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.internal.impl.OpaqueElementBodyChangeImpl
+	 * @see org.eclipse.emf.compare.uml2.internal.impl.UMLComparePackageImpl#getOpaqueElementBodyChange()
+	 * @generated
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE = 13;
+
+	/**
+	 * The feature id for the '<em><b>Match</b></em>' container reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__MATCH = UML_DIFF__MATCH;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__REQUIRES = UML_DIFF__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__REQUIRED_BY = UML_DIFF__REQUIRED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Implies</b></em>' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__IMPLIES = UML_DIFF__IMPLIES;
+
+	/**
+	 * The feature id for the '<em><b>Implied By</b></em>' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__IMPLIED_BY = UML_DIFF__IMPLIED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Refines</b></em>' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__REFINES = UML_DIFF__REFINES;
+
+	/**
+	 * The feature id for the '<em><b>Refined By</b></em>' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__REFINED_BY = UML_DIFF__REFINED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Prime Refining</b></em>' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__PRIME_REFINING = UML_DIFF__PRIME_REFINING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__KIND = UML_DIFF__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__SOURCE = UML_DIFF__SOURCE;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__STATE = UML_DIFF__STATE;
+
+	/**
+	 * The feature id for the '<em><b>Equivalence</b></em>' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__EQUIVALENCE = UML_DIFF__EQUIVALENCE;
+
+	/**
+	 * The feature id for the '<em><b>Conflict</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__CONFLICT = UML_DIFF__CONFLICT;
+
+	/**
+	 * The feature id for the '<em><b>Discriminant</b></em>' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__DISCRIMINANT = UML_DIFF__DISCRIMINANT;
+
+	/**
+	 * The feature id for the '<em><b>EReference</b></em>' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__EREFERENCE = UML_DIFF__EREFERENCE;
+
+	/**
+	 * The feature id for the '<em><b>Language</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE__LANGUAGE = UML_DIFF_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Opaque Element Body Change</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int OPAQUE_ELEMENT_BODY_CHANGE_FEATURE_COUNT = UML_DIFF_FEATURE_COUNT + 1;
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2.internal.AssociationChange
 	 * <em>Association Change</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -2248,6 +2411,29 @@ public interface UMLComparePackage extends EPackage {
 	 * @generated
 	 */
 	EClass getStereotypedElementChange();
+
+	/**
+	 * Returns the meta object for class '
+	 * {@link org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange
+	 * <em>Opaque Element Body Change</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Opaque Element Body Change</em>'.
+	 * @see org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange
+	 * @generated
+	 */
+	EClass getOpaqueElementBodyChange();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange#getLanguage <em>Language</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Language</em>'.
+	 * @see org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange#getLanguage()
+	 * @see #getOpaqueElementBodyChange()
+	 * @generated
+	 */
+	EAttribute getOpaqueElementBodyChange_Language();
 
 	/**
 	 * Returns the factory that creates the instances of the model. <!-- begin-user-doc --> <!-- end-user-doc
@@ -2447,6 +2633,25 @@ public interface UMLComparePackage extends EPackage {
 		 * @generated
 		 */
 		EClass STEREOTYPED_ELEMENT_CHANGE = eINSTANCE.getStereotypedElementChange();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link org.eclipse.emf.compare.uml2.internal.impl.OpaqueElementBodyChangeImpl
+		 * <em>Opaque Element Body Change</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.emf.compare.uml2.internal.impl.OpaqueElementBodyChangeImpl
+		 * @see org.eclipse.emf.compare.uml2.internal.impl.UMLComparePackageImpl#getOpaqueElementBodyChange()
+		 * @generated
+		 */
+		EClass OPAQUE_ELEMENT_BODY_CHANGE = eINSTANCE.getOpaqueElementBodyChange();
+
+		/**
+		 * The meta object literal for the '<em><b>Language</b></em>' attribute feature. <!-- begin-user-doc
+		 * --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute OPAQUE_ELEMENT_BODY_CHANGE__LANGUAGE = eINSTANCE.getOpaqueElementBodyChange_Language();
 
 	}
 

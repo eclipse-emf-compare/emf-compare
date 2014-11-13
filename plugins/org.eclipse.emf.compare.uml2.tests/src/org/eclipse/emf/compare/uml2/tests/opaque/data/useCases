@@ -1,0 +1,82 @@
+Use Cases for merging bodies of OpaqueBehaviors
+===============================================
+
+A1
+--
+Opaque action with one body attribute value that is concurrently modified in a
+mergeable way (i.e., at different lines).
+
+A2
+--
+Opaque action with one body attribute value that is concurrently modified in a
+non-mergeable way (i.e., conflict).
+
+A3
+--
+Opaque action with two body attribute values, whereas the second is concurrently
+modified in a non-mergeable way (i.e., conflict) and the first one is changed in
+a mergeable way (i.e., no conflict).
+
+A4
+--
+Opaque action with one body attribute value that is changed on the right-hand side
+and on the left-hand side a new language and body has been added (i.e., mergeable).
+
+A5
+--
+Opaque action with one body attribute value that is unchanged, but both sides add
+different new languages and bodies (i.e., mergeable).
+
+A6
+--
+Opaque action with two body attribute values, whereas one is changed on the both
+sides but on different lines (i.e., mergeable) and on the right-hand side the order
+of the language/body values is changed (i.e., mergeable).
+
+A7
+--
+Opaque action with two body attribute values, whereas one is changed on the both
+sides on the same line (i.e., conflict) and additionally on the right-hand side
+the order of the language/body values is changed.
+
+A8
+--
+Opaque action with one body attribute value that is unchanged, but both sides add
+same new language value with different body (i.e., conflict).
+
+A9
+--
+Opaque action with one body attribute value that is deleted on the left-hand side
+and left unchanged on the right-hand side.
+
+A10
+---
+Opaque action with two body attribute values, whereas one is deleted and the other one
+is changed left-hand side and on the right-hand side the one that has been changed on the
+left-hand side is also changed in a mergeable way.
+
+A11
+---
+Opaque action with two body attribute values, whereas one is deleted and the other one
+is changed left-hand side and on the right-hand side the one that has been changed on the
+left-hand side is also changed in a non-mergeable way (conflict).
+
+A12
+---
+Opaque action with two body attribute values, whereas one is deleted and the other one
+is changed left-hand side and on the right-hand side the one that has been changed on the
+left-hand side is deleted (delete-update conflict).
+
+A13
+---
+Opaque action with two body attribute values, whereas one is deleted and the other one
+is changed left-hand side and on the right-hand side the one that has been deleted on
+the left-hand side is deleted too (delete-delete -> no conflict).
+
+B1
+--
+Same as A1 but with OpaqueBehaviors.
+
+E1
+--
+Same as A1 but with OpaqueExpressions.

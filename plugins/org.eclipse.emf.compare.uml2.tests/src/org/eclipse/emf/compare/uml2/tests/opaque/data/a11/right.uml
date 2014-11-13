@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_mhydQGQIEeS_8IneN_JFUg" name="Model">
+  <packageImport xmi:id="_mhydQWQIEeS_8IneN_JFUg">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+  </packageImport>
+  <packagedElement xmi:type="uml:Activity" xmi:id="_mlTEQGQIEeS_8IneN_JFUg" name="Activity1" node="_opaqueAction1">
+    <node xmi:type="uml:OpaqueAction" xmi:id="_opaqueAction1" name="OpaqueAction1">
+      <language>JAVA</language>
+      <language>OCL</language>
+      <body>This is a JAVA&#xD;
+test with multi-line&#xD;
+String attribute&#xD;
+and concurrent changes&#xD;
+of them.</body>
+      <body>This is an OCL&#xD;
+(changed) test with multi-line&#xD;
+String attribute&#xD;
+and concurrent changes&#xD;
+of them.</body>
+    </node>
+  </packagedElement>
+</uml:Model>

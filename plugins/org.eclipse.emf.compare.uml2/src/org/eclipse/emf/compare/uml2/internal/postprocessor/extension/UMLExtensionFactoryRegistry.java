@@ -64,6 +64,7 @@ public final class UMLExtensionFactoryRegistry {
 		factories.add(new UMLStereotypeAttributeChangeFactory());
 		factories.add(new UMLStereotypeReferenceChangeFactory());
 		factories.add(new UMLStereotypeApplicationChangeFactory());
+		factories.add(new UMLOpaqueElementBodyChangeFactory());
 
 		for (IChangeFactory iDiffExtensionFactory : factories) {
 			dataset.put(iDiffExtensionFactory.getExtensionKind(), iDiffExtensionFactory);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - addition of OpaqueTest
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.suite;
 
@@ -38,6 +39,8 @@ import org.eclipse.emf.compare.uml2.tests.implications.ImplicationsTransitionTes
 import org.eclipse.emf.compare.uml2.tests.include.AddIncludeTest;
 import org.eclipse.emf.compare.uml2.tests.merge.ExtensionMergeTest;
 import org.eclipse.emf.compare.uml2.tests.message.AddMessageTest;
+import org.eclipse.emf.compare.uml2.tests.opaque.OpaqueElementBodyChangeDiffTest;
+import org.eclipse.emf.compare.uml2.tests.opaque.OpaqueElementBodyChangeMergeTest;
 import org.eclipse.emf.compare.uml2.tests.profiles.DynamicProfileTest;
 import org.eclipse.emf.compare.uml2.tests.profiles.StaticProfileTest;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.DynamicStereotypeTest;
@@ -65,7 +68,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		StaticStereotypeTest.class, StaticStereotypedElementChangeTests.class, DynamicStereotypeTest.class,
 		DynamicStereotypedElementChangeTests.class, ImplicationsAssociationTest.class,
 		ImplicationsTransitionTest.class, ImplicationsInterfaceRealizationTest.class,
-		StaticStereotypedElementItemProviderTest.class, DynamicStereotypedElementItemProviderTest.class })
+		StaticStereotypedElementItemProviderTest.class, DynamicStereotypedElementItemProviderTest.class,
+		OpaqueElementBodyChangeDiffTest.class, OpaqueElementBodyChangeMergeTest.class })
 public class AllTests {
 
 	/**

@@ -17,6 +17,7 @@ import org.eclipse.emf.compare.uml2.internal.ExtendChange;
 import org.eclipse.emf.compare.uml2.internal.GeneralizationSetChange;
 import org.eclipse.emf.compare.uml2.internal.IntervalConstraintChange;
 import org.eclipse.emf.compare.uml2.internal.MessageChange;
+import org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange;
 import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange;
@@ -81,6 +82,7 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 			case UMLComparePackage.PROFILE_APPLICATION_CHANGE: return createProfileApplicationChange();
 			case UMLComparePackage.DIRECTED_RELATIONSHIP_CHANGE: return createDirectedRelationshipChange();
 			case UMLComparePackage.STEREOTYPED_ELEMENT_CHANGE: return createStereotypedElementChange();
+			case UMLComparePackage.OPAQUE_ELEMENT_BODY_CHANGE: return createOpaqueElementBodyChange();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -192,6 +194,16 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	public StereotypedElementChange createStereotypedElementChange() {
 		StereotypedElementChangeImpl stereotypedElementChange = new StereotypedElementChangeImpl();
 		return stereotypedElementChange;
+	}
+	
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public OpaqueElementBodyChange createOpaqueElementBodyChange() {
+		OpaqueElementBodyChangeImpl opaqueElementBodyChange = new OpaqueElementBodyChangeImpl();
+		return opaqueElementBodyChange;
 	}
 
 	/**

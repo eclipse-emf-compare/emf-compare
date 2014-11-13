@@ -134,6 +134,15 @@ public interface UMLCompareFactory extends EFactory {
 	StereotypedElementChange createStereotypedElementChange();
 
 	/**
+	 * Returns a new object of class '<em>Opaque Element Body Change</em>'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Opaque Element Body Change</em>'.
+	 * @generated
+	 */
+	OpaqueElementBodyChange createOpaqueElementBodyChange();
+
+	/**
 	 * Returns the package supported by this factory. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the package supported by this factory.

@@ -47,8 +47,10 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.compare.uml2.internal.StereotypedElementChange;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
+import org.eclipse.emf.compare.uml2.internal.merge.OpaqueElementBodyChangeMerger;
 import org.eclipse.emf.compare.uml2.internal.merge.UMLMerger;
 import org.eclipse.emf.compare.uml2.internal.merge.UMLReferenceChangeMerger;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.OpaqueElementBodyChangePostProcessor;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor;
 import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
@@ -113,10 +115,13 @@ public abstract class AbstractUMLTest {
 		mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
 		final IMerger umlMerger = new UMLMerger();
 		final IMerger umlReferenceChangeMerger = new UMLReferenceChangeMerger();
+		final IMerger opaqueElementBodyChangeMerger = new OpaqueElementBodyChangeMerger();
 		umlMerger.setRanking(11);
 		umlReferenceChangeMerger.setRanking(25);
+		opaqueElementBodyChangeMerger.setRanking(25);
 		mergerRegistry.add(umlMerger);
 		mergerRegistry.add(umlReferenceChangeMerger);
+		mergerRegistry.add(opaqueElementBodyChangeMerger);
 		emfCompare = builder.build();
 	}
 
@@ -131,6 +136,10 @@ public abstract class AbstractUMLTest {
 				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
 						.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null,
 						new UMLPostProcessor(), 20));
+		postProcessorRegistry.put(OpaqueElementBodyChangePostProcessor.class.getName(),
+				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
+						.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null,
+						new OpaqueElementBodyChangePostProcessor(), 25));
 	}
 
 	@After

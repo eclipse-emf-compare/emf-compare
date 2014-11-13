@@ -570,7 +570,23 @@ public class DefaultConflictDetector implements IConflictDetector {
 		final EObject originalContainer = diff1.getMatch().getOrigin();
 		final EAttribute changedAttribute = diff1.getAttribute();
 		final String originalValue = (String)originalContainer.eGet(changedAttribute);
-		ThreeWayTextDiff textDiff = new ThreeWayTextDiff(originalValue, changedValue1, changedValue2);
+		return isMergeableText(changedValue1, changedValue2, originalValue);
+	}
+
+	/**
+	 * Specifies whether the given three versions of a text {@code left}, {@code right}, and {@code origin}
+	 * are mergeable with a line-based three-way merge.
+	 * 
+	 * @param left
+	 *            The left version.
+	 * @param right
+	 *            The right version.
+	 * @param origin
+	 *            The original version.
+	 * @return <code>true</code> if they are mergeable, false otherwise.
+	 */
+	protected boolean isMergeableText(final String left, final String right, final String origin) {
+		ThreeWayTextDiff textDiff = new ThreeWayTextDiff(origin, left, right);
 		return !textDiff.isConflicting();
 	}
 

@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.uml2.internal.ExtendChange;
 import org.eclipse.emf.compare.uml2.internal.GeneralizationSetChange;
 import org.eclipse.emf.compare.uml2.internal.IntervalConstraintChange;
 import org.eclipse.emf.compare.uml2.internal.MessageChange;
+import org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange;
 import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange;
@@ -26,6 +27,7 @@ import org.eclipse.emf.compare.uml2.internal.StereotypedElementChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -117,6 +119,13 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	 * @generated
 	 */
 	private EClass stereotypedElementChangeEClass = null;
+	
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass opaqueElementBodyChangeEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -317,6 +326,24 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	public EClass getStereotypedElementChange() {
 		return stereotypedElementChangeEClass;
 	}
+	
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getOpaqueElementBodyChange() {
+		return opaqueElementBodyChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getOpaqueElementBodyChange_Language() {
+		return (EAttribute)opaqueElementBodyChangeEClass.getEStructuralFeatures().get(0);
+	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -372,6 +399,9 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		createEReference(umlDiffEClass, UML_DIFF__EREFERENCE);
 
 		stereotypedElementChangeEClass = createEClass(STEREOTYPED_ELEMENT_CHANGE);
+		
+		opaqueElementBodyChangeEClass = createEClass(OPAQUE_ELEMENT_BODY_CHANGE);
+		createEAttribute(opaqueElementBodyChangeEClass, OPAQUE_ELEMENT_BODY_CHANGE__LANGUAGE);
 	}
 
 	/**
@@ -418,6 +448,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		directedRelationshipChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		umlDiffEClass.getESuperTypes().add(theComparePackage.getDiff());
 		stereotypedElementChangeEClass.getESuperTypes().add(this.getUMLDiff());
+		opaqueElementBodyChangeEClass.getESuperTypes().add(this.getUMLDiff());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(associationChangeEClass, AssociationChange.class, "AssociationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -449,6 +480,9 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		initEReference(getUMLDiff_EReference(), theEcorePackage.getEReference(), null, "eReference", null, 0, 1, UMLDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(stereotypedElementChangeEClass, StereotypedElementChange.class, "StereotypedElementChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		
+		initEClass(opaqueElementBodyChangeEClass, OpaqueElementBodyChange.class, "OpaqueElementBodyChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getOpaqueElementBodyChange_Language(), ecorePackage.getEString(), "language", null, 0, 1, OpaqueElementBodyChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

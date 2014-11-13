@@ -10,6 +10,7 @@ http://www.eclipse.org/legal/epl-v10.html
 
 Contributors:
     Obeo - initial API and implementation
+    Philip Langer - post processor and merger for opaque element body changes
 -->
 
 <plugin>
@@ -27,6 +28,15 @@ Contributors:
             description="Post Processor used for UML models."
             label="UML Post Processor"
             ordinal="20">
+         <nsURI
+               value="http://www.eclipse.org/uml2/\d.0.0/UML">
+         </nsURI>
+      </processor>
+      <processor
+            class="org.eclipse.emf.compare.uml2.internal.postprocessor.OpaqueElementBodyChangePostProcessor"
+            description="Post Processor for detecting conflicts specific to opaque element body changes."
+            label="Opaque Element Change Processor"
+            ordinal="25">
          <nsURI
                value="http://www.eclipse.org/uml2/\d.0.0/UML">
          </nsURI>
@@ -49,6 +59,10 @@ Contributors:
       </merger>
       <merger
             class="org.eclipse.emf.compare.uml2.internal.merge.UMLReferenceChangeMerger"
+            ranking="25">
+      </merger>
+      <merger
+            class="org.eclipse.emf.compare.uml2.internal.merge.OpaqueElementBodyChangeMerger"
             ranking="25">
       </merger>
    </extension>

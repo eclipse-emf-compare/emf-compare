@@ -121,6 +121,10 @@ public class UMLCompareAdapterFactory extends AdapterFactoryImpl {
 				return createStereotypedElementChangeAdapter();
 			}
 			@Override
+			public Adapter caseOpaqueElementBodyChange(OpaqueElementBodyChange object) {
+				return createOpaqueElementBodyChangeAdapter();
+			}
+			@Override
 			public Adapter caseDiff(Diff object) {
 				return createDiffAdapter();
 			}
@@ -311,6 +315,20 @@ public class UMLCompareAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStereotypedElementChangeAdapter() {
+		return null;
+	}
+	
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange <em>Opaque Element Body Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange
+	 * @generated
+	 */
+	public Adapter createOpaqueElementBodyChangeAdapter() {
 		return null;
 	}
 

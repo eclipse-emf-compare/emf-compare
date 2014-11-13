@@ -454,7 +454,23 @@ public class AttributeChangeMerger extends AbstractMerger {
 		final String leftValue = (String)safeEGet(match.getLeft(), attribute);
 		final String rightValue = (String)safeEGet(match.getRight(), attribute);
 
-		ThreeWayTextDiff textDiff = new ThreeWayTextDiff(originValue, leftValue, rightValue);
+		return performThreeWayTextMerge(leftValue, rightValue, originValue);
+	}
+
+	/**
+	 * Performs a three-way text merge for the given {@code origin}, {@code left}, and {@code right} text
+	 * versions.
+	 * @param left
+	 *            The left version of the String.
+	 * @param right
+	 *            The right version of the String.
+	 * @param origin
+	 *            The original version of the String.
+	 * 
+	 * @return The merged version.
+	 */
+	protected String performThreeWayTextMerge(final String left, final String right, final String origin) {
+		ThreeWayTextDiff textDiff = new ThreeWayTextDiff(origin, left, right);
 		return textDiff.getMerged();
 	}
 

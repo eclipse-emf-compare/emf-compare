@@ -215,6 +215,29 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected OpaqueElementBodyChangeItemProvider opaqueElementBodyChangeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createOpaqueElementBodyChangeAdapter() {
+		if (opaqueElementBodyChangeItemProvider == null) {
+			opaqueElementBodyChangeItemProvider = new OpaqueElementBodyChangeItemProvider(this);
+		}
+
+		return opaqueElementBodyChangeItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->

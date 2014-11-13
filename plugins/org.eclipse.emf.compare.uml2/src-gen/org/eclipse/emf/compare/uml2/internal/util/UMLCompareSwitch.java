@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.uml2.internal.ExtendChange;
 import org.eclipse.emf.compare.uml2.internal.GeneralizationSetChange;
 import org.eclipse.emf.compare.uml2.internal.IntervalConstraintChange;
 import org.eclipse.emf.compare.uml2.internal.MessageChange;
+import org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange;
 import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeAttributeChange;
@@ -194,6 +195,14 @@ public class UMLCompareSwitch<T> {
 				T result = caseStereotypedElementChange(stereotypedElementChange);
 				if (result == null) result = caseUMLDiff(stereotypedElementChange);
 				if (result == null) result = caseDiff(stereotypedElementChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UMLComparePackage.OPAQUE_ELEMENT_BODY_CHANGE: {
+				OpaqueElementBodyChange opaqueElementBodyChange = (OpaqueElementBodyChange)theEObject;
+				T result = caseOpaqueElementBodyChange(opaqueElementBodyChange);
+				if (result == null) result = caseUMLDiff(opaqueElementBodyChange);
+				if (result == null) result = caseDiff(opaqueElementBodyChange);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -379,6 +388,21 @@ public class UMLCompareSwitch<T> {
 	 * @generated
 	 */
 	public T caseStereotypedElementChange(StereotypedElementChange object) {
+		return null;
+	}
+	
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Opaque Element Body Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Opaque Element Body Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseOpaqueElementBodyChange(OpaqueElementBodyChange object) {
 		return null;
 	}
 

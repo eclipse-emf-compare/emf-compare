@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_mhydQGQIEeS_8IneN_JFUg" name="Model">
+  <packageImport xmi:id="_mhydQWQIEeS_8IneN_JFUg">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+  </packageImport>
+  <packagedElement xmi:type="uml:OpaqueBehavior" xmi:id="_opaqueBehavior1" name="OpaqueBehavior1">
+      <language>JAVA</language>
+      <body>This is a&#xD;
+test with multi-line&#xD;
+String attribute&#xD;
+and concurrent changes (changed)&#xD;
+of them.</body>
+  </packagedElement>
+</uml:Model>
