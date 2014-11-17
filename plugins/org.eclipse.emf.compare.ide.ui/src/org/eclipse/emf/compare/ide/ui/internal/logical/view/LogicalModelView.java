@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences;
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressInfoComposite;
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressMonitorWrapper;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
@@ -33,6 +34,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -97,6 +101,19 @@ public class LogicalModelView extends CommonNavigator {
 
 	/** Default presentation for the viewer. */
 	private Presentation presentation = Presentation.LIST;
+
+	/** The preference store of the EMF Compare IDE UI plugin. */
+	private final IPreferenceStore store = EMFCompareIDEUIPlugin.getDefault().getPreferenceStore();
+
+	/** The listener of changes for the preference store of the EMF Compare IDE UI plugin. */
+	private IPropertyChangeListener preferenceStoreListener = new IPropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent event) {
+			if (synchroActive && EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE == event.getProperty()
+					&& !event.getOldValue().equals(event.getNewValue())) {
+				selectionChangedTask.schedule();
+			}
+		}
+	};
 
 	/**
 	 * Presentation mode of the viewer.
@@ -216,9 +233,11 @@ public class LogicalModelView extends CommonNavigator {
 			public void run() {
 				if (isChecked()) {
 					synchroActive = true;
+					store.addPropertyChangeListener(preferenceStoreListener);
 					listenToSelection.selectionChanged(lastPart, lastSelection);
 				} else {
 					synchroActive = false;
+					store.removePropertyChangeListener(preferenceStoreListener);
 				}
 
 			}
