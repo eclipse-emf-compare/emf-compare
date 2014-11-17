@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ide.ui.internal.logical.view;
 import com.google.common.collect.Sets;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -56,18 +57,19 @@ public final class LogicalModelViewHandlerUtil {
 	}
 
 	/**
-	 * Get the resources of the logical model computed from the given file.
+	 * Get the logical model associated with the given file.
 	 * 
 	 * @param file
 	 *            the given file to compute the logical model.
 	 * @param monitor
 	 *            to monitor the process.
-	 * @return the resources of the logical model computed from the given file.
+	 * @return the synchronization model associated with the given file.
 	 */
-	public static Set<IResource> getLogicalModelResources(IFile file, IProgressMonitor monitor) {
-		Set<IResource> resources = Sets.newLinkedHashSet();
+	public static Collection<SynchronizationModel> getSynchronizationModels(IFile file,
+			IProgressMonitor monitor) {
+		final Collection<SynchronizationModel> logicalModels = Sets.newHashSet();
 		if (file == null) {
-			return resources;
+			return null;
 		}
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 		Collection<EMFResourceMapping> resourceMappings = getResourceMappings(file, subMonitor
@@ -80,12 +82,33 @@ public final class LogicalModelViewHandlerUtil {
 				try {
 					((EMFResourceMapping)resourceMapping).getTraversals(ResourceMappingContext.LOCAL_CONTEXT,
 							subMonitorLoop.newChild(1));
-					SynchronizationModel syncModel = ((EMFResourceMapping)resourceMapping).getLatestModel();
-					resources.addAll(syncModel.getResources());
+					logicalModels.add(((EMFResourceMapping)resourceMapping).getLatestModel());
 				} catch (CoreException e) {
 					EMFCompareIDEUIPlugin.getDefault().log(e);
 				}
 			}
+		}
+		return logicalModels;
+	}
+
+	/**
+	 * Get the resources of the given logical models.
+	 * 
+	 * @param logicalModels
+	 *            the logical models.
+	 * @param monitor
+	 *            to monitor the process.
+	 * @return the resources of the given logical models.
+	 */
+	public static Collection<IResource> getLogicalModelResources(
+			Collection<SynchronizationModel> logicalModels, IProgressMonitor monitor) {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+		SubMonitor subMonitorLoop = subMonitor.newChild(100).setWorkRemaining(logicalModels.size());
+		final Collection<IResource> resources = Sets.newHashSet();
+		for (Iterator<SynchronizationModel> it = logicalModels.iterator(); it.hasNext();) {
+			SynchronizationModel logicalModel = it.next();
+			resources.addAll(logicalModel.getResources());
+			subMonitorLoop.newChild(1);
 		}
 		return resources;
 	}

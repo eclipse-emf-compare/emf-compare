@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ide.ui.internal.logical.view;
 import com.google.common.base.Throwables;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -21,14 +22,17 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressInfoComposite;
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressMonitorWrapper;
+import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -390,6 +394,7 @@ public class LogicalModelView extends CommonNavigator {
 		 */
 		@Override
 		public IStatus run(IProgressMonitor monitor) {
+			IStatus status = Status.OK_STATUS;
 			IProgressMonitor wrapper = new JobProgressMonitorWrapper(monitor, progressInfoItem);
 			SubMonitor subMonitor = SubMonitor.convert(wrapper, 100);
 
@@ -407,9 +412,36 @@ public class LogicalModelView extends CommonNavigator {
 					}
 				});
 
-				// Retrieve logical model
-				final Collection<IResource> resources = handler.getLogicalModelResources(part, selection,
-						subMonitor.newChild(100));
+				// Retrieve logical models
+				final Collection<SynchronizationModel> logicalModels = handler.getSynchronizationModels(part,
+						selection, subMonitor.newChild(50));
+				for (SynchronizationModel logicalModel : logicalModels) {
+					Diagnostic diagnostic = logicalModel.getDiagnostic();
+					if (diagnostic != null && diagnostic.getSeverity() != Diagnostic.OK) {
+						if (status != Status.CANCEL_STATUS) {
+							SWTUtil.safeSyncExec(new Runnable() {
+								public void run() {
+									MessageDialog
+											.openError(
+													LogicalModelView.this.getSite().getShell(),
+													EMFCompareIDEUIMessages
+															.getString("LogicalModelView.errorDialog.title"), EMFCompareIDEUIMessages //$NON-NLS-1$
+															.getString("LogicalModelView.errorDialog.message")); //$NON-NLS-1$
+								}
+							});
+							status = Status.CANCEL_STATUS;
+						}
+					}
+				}
+
+				// Retrieve resources from logical models
+				final Collection<IResource> resources;
+				if (status == Status.OK_STATUS) {
+					resources = LogicalModelViewHandlerUtil.getLogicalModelResources(logicalModels,
+							subMonitor.newChild(50));
+				} else {
+					resources = Collections.emptySet();
+				}
 
 				// Display resources in viewer
 				if (!monitor.isCanceled()) {
@@ -421,11 +453,11 @@ public class LogicalModelView extends CommonNavigator {
 						}
 					});
 				} else {
-					return Status.CANCEL_STATUS;
+					status = Status.CANCEL_STATUS;
 				}
 			}
 
-			return Status.OK_STATUS;
+			return status;
 		}
 	}
 }

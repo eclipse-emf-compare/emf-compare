@@ -13,8 +13,8 @@ package org.eclipse.emf.compare.ide.ui.internal.logical.view;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -49,7 +49,7 @@ public interface ILogicalModelViewHandler {
 	Collection<IFile> getFiles(IWorkbenchPart part, ISelection selection);
 
 	/**
-	 * Get the resources computed by the logical model.
+	 * Get the logical models associated with the given editor or selection.
 	 * 
 	 * @param part
 	 *            the {@link IWorkbenchPart} of the editor on which the selection occurs.
@@ -57,9 +57,9 @@ public interface ILogicalModelViewHandler {
 	 *            the {@link ISelection}.
 	 * @param monitor
 	 *            to monitor the process.
-	 * @return the resources computed by the logical model.
+	 * @return the logical models associated with the given editor or selection.
 	 */
-	Collection<IResource> getLogicalModelResources(IWorkbenchPart part, ISelection selection,
-			IProgressMonitor monitor);
+	public Collection<SynchronizationModel> getSynchronizationModels(IWorkbenchPart part,
+			ISelection selection, IProgressMonitor monitor);
 
 }
