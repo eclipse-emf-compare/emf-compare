@@ -44,7 +44,9 @@ import org.eclipse.emf.compare.ide.utils.StorageTraversal;
  * EMF models.
  * <p>
  * Concretely, an EMF model can span multiple physical resources (fragmented models); this model provider can
- * be used to find all of these associated physical resources.
+ * be used to find all of these associated physical resources. <b>Note</b> that a model can span remote
+ * resources that do not exist locally; these will be accounted for when using this model with a
+ * {@link RemoteResourceMappingContext}.
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
@@ -60,9 +62,9 @@ public class EMFModelProvider extends ModelProvider {
 	 * that often.
 	 * <p>
 	 * Basically, the mappings are used by the platform to determine whether a file can be moved, replaced or
-	 * compared alone or if in the contrary the action's scope must be expanded, and thus we can cache the
-	 * "local" computation (this model provider won't use remote context information). A more accurate mapping
-	 * will be determined later on.
+	 * compared alone or if in the contrary the action's scope must be expanded, and will do so very often in
+	 * short intervals. We will cache the result in order to avoid multiple identical computation to take
+	 * place and hasten the whole process.
 	 * </p>
 	 */
 	public static final long CACHE_EXPIRATION = 5L;
@@ -123,6 +125,32 @@ public class EMFModelProvider extends ModelProvider {
 		contextToResourceMappingCache.invalidateAll();
 	}
 
+	/**
+	 * Retrieve the logical model associated with the given IFile from our
+	 * {@link #contextToResourceMappingCache cache}, compute and store it if we do not have it yet (or no
+	 * longer).
+	 * <p>
+	 * The returned traversal will only reflect the local state of the logical model if this is passed a
+	 * {@link ResourceMappingContext#LOCAL_CONTEXT local mapping context}. Since computing the whole
+	 * traversal, including remote resources and links, can be a costly operation which involves I/O calls
+	 * over remote repositories, using a local context is advisable when such an accurate traversal is not
+	 * needed.
+	 * </p>
+	 * 
+	 * @param file
+	 *            The IFile for which we are currently seeking a logical model. Does not require to exist
+	 *            locally, but in this case we may only retrieve its model from the cache and will be unable
+	 *            to compute it.
+	 * @param context
+	 *            The context we'll use to compute this file's model.
+	 * @param monitor
+	 *            Monitor on which to report progress to the user.
+	 * @return The resolved synchronization model for this file.
+	 * @throws CoreException
+	 *             if we cannot retrieve the content of a resource for some reason.
+	 * @throws InterruptedException
+	 *             If the user interrupts the resolving.
+	 */
 	SynchronizationModel getOrComputeLogicalModel(IFile file, ResourceMappingContext context,
 			IProgressMonitor monitor) throws CoreException, InterruptedException {
 		SynchronizationModel syncModel;
@@ -143,8 +171,16 @@ public class EMFModelProvider extends ModelProvider {
 	}
 
 	/**
-	 * Resolve the logical model of the given file. Do note that this will only reflect the local state of
-	 * this file's logical model.
+	 * Resolve the logical model of the given file.
+	 * <p>
+	 * If the given {@link ResourceMappingContext context} is a {@link RemoteResourceMappingContext remote}
+	 * one, the returned synchronization model will reflect the state of all three sides of this file's model.
+	 * For example, two files <code>file1</code> and <code>file2</code> may not be linked locally, but still
+	 * have cross-references to each other on one of the remote sides. In such a case, considering we're
+	 * trying to compute the model of <code>file1</code>, the returned model will only contained
+	 * <code>file1</code> if called with a {@link ResourceMappingContext#LOCAL_CONTEXT local context}, but it
+	 * will contain both files if called with a {@link RemoteResourceMappingContext remote context}.
+	 * </p>
 	 * 
 	 * @param file
 	 *            The file which logical model is to be resolved.
@@ -187,7 +223,6 @@ public class EMFModelProvider extends ModelProvider {
 			if (left instanceof IAdaptable) {
 				leftStorage = (IStorage)((IAdaptable)left).getAdapter(IStorage.class);
 			}
-			// we don't need to double-check for left != null here if leftStorage is not null.
 			if (left == null || right == null) {
 				return null;
 			}
@@ -199,6 +234,7 @@ public class EMFModelProvider extends ModelProvider {
 					accessor);
 			syncModel = builder.buildSynchronizationModel(left, right, origin, actualMonitor);
 		} else {
+			// TODO wouldn't it be better to use Collections.singleton(file) for the right and origin?
 			syncModel = new SynchronizationModel(localTraversal, new StorageTraversal(Collections
 					.<IStorage> emptySet()), new StorageTraversal(Collections.<IStorage> emptySet()));
 		}
