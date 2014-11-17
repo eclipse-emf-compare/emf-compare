@@ -54,7 +54,7 @@
       </merger>
       <merger
             class="org.eclipse.emf.compare.merge.ConflictMerger"
-            ranking="15">
+            ranking="50">
       </merger>
    </extension>
    <extension
