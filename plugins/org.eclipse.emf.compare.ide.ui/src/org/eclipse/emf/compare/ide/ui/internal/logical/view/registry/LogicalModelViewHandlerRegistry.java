@@ -46,34 +46,6 @@ public final class LogicalModelViewHandlerRegistry {
 	}
 
 	/**
-	 * Returns a {@link ILogicalModelViewHandler} that handles the given IWorkbenchPart.
-	 * <p>
-	 * This will iterate over all the registered handlers, selecting the highest-ranking handler that can
-	 * handle the target workbench part.
-	 * </p>
-	 * 
-	 * @param part
-	 *            the workbench part of the editor.
-	 * @return a {@link ILogicalModelViewHandler} that is able to handle the IWorkbenchPart.
-	 */
-	public ILogicalModelViewHandler getBestHandlerFor(IWorkbenchPart part) {
-		LogicalModelViewHandlerDescriptor handler = null;
-		for (LogicalModelViewHandlerDescriptor candidate : registeredDescriptors.values()) {
-			if (handler == null || handler.getRanking() < candidate.getRanking()) {
-				if (candidate.getHandler().canHandle(part)) {
-					handler = candidate;
-				}
-			}
-		}
-
-		if (handler != null) {
-			return handler.getHandler();
-		}
-
-		return null;
-	}
-
-	/**
 	 * Returns a {@link ILogicalModelViewHandler} that handles the given ISelection.
 	 * <p>
 	 * This will iterate over all the registered handlers, selecting the highest-ranking handler that can

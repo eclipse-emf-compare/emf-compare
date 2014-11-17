@@ -21,26 +21,39 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.papyrus.infra.onefile.model.IPapyrusFile;
 import org.eclipse.papyrus.infra.onefile.model.ISubResourceFile;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
- * Handle, for the Logical Model View, the Papyrus files selection.
+ * Handle, for the Logical Model View, the Papyrus editors activations & files selections.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 2.4
  */
-public class PapyrusFilesSelectionLMVHandler extends AbstractLogicalModelViewHandler {
+public class PapyrusLMVHandler extends AbstractLogicalModelViewHandler {
 
 	/**
-	 * Retrieve the files associated with the given selection.
+	 * Retrieve the files associated with the given editor (via its {@link IWorkbenchPart}) or the given
+	 * selection.
 	 * 
+	 * @param part
+	 *            the {@link IWorkbenchPart}.
 	 * @param selection
 	 *            the {@link ISelection}.
-	 * @return the files associated with the given selection.
+	 * @return the files associated with the given editor or the given selection.
 	 */
 	@Override
-	public Collection<IFile> getFilesFromSelection(ISelection selection) {
+	public Collection<IFile> getFiles(IWorkbenchPart part, ISelection selection) {
 		final Set<IFile> files = Sets.newLinkedHashSet();
-		if (selection instanceof TreeSelection) {
+		if (part instanceof IEditorPart) {
+			IEditorInput editorInput = ((IEditorPart)part).getEditorInput();
+			if (editorInput instanceof IFileEditorInput) {
+				files.add(((IFileEditorInput)editorInput).getFile());
+			}
+		}
+		if (files.isEmpty() && selection instanceof TreeSelection) {
 			Object element = ((TreeSelection)selection).getFirstElement();
 			if (element instanceof IPapyrusFile) {
 				files.add(((IPapyrusFile)element).getMainFile());

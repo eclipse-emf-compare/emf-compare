@@ -30,66 +30,17 @@ import org.eclipse.ui.IWorkbenchPart;
 public abstract class AbstractLogicalModelViewHandler implements ILogicalModelViewHandler {
 
 	/**
-	 * This will be called to determine whether an editor must be listened by the logical model view.
-	 * 
-	 * @param part
-	 *            the {@link IWorkbenchPart} of the editor to test.
-	 * @return true if the editor must be listened, false otherwise.
-	 */
-	public boolean canHandle(IWorkbenchPart part) {
-		Collection<IFile> files = getFilesFromWorkbenchPart(part);
-		for (IFile file : files) {
-			if (LogicalModelViewHandlerUtil.isEMFCompareCompliantFile(file)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Retrieve the files associated with the given editor (via its {@link IWorkbenchPart}).
-	 * 
-	 * @param part
-	 *            the {@link IWorkbenchPart} of the editor.
-	 * @return the files associated with the given editor (via its {@link IWorkbenchPart}).
-	 */
-	public Collection<IFile> getFilesFromWorkbenchPart(IWorkbenchPart part) {
-		return Collections.emptySet();
-	}
-
-	/**
-	 * Get the resources computed by the logical model.
-	 * 
-	 * @param part
-	 *            the {@link IWorkbenchPart} of the editor.
-	 * @param monitor
-	 *            to monitor the process.
-	 * @return the resources computed by the logical model.
-	 */
-	public Collection<IResource> getLogicalModelResources(IWorkbenchPart part, IProgressMonitor monitor) {
-		final Collection<IResource> resources = Sets.newLinkedHashSet();
-		final Collection<IFile> files = getFilesFromWorkbenchPart(part);
-
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 100).setWorkRemaining(files.size());
-
-		for (IFile file : files) {
-			resources.addAll(LogicalModelViewHandlerUtil.getLogicalModelResources(file, subMonitor
-					.newChild(1)));
-		}
-		return resources;
-	}
-
-	/**
-	 * This will be called to determine whether a selection must be listened by the logical model view.
+	 * This will be called to determine whether the given editor or the given selection must be listened by
+	 * the logical model view.
 	 * 
 	 * @param part
 	 *            the {@link IWorkbenchPart} of the editor on which the selection occurs.
 	 * @param selection
 	 *            the {@link ISelection} to test.
-	 * @return true if the selection must be listened, false otherwise.
+	 * @return true if the editor or the selection must be listened, false otherwise.
 	 */
 	public boolean canHandle(IWorkbenchPart part, ISelection selection) {
-		Collection<IFile> files = getFilesFromSelection(selection);
+		Collection<IFile> files = getFiles(part, selection);
 		for (IFile file : files) {
 			if (LogicalModelViewHandlerUtil.isEMFCompareCompliantFile(file)) {
 				return true;
@@ -99,28 +50,34 @@ public abstract class AbstractLogicalModelViewHandler implements ILogicalModelVi
 	}
 
 	/**
-	 * Retrieve the files associated with the given selection.
+	 * Retrieve the files associated with the given editor (via its {@link IWorkbenchPart}) or the given
+	 * selection.
 	 * 
+	 * @param part
+	 *            the {@link IWorkbenchPart} of the editor on which the selection occurs.
 	 * @param selection
 	 *            the {@link ISelection}.
-	 * @return the files associated with the given selection.
+	 * @return the files associated with the given editor or the given selection.
 	 */
-	public Collection<IFile> getFilesFromSelection(ISelection selection) {
+	public Collection<IFile> getFiles(IWorkbenchPart part, ISelection selection) {
 		return Collections.emptySet();
 	}
 
 	/**
 	 * Get the resources computed by the logical model.
 	 * 
+	 * @param part
+	 *            the {@link IWorkbenchPart} of the editor on which the selection occurs.
 	 * @param selection
 	 *            the {@link ISelection}.
 	 * @param monitor
 	 *            to monitor the process.
 	 * @return the resources computed by the logical model.
 	 */
-	public Collection<IResource> getLogicalModelResources(ISelection selection, IProgressMonitor monitor) {
+	public Collection<IResource> getLogicalModelResources(IWorkbenchPart part, ISelection selection,
+			IProgressMonitor monitor) {
 		final Collection<IResource> resources = Sets.newLinkedHashSet();
-		final Collection<IFile> files = getFilesFromSelection(selection);
+		final Collection<IFile> files = getFiles(part, selection);
 
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 100).setWorkRemaining(files.size());
 

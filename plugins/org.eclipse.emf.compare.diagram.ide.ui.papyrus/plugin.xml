@@ -28,7 +28,7 @@
    <extension
          point="org.eclipse.emf.compare.ide.ui.logicalModelViewHandlers">
       <handler
-            class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.logical.view.PapyrusFilesSelectionLMVHandler"
+            class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.logical.view.PapyrusLMVHandler"
             ranking="20">
       </handler>
    </extension>

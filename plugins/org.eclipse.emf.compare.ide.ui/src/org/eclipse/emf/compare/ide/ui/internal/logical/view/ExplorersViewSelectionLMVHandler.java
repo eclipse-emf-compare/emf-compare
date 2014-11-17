@@ -38,7 +38,8 @@ public class ExplorersViewSelectionLMVHandler extends AbstractLogicalModelViewHa
 	 */
 	@Override
 	public boolean canHandle(IWorkbenchPart part, ISelection selection) {
-		if ("Project Explorer".equals(part.getTitle()) || "Package Explorer".equals(part.getTitle())) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (part != null
+				&& ("Project Explorer".equals(part.getTitle()) || "Package Explorer".equals(part.getTitle()))) { //$NON-NLS-1$ //$NON-NLS-2$
 			return super.canHandle(part, selection);
 		}
 		return false;
@@ -47,12 +48,14 @@ public class ExplorersViewSelectionLMVHandler extends AbstractLogicalModelViewHa
 	/**
 	 * Retrieve the files associated with the given selection.
 	 * 
+	 * @param part
+	 *            the {@link IWorkbenchPart} of the editor.
 	 * @param selection
 	 *            the {@link ISelection}.
 	 * @return the files associated with the given selection.
 	 */
 	@Override
-	public Collection<IFile> getFilesFromSelection(ISelection selection) {
+	public Collection<IFile> getFiles(IWorkbenchPart part, ISelection selection) {
 		final Set<IFile> files = Sets.newLinkedHashSet();
 		if (selection instanceof TreeSelection) {
 			Object element = ((TreeSelection)selection).getFirstElement();
@@ -62,4 +65,5 @@ public class ExplorersViewSelectionLMVHandler extends AbstractLogicalModelViewHa
 		}
 		return files;
 	}
+
 }

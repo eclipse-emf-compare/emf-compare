@@ -36,8 +36,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IPartService;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.ISharedImages;
@@ -69,9 +67,6 @@ public class LogicalModelView extends CommonNavigator {
 	/** Job executed when the selection changed. */
 	private SelectionChangedJob selectionChangedTask;
 
-	/** Job executed when the focused editor changed. */
-	private ActiveEditorJob activeEditorTask;
-
 	/** Synchronize the viewer with editors and selection. */
 	private IAction synchronizeAction;
 
@@ -81,17 +76,20 @@ public class LogicalModelView extends CommonNavigator {
 	/** Show folder structure in full tree. */
 	private Action treePresentationAction;
 
-	/** Editors listener. */
-	private ListenToEditors listenToEditors;
-
 	/** Selection listener. */
 	private ListenToSelection listenToSelection;
 
-	/** The service that tracks editors activations. */
-	private IPartService partService;
-
 	/** The service that tracks selection changes. */
 	private ISelectionService selectionService;
+
+	/** Keeps track of the last active workbench part. */
+	private IWorkbenchPart lastPart;
+
+	/** Keeps track of the last selection. */
+	private ISelection lastSelection;
+
+	/** Keeps track of the synchronization button state. */
+	private boolean synchroActive;
 
 	/** Default presentation for the viewer. */
 	private Presentation presentation = Presentation.LIST;
@@ -132,10 +130,6 @@ public class LogicalModelView extends CommonNavigator {
 				.getString("LogicalModelView.computingLogicalModel")); //$NON-NLS-1$
 		selectionChangedTask.setPriority(Job.LONG);
 
-		activeEditorTask = new ActiveEditorJob(EMFCompareIDEUIMessages
-				.getString("LogicalModelView.computingLogicalModel")); //$NON-NLS-1$
-		activeEditorTask.setPriority(Job.LONG);
-
 		progressInfoItem = new JobProgressInfoComposite(selectionChangedTask, aParent, SWT.SMOOTH
 				| SWT.HORIZONTAL, SWT.NONE);
 		progressInfoItem.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -150,7 +144,6 @@ public class LogicalModelView extends CommonNavigator {
 		updateLayout(false, false);
 
 		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		partService = activeWorkbenchWindow.getPartService();
 		selectionService = activeWorkbenchWindow.getSelectionService();
 
 		makeActions();
@@ -178,19 +171,8 @@ public class LogicalModelView extends CommonNavigator {
 	 */
 	@Override
 	public void dispose() {
-		if (listenToEditors != null) {
-			partService.removePartListener(listenToEditors);
-		}
 		if (listenToSelection != null) {
 			selectionService.removePostSelectionListener(listenToSelection);
-		}
-		if (!activeEditorTask.cancel()) {
-			try {
-				activeEditorTask.join();
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-				Throwables.propagate(e);
-			}
 		}
 		if (!selectionChangedTask.cancel()) {
 			try {
@@ -217,28 +199,22 @@ public class LogicalModelView extends CommonNavigator {
 	 */
 	@SuppressWarnings("static-access")
 	private void makeActions() {
+
+		if (listenToSelection == null) {
+			listenToSelection = new ListenToSelection();
+		}
+		selectionService.addPostSelectionListener(listenToSelection);
+
 		String synchronizationLabel = EMFCompareIDEUIMessages
 				.getString("LogicalModelView.linkWithEditorAndSelection"); //$NON-NLS-1$
 		synchronizeAction = new Action(synchronizationLabel, IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 				if (isChecked()) {
-					if (listenToEditors == null) {
-						listenToEditors = new ListenToEditors();
-					}
-					partService.addPartListener(listenToEditors);
-
-					if (listenToSelection == null) {
-						listenToSelection = new ListenToSelection();
-					}
-					selectionService.addPostSelectionListener(listenToSelection);
+					synchroActive = true;
+					listenToSelection.selectionChanged(lastPart, lastSelection);
 				} else {
-					if (listenToEditors != null) {
-						partService.removePartListener(listenToEditors);
-					}
-					if (listenToSelection != null) {
-						selectionService.removePostSelectionListener(listenToSelection);
-					}
+					synchroActive = false;
 				}
 
 			}
@@ -320,61 +296,6 @@ public class LogicalModelView extends CommonNavigator {
 	}
 
 	/**
-	 * Listener that reacts on editors activation (focus).
-	 * 
-	 * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
-	 */
-	private final class ListenToEditors implements IPartListener {
-
-		/**
-		 * Notifies this listener that the given part has been opened.
-		 * 
-		 * @param part
-		 *            the part that was opened.
-		 */
-		public void partOpened(IWorkbenchPart part) {
-		}
-
-		/**
-		 * Notifies this listener that the given part has been deactivated.
-		 * 
-		 * @param part
-		 *            the part that was deactivated.
-		 */
-		public void partDeactivated(IWorkbenchPart part) {
-		}
-
-		/**
-		 * Notifies this listener that the given part has been closed.
-		 * 
-		 * @param part
-		 *            the part that was closed.
-		 */
-		public void partClosed(IWorkbenchPart part) {
-		}
-
-		/**
-		 * Notifies this listener that the given part has been brought to the top.
-		 * 
-		 * @param part
-		 *            the part that was surfaced.
-		 */
-		public void partBroughtToTop(IWorkbenchPart part) {
-		}
-
-		/**
-		 * Notifies this listener that the given part has been activated.
-		 * 
-		 * @param part
-		 *            the part that was activated.
-		 */
-		public void partActivated(IWorkbenchPart part) {
-			activeEditorTask.setPart(part);
-			activeEditorTask.schedule();
-		}
-	}
-
-	/**
 	 * Listener that reacts on selection changes.
 	 * 
 	 * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
@@ -390,93 +311,16 @@ public class LogicalModelView extends CommonNavigator {
 		 *            the current selection.
 		 */
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-			if (selection != null && !selection.isEmpty()
+			if (!(part instanceof LogicalModelView)) {
+				lastPart = part;
+				lastSelection = selection;
+			}
+			if (synchroActive && selection != null && !selection.isEmpty()
 					&& !selection.equals(selectionChangedTask.getSelection())) {
 				selectionChangedTask.setPart(part);
 				selectionChangedTask.setSelection(selection);
 				selectionChangedTask.schedule();
 			}
-		}
-	}
-
-	/**
-	 * Job executed on editors activation (focus).
-	 * 
-	 * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
-	 */
-	private final class ActiveEditorJob extends Job {
-
-		/**
-		 * The workbench part.
-		 */
-		private IWorkbenchPart part;
-
-		/**
-		 * Constructor.
-		 * 
-		 * @param name
-		 *            the job's name.
-		 */
-		private ActiveEditorJob(String name) {
-			super(name);
-		}
-
-		/**
-		 * Set the workbench part.
-		 * 
-		 * @param part
-		 *            the workbench part.
-		 */
-		public void setPart(IWorkbenchPart part) {
-			this.part = part;
-		}
-
-		/**
-		 * Compute the logical model from the IFile corresponding to the active editor, and then display those
-		 * resources in the viewer.
-		 * 
-		 * @param monitor
-		 *            to monitor the whole process.
-		 * @return the status of the whole process.
-		 */
-		@Override
-		public IStatus run(IProgressMonitor monitor) {
-			IProgressMonitor wrapper = new JobProgressMonitorWrapper(monitor, progressInfoItem);
-			SubMonitor subMonitor = SubMonitor.convert(wrapper, 100);
-
-			final ILogicalModelViewHandler handler = EMFCompareIDEUIPlugin.getDefault()
-					.getLogicalModelViewHandlerRegistry().getBestHandlerFor(part);
-
-			if (handler != null) {
-
-				// Display progress bar
-				SWTUtil.safeSyncExec(new Runnable() {
-					public void run() {
-						if (!container.isDisposed()) {
-							updateLayout(true, true);
-						}
-					}
-				});
-
-				// Retrieve logical model
-				final Collection<IResource> resources = handler.getLogicalModelResources(part, subMonitor
-						.newChild(100));
-
-				// Display resources in viewer
-				if (!monitor.isCanceled()) {
-					SWTUtil.safeSyncExec(new Runnable() {
-						public void run() {
-							updateLayout(false, true);
-							viewContentProvider.setLeaves(resources);
-							getCommonViewer().refresh();
-						}
-					});
-				} else {
-					return Status.CANCEL_STATUS;
-				}
-			}
-
-			return Status.OK_STATUS;
 		}
 	}
 
@@ -564,7 +408,7 @@ public class LogicalModelView extends CommonNavigator {
 				});
 
 				// Retrieve logical model
-				final Collection<IResource> resources = handler.getLogicalModelResources(selection,
+				final Collection<IResource> resources = handler.getLogicalModelResources(part, selection,
 						subMonitor.newChild(100));
 
 				// Display resources in viewer

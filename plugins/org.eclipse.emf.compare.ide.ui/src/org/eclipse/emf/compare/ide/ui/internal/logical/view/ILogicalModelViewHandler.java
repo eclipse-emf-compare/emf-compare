@@ -26,62 +26,40 @@ import org.eclipse.ui.IWorkbenchPart;
 public interface ILogicalModelViewHandler {
 
 	/**
-	 * This will be called to determine whether an editor must be listened by the logical model view.
-	 * 
-	 * @param part
-	 *            the {@link IWorkbenchPart} of the editor to test.
-	 * @return true if the editor must be listened, false otherwise.
-	 */
-	boolean canHandle(IWorkbenchPart part);
-
-	/**
-	 * This will be called to determine whether a selection must be listened by the logical model view.
+	 * This will be called to determine whether the given editor or the given selection must be listened by
+	 * the logical model view.
 	 * 
 	 * @param part
 	 *            the {@link IWorkbenchPart} of the editor on which the selection occurs.
 	 * @param selection
 	 *            the {@link ISelection} to test.
-	 * @return true if the selection must be listened, false otherwise.
+	 * @return true if the editor or the selection must be listened, false otherwise.
 	 */
 	boolean canHandle(IWorkbenchPart part, ISelection selection);
 
 	/**
-	 * Retrieve the files associated with the given editor (via its {@link IWorkbenchPart}).
-	 * 
-	 * @param part
-	 *            the {@link IWorkbenchPart} of the editor.
-	 * @return the files associated with the given editor (via its {@link IWorkbenchPart}).
-	 */
-	Collection<IFile> getFilesFromWorkbenchPart(IWorkbenchPart part);
-
-	/**
 	 * Retrieve the files associated with the given selection.
 	 * 
+	 * @param part
+	 *            the {@link IWorkbenchPart} of the editor on which the selection occurs.
 	 * @param selection
 	 *            the {@link ISelection}.
-	 * @return the files associated with the given selection.
+	 * @return the files associated with the given editor or the given selection.
 	 */
-	Collection<IFile> getFilesFromSelection(ISelection selection);
+	Collection<IFile> getFiles(IWorkbenchPart part, ISelection selection);
 
 	/**
 	 * Get the resources computed by the logical model.
 	 * 
 	 * @param part
-	 *            the {@link IWorkbenchPart} of the editor.
-	 * @param monitor
-	 *            to monitor the process.
-	 * @return the resources computed by the logical model.
-	 */
-	Collection<IResource> getLogicalModelResources(IWorkbenchPart part, IProgressMonitor monitor);
-
-	/**
-	 * Get the resources computed by the logical model.
-	 * 
+	 *            the {@link IWorkbenchPart} of the editor on which the selection occurs.
 	 * @param selection
 	 *            the {@link ISelection}.
 	 * @param monitor
 	 *            to monitor the process.
 	 * @return the resources computed by the logical model.
 	 */
-	Collection<IResource> getLogicalModelResources(ISelection selection, IProgressMonitor monitor);
+	Collection<IResource> getLogicalModelResources(IWorkbenchPart part, ISelection selection,
+			IProgressMonitor monitor);
+
 }

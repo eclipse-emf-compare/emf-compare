@@ -20,6 +20,7 @@ import java.util.Set;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
@@ -36,10 +37,12 @@ public class EMFCompareEditorLMVHandler extends AbstractLogicalModelViewHandler 
 	 * 
 	 * @param part
 	 *            the {@link IWorkbenchPart} of the editor.
+	 * @param selection
+	 *            the {@link ISelection}.
 	 * @return the files associated with the given editor (via its {@link IWorkbenchPart}).
 	 */
 	@Override
-	public Collection<IFile> getFilesFromWorkbenchPart(IWorkbenchPart part) {
+	public Collection<IFile> getFiles(IWorkbenchPart part, ISelection selection) {
 		final Set<IFile> files = Sets.newLinkedHashSet();
 		if (part instanceof IEditorPart) {
 			final IEditorInput editorInput = ((IEditorPart)part).getEditorInput();
