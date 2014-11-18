@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Stefan Dirix - Fix for Bug 453218
+ *     Stefan Dirix - Fixes for Bugs 452147 and 453218
  *******************************************************************************/
 package org.eclipse.emf.compare.equi;
 
@@ -30,8 +30,8 @@ import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
-import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -115,6 +115,14 @@ public class DefaultEquiEngine implements IEquiEngine {
 			 */
 			final Match valueMatch = comparison.getMatch(referenceChange.getValue());
 			final EReference eOpposite = referenceChange.getReference().getEOpposite();
+
+			final Object referenceContainer = ComparisonUtil.getExpectedSide(referenceChange.getMatch(),
+					referenceChange.getSource(), false);
+			final Object referenceValue = ComparisonUtil.getExpectedSide(valueMatch, referenceChange
+					.getSource(), false);
+			final boolean valueIsContainer = referenceContainer == referenceValue
+					&& referenceContainer != null;
+
 			if (eOpposite != null && valueMatch != null) {
 				final Predicate<? super Diff> candidateFilter = new Predicate<Diff>() {
 					public boolean apply(Diff input) {
@@ -122,7 +130,12 @@ public class DefaultEquiEngine implements IEquiEngine {
 								&& ((ReferenceChange)input).getReference() == eOpposite) {
 							final Match candidateMatch = comparison.getMatch(((ReferenceChange)input)
 									.getValue());
-							return candidateMatch == referenceChange.getMatch();
+
+							final boolean sameMatch = candidateMatch == referenceChange.getMatch();
+							final boolean oneIsMany = referenceChange.getReference().isMany()
+									|| eOpposite.isMany();
+
+							return sameMatch && (oneIsMany || !valueIsContainer);
 						}
 						return false;
 					}
@@ -152,18 +165,27 @@ public class DefaultEquiEngine implements IEquiEngine {
 	 */
 	private void addChangesFromOrigin(Comparison comparison, ReferenceChange diff, Equivalence equivalence) {
 		if (!diff.getReference().isMany()) {
-			final EObject originContainer = MatchUtil.getOriginContainer(diff.getMatch().getComparison(),
-					diff);
+			final EObject originContainer = ComparisonUtil.getExpectedSide(diff.getMatch(), diff.getSource(),
+					false);
+			final Match valueMatch = comparison.getMatch(diff.getValue());
 			if (originContainer != null) {
-				for (Diff referenceChange : comparison.getDifferences(originContainer)) {
-					if (referenceChange instanceof ReferenceChange
-							/*
-							 * && MatchUtil.getContainer(comparison, referenceChange).equals(
-							 * ReferenceUtil.safeEGet(originContainer, diff.getReference()))
-							 */
-							&& diff.getReference().equals(
-									((ReferenceChange)referenceChange).getReference().getEOpposite())) {
-						equivalence.getDifferences().add(referenceChange);
+				for (Diff candidate : comparison.getDifferences(originContainer)) {
+					if (!(candidate instanceof ReferenceChange)) {
+						continue;
+					}
+					final ReferenceChange candidateRC = (ReferenceChange)candidate;
+
+					final boolean sameReference = diff.getReference().equals(
+							candidateRC.getReference().getEOpposite());
+
+					final boolean sameContainer = originContainer == ComparisonUtil.getExpectedSide(candidate
+							.getMatch(), candidate.getSource(), false);
+					final boolean containerIsValue = originContainer == ComparisonUtil.getExpectedSide(
+							valueMatch, candidate.getSource(), false);
+
+					if (sameReference
+							&& (candidateRC.getReference().isMany() || !sameContainer || !containerIsValue)) {
+						equivalence.getDifferences().add(candidate);
 					}
 				}
 			}

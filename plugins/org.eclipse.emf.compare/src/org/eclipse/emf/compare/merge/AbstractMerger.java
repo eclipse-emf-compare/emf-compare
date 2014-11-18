@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo and others.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Stefan Dirix - bugs 441172 and 454579
+ *     Stefan Dirix - bugs 441172, 452147 and 454579
  *     Alexandra Buzila - Fixes for Bug 446252
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
@@ -26,6 +26,8 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -46,6 +48,7 @@ import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -165,7 +168,112 @@ public abstract class AbstractMerger implements IMerger2 {
 			resulting.addAll(target.getConflict().getDifferences());
 			resulting.remove(target);
 		}
+
+		// Bug 452147:
+		// Add interlocked differences to the resulting merges to avoid merging redundant differences with
+		// undefined consequences.
+		if (target instanceof ReferenceChange) {
+			final ReferenceChange refTarget = (ReferenceChange)target;
+			if (isOneToOneAndChange(refTarget)) {
+				resulting.addAll(findInterlockedOneToOneDiffs(refTarget, mergeRightToLeft));
+			}
+		}
+
 		return resulting;
+	}
+
+	/**
+	 * Interlocked differences only occur in special cases: When both ends of a one-to-one feature have the
+	 * same type and are actually set to the container object in an instance model.
+	 * <p>
+	 * For each end of the feature usually two differences are determined: Setting the feature in object A and
+	 * in object B. Each pair of differences is equivalent. But when the value of the feature is set to its
+	 * containing object, those differences may ALL act as equivalent depending on the merge direction.
+	 * <p>
+	 * These interlocked differences are therefore indirectly equivalent and need special treatment to avoid
+	 * merging the same effects twice. These differences are determined by this method.
+	 * 
+	 * @see <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=452147">Bugzilla #452147</a> for more
+	 *      information.
+	 * @param referenceChange
+	 *            The diff for which interlocked differences are determined.
+	 * @param mergeRightToLeft
+	 *            The direction in which we're considering a merge.
+	 * @return All interlocked differences in regards to the given {@code referenceChange} and
+	 *         {@code mergeDirection}.
+	 */
+	private Collection<? extends Diff> findInterlockedOneToOneDiffs(ReferenceChange referenceChange,
+			boolean mergeRightToLeft) {
+		final boolean sanityChecks = referenceChange.getKind() != DifferenceKind.CHANGE
+				|| referenceChange.getReference().isMany()
+				|| referenceChange.getReference().getEOpposite().isMany();
+
+		// check if value to be set is the container itself
+		final EObject sourceContainer = ComparisonUtil.getExpectedSide(referenceChange.getMatch(),
+				referenceChange.getSource(), mergeRightToLeft);
+
+		if (!sanityChecks && sourceContainer != null) {
+			final Object sourceValue = ReferenceUtil
+					.safeEGet(sourceContainer, referenceChange.getReference());
+
+			if (sourceValue == sourceContainer) {
+				// collect all diffs which might be "equal"
+				final Match match = referenceChange.getMatch();
+				final Set<Diff> candidates = new LinkedHashSet<Diff>();
+				for (Diff diff : match.getDifferences()) {
+					candidates.add(diff);
+					if (diff.getEquivalence() != null) {
+						candidates.addAll(diff.getEquivalence().getDifferences());
+					}
+				}
+
+				// special case - check for interlocked diffs and return them as result
+				return filterInterlockedOneToOneDiffs(candidates, referenceChange, mergeRightToLeft);
+			}
+		}
+
+		return Collections.emptyList();
+	}
+
+	/**
+	 * Checks for interlocked differences from a list of candidates. See
+	 * {@link #findInterlockedOneToOneDiffs(ReferenceChange, boolean)} for more information.
+	 *
+	 * @param diffsToCheck
+	 *            The differences to be checked for indirect equivalence.
+	 * @param referenceChange
+	 *            The diff to which the determined differences are indirectly equivalent.
+	 * @param mergeRightToLeft
+	 *            The direction in which we're considering a merge.
+	 * @return All differences (and their equivalents) from {@code diffsToCheck} which are indirectly
+	 *         equivalent to {@code referenceChange}. Does not modify the given collection.
+	 */
+	private Collection<? extends Diff> filterInterlockedOneToOneDiffs(
+			Collection<? extends Diff> diffsToCheck, ReferenceChange referenceChange, boolean mergeRightToLeft) {
+
+		final Object sourceContainer = ComparisonUtil.getExpectedSide(referenceChange.getMatch(),
+				referenceChange.getSource(), mergeRightToLeft);
+		final EReference sourceReference = referenceChange.getReference();
+
+		final Set<Diff> result = new LinkedHashSet<Diff>();
+
+		for (Diff candidate : diffsToCheck) {
+			if (candidate instanceof ReferenceChange) {
+				// check if container & reference(-opposite) are the same as from the given referenceChange
+				final Object candidateContainer = ComparisonUtil.getExpectedSide(candidate.getMatch(),
+						candidate.getSource(), mergeRightToLeft);
+				final EReference candidateReference = ((ReferenceChange)candidate).getReference();
+
+				if (sourceContainer == candidateContainer
+						&& sourceReference.getEOpposite() == candidateReference) {
+					result.add(candidate);
+					if (candidate.getEquivalence() != null) {
+						result.addAll(candidate.getEquivalence().getDifferences());
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -444,7 +552,7 @@ public abstract class AbstractMerger implements IMerger2 {
 
 	/**
 	 * Specifies whether the given reference changes, {@code diff} and {@code equivalent}, affect references
-	 * constituting an one-to-one relationship and whether {@code equivalent} is a set in the current merging.
+	 * constituting a one-to-one relationship and whether {@code equivalent} is a set in the current merging.
 	 *
 	 * @param diff
 	 *            The difference to check.
@@ -461,6 +569,22 @@ public abstract class AbstractMerger implements IMerger2 {
 			boolean mergeRightToLeft) {
 		return !diff.getReference().isMany() && !equivalent.getReference().isMany()
 				&& isSet(equivalent, mergeRightToLeft);
+	}
+
+	/**
+	 * Checks whether the given {@code diff} is of kind {@link DifferenceKind#CHANGE} and its reference is
+	 * one-to-one.
+	 * 
+	 * @param diff
+	 *            The ReferenceChange to check.
+	 * @return {@code true} if the given {@code diff} is of kind {@link DifferenceKind#CHANGE} and describes a
+	 *         one-to-one reference, {@code false} otherwise.
+	 */
+	private boolean isOneToOneAndChange(ReferenceChange diff) {
+		final boolean oppositeReferenceExists = diff.getReference() != null
+				&& diff.getReference().getEOpposite() != null;
+		return diff.getKind() == DifferenceKind.CHANGE && oppositeReferenceExists
+				&& !diff.getReference().isMany() && !diff.getReference().getEOpposite().isMany();
 	}
 
 	/**
