@@ -34,6 +34,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -413,6 +414,9 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 		getURIResourceMap().put(uri, loaded);
 		try {
 			loadFromStorage(loaded, storage);
+			final String fullPath = storage.getFullPath().toString();
+			boolean isLocal = storage instanceof IFile;
+			loaded.eAdapters().add(new StoragePathAdapter(fullPath, isLocal));
 			monitor.worked(1);
 		} catch (IOException e) {
 			logLoadingFromStorageFailed(loaded, storage, e);

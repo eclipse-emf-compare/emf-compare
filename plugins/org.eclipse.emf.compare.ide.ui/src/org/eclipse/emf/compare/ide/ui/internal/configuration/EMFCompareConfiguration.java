@@ -15,8 +15,12 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.ICompareInputLabelProvider;
+import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
@@ -40,6 +44,7 @@ import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGro
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -70,6 +75,8 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	private final PropertyChangeListener propertyChangeListener;
 
 	private final CompareConfiguration compareConfiguration;
+
+	private final Map<Class<? extends ICompareInput>, ICompareInputLabelProvider> labelProviders = new HashMap<Class<? extends ICompareInput>, ICompareInputLabelProvider>();
 
 	public EMFCompareConfiguration(CompareConfiguration compareConfiguration) {
 		this.compareConfiguration = compareConfiguration;
@@ -293,4 +300,87 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		setProperty(RESOURCES_GRAPH, graph);
 	}
 
+	public void setLabelProvider(Class<? extends ICompareInput> inputType,
+			ICompareInputLabelProvider labelProvider) {
+		labelProviders.put(inputType, labelProvider);
+	}
+
+	@Override
+	public String getLeftLabel(Object element) {
+		final ICompareInputLabelProvider labelProvider = getLabelProviderForType(element);
+		if (labelProvider != null) {
+			final String leftLabel = labelProvider.getLeftLabel(element);
+			if (leftLabel != null) {
+				return leftLabel;
+			}
+		}
+		return super.getLeftLabel(element);
+	}
+
+	@Override
+	public Image getLeftImage(Object element) {
+		final ICompareInputLabelProvider labelProvider = getLabelProviderForType(element);
+		if (labelProvider != null) {
+			final Image leftImage = labelProvider.getLeftImage(element);
+			if (leftImage != null) {
+				return leftImage;
+			}
+		}
+		return super.getLeftImage(element);
+	}
+
+	@Override
+	public String getRightLabel(Object element) {
+		final ICompareInputLabelProvider labelProvider = getLabelProviderForType(element);
+		if (labelProvider != null) {
+			final String rightLabel = labelProvider.getRightLabel(element);
+			if (rightLabel != null) {
+				return rightLabel;
+			}
+		}
+		return super.getRightLabel(element);
+	}
+
+	@Override
+	public Image getRightImage(Object element) {
+		final ICompareInputLabelProvider labelProvider = getLabelProviderForType(element);
+		if (labelProvider != null) {
+			final Image rightImage = labelProvider.getRightImage(element);
+			if (rightImage != null) {
+				return rightImage;
+			}
+		}
+		return super.getRightImage(element);
+	}
+
+	@Override
+	public String getAncestorLabel(Object element) {
+		final ICompareInputLabelProvider labelProvider = getLabelProviderForType(element);
+		if (labelProvider != null) {
+			final String ancestorLabel = labelProvider.getAncestorLabel(element);
+			if (ancestorLabel != null) {
+				return ancestorLabel;
+			}
+		}
+		return super.getAncestorLabel(element);
+	}
+
+	@Override
+	public Image getAncestorImage(Object element) {
+		final ICompareInputLabelProvider labelProvider = getLabelProviderForType(element);
+		if (labelProvider != null) {
+			final Image ancestorImage = labelProvider.getAncestorImage(element);
+			if (ancestorImage != null) {
+				return ancestorImage;
+			}
+		}
+		return super.getLeftImage(element);
+	}
+
+	private ICompareInputLabelProvider getLabelProviderForType(Object element) {
+		if (element instanceof ICompareInput) {
+			return labelProviders.get(((ICompareInput)element).getClass());
+		}
+		return null;
+	}
 }

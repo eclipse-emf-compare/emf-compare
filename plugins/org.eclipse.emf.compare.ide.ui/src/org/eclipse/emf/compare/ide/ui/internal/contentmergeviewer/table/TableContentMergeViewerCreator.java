@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,8 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IViewerCreator;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeNodeCompareInput;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeNodeCompareInputLabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
@@ -24,18 +26,15 @@ import org.eclipse.swt.widgets.Composite;
 public class TableContentMergeViewerCreator implements IViewerCreator {
 
 	/**
-	 * ID of the contribution to the org.eclipse.compare.contentMergeViewers extension point.
-	 */
-	public static final String EOBJECT_CONTENT_MERGE_VIEWER_ID = "org.eclipse.emf.compare.ide.ui.internal.EObjectContentListMergeViewer"; //$NON-NLS-1$
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.compare.IViewerCreator#createViewer(org.eclipse.swt.widgets.Composite,
 	 *      org.eclipse.compare.CompareConfiguration)
 	 */
 	public Viewer createViewer(Composite parent, CompareConfiguration config) {
-		return new TableContentMergeViewer(parent, new EMFCompareConfiguration(config));
+		final EMFCompareConfiguration emfConfig = new EMFCompareConfiguration(config);
+		emfConfig.setLabelProvider(TreeNodeCompareInput.class, new TreeNodeCompareInputLabelProvider());
+		return new TableContentMergeViewer(parent, emfConfig);
 	}
 
 }

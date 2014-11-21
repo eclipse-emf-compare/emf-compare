@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,8 @@ import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.CompareInputAdapter;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.ForwardingCompareInput;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeNodeCompareInput;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeNodeCompareInputLabelProvider;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -44,7 +46,9 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 	 *      org.eclipse.compare.CompareConfiguration)
 	 */
 	public Viewer createViewer(Composite parent, CompareConfiguration config) {
-		return new TextFallbackMergeViewer(parent, new EMFCompareConfiguration(config));
+		final EMFCompareConfiguration emfConfig = new EMFCompareConfiguration(config);
+		emfConfig.setLabelProvider(TreeNodeCompareInput.class, new TreeNodeCompareInputLabelProvider());
+		return new TextFallbackMergeViewer(parent, emfConfig);
 	}
 
 	private static ICompareInput getAdaptedCompareInput(CompareInputAdapter input) {
@@ -78,7 +82,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 	 */
 	private static final class TextFallbackMergeViewer extends TextMergeViewer {
 		private Object originalInput;
-	
+
 		/**
 		 * @param parent
 		 * @param configuration
@@ -87,7 +91,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 			super(parent, configuration);
 			setContentProvider(new TextFallbackMergeViewerContentProvider(configuration));
 		}
-	
+
 		@Override
 		public void setInput(Object input) {
 			originalInput = input;
@@ -99,7 +103,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 				super.setInput(input);
 			}
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -109,7 +113,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 		public Object getInput() {
 			return originalInput;
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -120,7 +124,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 			super.handleDispose(event);
 			originalInput = null;
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -142,7 +146,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 		private TextFallbackMergeViewerContentProvider(CompareConfiguration cc) {
 			super(cc);
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -163,7 +167,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 			}
 			return leftEditable;
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -184,7 +188,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 			}
 			return rightEditable;
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -204,7 +208,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 				super.saveLeftContent(element, bytes);
 			}
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -224,7 +228,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 				super.saveRightContent(element, bytes);
 			}
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -245,7 +249,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 			}
 			return ancestorLabel;
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -266,7 +270,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 			}
 			return ancestorImage;
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -287,7 +291,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 			}
 			return ancestorContent;
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -308,7 +312,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 			}
 			return leftLabel;
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -329,7 +333,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 			}
 			return leftImage;
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -350,7 +354,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 			}
 			return leftContent;
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -371,7 +375,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 			}
 			return rightLabel;
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -392,7 +396,7 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 			}
 			return rightImage;
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
