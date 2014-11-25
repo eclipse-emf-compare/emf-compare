@@ -260,7 +260,7 @@ public final class EMFComparePredicates {
 	/**
 	 * This predicate can be used to check whether a given Diff is a {@link ReferenceChange} representing the
 	 * eOpposite of the {@code diff} argument.
-	 *
+	 * 
 	 * @param diff
 	 *            The {@link ReferenceChange} against which is checked if an eOpposite relation exists.
 	 * @return The created predicate.
@@ -278,7 +278,7 @@ public final class EMFComparePredicates {
 	/**
 	 * This predicate can be used to check whether a given Diff is a {@link ReferenceChange} with the same
 	 * reference as the {@code diff} argument.
-	 *
+	 * 
 	 * @param diff
 	 *            The {@link ReferenceChange} against which is checked whether it has the same reference.
 	 * @return The created predicate.

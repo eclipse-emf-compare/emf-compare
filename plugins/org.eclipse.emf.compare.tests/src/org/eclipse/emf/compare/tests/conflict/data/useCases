@@ -44,6 +44,12 @@ h - Changing container of Notifier to a deleted Notifier.
 	h1 - Within single-valued containment reference (refinement of case 1).
 	h2 - Within multi-valued containment reference (refinement of case 3).
 
+k1 - Real Add Conflict, containing pseudo conflict (must be detected as real conflict).
+k2 - Real Add Conflict, containing pseudo conflicts (must be detected as real conflicts).
+k3 - Real Add Conflict, containing pseudo conflict, containing pseudo conflict (must be detected as real conflict).
+k4 - Real Conflict (not add), containing pseudo conflict (must not be detected as real conflict).
+	(see https://bugs.eclipse.org/bugs/show_bug.cgi?id=442897)
+
 Ecore specific?
 
 - Setting two different attributes as "idAttribute" in left and right.

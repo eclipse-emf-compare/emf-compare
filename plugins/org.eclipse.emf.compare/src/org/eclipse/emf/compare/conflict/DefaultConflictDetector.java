@@ -12,8 +12,12 @@
 package org.eclipse.emf.compare.conflict;
 
 import static com.google.common.base.Predicates.and;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.isEmpty;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isFeatureMapContainment;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
@@ -69,6 +73,27 @@ import org.eclipse.emf.ecore.util.FeatureMap;
 public class DefaultConflictDetector implements IConflictDetector {
 
 	/**
+	 * This can be used to check whether a given conflict involves add containment reference changes.
+	 */
+	private static final Predicate<? super Conflict> IS_REAL_CONTAINMENT_ADD_CONFLICT = new Predicate<Conflict>() {
+		public boolean apply(Conflict input) {
+			boolean isRealAddContainmentConflict = false;
+			if (input != null && input.getKind() == ConflictKind.REAL) {
+				Iterable<Diff> containmentRefs = filter(input.getDifferences(), CONTAINMENT_REFERENCE_CHANGE);
+				if (!isEmpty(containmentRefs)) {
+					for (Diff diff : containmentRefs) {
+						if (diff.getKind() != DifferenceKind.ADD) {
+							return false;
+						}
+					}
+					isRealAddContainmentConflict = true;
+				}
+			}
+			return isRealAddContainmentConflict;
+		}
+	};
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.conflict.IConflictDetector#detect(org.eclipse.emf.compare.Comparison,
@@ -83,6 +108,41 @@ public class DefaultConflictDetector implements IConflictDetector {
 
 			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
 			checkConflict(comparison, diff, Iterables.filter(differences, candidateFilter));
+		}
+
+		handlePseudoUnderRealAdd(comparison);
+	}
+
+	/**
+	 * If a real add conflict contains pseudo conflicts, these pseudo conflicts must be changed to real
+	 * conflicts.
+	 * 
+	 * @param comparison
+	 *            The originating comparison of those diffs.
+	 */
+	private void handlePseudoUnderRealAdd(Comparison comparison) {
+		for (Conflict realContainmentAdd : filter(comparison.getConflicts(), IS_REAL_CONTAINMENT_ADD_CONFLICT)) {
+			changeKindOfPseudoConflictsUnder(realContainmentAdd);
+		}
+	}
+
+	/**
+	 * Change all pseudo conflicts under the given real conflict to real conflicts.
+	 * 
+	 * @param conflict
+	 *            the given conflict.
+	 */
+	private void changeKindOfPseudoConflictsUnder(Conflict conflict) {
+		for (Diff diff : conflict.getDifferences()) {
+			final Match realConflictMatch = diff.getMatch();
+			for (Match subMatch : realConflictMatch.getSubmatches()) {
+				for (Diff conflictDiffUnder : filter(subMatch.getDifferences(),
+						hasConflict(ConflictKind.PSEUDO))) {
+					Conflict conflictUnder = conflictDiffUnder.getConflict();
+					conflictUnder.setKind(ConflictKind.REAL);
+					changeKindOfPseudoConflictsUnder(conflictUnder);
+				}
+			}
 		}
 	}
 

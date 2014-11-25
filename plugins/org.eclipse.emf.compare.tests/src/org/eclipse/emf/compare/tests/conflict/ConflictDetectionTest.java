@@ -2049,6 +2049,86 @@ public class ConflictDetectionTest {
 	}
 
 	@Test
+	public void testK1UseCase() throws IOException {
+		final Resource left = input.getK1Left();
+		final Resource origin = input.getK1Origin();
+		final Resource right = input.getK1Right();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		assertEquals(6, differences.size());
+		assertEquals(2, conflicts.size());
+
+		for (Conflict conflict : conflicts) {
+			assertSame(ConflictKind.REAL, conflict.getKind());
+		}
+	}
+
+	@Test
+	public void testK2UseCase() throws IOException {
+		final Resource left = input.getK2Left();
+		final Resource origin = input.getK2Origin();
+		final Resource right = input.getK2Right();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		assertEquals(8, differences.size());
+		assertEquals(3, conflicts.size());
+
+		for (Conflict conflict : conflicts) {
+			assertSame(ConflictKind.REAL, conflict.getKind());
+		}
+	}
+
+	@Test
+	public void testK3UseCase() throws IOException {
+		final Resource left = input.getK3Left();
+		final Resource origin = input.getK3Origin();
+		final Resource right = input.getK3Right();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		assertEquals(6, differences.size());
+		assertEquals(3, conflicts.size());
+
+		for (Conflict conflict : conflicts) {
+			assertSame(ConflictKind.REAL, conflict.getKind());
+		}
+	}
+
+	@Test
+	public void testK4UseCase() throws IOException {
+		final Resource left = input.getK4Left();
+		final Resource origin = input.getK4Origin();
+		final Resource right = input.getK4Right();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		assertEquals(4, differences.size());
+		assertEquals(2, conflicts.size());
+
+		assertEquals(ConflictKind.PSEUDO, conflicts.get(0).getKind());
+		assertEquals(ConflictKind.REAL, conflicts.get(1).getKind());
+
+	}
+
+	@Test
 	public void testComplexUseCase() throws IOException {
 		final Resource left = input.getComplexLeft();
 		final Resource origin = input.getComplexOrigin();

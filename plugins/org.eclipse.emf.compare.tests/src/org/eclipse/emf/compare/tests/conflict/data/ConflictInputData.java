@@ -598,6 +598,54 @@ public class ConflictInputData extends AbstractInputData {
 		return loadFromClassLoader("j/conflict_j_right.nodes");
 	}
 
+	public Resource getK1Left() throws IOException {
+		return loadFromClassLoader("k1/conflict_k1_left.nodes");
+	}
+
+	public Resource getK1Origin() throws IOException {
+		return loadFromClassLoader("k1/conflict_k1_origin.nodes");
+	}
+
+	public Resource getK1Right() throws IOException {
+		return loadFromClassLoader("k1/conflict_k1_right.nodes");
+	}
+
+	public Resource getK2Left() throws IOException {
+		return loadFromClassLoader("k2/conflict_k2_left.nodes");
+	}
+
+	public Resource getK2Origin() throws IOException {
+		return loadFromClassLoader("k2/conflict_k2_origin.nodes");
+	}
+
+	public Resource getK2Right() throws IOException {
+		return loadFromClassLoader("k2/conflict_k2_right.nodes");
+	}
+
+	public Resource getK3Left() throws IOException {
+		return loadFromClassLoader("k3/conflict_k3_left.nodes");
+	}
+
+	public Resource getK3Origin() throws IOException {
+		return loadFromClassLoader("k3/conflict_k3_origin.nodes");
+	}
+
+	public Resource getK3Right() throws IOException {
+		return loadFromClassLoader("k3/conflict_k3_right.nodes");
+	}
+
+	public Resource getK4Left() throws IOException {
+		return loadFromClassLoader("k4/conflict_k4_left.nodes");
+	}
+
+	public Resource getK4Origin() throws IOException {
+		return loadFromClassLoader("k4/conflict_k4_origin.nodes");
+	}
+
+	public Resource getK4Right() throws IOException {
+		return loadFromClassLoader("k4/conflict_k4_right.nodes");
+	}
+
 	public Resource getComplexLeft() throws IOException {
 		return loadFromClassLoader("complex/conflict_complex_left.nodes");
 	}

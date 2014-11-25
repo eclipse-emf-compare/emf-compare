@@ -247,6 +247,18 @@ public class IndividualDiffInputData extends AbstractInputData {
 		return loadFromClassLoader("outofscope/referencemultimove/right.nodes");
 	}
 
+	public Resource getLeftAddRightAddLeftConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftadd_rightadd/left.nodes");
+	}
+
+	public Resource getLeftAddRightAddOriginConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftadd_rightadd/origin.nodes");
+	}
+
+	public Resource getLeftAddRightAddRightConflictScope() throws IOException {
+		return loadFromClassLoader("conflictscope/leftadd_rightadd/right.nodes");
+	}
+
 	public Resource getLeftAddRightDeleteLeftConflictScope() throws IOException {
 		return loadFromClassLoader("conflictscope/leftadd_rightdelete/left.ecore");
 	}
