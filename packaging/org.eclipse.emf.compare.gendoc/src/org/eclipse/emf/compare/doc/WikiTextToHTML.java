@@ -117,6 +117,8 @@ public class WikiTextToHTML {
 
 	private String projectId;
 	
+	private String anchorId;
+	
 	public static void main(String[] args) throws Exception {
 		WikiTextToHTML wikiTextToHTML = new WikiTextToHTML();
 		wikiTextToHTML.run(args);
@@ -153,6 +155,12 @@ public class WikiTextToHTML {
 			System.exit(1);
 		}
 		
+		if (!genEclipseHelp && anchorId != null && !anchorId.trim().equals("")) {
+			System.err.println("Error: -anchorid can be used only with -eclipsehelp");
+			usage();
+			System.exit(1);
+		}
+		
 		markupLanguage = new CustomMediaWikiLanguage();
 		markupLanguage.setInternalLinkPattern("{0}");
 
@@ -182,7 +190,7 @@ public class WikiTextToHTML {
 				System.out.println("Deleting "+ resolvedTargetHelpFolder + " before regenerating Eclipse help");
 				removeRecursiveContent(resolvedTargetHelpFolder);
 			}
-			primaryTOCWriter.startPrimaryTOC(targetHelpFolder.resolve("index.html"), projectName+" Documentation");
+			primaryTOCWriter.startPrimaryTOC(targetHelpFolder.resolve("index.html"), projectName+" Documentation", anchorId);
 		}
 		
 		final PathMatcher mediawikiPattern = DEFAULT_FS.getPathMatcher("glob:**/*.mediawiki");
@@ -254,7 +262,7 @@ public class WikiTextToHTML {
 	 * 
 	 */
 	private void usage() {
-		System.out.println("Usage: wikiTextToHTML -projectname \"Name of the Project\" -projectid org.eclipse.emf.compare.doc -location path -version version [-eclipsehelp path] [-website path]");
+		System.out.println("Usage: wikiTextToHTML -projectname \"Name of the Project\" -projectid org.eclipse.emf.compare.doc -location path -version version [-eclipsehelp path] [-website path] [-anchorId path/id]");
 	}
 
 	private void processCommandLineArgs(String[] args) throws Exception {
@@ -293,6 +301,10 @@ public class WikiTextToHTML {
 			
 			if (option.equalsIgnoreCase("-projectid")) { //$NON-NLS-1$
 				projectId = arg.trim();
+			}
+			
+			if (option.equalsIgnoreCase("-anchorid")) { //$NON-NLS-1$
+				anchorId = arg.trim();
 			}
 		}
 		

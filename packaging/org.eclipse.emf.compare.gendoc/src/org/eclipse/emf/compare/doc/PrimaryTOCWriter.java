@@ -31,7 +31,7 @@ public class PrimaryTOCWriter {
 	private XmlStreamWriter pluginWriter;
 	private Path baseDir;
 
-	void startPrimaryTOC(Path indexHTMLFile, String title) {
+	void startPrimaryTOC(Path indexHTMLFile, String title, String anchorId) {
 		baseDir = indexHTMLFile.getParent();
 		primaryTOCOut = new StringWriter(8096);
 		primaryTOCWriter = createXmlStreamWriter(primaryTOCOut);
@@ -42,8 +42,12 @@ public class PrimaryTOCWriter {
 		primaryTOCWriter.writeStartDocument("UTF-8", "1.0");
 		primaryTOCWriter.writeStartElement("toc"); 
 		primaryTOCWriter.writeAttribute("topic", indexHTMLFile.toString()); 
-		primaryTOCWriter.writeAttribute("label", title); 
-
+		primaryTOCWriter.writeAttribute("label", title);
+		if (anchorId != null && !"".equals(anchorId.trim())) {
+			// link the primary TOC to the given anchor id.
+			primaryTOCWriter.writeAttribute("link_to", anchorId); 
+		}
+			
 		pluginWriter.writeStartDocument("UTF-8", "1.0");
 		pluginWriter.writeLiteral("\n<?eclipse version=\"3.2\"?>\n");
 		pluginWriter.writeStartElement("plugin");
