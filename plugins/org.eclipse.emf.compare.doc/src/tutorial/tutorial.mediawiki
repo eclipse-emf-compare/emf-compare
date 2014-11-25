@@ -1,6 +1,6 @@
 = EMF Compare tutorial =
 
-The aim of this tutorial is to guide you through the basic mechanisms of EMF Compare. The first part of this tutorial will explain you how to set up your environment. The second will help you to have a better understanding of the main differences that EMF Compare detects. The third part will explain you how EGit can interoperate with EMF Compare to compare model from a git repository. 
+The aim of this tutorial is to guide you through the basic mechanisms of EMF Compare. The first part of this tutorial will explain you how to set up your environment. The second will help you understand the main differences that EMF Compare detects. The third part will explain you how EGit can interoperate with EMF Compare to compare model from a git repository. 
 
 == Installation == 
 EMF Compare is part of the Eclipse release train. You will find all you need in the eclipse release update of your platform. You can also find newer version on [[http://www.eclipse.org/emf/compare/ | EMF Compare web site]] in the download section.
@@ -88,13 +88,13 @@ If you are using the basic EXTLibrary plugins (imported from examples) this step
 ==== Context ====
 
 If you have correctly followed the previous steps you should have the following environment:
-* The custom ExtLibray meta-model installed in your runtime
+* The custom ExtLibrary meta-model installed in your runtime
 * Associated the .extlibrary files with the EMF Compare content type
 * Using EMF Compare default preferences
 
 ==== Compare with history (2-way comparison) ====
 
-Now that everything is set up, we are going to go through all major differences that EMF Compare detects and handles. To do so we are going to create step by step a library model. Each time that you will modify your library we are going to compare it with a previous version to see how EMF Compare handles each difference.
+Now that everything is set up, we are going to go through all the major differences EMF Compare detects and handles. To do so we will create a library model step by step. Each time that we will modify the library we will compare it with a previous version to see how EMF Compare handles each difference.
 
 ===== Create a library model =====
 
@@ -136,7 +136,7 @@ The history view is now open.
 
 [[Image:../images/Local_History_View.png]]
 
-This view will display each state of the file that Eclipse has saved for you. Each time you will save your model a new entry will appear. The item written in bold is the current version of your file. In the first part of this tutorial you will have to compare the current version of your model with it's previous version.
+This view will display each state of the file that Eclipse has saved for you. Each time you will save your model a new entry will appear. The item written in bold is the current version of your file. In the first part of this tutorial you will have to compare the current version of your model with its previous version.
 
 To do so, double click on the entry just below the bold entry.
 
@@ -150,7 +150,7 @@ Let's have a look at the user interface. The tool bar look like this:
 
 [[Image:../images/EMF_Compare_Tuto_Accept_Reject_Toolbar.png]]
 
-This toolbar appears when you are in accept/reject mode. This mode is activated when at least one of the inputs is not writeable. In our example the current version of your file can be modified whereas the previous version of it can not (since it is provided by the local history). In this mode you can accept or reject a difference. This is obvious, but the only resource that is going to be modified is the current version of your model.
+This toolbar appears when you are in accept/reject mode. This mode is activated when at least one of the inputs is not writable. In our example the current version of your file can be modified whereas the previous version of it cannot (since it is provided by the local history). In this mode you can accept or reject a difference. This is obvious, but the only resource that is going to be modified is the current version of your model.
 
 The top of the editor is filled with the "Structure Merge viewer". In it, you will find a structured representation of all differences that EMF Compare has found.
 
@@ -240,7 +240,7 @@ Accept the difference and you obviously see (see [[#Accept a difference | Accept
 
 [[Image:../images/EMF_Compare_Tuto_Book_Category_Accepted.png]]
 
-Reject the difference to set the "Category" feature to it's default value (see [[#Reject a difference]]).
+Reject the difference to set the "Category" feature to its default value (see [[#Reject a difference]]).
 
 [[Image:../images/EMF_Compare_Tuto_Book_Category_Rejected.png]]
 
@@ -356,7 +356,7 @@ This means that each time you add/remove a book to a borrower EMF will automatic
 
 Now you may wonder what happens when you accept one of the differences? EMF Compare will give you a hint on this matter. First notice the consequences preview button [[Image:../images/EMF_Compare_Tuto_Consequences_Preview_Button.png]]. It can either have its icon set to [[Image:../images/accept.gif]] for "Accept preview mode" or [[Image:../images/reject.gif]] for "Reject preview mode".
 
-When the "Accept preview mode" is activated ([[Image:../images/accept.gif]]), EMF Compare will help you to understand the consequences of accepting the current selected difference. Let's try it.
+When the "Accept preview mode" is activated ([[Image:../images/accept.gif]]), EMF Compare will help you understand the consequences of accepting the current selected difference. Let's try it.
 * Activate the "Accept preview mode" ([[Image:../images/accept.gif]]).
 * Select "Borrower Graham  <nowiki>[borrowers add]</nowiki>" difference.
 [[Image:../images/EMF_Compare_Tuto_Graham_Borrows_Book_Comparison.png]]
@@ -381,7 +381,7 @@ Both differences have been rejected.
 
 ===== Create a new library branch =====
 
-Now that's your library is growing, let's create a new branch in your library. This new library will be affiliated to the main entity but will have an independent life.
+Now that your library is growing, let's create a new branch in your library. This new library will be affiliated to the main entity but will have an independent life.
 * Close EMF Compare Editor (without saving).
 * Open the model editor.
 * Create a new library under your main library.
@@ -604,7 +604,7 @@ Both scenario 1 and 2 used the master branch as starting point. This is why it h
 * Let's have a look at the differences.
 [[Image:../images/EMF_Compare_Tuto_Scenario2_Conflict_Differences.png]]
 
-You can notice a new type of difference: conflicts. Indeed in Scenario1 we set the number of pages to 374 whereas we set it to 375 in Scenario2. EMF Compare is telling us that it can not be both. If you select one of the difference you will see that the other is highlighted in red. This means that if you merge this difference EMF Compare will not be able to merge the other one.
+You can notice a new type of difference: conflicts. Indeed in Scenario1 we set the number of pages to 374 whereas we set it to 375 in Scenario2. EMF Compare is telling us that it cannot be both. If you select one of the difference you will see that the other is highlighted in red. This means that if you merge this difference EMF Compare will not be able to merge the other one.
 
 We are now going to see what will be the impact of accepting or rejecting each difference.
 * Select the difference named "375 <nowiki>[page changed]</nowiki>".
@@ -612,7 +612,7 @@ We are now going to see what will be the impact of accepting or rejecting each d
 
 [[Image:../images/EMF_Compare_Tuto_Scenario2_Accept_375.png]]
 
-In this case EMF Compare has accepted the selected difference and rejected the other one since they can not be accepted simultaneously. Let's try to reject this difference.
+In this case EMF Compare has accepted the selected difference and rejected the other one since they cannot be accepted simultaneously. Let's try to reject this difference.
 * Undo the previous action (Ctrl+z).
 * Switch to "Reject preview mode" ([[Image:../images/reject.gif]]).
 [[Image:../images/EMF_Compare_Tuto_Scenario2_Reject_Preview_Mode.png]]
@@ -675,14 +675,14 @@ At this stage of the tutorial your Git repository should look like this.
 *: [[Image:../images/EMF_Compare_Tuto_Scenario5_Comparison.png]]
 
 If you select each differences you will see that:
-* "Book Prelude to foundation<nowiki>[stock delete]</nowiki>" can not be merged with the two other differences.
+* "Book Prelude to foundation<nowiki>[stock delete]</nowiki>" cannot be merged with the two other differences.
 *: [[Image:../images/EMF_Compare_Tuto_Scenario5_Diff_Dependencies.png]]
 ** Accept the difference to get:
 **: [[Image:../images/EMF_Compare_Tuto_Scenario5_Deletion_Accepted.png]]
 ** Reject the difference to get:
 **: [[Image:../images/EMF_Compare_Tuto_Scenario5_Deletion_Rejected.png]]
 **: Rejecting it does not automatically accept the other differences. Indeed you can prevent the deletion of the book but still want to choose to accept or reject the other difference.
-* "Borrower Graham<nowiki>[borrowers add]</nowiki>" and "Book Prelude to foundation<nowiki>[borrowed add]</nowiki>" are equivalent and they can not be merged with the third difference.
+* "Borrower Graham<nowiki>[borrowers add]</nowiki>" and "Book Prelude to foundation<nowiki>[borrowed add]</nowiki>" are equivalent and they cannot be merged with the third difference.
 *: [[Image:../images/EMF_Compare_Tuto_Scenario5_Diff_Dependencies2.png]]
 ** Accept one of them to get:
 **: [[Image:../images/EMF_Compare_Tuto_Scenario5_Set_Ref_Accepted.png]]
@@ -713,5 +713,5 @@ Eclipse asks you to switch to the "Team Synchronize" perspective, accept.
 
 '''Blocked https://bugs.eclipse.org/bugs/show_bug.cgi?id=435081'''
 
-''TODO when included in repository - Rebase two branch - Rebase your work on the work of your colleague''
-''TODO when included in repository - Merge two branch - Merge the work with your colleague''
+''TODO when included in repository - Rebase two branches - Rebase your work on the work of your colleague''
+''TODO when included in repository - Merge two branches - Merge your work with that of your colleague''
