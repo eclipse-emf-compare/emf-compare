@@ -271,3 +271,14 @@ Dispay help for this command.
 <span style="background:#dcdcdc"> <nowiki>[</nowiki>--debug (or -d)<nowiki>]</nowiki> </span>
 
 Give the opportinity to connect a remote debugger to the logical cherry-pick application (using port 8123).
+
+=== Known issues ===
+
+==== Cherry-pick empty commit ====
+
+If you try to cherry-pick a commit that introduces changes that already belong to the worktree, the operation may stop on a dirty state. For example, if you have cherry-picked a commit that belongs to the ancestor tree of HEAD. The characteristics of this dirty state are:
+# Wrong position of HEAD.
+# Some modified files in the working tree (use ''git status'' command).
+
+This problem comes from a EGit/JGit problem (see [[https://bugs.eclipse.org/bugs/show_bug.cgi?id=451159 | bug 451159]]).
+A workaround would be to find the previous position of HEAD using the ''git reflog'' command. Then, use the ''git reset --hard {$CommitId}''. This will reset HEAD to its previous position (''Use with caution'').
