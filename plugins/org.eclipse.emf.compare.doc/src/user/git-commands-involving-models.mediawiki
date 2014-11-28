@@ -166,3 +166,108 @@ git logicalmergetool ''<setup>''
 </span>
 
 Run logical merge conflict resolution tools to resolve logical merge conflicts. In our case, it will launch an Eclipse platform with all the tools needed to resolve the conflict(s) induced by the merge. To do so, in the Eclipse environment, select the conflicting file(s) and open the contextual menu ''Team > Merge Tool''. Once the conflict has been resolved, add the file to the index (staged area). And then commit.
+
+== Git cherry-pick with models : git logicalcherry-pick ==
+
+The ''logicalcherry-pick'' command is the logical version of the git cherry pick command. To see a full description of the git cherry-pick command, please visit [http://git-scm.com/docs/git-cherry-pick].
+
+The command is specified as below:
+
+<span style="background:#dcdcdc">
+git logicalcherry-pick ''<setup>'' ''<commit>...''
+</span>
+
+Assume the following history exists and the current branch is ''master'':<code><pre>
+	  A---B---C topic
+	 /
+    D---E---F---G master,HEAD</pre></code>
+
+Then <code>git logicalcherry-pick mySetupModel.setup A B C</code> will pick A,B and C commits on top of the current HEAD (in the order defined by the command).<code><pre>
+	  A---B---C topic
+	 /
+    D---E---F---G---A---B---C master,HEAD</pre></code>
+    
+In all cases, ''<commit>''  can refers to a branch name or a commit id.
+
+=== Conflicts ===
+==== Resolve a conflict ====
+
+If cherry-picking a commit introduces a conflict, you will have to choose how to handle it. The first option is to resolve it by using:
+
+<span style="background:#dcdcdc">
+git logicalmergetool ''<setup>''
+</span>
+
+It opens an Eclipse platform in which you will be able to merge the differences using the merge tool (see [[#Git mergetool command with models : git logicalmergetool| Git mergetool command with models : git logicalmergetool]]). Once you have resolved all the conflicts, add the related file to the index and close your platform. To do so you can:
+* Use the contextual menu "Team > Add to Index" 
+
+:[[Image:../images/AddToIndexMenu.png]]
+
+* Drag and drop the files from the "Unstaged changes" area to the "Staged changes" area in the "Git Staging" view . 
+
+:[[Image:../images/StagedChanges.png]]
+
+By the way, you can notice in the top right corner there is an '''Abort''','''Skip Commit''' and '''Continue''' button. This simply means that there is a interactive rebase in progress. Indeed, in EGit, cherry-picking commits is equivalent to doing an interactive rebase with only pick actions. From now on, you can either choose to continue with in UI mode (that is to say using those buttons) or go back to command line tool by closing the Eclipse platform. This documentation only describes the mechanism of the command line tool.
+
+==== Continue ====
+Once you have resolved all the conflicts, please hit:
+
+<span style="background:#dcdcdc">
+git logicalcherry-pick ''<setup>'' ''<nowiki>[</nowiki>--continue<nowiki>]</nowiki>''
+</span>
+
+This command will continue an in going cherry-pick. Be careful you have to resolve all conflicts before using this command otherwise you might get the following message:
+<code><pre>fatal: Some files are in conflict:
+	project/file.ecore
+	project/file2.ecore
+hint: You must edit all merge conflicts and then
+hint: mark them as resolved using git add.</pre></code>
+
+There is a major diffference with the merge workflow. While cherry-picking you should not commit by yourself the files but only add them to the index. If you do, you might receive the following message when you use the ''--continue'' option.
+<code>
+<pre>
+No changes detected
+
+If there is nothing left to stage, chances are that something
+else already introduced the same changes; you might want to skip
+this patch using git logicalcherry-pick --quit
+</pre>
+</code>
+
+You can simply use the ''--quit'' option to continue your cherry-pick operation (see [[#Quit | Quit option]]).
+=== Abort ===
+
+A second solution while encountering a conflict is to abort the whole cherry-pick operation. To do so please hit:
+
+<span style="background:#dcdcdc">
+git logicalcherry-pick ''<setup>'' ''<nowiki>[</nowiki>--abort<nowiki>]</nowiki>''
+</span>
+
+It reverts all the commits already cherry-picked to retrieve the state before the cherry-pick command.
+
+=== Quit ===
+
+The last solution you have while facing a conflict would be to "skip" the current commit and go on with the remaining commits. To do so please hit:
+
+<span style="background:#dcdcdc">
+git logicalcherry-pick ''<setup>'' ''<nowiki>[</nowiki>--quit<nowiki>]</nowiki>''
+</span>
+
+The ''--quit'' option is quite different than the ''--quit'' option of the cherry-pick command in CGit. Instead of quitting an in going cherry-pick, it skips the current commit. Indeed, as mentionned above, in EGit a cherry-pick is replaced by a interactive rebase. This is why the ''--quit'' option is more like the ''--skip'' option of an interactive rebase.
+
+=== Others options available ===
+<span style="background:#dcdcdc"> <nowiki>[</nowiki>--git-dir ''<path>''<nowiki>]</nowiki>  </span>
+
+To specify the .git folder of a repository. This can be use to execute a command outside a git repository.
+
+<span style="background:#dcdcdc"> <nowiki>[</nowiki>--show-stack-trace<nowiki>]</nowiki> </span>
+
+Use this option to display java stack trace in console on error.
+
+<span style="background:#dcdcdc"> <nowiki>[</nowiki>--help (or -h)<nowiki>]</nowiki> </span>
+
+Dispay help for this command.
+
+<span style="background:#dcdcdc"> <nowiki>[</nowiki>--debug (or -d)<nowiki>]</nowiki> </span>
+
+Give the opportinity to connect a remote debugger to the logical cherry-pick application (using port 8123).
