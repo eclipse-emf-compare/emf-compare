@@ -272,6 +272,138 @@ Dispay help for this command.
 
 Give the opportinity to connect a remote debugger to the logical cherry-pick application (using port 8123).
 
+== Git rebase with models : git logicalrebase ==
+
+The ''logicalrebase'' command is the logical version of the git rebase command. To see a full description of the git rebase command, please visit [http://git-scm.com/docs/git-rebase].
+
+The command is specified as below:
+
+<span style="background:#dcdcdc">
+git logicalrebase ''<nowiki>[</nowiki><upstream><nowiki>]</nowiki>'' ''<nowiki>[</nowiki><branch><nowiki>]</nowiki>''
+</span>
+
+<span style="background:#dcdcdc"> <nowiki>[</nowiki><upstream><nowiki>]</nowiki></span>
+
+Optional parameter used to reference the target commit on top of which the branch ''<nowiki>[</nowiki><branch><nowiki>]</nowiki>'' will be rebased. It can either be the name of a branch, the id of a commit or the name of tag. If only one parameter is given, the software will consider it to be the upstream parameter and set ''<nowiki>[</nowiki><branch><nowiki>]</nowiki>'' to ''HEAD''.
+
+Assume the following history exists and the current branch is ''topic'':<code><pre>
+	       A---B---C topic, HEAD
+	      /
+    D---E---F---G master</pre></code>
+
+Then <code>git rebase mySetupModel.setup master</code> will rebase the branch ''topic'' on top of ''master''.<code><pre>
+
+    D---E---F---G---A---B---C master, topic, HEAD</pre></code>
+
+<span style="background:#dcdcdc"> <nowiki>[</nowiki><branch><nowiki>]</nowiki></span>
+
+Optional parameter used to reference what is going to be rebased. It can either be the name of a branch, the id of a commit or the name of tag.
+
+For example, assume the following history exists and the current branch is ''master'':<code><pre>
+	       A---B---C topic
+	      /
+    D---E---F---G master, HEAD</pre></code>
+
+Then <code>git rebase mySetupModel.setup master topic</code> will checkout the branch ''topic'' and the rebase it on top of ''master''.<code><pre>
+
+    D---E---F---G---A---B---C master, topic, HEAD</pre></code>
+    
+Hint to remember the parameter order:
+* <code>git rebase mySetupModel.setup master</code> = Rebase on ''master'' the HEAD
+* <code>git rebase mySetupModel.setup master topic</code> = Rebase on ''master'' the branch ''topic''
+* <code>git rebase mySetupModel.setup master topic</code> equivalent to <code>git rebase mySetupModel.setup master</code> if HEAD is on same commit than topic.
+
+If you do not specify any branch, <code>git rebase mySetupModel.setup</code> will try to rebase the current branch on top of its remote tracking branch (see branch.<name>.remote and branch.<name>.merge options in [[http://git-scm.com/docs/git-config | git-config]]).
+
+For example, assume the following history exists. The current branch is ''master'' which tracks the remote branch ''origin/master'':<code><pre>
+           A---B---C origin/master
+         /
+    D---E---F---G master, HEAD</pre></code>
+
+Then <code>git rebase mySetupModel.setup</code> will rebase ''master'' on top of ''origin/master''.<code><pre>
+
+    D---E---A---B---C---F---G master, origin/master, HEAD</pre></code>
+
+=== Conflicts ===
+==== Resolve a conflict ====
+
+If rebasing a commit introduces a conflict, you will have to choose how to handle it. The first option is to resolve it by using:
+
+<span style="background:#dcdcdc">
+git logicalmergetool ''<setup>''
+</span>
+
+It opens an Eclipse platform in which you will be able to merge the differences using the merge tool (see [[#Git mergetool command with models : git logicalmergetool| Git mergetool command with models : git logicalmergetool]]). Once you have resolved all the conflicts, add the related file to the index and close your platform. To do so you can:
+* Use the contextual menu "Team > Add to Index" 
+
+:[[Image:../images/AddToIndexMenu.png]]
+
+* Drag and drop the files from the "Unstaged changes" area to the "Staged changes" area in the "Git Staging" view . 
+
+:[[Image:../images/StagedChanges.png]]
+
+By the way, you can notice in the top right corner there is an '''Abort''','''Skip Commit''' and '''Continue''' button. This simply means that there is a interactive rebase in progress. Indeed, in EGit, even a normal rebase operation is equivalent to doing an interactive rebase with only pick actions. From now on, you can either choose to continue with in UI mode (that is to say using those buttons) or go back to command line tool by closing the Eclipse platform. This documentation only describes the mechanism of the command line tool.
+
+==== Continue ====
+Once you have resolved all the conflicts, please hit:
+
+<span style="background:#dcdcdc">
+git logicalrebase ''<setup>'' ''--continue''
+</span>
+
+This command will continue an in going rebase. Be careful you have to resolve all conflicts before using this command otherwise you might get the following message:
+<code><pre>fatal: Some files are in conflict:
+	project/file.ecore
+	project/file2.ecore
+hint: You must edit all merge conflicts and then
+hint: mark them as resolved using git add.</pre></code>
+
+There is a major diffference with the merge workflow. While rebasing you should not commit by yourself the files but only add them to the index. If you do, you might receive the following message when you use the ''--continue'' option.
+<code>
+<pre>
+No changes - did you forget to use 'git add'?
+
+If there is nothing left to stage, chances are that something else
+already introduced the same changes; you might want to skip this patch.
+
+When you have resolved this problem, run "git logicalrebase --continue".
+If you prefer to skip this patch, run "git logicalrebase --skip" instead.
+To check out the original branch and stop rebasing, run "git logicalrebase --abort".
+</pre>
+</code>
+
+You can simply use the ''--skip'' option to continue your rebase operation (see [[#Skip | Skip option]]).
+=== Abort ===
+
+A second solution while encountering a conflict is to abort the whole rebase operation. To do so please hit:
+
+<span style="background:#dcdcdc">
+git rebase ''<setup>'' ''<nowiki></nowiki>--abort<nowiki></nowiki>''
+</span>
+
+=== Skip ===
+
+The last solution you have while facing a conflict, would be to "skip" the current commit and go on with the remaining commits to rebase. To do so please hit:
+
+<span style="background:#dcdcdc">
+git rebase ''<setup>'' ''<nowiki></nowiki>--quit<nowiki></nowiki>''
+</span>
+
+=== Others options available ===
+
+<span style="background:#dcdcdc"> <nowiki>[</nowiki>--git-dir ''<path>''<nowiki>]</nowiki>  </span>
+
+To specify the .git folder of a repository. This can be use to execute a command outside a git repository.
+
+<span style="background:#dcdcdc"> <nowiki>[</nowiki>--show-stack-trace<nowiki>]</nowiki> </span>
+
+Use this option to display java stack trace in console on error.
+
+<span style="background:#dcdcdc"> <nowiki>[</nowiki>--help (or -h)<nowiki>]</nowiki> </span>
+
+Dispay help for this command.
+
+
 === Known issues ===
 
 ==== Cherry-pick empty commit ====
