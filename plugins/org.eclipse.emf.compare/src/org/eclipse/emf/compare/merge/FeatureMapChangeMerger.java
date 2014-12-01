@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Alexandra Buzila - Fixes for bug 446252
+ *     Stefan Dirix - Fixes for bug 453749
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
@@ -293,12 +294,15 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 			final List<Object> list, final FeatureMap.Entry entry) {
 		final Object value = entry.getValue();
 		final EStructuralFeature key = entry.getEStructuralFeature();
-		((BasicFeatureMap)(Object)list).remove(key, value);
 		final Match expectedContainerMatch = comparison.getMatch((EObject)value);
-		if (rightToLeft) {
-			expectedContainerMatch.setLeft(null);
-		} else {
-			expectedContainerMatch.setRight(null);
+		((BasicFeatureMap)(Object)list).remove(key, value);
+
+		if (((EReference)key).isContainment()) {
+			if (rightToLeft) {
+				expectedContainerMatch.setLeft(null);
+			} else {
+				expectedContainerMatch.setRight(null);
+			}
 		}
 	}
 
