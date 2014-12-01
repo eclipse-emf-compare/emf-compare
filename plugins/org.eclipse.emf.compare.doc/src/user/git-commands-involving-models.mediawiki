@@ -213,7 +213,7 @@ By the way, you can notice in the top right corner there is an '''Abort''','''Sk
 Once you have resolved all the conflicts, please hit:
 
 <span style="background:#dcdcdc">
-git logicalcherry-pick ''<setup>'' ''<nowiki>[</nowiki>--continue<nowiki>]</nowiki>''
+git logicalcherry-pick ''<setup>'' ''--continue''
 </span>
 
 This command will continue an in going cherry-pick. Be careful you have to resolve all conflicts before using this command otherwise you might get the following message:
@@ -240,7 +240,7 @@ You can simply use the ''--quit'' option to continue your cherry-pick operation 
 A second solution while encountering a conflict is to abort the whole cherry-pick operation. To do so please hit:
 
 <span style="background:#dcdcdc">
-git logicalcherry-pick ''<setup>'' ''<nowiki>[</nowiki>--abort<nowiki>]</nowiki>''
+git logicalcherry-pick ''<setup>'' ''--abort''
 </span>
 
 It reverts all the commits already cherry-picked to retrieve the state before the cherry-pick command.
@@ -250,7 +250,7 @@ It reverts all the commits already cherry-picked to retrieve the state before th
 The last solution you have while facing a conflict would be to "skip" the current commit and go on with the remaining commits. To do so please hit:
 
 <span style="background:#dcdcdc">
-git logicalcherry-pick ''<setup>'' ''<nowiki>[</nowiki>--quit<nowiki>]</nowiki>''
+git logicalcherry-pick ''<setup>'' ''--quit'
 </span>
 
 The ''--quit'' option is quite different than the ''--quit'' option of the cherry-pick command in CGit. Instead of quitting an in going cherry-pick, it skips the current commit. Indeed, as mentionned above, in EGit a cherry-pick is replaced by a interactive rebase. This is why the ''--quit'' option is more like the ''--skip'' option of an interactive rebase.
