@@ -9,7 +9,7 @@ EMF Compare provides additional git commands in order to compare and merge model
 
 Oomph [https://wiki.eclipse.org/Eclipse_Oomph_Installer Oomph] is a technology that provisions a set of plugins in an Eclipse IDE, clones Git repositories, binds Git repositories to this IDE, checks projects, sets workspace preferences... The configuration is model driven, with files called Oomph setup model files.
 
-== Add new Git commands in you system ==
+== Add new Git commands in your system ==
 
 The basics git commands don't allow to compare or merge EMF models in a logical way. Additional git commands must be added to your system. Each git command is a shell script describing its behaviour. So, to add a new git command, a new script has to be developed.
 The new scripts corresponding to the git commands are:
