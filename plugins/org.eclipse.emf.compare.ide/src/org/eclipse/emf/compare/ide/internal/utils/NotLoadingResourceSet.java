@@ -506,8 +506,8 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	/**
 	 * {@inheritDoc}
 	 */
-	public void proxyCreated(EObject eObject, EStructuralFeature eStructuralFeature, EObject proxy,
-			int position) {
+	public void proxyCreated(Resource source, EObject eObject, EStructuralFeature eStructuralFeature,
+			EObject proxy, int position) {
 		Set<EStructuralFeature> proxiesOn = proxyMap.get(eObject);
 		if (proxiesOn == null) {
 			proxiesOn = new LinkedHashSet<EStructuralFeature>();

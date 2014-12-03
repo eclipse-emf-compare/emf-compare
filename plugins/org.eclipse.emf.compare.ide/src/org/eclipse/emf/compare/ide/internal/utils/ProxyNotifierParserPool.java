@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal.utils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.ExtendedMetaData;
 import org.eclipse.emf.ecore.xmi.DanglingHREFException;
 import org.eclipse.emf.ecore.xmi.NameInfo;
@@ -43,14 +44,14 @@ import org.eclipse.emf.ecore.xmi.impl.XMLParserPoolImpl;
  */
 public class ProxyNotifierParserPool extends XMLParserPoolImpl {
 	/** The list of parties interested by our proxies. */
-	private List<IProxyCreationListener> proxyListeners;
+	private ListenerList proxyListeners;
 
 	/**
 	 * Default constructor.
 	 */
 	public ProxyNotifierParserPool() {
 		super(true);
-		this.proxyListeners = new ArrayList<IProxyCreationListener>();
+		this.proxyListeners = new ListenerList();
 	}
 
 	/** {@inheritDoc} */
@@ -58,12 +59,32 @@ public class ProxyNotifierParserPool extends XMLParserPoolImpl {
 	public synchronized XMLDefaultHandler getDefaultHandler(XMLResource resource, XMLLoad xmlLoad,
 			XMLHelper helper, Map<?, ?> options) {
 		final ProxyNotifierXMLHelper wrapper = new ProxyNotifierXMLHelper(helper);
-		for (IProxyCreationListener listener : proxyListeners) {
-			wrapper.addProxyListener(listener);
+		for (Object listener : proxyListeners.getListeners()) {
+			wrapper.addProxyListener((IProxyCreationListener)listener);
 		}
-		final XMLDefaultHandler handler = super.getDefaultHandler(resource, xmlLoad, wrapper, options);
+		final XMLDefaultHandler handler = createDefaultHandler(resource, xmlLoad, wrapper, options);
 		handler.prepare(resource, wrapper, options);
 		return handler;
+	}
+
+	/**
+	 * Create the default (unwrapped) XMLDefaultHandler. This is merely a call to <code>super</code> but can
+	 * be sub-classed.
+	 * 
+	 * @param resource
+	 *            The resource to load.
+	 * @param xmlLoad
+	 *            The XML load to pass on tho the handler.
+	 * @param helper
+	 *            The XML helper to pass on tho the handler.
+	 * @param options
+	 *            The load options for this resource.
+	 * @return The created XMLDefaultHandler.
+	 * @see #getDefaultHandler(XMLResource, XMLLoad, XMLHelper, Map)
+	 */
+	protected XMLDefaultHandler createDefaultHandler(XMLResource resource, XMLLoad xmlLoad, XMLHelper helper,
+			Map<?, ?> options) {
+		return super.getDefaultHandler(resource, xmlLoad, helper, options);
 	}
 
 	/**
@@ -94,6 +115,8 @@ public class ProxyNotifierParserPool extends XMLParserPoolImpl {
 		/**
 		 * This will be called when a proxy is created from one of the parser pool's parsers.
 		 * 
+		 * @param source
+		 *            The resource in which a proxy has been created towards another.
 		 * @param eObject
 		 *            The EObject on which some feature is going to be set with a proxy value.
 		 * @param eStructuralFeature
@@ -105,7 +128,8 @@ public class ProxyNotifierParserPool extends XMLParserPoolImpl {
 		 *            when the proxy is added at the end of the <code>eStructuralFeature</code>'s values list
 		 *            (for multi-valued features) or if said feature is single-valued.
 		 */
-		void proxyCreated(EObject eObject, EStructuralFeature eStructuralFeature, EObject proxy, int position);
+		void proxyCreated(Resource source, EObject eObject, EStructuralFeature eStructuralFeature,
+				EObject proxy, int position);
 	}
 
 	/**
@@ -114,7 +138,7 @@ public class ProxyNotifierParserPool extends XMLParserPoolImpl {
 	 */
 	private static class ProxyNotifierXMLHelper extends ForwardingXMLHelper {
 		/** The list of parties interested by our proxy creations. */
-		private final List<IProxyCreationListener> proxyListeners;
+		private final ListenerList proxyListeners;
 
 		/**
 		 * Constructs a wrapper given its delegate XMLHelper.
@@ -124,7 +148,7 @@ public class ProxyNotifierParserPool extends XMLParserPoolImpl {
 		 */
 		public ProxyNotifierXMLHelper(XMLHelper delegate) {
 			super(delegate);
-			this.proxyListeners = new ArrayList<IProxyCreationListener>();
+			this.proxyListeners = new ListenerList();
 		}
 
 		/** {@inheritDoc} */
@@ -133,8 +157,9 @@ public class ProxyNotifierParserPool extends XMLParserPoolImpl {
 				int position) {
 			super.setValue(eObject, eStructuralFeature, value, position);
 			if (value instanceof EObject && ((EObject)value).eIsProxy()) {
-				for (IProxyCreationListener listener : proxyListeners) {
-					listener.proxyCreated(eObject, eStructuralFeature, (EObject)value, position);
+				for (Object listener : proxyListeners.getListeners()) {
+					((IProxyCreationListener)listener).proxyCreated(getResource(), eObject,
+							eStructuralFeature, (EObject)value, position);
 				}
 			}
 		}

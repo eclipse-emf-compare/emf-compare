@@ -59,6 +59,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ide.internal.utils.ProxyNotifierParserPool.IProxyCreationListener;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences;
@@ -72,6 +73,9 @@ import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 import org.eclipse.emf.compare.internal.utils.Graph;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -320,7 +324,8 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			setupResolving();
 
 			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
-				final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
+				final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet(
+						new MonitoredProxyCreationListener(subMonitor, false));
 				updateDependencies(resourceSet, (IFile)start, subMonitor);
 				updateChangedResources(resourceSet, subMonitor);
 			}
@@ -402,7 +407,8 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			setupResolving();
 
 			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
-				final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
+				final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet(
+						new MonitoredProxyCreationListener(monitor, false));
 				updateDependencies(resourceSet, (IFile)left, monitor);
 				updateDependencies(resourceSet, (IFile)right, monitor);
 				if (origin instanceof IFile) {
@@ -554,7 +560,8 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		// Then load the same set of resources for the remote sides, completing it top-down
 
 		if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
-			final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
+			final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet(
+					new MonitoredProxyCreationListener(monitor, false));
 			updateDependencies(resourceSet, left, monitor);
 			updateChangedResources(resourceSet, monitor);
 		}
@@ -807,7 +814,8 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	private Set<IStorage> findAdditionalRemoteTraversal(IStorageProviderAccessor storageAccessor,
 			Set<IStorage> alreadyLoaded, Set<IStorage> additionalStorages, DiffSide side,
 			ThreadSafeProgressMonitor monitor) throws InterruptedException {
-		final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
+		final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet(
+				new MonitoredProxyCreationListener(monitor, true));
 		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
 				storageAccessor, side);
 		resourceSet.setURIConverter(converter);
@@ -1035,7 +1043,8 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	private Set<IStorage> resolveRemoteTraversal(IStorageProviderAccessor storageAccessor, IStorage start,
 			Iterable<URI> knownVariants, DiffSide side, ThreadSafeProgressMonitor monitor)
 			throws InterruptedException {
-		final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet();
+		final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet(
+				new MonitoredProxyCreationListener(monitor, true));
 		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
 				storageAccessor, side);
 		resourceSet.setURIConverter(converter);
@@ -1362,6 +1371,33 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		}
 	}
 
+	private class MonitoredProxyCreationListener implements IProxyCreationListener {
+		private final ThreadSafeProgressMonitor monitor;
+
+		private final boolean remote;
+
+		public MonitoredProxyCreationListener(ThreadSafeProgressMonitor monitor, boolean remote) {
+			this.monitor = monitor;
+			this.remote = remote;
+		}
+
+		public void proxyCreated(Resource source, EObject eObject, EStructuralFeature eStructuralFeature,
+				EObject proxy, int position) {
+			final URI from = source.getURI();
+			final URI to = ((InternalEObject)proxy).eProxyURI().trimFragment();
+
+			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
+				SynchronizedResourceSet resourceSet = (SynchronizedResourceSet)source.getResourceSet();
+				if (remote) {
+					demandRemoteResolve(resourceSet, to, monitor);
+				} else {
+					dependencyGraph.addChildren(from, Collections.singleton(to));
+					demandResolve(resourceSet, to, monitor);
+				}
+			}
+		}
+	}
+
 	/**
 	 * The callback for {@link ResourceResolver} and {@link RemoteResourceResolver} tasks. It will report
 	 * progress, log errors and finalize the resolving and as such, possibly signaling the end of the
@@ -1459,19 +1495,6 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 				safeMergeDiagnostic(resourceDiagnostic);
 			}
 			dependencyGraph.add(uri);
-			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
-				final Set<URI> crossReferencedResources = resourceSet.discoverCrossReferences(resource,
-						monitor);
-				dependencyGraph.addChildren(uri, crossReferencedResources);
-				for (URI crossRef : crossReferencedResources) {
-					if (isInterruptedOrCanceled(monitor)) {
-						demandResolvingAndUnloadingPoolShutdown();
-						// do not return, we want to unload what we've already loaded to avoid leaks.
-						break;
-					}
-					demandResolve(resourceSet, crossRef, monitor);
-				}
-			}
 			demandUnload(resourceSet, resource, monitor);
 		}
 	}
@@ -1520,18 +1543,6 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			Diagnostic resourceDiagnostic = EcoreUtil.computeDiagnostic(resource, true);
 			if (resourceDiagnostic.getSeverity() >= Diagnostic.WARNING) {
 				safeMergeDiagnostic(resourceDiagnostic);
-			}
-			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
-				final Set<URI> crossReferencedResources = resourceSet.discoverCrossReferences(resource,
-						monitor);
-				for (URI crossRef : crossReferencedResources) {
-					if (isInterruptedOrCanceled(monitor)) {
-						demandResolvingAndUnloadingPoolShutdown();
-						// do not return, we want to unload what we've already loaded to avoid leaks.
-						break;
-					}
-					demandRemoteResolve(resourceSet, crossRef, monitor);
-				}
 			}
 			demandUnload(resourceSet, resource, monitor);
 		}
