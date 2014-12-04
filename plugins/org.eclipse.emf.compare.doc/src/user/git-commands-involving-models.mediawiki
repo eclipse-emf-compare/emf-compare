@@ -403,10 +403,61 @@ Use this option to display java stack trace in console on error.
 
 Dispay help for this command.
 
+== Git pull with models : git logicalpull ==
 
-=== Known issues ===
+The ''logicalpull'' command is the logical version of the git pull command. To see a full description of the git pull command, please visit [http://git-scm.com/docs/git-pull].
 
-==== Cherry-pick empty commit ====
+The command is specified as below:
+
+<span style="background:#dcdcdc">
+git logicalpull ''<setup>''
+</span>
+
+Assume the following history exists and the current branch is master:
+
+<span style="background:#dcdcdc">
+         A---B---C      master on origin  
+        /                                 
+   D---E---F---G        master            
+       ^                                  
+       origin/master in your repository
+</span>
+
+Basically a ''git logicalpull'' is a ''git fetch'' followed by a ''git logicalmerge'' of the fetched branch.
+So ''git logicalpull mySetupModel.setup'' will fetch and replay the changes from the remote ''master'' branch since it diverged from the local ''master'' (i.e., ''E'') until its current commit (''C'') on top of ''master'', and record the result in a new commit along with the names of the two parent commits and a log message from the user describing the changes.
+
+<span style="background:#dcdcdc">
+         A---B---C       origin/master
+        /         \             
+   D---E---F---G---H     master 
+</span>
+
+If the command introduces conflicts, you will have to launch the [[#Git_mergetool_command_with_models_:_git_logicalmergetool | git logicalmergetool]] to resolve them.
+
+=== Others options available ===
+<span style="background:#dcdcdc"> <nowiki>[</nowiki>--show-stack-trace<nowiki>]</nowiki> </span>
+
+Use this option to display java stack trace in console on error.
+
+<span style="background:#dcdcdc"> <nowiki>[</nowiki>--help (or -h)<nowiki>]</nowiki> </span>
+
+Dispays help for this command.
+
+== Known limitations ==
+
+=== Merge tool ===
+
+The merge tool doesn't work correctly on logical models. the problem is known and a patch has been made to fix it.
+Since the problem concerns EGit & EMF Compare, we need to stay EGit team to integrate the following contribution:
+*https://git.eclipse.org/r/#/c/36026/
+
+Once integrated, the following EMF Compare contributions will be integrated too:
+*https://git.eclipse.org/r/#/c/35541/
+*https://git.eclipse.org/r/#/c/36025/
+
+Then, the merge tool will work correctly.
+
+=== Cherry-pick empty commit ===
 
 If you try to cherry-pick a commit that introduces changes that already belong to the worktree, the operation may stop on a dirty state. For example, if you have cherry-picked a commit that belongs to the ancestor tree of HEAD. The characteristics of this dirty state are:
 # Wrong position of HEAD.
