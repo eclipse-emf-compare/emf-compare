@@ -11,10 +11,11 @@
 package org.eclipse.emf.compare.internal.postprocessor.factories;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -386,13 +387,7 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 	 * @return The found differences.
 	 */
 	protected final List<Diff> findCrossReferences(Comparison comparison, EObject lookup, Predicate<Diff> p) {
-		final List<Diff> result = new ArrayList<Diff>();
-		for (Diff diff : comparison.getDifferences(lookup)) {
-			if (p.apply(diff)) {
-				result.add(diff);
-			}
-		}
-		return result;
+		return Lists.newArrayList(Iterables.filter(comparison.getDifferences(lookup), p));
 	}
 
 	/**
