@@ -1,0 +1,192 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,__2VZ8HyOEeSBuoKgQXcXfw
+Element-Name: ts002_tc006_3-way_real_add_conflict_2
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: https://bugs.eclipse.org/bugs/show_bug.cgi?id=442898
+Id: _KOSEMHyaEeSBuoKgQXcXfw
+Q7-Runtime-Version: 1.3.14.201410230950
+Save-Time: 12/5/14 5:54 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate the content of the SMV & CMVs in case of a real add conflict.
+This test doesn't test merge, synchronization between SMV and CMVs and synchronization between left CMV & right CMV.
+
+TEST STEPS
+	1) Select the 3 uml models and run a 3-way comparison
+	2) Expand the SMV
+	// Asserts that all differences are here
+	3) Expand the Left CMV
+	// Asserts that all differences are here
+	5)  Expand the Right CMV
+	// Asserts that all differences are here
+	
+In the right group of the SMV, there is a problem that must be fixed in the future:
+- Root
+  - A
+    - C
+      - F
+should be :
+- Root
+  - B
+    - C
+      - F
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Package Explorer" | get-tree] {
+    select "442897_AddConflict/k2/conflict_k2_left.uml" "442897_AddConflict/k2/conflict_k2_origin.uml" "442897_AddConflict/k2/conflict_k2_right.uml"
+    get-menu "Compare With/Each Other" | click
+}
+with [get-window "Select Common Ancestor"] {
+    get-button "\'/442897_AddConflict/k2/conflict_k2_origin.uml\'" | click
+    get-button OK | click
+}
+get-editor "Compare (\'442897_AddConflict/k2/conflict_k2_right.uml\' - \'442897_AddConflict/k2/conflict_k2_left.uml\' - \'442897_AddConflict/k2/conflict_k2_right.uml\')" 
+    | get-button "Expand All" | click
+
+with [get-editor "Compare (\'442897_AddConflict/k2/conflict_k2_right.uml\' - \'442897_AddConflict/k2/conflict_k2_left.uml\' - \'442897_AddConflict/k2/conflict_k2_right.uml\')" 
+    | get-tree] {
+    get-property "getItems().length" | equals 3 | verify-true
+    get-property "getItems().TreeItem[0].getItems().length" | equals 3 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 2 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "<Class> D [nestedClassifier add]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 0 
+        | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[1].getText()" 
+        | equals "<Class> D [nestedClassifier add]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[1].getItems().length" | equals 0 
+        | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[1].getText()" 
+        | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().length" | equals 2 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getText()" 
+        | equals "<Class> G [nestedClassifier add]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().length" | equals 0 
+        | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[1].getText()" 
+        | equals "<Class> G [nestedClassifier add]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[1].getItems().length" | equals 0 
+        | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[2].getText()" 
+        | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[2].getItems().length" | equals 2 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[2].getItems().TreeItem[0].getText()" 
+        | equals "<Class> C [nestedClassifier add]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[2].getItems().TreeItem[0].getItems().length" | equals 0 
+        | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[2].getItems().TreeItem[1].getText()" 
+        | equals "<Class> C [nestedClassifier add]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[2].getItems().TreeItem[1].getItems().length" | equals 0 
+        | verify-true
+    get-property "getItems().TreeItem[1].getText()" | equals "> 442897_AddConflict/k2/conflict_k2_left.uml" 
+        | verify-true
+    get-property "getItems().TreeItem[1].getItems().length" | equals 1 | verify-true
+    get-property "getItems().TreeItem[1].getItems().TreeItem[0].getText()" | equals "> <Package> root" | verify-true
+    get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().length" | equals 1 | verify-true
+    get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "> <Class> A" | verify-true
+    get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 1 
+        | verify-true
+    get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "> <Class> C" | verify-true
+    get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+        | equals 1 | verify-true
+    get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "<Class> E [nestedClassifier add]" | verify-true
+    get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+        | equals 0 | verify-true
+    get-property "getItems().TreeItem[2].getText()" | equals "> 442897_AddConflict/k2/conflict_k2_right.uml" 
+        | verify-true
+    get-property "getItems().TreeItem[2].getItems().length" | equals 1 | verify-true
+    get-property "getItems().TreeItem[2].getItems().TreeItem[0].getText()" | equals "> <Package> root" | verify-true
+    get-property "getItems().TreeItem[2].getItems().TreeItem[0].getItems().length" | equals 1 | verify-true
+    get-property "getItems().TreeItem[2].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "> <Class> A" | verify-true
+    get-property "getItems().TreeItem[2].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 1 
+        | verify-true
+    get-property "getItems().TreeItem[2].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "> <Class> C" | verify-true
+    get-property "getItems().TreeItem[2].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+        | equals 1 | verify-true
+    get-property "getItems().TreeItem[2].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "<Class> F [nestedClassifier add]" | verify-true
+    get-property "getItems().TreeItem[2].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+        | equals 0 | verify-true
+}
+with [get-editor "Compare (\'442897_AddConflict/k2/conflict_k2_right.uml\' - \'442897_AddConflict/k2/conflict_k2_left.uml\' - \'442897_AddConflict/k2/conflict_k2_right.uml\')"] {
+    get-tree -after [get-label "442897_AddConflict/k2/conflict_k2_right.uml"] | expand-all
+    get-tree -after [get-label "442897_AddConflict/k2/conflict_k2_right.uml"] -index 1 | expand-all
+}
+with [get-editor "Compare (\'442897_AddConflict/k2/conflict_k2_right.uml\' - \'442897_AddConflict/k2/conflict_k2_left.uml\' - \'442897_AddConflict/k2/conflict_k2_right.uml\')"] {
+    with [get-tree -after [get-label "442897_AddConflict/k2/conflict_k2_right.uml"]] {
+        get-property "getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getText()" | equals "<Package> root" | verify-true
+        get-property "getItems().TreeItem[0].getItems().length" | equals 2 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals "<Class> A" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+            | equals "<Class> C" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 4 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+            | equals "<Class> D" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[1].getText()" 
+            | equals "" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[1].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[2].getText()" 
+            | equals "<Class> E" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[2].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[3].getText()" 
+            | equals "<Class> G" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[3].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getText()" | equals "<Class> B" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().length" | equals 0 | verify-true
+    }
+    with [get-tree -after [get-label "442897_AddConflict/k2/conflict_k2_right.uml"] -index 1] {
+        get-property "getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getText()" | equals "<Package> root" | verify-true
+        get-property "getItems().TreeItem[0].getItems().length" | equals 2 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals "<Class> A" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getText()" | equals "<Class> B" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getText()" 
+            | equals "<Class> C" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().length" 
+            | equals 4 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+            | equals "<Class> D" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[1].getText()" 
+            | equals "" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[1].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[2].getText()" 
+            | equals "<Class> F" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[2].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[3].getText()" 
+            | equals "<Class> G" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[3].getItems().length" 
+            | equals 0 | verify-true
+    }
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
