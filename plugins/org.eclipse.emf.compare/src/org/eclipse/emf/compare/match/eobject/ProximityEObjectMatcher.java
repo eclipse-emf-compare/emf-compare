@@ -82,6 +82,9 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 	public void createMatches(Comparison comparison, Iterator<? extends EObject> leftEObjects,
 			Iterator<? extends EObject> rightEObjects, Iterator<? extends EObject> originEObjects,
 			Monitor monitor) {
+		if (!leftEObjects.hasNext() && !rightEObjects.hasNext() && !originEObjects.hasNext()) {
+			return;
+		}
 
 		// FIXME: how to create an EMF submonitor
 		Monitor subMonitor = new BasicMonitor();
