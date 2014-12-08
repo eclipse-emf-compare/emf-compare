@@ -81,7 +81,6 @@ public class CompareToolBar implements ISelectionChangedListener {
 			StructureMergeViewerFilter viewerFilter, EMFCompareConfiguration compareConfiguration) {
 		this.toolbarManager = toolbarManager;
 		this.compareConfiguration = compareConfiguration;
-		this.doOnce = false;
 		mergeActions = newArrayListWithCapacity(2);
 		mergeAllNonConflictingActions = newArrayListWithCapacity(2);
 
