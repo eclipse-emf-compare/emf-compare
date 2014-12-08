@@ -19,21 +19,25 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
@@ -46,15 +50,19 @@ import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.hook.IResourceSetHook;
 import org.eclipse.emf.compare.ide.internal.EMFCompareIDEMessages;
 import org.eclipse.emf.compare.ide.internal.hook.ResourceSetHookRegistry;
+import org.eclipse.emf.compare.ide.internal.utils.ProxyNotifierParserPool.IProxyCreationListener;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
+import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 
 /**
  * This implementation of a resource set will be created from a {@link StorageTraversal}, and only those
@@ -69,22 +77,11 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @Beta
-public final class NotLoadingResourceSet extends ResourceSetImpl implements DisposableResourceSet {
-
+public final class NotLoadingResourceSet extends ResourceSetImpl implements DisposableResourceSet, IProxyCreationListener {
 	/**
-	 * Function to transform a {@link IStorage} in an {@link URI}.
+	 * All of the storages that this resource set is going to load, mapped to their resource (workspace) URIs.
 	 */
-	private static final Function<IStorage, URI> TO_URI = new Function<IStorage, URI>() {
-
-		public URI apply(IStorage input) {
-			return createURIFor(input);
-		}
-	};
-
-	/**
-	 * Storage traversal used to load specific resources from {@link IStorage}.
-	 */
-	private final StorageTraversal storageTranversal;
+	private final Map<URI, IStorage> storageToURI;
 
 	/**
 	 * Registry holding {@link IResourceSetHook}s.
@@ -96,17 +93,21 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	 */
 	private boolean isDisposed;
 
+	/** Registers the proxies we detect while resolving our resources. */
+	private Map<EObject, Set<EStructuralFeature>> proxyMap;
+
 	/**
 	 * Constructor.
 	 * 
-	 * @param storageTranversal
-	 *            see {@link #storageTranversal}.
+	 * @param storagesToLoad
+	 *            see {@link #storageToURI}.
 	 * @param hookRegistry
 	 *            Registry holding {@link IResourceSetHook}s.
 	 */
-	private NotLoadingResourceSet(StorageTraversal storageTranversal, ResourceSetHookRegistry hookRegistry) {
-		this.storageTranversal = storageTranversal;
+	private NotLoadingResourceSet(Map<URI, IStorage> storagesToLoad, ResourceSetHookRegistry hookRegistry) {
+		this.storageToURI = storagesToLoad;
 		this.hookRegistry = hookRegistry;
+		this.proxyMap = new ConcurrentHashMap<EObject, Set<EStructuralFeature>>();
 	}
 
 	/**
@@ -125,34 +126,33 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 			ResourceSetHookRegistry resourceSetHookRegistry) {
 		SubMonitor progress = SubMonitor.convert(monitor, 100);
 		progress.subTask(EMFCompareIDEMessages.getString("NotLoadingResourceSet.monitor.resolve")); //$NON-NLS-1$
-		final NotLoadingResourceSet resourceSet = new NotLoadingResourceSet(traversals,
-				resourceSetHookRegistry);
 
+		final URIConverter converter = new ExtensibleURIConverterImpl();
 		final Set<? extends IStorage> storages = traversals.getStorages();
+		final Map<URI, IStorage> storageToURI = new LinkedHashMap<URI, IStorage>(storages.size());
+		for (IStorage storage : storages) {
+			final IStorage old = storageToURI.put(converter.normalize(createURIFor(storage)), storage);
+			if (old != null) {
+				// FIXME debug and log : duplicate storage URI somehow
+			}
+		}
+		final NotLoadingResourceSet resourceSet = new NotLoadingResourceSet(storageToURI,
+				resourceSetHookRegistry);
+		resourceSet.setURIConverter(converter);
 
 		resourceSet.setURIResourceMap(new HashMap<URI, Resource>(storages.size() << 1));
 
 		// loading is 60% of the total work?
 		final int loadWorkPercentage = 60;
-		SubMonitor subMonitor = progress.newChild(loadWorkPercentage).setWorkRemaining(
-				traversals.getStorages().size());
+		SubMonitor subMonitor = progress.newChild(loadWorkPercentage).setWorkRemaining(storages.size());
 
 		resourceSet.load(subMonitor);
 
 		final int resolveWorkPercentage = 40;
-		subMonitor = progress.newChild(resolveWorkPercentage).setWorkRemaining(
-				resourceSet.getResources().size());
+		subMonitor = progress.newChild(resolveWorkPercentage);
 
 		// Then resolve all proxies between our "loaded" resources.
-		List<Resource> resourcesCopy = newArrayList(resourceSet.getResources());
-		for (Resource res : resourcesCopy) {
-			if (monitor.isCanceled()) {
-				throw new OperationCanceledException();
-			}
-
-			resourceSet.resolve(res);
-			subMonitor.worked(1);
-		}
+		resourceSet.resolveProxies(subMonitor);
 
 		return resourceSet;
 	}
@@ -187,17 +187,13 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	 */
 	@Override
 	protected void demandLoadHelper(Resource resource) {
-		if (storageTranversal != null) {
-			// Checks if there is IStorage that should be used to fill this ressource.
-			IStorage storage = getMatchingStorage(resource);
-			if (storage != null) {
-				try {
-					loadFromStorage(resource, storage);
-				} catch (IOException e) {
-					logLoadingFromStorageFailed(resource, storage, e);
-				}
-			} else {
-				super.demandLoadHelper(resource);
+		// Checks if there is an IStorage that should be used to fill this ressource.
+		IStorage storage = getMatchingStorage(resource);
+		if (storage != null) {
+			try {
+				loadFromStorage(resource, storage);
+			} catch (IOException e) {
+				logLoadingFromStorageFailed(resource, storage, e);
 			}
 		} else {
 			super.demandLoadHelper(resource);
@@ -232,13 +228,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	private IStorage getMatchingStorage(Resource resource) {
 		URIConverter theURIConverter = getURIConverter();
 		URI resourceNormalizedUri = theURIConverter.normalize(resource.getURI());
-		for (IStorage storage : storageTranversal.getStorages()) {
-			URI storageNormalizedURI = getURIConverter().normalize(createURIFor(storage));
-			if (storageNormalizedURI.equals(resourceNormalizedUri)) {
-				return storage;
-			}
-		}
-		return null;
+		return storageToURI.get(resourceNormalizedUri);
 	}
 
 	/**
@@ -268,17 +258,6 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	}
 
 	/**
-	 * Loads a resource the way a basic {@link ResourceSetImpl} would do it.
-	 * 
-	 * @param uri
-	 *            same as {@link ResourceSetImpl#getResource(URI, boolean)}.
-	 * @return same as {@link ResourceSetImpl#getResource(URI, boolean)}.
-	 */
-	private Resource loadResource(URI uri) {
-		return super.getResource(uri, true);
-	}
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#handleDemandLoadException(org.eclipse.emf.ecore.resource.Resource,
@@ -305,112 +284,144 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	public Resource getResource(URI uri, boolean loadOnDemand) {
 		checkNotDisposed();
 
-		ILoadOnDemandPolicy.Registry registry = EMFCompareRCPPlugin.getDefault()
-				.getLoadOnDemandPolicyRegistry();
-		if (registry.hasAnyAuthorizingPolicy(uri)) {
-			return super.getResource(uri, true);
+		// Bypass the load on demand policies when possible
+		final Resource cached = getURIResourceMap().get(uri);
+		if (cached != null) {
+			return cached;
 		}
-		return super.getResource(uri, false);
-	}
 
-	/**
-	 * This will resolve all cross references of the given resource, then unload it. It will then swap the
-	 * loaded resource with a new, empty one with the same URI.
-	 * 
-	 * @param resource
-	 *            The resource for which we are to resolve all cross references.
-	 */
-	private void resolve(Resource resource) {
-		final List<EObject> roots = ((InternalEList<EObject>)resource.getContents()).basicList();
-		final Iterator<EObject> resourceContent = roots.iterator();
-		while (resourceContent.hasNext()) {
-			final EObject eObject = resourceContent.next();
-			resolveCrossReferences(eObject);
-			resolveChildren(eObject);
-		}
-		resource.getContents().addAll(roots);
-	}
-
-	/**
-	 * Recursively resolve all children of the given EObject, including (but stopping at) any proxy.
-	 * 
-	 * @param eObject
-	 *            The eObject which children we are to resolve.
-	 */
-	private void resolveChildren(EObject eObject) {
-		final List<EObject> list = eObject.eContents();
-		final ListIterator<EObject> childContent = ((InternalEList<EObject>)list).basicListIterator();
-		while (childContent.hasNext()) {
-			final EObject child = childContent.next();
-			if (child.eIsProxy()) {
-				final URI proxyURI = ((InternalEObject)child).eProxyURI();
-				final Resource targetRes = getResource(proxyURI.trimFragment(), false);
-				if (targetRes != null) {
-					// resolve this one
-					list.get(childContent.previousIndex());
-				}
-				resolveCrossReferences(child);
+		final Resource resource;
+		// If this is a resource we know and want to load, do it
+		final IStorage storage = storageToURI.get(uri);
+		if (loadOnDemand && storage != null) {
+			resource = load(storage, uri, new NullProgressMonitor());
+		} else {
+			ILoadOnDemandPolicy.Registry registry = EMFCompareRCPPlugin.getDefault()
+					.getLoadOnDemandPolicyRegistry();
+			if (registry.hasAnyAuthorizingPolicy(uri)) {
+				resource = super.getResource(uri, true);
 			} else {
-				resolveCrossReferences(child);
-				resolveChildren(child);
+				resource = super.getResource(uri, false);
 			}
 		}
+		return resource;
 	}
 
 	/**
-	 * Resolves the cross references of the given EObject.
+	 * Resolve the proxies registered when loading our resources (as mapped within {@link #proxyMap}) so that
+	 * all links between the resources we want to load have been resolved. Note that this will leave other
+	 * proxies (proxies to some resource that is not included in the {@link #storageToURI} map) unresolved.
 	 * 
-	 * @param eObject
-	 *            The EObject for which we are to resolve the cross references.
+	 * @param monitor
+	 *            Monitor on which to report progress to the user.
 	 */
-	private void resolveCrossReferences(EObject eObject) {
-		final EList<EObject> list = eObject.eCrossReferences();
-		final ListIterator<EObject> objectChildren = ((InternalEList<EObject>)list).basicListIterator();
-		while (objectChildren.hasNext()) {
-			final EObject eObj = objectChildren.next();
-			if (eObj.eIsProxy()) {
-				final URI proxyURI = ((InternalEObject)eObj).eProxyURI();
-				final Resource targetRes = getResource(proxyURI.trimFragment(), false);
-				if (targetRes != null) {
-					// resolve this one
-					list.get(objectChildren.previousIndex());
+	private void resolveProxies(SubMonitor monitor) {
+		// Isn't this first loop counter-productive?
+		int totalWork = 0;
+		for (Map.Entry<EObject, Set<EStructuralFeature>> entry : proxyMap.entrySet()) {
+			totalWork += entry.getValue().size();
+		}
+		monitor.setWorkRemaining(totalWork);
+
+		for (Map.Entry<EObject, Set<EStructuralFeature>> proxyEntry : proxyMap.entrySet()) {
+			for (EStructuralFeature proxiesOn : proxyEntry.getValue()) {
+				Object values = proxyEntry.getKey().eGet(proxiesOn, true);
+				if (values instanceof InternalEList<?>) {
+					final ListIterator<?> crossRefs = ((InternalEList<?>)values).basicListIterator();
+					while (crossRefs.hasNext()) {
+						final Object nextValue = crossRefs.next();
+						if (nextValue instanceof EObject && ((EObject)nextValue).eIsProxy()) {
+							final URI proxyURI = ((InternalEObject)nextValue).eProxyURI();
+							final Resource targetRes = getResource(proxyURI.trimFragment(), false);
+							if (targetRes != null) {
+								// resolve this one
+								((InternalEList<?>)values).get(crossRefs.previousIndex());
+							}
+						}
+					}
 				}
+				monitor.worked(1);
 			}
 		}
+
+		proxyMap.clear();
 	}
 
 	/**
-	 * Loads resources from the {@link StorageTraversal}.
+	 * Loads resources known by the {@link #storageToURI} map.
 	 * 
-	 * @see #storageTranversal
 	 * @param monitor
 	 *            {@link IProgressMonitor} reporting progress.
 	 */
 	private void load(IProgressMonitor monitor) {
 		checkNotDisposed();
 
-		final Collection<URI> urisToLoad = ImmutableList.copyOf(transform(storageTranversal.getStorages(),
-				TO_URI));
-
+		final Set<URI> urisToLoad = ImmutableSet.copyOf(storageToURI.keySet());
 		final Collection<IResourceSetHook> hooks = getMatchingHooks(urisToLoad);
 
 		for (IResourceSetHook hook : hooks) {
 			hook.preLoadingHook(this, urisToLoad);
 		}
 
-		for (URI uri : urisToLoad) {
-			if (monitor.isCanceled()) {
-				throw new OperationCanceledException();
-			}
-			// Forces the loading of the selected resources.
-			loadResource(uri);
-			monitor.worked(1);
+		for (Map.Entry<URI, IStorage> entry : storageToURI.entrySet()) {
+			load(entry.getValue(), entry.getKey(), monitor);
 		}
 
 		for (IResourceSetHook hook : hooks) {
 			hook.postLoadingHook(this, urisToLoad);
 		}
+	}
 
+	/**
+	 * Retrieve an already loaded resource with the given URI, or load it using the content from the given
+	 * storage.
+	 * 
+	 * @param storage
+	 *            The storage from which to load this resource.
+	 * @param uri
+	 *            The uri to use for our new resource.
+	 * @param monitor
+	 *            Monitor on which to report progress to the user.
+	 * @return The loaded resource.
+	 */
+	private Resource load(IStorage storage, URI uri, IProgressMonitor monitor) {
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+
+		final Resource cached = getURIResourceMap().get(uri);
+		if (cached != null) {
+			return cached;
+		}
+
+		final Resource loaded = createResource(uri);
+		getURIResourceMap().put(uri, loaded);
+		try {
+			loadFromStorage(loaded, storage);
+			monitor.worked(1);
+		} catch (IOException e) {
+			logLoadingFromStorageFailed(loaded, storage, e);
+		}
+		return loaded;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Map<Object, Object> getLoadOptions() {
+		this.loadOptions = super.getLoadOptions();
+		final ProxyNotifierParserPool parserPool = new ProxyNotifierParserPool();
+		parserPool.addProxyListener(this);
+		loadOptions.put(XMLResource.OPTION_USE_PARSER_POOL, parserPool);
+		loadOptions.put(XMLResource.OPTION_USE_DEPRECATED_METHODS, Boolean.FALSE);
+		loadOptions.put(XMLResource.OPTION_DISABLE_NOTIFY, Boolean.TRUE);
+
+		final int bufferSize = 16384;
+		final Map<String, Object> parserProperties = new HashMap<String, Object>();
+		parserProperties.put("http://apache.org/xml/properties/input-buffer-size", Integer //$NON-NLS-1$
+				.valueOf(bufferSize));
+		loadOptions.put(XMLResource.OPTION_PARSER_PROPERTIES, parserProperties);
+
+		return loadOptions;
 	}
 
 	/**
@@ -492,4 +503,16 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public void proxyCreated(EObject eObject, EStructuralFeature eStructuralFeature, EObject proxy,
+			int position) {
+		Set<EStructuralFeature> proxiesOn = proxyMap.get(eObject);
+		if (proxiesOn == null) {
+			proxiesOn = new LinkedHashSet<EStructuralFeature>();
+			proxyMap.put(eObject, proxiesOn);
+		}
+		proxiesOn.add(eStructuralFeature);
+	}
 }

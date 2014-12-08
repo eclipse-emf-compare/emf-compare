@@ -174,10 +174,8 @@ public class ProfileLoadingTest {
 	public void loadStaticProfile() {
 		String umlResourceURI = BASE_URI + "static_/model.uml"; //$NON-NLS-1$
 		resourceSet = createNotLoadingResourceSet(umlResourceURI);
-		Set<String> expectedLoadedResource = Sets
-				.newHashSet("pathmap://UML_PROFILES/Ecore.profile.uml", //$NON-NLS-1$
-						umlResourceURI, BASE_URI + "static_/model.uml", //$NON-NLS-1$
-						"platform:/plugin/org.eclipse.emf.compare.uml2.tests/model/uml2.compare.testprofile.profile.uml"); //$NON-NLS-1$
+		Set<String> expectedLoadedResource = Sets.newHashSet("pathmap://UML_PROFILES/Ecore.profile.uml", //$NON-NLS-1$
+				umlResourceURI, "pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml"); //$NON-NLS-1$
 		assertLoadeResources(resourceSet, expectedLoadedResource);
 		EObject stereotypeApplication = getStereotype(resourceSet, umlResourceURI
 				+ "#_mg1YkEJqEeSsE-f8QjqLJA", //$NON-NLS-1$
