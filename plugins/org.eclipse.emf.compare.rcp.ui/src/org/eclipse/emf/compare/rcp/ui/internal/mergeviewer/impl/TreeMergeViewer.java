@@ -101,6 +101,11 @@ public class TreeMergeViewer extends AbstractTableOrTreeMergeViewer {
 		getStructuredViewer().setExpandedState(elementOrTreePath, expanded);
 	}
 
+	protected void hookDispose() {
+		fInput = null;
+		fTreeViewer = null;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -117,6 +122,7 @@ public class TreeMergeViewer extends AbstractTableOrTreeMergeViewer {
 			getStructuredViewer().setSelection(null);
 			getStructuredViewer().setInput(input);
 		} else {
+			fInput = null;
 			getStructuredViewer().setInput(null);
 		}
 	}

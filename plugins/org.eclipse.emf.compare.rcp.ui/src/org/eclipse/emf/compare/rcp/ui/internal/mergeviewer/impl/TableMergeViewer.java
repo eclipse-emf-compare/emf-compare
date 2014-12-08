@@ -130,6 +130,12 @@ public class TableMergeViewer extends AbstractTableOrTreeMergeViewer {
 		fInfoViewer.setLabelProvider(labelProvider);
 	}
 
+	@Override
+	protected void hookDispose() {
+		fTableViewer = null;
+		fInfoViewer = null;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 

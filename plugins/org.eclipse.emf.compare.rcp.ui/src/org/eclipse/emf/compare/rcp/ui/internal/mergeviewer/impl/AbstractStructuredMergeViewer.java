@@ -85,8 +85,11 @@ public abstract class AbstractStructuredMergeViewer extends AbstractMergeViewer 
 	@Override
 	protected void handleDispose(DisposeEvent event) {
 		getStructuredViewer().removeSelectionChangedListener(fForwardingSelectionListener);
+		hookDispose();
 		super.handleDispose(event);
 	}
+
+	protected abstract void hookDispose();
 
 	/**
 	 * {@inheritDoc}
