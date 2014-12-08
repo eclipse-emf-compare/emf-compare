@@ -58,8 +58,6 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 
 	private static final String SMV_FILTERS = EMFCompareIDEUIPlugin.PLUGIN_ID + ".SMV_FILTERS"; //$NON-NLS-1$;
 
-	private static final String EVENT_BUS = EMFCompareIDEUIPlugin.PLUGIN_ID + ".EVENT_BUS"; //$NON-NLS-1$;
-
 	private static final String SMV_GROUP_PROVIDERS = EMFCompareIDEUIPlugin.PLUGIN_ID
 			+ ".SMV_GROUP_PROVIDERS"; //$NON-NLS-1$;
 
@@ -67,8 +65,11 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 
 	private final CompareConfiguration compareConfiguration;
 
+	private final EventBus eventBus;
+
 	public EMFCompareConfiguration(CompareConfiguration compareConfiguration) {
 		this.compareConfiguration = compareConfiguration;
+		this.eventBus = new EventBus();
 		setDefaultValues();
 		propertyChangeListener = new PropertyChangeListener();
 		compareConfiguration.addPropertyChangeListener(propertyChangeListener);
@@ -83,17 +84,12 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 			}
 		}
 
-		EventBus eventBus = new EventBus();
 		if (getProperty(SMV_FILTERS) == null) {
 			setProperty(SMV_FILTERS, new StructureMergeViewerFilter(eventBus));
 		}
 
 		if (getProperty(SMV_GROUP_PROVIDERS) == null) {
 			setProperty(SMV_GROUP_PROVIDERS, new StructureMergeViewerGrouper(eventBus));
-		}
-
-		if (getProperty(EVENT_BUS) == null) {
-			setProperty(EVENT_BUS, eventBus);
 		}
 	}
 
@@ -103,7 +99,7 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration#getEventBus()
 	 */
 	public EventBus getEventBus() {
-		return (EventBus)getProperty(EVENT_BUS);
+		return eventBus;
 	}
 
 	/**
@@ -125,6 +121,15 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	public void dispose() {
 		super.dispose();
 		compareConfiguration.removePropertyChangeListener(propertyChangeListener);
+		// CompareConfiguration does not clear its properties list...
+		// Lets clean our own mess ourselves
+		compareConfiguration.setProperty(COMPARISON_SCOPE, null);
+		compareConfiguration.setProperty(COMPARE_RESULT, null);
+		compareConfiguration.setProperty(SMV_FILTERS, null);
+		compareConfiguration.setProperty(EDITING_DOMAIN, null);
+		compareConfiguration.setProperty(ADAPTER_FACTORY, null);
+		compareConfiguration.setProperty(SMV_GROUP_PROVIDERS, null);
+		compareConfiguration.setProperty(PREVIEW_MERGE_MODE, null);
 	}
 
 	public boolean getBooleanProperty(String key, boolean dflt) {
