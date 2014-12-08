@@ -435,6 +435,11 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 		editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
 
+		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), null);
+		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), null);
+		fRedoAction = null;
+		fUndoAction = null;
+
 		super.handleDispose(event);
 	}
 
