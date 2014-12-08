@@ -23,6 +23,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.EventObject;
@@ -684,6 +685,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		if (editingDomainNeedsToBeDisposed) {
 			((IDisposable)getCompareConfiguration().getEditingDomain()).dispose();
 		}
+		getCompareConfiguration().getStructureMergeViewerGrouper().uninstall(getViewer());
 		compareInputChanged((ICompareInput)null);
 		treeRuler.handleDispose();
 		fAdapterFactory.dispose();
@@ -866,7 +868,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				final boolean rightEditable;
 
 				EMFCompareConfiguration compareConfiguration = getCompareConfiguration();
-				/**
+				/*
 				 * A resource node means that the left ITypedElement is in the workspace, a DiffNode input
 				 * means the comparison has been launched from a Replace With action.
 				 */
@@ -1008,8 +1010,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		ResourceSet rightResourceSet = null;
 		ResourceSet originResourceSet = null;
 
-		if (getCompareConfiguration().getComparison() != null) {
-			Comparison comparison = getCompareConfiguration().getComparison();
+		final Comparison comparison = getCompareConfiguration().getComparison();
+		if (comparison != null) {
 			Iterator<Match> matchIt = comparison.getMatches().iterator();
 			if (comparison.isThreeWay()) {
 				while (matchIt.hasNext()
@@ -1034,6 +1036,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					if (rightResourceSet == null) {
 						rightResourceSet = getResourceSet(match.getRight());
 					}
+				}
+			}
+			final List<Adapter> adaptersCopy = new ArrayList<Adapter>(comparison.eAdapters());
+			for (Adapter adapter : adaptersCopy) {
+				if (adapter instanceof ForwardingCompareInputAdapter || adapter instanceof SideLabelProvider) {
+					comparison.eAdapters().remove(adapter);
 				}
 			}
 		}
