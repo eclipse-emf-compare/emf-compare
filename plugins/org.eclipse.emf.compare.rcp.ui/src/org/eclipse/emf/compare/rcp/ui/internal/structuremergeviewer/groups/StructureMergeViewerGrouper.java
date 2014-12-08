@@ -38,7 +38,7 @@ import org.eclipse.swt.events.DisposeListener;
 public final class StructureMergeViewerGrouper {
 
 	/** An empty difference group provider. */
-	private static IDifferenceGroupProvider empty = new EmptyDifferenceGroupProvider();
+	private final IDifferenceGroupProvider empty;
 
 	/**
 	 * The currently selected group provider. This is what will compute and give us the groups we need to
@@ -62,8 +62,9 @@ public final class StructureMergeViewerGrouper {
 	 *            The {@link EventBus} which will be associated with this difference grouper.
 	 */
 	public StructureMergeViewerGrouper(EventBus eventBus) {
+		this.empty = new EmptyDifferenceGroupProvider();
 		this.eventBus = eventBus;
-		this.provider = StructureMergeViewerGrouper.empty;
+		this.provider = empty;
 		this.viewers = Lists.newArrayList();
 		this.registeredGroupProviders = newLinkedHashSet();
 	}
@@ -149,13 +150,18 @@ public final class StructureMergeViewerGrouper {
 	 */
 	public void uninstall(StructuredViewer viewer) {
 		Object input = viewer.getInput();
-		if (input != null) {
-			List<Adapter> eAdapters = ((Notifier)input).eAdapters();
+		final Notifier notifier;
+		if (input instanceof Notifier) {
+			notifier = (Notifier)input;
+		} else if (input instanceof Adapter) {
+			notifier = ((Adapter)input).getTarget();
+		} else {
+			notifier = null;
+		}
+		if (notifier != null) {
+			List<Adapter> eAdapters = notifier.eAdapters();
 			Adapter groupProvider = EcoreUtil.getAdapter(eAdapters, IDifferenceGroupProvider.class);
 			if (provider != groupProvider) {
-				throw new IllegalStateException();
-			}
-			if (registeredGroupProviders.contains(groupProvider)) {
 				throw new IllegalStateException();
 			}
 
