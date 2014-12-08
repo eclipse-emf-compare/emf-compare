@@ -10,12 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.rcp.internal.policy;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
-import java.util.Collection;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
@@ -37,6 +35,8 @@ import org.eclipse.uml2.uml.UMLPlugin;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class UMLLoadOnDemandPolicy implements ILoadOnDemandPolicy {
+	/** Keep track of the normalizations we've already made. */
+	private final BiMap<String, URI> profileNsURIToNormalized = HashBiMap.create();
 
 	/**
 	 * {@inheritDoc}
@@ -61,15 +61,14 @@ public class UMLLoadOnDemandPolicy implements ILoadOnDemandPolicy {
 	 * @return
 	 */
 	private boolean isRegisteredUMLProfile(URI normalizedURI, final URIConverter uriConverter) {
-		Collection<URI> normalizedURIs = Collections2.transform(UMLPlugin
-				.getEPackageNsURIToProfileLocationMap().values(), new Function<URI, URI>() {
-
-			public URI apply(URI t) {
-				return uriConverter.normalize(t).trimFragment();
+		for (Map.Entry<String, URI> entry : UMLPlugin.getEPackageNsURIToProfileLocationMap().entrySet()) {
+			if (!profileNsURIToNormalized.containsKey(entry.getKey())) {
+				profileNsURIToNormalized.put(entry.getKey(), uriConverter.normalize(entry.getValue()));
 			}
-		});
-		return Iterables.tryFind(normalizedURIs, Predicates.equalTo(normalizedURI.trimFragment()))
-				.isPresent();
+		}
+		// This should be a short-hand to inverse().containsKey(...), but HashBiMap seems to optimize
+		// containsValue further
+		return profileNsURIToNormalized.containsValue(normalizedURI);
 	}
 
 	/**
@@ -93,5 +92,4 @@ public class UMLLoadOnDemandPolicy implements ILoadOnDemandPolicy {
 		}
 		return false;
 	}
-
 }
