@@ -14,6 +14,7 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -68,6 +69,9 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 	/** The command stack on which the merge commands will be executed. */
 	private final ICompareCommandStack fCommandStack;
 
+	/** List of domains we've created ourselves and should thus cleanup ourselves. */
+	private final List<TransactionalEditingDomain> disposableDomains;
+
 	/**
 	 * Creates a new instance with the given notifiers to be listen to when something will be changed.
 	 * 
@@ -95,6 +99,7 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 
 		fChangeRecorder = new ChangeRecorder();
 		fChangeRecorder.setResolveProxies(false);
+		disposableDomains = new ArrayList<TransactionalEditingDomain>();
 	}
 
 	/**
@@ -136,9 +141,13 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 	 * @return a new compare editing domain on the given notifier.
 	 */
 	public static ICompareEditingDomain create(Notifier left, Notifier right, Notifier ancestor) {
-		EditingDomain leftED = getEditingDomain(left);
-		EditingDomain rightED = getEditingDomain(right);
+		boolean hadLeftED = getExistingEditingDomain(left) != null;
+		boolean hadRightED = getExistingEditingDomain(right) != null;
 
+		EditingDomain leftED = getOrCreateEditingDomain(left);
+		EditingDomain rightED = getOrCreateEditingDomain(right);
+
+		final ICompareEditingDomain domain;
 		if (leftED != null && rightED != null) {
 			CommandStack leftCommandStack = leftED.getCommandStack();
 			CommandStack rightCommandStack = rightED.getCommandStack();
@@ -166,10 +175,34 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 										+ " are not instances of BasicCommandStack, nor AbstractTransactionalCommandStack, therefore, they will not be used as backing command stacks for the current merge session.")); //$NON-NLS-1$
 				commandStack = new CompareCommandStack(new BasicCommandStack());
 			}
-			return new EMFCompareEditingDomain(left, right, ancestor, commandStack);
+			domain = new EMFCompareEditingDomain(left, right, ancestor, commandStack);
+		} else {
+			domain = create(left, right, ancestor, new BasicCommandStack());
 		}
 
-		return create(left, right, ancestor, new BasicCommandStack());
+		if (!hadLeftED && leftED instanceof TransactionalEditingDomain) {
+			((EMFCompareEditingDomain)domain).addDomainToDispose((TransactionalEditingDomain)leftED);
+		}
+		if (!hadRightED && rightED instanceof TransactionalEditingDomain) {
+			((EMFCompareEditingDomain)domain).addDomainToDispose((TransactionalEditingDomain)rightED);
+		}
+
+		return domain;
+	}
+
+	/**
+	 * Return an existing editing domain associated with the given {@link Notifier}.
+	 * 
+	 * @param notifier
+	 *            the notifier from which the editing domain has to be linked.
+	 * @return an editing domain associated with the given {@link Notifier} if any.
+	 */
+	private static EditingDomain getExistingEditingDomain(Notifier notifier) {
+		EditingDomain editingDomain = TransactionUtil.getEditingDomain(notifier);
+		if (editingDomain == null) {
+			editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(notifier);
+		}
+		return editingDomain;
 	}
 
 	/**
@@ -181,16 +214,12 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 	 *            the notifier from which the editing domain has to be linked.
 	 * @return an editing domain associated with the given {@link Notifier}
 	 */
-	private static EditingDomain getEditingDomain(Notifier notifier) {
-		EditingDomain editingDomain = TransactionUtil.getEditingDomain(notifier);
+	private static EditingDomain getOrCreateEditingDomain(Notifier notifier) {
+		EditingDomain editingDomain = getExistingEditingDomain(notifier);
 		if (editingDomain == null) {
-			editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(notifier);
-			if (editingDomain == null) {
-				ResourceSet resourceSet = getResourceSet(notifier);
-				if (resourceSet != null) {
-					editingDomain = TransactionalEditingDomain.Factory.INSTANCE
-							.createEditingDomain(resourceSet);
-				}
+			ResourceSet resourceSet = getResourceSet(notifier);
+			if (resourceSet != null) {
+				editingDomain = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
 			}
 		}
 
@@ -268,6 +297,9 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 		fChangeRecorder.dispose();
 		if (fCommandStack instanceof IDisposable) {
 			((IDisposable)fCommandStack).dispose();
+		}
+		for (TransactionalEditingDomain domain : disposableDomains) {
+			domain.dispose();
 		}
 	}
 
@@ -352,8 +384,8 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 	public ICompareCopyCommand createCopyAllNonConflictingCommand(Comparison comparison, boolean leftToRight,
 			IMerger.Registry mergerRegistry, IMergeAllNonConflictingRunnable runnable) {
 		ImmutableSet<Notifier> notifiers = ImmutableSet.<Notifier> of(comparison);
-		return new MergeAllNonConflictingCommand(fChangeRecorder, notifiers, comparison, leftToRight, mergerRegistry,
-				runnable);
+		return new MergeAllNonConflictingCommand(fChangeRecorder, notifiers, comparison, leftToRight,
+				mergerRegistry, runnable);
 	}
 
 	/**
@@ -365,4 +397,13 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 		return fChangeRecorder;
 	}
 
+	/**
+	 * Sets up a {@link TransactionalEditingDomain} for disposal along with {@code this}.
+	 * 
+	 * @param domain
+	 *            The domain that should be disposed when we are.
+	 */
+	private void addDomainToDispose(TransactionalEditingDomain domain) {
+		disposableDomains.add(domain);
+	}
 }
