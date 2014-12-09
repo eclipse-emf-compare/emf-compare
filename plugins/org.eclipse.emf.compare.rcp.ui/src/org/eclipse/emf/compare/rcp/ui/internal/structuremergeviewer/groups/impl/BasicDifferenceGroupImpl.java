@@ -23,16 +23,19 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REF
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -60,7 +63,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.edit.tree.TreeFactory;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -275,39 +277,13 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 *            the given MatchResource.
 	 * @return the sub tree of the given MatchResource.
 	 */
-	protected TreeNode buildSubTree(MatchResource matchResource) {
+	protected TreeNode buildSubTree(MatchResource matchResource,
+			Set<ResourceAttachmentChange> attachmentChanges) {
 		TreeNode treeNode = wrap(matchResource);
-		for (Match match : comparison.getMatches()) {
-			treeNode.getChildren().addAll(buildSubTree(matchResource, match));
+		for (ResourceAttachmentChange attachmentChange : attachmentChanges) {
+			treeNode.getChildren().add(wrap(attachmentChange));
 		}
 		return treeNode;
-	}
-
-	/**
-	 * Build the sub tree of the given Match that is a root of the given MatchResource.
-	 * 
-	 * @param matchResource
-	 *            the given MatchResource.
-	 * @param match
-	 *            the given Match.
-	 * @return the sub tree of the given Match that is a root of the given MatchResource.
-	 */
-	protected List<TreeNode> buildSubTree(MatchResource matchResource, Match match) {
-		List<TreeNode> ret = newArrayList();
-		if (isRootOfResourceURI(match.getLeft(), matchResource.getLeftURI())
-				|| isRootOfResourceURI(match.getRight(), matchResource.getRightURI())
-				|| isRootOfResourceURI(match.getOrigin(), matchResource.getOriginURI())) {
-			Collection<Diff> resourceAttachmentChanges = filter(match.getDifferences(), and(filter,
-					resourceAttachmentChange()));
-			for (Diff diff : resourceAttachmentChanges) {
-				ret.add(wrap(diff));
-			}
-		} else {
-			for (Match subMatch : match.getSubmatches()) {
-				ret.addAll(buildSubTree(matchResource, subMatch));
-			}
-		}
-		return ret;
 	}
 
 	/**
@@ -440,7 +416,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 *            the given diff.
 	 * @return the sub tree of the given diff.
 	 */
-	protected TreeNode buildSubTree(Diff diff) {
+	private TreeNode buildSubTree(Diff diff) {
 		TreeNode treeNode = wrap(diff);
 		for (IDifferenceGroupExtender ext : registry.getExtenders()) {
 			if (ext.handle(treeNode)) {
@@ -448,83 +424,6 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			}
 		}
 		return treeNode;
-	}
-
-	/**
-	 * Check if the resource of the given object as the same uri as the given uri.
-	 * 
-	 * @param eObject
-	 *            the given object.
-	 * @param uri
-	 *            the given uri.
-	 * @return true if the resource of the given object as the same uri as the given uri, false otherwise.
-	 */
-	protected boolean isRootOfResourceURI(EObject eObject, String uri) {
-		if (eObject != null && uri != null) {
-			final Resource resource = eObject.eResource();
-			return resource != null && uri.equals(resource.getURI().toString());
-		}
-		return false;
-	}
-
-	/**
-	 * This can be used to check whether a givan diff is a resource attachment change.
-	 * 
-	 * @return The created predicate.
-	 */
-	protected static Predicate<? super Diff> resourceAttachmentChange() {
-		return Predicates.instanceOf(ResourceAttachmentChange.class);
-	}
-
-	/**
-	 * Checks, for the given Match, if the container of the left part is different from the container of the
-	 * right part (Case of a match of a move remote diff).
-	 * 
-	 * @param match
-	 *            the given Match.
-	 * @return true, if the container of the left part is different from the container of the right part,
-	 *         false otherwise.
-	 */
-	public boolean matchWithLeftAndRightInDifferentContainer(Match match) {
-		EObject left = match.getLeft();
-		EObject right = match.getRight();
-		if (left != null && right != null) {
-			return comparison.getMatch(left.eContainer()) != comparison.getMatch(right.eContainer());
-		}
-		return false;
-	}
-
-	/**
-	 * Checks if the given TreeNode children contain the given diff.
-	 * 
-	 * @param treeNode
-	 *            the given TreeNode.
-	 * @param diff
-	 *            the given diff.
-	 * @return true, if the given TreeNode children contain the given diff, false otherwise.
-	 */
-	protected boolean containsChildrenWithDataEqualsToDiff(TreeNode treeNode, Diff diff) {
-		for (TreeNode child : treeNode.getChildren()) {
-			if (diff == child.getData()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Predicate to know if the given match contains containment refernce change according to the filter of
-	 * the group.
-	 * 
-	 * @param subMatch
-	 *            the given Match.
-	 * @return a predicate to know if the given match contains containment refernce change according to the
-	 *         filter of the group.
-	 */
-	@SuppressWarnings("unchecked")
-	protected Predicate<Diff> containmentReferenceForMatch(Match subMatch) {
-		return and(filter, CONTAINMENT_REFERENCE_CHANGE, or(valueIs(subMatch.getLeft()), valueIs(subMatch
-				.getRight()), valueIs(subMatch.getOrigin())));
 	}
 
 	/**
@@ -599,7 +498,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	/**
 	 * Get the accepted side(s) for children of a given Diff.
 	 */
-	protected static final Function<Diff, ChildrenSide> DIFF_TO_SIDE = new Function<Diff, ChildrenSide>() {
+	private static final Function<Diff, ChildrenSide> DIFF_TO_SIDE = new Function<Diff, ChildrenSide>() {
 		public ChildrenSide apply(Diff diff) {
 			final ChildrenSide side;
 			if (diff != null) {
@@ -625,7 +524,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 *            The side for which we accept the given Diff.
 	 * @return The created predicate.
 	 */
-	protected static Predicate<? super Diff> compatibleSide(final ChildrenSide side) {
+	private static Predicate<? super Diff> compatibleSide(final ChildrenSide side) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				if (input != null && side != ChildrenSide.BOTH) {
@@ -643,19 +542,49 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	public void buildSubTree() {
 		children = newArrayList();
 		extensionDiffProcessed = newLinkedHashSet();
+		children.addAll(buildMatchSubTrees());
+		children.addAll(buildMatchResourceSubTrees());
+		registerCrossReferenceAdapter(children);
+	}
+
+	protected List<TreeNode> buildMatchSubTrees() {
+		final List<TreeNode> matchSubTrees = new ArrayList<TreeNode>();
+
 		for (Match match : comparison.getMatches()) {
 			List<? extends TreeNode> buildSubTree = buildSubTree((Match)null, match);
 			if (buildSubTree != null) {
-				children.addAll(buildSubTree);
+				matchSubTrees.addAll(buildSubTree);
 			}
+		}
+
+		return matchSubTrees;
+	}
+
+	protected List<TreeNode> buildMatchResourceSubTrees() {
+		final List<TreeNode> matchResourceSubTrees = new ArrayList<TreeNode>();
+		if (comparison.getMatchedResources().isEmpty()) {
+			return matchResourceSubTrees;
+		}
+
+		final Iterable<ResourceAttachmentChange> attachmentChanges = Iterables.filter(comparison
+				.getDifferences(), ResourceAttachmentChange.class);
+		final Multimap<String, ResourceAttachmentChange> uriToRAC = HashMultimap.create();
+		for (ResourceAttachmentChange attachmentChange : attachmentChanges) {
+			uriToRAC.put(attachmentChange.getResourceURI(), attachmentChange);
 		}
 		for (MatchResource matchResource : comparison.getMatchedResources()) {
-			TreeNode buildSubTree = buildSubTree(matchResource);
+			final Collection<ResourceAttachmentChange> leftRAC = uriToRAC.get(matchResource.getLeftURI());
+			final Collection<ResourceAttachmentChange> rightRAC = uriToRAC.get(matchResource.getRightURI());
+			final Collection<ResourceAttachmentChange> originRAC = uriToRAC.get(matchResource.getOriginURI());
+			final ImmutableSet<ResourceAttachmentChange> racForMatchResource = ImmutableSet
+					.<ResourceAttachmentChange> builder().addAll(leftRAC).addAll(rightRAC).addAll(originRAC)
+					.build();
+
+			TreeNode buildSubTree = buildSubTree(matchResource, racForMatchResource);
 			if (buildSubTree != null) {
-				children.add(buildSubTree);
+				matchResourceSubTrees.add(buildSubTree);
 			}
 		}
-		registerCrossReferenceAdapter(children);
-
+		return matchResourceSubTrees;
 	}
 }
