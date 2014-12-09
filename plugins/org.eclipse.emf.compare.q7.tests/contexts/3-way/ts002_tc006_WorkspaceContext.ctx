@@ -1,0 +1,72 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Context-Type: com.xored.q7.workspace.context
+Element-Name: ts002_tc006_WorkspaceContext
+Element-Type: context
+Element-Version: 2.0
+Id: __2VZ8HyOEeSBuoKgQXcXfw
+Q7-Runtime-Version: 1.3.14.201410230950
+Save-Time: 12/5/14 5:18 PM
+
+------=_contents/442897_AddConflict/k2/conflict_k2_origin.uml-8d37dfae-e0eb-31ff-b340-2d303bc5ebcc
+Content-Type: q7/binary
+Entry-Name: contents/442897_AddConflict/k2/conflict_k2_origin.uml
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSdkFtLAzEQhd8F/0OY9+ZS623ZWFS2
+uGChoNW+yZqNMZobm+i2/nrjClKFvvg4c+Z8c2bK6doa9C67qL3jwDAFJJ3wrXaKw/J2NjqB6dn+Xvlm
+TbFoxGujJFpbXfxYxpQdMEoZ5LZxscgih+eUQkFI3/fYW4V9p0gMUpDVvCZ/DZn8yyCF0SHKwZS1MTnE
+FFOynF/DsFm3HB7uRt1scrW5r+SNmtTsw6yOj54UINdYyaHzPkFOjVAZvjO3lZFWujQQ0ibkoa+LLk0T
+4xb28UWcVjux50D+A22tqNVO6MUALcnWg3P9CVBLBwgcsOug5gAAAJgBAABQSwECFAAUAAgICAAAACEA
+HLDroOYAAACYAQAACAAAAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAHAEAAAAA
+
+------=_contents/442897_AddConflict/k2/conflict_k2_origin.uml-8d37dfae-e0eb-31ff-b340-2d303bc5ebcc--
+------=_contents/442897_AddConflict/k2/conflict_k2_left.uml-cd11f16c-686b-35ca-93e5-c3054f920f93
+Content-Type: q7/binary
+Entry-Name: contents/442897_AddConflict/k2/conflict_k2_left.uml
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSl0l1PwjAUBuB7E//D0nvWDVBx2SQC
+QxYg0SBKvDGjK6XSj7kWxvz11hEJkixGvGxP36enOfXbW86sDc4UlSIAru0ACwskEypIAKaP/VoLtG/O
+z/w1Z959jFYxwdaWU28fqTtuw3UcF5htJpRnigFYap16EOZ5bktObJkRqFKM4GwcweOAkX8EMGI0VbgM
+mVodXtiO7cDpeATKm2kSgNenWtZvDornEE9IM3I/2OzqckGAJWKOA5BJqYHp2rL8dNdzEjLMsdCloIvU
+HPp6UZfFSh2w8zd0HVaytzvTqAIrjZMyTRcUZ7+wYtIYkkq2+83+HU71VueVcA/Ak+X3gizHlXL4D7lV
+a/bkoHgxcucBzaPNaL1Se/luL/vwGN5NFB6N9JQ5JxxF1QPplD348ODPm/UnUEsHCAAAoQ8zAQAAKwMA
+AFBLAQIUABQACAgIAAAAIQAAAKEPMwEAACsDAAAIAAAAAAAAAAAAAAAAAAAAAAAuY29udGVudFBLBQYA
+AAAAAQABADYAAABpAQAAAAA=
+------=_contents/442897_AddConflict/k2/conflict_k2_left.uml-cd11f16c-686b-35ca-93e5-c3054f920f93--
+------=_contents/442897_AddConflict/k2/conflict_k2_right.uml-67a45071-a8b8-39bc-b124-02d027053a61
+Content-Type: q7/binary
+Entry-Name: contents/442897_AddConflict/k2/conflict_k2_right.uml
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSl0ltPwjAYBuB7E//D0nvWDRBx2SRy
+kkVINIgSb8zoSq30sKyFgb/eMnTBJYsRL3t4n37tV7+z5cza4FRRKQLg2g6wsEAypoIEYPY4rLVB5/r8
+zF9z5t1HaBURbG059YpI3XEbruO4wEwzoTyzGIA3rRMPwizLbMmJLVMCVYIRnE9CWA4Y+UcAI0YThfOQ
+WavDC9uxHTibjEF+Mo0D8PpUS4fN0e55gKekGbofbH7ZWhJgiYjjAKRSamCqtiw/OdQcDxjmWOhc0LvE
+bNrfqMcipY7YxTu6GlSyNwCegsYchaQS7R4KNarASuM4T9MlxekvrJg27qrZ3jf7dzjRW51Vwv2vRzhF
+3vTiVnXJw3/I7VqzL0e7FyN3H9Ai3IzXK1XIt4XswzJ86CgstXT/5eHRnzfjT1BLBwh/++TmNAEAACsD
+AABQSwECFAAUAAgICAAAACEAf/vk5jQBAAArAwAACAAAAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUG
+AAAAAAEAAQA2AAAAagEAAAAA
+------=_contents/442897_AddConflict/k2/conflict_k2_right.uml-67a45071-a8b8-39bc-b124-02d027053a61--
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf
+Content-Type: q7/binary
+Entry-Name: .q7.content
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSNkt1KxDAQhe8F3yHk3qSWxdbSuqgI
+ioiIoMWbsKRpNzY/3Ta19e2dXdvuUkT2LjPzzZmZQ+JlrxX6EnUjrUnwOfEwEobbTJoiwa3Lz0K8vDo9
+ibnVpLe1yMgmIJ2ty6ZacRG9j69ba5zoHeq1jCY5fysHA0wTQT7Ba+eqiNKu64jVBbF1QdOnhxH5e8TU
+RaFOd3W6CehUJ4JDDiOz0sC6xvN85rjnXbD5bhjJLMGM+W8f4f338514vWntY/GS8jTvMByJEJwJqHG7
+AMKqtp+Cu2ZQXyz88DJg11kGkrmS3OGBBDaXSowgGRoxPahblYExA1H6+9ZZMx+0WekzJXJHWq0OhP6h
+bS0LaY7nAV/P5WM6LDp6QEcTfh2ie4u276N+BbA/UEsHCAfJAWUkAQAAaQIAAFBLAQIUABQACAgIAAAA
+IQAHyQFlJAEAAGkCAAAIAAAAAAAAAAAAAAAAAAAAAAAuY29udGVudFBLBQYAAAAAAQABADYAAABaAQAA
+AAA=
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf--
+------=_contents/442897_AddConflict/.project-3dbeb2e3-20c6-31fb-868b-11be1c1da9d8
+Content-Type: q7/binary
+Entry-Name: contents/442897_AddConflict/.project
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSzsa/IzVEoSy0qzszPs1Uy1DNQUkjN
+S85PycxLt1UKDXHTtVCyt+Plsikoys9KTS5xSS1OLsosKAGqBopy2uQl5qbamZgYWViaxzumpDjn56Xl
+ZCaX2OiDJUAqkvNzc1PzSuxs9GEskCjUuGIwRx+Fl1SamZMSXJCaDJFD5eYllpQWpUK1IThwI1DdBwBQ
+SwcIsCiTuI0AAADeAAAAUEsBAhQAFAAICAgAAAAhALAok7iNAAAA3gAAAAgAAAAAAAAAAAAAAAAAAAAA
+AC5jb250ZW50UEsFBgAAAAABAAEANgAAAMMAAAAAAA==
+------=_contents/442897_AddConflict/.project-3dbeb2e3-20c6-31fb-868b-11be1c1da9d8--

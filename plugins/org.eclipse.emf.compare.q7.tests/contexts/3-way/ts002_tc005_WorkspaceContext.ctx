@@ -1,0 +1,70 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Context-Type: com.xored.q7.workspace.context
+Element-Name: ts002_tc005_WorkspaceContext
+Element-Type: context
+Element-Version: 2.0
+Id: _6zP6kHyOEeSBuoKgQXcXfw
+Q7-Runtime-Version: 1.3.14.201410230950
+Save-Time: 12/5/14 4:53 PM
+
+------=_contents/442897_AddConflict/k1/conflict_k1_origin.uml-bb1fb1e8-936b-39bf-9db5-7cacc6918c3a
+Content-Type: q7/binary
+Entry-Name: contents/442897_AddConflict/k1/conflict_k1_origin.uml
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSdkFtLAzEQhd8F/0OY9+ZS623ZWFS2
+uGChoNW+yZqNMZobm+i2/nrjClKFvvg4c+Z8c2bK6doa9C67qL3jwDAFJJ3wrXaKw/J2NjqB6dn+Xvlm
+TbFoxGujJFpbXfxYxpQdMEoZ5LZxscgih+eUQkFI3/fYW4V9p0gMUpDVvCZ/DZn8yyCF0SHKwZS1MTnE
+FFOynF/DsFm3HB7uRt1scrW5r+SNmtTsw6yOj54UINdYyaHzPkFOjVAZvjO3lZFWujQQ0ibkoa+LLk0T
+4xb28UWcVjux50D+A22tqNVO6MUALcnWg3P9CVBLBwgcsOug5gAAAJgBAABQSwECFAAUAAgICAAAACEA
+HLDroOYAAACYAQAACAAAAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAHAEAAAAA
+
+------=_contents/442897_AddConflict/k1/conflict_k1_origin.uml-bb1fb1e8-936b-39bf-9db5-7cacc6918c3a--
+------=_contents/442897_AddConflict/k1/conflict_k1_left.uml-59c8cc0a-108b-3b85-a44b-feb911bf9d61
+Content-Type: q7/binary
+Entry-Name: contents/442897_AddConflict/k1/conflict_k1_left.uml
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSd0l1PgzAUBuB7E/9D0/tR2OYXARed
+LC5KYjKnuzMIZ121LZVWAX+9FeIySYhxl/14n56eNphUgqMPKDTLZYg9x8UIZJpnTNIQL+9ng1M8OT88
+CN4F9++S9DWhgCrB/G1k6Hojz3U9bKe51L5dDPHGGOUTUpalkwvq5AUlWkFKVvGcdANW/hWAlDOloQnZ
+tSE5clzHJcv4FjcnsyzETw+DYja+rh8jWNDx3Pvkq5PjNcVIJgJCXOS5wbZqhALV1pxFHARI0wimVnbT
+942mPNF6h31+Sc+iXvaiNa0qQRvImjRbMyj+YOVidEN72ekP+39YmcqUvfAVJnvLbzXdxL1ytJUD0oXb
+vpNO4/d5jUyk8/62XTY1BGTnZ9rxF1BLBwjQI3hRHAEAANECAABQSwECFAAUAAgICAAAACEA0CN4URwB
+AADRAgAACAAAAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAUgEAAAAA
+------=_contents/442897_AddConflict/k1/conflict_k1_left.uml-59c8cc0a-108b-3b85-a44b-feb911bf9d61--
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf
+Content-Type: q7/binary
+Entry-Name: .q7.content
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSNklFPgzAQx99N/A5N322BzDEJuKgx
+0Rijiw/yRpZSWKW0DIqgn97bLGwhxuytd/e7/93903DZlxJ98roRWkXYJQ5GXDGdCpVHuDXZxQIvr8/P
+QqZL0uuap2Trk07XRVOtGQ/eh9edVob3BvWlCEY5bycHA1QTQD7CG2OqgNKu64guc6LrnMbPjwPy94ix
+i0Kd7ut069OxTjiDHEZqXQJrGsfxEsMc5zKZ7oaRSCOczL9f58XD18s9f7tt9VO+ilmcdRiORAjOBFSZ
+fQBhVesPzkxj1Wczb3HlJzdpCpKZFMxgSwKbCckHkNhGTI/qWqZgjCUK99A6aWZWOyncRPLMkLaUR0L/
+0LoWuVCn84BvpvIhtYsOHtDBhF+H6MGi3fukXwHsD1BLBwisRphJJQEAAGkCAABQSwECFAAUAAgICAAA
+ACEArEaYSSUBAABpAgAACAAAAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAWwEA
+AAAA
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf--
+------=_contents/442897_AddConflict/.project-3dbeb2e3-20c6-31fb-868b-11be1c1da9d8
+Content-Type: q7/binary
+Entry-Name: contents/442897_AddConflict/.project
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSzsa/IzVEoSy0qzszPs1Uy1DNQUkjN
+S85PycxLt1UKDXHTtVCyt+Plsikoys9KTS5xSS1OLsosKAGqBopy2uQl5qbamZgYWViaxzumpDjn56Xl
+ZCaX2OiDJUAqkvNzc1PzSuxs9GEskCjUuGIwRx+Fl1SamZMSXJCaDJFD5eYllpQWpUK1IThwI1DdBwBQ
+SwcIsCiTuI0AAADeAAAAUEsBAhQAFAAICAgAAAAhALAok7iNAAAA3gAAAAgAAAAAAAAAAAAAAAAAAAAA
+AC5jb250ZW50UEsFBgAAAAABAAEANgAAAMMAAAAAAA==
+------=_contents/442897_AddConflict/.project-3dbeb2e3-20c6-31fb-868b-11be1c1da9d8--
+------=_contents/442897_AddConflict/k1/conflict_k1_right.uml-e418e356-9537-3fde-b38d-9e679da61051
+Content-Type: q7/binary
+Entry-Name: contents/442897_AddConflict/k1/conflict_k1_right.uml
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSd0l1PgzAUBuB7E/9D0/tR2OZUAi6K
+EIkuMZnT3RmEs1ptC6F1MH+9HegySYhxl/14n56eHG9aC47WUCqWSx87lo0RyDTPmKQ+XjxEgzM8vTg+
+8j4Ed++T9D2hgGrB3F1kaDsjx7YdbLa5VK459PGr1oVLSFVVVi6olZeUqAJSspzFpBsw8q8ApJwVCpqQ
+ORuSE8u2bLKY3eHmZZb5+PlxUEbjm81TCHM6jp1PvjydrChGMhHg4zLPNTZVI+QVbc1ZyEGA1I2gN4W5
+tP1RwBOl9tiXt/Q87GUvMTkEzUQa0170qi3UqBKUhqxJsxWD8g9Wzke3/Wzww/4fLnStq174+rsJh8jr
+IJv0lxztZI904bbvpNP47WCSvck06y9QSwcICDPh7R0BAADRAgAAUEsBAhQAFAAICAgAAAAhAAgz4e0d
+AQAA0QIAAAgAAAAAAAAAAAAAAAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAFMBAAAAAA==
+------=_contents/442897_AddConflict/k1/conflict_k1_right.uml-e418e356-9537-3fde-b38d-9e679da61051--

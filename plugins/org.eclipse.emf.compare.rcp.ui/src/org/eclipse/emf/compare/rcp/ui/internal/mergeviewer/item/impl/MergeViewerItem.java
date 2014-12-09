@@ -383,9 +383,20 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 					match = getMatchWithNullValues(match);
 				}
 				if (match != null) {
+					EObject left = match.getLeft();
+					EObject right = match.getRight();
+
+					// Real add conflict (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=442898)
+					if (match.getLeft() != null && match.getRight() != null) {
+						if (b3) {
+							continue;
+						} else if (b2) {
+							continue;
+						}
+					}
 					IMergeViewerItem.Container insertionPoint = new MergeViewerItem.Container(
-							getComparison(), diff, match.getLeft(), match.getRight(), match.getOrigin(),
-							getSide(), getAdapterFactory());
+							getComparison(), diff, left, right, match.getOrigin(), getSide(),
+							getAdapterFactory());
 
 					final int insertionIndex;
 					if (match.getLeft() == null && match.getRight() == null && diff.getConflict() != null
