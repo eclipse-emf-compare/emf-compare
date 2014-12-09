@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
@@ -112,25 +113,26 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 
 		Iterables.addAll(comparison.getMatches(), matches);
 
-		if (delegate.isPresent()) {
-			doDelegation(comparison, leftEObjectsNoID, rightEObjectsNoID, originEObjectsNoID, monitor);
-		} else {
-			for (EObject eObject : leftEObjectsNoID) {
-				Match match = CompareFactory.eINSTANCE.createMatch();
-				match.setLeft(eObject);
-				matches.add(match);
+		if (!leftEObjectsNoID.isEmpty() || !rightEObjectsNoID.isEmpty() || !originEObjectsNoID.isEmpty()) {
+			if (delegate.isPresent()) {
+				doDelegation(comparison, leftEObjectsNoID, rightEObjectsNoID, originEObjectsNoID, monitor);
+			} else {
+				for (EObject eObject : leftEObjectsNoID) {
+					Match match = CompareFactory.eINSTANCE.createMatch();
+					match.setLeft(eObject);
+					matches.add(match);
+				}
+				for (EObject eObject : rightEObjectsNoID) {
+					Match match = CompareFactory.eINSTANCE.createMatch();
+					match.setRight(eObject);
+					matches.add(match);
+				}
+				for (EObject eObject : originEObjectsNoID) {
+					Match match = CompareFactory.eINSTANCE.createMatch();
+					match.setOrigin(eObject);
+					matches.add(match);
+				}
 			}
-			for (EObject eObject : rightEObjectsNoID) {
-				Match match = CompareFactory.eINSTANCE.createMatch();
-				match.setRight(eObject);
-				matches.add(match);
-			}
-			for (EObject eObject : originEObjectsNoID) {
-				Match match = CompareFactory.eINSTANCE.createMatch();
-				match.setOrigin(eObject);
-				matches.add(match);
-			}
-
 		}
 	}
 
@@ -199,7 +201,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 				final EObject parentEObject = left.eContainer();
 				final Match parent = leftEObjectsToMatch.get(parentEObject);
 				if (parent != null) {
-					parent.getSubmatches().add(match);
+					((InternalEList<Match>)parent.getSubmatches()).addUnique(match);
 				} else {
 					matches.add(match);
 				}
@@ -231,7 +233,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 					final EObject parentEObject = right.eContainer();
 					final Match parent = rightEObjectsToMatch.get(parentEObject);
 					if (parent != null) {
-						parent.getSubmatches().add(match);
+						((InternalEList<Match>)parent.getSubmatches()).addUnique(match);
 					} else {
 						matches.add(match);
 					}
@@ -264,7 +266,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 					final EObject parentEObject = origin.eContainer();
 					final Match parent = originEObjectsToMatch.get(parentEObject);
 					if (parent != null) {
-						parent.getSubmatches().add(match);
+						((InternalEList<Match>)parent.getSubmatches()).addUnique(match);
 					} else {
 						matches.add(match);
 					}
