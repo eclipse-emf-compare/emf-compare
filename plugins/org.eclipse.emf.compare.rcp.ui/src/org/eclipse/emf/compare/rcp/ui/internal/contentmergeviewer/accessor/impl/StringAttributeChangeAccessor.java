@@ -15,7 +15,6 @@ import java.io.InputStream;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.compare.AttributeChange;
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.IStreamContentAccessor;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.TypeConstants;
@@ -47,11 +46,6 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	private final EAttribute fAttribute;
 
 	/**
-	 * The comparison object.
-	 */
-	private final Comparison fComparison;
-
-	/**
 	 * Creates a new accessor for the given <code>eObject</code> and <code>eAttribute</code>.
 	 * 
 	 * @param eObject
@@ -62,16 +56,6 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	public StringAttributeChangeAccessor(EObject eObject, AttributeChange attributeChange) {
 		this.fEObject = eObject;
 		this.fAttribute = attributeChange.getAttribute();
-		this.fComparison = attributeChange.getMatch().getComparison();
-	}
-
-	/**
-	 * Returns the comparison object.
-	 * 
-	 * @return the comparison object.
-	 */
-	public Comparison getComparison() {
-		return fComparison;
 	}
 
 	/**
