@@ -713,4 +713,17 @@ public class IndividualDiffInputData extends AbstractInputData {
 		return loadFromClassLoader("featuremapscope/noncontainment/pseudoconflicts/moveorder/ancestor.nodes",
 				resourceSet);
 	}
+
+	public Resource getFeatureMapContainmentMoveInsideOutsideOrigin(ResourceSet resourceSet)
+			throws IOException {
+		return loadFromClassLoader("featuremapscope/containment/moveinandout/ancestor.nodes", resourceSet);
+	}
+
+	public Resource getFeatureMapContainmentMoveOutside(ResourceSet resourceSet) throws IOException {
+		return loadFromClassLoader("featuremapscope/containment/moveinandout/outside.nodes", resourceSet);
+	}
+
+	public Resource getFeatureMapContainmentMoveInside(ResourceSet resourceSet) throws IOException {
+		return loadFromClassLoader("featuremapscope/containment/moveinandout/inside.nodes", resourceSet);
+	}
 }

@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Stefan Dirix - bug 441172
+ *     Stefan Dirix - bugs 441172 and 454579
  *     Alexandra Buzila - Fixes for Bug 446252
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.Monitor;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
@@ -41,10 +42,14 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
+import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.ExtendedMetaData;
+import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -204,9 +209,10 @@ public abstract class AbstractMerger implements IMerger2 {
 	 * merged. We need to consider the conflict to be taking precedence over the others to make sure that the
 	 * conflict is resolved before even trying to merge anything.</li>
 	 * <li>Equivalent {@link ReferenceChange} and {@link FeatureMapChange} differences: in this case the
-	 * {@link FeatureMapChange} difference will take precedence over the {@link ReferenceChange}. This happens
-	 * in order to prevent special cases in which the {@link ReferenceChangeMerger} cannot ensure the correct
-	 * order of the feature map attribute.</li>
+	 * {@link FeatureMapChange} difference will take precedence over the {@link ReferenceChange} when the the
+	 * resulting operation actively modifies a FeatureMap. The {@link ReferenceChange} will take precedence
+	 * when a FeatureMap is only modified implicitly. This happens in order to prevent special cases in which
+	 * the {@link ReferenceChangeMerger} cannot ensure the correct order of the feature map attribute.</li>
 	 * </ol>
 	 * </p>
 	 * 
@@ -217,19 +223,82 @@ public abstract class AbstractMerger implements IMerger2 {
 	 * @return The master difference of this equivalence relation. May be <code>null</code> if there are none.
 	 */
 	private Diff findMasterEquivalence(Diff diff, boolean mergeRightToLeft) {
-		final Diff masterDiff;
 		final List<Diff> equivalentDiffs = diff.getEquivalence().getDifferences();
 		final Optional<Diff> firstConflicting = Iterables.tryFind(equivalentDiffs,
 				hasConflict(ConflictKind.REAL));
-		if (firstConflicting.isPresent()) {
-			masterDiff = firstConflicting.get();
-		} else if (diff instanceof ReferenceChange) {
+
+		final Diff idealMasterDiff;
+
+		if (diff instanceof ReferenceChange) {
 			final ReferenceChange referenceChange = (ReferenceChange)diff;
-			masterDiff = getMasterEquivalenceForReferenceChange(referenceChange, mergeRightToLeft);
+			idealMasterDiff = getMasterEquivalenceForReferenceChange(referenceChange, mergeRightToLeft);
+		} else if (diff instanceof FeatureMapChange) {
+			final FeatureMapChange featureMapChange = (FeatureMapChange)diff;
+			idealMasterDiff = getMasterEquivalenceForFeatureMapChange(featureMapChange, mergeRightToLeft);
 		} else {
-			masterDiff = null;
+			idealMasterDiff = null;
 		}
+
+		final Diff masterDiff;
+		// conflicting equivalents take precedence over the ideal master equivalence
+		if (firstConflicting.isPresent() && !hasRealConflict(idealMasterDiff)) {
+			if (hasRealConflict(diff)) {
+				masterDiff = null;
+			} else {
+				masterDiff = firstConflicting.get();
+			}
+		} else {
+			masterDiff = idealMasterDiff;
+		}
+
 		return masterDiff;
+	}
+
+	/**
+	 * Determines if the given {@link Diff} has a conflict of kind {@link ConflictKind#REAL}.
+	 *
+	 * @param diff
+	 *            The {@link Diff} to check.
+	 * @return {@code true} if the diff exists and has a conflict of kind {@link ConflictKind#REAL},
+	 *         {@code false} otherwise.
+	 */
+	private boolean hasRealConflict(Diff diff) {
+		return diff != null && diff.getConflict() != null
+				&& diff.getConflict().getKind() == ConflictKind.REAL;
+	}
+
+	/**
+	 * Returns the master equivalence for a {@link FeatureMapChange}.
+	 * 
+	 * @see AbstractMerger#findMasterEquivalence(Diff, boolean)
+	 * @param diff
+	 *            The {@link Diff} we need to check the equivalence for a 'master' difference.
+	 * @param mergeRightToLeft
+	 *            Direction of the current merging.
+	 * @return The master difference of {@code diff} and its equivalent diffs. This method may return
+	 *         <code>null</code> if there is no master diff.
+	 */
+	private Diff getMasterEquivalenceForFeatureMapChange(FeatureMapChange diff, boolean mergeRightToLeft) {
+		if (diff.getKind() == DifferenceKind.MOVE) {
+			final Comparison comparison = diff.getMatch().getComparison();
+			final FeatureMap.Entry entry = (FeatureMap.Entry)diff.getValue();
+
+			if (entry.getValue() instanceof EObject) {
+				final Match valueMatch = comparison.getMatch((EObject)entry.getValue());
+
+				final EObject expectedValue = ComparisonUtil.getExpectedSide(valueMatch, diff.getSource(),
+						mergeRightToLeft);
+
+				// Try to find the ReferenceChange-MasterEquivalence when the expected value will not be
+				// contained in a FeatureMap
+				if (!isContainedInFeatureMap(expectedValue)) {
+					return Iterators.tryFind(diff.getEquivalence().getDifferences().iterator(),
+							Predicates.instanceOf(ReferenceChange.class)).orNull();
+				}
+			}
+
+		}
+		return null;
 	}
 
 	/**
@@ -246,7 +315,7 @@ public abstract class AbstractMerger implements IMerger2 {
 	private Diff getMasterEquivalenceForReferenceChange(ReferenceChange diff, boolean mergeRightToLeft) {
 		Diff masterDiff = getMasterEquivalenceOnReference(diff, mergeRightToLeft);
 		if (masterDiff == null) {
-			masterDiff = getMasterEquivalenceFeatureMap(diff);
+			masterDiff = getMasterEquivalenceOnFeatureMap(diff, mergeRightToLeft);
 		}
 		return masterDiff;
 	}
@@ -329,10 +398,26 @@ public abstract class AbstractMerger implements IMerger2 {
 	 * @see AbstractMerger#findMasterEquivalence(Diff, boolean)
 	 * @param diff
 	 *            The {@link Diff} we need to check the equivalence for a 'master' difference.
+	 * @param mergeRightToLeft
+	 *            Direction of the current merging.
 	 * @return The master difference of {@code diff} and its equivalent diffs. This method may return
 	 *         <code>null</code> if there is no master diff.
 	 */
-	private Diff getMasterEquivalenceFeatureMap(ReferenceChange diff) {
+	private Diff getMasterEquivalenceOnFeatureMap(ReferenceChange diff, boolean mergeRightToLeft) {
+		if (diff.getKind() == DifferenceKind.MOVE) {
+
+			Comparison comparison = diff.getMatch().getComparison();
+			Match valueMatch = comparison.getMatch(diff.getValue());
+
+			EObject sourceValue = ComparisonUtil.getExpectedSide(valueMatch, diff.getSource(),
+					mergeRightToLeft);
+
+			// No FeatureMap-MasterEquivalence when the resulting destination is not a FeatureMap
+			if (!isContainedInFeatureMap(sourceValue)) {
+				return null;
+			}
+		}
+
 		return Iterators.tryFind(diff.getEquivalence().getDifferences().iterator(),
 				Predicates.instanceOf(FeatureMapChange.class)).orNull();
 	}
@@ -1023,5 +1108,23 @@ public abstract class AbstractMerger implements IMerger2 {
 				list.add(insertionIndex, value);
 			}
 		}
+	}
+
+	/**
+	 * Determines if the given {@link EObject} is contained directly within a FeatureMap by checking the
+	 * {@link EAnnotation}s.
+	 *
+	 * @param object
+	 *            The object to check.
+	 * @return {@true} if the {@code object} is directly contained within a FeatureMap.
+	 */
+	private boolean isContainedInFeatureMap(EObject object) {
+		final EAnnotation annotation = object.eContainingFeature().getEAnnotation(
+				ExtendedMetaData.ANNOTATION_URI);
+		if (annotation != null) {
+			final String groupKind = ExtendedMetaData.FEATURE_KINDS[ExtendedMetaData.GROUP_FEATURE];
+			return annotation.getDetails().containsKey(groupKind);
+		}
+		return false;
 	}
 }

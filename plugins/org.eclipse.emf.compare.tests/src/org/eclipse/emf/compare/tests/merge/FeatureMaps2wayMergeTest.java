@@ -1164,6 +1164,52 @@ public class FeatureMaps2wayMergeTest {
 	}
 
 	@Test
+	public void test2wayContainmentMoveToInside_RtL() throws IOException {
+		final ResourceSet resourceSet = new ResourceSetImpl();
+
+		final Resource left = input.getFeatureMapContainmentMoveInside(resourceSet);
+		final Resource right = input.getFeatureMapContainmentMoveOutside(resourceSet);
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertEquals(4, differences.size());
+
+		// reject all -> element a is moved out from a featuremap-containment
+		for (Diff diff : differences) {
+			mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		}
+
+		// no differences should be left
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertEquals(0, comparison.getDifferences().size());
+	}
+
+	@Test
+	public void test2wayContainmentMoveToInside_LtR() throws IOException {
+		final ResourceSet resourceSet = new ResourceSetImpl();
+
+		final Resource left = input.getFeatureMapContainmentMoveInside(resourceSet);
+		final Resource right = input.getFeatureMapContainmentMoveOutside(resourceSet);
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertEquals(4, differences.size());
+
+		// accept all -> element a is moved into a featuremap-containment
+		for (Diff diff : differences) {
+			mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		}
+
+		// no differences should be left
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertEquals(0, comparison.getDifferences().size());
+	}
+
+	@Test
 	public void test2wayNonContainmentAdd_LtR_1() throws IOException {
 		final ResourceSet rs = new ResourceSetImpl();
 		final Resource left = input.getFeatureMapNonContainmentLeftAddScope(rs);
