@@ -137,6 +137,8 @@ public class Navigatable implements INavigatable {
 				return getNextDiff(firstSelectedItem) != null;
 			case PREVIOUS_CHANGE:
 				return getPreviousDiff(firstSelectedItem) != null;
+			case FIRST_CHANGE:
+				return getNextDiff(null) != null;
 			default:
 				throw new IllegalStateException();
 		}
@@ -201,6 +203,7 @@ public class Navigatable implements INavigatable {
 		if (startingItem == null) {
 			return null;
 		}
+
 		Item previousItem = getPreviousItem(startingItem);
 		Object result = null;
 		while (previousItem != null && result == null) {
@@ -216,7 +219,7 @@ public class Navigatable implements INavigatable {
 
 	// Protected for testing purpose
 	protected Item getNextItem(Item previousItem) {
-		final TreeItem result;
+		final Item result;
 		TreeItem firstChild = getFirstChild(previousItem);
 		if (firstChild != null) {
 			result = firstChild;
@@ -227,6 +230,16 @@ public class Navigatable implements INavigatable {
 			} else {
 				result = getAncestorSibling(previousItem);
 			}
+		}
+		if (result instanceof TreeItem && result.getData() == null) {
+			// This is a dummy object for yet to be created children
+			final TreeItem parentItem = ((TreeItem)result).getParentItem();
+			if (parentItem != null) {
+				viewer.createChildren(parentItem);
+			} else {
+				viewer.createChildren(viewer.getTree());
+			}
+			return getNextItem(previousItem);
 		}
 		return result;
 	}
@@ -244,6 +257,16 @@ public class Navigatable implements INavigatable {
 			} else {
 				result = null;
 			}
+		}
+		if (result instanceof TreeItem && result.getData() == null) {
+			// This is a dummy object for yet to be created children
+			final TreeItem parentItem = ((TreeItem)result).getParentItem();
+			if (parentItem != null) {
+				viewer.createChildren(parentItem);
+			} else {
+				viewer.createChildren(viewer.getTree());
+			}
+			return getPreviousItem(previousItem);
 		}
 		return result;
 	}

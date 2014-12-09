@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
 
@@ -17,6 +18,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 import java.util.Arrays;
@@ -248,7 +250,18 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 	public Object getParent(Object element) {
 		final Object ret;
 		if (element instanceof CompareInputAdapter) {
-			ret = super.getParent(((Adapter)element).getTarget());
+			Object parentNode = super.getParent(((Adapter)element).getTarget());
+			if (parentNode instanceof TreeNode) {
+				final Optional<Adapter> cia = Iterators.tryFind(
+						((TreeNode)parentNode).eAdapters().iterator(), instanceOf(CompareInputAdapter.class));
+				if (cia.isPresent()) {
+					ret = cia.get();
+				} else {
+					ret = parentNode;
+				}
+			} else {
+				ret = parentNode;
+			}
 		} else if (element instanceof ICompareInput) {
 			ret = null;
 		} else {

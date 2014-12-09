@@ -113,6 +113,7 @@ public class NavigatableTest {
 					Integer increment = increment();
 					String name = String.valueOf(increment);
 					item.setText(name);
+					item.setData(name);
 					itemRetreiver.put(increment, item);
 					createSubNodes(item, numberOfChild, depth - 1);
 				}
@@ -141,7 +142,6 @@ public class NavigatableTest {
 			swtTree.dispose();
 		}
 		shell.dispose();
-		display.dispose();
 	}
 
 	/**

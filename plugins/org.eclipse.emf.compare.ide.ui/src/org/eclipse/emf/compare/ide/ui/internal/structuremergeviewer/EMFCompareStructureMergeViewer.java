@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.EventObject;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -184,9 +185,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	/** The width of the tree ruler. */
 	private static final int TREE_RULER_WIDTH = 17;
 
-	private static final Predicate<? super Object> IS_DIFF = new Predicate<Object>() {
-		public boolean apply(Object object) {
-			return getDataOfTreeNodeOfAdapter(object) instanceof Diff;
+	private static final Function<TreeNode, Diff> TREE_NODE_AS_DIFF = new Function<TreeNode, Diff>() {
+		public Diff apply(TreeNode input) {
+			if (input.getData() instanceof Diff) {
+				return (Diff)input.getData();
+			}
+			return null;
 		}
 	};
 
@@ -580,29 +584,35 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	private void refreshTitle() {
+		// TODO Make sure this is called as little as possible
+		// Or make this asynhronous?
 		Composite parent = getControl().getParent();
-		if (parent instanceof CompareViewerSwitchingPane) {
-			final Set<Adapter> visibleElement = ImmutableSet.copyOf(Iterables.filter(JFaceUtil
-					.visibleElements(getViewer(), IS_DIFF), Adapter.class));
-			final Set<Diff> visibleDiff = ImmutableSet.copyOf(Iterables.filter(Iterables.transform(
-					visibleElement, new Function<Adapter, Notifier>() {
-						public Notifier apply(Adapter input) {
-							return getDataOfTreeNodeOfAdapter(input);
-						}
-					}), Diff.class));
+		Comparison comparison = getCompareConfiguration().getComparison();
+		if (parent instanceof CompareViewerSwitchingPane && comparison != null) {
+			final Predicate<? super TreeNode> unfilteredNode = new Predicate<TreeNode>() {
+				public boolean apply(TreeNode input) {
+					return input != null && !JFaceUtil.isFiltered(getViewer(), input, null);
+				}
+			};
 
-			Comparison comparison = getCompareConfiguration().getComparison();
-			if (comparison != null) {
-				final Set<Diff> differences = ImmutableSet.copyOf(comparison.getDifferences());
-				final int filteredDiff = Sets.difference(differences, visibleDiff).size();
-				final int differencesToMerge = size(Iterables.filter(visibleDiff,
-						hasState(DifferenceState.UNRESOLVED)));
-				((CompareViewerSwitchingPane)parent)
-						.setTitleArgument(EMFCompareIDEUIMessages
-								.getString(
-										"EMFCompareStructureMergeViewer.titleDesc", differencesToMerge, visibleElement.size(), //$NON-NLS-1$
-										filteredDiff));
+			final Set<Diff> differences = new LinkedHashSet<Diff>();
+			final List<Iterable<TreeNode>> allTreeNodes = new ArrayList<Iterable<TreeNode>>();
+			for (Diff diff : comparison.getDifferences()) {
+				differences.add(diff);
+				allTreeNodes.add(dependencyData.getTreeNodes(diff));
 			}
+			final Iterable<TreeNode> treeNodes = Iterables.concat(allTreeNodes);
+			final Set<TreeNode> visibleNodes = ImmutableSet.copyOf(Iterables
+					.filter(treeNodes, unfilteredNode));
+			final Set<Diff> visibleDiffs = ImmutableSet.copyOf(Iterables.filter(Iterables.transform(
+					visibleNodes, TREE_NODE_AS_DIFF), Diff.class));
+
+			final int filteredDiff = Sets.difference(differences, visibleDiffs).size();
+			final int differencesToMerge = size(Iterables.filter(visibleDiffs,
+					hasState(DifferenceState.UNRESOLVED)));
+			((CompareViewerSwitchingPane)parent).setTitleArgument(EMFCompareIDEUIMessages.getString(
+					"EMFCompareStructureMergeViewer.titleDesc", differencesToMerge, visibleNodes.size(), //$NON-NLS-1$
+					filteredDiff));
 		}
 	}
 
@@ -988,7 +998,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			List<Diff> differences = comparison.getDifferences();
 			if (differences.isEmpty()) {
 				navigatable.fireOpen(new NoDifferencesCompareInput(compareInput));
-			} else if (JFaceUtil.visibleElements(getViewer(), IS_DIFF).isEmpty()) {
+			} else if (!navigatable.hasChange(INavigatable.FIRST_CHANGE)) {
 				navigatable.fireOpen(new NoVisibleItemCompareInput(compareInput));
 			} else {
 				navigatable.selectChange(INavigatable.FIRST_CHANGE);

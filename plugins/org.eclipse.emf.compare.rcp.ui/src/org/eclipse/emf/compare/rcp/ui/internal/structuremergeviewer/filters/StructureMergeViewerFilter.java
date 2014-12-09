@@ -140,6 +140,8 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 			} else {
 				result = true;
 			}
+		} else if (element instanceof EObject) {
+			result = viewerPredicate.apply((EObject)element);
 		} else {
 			result = true;
 		}
