@@ -10,23 +10,25 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
-import static com.google.common.collect.Collections2.filter;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.newLinkedHashSet;
-
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.edit.tree.TreeNode;
 
@@ -46,6 +48,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
 	 */
 	public static class ResourceGroup extends BasicDifferenceGroupImpl {
+		private Set<Match> roots;
 
 		/**
 		 * {@inheritDoc}.
@@ -57,78 +60,90 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 		}
 
 		@Override
-		public synchronized void buildSubTree() {
-			children = newArrayList();
-			extensionDiffProcessed = newLinkedHashSet();
-			for (MatchResource matchResource : getComparison().getMatchedResources()) {
-				children.add(buildSubTree(matchResource));
+		public void buildSubTree() {
+			// Prepare our "roots" list
+			roots = new LinkedHashSet<Match>();
+			for (Match match : getComparison().getMatches()) {
+				recursiveFindRoots(match);
 			}
-			registerCrossReferenceAdapter(children);
+			super.buildSubTree();
+		}
+
+		private void recursiveFindRoots(Match match) {
+			if (hasRootSide(match)) {
+				roots.add(match);
+			}
+			for (Match subMatch : match.getSubmatches()) {
+				recursiveFindRoots(subMatch);
+			}
+		}
+
+		/**
+		 * Checks if the given match has a side which is the root of its resource.
+		 * 
+		 * @param match
+		 *            The match.
+		 * @return <code>true</code> if this match has a "root" side (even if its the root of a fragment),
+		 *         <code>false</code> otherwise.
+		 */
+		private boolean hasRootSide(Match match) {
+			boolean hasRoot = match.getLeft() instanceof InternalEObject
+					&& ((InternalEObject)match.getLeft()).eDirectResource() != null;
+			hasRoot = hasRoot || match.getRight() instanceof InternalEObject
+					&& ((InternalEObject)match.getRight()).eDirectResource() != null;
+			hasRoot = hasRoot || match.getOrigin() instanceof InternalEObject
+					&& ((InternalEObject)match.getOrigin()).eDirectResource() != null;
+			return hasRoot;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		protected List<TreeNode> buildMatchSubTrees() {
+			// All of our nodes will be under MatchResources for this group.
+			return new ArrayList<TreeNode>();
 		}
 
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#buildSubTree(org.eclipse.emf.compare.MatchResource)
+		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#buildSubTree(MatchResource,
+		 *      Set)
 		 */
 		@Override
-		protected TreeNode buildSubTree(MatchResource matchResource) {
+		protected TreeNode buildSubTree(MatchResource matchResource,
+				Set<ResourceAttachmentChange> attachmentChanges) {
 			TreeNode ret = wrap(matchResource);
 
-			for (Match match : getComparison().getMatches()) {
-				ret.getChildren().addAll(buildSubTree(matchResource, match));
+			for (ResourceAttachmentChange attachmentChange : attachmentChanges) {
+				ret.getChildren().add(wrap(attachmentChange));
+			}
+
+			for (Match match : roots) {
+				if (isUnderResourceWithURI(match.getLeft(), matchResource.getLeftURI())
+						|| isUnderResourceWithURI(match.getRight(), matchResource.getRightURI())
+						|| isUnderResourceWithURI(match.getOrigin(), matchResource.getOriginURI())) {
+					ret.getChildren().addAll(buildSubTree(match, false, ChildrenSide.BOTH));
+				}
 			}
 
 			return ret;
 		}
 
 		/**
-		 * {@inheritDoc}
+		 * Check if the resource of the given object as the same uri as the given uri.
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#buildSubTree(org.eclipse.emf.compare.MatchResource,
-		 *      org.eclipse.emf.compare.Match)
+		 * @param eObject
+		 *            the given object.
+		 * @param uri
+		 *            the given uri.
+		 * @return true if the resource of the given object as the same uri as the given uri, false otherwise.
 		 */
-		@Override
-		protected List<TreeNode> buildSubTree(MatchResource matchResource, Match match) {
-			List<TreeNode> ret = newArrayList();
-			if (isRootOfResourceURI(match.getLeft(), matchResource.getLeftURI())
-					|| isRootOfResourceURI(match.getRight(), matchResource.getRightURI())
-					|| isRootOfResourceURI(match.getOrigin(), matchResource.getOriginURI())) {
-				ret.addAll(buildSubTree((Match)null, match));
-			} else {
-				for (Match subMatch : match.getSubmatches()) {
-					ret.addAll(buildSubTree(matchResource, subMatch));
-				}
+		private boolean isUnderResourceWithURI(EObject eObject, String uri) {
+			if (eObject != null && uri != null) {
+				final Resource resource = eObject.eResource();
+				return resource != null && uri.equals(resource.getURI().toString());
 			}
-			return ret;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#buildSubTree(org.eclipse.emf.compare.Match,
-		 *      org.eclipse.emf.compare.Match)
-		 */
-		@Override
-		public List<TreeNode> buildSubTree(Match parentMatch, Match match) {
-			final List<TreeNode> ret = Lists.newArrayList();
-			Collection<Diff> resourceAttachmentChanges = filter(match.getDifferences(),
-					resourceAttachmentChange());
-			if (!resourceAttachmentChanges.isEmpty()) {
-				for (Diff diff : resourceAttachmentChanges) {
-					ret.add(wrap(diff));
-				}
-			}
-
-			if (ret.isEmpty()) {
-				ret.add(wrap(match));
-			}
-
-			for (TreeNode treeNode : ret) {
-				treeNode.getChildren().addAll(buildSubTree(match, false, ChildrenSide.BOTH));
-			}
-
-			return ret;
+			return false;
 		}
 	}
 
