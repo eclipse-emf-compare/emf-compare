@@ -20,7 +20,7 @@ elif [[ "${OSTYPE}" == "darwin"* ]]; then
 	PLATFORM_SHORT_SPECIFIER="macosx-cocoa"
 	FILE_EXT="tar.gz"
 else
-	LSCRITICAL "Unknown 'OSTYPE'=${OSTYPE}."
+	echo "Unknown 'OSTYPE'=${OSTYPE}."
 	exit -1
 fi
 
@@ -49,11 +49,16 @@ if [[ -d $P2_ADMIN_PATH ]]; then
 	rm -rf "p2-admin"
 fi
 echo "Unzipping $P2_ADMIN_ZIPNAME"
-tar zxf "$P2_ADMIN_ZIPPATH" -C $workdir
+if [[ "$FILE_EXT" == "zip" ]]; then
+	unzip -q "$P2_ADMIN_ZIPPATH" -d $workdir
+else
+	tar zxf "$P2_ADMIN_ZIPPATH" -C $workdir
+fi
+
 
 if [[ "$simrel" == "mars"* ]]; then
-	simrel_zip_name="eclipse-SDK-4.5M2-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
-	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/S-4.5M2-201409180330/$simrel_zip_name"	
+	simrel_zip_name="eclipse-SDK-4.5M3-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
+	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/S-4.5M3-201410292000/$simrel_zip_name"	
 	p2_repositories="http://download.eclipse.org/releases/mars/,\
 http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest/,\
 http://download.eclipse.org/modeling/emf/compare/updates/egit-logical/nightly/"
@@ -115,7 +120,11 @@ if [[ -d "$simrel_path/eclipse" ]]; then
 fi
 
 echo "Unzipping $simrel_zip_name"
-tar zxf "$simrel_zip_path" -C $simrel_path
+if [[ "$FILE_EXT" == "zip" ]]; then
+	unzip -q "$simrel_zip_path" -d $simrel_path
+else
+	tar zxf "$simrel_zip_path" -C $simrel_path
+fi
 
 echo "Provisioning AUT"
 echo "  Repositories: $p2_repositories"
