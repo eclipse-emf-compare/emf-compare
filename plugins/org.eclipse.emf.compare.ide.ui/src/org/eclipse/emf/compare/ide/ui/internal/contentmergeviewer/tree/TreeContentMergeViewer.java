@@ -539,7 +539,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 									eContainer = ancestor.eContainer();
 								}
 								Match match2 = comparison.getMatch(eContainer);
-								if (match2.getLeft() != parent) {
+								if (match2 != null && match2.getLeft() != parent) {
 									IMergeViewerItem.Container container = new MergeViewerItem.Container(
 											getCompareConfiguration().getComparison(), null, match2,
 											MergeViewerSide.RIGHT, fAdapterFactory);
@@ -559,7 +559,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 									eContainer = ancestor.eContainer();
 								}
 								Match match2 = comparison.getMatch(eContainer);
-								if (match2.getRight() != parent) {
+								if (match2 != null && match2.getRight() != parent) {
 									IMergeViewerItem.Container container = new MergeViewerItem.Container(
 											getCompareConfiguration().getComparison(), null, match2,
 											MergeViewerSide.LEFT, fAdapterFactory);
