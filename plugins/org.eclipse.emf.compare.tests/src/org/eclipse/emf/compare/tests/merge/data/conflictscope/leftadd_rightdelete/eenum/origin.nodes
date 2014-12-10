@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes:Node xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" xmi:id="_FXA7gICFEeSu5PbwwW1jRA" name="root">
+  <containmentRef1 xsi:type="nodes:NodeMultiValueEEnumAttribute" xmi:id="_Hdzo4ICFEeSu5PbwwW1jRA" name="origin"/>
+</nodes:Node>

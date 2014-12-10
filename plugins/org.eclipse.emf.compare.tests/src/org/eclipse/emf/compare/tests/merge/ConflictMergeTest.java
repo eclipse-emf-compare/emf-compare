@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.tests.merge;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.not;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
@@ -23,9 +24,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 import com.google.common.collect.UnmodifiableIterator;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,6 +45,7 @@ import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.merge.data.IndividualDiffInputData;
 import org.eclipse.emf.compare.tests.nodes.Node;
+import org.eclipse.emf.compare.tests.nodes.NodeEnum;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
@@ -391,6 +395,65 @@ public class ConflictMergeTest {
 				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
 			}
 		}
+	}
+
+	@Test
+	public void testLeftAddRightDelete_LtR_EEnum() throws IOException {
+		final Resource left = input.getLeftAddRightDeleteLeftEEnumConflictScope();
+		final Resource right = input.getLeftAddRightDeleteRightEEnumConflictScope();
+		final Resource origin = input.getLeftAddRightDeleteOriginEEnumConflictScope();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		List<Diff> differences = comparison.getDifferences();
+		assertEquals(3, differences.size());
+
+		final String featureName = "multiValueEEnumAttribute";
+		final Diff diffA = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				addedToAttribute("root.origin", featureName, NodeEnum.A)));
+		final Diff diffB = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				addedToAttribute("root.origin", featureName, NodeEnum.B)));
+
+		mergerRegistry.getHighestRankingMerger(diffA).copyLeftToRight(diffA, new BasicMonitor());
+
+		final EObject rightElement = getNodeNamed(right, "origin");
+		assertNotNull(rightElement);
+		final EStructuralFeature feature = rightElement.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+		Object featureValue = rightElement.eGet(feature);
+		assertTrue(featureValue instanceof Collection<?>);
+		assertTrue(((Collection<?>)featureValue).containsAll(Lists.newArrayList(NodeEnum.A)));
+
+		mergerRegistry.getHighestRankingMerger(diffB).copyLeftToRight(diffB, new BasicMonitor());
+
+		featureValue = rightElement.eGet(feature);
+		assertTrue(featureValue instanceof Collection<?>);
+		assertTrue(((Collection<?>)featureValue).containsAll(Lists.newArrayList(NodeEnum.A, NodeEnum.B)));
+
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+	}
+
+	@Test
+	public void testLeftAddRightDelete_RtL_EEnum() throws IOException {
+		final Resource left = input.getLeftAddRightDeleteLeftEEnumConflictScope();
+		final Resource right = input.getLeftAddRightDeleteRightEEnumConflictScope();
+		final Resource origin = input.getLeftAddRightDeleteOriginEEnumConflictScope();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		List<Diff> differences = comparison.getDifferences();
+		assertEquals(3, differences.size());
+
+		final Diff diffDelete = Iterators.find(differences.iterator(), fromSide(DifferenceSource.RIGHT));
+
+		mergerRegistry.getHighestRankingMerger(diffDelete).copyRightToLeft(diffDelete, new BasicMonitor());
+
+		final EObject rightElement = getNodeNamed(left, "origin");
+		assertNull(rightElement);
+
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
 	}
 
 	@Test
@@ -1528,6 +1591,74 @@ public class ConflictMergeTest {
 		final EStructuralFeature eStructuralFeatureNameA = ((EClass)leftEClassA)
 				.getEStructuralFeature("name");
 		assertNull(eStructuralFeatureNameA);
+
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+	}
+
+	@Test
+	public void testLeftSetRightSetEEnum_LtR() throws IOException {
+		// Conflict between two single value attribute with an eenum type
+		final Resource left = input.getLeftSetRightSetLeftEEnumConflictScope();
+		final Resource right = input.getLeftSetRightSetRightEEnumConflictScope();
+		final Resource origin = input.getLeftSetRightSetOriginEEnumConflictScope();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		List<Diff> differences = comparison.getDifferences();
+		assertEquals(2, differences.size());
+
+		final Diff diff = Iterators.find(differences.iterator(), fromSide(DifferenceSource.LEFT));
+
+		// Merge the left diff should also merge the right diff
+		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+
+		final String featureName = "singlevalueEEnumAttribute";
+		final EObject rightNode = getNodeNamed(right, "root");
+		assertNotNull(rightNode);
+		final EStructuralFeature feature = rightNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+		final Object rightValue = rightNode.eGet(feature);
+		assertEquals(NodeEnum.B, rightValue);
+
+		final EObject leftNode = getNodeNamed(left, "root");
+		assertNotNull(rightNode);
+		final Object leftValue = leftNode.eGet(feature);
+		assertEquals(NodeEnum.B, leftValue);
+
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+	}
+
+	@Test
+	public void testLeftSetRightSetEEnum_RtL() throws IOException {
+		// Conflict between two single value attribute with an eenum type
+		final Resource left = input.getLeftSetRightSetLeftEEnumConflictScope();
+		final Resource right = input.getLeftSetRightSetRightEEnumConflictScope();
+		final Resource origin = input.getLeftSetRightSetOriginEEnumConflictScope();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		List<Diff> differences = comparison.getDifferences();
+		assertEquals(2, differences.size());
+
+		final Diff diff = Iterators.find(differences.iterator(), fromSide(DifferenceSource.RIGHT));
+
+		// Merge the left diff should also merge the right diff
+		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+
+		final String featureName = "singlevalueEEnumAttribute";
+		final EObject rightNode = getNodeNamed(right, "root");
+		assertNotNull(rightNode);
+		final EStructuralFeature feature = rightNode.eClass().getEStructuralFeature(featureName);
+		assertNotNull(feature);
+		final Object rightValue = rightNode.eGet(feature);
+		assertEquals(NodeEnum.C, rightValue);
+
+		final EObject leftNode = getNodeNamed(left, "root");
+		assertNotNull(rightNode);
+		final Object leftValue = leftNode.eGet(feature);
+		assertEquals(NodeEnum.C, leftValue);
 
 		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
 	}
