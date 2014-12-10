@@ -154,6 +154,24 @@ public interface NodesFactory extends EFactory {
 	NodeFeatureMapContainment2 createNodeFeatureMapContainment2();
 
 	/**
+	 * Returns a new object of class '<em>Node Single Value EEnum Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Node Single Value EEnum Attribute</em>'.
+	 * @generated
+	 */
+	NodeSingleValueEEnumAttribute createNodeSingleValueEEnumAttribute();
+
+	/**
+	 * Returns a new object of class '<em>Node Multi Value EEnum Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Node Multi Value EEnum Attribute</em>'.
+	 * @generated
+	 */
+	NodeMultiValueEEnumAttribute createNodeMultiValueEEnumAttribute();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

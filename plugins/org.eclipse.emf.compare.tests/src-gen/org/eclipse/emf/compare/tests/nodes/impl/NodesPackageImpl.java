@@ -11,9 +11,11 @@
 package org.eclipse.emf.compare.tests.nodes.impl;
 
 import org.eclipse.emf.compare.tests.nodes.Node;
+import org.eclipse.emf.compare.tests.nodes.NodeEnum;
 import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment;
 import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2;
 import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapNonContainment;
+import org.eclipse.emf.compare.tests.nodes.NodeMultiValueEEnumAttribute;
 import org.eclipse.emf.compare.tests.nodes.NodeMultiValueReference;
 import org.eclipse.emf.compare.tests.nodes.NodeMultiValuedAttribute;
 import org.eclipse.emf.compare.tests.nodes.NodeMultipleContainment;
@@ -22,12 +24,14 @@ import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany;
 import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToOne;
 import org.eclipse.emf.compare.tests.nodes.NodeSingleValueAttribute;
 import org.eclipse.emf.compare.tests.nodes.NodeSingleValueContainment;
+import org.eclipse.emf.compare.tests.nodes.NodeSingleValueEEnumAttribute;
 import org.eclipse.emf.compare.tests.nodes.NodeSingleValueReference;
 import org.eclipse.emf.compare.tests.nodes.NodesFactory;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -137,6 +141,27 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	 * @generated
 	 */
 	private EClass nodeFeatureMapContainment2EClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass nodeSingleValueEEnumAttributeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass nodeMultiValueEEnumAttributeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum nodeEnumEEnum = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -537,6 +562,51 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getNodeSingleValueEEnumAttribute() {
+		return nodeSingleValueEEnumAttributeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getNodeSingleValueEEnumAttribute_SinglevalueEEnumAttribute() {
+		return (EAttribute)nodeSingleValueEEnumAttributeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getNodeMultiValueEEnumAttribute() {
+		return nodeMultiValueEEnumAttributeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getNodeMultiValueEEnumAttribute_MultiValueEEnumAttribute() {
+		return (EAttribute)nodeMultiValueEEnumAttributeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getNodeEnum() {
+		return nodeEnumEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public NodesFactory getNodesFactory() {
 		return (NodesFactory)getEFactoryInstance();
 	}
@@ -609,6 +679,15 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 		createEAttribute(nodeFeatureMapContainment2EClass, NODE_FEATURE_MAP_CONTAINMENT2__MAP2);
 		createEReference(nodeFeatureMapContainment2EClass, NODE_FEATURE_MAP_CONTAINMENT2__MULTIPLE);
 		createEReference(nodeFeatureMapContainment2EClass, NODE_FEATURE_MAP_CONTAINMENT2__SINGLE);
+
+		nodeSingleValueEEnumAttributeEClass = createEClass(NODE_SINGLE_VALUE_EENUM_ATTRIBUTE);
+		createEAttribute(nodeSingleValueEEnumAttributeEClass, NODE_SINGLE_VALUE_EENUM_ATTRIBUTE__SINGLEVALUE_EENUM_ATTRIBUTE);
+
+		nodeMultiValueEEnumAttributeEClass = createEClass(NODE_MULTI_VALUE_EENUM_ATTRIBUTE);
+		createEAttribute(nodeMultiValueEEnumAttributeEClass, NODE_MULTI_VALUE_EENUM_ATTRIBUTE__MULTI_VALUE_EENUM_ATTRIBUTE);
+
+		// Create enums
+		nodeEnumEEnum = createEEnum(NODE_ENUM);
 	}
 
 	/**
@@ -651,6 +730,8 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 		nodeFeatureMapContainmentEClass.getESuperTypes().add(this.getNode());
 		nodeFeatureMapNonContainmentEClass.getESuperTypes().add(this.getNode());
 		nodeFeatureMapContainment2EClass.getESuperTypes().add(this.getNode());
+		nodeSingleValueEEnumAttributeEClass.getESuperTypes().add(this.getNode());
+		nodeMultiValueEEnumAttributeEClass.getESuperTypes().add(this.getNode());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(nodeEClass, Node.class, "Node", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -703,6 +784,18 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 		initEReference(getNodeFeatureMapContainment2_Multiple(), this.getNodeMultipleContainment(), null, "multiple", null, 0, -1, NodeFeatureMapContainment2.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getNodeFeatureMapContainment2_Single(), this.getNodeSingleValueContainment(), null, "single", null, 0, -1, NodeFeatureMapContainment2.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
+		initEClass(nodeSingleValueEEnumAttributeEClass, NodeSingleValueEEnumAttribute.class, "NodeSingleValueEEnumAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getNodeSingleValueEEnumAttribute_SinglevalueEEnumAttribute(), this.getNodeEnum(), "singlevalueEEnumAttribute", null, 0, 1, NodeSingleValueEEnumAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(nodeMultiValueEEnumAttributeEClass, NodeMultiValueEEnumAttribute.class, "NodeMultiValueEEnumAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getNodeMultiValueEEnumAttribute_MultiValueEEnumAttribute(), this.getNodeEnum(), "multiValueEEnumAttribute", null, 0, -1, NodeMultiValueEEnumAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		// Initialize enums and add enum literals
+		initEEnum(nodeEnumEEnum, NodeEnum.class, "NodeEnum"); //$NON-NLS-1$
+		addEEnumLiteral(nodeEnumEEnum, NodeEnum.A);
+		addEEnumLiteral(nodeEnumEEnum, NodeEnum.B);
+		addEEnumLiteral(nodeEnumEEnum, NodeEnum.C);
+
 		// Create resource
 		createResource(eNS_URI);
 
@@ -718,55 +811,55 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	 * @generated
 	 */
 	protected void createExtendedMetaDataAnnotations() {
-		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData"; //$NON-NLS-1$		
+		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData"; //$NON-NLS-1$	
 		addAnnotation
 		  (getNodeFeatureMapContainment_Map(), 
 		   source, 
 		   new String[] {
 			 "kind", "group" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getNodeFeatureMapContainment_FirstKey(), 
 		   source, 
 		   new String[] {
 			 "group", "#map" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getNodeFeatureMapContainment_SecondKey(), 
 		   source, 
 		   new String[] {
 			 "group", "#map" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getNodeFeatureMapNonContainment_MapNC(), 
 		   source, 
 		   new String[] {
 			 "kind", "group" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getNodeFeatureMapNonContainment_FirstKeyNC(), 
 		   source, 
 		   new String[] {
 			 "group", "#mapNC" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getNodeFeatureMapNonContainment_SecondKeyNC(), 
 		   source, 
 		   new String[] {
 			 "group", "#mapNC" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getNodeFeatureMapContainment2_Map2(), 
 		   source, 
 		   new String[] {
 			 "kind", "group" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getNodeFeatureMapContainment2_Multiple(), 
 		   source, 
 		   new String[] {
 			 "group", "#map2" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getNodeFeatureMapContainment2_Single(), 
 		   source, 

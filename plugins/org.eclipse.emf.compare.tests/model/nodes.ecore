@@ -112,4 +112,17 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NodeSingleValueEEnumAttribute" eSuperTypes="#//Node">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="singlevalueEEnumAttribute"
+        eType="#//NodeEnum"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="NodeEnum">
+    <eLiterals name="A"/>
+    <eLiterals name="B" value="1"/>
+    <eLiterals name="C" value="2" literal="C"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NodeMultiValueEEnumAttribute" eSuperTypes="#//Node">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiValueEEnumAttribute"
+        upperBound="-1" eType="#//NodeEnum"/>
+  </eClassifiers>
 </ecore:EPackage>

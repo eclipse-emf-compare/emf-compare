@@ -135,6 +135,14 @@ public class NodesAdapterFactory extends AdapterFactoryImpl {
 				return createNodeFeatureMapContainment2Adapter();
 			}
 			@Override
+			public Adapter caseNodeSingleValueEEnumAttribute(NodeSingleValueEEnumAttribute object) {
+				return createNodeSingleValueEEnumAttributeAdapter();
+			}
+			@Override
+			public Adapter caseNodeMultiValueEEnumAttribute(NodeMultiValueEEnumAttribute object) {
+				return createNodeMultiValueEEnumAttributeAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -333,6 +341,34 @@ public class NodesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createNodeFeatureMapContainment2Adapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.tests.nodes.NodeSingleValueEEnumAttribute <em>Node Single Value EEnum Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeSingleValueEEnumAttribute
+	 * @generated
+	 */
+	public Adapter createNodeSingleValueEEnumAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.tests.nodes.NodeMultiValueEEnumAttribute <em>Node Multi Value EEnum Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeMultiValueEEnumAttribute
+	 * @generated
+	 */
+	public Adapter createNodeMultiValueEEnumAttributeAdapter() {
 		return null;
 	}
 

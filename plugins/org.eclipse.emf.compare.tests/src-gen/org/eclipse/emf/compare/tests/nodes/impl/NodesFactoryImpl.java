@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.tests.nodes.impl;
 import org.eclipse.emf.compare.tests.nodes.*;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -84,8 +85,40 @@ public class NodesFactoryImpl extends EFactoryImpl implements NodesFactory {
 			case NodesPackage.NODE_FEATURE_MAP_CONTAINMENT: return createNodeFeatureMapContainment();
 			case NodesPackage.NODE_FEATURE_MAP_NON_CONTAINMENT: return createNodeFeatureMapNonContainment();
 			case NodesPackage.NODE_FEATURE_MAP_CONTAINMENT2: return createNodeFeatureMapContainment2();
+			case NodesPackage.NODE_SINGLE_VALUE_EENUM_ATTRIBUTE: return createNodeSingleValueEEnumAttribute();
+			case NodesPackage.NODE_MULTI_VALUE_EENUM_ATTRIBUTE: return createNodeMultiValueEEnumAttribute();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object createFromString(EDataType eDataType, String initialValue) {
+		switch (eDataType.getClassifierID()) {
+			case NodesPackage.NODE_ENUM:
+				return createNodeEnumFromString(eDataType, initialValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String convertToString(EDataType eDataType, Object instanceValue) {
+		switch (eDataType.getClassifierID()) {
+			case NodesPackage.NODE_ENUM:
+				return convertNodeEnumToString(eDataType, instanceValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -217,6 +250,46 @@ public class NodesFactoryImpl extends EFactoryImpl implements NodesFactory {
 	public NodeFeatureMapContainment2 createNodeFeatureMapContainment2() {
 		NodeFeatureMapContainment2Impl nodeFeatureMapContainment2 = new NodeFeatureMapContainment2Impl();
 		return nodeFeatureMapContainment2;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NodeSingleValueEEnumAttribute createNodeSingleValueEEnumAttribute() {
+		NodeSingleValueEEnumAttributeImpl nodeSingleValueEEnumAttribute = new NodeSingleValueEEnumAttributeImpl();
+		return nodeSingleValueEEnumAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NodeMultiValueEEnumAttribute createNodeMultiValueEEnumAttribute() {
+		NodeMultiValueEEnumAttributeImpl nodeMultiValueEEnumAttribute = new NodeMultiValueEEnumAttributeImpl();
+		return nodeMultiValueEEnumAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NodeEnum createNodeEnumFromString(EDataType eDataType, String initialValue) {
+		NodeEnum result = NodeEnum.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertNodeEnumToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
 	}
 
 	/**

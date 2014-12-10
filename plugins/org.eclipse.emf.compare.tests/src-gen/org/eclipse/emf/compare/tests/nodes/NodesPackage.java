@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.tests.nodes;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -759,6 +760,109 @@ public interface NodesPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeSingleValueEEnumAttributeImpl <em>Node Single Value EEnum Attribute</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodeSingleValueEEnumAttributeImpl
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeSingleValueEEnumAttribute()
+	 * @generated
+	 */
+	int NODE_SINGLE_VALUE_EENUM_ATTRIBUTE = 13;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_SINGLE_VALUE_EENUM_ATTRIBUTE__NAME = NODE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Containment Ref1</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_SINGLE_VALUE_EENUM_ATTRIBUTE__CONTAINMENT_REF1 = NODE__CONTAINMENT_REF1;
+
+	/**
+	 * The feature id for the '<em><b>Singlevalue EEnum Attribute</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_SINGLE_VALUE_EENUM_ATTRIBUTE__SINGLEVALUE_EENUM_ATTRIBUTE = NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Node Single Value EEnum Attribute</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_SINGLE_VALUE_EENUM_ATTRIBUTE_FEATURE_COUNT = NODE_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeMultiValueEEnumAttributeImpl <em>Node Multi Value EEnum Attribute</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodeMultiValueEEnumAttributeImpl
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeMultiValueEEnumAttribute()
+	 * @generated
+	 */
+	int NODE_MULTI_VALUE_EENUM_ATTRIBUTE = 14;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_MULTI_VALUE_EENUM_ATTRIBUTE__NAME = NODE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Containment Ref1</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_MULTI_VALUE_EENUM_ATTRIBUTE__CONTAINMENT_REF1 = NODE__CONTAINMENT_REF1;
+
+	/**
+	 * The feature id for the '<em><b>Multi Value EEnum Attribute</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_MULTI_VALUE_EENUM_ATTRIBUTE__MULTI_VALUE_EENUM_ATTRIBUTE = NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Node Multi Value EEnum Attribute</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_MULTI_VALUE_EENUM_ATTRIBUTE_FEATURE_COUNT = NODE_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.tests.nodes.NodeEnum <em>Node Enum</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeEnum
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeEnum()
+	 * @generated
+	 */
+	int NODE_ENUM = 15;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.tests.nodes.Node <em>Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1153,6 +1257,58 @@ public interface NodesPackage extends EPackage {
 	EReference getNodeFeatureMapContainment2_Single();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.tests.nodes.NodeSingleValueEEnumAttribute <em>Node Single Value EEnum Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Node Single Value EEnum Attribute</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeSingleValueEEnumAttribute
+	 * @generated
+	 */
+	EClass getNodeSingleValueEEnumAttribute();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.tests.nodes.NodeSingleValueEEnumAttribute#getSinglevalueEEnumAttribute <em>Singlevalue EEnum Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Singlevalue EEnum Attribute</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeSingleValueEEnumAttribute#getSinglevalueEEnumAttribute()
+	 * @see #getNodeSingleValueEEnumAttribute()
+	 * @generated
+	 */
+	EAttribute getNodeSingleValueEEnumAttribute_SinglevalueEEnumAttribute();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.tests.nodes.NodeMultiValueEEnumAttribute <em>Node Multi Value EEnum Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Node Multi Value EEnum Attribute</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeMultiValueEEnumAttribute
+	 * @generated
+	 */
+	EClass getNodeMultiValueEEnumAttribute();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.emf.compare.tests.nodes.NodeMultiValueEEnumAttribute#getMultiValueEEnumAttribute <em>Multi Value EEnum Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Multi Value EEnum Attribute</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeMultiValueEEnumAttribute#getMultiValueEEnumAttribute()
+	 * @see #getNodeMultiValueEEnumAttribute()
+	 * @generated
+	 */
+	EAttribute getNodeMultiValueEEnumAttribute_MultiValueEEnumAttribute();
+
+	/**
+	 * Returns the meta object for enum '{@link org.eclipse.emf.compare.tests.nodes.NodeEnum <em>Node Enum</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Node Enum</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeEnum
+	 * @generated
+	 */
+	EEnum getNodeEnum();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1495,6 +1651,52 @@ public interface NodesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference NODE_FEATURE_MAP_CONTAINMENT2__SINGLE = eINSTANCE.getNodeFeatureMapContainment2_Single();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeSingleValueEEnumAttributeImpl <em>Node Single Value EEnum Attribute</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodeSingleValueEEnumAttributeImpl
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeSingleValueEEnumAttribute()
+		 * @generated
+		 */
+		EClass NODE_SINGLE_VALUE_EENUM_ATTRIBUTE = eINSTANCE.getNodeSingleValueEEnumAttribute();
+
+		/**
+		 * The meta object literal for the '<em><b>Singlevalue EEnum Attribute</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NODE_SINGLE_VALUE_EENUM_ATTRIBUTE__SINGLEVALUE_EENUM_ATTRIBUTE = eINSTANCE.getNodeSingleValueEEnumAttribute_SinglevalueEEnumAttribute();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeMultiValueEEnumAttributeImpl <em>Node Multi Value EEnum Attribute</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodeMultiValueEEnumAttributeImpl
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeMultiValueEEnumAttribute()
+		 * @generated
+		 */
+		EClass NODE_MULTI_VALUE_EENUM_ATTRIBUTE = eINSTANCE.getNodeMultiValueEEnumAttribute();
+
+		/**
+		 * The meta object literal for the '<em><b>Multi Value EEnum Attribute</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NODE_MULTI_VALUE_EENUM_ATTRIBUTE__MULTI_VALUE_EENUM_ATTRIBUTE = eINSTANCE.getNodeMultiValueEEnumAttribute_MultiValueEEnumAttribute();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.tests.nodes.NodeEnum <em>Node Enum</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.tests.nodes.NodeEnum
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeEnum()
+		 * @generated
+		 */
+		EEnum NODE_ENUM = eINSTANCE.getNodeEnum();
 
 	}
 
