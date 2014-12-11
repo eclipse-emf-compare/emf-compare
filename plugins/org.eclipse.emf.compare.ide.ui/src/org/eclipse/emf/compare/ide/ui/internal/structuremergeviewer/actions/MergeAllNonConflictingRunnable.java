@@ -92,13 +92,23 @@ public class MergeAllNonConflictingRunnable extends AbstractMergeRunnable implem
 			}
 		} else {
 			final IBatchMerger merger = new BatchMerger(mergerRegistry);
-			if (leftToRight) {
+			final boolean threeWay = comparison.isThreeWay();
+			if (threeWay && leftToRight) {
+				affectedDiffs = Lists.newArrayList(Iterables.filter(comparison.getDifferences(),
+						fromSide(DifferenceSource.LEFT)));
+				merger.copyAllLeftToRight(affectedDiffs, emfMonitor);
+			} else if (threeWay) {
+				affectedDiffs = Lists.newArrayList(Iterables.filter(comparison.getDifferences(),
+						fromSide(DifferenceSource.RIGHT)));
+				merger.copyAllRightToLeft(affectedDiffs, emfMonitor);
+			} else if (leftToRight) {
 				affectedDiffs = Lists.newArrayList(Iterables.filter(comparison.getDifferences(),
 						fromSide(DifferenceSource.LEFT)));
 				merger.copyAllLeftToRight(affectedDiffs, emfMonitor);
 			} else {
+				// We're in a 2way-comparison, so all differences come from left side.
 				affectedDiffs = Lists.newArrayList(Iterables.filter(comparison.getDifferences(),
-						fromSide(DifferenceSource.RIGHT)));
+						fromSide(DifferenceSource.LEFT)));
 				merger.copyAllRightToLeft(affectedDiffs, emfMonitor);
 			}
 		}

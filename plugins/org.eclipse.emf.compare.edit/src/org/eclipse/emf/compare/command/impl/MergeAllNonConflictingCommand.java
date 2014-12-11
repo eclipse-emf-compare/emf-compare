@@ -17,7 +17,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
@@ -38,12 +37,6 @@ import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 public class MergeAllNonConflictingCommand extends AbstractCopyCommand {
 	/** The comparison which differences this command will merge. */
 	private final Comparison comparison;
-
-	/**
-	 * This will be set to the list of diffs that have been merged successfully after {@link #doExecute()
-	 * execution} of this command.
-	 */
-	private List<Diff> affectedDiffs;
 
 	/** The runnable to execute for the actual merge operation. */
 	private IMergeAllNonConflictingRunnable runnable;
@@ -83,15 +76,6 @@ public class MergeAllNonConflictingCommand extends AbstractCopyCommand {
 		runnable.merge(comparison, isLeftToRight(), mergerRegistry);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public Collection<?> getAffectedObjects() {
-		if (affectedDiffs == null) {
-			return Collections.emptyList();
-		}
-		return affectedDiffs;
-	}
-
 	/**
 	 * Returns the set of differences this command will operate on.
 	 * <p>
@@ -106,11 +90,15 @@ public class MergeAllNonConflictingCommand extends AbstractCopyCommand {
 	 * @return The list of differences this command will try and merge
 	 */
 	private static List<Diff> getDifferencesToMerge(Comparison comparison, boolean leftToRight) {
-		Iterable<Diff> diffs;
-		if (leftToRight) {
+		final boolean threeWay = comparison.isThreeWay();
+		final Iterable<Diff> diffs;
+		if (threeWay && leftToRight) {
 			diffs = Iterables.filter(comparison.getDifferences(), fromSide(DifferenceSource.LEFT));
-		} else {
+		} else if (threeWay) {
 			diffs = Iterables.filter(comparison.getDifferences(), fromSide(DifferenceSource.RIGHT));
+		} else {
+			// We're in a 2way-comparison, so all differences come from left side.
+			diffs = Iterables.filter(comparison.getDifferences(), fromSide(DifferenceSource.LEFT));
 		}
 		return Lists.newArrayList(diffs);
 	}

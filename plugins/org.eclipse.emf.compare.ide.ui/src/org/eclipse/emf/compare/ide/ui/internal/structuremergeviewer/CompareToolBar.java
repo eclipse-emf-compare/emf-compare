@@ -201,6 +201,9 @@ public class CompareToolBar implements ISelectionChangedListener {
 		for (MergeAction mergeAction : mergeActions) {
 			mergeAction.setCascadingDifferencesFilterEnabled(enabled);
 		}
+		for (MergeAction mergeAction : mergeAllNonConflictingActions) {
+			mergeAction.setCascadingDifferencesFilterEnabled(enabled);
+		}
 	}
 
 	@Subscribe

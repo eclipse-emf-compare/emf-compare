@@ -343,6 +343,16 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 			public void run() {
 				toolBar.initToolbar(getViewer(), navigatable);
+				toolBar.setEnabled(false);
+			}
+		});
+	}
+
+	private void enableToolbar() {
+		SWTUtil.safeSyncExec(new Runnable() {
+
+			public void run() {
+				toolBar.setEnabled(true);
 			}
 		});
 	}
@@ -853,9 +863,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			if (input instanceof CompareInputAdapter) {
 				resourceSetShouldBeDisposed = false;
 				compareInputChanged((CompareInputAdapter)input, monitor);
+				initToolbar();
 			} else if (input instanceof ComparisonScopeInput) {
 				resourceSetShouldBeDisposed = false;
 				compareInputChanged((ComparisonScopeInput)input, monitor);
+				initToolbar();
 			} else {
 				resourceSetShouldBeDisposed = true;
 				SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
@@ -951,9 +963,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				editingDomainNeedsToBeDisposed = true;
 				compareConfiguration.setEditingDomain(editingDomain);
 
+				initToolbar();
+
 				compareInputChanged(scope, compareResult);
 			}
-			initToolbar();
+			// Protect compare actions from over-enthusiast users
+			enableToolbar();
 		} else {
 			compareInputChangedToNull();
 		}
