@@ -280,7 +280,8 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	protected TreeNode buildSubTree(MatchResource matchResource,
 			Set<ResourceAttachmentChange> attachmentChanges) {
 		TreeNode treeNode = wrap(matchResource);
-		for (ResourceAttachmentChange attachmentChange : attachmentChanges) {
+		Collection<ResourceAttachmentChange> filteredChanges = filter(attachmentChanges, filter);
+		for (ResourceAttachmentChange attachmentChange : filteredChanges) {
 			treeNode.getChildren().add(wrap(attachmentChange));
 		}
 		return treeNode;
