@@ -164,12 +164,10 @@ public final class StructureMergeViewerGrouper {
 			if (provider != groupProvider) {
 				throw new IllegalStateException();
 			}
-
 			eAdapters.remove(provider);
-
-			for (IDifferenceGroupProvider registeredGroupProvider : registeredGroupProviders) {
-				registeredGroupProvider.dispose();
-			}
+		}
+		for (IDifferenceGroupProvider registeredGroupProvider : registeredGroupProviders) {
+			registeredGroupProvider.dispose();
 		}
 		viewers.remove(viewer);
 	}
