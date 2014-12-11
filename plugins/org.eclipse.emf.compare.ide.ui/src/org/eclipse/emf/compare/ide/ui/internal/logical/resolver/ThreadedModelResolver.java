@@ -1386,7 +1386,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			final URI from = source.getURI();
 			final URI to = ((InternalEObject)proxy).eProxyURI().trimFragment();
 
-			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
+			if (getResolutionScope() != CrossReferenceResolutionScope.SELF && to.isPlatformResource()) {
 				SynchronizedResourceSet resourceSet = (SynchronizedResourceSet)source.getResourceSet();
 				if (remote) {
 					demandRemoteResolve(resourceSet, to, monitor);
