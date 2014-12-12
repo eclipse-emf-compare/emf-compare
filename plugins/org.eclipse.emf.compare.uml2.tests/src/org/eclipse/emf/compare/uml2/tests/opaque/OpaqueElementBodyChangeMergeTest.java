@@ -11,9 +11,13 @@
 package org.eclipse.emf.compare.uml2.tests.opaque;
 
 import static com.google.common.base.Predicates.and;
+import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.size;
+import static org.eclipse.emf.compare.DifferenceSource.LEFT;
+import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
@@ -26,7 +30,6 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
@@ -103,15 +106,15 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 		}
 	};
 
-	private static final Predicate<Diff> IS_RIGHT_SOURCE = new Predicate<Diff>() {
-		public boolean apply(Diff diff) {
-			return DifferenceSource.RIGHT.equals(diff.getSource());
+	private static final Predicate<Conflict> IS_REAL_CONFLICT = new Predicate<Conflict>() {
+		public boolean apply(Conflict conflict) {
+			return ConflictKind.REAL.equals(conflict.getKind());
 		}
 	};
 
-	private static final Predicate<Diff> IS_LEFT_SOURCE = new Predicate<Diff>() {
-		public boolean apply(Diff diff) {
-			return DifferenceSource.LEFT.equals(diff.getSource());
+	private static final Predicate<Conflict> CONCERNS_OPAQUE_ELEMENT_BODY_CHANGE = new Predicate<Conflict>() {
+		public boolean apply(Conflict conflict) {
+			return any(conflict.getDifferences(), IS_OPAQUE_ELEMENT_CHANGE);
 		}
 	};
 
@@ -188,7 +191,7 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 		Resource right = input.getA2Right();
 
 		Comparison comparison = compare(left, right, origin);
-		assertOneRealConflict(comparison);
+		assertOneRealConflictOnOpaqueElementBodyChange(comparison);
 	}
 
 	@Test
@@ -198,7 +201,7 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 		Resource right = input.getA3Right();
 
 		Comparison comparison = compare(left, right, origin);
-		assertOneRealConflict(comparison);
+		assertOneRealConflictOnOpaqueElementBodyChange(comparison);
 	}
 
 	@Test
@@ -392,7 +395,7 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 		Resource right = input.getA7Right();
 
 		Comparison comparison = compare(left, right, origin);
-		assertOneRealConflict(comparison);
+		assertOneRealConflictOnOpaqueElementBodyChange(comparison);
 	}
 
 	@Test
@@ -402,7 +405,7 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 		Resource right = input.getA8Right();
 
 		Comparison comparison = compare(left, right, origin);
-		assertOneRealConflict(comparison);
+		assertOneRealConflictOnOpaqueElementBodyChange(comparison);
 	}
 
 	@Test
@@ -476,7 +479,7 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 		Resource right = input.getA11Right();
 
 		Comparison comparison = compare(left, right, origin);
-		assertOneRealConflict(comparison);
+		assertOneRealConflictOnOpaqueElementBodyChange(comparison);
 	}
 
 	@Test
@@ -486,7 +489,7 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 		Resource right = input.getA12Right();
 
 		Comparison comparison = compare(left, right, origin);
-		assertOneRealConflict(comparison);
+		assertOneRealConflictOnOpaqueElementBodyChange(comparison);
 	}
 
 	@Test
@@ -595,7 +598,7 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 	private void applyRightOpaqueElementBodyChangesToLeft(Comparison comparison) {
 		final EList<Diff> allDifferences = comparison.getDifferences();
 		final Iterable<Diff> rightOpaqueElementBodyChanges = filter(allDifferences, and(
-				IS_OPAQUE_ELEMENT_CHANGE, IS_RIGHT_SOURCE));
+				IS_OPAQUE_ELEMENT_CHANGE, fromSide(RIGHT)));
 		for (Diff diff : rightOpaqueElementBodyChanges) {
 			IMerger merger = getMergerRegistry().getHighestRankingMerger(diff);
 			merger.copyRightToLeft(diff, new BasicMonitor());
@@ -605,7 +608,7 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 	private void revertLeftOpaqueElementBodyChanges(Comparison comparison) {
 		final EList<Diff> allDifferences = comparison.getDifferences();
 		final Iterable<Diff> leftOpaqueElementBodyChanges = filter(allDifferences, and(
-				IS_OPAQUE_ELEMENT_CHANGE, IS_LEFT_SOURCE));
+				IS_OPAQUE_ELEMENT_CHANGE, fromSide(LEFT)));
 		for (Diff diff : leftOpaqueElementBodyChanges) {
 			IMerger merger = getMergerRegistry().getHighestRankingMerger(diff);
 			merger.copyRightToLeft(diff, new BasicMonitor());
@@ -615,7 +618,7 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 	private void revertRightOpaqueElementBodyChanges(Comparison comparison) {
 		final EList<Diff> allDifferences = comparison.getDifferences();
 		final Iterable<Diff> rightOpaqueElementBodyChanges = filter(allDifferences, and(
-				IS_OPAQUE_ELEMENT_CHANGE, IS_RIGHT_SOURCE));
+				IS_OPAQUE_ELEMENT_CHANGE, fromSide(RIGHT)));
 		for (Diff diff : rightOpaqueElementBodyChanges) {
 			IMerger merger = getMergerRegistry().getHighestRankingMerger(diff);
 			merger.copyLeftToRight(diff, new BasicMonitor());
@@ -625,7 +628,7 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 	private void applyLeftOpaqueElementBodyChangesToRight(Comparison comparison) {
 		final EList<Diff> allDifferences = comparison.getDifferences();
 		final Iterable<Diff> leftOpaqueElementBodyChanges = filter(allDifferences, and(
-				IS_OPAQUE_ELEMENT_CHANGE, IS_LEFT_SOURCE));
+				IS_OPAQUE_ELEMENT_CHANGE, fromSide(LEFT)));
 		for (Diff diff : leftOpaqueElementBodyChanges) {
 			IMerger merger = getMergerRegistry().getHighestRankingMerger(diff);
 			merger.copyLeftToRight(diff, new BasicMonitor());
@@ -633,23 +636,14 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 	}
 
 	private void assertNoRealConflict(Comparison comparison) {
-		for (Conflict conflict : comparison.getConflicts()) {
-			assertFalse(isRealConflict(conflict));
-		}
+		assertEquals(0, size(filter(comparison.getConflicts(), IS_REAL_CONFLICT)));
+		assertEquals(0, size(filter(comparison.getConflicts(), CONCERNS_OPAQUE_ELEMENT_BODY_CHANGE)));
 	}
 
-	private void assertOneRealConflict(Comparison comparison) {
-		int numberOfRealConflicts = 0;
-		for (Conflict conflict : comparison.getConflicts()) {
-			if (isRealConflict(conflict)) {
-				numberOfRealConflicts++;
-			}
-		}
-		assertEquals(1, numberOfRealConflicts);
-	}
-
-	private boolean isRealConflict(Conflict conflict) {
-		return ConflictKind.REAL.equals(conflict.getKind());
+	private void assertOneRealConflictOnOpaqueElementBodyChange(Comparison comparison) {
+		assertEquals(1, size(filter(comparison.getConflicts(), IS_REAL_CONFLICT)));
+		assertEquals(1, size(filter(comparison.getConflicts(), and(IS_REAL_CONFLICT,
+				CONCERNS_OPAQUE_ELEMENT_BODY_CHANGE))));
 	}
 
 	@Override

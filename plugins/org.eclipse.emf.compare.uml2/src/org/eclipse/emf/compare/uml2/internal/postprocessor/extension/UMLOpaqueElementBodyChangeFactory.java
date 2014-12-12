@@ -264,12 +264,17 @@ public class UMLOpaqueElementBodyChangeFactory extends AbstractUMLChangeFactory 
 	@Override
 	public Diff create(Diff input) {
 		final OpaqueElementBodyChange extension = (OpaqueElementBodyChange)super.create(input);
+
 		// getAffectedLanguage must yield a value at this point, otherwise we wouldn't have
 		// returned true when handle was called
 		extension.setLanguage(getAffectedLanguage((AttributeChange)input).get());
 		extension.setKind(computeDifferenceKind(extension));
-		extension.setSource(input.getSource());
-		extension.getImplies().addAll(extension.getRefinedBy());
+
+		// remove conflict from extension that has been inferred from refined differences (cf.
+		// AbstractChangeFactory#create()) because we add specific conflicts for OpaqueElementBodyChanges
+		// later in the post processor
+		extension.setConflict(null);
+
 		return extension;
 	}
 

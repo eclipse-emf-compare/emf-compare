@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.uml2.internal.merge;
 import com.google.common.base.Optional;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
@@ -32,9 +33,9 @@ import org.eclipse.emf.ecore.EObject;
  * OpaqueExpressions.
  * <p>
  * This merger handles all {@link Diff differences} that are either {@link OpaqueElementBodyChange opaque
- * element body changes} itself or that are AttributeChanges refining {@link OpaqueElementBodyChange opaque
- * element body changes}. Note that this merger forces the merging of the entire
- * {@link OpaqueElementBodyChange}, also if it is only invoked for one {@link AttributeChange} that refines a
+ * element body changes} themselves or that are {@link AttributeChange attribute changes} refining opaque
+ * element body changes. Note that this merger forces the merging of the entire
+ * {@link OpaqueElementBodyChange}, also if it is invoked only for one {@link AttributeChange} that refines a
  * {@link OpaqueElementBodyChange}.
  * </p>
  * 
@@ -398,7 +399,6 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 
 		move(languages, languageValueToMove, insertionIndex);
 		move(bodies, bodyValueToMove, insertionIndex);
-
 	}
 
 	/**
@@ -430,6 +430,18 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 		for (Diff refiningDiff : bodyChange.getRefinedBy()) {
 			refiningDiff.setState(DifferenceState.MERGED);
 		}
+	}
+
+	@Override
+	public Set<Diff> getDirectMergeDependencies(Diff diff, boolean mergeRightToLeft) {
+		/*
+		 * We take care of merging the refining diffs in this merger anyway, so we remove them from the direct
+		 * merge dependencies to avoid being called for them again before we even have completed the merge of
+		 * the body change itself.
+		 */
+		Set<Diff> dependencies = super.getDirectMergeDependencies(diff, mergeRightToLeft);
+		dependencies.removeAll(diff.getRefinedBy());
+		return dependencies;
 	}
 
 }
