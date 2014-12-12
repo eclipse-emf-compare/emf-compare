@@ -27,10 +27,9 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
@@ -38,6 +37,7 @@ import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -569,7 +569,8 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 
 		final Iterable<ResourceAttachmentChange> attachmentChanges = Iterables.filter(comparison
 				.getDifferences(), ResourceAttachmentChange.class);
-		final Multimap<String, ResourceAttachmentChange> uriToRAC = HashMultimap.create();
+
+		final Multimap<String, ResourceAttachmentChange> uriToRAC = LinkedHashMultimap.create();
 		for (ResourceAttachmentChange attachmentChange : attachmentChanges) {
 			uriToRAC.put(attachmentChange.getResourceURI(), attachmentChange);
 		}
@@ -577,9 +578,10 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			final Collection<ResourceAttachmentChange> leftRAC = uriToRAC.get(matchResource.getLeftURI());
 			final Collection<ResourceAttachmentChange> rightRAC = uriToRAC.get(matchResource.getRightURI());
 			final Collection<ResourceAttachmentChange> originRAC = uriToRAC.get(matchResource.getOriginURI());
-			final ImmutableSet<ResourceAttachmentChange> racForMatchResource = ImmutableSet
-					.<ResourceAttachmentChange> builder().addAll(leftRAC).addAll(rightRAC).addAll(originRAC)
-					.build();
+			final LinkedHashSet<ResourceAttachmentChange> racForMatchResource = Sets.newLinkedHashSet();
+			racForMatchResource.addAll(leftRAC);
+			racForMatchResource.addAll(rightRAC);
+			racForMatchResource.addAll(originRAC);
 
 			TreeNode buildSubTree = buildSubTree(matchResource, racForMatchResource);
 			if (buildSubTree != null) {
