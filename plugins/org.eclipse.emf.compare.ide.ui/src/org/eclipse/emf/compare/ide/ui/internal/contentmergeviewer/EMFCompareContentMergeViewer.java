@@ -645,8 +645,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
 		getCompareConfiguration().getEventBus().unregister(this);
 		differenceGroupProvider = null;
-		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), null);
-		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), null);
 		undoAction = null;
 		redoAction = null;
 		super.handleDispose(event);
