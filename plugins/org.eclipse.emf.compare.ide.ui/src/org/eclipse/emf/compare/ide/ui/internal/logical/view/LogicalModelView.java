@@ -46,7 +46,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -243,8 +242,8 @@ public class LogicalModelView extends CommonNavigator {
 			}
 		};
 		synchronizeAction.setToolTipText(synchronizationLabel);
-		synchronizeAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
-				ISharedImages.IMG_ELCL_SYNCED));
+		synchronizeAction.setImageDescriptor(EMFCompareIDEUIPlugin.getDefault().getImageDescriptor(
+				"icons/full/eobj16/synced.gif")); //$NON-NLS-1$
 
 		listPresentationAction = new Action(EMFCompareIDEUIMessages
 				.getString("LogicalModelView.listPresentation.title"), IAction.AS_RADIO_BUTTON) { //$NON-NLS-1$
