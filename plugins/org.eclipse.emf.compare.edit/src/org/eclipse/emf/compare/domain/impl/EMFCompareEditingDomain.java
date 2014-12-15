@@ -383,7 +383,9 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 	 */
 	public ICompareCopyCommand createCopyAllNonConflictingCommand(Comparison comparison, boolean leftToRight,
 			IMerger.Registry mergerRegistry, IMergeAllNonConflictingRunnable runnable) {
-		ImmutableSet<Notifier> notifiers = ImmutableSet.<Notifier> of(comparison);
+		ImmutableSet.Builder<Notifier> notifiersBuilder = ImmutableSet.builder();
+		notifiersBuilder.add(comparison);
+		ImmutableSet<Notifier> notifiers = notifiersBuilder.addAll(fNotifiers).build();
 		return new MergeAllNonConflictingCommand(fChangeRecorder, notifiers, comparison, leftToRight,
 				mergerRegistry, runnable);
 	}
