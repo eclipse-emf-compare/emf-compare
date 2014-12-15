@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ASCII"?>
+<nodes:NodeMultipleContainment
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes"
+    name="Root">
+  <containmentRef2 xsi:type="nodes:Node" name="A"/>
+  <containmentRef2 xsi:type="nodes:Node" name="B"/>
+</nodes:NodeMultipleContainment>

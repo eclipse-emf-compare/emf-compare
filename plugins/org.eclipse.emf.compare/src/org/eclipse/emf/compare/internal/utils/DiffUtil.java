@@ -9,7 +9,7 @@
  *     Obeo - initial API and implementation
  *     Philip Langer - Bugs 440679, 441258, 442439, 443504, 446739, 451048 and refactorings
  *     Alexandra Buzila - Fixes for bug 448464
- *     Stefan Dirix - Refactoring
+ *     Stefan Dirix - Bug 455255 and Refactoring
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
 
@@ -1061,7 +1061,9 @@ public final class DiffUtil {
 
 		if (isContainmentReferenceMove(diff) && isTargetOnTheRight(diff, rightToLeft)) {
 			final Match valueMatch = comparison.getMatch((EObject)diffValue);
-			targetFeature = valueMatch.getRight().eContainingFeature();
+			final EObject expectedValue = ComparisonUtil.getExpectedSide(valueMatch, diff.getSource(),
+					rightToLeft);
+			targetFeature = expectedValue.eContainingFeature();
 		} else {
 			targetFeature = diffFeature;
 		}

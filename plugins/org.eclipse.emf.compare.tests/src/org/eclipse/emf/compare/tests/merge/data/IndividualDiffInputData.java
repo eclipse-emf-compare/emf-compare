@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - added testdata for bug 455255
  */
 package org.eclipse.emf.compare.tests.merge.data;
 
@@ -181,6 +182,18 @@ public class IndividualDiffInputData extends AbstractInputData {
 
 	public Resource getReferenceMultiMoveLeft() throws IOException {
 		return loadFromClassLoader("fullscope/referencemultimove/left.nodes");
+	}
+
+	public Resource getReferenceDifferentContainmentMoveOrigin() throws IOException {
+		return loadFromClassLoader("fullscope/differentcontainmentmove/origin.nodes");
+	}
+
+	public Resource getReferenceDifferentContainmentMoveLeft() throws IOException {
+		return loadFromClassLoader("fullscope/differentcontainmentmove/left.nodes");
+	}
+
+	public Resource getReferenceDifferentContainmentMoveRight() throws IOException {
+		return loadFromClassLoader("fullscope/differentcontainmentmove/right.nodes");
 	}
 
 	public Resource getReferenceMultiMoveOrigin() throws IOException {

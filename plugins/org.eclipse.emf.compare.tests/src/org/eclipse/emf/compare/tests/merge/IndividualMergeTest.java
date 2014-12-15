@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - added test for bug 455255
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.merge;
 
@@ -2768,6 +2769,25 @@ public class IndividualMergeTest {
 
 		assertEquals(sourceContainerNode, sourceNode.eContainer());
 
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertEquals(0, comparison.getDifferences().size());
+	}
+
+	@Test
+	public void testReferenceDifferentContainmentMove3Way() throws IOException {
+		final Resource left = input.getReferenceDifferentContainmentMoveLeft();
+		final Resource right = input.getReferenceDifferentContainmentMoveRight();
+		final Resource origin = input.getReferenceDifferentContainmentMoveOrigin();
+
+		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		for (Diff diff : differences) {
+			mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		}
+
+		scope = new DefaultComparisonScope(right, origin, null);
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertEquals(0, comparison.getDifferences().size());
 	}
