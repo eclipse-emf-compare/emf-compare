@@ -338,8 +338,10 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 					nodeChildren.add(node);
 				}
 				Match matchOfValue = match.getComparison().getMatch(((ReferenceChange)diff).getValue());
-				matchOfValues.add(matchOfValue);
-				node.getChildren().addAll(buildSubTree(matchOfValue, true, DIFF_TO_SIDE.apply(diff)));
+				if (matchOfValue != null) {
+					matchOfValues.add(matchOfValue);
+					node.getChildren().addAll(buildSubTree(matchOfValue, true, DIFF_TO_SIDE.apply(diff)));
+				}
 				if (containment) {
 					ret.addAll(manageRefines(diff));
 				} else {
