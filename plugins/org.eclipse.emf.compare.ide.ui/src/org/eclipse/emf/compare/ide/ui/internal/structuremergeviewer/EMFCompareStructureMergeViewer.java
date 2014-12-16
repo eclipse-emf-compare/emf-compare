@@ -521,7 +521,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		treeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		treeViewer.setUseHashlookup(true);
 
-		dependencyData = new DependencyData(getCompareConfiguration(), treeViewer);
+		dependencyData = new DependencyData(getCompareConfiguration());
 
 		tabFolder.setData(CompareUI.COMPARE_VIEWER_TITLE, EMFCompareIDEUIMessages
 				.getString("EMFCompareStructureMergeViewer.title")); //$NON-NLS-1$
@@ -594,12 +594,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					return input != null && !JFaceUtil.isFiltered(getViewer(), input, null);
 				}
 			};
-
+			final IDifferenceGroupProvider groupProvider = getCompareConfiguration()
+					.getStructureMergeViewerGrouper().getProvider();
 			final Set<Diff> differences = new LinkedHashSet<Diff>();
 			final List<Iterable<TreeNode>> allTreeNodes = new ArrayList<Iterable<TreeNode>>();
 			for (Diff diff : comparison.getDifferences()) {
 				differences.add(diff);
-				allTreeNodes.add(dependencyData.getTreeNodes(diff));
+				allTreeNodes.add(groupProvider.getTreeNodes(diff));
 			}
 			final Iterable<TreeNode> treeNodes = Iterables.concat(allTreeNodes);
 			final Set<TreeNode> visibleNodes = ImmutableSet.copyOf(Iterables
@@ -841,9 +842,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
 				public void run() {
 					if (!getControl().isDisposed()) {
-						// Needs all to build all treeItem to compute the label
-						dependencyData.updateTreeItemMappings();
-
 						// title is not initialized as the comparison was set in the configuration after the
 						// refresh caused by the initialization of the viewer filters and the group providers.
 						refreshTitle();
@@ -1237,7 +1235,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		// Updates dependency data when the viewer has been refreshed and the content provider is ready.
 		getContentProvider().runWhenReady(IN_UI_SYNC, new Runnable() {
 			public void run() {
-				dependencyData.updateTreeItemMappings();
 				dependencyData.updateDependencies(getSelection(), EMFCompareRCPPlugin.getDefault()
 						.getMergerRegistry());
 
