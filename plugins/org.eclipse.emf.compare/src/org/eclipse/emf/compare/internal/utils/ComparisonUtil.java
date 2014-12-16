@@ -46,8 +46,10 @@ import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
+import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.ExtendedMetaData;
 import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
@@ -498,5 +500,23 @@ public final class ComparisonUtil {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Determines if the given {@link EObject} is contained directly within a FeatureMap by checking the
+	 * {@link EAnnotation}s.
+	 *
+	 * @param object
+	 *            The object to check.
+	 * @return {@true} if the {@code object} is directly contained within a FeatureMap.
+	 */
+	public static boolean isContainedInFeatureMap(EObject object) {
+		final EAnnotation annotation = object.eContainingFeature().getEAnnotation(
+				ExtendedMetaData.ANNOTATION_URI);
+		if (annotation != null) {
+			final String groupKind = ExtendedMetaData.FEATURE_KINDS[ExtendedMetaData.GROUP_FEATURE];
+			return annotation.getDetails().containsKey(groupKind);
+		}
+		return false;
 	}
 }

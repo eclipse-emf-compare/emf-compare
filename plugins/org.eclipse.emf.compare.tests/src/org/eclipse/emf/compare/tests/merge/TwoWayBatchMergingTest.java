@@ -38,6 +38,8 @@ import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.junit.Test;
 
 /**
@@ -211,8 +213,9 @@ public class TwoWayBatchMergingTest {
 	 */
 	@Test
 	public void mergingDeleteFeatureMapNonContainmentsL2R() throws IOException {
-		final Resource left = input.getDeleteFeatureMapNonContainmentsL2RLeft();
-		final Resource right = input.getDeleteFeatureMapNonContainmentsL2RRight();
+		final ResourceSet resourceSet = new ResourceSetImpl();
+		final Resource left = input.getDeleteFeatureMapNonContainmentsL2RLeft(resourceSet);
+		final Resource right = input.getDeleteFeatureMapNonContainmentsL2RRight(resourceSet);
 		batchMergeAndAssertEquality(left, right, Direction.LEFT_TO_RIGHT);
 	}
 

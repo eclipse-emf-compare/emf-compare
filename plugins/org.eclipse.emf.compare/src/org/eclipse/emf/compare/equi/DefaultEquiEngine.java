@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - Fix for Bug 453218
  *******************************************************************************/
 package org.eclipse.emf.compare.equi;
 
@@ -15,13 +16,14 @@ import static com.google.common.collect.Iterables.filter;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
@@ -174,17 +176,40 @@ public class DefaultEquiEngine implements IEquiEngine {
 	protected void checkForEquivalences(final Comparison comparison, final FeatureMapChange featureMapChange) {
 		Equivalence equivalence = featureMapChange.getEquivalence();
 		if (equivalence == null) {
-			EList<Diff> differences = featureMapChange.getMatch().getDifferences();
-			Object featureMapEntry = featureMapChange.getValue();
-			Object entryValue = ((FeatureMap.Entry)featureMapEntry).getValue();
-			EStructuralFeature entryKey = ((FeatureMap.Entry)featureMapEntry).getEStructuralFeature();
-			Set<ReferenceChange> equivalentDiffs = Sets.newLinkedHashSet();
-			IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+			final Set<Diff> differences = new LinkedHashSet<Diff>();
+			differences.addAll(featureMapChange.getMatch().getDifferences());
+
+			final Object featureMapEntry = featureMapChange.getValue();
+			final Object entryValue = ((FeatureMap.Entry)featureMapEntry).getValue();
+
+			if (entryValue instanceof EObject) {
+				final EObject entryValueObject = (EObject)entryValue;
+				final Match entryValueMatch = comparison.getMatch(entryValueObject);
+				differences.addAll(entryValueMatch.getDifferences());
+
+				if (entryValueMatch.getLeft() != null) {
+					final Match leftParentMatch = comparison.getMatch(entryValueMatch.getLeft().eContainer());
+					differences.addAll(leftParentMatch.getDifferences());
+				}
+				if (entryValueMatch.getRight() != null) {
+					final Match leftParentMatch = comparison
+							.getMatch(entryValueMatch.getRight().eContainer());
+					differences.addAll(leftParentMatch.getDifferences());
+				}
+			}
+
+			final EStructuralFeature entryKey = ((FeatureMap.Entry)featureMapEntry).getEStructuralFeature();
+			final Set<ReferenceChange> equivalentDiffs = Sets.newLinkedHashSet();
+			final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
 			for (ReferenceChange refChange : filter(differences, ReferenceChange.class)) {
 				// The current diff has the same ref & value than the Map Entry of the FeatureMapChange.
-				if (featureMapChange.getSource() == refChange.getSource()
-						&& refChange.getReference() == entryKey
-						&& equalityHelper.matchingValues(refChange.getValue(), entryValue)) {
+				boolean sameValue = equalityHelper.matchingValues(refChange.getValue(), entryValue);
+				boolean sameSource = featureMapChange.getSource() == refChange.getSource();
+				boolean sameReference = refChange.getReference() == entryKey;
+				boolean sameMove = refChange.getKind() == DifferenceKind.MOVE
+						&& featureMapChange.getKind() == DifferenceKind.MOVE;
+
+				if (sameSource && sameValue && (sameReference || sameMove)) {
 					equivalentDiffs.add(refChange);
 					if (equivalence == null && refChange.getEquivalence() != null) {
 						equivalence = refChange.getEquivalence();

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Alexandra Buzila - Fixes for bug 446252
- *     Stefan Dirix - Fixes for bug 453749
+ *     Stefan Dirix - Fixes for Bugs 453218 and 453749
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
@@ -419,27 +419,32 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 		final FeatureMap.Entry expectedEntry;
 		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
 		final FeatureMap.Entry diffEntry = (FeatureMap.Entry)diff.getValue();
+		final Match matchValue = comparison.getMatch((EObject)diffEntry.getValue());
+		final EObject value;
+		if (diff.getSource() == DifferenceSource.RIGHT) {
+			value = matchValue.getRight();
+		} else {
+			value = matchValue.getLeft();
+		}
 		if (comparison.isThreeWay() && isFeatureMapContainment(diff)) {
-			final Match matchValue = comparison.getMatch((EObject)diffEntry.getValue());
 			// search the origin key associated to the value
 			EStructuralFeature originKey = null;
 			final List<Object> originList = (List<Object>)safeEGet(matchValue.getOrigin().eContainer(), diff
 					.getAttribute());
 			for (Object object : originList) {
 				if (object instanceof FeatureMap.Entry
-						&& equalityHelper.matchingValues(diffEntry.getValue(), ((FeatureMap.Entry)object)
-								.getValue())) {
+						&& equalityHelper.matchingValues(value, ((FeatureMap.Entry)object).getValue())) {
 					// same value, get the key
 					originKey = ((FeatureMap.Entry)object).getEStructuralFeature();
 					break;
 				}
 			}
-			expectedEntry = FeatureMapUtil.createEntry(originKey, diffEntry.getValue());
+			expectedEntry = FeatureMapUtil.createEntry(originKey, value);
 		} else if (((EReference)diffEntry.getEStructuralFeature()).isContainment()) {
 			EStructuralFeature targetReference = getTargetReference(comparison, diff);
-			expectedEntry = FeatureMapUtil.createEntry(targetReference, diffEntry.getValue());
+			expectedEntry = FeatureMapUtil.createEntry(targetReference, value);
 		} else {
-			expectedEntry = diffEntry;
+			expectedEntry = FeatureMapUtil.createEntry(diffEntry.getEStructuralFeature(), value);
 		}
 		return expectedEntry;
 	}

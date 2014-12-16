@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Stefan Dirix - bug 450949
+ *     Stefan Dirix - Bugs 450949 and 453218
  *******************************************************************************/
 package org.eclipse.emf.compare.diff;
 
@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.ecore.EAttribute;
@@ -746,19 +747,104 @@ public class DefaultDiffEngine implements IDiffEngine {
 			}
 		}
 
-		// deleted
 		for (Object diffCandidate : rightValues) {
-			// A value that is in the right but not in the left has been deleted.
+
+			if (contains(comparison, leftValues, diffCandidate)) {
+				// skip elements which were already looked at earlier
+				continue;
+			}
+
+			// A value that is in the right but not in the left has been deleted or moved.
+
 			// However, we do not want attribute changes on removed elements and in case of a FeatureMapChange
-			// of kind DifferenceKind.CHANGE or DifferenceKind.MOVE
-			if (!contains(comparison, leftValues, diffCandidate)) {
-				if ((feature instanceof EReference || match.getLeft() != null)
-						&& !isFeatureMapChangeOrMove(comparison, feature, diffCandidate, leftValues,
-								DifferenceSource.LEFT)) {
+			// of kind DifferenceKind.CHANGE
+			if (feature instanceof EReference || match.getLeft() != null) {
+				if (isFeatureMapMoveFromNonFeatureMapContainment(comparison, feature, diffCandidate,
+						leftValues, DifferenceSource.LEFT)) {
+					// add move change if the move originates from a non-feature-map containment.
+					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
+				} else if (!isFeatureMapChangeOrMove(comparison, feature, diffCandidate, leftValues,
+						DifferenceSource.LEFT)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE, DifferenceSource.LEFT);
 				}
 			}
+
 		}
+	}
+
+	/**
+	 * Checks if the given candidate is a FeatureMap change of type DifferenceKind.CHANGE.
+	 *
+	 * @param comparison
+	 *            The comparison object.
+	 * @param feature
+	 *            The feature which values are to be checked.
+	 * @param diffCandidate
+	 *            The given candidate for which we search an equivalent value.
+	 * @param values
+	 *            The entries in which we search.
+	 * @param source
+	 *            The given DifferenceSource of the entry.
+	 * @return true if the given candidate is a FeatureMap change of type DifferenceKind.CHANGE, false
+	 *         otherwise.
+	 */
+	private boolean isFeatureMapChange(final Comparison comparison, final EStructuralFeature feature,
+			final Object diffCandidate, final List<Object> values, final DifferenceSource source) {
+		return FeatureMapUtil.isFeatureMap(feature)
+				&& (isFeatureMapEntryKeyChange(comparison.getEqualityHelper(),
+						(FeatureMap.Entry)diffCandidate, values));
+	}
+
+	/**
+	 * Checks if the given candidate is a FeatureMap change of type DifferenceKind.MOVE.
+	 *
+	 * @param comparison
+	 *            The comparison object.
+	 * @param feature
+	 *            The feature which values are to be checked.
+	 * @param diffCandidate
+	 *            The given candidate for which we search an equivalent value.
+	 * @param values
+	 *            The entries in which we search.
+	 * @param source
+	 *            The given DifferenceSource of the entry.
+	 * @return true if the given candidate is a FeatureMap change of type DifferenceKind.MOVE, false
+	 *         otherwise.
+	 */
+	private boolean isFeatureMapMove(final Comparison comparison, final EStructuralFeature feature,
+			final Object diffCandidate, final List<Object> values, final DifferenceSource source) {
+		return FeatureMapUtil.isFeatureMap(feature)
+				&& isFeatureMapEntryMove(comparison, (FeatureMap.Entry)diffCandidate, source);
+	}
+
+	/**
+	 * Checks if the given candidate is a FeatureMap change of type DifferenceKind.MOVE which originates from
+	 * a Non-FeatureMap-Containment.
+	 *
+	 * @param comparison
+	 *            The comparison object.
+	 * @param feature
+	 *            The feature which values are to be checked.
+	 * @param diffCandidate
+	 *            The given candidate for which we search an equivalent value.
+	 * @param values
+	 *            The entries in which we search.
+	 * @param source
+	 *            The given DifferenceSource of the entry.
+	 * @return true if the given candidate is a FeatureMap change of type DifferenceKind.MOVE, false
+	 *         otherwise.
+	 */
+	private boolean isFeatureMapMoveFromNonFeatureMapContainment(final Comparison comparison,
+			final EStructuralFeature feature, final Object diffCandidate, final List<Object> values,
+			final DifferenceSource source) {
+		if (isFeatureMapMove(comparison, feature, diffCandidate, values, source)) {
+			final Object entryValue = ((FeatureMap.Entry)diffCandidate).getValue();
+			if (entryValue instanceof EObject) {
+				final EObject leftObject = comparison.getMatch((EObject)entryValue).getLeft();
+				return !ComparisonUtil.isContainedInFeatureMap(leftObject);
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -780,10 +866,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 */
 	private boolean isFeatureMapChangeOrMove(final Comparison comparison, final EStructuralFeature feature,
 			final Object diffCandidate, final List<Object> values, final DifferenceSource source) {
-		return FeatureMapUtil.isFeatureMap(feature)
-				&& (isFeatureMapEntryKeyChange(comparison.getEqualityHelper(),
-						(FeatureMap.Entry)diffCandidate, values) || isFeatureMapEntryMove(comparison,
-						(FeatureMap.Entry)diffCandidate, source));
+		return isFeatureMapChange(comparison, feature, diffCandidate, values, source)
+				|| isFeatureMapMove(comparison, feature, diffCandidate, values, source);
 	}
 
 	/**

@@ -8,11 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Alexandra Buzila - Fixes for bug 446252
+ *     Stefan Dirix - Testcases for Bugs 453218 and 454579
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.merge;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.not;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.isEquivalentTo;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -50,7 +53,7 @@ import org.junit.Test;
  * A FeatureMapChange is always associated with a ReferenceChange. The FeatureMapChange is equivalent to his
  * ReferenceChange and vice-versa. Each case will be done on the FeatureMapChange and on the ReferenceChange.
  */
-@SuppressWarnings({"nls", "rawtypes" })
+@SuppressWarnings({"nls", "rawtypes", "unchecked" })
 public class FeatureMaps2wayMergeTest {
 
 	private IndividualDiffInputData input = new IndividualDiffInputData();
@@ -1203,6 +1206,76 @@ public class FeatureMaps2wayMergeTest {
 		for (Diff diff : differences) {
 			mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		}
+
+		// no differences should be left
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertEquals(0, comparison.getDifferences().size());
+	}
+
+	@Test
+	public void test2wayContainmentMoveToOutside_LtR() throws IOException {
+		final ResourceSet resourceSet = new ResourceSetImpl();
+
+		final Resource left = input.getFeatureMapContainmentMoveOutside(resourceSet);
+		final Resource right = input.getFeatureMapContainmentMoveInside(resourceSet);
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertEquals(4, differences.size());
+
+		// check if each featuremapchange / referencechange pair is equivalent
+		final Diff featureMapChangeDiff = Iterators.find(differences.iterator(), and(
+				instanceOf(FeatureMapChange.class), ofKind(DifferenceKind.MOVE)));
+
+		final Diff referenceChangeDiff = Iterators.find(differences.iterator(), and(
+				instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
+				not(isEquivalentTo(featureMapChangeDiff))));
+
+		assertEquals(2, featureMapChangeDiff.getEquivalence().getDifferences().size());
+		assertEquals(2, referenceChangeDiff.getEquivalence().getDifferences().size());
+
+		// accept both
+		mergerRegistry.getHighestRankingMerger(featureMapChangeDiff).copyLeftToRight(featureMapChangeDiff,
+				new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(referenceChangeDiff).copyLeftToRight(referenceChangeDiff,
+				new BasicMonitor());
+
+		// no differences should be left
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertEquals(0, comparison.getDifferences().size());
+	}
+
+	@Test
+	public void test2wayContainmentMoveToOutside_RtL() throws IOException {
+		final ResourceSet resourceSet = new ResourceSetImpl();
+
+		final Resource left = input.getFeatureMapContainmentMoveOutside(resourceSet);
+		final Resource right = input.getFeatureMapContainmentMoveInside(resourceSet);
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		assertEquals(4, differences.size());
+
+		// check if each featuremapchange / referencechange pair is equivalent
+		final Diff featureMapChangeDiff = Iterators.find(differences.iterator(), and(
+				instanceOf(FeatureMapChange.class), ofKind(DifferenceKind.MOVE)));
+
+		final Diff referenceChangeDiff = Iterators.find(differences.iterator(), and(
+				instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
+				not(isEquivalentTo(featureMapChangeDiff))));
+
+		assertEquals(2, featureMapChangeDiff.getEquivalence().getDifferences().size());
+		assertEquals(2, referenceChangeDiff.getEquivalence().getDifferences().size());
+
+		// reject both
+		mergerRegistry.getHighestRankingMerger(featureMapChangeDiff).copyRightToLeft(featureMapChangeDiff,
+				new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(referenceChangeDiff).copyRightToLeft(referenceChangeDiff,
+				new BasicMonitor());
 
 		// no differences should be left
 		comparison = EMFCompare.builder().build().compare(scope);

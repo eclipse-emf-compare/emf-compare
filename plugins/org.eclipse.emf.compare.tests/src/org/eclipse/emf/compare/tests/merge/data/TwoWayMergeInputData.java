@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 
 @SuppressWarnings("nls")
 public class TwoWayMergeInputData extends AbstractInputData {
@@ -83,11 +84,11 @@ public class TwoWayMergeInputData extends AbstractInputData {
 		return loadFromClassLoader("twoway/movetofeaturemap/ltr/right.nodes");
 	}
 
-	public Resource getDeleteFeatureMapNonContainmentsL2RLeft() throws IOException {
-		return loadFromClassLoader("twoway/deletefeaturemapnoncontainments/ltr/left.nodes");
+	public Resource getDeleteFeatureMapNonContainmentsL2RLeft(ResourceSet resourceSet) throws IOException {
+		return loadFromClassLoader("twoway/deletefeaturemapnoncontainments/ltr/left.nodes", resourceSet);
 	}
 
-	public Resource getDeleteFeatureMapNonContainmentsL2RRight() throws IOException {
-		return loadFromClassLoader("twoway/deletefeaturemapnoncontainments/ltr/right.nodes");
+	public Resource getDeleteFeatureMapNonContainmentsL2RRight(ResourceSet resourceSet) throws IOException {
+		return loadFromClassLoader("twoway/deletefeaturemapnoncontainments/ltr/right.nodes", resourceSet);
 	}
 }

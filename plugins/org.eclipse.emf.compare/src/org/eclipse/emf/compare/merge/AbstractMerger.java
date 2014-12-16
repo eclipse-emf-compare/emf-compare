@@ -45,10 +45,8 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
-import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.ExtendedMetaData;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -291,7 +289,7 @@ public abstract class AbstractMerger implements IMerger2 {
 
 				// Try to find the ReferenceChange-MasterEquivalence when the expected value will not be
 				// contained in a FeatureMap
-				if (!isContainedInFeatureMap(expectedValue)) {
+				if (!ComparisonUtil.isContainedInFeatureMap(expectedValue)) {
 					return Iterators.tryFind(diff.getEquivalence().getDifferences().iterator(),
 							Predicates.instanceOf(ReferenceChange.class)).orNull();
 				}
@@ -413,7 +411,7 @@ public abstract class AbstractMerger implements IMerger2 {
 					mergeRightToLeft);
 
 			// No FeatureMap-MasterEquivalence when the resulting destination is not a FeatureMap
-			if (!isContainedInFeatureMap(sourceValue)) {
+			if (!ComparisonUtil.isContainedInFeatureMap(sourceValue)) {
 				return null;
 			}
 		}
@@ -1108,23 +1106,5 @@ public abstract class AbstractMerger implements IMerger2 {
 				list.add(insertionIndex, value);
 			}
 		}
-	}
-
-	/**
-	 * Determines if the given {@link EObject} is contained directly within a FeatureMap by checking the
-	 * {@link EAnnotation}s.
-	 *
-	 * @param object
-	 *            The object to check.
-	 * @return {@true} if the {@code object} is directly contained within a FeatureMap.
-	 */
-	private boolean isContainedInFeatureMap(EObject object) {
-		final EAnnotation annotation = object.eContainingFeature().getEAnnotation(
-				ExtendedMetaData.ANNOTATION_URI);
-		if (annotation != null) {
-			final String groupKind = ExtendedMetaData.FEATURE_KINDS[ExtendedMetaData.GROUP_FEATURE];
-			return annotation.getDetails().containsKey(groupKind);
-		}
-		return false;
 	}
 }
