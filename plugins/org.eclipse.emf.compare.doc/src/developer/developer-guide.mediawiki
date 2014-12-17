@@ -222,13 +222,13 @@ IEObjectMatcher customIDMatcher = new IdentifierEObjectMatcher(fallBackMatcher, 
  
 IComparisonFactory comparisonFactory = new DefaultComparisonFactory(new DefaultEqualityHelperFactory());
  
-IMatchEngine matchEngine = new DefaultMatchEngine(customIDMatcher, comparisonFactory);
 IMatchEngine.Factory.Registry registry = MatchEngineFactoryRegistryImpl.createStandaloneInstance();
 // for OSGi (IDE, RCP) usage
 // IMatchEngine.Factory.Registry registry = EMFCompareRCPPlugin.getMatchEngineFactoryRegistry();
-engineFactory.setRanking(20); // default engine ranking is 10, must be higher to override.
-registry.add(engineFactory);
-EMFCompare.builder().setMatchEngineFactoryRegistry(registry).build().compare(scope);
+final MatchEngineFactoryImpl matchEngineFactory = new MatchEngineFactoryImpl(customIDMatcher, comparisonFactory);
+matchEngineFactory.setRanking(20); // default engine ranking is 10, must be higher to override.
+registry.add(matchEngineFactory);
+Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(registry).build().compare(scope);
 </source>
 
 ==== Ignoring identifiers ====
@@ -238,11 +238,14 @@ There are some cases where you do not want the identifiers of your elements to b
 '''Through code'''
 
 <source lang="java">
-IEObjectMatcher matcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER);
-IComparisonFactory comparisonFactory = new DefaultComparisonFactory(new DefaultEqualityHelperFactory());
+IMatchEngine.Factory.Registry registry === MatchEngineFactoryRegistryImpl.createStandaloneInstance();
+// for OSGi (IDE, RCP) usage
+// IMatchEngine.Factory.Registry registry === EMFCompareRCPPlugin.getMatchEngineFactoryRegistry();
+final MatchEngineFactoryImpl matchEngineFactory = new MatchEngineFactoryImpl(UseIdentifiers.NEVER);
+matchEngineFactory.setRanking(20); // default engine ranking is 10, must be higher to override.
+registry.add(matchEngineFactory);
 
-IMatchEngine matchEngine = new DefaultMatchEngine(matcher , comparisonFactory);
-EMFCompare.builder().setMatchEngine(matchEngine).build().compare(scope);
+Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(registry).build().compare(scope);
 </source>
 
 '''From the user interface'''
