@@ -19,6 +19,10 @@ import static org.eclipse.emf.compare.DifferenceKind.ADD;
 import static org.eclipse.emf.compare.DifferenceKind.CHANGE;
 import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.DifferenceKind.MOVE;
+import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.getOpaqueElementBodies;
+import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.getOpaqueElementLanguages;
+import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.isChangeOfOpaqueElementBodyAttribute;
+import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.isChangeOfOpaqueElementLanguageAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Optional;
@@ -37,14 +41,11 @@ import org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
-import org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.Switch;
 import org.eclipse.uml2.uml.OpaqueAction;
 import org.eclipse.uml2.uml.OpaqueBehavior;
 import org.eclipse.uml2.uml.OpaqueExpression;
-import org.eclipse.uml2.uml.UMLPackage;
 
 /**
  * A change factory for creating {@link OpaqueElementBodyChange changes of bodies} of {@link OpaqueAction
@@ -94,37 +95,7 @@ public class UMLOpaqueElementBodyChangeFactory extends AbstractUMLChangeFactory 
 	 *         <code>false</code> otherwise.
 	 */
 	private boolean isChangeOfBodyAttributeWithLanguage(AttributeChange diff) {
-		return isChangeOfBodyAttribute(diff) && affectsBodyWithLanguage(diff);
-	}
-
-	/**
-	 * Specifies whether the given {@code diff} is a change of the body attribute of {@link OpaqueAction},
-	 * {@link OpaqueBehavior}, or {@link OpaqueExpression}.
-	 * 
-	 * @param diff
-	 *            The attribute change to check.
-	 * @return <code>true</code> if it is a change of the body attribute, <code>false</code> otherwise.
-	 */
-	private boolean isChangeOfBodyAttribute(AttributeChange diff) {
-		final EAttribute attribute = diff.getAttribute();
-		return UMLPackage.eINSTANCE.getOpaqueAction_Body().equals(attribute)
-				|| UMLPackage.eINSTANCE.getOpaqueBehavior_Body().equals(attribute)
-				|| UMLPackage.eINSTANCE.getOpaqueExpression_Body().equals(attribute);
-	}
-
-	/**
-	 * Specifies whether the given {@code diff} is a change of the language attribute of {@link OpaqueAction},
-	 * {@link OpaqueBehavior}, or {@link OpaqueExpression}.
-	 * 
-	 * @param diff
-	 *            The attribute change to check.
-	 * @return <code>true</code> if it is a change of the language attribute, <code>false</code> otherwise.
-	 */
-	private boolean isChangeOfLanguageAttribute(AttributeChange diff) {
-		final EAttribute attribute = diff.getAttribute();
-		return UMLPackage.eINSTANCE.getOpaqueAction_Language().equals(attribute)
-				|| UMLPackage.eINSTANCE.getOpaqueBehavior_Language().equals(attribute)
-				|| UMLPackage.eINSTANCE.getOpaqueExpression_Language().equals(attribute);
+		return isChangeOfOpaqueElementBodyAttribute(diff) && affectsBodyWithLanguage(diff);
 	}
 
 	/**
@@ -151,13 +122,13 @@ public class UMLOpaqueElementBodyChangeFactory extends AbstractUMLChangeFactory 
 	 */
 	private Optional<String> getAffectedLanguage(AttributeChange diff) {
 		Optional<String> language = Optional.absent();
-		if (isChangeOfBodyAttribute(diff)) {
+		if (isChangeOfOpaqueElementBodyAttribute(diff)) {
 			final EObject changedObject = getObjectContainingTheChangedValue(diff);
-			final List<String> languages = UMLCompareUtil.getOpaqueElementLanguages(changedObject);
-			final List<String> bodies = UMLCompareUtil.getOpaqueElementBodies(changedObject);
+			final List<String> languages = getOpaqueElementLanguages(changedObject);
+			final List<String> bodies = getOpaqueElementBodies(changedObject);
 			final int changedIndex = bodies.indexOf(diff.getValue());
 			language = safeGet(languages, changedIndex);
-		} else if (isChangeOfLanguageAttribute(diff)) {
+		} else if (isChangeOfOpaqueElementLanguageAttribute(diff)) {
 			language = Optional.of((String)diff.getValue());
 		}
 		return language;
@@ -258,7 +229,7 @@ public class UMLOpaqueElementBodyChangeFactory extends AbstractUMLChangeFactory 
 	 * @return <code>true</code> if it is a move of a value in a language attribute.
 	 */
 	private boolean isMoveOfLanguageAttributeValue(AttributeChange diff) {
-		return MOVE.equals(diff.getKind()) && isChangeOfLanguageAttribute(diff);
+		return MOVE.equals(diff.getKind()) && isChangeOfOpaqueElementLanguageAttribute(diff);
 	}
 
 	@Override
@@ -451,9 +422,9 @@ public class UMLOpaqueElementBodyChangeFactory extends AbstractUMLChangeFactory 
 		 */
 		private Optional<String> getLanguage(AttributeChange attributeChange) {
 			final Optional<String> languageOfAttributeChange;
-			if (isChangeOfBodyAttribute(attributeChange)) {
+			if (isChangeOfOpaqueElementBodyAttribute(attributeChange)) {
 				languageOfAttributeChange = getAffectedLanguage(attributeChange);
-			} else if (isChangeOfLanguageAttribute(attributeChange)) {
+			} else if (isChangeOfOpaqueElementLanguageAttribute(attributeChange)) {
 				languageOfAttributeChange = Optional.of((String)attributeChange.getValue());
 			} else {
 				languageOfAttributeChange = Optional.absent();
@@ -492,7 +463,7 @@ public class UMLOpaqueElementBodyChangeFactory extends AbstractUMLChangeFactory 
 		 *         otherwise.
 		 */
 		private boolean isChangeOfBodyOrLanguageAttribute(AttributeChange attributeChange) {
-			return isChangeOfBodyAttribute(attributeChange) || isChangeOfLanguageAttribute(attributeChange);
+			return isChangeOfOpaqueElementBodyAttribute(attributeChange) || isChangeOfOpaqueElementLanguageAttribute(attributeChange);
 		}
 
 	}

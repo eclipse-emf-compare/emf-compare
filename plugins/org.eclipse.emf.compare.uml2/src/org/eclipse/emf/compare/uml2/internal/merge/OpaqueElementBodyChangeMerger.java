@@ -10,8 +10,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.merge;
 
+import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.getOpaqueElementLanguages;
+import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.isChangeOfOpaqueElementBodyAttribute;
+import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.isChangeOfOpaqueElementLanguageAttribute;
+
 import com.google.common.base.Optional;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -109,10 +116,10 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 			final OpaqueElementBodyChange bodyChange = getOpaqueElementBodyChange(diff).get();
 			switch (bodyChange.getKind()) {
 				case ADD:
-					delegateAccept(diff, rightToLeft);
+					acceptRefiningDiffs(bodyChange, rightToLeft);
 					break;
 				case DELETE:
-					delegateAccept(diff, rightToLeft);
+					acceptRefiningDiffs(bodyChange, rightToLeft);
 					break;
 				case CHANGE:
 					changeElement(bodyChange, rightToLeft);
@@ -134,10 +141,10 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 			final OpaqueElementBodyChange bodyChange = possibleBodyChange.get();
 			switch (bodyChange.getKind()) {
 				case ADD:
-					delegateReject(diff, rightToLeft);
+					rejectRefiningDiffs(bodyChange, rightToLeft);
 					break;
 				case DELETE:
-					delegateReject(diff, rightToLeft);
+					rejectRefiningDiffs(bodyChange, rightToLeft);
 					break;
 				case CHANGE:
 					changeElement(bodyChange, rightToLeft);
@@ -152,27 +159,6 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 	}
 
 	/**
-	 * Delegates the accept of {@code diff} to the super class ({@link AttributeChangeMerger}).
-	 * <p>
-	 * If this method is called with an {@link OpaqueElementBodyChange}, its refining differences will be
-	 * delegated. For any other kind of differences, they are be delegated directly.
-	 * </p>
-	 * 
-	 * @param diff
-	 *            The difference to be delegated.
-	 * @param rightToLeft
-	 *            The direction of merging.
-	 */
-	private void delegateAccept(Diff diff, boolean rightToLeft) {
-		if (diff instanceof OpaqueElementBodyChange) {
-			OpaqueElementBodyChange bodyChange = (OpaqueElementBodyChange)diff;
-			acceptRefiningDiffs(bodyChange, rightToLeft);
-		} else {
-			super.accept(diff, rightToLeft);
-		}
-	}
-
-	/**
 	 * Delegates the accept of the refining differences of the given {@code bodyChange} to the super class (
 	 * {@link AttributeChangeMerger}).
 	 * 
@@ -183,29 +169,9 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 	 */
 	private void acceptRefiningDiffs(OpaqueElementBodyChange bodyChange, boolean rightToLeft) {
 		bodyChange.setState(DifferenceState.MERGED);
-		for (Diff refiningDiff : bodyChange.getRefinedBy()) {
+		final List<Diff> sortedRefiningDiffs = sortByMergePriority(bodyChange.getRefinedBy());
+		for (Diff refiningDiff : sortedRefiningDiffs) {
 			super.accept(refiningDiff, rightToLeft);
-		}
-	}
-
-	/**
-	 * Delegates the reject of {@code diff} to the super class ({@link AttributeChangeMerger}).
-	 * <p>
-	 * If this method is called with an {@link OpaqueElementBodyChange}, its refining differences will be
-	 * delegated. For any other kind of differences, they are be delegated directly.
-	 * </p>
-	 * 
-	 * @param diff
-	 *            The difference to be delegated.
-	 * @param rightToLeft
-	 *            The direction of merging.
-	 */
-	private void delegateReject(Diff diff, boolean rightToLeft) {
-		if (diff instanceof OpaqueElementBodyChange) {
-			OpaqueElementBodyChange bodyChange = (OpaqueElementBodyChange)diff;
-			rejectRefiningDiffs(bodyChange, rightToLeft);
-		} else {
-			super.reject(diff, rightToLeft);
 		}
 	}
 
@@ -220,9 +186,47 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 	 */
 	private void rejectRefiningDiffs(OpaqueElementBodyChange bodyChange, boolean rightToLeft) {
 		bodyChange.setState(DifferenceState.MERGED);
-		for (Diff refiningDiff : bodyChange.getRefinedBy()) {
+		final List<Diff> sortedRefiningDiffs = sortByMergePriority(bodyChange.getRefinedBy());
+		for (Diff refiningDiff : sortedRefiningDiffs) {
 			super.reject(refiningDiff, rightToLeft);
 		}
+	}
+
+	/**
+	 * Creates a new list of the given {@code refiningDiffs} sorted by priority of merging.
+	 * <p>
+	 * The priority of merging is first merge the potentially existing language attribute value differences,
+	 * then merge the body attribute value differences. This is important in order to maintain the correct
+	 * order of both. We first merge the language attribute value, because #findInsertionIndex(Comparison,
+	 * Diff, boolean) works better for language attribute values than for bodies.
+	 * </p>
+	 * 
+	 * @param refiningDiffs
+	 *            The list of refining differences.
+	 * @return The sorted list of refining differnces.
+	 */
+	private List<Diff> sortByMergePriority(List<Diff> refiningDiffs) {
+		final LinkedList<Diff> sortedRefiningDiffs = new LinkedList<Diff>(refiningDiffs);
+		Collections.sort(sortedRefiningDiffs, new Comparator<Diff>() {
+			/*
+			 * Note: this comparator imposes orderings that are inconsistent with equals. We only want to
+			 * ensure that language attribute values are sorted in before body attribute values.
+			 */
+			public int compare(Diff diff1, Diff diff2) {
+				final int compare;
+				if (isChangeOfOpaqueElementLanguageAttribute(diff1)
+						&& !isChangeOfOpaqueElementLanguageAttribute(diff2)) {
+					compare = -1;
+				} else if (!isChangeOfOpaqueElementLanguageAttribute(diff1)
+						&& isChangeOfOpaqueElementLanguageAttribute(diff2)) {
+					compare = 1;
+				} else {
+					compare = 0;
+				}
+				return compare;
+			}
+		});
+		return sortedRefiningDiffs;
 	}
 
 	/**
@@ -442,6 +446,93 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 		Set<Diff> dependencies = super.getDirectMergeDependencies(diff, mergeRightToLeft);
 		dependencies.removeAll(diff.getRefinedBy());
 		return dependencies;
+	}
+
+	@Override
+	protected int findInsertionIndex(Comparison comparison, Diff diff, boolean rightToLeft) {
+		/*
+		 * If body values are added (also if deletions are rejected), we have to make sure that the insertion
+		 * index corresponds to the value of the language value they belong to. Therefore, above we made sure
+		 * (by sorting differences) that language value changes are applied before body changes and here we
+		 * ensure that the body value will be inserted at the index of the language value of the
+		 * OpaqueElementBodyChange it belongs to.
+		 */
+		if (shouldUseInsertionIndexOfAffectedLanguage(diff, rightToLeft)) {
+			final EObject expectedContainer = getExpectedContainer(diff, rightToLeft);
+			final Optional<String> language = getAffectedLanguage(diff);
+			return getOpaqueElementLanguages(expectedContainer).indexOf(language.get());
+		} else {
+			return super.findInsertionIndex(comparison, diff, rightToLeft);
+		}
+	}
+
+	/**
+	 * Returns the container that will be modified by the given {@code diff} in the current merging. This will
+	 * be different depending on the merge direction specified in {@code rightToLeft}.
+	 * 
+	 * @param diff
+	 *            The difference to get the container for.
+	 * @param rightToLeft
+	 *            The direction of the current merge.
+	 * @return The expected container.
+	 */
+	private EObject getExpectedContainer(Diff diff, boolean rightToLeft) {
+		final EObject expectedContainer;
+		final Match match = diff.getMatch();
+		if (rightToLeft) {
+			expectedContainer = match.getLeft();
+		} else {
+			expectedContainer = match.getRight();
+		}
+		return expectedContainer;
+	}
+
+	/**
+	 * Returns the {@link Optional optional} language value that is affected by the given {@code diff}.
+	 * <p>
+	 * The affected language is resolved by obtaining the {@link OpaqueElementBodyChange} that is refined by
+	 * the given {@code diff} and returning its {@link OpaqueElementBodyChange#getLanguate() language. Thus,
+	 * if the given {@code diff} is not refining an opaque element body change, the language value will be
+	 * absent.
+	 * 
+	 * @param diff
+	 *            The difference to get the corresponding language value for.
+	 * @return The language value affected by the given difference.
+	 */
+	private Optional<String> getAffectedLanguage(Diff diff) {
+		final Optional<OpaqueElementBodyChange> bodyChange = getRefinedOpaqueElementBodyChange(diff);
+		if (bodyChange.isPresent()) {
+			return Optional.of(bodyChange.get().getLanguage());
+		} else {
+			return Optional.absent();
+		}
+	}
+
+	/**
+	 * Specifies whether we should use the index of the corresponding language value as an insertion index
+	 * when merging the given {@code diff}.
+	 * <p>
+	 * The corresponding language index is the index of the language value that is affected by the given
+	 * {@code diff}. This index has to be used if there is an addition of a body value for which we can obtain
+	 * a corresponding and existing language value in the expected container.
+	 * </p>
+	 * 
+	 * @param diff
+	 *            The diff to determine whether we should use the index of the affected language.
+	 * @param rightToLeft
+	 *            The direction of merging, used for obtaining expected container
+	 * @return <code>true</code> if the affected language value index should be used, <code>false</code>
+	 *         otherwise.
+	 */
+	private boolean shouldUseInsertionIndexOfAffectedLanguage(Diff diff, boolean rightToLeft) {
+		if (isChangeOfOpaqueElementBodyAttribute(diff)) {
+			final Optional<String> affectedLanguage = getAffectedLanguage(diff);
+			final EObject expectedContainer = getExpectedContainer(diff, rightToLeft);
+			return affectedLanguage.isPresent()
+					&& getOpaqueElementLanguages(expectedContainer).contains(affectedLanguage.get());
+		} else {
+			return false;
+		}
 	}
 
 }

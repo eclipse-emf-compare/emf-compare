@@ -473,6 +473,35 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 	}
 
 	@Test
+	public void testA10UseCaseRtoL_RevertLeftDeletion() throws IOException {
+		Resource origin = input.getA10Origin();
+		Resource left = input.getA10Left();
+		Resource right = input.getA10Right();
+
+		Comparison comparison = compare(left, right, origin);
+		assertNoRealConflict(comparison);
+
+		revertLeftOpaqueElementBodyChanges(comparison);
+
+		EObject leftEObject = left.getEObject(OPAQUE_ACTION1_ID);
+		OpaqueAction leftOpaqueAction = (OpaqueAction)leftEObject;
+
+		String leftLanguageAt0 = leftOpaqueAction.getLanguages().get(0);
+		String leftBodyAt0 = leftOpaqueAction.getBodies().get(0);
+
+		assertEquals("JAVA", leftLanguageAt0);
+		assertEquals(EXPECTED_JAVA, leftBodyAt0);
+
+		String leftLanguageAt1 = leftOpaqueAction.getLanguages().get(1);
+		String leftBodyAt1 = leftOpaqueAction.getBodies().get(1);
+
+		assertEquals("OCL", leftLanguageAt1);
+		assertEquals(EXPECTED_OCL, leftBodyAt1);
+	}
+
+	// reverting addition and insertion index?
+
+	@Test
 	public void testA11UseCase() throws IOException {
 		Resource origin = input.getA11Origin();
 		Resource left = input.getA11Left();

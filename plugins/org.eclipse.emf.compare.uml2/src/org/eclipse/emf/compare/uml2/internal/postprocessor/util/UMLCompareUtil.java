@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - adds helpers for opaque elements and opaque element changes
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor.util;
 
@@ -17,7 +18,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.ecore.EAnnotation;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -26,6 +30,7 @@ import org.eclipse.uml2.uml.Extension;
 import org.eclipse.uml2.uml.OpaqueAction;
 import org.eclipse.uml2.uml.OpaqueBehavior;
 import org.eclipse.uml2.uml.OpaqueExpression;
+import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.util.UMLUtil;
 
 /**
@@ -199,5 +204,43 @@ public final class UMLCompareUtil {
 		final List<String> bodies = getOpaqueElementBodies(eObject);
 		final int index = languages.indexOf(language);
 		return bodies.get(index);
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} is a change of the body attribute of {@link OpaqueAction},
+	 * {@link OpaqueBehavior}, or {@link OpaqueExpression}.
+	 * 
+	 * @param diff
+	 *            The difference to check.
+	 * @return <code>true</code> if it is a change of the body attribute, <code>false</code> otherwise.
+	 */
+	public static boolean isChangeOfOpaqueElementBodyAttribute(Diff diff) {
+		if (diff instanceof AttributeChange) {
+			final EAttribute attribute = ((AttributeChange)diff).getAttribute();
+			return UMLPackage.eINSTANCE.getOpaqueAction_Body().equals(attribute)
+					|| UMLPackage.eINSTANCE.getOpaqueBehavior_Body().equals(attribute)
+					|| UMLPackage.eINSTANCE.getOpaqueExpression_Body().equals(attribute);
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} is a change of the language attribute of {@link OpaqueAction},
+	 * {@link OpaqueBehavior}, or {@link OpaqueExpression}.
+	 * 
+	 * @param diff
+	 *            The difference to check.
+	 * @return <code>true</code> if it is a change of the language attribute, <code>false</code> otherwise.
+	 */
+	public static boolean isChangeOfOpaqueElementLanguageAttribute(Diff diff) {
+		if (diff instanceof AttributeChange) {
+			final EAttribute attribute = ((AttributeChange)diff).getAttribute();
+			return UMLPackage.eINSTANCE.getOpaqueAction_Language().equals(attribute)
+					|| UMLPackage.eINSTANCE.getOpaqueBehavior_Language().equals(attribute)
+					|| UMLPackage.eINSTANCE.getOpaqueExpression_Language().equals(attribute);
+		} else {
+			return false;
+		}
 	}
 }
