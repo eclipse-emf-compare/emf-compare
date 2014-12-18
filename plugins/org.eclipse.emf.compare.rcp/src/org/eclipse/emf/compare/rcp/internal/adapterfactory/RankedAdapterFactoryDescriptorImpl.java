@@ -31,9 +31,6 @@ public class RankedAdapterFactoryDescriptorImpl extends PluginClassDescriptor<Ad
 	/** Description attribute in extension point. */
 	private static final String ATT_DESCRIPTION = "description"; //$NON-NLS-1$
 
-	/** The wrapped adapter factory. */
-	private AdapterFactory factory;
-
 	/** Ranking of this adapter factory. */
 	private final int ranking;
 
@@ -60,10 +57,7 @@ public class RankedAdapterFactoryDescriptorImpl extends PluginClassDescriptor<Ad
 	 * @see org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor#createAdapterFactory()
 	 */
 	public AdapterFactory createAdapterFactory() {
-		if (factory == null) {
-			factory = this.createInstance();
-		}
-		return factory;
+		return createInstance();
 	}
 
 	/**
