@@ -78,10 +78,6 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.action.ActionContributionItem;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
@@ -1837,28 +1833,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	@Override
 	protected void paintCenter(GC g) {
 
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#createToolItems(org.eclipse.jface.action.ToolBarManager)
-	 */
-	@Override
-	protected void createToolItems(ToolBarManager toolBarManager) {
-		super.createToolItems(toolBarManager);
-		IContributionItem[] items = toolBarManager.getItems();
-		for (IContributionItem iContributionItem : items) {
-			if (iContributionItem instanceof ActionContributionItem) {
-				IAction action = ((ActionContributionItem)iContributionItem).getAction();
-				String id = action.getActionDefinitionId();
-				if ("org.eclipse.compare.copyAllLeftToRight".equals(id)) {
-					toolBarManager.remove(iContributionItem);
-				} else if ("org.eclipse.compare.copyAllRightToLeft".equals(id)) {
-					toolBarManager.remove(iContributionItem);
-				}
-			}
-		}
 	}
 
 	/**

@@ -51,6 +51,9 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -297,6 +300,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 		fRight = createMergeViewer(composite, MergeViewerSide.RIGHT);
 		fRight.addSelectionChangedListener(this);
+
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		final ITheme currentTheme;
 		if (themeManager != null) {
@@ -325,18 +329,35 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#createToolItems(org.eclipse.jface.action.ToolBarManager)
 	 */
 	@Override
-	protected void createToolItems(ToolBarManager toolBarManager) {
+	protected void createToolItems(final ToolBarManager toolBarManager) {
 		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
 		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 
+		IContributionItem[] items = toolBarManager.getItems();
+		for (IContributionItem iContributionItem : items) {
+			if (iContributionItem instanceof ActionContributionItem) {
+				IAction action = ((ActionContributionItem)iContributionItem).getAction();
+				String id = action.getActionDefinitionId();
+				if ("org.eclipse.compare.copyAllLeftToRight".equals(id)) {
+					toolBarManager.remove(iContributionItem);
+				} else if ("org.eclipse.compare.copyAllRightToLeft".equals(id)) {
+					toolBarManager.remove(iContributionItem);
+				}
+			}
+		}
+
 		// Add extension point contributions to the content merge viewer toolbar
 		IServiceLocator workbench = PlatformUI.getWorkbench();
-		IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
+		final IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
 		if (menuService != null) {
 			menuService.populateContributionManager(toolBarManager,
 					"toolbar:org.eclipse.emf.compare.contentmergeviewer.toolbar"); //$NON-NLS-1$
+			toolBarManager.getControl().addDisposeListener(new DisposeListener() {
+				public void widgetDisposed(DisposeEvent e) {
+					menuService.releaseContributions(toolBarManager);
+				}
+			});
 		}
-
 	}
 
 	public void commandStackChanged(EventObject event) {

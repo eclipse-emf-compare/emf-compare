@@ -48,10 +48,6 @@ import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.action.ActionContributionItem;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -365,28 +361,6 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 						g.setForeground(strokeColor);
 						drawCenterLine(g, leftClientArea, rightClientArea, leftItem, rightItem);
 					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#createToolItems(org.eclipse.jface.action.ToolBarManager)
-	 */
-	@Override
-	protected void createToolItems(ToolBarManager toolBarManager) {
-		super.createToolItems(toolBarManager);
-		IContributionItem[] items = toolBarManager.getItems();
-		for (IContributionItem iContributionItem : items) {
-			if (iContributionItem instanceof ActionContributionItem) {
-				IAction action = ((ActionContributionItem)iContributionItem).getAction();
-				String id = action.getActionDefinitionId();
-				if ("org.eclipse.compare.copyAllLeftToRight".equals(id)) { //$NON-NLS-1$
-					toolBarManager.remove(iContributionItem);
-				} else if ("org.eclipse.compare.copyAllRightToLeft".equals(id)) { //$NON-NLS-1$
-					toolBarManager.remove(iContributionItem);
 				}
 			}
 		}
