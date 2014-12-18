@@ -111,7 +111,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 	public void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue) {
 		if (oldValue != null) {
-			oldValue.getCommandStack().removeCommandStackListener(this);
+			ICompareCommandStack commandStack = oldValue.getCommandStack();
+			commandStack.removeCommandStackListener(this);
 		}
 		if (newValue != oldValue) {
 			if (newValue != null) {
@@ -390,8 +391,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 		editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
 
-		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), null);
-		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), null);
 		fRedoAction = null;
 		fUndoAction = null;
 

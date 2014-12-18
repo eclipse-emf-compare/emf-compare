@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.command.impl;
 
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.not;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.Iterables;
@@ -21,6 +24,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.internal.domain.IMergeAllNonConflictingRunnable;
@@ -93,9 +97,11 @@ public class MergeAllNonConflictingCommand extends AbstractCopyCommand {
 		final boolean threeWay = comparison.isThreeWay();
 		final Iterable<Diff> diffs;
 		if (threeWay && leftToRight) {
-			diffs = Iterables.filter(comparison.getDifferences(), fromSide(DifferenceSource.LEFT));
+			diffs = Iterables.filter(comparison.getDifferences(), and(fromSide(DifferenceSource.LEFT),
+					not(hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO))));
 		} else if (threeWay) {
-			diffs = Iterables.filter(comparison.getDifferences(), fromSide(DifferenceSource.RIGHT));
+			diffs = Iterables.filter(comparison.getDifferences(), and(fromSide(DifferenceSource.RIGHT),
+					not(hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO))));
 		} else {
 			// We're in a 2way-comparison, so all differences come from left side.
 			diffs = Iterables.filter(comparison.getDifferences(), fromSide(DifferenceSource.LEFT));

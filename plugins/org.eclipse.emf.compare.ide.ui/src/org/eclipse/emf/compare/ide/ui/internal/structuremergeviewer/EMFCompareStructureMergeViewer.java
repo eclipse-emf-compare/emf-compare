@@ -20,11 +20,13 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.EventObject;
 import java.util.Iterator;
@@ -727,50 +729,69 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		Command mostRecentCommand = ((CommandStack)event.getSource()).getMostRecentCommand();
 		if (mostRecentCommand instanceof ICompareCopyCommand) {
+			// MUST NOT call a setSelection with a list, o.e.compare does not handle it (cf
+			// org.eclipse.compare.CompareEditorInput#getElement(ISelection))
 			Collection<?> affectedObjects = mostRecentCommand.getAffectedObjects();
-
+			TreeNode unfilteredNode = null;
 			if (!affectedObjects.isEmpty()) {
-				// MUST NOT call a setSelection with a list, o.e.compare does not handle it (cf
-				// org.eclipse.compare.CompareEditorInput#getElement(ISelection))
 				final Iterator<EObject> affectedIterator = Iterables.filter(affectedObjects, EObject.class)
 						.iterator();
 				IDifferenceGroupProvider groupProvider = getCompareConfiguration()
 						.getStructureMergeViewerGrouper().getProvider();
-				TreeNode unfilteredNode = null;
 				while (affectedIterator.hasNext() && unfilteredNode == null) {
 					EObject affected = affectedIterator.next();
 					Iterable<TreeNode> treeNodes = groupProvider.getTreeNodes(affected);
 					for (TreeNode node : treeNodes) {
 						if (!JFaceUtil.isFiltered(getViewer(), node, node.getParent())) {
 							unfilteredNode = node;
+							break;
 						}
 					}
 				}
-				if (unfilteredNode != null) {
-					final Object adaptedAffectedObject = fAdapterFactory.adapt(unfilteredNode,
-							ICompareInput.class);
-					// execute synchronously the set selection to be sure the MergeAction#run() will
-					// select next diff after.
-					SWTUtil.safeSyncExec(new Runnable() {
-						public void run() {
-							refresh();
-							StructuredSelection selection = new StructuredSelection(adaptedAffectedObject);
-							// allows to call CompareToolBar#selectionChanged(SelectionChangedEvent)
-							getViewer().setSelection(selection);
-						}
-					});
-					// update content viewers with the new selection
-					SWTUtil.safeAsyncExec(new Runnable() {
-						public void run() {
-							navigatable.openSelectedChange();
-						}
-					});
+			}
+			if (unfilteredNode != null) {
+				final Object adaptedAffectedObject = fAdapterFactory.adapt(unfilteredNode,
+						ICompareInput.class);
+				// be sure the affected object has been created in the viewer.
+				for (TreeNode node : getPath(null, unfilteredNode)) {
+					getViewer().expandToLevel(fAdapterFactory.adapt(node, ICompareInput.class), 0);
 				}
+				// execute synchronously the set selection to be sure the MergeAction#run() will
+				// select next diff after.
+				SWTUtil.safeSyncExec(new Runnable() {
+					public void run() {
+						refresh();
+						StructuredSelection selection = new StructuredSelection(adaptedAffectedObject);
+						// allows to call CompareToolBar#selectionChanged(SelectionChangedEvent)
+						getViewer().setSelection(selection);
+					}
+				});
+				// update content viewers with the new selection
+				SWTUtil.safeAsyncExec(new Runnable() {
+					public void run() {
+						navigatable.openSelectedChange();
+					}
+				});
 			}
 		} else {
 			// FIXME, should recompute the difference, something happened outside of this compare editor
 		}
 
+	}
+
+	private Iterable<TreeNode> getPath(TreeNode from, TreeNode to) {
+		if (to == from) {
+			return Collections.emptyList();
+		}
+
+		final List<TreeNode> path = new ArrayList<TreeNode>();
+		path.add(to);
+		TreeNode parent = to.getParent();
+		while (parent != null && parent != from) {
+			path.add(parent);
+			parent = parent.getParent();
+		}
+		return Lists.reverse(path);
 	}
 
 	/**

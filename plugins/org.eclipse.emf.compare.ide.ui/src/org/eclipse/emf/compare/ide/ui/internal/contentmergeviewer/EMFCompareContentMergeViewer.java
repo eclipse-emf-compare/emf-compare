@@ -28,6 +28,7 @@ import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
@@ -177,17 +178,17 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	}
 
 	protected void editingDomainChange(ICompareEditingDomain oldValue, ICompareEditingDomain newValue) {
+		if (oldValue != null) {
+			ICompareCommandStack commandStack = oldValue.getCommandStack();
+			commandStack.removeCommandStackListener(this);
+		}
 		if (newValue != oldValue) {
-			if (oldValue != null) {
-				oldValue.getCommandStack().removeCommandStackListener(this);
-			}
-
 			if (newValue != null) {
-				newValue.getCommandStack().addCommandStackListener(this);
-				setLeftDirty(newValue.getCommandStack().isLeftSaveNeeded());
-				setRightDirty(newValue.getCommandStack().isRightSaveNeeded());
+				ICompareCommandStack commandStack = newValue.getCommandStack();
+				commandStack.addCommandStackListener(this);
+				setLeftDirty(commandStack.isLeftSaveNeeded());
+				setRightDirty(commandStack.isRightSaveNeeded());
 			}
-
 			undoAction.setEditingDomain(newValue);
 			redoAction.setEditingDomain(newValue);
 		}
@@ -368,8 +369,10 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		redoAction.update();
 
 		if (getCompareConfiguration().getEditingDomain() != null) {
-			setLeftDirty(getCompareConfiguration().getEditingDomain().getCommandStack().isLeftSaveNeeded());
-			setRightDirty(getCompareConfiguration().getEditingDomain().getCommandStack().isRightSaveNeeded());
+			ICompareCommandStack commandStack = getCompareConfiguration().getEditingDomain()
+					.getCommandStack();
+			setLeftDirty(commandStack.isLeftSaveNeeded());
+			setRightDirty(commandStack.isRightSaveNeeded());
 		}
 
 		Command mostRecentCommand = ((CommandStack)event.getSource()).getMostRecentCommand();
