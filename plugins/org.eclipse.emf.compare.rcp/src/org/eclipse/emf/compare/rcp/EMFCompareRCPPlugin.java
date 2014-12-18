@@ -222,7 +222,8 @@ public class EMFCompareRCPPlugin extends Plugin {
 				.<Collection<?>, RankedAdapterFactoryDescriptor> create());
 		adapterFactoryRegistryListener = new AdapterFactoryDescriptorRegistryListener(
 				EMFCompareEditPlugin.PLUGIN_ID, FACTORY_PPID, getLog(), adapterFactoryRegistryBackingMultimap);
-		registry.addListener(adapterFactoryRegistryListener, PLUGIN_ID + "." + FACTORY_PPID); //$NON-NLS-1$
+		registry.addListener(adapterFactoryRegistryListener, EMFCompareEditPlugin.PLUGIN_ID + '.'
+				+ FACTORY_PPID);
 		adapterFactoryRegistryListener.readRegistry(registry);
 		rankedAdapterFactoryRegistry = new RankedAdapterFactoryDescriptorRegistryImpl(
 				ComposedAdapterFactory.Descriptor.Registry.INSTANCE, Multimaps
