@@ -1061,12 +1061,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					}
 				}
 			}
-			final List<Adapter> adaptersCopy = new ArrayList<Adapter>(comparison.eAdapters());
-			for (Adapter adapter : adaptersCopy) {
-				if (adapter instanceof ForwardingCompareInputAdapter || adapter instanceof SideLabelProvider) {
-					comparison.eAdapters().remove(adapter);
-				}
-			}
+			comparison.eAdapters().clear();
 		}
 
 		editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
