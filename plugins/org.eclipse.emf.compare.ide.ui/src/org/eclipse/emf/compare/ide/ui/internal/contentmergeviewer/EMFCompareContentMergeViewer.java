@@ -537,16 +537,22 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection)selection;
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			ExtendedPropertySheetPage propertySheetPage = getExtendedPropertySheetPage(page);
+			final ExtendedPropertySheetPage propertySheetPage = getExtendedPropertySheetPage(page);
 			if (propertySheetPage != null) {
 				StructuredSelection selectionForPropertySheet = null;
-				IWorkbenchPart activePart = page.getActivePart();
+				final IWorkbenchPart activePart = page.getActivePart();
 				Object firstElement = structuredSelection.getFirstElement();
 				if (firstElement instanceof MergeViewerItem) {
 					MergeViewerItem mergeViewerItem = (MergeViewerItem)firstElement;
 					MergeViewerSide side = mergeViewerItem.getSide();
 					Object newSelectedObject = mergeViewerItem.getSideValue(side);
 					propertySheetPage.setPropertySourceProvider(fAdapterFactoryContentProvider);
+					getControl().addDisposeListener(new DisposeListener() {
+						public void widgetDisposed(DisposeEvent e) {
+							propertySheetPage.selectionChanged(activePart, null);
+							propertySheetPage.setPropertySourceProvider(null);
+						}
+					});
 					if (newSelectedObject != null) {
 						if (newSelectedObject instanceof EObject) {
 							manageReadOnly((EObject)newSelectedObject, side);
@@ -668,6 +674,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		differenceGroupProvider = null;
 		undoAction = null;
 		redoAction = null;
+		fAdapterFactoryContentProvider.setAdapterFactory(null);
 		super.handleDispose(event);
 	}
 
