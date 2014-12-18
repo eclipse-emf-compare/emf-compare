@@ -155,12 +155,7 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 		final URI uri = resource.getURI();
 		uriCache.remove(uri);
 		getResources().remove(resource);
-
-		// Only call "unload()" when really needed as this is both a time and memory hog.
-		// We can't ignore this call with UML because of the CacheAdapter.
-		if (resource.getClass().getSimpleName().startsWith("UMLResource")) { //$NON-NLS-1$
-			resource.unload();
-		}
+		resource.eAdapters().clear();
 	}
 
 	/**

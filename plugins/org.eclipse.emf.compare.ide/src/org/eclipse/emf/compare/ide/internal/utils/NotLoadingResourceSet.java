@@ -61,6 +61,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 
@@ -432,7 +433,6 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 		ImmutableList<Resource> currentResources = ImmutableList.copyOf(getResources());
 		Collection<URI> resourceSetUris = newArrayList(transform(currentResources,
 				new Function<Resource, URI>() {
-
 					public URI apply(Resource input) {
 						return input.getURI();
 					}
@@ -440,7 +440,22 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 		for (IResourceSetHook hook : getMatchingHooks(resourceSetUris)) {
 			hook.onDispose(currentResources);
 		}
+
+		// the properties view retains resources in memory somehow (at least with uml).
+		// resource.unload does not unload all resources...
+		// removing the uml CacheAdapter isn't enough either
+		// we need to get rid of all adapters manually
+		for (Resource resource : currentResources) {
+			TreeIterator<EObject> allContents = EcoreUtil.getAllProperContents(resource, false);
+			while (allContents.hasNext()) {
+				final EObject next = allContents.next();
+				next.eAdapters().clear();
+			}
+			resource.eAdapters().clear();
+		}
+
 		getResources().clear();
+		eAdapters().clear();
 		isDisposed = true;
 	}
 
