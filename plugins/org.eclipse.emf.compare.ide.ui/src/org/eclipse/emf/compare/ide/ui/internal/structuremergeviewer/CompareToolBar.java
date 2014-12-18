@@ -48,6 +48,8 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.services.IServiceLocator;
@@ -98,10 +100,15 @@ public class CompareToolBar implements ISelectionChangedListener {
 			// Add extension point contributions to the structure merge viewer toolbar
 			IServiceLocator workbench = PlatformUI.getWorkbench();
 
-			IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
+			final IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
 			if (menuService != null) {
 				menuService.populateContributionManager(toolbarManager,
 						"toolbar:org.eclipse.emf.compare.structuremergeviewer.toolbar"); //$NON-NLS-1$
+				toolbarManager.getControl().addDisposeListener(new DisposeListener() {
+					public void widgetDisposed(DisposeEvent e) {
+						menuService.releaseContributions(toolbarManager);
+					}
+				});
 			}
 
 			boolean leftEditable = compareConfiguration.isLeftEditable();
