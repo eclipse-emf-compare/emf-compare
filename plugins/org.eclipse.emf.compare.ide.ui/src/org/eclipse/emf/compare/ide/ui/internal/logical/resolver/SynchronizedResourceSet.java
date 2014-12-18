@@ -57,17 +57,20 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 		parserPool.addProxyListener(proxyListener);
 		loadOptions.put(XMLResource.OPTION_USE_PARSER_POOL, parserPool);
 		loadOptions.put(XMLResource.OPTION_USE_DEPRECATED_METHODS, Boolean.FALSE);
-		loadOptions.put(XMLResource.OPTION_DISABLE_NOTIFY, Boolean.TRUE);
+
+		/*
+		 * _Do not_ use the XMLResource.OPTION_DISABLE_NOTIFY option. Because of the implementation of UML2,
+		 * setting this option to true is counter-productive as even more notifications will be sent than
+		 * without the option. The worse part being that it will create unreachable (and uncleanable)
+		 * references within the CacheAdapter#proxyMap. See bugs 455572. We also cannot use
+		 * OPTION_DEFER_ATTACHMENT because of potential issues with stereotypes and profiles, see bug 455580.
+		 */
 
 		final int bufferSize = 16384;
 		final Map<String, Object> parserProperties = Maps.newHashMap();
 		parserProperties.put("http://apache.org/xml/properties/input-buffer-size", Integer //$NON-NLS-1$
 				.valueOf(bufferSize));
 		loadOptions.put(XMLResource.OPTION_PARSER_PROPERTIES, parserProperties);
-
-		// These two might be superfluous
-		loadOptions.put(XMLResource.OPTION_DEFER_ATTACHMENT, Boolean.TRUE);
-		loadOptions.put(XMLResource.OPTION_DEFER_IDREF_RESOLUTION, Boolean.TRUE);
 
 		/*
 		 * We don't use XMLResource.OPTION_USE_XML_NAME_TO_FEATURE_MAP whereas it could bring performance

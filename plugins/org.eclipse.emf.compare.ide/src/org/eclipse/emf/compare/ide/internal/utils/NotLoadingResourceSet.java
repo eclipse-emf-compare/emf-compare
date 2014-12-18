@@ -413,7 +413,6 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 		parserPool.addProxyListener(this);
 		loadOptions.put(XMLResource.OPTION_USE_PARSER_POOL, parserPool);
 		loadOptions.put(XMLResource.OPTION_USE_DEPRECATED_METHODS, Boolean.FALSE);
-		loadOptions.put(XMLResource.OPTION_DISABLE_NOTIFY, Boolean.TRUE);
 
 		final int bufferSize = 16384;
 		final Map<String, Object> parserProperties = new HashMap<String, Object>();
