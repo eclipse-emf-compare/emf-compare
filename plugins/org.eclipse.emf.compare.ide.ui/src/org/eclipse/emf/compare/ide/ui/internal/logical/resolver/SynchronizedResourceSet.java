@@ -53,7 +53,7 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 		 * of time loading resources. The following set of options is what seems to give the most significant
 		 * boost in loading performances, though I did not fine-tune what's really needed here.
 		 */
-		final NoNotificationParserPool parserPool = new NoNotificationParserPool();
+		final NoNotificationParserPool parserPool = new NoNotificationParserPool(true);
 		parserPool.addProxyListener(proxyListener);
 		loadOptions.put(XMLResource.OPTION_USE_PARSER_POOL, parserPool);
 		loadOptions.put(XMLResource.OPTION_USE_DEPRECATED_METHODS, Boolean.FALSE);

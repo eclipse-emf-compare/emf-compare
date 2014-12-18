@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EFactory;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.ExtendedMetaData;
@@ -43,22 +44,30 @@ import org.eclipse.emf.ecore.xmi.impl.XMLParserPoolImpl;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ProxyNotifierParserPool extends XMLParserPoolImpl {
+	/** Only set containment reference values, ignore the rest. */
+	protected final boolean containmentOnly;
+
 	/** The list of parties interested by our proxies. */
 	private ListenerList proxyListeners;
 
 	/**
 	 * Default constructor.
+	 * 
+	 * @param containmentOnly
+	 *            only set containment reference values. The model will be mostly empty except for its
+	 *            containment tree.
 	 */
-	public ProxyNotifierParserPool() {
+	public ProxyNotifierParserPool(boolean containmentOnly) {
 		super(true);
 		this.proxyListeners = new ListenerList();
+		this.containmentOnly = containmentOnly;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public synchronized XMLDefaultHandler getDefaultHandler(XMLResource resource, XMLLoad xmlLoad,
 			XMLHelper helper, Map<?, ?> options) {
-		final ProxyNotifierXMLHelper wrapper = new ProxyNotifierXMLHelper(helper);
+		final ProxyNotifierXMLHelper wrapper = new ProxyNotifierXMLHelper(helper, containmentOnly);
 		for (Object listener : proxyListeners.getListeners()) {
 			wrapper.addProxyListener((IProxyCreationListener)listener);
 		}
@@ -140,22 +149,32 @@ public class ProxyNotifierParserPool extends XMLParserPoolImpl {
 		/** The list of parties interested by our proxy creations. */
 		private final ListenerList proxyListeners;
 
+		/** Only set containment reference values, ignore the rest. */
+		private final boolean containmentOnly;
+
 		/**
 		 * Constructs a wrapper given its delegate XMLHelper.
 		 * 
 		 * @param delegate
 		 *            The delegate XMLHelper.
+		 * @param containmentOnly
+		 *            Only set containment reference values.
 		 */
-		public ProxyNotifierXMLHelper(XMLHelper delegate) {
+		public ProxyNotifierXMLHelper(XMLHelper delegate, boolean containmentOnly) {
 			super(delegate);
 			this.proxyListeners = new ListenerList();
+			this.containmentOnly = containmentOnly;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public void setValue(EObject eObject, EStructuralFeature eStructuralFeature, Object value,
 				int position) {
-			super.setValue(eObject, eStructuralFeature, value, position);
+			if (!containmentOnly
+					|| (eStructuralFeature instanceof EReference && ((EReference)eStructuralFeature)
+							.isContainment())) {
+				super.setValue(eObject, eStructuralFeature, value, position);
+			}
 			if (value instanceof EObject && ((EObject)value).eIsProxy()) {
 				for (Object listener : proxyListeners.getListeners()) {
 					((IProxyCreationListener)listener).proxyCreated(getResource(), eObject,

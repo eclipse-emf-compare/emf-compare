@@ -410,7 +410,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	@Override
 	public Map<Object, Object> getLoadOptions() {
 		this.loadOptions = super.getLoadOptions();
-		final ProxyNotifierParserPool parserPool = new ProxyNotifierParserPool();
+		final ProxyNotifierParserPool parserPool = new ProxyNotifierParserPool(false);
 		parserPool.addProxyListener(this);
 		loadOptions.put(XMLResource.OPTION_USE_PARSER_POOL, parserPool);
 		loadOptions.put(XMLResource.OPTION_USE_DEPRECATED_METHODS, Boolean.FALSE);

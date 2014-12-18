@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal.utils;
 
+import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.xmi.UnresolvedReferenceException;
 import org.eclipse.emf.ecore.xmi.XMLDefaultHandler;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLLoad;
@@ -30,6 +33,17 @@ import org.eclipse.emf.ecore.xmi.impl.XMLHandler;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class NoNotificationParserPool extends ProxyNotifierParserPool {
+	/**
+	 * Default constructor.
+	 * 
+	 * @param containmentOnly
+	 *            only set containment reference values. The model will be mostly empty except for its
+	 *            containment tree.
+	 */
+	public NoNotificationParserPool(boolean containmentOnly) {
+		super(containmentOnly);
+	}
+
 	@Override
 	protected XMLDefaultHandler createDefaultHandler(XMLResource resource, XMLLoad xmlLoad, XMLHelper helper,
 			Map<?, ?> options) {
@@ -75,10 +89,23 @@ public class NoNotificationParserPool extends ProxyNotifierParserPool {
 		 */
 		@Override
 		public void endDocument() {
-			// prevent the sending of notifications
+			// prevent the sending of notifications at the end of loading
+			// "disableNotify" at true would still send some from here
 			setField("disableNotify", delegate(), Boolean.FALSE); //$NON-NLS-1$
 			super.endDocument();
 			setField("disableNotify", delegate(), Boolean.TRUE); //$NON-NLS-1$
+
+			if (containmentOnly) {
+				// Same document references are all left as proxies since we haven't set them.
+				// The xml handler would diagnose that has an error.
+				final Iterator<Resource.Diagnostic> errors = xmlResource.getErrors().iterator();
+				while (errors.hasNext()) {
+					final Resource.Diagnostic diagnostic = errors.next();
+					if (diagnostic instanceof UnresolvedReferenceException) {
+						errors.remove();
+					}
+				}
+			}
 		}
 	}
 }
