@@ -119,8 +119,8 @@ simrel_path=$workdir/$simrel
 mkdir -p $simrel_path
 
 if [[ -d "$simrel_path/Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER}" ]]; then
-  echo "Renaming Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER} to eclipse"
-  mv "$simrel_path/Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER}" "$simrel_path/eclipse"
+  echo "Removing old Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER} folder"
+  rm -rf "$simrel_path/Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER}"
 fi
 
 if [[ -d "$simrel_path/eclipse" ]]; then
@@ -133,6 +133,11 @@ if [[ "$FILE_EXT" == "zip" ]]; then
 	unzip -q "$simrel_zip_path" -d $simrel_path
 else
 	tar zxf "$simrel_zip_path" -C $simrel_path
+fi
+
+if [[ -d "$simrel_path/Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER}" ]]; then
+  echo "Renaming Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER} to eclipse"
+  mv "$simrel_path/Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER}" "$simrel_path/eclipse"
 fi
 
 echo "Provisioning AUT"
