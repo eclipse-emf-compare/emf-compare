@@ -118,6 +118,11 @@ fi
 simrel_path=$workdir/$simrel
 mkdir -p $simrel_path
 
+if [[ -d "$simrel_path/Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER}" ]]; then
+  echo "Renaming Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER} to eclipse"
+  mv "$simrel_path/Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER}" "$simrel_path/eclipse"
+fi
+
 if [[ -d "$simrel_path/eclipse" ]]; then
   echo "Removing old eclipse folder"
   rm -rf "$simrel_path/eclipse"
