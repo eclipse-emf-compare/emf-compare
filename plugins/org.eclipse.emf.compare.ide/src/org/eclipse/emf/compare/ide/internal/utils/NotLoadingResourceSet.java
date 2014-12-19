@@ -395,7 +395,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 			return cached;
 		}
 
-		final Resource loaded = createResource(uri);
+		final Resource loaded = demandCreateResource(uri);
 		getURIResourceMap().put(uri, loaded);
 		try {
 			loadFromStorage(loaded, storage);
