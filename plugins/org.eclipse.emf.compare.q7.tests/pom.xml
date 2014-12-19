@@ -53,6 +53,37 @@
   </build>
  
   <profiles>
+    <profile>
+      <id>collaborative-modeling</id>
+      <properties>
+        <profile-id>collaborative-modeling</profile-id>
+      </properties>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.xored.q7</groupId>
+            <artifactId>q7-maven-plugin</artifactId>
+            <version>${q7-maven-version}</version>
+            <extensions>true</extensions>
+            <configuration>
+              <aut>
+                <explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
+              </aut>
+              <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
+              <suites>
+                <suite>TestSuite.Full</suite>
+              </suites>
+              <q7>
+                <version>${q7-runner-version}</version>
+              </q7>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
    <profile>
       <id>mars</id>
       <properties>

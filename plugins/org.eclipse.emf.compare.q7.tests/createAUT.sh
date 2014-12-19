@@ -55,10 +55,14 @@ else
 	tar zxf "$P2_ADMIN_ZIPPATH" -C $workdir
 fi
 
-
-if [[ "$simrel" == "mars"* ]]; then
-	simrel_zip_name="eclipse-SDK-4.5M3-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
-	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/S-4.5M3-201410292000/$simrel_zip_name"	
+if [[ "$simrel" == "collaborative-modeling"* ]]; then
+	simrel_zip_name="Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
+	simrel_zip_url="http://download.eclipse.org/modeling/emf/compare/collaborative-modeling-package/nightly/$simrel_zip_name"	
+	p2_repositories=""
+	p2_installIUs=""
+elif [[ "$simrel" == "mars"* ]]; then
+	simrel_zip_name="eclipse-SDK-4.5M4-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
+	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/S-4.5M4-201412102000/$simrel_zip_name"	
 	p2_repositories="http://download.eclipse.org/releases/mars/,\
 http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest/,\
 http://download.eclipse.org/modeling/emf/compare/updates/egit-logical/nightly/"
@@ -71,8 +75,8 @@ org.eclipse.emf.compare.uml2.feature.group,\
 org.eclipse.emf.compare.diagram.gmf.feature.group,\
 org.eclipse.emf.compare.diagram.papyrus.feature.group"
 elif [[ "$simrel" == "luna"* ]]; then
-	simrel_zip_name="eclipse-SDK-4.4-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
-	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/R-4.4-201406061215/$simrel_zip_name"
+	simrel_zip_name="eclipse-SDK-4.4.1-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
+	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/R-4.4.1-201409250400/$simrel_zip_name"
 	p2_repositories="http://download.eclipse.org/releases/luna/,\
 http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest/,\
 http://download.eclipse.org/modeling/emf/compare/updates/egit-logical/nightly/"
@@ -129,4 +133,6 @@ fi
 echo "Provisioning AUT"
 echo "  Repositories: $p2_repositories"
 echo "  IUs: $p2_installIUs"
-$P2_ADMIN_PATH/p2-admin -vm $JAVA_HOME/bin/java -application org.eclipse.equinox.p2.director -repository "$p2_repositories" -installIU "$p2_installIUs" -tag Q7_AUT -destination "$simrel_path/eclipse" -profile SDKProfile
+if [ -n "$p2_repositories" ]; then 
+	$P2_ADMIN_PATH/p2-admin -vm $JAVA_HOME/bin/java -application org.eclipse.equinox.p2.director -repository "$p2_repositories" -installIU "$p2_installIUs" -tag Q7_AUT -destination "$simrel_path/eclipse" -profile SDKProfile
+fi
