@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,7 +49,6 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
@@ -241,7 +240,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			}
 		};
 		mergeTreeViewer.setContentProvider(contentProvider);
-		ILabelProvider labelProvider = new AdapterFactoryLabelProvider(fAdapterFactory) {
+		AdapterFactoryLabelProvider labelProvider = new AdapterFactoryLabelProvider(fAdapterFactory) {
 			/**
 			 * {@inheritDoc}
 			 * 
@@ -295,6 +294,11 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 				return super.getImage(object);
 			}
 		};
+
+		// FIXME: a better solution will be that MergeViewerItem have ItemProviders (on the same principle
+		// than TreeNodes).
+		labelProvider.setFireLabelUpdateNotifications(true);
+
 		mergeTreeViewer.setLabelProvider(labelProvider);
 
 		mergeTreeViewer.getStructuredViewer().getTree().addListener(SWT.Collapse,
