@@ -414,13 +414,6 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 		parserPool.addProxyListener(this);
 		loadOptions.put(XMLResource.OPTION_USE_PARSER_POOL, parserPool);
 		loadOptions.put(XMLResource.OPTION_USE_DEPRECATED_METHODS, Boolean.FALSE);
-
-		final int bufferSize = 16384;
-		final Map<String, Object> parserProperties = new HashMap<String, Object>();
-		parserProperties.put("http://apache.org/xml/properties/input-buffer-size", Integer //$NON-NLS-1$
-				.valueOf(bufferSize));
-		loadOptions.put(XMLResource.OPTION_PARSER_PROPERTIES, parserProperties);
-
 		return loadOptions;
 	}
 
