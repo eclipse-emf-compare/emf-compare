@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,7 @@ import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
  * A filter used by default that filtered out cascading differences (differences located under differences,
- * also known as sub differences).
+ * also known as sub differences). The MOVE differences are not hidden by this filter.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 4.0
@@ -49,19 +49,23 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 			if (input instanceof TreeNode) {
 				TreeNode treeNode = (TreeNode)input;
 				EObject data = treeNode.getData();
-				TreeNode parent = treeNode.getParent();
-				final EObject parentData;
-				if (parent != null) {
-					parentData = parent.getData();
+				if (data instanceof Diff && ofKind(DifferenceKind.MOVE).apply((Diff)data)) {
+					ret = false;
 				} else {
-					parentData = null;
-				}
-				if (parentData instanceof Diff
-						&& !((parentData instanceof ResourceAttachmentChange) || ofKind(DifferenceKind.MOVE)
-								.apply((Diff)parentData)) && data instanceof Diff) {
-					Iterator<EObject> eAllDataContents = transform(treeNode.eAllContents(),
-							IDifferenceGroup.TREE_NODE_DATA);
-					return CASCADING_DIFF.apply(data) && !any(eAllDataContents, not(CASCADING_DIFF));
+					TreeNode parent = treeNode.getParent();
+					final EObject parentData;
+					if (parent != null) {
+						parentData = parent.getData();
+					} else {
+						parentData = null;
+					}
+					if (parentData instanceof Diff
+							&& !((parentData instanceof ResourceAttachmentChange) || ofKind(
+									DifferenceKind.MOVE).apply((Diff)parentData)) && data instanceof Diff) {
+						Iterator<EObject> eAllDataContents = transform(treeNode.eAllContents(),
+								IDifferenceGroup.TREE_NODE_DATA);
+						return CASCADING_DIFF.apply(data) && !any(eAllDataContents, not(CASCADING_DIFF));
+					}
 				}
 			}
 			return ret;
