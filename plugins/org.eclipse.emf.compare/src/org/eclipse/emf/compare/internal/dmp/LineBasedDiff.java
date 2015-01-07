@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2014, 2015 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,8 +35,7 @@ public class LineBasedDiff extends diff_match_patch {
 	 */
 	public LinkedList<Diff> computeLineBasedDiff(String text1, String text2) {
 		final LinesToCharsResult lines = diff_linesToChars(text1, text2);
-		final LinkedList<Diff> diffs = diff_main(lines.chars1, lines.chars2, false);
-		diff_cleanupSemantic(diffs);
+		final LinkedList<Diff> diffs = diff_main(lines.chars1, lines.chars2, true);
 		diff_charsToLines(diffs, lines.lineArray);
 		return diffs;
 	}

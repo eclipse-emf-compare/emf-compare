@@ -15,7 +15,7 @@ of them.</body>
       <body>This is an OCL&#xD;
 test with multi-line&#xD;
 String attribute&#xD;
-and concurrent changes (changed)&#xD;
+(changed) and concurrent changes&#xD;
 of them.</body>
     </node>
   </packagedElement>
