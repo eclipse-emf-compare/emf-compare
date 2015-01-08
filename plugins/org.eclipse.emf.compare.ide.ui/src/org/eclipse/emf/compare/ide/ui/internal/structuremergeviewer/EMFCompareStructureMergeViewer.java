@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,6 +70,7 @@ import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.internal.utils.DisposableResourceSet;
+import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
@@ -970,6 +971,16 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 						rightResourceSet, originResourceSet);
 				editingDomainNeedsToBeDisposed = true;
 				compareConfiguration.setEditingDomain(editingDomain);
+
+				if (leftResourceSet instanceof NotLoadingResourceSet) {
+					((NotLoadingResourceSet)leftResourceSet).setAllowResourceLoad(true);
+				}
+				if (rightResourceSet instanceof NotLoadingResourceSet) {
+					((NotLoadingResourceSet)rightResourceSet).setAllowResourceLoad(true);
+				}
+				if (originResourceSet instanceof NotLoadingResourceSet) {
+					((NotLoadingResourceSet)originResourceSet).setAllowResourceLoad(true);
+				}
 
 				initToolbar();
 

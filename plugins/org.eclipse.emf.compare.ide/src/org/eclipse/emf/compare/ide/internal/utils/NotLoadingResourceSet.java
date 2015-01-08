@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,6 +96,9 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 
 	/** Registers the proxies we detect while resolving our resources. */
 	private Map<EObject, Set<EStructuralFeature>> proxyMap;
+
+	/** Turn from not loading resource set into loading resource set. */
+	private boolean allowResourceLoad;
 
 	/**
 	 * Constructor.
@@ -296,6 +299,8 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 		final IStorage storage = storageToURI.get(uri);
 		if (loadOnDemand && storage != null) {
 			resource = load(storage, uri, new NullProgressMonitor());
+		} else if (allowResourceLoad) {
+			resource = super.getResource(uri, loadOnDemand);
 		} else {
 			ILoadOnDemandPolicy.Registry registry = EMFCompareRCPPlugin.getDefault()
 					.getLoadOnDemandPolicyRegistry();
@@ -521,5 +526,16 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 			proxyMap.put(eObject, proxiesOn);
 		}
 		proxiesOn.add(eStructuralFeature);
+	}
+
+	/**
+	 * Allow/disallow the resource set to load its resources when asked to. This is useful after the
+	 * comparison process, where every resource should be loaded through {@link #getResource(URI, boolean)}.
+	 * 
+	 * @param allowResourceLoad
+	 *            true to allow the resource set to load its resources when asked to, false otherwise.
+	 */
+	public void setAllowResourceLoad(boolean allowResourceLoad) {
+		this.allowResourceLoad = allowResourceLoad;
 	}
 }
