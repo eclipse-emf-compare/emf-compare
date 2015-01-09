@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Alexandra Buzila - Bug 457117
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
@@ -22,9 +23,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.EventObject;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.eclipse.compare.CompareNavigator;
 import org.eclipse.compare.ICompareNavigator;
@@ -34,8 +32,6 @@ import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
@@ -47,7 +43,6 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
-import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
@@ -89,10 +84,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 	private RedoAction fRedoAction;
 
-	private final DelayedExecutor fDelayedExecutor;
-
-	private final ScheduledExecutorService fExecutorService;
-
 	/**
 	 * @param parent
 	 * @param configuration
@@ -101,28 +92,9 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		super(parent, configuration);
 		setContentProvider(new EMFCompareTextMergeViewerContentProvider(configuration));
 
-		fExecutorService = Executors.newSingleThreadScheduledExecutor();
-		fDelayedExecutor = new DelayedExecutor(fExecutorService);
-
 		editingDomainChange(null, configuration.getEditingDomain());
 
 		configuration.getEventBus().register(this);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#flushContent(java.lang.Object,
-	 *      org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	@Override
-	protected void flushContent(Object oldInput, IProgressMonitor monitor) {
-		try {
-			fExecutorService.awaitTermination(1, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-			EMFCompareIDEUIPlugin.getDefault().log(e);
-		}
-		super.flushContent(oldInput, monitor);
 	}
 
 	/**
@@ -332,22 +304,17 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 			public void textChanged(TextEvent event) {
 				final Object oldInput = getInput();
 				if (event.getDocumentEvent() != null && oldInput instanceof CompareInputAdapter) {
-					fDelayedExecutor.schedule(new Runnable() {
-						public void run() {
-							// When we leave the current input
-							if (oldInput instanceof CompareInputAdapter) {
-								final AttributeChange diff = (AttributeChange)((CompareInputAdapter)oldInput)
-										.getComparisonObject();
-								final EAttribute eAttribute = diff.getAttribute();
-								final Match match = diff.getMatch();
-								final IEqualityHelper equalityHelper = match.getComparison()
-										.getEqualityHelper();
+					// When we leave the current input
+					if (oldInput instanceof CompareInputAdapter) {
+						final AttributeChange diff = (AttributeChange)((CompareInputAdapter)oldInput)
+								.getComparisonObject();
+						final EAttribute eAttribute = diff.getAttribute();
+						final Match match = diff.getMatch();
+						final IEqualityHelper equalityHelper = match.getComparison().getEqualityHelper();
 
-								updateModel(diff, eAttribute, equalityHelper, match.getLeft(), true);
-								updateModel(diff, eAttribute, equalityHelper, match.getRight(), false);
-							}
-						}
-					});
+						updateModel(diff, eAttribute, equalityHelper, match.getLeft(), true);
+						updateModel(diff, eAttribute, equalityHelper, match.getRight(), false);
+					}
 				}
 			}
 		});
@@ -418,19 +385,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
-		fExecutorService.shutdown();
-		try {
-			if (!fExecutorService.awaitTermination(1, TimeUnit.SECONDS)) {
-				fExecutorService.shutdownNow();
-				if (!fExecutorService.awaitTermination(1, TimeUnit.SECONDS)) {
-					EMFCompareIDEUIPlugin.getDefault().log(IStatus.WARNING,
-							"The executor of EMFCompareTextMergeViewer did not shutdown properly."); //$NON-NLS-1$
-				}
-			}
-		} catch (InterruptedException e) {
-			EMFCompareIDEUIPlugin.getDefault().log(e);
-		}
-
 		getCompareConfiguration().getEventBus().unregister(this);
 
 		editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
