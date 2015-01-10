@@ -5,8 +5,8 @@ Element-Name: ts005-egit
 Element-Type: testsuite
 Element-Version: 2.0
 Id: _nfxl8G9_EeKmUfxl9qSLpg
-Q7-Runtime-Version: 1.3.10.201312200736
-Save-Time: 4/9/14 4:22 PM
+Q7-Runtime-Version: 1.3.14.201410230950
+Save-Time: 1/10/15 12:09 PM
 Tags: EGit
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -38,5 +38,6 @@ _EVe_sL_rEeOYOO8-bD9VkQ	// kind: 'test' name: 'ts005_tc016_compare_with_head_rev
 _AcvXEL_sEeOYOO8-bD9VkQ	// kind: 'test' name: 'ts005_tc017_compare_with_git_index_from_editor' path: 'egit/ts005_tc017_compare_with_git_index_from_editor.test'
 _cR-YkL_sEeOYOO8-bD9VkQ	// kind: 'test' name: 'ts005_tc018_compare_with_branch_master_from_editor' path: 'egit/ts005_tc018_compare_with_branch_master_from_editor.test'
 _qrJEQL_xEeOYOO8-bD9VkQ	// kind: 'test' name: 'ts005_tc019_commit_viewer_compare_with_workspace' path: 'egit/ts005_tc019_commit_viewer_compare_with_workspace.test'
+_I0mWoJKiEeSdjeXOy8KSHw	// kind: 'test' name: 'ts005_tc020_merge_branch1_into_master' path: 'egit/ts005_tc020_merge_branch1_into_master.test'
 
 ------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8--

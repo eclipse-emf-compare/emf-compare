@@ -1,0 +1,62 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_qbXc8Zi4EeScr6JtPPBZKw,_zFx5wJKhEeSdjeXOy8KSHw
+Element-Name: ts005_tc020_merge_branch1_into_master
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _I0mWoJKiEeSdjeXOy8KSHw
+Q7-Runtime-Version: 1.3.10.201312200736
+Save-Time: 1/8/15 10:53 AM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test validates whether the model-based merge of branch1 into branch master works when invoked from EGit. Therefore, this is based on a context with two branches (master and branch1), which both diverged by one commit from their common ancestor commit. Both diverging commits affect the same attribute: one commit changes the attribute name ("page" to "numberOfPages") and the other one changes the attribute type (EInt to EString). This test succeeds if the model-based merge has been invoked successfully by EGit so that both changes can be merged without any issues. If the model-based merge is not invoked, a line-based conflict is raised.
+
+TEST STEPS
+	1) Right-click the model (library.ecore) and select "Team/Show in History"
+    2) In the History view, click icon "Show All Branches and Tags"
+    3) Select the latest commit of branch1 (e8db9ff) and select context menu "Merge"
+    4) Dismiss the Merge Result view (by clicking OK)
+    5) Open library.ecore
+        // assert that the EClass "Book" now contains an attribute named "numberOfPages" of type "EString"
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+get-view "Package Explorer" | get-tree 
+    | select "library  \\[emf-compare-library-egit-multiple-branches master\\]/library.ecore" | double-click
+
+get-view "Package Explorer" | get-tree 
+    | select "library  \\[emf-compare-library-egit-multiple-branches master\\]/library.ecore" 
+    | get-menu "Team/Show in History" | click
+
+with [get-view History] {
+    get-button "Show All Branches and Tags" | click
+    try -command {
+    	get-table | select e8db9ff | get-menu Merge | click
+    } -catch {
+    	get-button "Show All Branches and Tags" | click
+    }
+}
+
+wait 500
+
+try -command {
+	get-window "Merge Result" | get-editbox -after [get-label Result] | get-property text | equals Merged | verify-true
+	get-window "Merge Result" | get-button OK | click
+} -catch {
+	// do nothing if Merge Result dialog isn't there, we try to verify the merge result in the model anyway later
+}
+
+get-editor "library.ecore" | get-tree 
+    | get-item "platform:\\/resource\\/library\\/library.ecore/library/Book/numberOfPages : EString" | click
+get-editor "library.ecore" | get-tree 
+    | get-item "platform:\\/resource\\/library\\/library.ecore/library/Book/numberOfPages : EString" 
+    | get-property caption | equals "numberOfPages : EString" | verify-true
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

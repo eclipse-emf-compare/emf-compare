@@ -1,0 +1,284 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Context-Type: com.xored.q7.workspace.context
+Element-Name: EGitMultipleBranchWorkspaceContext
+Element-Type: context
+Element-Version: 2.0
+Id: _qbXc8Zi4EeScr6JtPPBZKw
+Q7-Runtime-Version: 1.3.14.201410230950
+Save-Time: 1/10/15 12:07 PM
+
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/index-d3606c74-6915-3cbc-9e12-d12f0ed6656a
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/index
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRz8QxyZmBgYIJiMAhZduaIxXrpAwxw
+0LgEwWa4LPZXd8ESP8XT2gH7M3bUHKneVfiqgEEgJzOpKLGoUl+voCg/KzW5BKEhZNk5KxUGfwbs5jFX
+mtflBUbMubtI4l93Z8LVt0nPlqumM4jCzIPSeqnJ+UWpYB2vou5sc8sQkjir6eWi8Sh70tKFwUEAUEsH
+CGbOMAeLAAAAyAAAAFBLAQIUABQACAgIAAAAIQBmzjAHiwAAAMgAAAAIAAAAAAAAAAAAAAAAAAAAAAAu
+Y29udGVudFBLBQYAAAAAAQABADYAAADBAAAAAAA=
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/index-d3606c74-6915-3cbc-9e12-d12f0ed6656a--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/76/324170005bfb5270a55959181c22e92fdd65be-630c7972-1c87-3007-95de-97894e06f57f
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/76/324170005bfb5270a55959181c22e92fdd65be
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQBMQDO/3icKylKTVUwNmEwMQAChZzM
+pKLEokoGYefUXeEVp5RF2njtWPOcpn97s2Y+ABDMDtBQSwcIKK2ZoDYAAAAxAAAAUEsBAhQAFAAICAgA
+AAAhACitmaA2AAAAMQAAAAgAAAAAAAAAAAAAAAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAGwA
+AAAAAA==
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/76/324170005bfb5270a55959181c22e92fdd65be-630c7972-1c87-3007-95de-97894e06f57f--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/library/.project-10f4ded3-2583-3d5c-9590-39dd64c2db75
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/library/.project
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSzsa/IzVEoSy0qzszPs1Uy1DNQUkjN
+S85PycxLt1UKDXHTtVCyt+Plsikoys9KTS5xSS1OLsosKAGqBopy2uQl5qba5WQmFSUWVdrog3kg4eT8
+3NzUvBI7G30YCyQKNaMYzNFH4SWVZuakBBekJkPkULl5iSWlRalQbQgO3AhURwEAUEsHCPQWM0iCAAAA
+0wAAAFBLAQIUABQACAgIAAAAIQD0FjNIggAAANMAAAAIAAAAAAAAAAAAAAAAAAAAAAAuY29udGVudFBL
+BQYAAAAAAQABADYAAAC4AAAAAAA=
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/library/.project-10f4ded3-2583-3d5c-9590-39dd64c2db75--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/77/85eacc50cec0bc0157e76a7dfed928db594d2b-e2526d55-146f-3943-8849-7a3de4c9d9f5
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/77/85eacc50cec0bc0157e76a7dfed928db594d2b
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQBoQBe/3icpY1LDoIwEEBdc4rZm5jp
+QKkkxujehVfoZ5AxhZJSNN5ewxXcvbzFez6NoxSgmnYlM4Npa2qUQUTteqfJoNW60506Kk/EHfUhtNpx
+ZdcypAz3QaLMcLPTgzOc5rjBhf3PLrykNXs++DSeQTWEpMwREfaoECu/rQv/FamuISww5/RkX+AtZQCZ
+pIiN8OK8SJog9RDFZZs/MKbA8Qvtpk48UEsHCAjI8zGmAAAAoQAAAFBLAQIUABQACAgIAAAAIQAIyPMx
+pgAAAKEAAAAIAAAAAAAAAAAAAAAAAAAAAAAuY29udGVudFBLBQYAAAAAAQABADYAAADcAAAAAAA=
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/77/85eacc50cec0bc0157e76a7dfed928db594d2b-e2526d55-146f-3943-8849-7a3de4c9d9f5--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/config-727b1e00-4c42-37dc-88e0-f10a8149cf8f
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/config
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRFzMENgCAMBdAzTMEILuAkxkMjH0Ms
+lLRgwvbqyfvL2w5R7N7ZLJzrZWENidjgnaKJ5S46k2ihfkMtS33B4l3KjCIRP2c5iVmRRovU8UVdB/wD
+UEsHCIJ87MJSAAAAYQAAAFBLAQIUABQACAgIAAAAIQCCfOzCUgAAAGEAAAAIAAAAAAAAAAAAAAAAAAAA
+AAAuY29udGVudFBLBQYAAAAAAQABADYAAACIAAAAAAA=
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/config-727b1e00-4c42-37dc-88e0-f10a8149cf8f--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/13/4365ba5778ca2314860d3e056e4297f6ecac9f-2dc96a4b-b3de-38dd-82c3-c296843c9abe
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/13/4365ba5778ca2314860d3e056e4297f6ecac9f
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQBWgCl/3icKylKTVUwN2cwNDAwMzFR
+0Csoys9KTS5hEPuru2CJn+Jp7YD9GTtqjlTvKnxVAFWTk5lUlFhUqZeanF+UymBgu2TCtYhndpNWqX6v
+nWrSmPLzkiEAJSwh/VBLBwiQoU4NXwAAAFoAAABQSwECFAAUAAgICAAAACEAkKFODV8AAABaAAAACAAA
+AAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAlQAAAAAA
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/13/4365ba5778ca2314860d3e056e4297f6ecac9f-2dc96a4b-b3de-38dd-82c3-c296843c9abe--
+------=_contents/Library-EGit-Multiple-Branches/.project-5ddc35af-0327-33af-94bc-e46e65b057b7
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/.project
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnRVjrsOwjAMRWeQ+IcqewhsDGkrIR4L
+TMAHpKkFRnnJSRH8PW0poG4+18dXluXTmuwBFNG7nC3nC5aB075Gd83Z5bzjK1YWs6kM5O+g0waiJgyp
+tdt0Ip2yUBywIkUvvt1j4sfGJAwG+JqU0zeIUvRSZ2tvLbhUSPGdunSojj2IEVUNmvoUQH92Y3QqNQTD
+2R9+FeNf31BLBwhTpKYKlQAAAOoAAABQSwECFAAUAAgICAAAACEAU6SmCpUAAADqAAAACAAAAAAAAAAA
+AAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAywAAAAAA
+------=_contents/Library-EGit-Multiple-Branches/.project-5ddc35af-0327-33af-94bc-e46e65b057b7--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/logs/HEAD-2919a9d7-2467-3c75-9650-bb087a86a341
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/logs/HEAD
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnS1ksFKxDAQhs/uUwx7UgRJmmbTLiKK
+eBAERZ8gmUy20TYpaVbx7c2uelBBimBOwwwZvv//h7F5D5RqJGlEyZCQGWRcKlIrrawj21aNNbKtbWXg
+rvO9H+FGhw0lOB37fXFOWLoTTXGbkE4wDmfA64pVXDVl+zHjjB2U7uAzHPrgs9f90RourJ1gTPGRMMOL
+zx18zOCZ0uRjgOig9ybp9ApDtNQvZoP+oyIhPhV1hE9xm9cF7tmHDbgUBxj0lMumHKGAB+z4fGgqZeuc
+rQ3XgtVOWKHINq3kxFEqp0nUVWPsH6Bb9SWGNdxT0ANNoHNO3mwzwXLUG5qWJYTCvgzbwVC6dXf75mI2
+2v8Z37LqV+M/7N45/57BfOONWDG0sjaNUVitGiOdUNJp1K2WWLdCO3Sq0X+Alvyb8Zfd7s8E+XWk3YH/
+DGCv5uo65J2Uq4cyDpvFG1BLBwhgyuCBUgEAAMwDAABQSwECFAAUAAgICAAAACEAYMrggVIBAADMAwAA
+CAAAAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAiAEAAAAA
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/logs/HEAD-2919a9d7-2467-3c75-9650-bb087a86a341--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/3e/22b639d0729d5ccaafa689721fcff209594abf-c8d22027-d418-380b-9627-45b50d182f59
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/3e/22b639d0729d5ccaafa689721fcff209594abf
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQBMQDO/3icKylKTVUwNmEwMQAChZzM
+pKLEokoG71umjyxd1y1aOf0Uu3KaB9/sLVcqASkmD9dQSwcIYDChPTYAAAAxAAAAUEsBAhQAFAAICAgA
+AAAhAGAwoT02AAAAMQAAAAgAAAAAAAAAAAAAAAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAGwA
+AAAAAA==
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/3e/22b639d0729d5ccaafa689721fcff209594abf-c8d22027-d418-380b-9627-45b50d182f59--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/e8/db9ffd4b1a304f3d37ed8951e1c57fae3428bd-757bd969-9b06-32f5-93a7-b7947bdc25b6
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/e8/db9ffd4b1a304f3d37ed8951e1c57fae3428bd
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQBvQBC/3icpY5RasMwEETz7VMs/i0E
+aRNZFoTSAxQSeoPVapUIIsnI8v1rfIX8DY/hzXDNOXVAO516E4GLIPrp4oKy6IJhJoo0zc6ijhwjKmfc
+lXwcFmpSOlg7GyFmo1hYeVbaWLET2RAlOJyD3/sB/UBbf9UGj1d6pwV+qTylwW15H+FHeKerrHVrLGeu
++Rv0FRVqu0/Dl9JKDXxc7fKRZPiTQllWoN5b8lsXGBd6yjpCKr3CWLbspd3j44D/iC1bwlBLBwh2pyXc
+wgAAAL0AAABQSwECFAAUAAgICAAAACEAdqcl3MIAAAC9AAAACAAAAAAAAAAAAAAAAAAAAAAALmNvbnRl
+bnRQSwUGAAAAAAEAAQA2AAAA+AAAAAAA
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/e8/db9ffd4b1a304f3d37ed8951e1c57fae3428bd-757bd969-9b06-32f5-93a7-b7947bdc25b6--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/HEAD-3c9a6d6e-813a-35e8-b3af-c35157123952
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/HEAD
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQrSk2zUihKTSvWz0hNTCnWz00sLkkt
+4gIAUEsHCCtpc6cZAAAAFwAAAFBLAQIUABQACAgIAAAAIQAraXOnGQAAABcAAAAIAAAAAAAAAAAAAAAA
+AAAAAAAuY29udGVudFBLBQYAAAAAAQABADYAAABPAAAAAAA=
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/HEAD-3c9a6d6e-813a-35e8-b3af-c35157123952--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/logs/refs/heads/master-1ed5beef-3655-354e-915f-ffbc887744ba
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/logs/refs/heads/master
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSVj0FLxDAQhc/urxj2pAiSpk2TLiKK
+7EHwIPgLJpPJNpI2Ic0q++/tihdv6zsN72Me7wlxmUBroxiJlCAmYUk0SrPuUTvPbpDGWTV0Tlp4G0MM
+GV5xPnCB+xx/jkem1V14ScdCfEdpeoCmk0I22qzpt6IR4mp1p1DhOsyhBow3O3hyboFc0gdTha9QR/hl
+8MllCWmG5CEGW7CcYEqO4+biorbtBTnVWWM1yd5Y5VutPBIOqKgbWvTktcH/LxpU82fRDp7H888C9ZT5
+XBlrLcEeK8M24wq24EuaYP8yV6gJ9u8rng+bb1BLBwiZm06s5gAAAJ4BAABQSwECFAAUAAgICAAAACEA
+mZtOrOYAAACeAQAACAAAAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAHAEAAAAA
+
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/logs/refs/heads/master-1ed5beef-3655-354e-915f-ffbc887744ba--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/12/6029f15c4ca2b6d1468658ed0c864a41327ce8-1338f88e-0540-3670-9f9a-e2b5aa4f76fd
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/12/6029f15c4ca2b6d1468658ed0c864a41327ce8
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQBWgCl/3icKylKTVUwN2cwNDAwMzFR
+0Csoys9KTS5hEPuru2CJn+Jp7YD9GTtqjlTvKnxVAFWTk5lUlFhUqZeanF+UymBelxcYMefuIol/3Z0J
+V98mPVuumg4AJcUiOVBLBwjq7wgcXwAAAFoAAABQSwECFAAUAAgICAAAACEA6u8IHF8AAABaAAAACAAA
+AAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAlQAAAAAA
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/12/6029f15c4ca2b6d1468658ed0c864a41327ce8-1338f88e-0540-3670-9f9a-e2b5aa4f76fd--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/refs/heads/master-ef1ff080-7bfb-3b0e-b20b-053cb2a232e4
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/refs/heads/master
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQFwcERACAIA7C/03gCAuO09dh/BBPa
+3XrhLKbOLcZYxkBohLwNo8nC+lBLBwjiBYReKQAAACkAAABQSwECFAAUAAgICAAAACEA4gWEXikAAAAp
+AAAACAAAAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAXwAAAAAA
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/refs/heads/master-ef1ff080-7bfb-3b0e-b20b-053cb2a232e4--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/30/3da490d658e63e92aa25f77d95348164f9d231-abe5b7d3-7730-3de9-ba69-dcd020674782
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/30/3da490d658e63e92aa25f77d95348164f9d231
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQBiAF3/nicrZNdT8IwFIa95lcs9Ro6
+kCBZBgR1EBJNiHxIvDFlnI2GrlvaTuDfe1aQDz+iie6m2el5n/P2tGcu0rnTvK5f+J1NIpxXUJqnskWq
+FZc4IMN0wWXcIpNxr9wknXbJhzBV4AVDFq5YDM4m4d5BVCtEiJHaw3iLLI3JPErX63UlTeJKqmI6exgc
+UvR5yvrKZtRct4pp96NwCQkrc6kNkyGQkoPfTmk9nGkhFDzTYAGQRAWkRoMijViLfNEiL9W6Hgf9hhtA
+f7Wox82meZ5FXeJIliBN8Lliaou/evI4ONCpRe7wFg0blmQCNN0L3teKdUWxcdgFa1bqoYKIb47sNsZ9
+uBVMax5xbJuDTfDMNsP6+8bazTPTjWn8rembNF1ZasEdGZWHJldM9IDhCl/gu8YoPs8NfCzx9KmEpdpz
+2FKGG4EqGJ/i7phhRcD51V1cUhqgSXxRhP6L6dpPpjN8o/rvpgfSHMkLiFguzJSJHO65AbSO8+K6uzP5
+9PR+cWDo+cS0S2/yBh6vUEsHCJilB+aNAQAAiAEAAFBLAQIUABQACAgIAAAAIQCYpQfmjQEAAIgBAAAI
+AAAAAAAAAAAAAAAAAAAAAAAuY29udGVudFBLBQYAAAAAAQABADYAAADDAQAAAAA=
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/30/3da490d658e63e92aa25f77d95348164f9d231-abe5b7d3-7730-3de9-ba69-dcd020674782--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/library/library.ecore-fd9e65dc-1be0-329c-9c73-93cdaf0cb6ef
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/library/library.ecore
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnStk8luwjAQhu9IvEPknsEhRQhFLKJt
+QEhUQmUp6qUyySRYOItsp8Dbd+JQCl3UHsjFynj+b36PPZ3+PhbWG0jF06RLGnWbWJD4acCTqEsW82Gt
+Tfq9aqUDfirB9abM37IIrH3M3ZPKKVTISZSL8S7ZaJ25lO52u3oaR/VURnT1OD6lqMuU3a3JcGy7gWmT
+mb+BmNV4ojRLfCDVioVfKTUmLsTgC54pMASIw4LiUK9II8YjD7rktdFUc2/Usj0YbYNm1G7rl1U4IFbC
+YqQJvpZMHvBXLZ7GJzo1yBJv0LBncSZA0aPgY60bVxRbh20o3SZqKiHk+094r9jowL1gSvGQY+cs7IOr
+Dxk6OPbWbF7Ybi2jX23fpem2xBbgmZa5r3PJxBAYrvADf6C15Otcw9caz99qlFhzFFNMcy1QBvNz3gPT
+rAhY/7qPG0o9dInvitDr2Hb+tJ3hU1VXs/1JDyBkudBLJnKYcA3oH2fHto8n69Dziy6mh16OD4beAVBL
+Bwi6r+uqfAEAAHkDAABQSwECFAAUAAgICAAAACEAuq/rqnwBAAB5AwAACAAAAAAAAAAAAAAAAAAAAAAA
+LmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAsgEAAAAA
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/library/library.ecore-fd9e65dc-1be0-329c-9c73-93cdaf0cb6ef--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/b3/60cd54b8b7c268b5f375faca9a5c493afcf78a-19255a01-8856-36bb-acdc-f59d3809e46b
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/b3/60cd54b8b7c268b5f375faca9a5c493afcf78a
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQByAA3/3icpY/NasMwEIR79lMsuRbK
+6t+CUAohh0IPhT7BarWODbFlZPmQt6+bV+htmG8YZrjM89RA9/alVRHwwRpCNNFEMuK8R2LDNvTsUlTO
+KMp+cMl2K1VZGoTQOyFmhyyMiVG5IMFTyIPkqPucXLRZp472NpYK3+N0n1b4ouUmFc7r/Sk+hA93k63s
+leWNy/wOymrUKkSn4BUVYsfPqU3+VdJdxr/wBu2xCpQBqLU6pb0JnFY6wAmGWma4fh7nWoHrz4GX2y9f
+l11OUEsHCMN5UnLNAAAAyAAAAFBLAQIUABQACAgIAAAAIQDDeVJyzQAAAMgAAAAIAAAAAAAAAAAAAAAA
+AAAAAAAuY29udGVudFBLBQYAAAAAAQABADYAAAADAQAAAAA=
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/b3/60cd54b8b7c268b5f375faca9a5c493afcf78a-19255a01-8856-36bb-acdc-f59d3809e46b--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/ff/6562904ffe76936533a26ba56ee32fe5a91d37-c0d8eea1-c01e-3291-9ad8-ea7342599d35
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/ff/6562904ffe76936533a26ba56ee32fe5a91d37
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQBjwFw/nicrZNdT8IwFIa95lcs9Vo6
+JiHLsmH8mIQEI5EPjTemG2ezoetI2wn8e88KIvgRTXQ3zU7P+5z3nLaJKBPH972j8GxVCOcFlOaljEir
+6RIHZFrOuMwjMhlfn/jkrNsIIS0VBPGQpXOWg7MqeLATebUIMVIHGI/IszGLgNLlctksi7xZqpw+3PR3
+KfowZXlqMzzXbWHaYJQ+Q8FOuNSGyRRIw8Fvo7QeDrSQCr7QYAFQZDXEo3GdRqxFPovIU6utx3Gv48bQ
+m8/aue+bx4fsnDiSFUgTPFFMrfFXT+76Ozq1yA3eomHFioUATbeCt7VpXVEcHE7BmpV6qCDjq3d2F+Mh
+XAqmNc84js3BIQRmvcD628HazQPTnWn+remLspxbas0dGVWlplJMXAPDFb7AnxujeFIZ+Fji/lMJS7V9
+2FKGG4EqGO/jrphhdcD51VkcUxqjSbxRhP6Lae8n07IqElC32RDvqv67+b407xVmkLFKmCkTFQy4AWwB
+343rbnoL6f4548Ohhy+n23gFRhIhzFBLBwjchcH6lAEAAI8BAABQSwECFAAUAAgICAAAACEA3IXB+pQB
+AACPAQAACAAAAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAygEAAAAA
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/ff/6562904ffe76936533a26ba56ee32fe5a91d37-c0d8eea1-c01e-3291-9ad8-ea7342599d35--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/refs/heads/branch1-10b60695-b68e-377b-b77f-86a07ec16285
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/refs/heads/branch1
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQFwcERACAIA7C/04jACeOApfuPYDKB
+ThLWUrqNCr2DSJeR55c1aica6wNQSwcIIZA1mCoAAAApAAAAUEsBAhQAFAAICAgAAAAhACGQNZgqAAAA
+KQAAAAgAAAAAAAAAAAAAAAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAGAAAAAAAA==
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/refs/heads/branch1-10b60695-b68e-377b-b77f-86a07ec16285--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/4b/da35e23945aea2a997ca072366480e9bb4d479-2e8a235f-61b6-3e12-aef1-28f187adcb24
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/4b/da35e23945aea2a997ca072366480e9bb4d479
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQBWgCl/3icKylKTVUwN2cwNDAwMzFR
+0Csoys9KTS5hEPuru2CJn+Jp7YD9GTtqjlTvKnxVAFWTk5lUlFhUqZeanF+UyvA/NWmC/7+yyanGi7KX
+5j3Wf7pS1hwALkMh41BLBwhZsH56XwAAAFoAAABQSwECFAAUAAgICAAAACEAWbB+el8AAABaAAAACAAA
+AAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAlQAAAAAA
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/4b/da35e23945aea2a997ca072366480e9bb4d479-2e8a235f-61b6-3e12-aef1-28f187adcb24--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/logs/refs/heads/branch1-035feff3-f7b9-344c-8089-7dcd8e839fee
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/logs/refs/heads/branch1
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSdzkFqwzAUhOF1c4qHt4VGsqTKDqEU
+ui009AZP0ig2RLKR5PvXpD1A6KyGb/UL8djI2sGAvTfCwwvnhTQW9pVtiAhjPwRnRh16R5dpvs0rfXK+
+otB5vd3PO/yuFXXZiseLX9IbSd2LXtpBKXoWUognVzj76UQfBdwQKJYl0S9SQazHCRzqMXFtKIeHi7Df
+McagnWQldFRBWYRhNBLSGxsZSveDC/9IH+1f+q5pbif6RuaEStxamd3WQN3KV9SO5twW6vKWHMpXvNzx
+8ANQSwcIBXZrAswAAAB/AQAAUEsBAhQAFAAICAgAAAAhAAV2awLMAAAAfwEAAAgAAAAAAAAAAAAAAAAA
+AAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAAIBAAAAAA==
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/logs/refs/heads/branch1-035feff3-f7b9-344c-8089-7dcd8e839fee--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/67/43a003939a3e5660ac3c478c5b91531ad6f5b4-362979ad-1728-39d5-b23c-3adfaddd3377
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/67/43a003939a3e5660ac3c478c5b91531ad6f5b4
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQBMQDO/3icKylKTVUwNmEwMQAChZzM
+pKLEokoGoQTNjzE+i7ZddGuLeMvT5uVoVPMCACChD2JQSwcIEpuL2jYAAAAxAAAAUEsBAhQAFAAICAgA
+AAAhABKbi9o2AAAAMQAAAAgAAAAAAAAAAAAAAAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAGwA
+AAAAAA==
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/67/43a003939a3e5660ac3c478c5b91531ad6f5b4-362979ad-1728-39d5-b23c-3adfaddd3377--
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf
+Content-Type: q7/binary
+Entry-Name: .q7.content
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSdl0tv20YQx+8F8h0E3iXu+2HYDZrW
+SPoIEKCHBrkUs7uzMmOJlCmmUr99x7bk2iJjCryRu/+d38xwtDO6fLtfr2b/YLutmvqq4AtWzLCOTarq
+5VXxrctzV7z98c0Pl7FZL/ZNi2lxZxe7pr3dbiDixV/Hp5+busN9N9uvq4snc+LeHAHq7QWtXxU3Xbe5
+KMvdbrdo1stF0y7Lzx9/PUqGEU+nStovH/bLO1s+7S8w0loxq2FN2uv3Vffx26qrNit810Idb049LGZV
+uir+vgufo/tSqWv8M7bmt+7Tp3dfft8VFOpsRsGStO4eXuh10zZfMXbbA+OPKrTQ/ju/Z82PsPkjDbfF
+4RSdy9UKj4cWByNF+Wy/WSVK1UGB6zynEDfQ4nx1QOCSEOsjIvQQPSMLOvB8+8SLD9c//fLMg94+BZ6r
+5WuKqk647wle+PDk5quqm6a5HZGsmuX2ZTDj4fSMtJh7RvrOIKQB1QnuMTDeI/aEa9h22A7oLssD99Tn
+wfXvrL50vQkPtdnP0wsVF0M5eOayYcJnrqOKIIJJXBlntMPEojMKFJfCRnT9ZH8voBO8HMEraXQAba0j
+vuTKGZYkMm1QCW+zwQjR58l4M4LPSSRgoBQKHoMImoVsXHA2RmVDAMsRLJuKl2wELxMoz9J9wo1ELwCE
+ztYmr6Vy3KjsEyVlMt6O4C0a1Fw7H1MCwV1GCt3TF9CYjEADVmhjJ+NxBC+o4KRPzAqfdIwAGYzzVvAc
+cxbMa68gTP72KozgE0iNQnqlAUGA9zYC+SKNUY6hD0ElZf1UvBlLvpLAmPTSg0RtDIMoqeZc1MFzLTkk
+k3VQU/F2rPKlUNwyxnTIQQvLQGtKOHc8CkGVmBNVZcDJ+LHonUaIUbOIkYXIuLZoqd5SxuSFS4G+fRJh
+Kj6MXTuGxaRVcMFGQb93naXVGSJ4oJvQS6AKtA6m4um+HCm94HNOKnCQTGWZpMXkvObIo7YZUCrhQpqK
+z3ksem2EJ3CmnHu6gKUEYegWNohSZNTgObk0FV/VuRlrzjSX3Z7OAOc0vaGmfl5LP7Ohn9POz8xDB8ve
+nDNwcnDtZB56nApfme8Gpsye5mDlMDeXr7pwunJZHmfhx0G5/H9Svn8+6y8Caf8DUEsHCFxmtchSAwAA
+dgwAAFBLAQIUABQACAgIAAAAIQBcZrXIUgMAAHYMAAAIAAAAAAAAAAAAAAAAAAAAAAAuY29udGVudFBL
+BQYAAAAAAQABADYAAACIAwAAAAA=
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/37/7e6e51589cdda218fe8b8960d5ed62e6a72567-f0010108-9187-32f6-ac4e-29505062b956
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/37/7e6e51589cdda218fe8b8960d5ed62e6a72567
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQBhgF5/nicrZPLbsIwEEW75isidw0O
+FNEoIiDaBoREJVQeRd1UTpgEC+ch2ynw950YSqEPtQuysTKee+Z67AlEFljO7e1Vu7tNhPUGUvEs9Ui9
+ZhML0jBb8jT2yGzarzqk26m0IcwkuP6YhWsWg7VNuHsUNUoRYlLlYtwjK61zl9LNZlPLkriWyZguHofH
+FHWesrkxGQ3brmPaaBKuIGFVnirN0hBIxcJvrzQezrQQCp4rMABIohLSoH6ZRoxFvvTIa72ppv6gZfsw
+WC+bsePol0XUI1bKEqQJHkgmd/irZk/DI50a5B5v0LBlSS5A0YPgY60ZVxQbh10wZlM1lhDx7Se7g/E2
+3AumFI84ts3CJrh6l2P9Q2PN5pnp1jz+1fRdlq0NteROtCxCXUgm+sBwhR/wPa0lDwoNX0s8fythqOYc
+ppTmWqAKpqe4B6ZZGbD+dRfXlPpoEl8UoRcx3fjLdI5vVF3M9BG+hIgVQs+ZKGDENaB7HBnb3h+rTU+v
+GGeGng9Np/IOeNcf/lBLBwiO0GlFiwEAAIYBAABQSwECFAAUAAgICAAAACEAjtBpRYsBAACGAQAACAAA
+AAAAAAAAAAAAAAAAAAAALmNvbnRlbnRQSwUGAAAAAAEAAQA2AAAAwQEAAAAA
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/37/7e6e51589cdda218fe8b8960d5ed62e6a72567-f0010108-9187-32f6-ac4e-29505062b956--
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/16/fd2da0a44e21cb2b50bf68b87cc47bba71ea70-1540104a-4dfa-3734-bd81-ed9640e7b733
+Content-Type: q7/binary
+Entry-Name: contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/16/fd2da0a44e21cb2b50bf68b87cc47bba71ea70
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnQBjgBx/3icVY5BDsIgEEXd2lMQ9gq6
+ckHppvEC6gGATgwGBgLU6O3Fqo3dvfdn/mS0C5rsOV+J7uEduUPKNmBLd1tOCaAJg8VrSy/n4+ZAO9mI
+mMINTOkhm2RjqcuyWQtUHqSzOqn0FGyymprgPWCRgv2oht8D+c3sX/Ro3XCKYKbJwlCVMcGnMvPcXvzy
+AsAZRLZQSwcIdqqMFZMAAACOAAAAUEsBAhQAFAAICAgAAAAhAHaqjBWTAAAAjgAAAAgAAAAAAAAAAAAA
+AAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAMkAAAAAAA==
+------=_contents/Library-EGit-Multiple-Branches/emf-compare-library-egit-multiple-branches/.git/objects/16/fd2da0a44e21cb2b50bf68b87cc47bba71ea70-1540104a-4dfa-3734-bd81-ed9640e7b733--
