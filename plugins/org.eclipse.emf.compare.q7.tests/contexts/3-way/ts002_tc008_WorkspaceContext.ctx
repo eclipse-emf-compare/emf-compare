@@ -1,0 +1,68 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Context-Type: com.xored.q7.workspace.context
+Element-Name: ts002_tc008_WorkspaceContext
+Element-Type: context
+Element-Version: 2.0
+Id: _4fRmsJkzEeScr6JtPPBZKw
+Q7-Runtime-Version: 1.3.14.201410230950
+Save-Time: 1/11/15 2:50 AM
+
+------=_contents/OpaqueActionBodyChange/origin.uml-42a85ad0-3dc3-3c1e-be8f-9bd6d1effa33
+Content-Type: q7/binary
+Entry-Name: contents/OpaqueActionBodyChange/origin.uml
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnS9U9tum0AQfY+Uf1htpL6FhVSVIhcc
+ua1TEdl1Ettt39AaJrDqXuiyxObvOxAbGSd5rYSEds6cyw5DeLNTkjyDrYTREQ08nxLQqcmEziO6Xt1e
+XtOb8flZWCs5mpsMJNkpMeoJV37wMfD9gGJZ6mqEYEQL58oRY9vt1jMq94zNWVVCyn7PY3ZKQN0BAVIp
+ygo6EmJX7JPnez5bz2e0cxZZRBNVNNnD94d4CsvkOtbwI7m7XeeUaK4gol1MiqEJCUue/uE5xKo01p0I
+/Hol0HGQJbp2yO5f2B3PNSVq92OgpLDwFNGSu0LxNj1GTGbxl8fJYzxdtqd7K5Rw4hlWSK08KTaW28ZD
+iYvEp+wlIBskHITOphIUaHdiP0lRU7jmeB5yNX1/HgcCzlxjdOw3Jf9bQ1s3Ouhv3YInXoujxiO/IX9v
+s3hLFGUl13mN1xnfTX5OQtYfXzcsvs7ewjcma8arQlQEH05amQ8Xu2+fz88cVI5shSuIqqUTl1Jo2ENL
+Z3GFCXf43tTuUOY6I6nRaW1tO9m0QDeo9qB5Iq4A5YWss3wngCaY8z8GCFn7YYbbcliN9s9k/U7i6R9Q
+SwcIPMX3+rkBAADQAwAAUEsBAhQAFAAICAgAAAAhADzF9/q5AQAA0AMAAAgAAAAAAAAAAAAAAAAAAAAA
+AC5jb250ZW50UEsFBgAAAAABAAEANgAAAO8BAAAAAA==
+------=_contents/OpaqueActionBodyChange/origin.uml-42a85ad0-3dc3-3c1e-be8f-9bd6d1effa33--
+------=_contents/OpaqueActionBodyChange/right.uml-a0786274-b8ed-354e-9be0-a092309ac7c8
+Content-Type: q7/binary
+Entry-Name: contents/OpaqueActionBodyChange/right.uml
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnS9U9tum0AQfY+Uf1htpKp9CItTVYpc
+cOS2TkVk10lst31Da5jAqnuhyxKbv++AbWSc5LUSEto5cy47DMHNVknyDLYURod04PmUgE5MKnQW0tXy
+9vKa3ozOz4JKyeHMpCDJVolhR7jyBx8Hvj+gWJa6HCIY0ty5YsjYZrPxjMo8YzNWFpCw37OInRJQt0eA
+RIqihJaE2BX75Pmez1azKW2dRRrSWOV1+vD9IZrAIr6ONPyI725XGSWaKwhpG5NiaEKCgid/eAaRKox1
+JwK/Xgi0HGSJth3S+x275bm6QO1uDJTkFp5CWnCXK96kx4jxNPryOH6MJovmdG+FEk48wxKppSfF2nJb
+eyhxEfuU7QKyXsJe6HQiQYF2J/bjBDWFq4/nIZeTt+dxIODMNUbHflPwvxU0daMH3a0b8MRrftR45Nfn
+723mr4mirOQ6q/A6o/nXacC600v8bvxz/FrD2qT1aJmLkuDDNUGddxfbb5/PzxyUjmyEy4mqpBOXUmjY
+QwtncYUJd/heV+5Q5jolidFJZW0z2SRHNyj3oHkiLgflBay1fCMAaXLuGe93AukH8j+iBKz5RP29OSxJ
+84+ybjvx9A9QSwcID9bTcsIBAADaAwAAUEsBAhQAFAAICAgAAAAhAA/W03LCAQAA2gMAAAgAAAAAAAAA
+AAAAAAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAPgBAAAAAA==
+------=_contents/OpaqueActionBodyChange/right.uml-a0786274-b8ed-354e-9be0-a092309ac7c8--
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf
+Content-Type: q7/binary
+Entry-Name: .q7.content
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnSNkdFLwzAQxt8F/4eQd5M6xI3SOtzw
+wYk49GHiSynptY1rkjZJbfWv9zbXijLEt7v7fvnuOxLNe1WRN7BOGh3TcxZQAlqYTOoipq3Pz2Z0fnV6
+EgmjWG8sZKyZss7YratTAeFmqJZGe+g96ZUMR7vJzg4XaBfiPKal93XIedd1zKiCGVvw5/vbATm+YnzF
+Ued7nTdTPuoMBM4o0alC1rsgmCReBMEs+Z2NEpnFNLnIH5VbbT9u4EnYy5Vfrxcvdx3FIwnBMxHVft9g
+W1vzCsK7g/tDnTYtXAuP1y1M9r4sU10APdDI57KCAa4g96xVFeXHdWNlIfVfBALlT4uID4m+4vLvvLv6
+X1+E7CdQSwcIWDK7KwsBAAD2AQAAUEsBAhQAFAAICAgAAAAhAFgyuysLAQAA9gEAAAgAAAAAAAAAAAAA
+AAAAAAAAAC5jb250ZW50UEsFBgAAAAABAAEANgAAAEEBAAAAAA==
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf--
+------=_contents/OpaqueActionBodyChange/left.uml-889510f8-daff-3310-aec8-2a09d168e978
+Content-Type: q7/binary
+Entry-Name: contents/OpaqueActionBodyChange/left.uml
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAAALmNvbnRlbnStk91um0AQhe8j5R1WG6lqL8JCqkiR
+C47c1qmI7DqJ7bZ3aA0TWHV/6LLE5u07YMcyTtKrSkhoZ+ac+XYYwuuNkuQJbCWMjmjg+ZSATk0mdB7R
+5eLm/IpeD09PwlrJwdRkIMlGicFecOEHHwPfDyiGpa4GmIxo4Vw5YGy9XntG5Z6xOatKSNmvacyOBejb
+E0AqRVlBJ8LcBbv0fM9ny+mEdp1FFtFEFU12/+0+HsM8uYo1fE9ub5Y5JZoriGiHSRGakLDk6W+eQ6xK
+Y92Rwc8XBp0GVaIrh+xuq+50rinRez8GSgoLjxEtuSsUb+kRMZnEnx9GD/F43p7urFDCiSdYoLTypFhZ
+bhsPLc4Sn7ItIOsR9qCzsQQF2h21H6XoKVxzOA+5GL89j2cBzlwjOtabkv+poY0bHexv3SaPes0OCg/6
+9fW7NrPXTNFWcp3XeJ3h7ejHKGT748uC2ZfJa/mVyZrhohAVwYeT1ubd2ebrp9MTB5Uja+EKomrpxLkU
+Gsj7tEALyD7siubO4jIT7vC9qh3swlxnJDU6ra1tZ7wVVbukeSSuAOWFrGv+BoomSPwPlP8NELL2E/X3
+5nlJ2n+U7bcTT38BUEsHCBrag0vGAQAA2gMAAFBLAQIUABQACAgIAAAAIQAa2oNLxgEAANoDAAAIAAAA
+AAAAAAAAAAAAAAAAAAAuY29udGVudFBLBQYAAAAAAQABADYAAAD8AQAAAAA=
+------=_contents/OpaqueActionBodyChange/left.uml-889510f8-daff-3310-aec8-2a09d168e978--

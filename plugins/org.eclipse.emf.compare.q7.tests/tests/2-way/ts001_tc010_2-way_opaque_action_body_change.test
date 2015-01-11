@@ -1,0 +1,84 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_HClCoJk1EeScr6JtPPBZKw
+Element-Name: ts001_tc010_2-way_opaque_action_body_change
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: https://bugs.eclipse.org/bugs/show_bug.cgi?id=455677
+Id: _XkzcYZJyEeSdjeXOy8KSHw
+Q7-Runtime-Version: 1.3.14.201410230950
+Save-Time: 1/21/15 1:18 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test validates, on a 2-way comparison with one opaque action body change, whether the difference is displayed in the structure merge viewer under the match resource item and in the content merge viewer and right-clicking the difference. Furthermore, this test validates, when selecting "Copy Current Change From Left To Right", whether the difference is correctly merged and whether the left and right body values in the content merge viewer are correctly updated.
+
+TEST STEPS
+	1) Select the 2 uml models and run a 2-way comparison (select left.uml and right.uml)
+    2) Start comparison by selecting the context menu item "Compare With/Each Other" 
+		//assert that the one difference is displayed in the structure merge viewer under the match resource item (checking item count and label of difference)
+		//assert that the one difference is displayed and selected in the content merge viewer
+	3) Right-click on the one opaque action body change difference and select "Copy Current Change From Left To Right"
+		//check that the difference is merged and the content viewer is updated by asserting the content of the body value of left and right in the content merge viewer
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Package Explorer" | get-tree] {
+    select "OpaqueActionBodyChange/left.uml" "OpaqueActionBodyChange/right.uml"
+    get-menu "Compare With/Each Other" | click
+}
+with [get-editor "Compare ('OpaqueActionBodyChange/left.uml' - 'OpaqueActionBodyChange/right.uml')"] {
+    with [get-tree] {
+        get-item "> <Model> Model" | get-property childCount | equals 1 | verify-true
+        get-item "> <Model> Model" | get-property "getItems().TreeItem[0].getItemCount()" | equals 1 | verify-true
+        get-item "> <Model> Model" | get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItemCount()" 
+            | equals 1 | verify-true
+        get-item "> <Model> Model" 
+            | get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItemCount()" 
+            | equals 0 | verify-true
+        get-item "> <Model> Model" 
+            | get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+            | contains "JAVA" | verify-true
+        get-item "> <Model> Model" 
+            | get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+            | contains "changed" | verify-true
+        get-item "> <Model> Model" 
+            | get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+            | contains "<Opaque Action> OpaqueAction1" | verify-true
+    }
+    get-text-viewer | get-property text | equals "This is a\n"
+        + "test with multi-line (changed)\n"
+        + "String attribute\n"
+        + "and concurrent changes\n"
+        + "of them." | verify-true
+    get-text-viewer -after [get-label "(Local: /)?OpaqueActionBodyChange/right.uml"] -index 1 | get-property text 
+        | equals "This is a\n"
+        + "test with multi-line\n"
+        + "String attribute\n"
+        + "and concurrent changes\n"
+        + "of them." | verify-true
+}
+get-editor "Compare ('OpaqueActionBodyChange/left.uml' - 'OpaqueActionBodyChange/right.uml')" | get-tree 
+    | select "> <Model> Model/> <Activity> Activity1/> <Opaque Action> OpaqueAction1/JAVA body of <Opaque Action> OpaqueAction1 changed [opaque action body change]" 
+    | get-menu "Copy Current Change From Left To Right" | click
+with [get-editor "Compare ('OpaqueActionBodyChange/left.uml' - 'OpaqueActionBodyChange/right.uml')"] {
+    get-text-viewer | get-property text | equals "This is a\n"
+        + "test with multi-line (changed)\n"
+        + "String attribute\n"
+        + "and concurrent changes\n"
+        + "of them." | verify-true
+    get-text-viewer -after [get-label "(Local: /)?OpaqueActionBodyChange/right.uml"] -index 1 | get-property text 
+        | equals "This is a\n"
+        + "test with multi-line (changed)\n"
+        + "String attribute\n"
+        + "and concurrent changes\n"
+        + "of them." | verify-true
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
