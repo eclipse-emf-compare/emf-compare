@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,7 +70,7 @@ public class TestConflict extends AbstractEMFComparePerformanceTest {
 		data.dispose();
 	}
 	
-//	@Test
+	@Test
 	public void c_conflictUMLLarge() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("conflictUMLLarge");
 		final Data data = new LargeInputData();
