@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.compare.Comparison;
@@ -46,9 +47,11 @@ import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.UMLPostProcessor;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.resource.UMLResource;
 
@@ -166,9 +169,19 @@ public abstract class Data {
 		for (ResourceSet rs : resourceSets) {
 			EList<Resource> resources = rs.getResources();
 			for (Resource resource : resources) {
-				resource.unload();
-			}				
+				TreeIterator<EObject> allContents = EcoreUtil.getAllProperContents(resource, false);
+				while (allContents.hasNext()) {
+					final EObject next = allContents.next();
+					next.eAdapters().clear();
+				}
+				resource.eAdapters().clear();
+			}
+			
+			rs.getResources().clear();
+			rs.eAdapters().clear();
 		}
+		
+		
 		resourceSets = null;
 	}
 
