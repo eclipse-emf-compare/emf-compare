@@ -20,6 +20,7 @@ import data.models.Data;
 import data.models.LargeInputData;
 import data.models.NominalInputData;
 import data.models.SmallInputData;
+import data.models.SmallSplitInputData;
 import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
@@ -86,4 +87,19 @@ public class TestConflict extends AbstractEMFComparePerformanceTest {
 		data.dispose();
 	}
 
+	@Test
+	public void d_conflictUMLSmallSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("conflictUMLSmallSplit");
+		final Data data = new SmallSplitInputData();
+		data.match();
+		data.diff();
+		data.req();
+		data.equi();
+		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
+			public void run() {
+				data.conflict();
+			}
+		});
+		data.dispose();
+	}
 }

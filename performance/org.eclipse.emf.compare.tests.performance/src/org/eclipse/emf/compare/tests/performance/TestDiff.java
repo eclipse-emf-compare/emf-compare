@@ -20,6 +20,7 @@ import data.models.Data;
 import data.models.LargeInputData;
 import data.models.NominalInputData;
 import data.models.SmallInputData;
+import data.models.SmallSplitInputData;
 import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
@@ -69,6 +70,19 @@ public class TestDiff extends AbstractEMFComparePerformanceTest {
 	public void c_diffUMLLarge() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLLarge");
 		final Data data = new LargeInputData();
+		data.match();
+		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
+			public void run() {
+				data.diff();
+			}
+		});
+		data.dispose();
+	}
+	
+	@Test
+	public void d_diffUMLSmallSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLSmallSplit");
+		final Data data = new SmallSplitInputData();
 		data.match();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
