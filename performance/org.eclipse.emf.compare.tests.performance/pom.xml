@@ -20,7 +20,7 @@
 		<artifactId>tycho-surefire-plugin</artifactId>
 		<configuration>
 			<includes>
-				<include>org/eclipse/emf/compare/tests/performance/FixCSV.class</include>
+				<include>org/eclipse/emf/compare/tests/performance/PerformanceSuite.class</include>
 			</includes>	
 			<argLine>-Xmx2048m -XX:MaxPermSize=256m</argLine>
 		</configuration>
