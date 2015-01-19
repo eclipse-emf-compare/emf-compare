@@ -76,9 +76,9 @@ public class TestPostComparisonUML extends AbstractEMFComparePerformanceTest {
 	}
 	
 	@Test
-	public void c_pcUMLUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLLarge");
-		final Data data = new LargeInputData();
+	public void c_pcUMLUMLSmallSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLSmallSplit");
+		final Data data = new SmallSplitInputData();
 		data.match();
 		data.postMatchUML();
 		data.diff();
@@ -93,10 +93,10 @@ public class TestPostComparisonUML extends AbstractEMFComparePerformanceTest {
 		data.dispose();
 	}
 	
-	@Test
-	public void d_pcUMLUMLSmallSplit() {
-		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLSmallSplit");
-		final Data data = new SmallSplitInputData();
+//	@Test
+	public void d_pcUMLUMLLarge() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLLarge");
+		final Data data = new LargeInputData();
 		data.match();
 		data.postMatchUML();
 		data.diff();

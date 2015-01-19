@@ -67,9 +67,9 @@ public class TestDiff extends AbstractEMFComparePerformanceTest {
 	}
 	
 	@Test
-	public void c_diffUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLLarge");
-		final Data data = new LargeInputData();
+	public void c_diffUMLSmallSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLSmallSplit");
+		final Data data = new SmallSplitInputData();
 		data.match();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
@@ -79,10 +79,10 @@ public class TestDiff extends AbstractEMFComparePerformanceTest {
 		data.dispose();
 	}
 	
-	@Test
-	public void d_diffUMLSmallSplit() {
-		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLSmallSplit");
-		final Data data = new SmallSplitInputData();
+//	@Test
+	public void d_diffUMLLarge() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLLarge");
+		final Data data = new LargeInputData();
 		data.match();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {

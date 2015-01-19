@@ -72,9 +72,9 @@ public class TestConflict extends AbstractEMFComparePerformanceTest {
 	}
 	
 	@Test
-	public void c_conflictUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("conflictUMLLarge");
-		final Data data = new LargeInputData();
+	public void c_conflictUMLSmallSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("conflictUMLSmallSplit");
+		final Data data = new SmallSplitInputData();
 		data.match();
 		data.diff();
 		data.req();
@@ -86,11 +86,11 @@ public class TestConflict extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-
-	@Test
-	public void d_conflictUMLSmallSplit() {
-		PerformanceMonitor monitor = getPerformance().createMonitor("conflictUMLSmallSplit");
-		final Data data = new SmallSplitInputData();
+	
+//	@Test
+	public void d_conflictUMLLarge() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("conflictUMLLarge");
+		final Data data = new LargeInputData();
 		data.match();
 		data.diff();
 		data.req();

@@ -74,9 +74,9 @@ public class TestPostComparisonGMF extends AbstractEMFComparePerformanceTest {
 	}
 	
 	@Test
-	public void c_pcGMFUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("pcGMFUMLLarge");
-		final Data data = new LargeInputData();
+	public void c_pcGMFUMLSmallSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pcGMFUMLSmallSplit");
+		final Data data = new SmallSplitInputData();
 		data.match();
 		data.diff();
 		data.req();
@@ -91,9 +91,9 @@ public class TestPostComparisonGMF extends AbstractEMFComparePerformanceTest {
 	}
 	
 	@Test
-	public void d_pcGMFUMLSmallSplit() {
-		PerformanceMonitor monitor = getPerformance().createMonitor("pcGMFUMLSmallSplit");
-		final Data data = new SmallSplitInputData();
+	public void d_pcGMFUMLLarge() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pcGMFUMLLarge");
+		final Data data = new LargeInputData();
 		data.match();
 		data.diff();
 		data.req();

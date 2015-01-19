@@ -65,21 +65,21 @@ public class TestMatchContent extends AbstractEMFComparePerformanceTest {
 	}
 	
 	@Test
-	public void c_matchContentUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLLarge");
-		final Data data = new LargeInputData();
+	public void d_matchContentUMLSmallSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLSmallSplit");
+		final Data data = new SmallSplitInputData();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
-				//data.match(UseIdentifiers.NEVER);
+				data.match(UseIdentifiers.NEVER);
 			}
 		});
 		data.dispose();
 	}
 	
-	@Test
-	public void d_matchContentUMLSmallSplit() {
-		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLSmallSplit");
-		final Data data = new SmallSplitInputData();
+//	@Test
+	public void c_matchContentUMLLarge() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLLarge");
+		final Data data = new LargeInputData();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
 				data.match(UseIdentifiers.NEVER);

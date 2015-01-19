@@ -68,9 +68,9 @@ public class TestEqui extends AbstractEMFComparePerformanceTest {
 	}
 	
 	@Test
-	public void c_equiUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLLarge");
-		final Data data = new LargeInputData();
+	public void c_equiUMLSmallSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLSmallSplit");
+		final Data data = new SmallSplitInputData();
 		data.match();
 		data.diff();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
@@ -80,11 +80,11 @@ public class TestEqui extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-
-	@Test
-	public void d_equiUMLSmallSplit() {
-		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLSmallSplit");
-		final Data data = new SmallSplitInputData();
+	
+//	@Test
+	public void d_equiUMLLarge() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLLarge");
+		final Data data = new LargeInputData();
 		data.match();
 		data.diff();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {

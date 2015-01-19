@@ -68,9 +68,9 @@ public class TestReq extends AbstractEMFComparePerformanceTest {
 	}
 	
 	@Test
-	public void c_reqUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("reqUMLLarge");
-		final Data data = new LargeInputData();
+	public void c_reqUMLSmallSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("reqUMLSmallSplit");
+		final Data data = new SmallSplitInputData();
 		data.match();
 		data.diff();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
@@ -80,11 +80,11 @@ public class TestReq extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-
-	@Test
-	public void d_reqUMLSmallSplit() {
-		PerformanceMonitor monitor = getPerformance().createMonitor("reqUMLSmallSplit");
-		final Data data = new SmallSplitInputData();
+	
+//	@Test
+	public void d_reqUMLLarge() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("reqUMLLarge");
+		final Data data = new LargeInputData();
 		data.match();
 		data.diff();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {

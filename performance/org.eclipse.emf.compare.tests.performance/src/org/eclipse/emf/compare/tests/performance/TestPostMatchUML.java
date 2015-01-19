@@ -66,9 +66,9 @@ public class TestPostMatchUML extends AbstractEMFComparePerformanceTest {
 	}
 	
 	@Test
-	public void c_pmUMLUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("pmUMLUMLLarge");
-		final Data data = new LargeInputData();
+	public void c_pmUMLUMLSmallSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pmUMLUMLSmallSplit");
+		final Data data = new SmallSplitInputData();
 		data.match();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
@@ -78,10 +78,10 @@ public class TestPostMatchUML extends AbstractEMFComparePerformanceTest {
 		data.dispose();
 	}
 	
-	@Test
-	public void d_pmUMLUMLSmallSplit() {
-		PerformanceMonitor monitor = getPerformance().createMonitor("pmUMLUMLSmallSplit");
-		final Data data = new SmallSplitInputData();
+//	@Test
+	public void d_pmUMLUMLLarge() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pmUMLUMLLarge");
+		final Data data = new LargeInputData();
 		data.match();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {

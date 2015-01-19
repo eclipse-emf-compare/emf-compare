@@ -125,41 +125,9 @@ public class TestLogicalModel extends AbstractEMFComparePerformanceTest {
 		}
 	}
 	
-	@Test
-	public void c_logicalModelUMLLarge() {
-		try {
-			PerformanceMonitor monitor = getPerformance().createMonitor("logicalModelUMLLarge");
-			final Data data = new SmallInputData();
-			
-			Bundle bundle = Platform.getBundle("org.eclipse.emf.compare.tests.performance");
-			URL entry = bundle.getEntry("src/data/models/model_size_large/.project");
-			URL fileURL = FileLocator.toFileURL(entry);
-			IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(fileURL.getPath()));
-			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
-			project.create(description, new NullProgressMonitor());
-			project.open(new NullProgressMonitor());
-			final IFile leftFile = project.getFile(new Path("original/model.uml"));
-			final IFile rightFile = project.getFile(new Path("modified/model.uml"));
-			final ITypedElement leftTypedElement = new StorageTypedElement(leftFile, leftFile.getFullPath().toOSString());
-			final ITypedElement rightTypedElement = new StorageTypedElement(rightFile, rightFile.getFullPath().toOSString());
-			
-			monitor.measure(false, getStepsNumber(), new Runnable() {
-				public void run() {
-					data.logicalModel(leftTypedElement, rightTypedElement);
-				}
-			});
-			data.dispose();
-			project.close(new NullProgressMonitor());
-			project.delete(false, new NullProgressMonitor());
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail();
-		}
-	}
-
 	@SuppressWarnings("restriction")
 	@Test
-	public void d_logicalModelUMLSmallSplit() {
+	public void c_logicalModelUMLSmallSplit() {
 		try {
 			PerformanceMonitor monitor = getPerformance().createMonitor("logicalModelUMLSmallSplit");
 			final Data data = new SmallSplitInputData();
@@ -200,7 +168,39 @@ public class TestLogicalModel extends AbstractEMFComparePerformanceTest {
 			Assert.fail();
 		}
 	}
-
+	
+//	@Test
+	public void d_logicalModelUMLLarge() {
+		try {
+			PerformanceMonitor monitor = getPerformance().createMonitor("logicalModelUMLLarge");
+			final Data data = new SmallInputData();
+			
+			Bundle bundle = Platform.getBundle("org.eclipse.emf.compare.tests.performance");
+			URL entry = bundle.getEntry("src/data/models/model_size_large/.project");
+			URL fileURL = FileLocator.toFileURL(entry);
+			IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(fileURL.getPath()));
+			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
+			project.create(description, new NullProgressMonitor());
+			project.open(new NullProgressMonitor());
+			final IFile leftFile = project.getFile(new Path("original/model.uml"));
+			final IFile rightFile = project.getFile(new Path("modified/model.uml"));
+			final ITypedElement leftTypedElement = new StorageTypedElement(leftFile, leftFile.getFullPath().toOSString());
+			final ITypedElement rightTypedElement = new StorageTypedElement(rightFile, rightFile.getFullPath().toOSString());
+			
+			monitor.measure(false, getStepsNumber(), new Runnable() {
+				public void run() {
+					data.logicalModel(leftTypedElement, rightTypedElement);
+				}
+			});
+			data.dispose();
+			project.close(new NullProgressMonitor());
+			project.delete(false, new NullProgressMonitor());
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+	
 	private IFile createProjects(Bundle bundle, final ResourceSet rightResourceSet,
 			String sourceProjectName, String projectName, final List<IProject> projects) throws IOException,
 			CoreException {
