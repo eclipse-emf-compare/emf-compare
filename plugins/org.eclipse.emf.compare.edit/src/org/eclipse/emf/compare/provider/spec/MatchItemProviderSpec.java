@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.match.impl.EllipsisMatch;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
@@ -94,11 +93,7 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 		}
 
 		if (isNullOrEmpty(ret)) {
-			if (match instanceof EllipsisMatch) {
-				ret = "[ ... ]";
-			} else {
-				ret = super.getText(object);
-			}
+			ret = super.getText(object);
 		}
 
 		return ret;
@@ -111,7 +106,6 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 * @since 3.0
 	 */
-	@Override
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		ComposedStyledString styledString = new ComposedStyledString(getText(object));
 		return styledString;

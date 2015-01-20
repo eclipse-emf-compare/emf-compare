@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.configuration.impl;
+package org.eclipse.emf.compare.ide.ui.internal.configuration;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.ICompareContainer;

@@ -12,7 +12,7 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import java.util.List;
 
-import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.EMFCompareConfiguration;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.GroupItemProviderAdapter;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IBaseLabelProvider;

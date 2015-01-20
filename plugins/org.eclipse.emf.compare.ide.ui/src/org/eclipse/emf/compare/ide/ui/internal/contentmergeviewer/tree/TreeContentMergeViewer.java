@@ -30,11 +30,10 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
-import org.eclipse.emf.compare.match.impl.EllipsisMatch;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor;
-import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.EMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.TreeMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
@@ -495,14 +494,7 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 				parent = ((IMergeViewerItem)data).getAncestor();
 			}
 
-			if (parent instanceof EllipsisMatch) {
-				IMergeViewerItem.Container left = new MergeViewerItem.Container(getCompareConfiguration()
-						.getComparison(), null, (Match)parent, MergeViewerSide.LEFT, fAdapterFactory);
-				IMergeViewerItem.Container right = new MergeViewerItem.Container(getCompareConfiguration()
-						.getComparison(), null, (Match)parent, MergeViewerSide.RIGHT, fAdapterFactory);
-				toBeExpanded.add(left);
-				toBeExpanded.add(right);
-			} else if (parent instanceof EObject) {
+			if (parent instanceof EObject) {
 				Comparison comparison = getCompareConfiguration().getComparison();
 				Match match = comparison.getMatch((EObject)parent);
 				if (match != null) {

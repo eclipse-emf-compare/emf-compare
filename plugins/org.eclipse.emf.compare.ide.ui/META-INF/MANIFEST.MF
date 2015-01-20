@@ -25,6 +25,7 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.ide.ui.internal;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.configuration;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label;x-internal:=true,

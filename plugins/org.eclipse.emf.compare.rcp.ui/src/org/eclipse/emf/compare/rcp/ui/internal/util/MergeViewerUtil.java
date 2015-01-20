@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.AttributeChange;
@@ -36,7 +35,6 @@ import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.merge.IMergeData;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
-import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
@@ -390,39 +388,5 @@ public final class MergeViewerUtil {
 			markAsMerged = false;
 		}
 		return markAsMerged;
-	}
-
-	public static boolean isFragment(Match match, MergeViewerSide side) {
-		// Ensure this is a root element of the comparison model.
-		if (match.eContainer() instanceof Comparison) {
-			URI uri = getURI(match, side);
-			return isFragment(uri);
-		}
-		return false;
-	}
-
-	public static boolean isFragment(URI uri) {
-		if (uri != null) {
-			Set<URI> parents = EMFCompareRCPUIPlugin.getDefault().getEMFCompareConfiguration()
-					.getDependencyGraph().getDirectParents(uri);
-			if (!parents.isEmpty()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static URI getURI(Match match, MergeViewerSide side) {
-		final URI uri;
-		if (MergeViewerSide.LEFT == side && match.getLeft() != null) {
-			uri = match.getLeft().eResource().getURI();
-		} else if (MergeViewerSide.RIGHT == side && match.getRight() != null) {
-			uri = match.getRight().eResource().getURI();
-		} else if (MergeViewerSide.ANCESTOR == side && match.getOrigin() != null) {
-			uri = match.getOrigin().eResource().getURI();
-		} else {
-			uri = null;
-		}
-		return uri;
 	}
 }

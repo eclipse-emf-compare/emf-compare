@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.rcp.ui.internal.configuration.impl;
+package org.eclipse.emf.compare.ide.ui.internal.configuration;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -18,14 +18,17 @@ import java.util.Collection;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
-import org.eclipse.emf.compare.internal.utils.Graph;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.CompareEditingDomainChange;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.ComparisonAndScopeChange;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.EMFComparatorChange;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.MergePreviewModeChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
@@ -41,26 +44,24 @@ import org.eclipse.jface.util.PropertyChangeEvent;
  */
 public class EMFCompareConfiguration extends ForwardingCompareConfiguration implements IEMFCompareConfiguration {
 
-	private static final String COMPARE_RESULT = EMFCompareRCPUIPlugin.PLUGIN_ID + ".COMPARE_RESULT"; //$NON-NLS-1$
+	private static final String COMPARE_RESULT = EMFCompareIDEUIPlugin.PLUGIN_ID + ".COMPARE_RESULT"; //$NON-NLS-1$
 
-	private static final String COMPARATOR = EMFCompareRCPUIPlugin.PLUGIN_ID + ".COMPARATOR"; //$NON-NLS-1$
+	private static final String COMPARATOR = EMFCompareIDEUIPlugin.PLUGIN_ID + ".COMPARATOR"; //$NON-NLS-1$
 
-	private static final String EDITING_DOMAIN = EMFCompareRCPUIPlugin.PLUGIN_ID + ".EDITING_DOMAIN"; //$NON-NLS-1$
+	private static final String EDITING_DOMAIN = EMFCompareIDEUIPlugin.PLUGIN_ID + ".EDITING_DOMAIN"; //$NON-NLS-1$
 
-	private static final String ADAPTER_FACTORY = EMFCompareRCPUIPlugin.PLUGIN_ID + ".ADAPTER_FACTORY"; //$NON-NLS-1$
+	private static final String ADAPTER_FACTORY = EMFCompareIDEUIPlugin.PLUGIN_ID + ".ADAPTER_FACTORY"; //$NON-NLS-1$
 
-	private static final String PREVIEW_MERGE_MODE = EMFCompareRCPUIPlugin.PLUGIN_ID + ".PREVIEW_MERGE_MODE"; //$NON-NLS-1$
+	private static final String PREVIEW_MERGE_MODE = EMFCompareIDEUIPlugin.PLUGIN_ID + ".PREVIEW_MERGE_MODE"; //$NON-NLS-1$
 
-	private static final String COMPARISON_SCOPE = EMFCompareRCPUIPlugin.PLUGIN_ID + ".COMPARISON_SCOPE"; //$NON-NLS-1$;
+	private static final String COMPARISON_SCOPE = EMFCompareIDEUIPlugin.PLUGIN_ID + ".COMPARISON_SCOPE"; //$NON-NLS-1$;
 
-	private static final String SMV_FILTERS = EMFCompareRCPUIPlugin.PLUGIN_ID + ".SMV_FILTERS"; //$NON-NLS-1$;
+	private static final String SMV_FILTERS = EMFCompareIDEUIPlugin.PLUGIN_ID + ".SMV_FILTERS"; //$NON-NLS-1$;
 
-	private static final String EVENT_BUS = EMFCompareRCPUIPlugin.PLUGIN_ID + ".EVENT_BUS"; //$NON-NLS-1$;
+	private static final String EVENT_BUS = EMFCompareIDEUIPlugin.PLUGIN_ID + ".EVENT_BUS"; //$NON-NLS-1$;
 
-	private static final String SMV_GROUP_PROVIDERS = EMFCompareRCPUIPlugin.PLUGIN_ID
+	private static final String SMV_GROUP_PROVIDERS = EMFCompareIDEUIPlugin.PLUGIN_ID
 			+ ".SMV_GROUP_PROVIDERS"; //$NON-NLS-1$;
-
-	private static final String DEPENDENCY_GRAPH = EMFCompareRCPUIPlugin.PLUGIN_ID + ".DEPENDENCY_GRAPH"; //$NON-NLS-1$;
 
 	private final PropertyChangeListener propertyChangeListener;
 
@@ -108,7 +109,7 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.ForwardingCompareConfiguration#delegate()
+	 * @see org.eclipse.emf.compare.ide.ui.internal.configuration.ForwardingCompareConfiguration#delegate()
 	 */
 	@Override
 	protected CompareConfiguration delegate() {
@@ -276,14 +277,6 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	 */
 	public StructureMergeViewerFilter getStructureMergeViewerFilter() {
 		return (StructureMergeViewerFilter)getProperty(SMV_FILTERS);
-	}
-
-	public Graph<URI> getDependencyGraph() {
-		return (Graph<URI>)getProperty(DEPENDENCY_GRAPH);
-	}
-
-	public void setDependencyGraph(Graph<URI> graph) {
-		setProperty(DEPENDENCY_GRAPH, graph);
 	}
 
 }

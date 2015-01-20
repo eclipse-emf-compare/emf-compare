@@ -118,12 +118,7 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 			ResourceAttachmentChange diff = getFirst(filter(match.getDifferences(),
 					ResourceAttachmentChange.class), null);
 			Container container = null;
-			// if (MergeViewerUtil.isFragment(match, getSide())) {
-			// EllipsisMatch ellipsisMatch = new EllipsisMatch(match);
-			// Container ellipsis = new MergeViewerItem.Container(getComparison(), null, ellipsisMatch,
-			// ellipsisMatch, null, getSide(), getRootAdapterFactory());
-			// ret.add(ellipsis);
-			/* } else */if (getSide() != MergeViewerSide.ANCESTOR
+			if (getSide() != MergeViewerSide.ANCESTOR
 					|| (getSide() == MergeViewerSide.ANCESTOR && match.getOrigin() != null)) {
 				container = new MergeViewerItem.Container(getComparison(), diff, match.getLeft(), match
 						.getRight(), match.getOrigin(), getSide(), getRootAdapterFactory());

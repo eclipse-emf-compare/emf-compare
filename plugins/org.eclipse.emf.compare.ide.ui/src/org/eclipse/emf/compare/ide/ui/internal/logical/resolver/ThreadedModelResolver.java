@@ -131,7 +131,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	 * traversal of the selected resource.
 	 * </p>
 	 */
-	public final Graph<URI> dependencyGraph;
+	private final Graph<URI> dependencyGraph;
 
 	/**
 	 * We'll keep track of what's already been resolved to avoid duplicate jobs.
