@@ -100,7 +100,7 @@ public class TestLogicalModel extends AbstractEMFComparePerformanceTest {
 	public void b_logicalModelUMLNominal() {
 		try {
 			PerformanceMonitor monitor = getPerformance().createMonitor("logicalModelUMLNominal");
-			final Data data = new SmallInputData();
+			final Data data = new NominalInputData();
 			
 			Bundle bundle = Platform.getBundle("org.eclipse.emf.compare.tests.performance");
 			URL entry = bundle.getEntry("src/data/models/model_size_nominal/.project");
