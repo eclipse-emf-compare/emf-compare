@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
-import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.EMFCompareConfiguration;
 
 /**
  * Abstract subclass of {@link CompareEditorInput} to be use to open CompareEditor with results of EMF

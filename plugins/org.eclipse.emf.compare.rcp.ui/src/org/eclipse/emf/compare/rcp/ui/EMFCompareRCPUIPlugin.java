@@ -25,6 +25,7 @@ import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemRegistry;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.EMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.ConfigurationUIRegistryEventListener;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.IConfigurationUIFactory;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AccessorFactoryExtensionRegistryListener;
@@ -106,6 +107,8 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 
 	private ConfigurationUIRegistryEventListener matchEngineConfiguratorRegistryListener;
 
+	private EMFCompareConfiguration compareConfiguration;
+
 	/**
 	 * Instance scope for preferences.
 	 * <p>
@@ -136,8 +139,8 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 
 		groupItemRegistry = new ItemRegistry<IDifferenceGroupProvider.Descriptor>();
-		DifferenceGroupManager groupManager = new DifferenceGroupManager(
-				getEMFCompareUIPreferences(), groupItemRegistry);
+		DifferenceGroupManager groupManager = new DifferenceGroupManager(getEMFCompareUIPreferences(),
+				groupItemRegistry);
 		groupProviderRegistry = new DifferenceGroupRegistryImpl(groupManager, groupItemRegistry);
 		groupProviderRegistryListener = new DifferenceGroupProviderExtensionRegistryListener(PLUGIN_ID,
 				GROUP_PROVIDER_PPID, getLog(), groupItemRegistry);
@@ -362,4 +365,20 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 		return instanceScope.getNode(PLUGIN_ID);
 	}
 
+	/**
+	 * @return the compare configuration object.
+	 */
+	public EMFCompareConfiguration getEMFCompareConfiguration() {
+		return compareConfiguration;
+	}
+
+	/**
+	 * Set the compare configuration object.
+	 * 
+	 * @param compareConfiguration
+	 *            the compare configuration object
+	 */
+	public void setEMFCompareConfiguration(EMFCompareConfiguration compareConfiguration) {
+		this.compareConfiguration = compareConfiguration;
+	}
 }

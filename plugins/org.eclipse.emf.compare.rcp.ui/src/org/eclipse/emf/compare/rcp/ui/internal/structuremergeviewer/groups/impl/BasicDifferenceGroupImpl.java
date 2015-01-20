@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,6 +44,7 @@ import java.util.Set;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
@@ -55,11 +56,14 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.internal.utils.Graph;
+import org.eclipse.emf.compare.match.impl.EllipsisMatch;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.EMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender;
 import org.eclipse.emf.ecore.EObject;
@@ -109,6 +113,10 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	/** The registry of difference group extenders. */
 	private final IDifferenceGroupExtender.Registry registry = EMFCompareRCPUIPlugin.getDefault()
 			.getDifferenceGroupExtenderRegistry();
+
+	/** The compare configuration object. */
+	private final EMFCompareConfiguration configuration = EMFCompareRCPUIPlugin.getDefault()
+			.getEMFCompareConfiguration();
 
 	/** The cross reference adapter that will be added to this group's children. */
 	private final ECrossReferenceAdapter crossReferenceAdapter;
@@ -560,6 +568,26 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			}
 		}
 
+		Graph<URI> dependencyGraph = configuration.getDependencyGraph();
+
+		for (TreeNode treeNode : matchSubTrees) {
+			EObject data = TREE_NODE_DATA.apply(treeNode);
+			if (data instanceof Match) {
+				URI uri = getURI((Match)data);
+				if (uri != null) {
+					Set<URI> parents = dependencyGraph.getDirectParents(uri);
+					if (!parents.isEmpty()) {
+						TreeNode ellipsisNode = createEllipsisMatchNode(treeNode);
+						matchSubTrees.add(ellipsisNode);
+						matchSubTrees.remove(treeNode);
+
+					}
+				}
+			} else if (data instanceof ReferenceChange) {
+
+			}
+		}
+
 		return matchSubTrees;
 	}
 
@@ -591,5 +619,28 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			}
 		}
 		return matchResourceSubTrees;
+	}
+
+	private URI getURI(Match match) {
+		final URI uri;
+		if (match.getLeft() != null) {
+			uri = match.getLeft().eResource().getURI();
+		} else if (match.getRight() != null) {
+			uri = match.getRight().eResource().getURI();
+		} else if (match.getOrigin() != null) {
+			uri = match.getOrigin().eResource().getURI();
+		} else {
+			uri = null;
+		}
+		return uri;
+	}
+
+	private TreeNode createEllipsisMatchNode(TreeNode child) {
+		TreeNode ellipsisNode = TreeFactory.eINSTANCE.createTreeNode();
+		EllipsisMatch ellipsisMatch = new EllipsisMatch((Match)TREE_NODE_DATA.apply(child));
+		ellipsisNode.setData(ellipsisMatch);
+		ellipsisNode.eAdapters().add(this);
+		ellipsisNode.getChildren().add(child);
+		return ellipsisNode;
 	}
 }

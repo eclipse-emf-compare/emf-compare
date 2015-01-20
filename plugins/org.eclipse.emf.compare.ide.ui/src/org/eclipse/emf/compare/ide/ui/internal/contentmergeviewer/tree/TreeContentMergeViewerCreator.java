@@ -12,7 +12,7 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IViewerCreator;
-import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.EMFCompareConfiguration;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 

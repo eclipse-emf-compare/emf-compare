@@ -15,7 +15,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.EMFCompareConfiguration;
 import org.junit.Test;
 
 @SuppressWarnings({"restriction", "nls" })

@@ -218,5 +218,4 @@ public final class MatchUtil {
 		};
 		return customSwitch.doSwitch(input);
 	}
-
 }

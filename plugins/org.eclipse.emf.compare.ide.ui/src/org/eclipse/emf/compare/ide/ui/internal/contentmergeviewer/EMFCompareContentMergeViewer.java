@@ -27,7 +27,6 @@ import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
-import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
@@ -35,6 +34,7 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoActio
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IAdapterFactoryChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.EMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IColorChangeEvent;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
@@ -163,7 +163,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration#editingDomainChange(org.eclipse.emf.compare.domain.ICompareEditingDomain,
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.EMFCompareConfiguration#editingDomainChange(org.eclipse.emf.compare.domain.ICompareEditingDomain,
 	 *      org.eclipse.emf.compare.domain.ICompareEditingDomain)
 	 */
 	@Subscribe

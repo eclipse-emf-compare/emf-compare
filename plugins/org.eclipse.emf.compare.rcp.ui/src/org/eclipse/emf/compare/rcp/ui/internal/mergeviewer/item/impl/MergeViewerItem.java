@@ -36,6 +36,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
@@ -47,6 +48,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.spec.EObjectUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.compare.match.impl.EllipsisMatch;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
@@ -595,6 +597,15 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 						.getParent(sideValue) : null;
 				if (parent instanceof EObject) {
 					ret = createBasicContainer((EObject)parent);
+				} else if (parent instanceof Resource) {
+					URI uri = ((Resource)parent).getURI();
+					if (MergeViewerUtil.isFragment(uri)) {
+						final Object object = getBestSideValue();
+						final Match matchOfValue = getComparison().getMatch((EObject)object);
+						final EllipsisMatch ellipsisMatch = new EllipsisMatch(matchOfValue);
+						ret = new MergeViewerItem.Container(getComparison(), getDiff(), ellipsisMatch,
+								ellipsisMatch, ellipsisMatch, getSide(), getAdapterFactory());
+					}
 				}
 			}
 			return ret;
@@ -622,32 +633,40 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		 */
 		public IMergeViewerItem[] getChildren(IDifferenceGroupProvider group,
 				Predicate<? super EObject> predicate) {
-			Object sideValue = getSideValue(getSide());
-			EObject bestSideValue = (EObject)getBestSideValue();
-
-			final Collection<? extends EStructuralFeature> childrenFeatures = getChildrenFeatures(bestSideValue);
-
-			Match match = getComparison().getMatch(bestSideValue);
-			final ImmutableList<Diff> differences;
-			if (match != null) {
-				differences = ImmutableList.copyOf(filter(match.getDifferences(),
-						CONTAINMENT_REFERENCE_CHANGE));
-			} else {
-				differences = ImmutableList.of();
-			}
 
 			List<IMergeViewerItem> ret = newArrayList();
 
-			for (EStructuralFeature eStructuralFeature : childrenFeatures) {
-				if (eStructuralFeature instanceof EReference) {
-					ret.addAll(getChildrenOfReference(group, predicate, sideValue, differences,
-							(EReference)eStructuralFeature));
-				} else if (FeatureMapUtil.isFeatureMap(eStructuralFeature)) {
-					ret.addAll(getChildrenOfFeatureMap(group, predicate, sideValue, differences,
-							eStructuralFeature));
+			if (this.getLeft() instanceof EllipsisMatch) {
+				Match match = ((EllipsisMatch)this.getLeft()).getChild();
+				MergeViewerItem.Container container = new MergeViewerItem.Container(getComparison(),
+						getDiff(), match.getLeft(), match.getRight(), match.getOrigin(), getSide(),
+						getAdapterFactory());
+				ret.add(container);
+			} else {
+				Object sideValue = getSideValue(getSide());
+				EObject bestSideValue = (EObject)getBestSideValue();
+
+				final Collection<? extends EStructuralFeature> childrenFeatures = getChildrenFeatures(bestSideValue);
+
+				Match match = getComparison().getMatch(bestSideValue);
+				final ImmutableList<Diff> differences;
+				if (match != null) {
+					differences = ImmutableList.copyOf(filter(match.getDifferences(),
+							CONTAINMENT_REFERENCE_CHANGE));
+				} else {
+					differences = ImmutableList.of();
+				}
+
+				for (EStructuralFeature eStructuralFeature : childrenFeatures) {
+					if (eStructuralFeature instanceof EReference) {
+						ret.addAll(getChildrenOfReference(group, predicate, sideValue, differences,
+								(EReference)eStructuralFeature));
+					} else if (FeatureMapUtil.isFeatureMap(eStructuralFeature)) {
+						ret.addAll(getChildrenOfFeatureMap(group, predicate, sideValue, differences,
+								eStructuralFeature));
+					}
 				}
 			}
-
 			return ret.toArray(NO_ITEMS_ARR);
 		}
 
