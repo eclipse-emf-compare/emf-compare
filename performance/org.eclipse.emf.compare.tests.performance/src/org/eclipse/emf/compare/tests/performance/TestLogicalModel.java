@@ -38,6 +38,9 @@ import org.junit.runners.MethodSorters;
 import org.osgi.framework.Bundle;
 
 import data.models.Data;
+import data.models.LargeInputData;
+import data.models.NominalInputData;
+import data.models.NominalSplitInputData;
 import data.models.SmallInputData;
 import data.models.SmallSplitInputData;
 import data.models.StorageTypedElement;
@@ -169,11 +172,55 @@ public class TestLogicalModel extends AbstractEMFComparePerformanceTest {
 		}
 	}
 	
+	@SuppressWarnings("restriction")
+	@Test
+	public void d_logicalModelUMLNominalSplit() {
+		try {
+			PerformanceMonitor monitor = getPerformance().createMonitor("logicalModelUMLNominalSplit");
+			final Data data = new NominalSplitInputData();
+			
+			Bundle bundle = Platform.getBundle("org.eclipse.emf.compare.tests.performance");
+			
+			final ResourceSet leftResourceSet = (ResourceSet) data.getLeft();
+			final ResourceSet rightResourceSet = (ResourceSet) data.getRight();
+			
+			IFile leftFile = null;
+			IFile rightFile = null;
+			
+			final List<IProject> projects = new ArrayList<IProject>();
+			
+			leftFile = createProjects(bundle, leftResourceSet, "model_size_nominal_split", "model_size_nominal_original_model", projects);
+			rightFile = createProjects(bundle, rightResourceSet, "model_size_nominal_split", "model_size_nominal_modified_model", projects);
+
+			final ITypedElement leftTypedElement = new StorageTypedElement(leftFile, leftFile.getFullPath().toOSString());
+			final ITypedElement rightTypedElement = new StorageTypedElement(rightFile, rightFile.getFullPath().toOSString());
+
+			final IPreferenceStore store = EMFCompareIDEUIPlugin.getDefault().getPreferenceStore();
+			monitor.measure(false, getStepsNumber(), new Runnable() {
+				public void run() {
+					store.setValue(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE, CrossReferenceResolutionScope.WORKSPACE.name());
+					data.logicalModel(leftTypedElement, rightTypedElement);
+					store.setValue(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE, store.getDefaultString(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE));
+				}
+			});
+			data.dispose();
+			
+			for (IProject project : projects) {
+				project.close(new NullProgressMonitor());
+				project.delete(false, new NullProgressMonitor());
+			}
+			projects.clear();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+	
 //	@Test
-	public void d_logicalModelUMLLarge() {
+	public void e_logicalModelUMLLarge() {
 		try {
 			PerformanceMonitor monitor = getPerformance().createMonitor("logicalModelUMLLarge");
-			final Data data = new SmallInputData();
+			final Data data = new LargeInputData();
 			
 			Bundle bundle = Platform.getBundle("org.eclipse.emf.compare.tests.performance");
 			URL entry = bundle.getEntry("src/data/models/model_size_large/.project");

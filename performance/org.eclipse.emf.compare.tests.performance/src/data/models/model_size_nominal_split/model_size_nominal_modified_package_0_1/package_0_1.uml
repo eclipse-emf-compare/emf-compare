@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_rIGLYPSvEeCjvIxB4eFIVw" name="Package_1" clientDependency="_rIi3WvSvEeCjvIxB4eFIVw _rIi3W_SvEeCjvIxB4eFIVw _rIi3XPSvEeCjvIxB4eFIVw _rIi3XfSvEeCjvIxB4eFIVw _rIi3XvSvEeCjvIxB4eFIVw _rIi3X_SvEeCjvIxB4eFIVw _rIi3YPSvEeCjvIxB4eFIVw _rIi3YfSvEeCjvIxB4eFIVw">
+  <packagedElement xmi:type="uml:Class" xmi:id="_rIP8YPSvEeCjvIxB4eFIVw" name="Class_0">
+    <ownedOperation xmi:id="_rIP8YfSvEeCjvIxB4eFIVw" name="Operation_0_0">
+      <ownedParameter xmi:id="_rIP8YvSvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9cPSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_rIP8Y_SvEeCjvIxB4eFIVw" name="Operation_0_1">
+      <ownedParameter xmi:id="_rIP8ZPSvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHpfd_SvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_rIP8ZfSvEeCjvIxB4eFIVw" name="Param_1">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHpff_SvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_rIP8ZvSvEeCjvIxB4eFIVw" name="Operation_0_2">
+      <ownedParameter xmi:id="_rIP8Z_SvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHfufPSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_rIP8aPSvEeCjvIxB4eFIVw" name="Operation_0_3">
+      <ownedParameter xmi:id="_rIP8afSvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9fPSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_rIP8avSvEeCjvIxB4eFIVw" name="Param_1" type="_rIP8YPSvEeCjvIxB4eFIVw"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_rIP8a_SvEeCjvIxB4eFIVw" name="Operation_0_4">
+      <ownedParameter xmi:id="_rIP8bPSvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHpfevSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_rIP8bfSvEeCjvIxB4eFIVw" name="Param_1">
+        <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9ePSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_rIP8bvSvEeCjvIxB4eFIVw" name="Operation_0_5">
+      <ownedParameter xmi:id="_rIP8b_SvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHfujPSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_rIP8cPSvEeCjvIxB4eFIVw" name="Operation_0_6">
+      <ownedParameter xmi:id="_rIP8cfSvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHfufvSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedReception xmi:id="_LrZegfSwEeCAvpdjvD0xUw"/>
+    <ownedReception xmi:id="_LrZegvSwEeCAvpdjvD0xUw"/>
+    <ownedReception xmi:id="_LrZeg_SwEeCAvpdjvD0xUw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_rIP8cvSvEeCjvIxB4eFIVw" name="Class_1">
+    <ownedOperation xmi:id="_rIP8c_SvEeCjvIxB4eFIVw" name="Operation_1_0">
+      <ownedParameter xmi:id="_rIP8dPSvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHpfd_SvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_rIP8dfSvEeCjvIxB4eFIVw" name="Param_1">
+        <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9cvSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_rIP8dvSvEeCjvIxB4eFIVw" name="Operation_1_1">
+      <ownedParameter xmi:id="_rIP8d_SvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9cPSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_rIP8ePSvEeCjvIxB4eFIVw" name="Operation_1_2">
+      <ownedParameter xmi:id="_rIP8efSvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9fPSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_rIP8evSvEeCjvIxB4eFIVw" name="Param_1">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHfujPSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_rIP8e_SvEeCjvIxB4eFIVw" name="Operation_1_3">
+      <ownedParameter xmi:id="_rIP8fPSvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:Class" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHDCkfSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_rIP8ffSvEeCjvIxB4eFIVw" name="Param_1">
+        <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9c_SvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_rIP8fvSvEeCjvIxB4eFIVw" name="Operation_1_4">
+      <ownedParameter xmi:id="_rIP8f_SvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHfuivSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_rIP8gPSvEeCjvIxB4eFIVw" name="Operation_1_5">
+      <ownedParameter xmi:id="_rIP8gfSvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHfuh_SvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_rIP8gvSvEeCjvIxB4eFIVw" name="Param_1">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHpffvSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_rIP8g_SvEeCjvIxB4eFIVw" name="Operation_1_6">
+      <ownedParameter xmi:id="_rIP8hPSvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHpff_SvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_rIP8hfSvEeCjvIxB4eFIVw" name="Operation_1_7">
+      <ownedParameter xmi:id="_rIP8hvSvEeCjvIxB4eFIVw" name="Param_0">
+        <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9cvSvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_rIP8h_SvEeCjvIxB4eFIVw" name="Param_1">
+        <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHpff_SvEeCjvIxB4eFIVw"/>
+      </ownedParameter>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_rIP8iPSvEeCjvIxB4eFIVw" name="PrimitiveType_2"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_rIP8ifSvEeCjvIxB4eFIVw" name="PrimitiveType_3"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_rIP8ivSvEeCjvIxB4eFIVw" name="PrimitiveType_4"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_rIP8i_SvEeCjvIxB4eFIVw" name="PrimitiveType_5"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_rIP8jPSvEeCjvIxB4eFIVw" name="PrimitiveType_6"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_rIP8jfSvEeCjvIxB4eFIVw" name="PrimitiveType_7"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_rIP8jvSvEeCjvIxB4eFIVw" name="PrimitiveType_8"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_rIP8j_SvEeCjvIxB4eFIVw" name="PrimitiveType_9"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_rIZtYPSvEeCjvIxB4eFIVw" name="PrimitiveType_10"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_rIZtYfSvEeCjvIxB4eFIVw" name="PrimitiveType_11"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_rIZtYvSvEeCjvIxB4eFIVw" name="PrimitiveType_12"/>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_rIZtY_SvEeCjvIxB4eFIVw" name="PrimitiveType_13"/>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIZtZPSvEeCjvIxB4eFIVw" name="DataType_14">
+    <ownedAttribute xmi:id="_rIZtZfSvEeCjvIxB4eFIVw" name="Attribute_0">
+      <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9dfSvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZtZvSvEeCjvIxB4eFIVw" name="Attribute_1">
+      <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9efSvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZtZ_SvEeCjvIxB4eFIVw" name="Attribute_2">
+      <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9cfSvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZtaPSvEeCjvIxB4eFIVw" name="Attribute_3">
+      <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHfufvSvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZtafSvEeCjvIxB4eFIVw" name="Attribute_4">
+      <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9dvSvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIZtavSvEeCjvIxB4eFIVw" name="DataType_15">
+    <ownedAttribute xmi:id="_rIZta_SvEeCjvIxB4eFIVw" name="Attribute_0">
+      <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9evSvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZtbPSvEeCjvIxB4eFIVw" name="Attribute_1">
+      <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9e_SvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIZtbfSvEeCjvIxB4eFIVw" name="DataType_16"/>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIZtbvSvEeCjvIxB4eFIVw" name="DataType_17">
+    <ownedAttribute xmi:id="_rIZtb_SvEeCjvIxB4eFIVw" name="Attribute_0">
+      <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9dPSvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZtcPSvEeCjvIxB4eFIVw" name="Attribute_1" type="_rIP8YPSvEeCjvIxB4eFIVw"/>
+    <ownedAttribute xmi:id="_rIZtcfSvEeCjvIxB4eFIVw" name="Attribute_2">
+      <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHfud_SvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZtcvSvEeCjvIxB4eFIVw" name="Attribute_3" type="_rIP8jfSvEeCjvIxB4eFIVw"/>
+    <ownedAttribute xmi:id="_rIZtc_SvEeCjvIxB4eFIVw" name="Attribute_4" type="_rIP8iPSvEeCjvIxB4eFIVw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIZtdPSvEeCjvIxB4eFIVw" name="DataType_18">
+    <ownedAttribute xmi:id="_rIZtdfSvEeCjvIxB4eFIVw" name="Attribute_0" clientDependency="_LrZehPSwEeCAvpdjvD0xUw _LrjPgPSwEeCAvpdjvD0xUw" type="_rIP8iPSvEeCjvIxB4eFIVw">
+      <deployment xmi:id="_LrZehPSwEeCAvpdjvD0xUw">
+        <client xmi:type="uml:Property" href="#_rIZtdfSvEeCjvIxB4eFIVw"/>
+        <client xmi:type="uml:Property" href="../model_size_nominal_modified_package_4_24/package_4_24.uml#_r2lCQ_SvEeCjvIxB4eFIVw"/>
+      </deployment>
+      <deployment xmi:id="_LrjPgPSwEeCAvpdjvD0xUw" client="_rIZtdfSvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZtdvSvEeCjvIxB4eFIVw" name="Attribute_1">
+      <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHpff_SvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIZtd_SvEeCjvIxB4eFIVw" name="DataType_19"/>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIZtePSvEeCjvIxB4eFIVw" name="DataType_20"/>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIZtefSvEeCjvIxB4eFIVw" name="DataType_21">
+    <ownedAttribute xmi:id="_rIZtevSvEeCjvIxB4eFIVw" name="Attribute_0" type="_rIZtbvSvEeCjvIxB4eFIVw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIZte_SvEeCjvIxB4eFIVw" name="DataType_22">
+    <ownedAttribute xmi:id="_rIZtfPSvEeCjvIxB4eFIVw" name="Attribute_0">
+      <type xmi:type="uml:Class" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHDCkfSvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZtffSvEeCjvIxB4eFIVw" name="Attribute_1">
+      <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHfud_SvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIZtfvSvEeCjvIxB4eFIVw" name="DataType_23">
+    <ownedAttribute xmi:id="_rIZtf_SvEeCjvIxB4eFIVw" name="Attribute_0">
+      <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHfuh_SvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZtgPSvEeCjvIxB4eFIVw" name="Attribute_1">
+      <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHfud_SvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZtgfSvEeCjvIxB4eFIVw" name="Attribute_2" type="_rIP8iPSvEeCjvIxB4eFIVw"/>
+    <ownedAttribute xmi:id="_rIZtgvSvEeCjvIxB4eFIVw" name="Attribute_3" type="_rIP8iPSvEeCjvIxB4eFIVw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIZtg_SvEeCjvIxB4eFIVw" name="DataType_24">
+    <ownedAttribute xmi:id="_rIZthPSvEeCjvIxB4eFIVw" name="Attribute_0" type="_rIZtZPSvEeCjvIxB4eFIVw"/>
+    <ownedAttribute xmi:id="_rIZthfSvEeCjvIxB4eFIVw" name="Attribute_1">
+      <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9d_SvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZthvSvEeCjvIxB4eFIVw" name="Attribute_2" type="_rIZtd_SvEeCjvIxB4eFIVw"/>
+    <ownedAttribute xmi:id="_rIZth_SvEeCjvIxB4eFIVw" name="Attribute_3">
+      <type xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHpff_SvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIZtiPSvEeCjvIxB4eFIVw" name="DataType_25">
+    <ownedAttribute xmi:id="_rIZtifSvEeCjvIxB4eFIVw" name="Attribute_0">
+      <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9e_SvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZtivSvEeCjvIxB4eFIVw" name="Attribute_1">
+      <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9cvSvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZti_SvEeCjvIxB4eFIVw" name="Attribute_2">
+      <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9cfSvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIZtjPSvEeCjvIxB4eFIVw" name="DataType_26">
+    <ownedAttribute xmi:id="_rIZtjfSvEeCjvIxB4eFIVw" name="Attribute_0" type="_rIP8YPSvEeCjvIxB4eFIVw"/>
+    <ownedAttribute xmi:id="_rIZtjvSvEeCjvIxB4eFIVw" name="Attribute_1">
+      <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9dfSvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIZtj_SvEeCjvIxB4eFIVw" name="Attribute_2" type="_rIP8jvSvEeCjvIxB4eFIVw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIi3UPSvEeCjvIxB4eFIVw" name="DataType_27">
+    <ownedAttribute xmi:id="_rIi3UfSvEeCjvIxB4eFIVw" name="Attribute_0" type="_rIZtYPSvEeCjvIxB4eFIVw"/>
+    <ownedAttribute xmi:id="_rIi3UvSvEeCjvIxB4eFIVw" name="Attribute_1" type="_rIP8jPSvEeCjvIxB4eFIVw"/>
+    <ownedAttribute xmi:id="_rIi3U_SvEeCjvIxB4eFIVw" name="Attribute_2">
+      <type xmi:type="uml:Class" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHDCkfSvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIi3VPSvEeCjvIxB4eFIVw" name="DataType_28"/>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_rIi3VfSvEeCjvIxB4eFIVw" name="DataType_29">
+    <ownedAttribute xmi:id="_rIi3VvSvEeCjvIxB4eFIVw" name="Attribute_0" type="_rIZtdPSvEeCjvIxB4eFIVw"/>
+    <ownedAttribute xmi:id="_rIi3V_SvEeCjvIxB4eFIVw" name="Attribute_1" type="_rIi3VfSvEeCjvIxB4eFIVw"/>
+    <ownedAttribute xmi:id="_rIi3WPSvEeCjvIxB4eFIVw" name="Attribute_2">
+      <type xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9dfSvEeCjvIxB4eFIVw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_rIi3WfSvEeCjvIxB4eFIVw" name="Attribute_3" type="_rIZtbvSvEeCjvIxB4eFIVw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_rIi3WvSvEeCjvIxB4eFIVw" supplier="_rIZtd_SvEeCjvIxB4eFIVw" client="_rIGLYPSvEeCjvIxB4eFIVw"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_rIi3W_SvEeCjvIxB4eFIVw" client="_rIGLYPSvEeCjvIxB4eFIVw">
+    <supplier xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHfujPSvEeCjvIxB4eFIVw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_rIi3XPSvEeCjvIxB4eFIVw" supplier="_rIi3W_SvEeCjvIxB4eFIVw" client="_rIGLYPSvEeCjvIxB4eFIVw"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_rIi3XfSvEeCjvIxB4eFIVw" client="_rIGLYPSvEeCjvIxB4eFIVw">
+    <supplier xmi:type="uml:Dependency" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHpfgPSvEeCjvIxB4eFIVw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_rIi3XvSvEeCjvIxB4eFIVw" supplier="_rIP8dvSvEeCjvIxB4eFIVw" client="_rIGLYPSvEeCjvIxB4eFIVw"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_rIi3X_SvEeCjvIxB4eFIVw" client="_rIGLYPSvEeCjvIxB4eFIVw">
+    <supplier xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9d_SvEeCjvIxB4eFIVw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_rIi3YPSvEeCjvIxB4eFIVw" client="_rIGLYPSvEeCjvIxB4eFIVw">
+    <supplier xmi:type="uml:DataType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHfuhPSvEeCjvIxB4eFIVw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_rIi3YfSvEeCjvIxB4eFIVw" client="_rIGLYPSvEeCjvIxB4eFIVw">
+    <supplier xmi:type="uml:PrimitiveType" href="../model_size_nominal_modified_package_0_0/package_0_0.uml#_rHV9dfSvEeCjvIxB4eFIVw"/>
+  </packagedElement>
+</uml:Package>

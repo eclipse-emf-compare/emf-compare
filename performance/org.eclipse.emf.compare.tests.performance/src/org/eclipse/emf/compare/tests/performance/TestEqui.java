@@ -19,6 +19,7 @@ import org.junit.runners.MethodSorters;
 import data.models.Data;
 import data.models.LargeInputData;
 import data.models.NominalInputData;
+import data.models.NominalSplitInputData;
 import data.models.SmallInputData;
 import data.models.SmallSplitInputData;
 import fr.obeo.performance.api.PerformanceMonitor;
@@ -81,8 +82,22 @@ public class TestEqui extends AbstractEMFComparePerformanceTest {
 		data.dispose();
 	}
 	
+	@Test
+	public void d_equiUMLNominalSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLNominalSplit");
+		final Data data = new NominalSplitInputData();
+		data.match();
+		data.diff();
+		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
+			public void run() {
+				data.equi();
+			}
+		});
+		data.dispose();
+	}
+	
 //	@Test
-	public void d_equiUMLLarge() throws IOException {
+	public void e_equiUMLLarge() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLLarge");
 		final Data data = new LargeInputData();
 		data.match();
