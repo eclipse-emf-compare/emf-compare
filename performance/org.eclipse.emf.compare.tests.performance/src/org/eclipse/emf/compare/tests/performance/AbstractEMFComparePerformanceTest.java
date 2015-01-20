@@ -173,7 +173,7 @@ public abstract class AbstractEMFComparePerformanceTest {
 				BufferedReader br = new BufferedReader(new FileReader(output));
 				if (br.readLine() == null) {
 					br.close();
-					writer.println("Date, Small UML, Nominal UML, Small Split UML, Nominal Split UML, Large UML, Large Split UML");
+					writer.println("Date, Large UML, Large Split UML");
 				}
 				writer.print(timestamp + ",");
 				Collection<Measure> measures = entry.getValue();
