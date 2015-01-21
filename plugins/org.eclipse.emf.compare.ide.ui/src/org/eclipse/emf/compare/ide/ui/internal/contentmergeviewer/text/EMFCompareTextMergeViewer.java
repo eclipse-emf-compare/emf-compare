@@ -305,16 +305,14 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 				final Object oldInput = getInput();
 				if (event.getDocumentEvent() != null && oldInput instanceof CompareInputAdapter) {
 					// When we leave the current input
-					if (oldInput instanceof CompareInputAdapter) {
-						final AttributeChange diff = (AttributeChange)((CompareInputAdapter)oldInput)
-								.getComparisonObject();
-						final EAttribute eAttribute = diff.getAttribute();
-						final Match match = diff.getMatch();
-						final IEqualityHelper equalityHelper = match.getComparison().getEqualityHelper();
+					final AttributeChange diff = (AttributeChange)((CompareInputAdapter)oldInput)
+							.getComparisonObject();
+					final EAttribute eAttribute = diff.getAttribute();
+					final Match match = diff.getMatch();
+					final IEqualityHelper equalityHelper = match.getComparison().getEqualityHelper();
 
-						updateModel(diff, eAttribute, equalityHelper, match.getLeft(), true);
-						updateModel(diff, eAttribute, equalityHelper, match.getRight(), false);
-					}
+					updateModel(diff, eAttribute, equalityHelper, match.getLeft(), true);
+					updateModel(diff, eAttribute, equalityHelper, match.getRight(), false);
 				}
 			}
 		});
