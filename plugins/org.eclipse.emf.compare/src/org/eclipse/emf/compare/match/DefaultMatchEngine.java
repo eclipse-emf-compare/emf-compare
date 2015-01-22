@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo and others.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,8 @@ import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ComparisonCanceledException;
+import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.match.eobject.CachingDistance;
 import org.eclipse.emf.compare.match.eobject.EditionDistance;
@@ -146,6 +148,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 */
 	protected void match(Comparison comparison, IComparisonScope scope, ResourceSet left, ResourceSet right,
 			ResourceSet origin, Monitor monitor) {
+		monitor.subTask(EMFCompareMessages.getString("DefaultMatchEngine.monitor.match.resourceSet")); //$NON-NLS-1$
 		final Iterator<? extends Resource> leftChildren = scope.getCoveredResources(left);
 		final Iterator<? extends Resource> rightChildren = scope.getCoveredResources(right);
 		final Iterator<? extends Resource> originChildren;
@@ -156,6 +159,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 		}
 
 		final IResourceMatcher resourceMatcher = createResourceMatcher();
+
+		// TODO Change API to pass the monitor to createMappings()
 		final Iterable<MatchResource> mappings = resourceMatcher.createMappings(leftChildren, rightChildren,
 				originChildren);
 
@@ -164,6 +169,9 @@ public class DefaultMatchEngine implements IMatchEngine {
 		final List<Iterator<? extends EObject>> originIterators = Lists.newLinkedList();
 
 		for (MatchResource mapping : mappings) {
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
+			}
 			comparison.getMatchedResources().add(mapping);
 
 			final Resource leftRes = mapping.getLeft();
@@ -212,6 +220,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 */
 	protected void match(Comparison comparison, IComparisonScope scope, Resource left, Resource right,
 			Resource origin, Monitor monitor) {
+		monitor.subTask(EMFCompareMessages.getString("DefaultMatchEngine.monitor.match.resource")); //$NON-NLS-1$
 		// Our "roots" are Resources. Consider them matched
 		final MatchResource match = CompareFactory.eINSTANCE.createMatchResource();
 
@@ -296,6 +305,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 */
 	protected void match(Comparison comparison, IComparisonScope scope, EObject left, EObject right,
 			EObject origin, Monitor monitor) {
+		monitor.subTask(EMFCompareMessages.getString("DefaultMatchEngine.monitor.match.eobject")); //$NON-NLS-1$
 		if (left == null || right == null) {
 			throw new IllegalArgumentException();
 		}

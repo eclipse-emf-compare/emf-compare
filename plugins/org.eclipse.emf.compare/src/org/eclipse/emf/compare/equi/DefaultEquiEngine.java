@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo and others.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,8 +22,10 @@ import java.util.Set;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ComparisonCanceledException;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
@@ -54,7 +56,11 @@ public class DefaultEquiEngine implements IEquiEngine {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void computeEquivalences(Comparison comparison, Monitor monitor) {
+		monitor.subTask(EMFCompareMessages.getString("DefaultEquiEngine.monitor.eq")); //$NON-NLS-1$
 		for (Diff difference : comparison.getDifferences()) {
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
+			}
 			checkForEquivalences(comparison, difference);
 		}
 	}

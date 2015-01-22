@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.conflict.DefaultConflictDetector;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
@@ -26,6 +28,8 @@ import org.eclipse.emf.compare.diff.DiffBuilder;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.equi.DefaultEquiEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
+import org.eclipse.emf.compare.internal.spec.ComparisonSpec;
+import org.eclipse.emf.compare.internal.utils.SafeSubMonitor;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
@@ -50,6 +54,13 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class EMFCompare {
+
+	/**
+	 * The value for diagnostics coming from EMF compare.
+	 * 
+	 * @since 3.2
+	 */
+	public static final String DIAGNOSTIC_SOURCE = "org.eclipse.emf.compare"; //$NON-NLS-1$
 
 	/** The registry we'll use to create a match engine for this comparison. */
 	private final IMatchEngine.Factory.Registry matchEngineFactoryRegistry;
@@ -158,42 +169,76 @@ public class EMFCompare {
 	 * Launches the comparison with the given scope and reporting progress to the given {@code monitor}.
 	 * 
 	 * @param scope
-	 *            the scope to compare.
+	 *            the scope to compare, must not be {@code null}.
 	 * @param monitor
-	 *            the monitor to report progress to.
-	 * @return the result of the comparison.
+	 *            the monitor to report progress to, must not be {@code null}. {@code done()} will be called
+	 *            on it. If the monitor is cancelled, the result may be {@code null} (in rare cases) or
+	 *            contain a Diagnostic that indicates cancellation. <b>Note:</b> The given monitor is expected
+	 *            to use 10 ticks for 100%.
+	 * @return The result of the comparison, which is never null but may be empty if the monitor has been
+	 *         canceled immediately after entering this method. The returned comparison will contain a
+	 *         relevant diagnostic indicating if the comparison has been canceled or if problems have occurred
+	 *         during its computation. Consequently, it is necessary to check the diagnostic of the returned
+	 *         comparison before using it.
+	 * @throws ComparisonCanceledException
+	 *             If the comparison is cancelled at any time.
 	 */
 	public Comparison compare(IComparisonScope scope, final Monitor monitor) {
 		checkNotNull(scope);
 		checkNotNull(monitor);
 
-		final Comparison comparison = matchEngineFactoryRegistry.getHighestRankingMatchEngineFactory(scope)
-				.getMatchEngine().match(scope, monitor);
+		Comparison comparison = null;
+		try {
+			Monitor subMonitor = new SafeSubMonitor(monitor);
+			comparison = matchEngineFactoryRegistry.getHighestRankingMatchEngineFactory(scope)
+					.getMatchEngine().match(scope, subMonitor);
 
-		List<IPostProcessor> postProcessors = postProcessorDescriptorRegistry.getPostProcessors(scope);
+			monitor.worked(1);
+			List<IPostProcessor> postProcessors = postProcessorDescriptorRegistry.getPostProcessors(scope);
 
-		postMatch(comparison, postProcessors, monitor);
-
-		if (!hasToStop(comparison, monitor)) {
-			diffEngine.diff(comparison, monitor);
-			postDiff(comparison, postProcessors, monitor);
+			postMatch(comparison, postProcessors, subMonitor);
+			monitor.worked(1);
 
 			if (!hasToStop(comparison, monitor)) {
-				reqEngine.computeRequirements(comparison, monitor);
-				postRequirements(comparison, postProcessors, monitor);
+				diffEngine.diff(comparison, subMonitor);
+				monitor.worked(1);
+				postDiff(comparison, postProcessors, subMonitor);
+				monitor.worked(1);
 
 				if (!hasToStop(comparison, monitor)) {
-					equiEngine.computeEquivalences(comparison, monitor);
-					postEquivalences(comparison, postProcessors, monitor);
+					reqEngine.computeRequirements(comparison, subMonitor);
+					monitor.worked(1);
+					postRequirements(comparison, postProcessors, subMonitor);
+					monitor.worked(1);
 
-					detectConflicts(comparison, postProcessors, monitor);
+					if (!hasToStop(comparison, monitor)) {
+						equiEngine.computeEquivalences(comparison, subMonitor);
+						monitor.worked(1);
+						postEquivalences(comparison, postProcessors, subMonitor);
+						monitor.worked(1);
 
-					postComparison(comparison, postProcessors, monitor);
+						detectConflicts(comparison, postProcessors, subMonitor);
+						monitor.worked(1);
+
+						postComparison(comparison, postProcessors, subMonitor);
+					}
 				}
 			}
+		} catch (ComparisonCanceledException e) {
+			if (comparison == null) {
+				comparison = new ComparisonSpec();
+			}
+			BasicDiagnostic cancelledDiag = new BasicDiagnostic(Diagnostic.CANCEL, DIAGNOSTIC_SOURCE, 0,
+					EMFCompareMessages.getString("EMFCompare.ComparisonCancelled"), null); //$NON-NLS-1$
+			Diagnostic diag = comparison.getDiagnostic();
+			if (diag != null && diag instanceof DiagnosticChain) {
+				((DiagnosticChain)diag).merge(cancelledDiag);
+			} else {
+				comparison.setDiagnostic(cancelledDiag);
+			}
+		} finally {
+			monitor.done();
 		}
-
-		monitor.done();
 
 		return comparison;
 	}

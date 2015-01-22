@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo and others.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,8 +21,10 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ComparisonCanceledException;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
@@ -108,6 +110,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void diff(Comparison comparison, Monitor monitor) {
+		monitor.subTask(EMFCompareMessages.getString("DefaultDiffEngine.monitor.diff")); //$NON-NLS-1$
 		for (Match rootMatch : comparison.getMatches()) {
 			checkForDifferences(rootMatch, monitor);
 		}
@@ -123,6 +126,9 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *            The monitor to report progress or to check for cancellation.
 	 */
 	protected void checkForDifferences(Match match, Monitor monitor) {
+		if (monitor.isCanceled()) {
+			throw new ComparisonCanceledException();
+		}
 		checkResourceAttachment(match, monitor);
 
 		final FeatureFilter featureFilter = createFeatureFilter();

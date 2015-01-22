@@ -790,6 +790,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	void compareInputChanged(CompareInputAdapter input, IProgressMonitor monitor) {
+		// TODO See why monitor is not used
 		compareInputChanged(null, (Comparison)input.getComparisonObject());
 	}
 
@@ -797,7 +798,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		EMFCompare comparator = getCompareConfiguration().getEMFComparator();
 
 		IComparisonScope comparisonScope = input.getComparisonScope();
-		final Comparison comparison = comparator.compare(comparisonScope, BasicMonitor.toMonitor(monitor));
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
+		final Comparison comparison = comparator.compare(comparisonScope, BasicMonitor.toMonitor(subMonitor
+				.newChild(10)));
 
 		compareInputChanged(input.getComparisonScope(), comparison);
 	}
@@ -951,8 +954,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 				EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
 
+				SubMonitor subMonitorChild = SubMonitor.convert(subMonitor.newChild(15), 10);
 				final Comparison compareResult = comparisonBuilder.build().compare(scope,
-						BasicMonitor.toMonitor(subMonitor.newChild(15)));
+						BasicMonitor.toMonitor(subMonitorChild));
 
 				compareResult.eAdapters().add(new ForwardingCompareInputAdapter(input));
 				ICompareInputLabelProvider labelProvider = getCompareConfiguration().getLabelProvider();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,9 +28,11 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ComparisonCanceledException;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -59,7 +61,11 @@ public class DefaultReqEngine implements IReqEngine {
 	 * @see org.eclipse.emf.compare.req.IReqEngine#computeRequirements(Comparison, Monitor)
 	 */
 	public void computeRequirements(Comparison comparison, Monitor monitor) {
+		monitor.subTask(EMFCompareMessages.getString("DefaultReqEngine.monitor.req")); //$NON-NLS-1$
 		for (Diff difference : comparison.getDifferences()) {
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
+			}
 			checkForRequiredDifferences(comparison, difference);
 		}
 	}

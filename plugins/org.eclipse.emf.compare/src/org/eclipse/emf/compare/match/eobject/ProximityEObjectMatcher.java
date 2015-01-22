@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,10 +22,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.BasicEList;
-import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ComparisonCanceledException;
 import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.match.eobject.EObjectIndex.Side;
@@ -86,9 +86,7 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 			return;
 		}
 
-		// FIXME: how to create an EMF submonitor
-		Monitor subMonitor = new BasicMonitor();
-		subMonitor.beginTask(EMFCompareMessages.getString("ProximityEObjectMatcher.monitor.indexing"), 1); //$NON-NLS-1$
+		monitor.subTask(EMFCompareMessages.getString("ProximityEObjectMatcher.monitor.indexing")); //$NON-NLS-1$
 		int nbElements = 0;
 		int lastSegment = 0;
 		/*
@@ -96,6 +94,9 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 		 * pre-matching strategies elements if they wish.
 		 */
 		while (leftEObjects.hasNext() || rightEObjects.hasNext() || originEObjects.hasNext()) {
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
+			}
 
 			if (leftEObjects.hasNext()) {
 				EObject next = leftEObjects.next();
@@ -116,24 +117,16 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 				eObjectsToSide.put(next, Side.ORIGIN);
 			}
 			if (nbElements / NB_ELEMENTS_BETWEEN_MATCH_AHEAD > lastSegment) {
-				matchAheadOfTime(comparison, subMonitor);
+				matchAheadOfTime(comparison, monitor);
 				lastSegment++;
 			}
 
 		}
 
-		subMonitor.worked(1);
-		subMonitor.done();
-
-		// FIXME: how to create an EMF submonitor
-		subMonitor = new BasicMonitor();
-		subMonitor.beginTask(EMFCompareMessages.getString("ProximityEObjectMatcher.monitor.matching"), //$NON-NLS-1$
-				nbElements);
-
-		matchIndexedObjects(comparison, subMonitor);
+		monitor.subTask(EMFCompareMessages.getString("ProximityEObjectMatcher.monitor.matching")); //$NON-NLS-1$
+		matchIndexedObjects(comparison, monitor);
 
 		createUnmatchesForRemainingObjects(comparison);
-		subMonitor.done();
 		restructureMatchModel(comparison);
 
 	}
@@ -160,17 +153,23 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 	 * 
 	 * @param comparison
 	 *            the current comparison.
-	 * @param subMonitor
+	 * @param monitor
 	 *            monitor to track progress.
 	 */
-	private void matchIndexedObjects(Comparison comparison, Monitor subMonitor) {
+	private void matchIndexedObjects(Comparison comparison, Monitor monitor) {
 		Iterable<EObject> todo = index.getValuesStillThere(Side.LEFT);
 		while (todo.iterator().hasNext()) {
-			todo = matchList(comparison, todo, true, subMonitor);
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
+			}
+			todo = matchList(comparison, todo, true, monitor);
 		}
 		todo = index.getValuesStillThere(Side.RIGHT);
 		while (todo.iterator().hasNext()) {
-			todo = matchList(comparison, todo, true, subMonitor);
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
+			}
+			todo = matchList(comparison, todo, true, monitor);
 		}
 
 	}
@@ -215,6 +214,9 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 		List<EObject> requiredContainers = Lists.newArrayList();
 		Iterator<EObject> todo = todoList.iterator();
 		while (todo.hasNext()) {
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
+			}
 			EObject next = todo.next();
 			/*
 			 * Let's first add every container which is in scope
@@ -230,6 +232,9 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 		Iterator<EObject> containersAndTodo = Iterators.concat(requiredContainers.iterator(), todoList
 				.iterator());
 		while (containersAndTodo.hasNext()) {
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
+			}
 			EObject next = containersAndTodo.next();
 			/*
 			 * At this point you need to be sure the element has not been matched in any other way before.
@@ -237,7 +242,6 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 			if (comparison.getMatch(next) == null) {
 				if (!tryToMatch(comparison, next, createUnmatches)) {
 					remainingResult.add(next);
-					monitor.worked(1);
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.emf.common.notify.Notifier;
@@ -62,9 +63,9 @@ import org.eclipse.team.core.mapping.IResourceMappingMerger;
 import org.eclipse.team.core.mapping.provider.MergeStatus;
 
 /**
- * A customized merger for the EMFResourceMappings. This will use EMF Compare to recompute the logical model
- * of the mappings it needs to merge, then merge everything to the left model if there are no conflicts,
- * stopping dead if there are any conflicts.
+ * A customized merger for the {@link EMFResourceMapping}s. This will use EMF Compare to recompute the logical
+ * model of the mappings it needs to merge, then merge everything to the left model if there are no conflicts,
+ * stopping dead if there is any conflict.
  * <p>
  * Mapping mergers are usually retrieved through an adapter registered on the ModelProvider. In this case,
  * {@code org.eclipse.core.runtime.Platform.getAdapterManager().getAdapter(emfModelProvider, IResourceMappingMerger.class)}
@@ -91,68 +92,97 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 			return hasInvalidMappings;
 		}
 
-		final Set<ResourceMapping> failingMappings = new HashSet<ResourceMapping>();
-		for (ResourceMapping mapping : emfMappings) {
-			// validateMappings() has made sure we only have EMFResourceMappings
-			final SynchronizationModel syncModel = ((EMFResourceMapping)mapping).getLatestModel();
+		// Use a sub-monitor with 10 ticks per child
+		// For the time being, Cancel is not supported here because reverting changes is problematic
+		SubMonitor subMonitor = SubMonitor.convert(monitor, emfMappings.length);
+		try {
+			final Set<ResourceMapping> failingMappings = new HashSet<ResourceMapping>();
+			for (ResourceMapping mapping : emfMappings) {
+				mergeMapping(mapping, mergeContext, failingMappings, subMonitor.newChild(1));
+			}
 
-			final IModelMinimizer minimizer = new IdenticalResourceMinimizer();
-			minimizer.minimize(syncModel, monitor);
-			final IComparisonScope scope = ComparisonScopeBuilder.create(syncModel, monitor);
+			if (!failingMappings.isEmpty()) {
+				final ResourceMapping[] failingArray = failingMappings
+						.toArray(new ResourceMapping[failingMappings.size()]);
+				return new MergeStatus(EMFCompareIDEUIPlugin.PLUGIN_ID, EMFCompareIDEUIMessages
+						.getString("EMFResourceMappingMerger.mergeFailedConflicts"), failingArray); //$NON-NLS-1$
+			}
+			return Status.OK_STATUS;
+		} finally {
+			if (monitor != null) {
+				monitor.done();
+			}
+		}
+	}
 
-			final Comparison comparison = EMFCompare.builder().build().compare(scope,
-					BasicMonitor.toMonitor(monitor));
-			final IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
-			if (hasRealConflict(comparison)) {
-				// pre-merge what can be
-				final Graph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison,
-						mergerRegistry, true);
-				final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
-				final Monitor emfMonitor = BasicMonitor.toMonitor(monitor);
+	/**
+	 * Merges one mapping.
+	 * 
+	 * @param mapping
+	 *            The mapping to merge
+	 * @param mergeContext
+	 *            The merge context
+	 * @param failingMappings
+	 *            The set of failing mappings
+	 * @param subMonitor
+	 *            The progress monitor to use, 10 ticks will be consumed
+	 */
+	private void mergeMapping(ResourceMapping mapping, IMergeContext mergeContext,
+			final Set<ResourceMapping> failingMappings, IProgressMonitor monitor) throws CoreException {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
+		// validateMappings() has made sure we only have EMFResourceMappings
+		final SynchronizationModel syncModel = ((EMFResourceMapping)mapping).getLatestModel();
 
-				while (iterator.hasNext()) {
-					final Diff next = iterator.next();
-					if (hasConflict(ConflictKind.REAL).apply(next)) {
-						iterator.prune();
-					} else {
-						if (next.getState() != DifferenceState.MERGED) {
-							final IMerger merger = mergerRegistry.getHighestRankingMerger(next);
-							merger.copyRightToLeft(next, emfMonitor);
-						}
+		final IModelMinimizer minimizer = new IdenticalResourceMinimizer();
+		minimizer.minimize(syncModel, subMonitor.newChild(1)); // 10%
+		final IComparisonScope scope = ComparisonScopeBuilder.create(syncModel, subMonitor.newChild(3)); // 40%
+
+		final Comparison comparison = EMFCompare.builder().build().compare(scope,
+				BasicMonitor.toMonitor(SubMonitor.convert(subMonitor.newChild(1), 10))); // 50%
+		final IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
+		if (hasRealConflict(comparison)) {
+			// pre-merge what can be
+			final Graph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison,
+					mergerRegistry, true);
+			final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
+			final Monitor emfMonitor = BasicMonitor.toMonitor(subMonitor.newChild(5)); // 100%
+
+			while (iterator.hasNext()) {
+				final Diff next = iterator.next();
+				if (hasConflict(ConflictKind.REAL).apply(next)) {
+					iterator.prune();
+				} else {
+					if (next.getState() != DifferenceState.MERGED) {
+						final IMerger merger = mergerRegistry.getHighestRankingMerger(next);
+						merger.copyRightToLeft(next, emfMonitor);
 					}
 				}
+			}
 
-				save(scope.getLeft());
+			save(scope.getLeft());
 
-				failingMappings.add(mapping);
-			} else {
-				final IBatchMerger merger = new BatchMerger(mergerRegistry, fromSide(DifferenceSource.RIGHT));
-				merger.copyAllRightToLeft(comparison.getDifferences(), BasicMonitor.toMonitor(monitor));
-				save(scope.getLeft());
+			failingMappings.add(mapping);
+		} else {
+			final IBatchMerger merger = new BatchMerger(mergerRegistry, fromSide(DifferenceSource.RIGHT));
+			merger.copyAllRightToLeft(comparison.getDifferences(), BasicMonitor.toMonitor(subMonitor
+					.newChild(4))); // 60%
+			save(scope.getLeft());
 
-				for (IStorage storage : syncModel.getLeftTraversal().getStorages()) {
-					if (storage.getFullPath() == null) {
-						EMFCompareIDEUIPlugin.getDefault().getLog().log(
-								new Status(IStatus.WARNING, EMFCompareIDEUIPlugin.PLUGIN_ID,
-										EMFCompareIDEUIMessages
-												.getString("EMFResourceMappingMerger.mergeIncomplete"))); //$NON-NLS-1$
-					} else {
-						final IDiff diff = mergeContext.getDiffTree().getDiff(storage.getFullPath());
-						if (diff != null) {
-							mergeContext.markAsMerged(diff, true, monitor);
-						}
+			for (IStorage storage : syncModel.getLeftTraversal().getStorages()) {
+				if (storage.getFullPath() == null) {
+					EMFCompareIDEUIPlugin.getDefault().getLog().log(
+							new Status(IStatus.WARNING, EMFCompareIDEUIPlugin.PLUGIN_ID,
+									EMFCompareIDEUIMessages
+											.getString("EMFResourceMappingMerger.mergeIncomplete"))); //$NON-NLS-1$
+				} else {
+					final IDiff diff = mergeContext.getDiffTree().getDiff(storage.getFullPath());
+					if (diff != null) {
+						mergeContext.markAsMerged(diff, true, subMonitor.newChild(1)); // 100%
 					}
 				}
 			}
 		}
-
-		if (!failingMappings.isEmpty()) {
-			final ResourceMapping[] failingArray = failingMappings
-					.toArray(new ResourceMapping[failingMappings.size()]);
-			return new MergeStatus(EMFCompareIDEUIPlugin.PLUGIN_ID, EMFCompareIDEUIMessages
-					.getString("EMFResourceMappingMerger.mergeFailedConflicts"), failingArray); //$NON-NLS-1$
-		}
-		return Status.OK_STATUS;
+		subMonitor.setWorkRemaining(0);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,9 +20,9 @@ import org.eclipse.emf.compare.tests.command.CommandStackTestSuite;
 import org.eclipse.emf.compare.tests.conflict.ConflictDetectionTest;
 import org.eclipse.emf.compare.tests.conflict.MultiLineAttributeConflictDetectionTest;
 import org.eclipse.emf.compare.tests.diff.ComparisonUtilTest;
-import org.eclipse.emf.compare.tests.diff.FeatureMapMoveDiffTest;
 import org.eclipse.emf.compare.tests.diff.DiffUtilTest;
 import org.eclipse.emf.compare.tests.diff.FeatureFilterTest;
+import org.eclipse.emf.compare.tests.diff.FeatureMapMoveDiffTest;
 import org.eclipse.emf.compare.tests.diff.LCSPerformanceTest;
 import org.eclipse.emf.compare.tests.diff.ThreeWayTextDiffTest;
 import org.eclipse.emf.compare.tests.diff.URIDistanceTest;
@@ -48,6 +48,7 @@ import org.eclipse.emf.compare.tests.merge.MultipleMergeTest;
 import org.eclipse.emf.compare.tests.merge.PseudoConflictMergeTest;
 import org.eclipse.emf.compare.tests.merge.ThreeWayBatchMergingTest;
 import org.eclipse.emf.compare.tests.merge.TwoWayBatchMergingTest;
+import org.eclipse.emf.compare.tests.monitor.MonitorCancelTest;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
 import org.eclipse.emf.compare.tests.postprocess.PostProcessorTest;
@@ -80,7 +81,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		FeatureMapsPseudoConflictsMergeTest.class, TwoWayBatchMergingTest.class, EqualityHelperTest.class,
 		FeatureFilterTest.class, ThreeWayBatchMergingTest.class,
 		MultiLineAttributeConflictDetectionTest.class, ThreeWayTextDiffTest.class,
-		MultiLineAttributeMergeTest.class })
+		MultiLineAttributeMergeTest.class, MonitorCancelTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

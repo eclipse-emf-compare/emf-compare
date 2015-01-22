@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012-2014 Obeo and others.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ComparisonCanceledException;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.match.eobject.EObjectIndex.Side;
 import org.eclipse.emf.ecore.EObject;
@@ -111,6 +112,9 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	public void createMatches(Comparison comparison, Iterator<? extends EObject> leftEObjects,
 			Iterator<? extends EObject> rightEObjects, Iterator<? extends EObject> originEObjects,
 			Monitor monitor) {
+		if (monitor.isCanceled()) {
+			throw new ComparisonCanceledException();
+		}
 		final List<EObject> leftEObjectsNoID = Lists.newArrayList();
 		final List<EObject> rightEObjectsNoID = Lists.newArrayList();
 		final List<EObject> originEObjectsNoID = Lists.newArrayList();
@@ -118,6 +122,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 		diagnostic = new BasicDiagnostic(Diagnostic.OK, "org.eclipse.emf.common", 0, //$NON-NLS-1$
 				org.eclipse.emf.common.CommonPlugin.INSTANCE.getString("_UI_OK_diagnostic_0"), null); //$NON-NLS-1$
 
+		// TODO Change API to pass the monitor to matchPerId()
 		final Set<Match> matches = matchPerId(leftEObjects, rightEObjects, originEObjects, leftEObjectsNoID,
 				rightEObjectsNoID, originEObjectsNoID);
 
@@ -130,16 +135,25 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 				doDelegation(comparison, leftEObjectsNoID, rightEObjectsNoID, originEObjectsNoID, monitor);
 			} else {
 				for (EObject eObject : leftEObjectsNoID) {
+					if (monitor.isCanceled()) {
+						throw new ComparisonCanceledException();
+					}
 					Match match = CompareFactory.eINSTANCE.createMatch();
 					match.setLeft(eObject);
 					matches.add(match);
 				}
 				for (EObject eObject : rightEObjectsNoID) {
+					if (monitor.isCanceled()) {
+						throw new ComparisonCanceledException();
+					}
 					Match match = CompareFactory.eINSTANCE.createMatch();
 					match.setRight(eObject);
 					matches.add(match);
 				}
 				for (EObject eObject : originEObjectsNoID) {
+					if (monitor.isCanceled()) {
+						throw new ComparisonCanceledException();
+					}
 					Match match = CompareFactory.eINSTANCE.createMatch();
 					match.setOrigin(eObject);
 					matches.add(match);
