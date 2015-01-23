@@ -8,19 +8,21 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.performance.large;
-
-import java.io.IOException;
+package org.eclipse.emf.compare.tests.performance.git;
 
 import org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest;
 import org.eclipse.emf.compare.tests.performance.TestMatchContent;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.intro.IIntroManager;
+import org.eclipse.ui.intro.IIntroPart;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import data.models.Data;
-import data.models.LargeInputData;
+import data.models.DataGit;
+import data.models.NominalGitInputData;
+import data.models.SmallGitInputData;
 import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
@@ -28,7 +30,7 @@ import fr.obeo.performance.api.PerformanceMonitor;
  *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestLargeMatchContent extends AbstractEMFComparePerformanceTest {
+public class TestGitMatchContent extends AbstractEMFComparePerformanceTest {
 
 	/** 
 	 * {@inheritDoc}
@@ -40,9 +42,31 @@ public class TestLargeMatchContent extends AbstractEMFComparePerformanceTest {
 	}
 
 	@Test
-	public void e_matchContentUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLLarge");
-		final Data data = new LargeInputData();
+	public void a_matchIdUMLSmall() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLSmall");
+		
+		final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
+		IIntroPart part = introManager.getIntro();
+		introManager.closeIntro(part);
+		
+		final DataGit data = new SmallGitInputData();
+		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
+			public void run() {
+				data.match(UseIdentifiers.NEVER);
+			}
+		});
+		data.dispose();
+	}
+	
+	@Test
+	public void b_matchIdUMLNominal() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLNominal");
+		
+		final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
+		IIntroPart part = introManager.getIntro();
+		introManager.closeIntro(part);
+		
+		final DataGit data = new NominalGitInputData();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
 				data.match(UseIdentifiers.NEVER);

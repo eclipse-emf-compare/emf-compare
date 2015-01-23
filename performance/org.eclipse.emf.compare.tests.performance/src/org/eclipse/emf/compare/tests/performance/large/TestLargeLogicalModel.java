@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest;
+import org.eclipse.emf.compare.tests.performance.TestLogicalModel;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.junit.Assert;
@@ -51,7 +52,7 @@ public class TestLargeLogicalModel extends AbstractEMFComparePerformanceTest {
 	 */
 	@Override
 	protected void setSUTName() {
-		getPerformance().getSystemUnderTest().setName(TestLargeLogicalModel.class.getSimpleName());
+		getPerformance().getSystemUnderTest().setName(TestLogicalModel.class.getSimpleName());
 	}
 	
 	@Test

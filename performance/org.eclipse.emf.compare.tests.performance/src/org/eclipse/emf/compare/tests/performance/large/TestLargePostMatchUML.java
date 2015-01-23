@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.tests.performance.large;
 import java.io.IOException;
 
 import org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest;
+import org.eclipse.emf.compare.tests.performance.TestPostMatchUML;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -34,7 +35,7 @@ public class TestLargePostMatchUML extends AbstractEMFComparePerformanceTest {
 	 */
 	@Override
 	protected void setSUTName() {
-		getPerformance().getSystemUnderTest().setName(TestLargePostMatchUML.class.getSimpleName());
+		getPerformance().getSystemUnderTest().setName(TestPostMatchUML.class.getSimpleName());
 	}
 	
 	@Test

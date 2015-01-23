@@ -19,7 +19,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare.diagram;bundle-version="2.2.0",
  org.eclipse.emf.compare.uml2;bundle-version="2.2.0",
  fr.obeo.performance;bundle-version="1.0.0",
- org.eclipse.jface
+ org.eclipse.jface,
+ org.eclipse.egit.core,
+ org.eclipse.jgit,
+ org.eclipse.team.core
 Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
  com.google.common.collect;version="[11.0.0,16.0.0)",
  com.google.common.io;version="[11.0.0,16.0.0)"

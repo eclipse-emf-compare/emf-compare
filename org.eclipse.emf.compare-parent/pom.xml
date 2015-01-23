@@ -798,6 +798,39 @@
         </plugins>
       </build>
     </profile>
+    <!-- use this profile to test performance of EMF Compare with models shared with git-->
+    <profile>
+      <id>performance-git</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <performance-suite>PerformanceGit</performance-suite>
+      </properties>
+      <modules>
+        <module>../performance/org.eclipse.emf.compare.tests.performance</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram</module>
+      </modules>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <configuration>
+              <target>
+                <artifact>
+                  <groupId>org.eclipse.emf.compare</groupId>
+                  <artifactId>emf.compare-parent</artifactId>
+                  <version>${parent-version}</version>
+                  <classifier>targetPlatforms/mars-sdk</classifier>
+                </artifact>
+              </target>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <!-- this profile will activate by itself if the build is ran on a mac. Be carefull to also activate a profile -->
     <profile>
       <id>macosx-jvm-flags</id>

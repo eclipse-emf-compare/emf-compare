@@ -22,6 +22,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
@@ -38,6 +39,7 @@ import org.junit.BeforeClass;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Iterables;
@@ -53,7 +55,6 @@ import fr.obeo.performance.PerformancePackage;
 import fr.obeo.performance.Scenario;
 import fr.obeo.performance.TestResult;
 import fr.obeo.performance.api.Performance;
-
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.transform;
@@ -171,9 +172,15 @@ public abstract class AbstractEMFComparePerformanceTest {
 			try {
 				writer = new PrintWriter(new BufferedWriter(new FileWriter(output, true), 16384));
 				BufferedReader br = new BufferedReader(new FileReader(output));
-				if (br.readLine() == null) {
+				String readLine = br.readLine();
+				final int columns;
+				if (readLine == null) {
 					br.close();
-					writer.println("Date, Large UML, Large Split UML");
+					writer.println("Date, Small UML, Nominal UML, Small Split UML, Nominal Split UML");
+					columns = 4;
+				} else {
+					//Get number of columns that contains measures
+					columns = readLine.split(",").length - 1;
 				}
 				writer.print(timestamp + ",");
 				Collection<Measure> measures = entry.getValue();
@@ -202,12 +209,13 @@ public abstract class AbstractEMFComparePerformanceTest {
 												return "";
 											}
 										});
-	
+									
 									String ret = Joiner.on(';').join(transform2);
 									return ret;
 								}
 							})
 						);
+				joinedMeasure = fillEmptyColumns(joinedMeasure, columns);
 				writer.println(joinedMeasure);
 				
 			} catch (IOException e) {
@@ -223,6 +231,14 @@ public abstract class AbstractEMFComparePerformanceTest {
 		performance = null;
 	}
 	
+	private static String fillEmptyColumns(String joinedMeasure, int columns) {
+		final int filled = joinedMeasure.split(",").length;
+		for (int i = 0; i < columns - filled; i++) {
+			joinedMeasure += ",";
+		}
+		return joinedMeasure;
+	}
+
 	@After
 	public void after() {
 		// try to minimize difference between runs

@@ -8,18 +8,20 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.performance.large;
-
-import java.io.IOException;
+package org.eclipse.emf.compare.tests.performance.git;
 
 import org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest;
 import org.eclipse.emf.compare.tests.performance.TestPostComparisonUML;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.intro.IIntroManager;
+import org.eclipse.ui.intro.IIntroPart;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import data.models.Data;
-import data.models.LargeInputData;
+import data.models.DataGit;
+import data.models.NominalGitInputData;
+import data.models.SmallGitInputData;
 import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
@@ -27,7 +29,7 @@ import fr.obeo.performance.api.PerformanceMonitor;
  *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestLargePostComparisonUML extends AbstractEMFComparePerformanceTest {
+public class TestGitPostComparisonUML extends AbstractEMFComparePerformanceTest {
 
 	/** 
 	 * {@inheritDoc}
@@ -37,11 +39,39 @@ public class TestLargePostComparisonUML extends AbstractEMFComparePerformanceTes
 	protected void setSUTName() {
 		getPerformance().getSystemUnderTest().setName(TestPostComparisonUML.class.getSimpleName());
 	}
+
+	@Test
+	public void a_matchIdUMLSmall() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLSmall");
+		
+		final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
+		IIntroPart part = introManager.getIntro();
+		introManager.closeIntro(part);
+		
+		final DataGit data = new SmallGitInputData();
+		data.match();
+		data.postMatchUML();
+		data.diff();
+		data.req();
+		data.equi();
+		data.conflict();
+		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
+			public void run() {
+				data.postComparisonUML();
+			}
+		});
+		data.dispose();
+	}
 	
 	@Test
-	public void e_pcUMLUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLLarge");
-		final Data data = new LargeInputData();
+	public void b_matchIdUMLNominal() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLNominal");
+		
+		final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
+		IIntroPart part = introManager.getIntro();
+		introManager.closeIntro(part);
+		
+		final DataGit data = new NominalGitInputData();
 		data.match();
 		data.postMatchUML();
 		data.diff();

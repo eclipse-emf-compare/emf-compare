@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.tests.performance.large;
 import java.io.IOException;
 
 import org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest;
+import org.eclipse.emf.compare.tests.performance.TestEqui;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -34,7 +35,7 @@ public class TestLargeEqui extends AbstractEMFComparePerformanceTest {
 	 */
 	@Override
 	protected void setSUTName() {
-		getPerformance().getSystemUnderTest().setName(TestLargeEqui.class.getSimpleName());
+		getPerformance().getSystemUnderTest().setName(TestEqui.class.getSimpleName());
 	}
 	
 	@Test
