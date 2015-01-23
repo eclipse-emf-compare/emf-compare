@@ -12,9 +12,6 @@ package org.eclipse.emf.compare.tests.performance.git;
 
 import org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest;
 import org.eclipse.emf.compare.tests.performance.TestPostComparisonUML;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.intro.IIntroManager;
-import org.eclipse.ui.intro.IIntroPart;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -44,10 +41,6 @@ public class TestGitPostComparisonUML extends AbstractEMFComparePerformanceTest 
 	public void a_matchIdUMLSmall() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLSmall");
 		
-		final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
-		IIntroPart part = introManager.getIntro();
-		introManager.closeIntro(part);
-		
 		final DataGit data = new SmallGitInputData();
 		data.match();
 		data.postMatchUML();
@@ -66,10 +59,6 @@ public class TestGitPostComparisonUML extends AbstractEMFComparePerformanceTest 
 	@Test
 	public void b_matchIdUMLNominal() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLNominal");
-		
-		final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
-		IIntroPart part = introManager.getIntro();
-		introManager.closeIntro(part);
 		
 		final DataGit data = new NominalGitInputData();
 		data.match();

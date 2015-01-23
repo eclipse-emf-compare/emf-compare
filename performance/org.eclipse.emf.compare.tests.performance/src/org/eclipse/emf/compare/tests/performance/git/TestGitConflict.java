@@ -12,9 +12,6 @@ package org.eclipse.emf.compare.tests.performance.git;
 
 import org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest;
 import org.eclipse.emf.compare.tests.performance.TestConflict;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.intro.IIntroManager;
-import org.eclipse.ui.intro.IIntroPart;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -44,10 +41,6 @@ public class TestGitConflict extends AbstractEMFComparePerformanceTest {
 	public void a_matchIdUMLSmall() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("conflictUMLSmall");
 		
-		final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
-		IIntroPart part = introManager.getIntro();
-		introManager.closeIntro(part);
-		
 		final DataGit data = new SmallGitInputData();
 		data.match();
 		data.diff();
@@ -64,10 +57,6 @@ public class TestGitConflict extends AbstractEMFComparePerformanceTest {
 	@Test
 	public void b_matchIdUMLNominal() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("conflictUMLNominal");
-		
-		final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
-		IIntroPart part = introManager.getIntro();
-		introManager.closeIntro(part);
 		
 		final DataGit data = new NominalGitInputData();
 		data.match();

@@ -13,9 +13,6 @@ package org.eclipse.emf.compare.tests.performance.git;
 import org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest;
 import org.eclipse.emf.compare.tests.performance.TestMatchId;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.intro.IIntroManager;
-import org.eclipse.ui.intro.IIntroPart;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -45,10 +42,6 @@ public class TestGitMatchId extends AbstractEMFComparePerformanceTest {
 	public void a_matchIdUMLSmall() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("matchIdUMLSmall");
 		
-		final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
-		IIntroPart part = introManager.getIntro();
-		introManager.closeIntro(part);
-		
 		final DataGit data = new SmallGitInputData();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
@@ -61,10 +54,6 @@ public class TestGitMatchId extends AbstractEMFComparePerformanceTest {
 	@Test
 	public void b_matchIdUMLNominal() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("matchIdUMLNominal");
-		
-		final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
-		IIntroPart part = introManager.getIntro();
-		introManager.closeIntro(part);
 		
 		final DataGit data = new NominalGitInputData();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
