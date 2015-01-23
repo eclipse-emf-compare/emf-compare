@@ -17,7 +17,6 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import data.models.Data;
-import data.models.LargeInputData;
 import data.models.NominalInputData;
 import data.models.NominalSplitInputData;
 import data.models.SmallInputData;
@@ -80,18 +79,6 @@ public class TestCompare extends AbstractEMFComparePerformanceTest {
 	public void d_compareUMLNominalSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("compareUMLNominalSplit");
 		final Data data = new NominalSplitInputData();
-		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
-			public void run() {
-				data.compare();
-			}
-		});
-		data.dispose();
-	}
-	
-//	@Test
-	public void e_compareUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("compareUMLLarge");
-		final Data data = new LargeInputData();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
 				data.compare();

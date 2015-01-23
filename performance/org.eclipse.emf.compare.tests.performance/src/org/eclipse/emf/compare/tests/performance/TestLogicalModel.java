@@ -38,7 +38,6 @@ import org.junit.runners.MethodSorters;
 import org.osgi.framework.Bundle;
 
 import data.models.Data;
-import data.models.LargeInputData;
 import data.models.NominalInputData;
 import data.models.NominalSplitInputData;
 import data.models.SmallInputData;
@@ -210,38 +209,6 @@ public class TestLogicalModel extends AbstractEMFComparePerformanceTest {
 				project.delete(false, new NullProgressMonitor());
 			}
 			projects.clear();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail();
-		}
-	}
-	
-//	@Test
-	public void e_logicalModelUMLLarge() {
-		try {
-			PerformanceMonitor monitor = getPerformance().createMonitor("logicalModelUMLLarge");
-			final Data data = new LargeInputData();
-			
-			Bundle bundle = Platform.getBundle("org.eclipse.emf.compare.tests.performance");
-			URL entry = bundle.getEntry("src/data/models/model_size_large/.project");
-			URL fileURL = FileLocator.toFileURL(entry);
-			IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(fileURL.getPath()));
-			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
-			project.create(description, new NullProgressMonitor());
-			project.open(new NullProgressMonitor());
-			final IFile leftFile = project.getFile(new Path("original/model.uml"));
-			final IFile rightFile = project.getFile(new Path("modified/model.uml"));
-			final ITypedElement leftTypedElement = new StorageTypedElement(leftFile, leftFile.getFullPath().toOSString());
-			final ITypedElement rightTypedElement = new StorageTypedElement(rightFile, rightFile.getFullPath().toOSString());
-			
-			monitor.measure(false, getStepsNumber(), new Runnable() {
-				public void run() {
-					data.logicalModel(leftTypedElement, rightTypedElement);
-				}
-			});
-			data.dispose();
-			project.close(new NullProgressMonitor());
-			project.delete(false, new NullProgressMonitor());
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();

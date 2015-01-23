@@ -17,7 +17,6 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import data.models.Data;
-import data.models.LargeInputData;
 import data.models.NominalInputData;
 import data.models.NominalSplitInputData;
 import data.models.SmallInputData;
@@ -92,22 +91,6 @@ public class TestConflict extends AbstractEMFComparePerformanceTest {
 	public void d_conflictUMLNominalSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("conflictUMLNominalSplit");
 		final Data data = new NominalSplitInputData();
-		data.match();
-		data.diff();
-		data.req();
-		data.equi();
-		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
-			public void run() {
-				data.conflict();
-			}
-		});
-		data.dispose();
-	}
-	
-//	@Test
-	public void e_conflictUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("conflictUMLLarge");
-		final Data data = new LargeInputData();
 		data.match();
 		data.diff();
 		data.req();

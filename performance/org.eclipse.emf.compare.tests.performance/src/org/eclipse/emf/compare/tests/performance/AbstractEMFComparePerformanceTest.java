@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.performance;
 
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.getFirst;
+import static com.google.common.collect.Iterables.transform;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,7 +26,6 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
@@ -39,7 +42,6 @@ import org.junit.BeforeClass;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Iterables;
@@ -55,9 +57,6 @@ import fr.obeo.performance.PerformancePackage;
 import fr.obeo.performance.Scenario;
 import fr.obeo.performance.TestResult;
 import fr.obeo.performance.api.Performance;
-import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Iterables.getFirst;
-import static com.google.common.collect.Iterables.transform;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>

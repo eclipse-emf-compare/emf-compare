@@ -20,6 +20,7 @@ import org.junit.runners.MethodSorters;
 
 import data.models.Data;
 import data.models.LargeInputData;
+import data.models.LargeSplitInputData;
 import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
@@ -39,9 +40,26 @@ public class TestLargePostComparisonGMF extends AbstractEMFComparePerformanceTes
 	}
 
 	@Test
-	public void e_pcGMFUMLLarge() throws IOException {
+	public void a_pcGMFUMLLarge() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcGMFUMLLarge");
 		final Data data = new LargeInputData();
+		data.match();
+		data.diff();
+		data.req();
+		data.equi();
+		data.conflict();
+		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
+			public void run() {
+				data.postComparisonGMF();
+			}
+		});
+		data.dispose();
+	}
+	
+	@Test
+	public void b_pcGMFUMLLargeSplit() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pcGMFUMLLargeSplit");
+		final Data data = new LargeSplitInputData();
 		data.match();
 		data.diff();
 		data.req();

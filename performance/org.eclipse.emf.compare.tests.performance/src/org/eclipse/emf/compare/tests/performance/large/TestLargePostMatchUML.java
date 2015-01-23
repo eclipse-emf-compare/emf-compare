@@ -20,6 +20,7 @@ import org.junit.runners.MethodSorters;
 
 import data.models.Data;
 import data.models.LargeInputData;
+import data.models.LargeSplitInputData;
 import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
@@ -39,9 +40,22 @@ public class TestLargePostMatchUML extends AbstractEMFComparePerformanceTest {
 	}
 	
 	@Test
-	public void e_pmUMLUMLLarge() throws IOException {
+	public void a_pmUMLUMLLarge() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pmUMLUMLLarge");
 		final Data data = new LargeInputData();
+		data.match();
+		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
+			public void run() {
+				data.postMatchUML();
+			}
+		});
+		data.dispose();
+	}
+	
+	@Test
+	public void b_pmUMLUMLLargeSplit() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pmUMLUMLLargeSplit");
+		final Data data = new LargeSplitInputData();
 		data.match();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {

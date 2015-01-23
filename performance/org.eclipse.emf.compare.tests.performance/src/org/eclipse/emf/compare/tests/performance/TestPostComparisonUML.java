@@ -17,7 +17,6 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import data.models.Data;
-import data.models.LargeInputData;
 import data.models.NominalInputData;
 import data.models.NominalSplitInputData;
 import data.models.SmallInputData;
@@ -98,24 +97,6 @@ public class TestPostComparisonUML extends AbstractEMFComparePerformanceTest {
 	public void d_pcUMLUMLNominalSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLNominalSplit");
 		final Data data = new NominalSplitInputData();
-		data.match();
-		data.postMatchUML();
-		data.diff();
-		data.req();
-		data.equi();
-		data.conflict();
-		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
-			public void run() {
-				data.postComparisonGMF();
-			}
-		});
-		data.dispose();
-	}
-	
-//	@Test
-	public void e_pcUMLUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLLarge");
-		final Data data = new LargeInputData();
 		data.match();
 		data.postMatchUML();
 		data.diff();

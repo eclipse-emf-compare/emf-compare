@@ -18,7 +18,6 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import data.models.Data;
-import data.models.LargeInputData;
 import data.models.NominalInputData;
 import data.models.NominalSplitInputData;
 import data.models.SmallInputData;
@@ -81,18 +80,6 @@ public class TestMatchContent extends AbstractEMFComparePerformanceTest {
 	public void d_matchContentUMLNominalSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLNominalSplit");
 		final Data data = new NominalSplitInputData();
-		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
-			public void run() {
-				data.match(UseIdentifiers.NEVER);
-			}
-		});
-		data.dispose();
-	}
-	
-//	@Test
-	public void e_matchContentUMLLarge() throws IOException {
-		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLLarge");
-		final Data data = new LargeInputData();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
 				data.match(UseIdentifiers.NEVER);

@@ -20,6 +20,7 @@ import org.junit.runners.MethodSorters;
 
 import data.models.Data;
 import data.models.LargeInputData;
+import data.models.LargeSplitInputData;
 import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
@@ -39,9 +40,23 @@ public class TestLargeEqui extends AbstractEMFComparePerformanceTest {
 	}
 	
 	@Test
-	public void e_equiUMLLarge() throws IOException {
+	public void a_equiUMLLarge() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLLarge");
 		final Data data = new LargeInputData();
+		data.match();
+		data.diff();
+		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
+			public void run() {
+				data.equi();
+			}
+		});
+		data.dispose();
+	}
+	
+	@Test
+	public void b_equiUMLLargeSplit() throws IOException {
+		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLLargeSplit");
+		final Data data = new LargeSplitInputData();
 		data.match();
 		data.diff();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {

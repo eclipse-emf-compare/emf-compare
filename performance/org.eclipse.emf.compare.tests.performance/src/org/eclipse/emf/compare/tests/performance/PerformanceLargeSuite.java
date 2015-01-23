@@ -13,7 +13,6 @@ import org.eclipse.emf.compare.tests.performance.large.TestLargeConflict;
 import org.eclipse.emf.compare.tests.performance.large.TestLargeDiff;
 import org.eclipse.emf.compare.tests.performance.large.TestLargeEqui;
 import org.eclipse.emf.compare.tests.performance.large.TestLargeLogicalModel;
-import org.eclipse.emf.compare.tests.performance.large.TestLargeMatchContent;
 import org.eclipse.emf.compare.tests.performance.large.TestLargeMatchId;
 import org.eclipse.emf.compare.tests.performance.large.TestLargePostComparisonUML;
 import org.eclipse.emf.compare.tests.performance.large.TestLargePostMatchUML;
