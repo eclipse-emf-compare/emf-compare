@@ -175,8 +175,8 @@ public abstract class AbstractEMFComparePerformanceTest {
 				final int columns;
 				if (readLine == null) {
 					br.close();
-					writer.println("Date, Small UML, Nominal UML, Small Split UML, Nominal Split UML");
-					columns = 4;
+					writer.println("Date, Large UML, Large Split UML");
+					columns = 2;
 				} else {
 					//Get number of columns that contains measures
 					columns = readLine.split(",").length - 1;

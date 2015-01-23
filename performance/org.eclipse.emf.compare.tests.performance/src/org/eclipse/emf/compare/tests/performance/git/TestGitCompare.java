@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.tests.performance.git;
 
 import org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest;
 import org.eclipse.emf.compare.tests.performance.TestCompare;
-import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -45,7 +44,7 @@ public class TestGitCompare extends AbstractEMFComparePerformanceTest {
 		final DataGit data = new SmallGitInputData();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
-				data.match(UseIdentifiers.NEVER);
+				data.compare();
 			}
 		});
 		data.dispose();
@@ -58,7 +57,7 @@ public class TestGitCompare extends AbstractEMFComparePerformanceTest {
 		final DataGit data = new NominalGitInputData();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
-				data.match(UseIdentifiers.NEVER);
+				data.compare();
 			}
 		});
 		data.dispose();

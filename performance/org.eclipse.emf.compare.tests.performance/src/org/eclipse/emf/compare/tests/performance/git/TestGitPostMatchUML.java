@@ -11,7 +11,7 @@
 package org.eclipse.emf.compare.tests.performance.git;
 
 import org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest;
-import org.eclipse.emf.compare.tests.performance.TestPostComparisonGMF;
+import org.eclipse.emf.compare.tests.performance.TestPostMatchUML;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -34,7 +34,7 @@ public class TestGitPostMatchUML extends AbstractEMFComparePerformanceTest {
 	 */
 	@Override
 	protected void setSUTName() {
-		getPerformance().getSystemUnderTest().setName(TestPostComparisonGMF.class.getSimpleName());
+		getPerformance().getSystemUnderTest().setName(TestPostMatchUML.class.getSimpleName());
 	}
 
 	@Test
