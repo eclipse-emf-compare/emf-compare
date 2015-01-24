@@ -838,7 +838,7 @@
         <activeByDefault>false</activeByDefault>
       </activation>
       <properties>
-        <performance-suite>PerformanceGit</performance-suite>
+        <performance-suite>PerformanceLargeGit</performance-suite>
       </properties>
       <modules>
         <module>../performance/org.eclipse.emf.compare.tests.performance</module>
