@@ -90,11 +90,11 @@ public class DataGit {
 
 	private Comparison comparison;
 
-	private IProject rootProject;
-
 	private File repoFile;
 
 	private Repository repository;
+
+	private Collection<IProject> importedProjects;
 
 	
 	public DataGit(String zippedRepoLocation, String repoName, String rootProjectName, String modelName) {
@@ -111,15 +111,14 @@ public class DataGit {
 			// Unzip repository to temp directory
 			GitUtil.unzipRepo(entry, systemTmpDir, new NullProgressMonitor());
 			
-			// Import projects into workspace from the repository
-			Collection<IProject> importedProjects = GitUtil.importProjectsFromRepo(repoFile);
+			importedProjects = GitUtil.importProjectsFromRepo(repoFile);
 			
 			// Connect eclipse projects to egit repository
 			File gitDir = new File(repoFile, Constants.DOT_GIT);
 			repository = Activator.getDefault().getRepositoryCache().lookupRepository(gitDir);
 			GitUtil.connectProjectsToRepo(repository, importedProjects);
 			
-			rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(rootProjectName);
+			IProject rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(rootProjectName);
 			
 			final IFile model = rootProject.getFile(new Path(modelName));
 			final String fullPath = model.getFullPath().toString();
@@ -227,11 +226,14 @@ public class DataGit {
 		resourceSets = null;
 		
 		try {
-			// Close & delete project from workspace
-			rootProject.close(new NullProgressMonitor());
-			rootProject.delete(false, new NullProgressMonitor());
+			// Close & delete projects from workspace
+			for (IProject project : importedProjects) {
+				project.close(new NullProgressMonitor());
+				project.delete(false, new NullProgressMonitor());
+			}
+			importedProjects.clear();
 		} catch (CoreException e) {
-			System.out.println(e);
+			Throwables.propagate(e);
 		}
 
 		if (repository != null) {
