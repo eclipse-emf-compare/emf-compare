@@ -15,6 +15,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +37,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.egit.core.Activator;
+import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.egit.core.synchronize.GitResourceVariantTreeSubscriber;
 import org.eclipse.egit.core.synchronize.GitSubscriberMergeContext;
 import org.eclipse.egit.core.synchronize.GitSubscriberResourceMappingContext;
@@ -44,6 +46,8 @@ import org.eclipse.egit.core.synchronize.dto.GitSynchronizeDataSet;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberScopeManager;
+
+import com.google.common.base.Throwables;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
@@ -109,7 +113,7 @@ public final class GitUtil {
 				zipEntry = zipFileStream.getNextEntry();
 			}
 		} catch (final IOException e) {
-			System.out.println(e);
+			Throwables.propagate(e);
 		}
 	}
 	
@@ -150,11 +154,76 @@ public final class GitUtil {
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
 			project.create(description, new NullProgressMonitor());
 			project.open(new NullProgressMonitor());
+			
 			return project;
 		} catch (CoreException e) {
-			System.out.println(e);
+			Throwables.propagate(e);
 		}
 		return null;
+	}
+	
+	/**
+	 * Import all projects contain in the given repository.
+	 * 
+	 * @param repository
+	 *            the given repository.
+	 */
+	public static Collection<IProject> importProjectsFromRepo(File repository) {
+		Collection<IProject> projects = new ArrayList<IProject>();
+		try {
+			Collection<File> projectsFromRepo = getProjectsFromRepo(repository);
+			for (File file : projectsFromRepo) {				
+				IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(file.getPath()));
+				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
+				project.create(description, new NullProgressMonitor());
+				project.open(new NullProgressMonitor());
+				projects.add(project);
+			}
+		} catch (CoreException e) {
+			Throwables.propagate(e);
+		}
+		return projects;
+	}
+	
+	/**
+	 * Get the ".projects" files from the given repository.
+	 * @param repository
+	 *            the given repository.
+	 * @return the ".projects" files from the given repository.
+	 */
+	public static Collection<File> getProjectsFromRepo(File repository) {
+		List<File> projects = new ArrayList<File>();
+		if (repository.exists()) {
+			File[] files = repository.listFiles();
+			if (null != files) {
+				for (int i=0; i < files.length; i++) {
+					if (files[i].isDirectory()) {
+						projects.addAll(getProjectsFromRepo(files[i]));
+					} else if (files[i].getName().endsWith(IProjectDescription.DESCRIPTION_FILE_NAME)) {
+						projects.add(files[i]);
+					}
+				}
+			}
+		}
+		return projects;
+	}
+	
+	/**
+	 * Connect given projects to the given repository.
+	 * @param repository
+	 *            the given repository.
+	 * @param projects
+	 *            the given projects.
+	 */
+	public static void connectProjectsToRepo(Repository repository, Collection<IProject> projects) {
+		for (IProject project : projects) {
+			try {
+				ConnectProviderOperation op = new ConnectProviderOperation(project, repository.getDirectory());
+				op.execute(new NullProgressMonitor());
+			} catch (CoreException e) {
+				Throwables.propagate(e);
+			}
+		}
 	}
 	
 	/**
@@ -217,7 +286,7 @@ public final class GitUtil {
 					}
 				}
 			} catch (CoreException e) {
-				Activator.logError(e.getMessage(), e);
+				Throwables.propagate(e);
 			}
 		}
 		return mappings.toArray(new ResourceMapping[mappings.size()]);

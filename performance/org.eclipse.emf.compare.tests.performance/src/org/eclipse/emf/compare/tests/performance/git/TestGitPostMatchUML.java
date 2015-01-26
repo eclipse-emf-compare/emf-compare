@@ -19,6 +19,7 @@ import org.junit.runners.MethodSorters;
 import data.models.DataGit;
 import data.models.NominalGitInputData;
 import data.models.SmallGitInputData;
+import data.models.SmallSplitGitInputData;
 import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
@@ -56,6 +57,20 @@ public class TestGitPostMatchUML extends AbstractEMFComparePerformanceTest {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pmUMLUMLNominal");
 		
 		final DataGit data = new NominalGitInputData();
+		data.match();
+		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
+			public void run() {
+				data.postMatchUML();
+			}
+		});
+		data.dispose();
+	}
+	
+	@Test
+	public void c_matchIdUMLSmallSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pmUMLUMLSmallSplit");
+		
+		final DataGit data = new SmallSplitGitInputData();
 		data.match();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {

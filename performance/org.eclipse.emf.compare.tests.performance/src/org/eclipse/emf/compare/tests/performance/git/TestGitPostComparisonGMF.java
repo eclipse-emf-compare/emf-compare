@@ -19,6 +19,7 @@ import org.junit.runners.MethodSorters;
 import data.models.DataGit;
 import data.models.NominalGitInputData;
 import data.models.SmallGitInputData;
+import data.models.SmallSplitGitInputData;
 import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
@@ -60,6 +61,24 @@ public class TestGitPostComparisonGMF extends AbstractEMFComparePerformanceTest 
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcGMFUMLNominal");
 		
 		final DataGit data = new NominalGitInputData();
+		data.match();
+		data.diff();
+		data.req();
+		data.equi();
+		data.conflict();
+		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
+			public void run() {
+				data.postComparisonGMF();
+			}
+		});
+		data.dispose();
+	}
+	
+	@Test
+	public void c_matchIdUMLSmallSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("pcGMFUMLSmallSplit");
+		
+		final DataGit data = new SmallSplitGitInputData();
 		data.match();
 		data.diff();
 		data.req();

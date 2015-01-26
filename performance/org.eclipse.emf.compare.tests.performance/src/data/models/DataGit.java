@@ -17,18 +17,19 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.egit.core.Activator;
-import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -68,6 +69,8 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.osgi.framework.Bundle;
 
+import com.google.common.base.Throwables;
+
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  *
@@ -87,14 +90,14 @@ public class DataGit {
 
 	private Comparison comparison;
 
-	private IProject project;
+	private IProject rootProject;
 
 	private File repoFile;
 
 	private Repository repository;
 
 	
-	public DataGit(String zippedRepoLocation, String repoName, String projectName, String modelName) {
+	public DataGit(String zippedRepoLocation, String repoName, String rootProjectName, String modelName) {
 		try {
 			this.disposers = new ArrayList<Runnable>();
 			String systemTmpDir = System.getProperty("java.io.tmpdir");
@@ -108,15 +111,17 @@ public class DataGit {
 			// Unzip repository to temp directory
 			GitUtil.unzipRepo(entry, systemTmpDir, new NullProgressMonitor());
 			
-			project = GitUtil.importProjectFromRepo(repoFile, projectName + File.separator + ".project");
+			// Import projects into workspace from the repository
+			Collection<IProject> importedProjects = GitUtil.importProjectsFromRepo(repoFile);
 			
-			// Connect eclipse project to egit repository
+			// Connect eclipse projects to egit repository
 			File gitDir = new File(repoFile, Constants.DOT_GIT);
 			repository = Activator.getDefault().getRepositoryCache().lookupRepository(gitDir);
-			ConnectProviderOperation op = new ConnectProviderOperation(project, repository.getDirectory());
-			op.execute(null);
+			GitUtil.connectProjectsToRepo(repository, importedProjects);
 			
-			final IFile model = project.getFile(new Path(modelName));
+			rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(rootProjectName);
+			
+			final IFile model = rootProject.getFile(new Path(modelName));
 			final String fullPath = model.getFullPath().toString();
 			final Subscriber subscriber = GitUtil.createSubscriberForComparison(repository, MASTER, MODIFIED, model, disposers);
 			final IStorageProviderAccessor accessor = new SubscriberStorageAccessor(subscriber);
@@ -144,9 +149,9 @@ public class DataGit {
 			resourceSets.add((ResourceSet)scope.getOrigin());
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			Throwables.propagate(e);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			Throwables.propagate(e);
 		}
 	}
 	
@@ -223,8 +228,8 @@ public class DataGit {
 		
 		try {
 			// Close & delete project from workspace
-			project.close(new NullProgressMonitor());
-			project.delete(false, new NullProgressMonitor());
+			rootProject.close(new NullProgressMonitor());
+			rootProject.delete(false, new NullProgressMonitor());
 		} catch (CoreException e) {
 			System.out.println(e);
 		}
