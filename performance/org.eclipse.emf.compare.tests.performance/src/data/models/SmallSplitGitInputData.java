@@ -17,6 +17,6 @@ package data.models;
 public class SmallSplitGitInputData extends DataGit {
 
 	public SmallSplitGitInputData() {
-		super("src/data/models/git/model_size_small_split_repo.zip", "model_size_small_split_repo", "model_small_size_split_git_model", "model.uml");
+		super("src/data/models/git/model_size_small_split_repo.zip", "model_size_small_split_repo", "model_size_small_git_model", "model.uml");
 	}
 }
