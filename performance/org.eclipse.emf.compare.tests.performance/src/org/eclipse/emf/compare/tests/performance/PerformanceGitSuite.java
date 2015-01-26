@@ -24,7 +24,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
 	TestGitMatchId.class,
-	TestGitMatchContent.class,
+//	TestGitMatchContent.class,
 	TestGitDiff.class,
 	TestGitReq.class,
 	TestGitEqui.class,
