@@ -18,6 +18,7 @@ import org.junit.runners.MethodSorters;
 
 import data.models.DataGit;
 import data.models.NominalGitInputData;
+import data.models.NominalSplitGitInputData;
 import data.models.SmallGitInputData;
 import data.models.SmallSplitGitInputData;
 import fr.obeo.performance.api.PerformanceMonitor;
@@ -39,7 +40,7 @@ public class TestGitEqui extends AbstractEMFComparePerformanceTest {
 	}
 
 	@Test
-	public void a_matchIdUMLSmall() {
+	public void a_equiUMLSmall() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLSmall");
 		
 		final DataGit data = new SmallGitInputData();
@@ -54,7 +55,7 @@ public class TestGitEqui extends AbstractEMFComparePerformanceTest {
 	}
 	
 	@Test
-	public void b_matchIdUMLNominal() {
+	public void b_equiUMLNominal() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLNominal");
 		
 		final DataGit data = new NominalGitInputData();
@@ -69,10 +70,25 @@ public class TestGitEqui extends AbstractEMFComparePerformanceTest {
 	}
 	
 	@Test
-	public void c_matchIdUMLSmallSplit() {
+	public void c_equiUMLSmallSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLSmallSplit");
 		
 		final DataGit data = new SmallSplitGitInputData();
+		data.match();
+		data.diff();
+		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
+			public void run() {
+				data.equi();
+			}
+		});
+		data.dispose();
+	}
+	
+	@Test
+	public void d_equiUMLNominalSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLNominalSplit");
+		
+		final DataGit data = new NominalSplitGitInputData();
 		data.match();
 		data.diff();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
