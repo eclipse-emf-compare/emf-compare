@@ -19,6 +19,7 @@ import org.junit.runners.MethodSorters;
 
 import data.models.DataGit;
 import data.models.LargeGitInputData;
+import data.models.LargeSplitGitInputData;
 import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
@@ -42,6 +43,19 @@ public class TestLargeGitMatchId extends AbstractEMFComparePerformanceTest {
 		PerformanceMonitor monitor = getPerformance().createMonitor("matchIdUMLLarge");
 		
 		final DataGit data = new LargeGitInputData();
+		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
+			public void run() {
+				data.match(UseIdentifiers.ONLY);
+			}
+		});
+		data.dispose();
+	}
+	
+	@Test
+	public void b_matchIdUMLLargeSplit() {
+		PerformanceMonitor monitor = getPerformance().createMonitor("matchIdUMLLargeSplit");
+		
+		final DataGit data = new LargeSplitGitInputData();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
 				data.match(UseIdentifiers.ONLY);
