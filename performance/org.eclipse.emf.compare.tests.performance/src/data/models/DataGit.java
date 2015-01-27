@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.compare.ITypedElement;
@@ -26,9 +26,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -94,9 +97,6 @@ public class DataGit {
 
 	private Repository repository;
 
-	private Collection<IProject> importedProjects;
-
-	
 	public DataGit(String zippedRepoLocation, String repoName, String rootProjectName, String modelName) {
 		try {
 			this.disposers = new ArrayList<Runnable>();
@@ -111,12 +111,33 @@ public class DataGit {
 			// Unzip repository to temp directory
 			GitUtil.unzipRepo(entry, systemTmpDir, new NullProgressMonitor());
 			
-			importedProjects = GitUtil.importProjectsFromRepo(repoFile);
+			Job importJob = new Job("ImportProjects") {
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					GitUtil.importProjectsFromRepo(repoFile);
+					return Status.OK_STATUS;
+				}
+			};
+			importJob.schedule();
+			importJob.join();
 			
-			// Connect eclipse projects to egit repository
-			File gitDir = new File(repoFile, Constants.DOT_GIT);
-			repository = Activator.getDefault().getRepositoryCache().lookupRepository(gitDir);
-			GitUtil.connectProjectsToRepo(repository, importedProjects);
+			Job connectJob = new Job("ConnectProjects") {
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					try {
+						// Connect eclipse projects to egit repository
+						File gitDir = new File(repoFile, Constants.DOT_GIT);
+						repository = Activator.getDefault().getRepositoryCache().lookupRepository(gitDir);
+						IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+						GitUtil.connectProjectsToRepo(repository, Arrays.asList(projects));
+					} catch (IOException e) {
+						Throwables.propagate(e);
+					}
+					return Status.OK_STATUS;
+				}
+			};
+			connectJob.schedule();
+			connectJob.join();
 			
 			IProject rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(rootProjectName);
 			
@@ -150,6 +171,8 @@ public class DataGit {
 		} catch (IOException e) {
 			Throwables.propagate(e);
 		} catch (CoreException e) {
+			Throwables.propagate(e);
+		} catch (InterruptedException e) {
 			Throwables.propagate(e);
 		}
 	}
@@ -225,16 +248,29 @@ public class DataGit {
 		
 		resourceSets = null;
 		
-		try {
-			// Close & delete projects from workspace
-			for (IProject project : importedProjects) {
-				project.close(new NullProgressMonitor());
-				project.delete(false, new NullProgressMonitor());
+		Job cleanJob = new Job("ClearWorkspace") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				try {
+					// Close & delete projects from workspace
+					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+					for (IProject project : projects) {
+						project.close(new NullProgressMonitor());
+						project.delete(false, new NullProgressMonitor());
+					}
+				} catch (CoreException e) {
+					Throwables.propagate(e);
+				}
+				return Status.OK_STATUS;
 			}
-			importedProjects.clear();
-		} catch (CoreException e) {
+		};
+		cleanJob.schedule();
+		try {
+			cleanJob.join();
+		} catch (InterruptedException e) {
 			Throwables.propagate(e);
 		}
+		
 
 		if (repository != null) {
 			repository.close();

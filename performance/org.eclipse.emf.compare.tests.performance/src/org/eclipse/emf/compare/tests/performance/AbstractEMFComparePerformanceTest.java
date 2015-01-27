@@ -30,6 +30,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceDescription;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EPackage;
@@ -123,8 +126,18 @@ public abstract class AbstractEMFComparePerformanceTest {
 			Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("performance", new XMIResourceFactoryImpl());
 		}
 		
-		timestamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-				.format(new Date());
+		//Deactivate auto-building
+		IWorkspace workspace= ResourcesPlugin.getWorkspace();
+		if (workspace != null) {			
+			IWorkspaceDescription desc= workspace.getDescription();
+			boolean isAutoBuilding= desc.isAutoBuilding();
+			if (isAutoBuilding == true) {
+				desc.setAutoBuilding(false);
+				workspace.setDescription(desc);
+			}
+		}
+		
+		timestamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
 		performance = new Performance("emf.compare.performance");
 	}
 
