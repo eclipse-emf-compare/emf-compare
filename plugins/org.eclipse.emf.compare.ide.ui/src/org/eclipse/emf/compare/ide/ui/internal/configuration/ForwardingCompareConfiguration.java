@@ -227,4 +227,17 @@ public abstract class ForwardingCompareConfiguration extends CompareConfiguratio
 		return delegate().isChangeIgnored(kind);
 	}
 
+	/**
+	 * Facility to check for editability of a given side to facilitate implementation in classes that receive
+	 * a boolean to indicate the side.
+	 * 
+	 * @param left
+	 * @return <code>true</code> if the given side is editable.
+	 */
+	public boolean isEditable(boolean left) {
+		if (left) {
+			return isLeftEditable();
+		}
+		return isRightEditable();
+	}
 }

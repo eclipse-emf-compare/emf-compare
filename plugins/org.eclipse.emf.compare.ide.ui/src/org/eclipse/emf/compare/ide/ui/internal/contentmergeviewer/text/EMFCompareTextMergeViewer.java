@@ -50,6 +50,7 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoActio
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.CompareInputAdapter;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
@@ -220,7 +221,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		String newValue = (String)runnable.getResult();
 
 		final boolean oldAndNewEquals = equalityHelper.matchingAttributeValues(newValue, oldValue);
-		if (eObject != null && !oldAndNewEquals && getCompareConfiguration().isLeftEditable()) {
+		if (eObject != null && !oldAndNewEquals && getCompareConfiguration().isEditable(isLeft)) {
 			// Save the change on left side
 			getCompareConfiguration().getEditingDomain().getCommandStack().execute(
 					new UpdateModelAndRejectDiffCommand(getCompareConfiguration().getEditingDomain()
@@ -281,41 +282,43 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	@Override
 	protected void createControls(Composite composite) {
 		super.createControls(composite);
-		attachListeners(getAncestorSourceViewer());
-		attachListeners(getLeftSourceViewer());
-		attachListeners(getRightSourceViewer());
+		attachListeners(getAncestorSourceViewer(), MergeViewerSide.ANCESTOR);
+		attachListeners(getLeftSourceViewer(), MergeViewerSide.LEFT);
+		attachListeners(getRightSourceViewer(), MergeViewerSide.RIGHT);
 	}
 
-	protected void attachListeners(final MergeSourceViewer viewer) {
-		final StyledText textWidget = viewer.getSourceViewer().getTextWidget();
-		textWidget.addFocusListener(new FocusListener() {
-			public void focusLost(FocusEvent e) {
-				getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), null);
-				getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), null);
-			}
-
-			public void focusGained(FocusEvent e) {
-				getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), fUndoAction);
-				getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), fRedoAction);
-			}
-		});
-
-		viewer.getSourceViewer().addTextListener(new ITextListener() {
-			public void textChanged(TextEvent event) {
-				final Object oldInput = getInput();
-				if (event.getDocumentEvent() != null && oldInput instanceof CompareInputAdapter) {
-					// When we leave the current input
-					final AttributeChange diff = (AttributeChange)((CompareInputAdapter)oldInput)
-							.getComparisonObject();
-					final EAttribute eAttribute = diff.getAttribute();
-					final Match match = diff.getMatch();
-					final IEqualityHelper equalityHelper = match.getComparison().getEqualityHelper();
-
-					updateModel(diff, eAttribute, equalityHelper, match.getLeft(), true);
-					updateModel(diff, eAttribute, equalityHelper, match.getRight(), false);
+	protected void attachListeners(MergeSourceViewer viewer, final MergeViewerSide side) {
+		// Nothing to do on the ancestor pane, which should not be edited
+		if (viewer != null && (side == MergeViewerSide.LEFT || side == MergeViewerSide.RIGHT)) {
+			final StyledText textWidget = viewer.getSourceViewer().getTextWidget();
+			textWidget.addFocusListener(new FocusListener() {
+				public void focusLost(FocusEvent e) {
+					getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), null);
+					getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), null);
 				}
-			}
-		});
+
+				public void focusGained(FocusEvent e) {
+					getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), fUndoAction);
+					getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), fRedoAction);
+				}
+			});
+			viewer.getSourceViewer().addTextListener(new ITextListener() {
+				public void textChanged(TextEvent event) {
+					final Object oldInput = getInput();
+					if (event.getDocumentEvent() != null && oldInput instanceof CompareInputAdapter) {
+						// When we leave the current input
+						final AttributeChange diff = (AttributeChange)((CompareInputAdapter)oldInput)
+								.getComparisonObject();
+						final EAttribute eAttribute = diff.getAttribute();
+						final Match match = diff.getMatch();
+						final IEqualityHelper equalityHelper = match.getComparison().getEqualityHelper();
+
+						updateModel(diff, eAttribute, equalityHelper, getMatchedEObject(match, side),
+								side == MergeViewerSide.LEFT);
+					}
+				}
+			});
+		}
 	}
 
 	/**
@@ -475,4 +478,30 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 	}
 
+	/**
+	 * Provides the EObject matched by the given match that is on the given side.
+	 * 
+	 * @param match
+	 *            The match
+	 * @param side
+	 *            The side to retrieve the value from
+	 * @return The left, right, or origin value of the given match, or <code>null</code> if the given match is
+	 *         <code>null</code>.
+	 * @since 4.1
+	 */
+	protected EObject getMatchedEObject(Match match, MergeViewerSide side) {
+		if (match == null) {
+			return null;
+		}
+		switch (side) {
+			case LEFT:
+				return match.getLeft();
+			case RIGHT:
+				return match.getRight();
+			case ANCESTOR:
+				return match.getOrigin();
+			default:
+				throw new IllegalStateException();
+		}
+	}
 }
