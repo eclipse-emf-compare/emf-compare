@@ -817,7 +817,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			// display problem tabs if any
 			SWTUtil.safeAsyncExec(new Runnable() {
 				public void run() {
-					updateProblemIndication(comparison.getDiagnostic());
+					Diagnostic diagnostic = comparison.getDiagnostic();
+					if (diagnostic == null) {
+						updateProblemIndication(Diagnostic.OK_INSTANCE);
+					} else {
+						updateProblemIndication(diagnostic);
+					}
 				}
 			});
 
@@ -1145,6 +1150,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	private void updateProblemIndication(Diagnostic diagnostic) {
+		Assert.isNotNull(diagnostic);
 		int lastEditorPage = getPageCount() - 1;
 		if (lastEditorPage >= 0 && getItemControl(lastEditorPage) instanceof ProblemIndicationComposite) {
 			((ProblemIndicationComposite)getItemControl(lastEditorPage)).setDiagnostic(diagnostic);
