@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes:Node xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" xmi:id="_O4xlYK0WEeSkmIUALVyw9w" name="A">
+  <containmentRef1 href="R2.nodes#_RwZ50K0WEeSkmIUALVyw9w"/>
+  <containmentRef1 xmi:id="_SSFqkK0WEeSkmIUALVyw9w" name="C"/>
+</nodes:Node>

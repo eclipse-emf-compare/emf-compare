@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,8 +17,10 @@ import static org.eclipse.emf.compare.ide.utils.ResourceUtil.hasModelType;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -933,8 +935,11 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	 *            The resource set in which to load our temporary resources.
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
+	 * @throws InterruptedException
+	 *             Thrown if the resolution is cancelled or interrupted one way or another.
 	 */
-	private void updateChangedResources(SynchronizedResourceSet resourceSet, ThreadSafeProgressMonitor monitor) {
+	private void updateChangedResources(SynchronizedResourceSet resourceSet, ThreadSafeProgressMonitor monitor)
+			throws InterruptedException {
 		final Set<URI> removedURIs = Sets.difference(resourceListener.popRemovedURIs(), resolvedResources);
 		final Set<URI> changedURIs = Sets.difference(resourceListener.popChangedURIs(), resolvedResources);
 
@@ -942,15 +947,34 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 		// We need to re-resolve the changed resources, along with their direct parents
 		final Set<URI> recompute = new LinkedHashSet<URI>(changedURIs);
+		final Multimap<URI, URI> parentToGrandParents = ArrayListMultimap.create();
 		for (URI changed : changedURIs) {
 			if (dependencyGraph.contains(changed)) {
-				recompute.addAll(dependencyGraph.getDirectParents(changed));
+				Set<URI> directParents = dependencyGraph.getDirectParents(changed);
+				recompute.addAll(directParents);
+				for (URI uri : directParents) {
+					Set<URI> grandParents = dependencyGraph.getDirectParents(uri);
+					parentToGrandParents.putAll(uri, grandParents);
+				}
 			}
 		}
 		dependencyGraph.removeAll(recompute);
 
 		for (URI changed : recompute) {
 			demandResolve(resourceSet, changed, monitor);
+		}
+
+		while (!currentlyResolving.isEmpty()) {
+			resolutionEnd.await();
+		}
+
+		// Re-connect changed resources parents' with their parents
+		for (URI uri : parentToGrandParents.keySet()) {
+			if (dependencyGraph.contains(uri)) {
+				for (URI parent : parentToGrandParents.get(uri)) {
+					dependencyGraph.addChildren(parent, Collections.singleton(uri));
+				}
+			}
 		}
 	}
 
