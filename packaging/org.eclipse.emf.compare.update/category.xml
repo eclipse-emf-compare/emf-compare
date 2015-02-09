@@ -44,10 +44,10 @@
    </feature>
    <category-def name="compare" label="EMF Compare">
       <description>
-         EMF Compare features.
+         EMF Compare main features.
       </description>
    </category-def>
-   <category-def name="compare_integration" label="EMF Compare Tools Integration">
+   <category-def name="compare_integration" label="EMF Compare tools support">
       <description>
          Features to integrate EMF Compare with other tools.
       </description>
