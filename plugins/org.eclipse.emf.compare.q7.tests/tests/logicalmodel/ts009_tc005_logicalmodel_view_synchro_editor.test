@@ -8,7 +8,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _cfl4QGNHEeSnVZVQFV_quQ
 Q7-Runtime-Version: 1.3.14.201410230950
-Save-Time: 11/3/14 5:27 PM
+Save-Time: 2/9/15 5:52 PM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -52,23 +52,33 @@ with [get-window "Show View"] {
 }
 
 //3. Open a model editor (double-click on a model)
-// Assert that the view is not populated (because the synchronization is not active)
 get-view "Package Explorer" | get-tree | select "UML-Library/left/model.uml" | double-click
-get-view "Logical Model View" | get-tree | get-property itemCount | equals 0 | verify-true
+
+//Create variable to store the logical model view tree
+//From mars release, get-view Logical Model View return null, so we have to find another way to retrive the tree.
+//It's ugly but I didn't found a proper way.
+let [val lmvTree [try -command {get-view "Logical Model View" | get-tree} -catch {get-tree -index 2}]] {
+
+// Assert that the view is not populated (because the synchronization is not active)
+$lmvTree | get-property itemCount | equals 0 | verify-true
 //4. Focus on the opened editor.
 // Assert that the view is not populated (because the synchronization is not active)
 get-editor "model.uml" | get-tree | select "platform:\\/resource\\/UML-Library\\/left\\/model.uml"
-get-view "Logical Model View" | get-tree | get-property itemCount | equals 0 | verify-true
+$lmvTree | get-property itemCount | equals 0 | verify-true
 //5. Open another model editor
 // Assert that the view is not populated (because the synchronization is not active)
 get-view "Package Explorer" | get-tree | select "UML-Library/origin/model.di" | double-click
-get-view "Logical Model View" | get-tree | get-property itemCount | equals 0 | verify-true
+$lmvTree | get-property itemCount | equals 0 | verify-true
 //6. Activate synchronization
-get-view "Logical Model View" | get-button "Synchronize with Editor and Selection" | click
+try -command {//From Mars release
+	get-view "Logical Model View" | get-button "Synchronize with Editor and Selection" | click
+} -catch {//Before Mars release
+	get-button "Synchronize with Editor and Selection" | click
+}
 //7. Focus on the first opened editor.
 // Assert that the view is populated (because the synchronization is active)
 get-editor "model.uml" | get-tree | select "platform:\\/resource\\/UML-Library\\/left\\/model.uml"
-with [get-view "Logical Model View" | get-tree] {
+with [$lmvTree] {
     get-property itemCount | equals 3 | verify-true
     get-property "getItems().TreeItem[0].getText()" | equals "model.di - /UML-Library/left" | verify-true
     get-property "getItems().TreeItem[1].getText()" | equals "model.notation - /UML-Library/left" | verify-true
@@ -81,7 +91,7 @@ with [get-editor "model.di"] {
         mouse-move 543 80 -height 1055 -width 1315
     }
 }
-with [get-view "Logical Model View" | get-tree] {
+with [$lmvTree] {
     get-property itemCount | equals 3 | verify-true
     get-property "getItems().TreeItem[0].getText()" | equals "model.di - /UML-Library/origin" | verify-true
     get-property "getItems().TreeItem[1].getText()" | equals "model.notation - /UML-Library/origin" | verify-true
@@ -91,24 +101,28 @@ with [get-view "Logical Model View" | get-tree] {
 // Assert that the view is populated with the logical models computing from the old selected editor
 get-view "Package Explorer" | get-tree | select "UML-Library/.project" | double-click
 get-editor ".project" | get-text-viewer | set-caret-pos 5 15
-with [get-view "Logical Model View" | get-tree] {
+with [$lmvTree] {
     get-property itemCount | equals 3 | verify-true
     get-property "getItems().TreeItem[0].getText()" | equals "model.di - /UML-Library/origin" | verify-true
     get-property "getItems().TreeItem[1].getText()" | equals "model.notation - /UML-Library/origin" | verify-true
     get-property "getItems().TreeItem[2].getText()" | equals "model.uml - /UML-Library/origin" | verify-true
 }
 //10. Deactivate the synchronization
-get-view "Logical Model View" | get-button "Synchronize with Editor and Selection" | click
+try -command {//From Mars release
+	get-view "Logical Model View" | get-button "Synchronize with Editor and Selection" | click
+} -catch {//Before Mars release
+	get-button "Synchronize with Editor and Selection" | click
+}
 //9. Click on an editor
 // Assert that the view is populated with the logical models computing from old selected model
 get-editor "model.uml" | get-tree | select "platform:\\/resource\\/UML-Library\\/left\\/model.uml"
-with [get-view "Logical Model View" | get-tree] {
+with [$lmvTree] {
     get-property itemCount | equals 3 | verify-true
     get-property "getItems().TreeItem[0].getText()" | equals "model.di - /UML-Library/origin" | verify-true
     get-property "getItems().TreeItem[1].getText()" | equals "model.notation - /UML-Library/origin" | verify-true
     get-property "getItems().TreeItem[2].getText()" | equals "model.uml - /UML-Library/origin" | verify-true
 }
-
+}
 get-button "View Menu" | click
 get-view "Package Explorer" | get-menu "Filters..." | click
 with [get-window "Java Element Filters"] {
