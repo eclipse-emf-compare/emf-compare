@@ -823,6 +823,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		final Comparison comparison = comparator.compare(comparisonScope, BasicMonitor.toMonitor(subMonitor
 				.newChild(10)));
 
+		// Bug 458802: NPE when synchronizing SMV & CMV if comparison is empty
+		hookAdapters(input, comparison);
+
 		compareInputChanged(input.getComparisonScope(), comparison);
 	}
 
@@ -979,13 +982,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				final Comparison compareResult = comparisonBuilder.build().compare(scope,
 						BasicMonitor.toMonitor(subMonitorChild));
 
-				compareResult.eAdapters().add(new ForwardingCompareInputAdapter(input));
-				ICompareInputLabelProvider labelProvider = getCompareConfiguration().getLabelProvider();
-				SideLabelProvider sideLabelProvider = new SideLabelProvider(labelProvider
-						.getAncestorLabel(input), labelProvider.getLeftLabel(input), labelProvider
-						.getRightLabel(input), labelProvider.getAncestorImage(input), labelProvider
-						.getLeftImage(input), labelProvider.getRightImage(input));
-				compareResult.eAdapters().add(sideLabelProvider);
+				hookAdapters(input, compareResult);
 
 				if (compareResult.getDiagnostic() != null) {
 					diagnostic.merge(compareResult.getDiagnostic());
@@ -1021,6 +1018,22 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		} else {
 			compareInputChangedToNull();
 		}
+	}
+
+	/**
+	 * Hooks the adapters required for handling UI properly.
+	 * 
+	 * @param input
+	 * @param compareResult
+	 */
+	private void hookAdapters(final ICompareInput input, final Comparison compareResult) {
+		compareResult.eAdapters().add(new ForwardingCompareInputAdapter(input));
+		ICompareInputLabelProvider labelProvider = getCompareConfiguration().getLabelProvider();
+		SideLabelProvider sideLabelProvider = new SideLabelProvider(labelProvider.getAncestorLabel(input),
+				labelProvider.getLeftLabel(input), labelProvider.getRightLabel(input), labelProvider
+						.getAncestorImage(input), labelProvider.getLeftImage(input), labelProvider
+						.getRightImage(input));
+		compareResult.eAdapters().add(sideLabelProvider);
 	}
 
 	/**
