@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,16 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - introduced model update strategy provider (bug 457117)
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.IModelUpdateStrategy;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.IModelUpdateStrategyProvider;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.SingleValuedAttributeModelUpdateStrategy;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.StringAttributeChangeAccessor;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
@@ -24,7 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  * @since 4.0
  */
-public class StringAttributeChangeAccessorFactory extends AbstractAccessorFactory {
+public class StringAttributeChangeAccessorFactory extends AbstractAccessorFactory implements IModelUpdateStrategyProvider {
 
 	/**
 	 * {@inheritDoc}
@@ -85,5 +89,14 @@ public class StringAttributeChangeAccessorFactory extends AbstractAccessorFactor
 			return new StringAttributeChangeAccessor(ancestor, (AttributeChange)target);
 		}
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see IModelUpdateStrategyProvider#getModelUpdateStrategy()
+	 */
+	public IModelUpdateStrategy getModelUpdateStrategy() {
+		return new SingleValuedAttributeModelUpdateStrategy();
 	}
 }

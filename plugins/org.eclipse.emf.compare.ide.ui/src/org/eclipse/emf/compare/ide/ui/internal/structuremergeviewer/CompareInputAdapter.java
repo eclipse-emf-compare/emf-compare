@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - integrated model update strategy (bug 457839)
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -29,6 +30,9 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.Acces
 import org.eclipse.emf.compare.provider.ExtendedAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.IModelUpdateStrategy;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.IModelUpdateStrategyProvider;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.SingleValuedAttributeModelUpdateStrategy;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IDisposable;
@@ -58,6 +62,9 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 
 	/** A {@link IDeferredWorkbenchAdapter} to which this compareInput can adapt to. */
 	private IDeferredWorkbenchAdapter deferredWorkbenchAdapter;
+
+	/** A {@link IModelUpdateStrategyProvider} providing the strategy for updating the underlying model. */
+	private IModelUpdateStrategyProvider modelUpdateStrategyProvider;
 
 	/**
 	 * Simple constructor storing the given {@link AdapterFactory}.
@@ -313,6 +320,7 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 			oldTarget.eAdapters().remove(this);
 		}
 		deferredWorkbenchAdapter = null;
+		modelUpdateStrategyProvider = null;
 	}
 
 	/**
@@ -335,5 +343,43 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 			return deferredWorkbenchAdapter;
 		}
 		return null;
+	}
+
+	/**
+	 * Returns the {@link IModelUpdateStrategy} to be used by content mergers for this compare input.
+	 * 
+	 * @return The {@link IModelUpdateStrategy} to be used.
+	 */
+	public IModelUpdateStrategy getModelUpdateStrategy() {
+		if (modelUpdateStrategyProvider == null) {
+			modelUpdateStrategyProvider = createModelUpdateStrategyProvider();
+		}
+		return modelUpdateStrategyProvider.getModelUpdateStrategy();
+	}
+
+	/**
+	 * Creates a {@link IModelUpdateStrategyProvider}.
+	 * <p>
+	 * Checks if the {@link #getAccessorFactoryForTarget() accessor factory for the target} is a
+	 * {@link IModelUpdateStrategyProvider} and, if yes, returns this accessor factory as
+	 * {@link IModelUpdateStrategyProvider}. If it is not a model update strategy provider, it will default to
+	 * one that always returns the tolerant {@link SingleValuedAttributeModelUpdateStrategy}.
+	 * </p>
+	 * 
+	 * @return The created {@link IModelUpdateStrategyProvider}.
+	 */
+	private IModelUpdateStrategyProvider createModelUpdateStrategyProvider() {
+		final IModelUpdateStrategyProvider ret;
+		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
+		if (accessorFactory instanceof IModelUpdateStrategyProvider) {
+			ret = (IModelUpdateStrategyProvider)accessorFactory;
+		} else {
+			ret = new IModelUpdateStrategyProvider() {
+				public IModelUpdateStrategy getModelUpdateStrategy() {
+					return new SingleValuedAttributeModelUpdateStrategy();
+				}
+			};
+		}
+		return ret;
 	}
 }

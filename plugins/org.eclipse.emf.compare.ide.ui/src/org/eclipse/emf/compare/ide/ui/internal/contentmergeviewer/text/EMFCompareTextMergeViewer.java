@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Alexandra Buzila - Bug 457117
+ *     Philip Langer - integrated model update strategy (bug 457839)
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
@@ -32,14 +33,14 @@ import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
-import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
@@ -49,16 +50,10 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoActio
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.CompareInputAdapter;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.IModelUpdateStrategy;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
-import org.eclipse.emf.compare.utils.ReferenceUtil;
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.change.util.ChangeRecorder;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.ChangeCommand;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.text.ITextListener;
@@ -214,33 +209,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		return null; // can not happen.
 	}
 
-	private void updateModel(final AttributeChange diff, final EAttribute eAttribute,
-			final IEqualityHelper equalityHelper, final EObject eObject, final boolean isLeft) {
-		final String oldValue = getStringValue(eObject, eAttribute);
-		GetContentRunnable runnable = new GetContentRunnable(isLeft);
-		Display.getDefault().syncExec(runnable);
-		String newValue = (String)runnable.getResult();
-
-		final boolean oldAndNewEquals = equalityHelper.matchingAttributeValues(newValue, oldValue);
-		if (eObject != null && !oldAndNewEquals && getCompareConfiguration().isEditable(isLeft)) {
-			// Save the change on left side
-			getCompareConfiguration().getEditingDomain().getCommandStack().execute(
-					new UpdateModelAndRejectDiffCommand(getCompareConfiguration().getEditingDomain()
-							.getChangeRecorder(), eObject, eAttribute, newValue, diff, isLeft));
-		}
-	}
-
-	private String getStringValue(final EObject eObject, final EAttribute eAttribute) {
-		final EDataType eAttributeType = eAttribute.getEAttributeType();
-		final Object value;
-		if (eObject == null) {
-			value = null;
-		} else {
-			value = ReferenceUtil.safeEGet(eObject, eAttribute);
-		}
-		return EcoreUtil.convertToString(eAttributeType, value);
-	}
-
 	/**
 	 * @return the fDynamicObject
 	 */
@@ -306,20 +274,95 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 			viewer.getSourceViewer().addTextListener(new ITextListener() {
 				public void textChanged(TextEvent event) {
 					final Object oldInput = getInput();
-					if (event.getDocumentEvent() != null && oldInput instanceof CompareInputAdapter) {
-						// When we leave the current input
-						final AttributeChange diff = (AttributeChange)((CompareInputAdapter)oldInput)
-								.getComparisonObject();
-						final EAttribute eAttribute = diff.getAttribute();
-						final Match match = diff.getMatch();
-						final IEqualityHelper equalityHelper = match.getComparison().getEqualityHelper();
-
-						updateModel(diff, eAttribute, equalityHelper, getMatchedEObject(match, side),
-								side == MergeViewerSide.LEFT);
+					if (event.getDocumentEvent() != null && isCompareInputAdapterHoldingDiff(oldInput)) {
+						final CompareInputAdapter inputAdapter = (CompareInputAdapter)oldInput;
+						final IModelUpdateStrategy modelUpdateStrategy = inputAdapter
+								.getModelUpdateStrategy();
+						final Diff diff = (Diff)inputAdapter.getComparisonObject();
+						updateModel(diff, modelUpdateStrategy, MergeViewerSide.LEFT);
+						updateModel(diff, modelUpdateStrategy, MergeViewerSide.RIGHT);
 					}
 				}
 			});
 		}
+	}
+
+	/**
+	 * Specifies whether the given {@code input} is a {@link CompareInputAdapter} that holds a {@link Diff}.
+	 * 
+	 * @param input
+	 *            Object to check.
+	 * @return <code>true</code> if {@code input} is a {@link CompareInputAdapter} holding a a {@link Diff}.
+	 */
+	private boolean isCompareInputAdapterHoldingDiff(Object input) {
+		return input instanceof CompareInputAdapter
+				&& ((CompareInputAdapter)input).getComparisonObject() != null
+				&& ((CompareInputAdapter)input).getComparisonObject() instanceof Diff;
+	}
+
+	/**
+	 * Updates the underlying model with the given {@code modelUpdateStrategy} on the given {@code side} in
+	 * the context of the given {@code diff}.
+	 * 
+	 * @param diff
+	 *            The context of the model update.
+	 * @param modelUpdateStrategy
+	 *            The model update strategy to be used.
+	 * @param side
+	 *            The side on which to perform the udpate.
+	 */
+	private void updateModel(Diff diff, IModelUpdateStrategy modelUpdateStrategy, MergeViewerSide side) {
+		if (isEditable(side) && modelUpdateStrategy.canUpdate(diff, side)) {
+			final String newValue = getCurrentValueFromViewer(side);
+			final Command updateCmd = modelUpdateStrategy.getModelUpdateCommand(diff, newValue, side);
+			final RejectAffectedDiffCommand rejectDiffsCmd = new RejectAffectedDiffCommand(diff);
+			final CompoundCommand compoundCmd = createCompoundCompareCommand(side, updateCmd, rejectDiffsCmd);
+			getCompareConfiguration().getEditingDomain().getCommandStack().execute(compoundCmd);
+		}
+	}
+
+	/**
+	 * Specifies whether the content merge viewers on the given {@code side} are editable.
+	 * 
+	 * @param side
+	 *            The side to check.
+	 * @return <code>true</code> if the content merge viewer is editable on {@code side}, <code>false</code>
+	 *         otherwise.
+	 */
+	private boolean isEditable(MergeViewerSide side) {
+		final boolean isLeft = MergeViewerSide.LEFT.equals(side);
+		return getCompareConfiguration().isEditable(isLeft);
+	}
+
+	/**
+	 * Returns the current value from the viewer on the given {@code side}.
+	 * 
+	 * @param side
+	 *            The side to get the value for.
+	 * @return The content of the viewer on the given {@code side}.
+	 */
+	private String getCurrentValueFromViewer(MergeViewerSide side) {
+		final boolean isLeft = MergeViewerSide.LEFT.equals(side);
+		final GetContentRunnable runnable = new GetContentRunnable(isLeft);
+		Display.getDefault().syncExec(runnable);
+		return (String)runnable.getResult();
+	}
+
+	/**
+	 * Creates a compound compare command for the given {@code side} and the given {@code commands}.
+	 * 
+	 * @param side
+	 *            The side on which the compare command is to be executed.
+	 * @param commands
+	 *            The commands to be enclosed in the compound command.
+	 * @return The compound compare command.
+	 */
+	private CompoundCompareCommand createCompoundCompareCommand(MergeViewerSide side, Command... commands) {
+		final CompoundCompareCommand compoundCommand = new CompoundCompareCommand(side);
+		for (Command command : commands) {
+			compoundCommand.append(command);
+		}
+		return compoundCommand;
 	}
 
 	/**
@@ -429,32 +472,17 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	 * 
 	 * @author cnotot
 	 */
-	private static class UpdateModelAndRejectDiffCommand extends ChangeCommand implements ICompareCopyCommand {
-
-		private boolean isLeft;
+	private static class RejectAffectedDiffCommand extends ChangeCommand {
 
 		private Diff difference;
 
-		private Object value;
-
-		private EStructuralFeature feature;
-
-		private EObject owner;
-
-		public UpdateModelAndRejectDiffCommand(ChangeRecorder changeRecorder, EObject owner,
-				EStructuralFeature feature, Object value, Diff difference, boolean isLeft) {
-			super(changeRecorder, ImmutableSet.<Notifier> builder().add(owner).addAll(
-					getAffectedDiff(difference)).build());
-			this.owner = owner;
-			this.feature = feature;
-			this.value = value;
+		public RejectAffectedDiffCommand(Diff difference) {
+			super(ImmutableSet.<Notifier> builder().addAll(getAffectedDiff(difference)).build());
 			this.difference = difference;
-			this.isLeft = isLeft;
 		}
 
 		@Override
 		public void doExecute() {
-			owner.eSet(feature, value);
 			for (Diff affectedDiff : getAffectedDiff(difference)) {
 				affectedDiff.setState(DifferenceState.DISCARDED);
 			}
@@ -470,37 +498,34 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 			}
 			return ImmutableSet.of(diff);
 		}
-
-		public boolean isLeftToRight() {
-			return !isLeft;
-		}
-
 	}
 
 	/**
-	 * Provides the EObject matched by the given match that is on the given side.
+	 * A compound command that also implements the {@link ICompareCopyCommand} to be executable in the context
+	 * of a comparison.
 	 * 
-	 * @param match
-	 *            The match
-	 * @param side
-	 *            The side to retrieve the value from
-	 * @return The left, right, or origin value of the given match, or <code>null</code> if the given match is
-	 *         <code>null</code>.
-	 * @since 4.1
+	 * @author Philip Langer <planger@eclipsesource.com>
 	 */
-	protected EObject getMatchedEObject(Match match, MergeViewerSide side) {
-		if (match == null) {
-			return null;
+	private static class CompoundCompareCommand extends CompoundCommand implements ICompareCopyCommand {
+
+		/** The side on which this command executes. */
+		private MergeViewerSide side;
+
+		/**
+		 * Creates a new compound command for the given {@code side}.
+		 * 
+		 * @param side
+		 *            The side on which this command executes.
+		 */
+		public CompoundCompareCommand(MergeViewerSide side) {
+			this.side = side;
 		}
-		switch (side) {
-			case LEFT:
-				return match.getLeft();
-			case RIGHT:
-				return match.getRight();
-			case ANCESTOR:
-				return match.getOrigin();
-			default:
-				throw new IllegalStateException();
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public boolean isLeftToRight() {
+			return !MergeViewerSide.LEFT.equals(side);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - integrated model update strategy (bug 457839)
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
@@ -19,8 +20,12 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.CompareInputAdapter;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.IModelUpdateStrategy;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -46,6 +51,39 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 
 	private boolean hasError() {
 		return fAncestorError != null || fLeftError != null || fRightError != null;
+	}
+
+	private boolean isEditable(Object element, MergeViewerSide side) {
+		final boolean isEditableInConfiguration = isEditableInConfiguration(side);
+		if (isEditableInConfiguration && isCompareInputAdapterHoldingADiff(element)) {
+			final CompareInputAdapter inputAdapter = (CompareInputAdapter)element;
+			final IModelUpdateStrategy modelUpdateStrategy = inputAdapter.getModelUpdateStrategy();
+			final Diff diff = (Diff)inputAdapter.getComparisonObject();
+			return modelUpdateStrategy.canUpdate(diff, side);
+		}
+		return isEditableInConfiguration;
+	}
+
+	private boolean isEditableInConfiguration(MergeViewerSide side) {
+		final boolean isEditableInConfiguration;
+		switch (side) {
+			case LEFT:
+				isEditableInConfiguration = fCompareConfiguration.isLeftEditable();
+				break;
+			case RIGHT:
+				isEditableInConfiguration = fCompareConfiguration.isRightEditable();
+				break;
+			default:
+				isEditableInConfiguration = false;
+				break;
+		}
+		return isEditableInConfiguration;
+	}
+
+	private boolean isCompareInputAdapterHoldingADiff(Object input) {
+		return input instanceof CompareInputAdapter
+				&& ((CompareInputAdapter)input).getComparisonObject() != null
+				&& ((CompareInputAdapter)input).getComparisonObject() instanceof Diff;
 	}
 
 	public void dispose() {
@@ -125,7 +163,7 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 		if (hasError()) {
 			return false;
 		}
-		return fCompareConfiguration.isLeftEditable();
+		return isEditable(element, MergeViewerSide.LEFT);
 	}
 
 	public void saveLeftContent(Object element, byte[] bytes) {
@@ -184,7 +222,7 @@ public class EMFCompareTextMergeViewerContentProvider implements IMergeViewerCon
 		if (hasError()) {
 			return false;
 		}
-		return fCompareConfiguration.isRightEditable();
+		return isEditable(element, MergeViewerSide.RIGHT);
 	}
 
 	public void saveRightContent(Object element, byte[] bytes) {
