@@ -71,6 +71,10 @@
             <configuration>
               <aut>
                 <explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
+                <vmArgs>
+                  <vmArg>-Xmx2048m</vmArg>
+                  <vmArg>-XX:MaxPermSize=512m</vmArg>
+                </vmArgs>
               </aut>
               <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
               <suites>
@@ -102,6 +106,10 @@
             <configuration>
               <aut>
                 <explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
+                <vmArgs>
+                  <vmArg>-Xmx2048m</vmArg>
+                  <vmArg>-XX:MaxPermSize=512m</vmArg>
+                </vmArgs>
               </aut>
               <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
               <suites>
@@ -130,6 +138,10 @@
             <configuration>
               <aut>
                 <explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
+                <vmArgs>
+                  <vmArg>-Xmx2048m</vmArg>
+                  <vmArg>-XX:MaxPermSize=512m</vmArg>
+                </vmArgs>
               </aut>
               <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
               <suites>
@@ -158,6 +170,10 @@
             <configuration>
               <aut>
                 <explicit>${project.build.directory}/${profile-id}/eclipse</explicit>
+                <vmArgs>
+                  <vmArg>-Xmx2048m</vmArg>
+                  <vmArg>-XX:MaxPermSize=512m</vmArg>
+                </vmArgs>
               </aut>
               <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
               <suites>
