@@ -375,7 +375,9 @@
       </build>
       <modules>
         <module>../packaging/org.eclipse.emf.compare.update</module>
+        <!-- Uncomment when https://git.eclipse.org/r/#/c/29372/ merged into repository
         <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git</module>
+        -->
         <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
         <module>../plugins/org.eclipse.emf.compare.uml2</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
@@ -423,7 +425,9 @@
         </plugins>
       </build>
       <modules>
+        <!-- Uncomment when https://git.eclipse.org/r/#/c/29372/ merged into repository
         <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git</module>
+        -->
         <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
         <module>../plugins/org.eclipse.emf.compare.uml2</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
@@ -471,7 +475,9 @@
         </plugins>
       </build>
       <modules>
+        <!-- Uncomment when https://git.eclipse.org/r/#/c/29372/ merged into repository
         <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git</module>
+        -->
         <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
         <module>../plugins/org.eclipse.emf.compare.diagram</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
@@ -506,7 +512,9 @@
         </plugins>
       </build>
       <modules>
+        <!-- Uncomment when https://git.eclipse.org/r/#/c/29372/ merged into repository
         <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git</module>
+        -->
         <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
         <module>../plugins/org.eclipse.emf.compare.diagram</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,9 +15,12 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.notloadedfragment.NotLoadedFragmentItemTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverGraphTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.NavigatableTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeActionTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.PseudoConflictsMergeActionTest;
+import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.notloadedfragment.NotLoadedFragmentNodeTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.DependenciesTest;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
@@ -30,7 +33,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({DependenciesTest.class, MergeActionTest.class, PseudoConflictsMergeActionTest.class,
-		BugsTestSuite.class, NavigatableTest.class })
+		BugsTestSuite.class, NavigatableTest.class, NotLoadedFragmentNodeTest.class,
+		NotLoadedFragmentItemTest.class, ThreadedModelResolverGraphTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

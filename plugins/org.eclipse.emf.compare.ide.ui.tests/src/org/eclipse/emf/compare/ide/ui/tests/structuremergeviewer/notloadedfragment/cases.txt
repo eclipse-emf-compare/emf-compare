@@ -1,0 +1,109 @@
+Intermediate Proxies Resolution - Tests Cases
+
+
+In all cases (l) means loaded.
+
+/*****************************************************************************/
+case0 : 
+	- 2 fragments
+
+* R1
+	* R2 (l)
+	
+		- no changes in 1st (upper) fragment
+		- 1 change in 2nd (deepest) fragment
+/*****************************************************************************/
+case1 :
+	- 3 fragments
+
+* R1 (l)
+	* R2
+		* R3 (l)
+
+		- 1 change in 1st (upper) fragment
+		- no changes in 2nd fragment
+		- 1 change in 3rd (deepest) fragment
+/*****************************************************************************/
+case2 :
+	- 3 fragments
+
+* R1
+	* R2 (l)
+		* R3 (l)
+
+		- no changes in 1st (upper) fragment
+		- 1 change in 2nd fragment
+		- 1 change in 3rd (deepest) fragment
+/*****************************************************************************/
+case3 :
+	- 4 fragments
+	
+* R1
+	* R2 (l)
+		* R3
+			* R4 (l)
+
+		- no changes in 1st (upper) fragment
+		- 1 change in 2nd fragment
+		- no changes in 3rd fragment
+		- 1 change in 4th (deepest) fragment
+/*****************************************************************************/
+case4 :
+	- 3 fragments
+	
+* R1
+	* R2 (l)
+	* R3 (l)
+		- no changes in 1st (upper) fragment
+		- 1 change in 2nd fragment
+		- 1 change in 3rd fragment
+/*****************************************************************************/
+case5 :
+	- 7 fragments
+	
+* R1
+	* R2
+		* R4
+			* R6 (l)
+	* R3
+		* R5
+			* R7 (l)
+	
+		- no changes in 1st (upper), 2nd, 3rd, 4th and 5th fragments
+		- 1 change in 6th fragment
+		- 1 change in 7th fragment
+/*****************************************************************************/
+case6 :
+	- 6 fragments
+	
+* R1
+	* R2 (l)
+		* R4
+			* R5 (l)
+			* R6 (l)
+	* R3 (l)
+	
+		- no changes in 1st (upper) fragment
+		- 1 change in 2nd fragment
+		- 1 change in 3rd fragment
+		- no changes in 4th fragment
+		- 1 change in 5th fragment
+		- 1 change in 6th fragment
+/*****************************************************************************/
+case7 :
+	- 6 fragments
+	
+* R1
+	* R2
+		* R4
+			* R5 (l)
+			* R6 (l)
+	* R3 (l)
+	
+		- no changes in 1st (upper) fragment
+		- no changes in 2nd fragment
+		- 1 change in 3rd fragment
+		- no changes in 4th fragment
+		- 1 change in 5th fragment
+		- 1 change in 6th fragment
+/*****************************************************************************/
