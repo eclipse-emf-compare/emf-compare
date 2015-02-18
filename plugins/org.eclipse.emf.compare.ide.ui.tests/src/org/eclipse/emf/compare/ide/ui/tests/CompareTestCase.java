@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2013, 2014 Obeo and others
+ * Copyright (C) 2013, 2015 Obeo and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -13,7 +13,11 @@ import static com.google.common.collect.Iterators.filter;
 import static org.eclipse.emf.ecore.util.EcoreUtil.getAllProperContents;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -259,5 +263,19 @@ public class CompareTestCase {
 			resource.save(options);
 		}
 		project.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+	}
+
+	protected static void copyFile(File source, File dest) throws IOException {
+		FileChannel sourceChannel = null;
+		FileChannel destChannel = null;
+		FileInputStream fileInputStream = new FileInputStream(source);
+		sourceChannel = fileInputStream.getChannel();
+		FileOutputStream fileOutputStream = new FileOutputStream(dest);
+		destChannel = fileOutputStream.getChannel();
+		destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+		sourceChannel.close();
+		destChannel.close();
+		fileInputStream.close();
+		fileOutputStream.close();
 	}
 }

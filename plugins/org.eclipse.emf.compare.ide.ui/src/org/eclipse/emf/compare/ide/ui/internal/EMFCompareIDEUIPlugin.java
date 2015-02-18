@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - Bug 456699
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal;
 
@@ -19,6 +20,8 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.compare.ide.ui.dependency.ModelDependencyProviderRegistry;
+import org.eclipse.emf.compare.ide.ui.dependency.ModelDependencyProviderRegistryListener;
 import org.eclipse.emf.compare.ide.ui.internal.editor.PropertySheetAdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverRegistryListener;
@@ -48,6 +51,12 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	/** Logical Model Editors Handlers extension point. */
 	private static final String LOGICAL_MODEL_VIEW_HANDLERS_PPID = "logicalModelViewHandlers"; //$NON-NLS-1$
 
+	/** Model dependency providers extension point. */
+	private static final String MODEL_DEPENDENCY_PROVIDER_PPID = "modelDependencyProvider"; //$NON-NLS-1$
+
+	/** keep track of resources that should be freed when exiting. */
+	private static Map<String, Image> resourcesMapper = new HashMap<String, Image>();
+
 	/** Listener for the model resolver extension point. */
 	private AbstractRegistryEventListener modelResolverRegistryListener;
 
@@ -60,8 +69,11 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	/** Registry of Logical Model View Handlers. */
 	private LogicalModelViewHandlerRegistry logicalModelViewHandlerRegistry;
 
-	/** keep track of resources that should be freed when exiting. */
-	private static Map<String, Image> resourcesMapper = new HashMap<String, Image>();
+	/** Listener for the model dependency provider extension point. */
+	private AbstractRegistryEventListener modelDependencyProviderRegistryListener;
+
+	/** Registry of model dependency providers. */
+	private ModelDependencyProviderRegistry modelDependencyProviderRegistry;
 
 	/** Default constructor. */
 	public EMFCompareIDEUIPlugin() {
@@ -78,14 +90,22 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 
-		final IExtensionRegistry globalRegistry = Platform.getExtensionRegistry();
+		modelDependencyProviderRegistry = new ModelDependencyProviderRegistry();
 		modelResolverRegistry = new ModelResolverRegistry();
+		logicalModelViewHandlerRegistry = new LogicalModelViewHandlerRegistry();
+
+		final IExtensionRegistry globalRegistry = Platform.getExtensionRegistry();
+
+		modelDependencyProviderRegistryListener = new ModelDependencyProviderRegistryListener(PLUGIN_ID,
+				MODEL_DEPENDENCY_PROVIDER_PPID, getLog(), modelDependencyProviderRegistry);
+		globalRegistry.addListener(modelDependencyProviderRegistryListener);
+		modelDependencyProviderRegistryListener.readRegistry(globalRegistry);
+
 		modelResolverRegistryListener = new ModelResolverRegistryListener(PLUGIN_ID, MODEL_RESOLVER_PPID,
 				getLog(), modelResolverRegistry);
 		globalRegistry.addListener(modelResolverRegistryListener);
 		modelResolverRegistryListener.readRegistry(globalRegistry);
 
-		logicalModelViewHandlerRegistry = new LogicalModelViewHandlerRegistry();
 		logicalModelViewHandlerRegistryListener = new LogicalModelViewHandlerRegistryListener(PLUGIN_ID,
 				LOGICAL_MODEL_VIEW_HANDLERS_PPID, getLog(), logicalModelViewHandlerRegistry);
 		globalRegistry.addListener(logicalModelViewHandlerRegistryListener);
@@ -106,6 +126,8 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		logicalModelViewHandlerRegistry.clear();
 		globalRegistry.removeListener(modelResolverRegistryListener);
 		modelResolverRegistry.clear();
+		globalRegistry.removeListener(modelDependencyProviderRegistryListener);
+		modelDependencyProviderRegistry.clear();
 		plugin = null;
 		super.stop(context);
 	}
@@ -191,6 +213,15 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	 */
 	public LogicalModelViewHandlerRegistry getLogicalModelViewHandlerRegistry() {
 		return logicalModelViewHandlerRegistry;
+	}
+
+	/**
+	 * Returns the registry containing all known dependency providers.
+	 * 
+	 * @return The registry containing all known dependency providers.
+	 */
+	public ModelDependencyProviderRegistry getModelDependencyProviderRegistry() {
+		return modelDependencyProviderRegistry;
 	}
 
 	/**

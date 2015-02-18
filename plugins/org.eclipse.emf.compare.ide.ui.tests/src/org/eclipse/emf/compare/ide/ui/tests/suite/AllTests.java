@@ -17,6 +17,7 @@ import junit.textui.TestRunner;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.notloadedfragment.NotLoadedFragmentItemTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverGraphTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverWithCustomDependencyProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.NavigatableTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeActionTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.PseudoConflictsMergeActionTest;
@@ -34,7 +35,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({DependenciesTest.class, MergeActionTest.class, PseudoConflictsMergeActionTest.class,
 		BugsTestSuite.class, NavigatableTest.class, NotLoadedFragmentNodeTest.class,
-		NotLoadedFragmentItemTest.class, ThreadedModelResolverGraphTest.class })
+		NotLoadedFragmentItemTest.class, ThreadedModelResolverGraphTest.class,
+		ThreadedModelResolverWithCustomDependencyProviderTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

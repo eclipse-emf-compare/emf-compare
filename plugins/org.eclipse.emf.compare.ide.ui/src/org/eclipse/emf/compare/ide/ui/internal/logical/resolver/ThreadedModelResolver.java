@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Alexandra Buzila - Fixes for Bug 462938
+ *     Stefan Dirix - Bug 456699
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
@@ -63,6 +64,7 @@ import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.internal.utils.ProxyNotifierParserPool.IProxyCreationListener;
+import org.eclipse.emf.compare.ide.ui.dependency.ModelDependencyProviderRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences;
@@ -203,6 +205,11 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	 */
 	private ModelResourceListener resourceListener;
 
+	/**
+	 * The manager for the dependency extension point.
+	 */
+	private ModelDependencyProviderRegistry dependencyProviderRegistry;
+
 	/** Default constructor. */
 	public ThreadedModelResolver() {
 		this.dependencyGraph = new Graph<URI>();
@@ -211,6 +218,16 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		this.resolutionEnd = lock.newCondition();
 		this.currentlyResolving = new HashSet<URI>();
 		this.shutdownInProgress = new AtomicBoolean(false);
+		this.dependencyProviderRegistry = getModelDependencyProviderRegistry();
+	}
+
+	/**
+	 * Returns the {@link ModelDependencyProviderRegistry} to be used.
+	 * 
+	 * @return the {@link ModelDependencyProviderRegistry} to be used.
+	 */
+	protected ModelDependencyProviderRegistry getModelDependencyProviderRegistry() {
+		return EMFCompareIDEUIPlugin.getDefault().getModelDependencyProviderRegistry();
 	}
 
 	/**
@@ -326,6 +343,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		if (!(start instanceof IFile)) {
 			return new StorageTraversal(new LinkedHashSet<IStorage>());
 		}
+		IFile file = (IFile)start;
 
 		ThreadSafeProgressMonitor subMonitor = null;
 		lock.lockInterruptibly();
@@ -340,7 +358,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			if (getResolutionScope() != CrossReferenceResolutionScope.SELF) {
 				final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet(
 						new MonitoredProxyCreationListener(subMonitor, false));
-				updateDependencies(resourceSet, (IFile)start, subMonitor);
+				updateDependencies(resourceSet, file, subMonitor);
 				updateChangedResources(resourceSet, subMonitor);
 			}
 
@@ -352,7 +370,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 				throw new OperationCanceledException();
 			}
 
-			final Set<IStorage> traversalSet = resolveTraversal((IFile)start, Collections.<URI> emptySet());
+			final Set<IStorage> traversalSet = resolveTraversal(file, Collections.<URI> emptySet());
 			StorageTraversal traversal = new StorageTraversal(traversalSet, diagnostic);
 
 			return traversal;
@@ -798,7 +816,9 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			final Set<IStorage> differenceOriginRight = difference(additionalOrigin, asURISet(right));
 			additionalStorages = symmetricDifference(differenceOriginRight, differenceOriginLeft);
 
-			// Differences between left/right and origin could come from resources that are present in the origin, but  were deleted in one of the sides. As these resources already exist in the origin, they
+			// Differences between left/right and origin could come from resources that are present in the
+			// origin, but were deleted in one of the sides. As these resources already exist in the origin,
+			// they
 			// need to be removed from the additionalStorages
 			additionalStorages.removeAll(origin);
 		}
@@ -1086,13 +1106,21 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	}
 
 	private Set<IStorage> resolveTraversal(IFile file, Set<URI> bounds) {
-		final Set<IStorage> traversal = new LinkedHashSet<IStorage>();
-
-		final Iterable<URI> dependencies = getDependenciesOf(file, bounds);
-		for (URI uri : dependencies) {
-			traversal.add(getFileAt(uri));
+		final URI baseUri = createURIFor(file);
+		final Set<IStorage> traversalSet = new LinkedHashSet<IStorage>();
+		for (URI uri : getUriAndDependentUrisFromDependencyProvider(baseUri)) {
+			final IFile toResolve = getFileAt(uri);
+			final Iterable<URI> dependencies = getDependenciesOf(toResolve, bounds);
+			for (URI dep : dependencies) {
+				traversalSet.add(getFileAt(dep));
+			}
 		}
-		return traversal;
+		return traversalSet;
+	}
+
+	private Set<URI> getUriAndDependentUrisFromDependencyProvider(URI uri) {
+		final Set<URI> dependencies = dependencyProviderRegistry.getDependencies(uri);
+		return Sets.union(Collections.singleton(uri), dependencies);
 	}
 
 	private Set<IStorage> resolveRemoteTraversal(IStorageProviderAccessor storageAccessor, IStorage start,
@@ -1264,13 +1292,13 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 		lock.lock();
 		try {
-			if (resolvedResources.add(uri) && currentlyResolving.add(uri)) {
-				// Regardless of the amount of progress reported so far, use 0.1% of the space remaining in
-				// the monitor to process the next node.
-				monitor.setWorkRemaining(1000);
-				ListenableFuture<?> future = resolvingPool.submit(new ResourceResolver(resourceSet, uri,
-						monitor));
-				Futures.addCallback(future, new ResolvingFutureCallback(monitor, uri));
+			monitor.setWorkRemaining(1000);
+			for (URI currentUri : getUriAndDependentUrisFromDependencyProvider(uri)) {
+				if (resolvedResources.add(currentUri) && currentlyResolving.add(currentUri)) {
+					ListenableFuture<?> future = resolvingPool.submit(new ResourceResolver(resourceSet,
+							currentUri, monitor));
+					Futures.addCallback(future, new ResolvingFutureCallback(monitor, currentUri));
+				}
 			}
 		} finally {
 			lock.unlock();
@@ -1301,13 +1329,13 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 
 		lock.lock();
 		try {
-			if (resolvedResources.add(uri) && currentlyResolving.add(uri)) {
-				// Regardless of the amount of progress reported so far, use 0.1% of the space remaining in
-				// the monitor to process the next node.
-				monitor.setWorkRemaining(1000);
-				ListenableFuture<?> future = resolvingPool.submit(new RemoteResourceResolver(resourceSet,
-						uri, monitor));
-				Futures.addCallback(future, new ResolvingFutureCallback(monitor, uri));
+			monitor.setWorkRemaining(1000);
+			for (URI currentUri : getUriAndDependentUrisFromDependencyProvider(uri)) {
+				if (resolvedResources.add(currentUri) && currentlyResolving.add(currentUri)) {
+					ListenableFuture<?> future = resolvingPool.submit(new RemoteResourceResolver(resourceSet,
+							currentUri, monitor));
+					Futures.addCallback(future, new ResolvingFutureCallback(monitor, currentUri));
+				}
 			}
 		} finally {
 			lock.unlock();

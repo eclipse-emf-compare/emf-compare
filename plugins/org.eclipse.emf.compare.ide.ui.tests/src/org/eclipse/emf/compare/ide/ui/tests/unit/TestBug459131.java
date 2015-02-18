@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - refactorings
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.unit;
 
@@ -14,11 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.channels.FileChannel;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -146,19 +143,5 @@ public class TestBug459131 extends CompareTestCase {
 		assertTrue(rightTraversal.getStorages().contains(iRightFile2));
 		assertTrue(rightTraversal.getStorages().contains(iRightFile3));
 
-	}
-
-	private static void copyFile(File source, File dest) throws IOException {
-		FileChannel sourceChannel = null;
-		FileChannel destChannel = null;
-		FileInputStream fileInputStream = new FileInputStream(source);
-		sourceChannel = fileInputStream.getChannel();
-		FileOutputStream fileOutputStream = new FileOutputStream(dest);
-		destChannel = fileOutputStream.getChannel();
-		destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
-		sourceChannel.close();
-		destChannel.close();
-		fileInputStream.close();
-		fileOutputStream.close();
 	}
 }

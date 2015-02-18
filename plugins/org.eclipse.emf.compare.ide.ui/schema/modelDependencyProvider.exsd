@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.emf.compare.ide.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.eclipse.emf.compare.ide.ui" id="modelDependencyProvider" name="Model Dependency Provider"/>
+      </appinfo>
+      <documentation>
+         This extension point allows to add custom dependencies for model resources to the default model dependency resolution.
+
+This can be used when the default model resolution of EMF Compare, that is following incoming and outgoing references, is insufficient for certain model types. Thus, with this extension point, clients may add custom dependencies to be considered during the model resolution of certain model resources, which otherwise would not have been detected as being dependent.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="dependency" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="dependency">
+      <annotation>
+         <documentation>
+            This element allows to specify additional dependencies of the given URI. This can be used when dependencies exist by design but do not manifest in the files themselves.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The fully qualified name of a class that implements org.eclipse.emf.compare.ide.ui.dependency.IDependencyProvider
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.ide.ui.dependency.IDependencyProvider"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         4.1
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         An example for adding a model dependency provider through this extension point can be found in org.eclipse.emf.compare.diagram.ide.ui.papyrus/plugin.xml.
+
+&lt;extension point=&quot;org.eclipse.emf.compare.ide.ui.modelDependencyProvider&quot;&gt;
+   &lt;dependency
+         class=&quot;org.eclipse.emf.compare.diagram.ide.ui.papyrus.dependency.PapyrusDependencyProvider&quot;&gt;
+   &lt;/dependency&gt;
+&lt;/extension&gt;
+      </documentation>
+   </annotation>
+
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         See org.eclipse.emf.compare.diagram.ide.ui.papyrus/plugin.xml for an existing implementation.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="copyright"/>
+      </appinfo>
+      <documentation>
+         Copyright (c) 2015 EclipseSource Muenchen GmbH and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+      </documentation>
+   </annotation>
+
+</schema>

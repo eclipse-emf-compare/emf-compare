@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?>
 
 <!--
- Copyright (c) 2013, 2014 Obeo.
+ Copyright (c) 2013, 2015 Obeo and others.
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
  which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  
  Contributors:
      Obeo - initial API and implementation
+     Stefan Dirix - Bug 456699
 -->
 
 <plugin>
@@ -31,5 +32,11 @@
             class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.logical.view.PapyrusLMVHandler"
             ranking="20">
       </handler>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.ide.ui.modelDependencyProvider">
+      <dependency
+            class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.dependency.PapyrusDependencyProvider">
+      </dependency>
    </extension>
 </plugin>
