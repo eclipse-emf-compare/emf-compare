@@ -5,24 +5,25 @@ Element-Name: TestSuite.Core
 Element-Type: testsuite
 Element-Version: 2.0
 Id: _ehdoce1eEeOGobrROiM5Sw
-Q7-Runtime-Version: 1.3.11.201403141124
-Save-Time: 6/6/14 2:25 PM
+Q7-Runtime-Version: 1.3.14.201410230950
+Save-Time: 2/18/15 9:53 AM
 
 ------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8
 Content-Type: text/testcase
 Entry-Name: testcase-items
 
-_9VmgsGvEEeKSKM5olA1H5Q	//
-_AZgWkGvFEeKSKM5olA1H5Q	//
-_DPGqsGvFEeKSKM5olA1H5Q	//
-_Fy0koGvFEeKSKM5olA1H5Q	//
-_nfxl8G9_EeKmUfxl9qSLpg	//
-_vZy9gHUiEeKHfa7Gozlrbw	//
-_7yAy8XXIEeKwK6X4DjDh0A	//
-_5zaY4aspEeKckft8tQOilA	//
-_wHPGAN2TEeKlP8eyY8UqWw	//
-_Sn8K8BxTEeOvMsdEm-eT7w	//
-_CuxdML_CEeOnsqx26fWf_w	//
-_6W-jYb4iEeOsAoUpt_cnqw	//
+_9VmgsGvEEeKSKM5olA1H5Q	// kind: 'suite' name: 'ts001_2-way' path: 'tests/ts001_2-way.suite'
+_AZgWkGvFEeKSKM5olA1H5Q	// kind: 'suite' name: 'ts002_3-way' path: 'tests/ts002_3-way.suite'
+_DPGqsGvFEeKSKM5olA1H5Q	// kind: 'suite' name: 'ts003_filters' path: 'tests/ts003_filters.suite'
+_Fy0koGvFEeKSKM5olA1H5Q	// kind: 'suite' name: 'ts004_groups' path: 'tests/ts004_groups.suite'
+_nfxl8G9_EeKmUfxl9qSLpg	// kind: 'suite' name: 'ts005_egit' path: 'tests/ts005_egit.suite'
+_vZy9gHUiEeKHfa7Gozlrbw	// kind: 'suite' name: 'ts006_control' path: 'tests/ts006_control.suite'
+_7yAy8XXIEeKwK6X4DjDh0A	// kind: 'suite' name: 'ts007_merge' path: 'tests/ts007_merge.suite'
+_5zaY4aspEeKckft8tQOilA	// kind: 'suite' name: 'ts008_treeviewer' path: 'tests/ts008_treeviewer.suite'
+_wHPGAN2TEeKlP8eyY8UqWw	// kind: 'suite' name: 'ts009_logicalmodel' path: 'tests/ts009_logicalmodel.suite'
+_Sn8K8BxTEeOvMsdEm-eT7w	// kind: 'suite' name: 'ts015_properties_view' path: 'tests/ts015_properties_view.suite'
+_CuxdML_CEeOnsqx26fWf_w	// kind: 'suite' name: 'ts011_localhistory' path: 'tests/ts011_localhistory.suite'
+_6W-jYb4iEeOsAoUpt_cnqw	// kind: 'suite' name: 'ts016_preferences' path: 'tests/ts016_preferences.suite'
+_h9QRkbdLEeSzKYAU0FYwkQ	// kind: 'suite' name: 'ts012_notloadedfragment' path: 'tests/ts012_notloadedfragment.suite'
 
 ------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8--

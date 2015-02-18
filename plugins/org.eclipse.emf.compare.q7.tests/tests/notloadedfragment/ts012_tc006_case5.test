@@ -1,0 +1,308 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_re9b4LdMEeSzKYAU0FYwkQ
+Element-Name: ts012_tc006_case5
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _q2uw0LhVEeSt3uBPf4Syeg
+Q7-Runtime-Version: 1.3.15.201412220512
+Save-Time: 3/18/15 2:40 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test case tests the content of the SMV and the CMVs, and the synchronization between elements.
+
+TEST STEPS
+	1) Select the 3 ecore models and run a 3-way comparison (select origin/R1.ecore as ancestor) //asserts that the 3 models are selected
+	2) Check the content of the SMV and its default selected element
+    3) Check the content of the three CMVs (left, right, ancestor) and their default selected element
+    4) Check synchronization between SMV and CMVs
+	5) Switch to Default Group : Check the content of the SMV
+	6) Switch to By Kind Group : Check the content of the SMV
+	7) Switch to By Resource Group : Check the content of the SMV
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Package Explorer" | get-tree] {
+    select "case5/left/R1.ecore" "case5/origin/R1.ecore" "case5/right/R1.ecore"
+    get-menu "Compare With/Each Other" | click
+}
+with [get-window "Select Common Ancestor"] {
+    get-button "\'/case5/origin/R1.ecore\'" | click
+    get-button OK | click
+}
+with [get-editor "Compare (\'case5/right/R1.ecore\' - \'case5/left/R1.ecore\' - \'case5/right/R1.ecore\')"] {
+    get-button "Expand All" | click
+    get-button "Show Ancestor Pane" | click
+}
+// 3-way Group Provider
+with [get-editor "Compare (\'case5/right/R1.ecore\' - \'case5/left/R1.ecore\' - \'case5/right/R1.ecore\')"] {
+	// Check selection
+    with [get-tree] {
+        get-property "selection[0].path[0]" | equals "> case5/left/R1.ecore" | verify-true
+        get-property "selection[0].path[1]" | equals "> \\[ ... \\]" | verify-true
+        get-property "selection[0].path[2]" | equals "> F" | verify-true
+        get-property "selection[0].path[3]" | equals "H \\[eSubpackages delete\\]" | verify-true
+    }
+    with [get-tree -after [get-label "(Local: /)?case5/right/R1.ecore"]] {
+        get-property "selection[0].path[0]" | equals "\\[ ... \\]" | verify-true
+        get-property "selection[0].path[1]" | equals "\\[ ... \\] \\( R6.ecore \\)" | verify-true
+        get-property "selection[0].path[2]" | equals F | verify-true
+        get-property "selection[0].path[3]" | equals H | verify-true
+    }
+    with [get-tree -after [get-label "(Local: /)?case5/right/R1.ecore"] -index 1] {
+        get-property "selection[0].path[0]" | equals "\\[ ... \\]" | verify-true
+        get-property "selection[0].path[1]" | equals "\\[ ... \\] \\( R6.ecore \\)" | verify-true
+        get-property "selection[0].path[2]" | equals F | verify-true
+        get-property "selection[0].path[3]" | equals "                                          " | verify-true
+    }
+    with [get-tree -after [get-label "(Local: /)?case5/right/R1.ecore"] -index 2] {
+        get-property "selection[0].path[0]" | equals "\\[ ... \\]" | verify-true
+        get-property "selection[0].path[1]" | equals "\\[ ... \\] \\( R6.ecore \\)" | verify-true
+        get-property "selection[0].path[2]" | equals F | verify-true
+        get-property "selection[0].path[3]" | equals H | verify-true
+    }
+    
+    // Expand CMV's trees
+	get-tree -after [get-label "(Local: /)?case5/right/R1.ecore"] -index 1 | select "\\[ ... \\]" | expand-all
+
+	// Check content of SMV
+    with [get-tree] {
+        get-property "getItems().length" | equals 2 | verify-true
+        get-property "getItems().TreeItem[0].getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+            | equals "H [eSubpackages delete]" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals "> F" 
+            | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals "> [ ... ]" | verify-true
+        get-property "getItems().TreeItem[0].getText()" | equals "> case5/left/R1.ecore" | verify-true
+        get-property "getItems().TreeItem[1].getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 1 | verify-true
+        get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+            | equals "I [eSubpackages delete]" | verify-true
+        get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals "> G" 
+            | verify-true
+        get-property "getItems().TreeItem[1].getItems().TreeItem[0].getText()" | equals "> [ ... ]" | verify-true
+        get-property "getItems().TreeItem[1].getText()" | equals "> case5/right/R1.ecore" | verify-true
+    }
+    // Check content of ancestor CMV
+    with [get-tree -after [get-label "(Local: /)?case5/right/R1.ecore"]] {
+        get-property "getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().length" | equals 2 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+            | equals H | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals F 
+            | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals "[ ... ] ( R6.ecore )" 
+            | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().length" 
+            | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+            | equals I | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getText()" | equals G 
+            | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getText()" | equals "[ ... ] ( R7.ecore )" 
+            | verify-true
+        get-property "getItems().TreeItem[0].getText()" | equals "[ ... ]" | verify-true
+    }
+    // Check content of left CMV
+    with [get-tree -after [get-label "(Local: /)?case5/right/R1.ecore"] -index 1] {
+        get-property "getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().length" | equals 2 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+            | equals "" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals F 
+            | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals "[ ... ] ( R6.ecore )" 
+            | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().length" 
+            | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+            | equals I | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getText()" | equals G 
+            | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getText()" | equals "[ ... ] ( R7.ecore )" 
+            | verify-true
+        get-property "getItems().TreeItem[0].getText()" | equals "[ ... ]" | verify-true
+    }
+    // Check content of right CMV
+    with [get-tree -after [get-label "(Local: /)?case5/right/R1.ecore"] -index 2] {
+        get-property "getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().length" | equals 2 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+            | equals H | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals F 
+            | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals "[ ... ] ( R6.ecore )" 
+            | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().length" | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().length" 
+            | equals 1 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+            | equals 0 | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+            | equals "" | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getText()" | equals G 
+            | verify-true
+        get-property "getItems().TreeItem[0].getItems().TreeItem[1].getText()" | equals "[ ... ] ( R7.ecore )" 
+            | verify-true
+        get-property "getItems().TreeItem[0].getText()" | equals "[ ... ]" | verify-true
+    }
+}
+// Check Synchronization
+get-editor "Compare (\'case5/right/R1.ecore\' - \'case5/left/R1.ecore\' - \'case5/right/R1.ecore\')" | get-tree 
+    | select "> case5\\/right\\/R1.ecore/> \\[ ... \\]" | double-click
+with [get-editor "Compare (\'case5/right/R1.ecore\' - \'case5/left/R1.ecore\' - \'case5/right/R1.ecore\')"] {
+    with [get-tree] {
+        get-property "selection[0].path[0]" | equals "> case5/right/R1.ecore" | verify-true
+        get-property "selection[0].path[1]" | equals "> \\[ ... \\]" | verify-true
+    }
+    with [get-tree -after [get-label "case5/right/R1.ecore"]] {
+        get-property "selection[0].path[0]" | equals "\\[ ... \\]" | verify-true
+        get-property "selection[0].path[1]" | equals "\\[ ... \\] \\( R7.ecore \\)" | verify-true
+    }
+    with [get-tree -after [get-label "case5/right/R1.ecore"] -index 1] {
+        get-property "selection[0].path[0]" | equals "\\[ ... \\]" | verify-true
+        get-property "selection[0].path[1]" | equals "\\[ ... \\] \\( R7.ecore \\)" | verify-true
+    }
+    with [get-tree -after [get-label "case5/right/R1.ecore"] -index 2] {
+        get-property "selection[0].path[0]" | equals "\\[ ... \\]" | verify-true
+        get-property "selection[0].path[1]" | equals "\\[ ... \\] \\( R7.ecore \\)" | verify-true
+    }
+}
+// Default Group Provider
+get-editor "Compare (\'case5/right/R1.ecore\' - \'case5/left/R1.ecore\' - \'case5/right/R1.ecore\')" 
+    | get-button Groups | click -arrow
+get-menu Default | click
+get-window "Group preference" | get-button No | click
+get-editor "Compare (\'case5/right/R1.ecore\' - \'case5/left/R1.ecore\' - \'case5/right/R1.ecore\')" 
+    | get-button "Expand All" | click
+with [get-editor "Compare (\'case5/right/R1.ecore\' - \'case5/left/R1.ecore\' - \'case5/right/R1.ecore\')" | get-tree] {
+    get-property "getItems().length" | equals 1 | verify-true
+    get-property "getItems().TreeItem[0].getItems().length" | equals 2 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 1 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 1 
+        | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+        | equals 0 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "H [eSubpackages delete]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals "> F" 
+        | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals "> [ ... ] ( R6.ecore )" 
+        | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().length" | equals 1 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().length" | equals 1 
+        | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+        | equals 0 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "I [eSubpackages delete]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getText()" | equals "> G" 
+        | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[1].getText()" | equals "> [ ... ] ( R7.ecore )" 
+        | verify-true
+    get-property "getItems().TreeItem[0].getText()" | equals "> [ ... ]" | verify-true
+}
+// ByKind Group Provider
+get-editor "Compare (\'case5/right/R1.ecore\' - \'case5/left/R1.ecore\' - \'case5/right/R1.ecore\')" 
+    | get-button Groups | click -arrow
+get-menu "By Kind" | click
+get-window "Group preference" | get-button No | click
+get-editor "Compare (\'case5/right/R1.ecore\' - \'case5/left/R1.ecore\' - \'case5/right/R1.ecore\')" 
+    | get-button "Expand All" | click
+with [get-editor "Compare (\'case5/right/R1.ecore\' - \'case5/left/R1.ecore\' - \'case5/right/R1.ecore\')" | get-tree] {
+    get-property "getItems().length" | equals 1 | verify-true
+    get-property "getItems().TreeItem[0].getItems().length" | equals 1 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 2 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+        | equals 1 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+        | equals 0 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "H [eSubpackages delete]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "> F" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "> [ ... ] ( R6.ecore )" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[1].getItems().length" | equals 1 
+        | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().length" 
+        | equals 1 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" 
+        | equals 0 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "I [eSubpackages delete]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getText()" 
+        | equals "> G" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[1].getText()" 
+        | equals "> [ ... ] ( R7.ecore )" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals "> [ ... ]" | verify-true
+    get-property "getItems().TreeItem[0].getText()" | equals "> Deletions" | verify-true
+}
+// By Resource Group Provider
+get-editor "Compare (\'case5/right/R1.ecore\' - \'case5/left/R1.ecore\' - \'case5/right/R1.ecore\')" 
+    | get-button Groups | click -arrow
+get-menu "By Resource" | click
+get-window "Group preference" | get-button No | click
+get-editor "Compare (\'case5/right/R1.ecore\' - \'case5/left/R1.ecore\' - \'case5/right/R1.ecore\')" 
+    | get-button "Expand All" | click
+with [get-editor "Compare (\'case5/right/R1.ecore\' - \'case5/left/R1.ecore\' - \'case5/right/R1.ecore\')" | get-tree] {
+    get-property "getItems().length" | equals 2 | verify-true
+    get-property "getItems().TreeItem[0].getItems().length" | equals 1 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 1 | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 0 
+        | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "H [eSubpackages delete]" | verify-true
+    get-property "getItems().TreeItem[0].getItems().TreeItem[0].getText()" | equals "> F" | verify-true
+    get-property "getItems().TreeItem[0].getText()" | equals "left/R6.ecore <-> right/R6.ecore (origin/R6.ecore)" 
+        | verify-true
+    get-property "getItems().TreeItem[1].getItems().length" | equals 1 | verify-true
+    get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().length" | equals 1 | verify-true
+    get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 0 
+        | verify-true
+    get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
+        | equals "I [eSubpackages delete]" | verify-true
+    get-property "getItems().TreeItem[1].getItems().TreeItem[0].getText()" | equals "> G" | verify-true
+    get-property "getItems().TreeItem[1].getText()" | equals "left/R7.ecore <-> right/R7.ecore (origin/R7.ecore)" 
+        | verify-true
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

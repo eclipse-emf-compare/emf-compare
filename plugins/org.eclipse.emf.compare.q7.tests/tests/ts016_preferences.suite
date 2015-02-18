@@ -1,0 +1,50 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Element-Name: ts016_preferences
+Element-Type: testsuite
+Element-Version: 2.0
+Id: _6W-jYb4iEeOsAoUpt_cnqw
+Q7-Runtime-Version: 1.3.14.201410230950
+Save-Time: 2/18/15 9:52 AM
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test suite must validate all EMF Compare preferences
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8
+Content-Type: text/testcase
+Entry-Name: testcase-items
+
+_5EL-cL4lEeOsAoUpt_cnqw	//
+_DnS3UL8XEeO668you7X_bw	//
+_gRXVcL8fEeO668you7X_bw	//
+_9LfF8L8gEeO668you7X_bw	//
+_NWDZoL8tEeO668you7X_bw	//
+_o-04AL8jEeO668you7X_bw	//
+_VWetgL8lEeO668you7X_bw	//
+_9uEYIL8sEeO668you7X_bw	//
+_bXrFkL_CEeO668you7X_bw	//
+_4e5ogL_EEeO668you7X_bw	//
+_V6BB4L_1EeO668you7X_bw	//
+_B_vH8L_5EeO668you7X_bw	//
+_wGWZoL_6EeO668you7X_bw	//
+_c1RDIL_9EeO668you7X_bw	//
+_hIdrwL__EeO668you7X_bw	//
+_DalLgcCMEeO4Kq0OGaiB6A	//
+_qx7I0MCNEeO4Kq0OGaiB6A	//
+_Cf3vYMCPEeO4Kq0OGaiB6A	//
+_JFcTMcClEeO8eNTYV1NAnA	//
+_Q0SOMMClEeO8eNTYV1NAnA	//
+_WYvVQMClEeO8eNTYV1NAnA	//
+_cdYYQMClEeO8eNTYV1NAnA	//
+_iC5PQMClEeO8eNTYV1NAnA	//
+_2RcMMMClEeO8eNTYV1NAnA	//
+_utAJYMCwEeO8eNTYV1NAnA	//
+_HfAiEMC_EeO8eNTYV1NAnA	//
+_taYtIMC_EeO8eNTYV1NAnA	//
+_z9E-EMC_EeO8eNTYV1NAnA	//
+
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8--

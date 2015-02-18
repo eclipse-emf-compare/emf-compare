@@ -1,0 +1,24 @@
+--- Q7 testcase ---
+Format-Version: 1.0
+Q7-vendor: www.xored.com/q7
+Element-Name: ts012_notloadedfragment
+Element-Type: testsuite
+Element-Version: 2.0
+Id: _h9QRkbdLEeSzKYAU0FYwkQ
+Q7-Runtime-Version: 1.3.14.201410230950
+Save-Time: 2/19/15 5:53 PM
+
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8
+Content-Type: text/testcase
+Entry-Name: testcase-items
+
+_tTqJILdLEeSzKYAU0FYwkQ	// kind: 'test' name: 'ts012_tc001_case0' path: 'notloadedfragment/ts012_tc001_case0.test'
+_9lJ2ILdVEeSzKYAU0FYwkQ	// kind: 'test' name: 'ts012_tc002_case1' path: 'notloadedfragment/ts012_tc002_case1.test'
+_SkFQ0LhLEeSt3uBPf4Syeg	// kind: 'test' name: 'ts012_tc003_case2' path: 'notloadedfragment/ts012_tc003_case2.test'
+_8GWbULhREeSt3uBPf4Syeg	// kind: 'test' name: 'ts012_tc004_case3' path: 'notloadedfragment/ts012_tc004_case3.test'
+_hn-NILhTEeSt3uBPf4Syeg	// kind: 'test' name: 'ts012_tc005_case4' path: 'notloadedfragment/ts012_tc005_case4.test'
+_q2uw0LhVEeSt3uBPf4Syeg	// kind: 'test' name: 'ts012_tc006_case5' path: 'notloadedfragment/ts012_tc006_case5.test'
+_yntu8LhXEeSt3uBPf4Syeg	// kind: 'test' name: 'ts012_tc007_case6' path: 'notloadedfragment/ts012_tc007_case6.test'
+_0g9vkLhXEeSt3uBPf4Syeg	// kind: 'test' name: 'ts012_tc008_case7' path: 'notloadedfragment/ts012_tc008_case7.test'
+
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8--
