@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ASCII"?>
+<nodes:Node xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" name="Root">
+  <containmentRef1 xsi:type="nodes:NodeFeatureMapNonContainment" name="n" xmi:id="_n">
+  	<firstKeyNC href="#_q"/>
+  </containmentRef1>
+  <containmentRef1 xsi:type="nodes:Node" name="r" xmi:id="_r"/>
+  <containmentRef1 xsi:type="nodes:Node" name="q" xmi:id="_q"/>
+</nodes:Node>

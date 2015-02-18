@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Stefan Dirix - Bugs 450949, 453218 and 460923
+ *     Stefan Dirix - Bugs 450949, 453218, 460923 and 460675
  *******************************************************************************/
 package org.eclipse.emf.compare.diff;
 
@@ -632,7 +632,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 				// A value of a FeatureMap changed his key
 				if (isFeatureMapEntryKeyChange(equality, (FeatureMap.Entry)diffCandidate, originValues)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.CHANGE, DifferenceSource.LEFT);
-				} else if (isFeatureMapEntryMove(comparison, (FeatureMap.Entry)diffCandidate,
+				} else if (isFeatureMapValueMove(comparison, (FeatureMap.Entry)diffCandidate,
 						DifferenceSource.LEFT)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
 				} else {
@@ -662,7 +662,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 				if (isFeatureMapEntryKeyChange(equality, (FeatureMap.Entry)diffCandidate, originValues)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.CHANGE,
 							DifferenceSource.RIGHT);
-				} else if (isFeatureMapEntryMove(comparison, (FeatureMap.Entry)diffCandidate,
+				} else if (isFeatureMapValueMove(comparison, (FeatureMap.Entry)diffCandidate,
 						DifferenceSource.RIGHT)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.RIGHT);
 				} else {
@@ -742,7 +742,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 				// A value of a FeatureMap changed his key
 				if (isFeatureMapEntryKeyChange(equality, (FeatureMap.Entry)diffCandidate, rightValues)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.CHANGE, DifferenceSource.LEFT);
-				} else if (isFeatureMapEntryMove(comparison, (FeatureMap.Entry)diffCandidate,
+				} else if (isFeatureMapValueMove(comparison, (FeatureMap.Entry)diffCandidate,
 						DifferenceSource.LEFT)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
 				} else {
@@ -814,7 +814,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 	private boolean isFeatureMapMove(final Comparison comparison, final EStructuralFeature feature,
 			final Object diffCandidate, final List<Object> values, final DifferenceSource source) {
 		return FeatureMapUtil.isFeatureMap(feature)
-				&& isFeatureMapEntryMove(comparison, (FeatureMap.Entry)diffCandidate, source);
+				&& isFeatureMapValueMove(comparison, (FeatureMap.Entry)diffCandidate, source);
 	}
 
 	/**
@@ -899,22 +899,25 @@ public class DefaultDiffEngine implements IDiffEngine {
 	}
 
 	/**
-	 * Checks if the entry has its equivalent in the opposite side, and thus is a DifferenceKind.MOVE
-	 * difference.
+	 * Checks if the entry's value has its equivalent in the opposite side, and thus is a DifferenceKind.MOVE
+	 * difference. If the FeatureMapEntry is non-contained the method will return {@code false}.
 	 * 
 	 * @param comparison
 	 *            The comparison object.
 	 * @param entry
-	 *            The FeatureMap.Entry for which we try to find its equivalent.
+	 *            The FeatureMap.Entry which contains the value for which we try to find its equivalent.
 	 * @param side
 	 *            The given DifferenceSource of the entry.
-	 * @return true if the entry has its equivalent in the opposite side, false otherwise.
+	 * @return {@code true} if the entry's value has its equivalent in the opposite side and is contained
+	 *         within the feature map, {@code false} otherwise.
 	 */
-	private boolean isFeatureMapEntryMove(final Comparison comparison, FeatureMap.Entry entry,
+	private boolean isFeatureMapValueMove(final Comparison comparison, FeatureMap.Entry entry,
 			DifferenceSource side) {
 		final boolean move;
 		final Object entryValue = entry.getValue();
-		if (entryValue instanceof EObject) {
+		final EReference structuralFeature = (EReference)entry.getEStructuralFeature();
+
+		if (entryValue instanceof EObject && structuralFeature.isContainment()) {
 			final Match candidateMatch = comparison.getMatch((EObject)entryValue);
 
 			if (candidateMatch == null) {

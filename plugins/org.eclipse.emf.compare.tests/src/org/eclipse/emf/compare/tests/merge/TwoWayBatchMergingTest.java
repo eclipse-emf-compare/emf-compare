@@ -8,7 +8,7 @@
  * Contributors:
  *     Philip Langer - initial API and implementation
  *     Alexandra Buzila - Test case for bug 446252
- *     Stefan Dirix - Test case for bug 453749
+ *     Stefan Dirix - Test cases for bugs 453749 and 460675
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.merge;
 
@@ -202,6 +202,36 @@ public class TwoWayBatchMergingTest {
 		final Resource left = input.getMoveToFeatureMapL2RLeft();
 		final Resource right = input.getMoveToFeatureMapL2RRight();
 		batchMergeAndAssertEquality(left, right, Direction.LEFT_TO_RIGHT);
+	}
+
+	/**
+	 * Tests a scenario in which a non-containment feature map key is removed and the node to which it refers
+	 * is moved.
+	 * 
+	 * @throws IOException
+	 *             if {@link TwoWayMergeInputData} fails to load the test models.
+	 */
+	@Test
+	public void mergingFeatureMapKeyRemoveAndRefMoveL2R() throws IOException {
+		ResourceSet resourceSet = new ResourceSetImpl();
+		final Resource left = input.getFeatureMapKeyRemoveAndRefMoveL2RLeft(resourceSet);
+		final Resource right = input.getFeatureMapKeyRemoveAndRefMoveL2RRight(resourceSet);
+		batchMergeAndAssertEquality(left, right, Direction.LEFT_TO_RIGHT);
+	}
+
+	/**
+	 * Tests a scenario in which a non-containment feature map key is added and the node to which it refers is
+	 * moved.
+	 * 
+	 * @throws IOException
+	 *             if {@link TwoWayMergeInputData} fails to load the test models.
+	 */
+	@Test
+	public void mergingFeatureMapKeyAddAndRefMoveR2L() throws IOException {
+		ResourceSet resourceSet = new ResourceSetImpl();
+		final Resource left = input.getFeatureMapKeyAddAndRefMoveR2LLeft(resourceSet);
+		final Resource right = input.getFeatureMapKeyAddAndRefMoveR2LRight(resourceSet);
+		batchMergeAndAssertEquality(left, right, Direction.RIGHT_TO_LEFT);
 	}
 
 	/**
