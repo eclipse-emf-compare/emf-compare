@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -132,12 +133,18 @@ public class TestProject {
 		f.createNewFile();
 	}
 
-	public IFile createFile(String name, byte[] content) throws Exception {
+	public IFile createFile(String name, InputStream inputStream) throws Exception {
 		IFile file = project.getFile(name);
-		InputStream inputStream = new ByteArrayInputStream(content);
+		if (!file.getParent().exists()) {
+			((IFolder)file.getParent()).create(IResource.FORCE, true, new NullProgressMonitor());
+		}
 		file.create(inputStream, true, new NullProgressMonitor());
 
 		return file;
+	}
+
+	public IFile createFile(String name, byte[] content) throws Exception {
+		return createFile(name, new ByteArrayInputStream(content));
 	}
 
 	public IFolder createFolder(String name) throws Exception {

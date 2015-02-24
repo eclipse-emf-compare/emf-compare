@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.internal.utils;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterators.concat;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -236,7 +237,7 @@ public final class Graph<E> {
 	private Predicate<? super Node<E>> is(final E element) {
 		return new Predicate<Node<E>>() {
 			public boolean apply(Node<E> input) {
-				return input != null && input.getElement() == element;
+				return input != null && input.getElement().equals(element);
 			}
 		};
 	}
@@ -468,9 +469,10 @@ public final class Graph<E> {
 		 * Construct a new Node for the given element.
 		 * 
 		 * @param element
-		 *            The element for which we need a graph Node.
+		 *            The element for which we need a graph Node. This element must not be null.
 		 */
 		public Node(K element) {
+			Preconditions.checkNotNull(element);
 			this.element = element;
 			this.parentData = null;
 			this.parents = new LinkedHashSet<Node<K>>();
