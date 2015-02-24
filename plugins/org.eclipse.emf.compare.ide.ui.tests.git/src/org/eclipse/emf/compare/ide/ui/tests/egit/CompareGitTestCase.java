@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2013, 2014 Obeo and others
+ * Copyright (C) 2013, 2015 Obeo and others
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -29,6 +29,7 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
 import org.eclipse.emf.compare.ide.ui.internal.logical.StorageTypedElement;
@@ -39,6 +40,7 @@ import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.tests.CompareTestCase;
 import org.eclipse.emf.compare.ide.ui.tests.egit.fixture.GitTestRepository;
 import org.eclipse.emf.compare.ide.ui.tests.egit.fixture.MockSystemReader;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jgit.lib.Constants;
@@ -143,7 +145,10 @@ public class CompareGitTestCase extends CompareTestCase {
 		assertFalse(rightResourceSet.getResources().isEmpty());
 		assertFalse(originResourceSet.getResources().isEmpty());
 
-		return EMFCompare.builder().build().compare(scope, new BasicMonitor());
+		final Builder comparisonBuilder = EMFCompare.builder();
+		EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
+		
+		return comparisonBuilder.build().compare(scope, new BasicMonitor());
 	}
 	
 	protected static void assertDiffCount(List<Diff> differences, int expectedOutgoing, int expectedIncoming) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
-import org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -59,6 +59,7 @@ import org.junit.Before;
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
+@SuppressWarnings("restriction")
 public abstract class AbstractDifferenceOrderTest {
 
 	/**
@@ -200,11 +201,8 @@ public abstract class AbstractDifferenceOrderTest {
 	private Comparison getComparison(NotifierScopeProvider scopeProvider) throws IOException {
 		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(), scopeProvider
 				.getRight(), scopeProvider.getOrigin());
-		Builder builder = EMFCompare.builder();
-		Registry<?> postProcessorRegistry = getPostProcessorRegistry();
-		if (postProcessorRegistry != null) {
-			builder.setPostProcessorRegistry(postProcessorRegistry);
-		}
+		final Builder builder = EMFCompare.builder();
+		EMFCompareBuilderConfigurator.createDefault().configure(builder);
 		return builder.build().compare(scope);
 	}
 

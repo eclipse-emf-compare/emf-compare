@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,8 @@ import java.io.IOException;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.EMFCompare.Builder;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
@@ -50,7 +52,9 @@ public class MergeViewerItemFeatureMapsTest {
 		final Resource rightResource = inputData.getNodesRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(leftResource, rightResource, null);
-		comparison = EMFCompare.builder().build().compare(scope);
+		final Builder comparisonBuilder = EMFCompare.builder();
+		EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
+		comparison = comparisonBuilder.build().compare(scope);
 	}
 	
 	@Test

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -75,12 +75,20 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 				.getMatchEngineFactoryRegistry();
 		matchEngineFactoryRegistry.add(eObjectMatchEngineFactory);
 
-		Builder builder = EMFCompare.builder().setPostProcessorRegistry(
-				EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
-		if (enginePreferences != null) {
-			EMFCompareBuilderConfigurator engineProvider = new EMFCompareBuilderConfigurator(
-					enginePreferences, matchEngineFactoryRegistry);
+		final Builder builder = EMFCompare.builder();
+		final IEclipsePreferences preferences;
+		if (enginePreferences == null) {
+			preferences = EMFCompareRCPPlugin.getDefault().getEMFComparePreferences();
+		} else {
+			preferences = enginePreferences;
+		}
+		if (preferences != null) {
+			EMFCompareBuilderConfigurator engineProvider = new EMFCompareBuilderConfigurator(preferences,
+					matchEngineFactoryRegistry, EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
 			engineProvider.configure(builder);
+		} else {
+			builder.setMatchEngineFactoryRegistry(matchEngineFactoryRegistry).setPostProcessorRegistry(
+					EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
 		}
 		EMFCompare comparator = builder.build();
 

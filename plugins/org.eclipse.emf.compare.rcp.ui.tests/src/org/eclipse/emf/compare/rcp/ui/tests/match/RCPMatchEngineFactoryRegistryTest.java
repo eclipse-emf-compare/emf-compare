@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo.
+ * Copyright (c) 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,9 +8,10 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.rcp;
+package org.eclipse.emf.compare.rcp.ui.tests.match;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -24,19 +25,19 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine.Factory;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryImpl;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
-import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemRegistry;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
 import org.eclipse.emf.compare.rcp.internal.match.MatchEngineFactoryRegistryWrapper;
 import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
+import org.eclipse.emf.compare.rcp.ui.tests.match.data.EcoreInputData;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.tests.rcp.data.EcoreInputData;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,12 +46,12 @@ import org.osgi.service.prefs.BackingStoreException;
 /**
  * Test class for {@link MatchEngineFactoryRegistryWrapper}.
  * 
- * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
+ * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
 @SuppressWarnings({"restriction", "nls" })
-public class MatchEngineFactoryRegistryWrapperTest {
+public class RCPMatchEngineFactoryRegistryTest {
 
-	private MatchEngineFactoryRegistryWrapper registryWrapper;
+	private IMatchEngine.Factory.Registry registryWrapper;
 
 	private IEclipsePreferences preferences;
 
@@ -65,16 +66,10 @@ public class MatchEngineFactoryRegistryWrapperTest {
 		return new DefaultComparisonScope(ecoreData.getLeft(), ecoreData.getRight(), ecoreData.getOrigin());
 	}
 
-	// For Helios compatibility.
-	@SuppressWarnings("deprecation")
 	@Before
 	public void setUp() throws BackingStoreException {
-		ItemRegistry<Factory> registry = new ItemRegistry<IMatchEngine.Factory>();
-		// Mock preference node.
-		preferences = new InstanceScope()
-				.getNode("org.eclipse.emf.compare.tests.rcp.MatchEngineFactoryRegistryWrapperTest");
-		preferences.clear();
-		registryWrapper = new MatchEngineFactoryRegistryWrapper(registry, preferences);
+		preferences = EMFCompareRCPPlugin.getDefault().getEMFComparePreferences();
+		registryWrapper = EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry();
 	}
 
 	@After
@@ -90,11 +85,11 @@ public class MatchEngineFactoryRegistryWrapperTest {
 	@Test
 	public void testAdd() throws IOException {
 		IMatchEngine.Factory factory = new MockMatchEngineFactory1();
-		factory.setRanking(10);
+		factory.setRanking(50);
 		registryWrapper.add(factory);
 		IComparisonScope createComparisonScope = createComparisonScope();
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(createComparisonScope), factory);
-		assertEquals(registryWrapper.getMatchEngineFactories(createComparisonScope).size(), 1);
+		assertEquals(registryWrapper.getMatchEngineFactories(createComparisonScope).size(), 4);
 	}
 
 	/**
@@ -107,7 +102,7 @@ public class MatchEngineFactoryRegistryWrapperTest {
 		IMatchEngine.Factory factory = new MockMatchEngineFactory1();
 		registryWrapper.add(factory);
 		IMatchEngine.Factory factory2 = new MockMatchEngineFactory2();
-		factory2.setRanking(10);
+		factory2.setRanking(50);
 		registryWrapper.add(factory2);
 		IComparisonScope createComparisonScope = createComparisonScope();
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(createComparisonScope), factory2);
@@ -129,11 +124,12 @@ public class MatchEngineFactoryRegistryWrapperTest {
 	@Test
 	public void testAddSameID() throws IOException {
 		MockMatchEngineFactory1 factory1 = new MockMatchEngineFactory1();
-		factory1.setRanking(10);
+		factory1.setRanking(50);
 		registryWrapper.add(factory1);
 		MockMatchEngineFactory1 factory2 = new MockMatchEngineFactory1();
+		factory2.setRanking(50);
 		Factory oldValue = registryWrapper.add(factory2);
-		assertTrue(oldValue == factory1);
+		assertSame(oldValue, factory1);
 		IComparisonScope createComparisonScope = createComparisonScope();
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(createComparisonScope), factory2);
 	}
@@ -159,18 +155,6 @@ public class MatchEngineFactoryRegistryWrapperTest {
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(scope), factory3);
 		assertTrue(registryWrapper.getMatchEngineFactories(scope).containsAll(
 				Lists.newArrayList(factory, factory2, factory3)));
-	}
-
-	/**
-	 * Tries to get the highest ranking match engine factory from an empty registry.
-	 * 
-	 * @throws IOException
-	 */
-	@Test
-	public void testHighestRankingMatchEngineFactoryEmpty() throws IOException {
-		IComparisonScope scope = createComparisonScope();
-		assertEquals(registryWrapper.getHighestRankingMatchEngineFactory(scope), null);
-		assertTrue(registryWrapper.getMatchEngineFactories(scope).isEmpty());
 	}
 
 	/**
@@ -219,12 +203,12 @@ public class MatchEngineFactoryRegistryWrapperTest {
 	@Test
 	public void testRemove() throws IOException {
 		IMatchEngine.Factory factory = new MockMatchEngineFactory1();
-		factory.setRanking(10);
+		factory.setRanking(50);
 		registryWrapper.add(factory);
 
 		Factory oldValue = registryWrapper.remove(MockMatchEngineFactory1.class.getName());
 		assertSame(oldValue, factory);
-		assertTrue(registryWrapper.getMatchEngineFactories(createComparisonScope()).isEmpty());
+		assertFalse(registryWrapper.getMatchEngineFactories(createComparisonScope()).contains(factory));
 	}
 
 	/**
@@ -308,7 +292,7 @@ public class MatchEngineFactoryRegistryWrapperTest {
 
 		assertNotSame(registryWrapper, builderMatchEngineFactoryRegistry);
 
-		mockBuilder.setMatchEngineFactoryRegistry(registryWrapper);
+		EMFCompareBuilderConfigurator.createDefault().configure(mockBuilder);
 		mockBuilder.build();
 		builderMatchEngineFactoryRegistry = mockBuilder.getMatchEngineFactoryRegistry();
 

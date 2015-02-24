@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.rcp.ui.tests.match.RCPMatchEngineFactoryRegistryTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemFeatureMapsTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemPseudoConflictTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemTest;
@@ -38,7 +39,8 @@ import org.junit.runners.Suite.SuiteClasses;
 			   TestReferenceChangeTreeNodeItemProviderSpec.class,
 			   MergeViewerItemTest.class, MergeViewerItemPseudoConflictTest.class, MergeViewerItemFeatureMapsTest.class,
 			   TestBasicDifferenceGroupImpl.class, BugsTestSuite.class,
-			   TestFeatureMapDifferencesFilter.class})
+			   TestFeatureMapDifferencesFilter.class,
+			   RCPMatchEngineFactoryRegistryTest.class})
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

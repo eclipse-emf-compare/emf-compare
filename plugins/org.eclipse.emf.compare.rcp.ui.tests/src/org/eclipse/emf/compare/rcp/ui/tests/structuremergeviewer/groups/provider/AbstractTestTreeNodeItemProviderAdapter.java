@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.EMFCompare.Builder;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -38,6 +40,7 @@ import com.google.common.base.Predicate;
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
+@SuppressWarnings("restriction")
 public class AbstractTestTreeNodeItemProviderAdapter {
 
 	protected static TreeItemProviderAdapterFactorySpec treeItemProviderAdapterFactory;
@@ -54,7 +57,9 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 	protected static Comparison getComparison(ResourceScopeProvider scopeProvider) throws IOException {
 		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(), scopeProvider
 				.getRight(), scopeProvider.getOrigin());
-		return EMFCompare.builder().build().compare(scope);
+		final Builder builder = EMFCompare.builder();
+		EMFCompareBuilderConfigurator.createDefault().configure(builder);
+		return builder.build().compare(scope);
 	}
 
 	/**

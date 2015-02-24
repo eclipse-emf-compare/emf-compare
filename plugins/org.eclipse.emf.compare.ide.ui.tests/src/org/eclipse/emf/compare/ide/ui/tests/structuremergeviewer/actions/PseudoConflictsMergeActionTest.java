@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -28,12 +28,14 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeNodeItemProviderSpec;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.AbstractTestTreeNodeItemProviderAdapter;
@@ -81,7 +83,9 @@ public class PseudoConflictsMergeActionTest extends AbstractTestTreeNodeItemProv
 		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider
 				.getLeftPseudoConflictFullScope(), scopeProvider.getRightPseudoConflictFullScope(),
 				scopeProvider.getOriginPseudoConflictFullScope());
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Builder comparisonBuilder = EMFCompare.builder();
+		EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
+		final Comparison comparison = comparisonBuilder.build().compare(scope);
 
 		editingDomain = EMFCompareEditingDomain.create(scopeProvider.getLeftPseudoConflictFullScope(),
 				scopeProvider.getRightPseudoConflictFullScope(), scopeProvider

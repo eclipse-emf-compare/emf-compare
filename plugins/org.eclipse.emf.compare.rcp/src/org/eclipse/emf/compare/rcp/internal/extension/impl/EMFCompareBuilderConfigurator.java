@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,7 @@ import org.eclipse.emf.compare.conflict.IConflictDetector;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
-import org.eclipse.emf.compare.match.IMatchEngine.Factory.Registry;
+import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.IEMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
@@ -37,30 +37,39 @@ public class EMFCompareBuilderConfigurator implements IEMFCompareBuilderConfigur
 	/** Match engine factory registry. */
 	private final IMatchEngine.Factory.Registry matchEngineFactoryRegistry;
 
+	/** Post Processor registry. */
+	private final IPostProcessor.Descriptor.Registry<String> postProcessorRegistry;
+
 	/**
 	 * Constructor.
 	 * 
 	 * @param enginePreferences
 	 *            {@link EMFCompareBuilderConfigurator#enginePreferences}
 	 * @param matchEngineFactoryRegistry
-	 *            {@link IMatchEngine.Factory.Registry} that hold Match Engine factories.
+	 *            {@link IMatchEngine.Factory.Registry} that holds Match Engine factories.
+	 * @param postProcessorRegistry
+	 *            {@link IPostProcessor.Descriptor.Registry} that holds post processors.
 	 */
 	public EMFCompareBuilderConfigurator(IEclipsePreferences enginePreferences,
-			IMatchEngine.Factory.Registry matchEngineFactoryRegistry) {
+			IMatchEngine.Factory.Registry matchEngineFactoryRegistry,
+			IPostProcessor.Descriptor.Registry<String> postProcessorRegistry) {
 		Preconditions.checkNotNull(enginePreferences);
 		this.enginePreferences = enginePreferences;
 		this.matchEngineFactoryRegistry = matchEngineFactoryRegistry;
+		this.postProcessorRegistry = postProcessorRegistry;
 	}
 
 	/**
-	 * Get EMFCompareBuilderConfigurator with EMF Compare default values. Get the default preference store and
-	 * the default {@link IMatchEngine.Factory.Registry}.
+	 * Get EMFCompareBuilderConfigurator with EMF Compare default values. Get the default preference store,
+	 * the default {@link IMatchEngine.Factory.Registry} and the default
+	 * {@link IPostProcessor.Descriptor.Registry}.
 	 * 
 	 * @return Default EMFCompareBuilderConfigurator;
 	 */
 	public static EMFCompareBuilderConfigurator createDefault() {
 		return new EMFCompareBuilderConfigurator(EMFCompareRCPPlugin.getDefault().getEMFComparePreferences(),
-				EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry());
+				EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry(), EMFCompareRCPPlugin
+						.getDefault().getPostProcessorRegistry());
 	}
 
 	/**
@@ -111,9 +120,11 @@ public class EMFCompareBuilderConfigurator implements IEMFCompareBuilderConfigur
 	 * {@inheritDoc}
 	 */
 	public void configure(Builder builder) {
-		Registry matchEngineRegistry = matchEngineFactoryRegistry;
-		if (matchEngineRegistry != null) {
-			builder.setMatchEngineFactoryRegistry(matchEngineRegistry);
+		if (matchEngineFactoryRegistry != null) {
+			builder.setMatchEngineFactoryRegistry(matchEngineFactoryRegistry);
+		}
+		if (postProcessorRegistry != null) {
+			builder.setPostProcessorRegistry(postProcessorRegistry);
 		}
 
 		IDiffEngine diffEngine = getDiffEngine();
