@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramDiffAcce
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditDomain;
@@ -190,8 +191,8 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 		if (input instanceof IDiagramNodeAccessor) {
 			Diagram diagram = ((IDiagramNodeAccessor)input).getOwnedDiagram();
 			if (diagram != null) {
-				initEditingDomain(diagram);
-				if (currentDiag != diagram) {
+				TransactionalEditingDomain domain = getEditingDomain(diagram);
+				if (domain != null && currentDiag != diagram) {
 					DiagramRootEditPart rootEditPart = new DiagramRootEditPart(diagram.getMeasurementUnit());
 					// rootEditPart.getZoomManager().setZoomAnimationStyle(ZoomManager.ANIMATE_NEVER);
 					// rootEditPart.getZoomManager().setZoom(ZOOM_FACTOR);
@@ -231,20 +232,33 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 	}
 
 	/**
-	 * It creates an editing domain for this diagram.
+	 * It creates/retrieves an editing domain for this diagram.
 	 * 
 	 * @param diagram
 	 *            The diagram.
+	 * @return The editing domain for this diagram.
 	 */
-	private void initEditingDomain(Diagram diagram) {
+	private TransactionalEditingDomain getEditingDomain(Diagram diagram) {
+		final TransactionalEditingDomain domain;
 		ResourceSet resourceSet = null;
 		if (diagram != null) {
-			resourceSet = diagram.eResource().getResourceSet();
+			Resource resource = diagram.eResource();
+			if (resource != null) {
+				resourceSet = resource.getResourceSet();
+			}
 		}
-		if (resourceSet != null
-				&& TransactionalEditingDomain.Factory.INSTANCE.getEditingDomain(resourceSet) == null) {
-			TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
+		if (resourceSet != null) {
+			TransactionalEditingDomain existingDomain = TransactionalEditingDomain.Factory.INSTANCE
+					.getEditingDomain(resourceSet);
+			if (existingDomain == null) {
+				domain = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
+			} else {
+				domain = existingDomain;
+			}
+		} else {
+			domain = null;
 		}
+		return domain;
 	}
 
 	/**
