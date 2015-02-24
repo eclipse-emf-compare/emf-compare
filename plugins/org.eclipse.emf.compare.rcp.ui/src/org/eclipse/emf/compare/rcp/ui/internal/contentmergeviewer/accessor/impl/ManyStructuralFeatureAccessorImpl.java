@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,9 @@ import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -120,21 +123,27 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 	 * 
 	 * @param values
 	 *            the given values.
-	 * @return a list of newly created insertion points (IMegreViewerItems).
+	 * @return a list of newly created insertion points that implement {@link IMergeViewerItem}.
 	 */
 	private List<? extends IMergeViewerItem> createInsertionPoints(
 			final List<? extends IMergeViewerItem> values) {
 		List<IMergeViewerItem> ret = newArrayList(values);
 		for (Diff diff : getDifferences().reverse()) {
-			boolean rightToLeft = getSide() == MergeViewerSide.LEFT;
+			boolean isLeft = getSide() == MergeViewerSide.LEFT;
 			Object left = getValueFromDiff(diff, MergeViewerSide.LEFT);
 			Object right = getValueFromDiff(diff, MergeViewerSide.RIGHT);
 
-			final boolean leftEmptyBox = getSide() == MergeViewerSide.LEFT
+			final boolean leftEmptyBox = isLeft
 					&& (left == null || !getFeatureValues(getSide()).contains(left));
-			final boolean rightEmptyBox = getSide() == MergeViewerSide.RIGHT
+			final boolean rightEmptyBox = !isLeft
 					&& (right == null || !getFeatureValues(getSide()).contains(right));
 			if (leftEmptyBox || rightEmptyBox) {
+				// Bug 458818: Don't display a delete+moved element twice
+				// If the diff is part of a conflict,
+				// we don't want to display both the MOVE and the DELETE on the same side
+				if (diff.getKind() == DifferenceKind.MOVE && isPartOfConflictWithDelete(diff)) {
+					continue;
+				}
 				Object ancestor = getValueFromDiff(diff, MergeViewerSide.ANCESTOR);
 				if (leftEmptyBox) {
 					left = null;
@@ -145,7 +154,7 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 				IMergeViewerItem insertionPoint = new MergeViewerItem(getComparison(), diff, left, right,
 						ancestor, getSide(), getRootAdapterFactory());
 
-				final int insertionIndex = Math.min(findInsertionIndex(diff, rightToLeft), ret.size());
+				final int insertionIndex = Math.min(findInsertionIndex(diff, isLeft), ret.size());
 				List<IMergeViewerItem> subList = ret.subList(0, insertionIndex);
 				final int nbInsertionPointBefore = size(filter(subList, IMergeViewerItem.IS_INSERTION_POINT));
 
@@ -154,6 +163,17 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 			}
 		}
 		return ret;
+	}
+
+	private boolean isPartOfConflictWithDelete(final Diff diff) {
+		if (diff.getConflict() == null) {
+			return false;
+		}
+		return Iterables.any(diff.getConflict().getDifferences(), new Predicate<Diff>() {
+			public boolean apply(Diff aDiff) {
+				return diff != aDiff && aDiff.getKind() == DifferenceKind.DELETE;
+			}
+		});
 	}
 
 	/**

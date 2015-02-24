@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo and others.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -485,20 +485,23 @@ public final class ComparisonUtil {
 	 */
 	public static EObject getExpectedSide(Match match, DifferenceSource source, boolean mergeRightToLeft) {
 		final EObject result;
+		// Bug 458818: prevent NPE if match is null
+		if (match != null) {
+			final boolean undoingLeft = mergeRightToLeft && source == DifferenceSource.LEFT;
+			final boolean undoingRight = !mergeRightToLeft && source == DifferenceSource.RIGHT;
 
-		final boolean undoingLeft = mergeRightToLeft && source == DifferenceSource.LEFT;
-		final boolean undoingRight = !mergeRightToLeft && source == DifferenceSource.RIGHT;
+			final Comparison comparison = match.getComparison();
 
-		final Comparison comparison = match.getComparison();
-
-		if (comparison.isThreeWay() && (undoingLeft || undoingRight) && match.getOrigin() != null) {
-			result = match.getOrigin();
-		} else if (mergeRightToLeft) {
-			result = match.getRight();
+			if (comparison.isThreeWay() && (undoingLeft || undoingRight) && match.getOrigin() != null) {
+				result = match.getOrigin();
+			} else if (mergeRightToLeft) {
+				result = match.getRight();
+			} else {
+				result = match.getLeft();
+			}
 		} else {
-			result = match.getLeft();
+			result = null;
 		}
-
 		return result;
 	}
 

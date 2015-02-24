@@ -249,33 +249,30 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		fLeft.setInput(left);
 		fRight.setInput(right);
 
-		updateSelection(left);
-	}
-
-	protected void updateSelection(Object left) {
-		// must update selection after the three viewers input has been set
-		// to avoid some NPE/AssertionError (they are calling each other on selectionChanged event to
-		// synchronize their selection)
-
 		IMergeViewerItem leftInitialItem = null;
 		if (left instanceof ICompareAccessor) {
 			leftInitialItem = ((ICompareAccessor)left).getInitialItem();
 		}
-
-		ISelection leftSelection = createSelectionOrEmpty(leftInitialItem);
-		fLeft.setSelection(leftSelection, true); // others will synchronize on this one :)
-
-		redrawCenterControl();
-	}
-
-	private ISelection createSelectionOrEmpty(final Object o) {
-		final ISelection selection;
-		if (o != null) {
-			selection = new StructuredSelection(o);
+		// Bug 458818: In some cases, the left initial item is null because
+		// the item that should be selected has been deleted on the right
+		// and this delete is part of a conflict
+		if (leftInitialItem == null) {
+			if (right instanceof ICompareAccessor) {
+				IMergeViewerItem rightInitialItem = ((ICompareAccessor)right).getInitialItem();
+				if (rightInitialItem == null) {
+					fLeft.setSelection(StructuredSelection.EMPTY, true);
+				} else {
+					fRight.setSelection(new StructuredSelection(rightInitialItem), true);
+				}
+			} else {
+				// Strange case: left is an ICompareAccessor but right is not?
+				fLeft.setSelection(StructuredSelection.EMPTY, true);
+			}
 		} else {
-			selection = StructuredSelection.EMPTY;
+			// others will synchronize on this one :)
+			fLeft.setSelection(new StructuredSelection(leftInitialItem), true);
 		}
-		return selection;
+		redrawCenterControl();
 	}
 
 	/**
