@@ -295,10 +295,6 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			}
 		};
 
-		// FIXME: a better solution will be that MergeViewerItem have ItemProviders (on the same principle
-		// than TreeNodes).
-		labelProvider.setFireLabelUpdateNotifications(true);
-
 		mergeTreeViewer.setLabelProvider(labelProvider);
 
 		mergeTreeViewer.getStructuredViewer().getTree().addListener(SWT.Collapse,

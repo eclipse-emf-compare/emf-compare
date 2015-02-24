@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 import com.google.common.base.Predicate;
 import com.google.common.eventbus.Subscribe;
 
+import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.Map;
@@ -64,6 +65,8 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.DisposeEvent;
@@ -372,10 +375,79 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			setRightDirty(commandStack.isRightSaveNeeded());
 		}
 
-		Command mostRecentCommand = ((CommandStack)event.getSource()).getMostRecentCommand();
+		final Command mostRecentCommand = ((CommandStack)event.getSource()).getMostRecentCommand();
 		if (mostRecentCommand instanceof ICompareCopyCommand) {
 			SWTUtil.safeRefresh(this, true, false);
+		} else if (mostRecentCommand != null) {
+			// Model has changed, but not by EMFCompare. Typical case is update from properties view.
+			// In this case, we don't want to refresh all viewers and lost selected element, just refresh
+			// appropriate side and keep selected element.
+			IMergeViewer affectedMergeViewer = getAffectedMergeViewer(mostRecentCommand);
+			if (affectedMergeViewer instanceof Viewer) {
+				SWTUtil.safeRefresh(((Viewer)affectedMergeViewer), true, false);
+			}
 		}
+	}
+
+	/**
+	 * Get the merge viewer affected by this command.
+	 * 
+	 * @param command
+	 *            the command.
+	 * @return the merge viewer affected by this command if found, null otherwise.
+	 */
+	private IMergeViewer getAffectedMergeViewer(Command command) {
+		final IMergeViewer viewer;
+		final IMergeViewer leftMergeViewer = this.getLeftMergeViewer();
+		final ISelection leftSelection = leftMergeViewer.getSelection();
+		final Collection<?> affectedObjects = command.getAffectedObjects();
+		if (affectedObjects != null && !affectedObjects.isEmpty()) {
+			Object firstAffectedObject = affectedObjects.iterator().next();
+			if (firstAffectedObject.equals(getElement(leftSelection, MergeViewerSide.LEFT))) {
+				viewer = leftMergeViewer;
+			} else if (firstAffectedObject.equals(getElement(leftSelection, MergeViewerSide.RIGHT))) {
+				viewer = this.getRightMergeViewer();
+			} else if (firstAffectedObject.equals(getElement(leftSelection, MergeViewerSide.ANCESTOR))) {
+				viewer = this.getAncestorMergeViewer();
+			} else {
+				viewer = null;
+			}
+		} else {
+			viewer = null;
+		}
+		return viewer;
+	}
+
+	/**
+	 * From the given selection, get the model element from the given side.
+	 * 
+	 * @param selection
+	 *            the given selection.
+	 * @param side
+	 *            the given side.
+	 * @return the model element from the given side if it exists, null otherwise.
+	 */
+	private Object getElement(ISelection selection, MergeViewerSide side) {
+		final Object element;
+		if (selection instanceof TreeSelection) {
+			Object firstElement = ((TreeSelection)selection).getFirstElement();
+			if (firstElement instanceof IMergeViewerItem) {
+				if (MergeViewerSide.LEFT == side) {
+					element = ((IMergeViewerItem)firstElement).getLeft();
+				} else if (MergeViewerSide.RIGHT == side) {
+					element = ((IMergeViewerItem)firstElement).getRight();
+				} else if (MergeViewerSide.ANCESTOR == side) {
+					element = ((IMergeViewerItem)firstElement).getAncestor();
+				} else {
+					element = null;
+				}
+			} else {
+				element = null;
+			}
+		} else {
+			element = null;
+		}
+		return element;
 	}
 
 	/**
