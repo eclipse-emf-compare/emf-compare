@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Stefan Dirix - bugs 441172, 452147 and 460902
+ *     Stefan Dirix - bugs 441172, 452147, 460902 and 460923
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.merge;
 
@@ -29,9 +29,11 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -1348,6 +1350,49 @@ public class MultipleMergeTest {
 		for (Diff diff : differences) {
 			if (diff != addFirstKey) {
 				mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+			}
+		}
+
+		// Check if no differences are left
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertEquals(0, comparison.getDifferences().size());
+	}
+
+	@Test
+	public void testRemoveFeatureMapR2L() throws IOException {
+		ResourceSetImpl resourceSet = new ResourceSetImpl();
+
+		final Resource left = twoWayInput.getRemoveFeatureMapR2LLeft(resourceSet);
+		final Resource right = twoWayInput.getRemoveFeatureMapR2LRight(resourceSet);
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+
+		// There should be 5 differences
+		// 1. Remove first key (ReferenceChange)
+		// 2. Remove first key (FeatureMapChange)
+		// 3. Remove second key (ReferenceChange)
+		// 4. Remove second key (FeatureMapChange)
+		// 5. Remove NodeFeatureMapContainment (ReferenceChange)
+		assertEquals(5, comparison.getDifferences().size());
+
+		// Also test dependencies by merging the FeatureMapChanges first
+		Iterator<Diff> featureMapChangesIt = Iterators.filter(differences.iterator(),
+				instanceOf(FeatureMapChange.class));
+		List<Diff> featureMapChanges = Lists.newArrayList(featureMapChangesIt);
+		assertEquals(2, featureMapChanges.size());
+
+		// Execute FeatureMapChanges first to test if they properly resolve their dependencies
+		for (Diff diff : featureMapChanges) {
+			mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		}
+
+		// Execute the remaining differences
+		for (Diff diff : differences) {
+			if (!featureMapChanges.contains(diff)) {
+				mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 			}
 		}
 

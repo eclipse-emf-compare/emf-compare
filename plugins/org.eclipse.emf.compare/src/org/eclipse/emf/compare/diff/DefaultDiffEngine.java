@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Stefan Dirix - Bugs 450949 and 453218
+ *     Stefan Dirix - Bugs 450949, 453218 and 460923
  *******************************************************************************/
 package org.eclipse.emf.compare.diff;
 
@@ -761,20 +761,14 @@ public class DefaultDiffEngine implements IDiffEngine {
 			}
 
 			// A value that is in the right but not in the left has been deleted or moved.
-
-			// However, we do not want attribute changes on removed elements and in case of a FeatureMapChange
-			// of kind DifferenceKind.CHANGE
-			if (feature instanceof EReference || match.getLeft() != null) {
-				if (isFeatureMapMoveFromNonFeatureMapContainment(comparison, feature, diffCandidate,
-						leftValues, DifferenceSource.LEFT)) {
-					// add move change if the move originates from a non-feature-map containment.
-					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
-				} else if (!isFeatureMapChangeOrMove(comparison, feature, diffCandidate, leftValues,
-						DifferenceSource.LEFT)) {
-					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE, DifferenceSource.LEFT);
-				}
+			if (isFeatureMapMoveFromNonFeatureMapContainment(comparison, feature, diffCandidate, leftValues,
+					DifferenceSource.LEFT)) {
+				// add move change if the move originates from a non-feature-map containment.
+				featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
+			} else if (!isFeatureMapChangeOrMove(comparison, feature, diffCandidate, leftValues,
+					DifferenceSource.LEFT)) {
+				featureChange(match, feature, diffCandidate, DifferenceKind.DELETE, DifferenceSource.LEFT);
 			}
-
 		}
 	}
 
