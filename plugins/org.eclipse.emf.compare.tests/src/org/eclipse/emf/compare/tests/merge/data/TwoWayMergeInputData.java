@@ -8,7 +8,7 @@
  * Contributors:
  *     Philip Langer - initial API and implementation
  *     Alexandra Buzila - test data for bug 446252
- *     Stefan Dirix - test data for bugs 452147 and 453749
+ *     Stefan Dirix - test data for bugs 452147, 453749 and 460902
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.merge.data;
 
@@ -106,5 +106,13 @@ public class TwoWayMergeInputData extends AbstractInputData {
 
 	public Resource getOneToOneRefMergeR2LRight() throws IOException {
 		return loadFromClassLoader("twoway/onetoonerefmerge/rtl/right.nodes");
+	}
+
+	public Resource getFeatureMapDependencyL2RLeft(ResourceSet resourceSet) throws IOException {
+		return loadFromClassLoader("twoway/featuremapdependency/ltr/left.nodes", resourceSet);
+	}
+
+	public Resource getFeatureMapDependencyL2RRight(ResourceSet resourceSet) throws IOException {
+		return loadFromClassLoader("twoway/featuremapdependency/ltr/right.nodes", resourceSet);
 	}
 }

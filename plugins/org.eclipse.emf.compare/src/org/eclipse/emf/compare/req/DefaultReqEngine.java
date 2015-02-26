@@ -7,11 +7,13 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - Bug 460902
  *******************************************************************************/
 package org.eclipse.emf.compare.req;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.filter;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isAddOrSetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
@@ -290,15 +292,16 @@ public class DefaultReqEngine implements IReqEngine {
 	 *            The given difference.
 	 * @return The found differences.
 	 */
-	private Set<ReferenceChange> getDELOutgoingReferences(Comparison comparison, Diff sourceDifference) {
-		Set<ReferenceChange> result = new HashSet<ReferenceChange>();
+	private Set<Diff> getDELOutgoingReferences(Comparison comparison, Diff sourceDifference) {
+		Set<Diff> result = new HashSet<Diff>();
 
 		EObject value = getValue(comparison, sourceDifference);
 
 		if (value != null) {
 			final Match valueMatch = comparison.getMatch(value);
 			if (valueMatch != null) {
-				for (ReferenceChange candidate : filter(valueMatch.getDifferences(), ReferenceChange.class)) {
+				for (Diff candidate : filter(valueMatch.getDifferences(), or(
+						instanceOf(ReferenceChange.class), instanceOf(FeatureMapChange.class)))) {
 					if (candidate.getKind() == DifferenceKind.DELETE || isDeleteOrUnsetDiff(candidate)) {
 						result.add(candidate);
 					}
@@ -344,7 +347,7 @@ public class DefaultReqEngine implements IReqEngine {
 
 	/**
 	 * Checks whether the given diff corresponds to a containment change. This holds true for differences on
-	 * containment references' values, but also for resource attachment changes.
+	 * containment references' values, but also for feature map or resource attachment changes.
 	 * 
 	 * @param diff
 	 *            The diff to consider.
@@ -353,7 +356,7 @@ public class DefaultReqEngine implements IReqEngine {
 	 */
 	private static boolean isReferenceContainment(Diff diff) {
 		return diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment()
-				|| diff instanceof ResourceAttachmentChange;
+				|| diff instanceof ResourceAttachmentChange || diff instanceof FeatureMapChange;
 	}
 
 	/**

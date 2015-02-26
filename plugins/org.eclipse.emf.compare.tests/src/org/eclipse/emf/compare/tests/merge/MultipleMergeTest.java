@@ -7,11 +7,12 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Stefan Dirix - bugs 441172 and 452147
+ *     Stefan Dirix - bugs 441172, 452147 and 460902
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.merge;
 
 import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.instanceOf;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
@@ -39,6 +40,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
@@ -52,6 +54,7 @@ import org.eclipse.emf.compare.tests.merge.data.TwoWayMergeInputData;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
@@ -1312,6 +1315,43 @@ public class MultipleMergeTest {
 		}
 
 		// check if no differences between models are left
+		comparison = EMFCompare.builder().build().compare(scope);
+		assertEquals(0, comparison.getDifferences().size());
+	}
+
+	@Test
+	public void testFeatureMapDependencyL2R() throws IOException {
+		ResourceSetImpl resourceSet = new ResourceSetImpl();
+
+		final Resource left = twoWayInput.getFeatureMapDependencyL2RLeft(resourceSet);
+		final Resource right = twoWayInput.getFeatureMapDependencyL2RRight(resourceSet);
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+
+		// There should be 3 differences
+		// 1. Add first key (ReferenceChange)
+		// 2. Add first key (FeatureMapChange)
+		// 3. Add NodeFeatureMapContainment (ReferenceChange)
+		assertEquals(3, comparison.getDifferences().size());
+
+		FeatureMapChange addFirstKey = (FeatureMapChange)Iterators.find(differences.iterator(),
+				instanceOf(FeatureMapChange.class));
+		assertNotNull(addFirstKey);
+
+		// Execute FeatureMapChange to test if it properly resolves its dependencies
+		mergerRegistry.getHighestRankingMerger(addFirstKey).copyLeftToRight(addFirstKey, new BasicMonitor());
+
+		// Execute the remaining differences
+		for (Diff diff : differences) {
+			if (diff != addFirstKey) {
+				mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+			}
+		}
+
+		// Check if no differences are left
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertEquals(0, comparison.getDifferences().size());
 	}
