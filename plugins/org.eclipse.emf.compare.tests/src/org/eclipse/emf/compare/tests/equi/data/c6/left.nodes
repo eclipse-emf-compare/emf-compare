@@ -6,8 +6,8 @@
     xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes"
     xmi:id="_root"
     name="Root">
-  <containmentRef1 xsi:type="nodes:NodeOppositeRefOneToOne" name="Node1" source="Node3"/>
-  <containmentRef1 xsi:type="nodes:NodeOppositeRefOneToOne" name="Node2"/>
-  <containmentRef1 xsi:type="nodes:NodeOppositeRefOneToOne" name="Node3" destination="Node1"/>
-  <containmentRef1 xsi:type="nodes:NodeOppositeRefOneToOne" name="Node4"/>
+  <containmentRef1 xsi:type="nodes:NodeOppositeRefOneToOne" name="Node1" source="_node3" xmi:id="_node1"/>
+  <containmentRef1 xsi:type="nodes:NodeOppositeRefOneToOne" name="Node2" xmi:id="_node2"/>
+  <containmentRef1 xsi:type="nodes:NodeOppositeRefOneToOne" name="Node3" destination="_node1" xmi:id="_node3"/>
+  <containmentRef1 xsi:type="nodes:NodeOppositeRefOneToOne" name="Node4" xmi:id="_node4"/>
 </nodes:Node>

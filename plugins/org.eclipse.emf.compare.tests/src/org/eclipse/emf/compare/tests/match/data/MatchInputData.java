@@ -34,4 +34,28 @@ public class MatchInputData extends AbstractInputData {
 	public Resource getProxyMatchingA2Right() throws IOException {
 		return loadFromClassLoader("proxy/a2/right.nodes", new ResourceSetImpl());
 	}
+
+	public Resource getSetIDAttributeLeft() throws IOException {
+		return loadFromClassLoader("setidattribute/left.nodes");
+	}
+
+	public Resource getSetIDAttributeRight() throws IOException {
+		return loadFromClassLoader("setidattribute/right.nodes");
+	}
+
+	public Resource getXMIIDPriorityA1Left() throws IOException {
+		return loadFromClassLoader("xmiidpriority/a1/left.nodes");
+	}
+
+	public Resource getXMIIDPriorityA1Right() throws IOException {
+		return loadFromClassLoader("xmiidpriority/a1/right.nodes");
+	}
+
+	public Resource getXMIIDPriorityA2Left() throws IOException {
+		return loadFromClassLoader("xmiidpriority/a2/left.nodes");
+	}
+
+	public Resource getXMIIDPriorityA2Right() throws IOException {
+		return loadFromClassLoader("xmiidpriority/a2/right.nodes");
+	}
 }

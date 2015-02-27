@@ -3,7 +3,8 @@
     xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes"
-    name="Root">
-  <containmentRef2 xsi:type="nodes:Node" name="A"/>
-  <containmentRef2 xsi:type="nodes:Node" name="B"/>
+    name="Root"
+    xmi:id="_r">
+  <containmentRef2 xsi:type="nodes:Node" name="A" xmi:id="_a"/>
+  <containmentRef2 xsi:type="nodes:Node" name="B" xmi:id="_b"/>
 </nodes:NodeMultipleContainment>

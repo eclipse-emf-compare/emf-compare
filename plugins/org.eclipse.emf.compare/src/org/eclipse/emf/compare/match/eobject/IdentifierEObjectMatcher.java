@@ -9,7 +9,7 @@
  *     Obeo - initial API and implementation
  *     Alexandra Buzila - Bug 450360
  *     Philip Langer - Bug 460778
- *     Stefan Dirix - Bugs 461011 and 461291
+ *     Stefan Dirix - Bugs 457652, 461011 and 461291
  *******************************************************************************/
 package org.eclipse.emf.compare.match.eobject;
 
@@ -61,8 +61,8 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	 * the following logic, in order (i.e. if condition 1 is fulfilled, we will not try conditions 2 and 3) :
 	 * <ol>
 	 * <li>If the given eObject is a proxy, it is uniquely identified by its URI fragment.</li>
-	 * <li>If the eObject's EClass has an eIdAttribute set, use this attribute's value.</li>
 	 * <li>If the eObject is located in an XMI resource and has an XMI ID, use this as its unique identifier.</li>
+	 * <li>If the eObject's EClass has an eIdAttribute set, use this attribute's value.</li>
 	 * </ol>
 	 */
 	private Function<EObject, String> idComputation = new DefaultIDFunction();
@@ -418,16 +418,17 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 			} else if (eObject.eIsProxy()) {
 				identifier = ((InternalEObject)eObject).eProxyURI().fragment();
 			} else {
-				String functionalId = EcoreUtil.getID(eObject);
-				if (functionalId != null) {
-					identifier = functionalId;
+				final Resource eObjectResource = eObject.eResource();
+				final String xmiID;
+				if (eObjectResource instanceof XMIResource) {
+					xmiID = ((XMIResource)eObjectResource).getID(eObject);
 				} else {
-					final Resource eObjectResource = eObject.eResource();
-					if (eObjectResource instanceof XMIResource) {
-						identifier = ((XMIResource)eObjectResource).getID(eObject);
-					} else {
-						identifier = null;
-					}
+					xmiID = null;
+				}
+				if (xmiID != null) {
+					identifier = xmiID;
+				} else {
+					identifier = EcoreUtil.getID(eObject);
 				}
 			}
 			return identifier;
