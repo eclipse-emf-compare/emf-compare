@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - [446947] Adds support for three-way text merging 
+ *     Philip Langer - [446947, 458147] Support for three-way text merging 
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
@@ -133,14 +133,9 @@ public class AttributeChangeMerger extends AbstractMerger {
 	@SuppressWarnings("unchecked")
 	protected void addInTarget(AttributeChange diff, boolean rightToLeft) {
 		final Match match = diff.getMatch();
-		final EObject expectedContainer;
-		if (rightToLeft) {
-			expectedContainer = match.getLeft();
-		} else {
-			expectedContainer = match.getRight();
-		}
+		final EObject targetContainer = getTargetContainer(diff, rightToLeft);
 
-		if (expectedContainer == null) {
+		if (targetContainer == null) {
 			// FIXME throw exception? log? re-try to merge our requirements?
 			// one of the "required" diffs should have created our container.
 		} else {
@@ -151,10 +146,10 @@ public class AttributeChangeMerger extends AbstractMerger {
 			if (attribute.isMany()) {
 				final int insertionIndex = findInsertionIndex(comparison, diff, rightToLeft);
 
-				final List<Object> targetList = (List<Object>)safeEGet(expectedContainer, attribute);
+				final List<Object> targetList = (List<Object>)safeEGet(targetContainer, attribute);
 				addAt(targetList, expectedValue, insertionIndex);
 			} else {
-				safeESet(expectedContainer, attribute, expectedValue);
+				safeESet(targetContainer, attribute, expectedValue);
 			}
 		}
 	}
@@ -187,12 +182,7 @@ public class AttributeChangeMerger extends AbstractMerger {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void removeFromTarget(AttributeChange diff, boolean rightToLeft) {
-		final EObject currentContainer;
-		if (rightToLeft) {
-			currentContainer = diff.getMatch().getLeft();
-		} else {
-			currentContainer = diff.getMatch().getRight();
-		}
+		final EObject currentContainer = getTargetContainer(diff, rightToLeft);
 
 		if (currentContainer == null) {
 			// FIXME throw exception? log? re-try to merge our requirements?
@@ -222,12 +212,7 @@ public class AttributeChangeMerger extends AbstractMerger {
 	 *            Whether we should move the value in the left or right side.
 	 */
 	protected void moveElement(AttributeChange diff, boolean rightToLeft) {
-		final EObject expectedContainer;
-		if (rightToLeft) {
-			expectedContainer = diff.getMatch().getLeft();
-		} else {
-			expectedContainer = diff.getMatch().getRight();
-		}
+		final EObject expectedContainer = getTargetContainer(diff, rightToLeft);
 
 		if (expectedContainer == null) {
 			// TODO throws exception?
@@ -307,29 +292,15 @@ public class AttributeChangeMerger extends AbstractMerger {
 	 */
 	@Deprecated
 	protected void resetInTarget(AttributeChange diff, boolean rightToLeft) {
-		final Match match = diff.getMatch();
 		final EStructuralFeature attribute = diff.getAttribute();
-		final EObject targetContainer;
-		if (rightToLeft) {
-			targetContainer = match.getLeft();
-		} else {
-			targetContainer = match.getRight();
-		}
+		final EObject targetContainer = getTargetContainer(diff, rightToLeft);
+		final EObject sourceContainer = getSourceContainer(diff, rightToLeft);
 
-		final EObject originContainer;
-		if (match.getComparison().isThreeWay()) {
-			originContainer = match.getOrigin();
-		} else if (rightToLeft) {
-			originContainer = match.getRight();
-		} else {
-			originContainer = match.getLeft();
-		}
-
-		if (originContainer == null || !safeEIsSet(targetContainer, attribute)
-				|| !safeEIsSet(originContainer, attribute)) {
+		if (sourceContainer == null || !safeEIsSet(targetContainer, attribute)
+				|| !safeEIsSet(sourceContainer, attribute)) {
 			targetContainer.eUnset(attribute);
 		} else {
-			final Object expectedValue = safeEGet(originContainer, attribute);
+			final Object expectedValue = safeEGet(sourceContainer, attribute);
 			safeESet(targetContainer, attribute, expectedValue);
 		}
 	}
@@ -343,69 +314,149 @@ public class AttributeChangeMerger extends AbstractMerger {
 	 *            Direction of the merge.
 	 */
 	protected void changeValue(AttributeChange diff, boolean rightToLeft) {
-		final Match match = diff.getMatch();
 		final EStructuralFeature attribute = diff.getAttribute();
-		final EObject expectedContainer;
-		if (rightToLeft) {
-			expectedContainer = match.getLeft();
-		} else {
-			expectedContainer = match.getRight();
-		}
+		final Object targetValue = getTargetValue(diff, rightToLeft);
+		final EObject targetContainer = getTargetContainer(diff, rightToLeft);
 
-		final EObject originContainer;
-		final boolean resetToOrigin = diff.getSource() == DifferenceSource.LEFT && rightToLeft
-				|| diff.getSource() == DifferenceSource.RIGHT && !rightToLeft;
-		if (resetToOrigin && match.getComparison().isThreeWay()) {
-			originContainer = match.getOrigin();
-		} else if (rightToLeft) {
-			originContainer = match.getRight();
+		if (isUnset(diff, targetValue)) {
+			targetContainer.eUnset(attribute);
 		} else {
-			originContainer = match.getLeft();
+			safeESet(targetContainer, attribute, targetValue);
 		}
+	}
+
+	/**
+	 * Returns the target value, that is, the value to be set when merging the given {@code diff} in the
+	 * direction indicated by {@code rightToLeft}.
+	 * 
+	 * @param diff
+	 *            The diff we are currently merging.
+	 * @param rightToLeft
+	 *            Direction of the merge.
+	 * @return The target value to be set when merging.
+	 */
+	private Object getTargetValue(AttributeChange diff, boolean rightToLeft) {
+		final EStructuralFeature attribute = diff.getAttribute();
+		final EObject targetContainer = getTargetContainer(diff, rightToLeft);
+		final EObject sourceContainer = getSourceContainer(diff, rightToLeft);
+		final Object sourceValue = safeEGet(sourceContainer, attribute);
 
 		final Object targetValue;
-		final Object value = safeEGet(originContainer, attribute);
-
-		// Case of change of EnumLiteral of an attribute of a DynamicEObject : we need to retrieve the
-		// EnumLiteral instance of the target which is not the same than the source.
-		if (expectedContainer instanceof DynamicEObjectImpl && value instanceof EEnumLiteral) {
-			targetValue = ((EEnum)((EEnumLiteral)safeEGet(expectedContainer, attribute)).eContainer())
-					.getEEnumLiteral(((ENamedElement)value).getName());
-		} else if (requireThreeWayTextMerge(diff, rightToLeft)) {
-			targetValue = performThreeWayTextMerge(diff);
+		if (isEnumChangeOfDynamicEObject(diff, targetContainer)) {
+			final EEnum eEnum = getAttributeTypeEnumFromDynamicObject(targetContainer, attribute);
+			targetValue = eEnum.getEEnumLiteral(((ENamedElement)sourceValue).getName());
+		} else if (requireThreeWayTextMerge(diff)) {
+			targetValue = performThreeWayTextMerge(diff, rightToLeft);
 		} else {
-			targetValue = value;
+			targetValue = sourceValue;
 		}
 
-		// Though not the "default value", we consider that an empty string is an unset attribute.
-		final Object defaultValue = attribute.getDefaultValue();
-		boolean isUnset = targetValue == null || targetValue.equals(defaultValue)
+		return targetValue;
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} concerns a change of a dynamic EObject at an attribute with an
+	 * EEnum type.
+	 * 
+	 * @param diff
+	 *            The diff to check.
+	 * @param targetContainer
+	 *            The target container.
+	 * @return <code>true</code> if is a change of a dynamic EObject with an EEnum-typed attribute,
+	 *         <code>false</code> otherwise.
+	 */
+	private boolean isEnumChangeOfDynamicEObject(AttributeChange diff, EObject targetContainer) {
+		return diff.getAttribute().getEType() instanceof EEnum
+				&& targetContainer instanceof DynamicEObjectImpl;
+	}
+
+	/**
+	 * Returns the EEnum that is the attribute type of the given {@code attribute} used in the given container
+	 * object {@code dynamicObject}.
+	 * 
+	 * @param dynamicObject
+	 *            The container object.
+	 * @param attribute
+	 *            The attribute.
+	 * @return The EEnum acting as type of {@code attribute}.
+	 */
+	private EEnum getAttributeTypeEnumFromDynamicObject(EObject dynamicObject, EStructuralFeature attribute) {
+		return (EEnum)((EEnumLiteral)safeEGet(dynamicObject, attribute)).eContainer();
+	}
+
+	/**
+	 * Returns the source container, that is the original container holding the original value before the
+	 * given {@code diff} is applied. This is different depending on direction indicated by
+	 * {@code rightToLeft}.
+	 * 
+	 * @param diff
+	 *            The diff we are currently merging.
+	 * @param rightToLeft
+	 *            Direction of the merge.
+	 * @return The source container.
+	 */
+	private EObject getSourceContainer(AttributeChange diff, boolean rightToLeft) {
+		final EObject sourceContainer;
+		final Match match = diff.getMatch();
+		if (match.getComparison().isThreeWay() && isRejectingChange(diff, rightToLeft)) {
+			sourceContainer = match.getOrigin();
+		} else if (rightToLeft) {
+			sourceContainer = match.getRight();
+		} else {
+			sourceContainer = match.getLeft();
+		}
+		return sourceContainer;
+	}
+
+	/**
+	 * Returns the target container, that is the container holding the value to be updated when merging the
+	 * given {@code diff} in the direction indicated by {@code rightToLeft}.
+	 * 
+	 * @param diff
+	 *            The diff we are currently merging.
+	 * @param rightToLeft
+	 *            Direction of the merge.
+	 * @return The target container to be updated when merging.
+	 */
+	private EObject getTargetContainer(AttributeChange diff, boolean rightToLeft) {
+		final Match match = diff.getMatch();
+		if (rightToLeft) {
+			return match.getLeft();
+		} else {
+			return match.getRight();
+		}
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} unsets the attribute value when updating the attribute with
+	 * the given {@code targetValue}.
+	 * 
+	 * @param diff
+	 *            The difference to check.
+	 * @param targetValue
+	 *            The value to be set.
+	 * @return <code>true</code> if setting {@code targetValue} is an unset, <code>false</code> otherwise.
+	 */
+	private boolean isUnset(AttributeChange diff, Object targetValue) {
+		final Object defaultValue = diff.getAttribute().getDefaultValue();
+		return targetValue == null || targetValue.equals(defaultValue)
 				|| (defaultValue == null && "".equals(targetValue)); //$NON-NLS-1$
-
-		if (isUnset) {
-			expectedContainer.eUnset(attribute);
-		} else {
-			safeESet(expectedContainer, attribute, targetValue);
-		}
 	}
 
 	/**
 	 * Specifies whether a three-way text merge is required for applying the given {@code diff} in the
 	 * direction indicated in {@code rightToLeft}.
 	 * <p>
-	 * Three-way text merging is required when applying the changes of a String attribute of one side to the
-	 * other side; that is, accepting changes as opposed to rejecting changes.
+	 * Three-way text merging is required when accepting or rejecting the changes of a
+	 * {@link #isStringAttribute(EAttribute) String attributes} in a three-way merge scenario.
 	 * </p>
 	 * 
 	 * @param diff
 	 *            The diff to be applied.
-	 * @param rightToLeft
-	 *            The direction of applying the {@code diff}.
 	 * @return <code>true</code> if three-way text merging is required, <code>false</code> otherwise.
 	 */
-	private boolean requireThreeWayTextMerge(AttributeChange diff, boolean rightToLeft) {
-		return diff.getMatch().getComparison().isThreeWay() && isStringAttribute(diff.getAttribute())
-				&& isAcceptingChange(diff, rightToLeft);
+	private boolean requireThreeWayTextMerge(AttributeChange diff) {
+		return diff.getMatch().getComparison().isThreeWay() && isStringAttribute(diff.getAttribute());
 	}
 
 	/**
@@ -435,7 +486,42 @@ public class AttributeChangeMerger extends AbstractMerger {
 	}
 
 	/**
+	 * Specifies whether applying the given {@code diff} in the direction indicated in {@code rightToLeft}
+	 * means rejecting the change as opposed to accepting the change.
+	 * 
+	 * @param diff
+	 *            The diff to be checked.
+	 * @param rightToLeft
+	 *            The direction of applying {@code diff}.
+	 * @return <code>true</code> if it means rejecting the change, <code>false</code> otherwise.
+	 */
+	private boolean isRejectingChange(AttributeChange diff, boolean rightToLeft) {
+		return !isAcceptingChange(diff, rightToLeft);
+	}
+
+	/**
 	 * Performs a three-way text merge for the given {@code diff} and returns the merged text.
+	 * <p>
+	 * Depending on whether the given {@code diff} is an accept or reject in the context of the merge
+	 * direction indicated by {@code rightToLeft}, this method will perform different strategies of merging.
+	 * </p>
+	 * 
+	 * @param diff
+	 *            The diff for which a three-way text diff is to be performed.
+	 * @param rightToLeft
+	 *            The direction of applying the {@code diff}.
+	 * @return The merged text.
+	 */
+	private String performThreeWayTextMerge(AttributeChange diff, boolean rightToLeft) {
+		if (isAcceptingChange(diff, rightToLeft)) {
+			return performAcceptingThreeWayTextMerge(diff);
+		} else {
+			return performRejectingThreeWayTextMerge(diff, rightToLeft);
+		}
+	}
+
+	/**
+	 * Performs a three-way text merge accepting the given {@code diff} and returns the merged text.
 	 * <p>
 	 * This method must only be called for {@link #isStringAttribute(EAttribute) String attributes}. As the
 	 * three-way text merging is symmetric, the result is equal irrespectively of the direction of merging as
@@ -447,7 +533,7 @@ public class AttributeChangeMerger extends AbstractMerger {
 	 *            The diff for which a three-way text diff is to be performed.
 	 * @return The merged text.
 	 */
-	private String performThreeWayTextMerge(AttributeChange diff) {
+	private String performAcceptingThreeWayTextMerge(AttributeChange diff) {
 		final Match match = diff.getMatch();
 		final EAttribute attribute = diff.getAttribute();
 		final String originValue = (String)safeEGet(match.getOrigin(), attribute);
@@ -458,15 +544,86 @@ public class AttributeChangeMerger extends AbstractMerger {
 	}
 
 	/**
+	 * Performs a three-way text merge rejecting the given {@code diff} and returns the merged text.
+	 * <p>
+	 * When rejecting an attribute change, we need to undo its effects on the attribute value, which is in
+	 * most of the cases done by setting the value to the original value. However, if there is a concurrent
+	 * attribute change of the same attribute value at the opposite side, it might have been merged to the
+	 * current side already. Therefore, we need to undo only those differences in the attribute value that
+	 * come from the current to-be-rejected diff.
+	 * </p>
+	 * <p>
+	 * This is done by applying a normal three-way merge, but instead of the origin value, left value, and
+	 * right value, we compute the three-way merge as follows: as origin value, we use the value of the
+	 * {@code diff}, which is the value as it was set on the respective side. As a left value, the value of
+	 * the current side as it is currently stored in the model; thus, a potential merging of opposite diffs
+	 * may have changed this value already. And as a right value, we use the actual origin value from the
+	 * origin model.
+	 * </p>
+	 * <p>
+	 * Since we consider the current value as it is in the model right now (including potential previous
+	 * merges) and the origin value as the two changed sides, a three-way merge will apply the changes we did
+	 * through merging and reset all other to the origin value.
+	 * </p>
+	 * <p>
+	 * Note that, if {@code diff} is an unset (that is, the current value is empty or null or default), we
+	 * just use the original value.
+	 * </p>
+	 * 
+	 * @param diff
+	 *            The diff for which a three-way text diff is to be performed.
+	 * @param rightToLeft
+	 *            The direction of applying the {@code diff}.
+	 * @return The merged text.
+	 */
+	private String performRejectingThreeWayTextMerge(AttributeChange diff, boolean rightToLeft) {
+		final EAttribute attribute = diff.getAttribute();
+		final EObject originContainer = diff.getMatch().getOrigin();
+		final String originValue = (String)safeEGet(originContainer, attribute);
+		final String changedValueFromModel = getChangedValueFromModel(diff);
+		final String changedValue = (String)diff.getValue();
+
+		if (isUnset(diff, changedValueFromModel)) {
+			return originValue;
+		} else {
+			return performThreeWayTextMerge(changedValueFromModel, originValue, changedValue);
+		}
+	}
+
+	/**
+	 * Returns the changed value, as it is right now stored in the model, of the attribute that is affected by
+	 * the given {@code diff}.
+	 * 
+	 * @param diff
+	 *            The diff to get the changed value for.
+	 * @return The changed value.
+	 */
+	private String getChangedValueFromModel(AttributeChange diff) {
+		final EAttribute attribute = diff.getAttribute();
+		final EObject changedContainer;
+		switch (diff.getSource()) {
+			case LEFT:
+				changedContainer = diff.getMatch().getLeft();
+				break;
+			case RIGHT:
+				changedContainer = diff.getMatch().getRight();
+				break;
+			default:
+				throw new IllegalArgumentException();
+		}
+		return (String)safeEGet(changedContainer, attribute);
+	}
+
+	/**
 	 * Performs a three-way text merge for the given {@code origin}, {@code left}, and {@code right} text
 	 * versions.
+	 * 
 	 * @param left
 	 *            The left version of the String.
 	 * @param right
 	 *            The right version of the String.
 	 * @param origin
 	 *            The original version of the String.
-	 * 
 	 * @return The merged version.
 	 */
 	protected String performThreeWayTextMerge(final String left, final String right, final String origin) {

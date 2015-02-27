@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2014, 2015 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -186,6 +186,247 @@ public class MultiLineAttributeMergeTest {
 		assertRejectedAndMergedBidirectional(origin, left, right, merged);
 	}
 
+	@Test
+	public void acceptingLeftInsertOnRightSideAndRejectingRightInsertOnRightSideAfterwards()
+			throws IOException {
+		final String origin = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right.";
+
+		final String left = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "Nah, they got the metric system." + NL // added
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right.";
+
+		final String right = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "What do they call a Big Mac?" + NL // added
+				+ "That's right.";
+
+		assertAcceptingLeftOnRightSideAndRejectingRightOnRightSideIsLeftValue(origin, left, right);
+		assertAcceptingRightOnLeftSideAndRejectingLeftOnLeftSideIsRightValue(origin, right, left);
+	}
+
+	@Test
+	public void acceptingLeftInsertOnRightSideAndRejectingRightDeleteOnRightSideAfterwards()
+			throws IOException {
+		final String origin = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right.";
+
+		final String left = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "Nah, they got the metric system." + NL // added
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right.";
+
+		final String right = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "" // deleted
+				+ "That's right.";
+
+		assertAcceptingLeftOnRightSideAndRejectingRightOnRightSideIsLeftValue(origin, left, right);
+		assertAcceptingRightOnLeftSideAndRejectingLeftOnLeftSideIsRightValue(origin, right, left);
+	}
+
+	@Test
+	public void acceptingLeftInsertOnRightSideAndRejectingRightChangeOnRightSideAfterwards()
+			throws IOException {
+		final String origin = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right.";
+
+		final String left = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "Nah, they got the metric system." + NL // added
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right.";
+
+		final String right = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right!!!!"; // changed
+
+		assertAcceptingLeftOnRightSideAndRejectingRightOnRightSideIsLeftValue(origin, left, right);
+		assertAcceptingRightOnLeftSideAndRejectingLeftOnLeftSideIsRightValue(origin, right, left);
+	}
+
+	@Test
+	public void acceptingLeftChangeOnRightSideAndRejectingRightInsertOnRightSideAfterwards()
+			throws IOException {
+		final String origin = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right.";
+
+		final String left = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese!!!" + NL // changed
+				+ "Royale with Cheese." + NL //
+				+ "That's right.";
+
+		final String right = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "What do they call a Big Mac?" + NL// added
+				+ "That's right."; //
+
+		assertAcceptingLeftOnRightSideAndRejectingRightOnRightSideIsLeftValue(origin, left, right);
+		assertAcceptingRightOnLeftSideAndRejectingLeftOnLeftSideIsRightValue(origin, right, left);
+	}
+
+	@Test
+	public void acceptingLeftChangeOnRightSideAndRejectingRightDeleteOnRightSideAfterwards()
+			throws IOException {
+		final String origin = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right." + NL //
+				+ "What do they call a Big Mac?";
+
+		final String left = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese!!!" + NL // changed
+				+ "Royale with Cheese." + NL //
+				+ "That's right." + NL //
+				+ "What do they call a Big Mac?";
+
+		final String right = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "" // deleted
+				+ "What do they call a Big Mac?";
+
+		assertAcceptingLeftOnRightSideAndRejectingRightOnRightSideIsLeftValue(origin, left, right);
+		assertAcceptingRightOnLeftSideAndRejectingLeftOnLeftSideIsRightValue(origin, right, left);
+	}
+
+	@Test
+	public void acceptingLeftChangeOnRightSideAndRejectingRightChangeOnRightSideAfterwards()
+			throws IOException {
+		final String origin = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right." + NL //
+				+ "What do they call a Big Mac?";
+
+		final String left = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese!!!" + NL // changed
+				+ "Royale with Cheese." + NL //
+				+ "That's right." + NL //
+				+ "What do they call a Big Mac?";
+
+		final String right = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right." + NL //
+				+ "What do they call a Big Mac?????"; // changed
+
+		assertAcceptingLeftOnRightSideAndRejectingRightOnRightSideIsLeftValue(origin, left, right);
+		assertAcceptingRightOnLeftSideAndRejectingLeftOnLeftSideIsRightValue(origin, right, left);
+	}
+
+	@Test
+	public void acceptingLeftDeleteOnRightSideAndRejectingRightInsertOnRightSideAfterwards()
+			throws IOException {
+		final String origin = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right." + NL //
+				+ "What do they call a Big Mac?";
+
+		final String left = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "" // deleted
+				+ "Royale with Cheese." + NL //
+				+ "That's right." + NL //
+				+ "What do they call a Big Mac?";
+
+		final String right = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right." + NL //
+				+ "That's freaking right." + NL // added
+				+ "What do they call a Big Mac?";
+
+		assertAcceptingLeftOnRightSideAndRejectingRightOnRightSideIsLeftValue(origin, left, right);
+		assertAcceptingRightOnLeftSideAndRejectingLeftOnLeftSideIsRightValue(origin, right, left);
+	}
+
+	@Test
+	public void acceptingLeftDeleteOnRightSideAndRejectingRightChangeOnRightSideAfterwards()
+			throws IOException {
+		final String origin = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right." + NL //
+				+ "What do they call a Big Mac?";
+
+		final String left = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "" // deleted
+				+ "Royale with Cheese." + NL //
+				+ "That's right." + NL //
+				+ "What do they call a Big Mac?";
+
+		final String right = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right." + NL //
+				+ "What do they call a Big Mac?????"; // changed
+
+		assertAcceptingLeftOnRightSideAndRejectingRightOnRightSideIsLeftValue(origin, left, right);
+		assertAcceptingRightOnLeftSideAndRejectingLeftOnLeftSideIsRightValue(origin, right, left);
+	}
+
+	@Test
+	public void acceptingLeftDeleteOnRightSideAndRejectingRightDeleteOnRightSideAfterwards()
+			throws IOException {
+		final String origin = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "That's right." + NL //
+				+ "What do they call a Big Mac?";
+
+		final String left = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "" // deleted
+				+ "Royale with Cheese." + NL //
+				+ "That's right." + NL //
+				+ "What do they call a Big Mac?";
+
+		final String right = "They don't call it a Quarter Pounder with Cheese?" + NL //
+				+ "They call it a Royale with Cheese." + NL //
+				+ "Royale with Cheese." + NL //
+				+ "" // deleted
+				+ "What do they call a Big Mac?"; // changed
+
+		assertAcceptingLeftOnRightSideAndRejectingRightOnRightSideIsLeftValue(origin, left, right);
+		assertAcceptingRightOnLeftSideAndRejectingLeftOnLeftSideIsRightValue(origin, right, left);
+	}
+
+	private void assertAcceptingLeftOnRightSideAndRejectingRightOnRightSideIsLeftValue(final String origin,
+			final String left, final String right) throws IOException {
+		final ThreeWayAttributeMergeScenario scenario = createMergeScenario(origin, left, right);
+		final Comparison comparison = compare(scenario);
+		acceptLeft(comparison);
+		rejectRight(comparison);
+
+		final String rightValue = scenario.getRightAttributeValue();
+		assertEquals(nullIfEmpty(left), nullIfEmpty(rightValue));
+	}
+
+	private void assertAcceptingRightOnLeftSideAndRejectingLeftOnLeftSideIsRightValue(final String origin,
+			final String left, final String right) throws IOException {
+		final ThreeWayAttributeMergeScenario scenario = createMergeScenario(origin, left, right);
+		final Comparison comparison = compare(scenario);
+		acceptRight(comparison);
+		rejectLeft(comparison);
+
+		final String leftValue = scenario.getLeftAttributeValue();
+		assertEquals(nullIfEmpty(right), nullIfEmpty(leftValue));
+	}
+
 	private void assertRejectedAndMergedBidirectional(String origin, String left, String right, String merged)
 			throws IOException {
 		assertRejectLeft(origin, left, right);
@@ -197,12 +438,7 @@ public class MultiLineAttributeMergeTest {
 	private void assertRejectLeft(String origin, String left, String right) throws IOException {
 		final ThreeWayAttributeMergeScenario scenario = createMergeScenario(origin, left, right);
 		final Comparison comparison = compare(scenario);
-		assertEquals(0, comparison.getConflicts().size());
-
-		final List<Diff> rightDiff = getDiffsForSource(comparison.getDifferences(), DifferenceSource.LEFT);
-		final IBatchMerger merger = new BatchMerger(mergerRegistry);
-		merger.copyAllRightToLeft(rightDiff, new BasicMonitor());
-
+		rejectLeft(comparison);
 		final String attributeValue = scenario.getLeftAttributeValue();
 		assertEquals(nullIfEmpty(origin), nullIfEmpty(attributeValue));
 	}
@@ -210,12 +446,7 @@ public class MultiLineAttributeMergeTest {
 	private void assertRejectRight(String origin, String left, String right) throws IOException {
 		final ThreeWayAttributeMergeScenario scenario = createMergeScenario(origin, left, right);
 		final Comparison comparison = compare(scenario);
-		assertEquals(0, comparison.getConflicts().size());
-
-		final List<Diff> rightDiff = getDiffsForSource(comparison.getDifferences(), DifferenceSource.RIGHT);
-		final IBatchMerger merger = new BatchMerger(mergerRegistry);
-		merger.copyAllLeftToRight(rightDiff, new BasicMonitor());
-
+		rejectRight(comparison);
 		final String attributeValue = scenario.getRightAttributeValue();
 		assertEquals(nullIfEmpty(origin), nullIfEmpty(attributeValue));
 	}
@@ -224,12 +455,7 @@ public class MultiLineAttributeMergeTest {
 			throws IOException {
 		final ThreeWayAttributeMergeScenario scenario = createMergeScenario(origin, left, right);
 		final Comparison comparison = compare(scenario);
-		assertEquals(0, comparison.getConflicts().size());
-
-		final List<Diff> rightDiff = getDiffsForSource(comparison.getDifferences(), DifferenceSource.LEFT);
-		final IBatchMerger merger = new BatchMerger(mergerRegistry);
-		merger.copyAllLeftToRight(rightDiff, new BasicMonitor());
-
+		acceptLeft(comparison);
 		final String attributeValue = scenario.getRightAttributeValue();
 		assertEquals(nullIfEmpty(merged), nullIfEmpty(attributeValue));
 	}
@@ -238,14 +464,33 @@ public class MultiLineAttributeMergeTest {
 			throws IOException {
 		final ThreeWayAttributeMergeScenario scenario = createMergeScenario(origin, left, right);
 		final Comparison comparison = compare(scenario);
-		assertEquals(0, comparison.getConflicts().size());
-
-		final List<Diff> rightDiff = getDiffsForSource(comparison.getDifferences(), DifferenceSource.RIGHT);
-		final IBatchMerger merger = new BatchMerger(mergerRegistry);
-		merger.copyAllRightToLeft(rightDiff, new BasicMonitor());
-
+		acceptRight(comparison);
 		final String attributeValue = scenario.getLeftAttributeValue();
 		assertEquals(nullIfEmpty(merged), nullIfEmpty(attributeValue));
+	}
+
+	private void rejectLeft(Comparison comparison) {
+		final List<Diff> leftDiffs = getDiffsForSource(comparison.getDifferences(), DifferenceSource.LEFT);
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllRightToLeft(leftDiffs, new BasicMonitor());
+	}
+
+	private void rejectRight(Comparison comparison) {
+		final List<Diff> rightDiffs = getDiffsForSource(comparison.getDifferences(), DifferenceSource.RIGHT);
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllLeftToRight(rightDiffs, new BasicMonitor());
+	}
+
+	private void acceptRight(Comparison comparison) {
+		final List<Diff> rightDiffs = getDiffsForSource(comparison.getDifferences(), DifferenceSource.RIGHT);
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllRightToLeft(rightDiffs, new BasicMonitor());
+	}
+
+	private void acceptLeft(Comparison comparison) {
+		final List<Diff> leftDiffs = getDiffsForSource(comparison.getDifferences(), DifferenceSource.LEFT);
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		merger.copyAllLeftToRight(leftDiffs, new BasicMonitor());
 	}
 
 	private List<Diff> getDiffsForSource(List<Diff> differences, DifferenceSource source) {
