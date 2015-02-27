@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Alexandra Buzila - Bug 450360
  *     Philip Langer - Bug 460778
+ *     Stefan Dirix - Bug 461011
  *******************************************************************************/
 package org.eclipse.emf.compare.match.eobject;
 
@@ -228,7 +229,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 				match.setLeft(left);
 
 				// Can we find a parent? Assume we're iterating in containment order
-				final EObject parentEObject = left.eContainer();
+				final EObject parentEObject = getParentEObject(left);
 				final Match parent = leftEObjectsToMatch.get(parentEObject);
 				if (parent != null) {
 					((InternalEList<Match>)parent.getSubmatches()).addUnique(match);
@@ -265,7 +266,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 					match.setRight(right);
 
 					// Can we find a parent?
-					final EObject parentEObject = right.eContainer();
+					final EObject parentEObject = getParentEObject(right);
 					final Match parent = rightEObjectsToMatch.get(parentEObject);
 					if (parent != null) {
 						((InternalEList<Match>)parent.getSubmatches()).addUnique(match);
@@ -301,7 +302,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 					match.setOrigin(origin);
 
 					// Can we find a parent?
-					final EObject parentEObject = origin.eContainer();
+					final EObject parentEObject = getParentEObject(origin);
 					final Match parent = originEObjectsToMatch.get(parentEObject);
 					if (parent != null) {
 						((InternalEList<Match>)parent.getSubmatches()).addUnique(match);
@@ -320,7 +321,21 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	}
 
 	/**
-	 * Adds a warning diagnostic to the comparison for an object that has a duplicate ID.
+	 * This method is used to determine the parent objects during matching. The default implementation of this
+	 * method returns the eContainer of the given {@code eObject}. Can be overwritten by clients to still
+	 * allow proper matching when using a more complex architecture.
+	 * 
+	 * @param eObject
+	 *            The {@link EObject} for which the parent object is to determine.
+	 * @return The parent of the given {@code eObject}.
+	 * @since 3.2
+	 */
+	protected EObject getParentEObject(EObject eObject) {
+		return eObject.eContainer();
+	}
+
+	/**
+	 * Adds a warning diagnostic to the comparison for the duplicate ID.
 	 * 
 	 * @param side
 	 *            the side where the duplicate ID was found
