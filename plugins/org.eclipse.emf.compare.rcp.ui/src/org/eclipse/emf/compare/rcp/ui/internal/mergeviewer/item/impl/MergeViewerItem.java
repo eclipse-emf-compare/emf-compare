@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
@@ -47,7 +48,10 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.spec.EObjectUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
+import org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
+import org.eclipse.emf.compare.rcp.ui.internal.util.ResourceUIUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
@@ -57,6 +61,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
@@ -472,12 +477,38 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	protected final List<IMergeViewerItem> createMergeViewerItemFrom(Collection<?> values) {
 		List<IMergeViewerItem> ret = newArrayListWithCapacity(values.size());
 		for (EObject value : filter(values, EObject.class)) {
-			IMergeViewerItem valueToAdd = createMergeViewerItemFrom(value);
-			if (valueToAdd != null) {
-				ret.add(valueToAdd);
+			Match match = getComparison().getMatch(value);
+			if (this.fDiff != null || (match != null && !isMatchWithAllProxyData(match))) {
+				IMergeViewerItem valueToAdd = createMergeViewerItemFrom(value);
+				if (valueToAdd != null) {
+					ret.add(valueToAdd);
+				}
 			}
 		}
 		return ret;
+	}
+
+	/**
+	 * Check if the given match holds a proxy on each side.
+	 * 
+	 * @param match
+	 *            the given match.
+	 * @return true if the given match holds a proxy on each side, false otherwise.
+	 */
+	private boolean isMatchWithAllProxyData(Match match) {
+		boolean proxy = false;
+		EObject left = match.getLeft();
+		EObject right = match.getRight();
+		EObject origin = match.getOrigin();
+		if (left != null && right != null) {
+			if (left.eIsProxy() && right.eIsProxy()) {
+				proxy = true;
+			}
+		}
+		if (proxy == true && fComparison.isThreeWay() && (origin == null || !origin.eIsProxy())) {
+			proxy = false;
+		}
+		return proxy;
 	}
 
 	/**
@@ -595,9 +626,112 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 						.getParent(sideValue) : null;
 				if (parent instanceof EObject) {
 					ret = createBasicContainer((EObject)parent);
+				} else if (parent instanceof Resource) {
+					ret = getParent((Resource)parent);
+				} else if (sideValue instanceof NotLoadedFragmentMatch) {
+					ret = getParent((NotLoadedFragmentMatch)sideValue);
 				}
 			}
 			return ret;
+		}
+
+		/**
+		 * Get the parent (as MergeViewerItem) of the MergeViewerItem in case the MergeViewerItem is a
+		 * {@link org.eclipse.emf.ecore.resource.Resource}.
+		 * 
+		 * @param resource
+		 *            the Resource for which we want the parent (as MergeViewerItem)
+		 * @return the parent (a MergeViewerItem) of the given element.
+		 */
+		private IMergeViewerItem.Container getParent(Resource resource) {
+			final IMergeViewerItem.Container parent;
+			URI uri = resource.getURI();
+			if (ResourceUIUtil.isFragment(uri)) {
+				final Object object = getBestSideValue();
+				final Match matchOfValue = getComparison().getMatch((EObject)object);
+				final NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(matchOfValue);
+				parent = new MergeViewerItem.Container(getComparison(), getDiff(), notLoadedFragmentMatch,
+						notLoadedFragmentMatch, notLoadedFragmentMatch, getSide(), getAdapterFactory());
+			} else {
+				parent = null;
+			}
+			return parent;
+
+		}
+
+		/**
+		 * Get the parent of the MergeViewerItem in case the MergeViewerItem is a
+		 * {@link org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch}.
+		 * 
+		 * @param nlfm
+		 *            the NotLoadedFragmentMatch for which we want the parent (as MergeViewerItem)
+		 * @return the parent (a MergeViewerItem) of the given element.
+		 */
+		private IMergeViewerItem.Container getParent(NotLoadedFragmentMatch nlfm) {
+			IMergeViewerItem.Container parent = null;
+			final Collection<? extends Match> children = nlfm.getChildren();
+			for (Match match : children) {
+				URI uri = ResourceUIUtil.getDataURI(match, getSide());
+				if (uri != null) {
+					ReadOnlyGraph<URI> graph = ResourceUIUtil.getResourcesURIGraph();
+					URI parentData = graph.getParentData(uri);
+					ResourceSet rs = ResourceUIUtil.getDataResourceSet(match, getSide());
+					Resource resourceParent = ResourceUIUtil.getParent(rs, uri);
+					while (resourceParent == null && parentData != null) {
+						resourceParent = ResourceUIUtil.getParent(rs, parentData.trimFragment());
+						parentData = graph.getParentData(parentData.trimFragment());
+					}
+					if (resourceParent != null && parentData != null) {
+						EObject eObjectParent = resourceParent.getEObject(parentData.fragment());
+						if (eObjectParent != null) {
+							parent = createBasicContainer(eObjectParent);
+							break;
+						}
+					} else {
+						parent = createNotLoadedFragmentContainer(rs, uri);
+						if (parent != null) {
+							break;
+						}
+					}
+				}
+			}
+			return parent;
+		}
+
+		/**
+		 * Create an IMergeViewerItem.Container that holds NotLoadedFragmentMatches.
+		 * 
+		 * @param uri
+		 *            the URI of the Match element for which we want to create a container.
+		 * @return an IMergeViewerItem.Container.
+		 */
+		private IMergeViewerItem.Container createNotLoadedFragmentContainer(ResourceSet rs, URI uri) {
+			final IMergeViewerItem.Container parent;
+			URI parentURI = ResourceUIUtil.getParentResourceURI(rs, uri);
+			URI rootResourceURI = ResourceUIUtil.getRootResourceURI(uri);
+			if (parentURI == null) {
+				parentURI = rootResourceURI;
+			}
+			Collection<Match> notLoadedFragmentMatches = Lists.newArrayList();
+			Collection<Match> rootMatches = getComparison().getMatches();
+			Collection<URI> uris = ResourceUIUtil.getDataURIs(rootMatches, getSide());
+			for (Match rootMatch : rootMatches) {
+				URI rootMatchDataURI = ResourceUIUtil.getDataURI(rootMatch, getSide());
+				if (!rootResourceURI.equals(rootMatchDataURI) && !parentURI.equals(rootMatchDataURI)
+						&& ResourceUIUtil.isChildOf(rootMatchDataURI, ImmutableSet.of(parentURI))
+						&& !ResourceUIUtil.isChildOf(rootMatchDataURI, uris)) {
+					notLoadedFragmentMatches.add(new NotLoadedFragmentMatch(rootMatch));
+				}
+			}
+			if (notLoadedFragmentMatches.size() > 1) {
+				final NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(
+						notLoadedFragmentMatches);
+				parent = new MergeViewerItem.Container(getComparison(), getDiff(), notLoadedFragmentMatch,
+						notLoadedFragmentMatch, notLoadedFragmentMatch, getSide(), getAdapterFactory());
+			} else {
+				parent = null;
+			}
+			return parent;
 		}
 
 		/**
@@ -622,33 +756,95 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		 */
 		public IMergeViewerItem[] getChildren(IDifferenceGroupProvider group,
 				Predicate<? super EObject> predicate) {
-			Object sideValue = getSideValue(getSide());
-			EObject bestSideValue = (EObject)getBestSideValue();
-
-			final Collection<? extends EStructuralFeature> childrenFeatures = getChildrenFeatures(bestSideValue);
-
-			Match match = getComparison().getMatch(bestSideValue);
-			final ImmutableList<Diff> differences;
-			if (match != null) {
-				differences = ImmutableList.copyOf(filter(match.getDifferences(),
-						CONTAINMENT_REFERENCE_CHANGE));
-			} else {
-				differences = ImmutableList.of();
-			}
 
 			List<IMergeViewerItem> ret = newArrayList();
 
-			for (EStructuralFeature eStructuralFeature : childrenFeatures) {
-				if (eStructuralFeature instanceof EReference) {
-					ret.addAll(getChildrenOfReference(group, predicate, sideValue, differences,
-							(EReference)eStructuralFeature));
-				} else if (FeatureMapUtil.isFeatureMap(eStructuralFeature)) {
-					ret.addAll(getChildrenOfFeatureMap(group, predicate, sideValue, differences,
-							eStructuralFeature));
+			if (this.getLeft() instanceof NotLoadedFragmentMatch) {
+				ret.addAll(getChildren((NotLoadedFragmentMatch)this.getLeft()));
+			} else {
+				Object sideValue = getSideValue(getSide());
+				EObject bestSideValue = (EObject)getBestSideValue();
+
+				final Collection<? extends EStructuralFeature> childrenFeatures = getChildrenFeatures(bestSideValue);
+
+				Match match = getComparison().getMatch(bestSideValue);
+				final ImmutableList<Diff> differences;
+				if (match != null) {
+					differences = ImmutableList.copyOf(filter(match.getDifferences(),
+							CONTAINMENT_REFERENCE_CHANGE));
+				} else {
+					differences = ImmutableList.of();
+				}
+
+				for (EStructuralFeature eStructuralFeature : childrenFeatures) {
+					if (eStructuralFeature instanceof EReference) {
+						ret.addAll(getChildrenOfReference(group, predicate, sideValue, differences,
+								(EReference)eStructuralFeature));
+					} else if (FeatureMapUtil.isFeatureMap(eStructuralFeature)) {
+						ret.addAll(getChildrenOfFeatureMap(group, predicate, sideValue, differences,
+								eStructuralFeature));
+					}
+				}
+
+				// Add not loaded fragment match if needed
+				ret.addAll(getNotLoadedFragmentsItems(match));
+			}
+			return ret.toArray(NO_ITEMS_ARR);
+		}
+
+		/**
+		 * Get the children of the MergeViewerItem in case the MergeViewerItem is a
+		 * {@link org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch}.
+		 * 
+		 * @param nlfm
+		 *            the NotLoadedFragmentMatch for which we want the children (as MergeViewerItems)
+		 * @return the children (a list of MergeViewerItems) of the given element.
+		 */
+		private List<IMergeViewerItem> getChildren(NotLoadedFragmentMatch nlfm) {
+			final List<IMergeViewerItem> ret = newArrayList();
+			final Collection<Match> matches = nlfm.getChildren();
+			for (Match match : matches) {
+				final MergeViewerItem.Container container;
+				if (match instanceof NotLoadedFragmentMatch) {
+					container = new MergeViewerItem.Container(getComparison(), getDiff(), match, match,
+							match, getSide(), getAdapterFactory());
+				} else {
+					container = new MergeViewerItem.Container(getComparison(), getDiff(), match.getLeft(),
+							match.getRight(), match.getOrigin(), getSide(), getAdapterFactory());
+				}
+				ret.add(container);
+			}
+			return ret;
+		}
+
+		/**
+		 * Return potential NotLoadedFragment children items (as MergeViewerItem) of the MergeViewerItem in
+		 * case the MergeViewerItem is a {@link org.eclipse.emf.compare.match.Match}.
+		 * 
+		 * @param match
+		 *            the Match for which we want the potential NotLoadedFragment children items (as
+		 *            MergeViewerItems)
+		 * @return the NotLoadedFragment children items (a list of MergeViewerItems) of the given element.
+		 */
+		private List<IMergeViewerItem> getNotLoadedFragmentsItems(Match match) {
+			final List<IMergeViewerItem> ret = newArrayList();
+			final Collection<Match> childrenMatches = ResourceUIUtil.getChildrenMatchWithNotLoadedParent(
+					getComparison(), match, getSide());
+			if (childrenMatches.size() > 0) {
+				boolean setNames = childrenMatches.size() > 1;
+				for (Match child : childrenMatches) {
+					NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(child);
+					if (setNames) {
+						notLoadedFragmentMatch
+								.setName(ResourceUIUtil.getResourceName(notLoadedFragmentMatch));
+					}
+					MergeViewerItem.Container notLoadedFragmentItem = new MergeViewerItem.Container(
+							getComparison(), null, notLoadedFragmentMatch, notLoadedFragmentMatch,
+							notLoadedFragmentMatch, getSide(), getAdapterFactory());
+					ret.add(notLoadedFragmentItem);
 				}
 			}
-
-			return ret.toArray(NO_ITEMS_ARR);
+			return ret;
 		}
 
 		/**

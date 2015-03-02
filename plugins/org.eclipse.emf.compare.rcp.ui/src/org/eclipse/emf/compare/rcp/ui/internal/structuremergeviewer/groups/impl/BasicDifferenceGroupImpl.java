@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,6 +44,7 @@ import java.util.Set;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
@@ -55,14 +56,17 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
+import org.eclipse.emf.compare.rcp.ui.internal.util.ResourceUIUtil;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.edit.tree.TreeFactory;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -377,6 +381,8 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 				toRemove.add(treeNode);
 			} else if (!containment && isMatchWithOnlyResourceAttachmentChanges(match)) {
 				toRemove.add(treeNode);
+			} else if (isMatchWithProxyData(match)) {
+				toRemove.add(treeNode);
 			} else {
 				for (IDifferenceGroupExtender ext : registry.getExtenders()) {
 					if (ext.handle(treeNode)) {
@@ -389,6 +395,31 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		ret.removeAll(toRemove);
 
 		return ret;
+	}
+
+	/**
+	 * Check if the given match holds a proxy.
+	 * 
+	 * @param match
+	 *            the given match
+	 * @return true if the given match holds a proxy, false otherwise.
+	 */
+	private boolean isMatchWithProxyData(Match match) {
+		boolean proxy = false;
+		if (match.getLeft() != null) {
+			if (match.getLeft().eIsProxy()) {
+				proxy = true;
+			}
+		} else if (match.getRight() != null) {
+			if (match.getRight().eIsProxy()) {
+				proxy = true;
+			}
+		} else if (match.getOrigin() != null) {
+			if (match.getOrigin().eIsProxy()) {
+				proxy = true;
+			}
+		}
+		return proxy;
 	}
 
 	/**
@@ -560,7 +591,9 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			}
 		}
 
-		return matchSubTrees;
+		final List<TreeNode> rootNodes = addNotLoadedFragmentNodes(matchSubTrees);
+
+		return rootNodes;
 	}
 
 	protected List<TreeNode> buildMatchResourceSubTrees() {
@@ -591,5 +624,170 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			}
 		}
 		return matchResourceSubTrees;
+	}
+
+	/**
+	 * When a model is split into fragments, and only some of them have changes, the structure merge viewer
+	 * (SMV) and the content merge viewers (CMV) display the models involved in the comparison but don’t
+	 * display the fragments that have no changes.
+	 * <p>
+	 * If a change (x) is detected in a fragment (B), and this fragment is a child of another fragment (A)
+	 * that has no changes, then (A) won't appear in the SMV and the CMV's. As a result, users will think (B)
+	 * is the root of the global model.
+	 * </p>
+	 * <p>
+	 * To avoid this, the idea is to display intermediate node(s) (a.k.a NotLoadedFragmentNodes) in order to
+	 * show to users that it exists something (fragments, i.e. a parts of models) between/above the changes.
+	 * </p>
+	 * This method add these NotLoadedFragmentNodes in the given list of root TreeNodes.
+	 * 
+	 * @param rootNodes
+	 *            the given list of root TreeNodes.
+	 * @return a new list of root TreeNodes, completed with NotLoadedFragmentNodes if needed.
+	 */
+	private List<TreeNode> addNotLoadedFragmentNodes(List<TreeNode> rootNodes) {
+		final List<TreeNode> newRootNodes = new ArrayList<TreeNode>(rootNodes);
+		for (TreeNode treeNode : rootNodes) {
+			EObject data = TREE_NODE_DATA.apply(treeNode);
+			if (data instanceof Match) {
+				URI uri = ResourceUIUtil.getDataURI((Match)data);
+				if (ResourceUIUtil.isFragment(uri)) {
+					newRootNodes.remove(treeNode);
+					TreeNode notLoadedFragment = addNotLoadedFragment(rootNodes, treeNode, (Match)data, uri);
+					if (notLoadedFragment != null) {
+						newRootNodes.add(notLoadedFragment);
+					}
+				}
+			}
+		}
+		// if several root nodes are NotLoadedFragment nodes, add new parent node for these
+		// NotLoadedFragmentNodes.
+		if (ResourceUIUtil.containsNotLoadedFragmentNodes(newRootNodes)) {
+			Collection<TreeNode> nodes = encapsulateNotLoadedFragmentNodes(newRootNodes);
+			newRootNodes.clear();
+			newRootNodes.addAll(nodes);
+		}
+
+		return newRootNodes;
+	}
+
+	/**
+	 * Encapsulate the given TreeNode under a new NotLoadedFragmentNode.
+	 * 
+	 * @param rootNodes
+	 *            the given list of root TreeNodes.
+	 * @param treeNode
+	 *            the given TreeNode.
+	 * @param match
+	 *            the match associated to the given TreeNode.
+	 * @param uri
+	 *            the data resource's URI of the given match.
+	 * @return
+	 */
+	private TreeNode addNotLoadedFragment(final List<TreeNode> rootNodes, TreeNode treeNode, Match match,
+			URI uri) {
+		TreeNode newRootNode = null;
+		TreeNode notLoadedFragmentNode = createNotLoadedFragmentMatchNode(treeNode, match);
+		if (ResourceUIUtil.isFirstLevelFragment(uri)) {
+			URI rootURI = ResourceUIUtil.getRootResourceURI(uri);
+			if (rootURI != null) {
+				// if root uri matches a tree node's data resource, the current treeNode has to be
+				// moved under this tree node.
+				TreeNode realParent = ResourceUIUtil.getTreeNodeFromURI(rootNodes, rootURI);
+				if (realParent != null) {
+					realParent.getChildren().add(notLoadedFragmentNode);
+				} else {
+					newRootNode = notLoadedFragmentNode;
+				}
+			}
+		} else { // Get the first loaded parent object
+			ResourceSet rs = ResourceUIUtil.getDataResourceSet(match);
+			EObject eObject = ResourceUIUtil.getEObjectParent(rs, uri);
+			if (eObject != null) {
+				Match newParentMatch = getComparison().getMatch(eObject);
+				TreeNode newParentNode = ResourceUIUtil.getTreeNode(rootNodes, newParentMatch);
+				if (newParentNode != null) {
+					EList<TreeNode> newParentNodeChildren = newParentNode.getChildren();
+					newParentNodeChildren.add(notLoadedFragmentNode);
+					setNotLoadedFragmentNodesName(newParentNodeChildren);
+				} else {
+					newRootNode = notLoadedFragmentNode;
+				}
+			} else {
+				newRootNode = notLoadedFragmentNode;
+			}
+		}
+		return newRootNode;
+	}
+
+	/**
+	 * If the given list of nodes contains at least two nodes with NotLoadedFragmentMatches, then it set the
+	 * name of these NotLoadedFragmentMatches.
+	 * 
+	 * @param nodes
+	 *            the given list of nodes.
+	 */
+	private void setNotLoadedFragmentNodesName(Collection<TreeNode> nodes) {
+		if (ResourceUIUtil.containsNotLoadedFragmentNodes(nodes)) {
+			for (TreeNode node : nodes) {
+				EObject data = TREE_NODE_DATA.apply(node);
+				if (data instanceof NotLoadedFragmentMatch) {
+					((NotLoadedFragmentMatch)data).setName(ResourceUIUtil
+							.getResourceName((NotLoadedFragmentMatch)data));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Creates a TreeNode that holds a {@link org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch}. The
+	 * holding NotLoadedFragmentMatch will be created by this method and will contains the given Match as a
+	 * child. The newly created TreeNode will be the parent of the given TreeNode. The given match must
+	 * correspond to the given TreeNode's data.
+	 * 
+	 * @param node
+	 *            the child of the newly created TreeNode.
+	 * @param match
+	 *            the match that will be the child of the newly created NotLoadedFragmentMatch.
+	 * @return the newly created TreeNode.
+	 */
+	private TreeNode createNotLoadedFragmentMatchNode(TreeNode node, Match match) {
+		TreeNode notLoadedFragmentNode = TreeFactory.eINSTANCE.createTreeNode();
+		NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(match);
+		notLoadedFragmentNode.setData(notLoadedFragmentMatch);
+		notLoadedFragmentNode.eAdapters().add(this);
+		notLoadedFragmentNode.getChildren().add(node);
+		return notLoadedFragmentNode;
+	}
+
+	/**
+	 * For the given list of TreeNodes, encapsulates under a new TreeNode container all TreeNode holding
+	 * NotLoadingFragmentMatches.
+	 * 
+	 * @param nodes
+	 *            the initial TreeNodes.
+	 * @return the modified TreeNodes.
+	 */
+	private Collection<TreeNode> encapsulateNotLoadedFragmentNodes(Collection<TreeNode> nodes) {
+		final Collection<TreeNode> newNodes = Lists.newArrayList(nodes);
+		final Collection<TreeNode> fragmentNodes = Lists.newArrayList();
+		TreeNode notLoadedFragmentNode = TreeFactory.eINSTANCE.createTreeNode();
+		Collection<Match> matches = new ArrayList<Match>();
+		for (TreeNode node : nodes) {
+			EObject data = TREE_NODE_DATA.apply(node);
+			if (data instanceof NotLoadedFragmentMatch) {
+				matches.add((Match)data);
+				((NotLoadedFragmentMatch)data).setName(ResourceUIUtil
+						.getResourceName((NotLoadedFragmentMatch)data));
+				newNodes.remove(node);
+				fragmentNodes.add(node);
+			}
+		}
+		NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(matches);
+		notLoadedFragmentNode.setData(notLoadedFragmentMatch);
+		notLoadedFragmentNode.eAdapters().add(this);
+		notLoadedFragmentNode.getChildren().addAll(fragmentNodes);
+		newNodes.add(notLoadedFragmentNode);
+		return newNodes;
 	}
 }

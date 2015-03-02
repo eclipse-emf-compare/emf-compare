@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -388,6 +388,63 @@ public final class Graph<E> {
 	}
 
 	/**
+	 * Get the parent data of the given element.
+	 * <p>
+	 * The parent data, is the URI of the parent resource's object in case of a containment relationship
+	 * between the given element and its parent.
+	 * <p>
+	 * 
+	 * @param element
+	 *            Element we need the parent data of.
+	 * @return A parent data of type <code>E</code> if this element has a parent data, <code>null</code>
+	 *         otherwise.
+	 */
+	public E getParentData(E element) {
+		lock.lock();
+		try {
+			Node<E> node = nodes.get(element);
+			if (node != null) {
+				return node.getParentData();
+			}
+		} finally {
+			lock.unlock();
+		}
+		return null;
+	}
+
+	/**
+	 * Set the parent data for the given element.
+	 * <p>
+	 * The parent data, is the URI of the parent resource's object in case of a containment relationship
+	 * between the given element and its parent.
+	 * </p>
+	 * If the given element has several parents, then the addition of a new parent data results in delete the
+	 * parent data. If the given element has no parents, then the addition of a new parent data results in
+	 * delete the parent data.
+	 * 
+	 * @param element
+	 *            Element for which we need to set the parent data.
+	 * @param parentData
+	 *            The parent data to set.
+	 */
+	public void addParentData(E element, E parentData) {
+		lock.lock();
+		try {
+			Node<E> node = nodes.get(element);
+			if (node != null) {
+				E tmp = this.getParentData(element);
+				if (tmp == null) {
+					node.setParentData(parentData);
+				} else {
+					node.setParentData(null);
+				}
+			}
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
 	 * This will be used to represent individual elements in our graph.
 	 * 
 	 * @param <K>
@@ -397,6 +454,9 @@ public final class Graph<E> {
 	private static class Node<K> {
 		/** Underlying data of this Node. */
 		private final K element;
+
+		/** The object that contains underlying data of this Node. */
+		private K parentData;
 
 		/** Nodes that are connected with this one as a parent. */
 		private final Set<Node<K>> children;
@@ -412,6 +472,7 @@ public final class Graph<E> {
 		 */
 		public Node(K element) {
 			this.element = element;
+			this.parentData = null;
 			this.parents = new LinkedHashSet<Node<K>>();
 			this.children = new LinkedHashSet<Node<K>>();
 		}
@@ -466,6 +527,7 @@ public final class Graph<E> {
 			}
 			this.parents.clear();
 			this.children.clear();
+			this.parentData = null;
 		}
 
 		/**
@@ -475,6 +537,25 @@ public final class Graph<E> {
 		 */
 		public K getElement() {
 			return element;
+		}
+
+		/**
+		 * Returns the object that contains underlying data of this Node.
+		 * 
+		 * @return The object that contains underlying data of this Node.
+		 */
+		public K getParentData() {
+			return parentData;
+		}
+
+		/**
+		 * Sets the object that contains underlying data of this Node.
+		 * 
+		 * @param parentData
+		 *            the object that contains underlying data of this Node.
+		 */
+		public void setParentData(K parentData) {
+			this.parentData = parentData;
 		}
 	}
 

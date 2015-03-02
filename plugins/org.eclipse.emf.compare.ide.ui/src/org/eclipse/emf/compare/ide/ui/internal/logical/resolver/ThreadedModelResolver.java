@@ -75,7 +75,9 @@ import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 import org.eclipse.emf.compare.internal.utils.Graph;
+import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -208,6 +210,15 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		this.resolutionEnd = lock.newCondition();
 		this.currentlyResolving = new HashSet<URI>();
 		this.shutdownInProgress = new AtomicBoolean(false);
+	}
+
+	/**
+	 * Convert the dependency graph to its read-only version.
+	 * 
+	 * @return a read-only version of the dependency graph associated to this model resolver.
+	 */
+	public ReadOnlyGraph<URI> getDependencyGraph() {
+		return ReadOnlyGraph.toReadOnlyGraph(dependencyGraph);
 	}
 
 	/**
@@ -935,11 +946,8 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	 *            The resource set in which to load our temporary resources.
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
-	 * @throws InterruptedException
-	 *             Thrown if the resolution is cancelled or interrupted one way or another.
 	 */
-	private void updateChangedResources(SynchronizedResourceSet resourceSet, ThreadSafeProgressMonitor monitor)
-			throws InterruptedException {
+	private void updateChangedResources(SynchronizedResourceSet resourceSet, ThreadSafeProgressMonitor monitor) {
 		final Set<URI> removedURIs = Sets.difference(resourceListener.popRemovedURIs(), resolvedResources);
 		final Set<URI> changedURIs = Sets.difference(resourceListener.popChangedURIs(), resolvedResources);
 
@@ -964,17 +972,35 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			demandResolve(resourceSet, changed, monitor);
 		}
 
-		while (!currentlyResolving.isEmpty()) {
-			resolutionEnd.await();
+		lock.lock();
+		try {
+			while (!currentlyResolving.isEmpty()) {
+				resolutionEnd.await();
+			}
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		} finally {
+			lock.unlock();
 		}
 
 		// Re-connect changed resources parents' with their parents
 		for (URI uri : parentToGrandParents.keySet()) {
 			if (dependencyGraph.contains(uri)) {
 				for (URI parent : parentToGrandParents.get(uri)) {
-					dependencyGraph.addChildren(parent, Collections.singleton(uri));
+					demandResolve(resourceSet, parent, monitor);
 				}
 			}
+		}
+
+		lock.lock();
+		try {
+			while (!currentlyResolving.isEmpty()) {
+				resolutionEnd.await();
+			}
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -1416,6 +1442,10 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 					demandRemoteResolve(resourceSet, to, monitor);
 				} else {
 					dependencyGraph.addChildren(from, Collections.singleton(to));
+					if (eStructuralFeature instanceof EReference
+							&& ((EReference)eStructuralFeature).isContainment()) {
+						dependencyGraph.addParentData(to, EcoreUtil.getURI(eObject));
+					}
 					demandResolve(resourceSet, to, monitor);
 				}
 			}

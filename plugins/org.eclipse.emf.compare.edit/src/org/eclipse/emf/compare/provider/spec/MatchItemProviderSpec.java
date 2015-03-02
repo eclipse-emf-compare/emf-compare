@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
@@ -64,6 +65,10 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 			ret = itemDelegator.getImage(match.getRight());
 		}
 
+		if (ret == null && match instanceof NotLoadedFragmentMatch) {
+			ret = itemDelegator.getImage(((NotLoadedFragmentMatch)match).getResource());
+		}
+
 		if (ret == null) {
 			ret = super.getImage(object);
 		}
@@ -93,7 +98,15 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 		}
 
 		if (isNullOrEmpty(ret)) {
-			ret = super.getText(object);
+			if (match instanceof NotLoadedFragmentMatch) {
+				ret = "[ ... ]"; //$NON-NLS-1$
+				String name = ((NotLoadedFragmentMatch)match).getName();
+				if (!isNullOrEmpty(name)) {
+					ret += " (" + name + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+				}
+			} else {
+				ret = super.getText(object);
+			}
 		}
 
 		return ret;

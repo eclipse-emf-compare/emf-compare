@@ -45,6 +45,7 @@ import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -62,6 +63,7 @@ import org.eclipse.emf.common.ui.CommonUIPlugin;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
@@ -84,16 +86,22 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoActio
 import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.EmptyComparisonScope;
+import org.eclipse.emf.compare.ide.ui.internal.logical.StreamAccessorStorage;
+import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressInfoComposite;
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressMonitorWrapper;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.FetchListener;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAction;
 import org.eclipse.emf.compare.ide.ui.internal.util.CompareHandlerService;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
+import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
+import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
+import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IMergePreviewModeChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.SideLabelProvider;
@@ -1009,6 +1017,18 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				}
 
 				initToolbar();
+
+				IStorage leftStorage = PlatformElementUtil.findFile(left);
+				if (leftStorage == null) {
+					leftStorage = StreamAccessorStorage.fromTypedElement(left);
+				}
+				IModelResolver resolver = EMFCompareIDEUIPlugin.getDefault().getModelResolverRegistry()
+						.getBestResolverFor(leftStorage);
+				if (resolver instanceof ThreadedModelResolver) {
+					ReadOnlyGraph<URI> graph = ((ThreadedModelResolver)resolver).getDependencyGraph();
+					getCompareConfiguration().setResourcesGraph(graph);
+					EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(compareConfiguration);
+				}
 
 				compareInputChanged(scope, compareResult);
 			}
