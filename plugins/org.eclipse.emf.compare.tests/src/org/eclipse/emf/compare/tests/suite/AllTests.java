@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - Adds additional test classes
+ *     Stefan Dirix - Add additional test class
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.suite;
 
@@ -35,6 +36,7 @@ import org.eclipse.emf.compare.tests.fullcomparison.IdentifierComparisonTest;
 import org.eclipse.emf.compare.tests.fullcomparison.ProximityComparisonTest;
 import org.eclipse.emf.compare.tests.match.MatchEngineFactoryRegistryTest;
 import org.eclipse.emf.compare.tests.match.ProximityIndexTest;
+import org.eclipse.emf.compare.tests.match.ProxyMatchingTest;
 import org.eclipse.emf.compare.tests.merge.ConflictMergeTest;
 import org.eclipse.emf.compare.tests.merge.ExtensionMergeTest;
 import org.eclipse.emf.compare.tests.merge.FeatureMaps2wayMergeTest;
@@ -76,8 +78,9 @@ import org.junit.runners.Suite.SuiteClasses;
 		ExtensionMergeTest.class, IndividualMergeOutOfScopeValuesTest.class, ProximityComparisonTest.class,
 		DynamicInstanceComparisonTest.class, URIDistanceTest.class, FragmentationTest.class,
 		AllEditTests.class, CommandStackTestSuite.class, MatchEngineFactoryRegistryTest.class,
-		ConflictMergeTest.class, PseudoConflictMergeTest.class, ProximityIndexTest.class, AllRCPTests.class,
-		FeatureMaps2wayMergeTest.class, FeatureMaps3wayMergeTest.class, FeatureMapsConflictsMergeTest.class,
+		ProxyMatchingTest.class, ConflictMergeTest.class, PseudoConflictMergeTest.class,
+		ProximityIndexTest.class, AllRCPTests.class, FeatureMaps2wayMergeTest.class,
+		FeatureMaps3wayMergeTest.class, FeatureMapsConflictsMergeTest.class,
 		FeatureMapsPseudoConflictsMergeTest.class, TwoWayBatchMergingTest.class, EqualityHelperTest.class,
 		FeatureFilterTest.class, ThreeWayBatchMergingTest.class,
 		MultiLineAttributeConflictDetectionTest.class, ThreeWayTextDiffTest.class,

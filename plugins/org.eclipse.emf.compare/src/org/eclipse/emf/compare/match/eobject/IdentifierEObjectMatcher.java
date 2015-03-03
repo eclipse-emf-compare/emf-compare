@@ -9,7 +9,7 @@
  *     Obeo - initial API and implementation
  *     Alexandra Buzila - Bug 450360
  *     Philip Langer - Bug 460778
- *     Stefan Dirix - Bug 461011
+ *     Stefan Dirix - Bugs 461011 and 461291
  *******************************************************************************/
 package org.eclipse.emf.compare.match.eobject;
 
@@ -211,7 +211,8 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 		final Set<Match> matches = Sets.newLinkedHashSet();
 		// This lookup map will be used by iterations on right and origin to find the match in which they
 		// should add themselves
-		final Map<String, Match> idToMatch = Maps.newHashMap();
+
+		SwitchMap<String, Match> idProxyMap = new SwitchMap<String, Match>();
 
 		// We will try and mimic the structure of the input model.
 		// These map do not need to be ordered, we only need fast lookup.
@@ -236,10 +237,11 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 				} else {
 					matches.add(match);
 				}
-				if (idToMatch.containsKey(identifier)) {
+
+				final boolean isAlreadyContained = idProxyMap.put(left.eIsProxy(), identifier, match);
+				if (isAlreadyContained) {
 					reportDuplicateID(Side.LEFT, left);
 				}
-				idToMatch.put(identifier, match);
 				leftEObjectsToMatch.put(left, match);
 			} else {
 				leftEObjectsNoID.add(left);
@@ -252,13 +254,12 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 			// Do we have an existing match?
 			final String identifier = idComputation.apply(right);
 			if (identifier != null) {
-				Match match = idToMatch.get(identifier);
+				Match match = idProxyMap.get(right.eIsProxy(), identifier);
 				if (match != null) {
 					if (match.getRight() != null) {
 						reportDuplicateID(Side.RIGHT, right);
 					}
 					match.setRight(right);
-
 					rightEObjectsToMatch.put(right, match);
 				} else {
 					// Otherwise, create and place it.
@@ -275,7 +276,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 					}
 
 					rightEObjectsToMatch.put(right, match);
-					idToMatch.put(identifier, match);
+					idProxyMap.put(right.eIsProxy(), identifier, match);
 				}
 			} else {
 				rightEObjectsNoID.add(right);
@@ -288,7 +289,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 			// Do we have an existing match?
 			final String identifier = idComputation.apply(origin);
 			if (identifier != null) {
-				Match match = idToMatch.get(identifier);
+				Match match = idProxyMap.get(origin.eIsProxy(), identifier);
 				if (match != null) {
 					if (match.getOrigin() != null) {
 						reportDuplicateID(Side.ORIGIN, origin);
@@ -310,7 +311,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 						matches.add(match);
 					}
 
-					idToMatch.put(identifier, match);
+					idProxyMap.put(origin.eIsProxy(), identifier, match);
 					originEObjectsToMatch.put(origin, match);
 				}
 			} else {
@@ -366,6 +367,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	 * </p>
 	 * 
 	 * @param eObject
+	 *            The {@link EObject} for which's resource the string representation of its URI is determined.
 	 * @return A String representation of the given {@code eObject}'s resource URI.
 	 */
 	private String getUriString(EObject eObject) {
@@ -429,6 +431,74 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 				}
 			}
 			return identifier;
+		}
+	}
+
+	/**
+	 * Helper class to manage two different maps within one class based on a switch boolean.
+	 *
+	 * @param <K>
+	 *            The class used as key in the internal maps.
+	 * @param <V>
+	 *            The class used as value in the internal maps.
+	 */
+	private class SwitchMap<K, V> {
+
+		/**
+		 * Map used when the switch boolean is true.
+		 */
+		final Map<K, V> trueMap = Maps.newHashMap();
+
+		/**
+		 * Map used when the switch boolean is false.
+		 */
+		final Map<K, V> falseMap = Maps.newHashMap();
+
+		/**
+		 * Puts the key-value pair in the map corresponding to the switch.
+		 *
+		 * @param switcher
+		 *            The boolean variable defining which map is to be used.
+		 * @param key
+		 *            The key which is to be put into a map.
+		 * @param value
+		 *            The value which is to be put into a map.
+		 * @return {@code true} if the key was already contained in the chosen map, {@code false} otherwise.
+		 */
+		public boolean put(boolean switcher, K key, V value) {
+			final Map<K, V> selectedMap = getMap(switcher);
+			final boolean isContained = selectedMap.containsKey(key);
+			selectedMap.put(key, value);
+			return isContained;
+		}
+
+		/**
+		 * Returns the value mapped to key.
+		 *
+		 * @param switcher
+		 *            The boolean variable defining which map is to be used.
+		 * @param key
+		 *            The key for which the value is looked up.
+		 * @return The value {@link V} if it exists, {@code null} otherwise.
+		 */
+		public V get(boolean switcher, K key) {
+			final Map<K, V> selectedMap = getMap(switcher);
+			return selectedMap.get(key);
+		}
+
+		/**
+		 * Selects the map based on the given boolean.
+		 *
+		 * @param switcher
+		 *            Defined which map is to be used.
+		 * @return {@link #trueMap} if {@code switcher} is true, {@link #falseMap} otherwise.
+		 */
+		private Map<K, V> getMap(boolean switcher) {
+			if (switcher) {
+				return falseMap;
+			} else {
+				return trueMap;
+			}
 		}
 	}
 }
