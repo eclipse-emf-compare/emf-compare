@@ -22,7 +22,7 @@
 			<includes>
 				<include>org/eclipse/emf/compare/tests/performance/${performance-suite}Suite.class</include>
 			</includes>	
-			<argLine>-Xmx2048m -XX:MaxPermSize=256m</argLine>
+			<argLine>-Xmx4096m -XX:MaxPermSize=512m</argLine>
 		</configuration>
 	</plugin>
     </plugins>
