@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,9 +25,11 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.compare.ICompareContainer;
+import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
@@ -373,7 +375,13 @@ public final class ComparisonScopeBuilder {
 
 		// This is not a local comparison, and we've got no info on how to load remote revisions.
 		final IStorage leftStorage = StreamAccessorStorage.fromTypedElement(left);
-		final IStorage rightStorage = StreamAccessorStorage.fromTypedElement(right);
+		Assert.isNotNull(leftStorage);
+		final IStorage rightStorage;
+		if (right instanceof IStreamContentAccessor) {
+			rightStorage = StreamAccessorStorage.fromTypedElement(right);
+		} else {
+			rightStorage = null;
+		}
 		final IStorage originStorage;
 		if (origin != null) {
 			originStorage = StreamAccessorStorage.fromTypedElement(origin);
@@ -398,8 +406,12 @@ public final class ComparisonScopeBuilder {
 	private SynchronizationModel loadSingleResource(IStorage left, IStorage right, IStorage origin) {
 		final StorageTraversal leftTraversal = new StorageTraversal(new LinkedHashSet<IStorage>(Arrays
 				.asList(left)));
-		final StorageTraversal rightTraversal = new StorageTraversal(new LinkedHashSet<IStorage>(Arrays
-				.asList(right)));
+		final StorageTraversal rightTraversal;
+		if (right != null) {
+			rightTraversal = new StorageTraversal(new LinkedHashSet<IStorage>(Arrays.asList(right)));
+		} else {
+			rightTraversal = new StorageTraversal(Sets.<IStorage> newLinkedHashSet());
+		}
 		final StorageTraversal originTraversal;
 		if (origin != null) {
 			originTraversal = new StorageTraversal(new LinkedHashSet<IStorage>(Arrays.asList(origin)));
