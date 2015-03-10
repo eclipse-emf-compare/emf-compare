@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2014, 2015 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -238,54 +238,13 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 	 *            The direction of merging.
 	 */
 	private void changeElement(OpaqueElementBodyChange bodyChange, boolean rightToLeft) {
-		final Match match = bodyChange.getMatch();
-		final Comparison comparison = match.getComparison();
-		final String language = bodyChange.getLanguage();
+		final EObject targetContainer = getTargetContainer(bodyChange.getMatch(), rightToLeft);
+		final String targetValue = getTargetBodyValue(bodyChange, rightToLeft);
 
-		final EObject leftContainer = match.getLeft();
-		final EObject rightContainer = match.getRight();
+		setBody(targetContainer, targetValue, bodyChange.getLanguage());
 
-		final String leftBody = UMLCompareUtil.getOpaqueElementBody(leftContainer, language);
-		final String rightBody = UMLCompareUtil.getOpaqueElementBody(rightContainer, language);
-
-		final String newBody;
-		if (comparison.isThreeWay()) {
-			final EObject originContainer = match.getOrigin();
-			final String originBody = UMLCompareUtil.getOpaqueElementBody(originContainer, language);
-			if (isAcceptingChange(bodyChange, rightToLeft)) {
-				newBody = performThreeWayTextMerge(leftBody, rightBody, originBody);
-			} else {
-				newBody = originBody;
-			}
-		} else if (rightToLeft) {
-			newBody = rightBody;
-		} else {
-			newBody = leftBody;
-		}
-
-		if (rightToLeft) {
-			setBody(leftContainer, newBody, language);
-		} else {
-			setBody(rightContainer, newBody, language);
-		}
-
-		// we merged the body change as a whole, so set all refining to merged too
+		// we merge the body change as a whole, so set all refining to merged too
 		setRefiningDiffsMerged(bodyChange);
-	}
-
-	/**
-	 * Specifies whether the given {@code diff} is an accept in the context of the given direction of merging
-	 * specified in {@code rightToLeft}.
-	 * 
-	 * @param diff
-	 *            The difference to check.
-	 * @param rightToLeft
-	 *            The direction of the merging.
-	 * @return <code>true</code> if it is an accept, <code>false</code> otherwise.
-	 */
-	private boolean isAcceptingChange(Diff diff, boolean rightToLeft) {
-		return (diff.getSource() == DifferenceSource.LEFT && !rightToLeft)
-				|| (diff.getSource() == DifferenceSource.RIGHT && rightToLeft);
 	}
 
 	/**
@@ -304,6 +263,159 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 		final List<String> bodies = UMLCompareUtil.getOpaqueElementBodies(container);
 		final int index = languages.indexOf(language);
 		bodies.set(index, newBody);
+	}
+
+	/**
+	 * Returns the target value, that is, the value to be set when merging the given {@code bodyChange} in the
+	 * direction indicated by {@code rightToLeft}.
+	 * 
+	 * @param bodyChange
+	 *            The bodyChange we are currently merging.
+	 * @param rightToLeft
+	 *            Direction of the merge.
+	 * @return The target value to be set when merging.
+	 */
+	private String getTargetBodyValue(OpaqueElementBodyChange bodyChange, boolean rightToLeft) {
+		final String newBody;
+		if (bodyChange.getMatch().getComparison().isThreeWay()) {
+			newBody = performThreeWayTextMerge(bodyChange, rightToLeft);
+		} else if (rightToLeft) {
+			newBody = getRightBodyValue(bodyChange);
+		} else {
+			newBody = getLeftBodyValue(bodyChange);
+		}
+		return newBody;
+	}
+
+	/**
+	 * Performs a three-way text merge for the given {@code bodyChange} and returns the merged text.
+	 * <p>
+	 * Depending on whether the given {@code bodyChange} is an accept or reject in the context of the merge
+	 * direction indicated by {@code rightToLeft}, this method will perform different strategies of merging.
+	 * </p>
+	 * 
+	 * @param bodyChange
+	 *            The bodyChange for which a three-way text diff is to be performed.
+	 * @param rightToLeft
+	 *            The direction of applying the {@code diff}.
+	 * @return The merged text.
+	 */
+	private String performThreeWayTextMerge(OpaqueElementBodyChange bodyChange, boolean rightToLeft) {
+		if (isAcceptingChange(bodyChange, rightToLeft)) {
+			return performAcceptingThreeWayTextMerge(bodyChange);
+		} else {
+			return performRejectingThreeWayTextMerge(bodyChange);
+		}
+	}
+
+	/**
+	 * Specifies whether the given {@code diff} is an accept in the context of the given direction of merging
+	 * specified in {@code rightToLeft}.
+	 * 
+	 * @param diff
+	 *            The difference to check.
+	 * @param rightToLeft
+	 *            The direction of the merging.
+	 * @return <code>true</code> if it is an accept, <code>false</code> otherwise.
+	 */
+	private boolean isAcceptingChange(Diff diff, boolean rightToLeft) {
+		return (diff.getSource() == DifferenceSource.LEFT && !rightToLeft)
+				|| (diff.getSource() == DifferenceSource.RIGHT && rightToLeft);
+	}
+
+	/**
+	 * Performs a three-way text merge accepting the given {@code bodyChange} and returns the merged text.
+	 * 
+	 * @param bodyChange
+	 *            The bodyChange for which a three-way text diff is to be performed.
+	 * @return The merged text.
+	 */
+	private String performAcceptingThreeWayTextMerge(OpaqueElementBodyChange bodyChange) {
+		final String leftBodyValue = getLeftBodyValue(bodyChange);
+		final String rightBodyValue = getRightBodyValue(bodyChange);
+		final String originBodyValue = getOriginBodyValue(bodyChange);
+		return performThreeWayTextMerge(leftBodyValue, rightBodyValue, originBodyValue);
+	}
+
+	/**
+	 * Performs a three-way text merge rejecting the given {@code bodyChange} and returns the merged text.
+	 * <p>
+	 * The implementation of rejecting a body value change is based on a three-way diff corresponding to
+	 * {@link AttributeChangeMerger#performRejectingThreeWayTextMerge(AttributeChange, boolean)}.
+	 * </p>
+	 * 
+	 * @param bodyChange
+	 *            The bodyChange for which a three-way text diff is to be performed.
+	 * @param rightToLeft
+	 *            The direction of applying the {@code bodyChange}.
+	 * @return The merged text.
+	 */
+	private String performRejectingThreeWayTextMerge(OpaqueElementBodyChange bodyChange) {
+		final String originBodyValue = getOriginBodyValue(bodyChange);
+		final AttributeChange bodyValueAddition = getBodyValueAddition(bodyChange).get();
+		final String changedValueFromDiff = (String)bodyValueAddition.getValue();
+
+		final String changedValueFromModel;
+		if (DifferenceSource.LEFT.equals(bodyValueAddition.getSource())) {
+			changedValueFromModel = getLeftBodyValue(bodyChange);
+		} else {
+			changedValueFromModel = getRightBodyValue(bodyChange);
+		}
+
+		return performThreeWayTextMerge(changedValueFromModel, originBodyValue, changedValueFromDiff);
+	}
+
+	/**
+	 * Returns the attribute change that adds a body value from the refining differences of the given
+	 * {@code bodyChange}.
+	 * 
+	 * @param bodyChange
+	 *            The body change to get the body value addition from.
+	 * @return The attribute change adding a body value.
+	 */
+	private Optional<AttributeChange> getBodyValueAddition(OpaqueElementBodyChange bodyChange) {
+		for (Diff diff : bodyChange.getRefinedBy()) {
+			if (isChangeOfOpaqueElementBodyAttribute(diff) && DifferenceKind.ADD.equals(diff.getKind())) {
+				return Optional.of((AttributeChange)diff);
+			}
+		}
+		return Optional.absent();
+	}
+
+	/**
+	 * Returns the body value of the left-hand side that is affected by the given {@code bodyChange}.
+	 * 
+	 * @param bodyChange
+	 *            The body change to get the left-hand side body value for.
+	 * @return The left-hand side body value.
+	 */
+	private String getLeftBodyValue(OpaqueElementBodyChange bodyChange) {
+		final EObject leftContainer = bodyChange.getMatch().getLeft();
+		return UMLCompareUtil.getOpaqueElementBody(leftContainer, bodyChange.getLanguage());
+	}
+
+	/**
+	 * Returns the body value of the right-hand side that is affected by the given {@code bodyChange}.
+	 * 
+	 * @param bodyChange
+	 *            The body change to get the right-hand side body value for.
+	 * @return The right-hand side body value.
+	 */
+	private String getRightBodyValue(OpaqueElementBodyChange bodyChange) {
+		final EObject rightContainer = bodyChange.getMatch().getRight();
+		return UMLCompareUtil.getOpaqueElementBody(rightContainer, bodyChange.getLanguage());
+	}
+
+	/**
+	 * Returns the body value of the origin that is affected by the given {@code bodyChange}.
+	 * 
+	 * @param bodyChange
+	 *            The body change to get the origin body value for.
+	 * @return The origin body value.
+	 */
+	private String getOriginBodyValue(OpaqueElementBodyChange bodyChange) {
+		final EObject originContainer = bodyChange.getMatch().getOrigin();
+		return UMLCompareUtil.getOpaqueElementBody(originContainer, bodyChange.getLanguage());
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2014, 2015 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -182,6 +182,36 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 		Comparison comparison = compare(left, right, origin);
 		revertRightOpaqueElementBodyChanges(comparison);
 		assertOneBodyWithContents(right, originBody);
+	}
+
+	@Test
+	public void testA1UseCase_ApplyLeftRevertRightChangeThreeWay() throws IOException {
+		Resource origin = input.getA1Origin();
+		Resource left = input.getA1Left();
+		Resource right = input.getA1Right();
+
+		OpaqueAction leftAction = (OpaqueAction)left.getEObject(OPAQUE_ACTION1_ID);
+		String leftBody = leftAction.getBodies().get(0);
+
+		Comparison comparison = compare(left, right, origin);
+		applyLeftOpaqueElementBodyChangesToRight(comparison);
+		revertRightOpaqueElementBodyChanges(comparison);
+		assertOneBodyWithContents(right, leftBody);
+	}
+
+	@Test
+	public void testA1UseCase_ApplyRightRevertLeftChangeThreeWay() throws IOException {
+		Resource origin = input.getA1Origin();
+		Resource left = input.getA1Left();
+		Resource right = input.getA1Right();
+
+		OpaqueAction rightAction = (OpaqueAction)right.getEObject(OPAQUE_ACTION1_ID);
+		String rightBody = rightAction.getBodies().get(0);
+
+		Comparison comparison = compare(left, right, origin);
+		applyRightOpaqueElementBodyChangesToLeft(comparison);
+		revertLeftOpaqueElementBodyChanges(comparison);
+		assertOneBodyWithContents(left, rightBody);
 	}
 
 	@Test
