@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - adds method removeLineBreaks(String)
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
@@ -43,5 +44,16 @@ public final class Strings {
 			return elided + suffix;
 		}
 		return original;
+	}
+
+	/**
+	 * Removes line-breaks (\r\n or \r or \n) from the given {@code original} and replaces it with blanks.
+	 * 
+	 * @param original
+	 *            the original string to remove line breaks from.
+	 * @return the string without line breaks but blanks instead.
+	 */
+	public static String removeLineBreaks(String original) {
+		return original.replaceAll("\\r\\n|\\r|\\n", " "); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }
