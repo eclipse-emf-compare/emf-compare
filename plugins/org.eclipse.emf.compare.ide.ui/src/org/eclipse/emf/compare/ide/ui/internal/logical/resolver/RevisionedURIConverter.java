@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Obeo.
+ * Copyright (c) 2011, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -164,7 +164,7 @@ final class RevisionedURIConverter extends StorageURIConverter {
 
 				if (provider != null) {
 					final IStorage storage = provider.getStorage(new NullProgressMonitor());
-					if (storage != null) {
+					if (storage != null && (!(storage instanceof IResource) || ((IResource)storage).exists())) {
 						getLoadedRevisions().add(storage);
 						return storage.getContents();
 					}

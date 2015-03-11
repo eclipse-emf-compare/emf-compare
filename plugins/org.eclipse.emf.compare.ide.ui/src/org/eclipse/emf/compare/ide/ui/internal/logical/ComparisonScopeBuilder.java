@@ -53,6 +53,8 @@ import org.eclipse.emf.compare.scope.FilterComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.URIConverter;
+import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberMergeContext;
@@ -479,16 +481,17 @@ public final class ComparisonScopeBuilder {
 		final ResourceSet rightResourceSet = NotLoadingResourceSet.create(rightTraversal, progress
 				.newChild(1), resourceSetHookRegistry);
 
+		final URIConverter converter = new ExtensibleURIConverterImpl();
 		final Set<URI> urisInScope = Sets.newLinkedHashSet();
 		for (IStorage left : leftTraversal.getStorages()) {
-			urisInScope.add(createURIFor(left));
+			urisInScope.add(converter.normalize(createURIFor(left)));
 		}
 		for (IStorage right : rightTraversal.getStorages()) {
-			urisInScope.add(createURIFor(right));
+			urisInScope.add(converter.normalize(createURIFor(right)));
 		}
 		if (originTraversal != null) {
 			for (IStorage origin : originTraversal.getStorages()) {
-				urisInScope.add(createURIFor(origin));
+				urisInScope.add(converter.normalize(createURIFor(origin)));
 			}
 		}
 

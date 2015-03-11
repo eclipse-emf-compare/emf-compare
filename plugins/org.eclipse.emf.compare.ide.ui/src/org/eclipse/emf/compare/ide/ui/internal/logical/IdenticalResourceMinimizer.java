@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,14 +18,11 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
-import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 
 /**
@@ -43,7 +40,7 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 
 	/**
 	 * {@inheritDoc} Specifically, we'll remove all resources that can be seen as binary identical (we match
-	 * resources through exact equality of their names) or unmatched and read-only.
+	 * resources through exact equality of their names).
 	 * 
 	 * @see org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer#minimize(org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
@@ -76,19 +73,26 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 			} else if (right != null && equals(left, right)) {
 				leftTraversal.removeStorage(left);
 				rightTraversal.removeStorage(right);
-			} else if (right == null) {
-				// This file has no match. remove it if read only and not in workspace.
-				if (left.isReadOnly() && !isInWorkspace(left)) {
-					leftTraversal.getStorages().remove(left);
-				}
+			} else if (right == null && isIgnoredStorage(left)) {
+				/*
+				 * This has no match and is in plugins. We would detect an insane number of false positives on
+				 * it (every element "added"), so remove it from the scope.
+				 */
+				leftTraversal.getStorages().remove(left);
 			}
 			subMonitor.worked(1);
 		}
 
 		subMonitor = progess.newChild(1).setWorkRemaining(rightCopy.size());
 		for (IStorage right : rightCopy) {
-			// These have no match on left. Remove if read only and not in workspace.
-			if (right.isReadOnly() && !isInWorkspace(right)) {
+			final IStorage origin = removeLikeNamedStorageFrom(right, originCopy);
+			if (origin != null) {
+				// we had a match in the origin, leave this file in scope (it's been removed from left)
+			} else if (isIgnoredStorage(right)) {
+				/*
+				 * This has no match and is in plugins. We would detect an insane number of false positives on
+				 * it (every element "removed"), so remove it from the scope.
+				 */
 				rightTraversal.removeStorage(right);
 			}
 			subMonitor.worked(1);
@@ -96,8 +100,8 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 
 		subMonitor = progess.newChild(1).setWorkRemaining(rightCopy.size());
 		for (IStorage origin : originCopy) {
-			// These have no match on left and right. Remove if read only and not in workspace.
-			if (origin.isReadOnly() && !isInWorkspace(origin)) {
+			// These have no match on left and right.
+			if (isIgnoredStorage(origin)) {
 				originTraversal.removeStorage(origin);
 			}
 			subMonitor.worked(1);
@@ -169,15 +173,14 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 	}
 
 	/**
-	 * Check if the given IStrorage exists in the workspace or not.
+	 * We will remove from the scope any storage that is located in the plugins (detecting differences on such
+	 * files is meaningless).
 	 * 
-	 * @return true, if the given IStorage exists in the workspace, false otherwise.
+	 * @param storage
+	 *            The storage we need to test.
+	 * @return <code>true</code> if this storage should be ignored and removed from this scope.
 	 */
-	boolean isInWorkspace(IStorage storage) {
-		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		if (root != null) {
-			return root.getFile(ResourceUtil.getFixedPath(storage)).isAccessible();
-		}
-		return false;
+	private boolean isIgnoredStorage(IStorage storage) {
+		return storage.getFullPath().toString().startsWith("platform:/plugin"); //$NON-NLS-1$
 	}
 }
