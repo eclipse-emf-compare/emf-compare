@@ -915,9 +915,10 @@ public class DefaultDiffEngine implements IDiffEngine {
 			DifferenceSource side) {
 		final boolean move;
 		final Object entryValue = entry.getValue();
-		final EReference structuralFeature = (EReference)entry.getEStructuralFeature();
+		final EStructuralFeature structuralFeature = entry.getEStructuralFeature();
 
-		if (entryValue instanceof EObject && structuralFeature.isContainment()) {
+		if (entryValue instanceof EObject && structuralFeature instanceof EReference
+				&& ((EReference)structuralFeature).isContainment()) {
 			final Match candidateMatch = comparison.getMatch((EObject)entryValue);
 
 			if (candidateMatch == null) {
