@@ -346,8 +346,6 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 	 * 
 	 * @param bodyChange
 	 *            The bodyChange for which a three-way text diff is to be performed.
-	 * @param rightToLeft
-	 *            The direction of applying the {@code bodyChange}.
 	 * @return The merged text.
 	 */
 	private String performRejectingThreeWayTextMerge(OpaqueElementBodyChange bodyChange) {
