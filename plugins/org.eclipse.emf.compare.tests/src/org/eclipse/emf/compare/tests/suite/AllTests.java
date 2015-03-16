@@ -34,6 +34,7 @@ import org.eclipse.emf.compare.tests.fullcomparison.DynamicInstanceComparisonTes
 import org.eclipse.emf.compare.tests.fullcomparison.ExtLibraryTest;
 import org.eclipse.emf.compare.tests.fullcomparison.IdentifierComparisonTest;
 import org.eclipse.emf.compare.tests.fullcomparison.ProximityComparisonTest;
+import org.eclipse.emf.compare.tests.match.IdentifierEObjectMatcherTest;
 import org.eclipse.emf.compare.tests.match.MatchEngineFactoryRegistryTest;
 import org.eclipse.emf.compare.tests.match.ProximityIndexTest;
 import org.eclipse.emf.compare.tests.match.ProxyMatchingTest;
@@ -85,7 +86,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		FeatureMapsPseudoConflictsMergeTest.class, TwoWayBatchMergingTest.class, EqualityHelperTest.class,
 		FeatureFilterTest.class, ThreeWayBatchMergingTest.class,
 		MultiLineAttributeConflictDetectionTest.class, ThreeWayTextDiffTest.class,
-		MultiLineAttributeMergeTest.class, MonitorCancelTest.class })
+		MultiLineAttributeMergeTest.class, MonitorCancelTest.class, IdentifierEObjectMatcherTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
