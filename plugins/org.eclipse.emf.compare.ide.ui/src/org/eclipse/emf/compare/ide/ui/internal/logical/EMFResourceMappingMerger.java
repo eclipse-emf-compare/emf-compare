@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo.
+ * Copyright (c) 2014, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - log messages (bug 461713)
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -15,17 +16,22 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
 import com.google.common.collect.ImmutableMap;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -85,6 +91,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	/** {@inheritDoc} */
 	public IStatus merge(IMergeContext mergeContext, IProgressMonitor monitor) throws CoreException {
 		final ResourceMapping[] emfMappings = getEMFMappings(mergeContext);
+		log(IStatus.OK, "EMFResourceMappingMerger.startingModelMerge", emfMappings); //$NON-NLS-1$
 		if (emfMappings.length <= 0) {
 			return new Status(IStatus.ERROR, EMFCompareIDEUIPlugin.PLUGIN_ID, EMFCompareIDEUIMessages
 					.getString("EMFResourceMappingMerger.mergeFailedGeneric")); //$NON-NLS-1$
@@ -109,12 +116,85 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 				return new MergeStatus(EMFCompareIDEUIPlugin.PLUGIN_ID, EMFCompareIDEUIMessages
 						.getString("EMFResourceMappingMerger.mergeFailedConflicts"), failingArray); //$NON-NLS-1$
 			}
+			log(IStatus.OK, "EMFResourceMappingMerger.successfulModelMerge", emfMappings); //$NON-NLS-1$
 			return Status.OK_STATUS;
 		} finally {
 			if (monitor != null) {
 				monitor.done();
 			}
 		}
+	}
+
+	/**
+	 * Logs the EMFCompareIDEUIPlugin message for the given {@code key} with the given severity
+	 * {@code statusCode} and {@code emfMappings}.
+	 * 
+	 * @param statusCode
+	 *            Status code must be one of {@link IStatus}.
+	 * @param key
+	 *            Message key for EMFCompareIDEUIPlugin.
+	 * @param emfMappings
+	 *            The resource mappings to log.
+	 */
+	private void log(int statusCode, String key, ResourceMapping[] emfMappings) {
+		final List<IResource> iResources = getInvolvedIResources(emfMappings);
+		final String message = EMFCompareIDEUIMessages.getString(key, String.valueOf(iResources.size()));
+		log(statusCode, message, iResources);
+	}
+
+	/**
+	 * Logs the given {@code message} and the given {@code iResources} with the given severity
+	 * {@code statusCode}.
+	 * <p>
+	 * The logged status is a {@link MultiStatus}, having the given {@code message} as a parent status and the
+	 * names of the provided {@code iResources} as child statuses.
+	 * </p>
+	 * 
+	 * @param statusCode
+	 *            Status code must be one of {@link IStatus}.
+	 * @param message
+	 *            The message to be logged.
+	 * @param iResources
+	 *            The resources to be added as child status.
+	 */
+	private void log(int statusCode, String message, Collection<IResource> iResources) {
+		final MultiStatus multiStatus = new MultiStatus(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, message, null);
+		for (IResource iResource : iResources) {
+			final Status childStatus = new Status(statusCode, EMFCompareIDEUIPlugin.PLUGIN_ID, iResource
+					.getFullPath().toOSString());
+			multiStatus.add(childStatus);
+		}
+		log(multiStatus);
+	}
+
+	/**
+	 * Returns the {@link IResource resources} involved in the given {@code emfMappings}.
+	 * 
+	 * @param emfMappings
+	 *            The resource mappings to get the involved resources from.
+	 * @return The resources involved in {@code emfMappings}.
+	 */
+	private List<IResource> getInvolvedIResources(ResourceMapping[] emfMappings) {
+		final List<IResource> iResources = new ArrayList<IResource>();
+		for (ResourceMapping mapping : emfMappings) {
+			if (mapping instanceof EMFResourceMapping) {
+				final SynchronizationModel syncModel = ((EMFResourceMapping)mapping).getLatestModel();
+				for (IResource iResource : syncModel.getResources()) {
+					iResources.add(iResource);
+				}
+			}
+		}
+		return iResources;
+	}
+
+	/**
+	 * Logs the given {@code status} to the log of {@link EMFCompareIDEUIPlugin}.
+	 * 
+	 * @param status
+	 *            The {@link IStatus} to log.
+	 */
+	private void log(IStatus status) {
+		EMFCompareIDEUIPlugin.getDefault().getLog().log(status);
 	}
 
 	/**
@@ -175,10 +255,8 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 
 			for (IStorage storage : syncModel.getLeftTraversal().getStorages()) {
 				if (storage.getFullPath() == null) {
-					EMFCompareIDEUIPlugin.getDefault().getLog().log(
-							new Status(IStatus.WARNING, EMFCompareIDEUIPlugin.PLUGIN_ID,
-									EMFCompareIDEUIMessages
-											.getString("EMFResourceMappingMerger.mergeIncomplete"))); //$NON-NLS-1$
+					log(new Status(IStatus.WARNING, EMFCompareIDEUIPlugin.PLUGIN_ID, EMFCompareIDEUIMessages
+							.getString("EMFResourceMappingMerger.mergeIncomplete"))); //$NON-NLS-1$
 				} else {
 					final IDiff diff = mergeContext.getDiffTree().getDiff(storage.getFullPath());
 					if (diff != null) {
