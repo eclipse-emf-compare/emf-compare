@@ -674,7 +674,7 @@ public final class Graph<E> {
 			 * @see java.util.Iterator#hasNext()
 			 */
 			public boolean hasNext() {
-				return next != null || nextNodeIterator.hasNext() || nodesIterator.hasNext();
+				return next != null || nextNodeIterator.hasNext();
 			}
 
 			/**
