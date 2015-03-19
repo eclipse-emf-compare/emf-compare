@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.emf.compare.rcp" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="org.eclipse.emf.compare.ide" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.eclipse.emf.compare.rcp" id="resourceSetHook" name="Resource Set Hook"/>
+         <meta.schema plugin="org.eclipse.emf.compare.ide" id="resourceSetHook" name="Resource Set Hook"/>
       </appinfo>
       <documentation>
          The ResourceSet hook extension point aims to offer a mean to hook external behaviors on the EMF Compare resource set. A hook has access to the ResourceSet before loading any resource and after loading all the resources. Those hooks will worked only if the input of the comparison are not already loaded items (that is to say neither an EObject,a Resource or ResourceSet).
