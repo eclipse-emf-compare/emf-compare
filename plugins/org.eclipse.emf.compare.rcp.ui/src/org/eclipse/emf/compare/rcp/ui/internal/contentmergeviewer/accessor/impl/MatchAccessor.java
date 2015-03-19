@@ -14,13 +14,11 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
@@ -34,7 +32,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.util.ResourceUIUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.swt.graphics.Image;
 
@@ -155,7 +152,8 @@ public class MatchAccessor extends AbstractTypedElementAdapter implements ICompa
 		for (Match match : matches) {
 			MergeViewerItem.Container container = null;
 			if (ResourceUIUtil.isFragment(match, getSide())) {
-				IMergeViewerItem item = createItemForNotLoadedFragmentMatch(match);
+				IMergeViewerItem item = ResourceUIUtil.createItemForNotLoadedFragmentMatch(match, getSide(),
+						getComparison(), getRootAdapterFactory());
 				if (item != null) {
 					items.add(item);
 				}
@@ -169,74 +167,13 @@ public class MatchAccessor extends AbstractTypedElementAdapter implements ICompa
 			}
 		}
 
-		final IMergeViewerItem newContainer = addNewContainerForNotLoadedFragmentMatches(items);
+		final IMergeViewerItem newContainer = ResourceUIUtil.addNewContainerForNotLoadedFragmentMatches(
+				items, getSide(), getComparison(), getRootAdapterFactory());
 		if (newContainer != null) {
 			ret.add(newContainer);
 		} else {
 			ret.addAll(items);
 		}
 		return ret.build();
-	}
-
-	/**
-	 * Constructs a {@link org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch} from the given
-	 * {@link org.eclipse.emf.compare.Match} and then return the
-	 * {@link org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem} corresponding to this
-	 * NotLoadedFragmentMatch.
-	 * 
-	 * @param match
-	 *            the given Match.
-	 * @return an IMergeViewerItem.
-	 */
-	private IMergeViewerItem createItemForNotLoadedFragmentMatch(Match match) {
-		final MergeViewerItem.Container container;
-		ResourceSet rs = ResourceUIUtil.getDataResourceSet(match, getSide());
-		URI uri = ResourceUIUtil.getDataURI(match, getSide());
-		EObject firstLoadedParent = ResourceUIUtil.getEObjectParent(rs, uri);
-		if (firstLoadedParent == null) {
-			NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(match);
-			container = new MergeViewerItem.Container(getComparison(), null, notLoadedFragmentMatch,
-					notLoadedFragmentMatch, notLoadedFragmentMatch, getSide(), getRootAdapterFactory());
-		} else if (ResourceUIUtil.isRootResource(firstLoadedParent.eResource().getURI())) {
-			Match matchParent = getComparison().getMatch(firstLoadedParent);
-			if (matchParent != null) {
-				container = new MergeViewerItem.Container(getComparison(), null, match.getLeft(), match
-						.getRight(), match.getOrigin(), getSide(), getRootAdapterFactory());
-			} else {
-				NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(match);
-				container = new MergeViewerItem.Container(getComparison(), null, notLoadedFragmentMatch,
-						notLoadedFragmentMatch, notLoadedFragmentMatch, getSide(), getRootAdapterFactory());
-			}
-		} else {
-			container = null;
-		}
-		return container;
-	}
-
-	/**
-	 * Add a new parent container to the given list of IMergeViewerItems if needed and returns it. If the
-	 * given items don't need a new parent, return null.
-	 * 
-	 * @param items
-	 *            the given IMergeViewerItems.
-	 * @return an IMergeViewerItem, or null.
-	 */
-	private IMergeViewerItem addNewContainerForNotLoadedFragmentMatches(Collection<IMergeViewerItem> items) {
-		final MergeViewerItem.Container newContainer;
-		final Collection<Match> notLoadedFragmentMatches = ResourceUIUtil.getNotLoadedFragmentMatches(items);
-		if (notLoadedFragmentMatches.size() > 1) {
-			// Need to replace by top-container NotLoadedFragment item
-			NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(
-					notLoadedFragmentMatches);
-			for (NotLoadedFragmentMatch match : Iterables.filter(notLoadedFragmentMatches,
-					NotLoadedFragmentMatch.class)) {
-				match.setName(ResourceUIUtil.getResourceName(match));
-			}
-			newContainer = new MergeViewerItem.Container(getComparison(), null, notLoadedFragmentMatch,
-					notLoadedFragmentMatch, notLoadedFragmentMatch, getSide(), getRootAdapterFactory());
-		} else {
-			newContainer = null;
-		}
-		return newContainer;
 	}
 }

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.util;
 
+import static com.google.common.collect.Iterables.filter;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -19,6 +21,7 @@ import com.google.common.collect.Sets;
 import java.util.Collection;
 import java.util.Map.Entry;
 
+import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
@@ -26,6 +29,7 @@ import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
 import org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
+import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.ecore.EObject;
@@ -608,5 +612,85 @@ public class ResourceUIUtil {
 			parentData = graph.getParentData(parent);
 		}
 		return false;
+	}
+
+	/**
+	 * Constructs a {@link org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch} from the given
+	 * {@link org.eclipse.emf.compare.Match} and then return the
+	 * {@link org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem} corresponding to this
+	 * NotLoadedFragmentMatch.
+	 * 
+	 * @param match
+	 *            the given Match.
+	 * @param side
+	 *            the side of the Match.
+	 * @param comparison
+	 *            the comparison object that contains the Match.
+	 * @param adapterFactory
+	 *            the adapter factory used to create the merge viewer item.
+	 * @return an IMergeViewerItem.
+	 */
+	public static IMergeViewerItem createItemForNotLoadedFragmentMatch(Match match, MergeViewerSide side,
+			Comparison comparison, AdapterFactory adapterFactory) {
+		final MergeViewerItem.Container container;
+		ResourceSet rs = getDataResourceSet(match, side);
+		URI uri = getDataURI(match, side);
+		EObject firstLoadedParent = getEObjectParent(rs, uri);
+		if (firstLoadedParent == null) {
+			NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(match);
+			container = new MergeViewerItem.Container(comparison, null, notLoadedFragmentMatch,
+					notLoadedFragmentMatch, notLoadedFragmentMatch, side, adapterFactory);
+		} else if (isRootResource(firstLoadedParent.eResource().getURI())) {
+			Match matchParent = comparison.getMatch(firstLoadedParent);
+			if (matchParent != null) {
+				if (!comparison.getMatches().contains(matchParent)) {
+					container = new MergeViewerItem.Container(comparison, null, match.getLeft(), match
+							.getRight(), match.getOrigin(), side, adapterFactory);
+				} else {
+					container = null;
+				}
+			} else {
+				NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(match);
+				container = new MergeViewerItem.Container(comparison, null, notLoadedFragmentMatch,
+						notLoadedFragmentMatch, notLoadedFragmentMatch, side, adapterFactory);
+			}
+		} else {
+			container = null;
+		}
+		return container;
+	}
+
+	/**
+	 * Adds a new parent container to the given list of IMergeViewerItems if needed and returns it. If the
+	 * given items don't need a new parent, return null.
+	 * 
+	 * @param items
+	 *            the given IMergeViewerItems.
+	 * @param side
+	 *            the side of the Match.
+	 * @param comparison
+	 *            the comparison object that contains the Match.
+	 * @param adapterFactory
+	 *            the adapter factory used to create the merge viewer item.
+	 * @return an IMergeViewerItem, or null.
+	 */
+	public static IMergeViewerItem addNewContainerForNotLoadedFragmentMatches(
+			Collection<IMergeViewerItem> items, MergeViewerSide side, Comparison comparison,
+			AdapterFactory adapterFactory) {
+		final MergeViewerItem.Container newContainer;
+		final Collection<Match> notLoadedFragmentMatches = getNotLoadedFragmentMatches(items);
+		if (notLoadedFragmentMatches.size() > 1) {
+			// Need to replace by top-container NotLoadedFragment item
+			NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(
+					notLoadedFragmentMatches);
+			for (NotLoadedFragmentMatch match : filter(notLoadedFragmentMatches, NotLoadedFragmentMatch.class)) {
+				match.setName(getResourceName(match));
+			}
+			newContainer = new MergeViewerItem.Container(comparison, null, notLoadedFragmentMatch,
+					notLoadedFragmentMatch, notLoadedFragmentMatch, side, adapterFactory);
+		} else {
+			newContainer = null;
+		}
+		return newContainer;
 	}
 }
