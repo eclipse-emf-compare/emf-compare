@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,7 +31,6 @@ import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.merge.CompareDiagramMerger;
 import org.eclipse.emf.compare.merge.IMerger;
-import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
@@ -59,16 +58,7 @@ public abstract class AbstractTest {
 	@Before
 	public void before() {
 		postProcessorRegistry = new PostProcessorDescriptorRegistryImpl<String>();
-		postProcessorRegistry.put(
-				UMLPostProcessor.class.getName(),
-				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
-						.compile("http://www.eclipse.org/uml2/\\d.0.0/UML"),
-						null, new UMLPostProcessor(), 20));
-		postProcessorRegistry
-				.put(CompareDiagramPostProcessor.class.getName(),
-						new TestPostProcessor.TestPostProcessorDescriptor(
-								Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"),
-								null, new CompareDiagramPostProcessor(), 30));
+		registerPostProcessors();
 		emfCompare = EMFCompare.builder()
 				.setPostProcessorRegistry(postProcessorRegistry).build();
 		mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
@@ -80,6 +70,19 @@ public abstract class AbstractTest {
 		mergerRegistry.add(diagramMerger);
 	}
 
+	protected void registerPostProcessors() {
+		getPostProcessorRegistry().put(
+				UMLPostProcessor.class.getName(),
+				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
+						.compile("http://www.eclipse.org/uml2/\\d.0.0/UML"),
+						null, new UMLPostProcessor(), 20));
+		getPostProcessorRegistry()
+				.put(CompareDiagramPostProcessor.class.getName(),
+						new TestPostProcessor.TestPostProcessorDescriptor(
+								Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"),
+								null, new CompareDiagramPostProcessor(), 30));
+	}
+
 	protected EMFCompare getCompare() {
 		return emfCompare;
 	}
@@ -87,7 +90,7 @@ public abstract class AbstractTest {
 	/**
 	 * @return the postProcessorRegistry
 	 */
-	protected IPostProcessor.Descriptor.Registry<?> getPostProcessorRegistry() {
+	protected PostProcessorDescriptorRegistryImpl<String> getPostProcessorRegistry() {
 		return postProcessorRegistry;
 	}
 

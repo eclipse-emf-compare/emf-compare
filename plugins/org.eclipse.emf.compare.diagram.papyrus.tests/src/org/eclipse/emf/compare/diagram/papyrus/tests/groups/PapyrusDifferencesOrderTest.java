@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,15 +15,10 @@ import static com.google.common.base.Predicates.alwaysTrue;
 import com.google.common.collect.Lists;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.structuremergeviewer.filters.GMFRefinedElementsFilter;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
 import org.eclipse.emf.compare.diagram.internal.extensions.provider.spec.ExtensionsItemProviderAdapterFactorySpec;
@@ -47,26 +42,19 @@ import org.eclipse.emf.compare.uml2.internal.provider.decorator.UMLCompareItemPr
 import org.eclipse.emf.compare.uml2.rcp.ui.internal.structuremergeviewer.filters.UMLRefinedElementsFilter;
 import org.eclipse.emf.compare.uml2.rcp.ui.tests.groups.AbstractDifferenceOrderTest;
 import org.eclipse.emf.compare.uml2.rcp.ui.tests.groups.NotifierScopeProvider;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.tree.TreeNode;
-import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
-import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.provider.NotationItemProviderAdapterFactory;
 import org.eclipse.gmf.runtime.notation.util.NotationAdapterFactory;
-import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.edit.providers.UMLItemProviderAdapterFactory;
-import org.eclipse.uml2.uml.internal.resource.UMLResourceFactoryImpl;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests the order of the differences they would be displayed in the structure merge viewer for MDT Papyrus
- * model.
+ * Tests the order of the differences they would be displayed in the structure
+ * merge viewer for MDT Papyrus model.
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
@@ -93,15 +81,17 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 	@Override
 	protected Registry<?> getPostProcessorRegistry() {
 		PostProcessorDescriptorRegistryImpl<Object> postProcessorRegistry = new PostProcessorDescriptorRegistryImpl<Object>();
-		//Adds UML post processor
+		// Adds UML post processor
 		BasicPostProcessorDescriptorImpl descriptor = new BasicPostProcessorDescriptorImpl(
-				new UMLPostProcessor(), Pattern.compile("http://www.eclipse.org/uml2/\\d.0.0/UML"), null); //$NON-NLS-1$
+				new UMLPostProcessor(),
+				Pattern.compile("http://www.eclipse.org/uml2/\\d.0.0/UML"), null); //$NON-NLS-1$
 		postProcessorRegistry.put(UMLPostProcessor.class.getName(), descriptor);
-		//Adds Diagram post processor
+		// Adds Diagram post processor
 		BasicPostProcessorDescriptorImpl descriptor2 = new BasicPostProcessorDescriptorImpl(
-				new CompareDiagramPostProcessor(), Pattern
-						.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null); //$NON-NLS-1$
-		postProcessorRegistry.put(CompareDiagramPostProcessor.class.getName(), descriptor2);
+				new CompareDiagramPostProcessor(),
+				Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null); //$NON-NLS-1$
+		postProcessorRegistry.put(CompareDiagramPostProcessor.class.getName(),
+				descriptor2);
 		return postProcessorRegistry;
 	}
 
@@ -112,12 +102,17 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 
 	@Override
 	protected List<AdapterFactory> getAdaptersFactory() {
-		return Lists.<AdapterFactory> newArrayList(new CompareItemProviderAdapterFactorySpec(),
-				new TreeItemProviderAdapterFactorySpec(), new UMLCompareCustomItemProviderAdapterFactory(),
-				new UMLItemProviderAdapterFactory(), new UMLCompareItemProviderDecoratorAdapterFactory(),
-				new ReflectiveItemProviderAdapterFactory(), new NotationAdapterFactory(),
+		return Lists.<AdapterFactory> newArrayList(
+				new CompareItemProviderAdapterFactorySpec(),
+				new TreeItemProviderAdapterFactorySpec(),
+				new UMLCompareCustomItemProviderAdapterFactory(),
+				new UMLItemProviderAdapterFactory(),
+				new UMLCompareItemProviderDecoratorAdapterFactory(),
+				new ReflectiveItemProviderAdapterFactory(),
+				new NotationAdapterFactory(),
 				new ExtensionsItemProviderAdapterFactorySpec(),
-				new DiagramCompareItemProviderAdapterFactorySpec(), new NotationItemProviderAdapterFactory());
+				new DiagramCompareItemProviderAdapterFactorySpec(),
+				new NotationItemProviderAdapterFactory());
 	}
 
 	@Test
@@ -125,15 +120,17 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 		GMFRefinedElementsFilter diagramFilter = new GMFRefinedElementsFilter();
 		getFilter().removeFilter(diagramFilter);
 
-		IDifferenceGroup group = new BasicDifferenceGroupImpl(getComparison(), alwaysTrue(),
-				getCrossReferenceAdapter());
+		IDifferenceGroup group = new BasicDifferenceGroupImpl(getComparison(),
+				alwaysTrue(), getCrossReferenceAdapter());
 		List<? extends TreeNode> roots = group.getChildren();
 
 		// Uncomment the following lines to reserialize the expected model
 		// TestWriterHelper writerHelper = createTestHelper();
-		// writerHelper.createExpectedModel(PATH_TO_MODEL_FILE+"/expectedResult_DiagRefineOff.nodes", roots,false);
+		// writerHelper.createExpectedModel(PATH_TO_MODEL_FILE+"/expectedResult_DiagRefineOff.nodes",
+		// roots,false);
 
-		compareTree(expectedResultData.getExpectedReseultWithFilterOff(), roots, false);
+		compareTree(expectedResultData.getExpectedReseultWithFilterOff(),
+				roots, false);
 	}
 
 	@Test
@@ -141,15 +138,17 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 		GMFRefinedElementsFilter diagramFilter = new GMFRefinedElementsFilter();
 		getFilter().addFilter(diagramFilter);
 
-		IDifferenceGroup group = new BasicDifferenceGroupImpl(getComparison(), alwaysTrue(),
-				getCrossReferenceAdapter());
+		IDifferenceGroup group = new BasicDifferenceGroupImpl(getComparison(),
+				alwaysTrue(), getCrossReferenceAdapter());
 		List<? extends TreeNode> roots = group.getChildren();
 
 		// Uncomment the following lines to reserialize the expected model
 		// TestWriterHelper writerHelper = createTestHelper();
-		// writerHelper.createExpectedModel(PATH_TO_MODEL_FILE+"/expectedResult_DiagRefineOn.nodes", roots);
+		// writerHelper.createExpectedModel(PATH_TO_MODEL_FILE+"/expectedResult_DiagRefineOn.nodes",
+		// roots);
 
-		compareTree(expectedResultData.getExpectedReseultWithFilterOn(), roots,false);
+		compareTree(expectedResultData.getExpectedReseultWithFilterOn(), roots,
+				false);
 	}
 
 	/**
@@ -173,46 +172,22 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 	 * 
 	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
 	 */
-	private static final class InputData extends DiagramInputData implements NotifierScopeProvider {
+	private static final class InputData extends DiagramInputData implements
+			NotifierScopeProvider {
 
 		public ResourceSet getLeft() throws IOException {
-			return loadFromClassLoader("data/a1/left.notation").getResourceSet();
+			return loadFromClassLoader("data/a1/left.notation")
+					.getResourceSet();
 		}
 
 		public ResourceSet getRight() throws IOException {
-			return loadFromClassLoader("data/a1/right.notation").getResourceSet();
+			return loadFromClassLoader("data/a1/right.notation")
+					.getResourceSet();
 		}
 
 		public ResourceSet getOrigin() throws IOException {
-			return loadFromClassLoader("data/a1/origin.notation").getResourceSet();
-		}
-
-		@Override
-		protected Resource loadFromClassLoader(String string) throws IOException {
-			final URL fileURL = getClass().getResource(string);
-			final InputStream str = fileURL.openStream();
-			final URI uri = URI.createURI(fileURL.toString());
-
-			ResourceSet resourceSet = new ResourceSetImpl();
-			getSets().add(resourceSet);
-
-			if (!EMFPlugin.IS_RESOURCES_BUNDLE_AVAILABLE) {
-				resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("uml",
-						new UMLResourceFactoryImpl());
-				resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("notation",
-						new GMFResourceFactory());
-				EPackage.Registry.INSTANCE.put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
-				EPackage.Registry.INSTANCE.put(NotationPackage.eNS_URI, NotationPackage.eINSTANCE);
-			}
-
-			Resource resource = resourceSet.createResource(uri);
-
-			resource.load(str, Collections.emptyMap());
-			str.close();
-
-			EcoreUtil.resolveAll(resourceSet);
-
-			return resource;
+			return loadFromClassLoader("data/a1/origin.notation")
+					.getResourceSet();
 		}
 	}
 

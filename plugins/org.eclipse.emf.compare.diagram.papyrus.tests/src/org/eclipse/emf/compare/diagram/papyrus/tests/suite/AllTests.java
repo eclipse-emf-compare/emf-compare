@@ -17,6 +17,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
+import org.eclipse.emf.compare.diagram.papyrus.tests.merge.AssocMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.EdgeMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.NodeMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.modelextension.ModelExtensionUtilTest;
@@ -45,7 +46,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @SuppressWarnings("restriction")
 @RunWith(Suite.class)
-@SuiteClasses({ EdgeMergeTest.class, NodeMergeTest.class,
+@SuiteClasses({AssocMergeTest.class, EdgeMergeTest.class, NodeMergeTest.class,
 		ModelExtensionUtilTest.class, SaveParameterHookTest.class,
 		SaveParameterHookIntegrationTest.class,
 		MergeRenamingMatchResource2WayTest.class,

@@ -21,7 +21,8 @@
           <configuration>
             <includes>
 			  <include>org/eclipse/emf/compare/diagram/papyrus/tests/suite/AllTests.class</include>
-            </includes>     
+            </includes>
+            <useUIHarness>true</useUIHarness>
           </configuration>
         </plugin>
     </plugins>
