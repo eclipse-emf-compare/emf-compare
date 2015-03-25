@@ -157,6 +157,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.team.internal.ui.mapping.ResourceDiffCompareInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.progress.PendingUpdateAdapter;
@@ -1046,13 +1047,19 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * @param compareResult
 	 */
 	private void hookAdapters(final ICompareInput input, final Comparison compareResult) {
-		compareResult.eAdapters().add(new ForwardingCompareInputAdapter(input));
-		ICompareInputLabelProvider labelProvider = getCompareConfiguration().getLabelProvider();
-		SideLabelProvider sideLabelProvider = new SideLabelProvider(labelProvider.getAncestorLabel(input),
-				labelProvider.getLeftLabel(input), labelProvider.getRightLabel(input), labelProvider
-						.getAncestorImage(input), labelProvider.getLeftImage(input), labelProvider
-						.getRightImage(input));
-		compareResult.eAdapters().add(sideLabelProvider);
+		// Thanks to
+		// org.eclipse.team.internal.ui.mapping.ResourceCompareInputChangeNotifier$CompareInputLabelProvider
+		// who doesn't check a cast in its getAncestorLabel(), getLeftLabel() and getRightLabel() methods,
+		// we can't allow to hook adapters in case of an input of type ResourceDiffCompareInput.
+		if (!(input instanceof ResourceDiffCompareInput)) {
+			compareResult.eAdapters().add(new ForwardingCompareInputAdapter(input));
+			ICompareInputLabelProvider labelProvider = getCompareConfiguration().getLabelProvider();
+			SideLabelProvider sideLabelProvider = new SideLabelProvider(
+					labelProvider.getAncestorLabel(input), labelProvider.getLeftLabel(input), labelProvider
+							.getRightLabel(input), labelProvider.getAncestorImage(input), labelProvider
+							.getLeftImage(input), labelProvider.getRightImage(input));
+			compareResult.eAdapters().add(sideLabelProvider);
+		}
 	}
 
 	/**

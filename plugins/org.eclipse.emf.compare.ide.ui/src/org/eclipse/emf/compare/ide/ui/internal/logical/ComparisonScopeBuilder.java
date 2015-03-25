@@ -337,9 +337,14 @@ public final class ComparisonScopeBuilder {
 		}
 
 		final IStorage leftStorage = StreamAccessorStorage.fromTypedElement(path, left);
-		final IStorage rightStorage = StreamAccessorStorage.fromTypedElement(path, right);
+		final IStorage rightStorage;
+		if (right instanceof IStreamContentAccessor) {
+			rightStorage = StreamAccessorStorage.fromTypedElement(path, right);
+		} else {
+			rightStorage = null;
+		}
 		final IStorage originStorage;
-		if (origin != null) {
+		if (origin instanceof IStreamContentAccessor) {
 			originStorage = StreamAccessorStorage.fromTypedElement(path, origin);
 		} else {
 			originStorage = null;
@@ -383,7 +388,7 @@ public final class ComparisonScopeBuilder {
 			rightStorage = null;
 		}
 		final IStorage originStorage;
-		if (origin != null) {
+		if (origin instanceof IStreamContentAccessor) {
 			originStorage = StreamAccessorStorage.fromTypedElement(origin);
 		} else {
 			originStorage = null;

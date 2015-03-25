@@ -1093,6 +1093,10 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	private Set<IStorage> resolveRemoteTraversal(IStorageProviderAccessor storageAccessor, IStorage start,
 			Iterable<URI> knownVariants, DiffSide side, ThreadSafeProgressMonitor monitor)
 			throws InterruptedException {
+		// we can't call ResourceUtil.createURIFor(start) if start is null, so
+		if (start == null) {
+			return Collections.emptySet();
+		}
 		final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet(
 				new MonitoredProxyCreationListener(monitor, true));
 		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
