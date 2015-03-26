@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Stefan Dirix - add ModelExtensionUtilTest
+ *     Stefan Dirix - add ModelExtensionUtilTest and SaveParameterHook tests
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests.suite;
 
@@ -20,6 +20,8 @@ import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.EdgeMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.NodeMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.modelextension.ModelExtensionUtilTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.saveparameter.SaveParameterHookIntegrationTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.saveparameter.SaveParameterHookTest;
 import org.eclipse.emf.compare.tests.suite.CompareTestSuite;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -40,7 +42,8 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({EdgeMergeTest.class, NodeMergeTest.class, ModelExtensionUtilTest.class })
+@SuiteClasses({EdgeMergeTest.class, NodeMergeTest.class, ModelExtensionUtilTest.class,
+		SaveParameterHookTest.class, SaveParameterHookIntegrationTest.class })
 public class AllTests {
 
 	/**

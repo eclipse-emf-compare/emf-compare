@@ -25,6 +25,9 @@
       <resourceSetHook
             class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.CssInstallationHook">
       </resourceSetHook>
+      <resourceSetHook
+            class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.SaveParameterHook">
+      </resourceSetHook>
    </extension>
    <extension
          point="org.eclipse.emf.compare.ide.ui.logicalModelViewHandlers">
