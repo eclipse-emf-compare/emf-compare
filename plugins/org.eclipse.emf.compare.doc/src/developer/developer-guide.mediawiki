@@ -157,7 +157,37 @@ All main components of EMF Compare have been designed for extensibility. Some ar
 
 === Model Resolving ===
 
-PENDING description of the phase, extensibility (use of the modelProviders extension point, custom ext point of compare)
+To adequately handle the comparison and merging of models that span across several resources (files), EMF Compare has to determine all dependencies among model resources in order to avoid breaking cross-references among model resources during a merge. It is not enough to only follow outgoing cross-references from model resources. Instead, EMF Compare needs to resolve outgoing and incoming cross-references to and from other model resources. Therefore, EMF Compare traverses through all model files within a configurable scope (container, project or the whole workspace in the EMF Compare preferences) before the comparison and merging, and tracks the dependencies among the visited model resources. The dependencies are stored and cached in terms of a graph, whereas nodes are model resources and edges are dependencies to other model resources. Based on this dependency graph, EMF Compare determines the set of model resources that must be included in a subsequent model comparison or merge.
+
+The default implementation of the model resolution is multi-threaded and can be found in the class ''org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver''.
+
+==== Customization ====
+
+The default implementation of the model resolution described above can be replaced completely with a custom implementation of a model resolver or it can be extended by registering custom dependency providers.
+
+===== Model Resolver Extension Point =====
+
+The "modelResolvers" extension point in the "org.eclipse.emf.compare.ide.ui" plug-in allows to register custom model resolvers. These model resolvers replace the default implementation (ThreadedModelResolver) and can therefore implement their own strategy.
+
+'''Note:''' This extension point is currently in beta and may be removed in the future since the ThreadedModelResolver seems flexible enough to support all common usecases.
+
+The custom model resolver must implement the IModelResolver interface (''org.eclipse.emf.compare.ide.ui.logical.IModelResolver'') or extend the AbstractModelResolver (''org.eclipse.emf.compare.ide.ui.logical.AbstractModelResolver'').
+
+'''Warning:''' Replacing the default ThreadedModelResolver is NOT recommended since the logic to be implemented is very complex. Make sure there is no alternative way to reach your goal!
+
+===== Model Dependency Provider Extension Point =====
+
+The "modelDependencyProvider" extension point in the "org.eclipse.emf.compare.ide.ui" plugin allows to extend the default model resolution mechanism. It allows to add additional custom dependencies for model resources that are not manifested in actual cross-references otherwise.
+
+'''Note:''' This extension point is currently in beta and may change in the future.
+
+The registered model dependency providers must implement the IDependencyProvider interface (''org.eclipse.emf.compare.ide.ui.dependency.IDependencyProvider'').
+
+The dependencies determined via the dependency providers are used in two ways in the default model resolver:
+* The dependencies are resolved when the given URI is resolved
+* The dependencies are added to the dependency graph
+
+This functionality can be used to express dependencies among model resources that exist "by design" but are not physically manifested in the model resources (as resolvable proxies). For example, this extension point is used by Papyrus to express a dependency between .di, .uml, and .notation files even if these model resources are not actually referencing each other.
 
 === Match ===
 
