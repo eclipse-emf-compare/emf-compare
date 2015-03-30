@@ -44,8 +44,8 @@ import org.eclipse.compare.ResourceNode;
 import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -935,15 +935,17 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				 * means the comparison has been launched from a Replace With action.
 				 */
 				if (left instanceof ResourceNode && !(input instanceof DiffNode)) {
-					IResource resource = ((ResourceNode)left).getResource();
-					leftEditable = !resource.getResourceAttributes().isReadOnly();
+					ResourceAttributes attributes = ((ResourceNode)left).getResource()
+							.getResourceAttributes();
+					leftEditable = attributes != null && !attributes.isReadOnly();
 				} else {
 					leftEditable = compareConfiguration.isLeftEditable();
 				}
 
 				if (right instanceof ResourceNode) {
-					IResource resource = ((ResourceNode)right).getResource();
-					rightEditable = !resource.getResourceAttributes().isReadOnly();
+					ResourceAttributes attributes = ((ResourceNode)right).getResource()
+							.getResourceAttributes();
+					rightEditable = attributes != null && !attributes.isReadOnly();
 				} else {
 					rightEditable = compareConfiguration.isRightEditable();
 				}
@@ -1047,12 +1049,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * @param compareResult
 	 */
 	private void hookAdapters(final ICompareInput input, final Comparison compareResult) {
+		compareResult.eAdapters().add(new ForwardingCompareInputAdapter(input));
 		// Thanks to
 		// org.eclipse.team.internal.ui.mapping.ResourceCompareInputChangeNotifier$CompareInputLabelProvider
 		// who doesn't check a cast in its getAncestorLabel(), getLeftLabel() and getRightLabel() methods,
-		// we can't allow to hook adapters in case of an input of type ResourceDiffCompareInput.
+		// we can't allow to add side label provider in case of an input of type ResourceDiffCompareInput.
 		if (!(input instanceof ResourceDiffCompareInput)) {
-			compareResult.eAdapters().add(new ForwardingCompareInputAdapter(input));
 			ICompareInputLabelProvider labelProvider = getCompareConfiguration().getLabelProvider();
 			SideLabelProvider sideLabelProvider = new SideLabelProvider(
 					labelProvider.getAncestorLabel(input), labelProvider.getLeftLabel(input), labelProvider
