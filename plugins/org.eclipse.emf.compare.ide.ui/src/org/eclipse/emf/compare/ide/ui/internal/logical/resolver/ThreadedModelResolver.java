@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo.
+ * Copyright (c) 2014, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Alexandra Buzila - Fixes for Bug 462938
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
@@ -796,6 +797,10 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			final Set<IStorage> differenceOriginLeft = difference(additionalOrigin, asURISet(left));
 			final Set<IStorage> differenceOriginRight = difference(additionalOrigin, asURISet(right));
 			additionalStorages = symmetricDifference(differenceOriginRight, differenceOriginLeft);
+
+			// Differences between left/right and origin could come from resources that are present in the origin, but  were deleted in one of the sides. As these resources already exist in the origin, they
+			// need to be removed from the additionalStorages
+			additionalStorages.removeAll(origin);
 		}
 	}
 
