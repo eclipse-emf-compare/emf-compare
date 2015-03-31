@@ -92,6 +92,8 @@ import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressInfoComposite
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressMonitorWrapper;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.FetchListener;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeCompareInputAdapterFactory;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeNodeCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.util.CompareHandlerService;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
@@ -1075,6 +1077,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		if (comparison != null) {
 			ICompareInput compareInput = (ICompareInput)EcoreUtil.getAdapter(comparison.eAdapters(),
 					ICompareInput.class);
+			if (compareInput == null) {
+				compareInput = new TreeNodeCompareInput(new TreeCompareInputAdapterFactory());
+			}
 			List<Diff> differences = comparison.getDifferences();
 			if (differences.isEmpty()) {
 				navigatable.fireOpen(new NoDifferencesCompareInput(compareInput));
