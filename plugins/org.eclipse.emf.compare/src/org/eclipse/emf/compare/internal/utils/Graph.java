@@ -67,7 +67,7 @@ public final class Graph<E> {
 	 * This will be incremented each time this graph is structurally modified by an operation, ensuring
 	 * fail-fast iterations from our returned iterators.
 	 */
-	private transient int modcount;
+	private transient volatile int modcount;
 
 	/** Constructs an empty graph. */
 	public Graph() {
