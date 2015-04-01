@@ -24,24 +24,31 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.MultiRule;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.Monitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
@@ -210,9 +217,9 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 * @param subMonitor
 	 *            The progress monitor to use, 10 ticks will be consumed
 	 */
-	private void mergeMapping(ResourceMapping mapping, IMergeContext mergeContext,
+	private void mergeMapping(ResourceMapping mapping, final IMergeContext mergeContext,
 			final Set<ResourceMapping> failingMappings, IProgressMonitor monitor) throws CoreException {
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
+		final SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
 		// validateMappings() has made sure we only have EMFResourceMappings
 		final SynchronizationModel syncModel = ((EMFResourceMapping)mapping).getLatestModel();
 
@@ -249,24 +256,30 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 
 			failingMappings.add(mapping);
 		} else {
-			final IBatchMerger merger = new BatchMerger(mergerRegistry, fromSide(DifferenceSource.RIGHT));
-			merger.copyAllRightToLeft(comparison.getDifferences(), BasicMonitor.toMonitor(subMonitor
-					.newChild(4))); // 60%
-			save(scope.getLeft());
+			MarkNewResourceAsMergedListener listener = new MarkNewResourceAsMergedListener(mergeContext);
+			try {
+				scope.getLeft().eAdapters().add(listener);
+				final IBatchMerger merger = new BatchMerger(mergerRegistry, fromSide(DifferenceSource.RIGHT));
+				merger.copyAllRightToLeft(comparison.getDifferences(), BasicMonitor.toMonitor(subMonitor
+						.newChild(4))); // 60%
+				save(scope.getLeft());
 
-			for (IStorage storage : syncModel.getLeftTraversal().getStorages()) {
-				final IPath fullPath = ResourceUtil.getFixedPath(storage);
-				if (fullPath == null) {
-					EMFCompareIDEUIPlugin.getDefault().getLog().log(
-							new Status(IStatus.WARNING, EMFCompareIDEUIPlugin.PLUGIN_ID,
-									EMFCompareIDEUIMessages
-											.getString("EMFResourceMappingMerger.mergeIncomplete"))); //$NON-NLS-1$
-				} else {
-					final IDiff diff = mergeContext.getDiffTree().getDiff(fullPath);
-					if (diff != null) {
-						mergeContext.markAsMerged(diff, true, subMonitor.newChild(1)); // 100%
+				for (IStorage storage : syncModel.getLeftTraversal().getStorages()) {
+					final IPath fullPath = ResourceUtil.getFixedPath(storage);
+					if (fullPath == null) {
+						EMFCompareIDEUIPlugin.getDefault().getLog().log(
+								new Status(IStatus.WARNING, EMFCompareIDEUIPlugin.PLUGIN_ID,
+										EMFCompareIDEUIMessages
+												.getString("EMFResourceMappingMerger.mergeIncomplete"))); //$NON-NLS-1$
+					} else {
+						final IDiff diff = mergeContext.getDiffTree().getDiff(fullPath);
+						if (diff != null) {
+							mergeContext.markAsMerged(diff, true, subMonitor.newChild(1)); // 100%
+						}
 					}
 				}
+			} finally {
+				scope.getLeft().eAdapters().remove(listener);
 			}
 		}
 		subMonitor.setWorkRemaining(0);
@@ -357,5 +370,31 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	/** {@inheritDoc} */
 	public IStatus validateMerge(IMergeContext mergeContext, IProgressMonitor monitor) {
 		return Status.OK_STATUS;
+	}
+
+	private static class MarkNewResourceAsMergedListener extends AdapterImpl {
+		private final IMergeContext mergeContext;
+
+		public MarkNewResourceAsMergedListener(IMergeContext mergeContext) {
+			this.mergeContext = mergeContext;
+		}
+
+		@Override
+		public void notifyChanged(Notification msg) {
+			if (msg.getEventType() == Notification.ADD && msg.getNewValue() instanceof Resource) {
+				Resource newResource = (Resource)msg.getNewValue();
+				URI uri = newResource.getURI();
+				if (uri.isPlatformResource()) {
+					String path = uri.toPlatformString(true);
+					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path));
+					IDiff diff = mergeContext.getDiffTree().getDiff(file);
+					try {
+						mergeContext.markAsMerged(diff, true, new NullProgressMonitor());
+					} catch (CoreException e) {
+						EMFCompareIDEUIPlugin.getDefault().log(e);
+					}
+				}
+			}
+		}
 	}
 }
