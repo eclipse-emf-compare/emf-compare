@@ -375,6 +375,30 @@
                      property="org.eclipse.core.resources.contentTypeId"
                      value="org.eclipse.emf.compare.content.type">
                </test>
+               <test
+                     property="org.eclipse.core.resources.extension"
+                     value="ecore">
+               </test>
+               <test
+                     property="org.eclipse.core.resources.extension"
+                     value="notation">
+               </test>
+               <test
+                     property="org.eclipse.core.resources.extension"
+                     value="uml">
+               </test>
+               <test
+                     property="org.eclipse.core.resources.extension"
+                     value="di">
+               </test>
+               <test
+                     property="org.eclipse.core.resources.extension"
+                     value="sash">
+               </test>
+               <test
+                     property="org.eclipse.core.resources.extension"
+                     value="xmi">
+               </test>
             </or>
          </and>
       </enablement>
