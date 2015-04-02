@@ -86,13 +86,13 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 	 *            see {@link #createInputStream(URI, Map)}
 	 * @return <code>true</code> if there is an input stream accessible for the given uri, <code>false</code>
 	 *         otherwise.
+	 * @throws IOException
+	 *             if an IO problem occurs.
 	 * @see #createInputStream(URI, Map)
 	 * @see #prefetchedStreams
 	 */
-	/*
-	 * Suppressing the warning. It is the responsibility of the caller to then use #createInputStream(...)
-	 * somehow and close the stream then.
-	 */
+	// Suppressing the warning. It is the responsibility of the caller to then use #createInputStream(...)
+	// somehow and close the stream then.
 	@SuppressWarnings("resource")
 	public boolean prefetchStream(URI uri, Map<?, ?> options) throws IOException {
 		InputStream stream = createInputStream(uri, options);

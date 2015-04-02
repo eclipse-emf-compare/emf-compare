@@ -134,7 +134,9 @@ public class CompareGitTestCase extends CompareTestCase {
 		final ITypedElement left = new StorageTypedElement(sourceProvider.getStorage(monitor), fullPath);
 		final ITypedElement right = new StorageTypedElement(remoteProvider.getStorage(monitor), fullPath);
 		final ITypedElement origin = new StorageTypedElement(ancestorProvider.getStorage(monitor), fullPath);
-		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(new ThreadedModelResolver(),
+		final ThreadedModelResolver resolver = new ThreadedModelResolver();
+		resolver.initialize();
+		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
 				new IdenticalResourceMinimizer(), storageAccessor);
 		final IComparisonScope scope = scopeBuilder.build(left, right, origin, monitor);
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - adds test classes
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.suite;
 
@@ -17,7 +18,10 @@ import junit.textui.TestRunner;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.ide.ui.tests.compareconfiguration.EMFCompareConfigurationTest;
 import org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.notloadedfragment.NotLoadedFragmentItemTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.DependencyGraphUpdaterTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.GraphResolutionTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ResolutionEventsTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ResourceComputationSchedulerTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverGraphTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverWithCustomDependencyProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.NavigatableTest;
@@ -35,10 +39,19 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({EMFCompareConfigurationTest.class, DependenciesTest.class, MergeActionTest.class,
-		PseudoConflictsMergeActionTest.class, BugsTestSuite.class, NavigatableTest.class,
-		NotLoadedFragmentNodeTest.class, NotLoadedFragmentItemTest.class, GraphResolutionTest.class,
-		ThreadedModelResolverGraphTest.class, ThreadedModelResolverWithCustomDependencyProviderTest.class })
+@SuiteClasses({EMFCompareConfigurationTest.class,
+		DependenciesTest.class,
+		MergeActionTest.class,
+		PseudoConflictsMergeActionTest.class,
+		BugsTestSuite.class,
+		NavigatableTest.class,
+		NotLoadedFragmentNodeTest.class,
+		NotLoadedFragmentItemTest.class,
+		ResolutionEventsTest.class,
+		ResourceComputationSchedulerTest.class,
+		ThreadedModelResolverGraphTest.class,
+		ThreadedModelResolverWithCustomDependencyProviderTest.class,
+		DependencyGraphUpdaterTest.class, GraphResolutionTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

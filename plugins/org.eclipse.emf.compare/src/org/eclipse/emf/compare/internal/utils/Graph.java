@@ -42,12 +42,15 @@ import org.eclipse.emf.common.util.AbstractTreeIterator;
  * Take note that the elements of this graph are not necessarily all connected together. This can be used to
  * represent a set of trees, a set of undirected graphs, a set of roots with no children...
  * </p>
+ * <p>
+ * This class is not intended to be sub-classed.
+ * </p>
  * 
  * @param <E>
  *            Kind of elements used as this graph's nodes.
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public final class Graph<E> {
+public class Graph<E> {
 	/** Keeps track of this graph's individual nodes. */
 	private final Map<E, Node<E>> nodes;
 

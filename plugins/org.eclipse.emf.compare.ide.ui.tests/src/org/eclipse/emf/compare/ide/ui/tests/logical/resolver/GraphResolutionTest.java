@@ -29,6 +29,7 @@ import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.junit.Test;
 
+@SuppressWarnings({"nls", "restriction", "unused" })
 public class GraphResolutionTest extends CompareTestCase {
 	private IFile leftR1;
 
@@ -86,7 +87,6 @@ public class GraphResolutionTest extends CompareTestCase {
 				.openStream());
 	}
 
-	@SuppressWarnings("restriction")
 	@Test
 	public void testComparison() throws Exception {
 		ITypedElement leftTE = new StorageTypedElement(leftR1, leftR1.getFullPath().toOSString());
@@ -133,7 +133,6 @@ public class GraphResolutionTest extends CompareTestCase {
 		assertTrue(graph.hasChild(getURI(originR3), getURI(originR4)));
 	}
 
-	@SuppressWarnings("restriction")
 	@Test
 	public void testModelResolver() throws Exception {
 		ThreadedModelResolver resolver = new ThreadedModelResolver();

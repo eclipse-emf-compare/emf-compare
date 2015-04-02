@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.utils;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.io.Closeables;
 
@@ -51,11 +52,32 @@ public final class ResourceUtil {
 			"org.eclipse.emf.compare.content.type", "org.eclipse.emf.ecore", //$NON-NLS-1$ //$NON-NLS-2$
 			"org.eclipse.emf.ecore.xmi", }; //$NON-NLS-1$
 
+	/** This can be used in order to convert an Iterable of IStorages to an Iterable over the storage's URIs. */
+	private static final Function<IStorage, URI> AS_URI = new Function<IStorage, URI>() {
+		public URI apply(IStorage input) {
+			if (input != null) {
+				return createURIFor(input);
+			}
+			return null;
+		}
+	};
+
 	/**
 	 * This does not need to be instantiated.
 	 */
 	private ResourceUtil() {
 		// hides default constructor
+	}
+
+	/**
+	 * Provides a {@link Function} that converts an {@link IStorage} into a {@link URI}.
+	 * 
+	 * @return A {@link Function} that converts an {@link IStorage} into a {@link URI}. This function
+	 *         transforms a {@code null} storage into a {@code null} URI.
+	 * @since 3.2
+	 */
+	public static Function<IStorage, URI> asURI() {
+		return AS_URI;
 	}
 
 	/**

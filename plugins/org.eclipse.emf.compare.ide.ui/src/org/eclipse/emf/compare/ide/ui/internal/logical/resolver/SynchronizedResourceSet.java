@@ -42,6 +42,12 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 	/** Associates URIs with their resources. */
 	private final ConcurrentHashMap<URI, Resource> uriCache;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param proxyListener
+	 *            The listener to notify of proxy creations.
+	 */
 	public SynchronizedResourceSet(IProxyCreationListener proxyListener) {
 		this.uriCache = new ConcurrentHashMap<URI, Resource>();
 		this.resources = new SynchronizedResourcesEList<Resource>();
@@ -125,8 +131,7 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 	 *      java.io.IOException)
 	 */
 	@Override
-	protected void handleDemandLoadException(Resource resource, IOException exception)
-			throws RuntimeException {
+	protected void handleDemandLoadException(Resource resource, IOException exception) {
 		try {
 			super.handleDemandLoadException(resource, exception);
 		} catch (RuntimeException e) {
@@ -135,7 +140,15 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 		}
 	}
 
-	public void unload(Resource resource, @SuppressWarnings("unused") IProgressMonitor monitor) {
+	/**
+	 * Unload the given resource.
+	 * 
+	 * @param resource
+	 *            Resource to unlod
+	 * @param monitor
+	 *            Progress monito to use (currently unused)
+	 */
+	public void unload(Resource resource, IProgressMonitor monitor) {
 		final URI uri = resource.getURI();
 		uriCache.remove(uri);
 		getResources().remove(resource);
