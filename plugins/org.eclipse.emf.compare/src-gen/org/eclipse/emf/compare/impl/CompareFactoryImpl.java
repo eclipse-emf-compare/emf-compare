@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2014 Obeo and others.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,16 +12,19 @@
 package org.eclipse.emf.compare.impl;
 
 import java.lang.Iterable;
+
 import org.eclipse.emf.compare.*;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.compare.internal.spec.AttributeChangeSpec;
 import org.eclipse.emf.compare.internal.spec.ComparisonSpec;
 import org.eclipse.emf.compare.internal.spec.ConflictSpec;
+import org.eclipse.emf.compare.internal.spec.DiffSpec;
 import org.eclipse.emf.compare.internal.spec.FeatureMapChangeSpec;
 import org.eclipse.emf.compare.internal.spec.MatchSpec;
 import org.eclipse.emf.compare.internal.spec.ReferenceChangeSpec;
 import org.eclipse.emf.compare.internal.spec.ResourceAttachmentChangeSpec;
+import org.eclipse.emf.compare.internal.spec.ResourceLocationChangeSpec;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -86,6 +89,8 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 				return createDiff();
 			case ComparePackage.RESOURCE_ATTACHMENT_CHANGE:
 				return createResourceAttachmentChange();
+			case ComparePackage.RESOURCE_LOCATION_CHANGE:
+				return createResourceLocationChange();
 			case ComparePackage.REFERENCE_CHANGE:
 				return createReferenceChange();
 			case ComparePackage.ATTRIBUTE_CHANGE:
@@ -175,11 +180,10 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public Diff createDiff() {
-		DiffImpl diff = new DiffImpl();
-		return diff;
+		return new DiffSpec();
 	}
 
 	/**
@@ -188,6 +192,15 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 	 */
 	public ResourceAttachmentChange createResourceAttachmentChange() {
 		return new ResourceAttachmentChangeSpec();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public ResourceLocationChange createResourceLocationChange() {
+		return new ResourceLocationChangeSpec();
 	}
 
 	/**

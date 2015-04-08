@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -104,6 +104,11 @@ public class CompareAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseResourceAttachmentChange(ResourceAttachmentChange object) {
 			return createResourceAttachmentChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseResourceLocationChange(ResourceLocationChange object) {
+			return createResourceLocationChangeAdapter();
 		}
 
 		@Override
@@ -217,6 +222,20 @@ public class CompareAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createResourceAttachmentChangeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.ResourceLocationChange <em>Resource Location Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.ResourceLocationChange
+	 * @generated
+	 */
+	public Adapter createResourceLocationChangeAdapter() {
 		return null;
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,11 +12,17 @@ package org.eclipse.emf.compare.internal.spec;
 
 import com.google.common.base.Objects;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.AttributeChangeImpl;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -97,5 +103,40 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 				getAttribute().getEContainingClass().getName() + "." + getAttribute().getName()).add("value",
 				valueString).add("kind", getKind()).add("source", getSource()).add("state", getState())
 				.toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.impl.DiffImpl#basicGetMatch()
+	 */
+	@Override
+	public Match basicGetMatch() {
+		if (eContainer() instanceof Match) {
+			return (Match)eContainer();
+		}
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.impl.DiffImpl#setMatch(org.eclipse.emf.compare.Match)
+	 */
+	@Override
+	public void setMatch(Match newMatch) {
+		Match oldMatch = basicGetMatch();
+		if (newMatch != null) {
+			EList<Diff> differences = newMatch.getDifferences();
+			differences.add(this);
+			eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.DIFF__MATCH, oldMatch,
+					newMatch));
+		} else if (eContainer() instanceof Match) {
+			EList<Diff> differences = ((Match)eContainer()).getDifferences();
+			differences.remove(this);
+			eNotify(new ENotificationImpl(this, Notification.UNSET, ComparePackage.DIFF__MATCH, oldMatch,
+					newMatch));
+
+		}
 	}
 }

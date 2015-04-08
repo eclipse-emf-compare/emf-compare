@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013,  2015 Obeo.
+ * Copyright (c) 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,25 +8,23 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diagram.internal.extensions.spec;
+package org.eclipse.emf.compare.internal.spec;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.diagram.internal.extensions.impl.DiagramDiffImpl;
+import org.eclipse.emf.compare.impl.DiffImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * This specialization of the {@link DiagramDiffImpl} class allows us to define the derived features and
- * operations implementations.
+ * This specialization of the {@link DiffImpl} class allows us to define the derived features and operations
+ * implementations.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-public class DiagramDiffSpec extends DiagramDiffImpl {
+public class DiffSpec extends DiffImpl {
 
 	/**
 	 * {@inheritDoc}
@@ -61,32 +59,5 @@ public class DiagramDiffSpec extends DiagramDiffImpl {
 					newMatch));
 
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.diagram.internal.extensions.impl.DiagramDiffImpl#getPrimeRefining()
-	 */
-	@Override
-	public Diff getPrimeRefining() {
-		if (primeRefining == null) {
-			for (Diff refBy : this.getRefinedBy()) {
-				if (refBy instanceof ReferenceChange) {
-					ReferenceChange rc = (ReferenceChange)refBy;
-					if (this.getView() == rc.getValue()) {
-						primeRefining = rc;
-						break;
-					}
-				} else if (refBy instanceof AttributeChange) {
-					AttributeChange ac = (AttributeChange)refBy;
-					if (this.getView() == ac.getValue()) {
-						primeRefining = ac;
-						break;
-					}
-				}
-			}
-		}
-		return primeRefining;
 	}
 }

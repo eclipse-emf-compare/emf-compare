@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -82,6 +82,15 @@ public interface CompareFactory extends EFactory {
 	ResourceAttachmentChange createResourceAttachmentChange();
 
 	/**
+	 * Returns a new object of class '<em>Resource Location Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Resource Location Change</em>'.
+	 * @generated
+	 */
+	ResourceLocationChange createResourceLocationChange();
+
+	/**
 	 * Returns a new object of class '<em>Reference Change</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -105,7 +114,6 @@ public interface CompareFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @return a new object of class '<em>Feature Map Change</em>'.
 	 * @generated
-	 * @since 3.2
 	 */
 	FeatureMapChange createFeatureMapChange();
 

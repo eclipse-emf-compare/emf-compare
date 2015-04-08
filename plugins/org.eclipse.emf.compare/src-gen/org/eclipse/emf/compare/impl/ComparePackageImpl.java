@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare.impl;
 
+import java.lang.Iterable;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.CompareFactory;
@@ -27,6 +28,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -41,144 +43,133 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
 public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public static final String copyright = "Copyright (c) 2012 Obeo.\r\nAll rights reserved. This program and the accompanying materials\r\nare made available under the terms of the Eclipse Public License v1.0\r\nwhich accompanies this distribution, and is available at\r\nhttp://www.eclipse.org/legal/epl-v10.html\r\n\r\nContributors:\r\n    Obeo - initial API and implementation"; //$NON-NLS-1$
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass comparisonEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass matchResourceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass matchEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass diffEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass resourceAttachmentChangeEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass resourceLocationChangeEClass = null;
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass referenceChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass attributeChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass featureMapChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass conflictEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass equivalenceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EEnum differenceKindEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EEnum differenceSourceEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EEnum differenceStateEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EEnum conflictKindEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EDataType eIterableEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EDataType iEqualityHelperEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EDataType diagnosticEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package package URI value.
-	 * <p>
-	 * Note: the correct way to create the package is via the static factory method {@link #init init()},
-	 * which also performs initialization of the package, or returns the registered package, if one already
-	 * exists. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
+	 * package URI value.
+	 * <p>Note: the correct way to create the package is via the static
+	 * factory method {@link #init init()}, which also performs
+	 * initialization of the package, or returns the registered package,
+	 * if one already exists.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.emf.compare.ComparePackage#eNS_URI
 	 * @see #init()
@@ -190,28 +181,24 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private static boolean isInited = false;
 
 	/**
-	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it
-	 * depends.
-	 * <p>
-	 * This method is used to initialize {@link ComparePackage#eINSTANCE} when that field is accessed. Clients
-	 * should not invoke it directly. Instead, they should simply access that field to obtain the package.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
 	 * 
+	 * <p>This method is used to initialize {@link ComparePackage#eINSTANCE} when that field is accessed.
+	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #eNS_URI
 	 * @see #createPackageContents()
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
 	public static ComparePackage init() {
-		if (isInited) {
+		if (isInited)
 			return (ComparePackage)EPackage.Registry.INSTANCE.getEPackage(ComparePackage.eNS_URI);
-		}
 
 		// Obtain or create and register package
 		ComparePackageImpl theComparePackage = (ComparePackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ComparePackageImpl ? EPackage.Registry.INSTANCE
@@ -239,7 +226,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getComparison() {
@@ -248,7 +234,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getComparison_MatchedResources() {
@@ -257,7 +242,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getComparison_Matches() {
@@ -266,7 +250,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getComparison_Conflicts() {
@@ -275,7 +258,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getComparison_Equivalences() {
@@ -284,7 +266,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getComparison_ThreeWay() {
@@ -293,7 +274,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getComparison_Diagnostic() {
@@ -302,7 +282,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getMatchResource() {
@@ -311,7 +290,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getMatchResource_LeftURI() {
@@ -320,7 +298,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getMatchResource_RightURI() {
@@ -329,7 +306,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getMatchResource_OriginURI() {
@@ -338,7 +314,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getMatchResource_Left() {
@@ -347,7 +322,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getMatchResource_Right() {
@@ -356,7 +330,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getMatchResource_Origin() {
@@ -365,7 +338,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatchResource_Comparison() {
@@ -373,8 +345,16 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMatchResource_LocationChanges() {
+		return (EReference)matchResourceEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getMatch() {
@@ -383,7 +363,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatch_Submatches() {
@@ -392,7 +371,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatch_Differences() {
@@ -401,7 +379,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatch_Left() {
@@ -410,7 +387,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatch_Right() {
@@ -419,7 +395,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatch_Origin() {
@@ -428,7 +403,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getDiff() {
@@ -437,7 +411,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getDiff_Match() {
@@ -446,7 +419,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getDiff_Requires() {
@@ -455,7 +427,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getDiff_RequiredBy() {
@@ -464,7 +435,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getDiff_Implies() {
@@ -473,7 +443,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getDiff_ImpliedBy() {
@@ -482,7 +451,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getDiff_Refines() {
@@ -491,7 +459,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getDiff_RefinedBy() {
@@ -500,7 +467,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getDiff_PrimeRefining() {
@@ -509,7 +475,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getDiff_Kind() {
@@ -518,7 +483,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getDiff_Source() {
@@ -527,7 +491,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getDiff_State() {
@@ -536,7 +499,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getDiff_Equivalence() {
@@ -545,7 +507,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getDiff_Conflict() {
@@ -554,7 +515,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getResourceAttachmentChange() {
@@ -563,7 +523,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getResourceAttachmentChange_ResourceURI() {
@@ -571,8 +530,34 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getResourceLocationChange() {
+		return resourceLocationChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getResourceLocationChange_BaseLocation() {
+		return (EAttribute)resourceLocationChangeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getResourceLocationChange_ChangedLocation() {
+		return (EAttribute)resourceLocationChangeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getReferenceChange() {
@@ -581,7 +566,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChange_Reference() {
@@ -590,7 +574,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChange_Value() {
@@ -599,7 +582,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getAttributeChange() {
@@ -608,7 +590,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getAttributeChange_Attribute() {
@@ -617,7 +598,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getAttributeChange_Value() {
@@ -626,7 +606,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getFeatureMapChange() {
@@ -635,7 +614,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getFeatureMapChange_Attribute() {
@@ -644,7 +622,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getFeatureMapChange_Value() {
@@ -653,7 +630,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getConflict() {
@@ -662,7 +638,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getConflict_Kind() {
@@ -671,7 +646,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getConflict_Differences() {
@@ -680,7 +654,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getEquivalence() {
@@ -689,7 +662,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getEquivalence_Differences() {
@@ -698,7 +670,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EEnum getDifferenceKind() {
@@ -707,7 +678,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EEnum getDifferenceSource() {
@@ -716,7 +686,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EEnum getDifferenceState() {
@@ -725,7 +694,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EEnum getConflictKind() {
@@ -734,7 +702,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EDataType getEIterable() {
@@ -743,7 +710,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EDataType getIEqualityHelper() {
@@ -752,7 +718,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EDataType getDiagnostic() {
@@ -761,7 +726,6 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public CompareFactory getCompareFactory() {
@@ -770,21 +734,19 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private boolean isCreated = false;
 
 	/**
-	 * Creates the meta-model objects for the package. This method is guarded to have no affect on any
-	 * invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates the meta-model objects for the package.  This method is
+	 * guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void createPackageContents() {
-		if (isCreated) {
+		if (isCreated)
 			return;
-		}
 		isCreated = true;
 
 		// Create classes and their features
@@ -804,6 +766,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		createEAttribute(matchResourceEClass, MATCH_RESOURCE__RIGHT);
 		createEAttribute(matchResourceEClass, MATCH_RESOURCE__ORIGIN);
 		createEReference(matchResourceEClass, MATCH_RESOURCE__COMPARISON);
+		createEReference(matchResourceEClass, MATCH_RESOURCE__LOCATION_CHANGES);
 
 		matchEClass = createEClass(MATCH);
 		createEReference(matchEClass, MATCH__SUBMATCHES);
@@ -829,6 +792,10 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 		resourceAttachmentChangeEClass = createEClass(RESOURCE_ATTACHMENT_CHANGE);
 		createEAttribute(resourceAttachmentChangeEClass, RESOURCE_ATTACHMENT_CHANGE__RESOURCE_URI);
+
+		resourceLocationChangeEClass = createEClass(RESOURCE_LOCATION_CHANGE);
+		createEAttribute(resourceLocationChangeEClass, RESOURCE_LOCATION_CHANGE__BASE_LOCATION);
+		createEAttribute(resourceLocationChangeEClass, RESOURCE_LOCATION_CHANGE__CHANGED_LOCATION);
 
 		referenceChangeEClass = createEClass(REFERENCE_CHANGE);
 		createEReference(referenceChangeEClass, REFERENCE_CHANGE__REFERENCE);
@@ -863,21 +830,19 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private boolean isInitialized = false;
 
 	/**
-	 * Complete the initialization of the package and its meta-model. This method is guarded to have no affect
-	 * on any invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Complete the initialization of the package and its meta-model.  This
+	 * method is guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void initializePackageContents() {
-		if (isInitialized) {
+		if (isInitialized)
 			return;
-		}
 		isInitialized = true;
 
 		// Initialize package
@@ -896,6 +861,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 
 		// Add supertypes to classes
 		resourceAttachmentChangeEClass.getESuperTypes().add(this.getDiff());
+		resourceLocationChangeEClass.getESuperTypes().add(this.getDiff());
 		referenceChangeEClass.getESuperTypes().add(this.getDiff());
 		attributeChangeEClass.getESuperTypes().add(this.getDiff());
 		featureMapChangeEClass.getESuperTypes().add(this.getDiff());
@@ -975,6 +941,11 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				this.getComparison(),
 				this.getComparison_MatchedResources(),
 				"comparison", null, 0, 1, MatchResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getMatchResource_LocationChanges(),
+				this.getResourceLocationChange(),
+				null,
+				"locationChanges", null, 0, 2, MatchResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(matchEClass, Match.class,
 				"Match", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -986,7 +957,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		initEReference(
 				getMatch_Differences(),
 				this.getDiff(),
-				this.getDiff_Match(),
+				null,
 				"differences", null, 0, -1, Match.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getMatch_Left(),
@@ -1022,8 +993,8 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		initEReference(
 				getDiff_Match(),
 				this.getMatch(),
-				this.getMatch_Differences(),
-				"match", null, 1, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				null,
+				"match", null, 0, 1, Diff.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getDiff_Requires(),
 				this.getDiff(),
@@ -1094,6 +1065,17 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				getResourceAttachmentChange_ResourceURI(),
 				ecorePackage.getEString(),
 				"resourceURI", null, 1, 1, ResourceAttachmentChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(resourceLocationChangeEClass, ResourceLocationChange.class,
+				"ResourceLocationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getResourceLocationChange_BaseLocation(),
+				ecorePackage.getEString(),
+				"baseLocation", null, 1, 1, ResourceLocationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getResourceLocationChange_ChangedLocation(),
+				ecorePackage.getEString(),
+				"changedLocation", null, 1, 1, ResourceLocationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(referenceChangeEClass, ReferenceChange.class,
 				"ReferenceChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$

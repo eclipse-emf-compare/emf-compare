@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -150,6 +150,17 @@ public class CompareItemProviderAdapterFactory extends CompareAdapterFactory imp
 	@Override
 	public Adapter createResourceAttachmentChangeAdapter() {
 		return new ResourceAttachmentChangeItemProvider(this);
+	}
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.ResourceLocationChange}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createResourceLocationChangeAdapter() {
+		return new ResourceLocationChangeItemProvider(this);
 	}
 
 	/**

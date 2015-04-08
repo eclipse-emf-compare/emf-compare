@@ -100,6 +100,8 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="comparison" eType="#//Comparison"
         eOpposite="#//Comparison/matchedResources"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="locationChanges" upperBound="2"
+        eType="#//ResourceLocationChange" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Match">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -133,7 +135,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="differences" upperBound="-1"
-        eType="#//Diff" containment="true" eOpposite="#//Diff/match">
+        eType="#//Diff" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="This will contain the list of all differences pertaining to this mapping, if any."/>
       </eAnnotations>
@@ -173,8 +175,8 @@
         <details key="documentation" value="This will remove the diff from the model, effectively &quot;forgetting&quot; about it."/>
       </eAnnotations>
     </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="match" lowerBound="1" eType="#//Match"
-        eOpposite="#//Match/differences">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="match" eType="#//Match"
+        volatile="true" transient="true" derived="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Back-reference towards this difference's parent match, it points towards the mapping on which this difference has been detected."/>
       </eAnnotations>
@@ -246,6 +248,23 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="URI of the resource in which the parent mapping's element is now located."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResourceLocationChange" eSuperTypes="#//Diff">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This particular kind of difference describes the change of a resource's location."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="baseLocation" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Cannot be null. Represents the URI of the left resource of this mapping."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="changedLocation" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Cannot be null. Represents the URI of the right resource of this mapping."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>

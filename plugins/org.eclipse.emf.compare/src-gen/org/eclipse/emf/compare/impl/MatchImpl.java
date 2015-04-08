@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -148,8 +148,8 @@ public class MatchImpl extends MinimalEObjectImpl implements Match {
 	 */
 	public EList<Diff> getDifferences() {
 		if (differences == null) {
-			differences = new EObjectContainmentWithInverseEList<Diff>(Diff.class, this,
-					ComparePackage.MATCH__DIFFERENCES, ComparePackage.DIFF__MATCH);
+			differences = new EObjectContainmentEList<Diff>(Diff.class, this,
+					ComparePackage.MATCH__DIFFERENCES);
 		}
 		return differences;
 	}
@@ -304,22 +304,6 @@ public class MatchImpl extends MinimalEObjectImpl implements Match {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ComparePackage.MATCH__DIFFERENCES:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getDifferences()).basicAdd(
-						otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,9 +18,11 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ResourceLocator;
 
+import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.MatchResource;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemColorProvider;
@@ -190,6 +192,36 @@ public class MatchResourceItemProvider extends ItemProviderAdapter implements IE
 	}
 
 	/**
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+		if (childrenFeatures == null) {
+			super.getChildrenFeatures(object);
+			childrenFeatures.add(ComparePackage.Literals.MATCH_RESOURCE__LOCATION_CHANGES);
+		}
+		return childrenFeatures;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EStructuralFeature getChildFeature(Object object, Object child) {
+		// Check the type of the specified child object and return the proper feature to use for
+		// adding (see {@link AddCommand}) it as a child.
+
+		return super.getChildFeature(object, child);
+	}
+
+	/**
 	 * This returns MatchResource.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -234,6 +266,10 @@ public class MatchResourceItemProvider extends ItemProviderAdapter implements IE
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
 						true));
 				return;
+			case ComparePackage.MATCH_RESOURCE__LOCATION_CHANGES:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true,
+						false));
+				return;
 		}
 		super.notifyChanged(notification);
 	}
@@ -248,6 +284,10 @@ public class MatchResourceItemProvider extends ItemProviderAdapter implements IE
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add(createChildParameter(
+				ComparePackage.Literals.MATCH_RESOURCE__LOCATION_CHANGES, CompareFactory.eINSTANCE
+						.createResourceLocationChange()));
 	}
 
 	/**

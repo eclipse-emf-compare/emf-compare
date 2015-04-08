@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,20 +10,25 @@
  */
 package org.eclipse.emf.compare.impl;
 
+import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.MatchResource;
 
+import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -39,6 +44,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  *   <li>{@link org.eclipse.emf.compare.impl.MatchResourceImpl#getRight <em>Right</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.MatchResourceImpl#getOrigin <em>Origin</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.impl.MatchResourceImpl#getComparison <em>Comparison</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.impl.MatchResourceImpl#getLocationChanges <em>Location Changes</em>}</li>
  * </ul>
  * </p>
  *
@@ -173,6 +179,16 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 	 * @ordered
 	 */
 	protected Resource origin = ORIGIN_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getLocationChanges() <em>Location Changes</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLocationChanges()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ResourceLocationChange> locationChanges;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -376,6 +392,19 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<ResourceLocationChange> getLocationChanges() {
+		if (locationChanges == null) {
+			locationChanges = new EObjectContainmentEList<ResourceLocationChange>(
+					ResourceLocationChange.class, this, ComparePackage.MATCH_RESOURCE__LOCATION_CHANGES);
+		}
+		return locationChanges;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -397,6 +426,8 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 		switch (featureID) {
 			case ComparePackage.MATCH_RESOURCE__COMPARISON:
 				return basicSetComparison(null, msgs);
+			case ComparePackage.MATCH_RESOURCE__LOCATION_CHANGES:
+				return ((InternalEList<?>)getLocationChanges()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -438,6 +469,8 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 				return getOrigin();
 			case ComparePackage.MATCH_RESOURCE__COMPARISON:
 				return getComparison();
+			case ComparePackage.MATCH_RESOURCE__LOCATION_CHANGES:
+				return getLocationChanges();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -447,6 +480,7 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -470,6 +504,10 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 				return;
 			case ComparePackage.MATCH_RESOURCE__COMPARISON:
 				setComparison((Comparison)newValue);
+				return;
+			case ComparePackage.MATCH_RESOURCE__LOCATION_CHANGES:
+				getLocationChanges().clear();
+				getLocationChanges().addAll((Collection<? extends ResourceLocationChange>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -504,6 +542,9 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 			case ComparePackage.MATCH_RESOURCE__COMPARISON:
 				setComparison((Comparison)null);
 				return;
+			case ComparePackage.MATCH_RESOURCE__LOCATION_CHANGES:
+				getLocationChanges().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -531,6 +572,8 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 				return ORIGIN_EDEFAULT == null ? origin != null : !ORIGIN_EDEFAULT.equals(origin);
 			case ComparePackage.MATCH_RESOURCE__COMPARISON:
 				return getComparison() != null;
+			case ComparePackage.MATCH_RESOURCE__LOCATION_CHANGES:
+				return locationChanges != null && !locationChanges.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

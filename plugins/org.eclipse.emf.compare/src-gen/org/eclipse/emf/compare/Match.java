@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,7 +65,6 @@ public interface Match extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Differences</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.emf.compare.Diff}.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.Diff#getMatch <em>Match</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -73,8 +72,7 @@ public interface Match extends EObject {
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Differences</em>' containment reference list.
 	 * @see org.eclipse.emf.compare.ComparePackage#getMatch_Differences()
-	 * @see org.eclipse.emf.compare.Diff#getMatch
-	 * @model opposite="match" containment="true"
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<Diff> getDifferences();

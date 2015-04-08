@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -111,5 +111,15 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 	@Override
 	public Adapter createResourceAttachmentChangeAdapter() {
 		return new ResourceAttachmentChangeItemProviderSpec(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory#createResourceLocationChangeAdapter()
+	 */
+	@Override
+	public Adapter createResourceLocationChangeAdapter() {
+		return new ResourceLocationChangeItemProviderSpec(this);
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -216,6 +216,9 @@ public class MatchItemProvider extends ItemProviderAdapter implements IEditingDo
 
 		newChildDescriptors.add(createChildParameter(ComparePackage.Literals.MATCH__DIFFERENCES,
 				CompareFactory.eINSTANCE.createResourceAttachmentChange()));
+
+		newChildDescriptors.add(createChildParameter(ComparePackage.Literals.MATCH__DIFFERENCES,
+				CompareFactory.eINSTANCE.createResourceLocationChange()));
 
 		newChildDescriptors.add(createChildParameter(ComparePackage.Literals.MATCH__DIFFERENCES,
 				CompareFactory.eINSTANCE.createReferenceChange()));

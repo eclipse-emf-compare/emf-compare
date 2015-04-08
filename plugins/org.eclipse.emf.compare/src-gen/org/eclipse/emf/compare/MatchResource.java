@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -32,6 +33,7 @@ import org.eclipse.emf.ecore.resource.Resource;
  *   <li>{@link org.eclipse.emf.compare.MatchResource#getRight <em>Right</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.MatchResource#getOrigin <em>Origin</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.MatchResource#getComparison <em>Comparison</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.MatchResource#getLocationChanges <em>Location Changes</em>}</li>
  * </ul>
  * </p>
  *
@@ -224,5 +226,21 @@ public interface MatchResource extends EObject {
 	 * @generated
 	 */
 	void setComparison(Comparison value);
+
+	/**
+	 * Returns the value of the '<em><b>Location Changes</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.emf.compare.ResourceLocationChange}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Location Changes</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Location Changes</em>' containment reference list.
+	 * @see org.eclipse.emf.compare.ComparePackage#getMatchResource_LocationChanges()
+	 * @model containment="true" upper="2"
+	 * @generated
+	 */
+	EList<ResourceLocationChange> getLocationChanges();
 
 } // MatchResource

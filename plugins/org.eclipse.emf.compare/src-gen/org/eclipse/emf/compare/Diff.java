@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,27 +15,30 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Diff</b></em>'. <!-- end-user-doc -->
- * <!-- begin-model-doc --> A DiffElement describes a difference related to the EObjects mapped by its parent
- * MatchElement. <!-- end-model-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * A DiffElement describes a difference related to the EObjects mapped by its parent MatchElement.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.Diff#getMatch <em>Match</em>}</li>
- * <li>{@link org.eclipse.emf.compare.Diff#getRequires <em>Requires</em>}</li>
- * <li>{@link org.eclipse.emf.compare.Diff#getRequiredBy <em>Required By</em>}</li>
- * <li>{@link org.eclipse.emf.compare.Diff#getImplies <em>Implies</em>}</li>
- * <li>{@link org.eclipse.emf.compare.Diff#getImpliedBy <em>Implied By</em>}</li>
- * <li>{@link org.eclipse.emf.compare.Diff#getRefines <em>Refines</em>}</li>
- * <li>{@link org.eclipse.emf.compare.Diff#getRefinedBy <em>Refined By</em>}</li>
- * <li>{@link org.eclipse.emf.compare.Diff#getPrimeRefining <em>Prime Refining</em>}</li>
- * <li>{@link org.eclipse.emf.compare.Diff#getKind <em>Kind</em>}</li>
- * <li>{@link org.eclipse.emf.compare.Diff#getSource <em>Source</em>}</li>
- * <li>{@link org.eclipse.emf.compare.Diff#getState <em>State</em>}</li>
- * <li>{@link org.eclipse.emf.compare.Diff#getEquivalence <em>Equivalence</em>}</li>
- * <li>{@link org.eclipse.emf.compare.Diff#getConflict <em>Conflict</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getMatch <em>Match</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getRequires <em>Requires</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getRequiredBy <em>Required By</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getImplies <em>Implies</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getImpliedBy <em>Implied By</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getRefines <em>Refines</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getRefinedBy <em>Refined By</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getPrimeRefining <em>Prime Refining</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getKind <em>Kind</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getSource <em>Source</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getState <em>State</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getEquivalence <em>Equivalence</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.Diff#getConflict <em>Conflict</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @see org.eclipse.emf.compare.ComparePackage#getDiff()
  * @model
  * @generated
@@ -43,7 +46,6 @@ import org.eclipse.emf.ecore.EObject;
 public interface Diff extends EObject {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	String copyright = "Copyright (c) 2012 Obeo.\r\nAll rights reserved. This program and the accompanying materials\r\nare made available under the terms of the Eclipse Public License v1.0\r\nwhich accompanies this distribution, and is available at\r\nhttp://www.eclipse.org/legal/epl-v10.html\r\n\r\nContributors:\r\n    Obeo - initial API and implementation"; //$NON-NLS-1$
@@ -57,19 +59,16 @@ public interface Diff extends EObject {
 	 * 
 	 * @return the value of the '<em>Match</em>' container reference.
 	 * @see #setMatch(Match)
-	 * @see org.eclipse.emf.compare.ComparePackage#getDiff_Match()
-	 * @see org.eclipse.emf.compare.Match#getDifferences
-	 * @model opposite="differences" required="true" transient="false"
+	 * @model derived="true"
 	 * @generated
 	 */
 	Match getMatch();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.Diff#getMatch <em>Match</em>}' container
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Match</em>' container reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.Diff#getMatch <em>Match</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Match</em>' reference.
 	 * @see #getMatch()
 	 * @generated
 	 */
@@ -106,15 +105,15 @@ public interface Diff extends EObject {
 	EList<Diff> getRequiredBy();
 
 	/**
-	 * Returns the value of the '<em><b>Implies</b></em>' reference list. The list contents are of type
-	 * {@link org.eclipse.emf.compare.Diff}. It is bidirectional and its opposite is '
-	 * {@link org.eclipse.emf.compare.Diff#getImpliedBy <em>Implied By</em>}'. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Implies</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.compare.Diff}.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.Diff#getImpliedBy <em>Implied By</em>}'.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Implies</em>' reference list isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Implies</em>' reference list.
 	 * @see org.eclipse.emf.compare.ComparePackage#getDiff_Implies()
 	 * @see org.eclipse.emf.compare.Diff#getImpliedBy
@@ -124,15 +123,15 @@ public interface Diff extends EObject {
 	EList<Diff> getImplies();
 
 	/**
-	 * Returns the value of the '<em><b>Implied By</b></em>' reference list. The list contents are of type
-	 * {@link org.eclipse.emf.compare.Diff}. It is bidirectional and its opposite is '
-	 * {@link org.eclipse.emf.compare.Diff#getImplies <em>Implies</em>}'. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Implied By</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.compare.Diff}.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.Diff#getImplies <em>Implies</em>}'.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Implied By</em>' reference list isn't clear, there really should be more of
 	 * a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Implied By</em>' reference list.
 	 * @see org.eclipse.emf.compare.ComparePackage#getDiff_ImpliedBy()
 	 * @see org.eclipse.emf.compare.Diff#getImplies
@@ -175,13 +174,13 @@ public interface Diff extends EObject {
 	EList<Diff> getRefinedBy();
 
 	/**
-	 * Returns the value of the '<em><b>Prime Refining</b></em>' reference. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Prime Refining</b></em>' reference.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Prime Refining</em>' reference isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Prime Refining</em>' reference.
 	 * @see org.eclipse.emf.compare.ComparePackage#getDiff_PrimeRefining()
 	 * @model transient="true" changeable="false" derived="true"
@@ -234,9 +233,7 @@ public interface Diff extends EObject {
 	/**
 	 * Sets the value of the '{@link org.eclipse.emf.compare.Diff#getConflict <em>Conflict</em>}' reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Conflict</em>' reference.
+	 * @param value the new value of the '<em>Conflict</em>' reference.
 	 * @see #getConflict()
 	 * @generated
 	 */
@@ -316,11 +313,9 @@ public interface Diff extends EObject {
 	Equivalence getEquivalence();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.Diff#getEquivalence <em>Equivalence</em>}'
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Equivalence</em>' reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.Diff#getEquivalence <em>Equivalence</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Equivalence</em>' reference.
 	 * @see #getEquivalence()
 	 * @generated
 	 */
