@@ -20,6 +20,8 @@ import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.EdgeMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.NodeMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.modelextension.ModelExtensionUtilTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.renaming.MergeRenamingMatchResource2WayTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.renaming.MergeRenamingMatchResource3WayTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.saveparameter.SaveParameterHookIntegrationTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.saveparameter.SaveParameterHookTest;
 import org.eclipse.emf.compare.tests.suite.CompareTestSuite;
@@ -41,9 +43,13 @@ import org.junit.runners.Suite.SuiteClasses;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
+@SuppressWarnings("restriction")
 @RunWith(Suite.class)
-@SuiteClasses({EdgeMergeTest.class, NodeMergeTest.class, ModelExtensionUtilTest.class,
-		SaveParameterHookTest.class, SaveParameterHookIntegrationTest.class })
+@SuiteClasses({ EdgeMergeTest.class, NodeMergeTest.class,
+		ModelExtensionUtilTest.class, SaveParameterHookTest.class,
+		SaveParameterHookIntegrationTest.class,
+		MergeRenamingMatchResource2WayTest.class,
+		MergeRenamingMatchResource3WayTest.class })
 public class AllTests {
 
 	/**
@@ -56,7 +62,8 @@ public class AllTests {
 	}
 
 	/**
-	 * This will return a suite populated with all tests available through this class.
+	 * This will return a suite populated with all tests available through this
+	 * class.
 	 * 
 	 * @generated
 	 */
@@ -66,17 +73,23 @@ public class AllTests {
 
 	@BeforeClass
 	public static void fillEMFRegistries() {
-		EPackage.Registry.INSTANCE.put(ComparePackage.eNS_URI, ComparePackage.eINSTANCE);
-		EPackage.Registry.INSTANCE.put(ExtensionsPackage.eNS_URI, ExtensionsPackage.eINSTANCE);
-		EPackage.Registry.INSTANCE.put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
-		EPackage.Registry.INSTANCE.put(NotationPackage.eNS_URI, NotationPackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(ComparePackage.eNS_URI,
+				ComparePackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(ExtensionsPackage.eNS_URI,
+				ExtensionsPackage.eINSTANCE);
+		EPackage.Registry.INSTANCE
+				.put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(NotationPackage.eNS_URI,
+				NotationPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(DiPackage.eNS_URI, DiPackage.eINSTANCE);
 
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("di", //$NON-NLS-1$
 				new DiResourceFactoryImpl());
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("notation", //$NON-NLS-1$
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(
+				"notation", //$NON-NLS-1$
 				new GMFResourceFactory());
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("uml", //$NON-NLS-1$
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(
+				"uml", //$NON-NLS-1$
 				new UMLResourceFactoryImpl());
 	}
 }

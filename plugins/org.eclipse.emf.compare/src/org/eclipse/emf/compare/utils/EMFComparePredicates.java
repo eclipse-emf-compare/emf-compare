@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo and others.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.ENamedElement;
@@ -586,7 +587,7 @@ public final class EMFComparePredicates {
 	public static Predicate<? super Diff> onEObject(final String qualifiedName) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				if (input == null) {
+				if (input == null || input instanceof ResourceLocationChange) {
 					return false;
 				}
 

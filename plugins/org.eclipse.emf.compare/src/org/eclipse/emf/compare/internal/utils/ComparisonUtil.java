@@ -28,10 +28,12 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
@@ -49,6 +51,8 @@ import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.ExtendedMetaData;
 import org.eclipse.emf.ecore.util.FeatureMap;
 
@@ -435,7 +439,11 @@ public final class ComparisonUtil {
 		if (object instanceof Match) {
 			comparison = ((Match)object).getComparison();
 		} else if (object instanceof Diff) {
-			comparison = ((Diff)object).getMatch().getComparison();
+			if (object.eContainer() instanceof MatchResource) {
+				comparison = ((MatchResource)((Diff)object).eContainer()).getComparison();
+			} else {
+				comparison = ((Diff)object).getMatch().getComparison();
+			}
 		} else if (object instanceof MatchResource) {
 			comparison = ((MatchResource)object).getComparison();
 		} else if (object instanceof Equivalence) {
@@ -519,6 +527,57 @@ public final class ComparisonUtil {
 		if (annotation != null) {
 			final String groupKind = ExtendedMetaData.FEATURE_KINDS[ExtendedMetaData.GROUP_FEATURE];
 			return annotation.getDetails().containsKey(groupKind);
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if both resources are platform resources and only one exists.
+	 * 
+	 * @param leftResource
+	 *            the first resource to check.
+	 * @param rightResource
+	 *            the second resource to check.
+	 * @return true if both resources are platform resources and only one exists, false otherwise.
+	 */
+	public static boolean bothArePlatformResourcesAndOnlyOneExists(Resource leftResource,
+			Resource rightResource) {
+		boolean existingPlatformResources = false;
+		if (leftResource != null && rightResource != null) {
+			final ResourceSet leftResourceSet = leftResource.getResourceSet();
+			final ResourceSet rightResourceSet = rightResource.getResourceSet();
+			if (leftResourceSet != null && rightResourceSet != null) {
+				final URI leftURI = leftResource.getURI();
+				final URI rightURI = rightResource.getURI();
+				if (leftURI.isPlatformResource() && rightURI.isPlatformResource()) {
+					boolean baseExists = leftResourceSet.getURIConverter().exists(leftURI,
+							Collections.emptyMap());
+					boolean changedExists = rightResourceSet.getURIConverter().exists(rightURI,
+							Collections.emptyMap());
+					existingPlatformResources = (baseExists && !changedExists)
+							|| (!baseExists && changedExists);
+				}
+			}
+		}
+		return existingPlatformResources;
+	}
+
+	/**
+	 * Checks if both resources have resource set.
+	 * 
+	 * @param leftResource
+	 *            the first resource to check.
+	 * @param rightResource
+	 *            the second resource to check.
+	 * @return true if both resources have resource set, false otherwise.
+	 */
+	public static boolean bothResourceHaveResourceSet(Resource leftResource, Resource rightResource) {
+		if (leftResource != null && rightResource != null) {
+			final ResourceSet leftResourceSet = leftResource.getResourceSet();
+			final ResourceSet rightResourceSet = rightResource.getResourceSet();
+			if (leftResourceSet != null && rightResourceSet != null) {
+				return true;
+			}
 		}
 		return false;
 	}

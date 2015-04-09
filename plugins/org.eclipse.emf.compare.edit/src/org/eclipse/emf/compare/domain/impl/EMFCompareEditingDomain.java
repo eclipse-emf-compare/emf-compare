@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,7 @@ import org.eclipse.emf.compare.command.impl.TransactionalDualCompareCommandStack
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.internal.domain.IMergeAllNonConflictingRunnable;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
@@ -352,7 +353,7 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 			Registry mergerRegistry, IMergeRunnable runnable) {
 		ImmutableSet.Builder<Notifier> notifiersBuilder = ImmutableSet.builder();
 		for (Diff diff : differences) {
-			notifiersBuilder.add(diff.getMatch().getComparison());
+			notifiersBuilder.add(ComparisonUtil.getComparison(diff));
 		}
 		ImmutableSet<Notifier> notifiers = notifiersBuilder.addAll(fNotifiers).build();
 

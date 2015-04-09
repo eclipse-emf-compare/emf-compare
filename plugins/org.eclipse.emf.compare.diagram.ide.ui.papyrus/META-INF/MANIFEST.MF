@@ -8,6 +8,8 @@ Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.CompareDiagramIDEUIPapyrusPlugin
 Require-Bundle: org.eclipse.ui.ide;bundle-version="3.5.0",
+ org.eclipse.emf.compare;bundle-version="3.0.0",
+ org.eclipse.emf.compare.rcp;bundle-version="2.0.0",
  org.eclipse.emf.compare.ide;bundle-version="3.1.0",
  org.eclipse.emf.compare.ide.ui;bundle-version="4.1.0",
  org.eclipse.emf.compare.diagram.ide.ui;bundle-version="3.0.0",
@@ -20,7 +22,10 @@ Require-Bundle: org.eclipse.ui.ide;bundle-version="3.5.0",
  org.eclipse.papyrus.uml.tools;bundle-version="1.0.0",
  org.eclipse.papyrus.infra.emf;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Import-Package: com.google.common.collect;version="[11.0.0,16.0.0)"
+Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
+ com.google.common.collect;version="[11.0.0,16.0.0)"
 Export-Package: org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal,
+ org.eclipse.emf.compare.diagram.ide.ui.papyrus.dependency,
  org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.logical.view,
+ org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.postprocessor,
  org.eclipse.emf.compare.diagram.ide.ui.papyrus.util

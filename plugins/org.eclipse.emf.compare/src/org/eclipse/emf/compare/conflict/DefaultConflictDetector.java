@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+( * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,6 +48,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.compare.internal.SubMatchIterator;
 import org.eclipse.emf.compare.internal.ThreeWayTextDiff;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
@@ -111,6 +112,33 @@ public class DefaultConflictDetector implements IConflictDetector {
 		}
 
 		handlePseudoUnderRealAdd(comparison);
+
+		handleResourceLocationChangesConflicts(comparison);
+	}
+
+	/**
+	 * Handles conflicts on resource location changes.
+	 * 
+	 * @param comparison
+	 *            The originating comparison of those diffs.
+	 */
+	private void handleResourceLocationChangesConflicts(Comparison comparison) {
+		for (MatchResource matchResource : comparison.getMatchedResources()) {
+			List<ResourceLocationChange> changes = matchResource.getLocationChanges();
+			if (changes.size() == 2) {
+				Conflict conflict = CompareFactory.eINSTANCE.createConflict();
+				conflict.getDifferences().addAll(changes);
+				comparison.getConflicts().add(conflict);
+				final String origin = matchResource.getOriginURI();
+				final String left = matchResource.getLeftURI();
+				final String right = matchResource.getRightURI();
+				if (origin != null && !origin.equals(left) && !origin.equals(right)) {
+					conflict.setKind(ConflictKind.REAL);
+				} else {
+					conflict.setKind(ConflictKind.PSEUDO);
+				}
+			}
+		}
 	}
 
 	/**
@@ -1189,7 +1217,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 		 * @see com.google.common.base.Predicate#apply(java.lang.Object)
 		 */
 		public boolean apply(Diff input) {
-			return canConflictWith(reference, input);
+			return !(input instanceof ResourceLocationChange) && canConflictWith(reference, input);
 		}
 
 		/**

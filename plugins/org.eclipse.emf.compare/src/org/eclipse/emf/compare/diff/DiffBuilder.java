@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,10 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -94,5 +96,22 @@ public class DiffBuilder implements IDiffProcessor {
 		change.setResourceURI(uri);
 		change.setKind(kind);
 		change.setSource(source);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.IDiffProcessor#resourceLocationChange(org.eclipse.emf.compare.
+	 *      MatchResource, java.lang.String, java.lang.String org.eclipse.emf.compare.DifferenceKind,
+	 *      org.eclipse.emf.compare.DifferenceSource)
+	 */
+	public void resourceLocationChange(MatchResource matchResource, String baseLocation,
+			String changedLocation, DifferenceKind kind, DifferenceSource source) {
+		final ResourceLocationChange change = CompareFactory.eINSTANCE.createResourceLocationChange();
+		change.setBaseLocation(baseLocation);
+		change.setChangedLocation(changedLocation);
+		change.setKind(kind);
+		change.setSource(source);
+		matchResource.getLocationChanges().add(change);
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -110,4 +111,25 @@ public interface IDiffProcessor {
 	 *            difference has been detected.
 	 */
 	void resourceAttachmentChange(Match match, String uri, DifferenceKind kind, DifferenceSource source);
+
+	/**
+	 * This will be called whenever the diff engine detects the change of a Resource location.
+	 * 
+	 * @param matchResource
+	 *            The matchResource to which this difference should be attached.
+	 * @param baseLocation
+	 *            The base location (left side in case of a two way comparison, origin or left side in case of
+	 *            a three way comparison).
+	 * @param changedLocation
+	 *            The change location (right side in case of a two way comparison, left or right side in case
+	 *            of a three way comparison).
+	 * @param kind
+	 *            Kind of this difference.
+	 * @param source
+	 *            Source of the difference. For two way comparisons, this will always be
+	 *            {@link DifferenceSource#LEFT}. Otherwise, this will indicate the side on which this
+	 *            difference has been detected.
+	 */
+	void resourceLocationChange(MatchResource matchResource, String baseLocation, String changedLocation,
+			DifferenceKind kind, DifferenceSource source);
 }

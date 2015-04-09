@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.internal.merge.IMergeData;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedImage;
 
@@ -142,8 +143,7 @@ public class OverlayImageProvider {
 	// Nothing here has to be externalized
 	@SuppressWarnings("nls")
 	private String getImageOverlay(Diff diff) {
-		final Match match = diff.getMatch();
-		final Comparison comparison = match.getComparison();
+		final Comparison comparison = ComparisonUtil.getComparison(diff);
 		String path = "full/ovr16/";
 
 		if (diff.getState() == DifferenceState.MERGED) {

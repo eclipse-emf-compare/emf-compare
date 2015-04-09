@@ -42,4 +42,16 @@
             class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.dependency.PapyrusDependencyProvider">
       </dependency>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.rcp.postProcessor">
+      <processor
+            class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.postprocessor.PapyrusPostProcessor"
+            description="Post processor used in postMatch step for matching notation and di resources with different names"
+            label="Papyrus Post Processor"
+            ordinal="20">
+         <resourceURI
+               value=".*\.notation">
+         </resourceURI>
+      </processor>
+   </extension>
 </plugin>

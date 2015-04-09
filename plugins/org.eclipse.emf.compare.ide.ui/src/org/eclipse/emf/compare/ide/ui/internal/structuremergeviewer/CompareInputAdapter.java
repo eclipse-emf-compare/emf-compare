@@ -193,16 +193,7 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 	 */
 	public int getKind() {
 		Notifier notifier = getComparisonObject();
-		boolean isThreeWay = false;
-		if (notifier instanceof Diff) {
-			isThreeWay = ((Diff)notifier).getMatch().getComparison().isThreeWay();
-		} else if (notifier instanceof Match) {
-			isThreeWay = ((Match)notifier).getComparison().isThreeWay();
-		} else if (notifier instanceof Conflict) {
-			isThreeWay = true;
-		} else if (notifier instanceof MatchResource) {
-			isThreeWay = ((MatchResource)notifier).getComparison().isThreeWay();
-		}
+		boolean isThreeWay = isThreeWay(notifier);
 		if (isThreeWay) {
 			return Differencer.CONFLICTING;
 		}
@@ -249,7 +240,11 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 	protected boolean isThreeWay(Notifier notifier) {
 		final boolean isThreeWay;
 		if (notifier instanceof Diff) {
-			isThreeWay = ((Diff)notifier).getMatch().getComparison().isThreeWay();
+			if (((Diff)notifier).eContainer() instanceof MatchResource) {
+				isThreeWay = ((MatchResource)((Diff)notifier).eContainer()).getComparison().isThreeWay();
+			} else {
+				isThreeWay = ((Diff)notifier).getMatch().getComparison().isThreeWay();
+			}
 		} else if (notifier instanceof Match) {
 			isThreeWay = ((Match)notifier).getComparison().isThreeWay();
 		} else if (notifier instanceof Conflict) {
