@@ -1,0 +1,7 @@
+target "EGit"
+
+with source, requirements
+
+location "http://download.eclipse.org/modeling/emf/compare/updates/egit-logical/nightly/" {
+	org.eclipse.egit.feature.group lazy
+}

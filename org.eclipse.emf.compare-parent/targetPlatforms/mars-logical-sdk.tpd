@@ -3,12 +3,16 @@ target "EMF Compare based on Mars SDK"
 include "fragments/licence.tpd"
 include "fragments/fuzzy-tests.tpd"
 include "fragments/orbit.tpd"
-include "fragments/egit-nightly.tpd"
+include "fragments/egit-logical-nightly.tpd"
 include "fragments/perf.tpd"
 
 
 with source, requirements
 
+/*
+ * Can be used for local dev env to depend on the logical model
+ * build of EGit.
+ */
 location "http://download.eclipse.org/releases/mars" {
 	org.eclipse.platform.sdk lazy
 	org.eclipse.emf.sdk.feature.group lazy
