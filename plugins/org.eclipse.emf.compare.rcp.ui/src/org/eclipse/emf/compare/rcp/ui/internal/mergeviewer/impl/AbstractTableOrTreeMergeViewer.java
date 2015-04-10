@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
@@ -301,7 +302,7 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 	 *            is the Diff selected or not.
 	 */
 	private void setGCStyleForDiff(GC g, Diff diff, boolean selected) {
-		final Comparison comparison = diff.getMatch().getComparison();
+		final Comparison comparison = ComparisonUtil.getComparison(diff);
 		final boolean isThreeWay = comparison.isThreeWay();
 
 		if (diff.getKind() == DifferenceKind.MOVE) {

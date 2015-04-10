@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?>
 
 <!--
- Copyright (c) 2013, 2014 Obeo.
+ Copyright (c) 2013, 2015 Obeo.
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
  which accompanies this distribution, and is available at
@@ -120,6 +120,10 @@
       <factory
             class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.ContainmentReferenceChangeAccessorFactory"
             ranking="15">
+      </factory>
+      <factory
+            class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.ResourceLocationChangeAccessorFactory"
+            ranking="10">
       </factory>
    </extension>
    <extension
