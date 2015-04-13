@@ -1,7 +1,6 @@
 target "EMF Compare based on Mars SDK"
 
 include "fragments/licence.tpd"
-include "fragments/fuzzy-tests.tpd"
 include "fragments/orbit.tpd"
 include "fragments/egit-logical-nightly.tpd"
 include "fragments/perf.tpd"

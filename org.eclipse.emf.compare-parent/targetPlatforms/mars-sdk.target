@@ -8,11 +8,6 @@
       <repository location="http://download.eclipse.org/cbi/updates/license"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.emf.emfstore.modelmutator.feature.feature.group" version="0.9.3.M6"/>
-      <unit id="org.eclipse.emf.emfstore.fuzzy.feature.feature.group" version="0.9.3.M6"/>
-      <repository location="http://download.eclipse.org/emf-store/milestones/archive/0.9.3.M6"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.junit4" version="4.8.1.v20100525"/>
       <repository location="http://download.eclipse.org/releases/indigo"/>
     </location>

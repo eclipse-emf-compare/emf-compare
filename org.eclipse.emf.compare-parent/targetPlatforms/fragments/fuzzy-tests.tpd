@@ -2,7 +2,7 @@ target "Fuzzy testing framework from EMF Store"
 
 with source, requirements
 
-location "http://download.eclipse.org/emf-store/milestones/archive/0.9.3.M6" {
+location "http://download.eclipse.org/emf-store/releases_15" {
 	org.eclipse.emf.emfstore.modelmutator.feature.feature.group
 	org.eclipse.emf.emfstore.fuzzy.feature.feature.group
 }
