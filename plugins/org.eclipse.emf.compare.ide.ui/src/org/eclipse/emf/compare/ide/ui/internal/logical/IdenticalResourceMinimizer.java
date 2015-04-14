@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
+import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 
 /**
@@ -175,7 +176,7 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 	boolean isInWorkspace(IStorage storage) {
 		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		if (root != null) {
-			return root.getFile(storage.getFullPath()).isAccessible();
+			return root.getFile(ResourceUtil.getFixedPath(storage)).isAccessible();
 		}
 		return false;
 	}
