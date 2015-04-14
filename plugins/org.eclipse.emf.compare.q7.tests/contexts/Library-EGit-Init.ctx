@@ -6,8 +6,8 @@ Element-Name: Library-EGit-Init
 Element-Type: context
 Element-Version: 2.0
 Id: _pj0X4HBcEeKTzKjv1SXOgA
-Q7-Runtime-Version: 1.3.14.201410230950
-Save-Time: 12/12/14 11:47 AM
+Q7-Runtime-Version: 1.3.15.201412220512
+Save-Time: 4/14/15 10:26 AM
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
 Content-Type: text/plain
@@ -79,4 +79,8 @@ with [get-view "Package Explorer" | get-tree] {
 	    }
     }
 }
+
+//remove from the workspace the project that contains repo
+get-view "Package Explorer" | get-tree | select "Library-EGit" | get-menu Delete | click
+get-window "Delete Resources" | get-button OK | click
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--
