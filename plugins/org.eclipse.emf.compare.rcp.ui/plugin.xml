@@ -225,6 +225,12 @@
             id="org.eclipse.emf.compare.rcp.ui.preferencePage.adapterfactories"
             name="Item providers">
       </page>
+      <page
+            category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
+            class="org.eclipse.emf.compare.rcp.ui.internal.preferences.LoggingPreferencePage"
+            id="org.eclipse.emf.compare.rcp.ui.preferencePage.logging"
+            name="Logging">
+      </page>
    </extension>
    <extension
        point="org.eclipse.emf.compare.rcp.ui.matchEngineFactoryConfigurationUI">

@@ -10,11 +10,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.RollingFileAppender;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -25,11 +30,13 @@ import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemRegistry;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.ConfigurationUIRegistryEventListener;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.IConfigurationUIFactory;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AccessorFactoryExtensionRegistryListener;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AccessorFactoryRegistryImpl;
+import org.eclipse.emf.compare.rcp.ui.internal.preferences.LoggingPreferencePage;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterExtensionRegistryListener;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterManager;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterRegistryImpl;
@@ -41,8 +48,12 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.Preferences;
@@ -53,6 +64,13 @@ import org.osgi.service.prefs.Preferences;
  * @since 3.0
  */
 public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
+
+	/**
+	 * Log4j logger to use throughout EMFCompare for logging purposes.
+	 * 
+	 * @since 4.1
+	 */
+	public static final Logger LOGGER = Logger.getLogger("org.eclipse.emf.compare"); //$NON-NLS-1$
 
 	/**
 	 * The plug-in ID.
@@ -74,6 +92,15 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	 * @since 4.0
 	 */
 	private static final String MATCH_ENGINE_FACTORY_CONFIGURATION_UI_PPID = "matchEngineFactoryConfigurationUI";//$NON-NLS-1$
+
+	/**
+	 * Pattern used for log4j logging:
+	 * 
+	 * <pre>
+	 * Date [Thread name] LEVEL 3.last.segments.of.logger.name <NDC Tag> - message\n
+	 * </pre>
+	 */
+	private static final String LOG_PATTERN = "%d{ISO8601} [%t] %-5p %c{3} %x - %m%n"; //$NON-NLS-1$
 
 	/**
 	 * the shared instance.
@@ -108,6 +135,8 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	private ConfigurationUIRegistryEventListener matchEngineConfiguratorRegistryListener;
 
 	private IEMFCompareConfiguration compareConfiguration;
+
+	private IPropertyChangeListener propertyChangeListener;
 
 	/**
 	 * Instance scope for preferences.
@@ -177,6 +206,7 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 				+ MATCH_ENGINE_FACTORY_CONFIGURATION_UI_PPID);
 		matchEngineConfiguratorRegistryListener.readRegistry(extensionRegistry);
 
+		initLogging();
 	}
 
 	/*
@@ -185,6 +215,7 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		getPreferenceStore().removePropertyChangeListener(propertyChangeListener);
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 
 		extensionRegistry.removeListener(matchEngineConfiguratorRegistryListener);
@@ -221,6 +252,60 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	 */
 	public static EMFCompareRCPUIPlugin getDefault() {
 		return plugin;
+	}
+
+	/**
+	 * Initializes log4j by reading the preferences.
+	 */
+	private void initLogging() {
+		resetDefaultLoggingPreferences();
+		LOGGER.setLevel(Level.toLevel(getPreferenceStore().getString(LoggingPreferencePage.LOG_LEVEL_KEY)));
+		RollingFileAppender appender = (RollingFileAppender)LOGGER
+				.getAppender(LoggingPreferencePage.EMFC_APPENDER_NAME);
+		String logFileName = getPreferenceStore().getString(LoggingPreferencePage.LOG_FILENAME_KEY);
+		if (logFileName.length() > 0) {
+			if (appender == null) {
+				try {
+					createLogAppender(logFileName);
+				} catch (IOException e) {
+					// Invalidate file name
+					getPreferenceStore().setToDefault(LoggingPreferencePage.LOG_FILENAME_KEY);
+				}
+			} else {
+				appender.setMaxBackupIndex(getPreferenceStore().getInt(
+						LoggingPreferencePage.LOG_BACKUP_COUNT_KEY));
+				appender.setMaximumFileSize((getPreferenceStore()
+						.getLong(LoggingPreferencePage.LOG_FILE_MAX_SIZE_KEY)) * 1024 * 1024);
+			}
+		}
+		propertyChangeListener = new LoggingPropertyChangeListener();
+		getPreferenceStore().addPropertyChangeListener(propertyChangeListener);
+	}
+
+	private void resetDefaultLoggingPreferences() {
+		getPreferenceStore().setDefault(LoggingPreferencePage.LOG_FILENAME_KEY, ""); //$NON-NLS-1$
+		getPreferenceStore().setDefault(LoggingPreferencePage.LOG_LEVEL_KEY, "OFF"); //$NON-NLS-1$
+		getPreferenceStore().setValue(LoggingPreferencePage.LOG_BACKUP_COUNT_KEY, 20);
+		getPreferenceStore().setValue(LoggingPreferencePage.LOG_FILE_MAX_SIZE_KEY, 10);
+	}
+
+	/**
+	 * Creates the RollingFileAppender used to log with log4j.
+	 * 
+	 * @param newFileName
+	 *            Path opf the log file
+	 * @throws IOException
+	 *             If an IO problem occurs, like the given path does not represent a file, or it cannot be
+	 *             written;
+	 */
+	private void createLogAppender(String newFileName) throws IOException {
+		RollingFileAppender appender;
+		appender = new RollingFileAppender(new PatternLayout(LOG_PATTERN), newFileName, true);
+		LOGGER.removeAllAppenders(); // We don't want to log elsewhere
+		LOGGER.addAppender(appender);
+		appender.setMaxBackupIndex(getPreferenceStore().getInt(LoggingPreferencePage.LOG_BACKUP_COUNT_KEY));
+		appender.setMaximumFileSize((EMFCompareRCPUIPlugin.getDefault().getPreferenceStore()
+				.getLong(LoggingPreferencePage.LOG_FILE_MAX_SIZE_KEY)) * 1024 * 1024);
 	}
 
 	/**
@@ -380,5 +465,51 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	 */
 	public void setEMFCompareConfiguration(IEMFCompareConfiguration compareConfiguration) {
 		this.compareConfiguration = compareConfiguration;
+	}
+
+	private static class LoggingPropertyChangeListener implements IPropertyChangeListener {
+
+		public void propertyChange(PropertyChangeEvent event) {
+			if (LoggingPreferencePage.LOG_FILENAME_KEY.equals(event.getProperty())) {
+				String newFileName = (String)event.getNewValue();
+				RollingFileAppender appender = (RollingFileAppender)LOGGER
+						.getAppender(LoggingPreferencePage.EMFC_APPENDER_NAME);
+				if (newFileName != null && newFileName.length() > 0) {
+					if (appender == null) {
+						try {
+							EMFCompareRCPUIPlugin.getDefault().createLogAppender(newFileName);
+						} catch (IOException e) {
+							EMFCompareRCPUIPlugin.getDefault().getPreferenceStore().setToDefault(
+									LoggingPreferencePage.LOG_FILENAME_KEY);
+							MessageDialog.openError(Display.getCurrent().getActiveShell(),
+									EMFCompareRCPUIMessages
+											.getString("LoggingPreferencePage.appender.error.title"), //$NON-NLS-1$
+									EMFCompareRCPUIMessages.getString(
+											"LoggingPreferencePage.appender.error.msg", //$NON-NLS-1$
+											newFileName, e.getMessage()));
+						}
+					} else {
+						appender.setFile(newFileName);
+					}
+				} else {
+					// No file name, remove appender
+					LOGGER.removeAllAppenders();
+				}
+			} else if (LoggingPreferencePage.LOG_LEVEL_KEY.equals(event.getProperty())) {
+				LOGGER.setLevel(Level.toLevel((String)event.getNewValue()));
+			} else if (LoggingPreferencePage.LOG_BACKUP_COUNT_KEY.equals(event.getProperty())) {
+				RollingFileAppender appender = (RollingFileAppender)LOGGER
+						.getAppender(LoggingPreferencePage.EMFC_APPENDER_NAME);
+				if (appender != null) {
+					appender.setMaxBackupIndex(Integer.parseInt(((String)event.getNewValue())));
+				}
+			} else if (LoggingPreferencePage.LOG_FILE_MAX_SIZE_KEY.equals(event.getProperty())) {
+				RollingFileAppender appender = (RollingFileAppender)LOGGER
+						.getAppender(LoggingPreferencePage.EMFC_APPENDER_NAME);
+				if (appender != null) {
+					appender.setMaximumFileSize(Long.parseLong((String)event.getNewValue()) * 1024 * 1024);
+				}
+			}
+		}
 	}
 }
