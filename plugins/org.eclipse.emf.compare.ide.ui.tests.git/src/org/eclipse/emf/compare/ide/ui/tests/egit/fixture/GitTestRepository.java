@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2013, 2014 Obeo and others
+ * Copyright (C) 2013, 2015 Obeo and others
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -32,6 +32,7 @@ import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.egit.core.op.IgnoreOperation;
 import org.eclipse.egit.core.op.MergeOperation;
+import org.eclipse.egit.core.op.ResetOperation;
 import org.eclipse.egit.core.synchronize.GitResourceVariantTreeSubscriber;
 import org.eclipse.egit.core.synchronize.GitSubscriberMergeContext;
 import org.eclipse.egit.core.synchronize.GitSubscriberResourceMappingContext;
@@ -41,6 +42,7 @@ import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
+import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -54,13 +56,14 @@ import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberScopeManager;
 
 /**
- * This class is largely inspired from org.eclipse.egit.core.test.TestRepository. It has been copied here in
- * order to be usable from our build without dependencies towards egit.core.tests.
+ * This class is largely inspired from
+ * org.eclipse.egit.core.test.TestRepository. It has been copied here in order
+ * to be usable from our build without dependencies towards egit.core.tests.
  */
-@SuppressWarnings({"nls", "restriction" })
+@SuppressWarnings({ "nls", "restriction" })
 public class GitTestRepository {
 	private final List<Runnable> disposers;
-	
+
 	Repository repository;
 
 	String workdirPrefix;
@@ -74,7 +77,8 @@ public class GitTestRepository {
 	 *             Thrown if we cannot write at the given location.
 	 */
 	public GitTestRepository(File gitDir) throws IOException {
-		repository = Activator.getDefault().getRepositoryCache().lookupRepository(gitDir);
+		repository = Activator.getDefault().getRepositoryCache()
+				.lookupRepository(gitDir);
 		repository.create();
 
 		try {
@@ -86,13 +90,40 @@ public class GitTestRepository {
 		if (!workdirPrefix.endsWith("/")) {
 			workdirPrefix += "/";
 		}
-		
+
 		this.disposers = new ArrayList<Runnable>();
 	}
-	
+
 	public RevCommit addAllAndCommit(String commitMessage) throws Exception {
-		new Git(repository).add().addFilepattern(".").call();
-		return commit(commitMessage);
+		Git git = null;
+		try {
+			git = new Git(repository);
+			git.add().addFilepattern(".").call();
+			return commit(commitMessage);
+		} finally {
+			git.close();
+		}
+	}
+
+	/**
+	 * Adds all changes and amends the latest commit, also changing its message
+	 * to the given message.
+	 * 
+	 * @param message
+	 *            the amended commit message, must not be null
+	 * @return The RevCommit of the amended commit.
+	 * @throws Exception
+	 *             if anything goes wrong.
+	 */
+	public RevCommit addAllAndAmend(String message) throws Exception {
+		Git git = null;
+		try {
+			git = new Git(repository);
+			git.add().addFilepattern(".").call();
+			return git.commit().setAmend(true).setMessage(message).call();
+		} finally {
+			git.close();
+		}
 	}
 
 	/**
@@ -106,8 +137,8 @@ public class GitTestRepository {
 	 *            The files to add and commit.
 	 * @return The RevCommit corresponding to this operation.
 	 */
-	public RevCommit addAndCommit(TestProject testProject, String commitMessage, File... files)
-			throws Exception {
+	public RevCommit addAndCommit(TestProject testProject,
+			String commitMessage, File... files) throws Exception {
 		addToIndex(testProject, files);
 		return commit(commitMessage);
 	}
@@ -128,9 +159,25 @@ public class GitTestRepository {
 	 * @param files
 	 *            Files to add to the index.
 	 */
-	public void addToIndex(TestProject testProject, File... files) throws Exception {
+	public void addToIndex(TestProject testProject, File... files)
+			throws Exception {
 		for (File file : files) {
 			addToIndex(testProject.getIFile(testProject.getProject(), file));
+		}
+	}
+
+	/**
+	 * Removes the given files from the index.
+	 * 
+	 * @param testProject
+	 *            Project that contains these files.
+	 * @param files
+	 *            Files to remove from the index.
+	 */
+	public void removeFromIndex(TestProject testProject, File... files)
+			throws Exception {
+		for (File file : files) {
+			removeFromIndex(testProject.getIFile(testProject.getProject(), file));
 		}
 	}
 
@@ -140,11 +187,39 @@ public class GitTestRepository {
 	 * @param resources
 	 *            Resources to add to the index.
 	 */
-	public void addToIndex(IResource... resources) throws CoreException, IOException, NoFilepatternException,
-			GitAPIException {
-		for (IResource resource : resources) {
-			String repoPath = getRepoRelativePath(resource.getLocation().toString());
-			new Git(repository).add().addFilepattern(repoPath).call();
+	public void addToIndex(IResource... resources) throws CoreException,
+			IOException, NoFilepatternException, GitAPIException {
+		Git git = null;
+		try {
+			git = new Git(repository);
+			for (IResource resource : resources) {
+				String repoPath = getRepoRelativePath(resource.getLocation()
+						.toString());
+				git.add().addFilepattern(repoPath).call();
+			}
+		} finally {
+			git.close();
+		}
+	}
+
+	/**
+	 * Adds the given resources to the index
+	 * 
+	 * @param resources
+	 *            Resources to add to the index.
+	 */
+	public void removeFromIndex(IResource... resources) throws CoreException,
+			IOException, NoFilepatternException, GitAPIException {
+		Git git = null;
+		try {
+			git = new Git(repository);
+			for (IResource resource : resources) {
+				String repoPath = getRepoRelativePath(resource.getLocation()
+						.toString());
+				git.rm().addFilepattern(repoPath).call();
+			}
+		} finally {
+			git.close();
 		}
 	}
 
@@ -156,12 +231,17 @@ public class GitTestRepository {
 	 * @return commit object
 	 */
 	public RevCommit commit(String message) throws Exception {
-		Git git = new Git(repository);
-		CommitCommand commitCommand = git.commit();
-		commitCommand.setAuthor("J. Git", "j.git@egit.org");
-		commitCommand.setCommitter(commitCommand.getAuthor());
-		commitCommand.setMessage(message);
-		return commitCommand.call();
+		Git git = null;
+		try {
+			git = new Git(repository);
+			CommitCommand commitCommand = git.commit();
+			commitCommand.setAuthor("J. Git", "j.git@egit.org");
+			commitCommand.setCommitter(commitCommand.getAuthor());
+			commitCommand.setMessage(message);
+			return commitCommand.call();
+		} finally {
+			git.close();
+		}
 	}
 
 	/**
@@ -171,7 +251,8 @@ public class GitTestRepository {
 	 *            The project to connect
 	 */
 	public void connect(IProject project) throws CoreException {
-		ConnectProviderOperation op = new ConnectProviderOperation(project, repository.getDirectory());
+		ConnectProviderOperation op = new ConnectProviderOperation(project,
+				repository.getDirectory());
 		op.execute(null);
 	}
 
@@ -183,7 +264,8 @@ public class GitTestRepository {
 	 * @param newRefName
 	 *            Name of the new branch.
 	 */
-	public void createBranch(String refName, String newRefName) throws IOException {
+	public void createBranch(String refName, String newRefName)
+			throws IOException {
 		RefUpdate updateRef;
 		updateRef = repository.updateRef(newRefName);
 		Ref startRef = repository.getRef(refName);
@@ -196,10 +278,23 @@ public class GitTestRepository {
 		}
 		startBranch = Repository.shortenRefName(startBranch);
 		updateRef.setNewObjectId(startAt);
-		updateRef.setRefLogMessage("branch: Created from " + startBranch, false);
+		updateRef
+				.setRefLogMessage("branch: Created from " + startBranch, false);
 		updateRef.update();
 	}
 
+	/**
+	 * Resets branch.
+	 * 
+	 * @param refName
+	 *            Full name of the branch.
+	 * @param type
+	 *            Type of the reset.
+	 */
+	public void reset(String refName, ResetType type) throws CoreException {
+		new ResetOperation(repository, refName, type).execute(null);
+	}
+	
 	/**
 	 * Checkouts branch.
 	 * 
@@ -209,30 +304,44 @@ public class GitTestRepository {
 	public void checkoutBranch(String refName) throws CoreException {
 		new BranchOperation(repository, refName).execute(null);
 	}
-	
+
 	/**
-	 * Merge the given ref with the current HEAD, using the default (logical) strategy.
-	 * @param refName Name of a commit to merge with the current HEAD.
+	 * Merge the given ref with the current HEAD, using the default (logical)
+	 * strategy.
+	 * 
+	 * @param refName
+	 *            Name of a commit to merge with the current HEAD.
 	 */
 	public void mergeLogical(String refName) throws CoreException {
 		new MergeOperation(repository, refName).execute(null);
 	}
-	
+
 	/**
-	 * Merge the given ref with the current HEAD, using the textual "recursive" strategy.
-	 * @param refName Name of a commit to merge with the current HEAD.
+	 * Merge the given ref with the current HEAD, using the textual "recursive"
+	 * strategy.
+	 * 
+	 * @param refName
+	 *            Name of a commit to merge with the current HEAD.
 	 */
 	public void mergeTextual(String refName) throws CoreException {
-		new MergeOperation(repository, refName, MergeStrategy.RECURSIVE.getName()).execute(null);
+		new MergeOperation(repository, refName,
+				MergeStrategy.RECURSIVE.getName()).execute(null);
 	}
-	
+
 	/**
 	 * Returns the status of this repository's files as would "git status".
+	 * 
 	 * @return
 	 * @throws Exception
 	 */
 	public Status status() throws Exception {
-		return new Git(repository).status().call();
+		Git git = null;
+		try {
+			git = new Git(repository);
+			return git.status().call();
+		} finally {
+			git.close();
+		}
 	}
 
 	/**
@@ -268,30 +377,34 @@ public class GitTestRepository {
 	}
 
 	/**
-	 * Simulate a comparison between the two given references and returns back the subscriber that can provide
-	 * all computed synchronization information.
+	 * Simulate a comparison between the two given references and returns back
+	 * the subscriber that can provide all computed synchronization information.
 	 * 
 	 * @param sourceRef
 	 *            Source reference (i.e. "left" side of the comparison).
 	 * @param targetRef
 	 *            Target reference (i.e. "right" side of the comparison).
 	 * @param comparedFile
-	 *            The file we are comparing (that would be the file right-clicked into the workspace).
+	 *            The file we are comparing (that would be the file
+	 *            right-clicked into the workspace).
 	 * @return The created subscriber.
 	 */
-	public Subscriber createSubscriberForComparison(String sourceRef, String targetRef, IFile comparedFile)
-			throws IOException {
-		final GitSynchronizeData data = new GitSynchronizeData(repository, sourceRef, targetRef, false);
+	public Subscriber createSubscriberForComparison(String sourceRef,
+			String targetRef, IFile comparedFile) throws IOException {
+		final GitSynchronizeData data = new GitSynchronizeData(repository,
+				sourceRef, targetRef, false);
 		final GitSynchronizeDataSet dataSet = new GitSynchronizeDataSet(data);
 		final ResourceMapping[] mappings = getResourceMappings(comparedFile);
-		final GitResourceVariantTreeSubscriber subscriber = new GitResourceVariantTreeSubscriber(dataSet);
+		final GitResourceVariantTreeSubscriber subscriber = new GitResourceVariantTreeSubscriber(
+				dataSet);
 		subscriber.init(new NullProgressMonitor());
 
 		final RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(
 				subscriber, dataSet);
-		final SubscriberScopeManager manager = new SubscriberScopeManager(subscriber.getName(), mappings,
-				subscriber, remoteContext, true);
-		final GitSubscriberMergeContext context = new GitSubscriberMergeContext(subscriber, manager, dataSet);
+		final SubscriberScopeManager manager = new SubscriberScopeManager(
+				subscriber.getName(), mappings, subscriber, remoteContext, true);
+		final GitSubscriberMergeContext context = new GitSubscriberMergeContext(
+				subscriber, manager, dataSet);
 		disposers.add(new Runnable() {
 			public void run() {
 				manager.dispose();
@@ -301,7 +414,7 @@ public class GitTestRepository {
 		});
 		return context.getSubscriber();
 	}
-	
+
 	public String getRepoRelativePath(File file) {
 		return getRepoRelativePath(new Path(file.getPath()).toString());
 	}
@@ -318,25 +431,28 @@ public class GitTestRepository {
 	}
 
 	/**
-	 * This will query all model providers for those that are enabled on the given file and list all mappings
-	 * available for that file.
+	 * This will query all model providers for those that are enabled on the
+	 * given file and list all mappings available for that file.
 	 * 
 	 * @param file
 	 *            The file for which we need the associated resource mappings.
 	 * @return All mappings available for that file.
 	 */
 	private static ResourceMapping[] getResourceMappings(IFile file) {
-		final IModelProviderDescriptor[] modelDescriptors = ModelProvider.getModelProviderDescriptors();
+		final IModelProviderDescriptor[] modelDescriptors = ModelProvider
+				.getModelProviderDescriptors();
 
 		final Set<ResourceMapping> mappings = new LinkedHashSet<ResourceMapping>();
 		for (IModelProviderDescriptor candidate : modelDescriptors) {
 			try {
-				final IResource[] resources = candidate.getMatchingResources(new IResource[] {file, });
+				final IResource[] resources = candidate
+						.getMatchingResources(new IResource[] { file, });
 				if (resources.length > 0) {
-					// get mappings from model provider if there are matching resources
+					// get mappings from model provider if there are matching
+					// resources
 					final ModelProvider model = candidate.getModelProvider();
-					final ResourceMapping[] modelMappings = model.getMappings(file,
-							ResourceMappingContext.LOCAL_CONTEXT, null);
+					final ResourceMapping[] modelMappings = model.getMappings(
+							file, ResourceMappingContext.LOCAL_CONTEXT, null);
 					for (ResourceMapping mapping : modelMappings) {
 						mappings.add(mapping);
 					}

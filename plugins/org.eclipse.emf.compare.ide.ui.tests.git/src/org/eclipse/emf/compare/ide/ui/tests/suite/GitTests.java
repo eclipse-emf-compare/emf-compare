@@ -16,6 +16,7 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.ide.ui.tests.merge.RenamedControlledResourceTests;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeWithCustomDependenciesTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalModelTest;
@@ -33,6 +34,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	// FIXME
 	// GitLogicalMergeTest.class, Uncomment when all logical model contributions to EGit will be merged.
 	// GitLogicalMergeWithCustomDependenciesTest.class, 
+	// RenamedControlledResourceTests.class,
 	})
 public class GitTests {
 	/**
