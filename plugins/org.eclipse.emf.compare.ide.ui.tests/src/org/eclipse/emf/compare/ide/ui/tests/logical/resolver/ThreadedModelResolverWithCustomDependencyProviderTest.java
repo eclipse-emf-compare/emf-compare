@@ -40,6 +40,7 @@ import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.ui.tests.CompareTestCase;
 import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
+import org.eclipse.emf.ecore.resource.URIConverter;
 import org.junit.Test;
 import org.osgi.framework.Bundle;
 
@@ -244,7 +245,7 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 	private ModelDependencyProviderRegistry createRegistryWithCustomResolver() {
 		final ModelDependencyProviderRegistry registry = new ModelDependencyProviderRegistry() {
 			@Override
-			public Set<URI> getDependencies(URI uri) {
+			public Set<URI> getDependencies(URI uri, URIConverter uriConverter) {
 				final String uriString = uri.toPlatformString(false);
 				final String baseUriString = uriString.substring(0, uriString.lastIndexOf("/"));
 				final String file1UriString = baseUriString + "/" + MODEL_FILE1;

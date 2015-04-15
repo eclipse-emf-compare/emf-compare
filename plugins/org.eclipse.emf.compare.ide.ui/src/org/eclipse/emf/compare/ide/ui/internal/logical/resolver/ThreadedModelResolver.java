@@ -84,6 +84,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -1108,7 +1109,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	private Set<IStorage> resolveTraversal(IFile file, Set<URI> bounds) {
 		final URI baseUri = createURIFor(file);
 		final Set<IStorage> traversalSet = new LinkedHashSet<IStorage>();
-		for (URI uri : getUriAndDependentUrisFromDependencyProvider(baseUri)) {
+		for (URI uri : getUriAndDependentUrisFromDependencyProvider(baseUri, URIConverter.INSTANCE)) {
 			final IFile toResolve = getFileAt(uri);
 			final Iterable<URI> dependencies = getDependenciesOf(toResolve, bounds);
 			for (URI dep : dependencies) {
@@ -1118,8 +1119,8 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		return traversalSet;
 	}
 
-	private Set<URI> getUriAndDependentUrisFromDependencyProvider(URI uri) {
-		final Set<URI> dependencies = dependencyProviderRegistry.getDependencies(uri);
+	private Set<URI> getUriAndDependentUrisFromDependencyProvider(URI uri, URIConverter uriConverter) {
+		final Set<URI> dependencies = dependencyProviderRegistry.getDependencies(uri, uriConverter);
 		return Sets.union(Collections.singleton(uri), dependencies);
 	}
 
@@ -1293,7 +1294,8 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		lock.lock();
 		try {
 			monitor.setWorkRemaining(1000);
-			for (URI currentUri : getUriAndDependentUrisFromDependencyProvider(uri)) {
+			for (URI currentUri : getUriAndDependentUrisFromDependencyProvider(uri, resourceSet
+					.getURIConverter())) {
 				if (resolvedResources.add(currentUri) && currentlyResolving.add(currentUri)) {
 					ListenableFuture<?> future = resolvingPool.submit(new ResourceResolver(resourceSet,
 							currentUri, monitor));
@@ -1330,7 +1332,8 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 		lock.lock();
 		try {
 			monitor.setWorkRemaining(1000);
-			for (URI currentUri : getUriAndDependentUrisFromDependencyProvider(uri)) {
+			for (URI currentUri : getUriAndDependentUrisFromDependencyProvider(uri, resourceSet
+					.getURIConverter())) {
 				if (resolvedResources.add(currentUri) && currentlyResolving.add(currentUri)) {
 					ListenableFuture<?> future = resolvingPool.submit(new RemoteResourceResolver(resourceSet,
 							currentUri, monitor));

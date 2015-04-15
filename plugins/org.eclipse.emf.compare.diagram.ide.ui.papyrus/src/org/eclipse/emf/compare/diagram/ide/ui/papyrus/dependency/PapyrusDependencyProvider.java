@@ -51,11 +51,11 @@ public class PapyrusDependencyProvider implements IDependencyProvider {
 	 * {@inheritDoc} Checks the Papyrus model extension point and tries to determine all dependencies from the
 	 * registered information.
 	 */
-	public Set<URI> getDependencies(URI uri) {
+	public Set<URI> getDependencies(URI uri, URIConverter uriConverter) {
 		final Set<URI> dependencies = new LinkedHashSet<URI>();
 		for (String fileExtension : fileExtensions) {
 			URI dependencyURI = uri.trimFileExtension().appendFileExtension(fileExtension);
-			if (URIConverter.INSTANCE.exists(dependencyURI, null)) {
+			if (uriConverter.exists(dependencyURI, null)) {
 				dependencies.add(dependencyURI);
 			}
 		}

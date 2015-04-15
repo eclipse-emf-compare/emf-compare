@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.URIConverter;
 
 /**
  * The registry managing the registered dependency extension point information.
@@ -50,12 +51,12 @@ public class ModelDependencyProviderRegistry {
 	 * @return The set of dependencies of {@code uri}. If {@code uri} has no dependency, the returned set is
 	 *         empty.
 	 */
-	public Set<URI> getDependencies(URI uri) {
+	public Set<URI> getDependencies(URI uri, URIConverter uriConverter) {
 		final Set<URI> uris = new LinkedHashSet<URI>();
 		for (DependencyProviderDescriptor descriptor : registeredDescriptors.values()) {
 			IDependencyProvider provider = descriptor.getDependencyProvider();
 			if (provider != null && provider.apply(uri)) {
-				Collection<URI> dependencies = provider.getDependencies(uri);
+				Collection<URI> dependencies = provider.getDependencies(uri, uriConverter);
 				if (dependencies != null) {
 					addAll(uris, Iterables.filter(dependencies, notNull()));
 				}

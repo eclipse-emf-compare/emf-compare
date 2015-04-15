@@ -15,6 +15,7 @@ import com.google.common.annotations.Beta;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.URIConverter;
 
 /**
  * Contract for clients of the org.eclipse.emf.ecompare.ide.ui.modelDependencies extension point.
@@ -40,8 +41,10 @@ public interface IDependencyProvider {
 	 * 
 	 * @param uri
 	 *            The {@link URI} for which additional dependencies may be determined.
+	 * @param uriConverter
+	 *            The {@link URIConverter} to produce an input stream for the {@link URI}.
 	 * @return The set of dependencies of the given {@code uri}. If no dependency is determined an empty set
 	 *         is returned.
 	 */
-	Set<URI> getDependencies(URI uri);
+	Set<URI> getDependencies(URI uri, URIConverter uriConverter);
 }

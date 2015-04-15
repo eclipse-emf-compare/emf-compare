@@ -121,19 +121,7 @@ final class RevisionedURIConverter extends StorageURIConverter {
 			stream = super.createInputStream(normalizedUri, options);
 		} else {
 			// Otherwise, load it from the repository (resource might not yet (or no longer) exist locally)
-			final IResource targetFile;
-			if (normalizedUri.isPlatform()) {
-				IPath platformString = new Path(normalizedUri.trimFragment().toPlatformString(true));
-				targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(platformString);
-			} else {
-				/*
-				 * FIXME Deresolve the URI against the workspace root, if it cannot be done, delegate to
-				 * super.createInputStream()
-				 */
-				targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
-						new Path(normalizedUri.trimFragment().toString()));
-			}
-
+			final IResource targetFile = getResourceFromURI(normalizedUri);
 			if (targetFile != null) {
 				stream = openRevisionStream(targetFile);
 			} else {
@@ -142,6 +130,53 @@ final class RevisionedURIConverter extends StorageURIConverter {
 		}
 
 		return stream;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.ide.utils.StorageURIConverter#exists(org.eclipse.emf.common.util.URI,
+	 *      java.util.Map)
+	 */
+	@Override
+	public boolean exists(URI uri, Map<?, ?> options) {
+		boolean exists = false;
+		try {
+			final URI normalizedUri = normalize(uri);
+			IStorageProvider storageProvider = storageAccessor.getStorageProvider(
+					getResourceFromURI(normalizedUri), side);
+			if (storageProvider != null) {
+				exists = storageProvider.getStorage(new NullProgressMonitor()) != null;
+			} else {
+				exists = super.exists(normalizedUri, options);
+			}
+		} catch (CoreException e) {
+			EMFCompareIDEUIPlugin.getDefault().log(IStatus.ERROR, e.getMessage());
+		}
+		return exists;
+	}
+
+	/**
+	 * Retrieve the {@link IResource} associated with the given {@link URI}.
+	 * 
+	 * @param uri
+	 *            the URI for which we want the {@link IResource}.
+	 * @return the {@link IResource} if found, null otherwise.
+	 */
+	private IResource getResourceFromURI(final URI uri) {
+		final IResource targetFile;
+		if (uri.isPlatform()) {
+			IPath platformString = new Path(uri.trimFragment().toPlatformString(true));
+			targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(platformString);
+		} else {
+			/*
+			 * FIXME Deresolve the URI against the workspace root, if it cannot be done, delegate to
+			 * super.createInputStream()
+			 */
+			targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
+					new Path(uri.trimFragment().toString()));
+		}
+		return targetFile;
 	}
 
 	/**
