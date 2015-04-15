@@ -558,7 +558,7 @@ public final class ComparisonScopeBuilder {
 		} else if (side == DifferenceSource.RIGHT) {
 			sideStr = EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.right"); //$NON-NLS-1$
 		} else {
-			sideStr = EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.ancesotr"); //$NON-NLS-1$
+			sideStr = EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.ancestor"); //$NON-NLS-1$
 		}
 		BasicDiagnostic diagnostic = new BasicDiagnostic(
 				EMFCompareIDEUIPlugin.PLUGIN_ID,
