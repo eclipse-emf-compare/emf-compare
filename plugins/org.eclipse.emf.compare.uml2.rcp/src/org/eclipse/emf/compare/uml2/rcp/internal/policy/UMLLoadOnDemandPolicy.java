@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 460780
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.rcp.internal.policy;
 
@@ -24,12 +25,17 @@ import org.eclipse.uml2.uml.UMLPlugin;
 /**
  * This policy is used to force the loading required resources by a UML model.
  * <p>
- * In this particular case, we want to force the loading of any UML profile model. In order to do it, this
+ * In one particular case, we want to force the loading of any UML profile model. In order to do it, this
  * policy will compare the input URI with the URIs registered as profile in the platform. However it does not
  * handle the case of non registered dynamic profile (profile that are not registered against the UML profile
  * extension). In order to take into account such profile an approximation has been made. Any URI that as
  * thier extension file equal to ".profile.uml" will be considered as referencing a profile model and so will
  * be automatically loaded.
+ * </p>
+ * <p>
+ * We also want to force the loading of the UML metamodel to allow resolving sufficient meta information for
+ * the loaded models to properly work. To do that we check if the last segment of the normalized URI is
+ * "URL.metamodel.uml".
  * </p>
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -37,6 +43,9 @@ import org.eclipse.uml2.uml.UMLPlugin;
 public class UMLLoadOnDemandPolicy implements ILoadOnDemandPolicy {
 	/** Keep track of the normalizations we've already made. */
 	private final BiMap<String, URI> profileNsURIToNormalized = HashBiMap.create();
+
+	/** The {@link URI} of the UML metamodel offered by the UML2 Eclipse plugins */
+	private static final String PLATFORM_UML_METAMODEL_URI = "platform:/plugin/org.eclipse.uml2.uml.resources/metamodels/UML.metamodel.uml"; //$NON-NLS-1$
 
 	/**
 	 * {@inheritDoc}
@@ -47,7 +56,7 @@ public class UMLLoadOnDemandPolicy implements ILoadOnDemandPolicy {
 		URIConverter uriConverter = new ExtensibleURIConverterImpl();
 		// Needs to normalize the URI in order to resolve URI using path map
 		URI normalizedURI = uriConverter.normalize(uri);
-		return isConventionalURIForUMLProfile(normalizedURI)
+		return isConventionalURIForUMLProfile(normalizedURI) || isUMLMetaModel(normalizedURI)
 				|| isRegisteredUMLProfile(normalizedURI, uriConverter);
 	}
 
@@ -91,5 +100,17 @@ public class UMLLoadOnDemandPolicy implements ILoadOnDemandPolicy {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Determines if the given {@link URI} corresponds to the UML metamodel.
+	 * 
+	 * @param normalizedURI
+	 *            input URI to test.
+	 * @return {@code true} if the given {@link URI} corresponds to the UML metamodel.
+	 */
+	private boolean isUMLMetaModel(URI normalizedURI) {
+		URI noFragmentURI = normalizedURI.trimFragment();
+		return PLATFORM_UML_METAMODEL_URI.equals(noFragmentURI.toString());
 	}
 }
