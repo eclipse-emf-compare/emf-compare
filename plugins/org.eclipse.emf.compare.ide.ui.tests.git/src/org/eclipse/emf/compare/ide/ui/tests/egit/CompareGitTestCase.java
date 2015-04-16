@@ -129,6 +129,7 @@ public class CompareGitTestCase extends CompareTestCase {
 		assertNotNull(ancestorProvider);
 
 		final IProgressMonitor monitor = new NullProgressMonitor();
+		// do we really need to create a new one?
 		final IStorageProviderAccessor storageAccessor = new SubscriberStorageAccessor(subscriber);
 		final ITypedElement left = new StorageTypedElement(sourceProvider.getStorage(monitor), fullPath);
 		final ITypedElement right = new StorageTypedElement(remoteProvider.getStorage(monitor), fullPath);
@@ -149,6 +150,11 @@ public class CompareGitTestCase extends CompareTestCase {
 		EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
 		
 		return comparisonBuilder.build().compare(scope, new BasicMonitor());
+	}
+	
+	protected IStorageProviderAccessor createAccessorForComparison(String sourceRev, String targetRev, IFile file) throws Exception {
+		final Subscriber subscriber = repository.createSubscriberForComparison(sourceRev, targetRev, file);
+		return new SubscriberStorageAccessor(subscriber);
 	}
 	
 	protected static void assertDiffCount(List<Diff> differences, int expectedOutgoing, int expectedIncoming) {

@@ -49,6 +49,7 @@ import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.merge.MergeStrategy;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberScopeManager;
 
@@ -232,6 +233,24 @@ public class GitTestRepository {
 	 */
 	public Status status() throws Exception {
 		return new Git(repository).status().call();
+	}
+
+	/**
+	 * Return the commit with the given name if any.
+	 * @param revstr see {@link Repository#resolve(String)}
+	 * @return The commit with the given name if any.
+	 * @see {@link Repository#resolve(String)}
+	 */
+	public RevCommit findCommit(String revstr) throws Exception {
+		RevWalk walk = null;
+		try {
+			walk = new RevWalk(repository);
+			return walk.parseCommit(repository.resolve(revstr));
+		} finally {
+			if (walk != null) {
+				walk.close();
+			}
+		}
 	}
 
 	/**

@@ -39,7 +39,7 @@ import org.eclipse.emf.ecore.resource.URIConverter;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-final class RevisionedURIConverter extends StorageURIConverter {
+public final class RevisionedURIConverter extends StorageURIConverter {
 	/** The accessor that will provide us with resource content. */
 	private IStorageProviderAccessor storageAccessor;
 
