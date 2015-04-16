@@ -1129,7 +1129,7 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			throws InterruptedException {
 		// we can't call ResourceUtil.createURIFor(start) if start is null, so
 		if (start == null) {
-			return Collections.emptySet();
+			return Sets.newLinkedHashSet();
 		}
 		final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet(
 				new MonitoredProxyCreationListener(monitor, true));
