@@ -174,4 +174,20 @@ public final class ReadOnlyGraph<E> {
 	public ImmutableSet<E> getTreeFrom(E root, Set<E> endPoints) {
 		return ImmutableSet.copyOf(graph.getTreeFrom(root, endPoints));
 	}
+
+	/**
+	 * Returns a breadth-first iterator over this whole graph. This will begin iteration on this graph's roots
+	 * (whether they are linked together (directly or indirectly) or not), then carry on over each depth
+	 * level. This will never visit the same element twice, nor will it ever visit an element which parents
+	 * haven't all been iterated over yet.
+	 * <p>
+	 * The returned iterator does not support removal, and will fail or returned undefined results if this
+	 * graph is modified after the iterator's creation.
+	 * </p>
+	 * 
+	 * @return A breadth-first iterator over this whole graph.
+	 */
+	public PruningIterator<E> breadthFirstIterator() {
+		return graph.breadthFirstIterator();
+	}
 }

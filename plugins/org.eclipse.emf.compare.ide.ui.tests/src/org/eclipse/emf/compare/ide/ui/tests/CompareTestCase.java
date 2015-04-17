@@ -45,6 +45,8 @@ import org.junit.Before;
 
 @SuppressWarnings("nls")
 public class CompareTestCase {
+	protected static final String PROJECT_NAME = "Project-1";
+
 	protected static final String PACKAGE_NAME_PREFIX = "package";
 
 	protected static final String CLASS1_NAME_PREFIX = "Class_A";
@@ -59,7 +61,7 @@ public class CompareTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		project = new TestProject();
+		project = new TestProject(PROJECT_NAME);
 	}
 
 	@After
