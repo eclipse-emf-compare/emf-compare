@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 464904
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal.utils;
 
@@ -27,11 +28,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
@@ -95,7 +96,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	private boolean isDisposed;
 
 	/** Registers the proxies we detect while resolving our resources. */
-	private Map<EObject, Set<EStructuralFeature>> proxyMap;
+	private Queue<ProxyEntry> proxyQueue;
 
 	/** Turn from not loading resource set into loading resource set. */
 	private boolean allowResourceLoad;
@@ -111,7 +112,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	private NotLoadingResourceSet(Map<URI, IStorage> storagesToLoad, ResourceSetHookRegistry hookRegistry) {
 		this.storageToURI = storagesToLoad;
 		this.hookRegistry = hookRegistry;
-		this.proxyMap = new ConcurrentHashMap<EObject, Set<EStructuralFeature>>();
+		this.proxyQueue = new ConcurrentLinkedQueue<ProxyEntry>();
 	}
 
 	/**
@@ -314,43 +315,51 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	}
 
 	/**
-	 * Resolve the proxies registered when loading our resources (as mapped within {@link #proxyMap}) so that
-	 * all links between the resources we want to load have been resolved. Note that this will leave other
-	 * proxies (proxies to some resource that is not included in the {@link #storageToURI} map) unresolved.
+	 * Resolve the proxies registered when loading our resources (as mapped within {@link #proxyQueue}) so
+	 * that all links between the resources we want to load have been resolved. Note that this will leave
+	 * other proxies (proxies to some resource that is not included in the {@link #storageToURI} map)
+	 * unresolved.
 	 * 
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
 	 */
 	private void resolveProxies(SubMonitor monitor) {
-		// Isn't this first loop counter-productive?
-		int totalWork = 0;
-		for (Map.Entry<EObject, Set<EStructuralFeature>> entry : proxyMap.entrySet()) {
-			totalWork += entry.getValue().size();
-		}
-		monitor.setWorkRemaining(totalWork);
 
-		for (Map.Entry<EObject, Set<EStructuralFeature>> proxyEntry : proxyMap.entrySet()) {
-			for (EStructuralFeature proxiesOn : proxyEntry.getValue()) {
-				Object values = proxyEntry.getKey().eGet(proxiesOn, true);
-				if (values instanceof InternalEList<?>) {
-					final ListIterator<?> crossRefs = ((InternalEList<?>)values).basicListIterator();
-					while (crossRefs.hasNext()) {
-						final Object nextValue = crossRefs.next();
-						if (nextValue instanceof EObject && ((EObject)nextValue).eIsProxy()) {
-							final URI proxyURI = ((InternalEObject)nextValue).eProxyURI();
-							final Resource targetRes = getResource(proxyURI.trimFragment(), false);
-							if (targetRes != null) {
-								// resolve this one
-								((InternalEList<?>)values).get(crossRefs.previousIndex());
-							}
+		int workRemaining = proxyQueue.size();
+		int currentCount = 0;
+		monitor.setWorkRemaining(workRemaining);
+
+		while (!proxyQueue.isEmpty()) {
+
+			ProxyEntry proxyEntry = proxyQueue.poll();
+			EObject eObject = proxyEntry.eObject;
+			EStructuralFeature proxyFeature = proxyEntry.proxyFeature;
+
+			Object values = eObject.eGet(proxyFeature, true);
+			if (values instanceof InternalEList<?>) {
+				final ListIterator<?> crossRefs = ((InternalEList<?>)values).basicListIterator();
+				while (crossRefs.hasNext()) {
+					final Object nextValue = crossRefs.next();
+					if (nextValue instanceof EObject && ((EObject)nextValue).eIsProxy()) {
+						final URI proxyURI = ((InternalEObject)nextValue).eProxyURI();
+						final Resource targetRes = getResource(proxyURI.trimFragment(), false);
+
+						if (targetRes != null) {
+							// resolve this one
+							((InternalEList<?>)values).get(crossRefs.previousIndex());
 						}
 					}
 				}
-				monitor.worked(1);
+			}
+
+			monitor.worked(1);
+			currentCount++;
+			if (currentCount > workRemaining) {
+				workRemaining = proxyQueue.size();
+				currentCount = 0;
+				monitor.setWorkRemaining(workRemaining);
 			}
 		}
-
-		proxyMap.clear();
 	}
 
 	/**
@@ -520,12 +529,8 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	 */
 	public void proxyCreated(Resource source, EObject eObject, EStructuralFeature eStructuralFeature,
 			EObject proxy, int position) {
-		Set<EStructuralFeature> proxiesOn = proxyMap.get(eObject);
-		if (proxiesOn == null) {
-			proxiesOn = new LinkedHashSet<EStructuralFeature>();
-			proxyMap.put(eObject, proxiesOn);
-		}
-		proxiesOn.add(eStructuralFeature);
+		ProxyEntry proxyEntry = new ProxyEntry(eObject, eStructuralFeature);
+		proxyQueue.add(proxyEntry);
 	}
 
 	/**
@@ -537,5 +542,34 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	 */
 	public void setAllowResourceLoad(boolean allowResourceLoad) {
 		this.allowResourceLoad = allowResourceLoad;
+	}
+
+	/**
+	 * Helper class to encapsulate pairs of {@link EObject}s and {@link EStructuralFeature}s pointing to proxy
+	 * objects.
+	 */
+	private class ProxyEntry {
+		/**
+		 * The {@link EObject} containing a {@link EStructuralFeature} pointing to a proxy object.
+		 */
+		private final EObject eObject;
+
+		/**
+		 * The {@link EStructuralFeature} within the {@link #eObject} pointing to a proxy object.
+		 */
+		private final EStructuralFeature proxyFeature;
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param eObject
+		 *            The {@link #eObject}.
+		 * @param proxyFeature
+		 *            The {@link #proxyFeature}.
+		 */
+		public ProxyEntry(EObject eObject, EStructuralFeature proxyFeature) {
+			this.eObject = eObject;
+			this.proxyFeature = proxyFeature;
+		}
 	}
 }
