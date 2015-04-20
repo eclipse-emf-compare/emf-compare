@@ -63,7 +63,6 @@
     <!-- Sonar properties -->
     <sonar.language>java</sonar.language>
     <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
     <sonar.jacoco.reportPath>${project.basedir}/../../org.eclipse.emf.compare-parent/target/jacoco.exec</sonar.jacoco.reportPath>
     <!--sonar.junit.reportsPath>../${project.artifactId}.tests/target/surefire-reports/</sonar.junit.reportsPath>
     <sonar.skippedModules>plugin.tests</sonar.skippedModules-->
