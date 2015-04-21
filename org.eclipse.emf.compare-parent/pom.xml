@@ -62,7 +62,6 @@
 
     <!-- Sonar properties -->
     <sonar.language>java</sonar.language>
-    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
     <sonar.jacoco.reportPath>${project.basedir}/../../org.eclipse.emf.compare-parent/target/jacoco.exec</sonar.jacoco.reportPath>
     <!--sonar.junit.reportsPath>../${project.artifactId}.tests/target/surefire-reports/</sonar.junit.reportsPath>
     <sonar.skippedModules>plugin.tests</sonar.skippedModules-->
@@ -395,7 +394,7 @@
         <module>../plugins/org.eclipse.emf.compare.uml2.ide</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.ide.tests</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.ide.ui.tests</module>
-        
+
         <module>../plugins/org.eclipse.emf.compare.egit</module>
         <module>../packaging/org.eclipse.emf.compare.egit-feature</module>
         <module>../plugins/org.eclipse.emf.compare.subversive</module>
@@ -447,7 +446,7 @@
         <module>../plugins/org.eclipse.emf.compare.uml2.ide</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.ide.tests</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.ide.ui.tests</module>
-        
+
         <module>../plugins/org.eclipse.emf.compare.subversive</module>
         <module>../packaging/org.eclipse.emf.compare.subversive-feature</module>
       </modules>
@@ -730,8 +729,28 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>tycho-surefire-plugin</artifactId>
+            <configuration>
+              <providerProperties>
+                <property>
+                  <name>listener</name>
+                  <value>org.sonar.java.jacoco.JUnitListener</value>
+                </property>
+              </providerProperties>
+            </configuration>
+          </plugin>
         </plugins>
       </build>
+      <dependencies>
+        <dependency>
+          <groupId>org.codehaus.sonar-plugins.java</groupId>
+          <artifactId>sonar-jacoco-listeners</artifactId>
+          <version>3.1</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
       <reporting>
         <plugins>
           <plugin>
@@ -885,8 +904,8 @@
         <os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
       </properties>
     </profile>
-    <!-- This profile is activated when the code.coverage property is not set. 
-    Another profile is defined in test-parent where jacoco is triggerred and will set testArgLine to 
+    <!-- This profile is activated when the code.coverage property is not set.
+    Another profile is defined in test-parent where jacoco is triggerred and will set testArgLine to
     its desired value. -->
     <profile>
       <id>no.code.coverage</id>
