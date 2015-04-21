@@ -729,28 +729,8 @@
               </execution>
             </executions>
           </plugin>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>tycho-surefire-plugin</artifactId>
-            <configuration>
-              <providerProperties>
-                <property>
-                  <name>listener</name>
-                  <value>org.sonar.java.jacoco.JUnitListener</value>
-                </property>
-              </providerProperties>
-            </configuration>
-          </plugin>
         </plugins>
       </build>
-      <dependencies>
-        <dependency>
-          <groupId>org.codehaus.sonar-plugins.java</groupId>
-          <artifactId>sonar-jacoco-listeners</artifactId>
-          <version>3.1</version>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
       <reporting>
         <plugins>
           <plugin>
