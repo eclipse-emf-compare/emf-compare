@@ -1,23 +1,19 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *     Philip Langer - extract super class AbstractGitLogicalModelTest
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.unit;
 
-import java.io.File;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.emf.compare.ide.ui.tests.egit.CompareGitTestCase;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -25,22 +21,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class GitLogicalModelTest extends CompareGitTestCase {
-	private static final String MASTER = Constants.R_HEADS + Constants.MASTER;
-
-	private static final String BRANCH = Constants.R_HEADS + "branch";
+public class GitLogicalModelTest extends AbstractGitLogicalModelTest {
 
 	private static final String FILE1_SUFFIX = "_file1";
 
 	private static final String FILE2_SUFFIX = "_file2";
-
-	private IFile iFile1;
-
-	private IFile iFile2;
-
-	private Resource resource1;
-
-	private Resource resource2;
 
 	private String[] masterTipSynonyms;
 
@@ -76,16 +61,6 @@ public class GitLogicalModelTest extends CompareGitTestCase {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		final IProject iProject = project.getProject();
-		final ResourceSet resourceSet = new ResourceSetImpl();
-
-		final File file1 = project.getOrCreateFile(iProject, "file1.ecore");
-		final File file2 = project.getOrCreateFile(iProject, "file2.ecore");
-		iFile1 = project.getIFile(iProject, file1);
-		iFile2 = project.getIFile(iProject, file2);
-
-		resource1 = connectResource(iFile1, resourceSet);
-		resource2 = connectResource(iFile2, resourceSet);
 
 		resource1.getContents().add(createBasicModel(FILE1_SUFFIX));
 		resource2.getContents().add(createBasicModel(FILE2_SUFFIX));
@@ -212,5 +187,4 @@ public class GitLogicalModelTest extends CompareGitTestCase {
 		compareBothDirectionsAndCheck(iFile1, masterCommit, branchCommit, 0, 1, 2);
 	}
 
-	
 }
