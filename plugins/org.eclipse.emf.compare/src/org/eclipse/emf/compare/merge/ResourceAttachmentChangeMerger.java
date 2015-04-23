@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - fix bug 465329
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
@@ -276,7 +277,9 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 					currentResource = containerMatch.getRight().eResource();
 				}
 			} else {
-				return null;
+				// The sourceObject is the root object of a new resource that needs to be created. So return
+				// the original URI of the new resource.
+				return sourceObject.eResource().getURI();
 			}
 		} else {
 			currentResource = targetObject.eResource();
