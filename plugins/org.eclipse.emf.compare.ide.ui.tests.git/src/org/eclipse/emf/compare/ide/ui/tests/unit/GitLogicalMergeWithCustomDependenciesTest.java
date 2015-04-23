@@ -15,11 +15,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.dependency.DependencyProviderDescriptor;
@@ -91,47 +94,147 @@ public class GitLogicalMergeWithCustomDependenciesTest extends AbstractGitLogica
 	 */
 	@Test
 	public void testRemoteBranchAddsUnlinkedNonEmptyDependentFile() throws Exception {
+		final Collection<EObject> contentsOfNewResource = new HashSet<EObject>();
+		contentsOfNewResource.add(createPackage(null, "P3"));
+		assertCorrectMergingIfRemoteBranchAddsUnlinkedButDependentFile(contentsOfNewResource);
+	}
+
+	/**
+	 * In this test, a commit in a branch <em>adds</em> a <em>empty</em> file that is specified as a custom
+	 * dependency but is not linked using cross-references; also it adds a class to file1. A commit in the
+	 * master branch also adds a new class to file1 and file2. Adding the new classes on both sides, is only
+	 * done to make sure the logical merge kicked in. If the logical merge wouldn't kick in, we'd get a
+	 * textual conflict.
+	 * <p>
+	 * Since the logical merge has to deal with two existing and one added file, the EMFResourceMappingMerger
+	 * is also responsible for merging the addition of the file in the branch although it is not directly
+	 * linked to any other model.
+	 * </p>
+	 */
+	@Test
+	public void testRemoteBranchAddsUnlinkedEmptyDependentFile() throws Exception {
+		assertCorrectMergingIfRemoteBranchAddsUnlinkedButDependentFile(new HashSet<EObject>());
+	}
+
+	private void assertCorrectMergingIfRemoteBranchAddsUnlinkedButDependentFile(
+			final Collection<EObject> contentsOfAddedFile) throws Exception, IOException, CoreException {
 		// commit initial state as common ancestor commit
 		repository.addAllAndCommit("initial-commit");
-		
+
 		// create branch but stay on master
 		repository.createBranch(MASTER, BRANCH);
-		
+
 		// add class C4 to file1, add class C5 to file2, and commit to master
 		createClass((EPackage)findObject(resource1, "P1"), "C4");
 		createClass((EPackage)findObject(resource2, "P2"), "C5");
 		save(resource1, resource2);
 		repository.addAndCommit(project, "master-commit", file1, file2);
-		
+
 		// checkout branch and add a file that will be declared as dependency
 		repository.checkoutBranch(BRANCH);
-		final Collection<EObject> contentsOfNewResource = new HashSet<EObject>();
-		contentsOfNewResource.add(createPackage(null, "P3"));
-		save(createResourceWithContents(DEPENDENT_FILE_NAME, contentsOfNewResource));
+		save(createResourceWithContents(DEPENDENT_FILE_NAME, contentsOfAddedFile));
 		final File dependentFile = getFile(DEPENDENT_FILE_NAME);
 		assertTrue(dependentFile.exists());
-		
+
 		// also add a new class to produce a textual conflict
 		createClass((EPackage)findObject(resource1, "P1"), "C6");
 		save(resource1);
 		repository.addAndCommit(project, "branch-commit", dependentFile, file1);
-		
+
 		// install mock dependency provider
 		installMockModelDependencyProvider(ImmutableMap.of(file1.getName(), ImmutableSet
 				.of(DEPENDENT_FILE_NAME)));
-		
+
 		// checkout master and merge branch
 		repository.checkoutBranch(MASTER);
 		// dependent file does not exit before the merge
 		assertFalse(iProject.exists(new Path(DEPENDENT_FILE_NAME)));
-		
+
 		repository.mergeLogical(BRANCH);
 		// there shouldn't be a conflict, because the model-based merge handled this merge
 		assertTrue(repository.status().getConflicting().isEmpty());
 		// dependent file does exit after the merge
 		assertTrue(iProject.exists(new Path(DEPENDENT_FILE_NAME)));
 	}
-	
+
+	/**
+	 * In this test, a commit in a branch <em>deletes</em> a <em>non-empty</em> file that is specified as a
+	 * custom dependency but is not linked using cross-references; also it adds a new class. A commit in the
+	 * master branch adds a new class to file1 and to file2. Adding the new classes on both sides, is only
+	 * done to make sure the logical merge kicked in. If the logical merge wouldn't kick in, we'd get a
+	 * textual conflict.
+	 * <p>
+	 * Since the logical merge has to deal with two existing and one deleted file, the
+	 * EMFResourceMappingMerger is also responsible for merging the deletion of the file in the branch
+	 * although it is not directly linked to any other model.
+	 * </p>
+	 */
+	@Test
+	public void testRemoteBranchDeletesUnlinkedNonEmptyDependentFile() throws Exception {
+		final Collection<EObject> contentsOfDeletedResource = new HashSet<EObject>();
+		contentsOfDeletedResource.add(createPackage(null, "P3"));
+		assertCorrectMergingIfRemoteBranchDeletesUnlinkedButDependentFile(contentsOfDeletedResource);
+	}
+
+	/**
+	 * In this test, a commit in a branch <em>deletes</em> a <em>empty</em> file that is specified as a custom
+	 * dependency but is not linked using cross-references; also it adds a new class. A commit in the master
+	 * branch adds a new class to file1 and to file2. Adding the new classes on both sides, is only done to
+	 * make sure the logical merge kicked in. If the logical merge wouldn't kick in, we'd get a textual
+	 * conflict.
+	 * <p>
+	 * Since the logical merge has to deal with two existing and one deleted file, the
+	 * EMFResourceMappingMerger is also responsible for merging the deletion of the file in the branch
+	 * although it is not directly linked to any other model.
+	 * </p>
+	 */
+	@Test
+	public void testRemoteBranchDeletesUnlinkedEmptyDependentFile() throws Exception {
+		assertCorrectMergingIfRemoteBranchDeletesUnlinkedButDependentFile(new HashSet<EObject>());
+	}
+
+	private void assertCorrectMergingIfRemoteBranchDeletesUnlinkedButDependentFile(
+			final Collection<EObject> contentsOfDeletedResource) throws IOException, CoreException, Exception {
+		// add another dependent file and commit state as common ancestor commit
+		save(createResourceWithContents(DEPENDENT_FILE_NAME, contentsOfDeletedResource));
+		repository.addAllAndCommit("initial-commit");
+
+		// create branch but stay on master
+		repository.createBranch(MASTER, BRANCH);
+
+		// add class C4 to file1, add class C5 to file2, and commit to master
+		createClass((EPackage)findObject(resource1, "P1"), "C4");
+		createClass((EPackage)findObject(resource2, "P2"), "C5");
+		save(resource1, resource2);
+		repository.addAndCommit(project, "master-commit", file1, file2);
+
+		// checkout branch, delete the dependent file, and commit
+		repository.checkoutBranch(BRANCH);
+		final File dependentFile = getFile(DEPENDENT_FILE_NAME);
+		iProject.getFile(DEPENDENT_FILE_NAME).delete(true, new NullProgressMonitor());
+		assertFalse(iProject.exists(new Path(DEPENDENT_FILE_NAME)));
+
+		// also add a new class to produce a textual conflict
+		createClass((EPackage)findObject(resource1, "P1"), "C6");
+		save(resource1);
+		repository.addAndCommit(project, "branch-commit", file1, dependentFile);
+
+		// install mock dependency provider
+		installMockModelDependencyProvider(ImmutableMap.of(file1.getName(), ImmutableSet
+				.of(DEPENDENT_FILE_NAME)));
+
+		// checkout master and merge branch
+		repository.checkoutBranch(MASTER);
+		// dependent file exits before the merge
+		assertTrue(iProject.exists(new Path(DEPENDENT_FILE_NAME)));
+
+		repository.mergeLogical(BRANCH);
+		// there shouldn't be a conflict, because the model-based merge handled this merge
+		assertTrue(repository.status().getConflicting().isEmpty());
+		// dependent file does not exit after the merge
+		assertFalse(iProject.exists(new Path(DEPENDENT_FILE_NAME)));
+	}
+
 	private Resource createResourceWithContents(String fileName, Collection<EObject> contents)
 			throws Exception {
 		final Resource newResource = createAndConnectResource(fileName);
