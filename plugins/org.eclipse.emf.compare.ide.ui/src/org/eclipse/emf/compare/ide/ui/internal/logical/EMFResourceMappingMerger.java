@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - log messages (bug 461713)
+ *     Philip Langer - log messages (bug 461713), bug 465331
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -257,11 +257,13 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 			failingMappings.add(mapping);
 		} else {
 			MarkNewResourceAsMergedListener listener = new MarkNewResourceAsMergedListener(mergeContext);
+			TrackAddedAndRemovedResourcesListener resourceTracker = new TrackAddedAndRemovedResourcesListener();
 			try {
 				scope.getLeft().eAdapters().add(listener);
+				scope.getLeft().eAdapters().add(resourceTracker);
 				final IBatchMerger merger = new BatchMerger(mergerRegistry, fromSide(DifferenceSource.RIGHT));
 				merger.copyAllRightToLeft(comparison.getDifferences(), BasicMonitor.toMonitor(subMonitor
-						.newChild(4))); // 60%
+						.newChild(3))); // 50%
 				save(scope.getLeft());
 
 				for (IStorage storage : syncModel.getLeftTraversal().getStorages()) {
@@ -274,12 +276,30 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 					} else {
 						final IDiff diff = mergeContext.getDiffTree().getDiff(fullPath);
 						if (diff != null) {
-							mergeContext.markAsMerged(diff, true, subMonitor.newChild(1)); // 100%
+							if (IDiff.REMOVE == diff.getKind()
+									&& !resourceTracker.containsRemovedResource(fullPath)) {
+								mergeContext.merge(diff, false, subMonitor.newChild(1));
+							} else {
+								mergeContext.markAsMerged(diff, true, subMonitor.newChild(1));
+							}
 						}
 					}
 				}
+
+				for (IStorage rightStorage : syncModel.getRightTraversal().getStorages()) {
+					final IPath fullPath = ResourceUtil.getFixedPath(rightStorage);
+					if (fullPath != null) {
+						final IDiff diff = mergeContext.getDiffTree().getDiff(fullPath);
+						if (diff != null && IDiff.ADD == diff.getKind()
+								&& !resourceTracker.containsAddedResource(fullPath)) {
+							mergeContext.merge(diff, false, subMonitor.newChild(1));
+						}
+					}
+				}
+
 			} finally {
 				scope.getLeft().eAdapters().remove(listener);
+				scope.getLeft().eAdapters().remove(resourceTracker);
 			}
 		}
 		subMonitor.setWorkRemaining(0);
@@ -396,5 +416,47 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 				}
 			}
 		}
+	}
+
+	private static class TrackAddedAndRemovedResourcesListener extends AdapterImpl {
+
+		private final Set<String> addedResources = new HashSet<String>();
+
+		private final Set<String> removedResources = new HashSet<String>();
+
+		@Override
+		public void notifyChanged(Notification msg) {
+			int notificationType = msg.getEventType();
+			if (notificationType != Notification.ADD && notificationType != Notification.REMOVE) {
+				return;
+			}
+			if (msg.getNewValue() instanceof Resource) {
+				final Resource newResource = (Resource)msg.getNewValue();
+				final URI uri = newResource.getURI();
+				if (uri.isPlatformResource()) {
+					final String path = uri.toPlatformString(true);
+					final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path));
+					final String stringRepresentation = getStringRepresentation(file.getFullPath());
+					if (msg.getEventType() == Notification.ADD) {
+						addedResources.add(stringRepresentation);
+					} else if (msg.getEventType() == Notification.REMOVE) {
+						removedResources.add(stringRepresentation);
+					}
+				}
+			}
+		}
+
+		private String getStringRepresentation(IPath path) {
+			return path.toPortableString();
+		}
+
+		public boolean containsAddedResource(IPath path) {
+			return addedResources.contains(getStringRepresentation(path));
+		}
+
+		public boolean containsRemovedResource(IPath path) {
+			return removedResources.contains(getStringRepresentation(path));
+		}
+
 	}
 }
