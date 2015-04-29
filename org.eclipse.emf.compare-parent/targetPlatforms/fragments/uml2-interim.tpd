@@ -1,0 +1,7 @@
+target "UML2 Interim"
+
+with source, requirements
+
+location "http://download.eclipse.org/modeling/mdt/uml2/updates/interim/" {
+	org.eclipse.uml2.feature.group lazy
+}

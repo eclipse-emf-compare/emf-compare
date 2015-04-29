@@ -1,0 +1,25 @@
+target "EMF Compare based on Mars SDK"
+
+include "fragments/licence.tpd"
+include "fragments/orbit.tpd"
+include "fragments/egit-logical-nightly.tpd"
+include "fragments/perf.tpd"
+include "fragments/papyrus.tpd"
+include "fragments/uml2-interim.tpd"
+
+with source, requirements
+
+/*
+ * Can be used for local dev env to depend on the logical model build of EGit,
+ * interim builds of UML2 (cf bug 465216) and Papyrus and extras (richtext,
+ * UML-RT and migration.rsa).
+ */
+location "http://download.eclipse.org/releases/mars" {
+	org.eclipse.platform.sdk lazy
+	org.eclipse.emf.sdk.feature.group lazy
+	org.eclipse.emf.transaction.sdk.feature.group lazy
+	org.eclipse.gmf.runtime.notation.sdk.feature.group lazy
+	org.eclipse.papyrus.sdk.feature.feature.group lazy
+	org.eclipse.emf.ecoretools.sdk.feature.group lazy
+	org.eclipse.team.svn.feature.group lazy
+}
