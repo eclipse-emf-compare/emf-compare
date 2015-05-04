@@ -19,6 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,6 +44,9 @@ public abstract class AbstractResolution {
 
 	/** The diagnostic. */
 	protected DiagnosticSupport diagnostic;
+
+	/** The logger */
+	protected final Logger logger = Logger.getLogger(getClass());
 
 	/**
 	 * Constructor.

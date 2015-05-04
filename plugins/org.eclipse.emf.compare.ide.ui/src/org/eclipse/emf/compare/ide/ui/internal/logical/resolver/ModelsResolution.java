@@ -104,6 +104,9 @@ public class ModelsResolution extends AbstractResolution {
 	 *             If the treatment is interrupted.
 	 */
 	public SynchronizationModel run() throws InterruptedException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("run() - START"); //$NON-NLS-1$
+		}
 		return call(new Callable<SynchronizationModel>() {
 			public SynchronizationModel call() throws Exception {
 				final IFile leftFile = adaptAs(left, IFile.class);
@@ -115,7 +118,9 @@ public class ModelsResolution extends AbstractResolution {
 				} else {
 					synchronizationModel = resolveRemoteModels(new ThreadSafeProgressMonitor(monitor));
 				}
-
+				if (logger.isDebugEnabled()) {
+					logger.debug("run() - FINISH"); //$NON-NLS-1$
+				}
 				return synchronizationModel;
 			}
 		});
@@ -154,6 +159,9 @@ public class ModelsResolution extends AbstractResolution {
 	 */
 	private SynchronizationModel resolveModelsWithLocal(final IFile leftFile,
 			final ThreadSafeProgressMonitor tspm) throws InterruptedException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("resolveModelsWithLocal() - updating dependencies"); //$NON-NLS-1$
+		}
 		// Update changes and compute dependencies for left
 		// Then load the same set of resources for the remote sides, completing it top-down
 		localResolver.updateDependencies(monitor, diagnostic, leftFile);
@@ -162,8 +170,14 @@ public class ModelsResolution extends AbstractResolution {
 			throw new OperationCanceledException();
 		}
 
+		if (logger.isDebugEnabled()) {
+			logger.debug("resolveModelsWithLocal() - resolving traversal"); //$NON-NLS-1$
+		}
 		final Set<IStorage> leftTraversal = resolveTraversal(leftFile, Collections.<URI> emptySet());
 
+		if (logger.isDebugEnabled()) {
+			logger.debug("resolveModelsWithLocal() - resolving remote traversal"); //$NON-NLS-1$
+		}
 		return resolveRemoteTraversals(leftTraversal, tspm);
 	}
 
@@ -179,8 +193,14 @@ public class ModelsResolution extends AbstractResolution {
 	 */
 	private SynchronizationModel resolveRemoteModels(ThreadSafeProgressMonitor tspm)
 			throws InterruptedException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("resolveRemoteModels() - resolving left remote traversal"); //$NON-NLS-1$
+		}
 		final Set<IStorage> leftTraversal = resolveRemoteTraversal(left, Collections.<URI> emptySet(),
 				DiffSide.SOURCE, tspm);
+		if (logger.isDebugEnabled()) {
+			logger.debug("resolveRemoteModels() - resolving other remote traversals"); //$NON-NLS-1$
+		}
 		return resolveRemoteTraversals(leftTraversal, tspm);
 	}
 
@@ -204,6 +224,9 @@ public class ModelsResolution extends AbstractResolution {
 	 */
 	private SynchronizationModel resolveRemoteTraversals(Set<IStorage> leftTraversal,
 			ThreadSafeProgressMonitor tspm) throws InterruptedException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("resolveRemotetraversals() - START"); //$NON-NLS-1$
+		}
 		final Set<IStorage> rightTraversal = resolveRemoteTraversal(right, Iterables.transform(leftTraversal,
 				asURI()), DiffSide.REMOTE, tspm);
 		final Set<IStorage> differenceRightLeft = difference(rightTraversal, asURISet(leftTraversal));
@@ -225,6 +248,9 @@ public class ModelsResolution extends AbstractResolution {
 				leftTraversal), new StorageTraversal(rightTraversal), new StorageTraversal(originTraversal),
 				diagnostic.getDiagnostic());
 
+		if (logger.isDebugEnabled()) {
+			logger.debug("resolveRemotetraversals() - FINISH"); //$NON-NLS-1$
+		}
 		return synchronizationModel;
 	}
 
@@ -473,6 +499,9 @@ public class ModelsResolution extends AbstractResolution {
 		if (start == null) {
 			return Sets.newLinkedHashSet();
 		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("resolveRemotetraversal() - START for " + start); //$NON-NLS-1$
+		}
 		final SynchronizedResourceSet resourceSet = remoteResolver.getResourceSetForRemoteResolution(
 				diagnostic, tspm);
 		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
@@ -492,6 +521,9 @@ public class ModelsResolution extends AbstractResolution {
 
 		scheduler.clearComputedElements();
 
+		if (logger.isDebugEnabled()) {
+			logger.debug("resolveRemotetraversal() - END for " + start); //$NON-NLS-1$
+		}
 		return converter.getLoadedRevisions();
 	}
 

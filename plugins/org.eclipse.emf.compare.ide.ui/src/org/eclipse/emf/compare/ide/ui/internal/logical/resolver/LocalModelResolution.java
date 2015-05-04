@@ -61,7 +61,13 @@ public class LocalModelResolution extends AbstractResolution {
 	 *             If the computation is interrupted.
 	 */
 	public StorageTraversal run(final IResource start) throws InterruptedException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("run() - START"); //$NON-NLS-1$
+		}
 		if (!(start instanceof IFile)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("run() - FINISH"); //$NON-NLS-1$
+			}
 			return new StorageTraversal(new LinkedHashSet<IStorage>());
 		}
 		return call(new Callable<StorageTraversal>() {
@@ -75,7 +81,9 @@ public class LocalModelResolution extends AbstractResolution {
 				final Set<IStorage> traversalSet = resolveTraversal((IFile)start, Collections
 						.<URI> emptySet());
 				StorageTraversal traversal = new StorageTraversal(traversalSet, diagnostic.getDiagnostic());
-
+				if (logger.isDebugEnabled()) {
+					logger.debug("run() - FINISH"); //$NON-NLS-1$
+				}
 				return traversal;
 			}
 		});

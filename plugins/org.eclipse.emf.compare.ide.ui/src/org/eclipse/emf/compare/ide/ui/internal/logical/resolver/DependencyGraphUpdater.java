@@ -18,6 +18,7 @@ import com.google.common.eventbus.Subscribe;
 
 import java.util.Collections;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.compare.internal.utils.Graph;
 
 /**
@@ -30,6 +31,9 @@ public class DependencyGraphUpdater<T> {
 
 	/** The graph of dependencies between the resources. */
 	private final Graph<T> dependencyGraph;
+
+	/** The logger. */
+	private static final Logger LOGGER = Logger.getLogger(DependencyGraphUpdater.class);
 
 	/**
 	 * Constructor.
@@ -53,6 +57,9 @@ public class DependencyGraphUpdater<T> {
 	@Subscribe
 	public synchronized void recordNode(ResolvedEvent<T> event) {
 		dependencyGraph.add(event.getNode());
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Added node " + event.getNode()); //$NON-NLS-1$
+		}
 	}
 
 	/**
@@ -64,6 +71,9 @@ public class DependencyGraphUpdater<T> {
 	@Subscribe
 	public synchronized void recordEdge(DependencyFoundEvent<T> event) {
 		dependencyGraph.addChildren(event.getFrom(), Collections.singleton(event.getTo()));
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Added edge " + event.getFrom() + " -> " + event.getTo()); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		if (event.hasParent()) {
 			dependencyGraph.addParentData(event.getTo(), event.getParent().get());
 		}
@@ -78,5 +88,8 @@ public class DependencyGraphUpdater<T> {
 	@Subscribe
 	public synchronized void recordRemoval(ResourceRemovedEvent<T> event) {
 		dependencyGraph.removeAll(event.getElements());
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Cleared " + event.getElements().size() + " nodes."); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 }

@@ -92,6 +92,9 @@ public class LocalModelsResolution extends AbstractResolution {
 	 *             If the treatment is interrupted.
 	 */
 	public SynchronizationModel run() throws InterruptedException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("run() - START"); //$NON-NLS-1$
+		}
 		try {
 			if (allResourcesAreFiles()) {
 				return resolveLocalFiles();
@@ -99,6 +102,9 @@ public class LocalModelsResolution extends AbstractResolution {
 				return resolveLocalResources();
 			}
 		} finally {
+			if (logger.isDebugEnabled()) {
+				logger.debug("run() - FINISH"); //$NON-NLS-1$
+			}
 			monitor.setWorkRemaining(0);
 		}
 	}
@@ -125,6 +131,9 @@ public class LocalModelsResolution extends AbstractResolution {
 		final StorageTraversal leftTraversal;
 		final StorageTraversal rightTraversal;
 		final StorageTraversal originTraversal;
+		if (logger.isDebugEnabled()) {
+			logger.debug("resolveLocalResources()"); //$NON-NLS-1$
+		}
 		// CHECKSTYLE:OFF No, I won't create constants.
 		if (origin != null) {
 			leftTraversal = resolveLocalModel(left, monitor.newChild(33));
@@ -165,8 +174,14 @@ public class LocalModelsResolution extends AbstractResolution {
 	 *             In case it is interrupted.
 	 */
 	private SynchronizationModel resolveLocalFiles() throws InterruptedException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("resolveLocalFiles()"); //$NON-NLS-1$
+		}
 		return call(new Callable<SynchronizationModel>() {
 			public SynchronizationModel call() throws Exception {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Updating dependencies"); //$NON-NLS-1$
+				}
 				if (origin instanceof IFile) {
 					resolver.updateDependencies(monitor, diagnostic, (IFile)left, (IFile)right, (IFile)origin);
 				} else {
@@ -189,6 +204,9 @@ public class LocalModelsResolution extends AbstractResolution {
 					throw new OperationCanceledException();
 				}
 
+				if (logger.isDebugEnabled()) {
+					logger.debug("Computing traversals"); //$NON-NLS-1$
+				}
 				final Set<IStorage> leftTraversal;
 				final Set<IStorage> rightTraversal;
 				final Set<IStorage> originTraversal;
@@ -202,6 +220,9 @@ public class LocalModelsResolution extends AbstractResolution {
 					originTraversal = Collections.emptySet();
 				}
 
+				if (logger.isDebugEnabled()) {
+					logger.debug("Computing synchronization model"); //$NON-NLS-1$
+				}
 				// If one resource of the logical model was pointing to both (or "all three") of our
 				// starting elements, we'll have way too many things in our traversal. We need to remove the
 				// intersection before going any further.

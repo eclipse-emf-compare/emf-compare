@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -25,6 +26,8 @@ public class DiagnosticSupport {
 
 	/** The wrapped diagnostic, never {@code null}. */
 	private final BasicDiagnostic diagnostic;
+
+	private static final Logger LOGGER = Logger.getLogger(DiagnosticSupport.class);
 
 	/**
 	 * Constructor.
@@ -64,6 +67,9 @@ public class DiagnosticSupport {
 	 */
 	public void merge(final Diagnostic resourceDiagnostic) {
 		synchronized(diagnostic) {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Merging diagnostic #" + diagnostic.getChildren().size()); //$NON-NLS-1$
+			}
 			diagnostic.merge(resourceDiagnostic);
 		}
 	}

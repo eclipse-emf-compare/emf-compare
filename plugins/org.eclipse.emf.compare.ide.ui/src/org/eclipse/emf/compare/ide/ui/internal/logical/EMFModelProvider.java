@@ -18,6 +18,7 @@ import com.google.common.cache.LoadingCache;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -68,7 +69,10 @@ public class EMFModelProvider extends ModelProvider {
 	 * place and hasten the whole process.
 	 * </p>
 	 */
-	public static final long CACHE_EXPIRATION = 5L;
+	public static final long CACHE_EXPIRATION = 120L;
+
+	/** The logger. */
+	private static final Logger LOGGER = Logger.getLogger(EMFModelProvider.class);
 
 	/**
 	 * Cache the logical model computed for a given file through this provider. Note that the sub-cache
@@ -100,6 +104,9 @@ public class EMFModelProvider extends ModelProvider {
 	@Override
 	public ResourceMapping[] getMappings(IResource resource, ResourceMappingContext context,
 			IProgressMonitor monitor) throws CoreException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("getMappings() - START"); //$NON-NLS-1$
+		}
 		if (resource instanceof IFile) {
 			try {
 				final SynchronizationModel syncModel = getOrComputeLogicalModel((IFile)resource, context,
@@ -107,6 +114,9 @@ public class EMFModelProvider extends ModelProvider {
 				if (syncModel != null) {
 					final ResourceMapping mapping = new EMFResourceMapping(resource, context, syncModel,
 							PROVIDER_ID);
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug("getMappings() - FINISH NORMALLY"); //$NON-NLS-1$
+					}
 					return new ResourceMapping[] {mapping, };
 				} else {
 					// fall back to super
@@ -115,6 +125,9 @@ public class EMFModelProvider extends ModelProvider {
 				Thread.currentThread().interrupt();
 				// fall back to super
 			}
+		}
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("getMappings() - FINISH ABNORMALLY"); //$NON-NLS-1$
 		}
 		return super.getMappings(resource, context, monitor);
 	}
@@ -158,14 +171,23 @@ public class EMFModelProvider extends ModelProvider {
 		synchronized(contextToResourceMappingCache) {
 			final Cache<IResource, SynchronizationModel> resourceMappingCache = contextToResourceMappingCache
 					.getUnchecked(context);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Retrieved cache with ~ " + resourceMappingCache.size() //$NON-NLS-1$
+						+ " entries  for context " + context); //$NON-NLS-1$ 
+			}
 			syncModel = resourceMappingCache.getIfPresent(file);
 			if (syncModel == null) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Cache MISSED for " + file); //$NON-NLS-1$
+				}
 				syncModel = computeLogicalModel(file, context, monitor);
 				if (syncModel != null) {
 					for (IResource res : syncModel.getResources()) {
 						resourceMappingCache.put(res, syncModel);
 					}
 				}
+			} else if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Cache FOUND entry for " + file); //$NON-NLS-1$
 			}
 		}
 		return syncModel;
@@ -193,11 +215,17 @@ public class EMFModelProvider extends ModelProvider {
 	 */
 	private SynchronizationModel computeLogicalModel(IFile file, ResourceMappingContext context,
 			IProgressMonitor monitor) throws CoreException, InterruptedException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("computeLogicalModel() - START"); //$NON-NLS-1$
+		}
 		IProgressMonitor actualMonitor = monitor;
 		if (actualMonitor == null) {
 			actualMonitor = new NullProgressMonitor();
 		}
 
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("computeLogicalModel() - resolving local model"); //$NON-NLS-1$
+		}
 		// Computing the local traversal should be a fast (and cached!) operation. Start from there.
 		final IModelResolver resolver = EMFCompareIDEUIPlugin.getDefault().getModelResolverRegistry()
 				.getBestResolverFor(file);
@@ -239,7 +267,9 @@ public class EMFModelProvider extends ModelProvider {
 			syncModel = new SynchronizationModel(localTraversal, new StorageTraversal(Collections
 					.<IStorage> emptySet()), new StorageTraversal(Collections.<IStorage> emptySet()));
 		}
-
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("computeLogicalModel() - FINISH"); //$NON-NLS-1$
+		}
 		return syncModel;
 	}
 
