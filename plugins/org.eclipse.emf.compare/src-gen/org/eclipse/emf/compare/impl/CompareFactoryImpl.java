@@ -198,6 +198,7 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated NOT
+	 * @since 3.2
 	 */
 	public ResourceLocationChange createResourceLocationChange() {
 		return new ResourceLocationChangeSpec();
@@ -223,6 +224,7 @@ public class CompareFactoryImpl extends EFactoryImpl implements CompareFactory {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated NOT
+	 * @since 3.2
 	 */
 	public FeatureMapChange createFeatureMapChange() {
 		return new FeatureMapChangeSpec();

@@ -35,7 +35,9 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
+ * @since 4.1
  */
+@SuppressWarnings("all")
 public class ResourceLocationChangeItemProvider extends DiffItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource, IItemColorProvider, IItemFontProvider {
 	/**
 	 * <!-- begin-user-doc -->

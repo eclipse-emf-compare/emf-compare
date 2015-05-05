@@ -348,6 +348,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 3.2
 	 */
 	public EReference getMatchResource_LocationChanges() {
 		return (EReference)matchResourceEClass.getEStructuralFeatures().get(7);
@@ -533,6 +534,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 3.2
 	 */
 	public EClass getResourceLocationChange() {
 		return resourceLocationChangeEClass;
@@ -542,6 +544,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 3.2
 	 */
 	public EAttribute getResourceLocationChange_BaseLocation() {
 		return (EAttribute)resourceLocationChangeEClass.getEStructuralFeatures().get(0);
@@ -551,6 +554,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 3.2
 	 */
 	public EAttribute getResourceLocationChange_ChangedLocation() {
 		return (EAttribute)resourceLocationChangeEClass.getEStructuralFeatures().get(1);
@@ -607,6 +611,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
+	 * @since 3.2
 	 */
 	public EClass getFeatureMapChange() {
 		return featureMapChangeEClass;
@@ -615,6 +620,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
+	 * @since 3.2
 	 */
 	public EReference getFeatureMapChange_Attribute() {
 		return (EReference)featureMapChangeEClass.getEStructuralFeatures().get(0);
@@ -623,6 +629,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
+	 * @since 3.2
 	 */
 	public EAttribute getFeatureMapChange_Value() {
 		return (EAttribute)featureMapChangeEClass.getEStructuralFeatures().get(1);

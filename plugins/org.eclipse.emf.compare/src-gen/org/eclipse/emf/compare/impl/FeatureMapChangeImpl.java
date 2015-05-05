@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * </p>
  *
  * @generated
+ * @since 3.2
  */
 public class FeatureMapChangeImpl extends DiffImpl implements FeatureMapChange {
 	/**
@@ -41,6 +42,7 @@ public class FeatureMapChangeImpl extends DiffImpl implements FeatureMapChange {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public static final String copyright = "Copyright (c) 2012 Obeo.\r\nAll rights reserved. This program and the accompanying materials\r\nare made available under the terms of the Eclipse Public License v1.0\r\nwhich accompanies this distribution, and is available at\r\nhttp://www.eclipse.org/legal/epl-v10.html\r\n\r\nContributors:\r\n    Obeo - initial API and implementation"; //$NON-NLS-1$
 
 	/**

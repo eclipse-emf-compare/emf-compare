@@ -584,6 +584,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 * @param origin
 	 *            The original version.
 	 * @return <code>true</code> if they are mergeable, false otherwise.
+	 * @since 3.2
 	 */
 	protected boolean isMergeableText(final String left, final String right, final String origin) {
 		ThreeWayTextDiff textDiff = new ThreeWayTextDiff(origin, left, right);

@@ -234,6 +234,7 @@ public class CompareAdapterFactory extends AdapterFactoryImpl {
 	 * @return the new adapter.
 	 * @see org.eclipse.emf.compare.ResourceLocationChange
 	 * @generated
+	 * @since 3.2
 	 */
 	public Adapter createResourceLocationChangeAdapter() {
 		return null;
@@ -276,6 +277,7 @@ public class CompareAdapterFactory extends AdapterFactoryImpl {
 	 * @return the new adapter.
 	 * @see org.eclipse.emf.compare.FeatureMapChange
 	 * @generated
+	 * @since 3.2
 	 */
 	public Adapter createFeatureMapChangeAdapter() {
 		return null;

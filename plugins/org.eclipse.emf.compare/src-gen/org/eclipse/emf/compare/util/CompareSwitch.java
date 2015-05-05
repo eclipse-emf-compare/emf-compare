@@ -319,6 +319,7 @@ public class CompareSwitch<T> {
 	 * @return the result of interpreting the object as an instance of '<em>Feature Map Change</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
+	 * @since 3.2
 	 */
 	public T caseFeatureMapChange(FeatureMapChange object) {
 		return null;

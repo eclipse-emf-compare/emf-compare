@@ -625,6 +625,7 @@ public class AttributeChangeMerger extends AbstractMerger {
 	 * @param origin
 	 *            The original version of the String.
 	 * @return The merged version.
+	 * @since 3.2
 	 */
 	protected String performThreeWayTextMerge(final String left, final String right, final String origin) {
 		ThreeWayTextDiff textDiff = new ThreeWayTextDiff(origin, left, right);

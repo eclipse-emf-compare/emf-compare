@@ -43,6 +43,7 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
  * This specific implementation of {@link AbstractMerger} will be used to merge attribute changes.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @since 3.2
  */
 public class FeatureMapChangeMerger extends AbstractMerger {
 	/**

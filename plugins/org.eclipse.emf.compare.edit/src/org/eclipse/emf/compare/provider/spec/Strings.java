@@ -52,6 +52,7 @@ public final class Strings {
 	 * @param original
 	 *            the original string to remove line breaks from.
 	 * @return the string without line breaks but blanks instead.
+	 * @since 4.1
 	 */
 	public static String removeLineBreaks(String original) {
 		return original.replaceAll("\\r\\n|\\r|\\n", " "); //$NON-NLS-1$ //$NON-NLS-2$

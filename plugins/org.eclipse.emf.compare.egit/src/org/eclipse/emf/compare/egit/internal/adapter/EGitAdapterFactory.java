@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.ide.utils.IStoragePathProvider;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 // Suppress warnings : interface signatures are raw, so we can't generify
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes", "unchecked", })
 public class EGitAdapterFactory implements IAdapterFactory {
 	/** {@inheritDoc} */
 	public Object getAdapter(Object adaptableObject, Class adapterType) {

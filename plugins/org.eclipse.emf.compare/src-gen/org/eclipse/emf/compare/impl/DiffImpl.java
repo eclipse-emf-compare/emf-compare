@@ -245,6 +245,7 @@ public class DiffImpl extends MinimalEObjectImpl implements Diff {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 3.2
 	 */
 	public Match basicGetMatch() {
 		// TODO: implement this method to return the 'Match' reference

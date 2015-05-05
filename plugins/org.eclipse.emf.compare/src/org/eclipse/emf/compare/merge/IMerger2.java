@@ -27,7 +27,7 @@ import org.eclipse.emf.compare.Diff;
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 3.1
+ * @since 3.2
  */
 public interface IMerger2 extends IMerger {
 	/**

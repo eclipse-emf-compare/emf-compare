@@ -69,6 +69,7 @@ public class DiffBuilder implements IDiffProcessor {
 	 * @see org.eclipse.emf.compare.diff.IDiffProcessor#featureMapChange(org.eclipse.emf.compare.Match,
 	 *      org.eclipse.emf.ecore.EAttribute, java.lang.Object, org.eclipse.emf.compare.DifferenceKind,
 	 *      org.eclipse.emf.compare.DifferenceSource)
+	 * @since 3.2
 	 */
 	public void featureMapChange(Match match, EAttribute attribute, Object value, DifferenceKind kind,
 			DifferenceSource source) {

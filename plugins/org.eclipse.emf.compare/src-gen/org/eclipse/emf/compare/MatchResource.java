@@ -240,6 +240,7 @@ public interface MatchResource extends EObject {
 	 * @see org.eclipse.emf.compare.ComparePackage#getMatchResource_LocationChanges()
 	 * @model containment="true" upper="2"
 	 * @generated
+	 * @since 3.2
 	 */
 	EList<ResourceLocationChange> getLocationChanges();
 

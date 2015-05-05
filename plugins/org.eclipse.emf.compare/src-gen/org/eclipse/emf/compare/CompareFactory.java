@@ -87,6 +87,7 @@ public interface CompareFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @return a new object of class '<em>Resource Location Change</em>'.
 	 * @generated
+	 * @since 3.2
 	 */
 	ResourceLocationChange createResourceLocationChange();
 
@@ -114,6 +115,7 @@ public interface CompareFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @return a new object of class '<em>Feature Map Change</em>'.
 	 * @generated
+	 * @since 3.2
 	 */
 	FeatureMapChange createFeatureMapChange();
 

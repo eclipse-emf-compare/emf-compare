@@ -112,6 +112,7 @@ public class StorageTraversal implements IAdaptable, IDiagnosable {
 	 * 
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == org.eclipse.core.resources.mapping.ResourceTraversal.class) {
 			// Team's resource traversal only knows about IResources.

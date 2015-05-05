@@ -452,6 +452,7 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * @return the compare configuration object.
+	 * @since 4.1
 	 */
 	public IEMFCompareConfiguration getEMFCompareConfiguration() {
 		return compareConfiguration;
@@ -462,6 +463,7 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	 * 
 	 * @param compareConfiguration
 	 *            the compare configuration object
+	 * @since 4.1
 	 */
 	public void setEMFCompareConfiguration(IEMFCompareConfiguration compareConfiguration) {
 		this.compareConfiguration = compareConfiguration;

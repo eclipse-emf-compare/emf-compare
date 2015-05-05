@@ -380,6 +380,7 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 	 * @param runnable
 	 *            the runnable to execute for the actual merge operation.
 	 * @return The copy command, ready for use.
+	 * @since 4.1
 	 */
 	public ICompareCopyCommand createCopyAllNonConflictingCommand(Comparison comparison, boolean leftToRight,
 			IMerger.Registry mergerRegistry, IMergeAllNonConflictingRunnable runnable) {

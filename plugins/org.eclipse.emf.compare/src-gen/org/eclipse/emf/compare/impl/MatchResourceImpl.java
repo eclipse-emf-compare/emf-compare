@@ -187,6 +187,7 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 	 * @see #getLocationChanges()
 	 * @generated
 	 * @ordered
+	 * @since 3.2
 	 */
 	protected EList<ResourceLocationChange> locationChanges;
 
@@ -391,6 +392,7 @@ public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResour
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 3.2
 	 */
 	public EList<ResourceLocationChange> getLocationChanges() {
 		if (locationChanges == null) {
