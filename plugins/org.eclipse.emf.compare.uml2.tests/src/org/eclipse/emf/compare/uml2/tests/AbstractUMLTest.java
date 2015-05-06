@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - update priority value for UML merger
  */
 package org.eclipse.emf.compare.uml2.tests;
 
@@ -116,7 +117,7 @@ public abstract class AbstractUMLTest {
 		final IMerger umlMerger = new UMLMerger();
 		final IMerger umlReferenceChangeMerger = new UMLReferenceChangeMerger();
 		final IMerger opaqueElementBodyChangeMerger = new OpaqueElementBodyChangeMerger();
-		umlMerger.setRanking(11);
+		umlMerger.setRanking(20);
 		umlReferenceChangeMerger.setRanking(25);
 		opaqueElementBodyChangeMerger.setRanking(25);
 		mergerRegistry.add(umlMerger);

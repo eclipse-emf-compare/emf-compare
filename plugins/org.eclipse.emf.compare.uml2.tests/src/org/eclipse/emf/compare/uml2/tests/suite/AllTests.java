@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo and others.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - addition of OpaqueTest
+ *     Stefan Dirix - addition of PseudoConflictTest
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.suite;
 
@@ -19,6 +20,7 @@ import org.eclipse.emf.compare.uml2.tests.association.AddAssociation2Test;
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociation3Test;
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociationTest;
 import org.eclipse.emf.compare.uml2.tests.association.ChangeAssociationTest;
+import org.eclipse.emf.compare.uml2.tests.conflict.PseudoConflictTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.AddAbstractionTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.AddDependencyTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.AddInterfaceRealizationTest;
@@ -60,12 +62,13 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({AddDependencyTest.class, AddAbstractionTest.class, AddAssociationTest.class,
 		ExtensionMergeTest.class, AddAssociation2Test.class, ChangeAssociationTest.class,
-		ChangeDependencyTest.class, ChangeUsageTest.class, AddAssociation3Test.class, AddExtendTest.class,
-		AddGeneralizationSetTest.class, AddInterfaceRealizationTest.class, AddRealizationTest.class,
-		AddSubstitutionTest.class, AddUsageTest.class, AddMessageTest.class,
-		AddActionExecutionSpecificationTest.class, AddBehaviorExecutionSpecificationTest.class,
-		AddIncludeTest.class, AddTimeConstraintTest.class, StaticProfileTest.class, DynamicProfileTest.class,
-		StaticStereotypeTest.class, StaticStereotypedElementChangeTests.class, DynamicStereotypeTest.class,
+		PseudoConflictTest.class, ChangeDependencyTest.class, ChangeUsageTest.class,
+		AddAssociation3Test.class, AddExtendTest.class, AddGeneralizationSetTest.class,
+		AddInterfaceRealizationTest.class, AddRealizationTest.class, AddSubstitutionTest.class,
+		AddUsageTest.class, AddMessageTest.class, AddActionExecutionSpecificationTest.class,
+		AddBehaviorExecutionSpecificationTest.class, AddIncludeTest.class, AddTimeConstraintTest.class,
+		StaticProfileTest.class, DynamicProfileTest.class, StaticStereotypeTest.class,
+		StaticStereotypedElementChangeTests.class, DynamicStereotypeTest.class,
 		DynamicStereotypedElementChangeTests.class, ImplicationsAssociationTest.class,
 		ImplicationsTransitionTest.class, ImplicationsInterfaceRealizationTest.class,
 		StaticStereotypedElementItemProviderTest.class, DynamicStereotypedElementItemProviderTest.class,

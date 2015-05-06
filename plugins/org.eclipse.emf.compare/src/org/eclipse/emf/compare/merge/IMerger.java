@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 466552
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
@@ -178,11 +179,11 @@ public interface IMerger {
 		public static IMerger.Registry createStandaloneInstance() {
 			final IMerger.Registry registry = new RegistryImpl();
 
-			// We need our pseudo-conflict merger and conflict merger to have a slightly higher ranking than
+			// We need our pseudo-conflict merger and conflict merger to have a higher ranking than
 			// default.
 			final int defaultRanking = 10;
-			final int pseudoConflictRanking = 15;
-			final int conflictRanking = 15;
+			final int pseudoConflictRanking = 75;
+			final int conflictRanking = 100;
 
 			final IMerger attributeMerger = new AttributeChangeMerger();
 			attributeMerger.setRanking(defaultRanking);
