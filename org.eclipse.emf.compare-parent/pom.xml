@@ -93,6 +93,7 @@
     <module>../plugins/org.eclipse.emf.compare.rcp.ui</module>
     <module>../plugins/org.eclipse.emf.compare.rcp.ui.tests</module>
   </modules>
+
   <build>
    <!-- This is for checkstyle and PMD -->
    <sourceDirectory>src</sourceDirectory>
@@ -138,6 +139,43 @@
           </environments>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-source-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <archive>
+            <addMavenDescriptor>false</addMavenDescriptor>
+          </archive>
+        </configuration>
+        <executions>
+          <execution>
+            <id>plugin-source</id>
+            <goals>
+              <goal>plugin-source</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho.extras</groupId>
+        <artifactId>tycho-source-feature-plugin</artifactId>
+        <version>${tycho-extras-version}</version>
+        <configuration>
+          <archive>
+            <addMavenDescriptor>false</addMavenDescriptor>
+          </archive>
+        </configuration>
+        <executions>
+          <execution>
+            <id>source-feature</id>
+            <phase>package</phase>
+            <goals>
+              <goal>source-feature</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
@@ -155,43 +193,6 @@
               <addMavenDescriptor>false</addMavenDescriptor>
             </archive>
           </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho.extras</groupId>
-          <artifactId>tycho-source-feature-plugin</artifactId>
-          <version>${tycho-extras-version}</version>
-          <configuration>
-            <archive>
-              <addMavenDescriptor>false</addMavenDescriptor>
-            </archive>
-          </configuration>
-          <executions>
-            <execution>
-              <id>source-feature</id>
-              <phase>package</phase>
-              <goals>
-                <goal>source-feature</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-source-plugin</artifactId>
-          <version>${tycho-version}</version>
-          <configuration>
-            <archive>
-              <addMavenDescriptor>false</addMavenDescriptor>
-            </archive>
-          </configuration>
-          <executions>
-            <execution>
-              <id>plugin-source</id>
-              <goals>
-                <goal>plugin-source</goal>
-              </goals>
-            </execution>
-          </executions>
         </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
