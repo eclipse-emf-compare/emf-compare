@@ -30,14 +30,16 @@ get-preferences-menu | click
 with [get-window Preferences] {
  	get-tree | select "EMF Compare/Post Processors"
     with [get-table] {
-        get-property "getItems().TableItem[0].getText()" | equals "UML Post Processor" | verify-true
-        get-property "getItems().TableItem[1].getText()" | equals "Opaque Element Change Processor" | verify-true
-        get-property "getItems().TableItem[2].getText()" | equals "Stereotyped element change post processor" | verify-true
-        get-property "getItems().TableItem[3].getText()" | equals "Diagram Post processor" | verify-true
+        get-property "getItems().TableItem[0].getText()" | equals "Papyrus Post Processor" | verify-true
+        get-property "getItems().TableItem[1].getText()" | equals "UML Post Processor" | verify-true
+        get-property "getItems().TableItem[2].getText()" | equals "Opaque Element Change Processor" | verify-true
+        get-property "getItems().TableItem[3].getText()" | equals "Stereotyped element change post processor" | verify-true
+        get-property "getItems().TableItem[4].getText()" | equals "Diagram Post processor" | verify-true
         get-property "getItems().TableItem[0].getChecked()" | equals true | verify-true
    		get-property "getItems().TableItem[1].getChecked()" | equals true | verify-true
    		get-property "getItems().TableItem[2].getChecked()" | equals true | verify-true
    		get-property "getItems().TableItem[3].getChecked()" | equals true | verify-true
+   		get-property "getItems().TableItem[4].getChecked()" | equals true | verify-true
     }
     get-group Description | get-property "getChildren().Control[0].getText()" | equals "Post Processor used for UML models." | verify-true
 }

@@ -30,6 +30,7 @@ get-preferences-menu | click
 with [get-window Preferences] {
     get-tree | select "EMF Compare/Post Processors"
     with [get-table] {
+        get-item "Papyrus Post Processor" | uncheck
         get-item "UML Post Processor" | uncheck
         get-item "Diagram Post processor" | uncheck
         get-item "Stereotyped element change post processor" | uncheck
@@ -43,6 +44,7 @@ with [get-window Preferences | get-table] {
     get-property "getItems().TableItem[1].getChecked()" | equals false | verify-true
     get-property "getItems().TableItem[2].getChecked()" | equals false | verify-true
     get-property "getItems().TableItem[3].getChecked()" | equals false | verify-true
+    get-property "getItems().TableItem[4].getChecked()" | equals false | verify-true
 }
 get-window Preferences | get-button OK | click
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

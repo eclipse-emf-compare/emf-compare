@@ -28,12 +28,14 @@ Entry-Name: .content
 
 get-preferences-menu | click
 with [get-window Preferences | get-table] {
-    get-property "getItems().TableItem[0].getChecked()" | equals false | verify-true
-    get-property "getItems().TableItem[1].getChecked()" | equals true | verify-true
+    get-property "getItems().TableItem[0].getChecked()" | equals true | verify-true
+    get-property "getItems().TableItem[1].getChecked()" | equals false | verify-true
+    get-property "getItems().TableItem[2].getChecked()" | equals true | verify-true
 }
 get-window Preferences | get-button "Restore Defaults" | click
 with [get-window Preferences | get-table] {
     get-property "getItems().TableItem[0].getChecked()" | equals true | verify-true
     get-property "getItems().TableItem[1].getChecked()" | equals true | verify-true
+    get-property "getItems().TableItem[2].getChecked()" | equals true | verify-true
 }
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
