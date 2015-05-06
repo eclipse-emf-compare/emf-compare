@@ -650,7 +650,7 @@
                 <goals>
                   <goal>p2-metadata</goal>
                 </goals>
-                <phase>package</phase>
+                <phase>verify</phase>
               </execution>
             </executions>
             <configuration>
