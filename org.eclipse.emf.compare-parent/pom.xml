@@ -646,7 +646,7 @@
             <artifactId>tycho-p2-plugin</artifactId>
             <executions>
               <execution>
-                <id>alter-p2-metadata-for-signing</id>
+                <id>p2-metadata</id>
                 <goals>
                   <goal>p2-metadata</goal>
                 </goals>
