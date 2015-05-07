@@ -408,6 +408,9 @@ public class ModelsResolution extends AbstractResolution {
 	private Set<IStorage> findAdditionalRemoteTraversal(Set<IStorage> alreadyLoaded,
 			Set<IStorage> additionalStorages, DiffSide side, final ThreadSafeProgressMonitor tspm)
 			throws InterruptedException {
+		if (additionalStorages.isEmpty()) {
+			return Collections.emptySet();
+		}
 		final SynchronizedResourceSet resourceSet = remoteResolver.getResourceSetForRemoteResolution(
 				diagnostic, tspm);
 		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
