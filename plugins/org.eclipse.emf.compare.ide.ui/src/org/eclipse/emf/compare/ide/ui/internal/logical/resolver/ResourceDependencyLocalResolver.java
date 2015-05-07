@@ -26,6 +26,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -44,6 +45,9 @@ import org.eclipse.emf.ecore.resource.Resource;
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class ResourceDependencyLocalResolver implements IResourceDependencyLocalResolver {
+	/** The logger. */
+	private static final Logger LOGGER = Logger.getLogger(ResourceDependencyLocalResolver.class);
+
 	/** The scheduler. */
 	private final ResourceComputationScheduler<URI> scheduler;
 
@@ -235,6 +239,10 @@ public class ResourceDependencyLocalResolver implements IResourceDependencyLocal
 	public void updateDependencies(IProgressMonitor monitor, final DiagnosticSupport diagnostic,
 			IFile... files) throws InterruptedException {
 		final ThreadSafeProgressMonitor tspm = new ThreadSafeProgressMonitor(monitor);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("INSTANTIATING SynchronizedResourceSet to update dependencies with " //$NON-NLS-1$
+					+ files.length + " files"); //$NON-NLS-1$
+		}
 		final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet(
 				new LocalMonitoredProxyCreationListener(tspm, eventBus, this, diagnostic));
 		Iterable<IFile> filesToResolve = Iterables.filter(Arrays.asList(files), new Predicate<IFile>() {

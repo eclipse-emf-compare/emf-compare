@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
 import com.google.common.util.concurrent.FutureCallback;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.util.ThreadSafeProgressMonitor;
@@ -23,6 +24,9 @@ import org.eclipse.emf.compare.ide.ui.internal.util.ThreadSafeProgressMonitor;
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class ResourceDependencyRemoteResolver implements IResourceDependencyRemoteResolver {
+	/** The logger. */
+	private static final Logger LOGGER = Logger.getLogger(ResourceDependencyLocalResolver.class);
+
 	/** The scheduler. */
 	protected final ResourceComputationScheduler<URI> scheduler;
 
@@ -77,6 +81,9 @@ public class ResourceDependencyRemoteResolver implements IResourceDependencyRemo
 
 	public SynchronizedResourceSet getResourceSetForRemoteResolution(DiagnosticSupport diagnostic,
 			ThreadSafeProgressMonitor tspm) {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("INSTANTIATING SynchronizedResourceSet for remote resolution."); //$NON-NLS-1$
+		}
 		final SynchronizedResourceSet resourceSet = new SynchronizedResourceSet(
 				new RemoteMonitoredProxyCreationListener(tspm, this, diagnostic));
 		return resourceSet;

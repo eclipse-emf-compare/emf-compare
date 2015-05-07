@@ -104,8 +104,8 @@ public class EMFModelProvider extends ModelProvider {
 	@Override
 	public ResourceMapping[] getMappings(IResource resource, ResourceMappingContext context,
 			IProgressMonitor monitor) throws CoreException {
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("getMappings() - START"); //$NON-NLS-1$
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("getMappings() - START for " + resource); //$NON-NLS-1$
 		}
 		if (resource instanceof IFile) {
 			try {
@@ -114,8 +114,8 @@ public class EMFModelProvider extends ModelProvider {
 				if (syncModel != null) {
 					final ResourceMapping mapping = new EMFResourceMapping(resource, context, syncModel,
 							PROVIDER_ID);
-					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("getMappings() - FINISH NORMALLY"); //$NON-NLS-1$
+					if (LOGGER.isInfoEnabled()) {
+						LOGGER.info("getMappings() - FINISH NORMALLY"); //$NON-NLS-1$
 					}
 					return new ResourceMapping[] {mapping, };
 				} else {
@@ -126,8 +126,8 @@ public class EMFModelProvider extends ModelProvider {
 				// fall back to super
 			}
 		}
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("getMappings() - FINISH ABNORMALLY"); //$NON-NLS-1$
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("getMappings() - fallback to super."); //$NON-NLS-1$
 		}
 		return super.getMappings(resource, context, monitor);
 	}
