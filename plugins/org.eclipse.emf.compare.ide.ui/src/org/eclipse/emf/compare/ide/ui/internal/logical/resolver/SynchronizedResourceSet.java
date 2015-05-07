@@ -18,6 +18,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -39,6 +40,9 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 class SynchronizedResourceSet extends ResourceSetImpl {
+	/** The logger. */
+	private static final Logger LOGGER = Logger.getLogger(SynchronizedResourceSet.class);
+
 	/** Associates URIs with their resources. */
 	private final ConcurrentHashMap<URI, Resource> uriCache;
 
@@ -94,11 +98,21 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 		final URI normalizedURI = theURIConverter.normalize(uri);
 
 		Resource result = null;
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".loadResource for " + normalizedURI); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		result = uriCache.get(normalizedURI);
 		if (result == null) {
 			result = delegatedGetResource(uri, true);
 			if (result != null) {
-				result = uriCache.putIfAbsent(uri, result);
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".loadResource - caching " //$NON-NLS-1$ //$NON-NLS-2$
+							+ normalizedURI);
+				}
+				Resource former = uriCache.putIfAbsent(normalizedURI, result);
+				if (former != null) {
+					result = former;
+				}
 			}
 		}
 
@@ -118,6 +132,10 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 				// copy/pasted from super.getResource
 				throw new RuntimeException("Cannot create a resource for '" + uri //$NON-NLS-1$
 						+ "'; a registered resource factory is needed"); //$NON-NLS-1$
+			}
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".loadResource - No caching for " //$NON-NLS-1$ //$NON-NLS-2$
+						+ normalizedURI);
 			}
 			demandLoadHelper(result);
 		}
@@ -150,6 +168,9 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 	 */
 	public void unload(Resource resource, IProgressMonitor monitor) {
 		final URI uri = resource.getURI();
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".unload " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		uriCache.remove(uri);
 		getResources().remove(resource);
 		resource.eAdapters().clear();
@@ -165,15 +186,26 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 	public Resource getResource(URI uri, boolean loadOnDemand) {
 		// Never load resources from here, we only care for the EPackages to prevent the XMLHandler from going
 		// into a stackoverflow
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource for " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		Resource demanded = uriCache.get(uri);
 		if (demanded == null) {
 			final EPackage ePackage = getPackageRegistry().getEPackage(uri.toString());
 			if (ePackage != null) {
 				demanded = ePackage.eResource();
-				demanded = uriCache.putIfAbsent(uri, demanded);
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource - caching " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				Resource former = uriCache.putIfAbsent(uri, demanded);
+				if (former != null) {
+					demanded = former;
+				}
 			} else {
 				// simply return null
 			}
+		} else if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource - FOUND in cache " + uri); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return demanded;
 	}
@@ -185,8 +217,7 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 	 */
 	@Override
 	public synchronized Resource createResource(URI uri) {
-		final Resource created = super.createResource(uri);
-		return created;
+		return super.createResource(uri);
 	}
 
 	/**
@@ -197,7 +228,28 @@ class SynchronizedResourceSet extends ResourceSetImpl {
 	 */
 	@Override
 	public synchronized Resource createResource(URI uri, String contentType) {
-		final Resource created = super.createResource(uri, contentType);
+		// In some cases like the load of Profile in UML via pathmaps,
+		// The XMLHandler#getPackageForURI will call createResource after having got null by getResource()
+		final URI normalizedURI = getURIConverter().normalize(uri);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".createResource " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		if (uriCache.containsKey(normalizedURI)) {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".createResource FOUND IN CACHE " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			return uriCache.get(normalizedURI);
+		}
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".createResource CREATING " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		Resource created = super.createResource(uri, contentType);
+		// putIfAbsent will return atomically the one that's already registered
+		// if another instance has been registered in between
+		Resource former = uriCache.putIfAbsent(normalizedURI, created);
+		if (former != null) {
+			created = former;
+		}
 		return created;
 	}
 
