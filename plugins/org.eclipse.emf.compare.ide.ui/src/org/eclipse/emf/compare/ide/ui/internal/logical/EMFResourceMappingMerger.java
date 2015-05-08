@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - log messages (bug 461713), bug 465331
+ *     Philip Langer - log messages (bug 461713), bug 465331, refactorings
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -35,7 +36,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
@@ -68,6 +68,7 @@ import org.eclipse.emf.compare.internal.utils.PruningIterator;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -96,6 +97,10 @@ import org.eclipse.team.core.mapping.provider.MergeStatus;
  * ResourceMappingMerger. Filtered in the API filters.
  */
 public class EMFResourceMappingMerger implements IResourceMappingMerger {
+
+	/** The merger registry. */
+	private static final Registry MERGER_REGISTRY = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
+
 	/** {@inheritDoc} */
 	public IStatus merge(IMergeContext mergeContext, IProgressMonitor monitor) throws CoreException {
 		final ResourceMapping[] emfMappings = getEMFMappings(mergeContext);
@@ -232,77 +237,159 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 
 		final Comparison comparison = builder.build().compare(scope,
 				BasicMonitor.toMonitor(SubMonitor.convert(subMonitor.newChild(1), 10))); // 50%
-		final IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
+
 		if (hasRealConflict(comparison)) {
-			// pre-merge what can be
-			final Graph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison,
-					mergerRegistry, true, null);
-			final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
-			final Monitor emfMonitor = BasicMonitor.toMonitor(subMonitor.newChild(5)); // 100%
-
-			while (iterator.hasNext()) {
-				final Diff next = iterator.next();
-				if (hasConflict(ConflictKind.REAL).apply(next)) {
-					iterator.prune();
-				} else {
-					if (next.getState() != DifferenceState.MERGED) {
-						final IMerger merger = mergerRegistry.getHighestRankingMerger(next);
-						merger.copyRightToLeft(next, emfMonitor);
-					}
-				}
-			}
-
+			performPreMerge(comparison, subMonitor.newChild(5)); // 100 %
 			save(scope.getLeft());
-
 			failingMappings.add(mapping);
 		} else {
-			MarkNewResourceAsMergedListener listener = new MarkNewResourceAsMergedListener(mergeContext);
-			TrackAddedAndRemovedResourcesListener resourceTracker = new TrackAddedAndRemovedResourcesListener();
+			final ResourceAdditionAndDeletionTracker resourceTracker = new ResourceAdditionAndDeletionTracker();
 			try {
-				scope.getLeft().eAdapters().add(listener);
 				scope.getLeft().eAdapters().add(resourceTracker);
-				final IBatchMerger merger = new BatchMerger(mergerRegistry, fromSide(DifferenceSource.RIGHT));
-				merger.copyAllRightToLeft(comparison.getDifferences(), BasicMonitor.toMonitor(subMonitor
-						.newChild(3))); // 50%
+				performBatchMerge(comparison, subMonitor.newChild(3)); // 80%
 				save(scope.getLeft());
-
-				for (IStorage storage : syncModel.getLeftTraversal().getStorages()) {
-					final IPath fullPath = ResourceUtil.getFixedPath(storage);
-					if (fullPath == null) {
-						EMFCompareIDEUIPlugin.getDefault().getLog().log(
-								new Status(IStatus.WARNING, EMFCompareIDEUIPlugin.PLUGIN_ID,
-										EMFCompareIDEUIMessages
-												.getString("EMFResourceMappingMerger.mergeIncomplete"))); //$NON-NLS-1$
-					} else {
-						final IDiff diff = mergeContext.getDiffTree().getDiff(fullPath);
-						if (diff != null) {
-							if (IDiff.REMOVE == diff.getKind()
-									&& !resourceTracker.containsRemovedResource(fullPath)) {
-								mergeContext.merge(diff, false, subMonitor.newChild(1));
-							} else {
-								mergeContext.markAsMerged(diff, true, subMonitor.newChild(1));
-							}
-						}
-					}
-				}
-
-				for (IStorage rightStorage : syncModel.getRightTraversal().getStorages()) {
-					final IPath fullPath = ResourceUtil.getFixedPath(rightStorage);
-					if (fullPath != null) {
-						final IDiff diff = mergeContext.getDiffTree().getDiff(fullPath);
-						if (diff != null && IDiff.ADD == diff.getKind()
-								&& !resourceTracker.containsAddedResource(fullPath)) {
-							mergeContext.merge(diff, false, subMonitor.newChild(1));
-						}
-					}
-				}
-
+				delegateMergeOfUnmergedResourcesAndMarkDiffsAsMerged(syncModel, mergeContext,
+						resourceTracker, subMonitor.newChild(2)); // 100%
 			} finally {
-				scope.getLeft().eAdapters().remove(listener);
 				scope.getLeft().eAdapters().remove(resourceTracker);
 			}
 		}
+
 		subMonitor.setWorkRemaining(0);
+	}
+
+	/**
+	 * Performs a pre-merge of the given {@code comparison}.
+	 * <p>
+	 * A pre-merge is a merge that performs all non-conflicting changes but omits conflicting changes or
+	 * changes that depend on conflicting changes.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            The comparison to pre-merge.
+	 * @param subMonitor
+	 *            The progress monitor to use.
+	 */
+	private void performPreMerge(Comparison comparison, SubMonitor subMonitor) {
+		final Graph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison,
+				MERGER_REGISTRY, true, null);
+		final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
+		final Monitor emfMonitor = BasicMonitor.toMonitor(subMonitor);
+
+		while (iterator.hasNext()) {
+			final Diff next = iterator.next();
+			if (hasConflict(ConflictKind.REAL).apply(next)) {
+				iterator.prune();
+			} else if (next.getState() != DifferenceState.MERGED) {
+				final IMerger merger = MERGER_REGISTRY.getHighestRankingMerger(next);
+				merger.copyRightToLeft(next, emfMonitor);
+			}
+		}
+	}
+
+	/**
+	 * Performs a batch merge of the given {@code comparison}.
+	 * 
+	 * @param comparison
+	 *            The comparison to merge.
+	 * @param subMonitor
+	 *            The progress monitor to use.
+	 */
+	private void performBatchMerge(Comparison comparison, SubMonitor subMonitor) {
+		final IBatchMerger merger = new BatchMerger(MERGER_REGISTRY, fromSide(DifferenceSource.RIGHT));
+		merger.copyAllRightToLeft(comparison.getDifferences(), BasicMonitor.toMonitor(subMonitor));
+	}
+
+	/**
+	 * Delegates the merge of so far non-merged resource additions and deletions and marks all other already
+	 * merged resources as merged.
+	 * 
+	 * @param syncModel
+	 *            The synchronization model to obtain the storages.
+	 * @param mergeContext
+	 *            The merge context.
+	 * @param resourceTracker
+	 *            The tracker that tracked already merged file additions and deletions.
+	 * @param subMonitor
+	 *            The progress monitor to use.
+	 */
+	private void delegateMergeOfUnmergedResourcesAndMarkDiffsAsMerged(SynchronizationModel syncModel,
+			IMergeContext mergeContext, ResourceAdditionAndDeletionTracker resourceTracker,
+			SubMonitor subMonitor) throws CoreException {
+
+		// mark already deleted files as merged
+		for (IFile deletedFile : resourceTracker.getDeletedIFiles()) {
+			final IDiff diff = mergeContext.getDiffTree().getDiff(deletedFile);
+			markAsMerged(diff, mergeContext, subMonitor);
+		}
+
+		// for all left storages, delegate the merge of a deletion that has not been performed yet and mark
+		// all already performed diffs as merged
+		for (IStorage storage : syncModel.getLeftTraversal().getStorages()) {
+			final IPath fullPath = ResourceUtil.getFixedPath(storage);
+			if (fullPath == null) {
+				EMFCompareIDEUIPlugin.getDefault().getLog().log(
+						new Status(IStatus.WARNING, EMFCompareIDEUIPlugin.PLUGIN_ID, EMFCompareIDEUIMessages
+								.getString("EMFResourceMappingMerger.mergeIncomplete"))); //$NON-NLS-1$
+			} else {
+				final IDiff diff = mergeContext.getDiffTree().getDiff(fullPath);
+				if (diff != null) {
+					if (IDiff.REMOVE == diff.getKind() && !resourceTracker.containsRemovedResource(fullPath)) {
+						merge(diff, mergeContext, subMonitor.newChild(1));
+					} else {
+						markAsMerged(diff, mergeContext, subMonitor.newChild(1));
+					}
+				}
+			}
+		}
+
+		// delegate all additions from the right storages that have not been performed yet
+		for (IStorage rightStorage : syncModel.getRightTraversal().getStorages()) {
+			final IPath fullPath = ResourceUtil.getFixedPath(rightStorage);
+			if (fullPath != null) {
+				final IDiff diff = mergeContext.getDiffTree().getDiff(fullPath);
+				if (diff != null && IDiff.ADD == diff.getKind()
+						&& !resourceTracker.containsAddedResource(fullPath)) {
+					merge(diff, mergeContext, subMonitor.newChild(1));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Merges the given {@code diff}.
+	 * 
+	 * @param diff
+	 *            The difference to be merged.
+	 * @param mergeContext
+	 *            The merge context.
+	 * @param subMonitor
+	 *            The process monitor to use.
+	 */
+	private void merge(IDiff diff, IMergeContext mergeContext, SubMonitor subMonitor) {
+		try {
+			mergeContext.merge(diff, false, subMonitor);
+		} catch (CoreException e) {
+			EMFCompareIDEUIPlugin.getDefault().log(e);
+		}
+	}
+
+	/**
+	 * Marks the given {@code diff} as merged.
+	 * 
+	 * @param diff
+	 *            The difference to be marked as merge.
+	 * @param mergeContext
+	 *            The merge context.
+	 * @param subMonitor
+	 *            The progress monitor to use.
+	 */
+	private void markAsMerged(final IDiff diff, IMergeContext mergeContext, SubMonitor subMonitor) {
+		try {
+			mergeContext.markAsMerged(diff, true, subMonitor);
+		} catch (CoreException e) {
+			EMFCompareIDEUIPlugin.getDefault().log(e);
+		}
 	}
 
 	/**
@@ -392,58 +479,45 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 		return Status.OK_STATUS;
 	}
 
-	private static class MarkNewResourceAsMergedListener extends AdapterImpl {
-		private final IMergeContext mergeContext;
+	private static class ResourceAdditionAndDeletionTracker extends AdapterImpl {
 
-		public MarkNewResourceAsMergedListener(IMergeContext mergeContext) {
-			this.mergeContext = mergeContext;
-		}
+		private final Set<String> urisOfAddedResources = new HashSet<String>();
 
-		@Override
-		public void notifyChanged(Notification msg) {
-			if (msg.getEventType() == Notification.ADD && msg.getNewValue() instanceof Resource) {
-				Resource newResource = (Resource)msg.getNewValue();
-				URI uri = newResource.getURI();
-				if (uri.isPlatformResource()) {
-					String path = uri.toPlatformString(true);
-					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path));
-					IDiff diff = mergeContext.getDiffTree().getDiff(file);
-					try {
-						mergeContext.markAsMerged(diff, true, new NullProgressMonitor());
-					} catch (CoreException e) {
-						EMFCompareIDEUIPlugin.getDefault().log(e);
-					}
-				}
-			}
-		}
-	}
+		private final Set<String> urisOfDeletedResources = new HashSet<String>();
 
-	private static class TrackAddedAndRemovedResourcesListener extends AdapterImpl {
-
-		private final Set<String> addedResources = new HashSet<String>();
-
-		private final Set<String> removedResources = new HashSet<String>();
+		private final Set<IFile> deletedIFiles = new HashSet<IFile>();
 
 		@Override
 		public void notifyChanged(Notification msg) {
-			int notificationType = msg.getEventType();
-			if (notificationType != Notification.ADD && notificationType != Notification.REMOVE) {
+			if (!isAdditionOrDeletionOfResourceNotification(msg)) {
 				return;
 			}
-			if (msg.getNewValue() instanceof Resource) {
-				final Resource newResource = (Resource)msg.getNewValue();
-				final URI uri = newResource.getURI();
-				if (uri.isPlatformResource()) {
-					final String path = uri.toPlatformString(true);
-					final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path));
-					final String stringRepresentation = getStringRepresentation(file.getFullPath());
-					if (msg.getEventType() == Notification.ADD) {
-						addedResources.add(stringRepresentation);
-					} else if (msg.getEventType() == Notification.REMOVE) {
-						removedResources.add(stringRepresentation);
-					}
+
+			final Resource newResource = (Resource)msg.getNewValue();
+			final URI uri = newResource.getURI();
+			if (uri.isPlatformResource()) {
+				final String path = uri.toPlatformString(true);
+				final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path));
+				if (msg.getEventType() == Notification.ADD) {
+					trackResourceAddition(file);
+				} else if (msg.getEventType() == Notification.REMOVE) {
+					trackResourceDeletion(file);
 				}
 			}
+		}
+
+		private boolean isAdditionOrDeletionOfResourceNotification(Notification msg) {
+			return (msg.getEventType() == Notification.ADD || msg.getEventType() == Notification.REMOVE)
+					&& msg.getNewValue() instanceof Resource;
+		}
+
+		private void trackResourceAddition(IFile file) {
+			urisOfAddedResources.add(getStringRepresentation(file.getFullPath()));
+		}
+
+		private void trackResourceDeletion(IFile file) {
+			deletedIFiles.add(file);
+			urisOfDeletedResources.add(getStringRepresentation(file.getFullPath()));
 		}
 
 		private String getStringRepresentation(IPath path) {
@@ -451,12 +525,15 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 		}
 
 		public boolean containsAddedResource(IPath path) {
-			return addedResources.contains(getStringRepresentation(path));
+			return urisOfAddedResources.contains(getStringRepresentation(path));
 		}
 
 		public boolean containsRemovedResource(IPath path) {
-			return removedResources.contains(getStringRepresentation(path));
+			return urisOfDeletedResources.contains(getStringRepresentation(path));
 		}
 
+		public Set<IFile> getDeletedIFiles() {
+			return Collections.unmodifiableSet(deletedIFiles);
+		}
 	}
 }
