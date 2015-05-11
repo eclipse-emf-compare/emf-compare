@@ -73,7 +73,8 @@ org.eclipse.uml2.uml.feature.group,\
 org.eclipse.papyrus.sdk.feature.feature.group,\
 org.eclipse.emf.compare.uml2.feature.group,\
 org.eclipse.emf.compare.diagram.gmf.feature.group,\
-org.eclipse.emf.compare.diagram.papyrus.feature.group"
+org.eclipse.emf.compare.diagram.papyrus.feature.group,\
+org.eclipse.emf.compare.egit.feature.group"
 elif [[ "$simrel" == "luna"* ]]; then
 	simrel_zip_name="eclipse-SDK-4.4.2-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
 	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/R-4.4.2-201502041700/$simrel_zip_name"
