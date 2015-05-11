@@ -61,8 +61,8 @@ if [[ "$simrel" == "collaborative-modeling"* ]]; then
 	p2_repositories=""
 	p2_installIUs=""
 elif [[ "$simrel" == "mars"* ]]; then
-	simrel_zip_name="eclipse-SDK-4.5M6-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
-	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/S-4.5M6-201503200800/$simrel_zip_name"	
+	simrel_zip_name="eclipse-SDK-4.5M7-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
+	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/S-4.5M7-201504301445/$simrel_zip_name"	
 	p2_repositories="http://download.eclipse.org/releases/mars/,\
 http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest/,\
 http://download.eclipse.org/modeling/emf/compare/updates/egit-logical/nightly/"

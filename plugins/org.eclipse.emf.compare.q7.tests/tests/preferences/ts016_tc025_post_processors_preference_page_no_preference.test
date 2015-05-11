@@ -41,7 +41,7 @@ with [get-window Preferences] {
    		get-property "getItems().TableItem[3].getChecked()" | equals true | verify-true
    		get-property "getItems().TableItem[4].getChecked()" | equals true | verify-true
     }
-    get-group Description | get-property "getChildren().Control[1].getText()" | equals "Post Processor used for UML models." | verify-true
+    get-group Description | get-property "getChildren().Control[0].getText()" | equals "Post processor used in postMatch step for matching notation and di resources with different names" | verify-true
 }
 //Checks description update
 get-window Preferences | get-table | select "Diagram Post processor"
