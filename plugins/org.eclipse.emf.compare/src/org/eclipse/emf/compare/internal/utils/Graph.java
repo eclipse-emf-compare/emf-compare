@@ -898,11 +898,12 @@ public final class Graph<E> {
 			Set<Node<E>> children = lastReturned.getChildren();
 			lastReturned = null;
 			while (!children.isEmpty()) {
-				consumedNodes.addAll(children);
 				final Set<Node<E>> copy = children;
 				children = new LinkedHashSet<Node<E>>();
 				for (Node<E> child : copy) {
-					children.addAll(child.getChildren());
+					if (consumedNodes.add(child)) {
+						children.addAll(child.getChildren());
+					}
 				}
 			}
 		}

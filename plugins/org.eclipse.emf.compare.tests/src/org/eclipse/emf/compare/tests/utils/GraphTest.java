@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 import java.util.Set;
 
 import org.eclipse.emf.compare.internal.utils.Graph;
+import org.eclipse.emf.compare.internal.utils.PruningIterator;
 import org.junit.Test;
 
 /**
@@ -52,5 +53,31 @@ public class GraphTest {
 		Set<String> subgraph = graph.getSubgraphContaining("d", ImmutableSet.of("c"));
 		assertEquals(4, subgraph.size());
 		assertTrue(subgraph.containsAll(Lists.newArrayList("a", "b", "d", "f")));
+	}
+
+	/*
+	 * Just to avoid infinite loop in prune.
+	 */
+	@Test
+	public void testPrune() {
+		Graph<String> graph = new Graph<String>();
+		//@formatter:off
+		/*
+		 * Add the following graph:
+		 *          c-\
+		 *          |  |
+		 *          b-/
+		 *          |
+		 *          a
+		 */
+		//@formatter:on
+		graph.addChildren("a", ImmutableSet.of("b"));
+		graph.addChildren("b", ImmutableSet.of("c"));
+		graph.addChildren("c", ImmutableSet.of("b"));
+		PruningIterator<String> iterator = graph.breadthFirstIterator();
+		while (iterator.hasNext()) {
+			iterator.next();
+			iterator.prune();
+		}
 	}
 }
