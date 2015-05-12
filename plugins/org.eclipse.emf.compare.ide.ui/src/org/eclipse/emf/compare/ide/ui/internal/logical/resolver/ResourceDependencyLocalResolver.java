@@ -19,9 +19,11 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -34,6 +36,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.util.ThreadSafeProgressMonitor;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.internal.utils.Graph;
+import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * The default implementation of the {@link IResourceDependencyProvider}.
@@ -256,6 +259,12 @@ public class ResourceDependencyLocalResolver implements IResourceDependencyLocal
 			}
 		}));
 		updateChangedResources(resourceSet, diagnostic, tspm);
+
+		// Unload all remaining resources from resource set
+		List<Resource> resources = new ArrayList<Resource>(resourceSet.getResources());
+		for (Resource r : resources) {
+			resourceSet.unload(r, tspm);
+		}
 	}
 
 	/**
