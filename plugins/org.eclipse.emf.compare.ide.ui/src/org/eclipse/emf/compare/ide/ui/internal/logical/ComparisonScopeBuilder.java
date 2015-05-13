@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 466607
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -184,41 +185,36 @@ public final class ComparisonScopeBuilder {
 	 *            one. Can be <code>null</code>.
 	 * @param monitor
 	 *            The monitor on which to report progress information to the user.
-	 * @return The newly created SynchronizationModel, <code>null</code> in case of user interruption.
+	 * @return The newly created SynchronizationModel.
+	 * @throws InterruptedException
+	 *             In case of user interruption.
 	 */
 	/* package */SynchronizationModel buildSynchronizationModel(ITypedElement left, ITypedElement right,
-			ITypedElement origin, IProgressMonitor monitor) {
+			ITypedElement origin, IProgressMonitor monitor) throws InterruptedException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("buildSynchronizationModel - START"); //$NON-NLS-1$
 		}
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 		subMonitor.subTask(EMFCompareIDEUIMessages.getString("EMFSynchronizationModel.resolving")); //$NON-NLS-1$
-		try {
-			final SynchronizationModel syncModel;
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("buildSynchronizationModel - Creating sync model"); //$NON-NLS-1$
-			}
-			if (storageAccessor != null) {
-				syncModel = createSynchronizationModel(storageAccessor, left, right, origin, subMonitor
-						.newChild(90));
-			} else {
-				syncModel = createSynchronizationModel(left, right, origin, subMonitor.newChild(90));
-			}
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("buildSynchronizationModel - Minimizing model"); //$NON-NLS-1$
-			}
-			minimizer.minimize(syncModel, subMonitor.newChild(10));
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("buildSynchronizationModel - FINISH NORMALLY"); //$NON-NLS-1$
-			}
-			return syncModel;
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("buildSynchronizationModel - FINISH ABNORMALLY"); //$NON-NLS-1$
-			}
-			return null;
+
+		final SynchronizationModel syncModel;
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("buildSynchronizationModel - Creating sync model"); //$NON-NLS-1$
 		}
+		if (storageAccessor != null) {
+			syncModel = createSynchronizationModel(storageAccessor, left, right, origin, subMonitor
+					.newChild(90));
+		} else {
+			syncModel = createSynchronizationModel(left, right, origin, subMonitor.newChild(90));
+		}
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("buildSynchronizationModel - Minimizing model"); //$NON-NLS-1$
+		}
+		minimizer.minimize(syncModel, subMonitor.newChild(10));
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("buildSynchronizationModel - FINISH NORMALLY"); //$NON-NLS-1$
+		}
+		return syncModel;
 	}
 
 	/**

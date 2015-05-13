@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,15 +7,27 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 466607
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
+import com.google.common.base.Joiner;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -32,6 +44,8 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope;
+import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ResolutionUtil;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
@@ -132,6 +146,62 @@ public class EMFModelProvider extends ModelProvider {
 		return super.getMappings(resource, context, monitor);
 	}
 
+	@Override
+	public ResourceMapping[] getMappings(IResource[] resources, ResourceMappingContext context,
+			IProgressMonitor monitor) throws CoreException {
+		if (LOGGER.isInfoEnabled()) {
+			final Joiner joiner = Joiner.on(",").skipNulls(); //$NON-NLS-1$
+			final String resourceList = joiner.join(resources);
+			LOGGER.info("getMappings() - START for " + resourceList); //$NON-NLS-1$
+		}
+
+		final List<ResourceMapping> mappings = new ArrayList<ResourceMapping>();
+
+		// collect all IFiles
+		final List<IFile> files = new ArrayList<IFile>();
+		final List<IResource> remainingResources = new ArrayList<IResource>();
+
+		for (IResource resource : resources) {
+			if (resource instanceof IFile) {
+				files.add((IFile)resource);
+			} else {
+				remainingResources.add(resource);
+			}
+		}
+
+		try {
+			final Map<SynchronizationModel, IFile> syncModels = computeLogicalModels(files, context, monitor);
+			for (Map.Entry<SynchronizationModel, IFile> entry : syncModels.entrySet()) {
+				final ResourceMapping mapping = new EMFResourceMapping(entry.getValue(), context, entry
+						.getKey(), PROVIDER_ID);
+				mappings.add(mapping);
+			}
+
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("getMappings() - interrupt exception: fallback to super."); //$NON-NLS-1$
+			}
+			return super.getMappings(resources, context, monitor);
+		}
+
+		if (!remainingResources.isEmpty()) {
+			if (LOGGER.isInfoEnabled()) {
+				final Joiner joiner = Joiner.on(",").skipNulls(); //$NON-NLS-1$
+				final String resourceList = joiner.join(remainingResources);
+				LOGGER.info("getMappings() - not all resources were handled. fallback to super for: " + resourceList); //$NON-NLS-1$
+			}
+			mappings.addAll(Arrays.asList(super.getMappings(remainingResources
+					.toArray(new IResource[remainingResources.size()]), context, monitor)));
+		} else {
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("getMappings() - FINISH NORMALLY"); //$NON-NLS-1$
+			}
+		}
+
+		return mappings.toArray(new ResourceMapping[mappings.size()]);
+	}
+
 	/**
 	 * Clears the caches of this provider.
 	 */
@@ -182,8 +252,13 @@ public class EMFModelProvider extends ModelProvider {
 				}
 				syncModel = computeLogicalModel(file, context, monitor);
 				if (syncModel != null) {
-					for (IResource res : syncModel.getResources()) {
-						resourceMappingCache.put(res, syncModel);
+					if (ResolutionUtil.getResolutionScope().equals(CrossReferenceResolutionScope.WORKSPACE)) {
+						// logical model will be the same for all resources contained in the model
+						for (IResource res : syncModel.getResources()) {
+							resourceMappingCache.put(res, syncModel);
+						}
+					} else {
+						resourceMappingCache.put(file, syncModel);
 					}
 				}
 			} else if (LOGGER.isDebugEnabled()) {
@@ -271,6 +346,146 @@ public class EMFModelProvider extends ModelProvider {
 			LOGGER.debug("computeLogicalModel() - FINISH"); //$NON-NLS-1$
 		}
 		return syncModel;
+	}
+
+	/**
+	 * Resolve the logical model(s) of the given files.
+	 * <p>
+	 * When model resolution setting is not set to "workspace" the
+	 * {@link #computeLogicalModel(IFile, ResourceMappingContext, IProgressMonitor)} method can not guarantee
+	 * to compute the whole logical model for the given file. But there are actually use cases in which the
+	 * client already knows which files constitute the logical model, see for example
+	 * {@link #getMappings(IResource[], ResourceMappingContext, IProgressMonitor)}.
+	 * </p>
+	 * <p>
+	 * This method tries to combine the logical models of the given {@code files} if applicable. Depending of
+	 * the given {@code files} the whole logical model may be resolved independent of the workspace resolution
+	 * settings.
+	 * </p>
+	 *
+	 * @param files
+	 *            The {@link IFile}s for which the logical model(s) is to be computed.
+	 * @param context
+	 *            The resource mapping context.
+	 * @param monitor
+	 *            Used to display progress information to the user.
+	 * @return The computed logical models each mapped to the first file from which they were resolved. The
+	 *         logical models are disjoint.
+	 * @throws CoreException
+	 *             If we cannot retrieve the content of a resource for some reason.
+	 * @throws InterruptedException
+	 *             If the user interrupts the resolving.
+	 */
+	Map<SynchronizationModel, IFile> computeLogicalModels(Collection<IFile> files,
+			ResourceMappingContext context, IProgressMonitor monitor) throws CoreException,
+			InterruptedException {
+		if (LOGGER.isDebugEnabled()) {
+			final Joiner joiner = Joiner.on(",").skipNulls(); //$NON-NLS-1$
+			final String fileList = joiner.join(files);
+			LOGGER.debug("computeLogicalModels() - START with " + fileList); //$NON-NLS-1$
+		}
+		final Map<SynchronizationModel, IFile> syncModels = new LinkedHashMap<SynchronizationModel, IFile>();
+
+		for (IFile file : files) {
+			final SynchronizationModel currentSyncModel = getOrComputeLogicalModel(file, context, monitor);
+
+			if (currentSyncModel == null) {
+				// skip file
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("computeLogicalModels() - Could not determine logical model for \"" + file + "\". SKIP file."); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				continue;
+			}
+
+			// subsets can be shortcutted
+			boolean combineModels = false;
+
+			final List<SynchronizationModel> toCombine = new LinkedList<SynchronizationModel>();
+
+			for (SynchronizationModel syncModel : syncModels.keySet()) {
+
+				if (!Collections.disjoint(syncModel.getResources(), currentSyncModel.getResources())) {
+					toCombine.add(syncModel);
+
+					if (!syncModel.getResources().containsAll(currentSyncModel.getResources())) {
+						// the model is not a subset -> deactivate shortcut
+						combineModels = true;
+					}
+				}
+			}
+
+			// if there are no models to combine, add this model to the result set
+			if (toCombine.isEmpty()) {
+				syncModels.put(currentSyncModel, file);
+			}
+
+			// when a model can be added to multiple other models, all these models must be combined
+			if (combineModels) {
+				final Iterator<SynchronizationModel> it = toCombine.iterator();
+				final SynchronizationModel firstToCombine = it.next();
+				final IFile value = syncModels.get(firstToCombine);
+
+				SynchronizationModel combinedModel = combineModels(currentSyncModel, firstToCombine);
+				syncModels.remove(firstToCombine);
+
+				while (it.hasNext()) {
+					final SynchronizationModel currentModel = it.next();
+					combinedModel = combineModels(combinedModel, currentModel);
+					syncModels.remove(currentModel);
+				}
+
+				syncModels.put(combinedModel, value);
+			}
+		}
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("computeLogicalModels() - FINISH with " + syncModels.size() + " models"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		return syncModels;
+	}
+
+	/**
+	 * Combines the given {@link SynchronizationModel}s to a new model.
+	 *
+	 * @param modelA
+	 *            The model to combine.
+	 * @param modelB
+	 *            The model to combine.
+	 * @return A new {@link SynchronizationModel} which contains the combination of {@link StorageTraversal}s
+	 *         of the given models.
+	 */
+	private SynchronizationModel combineModels(SynchronizationModel modelA, SynchronizationModel modelB) {
+		Set<IStorage> left = new HashSet<IStorage>();
+		Set<IStorage> right = new HashSet<IStorage>();
+		Set<IStorage> origin = new HashSet<IStorage>();
+
+		StorageTraversal leftTraversal = null;
+		StorageTraversal rightTraversal = null;
+		StorageTraversal originTraversal = null;
+
+		if (modelA.getLeftTraversal() != null) {
+			left.addAll(modelA.getLeftTraversal().getStorages());
+			if (modelB != null && modelB.getLeftTraversal() != null) {
+				left.addAll(modelB.getLeftTraversal().getStorages());
+			}
+			leftTraversal = new StorageTraversal(left);
+		}
+		if (modelA.getRightTraversal() != null) {
+			right.addAll(modelA.getRightTraversal().getStorages());
+			if (modelB != null && modelB.getRightTraversal() != null) {
+				right.addAll(modelB.getRightTraversal().getStorages());
+			}
+			rightTraversal = new StorageTraversal(right);
+		}
+		if (modelA.getOriginTraversal() != null) {
+			origin.addAll(modelA.getOriginTraversal().getStorages());
+			if (modelB != null && modelB.getOriginTraversal() != null) {
+				right.addAll(modelB.getOriginTraversal().getStorages());
+			}
+			originTraversal = new StorageTraversal(origin);
+		}
+
+		return new SynchronizationModel(leftTraversal, rightTraversal, originTraversal);
 	}
 
 	/**

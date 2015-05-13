@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - adds test classes
+ *     Stefan Dirix - add EMFModelProviderTest
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.suite;
 
@@ -18,6 +19,7 @@ import junit.textui.TestRunner;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.ide.ui.tests.compareconfiguration.EMFCompareConfigurationTest;
 import org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.notloadedfragment.NotLoadedFragmentItemTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.modelprovider.EMFModelProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.DependencyGraphUpdaterTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.GraphResolutionTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ResolutionEventsTest;
@@ -39,19 +41,12 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({EMFCompareConfigurationTest.class,
-		DependenciesTest.class,
-		MergeActionTest.class,
-		PseudoConflictsMergeActionTest.class,
-		BugsTestSuite.class,
-		NavigatableTest.class,
-		NotLoadedFragmentNodeTest.class,
-		NotLoadedFragmentItemTest.class,
-		ResolutionEventsTest.class,
-		ResourceComputationSchedulerTest.class,
-		ThreadedModelResolverGraphTest.class,
-		ThreadedModelResolverWithCustomDependencyProviderTest.class,
-		DependencyGraphUpdaterTest.class, GraphResolutionTest.class })
+@SuiteClasses({EMFCompareConfigurationTest.class, DependenciesTest.class, MergeActionTest.class,
+		PseudoConflictsMergeActionTest.class, BugsTestSuite.class, NavigatableTest.class,
+		NotLoadedFragmentNodeTest.class, NotLoadedFragmentItemTest.class, ResolutionEventsTest.class,
+		ResourceComputationSchedulerTest.class, ThreadedModelResolverGraphTest.class,
+		ThreadedModelResolverWithCustomDependencyProviderTest.class, DependencyGraphUpdaterTest.class,
+		GraphResolutionTest.class, EMFModelProviderTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.
