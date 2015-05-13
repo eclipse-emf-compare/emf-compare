@@ -41,10 +41,10 @@ import org.eclipse.emf.ecore.resource.URIConverter;
  */
 public final class RevisionedURIConverter extends StorageURIConverter {
 	/** The accessor that will provide us with resource content. */
-	private IStorageProviderAccessor storageAccessor;
+	private final IStorageProviderAccessor storageAccessor;
 
 	/** The side we are currently resolving. */
-	private DiffSide side;
+	private final DiffSide side;
 
 	/**
 	 * We can have <code>null</code> input streams from here (if the resource does not exist on the remote
@@ -54,7 +54,7 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 	 * resource, that we will actually be able to load it. This field will be used to keep track of the
 	 * prefetched stream so that we can avoid loading it twice.
 	 */
-	private ConcurrentMap<URI, InputStream> prefetchedStreams = new ConcurrentHashMap<URI, InputStream>();
+	private final ConcurrentMap<URI, InputStream> prefetchedStreams = new ConcurrentHashMap<URI, InputStream>();
 
 	/**
 	 * Instantiates our URI converter given its delegate.
