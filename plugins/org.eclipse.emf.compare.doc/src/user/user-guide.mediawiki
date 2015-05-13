@@ -14,6 +14,7 @@ Using the bundled Eclipse marketplace client you can install EMF Compare in one 
 
 EMF has been part of the Eclipse release train since Galileo, you can install it using the following update sites, depending on your platform. '''Note''' that the following are not meant to be visited in your internet browser; they must be pasted in the ''Help > Install New Software'' dialog of your Eclipse, as p2 repositories.
 
+  http://download.eclipse.org/releases/mars
   http://download.eclipse.org/releases/luna
   http://download.eclipse.org/releases/kepler
   http://download.eclipse.org/releases/juno
@@ -30,8 +31,9 @@ Please note that the EMF Compare development team does its best to maintain down
 {| border="1"
 |-
 ! EMF Compare 
-! bgcolor="#cccccc" align="center" | Eclipse 4.4 - EMF 2.10
-! Eclipse 4.3 - EMF 2.9
+! bgcolor="#cccccc" align="center" | Eclipse 4.5 - EMF 2.11
+! align="center" | Eclipse 4.4 - EMF 2.10
+! align="center" | Eclipse 4.3 - EMF 2.9
 ! align="center" | Eclipse 4.2 - EMF 2.8
 ! align="center" | Eclipse 3.8 - EMF 2.8
 ! align="center" | Eclipse 3.7 - EMF 2.7
@@ -41,7 +43,21 @@ Please note that the EMF Compare development team does its best to maintain down
 ! align="center" | Eclipse 3.3 - EMF 2.3
 ! align="center" | Eclipse 3.2 - EMF 2.2
 |-
-| bgcolor="#cccccc" align="center" | 3.0
+| bgcolor="#cccccc" align="center" | 3.1
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#46a546" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
+|-
+| bgcolor="#ffffff" align="center" | 3.0
+| bgcolor="#ffffff" | &nbsp;
 | bgcolor="#46a546" | &nbsp;
 | bgcolor="#46a546" | &nbsp;
 | bgcolor="#46a546" | &nbsp;
@@ -55,6 +71,7 @@ Please note that the EMF Compare development team does its best to maintain down
 |-
 | align="center" | 2.1
 | bgcolor="#ffffff" | &nbsp;
+| bgcolor="#ffffff" | &nbsp;
 | bgcolor="#46a546" | &nbsp;
 | bgcolor="#46a546" | &nbsp;
 | bgcolor="#46a546" | &nbsp;
@@ -66,6 +83,7 @@ Please note that the EMF Compare development team does its best to maintain down
 | bgcolor="#9d261d" | &nbsp;
 |-
 | align="center" | 2.0
+| bgcolor="#ffffff" | &nbsp;
 | bgcolor="#ffffff" | &nbsp;
 | bgcolor="#ffffff" | &nbsp;
 | bgcolor="#46a546" | &nbsp;
@@ -81,6 +99,7 @@ Please note that the EMF Compare development team does its best to maintain down
 | bgcolor="#9d261d" | &nbsp;
 | bgcolor="#9d261d" | &nbsp;
 | bgcolor="#9d261d" | &nbsp;
+| bgcolor="#9d261d" | &nbsp;
 | bgcolor="#46a546" | &nbsp;
 | bgcolor="#46a546" | &nbsp;
 | bgcolor="#46a546" | &nbsp;
@@ -90,6 +109,7 @@ Please note that the EMF Compare development team does its best to maintain down
 | bgcolor="#9d261d" | &nbsp;
 |-
 | align="center" | 1.2 
+| bgcolor="#ffffff" | &nbsp;
 | bgcolor="#ffffff" | &nbsp;
 | bgcolor="#ffffff" | &nbsp;
 | bgcolor="#ffffff" | &nbsp;
@@ -105,6 +125,7 @@ Please note that the EMF Compare development team does its best to maintain down
 | bgcolor="#ffffff" | &nbsp;
 | bgcolor="#ffffff" | &nbsp;
 | bgcolor="#ffffff" | &nbsp;
+| bgcolor="#ffffff" | &nbsp;
 | bgcolor="#46a546" | &nbsp;
 | bgcolor="#46a546" | &nbsp;
 | bgcolor="#46a546" | &nbsp;
@@ -114,6 +135,7 @@ Please note that the EMF Compare development team does its best to maintain down
 | bgcolor="#9d261d" | &nbsp;
 |-
 | align="center" | 1.0 
+| bgcolor="#ffffff" | &nbsp;
 | bgcolor="#ffffff" | &nbsp;
 | bgcolor="#ffffff" | &nbsp;
 | bgcolor="#ffffff" | &nbsp;
@@ -210,6 +232,22 @@ When you compare models with one in a read-only mode, the icons are:
 *[[Image:./../images/merged_ov.gif|Accepted change]] represent a change that has been accepted.
 *[[Image:./../images/removed_ov.gif|Rejected change]] represent a change that has been rejected.
 
+==== Items for not loaded fragments ====
+
+When a model is split into fragments, and only some of them have changes, the structure merge viewer (upper part of the comparison editor) and the content merge viewers (lower parts of the comparison editor) display the models involved in the comparison but don’t display the fragments that have no changes.
+
+If a change (x) is detected in a fragment (B), and this fragment is a child of another fragment (A) that has no changes, then (A) won't appear in the structure merge viewer (upper part of the comparison editor) and the content merge viewers (lower parts of the comparison editor). As a result, users will think (B) is the root of the global model.
+
+To avoid this, the idea is to display intermediate node(s) (represented as [ ... ]) in order to show to users that it exists something (fragments, i.e. a parts of models) between/above the changes.
+
+{| border="1" cellpadding="5" cellspacing="0" align="center"
+|-
+! align="center" | Before
+! align="center" | After
+|-
+| [[Image:./../images/EMF_Compare_NotLoadedItems_1.png|650px|center]]
+| [[Image:./../images/EMF_Compare_NotLoadedItems_2.png|650px|center]]
+|}
 
 == Launch Comparison ==
 
@@ -233,7 +271,7 @@ You can also compare your local model with one of its previous version available
 
 [[Image:./../images/EMFC_Compare_With.png|center]]
 
-=== Compare with remote models ===
+=== Compare with remote models (EGit) ===
 
 The following displays the important part of a model life cycle with regards to the comparison. The full life cycle can be followed on [[./sample-use-case.html| Sample Use Case]]
 
@@ -313,6 +351,12 @@ The remaining two actions are those that actually interest us here we can either
 Accept '''all''' differences is not what we seek : we want to keep the changes we made locally, not revert them to the state they had before the branching point (which is their current state on ''master'', the right side). We will then select all ''incoming'' differences (under the ''Right side'' node) one after the other and merge them one by one. This gives us our merged model :
 
 [[Image:./../images/EMF_Compare_Merged.png|center]]
+
+==== Resource name changes ====
+
+In case of a comparison with remote models, EMF Compare will detect resource name changes. The comparison editor will allows you to accept or reject those changes. Furthermore, in case of a Papyrus diagram & model renaming (renaming all .di, .notation and .uml files), the 3 differences will be accepted or rejected together, in order to maintain the consistency of the models.
+
+[[Image:./../images/EMF_Compare_ResourceNameChange.png|center]]
 
 
 == Customization ==
@@ -395,6 +439,7 @@ On this page you will find all registered post processors. They have been sorted
 
 ==== Model Resolvers ====
 For each comparison, EMF Compare needs to define which resources are about to be compared. This scope is called the logical model (see [[./../developer/logical-model.html#What_is_a_logical_model_.3F | Logical Model]]). Model resolvers are used to define strategies to build this logical model.
+The model resolvers will try and find cross referenced resources starting from the compared one in order to determine the logical model that needs to be compared along with it. This can be used to widen or reduce the scope in which EMF Compare will seek these linked resources.
 
 To customize the model resolution behavior go to the "Resolution strategy" preference page.
 # Open preferences: Window -> Preferences
@@ -402,20 +447,19 @@ To customize the model resolution behavior go to the "Resolution strategy" prefe
 
 [[File:../images/EMF_Compare_Model_Resolver_Preference_Page.png]]
 
-===== Disable model resolution =====
-
-EMF Compare can prevent building the logical model. In that case, it will only compare the selected resources. To disable model resolution, uncheck the button called "Enable model resolution".
-
 ===== Choose a strategy =====
 
-By default, EMF Compare proposes 3 different strategies:
-* Default: This strategy will use the highest ranking model resolver contributed to the platform. With the basic EMF compare installation, this strategy will be "Resolve in project". 
-* Resolve in project: This strategy will resolve resources referenced by the current resource and all resources referencing the current resource within its containing project.
-* Resolve descendants: This strategy will resolve all resources referenced by the current resource.
-
-In order to ask EMF Compare to use a specific strategy, first enable the model resolution (if it's not already done) and select it in the combobox.
+EMF Compare proposes different strategies:
+* Workspace: Search for cross-references to (and from) the compared resource within all models from the workspace. '''This strategy is highly recommended in case of a comparison with remote models (EGit).'''
+* Project: Search for cross-references to (and from) the compared resource within all models from its containing project.
+* Container: Search for cross-references to (and from) the compared resource within all models from the same container.
+* Outgoing: Only search for cross-references from the compared resource to its children (and recursively).
 
 Other external strategies might be contributed to EMF Compare. In that case it may happen that the selected strategy can not handle a comparison. If it is so, EMF Compare will use the default strategy.
+
+===== Disable model resolution =====
+
+EMF Compare can prevent building the logical model. In that case, it will only compare the selected resources. To disable model resolution, check the button called "Disable model resolution".
 
 === User Interface customization ===
 
@@ -517,9 +561,10 @@ This features allows you to filter differences out of the structural view accord
 
 [[Image:./../images/EMF_Compare_Filters_Choice.png]]
 
+; Empty Resource Mappings : Filter out all resource mappings with no differences from the view. Enabled by default.
+; Feature Map differences : Filters out differences that apply on EFEatureMapEntry type.
 ; Pseudo conflicts differences : Filter out all pseudo conflicts differences (only in case of a 3-way comparison). Enabled by default.
 ; Identical elements : Filter out all identical elements (elements with no differences). Enabled by default.
-; Empty Resource Mappings : Filter out all resource mappings with no differences from the view. Enabled by default.
 ; Cascading differences : Filter out all differences that are contained under differences (except when in conflict). Enabled by default.
 
 PENDING UPDATE, this is a demo displaying EMF Compare 1.3 [http://www.eclipse.org/emf/compare/doc/features/videos/Filters/filters.htm Demo]
