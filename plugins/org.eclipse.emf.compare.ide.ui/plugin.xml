@@ -10,7 +10,8 @@
  
  Contributors:
      Obeo - initial API and implementation
-     Stefan Dirix - Bug 456699
+     Stefan Dirix - bug 456699
+     Michael Borkowski - bug 467191
 -->
 
 <plugin>
@@ -81,6 +82,12 @@
             label="%emf.compare.no.visible.item.viewer">
       </viewer>
       <viewer
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.OnlyPseudoConflictsViewerCreator"
+            extensions="org.eclipse.emf.compare.rcp.ui.eOnlyPseudoConflicts"
+            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.OnlyPseudoConflictsViewer"
+            label="%emf.compare.only.pseudo.conflicts.viewer">
+      </viewer>
+      <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.TextFallbackCompareViewerCreator"
             extensions=
             "org.eclipse.emf.compare.rcp.ui.fallbackText,
@@ -90,7 +97,8 @@
             org.eclipse.emf.compare.rcp.ui.eListDiff,
             org.eclipse.emf.compare.rcp.ui.eTextDiff,
             org.eclipse.emf.compare.rcp.ui.eNoDiff,
-            org.eclipse.emf.compare.rcp.ui.eNoVisibleItem"
+            org.eclipse.emf.compare.rcp.ui.eNoVisibleItem,
+            org.eclipse.emf.compare.rcp.ui.eOnlyPseudoConflicts"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.TextFallbackCompareViewer"
             label="%emf.compare.fallback.textcompare">
       </viewer>

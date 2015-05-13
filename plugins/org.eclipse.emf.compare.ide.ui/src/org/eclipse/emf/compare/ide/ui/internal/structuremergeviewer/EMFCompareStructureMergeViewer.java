@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Michael Borkowski - bug 467191
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -20,6 +21,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
@@ -65,6 +67,7 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
@@ -80,6 +83,7 @@ import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoDifferencesCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoVisibleItemCompareInput;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.OnlyPseudoConflictsCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
@@ -116,6 +120,7 @@ import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFi
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProviderChange;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.IDiagnosable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -1100,11 +1105,19 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			if (differences.isEmpty()) {
 				navigatable.fireOpen(new NoDifferencesCompareInput(compareInput));
 			} else if (!navigatable.hasChange(INavigatable.FIRST_CHANGE)) {
-				navigatable.fireOpen(new NoVisibleItemCompareInput(compareInput));
+				if (hasOnlyPseudoConflicts(differences)) {
+					navigatable.fireOpen(new OnlyPseudoConflictsCompareInput(compareInput));
+				} else {
+					navigatable.fireOpen(new NoVisibleItemCompareInput(compareInput));
+				}
 			} else {
 				navigatable.selectChange(INavigatable.FIRST_CHANGE);
 			}
 		}
+	}
+
+	private boolean hasOnlyPseudoConflicts(List<Diff> differences) {
+		return Iterators.all(differences.iterator(), EMFComparePredicates.hasConflict(ConflictKind.PSEUDO));
 	}
 
 	private void updateLayout(boolean displayProgress, boolean doLayout) {
