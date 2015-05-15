@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Michael Borkowski - extraction of nested classes 
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer;
 
@@ -16,12 +17,8 @@ import static org.junit.Assert.assertNull;
 
 import com.google.common.base.Strings;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.Navigatable;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.WrappableTreeViewer;
-import org.eclipse.swt.SWT;
+import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.TestContext.TestNavigatable;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Shell;
@@ -37,91 +34,6 @@ import org.junit.Test;
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
 public class NavigatableTest {
-	/**
-	 * Utils class used for creating the {@link Tree} and the {@link WrappableTreeViewer}.
-	 * 
-	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
-	 */
-	protected static final class TestContext {
-
-		/**
-		 * Number of elements in the testContext.
-		 */
-		private int counter = 0;
-
-		private Tree swtTree;
-
-		private Map<Integer, TreeItem> itemRetreiver;
-
-		private WrappableTreeViewer viewer;
-
-		private final Shell currentShell;
-
-		public TestContext(Shell shell) {
-			super();
-			currentShell = shell;
-			this.itemRetreiver = new HashMap<Integer, TreeItem>();
-		}
-
-		private Integer increment() {
-			return new Integer(counter++);
-		}
-
-		public Tree getTree() {
-			return swtTree;
-		}
-
-		public Item getItem(int id) {
-			return itemRetreiver.get(new Integer(id));
-		}
-
-		public int getNumberOfNodes() {
-			return counter - 1;
-		}
-
-		/**
-		 * Builds a {@link Tree}.
-		 * 
-		 * @param depth
-		 *            of the testContext
-		 * @param numberOfChildren
-		 *            number of chidlren by item.
-		 * @return {@link MockNavigatable}
-		 */
-		public MockNavigatable buildTree(int depth, int numberOfChildren) {
-			if (swtTree == null) {
-				swtTree = new Tree(currentShell, SWT.NONE);
-				swtTree.setData("root"); //$NON-NLS-1$
-				createSubNodes(swtTree, numberOfChildren, depth);
-				viewer = new WrappableTreeViewer(swtTree);
-				MockNavigatable navigatable = new MockNavigatable(viewer);
-				return navigatable;
-			} else {
-				throw new AssertionError("The tree can only be built once"); //$NON-NLS-1$
-			}
-		}
-
-		private void createSubNodes(Object parent, int numberOfChild, int depth) {
-			if (depth > 0) {
-				for (int childIndex = 0; childIndex < numberOfChild; childIndex++) {
-					final TreeItem item;
-					if (parent instanceof Tree) {
-						item = new TreeItem((Tree)parent, SWT.NONE);
-					} else {
-						item = new TreeItem((TreeItem)parent, SWT.NONE);
-					}
-					Integer increment = increment();
-					String name = String.valueOf(increment);
-					item.setText(name);
-					item.setData(name);
-					itemRetreiver.put(increment, item);
-					createSubNodes(item, numberOfChild, depth - 1);
-				}
-			}
-		}
-
-	}
-
 	private Shell shell;
 
 	protected TestContext testContext;
@@ -145,35 +57,11 @@ public class NavigatableTest {
 	}
 
 	/**
-	 * Inheriting class of {@link Navigatable} used for testing purpose.
-	 * 
-	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
-	 */
-	private static class MockNavigatable extends Navigatable {
-
-		public MockNavigatable(WrappableTreeViewer viewer) {
-			super(viewer, null);
-		}
-
-		// Makes it visible
-		@Override
-		protected Item getNextItem(Item previousItem) {
-			return super.getNextItem(previousItem);
-		}
-
-		// Makes it visible
-		@Override
-		protected Item getPreviousItem(Item previousItem) {
-			return super.getPreviousItem(previousItem);
-		}
-	}
-
-	/**
 	 * Test the iteration on an empty tree.
 	 */
 	@Test
 	public void emptyTree() {
-		MockNavigatable navigatable = testContext.buildTree(0, 0);
+		TestNavigatable navigatable = testContext.buildTree(0, 0);
 		assertAllNextItems(navigatable, testContext);
 		assertAllPreviousItems(navigatable, testContext);
 	}
@@ -199,7 +87,7 @@ public class NavigatableTest {
 	 */
 	@Test
 	public void littleTree() throws Exception {
-		MockNavigatable navigatable = testContext.buildTree(2, 2);
+		TestNavigatable navigatable = testContext.buildTree(2, 2);
 		assertAllNextItems(navigatable, testContext);
 		assertAllPreviousItems(navigatable, testContext);
 	}
@@ -224,7 +112,7 @@ public class NavigatableTest {
 	 */
 	@Test
 	public void deepTree() throws Exception {
-		MockNavigatable navigatable = testContext.buildTree(10, 1);
+		TestNavigatable navigatable = testContext.buildTree(10, 1);
 		assertAllNextItems(navigatable, testContext);
 		assertAllPreviousItems(navigatable, testContext);
 	}
@@ -249,7 +137,7 @@ public class NavigatableTest {
 	 */
 	@Test
 	public void wideTree() throws Exception {
-		MockNavigatable navigatable = testContext.buildTree(1, 10);
+		TestNavigatable navigatable = testContext.buildTree(1, 10);
 		assertAllNextItems(navigatable, testContext);
 		assertAllPreviousItems(navigatable, testContext);
 	}
@@ -261,7 +149,7 @@ public class NavigatableTest {
 	 */
 	@Test
 	public void bigTree() throws Exception {
-		MockNavigatable navigatable = testContext.buildTree(5, 5);
+		TestNavigatable navigatable = testContext.buildTree(5, 5);
 		// 0 = Root
 		// 3593 = Level 1
 		// 3843 = Level 2
@@ -273,23 +161,23 @@ public class NavigatableTest {
 		assertPreviousIterationStartingOn(navigatable, testContext, 0, 3593, 3843, 3874, 3850, 3904);
 	}
 
-	private void assertAllNextItems(MockNavigatable navigatable, TestContext context) {
+	private void assertAllNextItems(TestNavigatable navigatable, TestContext context) {
 		for (int startingElement = 0; startingElement <= context.getNumberOfNodes(); startingElement++) {
 			assertNextIterations(navigatable, context, startingElement);
 		}
 	}
 
-	private void assertNextIterationStartingOn(MockNavigatable navigatable, TestContext context,
+	private void assertNextIterationStartingOn(TestNavigatable navigatable, TestContext context,
 			int... startingElements) {
 		for (int startingElement : startingElements) {
 			assertNextIterations(navigatable, context, startingElement);
 		}
 	}
 
-	private void assertNextIterations(MockNavigatable navigatable, TestContext context, int startingElement) {
-		Item previousSelection = context.getItem(startingElement);
+	private void assertNextIterations(TestNavigatable navigatable, TestContext context, int startingElement) {
+		TreeItem previousSelection = context.getItem(startingElement);
 		for (int expectedElement = startingElement + 1; expectedElement <= context.getNumberOfNodes(); expectedElement++) {
-			Item nextItem = navigatable.getNextItem(previousSelection);
+			TreeItem nextItem = navigatable.getNextItem(previousSelection);
 			StringBuilder messageBuilder = new StringBuilder();
 			messageBuilder.append("Error with configuration: Starting iteration point=").append( //$NON-NLS-1$
 					startingElement).append(", previsous item=").append(previousSelection.getText()); //$NON-NLS-1$
@@ -301,24 +189,24 @@ public class NavigatableTest {
 		assertNull(navigatable.getNextItem(previousSelection));
 	}
 
-	private void assertAllPreviousItems(MockNavigatable navigatable, TestContext context) {
+	private void assertAllPreviousItems(TestNavigatable navigatable, TestContext context) {
 		for (int startingElement = 0; startingElement <= context.getNumberOfNodes(); startingElement++) {
 			assertPreviousIterations(navigatable, context, startingElement);
 		}
 	}
 
-	private void assertPreviousIterationStartingOn(MockNavigatable navigatable, TestContext context,
+	private void assertPreviousIterationStartingOn(TestNavigatable navigatable, TestContext context,
 			int... startingElements) {
 		for (int startingElement : startingElements) {
 			assertPreviousIterations(navigatable, context, startingElement);
 		}
 	}
 
-	private void assertPreviousIterations(MockNavigatable navigatable, TestContext context,
+	private void assertPreviousIterations(TestNavigatable navigatable, TestContext context,
 			int startingElement) {
-		Item previousSelection = context.getItem(startingElement);
+		TreeItem previousSelection = context.getItem(startingElement);
 		for (int expectedElement = startingElement - 1; expectedElement >= 0; expectedElement--) {
-			Item previousItem = navigatable.getPreviousItem(previousSelection);
+			TreeItem previousItem = navigatable.getPreviousItem(previousSelection);
 			StringBuilder messageBuilder = new StringBuilder();
 			messageBuilder.append("Error with configuration: Starting iteration point=").append( //$NON-NLS-1$
 					startingElement).append(", previsous item=").append(previousSelection.getText()); //$NON-NLS-1$
