@@ -160,7 +160,9 @@ public class DataGit {
 			final ITypedElement left = new StorageTypedElement(sourceProvider.getStorage(m), fullPath);
 			final ITypedElement right = new StorageTypedElement(remoteProvider.getStorage(m), fullPath);
 			final ITypedElement origin = new StorageTypedElement(ancestorProvider.getStorage(m), fullPath);
-			final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(new ThreadedModelResolver(),
+			final ThreadedModelResolver resolver = new ThreadedModelResolver();
+			resolver.initialize();
+			final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
 					new IdenticalResourceMinimizer(), storageAccessor);
 			scope = scopeBuilder.build(left, right, origin, m);
 
