@@ -290,42 +290,46 @@ public class ModelsResolution extends AbstractResolution {
 		final Set<URI> additionalURIs = new LinkedHashSet<URI>();
 		// Have we found new resources in the right as compared to the left?
 		Set<IStorage> differenceRightLeft = additional;
-		while (!differenceRightLeft.isEmpty()) {
+		boolean somethingToAdd = !differenceRightLeft.isEmpty();
+		while (somethingToAdd) {
+			somethingToAdd = false;
 			// There's at least one resource in the right that was not found in the left.
-			/*
-			 * This might be a new resource added on the right side... but it might also be a cross-reference
-			 * that's been either removed from left or added in right. In this second case, we need the
-			 * resource to be present in both traversals to make sure we'll be able to properly detect
-			 * potential conflicts. However, since this resource could itself be a part of a larger logical
-			 * model, we need to start the resolving again with it.
-			 */
+			// This might be a new resource added on the right side... but it might also be a cross-reference
+			// that's been either removed from left or added in right. In this second case, we need the
+			// resource to be present in both traversals to make sure we'll be able to properly detect
+			// potential conflicts. However, since this resource could itself be a part of a larger logical
+			// model, we need to start the resolving again with it.
 			final Set<IStorage> additionalLeft = findAdditionalRemoteTraversal(leftSet, differenceRightLeft,
 					DiffSide.SOURCE, tspm);
-			leftSet.addAll(additionalLeft);
-			for (IStorage storage : additionalLeft) {
-				final URI newURI = asURI().apply(storage);
-				if (additionalURIs.add(newURI)) {
-					additionalStorages.add(storage);
+			if (leftSet.addAll(additionalLeft)) {
+				somethingToAdd = true;
+				for (IStorage storage : additionalLeft) {
+					final URI newURI = asURI().apply(storage);
+					if (additionalURIs.add(newURI)) {
+						additionalStorages.add(storage);
+					}
 				}
 			}
-			/*
-			 * have we only loaded the resources that were present in the right but not in the left, or have
-			 * we found even more?
-			 */
+			// have we only loaded the resources that were present in the right but not in the left, or have
+			// we found even more?
 			final Set<IStorage> differenceAdditionalLeftRight = difference(additionalLeft, asURISet(rightSet));
 			// If so, we once more need to augment the right traversal
 			final Set<IStorage> additionalRight = findAdditionalRemoteTraversal(rightSet,
 					differenceAdditionalLeftRight, DiffSide.REMOTE, tspm);
-			rightSet.addAll(additionalRight);
-			for (IStorage storage : additionalRight) {
-				final URI newURI = asURI().apply(storage);
-				if (additionalURIs.add(newURI)) {
-					additionalStorages.add(storage);
+			if (rightSet.addAll(additionalRight)) {
+				somethingToAdd = true;
+				for (IStorage storage : additionalRight) {
+					final URI newURI = asURI().apply(storage);
+					if (additionalURIs.add(newURI)) {
+						additionalStorages.add(storage);
+					}
 				}
 			}
 			// Start this loop anew if we once again augmented the right further than what we had in
 			// left
-			differenceRightLeft = difference(additionalRight, asURISet(leftSet));
+			if (somethingToAdd) {
+				differenceRightLeft = difference(additionalRight, asURISet(leftSet));
+			}
 		}
 		return additionalStorages;
 	}
@@ -355,21 +359,15 @@ public class ModelsResolution extends AbstractResolution {
 	private void loadAdditionalRemoteStorages(Set<IStorage> leftSet, Set<IStorage> rightSet,
 			Set<IStorage> originSet, Set<IStorage> additional, ThreadSafeProgressMonitor tspm)
 			throws InterruptedException {
-		/*
-		 * This loop will be extremely costly at best, but we hope the case to be sufficiently rare (and the
-		 * new resources well spread when it happens) not to pose an issue in the most frequent cases.
-		 */
-
+		// This loop will be extremely costly at best, but we hope the case to be sufficiently rare (and the
+		// new resources well spread when it happens) not to pose an issue in the most frequent cases.
 		Set<IStorage> additionalStorages = additional;
 		while (!additionalStorages.isEmpty()) {
-			// There's at least one resource that is in the origin set yet neither in left nor in
-			// right.
+			// There's at least one resource that is in the origin set yet neither in left nor in right.
 			final Set<IStorage> additionalLeftRightComparedToOrigin = loadAdditionalRemoteStorages(leftSet,
 					rightSet, additionalStorages, tspm);
-			/*
-			 * Have we found even more resources to add to the traversal? If so, augment the origin
-			 * accordingly.
-			 */
+			// Have we found even more resources to add to the traversal? If so, augment the origin
+			// accordingly.
 			final Set<IStorage> additionalOrigin = findAdditionalRemoteTraversal(originSet,
 					additionalLeftRightComparedToOrigin, DiffSide.ORIGIN, tspm);
 			originSet.addAll(additionalOrigin);
