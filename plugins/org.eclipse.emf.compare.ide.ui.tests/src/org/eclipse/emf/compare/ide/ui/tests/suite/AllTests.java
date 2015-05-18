@@ -23,6 +23,8 @@ import org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.notloadedfragment
 import org.eclipse.emf.compare.ide.ui.tests.logical.modelprovider.EMFModelProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.DependencyGraphUpdaterTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.GraphResolutionTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.LocalMonitoredProxyCreationListenerTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.RemoteMonitoredProxyCreationListenerTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ResolutionEventsTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ResourceComputationSchedulerTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverGraphTest;
@@ -47,7 +49,9 @@ import org.junit.runners.Suite.SuiteClasses;
 		NotLoadedFragmentNodeTest.class, NotLoadedFragmentItemTest.class, ResolutionEventsTest.class,
 		ResourceComputationSchedulerTest.class, ThreadedModelResolverGraphTest.class,
 		ThreadedModelResolverWithCustomDependencyProviderTest.class, DependencyGraphUpdaterTest.class,
-		GraphResolutionTest.class, EMFModelProviderTest.class, MergeAllCommandTests.class })
+		GraphResolutionTest.class, EMFModelProviderTest.class, MergeAllCommandTests.class,
+		LocalMonitoredProxyCreationListenerTest.class,
+		RemoteMonitoredProxyCreationListenerTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

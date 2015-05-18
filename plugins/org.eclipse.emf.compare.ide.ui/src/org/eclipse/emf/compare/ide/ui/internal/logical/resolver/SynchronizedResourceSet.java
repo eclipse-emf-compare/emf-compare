@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Obeo.
+ * Copyright (c) 2011, 2014 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Michael Borkowski - public visibility
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
@@ -34,12 +35,13 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 
 /**
- * A thread-safe implementation of a ResourceSet that will prevent loading of resources unless explicitely
+ * A thread-safe implementation of a ResourceSet that will prevent loading of resources unless explicitly
  * demanded through {@link #loadResource(URI)}.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-class SynchronizedResourceSet extends ResourceSetImpl {
+// Visible for testing
+public class SynchronizedResourceSet extends ResourceSetImpl {
 	/** The logger. */
 	private static final Logger LOGGER = Logger.getLogger(SynchronizedResourceSet.class);
 

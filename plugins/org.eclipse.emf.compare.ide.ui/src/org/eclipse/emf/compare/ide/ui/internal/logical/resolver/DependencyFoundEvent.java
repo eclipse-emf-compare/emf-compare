@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - refactorings
+ *     Michael Borkowski - equals and hashCode
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
@@ -75,5 +76,55 @@ public class DependencyFoundEvent<T> {
 
 	public boolean hasParent() {
 		return parent.isPresent();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof DependencyFoundEvent<?>)) {
+			return false;
+		}
+
+		DependencyFoundEvent<?> event = (DependencyFoundEvent<?>)obj;
+
+		if ((from == null) != (event.from == null)) {
+			return false;
+		}
+		if ((to == null) != (event.to == null)) {
+			return false;
+		}
+		if ((parent == null) != (event.parent == null)) {
+			return false;
+		}
+
+		if (from != null && !from.equals(event.from)) {
+			return false;
+		}
+		if (to != null && !to.equals(event.to)) {
+			return false;
+		}
+		if (parent != null && !parent.equals(event.parent)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int hashCode;
+		if (from == null && to == null) {
+			hashCode = 0;
+		} else if (from == null) {
+			hashCode = to.hashCode();
+		} else if (to == null) {
+			hashCode = from.hashCode();
+		} else {
+			hashCode = from.hashCode() + to.hashCode();
+		}
+
+		if (parent != null) {
+			hashCode += parent.hashCode();
+		}
+
+		return hashCode;
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Michael Borkowski - public visibility
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
@@ -24,7 +25,8 @@ import org.eclipse.emf.ecore.resource.Resource;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-class LocalMonitoredProxyCreationListener extends AbstractMonitoredProxyCreationListener {
+// Visible for testing
+public class LocalMonitoredProxyCreationListener extends AbstractMonitoredProxyCreationListener {
 
 	/** The event bus to use to notify interesting events. */
 	protected final EventBus eventBus;
