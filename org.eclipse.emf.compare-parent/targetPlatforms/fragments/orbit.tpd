@@ -11,4 +11,6 @@ location "http://download.eclipse.org/tools/orbit/downloads/drops/R2014052502125
 	org.apache.commons.compress
 	org.kohsuke.args4j
 	/* Egit/Jgit */
+	org.mockito
+	org.hamcrest
 }
