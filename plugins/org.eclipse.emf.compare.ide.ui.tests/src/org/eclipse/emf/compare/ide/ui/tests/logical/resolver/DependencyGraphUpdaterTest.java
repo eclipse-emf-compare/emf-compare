@@ -7,29 +7,43 @@
  * 
  * Contributors:
  *     Philip Langer - initial API and implementation
+ *     Michael Borkowski - rewrite using Mockito
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.logical.resolver;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.Collections;
 
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.DependencyFoundEvent;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.DependencyGraphUpdater;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ResolvedEvent;
+import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ResourceRemovedEvent;
 import org.eclipse.emf.compare.internal.utils.Graph;
+import org.junit.Before;
 import org.junit.Test;
 
-@SuppressWarnings({"nls", "restriction" })
+@SuppressWarnings({"nls", "restriction", "cast", "unchecked" })
 public class DependencyGraphUpdaterTest {
+
+	Graph<String> graph;
+
+	DependencyGraphUpdater<String> sut;
+
+	@Before
+	public void setUp() {
+		graph = (Graph<String>)mock(Graph.class);
+		sut = new DependencyGraphUpdater<String>(graph, new EventBus());
+	}
 
 	@Test(expected = NullPointerException.class)
 	public void testInstantiationWithNullGraph() {
@@ -46,141 +60,71 @@ public class DependencyGraphUpdaterTest {
 		new DependencyGraphUpdater<String>(new Graph<String>(), new EventBus());
 	}
 
+	@Test
 	public void testInstantiationDoesNotModifyGraph() {
-		MockStringGraph graph = new MockStringGraph();
-		new DependencyGraphUpdater<String>(graph, new EventBus());
-		assertTrue(graph.addedElements.isEmpty());
-		assertTrue(graph.addedChildRelationships.isEmpty());
-		assertTrue(graph.addedParentRelationships.isEmpty());
-		assertFalse(graph.didRemove);
+		verifyZeroInteractions(graph);
 	}
 
 	@Test
 	public void testRecordNodeAddsNodeToGraph() {
-		MockStringGraph graph = new MockStringGraph();
-		DependencyGraphUpdater<String> updater = new DependencyGraphUpdater<String>(graph, new EventBus());
+		ResolvedEvent<String> event1, event2;
 
-		ResolvedEvent<String> resolvedEvent = new ResolvedEvent<String>("1");
-		updater.recordNode(resolvedEvent);
-		assertEquals(1, graph.addedElements.size());
-		assertEquals("1", graph.addedElements.get(0));
+		event1 = new ResolvedEvent<String>("1");
+		sut.recordNode(event1);
 
-		resolvedEvent = new ResolvedEvent<String>("2");
-		updater.recordNode(resolvedEvent);
-		assertEquals(2, graph.addedElements.size());
-		assertEquals("2", graph.addedElements.get(1));
+		event2 = new ResolvedEvent<String>("2");
+		sut.recordNode(event2);
+
+		verify(graph).add(event1.getNode());
+		verify(graph).add(event2.getNode());
+		verifyNoMoreInteractions(graph);
 	}
 
 	@Test
 	public void testRecordEdgeWithoutParent() {
-		MockStringGraph graph = new MockStringGraph();
-		DependencyGraphUpdater<String> updater = new DependencyGraphUpdater<String>(graph, new EventBus());
+		DependencyFoundEvent<String> event1, event2;
 
-		DependencyFoundEvent<String> event;
+		event1 = new DependencyFoundEvent<String>("from1", "to1");
+		sut.recordEdge(event1);
 
-		event = new DependencyFoundEvent<String>("from", "to");
-		updater.recordEdge(event);
-		assertAddedChildrenAtIndex(graph, "from", "to", 0);
+		event2 = new DependencyFoundEvent<String>("from2", "to2");
+		sut.recordEdge(event2);
 
-		event = new DependencyFoundEvent<String>("from2", "to2");
-		updater.recordEdge(event);
-		assertAddedChildrenAtIndex(graph, "from2", "to2", 1);
-	}
-
-	private void assertAddedChildrenAtIndex(MockStringGraph graph, String expectedFrom, String expectedTo,
-			int index) {
-		assertEquals(index + 1, graph.addedChildRelationships.size());
-		assertEquals(expectedFrom, graph.addedChildRelationships.get(index).element);
-		assertEquals(1, graph.addedChildRelationships.get(index).children.size());
-		assertEquals(expectedTo, graph.addedChildRelationships.get(index).children.iterator().next());
+		verify(graph).addChildren(event1.getFrom(), Collections.singleton(event1.getTo()));
+		verify(graph).addChildren(event2.getFrom(), Collections.singleton(event2.getTo()));
+		verifyNoMoreInteractions(graph);
 	}
 
 	@Test
 	public void testRecordEdgeWithParent() {
-		MockStringGraph graph = new MockStringGraph();
-		DependencyGraphUpdater<String> updater = new DependencyGraphUpdater<String>(graph, new EventBus());
+		DependencyFoundEvent<String> event1, event2;
 
-		DependencyFoundEvent<String> event;
+		event1 = new DependencyFoundEvent<String>("from1", "to1", Optional.of("parent"));
+		sut.recordEdge(event1);
 
-		event = new DependencyFoundEvent<String>("from", "to", Optional.of("parent"));
-		updater.recordEdge(event);
-		assertAddedChildrenAtIndex(graph, "from", "to", 0);
-		assertAddedParentAtIndex(graph, "to", "parent", 0);
+		verify(graph).addChildren(event1.getFrom(), Collections.singleton(event1.getTo()));
+		verify(graph).addParentData(event1.getTo(), event1.getParent().get());
 
-		event = new DependencyFoundEvent<String>("from2", "to2", Optional.of("parent2"));
-		updater.recordEdge(event);
-		assertAddedChildrenAtIndex(graph, "from2", "to2", 1);
-		assertAddedParentAtIndex(graph, "to2", "parent2", 1);
+		event2 = new DependencyFoundEvent<String>("from2", "to2", Optional.of("parent2"));
+		sut.recordEdge(event2);
+
+		verify(graph).addChildren(event2.getFrom(), Collections.singleton(event2.getTo()));
+		verify(graph).addParentData(event2.getTo(), event2.getParent().get());
 	}
 
-	private void assertAddedParentAtIndex(MockStringGraph graph, String to, String parent, int index) {
-		assertEquals(index + 1, graph.addedParentRelationships.size());
-		assertEquals(to, graph.addedParentRelationships.get(index).element);
-		assertEquals(parent, graph.addedParentRelationships.get(index).parent);
+	@Test
+	public void testRemoval() {
+		ResourceRemovedEvent<String> event;
+
+		sut.recordNode(new ResolvedEvent<String>("a"));
+		sut.recordNode(new ResolvedEvent<String>("b"));
+		sut.recordNode(new ResolvedEvent<String>("c"));
+		sut.recordNode(new ResolvedEvent<String>("d"));
+		event = new ResourceRemovedEvent<String>(Sets.newHashSet("a", "b", "c"));
+		sut.recordRemoval(event);
+
+		verify(graph, times(4)).add(anyString());
+		verify(graph).removeAll(event.getElements());
+		verifyNoMoreInteractions(graph);
 	}
-
-	private class MockStringGraph extends Graph<String> {
-
-		List<String> addedElements = new LinkedList<String>();
-
-		List<ChildRelationShip> addedChildRelationships = new LinkedList<ChildRelationShip>();
-
-		List<ParentRelationShip> addedParentRelationships = new LinkedList<ParentRelationShip>();
-
-		boolean didRemove = false;
-
-		@Override
-		public boolean add(String element) {
-			addedElements.add(element);
-			return super.add(element);
-		}
-
-		@Override
-		public void addChildren(String element, Set<String> newChildren) {
-			addedChildRelationships.add(new ChildRelationShip(element, newChildren));
-			super.addChildren(element, newChildren);
-		}
-
-		@Override
-		public void addParentData(String element, String parentData) {
-			addedParentRelationships.add(new ParentRelationShip(element, parentData));
-			super.addParentData(element, parentData);
-		}
-
-		@Override
-		public void remove(String element) {
-			didRemove = true;
-			super.remove(element);
-		}
-
-		@Override
-		public void removeAll(Collection<String> elements) {
-			didRemove = true;
-			super.removeAll(elements);
-		}
-
-	}
-
-	private class ChildRelationShip {
-		String element;
-
-		Set<String> children;
-
-		protected ChildRelationShip(String element, Set<String> children) {
-			this.element = element;
-			this.children = children;
-		}
-	}
-
-	private class ParentRelationShip {
-		String element;
-
-		String parent;
-
-		protected ParentRelationShip(String element, String parent) {
-			this.element = element;
-			this.parent = parent;
-		}
-	}
-
 }
