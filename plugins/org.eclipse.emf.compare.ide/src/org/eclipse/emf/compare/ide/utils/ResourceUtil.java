@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Michael Borkowski - bug 467677
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.utils;
 
@@ -14,11 +15,9 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.io.Closeables;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
@@ -131,34 +130,38 @@ public final class ResourceUtil {
 	 * @return <code>true</code> if {@code left} and {@code right} are binary identical.
 	 */
 	public static boolean binaryIdentical(IStorage left, IStorage right) {
-		Reader leftReader = null;
-		Reader rightReader = null;
+		BufferedInputStream leftStream = null;
+		BufferedInputStream rightStream = null;
 		try {
-			leftReader = new BufferedReader(new InputStreamReader(left.getContents()));
-			rightReader = new BufferedReader(new InputStreamReader(right.getContents()));
+			final int maxBufferSize = 8192;
+			final byte[] buffer = new byte[maxBufferSize];
 
-			final int bufferSize = 16384;
-			final char[] leftBuff = new char[bufferSize];
-			final char[] rightBuff = new char[bufferSize];
-			int readLeft = leftReader.read(leftBuff);
-			int readRight = rightReader.read(rightBuff);
-			while (readLeft > 0 && readRight > 0 && equalArrays(readLeft, readRight, leftBuff, rightBuff)) {
-				readLeft = leftReader.read(leftBuff);
-				readRight = rightReader.read(rightBuff);
-			}
-			// One last check in case we've reached the end of one side but not of the other
-			return equalArrays(readLeft, readRight, leftBuff, rightBuff);
+			leftStream = new BufferedInputStream(left.getContents(), maxBufferSize);
+			rightStream = new BufferedInputStream(right.getContents(), maxBufferSize);
+
+			int readLeft;
+			boolean identical = true;
+			do {
+				readLeft = leftStream.read(buffer, 0, buffer.length);
+				if (readLeft == -1) {
+					// check if there is anything left to read on right
+					identical = rightStream.read() == -1;
+					break;
+				}
+				if (!verifyNextBytes(rightStream, buffer, 0, readLeft)) {
+					identical = false;
+					break;
+				}
+			} while (readLeft > 0);
+
+			return identical;
 		} catch (CoreException e) {
 			logError(e);
 		} catch (IOException e) {
 			logError(e);
 		} finally {
-			if (leftReader != null) {
-				Closeables.closeQuietly(leftReader);
-			}
-			if (rightReader != null) {
-				Closeables.closeQuietly(rightReader);
-			}
+			Closeables.closeQuietly(leftStream);
+			Closeables.closeQuietly(rightStream);
 		}
 		return false;
 	}
@@ -177,45 +180,75 @@ public final class ResourceUtil {
 	 * @return <code>true</code> if {@code left}, {@code right} and {@code origin} are binary identical.
 	 */
 	public static boolean binaryIdentical(IStorage left, IStorage right, IStorage origin) {
-		Reader leftReader = null;
-		Reader rightReader = null;
-		Reader originReader = null;
+		BufferedInputStream leftStream = null;
+		BufferedInputStream rightStream = null;
+		BufferedInputStream originStream = null;
 		try {
-			leftReader = new BufferedReader(new InputStreamReader(left.getContents()));
-			rightReader = new BufferedReader(new InputStreamReader(right.getContents()));
-			originReader = new BufferedReader(new InputStreamReader(origin.getContents()));
+			final int maxBufferSize = 8192;
+			final byte[] buffer = new byte[maxBufferSize];
 
-			final int bufferSize = 16384;
-			final char[] leftBuff = new char[bufferSize];
-			final char[] rightBuff = new char[bufferSize];
-			final char[] originBuff = new char[bufferSize];
-			int readLeft = leftReader.read(leftBuff);
-			int readRight = rightReader.read(rightBuff);
-			int readOrigin = originReader.read(originBuff);
-			while (readLeft > 0 && readRight > 0 && readOrigin > 0
-					&& equalArrays(readLeft, readRight, readOrigin, leftBuff, rightBuff, originBuff)) {
-				readLeft = leftReader.read(leftBuff);
-				readRight = rightReader.read(rightBuff);
-				readOrigin = originReader.read(originBuff);
-			}
-			// One last check in case we've reached the end of one side but not of the other
-			return equalArrays(readLeft, readRight, readOrigin, leftBuff, rightBuff, originBuff);
+			leftStream = new BufferedInputStream(left.getContents(), maxBufferSize);
+			rightStream = new BufferedInputStream(right.getContents(), maxBufferSize);
+			originStream = new BufferedInputStream(origin.getContents(), maxBufferSize);
+
+			int readLeft;
+			boolean identical = true;
+			do {
+				readLeft = leftStream.read(buffer, 0, buffer.length);
+				if (readLeft == -1) {
+					// check if there is anything left to read on right or origin
+					identical = rightStream.read() == -1 && originStream.read() == -1;
+					break;
+				}
+				if (!verifyNextBytes(rightStream, buffer, 0, readLeft)
+						|| !verifyNextBytes(originStream, buffer, 0, readLeft)) {
+					identical = false;
+					break;
+				}
+			} while (readLeft > 0);
+
+			return identical;
 		} catch (CoreException e) {
 			logError(e);
 		} catch (IOException e) {
 			logError(e);
 		} finally {
-			if (leftReader != null) {
-				Closeables.closeQuietly(leftReader);
-			}
-			if (rightReader != null) {
-				Closeables.closeQuietly(rightReader);
-			}
-			if (originReader != null) {
-				Closeables.closeQuietly(originReader);
-			}
+			Closeables.closeQuietly(leftStream);
+			Closeables.closeQuietly(rightStream);
+			Closeables.closeQuietly(originStream);
 		}
 		return false;
+	}
+
+	/**
+	 * Verifies whether the next <code>length</code> bytes coming from <code>stream</code> equal
+	 * <code>bytes</code> at offset <code>offset</code>.
+	 * 
+	 * @param stream
+	 *            The stream to read bytes from
+	 * @param bytes
+	 *            The array of bytes to compare to (from offset of <code>offset</code> bytes)
+	 * @param offset
+	 *            The offset in the byte array to use
+	 * @param length
+	 *            The amount of bytes to verify
+	 * @return <code>true</code> if there are at least <code>length</code> bytes in the stream and they equal
+	 *         the provided bytes
+	 * @throws IOException
+	 *             If an I/O problem occurs
+	 */
+	private static boolean verifyNextBytes(InputStream stream, byte[] bytes, int offset, int length)
+			throws IOException {
+		int done = 0;
+		byte[] buffer = new byte[offset + length];
+		while (done < length) {
+			int read = stream.read(buffer, offset + done, length - done);
+			if (read == -1 || !equalArrays(offset + done, read, bytes, buffer)) {
+				return false;
+			}
+			done += read;
+		}
+		return true;
 	}
 
 	/**
@@ -447,73 +480,31 @@ public final class ResourceUtil {
 	}
 
 	/**
-	 * Checks whether the two arrays contain identical data in the {@code [0:length]} range. Note that we
-	 * won't even check the arrays' contents if {@code length1} is not equal to {@code length2}.
+	 * Checks whether the two arrays contain identical data in the {@code [0:length]} range.
 	 * 
-	 * @param length1
-	 *            Length of the data range to check within {@code array1}.
-	 * @param length2
-	 *            Length of the data range to check within {@code array2}.
+	 * @param offset
+	 *            The offset at which to start comparing
+	 * @param length
+	 *            Length of the data range to check within the arrays.
 	 * @param array1
 	 *            First of the two arrays which content we need to check.
 	 * @param array2
 	 *            Second of the two arrays which content we need to check.
-	 * @return <code>true</code> if the two given arrays contain identical data in the {@code [0:length]}
-	 *         range.
+	 * @return <code>true</code> if the two given arrays contain identical data in the
+	 *         {@code [offset..offset+length]} range.
 	 */
-	private static boolean equalArrays(int length1, int length2, char[] array1, char[] array2) {
-		if (length1 == length2) {
-			boolean result = true;
-			if (array1 == array2) {
-				result = true;
-			} else if (array1 == null || array2 == null) {
-				result = false;
-			} else {
-				for (int i = 0; i < length1 && result; i++) {
-					result = array1[i] == array2[i];
-				}
+	private static boolean equalArrays(int offset, int length, byte[] array1, byte[] array2) {
+		boolean result = true;
+		if (array1 == array2) {
+			result = true;
+		} else if (array1 == null || array2 == null) {
+			result = false;
+		} else {
+			for (int i = offset; result && i < offset + length; i++) {
+				result = array1[i] == array2[i];
 			}
-			return result;
 		}
-		return false;
-	}
-
-	/**
-	 * Checks whether the three arrays contain identical data in the {@code [0:length]} range. Note that we
-	 * will only check the arrays' contents if {@code length1} is equal to {@code length2} and {@code length3}
-	 * .
-	 * 
-	 * @param length1
-	 *            Length of the data range to check within {@code array1}.
-	 * @param length2
-	 *            Length of the data range to check within {@code array2}.
-	 * @param length3
-	 *            Length of the data range to check within {@code array3}.
-	 * @param array1
-	 *            First of the three arrays which content we need to check.
-	 * @param array2
-	 *            Second of the three arrays which content we need to check.
-	 * @param array3
-	 *            Third of the three arrays which content we need to check.
-	 * @return <code>true</code> if the three given arrays contain identical data in the {@code [0:length]}
-	 *         range.
-	 */
-	private static boolean equalArrays(int length1, int length2, int length3, char[] array1, char[] array2,
-			char[] array3) {
-		if (length1 == length2 && length1 == length3) {
-			boolean result = true;
-			if (array1 == array2 && array1 == array3) {
-				result = true;
-			} else if (array1 == null || array2 == null || array3 == null) {
-				result = false;
-			} else {
-				for (int i = 0; i < length1 && result; i++) {
-					result = array1[i] == array2[i] && array1[i] == array3[i];
-				}
-			}
-			return result;
-		}
-		return false;
+		return result;
 	}
 
 	/**
