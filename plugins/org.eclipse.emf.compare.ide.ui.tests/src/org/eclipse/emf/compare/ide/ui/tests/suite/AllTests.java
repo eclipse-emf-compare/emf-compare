@@ -17,6 +17,7 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.ide.ui.tests.command.MergeAllCommandTests;
 import org.eclipse.emf.compare.ide.ui.tests.compareconfiguration.EMFCompareConfigurationTest;
 import org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.notloadedfragment.NotLoadedFragmentItemTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.modelprovider.EMFModelProviderTest;
@@ -46,7 +47,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		NotLoadedFragmentNodeTest.class, NotLoadedFragmentItemTest.class, ResolutionEventsTest.class,
 		ResourceComputationSchedulerTest.class, ThreadedModelResolverGraphTest.class,
 		ThreadedModelResolverWithCustomDependencyProviderTest.class, DependencyGraphUpdaterTest.class,
-		GraphResolutionTest.class, EMFModelProviderTest.class })
+		GraphResolutionTest.class, EMFModelProviderTest.class, MergeAllCommandTests.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

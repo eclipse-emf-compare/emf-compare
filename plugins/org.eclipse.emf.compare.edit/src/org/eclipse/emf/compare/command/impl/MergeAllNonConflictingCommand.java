@@ -10,23 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.command.impl;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.not;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
-
 import com.google.common.annotations.Beta;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.ConflictKind;
-import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.internal.domain.IMergeAllNonConflictingRunnable;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
@@ -64,8 +53,12 @@ public class MergeAllNonConflictingCommand extends AbstractCopyCommand {
 	public MergeAllNonConflictingCommand(ChangeRecorder changeRecorder, Collection<Notifier> notifiers,
 			Comparison comparison, boolean leftToRight, IMerger.Registry mergerRegistry,
 			IMergeAllNonConflictingRunnable runnable) {
-		super(changeRecorder, notifiers, getDifferencesToMerge(comparison, leftToRight), leftToRight,
-				mergerRegistry);
+		// We don't use differences in this case.
+		// The IMergeAllNonConflictingRunnable computes all differences he needs.
+		// So just take the differences to let the command executable.
+		// (A command with no differences isn't executable; see
+		// org.eclipse.emf.compare.command.impl.AbstractCopyCommand.canExecute())
+		super(changeRecorder, notifiers, comparison.getDifferences(), leftToRight, mergerRegistry);
 		this.comparison = comparison;
 		this.runnable = runnable;
 	}
@@ -78,34 +71,5 @@ public class MergeAllNonConflictingCommand extends AbstractCopyCommand {
 	@Override
 	protected void doExecute() {
 		runnable.merge(comparison, isLeftToRight(), mergerRegistry);
-	}
-
-	/**
-	 * Returns the set of differences this command will operate on.
-	 * <p>
-	 * <b>Note</b> that this is not the set of affected objects! The command will operate on all of these
-	 * differences, but only after execution can we tell whether the diffs have actually been merged.
-	 * </p>
-	 * 
-	 * @param comparison
-	 *            The comparison we're operating on.
-	 * @param leftToRight
-	 *            Direction of the merge.
-	 * @return The list of differences this command will try and merge
-	 */
-	private static List<Diff> getDifferencesToMerge(Comparison comparison, boolean leftToRight) {
-		final boolean threeWay = comparison.isThreeWay();
-		final Iterable<Diff> diffs;
-		if (threeWay && leftToRight) {
-			diffs = Iterables.filter(comparison.getDifferences(), and(fromSide(DifferenceSource.LEFT),
-					not(hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO))));
-		} else if (threeWay) {
-			diffs = Iterables.filter(comparison.getDifferences(), and(fromSide(DifferenceSource.RIGHT),
-					not(hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO))));
-		} else {
-			// We're in a 2way-comparison, so all differences come from left side.
-			diffs = Iterables.filter(comparison.getDifferences(), fromSide(DifferenceSource.LEFT));
-		}
-		return Lists.newArrayList(diffs);
 	}
 }

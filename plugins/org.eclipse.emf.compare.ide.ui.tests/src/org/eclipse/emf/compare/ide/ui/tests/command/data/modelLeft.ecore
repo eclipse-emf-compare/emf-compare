@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmi:id="_packageRoot" name="MergeAllActions" nsURI="http:///org/eclipse/emf/examples/library/extlibrary.ecore/1.0.0"
+    nsPrefix="emfc">
+  <eClassifiers xsi:type="ecore:EClass" xmi:id="_RightDelete1" name="RightDelete1"/>
+  <eClassifiers xsi:type="ecore:EClass" xmi:id="_RightDelete2" name="RightDelete2"/>
+  <eClassifiers xsi:type="ecore:EClass" xmi:id="_RightDelete3" name="RightDelete3"/>
+  <eClassifiers xsi:type="ecore:EClass" xmi:id="_LeftAdd1" name="LeftAdd1"/>
+  <eClassifiers xsi:type="ecore:EClass" xmi:id="_LeftAdd2" name="LeftAdd2"/>
+  <eClassifiers xsi:type="ecore:EClass" xmi:id="_LeftAdd3" name="LeftAdd3"/>
+</ecore:EPackage>

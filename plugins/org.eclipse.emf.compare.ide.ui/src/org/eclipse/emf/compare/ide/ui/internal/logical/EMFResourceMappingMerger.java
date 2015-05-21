@@ -236,7 +236,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 		if (hasRealConflict(comparison)) {
 			// pre-merge what can be
 			final Graph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison,
-					mergerRegistry, true);
+					mergerRegistry, true, null);
 			final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
 			final Monitor emfMonitor = BasicMonitor.toMonitor(subMonitor.newChild(5)); // 100%
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.internal.merge;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
@@ -56,16 +57,20 @@ public final class MergeDependenciesUtil {
 	 *            The {@link IMerger.Registry merger registry} currently in use.
 	 * @param mergeRightToLeft
 	 *            The direction in which we're preparing a merge.
+	 * @param mergeMode
+	 *            The merge mode. If MergeMode is null, then no differences will be filtered.
 	 * @return The dependency graph of this comparison's differences.
 	 */
 	public static Graph<Diff> mapDifferences(Comparison comparison, IMerger.Registry mergerRegistry,
-			boolean mergeRightToLeft) {
+			boolean mergeRightToLeft, MergeMode mergeMode) {
 		Graph<Diff> differencesGraph = new Graph<Diff>();
 		final Predicate<? super Diff> filter;
-		if (mergeRightToLeft) {
+		if (mergeMode == MergeMode.RIGHT_TO_LEFT) {
 			filter = fromSide(DifferenceSource.RIGHT);
-		} else {
+		} else if (mergeMode == MergeMode.LEFT_TO_RIGHT) {
 			filter = fromSide(DifferenceSource.LEFT);
+		} else {
+			filter = Predicates.alwaysTrue();
 		}
 		for (Diff diff : Iterables.filter(comparison.getDifferences(), filter)) {
 			final IMerger merger = mergerRegistry.getHighestRankingMerger(diff);

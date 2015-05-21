@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -375,12 +375,16 @@ public final class MergeViewerUtil {
 		final boolean markAsMerged;
 		if (diff.getState() == DifferenceState.MERGED) {
 			IMergeData mergeData = (IMergeData)EcoreUtil.getExistingAdapter(diff, IMergeData.class);
-			boolean leftEditable = compareConfiguration.isLeftEditable();
-			boolean rightEditable = compareConfiguration.isRightEditable();
-			MergeMode mergeMode = mergeData.getMergeMode();
-			MergeOperation mergeAction = mergeMode.getMergeAction(diff, leftEditable, rightEditable);
-			if (mergeAction == MergeOperation.MARK_AS_MERGE) {
-				markAsMerged = true;
+			if (mergeData != null) {
+				boolean leftEditable = compareConfiguration.isLeftEditable();
+				boolean rightEditable = compareConfiguration.isRightEditable();
+				MergeMode mergeMode = mergeData.getMergeMode();
+				MergeOperation mergeAction = mergeMode.getMergeAction(diff, leftEditable, rightEditable);
+				if (mergeAction == MergeOperation.MARK_AS_MERGE) {
+					markAsMerged = true;
+				} else {
+					markAsMerged = false;
+				}
 			} else {
 				markAsMerged = false;
 			}
