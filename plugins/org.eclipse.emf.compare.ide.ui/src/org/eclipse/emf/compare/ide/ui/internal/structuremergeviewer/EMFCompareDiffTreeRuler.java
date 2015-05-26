@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -220,13 +220,26 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 
 	private TreeItem findFirstAncestorTreeItem(TreeNode node) {
 		CompareInputAdapter cia = findFirstAncestorCompareInputAdapter(node);
-		Object item = fTreeViewer.testFindItem(cia);
+		Object item;
+		if (cia != null) {
+			item = fTreeViewer.testFindItem(cia);
+		} else {
+			item = null;
+		}
 		TreeNode parent = node;
 		while (!(item instanceof TreeItem) && (parent = parent.getParent()) != null) {
 			cia = findFirstAncestorCompareInputAdapter(parent);
-			item = fTreeViewer.testFindItem(cia);
+			if (cia != null) {
+				item = fTreeViewer.testFindItem(cia);
+			} else {
+				item = null;
+			}
 		}
-		return (TreeItem)item;
+		if (item instanceof TreeItem) {
+			return (TreeItem)item;
+		} else {
+			return null;
+		}
 	}
 
 	private CompareInputAdapter findFirstAncestorCompareInputAdapter(TreeNode node) {
