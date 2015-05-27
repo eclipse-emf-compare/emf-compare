@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,13 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Michael Borkowski - bug 467576
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
 import static org.eclipse.emf.compare.utils.ReferenceUtil.getAsList;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -23,6 +25,7 @@ import org.eclipse.emf.compare.util.CompareSwitch;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * This utility class holds methods that will be used by the diff and merge processes.
@@ -149,7 +152,7 @@ public final class MatchUtil {
 					throw new IllegalArgumentException();
 				}
 				if (source == DifferenceSource.LEFT) {
-					if (getAsList(match.getLeft(), feature).contains(value)) {
+					if (featureContains(match.getLeft(), feature, value)) {
 						result = match.getLeft();
 					} else if (comparison.isThreeWay()) {
 						result = match.getOrigin();
@@ -157,7 +160,7 @@ public final class MatchUtil {
 						result = match.getRight();
 					}
 				} else {
-					if (getAsList(match.getRight(), feature).contains(value)) {
+					if (featureContains(match.getRight(), feature, value)) {
 						result = match.getRight();
 					} else if (comparison.isThreeWay()) {
 						result = match.getOrigin();
@@ -171,6 +174,45 @@ public final class MatchUtil {
 				// no other case for now.
 		}
 		return result;
+	}
+
+	/**
+	 * Determines whether the given feature of the given {@link EObject} contains the provided value, while
+	 * correctly handling proxies (in other words, in case of proxies, the proxy URI is compared instead of
+	 * the objects, which would otherwise lead to false negatives).
+	 * 
+	 * @param eObject
+	 *            The object of which a feature is to be checked
+	 * @param feature
+	 *            The feature of which containment is to be checked
+	 * @param value
+	 *            The value which is to be verified in the feature
+	 * @return <code>true</code> if the feature contains the given value
+	 */
+	// public for testing
+	public static boolean featureContains(EObject eObject, EStructuralFeature feature, Object value) {
+		URI proxyUri = null;
+		if (value instanceof EObject) {
+			EObject eObjectValue = (EObject)value;
+			proxyUri = EcoreUtil.getURI(eObjectValue);
+		}
+
+		for (Object element : getAsList(eObject, feature)) {
+			if (element == value) {
+				return true;
+			}
+			if (element != null && element.equals(value)) {
+				return true;
+			}
+			if (proxyUri != null && element instanceof EObject) {
+				EObject eObjectElement = (EObject)element;
+				if (eObjectElement.eIsProxy() && EcoreUtil.getURI(eObjectElement).equals(proxyUri)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
