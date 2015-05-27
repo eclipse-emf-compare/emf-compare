@@ -362,7 +362,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * @see #compareInputChanged(ICompareInput, IProgressMonitor)
 	 */
 	private void initToolbar() {
-		SWTUtil.safeAsyncExec(new Runnable() {
+		SWTUtil.safeSyncExec(new Runnable() {
 
 			public void run() {
 				toolBar.initToolbar(getViewer(), navigatable);
