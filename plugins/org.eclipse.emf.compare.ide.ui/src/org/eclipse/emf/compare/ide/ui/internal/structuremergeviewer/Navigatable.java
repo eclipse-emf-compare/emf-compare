@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -219,7 +219,7 @@ public class Navigatable implements INavigatable {
 
 	// Protected for testing purpose
 	protected Item getNextItem(Item previousItem) {
-		final Item result;
+		final TreeItem result;
 		TreeItem firstChild = getFirstChild(previousItem);
 		if (firstChild != null) {
 			result = firstChild;
@@ -231,9 +231,9 @@ public class Navigatable implements INavigatable {
 				result = getAncestorSibling(previousItem);
 			}
 		}
-		if (result instanceof TreeItem && result.getData() == null) {
+		if (result != null && result.getData() == null) {
 			// This is a dummy object for yet to be created children
-			final TreeItem parentItem = ((TreeItem)result).getParentItem();
+			final TreeItem parentItem = result.getParentItem();
 			if (parentItem != null) {
 				viewer.createChildren(parentItem);
 			} else {
@@ -246,7 +246,7 @@ public class Navigatable implements INavigatable {
 
 	// Protected for testing purpose
 	protected Item getPreviousItem(Item previousItem) {
-		final Item result;
+		final TreeItem result;
 		TreeItem previousSibling = getPreviousSibling(previousItem);
 		if (previousSibling != null) {
 			result = getDeepestChild(previousSibling);
@@ -258,9 +258,9 @@ public class Navigatable implements INavigatable {
 				result = null;
 			}
 		}
-		if (result instanceof TreeItem && result.getData() == null) {
+		if (result != null && result.getData() == null) {
 			// This is a dummy object for yet to be created children
-			final TreeItem parentItem = ((TreeItem)result).getParentItem();
+			final TreeItem parentItem = result.getParentItem();
 			if (parentItem != null) {
 				viewer.createChildren(parentItem);
 			} else {
