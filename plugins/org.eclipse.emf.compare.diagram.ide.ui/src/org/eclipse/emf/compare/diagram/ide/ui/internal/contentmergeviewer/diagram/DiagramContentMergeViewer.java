@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -88,6 +88,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
+@SuppressWarnings("restriction")
 public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 
 	/**
@@ -390,7 +391,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			// The selected difference is a good candidate and decorators exist for it
 			if (decorators != null && !decorators.isEmpty()) {
 				revealDecorators((Collection<? extends AbstractDecorator>)decorators);
-				// removeAll();
 			}
 		}
 
@@ -1248,7 +1248,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * @return True if the view changed its location, False otherwise.
 		 */
 		private boolean hasChange(View referenceView, MergeViewerSide targetSide) {
-			DifferenceKind lookup = DifferenceKind.CHANGE;
 			View extremity = (View)getMatchView(referenceView, targetSide);
 			// Look for a related change coordinates on the extremity of the edge reference.
 			Collection<Diff> diffs = Collections2.filter(getCompareConfiguration().getComparison()
@@ -1283,18 +1282,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				edgeEditPart = getOrCreatePhantomEditPart(referenceEdge, referenceSide, targetSide);
 
 				if (edgeEditPart instanceof ConnectionEditPart) {
-
-					View edgeSourceReference = (View)((ConnectionEditPart)edgeEditPartReference).getSource()
-							.getModel();
-					if (edgeSourceReference == null) {
-						edgeSourceReference = referenceEdge.getSource();
-					}
-					View edgeTargetReference = (View)((ConnectionEditPart)edgeEditPartReference).getTarget()
-							.getModel();
-					if (edgeTargetReference == null) {
-						edgeTargetReference = referenceEdge.getTarget();
-					}
-
 					EditPart edgeSourceEp = getOrCreateExtremityPhantomEditPart(
 							((ConnectionEditPart)edgeEditPartReference).getSource(), referenceSide,
 							targetSide);
@@ -1306,7 +1293,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 							targetSide);
 
 					((ConnectionEditPart)edgeEditPart).setTarget(edgeTargetEp);
-
 				}
 			}
 			return edgeEditPart;
@@ -1630,22 +1616,15 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 				Marker marker = new Marker(referenceLayer, side, referenceView, referenceFigure, diff);
 
 				if (isNodeList(referenceView)) {
-
 					markerFigure = new NodeListFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
 							referenceBounds, false);
-
-				} else if (referenceView instanceof Edge) {
-
-					if (referenceFigure instanceof PolylineConnection) {
-						markerFigure = new EdgeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
-								referenceBounds, false);
-					}
-
+				} else if (referenceView instanceof Edge && referenceFigure instanceof PolylineConnection) {
+					markerFigure = new EdgeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
+							referenceBounds, false);
 				}
 
 				// Default case: Nodes
 				if (markerFigure == null) {
-
 					markerFigure = new NodeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure,
 							referenceBounds, false);
 				}
@@ -1855,13 +1834,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		getAncestorMergeViewer().getGraphicalViewer().flush();
 
 		if (left instanceof IDiagramNodeAccessor) {
-
-			// if (fCurrentSelectedDiff != null && fCurrentSelectedDiff.getState() != DifferenceState.MERGED)
-			// {
-			// fDecoratorsManager.hideDecorators(fCurrentSelectedDiff);
-			// }
-			// fCurrentSelectedDiff = null;
-
 			// Compute and display the decorators related to the selected difference (if not merged and
 			// different from the current one)
 			if (left instanceof IDiagramDiffAccessor) {
@@ -1899,11 +1871,10 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			if (command instanceof CopyCommand) {
 				Iterator<DiagramDiff> diffs = Iterators.filter(command.getAffectedObjects().iterator(),
 						DiagramDiff.class);
-				while (diffs.hasNext()) {
-					DiagramDiff diagramDiff = diffs.next();
+				if (diffs.hasNext()) {
+					// force the computation for the next decorator reveal.
 					fDecoratorsManager.hideAll();
-					fDecoratorsManager.removeAll(); // force the computation for the next
-					// decorator reveal.
+					fDecoratorsManager.removeAll();
 				}
 			}
 		}
