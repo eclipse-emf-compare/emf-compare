@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,19 +60,9 @@ public class SingleStructuralFeatureAccessorImpl extends AbstractStructuralFeatu
 
 		// there can be only one diff on !many structural feature.
 		Diff diff = getInitialDiff();
-
-		final ImmutableList<? extends IMergeViewerItem> ret;
-		if (thisSideValue == null) {
-			IMergeViewerItem insertionPoint = new MergeViewerItem(getComparison(), diff, leftValue,
-					rightValue, ancestorValue, getSide(), getRootAdapterFactory());
-			ret = ImmutableList.of(insertionPoint);
-		} else {
-			IMergeViewerItem matchedObject = new MergeViewerItem(getComparison(), diff, leftValue,
-					rightValue, ancestorValue, getSide(), getRootAdapterFactory());
-			ret = ImmutableList.of(matchedObject);
-		}
-
-		return ret;
+		IMergeViewerItem insertionPoint = new MergeViewerItem(getComparison(), diff, leftValue, rightValue,
+				ancestorValue, getSide(), getRootAdapterFactory());
+		return ImmutableList.of(insertionPoint);
 	}
 
 	/**
