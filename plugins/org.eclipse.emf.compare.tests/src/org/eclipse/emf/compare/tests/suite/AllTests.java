@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Philip Langer - Adds additional test classes
  *     Stefan Dirix - Adds additional test classes
+ *     Michael Borkowski - Adds additional test classes
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.suite;
 
@@ -60,6 +61,7 @@ import org.eclipse.emf.compare.tests.rcp.AllRCPTests;
 import org.eclipse.emf.compare.tests.req.ReqComputingTest;
 import org.eclipse.emf.compare.tests.scope.DefaultComparisonScopeTest;
 import org.eclipse.emf.compare.tests.utils.EqualityHelperTest;
+import org.eclipse.emf.compare.tests.utils.MatchUtilFeatureContainsTest;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.BeforeClass;
@@ -86,7 +88,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		FeatureMapsPseudoConflictsMergeTest.class, TwoWayBatchMergingTest.class, EqualityHelperTest.class,
 		FeatureFilterTest.class, ThreeWayBatchMergingTest.class,
 		MultiLineAttributeConflictDetectionTest.class, ThreeWayTextDiffTest.class,
-		MultiLineAttributeMergeTest.class, MonitorCancelTest.class, IdentifierEObjectMatcherTest.class })
+		MultiLineAttributeMergeTest.class, MonitorCancelTest.class, IdentifierEObjectMatcherTest.class,
+		MatchUtilFeatureContainsTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
