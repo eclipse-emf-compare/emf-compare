@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -311,8 +311,7 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 			traceMessage.append(EMFComparePreferences.REQ_ENGINES).append(prefDelimiter).append(
 					getPreferenceStore().getString(EMFComparePreferences.REQ_ENGINES)).append(newLine);
 			traceMessage.append(EMFComparePreferences.CONFLICTS_DETECTOR).append(prefDelimiter).append(
-					getPreferenceStore().getString(EMFComparePreferences.CONFLICTS_DETECTOR))
-					.append(newLine);
+					getPreferenceStore().getString(EMFComparePreferences.CONFLICTS_DETECTOR)).append(newLine);
 			traceMessage.append(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES).append(prefDelimiter)
 					.append(getPreferenceStore()
 							.getString(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES)).append(newLine);
@@ -470,7 +469,7 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 */
 	private <T> void setEnginePreferences(String preferenceKey,
 			Set<IItemDescriptor<T>> currentSelectedEngine, Collection<IItemDescriptor<T>> defaultConf) {
-		if (currentSelectedEngine != null && !currentSelectedEngine.contains(defaultConf)) {
+		if (currentSelectedEngine != null && !currentSelectedEngine.containsAll(defaultConf)) {
 			StringBuilder descriptorsKey = new StringBuilder();
 			for (Iterator<IItemDescriptor<T>> iterator = currentSelectedEngine.iterator(); iterator.hasNext();) {
 				IItemDescriptor<T> iItemDescriptor = iterator.next();
