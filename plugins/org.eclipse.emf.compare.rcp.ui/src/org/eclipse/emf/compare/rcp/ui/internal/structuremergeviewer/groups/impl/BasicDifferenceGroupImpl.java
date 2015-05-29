@@ -348,9 +348,9 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 					node.getChildren().addAll(buildSubTree(matchOfValue, true, DIFF_TO_SIDE.apply(diff)));
 				}
 				if (containment) {
-					ret.addAll(manageRefines(diff));
+					ret.addAll(manageRefines(diff, side));
 				} else {
-					nodeChildren.addAll(manageRefines(diff));
+					nodeChildren.addAll(manageRefines(diff, side));
 				}
 			} else if (!(diff instanceof ResourceAttachmentChange)) {
 				if (diff.getPrimeRefining() != null && extensionDiffProcessed.contains(diff)) {
@@ -428,14 +428,16 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 * 
 	 * @param diff
 	 *            the given Diff.
+	 * @param side
+	 *            the accepted side(s) for children of current level.
 	 * @return the sub tree of refines diffs.
 	 */
-	private List<TreeNode> manageRefines(Diff diff) {
+	private List<TreeNode> manageRefines(Diff diff, ChildrenSide side) {
 		final List<TreeNode> ret = Lists.newArrayList();
 		final EList<Diff> refines = diff.getRefines();
 		for (Diff refine : refines) {
 			Diff mainDiff = refine.getPrimeRefining();
-			if (mainDiff != null && mainDiff == diff) {
+			if (mainDiff != null && mainDiff == diff && and(filter, compatibleSide(side)).apply(refine)) {
 				TreeNode refineSubTree = buildSubTree(refine);
 				ret.add(refineSubTree);
 				extensionDiffProcessed.add(refine);
