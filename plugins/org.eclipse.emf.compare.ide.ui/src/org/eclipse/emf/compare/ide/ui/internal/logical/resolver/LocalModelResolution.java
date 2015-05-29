@@ -57,10 +57,8 @@ public class LocalModelResolution extends AbstractResolution {
 	 * @param start
 	 *            Resource for which we want the traversal
 	 * @return The {@link StorageTraversal} for the given resource, never null but possibly empty.
-	 * @throws InterruptedException
-	 *             If the computation is interrupted.
 	 */
-	public StorageTraversal run(final IResource start) throws InterruptedException {
+	public StorageTraversal run(final IResource start) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("run() - START"); //$NON-NLS-1$
 		}

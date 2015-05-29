@@ -135,11 +135,8 @@ public class ResourceComputationScheduler<T> {
 	 * <li>{@link #unloadingPool} is not null and is ready to be used</li>
 	 * <li>{@link #computedKeys} is not null</li>
 	 * </p>
-	 * 
-	 * @throws InterruptedException
-	 *             If the set-up is interrupted
 	 */
-	private void setUpComputation() throws InterruptedException {
+	private void setUpComputation() {
 		final int availableProcessors = Runtime.getRuntime().availableProcessors();
 		ThreadFactory computingThreadFactory = new ThreadFactoryBuilder().setNameFormat(
 				"EMFCompare-ResolvingThread-%d") //$NON-NLS-1$
@@ -270,17 +267,18 @@ public class ResourceComputationScheduler<T> {
 	 * @param <U>
 	 *            the type of the return value.
 	 * @return The result returned by the given callable execution.
-	 * @throws InterruptedException
-	 *             If the computation is interrupted
 	 */
-	public synchronized <U> U call(Callable<U> callable, Runnable postTreatment) throws InterruptedException {
+	public synchronized <U> U call(Callable<U> callable, Runnable postTreatment) {
 		checkNotNull(callable);
 		try {
 			setUpComputation();
 			return callable.call();
 		} catch (Exception e) {
 			if (e instanceof InterruptedException) {
-				throw (InterruptedException)e;
+				throw new OperationCanceledException();
+			}
+			if (e instanceof OperationCanceledException) {
+				throw (OperationCanceledException)e;
 			}
 			throw new RuntimeException(e);
 		} finally {

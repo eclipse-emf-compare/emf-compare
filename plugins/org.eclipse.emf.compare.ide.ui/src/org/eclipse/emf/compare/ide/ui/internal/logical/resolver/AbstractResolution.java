@@ -81,10 +81,8 @@ public abstract class AbstractResolution {
 	 * @param callable
 	 *            Treatment to run
 	 * @return The result of the treatment
-	 * @throws InterruptedException
-	 *             If the treatment is interrupted
 	 */
-	protected <T> T call(Callable<T> callable) throws InterruptedException {
+	protected <T> T call(Callable<T> callable) {
 		this.diagnostic = new DiagnosticSupport();
 		return context.getScheduler().call(callable, getFinalizeResolvingRunnable());
 	}

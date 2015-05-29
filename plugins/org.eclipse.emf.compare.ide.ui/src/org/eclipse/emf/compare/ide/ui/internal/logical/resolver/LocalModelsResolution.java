@@ -88,10 +88,8 @@ public class LocalModelsResolution extends AbstractResolution {
 	 * Executes this treatment.
 	 * 
 	 * @return The Logical model to use to compare the 2 or 3 resources.
-	 * @throws InterruptedException
-	 *             If the treatment is interrupted.
 	 */
-	public SynchronizationModel run() throws InterruptedException {
+	public SynchronizationModel run() {
 		if (logger.isDebugEnabled()) {
 			logger.debug("run() - START"); //$NON-NLS-1$
 		}
@@ -123,10 +121,8 @@ public class LocalModelsResolution extends AbstractResolution {
 	 * Resolve the local resources.
 	 * 
 	 * @return The synchronization model that contains the logical models of each side.
-	 * @throws InterruptedException
-	 *             In case it is interrupted.
 	 */
-	private SynchronizationModel resolveLocalResources() throws InterruptedException {
+	private SynchronizationModel resolveLocalResources() {
 		// Sub-optimal implementation, we'll only try and resolve each side individually
 		final StorageTraversal leftTraversal;
 		final StorageTraversal rightTraversal;
@@ -157,11 +153,8 @@ public class LocalModelsResolution extends AbstractResolution {
 	 * @param subMonitor
 	 *            The progress monitor to use
 	 * @return The traversal for the given resource.
-	 * @throws InterruptedException
-	 *             In case it is interrupted.
 	 */
-	private StorageTraversal resolveLocalModel(final IResource start, SubMonitor subMonitor)
-			throws InterruptedException {
+	private StorageTraversal resolveLocalModel(final IResource start, SubMonitor subMonitor) {
 		LocalModelResolution comp = new LocalModelResolution(context, subMonitor);
 		return comp.run(start);
 	}
@@ -170,10 +163,8 @@ public class LocalModelsResolution extends AbstractResolution {
 	 * Resolve several local files.
 	 * 
 	 * @return The synchronization model that contains the logical models of each side.
-	 * @throws InterruptedException
-	 *             In case it is interrupted.
 	 */
-	private SynchronizationModel resolveLocalFiles() throws InterruptedException {
+	private SynchronizationModel resolveLocalFiles() {
 		if (logger.isDebugEnabled()) {
 			logger.debug("resolveLocalFiles()"); //$NON-NLS-1$
 		}

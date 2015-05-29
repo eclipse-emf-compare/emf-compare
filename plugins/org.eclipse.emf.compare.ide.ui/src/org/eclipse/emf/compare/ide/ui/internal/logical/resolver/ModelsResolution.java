@@ -101,10 +101,8 @@ public class ModelsResolution extends AbstractResolution {
 	 * Executes the resolution.
 	 * 
 	 * @return The logical model to use to compare the given storages
-	 * @throws InterruptedException
-	 *             If the treatment is interrupted.
 	 */
-	public SynchronizationModel run() throws InterruptedException {
+	public SynchronizationModel run() {
 		if (logger.isDebugEnabled()) {
 			logger.debug("run() - START"); //$NON-NLS-1$
 		}
