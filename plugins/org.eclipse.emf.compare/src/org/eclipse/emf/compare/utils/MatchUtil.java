@@ -197,22 +197,27 @@ public final class MatchUtil {
 			proxyUri = EcoreUtil.getURI(eObjectValue);
 		}
 
+		boolean contains = false;
+
 		for (Object element : getAsList(eObject, feature)) {
 			if (element == value) {
-				return true;
+				contains = true;
+				break;
 			}
 			if (element != null && element.equals(value)) {
-				return true;
+				contains = true;
+				break;
 			}
 			if (proxyUri != null && element instanceof EObject) {
 				EObject eObjectElement = (EObject)element;
 				if (eObjectElement.eIsProxy() && EcoreUtil.getURI(eObjectElement).equals(proxyUri)) {
-					return true;
+					contains = true;
+					break;
 				}
 			}
 		}
 
-		return false;
+		return contains;
 	}
 
 	/**
