@@ -120,7 +120,8 @@
                 <argument>-website</argument>
                 <argument>${project.build.directory}/website</argument>
                 <argument>-version</argument>
-                <argument>${unqualifiedVersion}.${buildQualifier}</argument>
+                <!-- Please update qualified version for each release. Please also update the publisher.properties.-->
+                <argument>3.1.0.${buildQualifier}</argument>
               </arguments>
             </configuration>
           </execution>
@@ -138,7 +139,8 @@
           </execution>
         </executions>
         <configuration>
-          <finalName>${project.artifactId}-website-${unqualifiedVersion}.${buildQualifier}</finalName>
+          <!-- Please update qualified version for each release. Please also update the publisher.properties.-->
+          <finalName>${project.artifactId}-website-3.1.0.${buildQualifier}</finalName>
           <appendAssemblyId>false</appendAssemblyId>
           <descriptors>
             <descriptor>assembly.xml</descriptor>
