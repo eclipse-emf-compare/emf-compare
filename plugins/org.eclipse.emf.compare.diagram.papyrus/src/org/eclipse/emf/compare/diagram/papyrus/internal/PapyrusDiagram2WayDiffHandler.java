@@ -76,6 +76,9 @@ public class PapyrusDiagram2WayDiffHandler extends AbstractPapyrusDiagramDiffHan
 			// association has consequences
 			Match match = refChange.getMatch();
 			Connector left = (Connector)match.getLeft();
+			if (left == null) {
+				return;
+			}
 			EObject leftElement = left.getElement();
 			if (leftElement instanceof Association) {
 				Association assoc = (Association)leftElement;

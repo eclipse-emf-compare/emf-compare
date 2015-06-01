@@ -78,6 +78,9 @@ public class PapyrusDiagram3WayDiffHandler extends AbstractPapyrusDiagramDiffHan
 			// Changing the target of an edge that represents an
 			// association has consequences
 			Connector connectorOnDiffSide = (Connector)getMatchObjectOnSameSideAs(refChange);
+			if (connectorOnDiffSide == null) {
+				return;
+			}
 			EObject element = connectorOnDiffSide.getElement();
 			if (element instanceof Association) {
 				Association assoc = (Association)element;
@@ -109,7 +112,7 @@ public class PapyrusDiagram3WayDiffHandler extends AbstractPapyrusDiagramDiffHan
 	}
 
 	/**
-	 * Proides the EObject of the given diff's match that is on the same side as the given diff.
+	 * Provides the EObject of the given diff's match that is on the same side as the given diff.
 	 * 
 	 * @param diff
 	 *            The diff
