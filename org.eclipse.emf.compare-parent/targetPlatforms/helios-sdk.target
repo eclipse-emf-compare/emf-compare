@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Helios SDK" sequenceNumber="1432024416">
+<target name="EMF Compare based on Helios SDK" sequenceNumber="1433172537">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -9,14 +9,14 @@
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="com.google.guava" version="11.0.2.v201303041551"/>
-      <unit id="org.junit" version="4.11.0.v201303080030"/>
+      <unit id="org.junit" version="4.12.0.v201504281640"/>
       <unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
       <unit id="javaewah" version="0.7.9.v201401101600"/>
       <unit id="org.apache.commons.compress" version="1.6.0.v201310281400"/>
       <unit id="org.kohsuke.args4j" version="2.0.21.v201301150030"/>
       <unit id="org.mockito" version="1.9.5.v201311280930"/>
       <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
-      <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/"/>
+      <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.platform.sdk" version="3.6.2.M20110210-1200"/>
