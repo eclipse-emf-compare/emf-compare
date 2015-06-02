@@ -181,7 +181,7 @@ The toolbar displays the current status of the comparison and allows you to act 
 # This button will allow you to filter some differences out of the view according to a set predicate. For example, filtering out all "Additions" or "Moves".
 # Allows to save the comparison model.
 
-When you compare models with one in a read-only mode, some of actions proposed by the toolbar are slightly different. Indeed, if you compare a model with the local history, or you compare a model with a remote model stored in a repository, the latter is in a read-only mode. You will not able to merge differences to this read-only model. You will only accept or reject changes for your local model.
+When you compare models with one in a read-only mode, some of actions proposed by the toolbar are slightly different. Indeed, if you compare a model with the local history, or you compare a model with a remote model stored in a repository (e.g. via EGit), the latter is in a read-only mode. You will not able to merge differences to this read-only model. You will only accept or reject changes for your local model.
 
 [[Image:./../images/EMF_Compare_User_Interface_Toolbar_With_Read_Only_Side.png|center|EMF Compare's user interface toolbar]]
 
@@ -190,6 +190,14 @@ When you compare models with one in a read-only mode, some of actions proposed b
 # Allows you to reject the single, currently selected change.
 # Allows you to accept all non conflicting changes at once.
 # Allows you to reject all non conflicting changes at once.
+
+==== Contextual menu on differences ====
+
+If you do a right-click on a difference in the viewer, a contextual menu now offers you to merge the selected difference. These actions are the same than those in the [#Toolbar|toolbar].
+* With local models
+[[Image:./../images/EMF_Compare_ContextualMenu_Differences.png|center|EMF Compare's user interface contextual menu]]
+* With a read-only side (comparison with EGit)
+[[Image:./../images/EMF_Compare_ContextualMenu_Differences_02.png|center|EMF Compare's user interface contextual menu]]
 
 ==== Signification of icons associated with differences ====
 
@@ -231,6 +239,110 @@ When you compare models with one in a read-only mode, the icons are:
 
 *[[Image:./../images/merged_ov.gif|Accepted change]] represent a change that has been accepted.
 *[[Image:./../images/removed_ov.gif|Rejected change]] represent a change that has been rejected.
+
+==== Merge actions recap ====
+
+The following table shows the state the model should be in  after clicking on EMF Compare comparison editor toolbar's buttons:
+
+{| border="1" cellpadding="10" cellspacing="0" align="center"
+!What it should be
+!Type of Difference
+!Ancestor Model
+!Left/Local Model
+!Right/Remote Model
+![[Image:./../images/merge_to_right.gif|Merge to right]] Merge to right
+![[Image:./../images/merge_to_left.gif|Merge to left]] Merge to left
+![[Image:./../images/accept_change.gif|Accept change]] Accept
+![[Image:./../images/reject_change.gif|Reject change]] Reject
+![[Image:./../images/merge_all_to_right.gif|Merge all non-conflicting left differences to right]] Merge all non-conflicting left differences to right
+![[Image:./../images/merge_all_to_left.gif|Merge all non-conflicting right differences to left]] Merge all non-conflicting right differences to left
+![[Image:./../images/accept_all_changes.gif|Accept all changes]] Accept all
+![[Image:./../images/reject_all_changes.gif|Reject all changes]] Reject all
+|- align="center"
+|3-way
+|[[Image:./../images/r_outdel_ov.gif|Outgoing deletion]] Outgoing deletion
+|X
+|/
+|X
+|RIGHT = /
+|LEFT = X
+|MARK AS MERGED
+|LEFT = X
+|RIGHT = /
+|DO NOTHING
+|MARK AS MERGED
+|LEFT = X
+|- align="center"
+|
+|[[Image:./../images/r_indel_ov.gif|Incoming deletion]] Incoming Deletion
+|X
+|X
+|/
+|RIGHT = X
+|LEFT = /
+|LEFT = /
+|MARK AS MERGED
+|DO NOTHING
+|LEFT = /
+|LEFT = /
+|MARK AS MERGED
+|- align="center"
+|
+|[[Image:./../images/r_outadd_ov.gif|Outgoing addition]] Outgoing addition
+|/
+|X
+|/
+|RIGHT = X
+|LEFT = /
+|MARK AS MERGED
+|LEFT = /
+|RIGHT = X
+|DO NOTHING
+|MARK AS MERGED
+|LEFT = /
+|- align="center"
+|
+|[[Image:./../images/r_inadd_ov.gif|Incoming addition]] Incoming Addition
+|/
+|/
+|X
+|RIGHT = /
+|LEFT = X
+|LEFT = X
+|MARK AS MERGED
+|DO NOTHING
+|LEFT = X
+|LEFT = X
+|MARK AS MERGED
+|- align="center"
+|2-way
+|[[Image:./../images/del_ov.gif|Deletion]] Deletion
+|
+|/
+|X
+|RIGHT = /
+|LEFT = X
+|MARK AS MERGED
+|LEFT = X
+|RIGHT = /
+|LEFT = X
+|MARK AS MERGED
+|LEFT = X
+|- align="center"
+|
+|[[Image:./../images/add_ov.gif|Addition]] Addition
+|
+|X
+|/
+|RIGHT = X
+|LEFT = /
+|MARK AS MERGED
+|LEFT = /
+|RIGHT = X
+|LEFT = /
+|MARK AS MERGED
+|LEFT = /
+|}
 
 ==== Items for not loaded fragments ====
 
@@ -357,6 +469,166 @@ Accept '''all''' differences is not what we seek : we want to keep the changes w
 In case of a comparison with remote models, EMF Compare will detect resource name changes. The comparison editor will allows you to accept or reject those changes. Furthermore, in case of a Papyrus diagram & model renaming (renaming all .di, .notation and .uml files), the 3 differences will be accepted or rejected together, in order to maintain the consistency of the models.
 
 [[Image:./../images/EMF_Compare_ResourceNameChange.png|center]]
+
+
+== Features ==
+
+=== Grouping Differences  ===
+
+This feature allows you to group differences together in the structural view according to a set predicate. By default, EMF Compare provides four distinct grouping strategies :
+
+[[Image:./../images/EMF_Compare_Groups_Choice.png]]
+
+; Default : Do not try and group differences together, display them as they were detected.
+
+[[Image:./../images/EMF_Compare_Groups_Default.png]]
+
+; By Kind : Group differences by their kind (''additions'', ''deletions'', ''moves'', ''changes'').
+
+[[Image:./../images/EMF_Compare_Groups_Kind.png]]
+
+; By Side : Group differences according to their side: left or right and a special group regrouping differences in conflicts with other differences together. This grouping strategy is display by default in case of a 3-way comparison.
+
+[[Image:./../images/EMF_Compare_Groups_Side.png]]
+
+; By Resource : Group differences according to their resource: useful when more than two resources involved in comparison and/or resources are split into fragments. 
+
+[[Image:./../images/EMF_Compare_Groups_Resource.png]]
+
+
+New grouping strategies can be provided to EMF Compare through extension points. See [[./../developer/developer-guide.html#Add your own group|Add your own group]] section in developer guide for further details. 
+
+=== Filtering Differences  ===
+
+This features allows you to filter differences out of the structural view according to a set predicate. By default, EMF Compare provides four distinct filters :
+
+[[Image:./../images/EMF_Compare_Filters_Choice.png]]
+
+; Empty Resource Mappings : Filter out all resource mappings with no differences from the view. Enabled by default.
+; Feature Map differences : Filters out differences that apply on EFEatureMapEntry type.
+; Pseudo conflicts differences : Filter out all pseudo conflicts differences (only in case of a 3-way comparison). Enabled by default.
+; Identical elements : Filter out all identical elements (elements with no differences). Enabled by default.
+; Cascading differences : Filter out all differences that are contained under differences (except when in conflict). Enabled by default.
+
+If you install UML support for EMF Compare, an additionnal filter will also be provided in case of a comparison invloving UML models:
+
+All settings related to filters are explained in the [[#Filters]] customization section.
+
+New filters can be provided to EMF Compare through extension points. See [[./../developer/developer-guide.html#Add your own filter|Add your own filter]] section in developer guide for further details.
+
+=== Handling Conflicts  ===
+
+When a 3-way comparison has conflicts, all differences involved in the same conflict are grouped under a Conflict node.
+
+In the following case, the Employee Smith has his manager reference in conflict. The left side of the comparison shows that the manager of the Employee Smith is the employee Lennon while the right side side shows that the manager is the Employee Webster.
+The consequences of a merge from right to left of the selected difference are displayed.
+
+When the left side difference ''Employee Lennon [ manager changed ]'' is selected in the top panel, the right side difference ''Employee Webster [ manager changed ]'' is highlighted in red, that means if the the left side difference ''Employee Lennon [ manager changed ]'' is merged from right to left, then it will be impossible to merge the right side difference ''Employee Webster [ manager changed ]'' from left to right.
+
+[[Image:./../images/EMF_Compare_Handling_Conflict_1.png]]
+
+After the merge of the left side difference from right to left ''Employee Lennon [ manager changed ]'', the right side difference ''Employee Webster [ manager changed ]'' is not "mergeable" from left to right anymore, it has been merged from right to left automatically.
+
+[[Image:./../images/EMF_Compare_Handling_Conflict_2.png]]
+
+=== Text Attribute Comparison  ===
+
+In case of differences made on ''String''-typed attributes, specifics actions are available in the top-right of the content viewer panel.
+
+[[Image:./../images/EMF_Compare_Text_Compare.png]]
+
+# Allows to merge all changes of the current difference.
+# Allows to merge the current change.
+# Allows to move to the next/previous textual difference (in case of multi-valuated ''String''-typed attributes).
+# Allows to move to next/previous change in the current textual difference.
+
+PENDING UPDATE, this demo displays EMF Compare 1.3
+[http://www.eclipse.org/emf/compare/doc/features/videos/Text%20compare/textCompare.htm Demo]
+
+=== Graphical Comparison  ===
+
+EMF compare provides the ability to compare models with Papyrus graphical modeler (GMF Diagrams). To get the graphical comparison, the ''EMF Compare Papyrus integration'' feature and Papyrus have to be installed.
+The graphical comparison will be launched if you compare diagrams files (.di), or if you compare models that have diagrams associated in the same folder.
+In the same way as the semantic model comparison, the graphical model comparison uses the same color coding, to distinguish <span style="color:blue">incoming</span> and <span style="color:gray">outgoing</span> changes, and <span style="color:red">conflicts</span>. To put in relief the graphical differences, some decorators are used:
+*On one hand, to focus on the impacted objects, identifying them with markers. These markers are simple transparent rectangles which are set down above the concerned objects and are lightly larger.
+*On the other hand, through phantoms (place-holders), to locate either the place where objects were deleted or the target location where objects should be added after merging.
+The color of the concerned decorators are highlighted on selection of the difference.
+
+In the following example, a 3-way comparison is run with UML class diagrams. We can see that a Shape associated to a semantic uml class named A has been added on the left side of the comparison. After selected the difference in top panel, we can see the concerned elements in down panels. In the left part, the Shape A is highlighted in gray because it is an incoming change. In the right part, a phantom is drawn at the place the Shape should be after merging from right to left.
+
+[[Image:./../images/EMF_Compare_Graphical_AddClassA.png]]
+
+About phantoms (place-holders):
+
+To ease their readability, in some cases, their context have to be displayed:
+*If they are nested in an other phantom (e.g. due to a delete of the parent object), this last contextual one is displayed at the same time as the main phantom concerned by the current selected change.
+*If they are edges connected to deleted nodes or edges, these last contextual ones are displayed at the same time as the main edge phantom.
+*The color of the contextual phantoms (dependencies) is not highlighted.
+They are drawn as:
+*A simple rectangle for nodes, at the same origin location (and size).
+*A simple line (with the same bend points) for edges, at the same location.
+*A simple line for nodes as element of containment list. For this case, the same LCS computation will be used to locate in the list, at the good index.
+*Particular cases: If the location of the contextual phantoms was changed, the new location of the main phantom is computed.
+**A node place-holder, related to a delete of a node, embedded in a node where the location changed.
+**An edge place-holder between nodes where the location changed. In this case, the display of the line is drawn again.
+
+
+Here is an example of nested phantom:
+* the first capture represent an addition of a lifeline in sequence diagram.
+
+[[Image:./../images/EMF_Compare_Graphical_Phantom.gif]]
+
+* the second capture represent an addition of an execution inside the lifeline. We can see the phantom of the execution element, which is highlighted and the phantom of the lifeline parent, which is not highlighted. 
+
+[[Image:./../images/EMF_Compare_Graphical_Nested_Phantom.gif]]
+
+Have a look on the following demos :
+
+PENDING update videos
+
+[[http://www.eclipse.org/emf/compare/doc/features/videos/EcoreTools-v2/EMFCompareEcoreTools.html | Demo : Comparing Ecore files with diagrams]] 
+
+[[http://www.eclipse.org/emf/compare/doc/features/videos/Papyrus/EMFComparePapyrus.html | Demo : Comparing UML files with diagrams]] 
+
+=== Logical Model  ===
+
+EMF Compare does not act simply on the selected files, but on their whole logical model (a given model can be split through multiple files through EMF ''control'' action). Thanks to that, if you try and compare a model file that reference other model files, the comparison will still be able to take these "other" files into account. For example, if you try and compare a ''genmodel'' file (that depends on its underlying ''ecore'' file) :
+
+[[Image:./../images/EMF_Compare_Logical_Compare_Action.png]]
+
+EMF Compare will actually consider both files when comparing :
+
+[[Image:./../images/EMF_Compare_Logical_Compare_Result.png]]
+
+PENDING UPDATE
+[http://www.eclipse.org/emf/compare/doc/features/videos/LogicalModels/LogicalModels.html Demo]
+
+=== UML Specialization  ===
+
+A specific work has been done with EMF Compare for UML. It consists in an additional filter named '''UML refined elements'''. This filter is active by default when a comparison involves UML resources.
+
+[[Image:./../images/EMF_Compare_UML_Filter.png]]
+
+The filter groups UML consistent differences together in one difference. For example, a UML association is modeled by an association element and several sub-elements:
+
+[[Image:./../images/EMF_Compare_UML_Association.png]]
+
+If EMF Compare detects a change on an element of type association, it will group all changes on the sub-elements of the association to the association difference.
+The goal of this filter is to ease the merge of differences. Indeed, all you have to do is to merge the association difference and it will merge all the sub-differences with it.
+
+Here is the comparison of two UML model, one with an association (the left side), another without (the right side). The '''UML refined elements''' filter has been deactivated:
+
+[[Image:./../images/EMF_Compare_UML_Association_2.png]]
+
+We can see a lot of differences. 
+The same comparison with the '''UML refined elements''' filter activated:
+
+[[Image:./../images/EMF_Compare_UML_Association_3.png]]
+
+PENDING
+
+[[http://www.eclipse.org/emf/compare/doc/features/videos/UML%20comparison/compareUml.htm | Demo : Specific support to encapsulate profiles and stereotypes diffs]]
+
 
 
 == Customization ==
@@ -526,164 +798,6 @@ In EMF item providers are used to define how elements are displayed (label, icon
 In this page, you will find all item providers that have been directly contributed to EMF Compare. Some elements are displayed in grayed meaning that can not be disabled. In our example you can see that "Notation item provider" is grayed. Indeed disabling it would produce incomprehensible results in EMF Compare UI on diagram comparisons. That's why its provider decided to prevents user from disabling it. All other elements can be enabled/disabled using the checkbox on the left of each label. For example the two other item providers can be disabled. If you want to know what an item provider is for, you can select it and a short description will appear in the "Description" field. For example, if you select "Stereotyped element item provider" you would read "This provider displays stereotyped elements like they were a new kind of UML element (it uses stereotype's icon and custom label)". This one can be disabled since without it a comparison result in EMF Compare UI would still be understandable for a user.
 
 
-== Features ==
-
-=== Grouping Differences  ===
-
-This feature allows you to group differences together in the structural view according to a set predicate. By default, EMF Compare provides four distinct grouping strategies :
-
-[[Image:./../images/EMF_Compare_Groups_Choice.png]]
-
-; Default : Do not try and group differences together, display them as they were detected.
-
-[[Image:./../images/EMF_Compare_Groups_Default.png]]
-
-; By Kind : Group differences by their kind (''additions'', ''deletions'', ''moves'', ''changes'').
-
-[[Image:./../images/EMF_Compare_Groups_Kind.png]]
-
-; By Side : Group differences according to their side: left or right and a special group regrouping differences in conflicts with other differences together. This grouping strategy is display by default in case of a 3-way comparison.
-
-[[Image:./../images/EMF_Compare_Groups_Side.png]]
-
-; By Resource : Group differences according to their resource: useful when more than two resources involved in comparison and/or resources are split into fragments. 
-
-[[Image:./../images/EMF_Compare_Groups_Resource.png]]
-
-
-PENDING UPDATE, this is a demo displaying EMF Compare 1.3 [http://www.eclipse.org/emf/compare/doc/features/videos/Groups/groups.htm Demo]
-
-New grouping strategies can be provided to EMF Compare through extension points. See [[./../developer/developer-guide.html#Add your own group|Add your own group]] section in developer guide for further details. 
-
-=== Filtering Differences  ===
-
-This features allows you to filter differences out of the structural view according to a set predicate. By default, EMF Compare provides four distinct filters :
-
-[[Image:./../images/EMF_Compare_Filters_Choice.png]]
-
-; Empty Resource Mappings : Filter out all resource mappings with no differences from the view. Enabled by default.
-; Feature Map differences : Filters out differences that apply on EFEatureMapEntry type.
-; Pseudo conflicts differences : Filter out all pseudo conflicts differences (only in case of a 3-way comparison). Enabled by default.
-; Identical elements : Filter out all identical elements (elements with no differences). Enabled by default.
-; Cascading differences : Filter out all differences that are contained under differences (except when in conflict). Enabled by default.
-
-PENDING UPDATE, this is a demo displaying EMF Compare 1.3 [http://www.eclipse.org/emf/compare/doc/features/videos/Filters/filters.htm Demo]
-
-New filters can be provided to EMF Compare through extension points. See [[./../developer/developer-guide.html#Add your own filter|Add your own filter]] section in developer guide for further details.
-
-=== Handling Conflicts  ===
-
-When a 3-way comparison has conflicts, all differences involved in the same conflict are grouped under a Conflict node.
-
-In the following case, the Employee Green has his manager reference in conflict. The left side of the comparison shows that the manager of the Employee Green is the employee Smith while the right side side shows that the manager is the Employee Johnson.
-The consequences of a merge from right to left of the selected difference are displayed.
-
-When the left side difference ''Employee Smith [ manager changed ]'' is selected in the top panel, the right side difference ''Employee Johnson [ manager changed ]'' is highlighted in red, that means if the the left side difference ''Employee Smith [ manager changed ]'' is merged from right to left, then it will be impossible to merge the right side difference ''Employee Johnson [ manager changed ]'' from left to right.
-
-[[Image:./../images/EMF_Compare_Handling_Conflict_1.png]]
-
-After the merge of the left side difference from right to left ''Employee Smith [ manager changed ]'', the right side difference ''Employee Johnson [ manager changed ]'' is not "mergeable" from left to right anymore, it has been merged from right to left automatically.
-
-[[Image:./../images/EMF_Compare_Handling_Conflict_2.png]]
-
-=== Text Attribute Comparison  ===
-
-In case of differences made on ''String''-typed attributes, specifics actions are available in the top-right of the content viewer panel.
-
-[[Image:./../images/EMF_Compare_Text_Compare.png]]
-
-# Allows to merge all changes of the current difference.
-# Allows to merge the current change.
-# Allows to move to the next/previous textual difference (in case of multi-valuated ''String''-typed attributes).
-# Allows to move to next/previous change in the current textual difference.
-
-PENDING UPDATE, this demo displays EMF Compare 1.3
-[http://www.eclipse.org/emf/compare/doc/features/videos/Text%20compare/textCompare.htm Demo]
-
-=== Graphical Comparison  ===
-
-EMF compare provides the ability to compare models with Papyrus graphical modeler (GMF Diagrams). To get the graphical comparison, the ''EMF Compare Papyrus integration'' feature and Papyrus have to be installed.
-The graphical comparison will be launched if you compare diagrams files (.di), or if you compare models that have diagrams associated in the same folder.
-In the same way as the semantic model comparison, the graphical model comparison uses the same color coding, to distinguish <span style="color:blue">incoming</span> and <span style="color:gray">outgoing</span> changes, and <span style="color:red">conflicts</span>. To put in relief the graphical differences, some decorators are used:
-*On one hand, to focus on the impacted objects, identifying them with markers. These markers are simple transparent rectangles which are set down above the concerned objects and are lightly larger.
-*On the other hand, through phantoms (place-holders), to locate either the place where objects were deleted or the target location where objects should be added after merging.
-The color of the concerned decorators are highlighted on selection of the difference.
-
-In the following example, a 3-way comparison is run with UML class diagrams. We can see that a Shape associated to a semantic uml class named A has been added on the left side of the comparison. After selected the difference in top panel, we can see the concerned elements in down panels. In the left part, the Shape A is highlighted in gray because it is an incoming change. In the right part, a phantom is drawn at the place the Shape should be after merging from right to left.
-
-[[Image:./../images/EMF_Compare_Graphical_AddClassA.png]]
-
-About phantoms (place-holders):
-
-To ease their readability, in some cases, their context have to be displayed:
-*If they are nested in an other phantom (e.g. due to a delete of the parent object), this last contextual one is displayed at the same time as the main phantom concerned by the current selected change.
-*If they are edges connected to deleted nodes or edges, these last contextual ones are displayed at the same time as the main edge phantom.
-*The color of the contextual phantoms (dependencies) is not highlighted.
-They are drawn as:
-*A simple rectangle for nodes, at the same origin location (and size).
-*A simple line (with the same bend points) for edges, at the same location.
-*A simple line for nodes as element of containment list. For this case, the same LCS computation will be used to locate in the list, at the good index.
-*Particular cases: If the location of the contextual phantoms was changed, the new location of the main phantom is computed.
-**A node place-holder, related to a delete of a node, embedded in a node where the location changed.
-**An edge place-holder between nodes where the location changed. In this case, the display of the line is drawn again.
-
-
-Here is an example of nested phantom:
-* the first capture represent an addition of a lifeline in sequence diagram.
-
-[[Image:./../images/EMF_Compare_Graphical_Phantom.gif]]
-
-* the second capture represent an addition of an execution inside the lifeline. We can see the phantom of the execution element, which is highlighted and the phantom of the lifeline parent, which is not highlighted. 
-
-[[Image:./../images/EMF_Compare_Graphical_Nested_Phantom.gif]]
-
-Have a look on the following demos :
-
-PENDING update videos
-
-[[http://www.eclipse.org/emf/compare/doc/features/videos/EcoreTools-v2/EMFCompareEcoreTools.html | Demo : Comparing Ecore files with diagrams]] 
-
-[[http://www.eclipse.org/emf/compare/doc/features/videos/Papyrus/EMFComparePapyrus.html | Demo : Comparing UML files with diagrams]] 
-
-=== Logical Model  ===
-
-EMF Compare does not act simply on the selected files, but on their whole logical model (a given model can be split through multiple files through EMF ''control'' action). Thanks to that, if you try and compare a model file that reference other model files, the comparison will still be able to take these "other" files into account. For example, if you try and compare a ''genmodel'' file (that depends on its underlying ''ecore'' file) :
-
-[[Image:./../images/EMF_Compare_Logical_Compare_Action.png]]
-
-EMF Compare will actually consider both files when comparing :
-
-[[Image:./../images/EMF_Compare_Logical_Compare_Result.png]]
-
-PENDING UPDATE
-[http://www.eclipse.org/emf/compare/doc/features/videos/LogicalModels/LogicalModels.html Demo]
-
-=== UML Specialization  ===
-
-A specific work has been done with EMF Compare for UML. It consists in an additional filter named '''UML refined elements'''. This filter is active by default when a comparison involves UML resources.
-
-[[Image:./../images/EMF_Compare_UML_Filter.png]]
-
-The filter groups UML consistent differences together in one difference. For example, a UML association is modeled by an association element and several sub-elements:
-
-[[Image:./../images/EMF_Compare_UML_Association.png]]
-
-If EMF Compare detects a change on an element of type association, it will group all changes on the sub-elements of the association to the association difference.
-The goal of this filter is to ease the merge of differences. Indeed, all you have to do is to merge the association difference and it will merge all the sub-differences with it.
-
-Here is the comparison of two UML model, one with an association (the left side), another without (the right side). The '''UML refined elements''' filter has been deactivated:
-
-[[Image:./../images/EMF_Compare_UML_Association_2.png]]
-
-We can see a lot of differences. 
-The same comparison with the '''UML refined elements''' filter activated:
-
-[[Image:./../images/EMF_Compare_UML_Association_3.png]]
-
-PENDING
-
-[[http://www.eclipse.org/emf/compare/doc/features/videos/UML%20comparison/compareUml.htm | Demo : Specific support to encapsulate profiles and stereotypes diffs]]
-
 == Logical Model View ==
 
 EMF Compare does not act simply on the selected files, but on their whole logical model (a given model can be split through multiple files through EMF control action). Thanks to that, if you try and compare a model file that reference other model files, the comparison will still be able to take these "other" files into account. For example, if you try and compare a genmodel file (that depends on its underlying ecore file), then both files will be taken into account for the comparison.
@@ -734,49 +848,13 @@ Through this menu, you will able to open the item selected, access to its proper
 
 == Known Bugs and Limitations ==
 
-=== Project names and location ===
+Here is the list of all open bugs of EMF Compare:
+[https://bugs.eclipse.org/bugs/buglist.cgi?bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&classification=Modeling&columnlist=bug_id%2Cproduct%2Ccomponent%2Cbug_status%2Ctarget_milestone%2Cresolution%2Cchangeddate%2Cshort_desc&known_name=EMFCompare%20all%20open&list_id=11857684&order=changeddate%20DESC%2Ccomponent%2Cbug_id%20DESC&product=EMFCompare&query_based_on=EMFCompare%20all%20open&query_format=advanced EMF Compare bugs]
 
-'''Project names should match their location'''
-
-==== Cause ====
-
-If you need to compare models that:
-* reference another model in the same project (or another project which also meets the following point), and
-* are located in a project which name (as seen in their '.project' file) does not match their containing folder's name (case sensitive).
-
-Due to [https://bugs.eclipse.org/bugs/show_bug.cgi?id=354801 Bug 354801], we cannot properly support models that are located in Eclipse projects which identifier is distinct from their containing folder, case included. For example, if you have a project named ''EcoreModels'', it '''must''' be contained in a folder named ''EcoreModels''. Any other name, even if changing only the case, such as ''ecoreModels'', will cause issues when comparing fragmented models (or any model which references another).
-
-Note that this only applies to comparisons launched from within Eclipse, which would trigger the opening of the EMF Compare user interface.
-
-==== Observed Symptoms ====
-
-Symptoms vary, but they often include a NullPointerException somewhere in EMFSynchronizationModel such as :
-
- Caused by: java.lang.NullPointerException
- at org.eclipse.emf.compare.ide.ui.logical.RevisionedURIConverter.<init>(RevisionedURIConverter.java:108)
- at org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel.resolveTraversal(EMFSynchronizationModel.java:464)
- at org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel.createSynchronizationModel(EMFSynchronizationModel.java:165)
- at org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewer.compareInputChanged(EMFCompareStructureMergeViewer.java:258)
-
-=== Models out of the workspace ===
-
-'''The models should be imported within the workspace'''
-
-==== Cause ====
-
-Trying to compare models that are not present in the current Eclipse workspace from either the ''Git repositories'' perspective, or from the ''Git Staging'' view.
-
-Note that this only applies to comparisons launched from within Eclipse, which would trigger the opening of the EMF Compare user interface.
-
-==== Observed Symptoms ====
-
-Symptoms are mostly the same here as they would be with the limitation mentioned above regarding project names, and they usually include the same NullPointerException:
-
- Caused by: java.lang.NullPointerException
- at org.eclipse.emf.compare.ide.ui.logical.RevisionedURIConverter.<init>(RevisionedURIConverter.java:108)
- at org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel.resolveTraversal(EMFSynchronizationModel.java:464)
- at org.eclipse.emf.compare.ide.ui.logical.EMFSynchronizationModel.createSynchronizationModel(EMFSynchronizationModel.java:165)
- at org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewer.compareInputChanged(EMFCompareStructureMergeViewer.java:258)
+Developments to properly compare shared models (via EGit) are not all included in offical releases EGit and EMF Compare yet. In order to let the customers to benefit such type of comparisons, you can download and install in your eclipse environment customs builds of EGit and EMF Compare that includes these additionnal developments.
+Here are the update sites:
+* EGit (4.0.0) with additionnal developments to fully support comparisons with shared models: [http://download.eclipse.org/modeling/emf/compare/updates/egit-logical/nightly/]
+* EMF Compare (3.1.0) with additionnal developments to fully support comparisons with shared models: [http://download.eclipse.org/modeling/emf/compare/updates/logical/emf.compare/nightly/latest/]
 
 == Other Materials ==
 
