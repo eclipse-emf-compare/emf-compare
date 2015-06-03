@@ -51,6 +51,7 @@ import org.eclipse.emf.compare.tests.merge.IndividualMergeTest;
 import org.eclipse.emf.compare.tests.merge.MultiLineAttributeMergeTest;
 import org.eclipse.emf.compare.tests.merge.MultipleMergeTest;
 import org.eclipse.emf.compare.tests.merge.PseudoConflictMergeTest;
+import org.eclipse.emf.compare.tests.merge.RefineMergeTest;
 import org.eclipse.emf.compare.tests.merge.ThreeWayBatchMergingTest;
 import org.eclipse.emf.compare.tests.merge.TwoWayBatchMergingTest;
 import org.eclipse.emf.compare.tests.monitor.MonitorCancelTest;
@@ -89,7 +90,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		FeatureFilterTest.class, ThreeWayBatchMergingTest.class,
 		MultiLineAttributeConflictDetectionTest.class, ThreeWayTextDiffTest.class,
 		MultiLineAttributeMergeTest.class, MonitorCancelTest.class, IdentifierEObjectMatcherTest.class,
-		MatchUtilFeatureContainsTest.class })
+		MatchUtilFeatureContainsTest.class, RefineMergeTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

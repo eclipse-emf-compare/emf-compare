@@ -23,8 +23,10 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.isDiffOnEOpposi
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Sets;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -46,6 +48,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.utils.EMFCompareCopier;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -167,6 +170,19 @@ public abstract class AbstractMerger implements IMerger2 {
 		if (target.getConflict() != null && target.getConflict().getKind() == ConflictKind.PSEUDO) {
 			resulting.addAll(target.getConflict().getDifferences());
 			resulting.remove(target);
+		}
+
+		// If a diff refines another, we have to check if the "macro" diff has to be merged with it. It is the
+		// case when the unresolved diffs that refine the "macro" diff are all contained by the set
+		// (target + resulting) (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=458961)
+		for (Diff refine : target.getRefines()) {
+			Set<Diff> tmp = Sets.newHashSet(resulting);
+			tmp.add(target);
+			Collection<Diff> unresolvedRefinedDiffs = Collections2.filter(refine.getRefinedBy(),
+					EMFComparePredicates.hasState(DifferenceState.UNRESOLVED));
+			if (tmp.containsAll(unresolvedRefinedDiffs)) {
+				resulting.add(refine);
+			}
 		}
 
 		// Bug 452147:
