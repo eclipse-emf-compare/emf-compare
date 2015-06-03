@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.diagram.internal.factories.extensions;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Predicate;
@@ -96,11 +97,12 @@ public class CoordinatesChangeFactory extends NodeChangeFactory {
 	 * @see org.eclipse.emf.compare.diagram.internal.factories.extensions.NodeChangeFactory#getAllDifferencesForChange(org.eclipse.emf.compare.Diff)
 	 */
 	@Override
-	protected Collection<Diff> getAllDifferencesForChange(Diff input) {
-		Collection<Diff> diffs = super.getAllDifferencesForChange(input);
+	protected Collection<Diff> getAllDifferencesForChange(final Diff input) {
+		final Collection<Diff> diffs = super.getAllDifferencesForChange(input);
 		return Collections2.filter(diffs, new Predicate<Diff>() {
 			public boolean apply(Diff diff) {
-				return diff instanceof AttributeChange && isCoordinatesChange((AttributeChange)diff);
+				return diff instanceof AttributeChange && isCoordinatesChange((AttributeChange)diff)
+						&& fromSide(input.getSource()).apply(diff);
 			}
 		});
 	}
@@ -209,5 +211,4 @@ public class CoordinatesChangeFactory extends NodeChangeFactory {
 		}
 		return false;
 	}
-
 }
