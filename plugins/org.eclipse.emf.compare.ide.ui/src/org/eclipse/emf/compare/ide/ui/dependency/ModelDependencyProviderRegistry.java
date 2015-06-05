@@ -48,6 +48,8 @@ public class ModelDependencyProviderRegistry {
 	 * 
 	 * @param uri
 	 *            The {@link URI} for which the dependencies are to be determined.
+	 * @param uriConverter
+	 *            The {@link URIConverter} to be used.
 	 * @return The set of dependencies of {@code uri}. If {@code uri} has no dependency, the returned set is
 	 *         empty.
 	 */

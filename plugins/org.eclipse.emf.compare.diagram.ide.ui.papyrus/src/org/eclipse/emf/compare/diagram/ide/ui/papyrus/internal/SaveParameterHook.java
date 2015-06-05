@@ -47,7 +47,7 @@ public class SaveParameterHook extends AbstractResourceSetHooks {
 	}
 
 	/**
-	 * Hooks in when any of the file extensions registered in Papyrus are loaded.
+	 * Hooks in when any of the file extensions registered in Papyrus are loaded. {@inheritDoc}
 	 */
 	@Override
 	public boolean isHookFor(final Collection<? extends URI> uris) {
@@ -63,7 +63,7 @@ public class SaveParameterHook extends AbstractResourceSetHooks {
 	 * Adjust the default save parameters of Papyrus resources. The {@link ResourceSet} is checked if it
 	 * "really" contains Papyrus resources by looking for either a {@code .di} or {@code .notation} file since
 	 * they are pretty unique to Papyrus. If either one is found all default save parameters of files with
-	 * file extensions registered in Papyrus are checked for additional save parameters.
+	 * file extensions registered in Papyrus are checked for additional save parameters. {@inheritDoc}
 	 */
 	@Override
 	public void postLoadingHook(final ResourceSet resourceSet, final Collection<? extends URI> uris) {
