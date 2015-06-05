@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,7 +76,7 @@ public class URIStorage implements IStorage {
 	public InputStream getContents() throws CoreException {
 		final Map<?, ?> options = Collections.singletonMap(URIConverter.OPTION_URI_CONVERTER, converter);
 		try {
-			return handler.createInputStream(uri, options);
+			return handler.createInputStream(converter.normalize(uri), options);
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, EMFCompareIDEPlugin.PLUGIN_ID, e.getMessage(),
 					e));
@@ -90,12 +90,13 @@ public class URIStorage implements IStorage {
 	 */
 	public IPath getFullPath() {
 		final String path;
-		if (uri.isRelative()) {
-			path = uri.toString();
-		} else if (uri.isPlatformResource()) {
-			path = uri.toPlatformString(true);
+		final URI normalized = converter.normalize(uri);
+		if (normalized.isRelative()) {
+			path = normalized.toString();
+		} else if (normalized.isPlatformResource()) {
+			path = normalized.toPlatformString(true);
 		} else {
-			path = uri.toString();
+			path = normalized.toString();
 		}
 		return new Path(path);
 	}
@@ -106,7 +107,7 @@ public class URIStorage implements IStorage {
 	 * @see org.eclipse.core.resources.IStorage#getName()
 	 */
 	public String getName() {
-		return URI.decode(uri.lastSegment());
+		return URI.decode(converter.normalize(uri).lastSegment());
 	}
 
 	/**
@@ -117,7 +118,7 @@ public class URIStorage implements IStorage {
 	public boolean isReadOnly() {
 		final Map<?, ?> options = Collections.singletonMap(URIConverter.OPTION_REQUESTED_ATTRIBUTES,
 				Collections.singleton(URIConverter.ATTRIBUTE_READ_ONLY));
-		final Map<String, ?> attributes = handler.getAttributes(uri, options);
+		final Map<String, ?> attributes = handler.getAttributes(converter.normalize(uri), options);
 		return Boolean.TRUE.equals(attributes.get(URIConverter.ATTRIBUTE_READ_ONLY));
 	}
 
@@ -169,5 +170,15 @@ public class URIStorage implements IStorage {
 		}
 		return true;
 	}
+
 	// CHECKSTYLE:ON
+
+	/**
+	 * Returns the unmodified URI for this storage (will need normalization).
+	 * 
+	 * @return The unmodified URI for this storage.
+	 */
+	public URI getURI() {
+		return uri;
+	}
 }

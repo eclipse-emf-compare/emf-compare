@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Obeo and others.
+ * Copyright (c) 2011, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,13 +11,19 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
+import com.google.common.collect.Sets;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -26,9 +32,12 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ide.internal.utils.DisposableResourceSet;
+import org.eclipse.emf.compare.ide.internal.utils.INamespaceDeclarationListener;
+import org.eclipse.emf.compare.ide.internal.utils.IProxyCreationListener;
 import org.eclipse.emf.compare.ide.internal.utils.NoNotificationParserPool;
-import org.eclipse.emf.compare.ide.internal.utils.ProxyNotifierParserPool.IProxyCreationListener;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.resource.ContentHandler;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -41,12 +50,26 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 // Visible for testing
-public class SynchronizedResourceSet extends ResourceSetImpl {
+public class SynchronizedResourceSet extends ResourceSetImpl implements DisposableResourceSet {
 	/** The logger. */
 	private static final Logger LOGGER = Logger.getLogger(SynchronizedResourceSet.class);
 
 	/** Associates URIs with their resources. */
 	private final ConcurrentHashMap<URI, Resource> uriCache;
+
+	/**
+	 * The list of URIs corresponding to namespaces as declared in the xml files ("xmlns:"). These must not go
+	 * through our usual xml parser as they have to be properly (and completely) loaded. They also need to be
+	 * kept in this resource set and made available for other resources to find as they might have associated
+	 * factories to create objects.
+	 */
+	private final Set<URI> namespaceURIs;
+
+	/** Keeps track of the packages manually loaded for some of this resource set's resources. */
+	private final Set<Resource> loadedPackages;
+
+	/** Never try and load the same package twice. We'll use this lock to prevent that from happening. */
+	private final ReentrantLock packageLoadingLock;
 
 	/**
 	 * Constructor.
@@ -57,6 +80,9 @@ public class SynchronizedResourceSet extends ResourceSetImpl {
 	public SynchronizedResourceSet(IProxyCreationListener proxyListener) {
 		this.uriCache = new ConcurrentHashMap<URI, Resource>();
 		this.resources = new SynchronizedResourcesEList<Resource>();
+		this.namespaceURIs = Sets.newSetFromMap(new ConcurrentHashMap<URI, Boolean>());
+		this.loadedPackages = Sets.newSetFromMap(new ConcurrentHashMap<Resource, Boolean>());
+		this.packageLoadingLock = new ReentrantLock(true);
 		this.loadOptions = super.getLoadOptions();
 		/*
 		 * This resource set is specifically designed to resolve cross resources links, it thus spends a lot
@@ -65,6 +91,11 @@ public class SynchronizedResourceSet extends ResourceSetImpl {
 		 */
 		final NoNotificationParserPool parserPool = new NoNotificationParserPool(true);
 		parserPool.addProxyListener(proxyListener);
+		parserPool.addNamespaceDeclarationListener(new INamespaceDeclarationListener() {
+			public void schemaLocationDeclared(String key, URI uri) {
+				namespaceURIs.add(uri.trimFragment());
+			}
+		});
 		loadOptions.put(XMLResource.OPTION_USE_PARSER_POOL, parserPool);
 		loadOptions.put(XMLResource.OPTION_USE_DEPRECATED_METHODS, Boolean.FALSE);
 
@@ -74,6 +105,11 @@ public class SynchronizedResourceSet extends ResourceSetImpl {
 		 * get) by several threads. Passing a ConcurrentMap here is not an option either as EMF sometimes
 		 * needs to put "null" values in there. see https://bugs.eclipse.org/bugs/show_bug.cgi?id=403425 for
 		 * more details.
+		 */
+		/*
+		 * Most of the existing options we are not using from here, since none of them seems to have a single
+		 * effect on loading performance, whether we're looking at time or memory. See also
+		 * https://www.eclipse.org/forums/index.php/t/929918/
 		 */
 	}
 
@@ -115,6 +151,10 @@ public class SynchronizedResourceSet extends ResourceSetImpl {
 				if (former != null) {
 					result = former;
 				}
+			} else if (namespaceURIs.contains(uri)) {
+				// This uri points to an EPackage (or profile) that needs to be loaded completely and
+				// normally for its factory to be useable.
+				result = demandPackageLoad(uri);
 			}
 		}
 
@@ -142,6 +182,40 @@ public class SynchronizedResourceSet extends ResourceSetImpl {
 			demandLoadHelper(result);
 		}
 		return result;
+	}
+
+	/**
+	 * Loads the given URI as an EMF EPackage. We will disable our custom parser pool for this one as it need
+	 * to be loaded properly for its factory to be functional.
+	 * 
+	 * @param uri
+	 *            The uri to load.
+	 * @return The loaded resource.
+	 */
+	private Resource loadPackage(URI uri) {
+		final URI trimmed = uri.trimFragment();
+		final Resource resource = createResource(trimmed, ContentHandler.UNSPECIFIED_CONTENT_TYPE);
+		if (resource == null) {
+			return null;
+		}
+
+		InputStream stream = null;
+		try {
+			stream = getURIConverter().createInputStream(trimmed, null);
+			resource.load(stream, Collections.emptyMap());
+		} catch (IOException e) {
+			handleDemandLoadException(resource, e);
+		} finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (IOException e) {
+					// handled by the outer try
+				}
+			}
+		}
+		loadedPackages.add(resource);
+		return resource;
 	}
 
 	/**
@@ -191,25 +265,67 @@ public class SynchronizedResourceSet extends ResourceSetImpl {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource for " + uri); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		Resource demanded = uriCache.get(uri);
+		final URI normalized = getURIConverter().normalize(uri);
+		Resource demanded = uriCache.get(normalized);
 		if (demanded == null) {
 			final EPackage ePackage = getPackageRegistry().getEPackage(uri.toString());
 			if (ePackage != null) {
-				demanded = ePackage.eResource();
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource - caching " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+					LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource - found in package registry : " + uri); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-				Resource former = uriCache.putIfAbsent(uri, demanded);
-				if (former != null) {
-					demanded = former;
+				demanded = ePackage.eResource();
+				if (demanded != null) {
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource - caching " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					Resource former = uriCache.putIfAbsent(normalized, demanded);
+					if (former != null) {
+						demanded = former;
+					}
 				}
-			} else {
-				// simply return null
+			} else if (namespaceURIs.contains(uri)) {
+				// This uri points to an EPackage (or profile) that needs to be loaded completely and
+				// normally.
+				demanded = demandPackageLoad(uri);
 			}
 		} else if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource - FOUND in cache " + uri); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return demanded;
+	}
+
+	/**
+	 * This will be used to load the uris matching those from {@link #namespaceURIs} normally.
+	 * 
+	 * @param uri
+	 *            The uri of the package to load.
+	 * @return The loaded package's resource.
+	 */
+	private Resource demandPackageLoad(URI uri) {
+		final URI normalized = getURIConverter().normalize(uri);
+
+		packageLoadingLock.lock();
+		try {
+			Resource demanded = uriCache.get(normalized);
+			if (demanded == null) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource - loaded package normally : " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				demanded = loadPackage(uri);
+				if (demanded != null) {
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource - caching package " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					Resource former = uriCache.putIfAbsent(normalized, demanded);
+					if (former != null) {
+						demanded = former;
+					}
+				}
+			}
+			return demanded;
+		} finally {
+			packageLoadingLock.unlock();
+		}
 	}
 
 	/**
@@ -230,29 +346,7 @@ public class SynchronizedResourceSet extends ResourceSetImpl {
 	 */
 	@Override
 	public synchronized Resource createResource(URI uri, String contentType) {
-		// In some cases like the load of Profile in UML via pathmaps,
-		// The XMLHandler#getPackageForURI will call createResource after having got null by getResource()
-		final URI normalizedURI = getURIConverter().normalize(uri);
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".createResource " + uri); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		if (uriCache.containsKey(normalizedURI)) {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".createResource FOUND IN CACHE " + uri); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			return uriCache.get(normalizedURI);
-		}
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".createResource CREATING " + uri); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		Resource created = super.createResource(uri, contentType);
-		// putIfAbsent will return atomically the one that's already registered
-		// if another instance has been registered in between
-		Resource former = uriCache.putIfAbsent(normalizedURI, created);
-		if (former != null) {
-			created = former;
-		}
-		return created;
+		return super.createResource(uri, contentType);
 	}
 
 	/**
@@ -273,6 +367,22 @@ public class SynchronizedResourceSet extends ResourceSetImpl {
 	@Override
 	public Map<Object, Object> getLoadOptions() {
 		return loadOptions;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void dispose() {
+		// unload these completely instead of using #unload(Resource)
+		for (Resource resource : loadedPackages) {
+			final URI uri = resource.getURI();
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".unload " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			uriCache.remove(uri);
+			resource.unload();
+			getResources().remove(resource);
+		}
 	}
 
 	/**

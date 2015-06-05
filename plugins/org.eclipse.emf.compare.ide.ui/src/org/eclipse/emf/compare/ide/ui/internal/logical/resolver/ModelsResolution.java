@@ -18,13 +18,12 @@ import static org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil.a
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.asURI;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -40,7 +39,6 @@ import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
-import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * Computation that resolves 2 or 3 storages (left, right and potentially origin).
@@ -420,13 +418,14 @@ public class ModelsResolution extends AbstractResolution {
 		scheduler.setComputedElements(transform(converter.getLoadedRevisions(), asURI()));
 
 		Iterable<URI> urisToResolve = transform(additionalStorages, asURI());
+		urisToResolve = Iterables.filter(urisToResolve, new Predicate<URI>() {
+			public boolean apply(URI input) {
+				return input != null && input.isPlatformResource();
+			}
+		});
 		scheduler.computeAll(transform(urisToResolve, resolveRemoteURI(tspm, resourceSet)));
 
-		// Unload all remaining resources from resource set
-		List<Resource> resources = new ArrayList<Resource>(resourceSet.getResources());
-		for (Resource r : resources) {
-			resourceSet.unload(r, tspm);
-		}
+		resourceSet.dispose();
 
 		if (tspm.isCanceled()) {
 			throw new OperationCanceledException();
@@ -529,11 +528,7 @@ public class ModelsResolution extends AbstractResolution {
 
 		scheduler.clearComputedElements();
 
-		// Unload all remaining resources from resource set
-		List<Resource> resources = new ArrayList<Resource>(resourceSet.getResources());
-		for (Resource r : resources) {
-			resourceSet.unload(r, tspm);
-		}
+		resourceSet.dispose();
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("resolveRemotetraversal() - END for " + start); //$NON-NLS-1$

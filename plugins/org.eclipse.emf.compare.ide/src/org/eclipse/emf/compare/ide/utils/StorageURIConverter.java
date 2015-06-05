@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Obeo.
+ * Copyright (c) 2011, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,7 +67,11 @@ public class StorageURIConverter extends DelegatingURIConverter {
 	public InputStream createInputStream(URI uri, Map<?, ?> options) throws IOException {
 		final URI normalizedURI = normalize(uri);
 		final URIHandler handler = getURIHandler(normalizedURI);
-		getLoadedRevisions().add(createStorage(normalizedURI, handler, this));
+		// Only keep track of the loaded resource if it's a platform:/resource.
+		// Resources loaded from plugins don't need to be part of our final logical model.
+		if (uri.isPlatformResource()) {
+			getLoadedRevisions().add(createStorage(uri, handler, this));
+		}
 
 		final Map<Object, Object> actualOptions = Maps.newLinkedHashMap();
 		actualOptions.put(URIConverter.OPTION_URI_CONVERTER, this);
