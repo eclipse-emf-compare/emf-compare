@@ -55,14 +55,19 @@ else
 	tar zxf "$P2_ADMIN_ZIPPATH" -C $workdir
 fi
 
-if [[ "$simrel" == "collaborative-modeling"* ]]; then
+if [[ "$simrel" == "collaborative-modeling-luna"* ]]; then
+	simrel_zip_name="Collaborative-Modeling-Luna-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
+	simrel_zip_url="http://download.eclipse.org/modeling/emf/compare/collaborative-modeling-luna-package/nightly/$simrel_zip_name"	
+	p2_repositories=""
+	p2_installIUs=""
+elif [[ "$simrel" == "collaborative-modeling"* ]]; then
 	simrel_zip_name="Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
 	simrel_zip_url="http://download.eclipse.org/modeling/emf/compare/collaborative-modeling-package/nightly/$simrel_zip_name"	
 	p2_repositories=""
 	p2_installIUs=""
 elif [[ "$simrel" == "mars"* ]]; then
-	simrel_zip_name="eclipse-S-4.5RC2a-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
-	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/S-4.5RC2a-201505222000/$simrel_zip_name"	
+	simrel_zip_name="eclipse-S-4.5RC3-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
+	simrel_zip_url="http://download.eclipse.org/eclipse/downloads/drops4/S-4.5RC3-201505280700/$simrel_zip_name"	
 	p2_repositories="http://download.eclipse.org/releases/mars/,\
 http://download.eclipse.org/modeling/emf/compare/updates/nightly/latest/,\
 http://download.eclipse.org/modeling/emf/compare/updates/egit-logical/nightly/"
@@ -88,7 +93,8 @@ org.eclipse.uml2.uml.feature.group,\
 org.eclipse.papyrus.sdk.feature.feature.group,\
 org.eclipse.emf.compare.uml2.feature.group,\
 org.eclipse.emf.compare.diagram.gmf.feature.group,\
-org.eclipse.emf.compare.diagram.papyrus.feature.group"
+org.eclipse.emf.compare.diagram.papyrus.feature.group,\
+org.eclipse.emf.compare.egit.feature.group"
 elif [[ "$simrel" == "kepler"* ]]; then
 	simrel_zip_name="eclipse-SDK-4.3.2-${PLATFORM_SHORT_SPECIFIER}.${FILE_EXT}"
 	simrel_zip_url="http://archive.eclipse.org/eclipse/downloads/drops4/R-4.3.2-201402211700/$simrel_zip_name"	
