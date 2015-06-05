@@ -44,8 +44,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope;
-import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ResolutionUtil;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
@@ -252,13 +250,8 @@ public class EMFModelProvider extends ModelProvider {
 				}
 				syncModel = computeLogicalModel(file, context, monitor);
 				if (syncModel != null) {
-					if (ResolutionUtil.getResolutionScope().equals(CrossReferenceResolutionScope.WORKSPACE)) {
-						// logical model will be the same for all resources contained in the model
-						for (IResource res : syncModel.getResources()) {
-							resourceMappingCache.put(res, syncModel);
-						}
-					} else {
-						resourceMappingCache.put(file, syncModel);
+					for (IResource res : syncModel.getResources()) {
+						resourceMappingCache.put(res, syncModel);
 					}
 				}
 			} else if (LOGGER.isDebugEnabled()) {
