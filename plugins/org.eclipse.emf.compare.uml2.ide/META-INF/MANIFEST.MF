@@ -7,7 +7,9 @@ Bundle-Activator: org.eclipse.emf.compare.uml2.ide.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.emf.compare.ide,
- org.eclipse.uml2.uml
+ org.eclipse.uml2.uml,
+ org.eclipse.emf.compare.rcp;bundle-version="2.3.0",
+ org.eclipse.emf.compare.uml2.rcp;bundle-version="2.3.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %providerName

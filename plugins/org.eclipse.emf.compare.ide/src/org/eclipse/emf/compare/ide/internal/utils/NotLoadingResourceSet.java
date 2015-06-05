@@ -52,7 +52,6 @@ import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.hook.IResourceSetHook;
 import org.eclipse.emf.compare.ide.internal.EMFCompareIDEMessages;
 import org.eclipse.emf.compare.ide.internal.hook.ResourceSetHookRegistry;
-import org.eclipse.emf.compare.ide.internal.utils.ProxyNotifierParserPool.IProxyCreationListener;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
@@ -428,7 +427,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	@Override
 	public Map<Object, Object> getLoadOptions() {
 		this.loadOptions = super.getLoadOptions();
-		final ProxyNotifierParserPool parserPool = new ProxyNotifierParserPool(false);
+		final NotifyingParserPool parserPool = new NotifyingParserPool(false);
 		parserPool.addProxyListener(this);
 		loadOptions.put(XMLResource.OPTION_USE_PARSER_POOL, parserPool);
 		loadOptions.put(XMLResource.OPTION_USE_DEPRECATED_METHODS, Boolean.FALSE);
@@ -457,12 +456,14 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 		// removing the uml CacheAdapter isn't enough either
 		// we need to get rid of all adapters manually
 		for (Resource resource : currentResources) {
-			TreeIterator<EObject> allContents = EcoreUtil.getAllProperContents(resource, false);
-			while (allContents.hasNext()) {
-				final EObject next = allContents.next();
-				next.eAdapters().clear();
+			if (resource.isLoaded()) {
+				TreeIterator<EObject> allContents = EcoreUtil.getAllProperContents(resource, false);
+				while (allContents.hasNext()) {
+					final EObject next = allContents.next();
+					next.eAdapters().clear();
+				}
+				resource.eAdapters().clear();
 			}
-			resource.eAdapters().clear();
 		}
 
 		getResources().clear();

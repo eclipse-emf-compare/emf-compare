@@ -12,7 +12,7 @@
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.ide.internal.utils.ProxyNotifierParserPool.IProxyCreationListener;
+import org.eclipse.emf.compare.ide.internal.utils.IProxyCreationListener;
 import org.eclipse.emf.compare.ide.ui.internal.util.ThreadSafeProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;

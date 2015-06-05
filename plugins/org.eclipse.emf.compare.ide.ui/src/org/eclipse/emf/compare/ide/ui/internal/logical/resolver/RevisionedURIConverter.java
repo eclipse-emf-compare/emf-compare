@@ -118,7 +118,9 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 		final URI normalizedUri = normalize(uri);
 		// If this uri points to the plugins directory, load it directly
 		if (normalizedUri.isPlatformPlugin() || normalizedUri.toString().matches("(\\.\\./)+?plugins/.*")) { //$NON-NLS-1$
-			stream = super.createInputStream(normalizedUri, options);
+			// This uri will be used later on to determine whether the storage has already been loaded or not.
+			// Use the unmodified URI instead of the normalized one here.
+			stream = super.createInputStream(uri, options);
 		} else {
 			// Otherwise, load it from the repository (resource might not yet (or no longer) exist locally)
 			final IResource targetFile = getResourceFromURI(normalizedUri);

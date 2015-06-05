@@ -41,11 +41,17 @@ import org.eclipse.uml2.uml.UMLPlugin;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class UMLLoadOnDemandPolicy implements ILoadOnDemandPolicy {
-	/** Keep track of the normalizations we've already made. */
-	private final BiMap<String, URI> profileNsURIToNormalized = HashBiMap.create();
-
 	/** The {@link URI} of the UML metamodel offered by the UML2 Eclipse plugins */
 	private static final String PLATFORM_UML_METAMODEL_URI = "platform:/plugin/org.eclipse.uml2.uml.resources/metamodels/UML.metamodel.uml"; //$NON-NLS-1$
+
+	/**
+	 * The UML file extension. We'll react to resource sets containing at least one resource with this
+	 * extension.
+	 */
+	protected static final String UML_EXTENSION = "uml"; //$NON-NLS-1$
+
+	/** Keep track of the normalizations we've already made. */
+	private final BiMap<String, URI> profileNsURIToNormalized = HashBiMap.create();
 
 	/**
 	 * {@inheritDoc}
@@ -69,7 +75,7 @@ public class UMLLoadOnDemandPolicy implements ILoadOnDemandPolicy {
 	 *            {@link URIConverter} to use for the registered profile URIs.
 	 * @return
 	 */
-	private boolean isRegisteredUMLProfile(URI normalizedURI, final URIConverter uriConverter) {
+	protected boolean isRegisteredUMLProfile(URI normalizedURI, final URIConverter uriConverter) {
 		for (Map.Entry<String, URI> entry : UMLPlugin.getEPackageNsURIToProfileLocationMap().entrySet()) {
 			if (!profileNsURIToNormalized.containsKey(entry.getKey())) {
 				profileNsURIToNormalized.put(entry.getKey(), uriConverter.normalize(entry.getValue()));
@@ -89,10 +95,10 @@ public class UMLLoadOnDemandPolicy implements ILoadOnDemandPolicy {
 	 * @return <code>true</code> if the input URI is considered as a profile URI, <code>false</code>
 	 *         otherwise.
 	 */
-	private boolean isConventionalURIForUMLProfile(URI normalizedURI) {
+	protected boolean isConventionalURIForUMLProfile(URI normalizedURI) {
 		URI noFragmentURI = normalizedURI.trimFragment();
 		String firstFileExtension = noFragmentURI.fileExtension();
-		if ("uml".equals(firstFileExtension)) { //$NON-NLS-1$
+		if (UML_EXTENSION.equals(firstFileExtension)) {
 			URI withoutFirstFileExtension = noFragmentURI.trimFileExtension();
 			String secondFileExtension = withoutFirstFileExtension.fileExtension();
 			if ("profile".equals(secondFileExtension)) { //$NON-NLS-1$
@@ -109,7 +115,7 @@ public class UMLLoadOnDemandPolicy implements ILoadOnDemandPolicy {
 	 *            input URI to test.
 	 * @return {@code true} if the given {@link URI} corresponds to the UML metamodel.
 	 */
-	private boolean isUMLMetaModel(URI normalizedURI) {
+	protected boolean isUMLMetaModel(URI normalizedURI) {
 		URI noFragmentURI = normalizedURI.trimFragment();
 		return PLATFORM_UML_METAMODEL_URI.equals(noFragmentURI.toString());
 	}

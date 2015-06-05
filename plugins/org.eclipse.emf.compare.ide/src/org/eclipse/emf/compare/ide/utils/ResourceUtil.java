@@ -38,6 +38,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
+import org.eclipse.emf.compare.ide.internal.utils.URIStorage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
@@ -238,8 +239,14 @@ public final class ResourceUtil {
 	 * @return The created URI.
 	 */
 	public static URI createURIFor(IStorage storage) {
+		URI shortcut = null;
 		if (storage instanceof IFile) {
-			return createURIFor((IFile)storage);
+			shortcut = createURIFor((IFile)storage);
+		} else if (storage instanceof URIStorage) {
+			shortcut = ((URIStorage)storage).getURI();
+		}
+		if (shortcut != null) {
+			return shortcut;
 		}
 
 		String path = getFixedPath(storage).toString();
@@ -256,7 +263,7 @@ public final class ResourceUtil {
 		} else if (hasStoragePathProvider(storage)) {
 			uri = URI.createPlatformResourceURI(path, true);
 		} else {
-			uri = URI.createFileURI(path);
+			uri = URI.createURI(path, true);
 		}
 
 		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
