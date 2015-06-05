@@ -43,6 +43,7 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceLocationChange;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
@@ -192,9 +193,16 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 					TreeNode wrap = wrap(diff);
 					parentNode.getChildren().add(wrap);
 					if (isContainment(diff)) {
-						final Match diffMatch = diff.getMatch().getComparison().getMatch(
+						final Match diffMatch = ComparisonUtil.getComparison(diff).getMatch(
 								((ReferenceChange)diff).getValue());
 						buildSubTree(wrap, conflict, diffMatch);
+					} else if (!diff.getRefinedBy().isEmpty()) {
+						for (Diff conflictDiff : conflict.getDifferences()) {
+							if (conflictDiff != diff && conflictDiff.getRefines().isEmpty()
+									&& conflictDiff.getRefinedBy().isEmpty()) {
+								buildSubTree(wrap, conflict, conflictDiff.getMatch());
+							}
+						}
 					}
 				}
 			}

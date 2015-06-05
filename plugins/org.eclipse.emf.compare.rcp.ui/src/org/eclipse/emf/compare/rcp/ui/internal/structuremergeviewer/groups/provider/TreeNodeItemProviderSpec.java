@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,23 +15,32 @@ import static com.google.common.collect.Iterators.filter;
 import static com.google.common.collect.Iterators.transform;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
+import com.google.common.collect.UnmodifiableIterator;
 
 import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.internal.EMFCompareEditMessages;
 import org.eclipse.emf.compare.provider.ExtendedAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
+import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.ecore.EObject;
@@ -151,6 +160,7 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 		TreeNode treeNode = (TreeNode)object;
 		EObject data = treeNode.getData();
 		ComposedStyledString styledString = new ComposedStyledString();
+		final IComposedStyledString treeNodeText;
 		if (data instanceof Match) {
 			Iterator<EObject> eAllContents = transform(treeNode.eAllContents(),
 					IDifferenceGroup.TREE_NODE_DATA);
@@ -158,9 +168,14 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 			if (any(allDifferences, hasState(DifferenceState.UNRESOLVED))) {
 				styledString.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 			}
+			treeNodeText = ((ExtendedAdapterFactoryItemDelegator)itemDelegator).getStyledText(treeNode
+					.getData());
+		} else if (data instanceof Conflict) {
+			treeNodeText = getTreeNodeText(treeNode, (Conflict)data);
+		} else {
+			treeNodeText = ((ExtendedAdapterFactoryItemDelegator)itemDelegator).getStyledText(treeNode
+					.getData());
 		}
-		IComposedStyledString treeNodeText = ((ExtendedAdapterFactoryItemDelegator)itemDelegator)
-				.getStyledText(treeNode.getData());
 		return styledString.append(treeNodeText);
 	}
 
@@ -225,5 +240,51 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 		if (groupItemProviderAdapters != null) {
 			groupItemProviderAdapters.clear();
 		}
+	}
+
+	/**
+	 * Due to filters (especially UML & Diagram Refined elements filters), refining & refined elements are
+	 * store in the same conflicts. But refining & refined elements will never be display together. It leads
+	 * to have a number of unresolved diffs who is confusing because it counts refining & refined unresolved
+	 * diffs together. So only counts visible unresolved nodes.
+	 * 
+	 * @param conflict
+	 *            the conflict for which we want to get the text to display.
+	 * @return the styled string.
+	 */
+	private IComposedStyledString getTreeNodeText(TreeNode treeNode, Conflict conflict) {
+		final ComposedStyledString ret = new ComposedStyledString();
+
+		final Predicate<? super EObject> unfilteredNode = EMFCompareRCPUIPlugin.getDefault()
+				.getEMFCompareConfiguration().getStructureMergeViewerFilter().getAggregatedPredicate();
+
+		final UnmodifiableIterator<EObject> visibleNodes = Iterators.filter(treeNode.eAllContents(),
+				unfilteredNode);
+
+		final Iterator<EObject> eAllContents = transform(visibleNodes, IDifferenceGroup.TREE_NODE_DATA);
+		final Iterator<Diff> allDifferences = filter(eAllContents, Diff.class);
+		final Collection<Diff> d = Sets.newHashSet(allDifferences);
+		final int unresolvedDiffCount = Iterables.size(Iterables.filter(d,
+				hasState(DifferenceState.UNRESOLVED)));
+
+		if (unresolvedDiffCount > 0) {
+			ret.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+		}
+
+		if (conflict.getKind() == ConflictKind.PSEUDO) {
+			ret.append(EMFCompareEditMessages.getString("pseudoconflict")); //$NON-NLS-1$
+		} else {
+			ret.append(EMFCompareEditMessages.getString("conflict")); //$NON-NLS-1$
+		}
+
+		if (unresolvedDiffCount > 0) {
+			ret.append(" [" //$NON-NLS-1$
+					+ EMFCompareEditMessages.getString("unresolved", Integer.valueOf(unresolvedDiffCount), //$NON-NLS-1$
+							Integer.valueOf(d.size())) + "]", //$NON-NLS-1$
+					Style.DECORATIONS_STYLER);
+		} else {
+			ret.append(" [" + EMFCompareEditMessages.getString("resolved") + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
+		return ret;
 	}
 }
