@@ -16,12 +16,12 @@
   <parent>
     <artifactId>emf.compare-parent</artifactId>
     <groupId>org.eclipse.emf.compare</groupId>
-    <version>3.1.0-SNAPSHOT</version>
+    <version>3.1.1-SNAPSHOT</version>
      <relativePath>../../org.eclipse.emf.compare-parent</relativePath>
   </parent>
   <groupId>org.eclipse.emf.compare</groupId>
   <artifactId>org.eclipse.emf.compare.doc</artifactId>
-  <version>3.2.0-SNAPSHOT</version>
+  <version>3.1.1-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 
   <properties>
@@ -121,7 +121,7 @@
                 <argument>${project.build.directory}/website</argument>
                 <argument>-version</argument>
                 <!-- Please update qualified version for each release. Please also update the publisher.properties.-->
-                <argument>3.1.0.${buildQualifier}</argument>
+                <argument>3.1.1.${buildQualifier}</argument>
               </arguments>
             </configuration>
           </execution>
@@ -140,7 +140,7 @@
         </executions>
         <configuration>
           <!-- Please update qualified version for each release. Please also update the publisher.properties.-->
-          <finalName>${project.artifactId}-website-3.1.0.${buildQualifier}</finalName>
+          <finalName>${project.artifactId}-website-3.1.1.${buildQualifier}</finalName>
           <appendAssemblyId>false</appendAssemblyId>
           <descriptors>
             <descriptor>assembly.xml</descriptor>
