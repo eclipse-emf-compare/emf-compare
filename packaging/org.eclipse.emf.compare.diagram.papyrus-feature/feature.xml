@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.diagram.papyrus"
       label="%featureName"
-      version="3.1.0.qualifier"
+      version="3.2.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.emf.compare.diagram.ide.ui.papyrus"
       license-feature="org.eclipse.license"
@@ -21,10 +21,10 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.emf.compare" version="3.1.0.qualifier"/>
-      <import feature="org.eclipse.emf.compare.diagram.gmf" version="3.1.0.qualifier"/>
-      <import feature="org.eclipse.emf.compare.ide.ui" version="3.1.0.qualifier"/>
-      <import feature="org.eclipse.emf.compare.uml2" version="3.1.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare" version="3.2.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare.diagram.gmf" version="3.2.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare.ide.ui" version="3.2.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare.uml2" version="3.2.0.qualifier"/>
       <import feature="org.eclipse.papyrus.infra.core.feature" version="0.9.1.v201209190809"/>
       <import feature="org.eclipse.papyrus.infra.emf.feature" version="0.9.1.v201209190809"/>
       <import feature="org.eclipse.papyrus.infra.gmfdiag.feature" version="0.9.1.v201209190809"/>
