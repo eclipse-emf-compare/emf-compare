@@ -12,6 +12,7 @@
 package org.eclipse.emf.compare.ide.ui.tests.unit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -23,7 +24,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.ui.tests.CompareTestCase;
@@ -45,24 +46,38 @@ public class TestBug459131 extends CompareTestCase {
 
 	private NullProgressMonitor monitor;
 
+	@SuppressWarnings("restriction")
 	@Override
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		resolver = new ThreadedModelResolver();
-		resolver.initialize();
+		resolver = EMFCompareIDEUIPlugin.getDefault().getModelResolverRegistry().getBestResolverFor(null);
 		monitor = new NullProgressMonitor();
 	}
 
 	@Override
 	@After
 	public void tearDown() throws Exception {
-		resolver.dispose();
 		super.tearDown();
 	}
 
+	/**
+	 * Test models:
+	 * <p>
+	 * On left side: R1 -> R2 -> R3
+	 * </p>
+	 * <p>
+	 * On right side: R1 -> R2 -> R3
+	 * </p>
+	 * <p>
+	 * 1 change in R2 fragment and 1 change in R3 fragment. Then update R3 right model to have 1 change in R2
+	 * fragment and no change in R3 fragment.
+	 * </p>
+	 * 
+	 * @throws Exception
+	 */
 	@Test
-	public void test() throws Exception {
+	public void testUpdateResource() throws Exception {
 
 		final IProject iProject = project.getProject();
 
@@ -125,9 +140,7 @@ public class TestBug459131 extends CompareTestCase {
 
 		// Update R3 right model
 		// 1 change in R2 fragment and no change in R3 fragment
-		copyFile(leftFile3, rightFile3);
-
-		iProject.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+		iRightFile3.setContents(iLeftFile3.getContents(), IResource.FORCE, monitor);
 
 		syncModel = resolver.resolveLocalModels(iLeftFile1, iRightFile1, null, monitor);
 
@@ -142,6 +155,109 @@ public class TestBug459131 extends CompareTestCase {
 		assertTrue(rightTraversal.getStorages().contains(iRightFile1));
 		assertTrue(rightTraversal.getStorages().contains(iRightFile2));
 		assertTrue(rightTraversal.getStorages().contains(iRightFile3));
+
+	}
+
+	/**
+	 * Test models:
+	 * <p>
+	 * On left side: R4 -> R5 -> R6
+	 * </p>
+	 * <p>
+	 * On right side: R4 -> R5 -> R6
+	 * </p>
+	 * <p>
+	 * 1 change in R5 fragment and 1 change in R6 fragment. Then brake dependency between R5 & R6 right models
+	 * to delete R3 right model from the logical model.
+	 * </p>
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testBrakeResourceDependency() throws Exception {
+
+		final IProject iProject = project.getProject();
+
+		final File leftFile4 = project.getOrCreateFile(iProject, "left" + File.separator + "R4.nodes");
+		final File leftFile5 = project.getOrCreateFile(iProject, "left" + File.separator + "R5.nodes");
+		final File leftFile6 = project.getOrCreateFile(iProject, "left" + File.separator + "R6.nodes");
+
+		final File rightFile4 = project.getOrCreateFile(iProject, "right" + File.separator + "R4.nodes");
+		final File rightFile5 = project.getOrCreateFile(iProject, "right" + File.separator + "R5.nodes");
+		final File newRightFile5 = project
+				.getOrCreateFile(iProject, "right" + File.separator + "R5NEW.nodes");
+		final File rightFile6 = project.getOrCreateFile(iProject, "right" + File.separator + "R6.nodes");
+
+		Bundle bundle = Platform.getBundle("org.eclipse.emf.compare.ide.ui.tests");
+		URL entryLeftFile4 = bundle
+				.getEntry("src/org/eclipse/emf/compare/ide/ui/tests/unit/data/_459131/left/R4.nodes");
+		URL entryLeftFile5 = bundle
+				.getEntry("src/org/eclipse/emf/compare/ide/ui/tests/unit/data/_459131/left/R5.nodes");
+		URL entryLeftFile6 = bundle
+				.getEntry("src/org/eclipse/emf/compare/ide/ui/tests/unit/data/_459131/left/R6.nodes");
+		URL entryRightFile4 = bundle
+				.getEntry("src/org/eclipse/emf/compare/ide/ui/tests/unit/data/_459131/right/R4.nodes");
+		URL entryRightFile5 = bundle
+				.getEntry("src/org/eclipse/emf/compare/ide/ui/tests/unit/data/_459131/right/R5.nodes");
+		URL newEntryRightFile5 = bundle
+				.getEntry("src/org/eclipse/emf/compare/ide/ui/tests/unit/data/_459131/right/R5NEW.nodes");
+		URL entryRightFile6 = bundle
+				.getEntry("src/org/eclipse/emf/compare/ide/ui/tests/unit/data/_459131/right/R6.nodes");
+		URL leftFile4URL = FileLocator.toFileURL(entryLeftFile4);
+		URL leftFile5URL = FileLocator.toFileURL(entryLeftFile5);
+		URL leftFile6URL = FileLocator.toFileURL(entryLeftFile6);
+		URL rightFile4URL = FileLocator.toFileURL(entryRightFile4);
+		URL rightFile5URL = FileLocator.toFileURL(entryRightFile5);
+		URL newRightFile5URL = FileLocator.toFileURL(newEntryRightFile5);
+		URL rightFile6URL = FileLocator.toFileURL(entryRightFile6);
+		copyFile(new File(leftFile4URL.toURI()), leftFile4);
+		copyFile(new File(leftFile5URL.toURI()), leftFile5);
+		copyFile(new File(leftFile6URL.toURI()), leftFile6);
+		copyFile(new File(rightFile4URL.toURI()), rightFile4);
+		copyFile(new File(rightFile5URL.toURI()), rightFile5);
+		copyFile(new File(newRightFile5URL.toURI()), newRightFile5);
+		copyFile(new File(rightFile6URL.toURI()), rightFile6);
+
+		IFile iLeftFile4 = project.getIFile(iProject, leftFile4);
+		IFile iLeftFile5 = project.getIFile(iProject, leftFile5);
+		IFile iLeftFile6 = project.getIFile(iProject, leftFile6);
+
+		IFile iRightFile4 = project.getIFile(iProject, rightFile4);
+		IFile iRightFile5 = project.getIFile(iProject, rightFile5);
+		IFile newIRightFile5 = project.getIFile(iProject, newRightFile5);
+		IFile iRightFile6 = project.getIFile(iProject, rightFile6);
+
+		// 1 change in R2 fragment and 1 change in R3 fragment
+		SynchronizationModel syncModel = resolver.resolveLocalModels(iLeftFile4, iRightFile4, null, monitor);
+
+		StorageTraversal leftTraversal = syncModel.getLeftTraversal();
+		assertEquals(3, leftTraversal.getStorages().size());
+		assertTrue(leftTraversal.getStorages().contains(iLeftFile4));
+		assertTrue(leftTraversal.getStorages().contains(iLeftFile5));
+		assertTrue(leftTraversal.getStorages().contains(iLeftFile6));
+
+		StorageTraversal rightTraversal = syncModel.getRightTraversal();
+		assertEquals(3, rightTraversal.getStorages().size());
+		assertTrue(rightTraversal.getStorages().contains(iRightFile4));
+		assertTrue(rightTraversal.getStorages().contains(iRightFile5));
+		assertTrue(rightTraversal.getStorages().contains(iRightFile6));
+
+		// Brake dependency between R5 & R6 right models.
+		iRightFile5.setContents(newIRightFile5.getContents(), IResource.FORCE, monitor);
+
+		syncModel = resolver.resolveLocalModels(iLeftFile4, iRightFile4, null, monitor);
+
+		leftTraversal = syncModel.getLeftTraversal();
+		assertEquals(3, leftTraversal.getStorages().size());
+		assertTrue(leftTraversal.getStorages().contains(iLeftFile4));
+		assertTrue(leftTraversal.getStorages().contains(iLeftFile5));
+		assertTrue(leftTraversal.getStorages().contains(iLeftFile6));
+
+		rightTraversal = syncModel.getRightTraversal();
+		assertEquals(2, rightTraversal.getStorages().size());
+		assertTrue(rightTraversal.getStorages().contains(iRightFile4));
+		assertTrue(rightTraversal.getStorages().contains(iRightFile5));
+		assertFalse(rightTraversal.getStorages().contains(iRightFile6));
 
 	}
 }
