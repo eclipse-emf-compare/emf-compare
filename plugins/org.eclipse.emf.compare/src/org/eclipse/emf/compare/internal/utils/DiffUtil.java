@@ -1180,20 +1180,9 @@ public final class DiffUtil {
 		public UnresolvedDiffMatching(Diff diff, Object value, boolean rightToLeft) {
 			this.referenceDiff = diff;
 			this.referenceValue = value;
-			this.comparison = getComparison(diff);
+			this.comparison = ComparisonUtil.getComparison(diff);
 			this.equalityHelper = getEqualityHelper(diff);
 			this.rightToLeft = rightToLeft;
-		}
-
-		/**
-		 * Returns the {@link Comparison} of the given {@code diff} element.
-		 * 
-		 * @param diff
-		 *            the diff element to get its comparison.
-		 * @return the {@link Comparison} of {@code diff}.
-		 */
-		private static Comparison getComparison(Diff diff) {
-			return diff.getMatch().getComparison();
 		}
 
 		/**
@@ -1205,7 +1194,7 @@ public final class DiffUtil {
 		 * @return the {@link Comparison} of {@code diff}.
 		 */
 		private static IEqualityHelper getEqualityHelper(Diff diff) {
-			return getComparison(diff).getEqualityHelper();
+			return ComparisonUtil.getComparison(diff).getEqualityHelper();
 		}
 
 		/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.util.CompareSwitch;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -347,7 +348,7 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 	protected Set<Diff> getAllContainedDifferences(Diff input) {
 		final Set<Diff> result = new HashSet<Diff>();
 
-		final Comparison comparison = input.getMatch().getComparison();
+		final Comparison comparison = ComparisonUtil.getComparison(input);
 
 		CompareSwitch<EObject> valueGetter = new CompareSwitch<EObject>() {
 			@Override
@@ -357,7 +358,7 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 
 			@Override
 			public EObject caseResourceAttachmentChange(ResourceAttachmentChange object) {
-				return MatchUtil.getContainer(object.getMatch().getComparison(), object);
+				return MatchUtil.getContainer(ComparisonUtil.getComparison(object), object);
 			}
 
 			@Override

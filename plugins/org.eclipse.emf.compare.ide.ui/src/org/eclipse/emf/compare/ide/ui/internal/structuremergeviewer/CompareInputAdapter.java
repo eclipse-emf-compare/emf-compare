@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor.AccessorAdapter;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.provider.ExtendedAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory;
@@ -243,7 +244,7 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 			if (((Diff)notifier).eContainer() instanceof MatchResource) {
 				isThreeWay = ((MatchResource)((Diff)notifier).eContainer()).getComparison().isThreeWay();
 			} else {
-				isThreeWay = ((Diff)notifier).getMatch().getComparison().isThreeWay();
+				isThreeWay = ComparisonUtil.getComparison((Diff)notifier).isThreeWay();
 			}
 		} else if (notifier instanceof Match) {
 			isThreeWay = ((Match)notifier).getComparison().isThreeWay();

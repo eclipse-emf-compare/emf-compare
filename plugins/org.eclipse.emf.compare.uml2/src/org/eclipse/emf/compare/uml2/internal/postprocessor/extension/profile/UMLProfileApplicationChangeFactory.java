@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
@@ -154,7 +155,7 @@ public class UMLProfileApplicationChangeFactory extends AbstractUMLChangeFactory
 		final EObject discriminant = getDiscriminant(input);
 		if (discriminant instanceof ProfileApplication) {
 			final org.eclipse.uml2.uml.Package p = ((ProfileApplication)discriminant).getApplyingPackage();
-			final Match match = input.getMatch().getComparison().getMatch(p);
+			final Match match = ComparisonUtil.getComparison(input).getMatch(p);
 			if (match != null) {
 				return match;
 			}

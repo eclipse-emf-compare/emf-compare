@@ -49,6 +49,7 @@ import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicOb
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.CompareInputAdapter;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.IModelUpdateStrategy;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
@@ -489,7 +490,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		}
 
 		private static Set<Diff> getAffectedDiff(Diff diff) {
-			EList<Conflict> conflicts = diff.getMatch().getComparison().getConflicts();
+			EList<Conflict> conflicts = ComparisonUtil.getComparison(diff).getConflicts();
 			for (Conflict conflict : conflicts) {
 				EList<Diff> conflictualDifferences = conflict.getDifferences();
 				if (conflictualDifferences.contains(diff)) {

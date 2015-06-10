@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
@@ -115,7 +116,7 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFact
 		EObject discriminant = getDiscriminant(refiningDiff);
 
 		if (discriminant != null) {
-			final Iterator<Diff> changes = refiningDiff.getMatch().getComparison().getMatch(discriminant)
+			final Iterator<Diff> changes = ComparisonUtil.getComparison(refiningDiff).getMatch(discriminant)
 					.getDifferences().iterator();
 			while (changes.hasNext()) {
 				final Diff diff = changes.next();
@@ -256,7 +257,7 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFact
 		final EObject discriminant = getDiscriminant(input);
 		if (discriminant != null) {
 			final Element element = UMLCompareUtil.getBaseElement(discriminant);
-			final Match match = input.getMatch().getComparison().getMatch(element);
+			final Match match = ComparisonUtil.getComparison(input).getMatch(element);
 			if (match != null) {
 				return match;
 			}

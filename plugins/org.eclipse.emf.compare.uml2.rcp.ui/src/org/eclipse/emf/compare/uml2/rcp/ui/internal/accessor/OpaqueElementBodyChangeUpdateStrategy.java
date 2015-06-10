@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.IModelUpdateStrategy;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
@@ -134,7 +135,7 @@ public class OpaqueElementBodyChangeUpdateStrategy implements IModelUpdateStrate
 	private boolean needsUpdate(Diff diff, Object newValue, MergeViewerSide side) {
 		final OpaqueElementBodyChange bodyChange = (OpaqueElementBodyChange)diff;
 		final String oldValue = getOldBodyValue(bodyChange, side);
-		final IEqualityHelper equalityHelper = diff.getMatch().getComparison().getEqualityHelper();
+		final IEqualityHelper equalityHelper = ComparisonUtil.getComparison(diff).getEqualityHelper();
 		return !equalityHelper.matchingAttributeValues(newValue, oldValue);
 	}
 }

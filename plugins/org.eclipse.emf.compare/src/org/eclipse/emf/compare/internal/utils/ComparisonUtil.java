@@ -439,11 +439,7 @@ public final class ComparisonUtil {
 		if (object instanceof Match) {
 			comparison = ((Match)object).getComparison();
 		} else if (object instanceof Diff) {
-			if (object.eContainer() instanceof MatchResource) {
-				comparison = ((MatchResource)((Diff)object).eContainer()).getComparison();
-			} else {
-				comparison = ((Diff)object).getMatch().getComparison();
-			}
+			comparison = getComparison((Diff)object);
 		} else if (object instanceof MatchResource) {
 			comparison = ((MatchResource)object).getComparison();
 		} else if (object instanceof Equivalence) {
@@ -474,6 +470,24 @@ public final class ComparisonUtil {
 			}
 		} else {
 			comparison = null;
+		}
+		return comparison;
+	}
+
+	/**
+	 * Returns the comparison associated with the given diff.
+	 * 
+	 * @param diff
+	 *            The diff, which must either have a match or a MatchResource container, otherwise a NPE will
+	 *            be thrown.
+	 * @return The comparison that contains the given diff, or {@code null} if there's none.
+	 */
+	public static Comparison getComparison(Diff diff) {
+		final Comparison comparison;
+		if (diff.eContainer() instanceof MatchResource) {
+			comparison = ((MatchResource)diff.eContainer()).getComparison();
+		} else {
+			comparison = diff.getMatch().getComparison();
 		}
 		return comparison;
 	}

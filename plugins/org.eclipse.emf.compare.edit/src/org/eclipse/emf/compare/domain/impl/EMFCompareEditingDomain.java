@@ -324,7 +324,7 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 			IMerger.Registry mergerRegistry) {
 		ImmutableSet.Builder<Notifier> notifiersBuilder = ImmutableSet.builder();
 		for (Diff diff : differences) {
-			notifiersBuilder.add(diff.getMatch().getComparison());
+			notifiersBuilder.add(ComparisonUtil.getComparison(diff));
 		}
 		ImmutableSet<Notifier> notifiers = notifiersBuilder.addAll(fNotifiers).build();
 

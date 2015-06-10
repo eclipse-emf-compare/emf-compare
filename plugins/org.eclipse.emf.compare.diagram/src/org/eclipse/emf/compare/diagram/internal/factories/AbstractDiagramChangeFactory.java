@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.util.CompareSwitch;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
@@ -41,6 +42,7 @@ public abstract class AbstractDiagramChangeFactory extends AbstractChangeFactory
 	 * 
 	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.IChangeFactory#create(org.eclipse.emf.compare.Diff)
 	 */
+	@SuppressWarnings("restriction")
 	@Override
 	public Diff create(Diff input) {
 		Diff ret = super.create(input);
@@ -100,7 +102,7 @@ public abstract class AbstractDiagramChangeFactory extends AbstractChangeFactory
 	 */
 	@Override
 	public Match getParentMatch(Diff input) {
-		return getParentMatch(input.getMatch().getComparison(), input);
+		return getParentMatch(ComparisonUtil.getComparison(input), input);
 	}
 
 	/**
@@ -165,7 +167,7 @@ public abstract class AbstractDiagramChangeFactory extends AbstractChangeFactory
 			final View view = (View)((ReferenceChange)input).getValue();
 			final Object element = ReferenceUtil.safeEGet(view, NotationPackage.Literals.VIEW__ELEMENT);
 			if (element instanceof EObject) {
-				final List<Diff> diffs = findCrossReferences(input.getMatch().getComparison(),
+				final List<Diff> diffs = findCrossReferences(ComparisonUtil.getComparison(input),
 						(EObject)element, new Predicate<Diff>() {
 							public boolean apply(Diff diff) {
 								return diff instanceof ReferenceChange

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.utils.MatchUtil;
@@ -268,7 +269,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
 		HashMultimap<Object, RefiningCandidate> refiningCandidates = HashMultimap.create();
 
-		Comparison comparison = refiningDiff.getMatch().getComparison();
+		Comparison comparison = ComparisonUtil.getComparison(refiningDiff);
 		// From each discriminant business object, ...
 		Set<EObject> discriminants = getDiscriminants(refiningDiff);
 		for (EObject discriminant : discriminants) {
@@ -292,7 +293,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 	 */
 	@Override
 	public Match getParentMatch(Diff input) {
-		return getParentMatch(input.getMatch().getComparison(), input);
+		return getParentMatch(ComparisonUtil.getComparison(input), input);
 	}
 
 	/**
@@ -308,7 +309,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 		if (input instanceof ReferenceChange && ((ReferenceChange)input).getReference().isContainment()) {
 			value = ((ReferenceChange)input).getValue();
 		} else {
-			value = MatchUtil.getContainer(input.getMatch().getComparison(), input);
+			value = MatchUtil.getContainer(ComparisonUtil.getComparison(input), input);
 		}
 		return getDiscriminants(value);
 	}
@@ -558,7 +559,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 	 */
 	protected boolean isChangeOnAddOrDelete(Diff input) {
 		if (getRelatedExtensionKind(input) == DifferenceKind.CHANGE) {
-			final Comparison comparison = input.getMatch().getComparison();
+			final Comparison comparison = ComparisonUtil.getComparison(input);
 			final EObject discriminant = getDiscriminant(input);
 			if (discriminant != null) {
 				return isChangeOnAddOrDelete(input, comparison, discriminant);
