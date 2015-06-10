@@ -7,7 +7,7 @@ Element-Type: context
 Element-Version: 2.0
 Id: _pj0X4HBcEeKTzKjv1SXOgA
 Q7-Runtime-Version: 1.3.15.201412220512
-Save-Time: 4/14/15 10:26 AM
+Save-Time: 6/10/15 11:43 AM
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
 Content-Type: text/plain
@@ -49,6 +49,7 @@ try {
 get-button "Add an existing local Git Repository to this view" | click
 set-dialog-result Folder "platform:/resource/Library-EGit/emf-compare-library-egit"
 get-window "Add Git Repositories" | get-group "Search criteria" | get-button "Browse..." | click
+get-window "Add Git Repositories" | get-checkbox "Check All Repositories" | click
 get-window "Add Git Repositories" | get-button Finish | click
 try -command {
 get-view "Git Repositories" | get-tree | get-property itemCount | equals 1 | verify-true
