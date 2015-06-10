@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Alexandra Buzila - bug 469105
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -29,6 +30,8 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.compare.ide.utils.IStoragePathProvider;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.core.variants.CachedResourceVariant;
@@ -104,9 +107,8 @@ public class StreamAccessorStorage implements IStorage {
 	}
 
 	/**
-	 * This will tries and find a path for the given typed element. If that element can be adapted as an
-	 * IResource, we'll use that resource's path. Otherwise, we'll try and adapt it to a File Revision and use
-	 * that revision's path.
+	 * This will try to find a path for the given typed element. If that element can be adapted, it delegates
+	 * to {@link #findPath(IAdaptable)}.
 	 * 
 	 * @param element
 	 *            The element for which we need a path.
@@ -125,23 +127,9 @@ public class StreamAccessorStorage implements IStorage {
 				if (uri != null) {
 					tmp = org.eclipse.emf.common.util.URI.decode(uri.toString());
 				} else if (revision instanceof IAdaptable) {
-					final IResourceVariant variant = (IResourceVariant)((IAdaptable)revision)
-							.getAdapter(IResourceVariant.class);
-					if (variant instanceof CachedResourceVariant) {
-						tmp = ((CachedResourceVariant)variant).getDisplayPath().toString();
-					} else if (variant != null) {
-						try {
-							final IStorage storage = variant.getStorage(new NullProgressMonitor());
-							if (storage instanceof IFile) {
-								tmp = storage.getFullPath().toString();
-							}
-						} catch (TeamException e) {
-							// Swallow, this was a best effort...
-						}
-					}
+					tmp = findPath((IAdaptable)revision);
 				}
 			}
-
 			if (tmp != null) {
 				fullPath = tmp;
 			} else {
@@ -150,6 +138,41 @@ public class StreamAccessorStorage implements IStorage {
 			}
 		}
 		return fullPath;
+	}
+
+	/**
+	 * If the {@code adaptable} can be adapted to an {@link IResourceVariant}, we'll try to retrieve the
+	 * resource's path. It will use {@link IStoragePathProvider}s, if any are registered. May return null
+	 * 
+	 * @param adaptable
+	 *            The {@link IAdaptable} for which we need a path
+	 * @return A path for the given element.
+	 */
+	private static String findPath(IAdaptable adaptable) {
+		String result = null;
+
+		final IResourceVariant variant = (IResourceVariant)adaptable.getAdapter(IResourceVariant.class);
+
+		if (variant != null) {
+			try {
+				final IStorage storage = variant.getStorage(new NullProgressMonitor());
+				if (storage != null) {
+					final Object adapter = Platform.getAdapterManager().loadAdapter(storage,
+							IStoragePathProvider.class.getName());
+					if (adapter instanceof IStoragePathProvider) {
+						final IPath fixedPath = ((IStoragePathProvider)adapter).computeFixedPath(storage);
+						result = fixedPath.toString();
+					} else if (storage instanceof IFile) {
+						result = storage.getFullPath().toString();
+					}
+				} else if (variant instanceof CachedResourceVariant) {
+					result = ((CachedResourceVariant)variant).getDisplayPath().toString();
+				}
+			} catch (TeamException e) {
+				// Swallow, this was a best effort...
+			}
+		}
+		return result;
 	}
 
 	/**
