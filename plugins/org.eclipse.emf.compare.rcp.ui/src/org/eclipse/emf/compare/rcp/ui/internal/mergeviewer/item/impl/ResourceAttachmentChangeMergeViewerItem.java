@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,8 +46,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Container {
 
 	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem.Container#Container(Comparison
 	 *      comparison, Diff diff, Object left, Object right, Object ancestor, MergeViewerSide side,
 	 *      AdapterFactory adapterFactory)
@@ -59,8 +57,6 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem.Container#Container(Comparison,
 	 *      Diff, Match, MergeViewerSide, AdapterFactory)
 	 */
@@ -72,7 +68,19 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem.Container#getChildren()
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem.Container#hasChildren(IDifferenceGroupProvider,
+	 *      Predicate)
+	 */
+	@Override
+	public boolean hasChildren(IDifferenceGroupProvider groupProvider, Predicate<? super EObject> predicate) {
+		return getChildren(groupProvider, predicate).length > 0;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem.Container#getChildren(IDifferenceGroupProvider,
+	 *      Predicate)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override

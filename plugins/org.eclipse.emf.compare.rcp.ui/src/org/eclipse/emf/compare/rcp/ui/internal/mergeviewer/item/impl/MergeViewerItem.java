@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,16 +21,20 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REF
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 
+import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -38,6 +42,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -54,7 +59,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.util.ResourceUIUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -350,6 +354,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		if (differences.isEmpty()) {
 			return ret;
 		}
+
 		final List<Object> sideContent = ReferenceUtil.getAsList((EObject)getSideValue(getSide()),
 				eStructuralFeature);
 		final List<Object> oppositeContent = ReferenceUtil.getAsList((EObject)getSideValue(getSide()
@@ -358,50 +363,19 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		for (Diff diff : Lists.reverse(differences)) {
 			EObject value = (EObject)MergeViewerUtil.getDiffValue(diff);
 			Match match = getComparison().getMatch(value);
-
-			// create insertion point if we are on the opposite side of the source of an ADD or on the same
-			// side as the a DELETE
-			DifferenceSource source = diff.getSource();
-			DifferenceKind kind = diff.getKind();
-			DifferenceState state = diff.getState();
-			boolean b1 = source == DifferenceSource.LEFT && kind == DifferenceKind.DELETE
-					&& getSide() == MergeViewerSide.LEFT && DifferenceState.MERGED != state;
-			boolean b2 = source == DifferenceSource.LEFT && kind == DifferenceKind.ADD
-					&& getSide() == MergeViewerSide.RIGHT && DifferenceState.MERGED != state;
-			boolean b3 = source == DifferenceSource.RIGHT && kind == DifferenceKind.ADD
-					&& getSide() == MergeViewerSide.LEFT && DifferenceState.MERGED != state;
-			boolean b4 = source == DifferenceSource.RIGHT && kind == DifferenceKind.DELETE
-					&& getSide() == MergeViewerSide.RIGHT && DifferenceState.MERGED != state;
-
-			boolean b5 = (match == null || match.getLeft() == null && match.getRight() == null)
-					&& DifferenceState.MERGED == state;
-
-			// do not duplicate insertion point for pseudo add conflict
-			// so we must only create one for pseudo delete conflict
-			boolean b6 = diff.getConflict() == null
-					|| (diff.getConflict().getKind() != ConflictKind.PSEUDO || kind == DifferenceKind.DELETE);
-
-			if ((b1 || b2 || b3 || b4 || b5) && b6) {
-				if (match == null && DifferenceState.MERGED == state) {
+			if (!isPseudoAddConflict(diff)
+					&& (isAddOnOppositeSide(diff) || isDeleteOnSameSide(diff) || isInsertOnBothSides(diff,
+							match))) {
+				if (match == null && diff.getState() == DifferenceState.MERGED) {
 					EObject bestSideValue = (EObject)getBestSideValue();
 					match = getComparison().getMatch(bestSideValue);
 					match = getMatchWithNullValues(match);
 				}
-				if (match != null) {
-					EObject left = match.getLeft();
-					EObject right = match.getRight();
 
-					// Real add conflict (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=442898)
-					if (match.getLeft() != null && match.getRight() != null) {
-						if (b3) {
-							continue;
-						} else if (b2) {
-							continue;
-						}
-					}
+				if (match != null && !isRealAddConflict(diff, match)) {
 					IMergeViewerItem.Container insertionPoint = new MergeViewerItem.Container(
-							getComparison(), diff, left, right, match.getOrigin(), getSide(),
-							getAdapterFactory());
+							getComparison(), diff, match.getLeft(), match.getRight(), match.getOrigin(),
+							getSide(), getAdapterFactory());
 
 					final int insertionIndex;
 					if (match.getLeft() == null && match.getRight() == null && diff.getConflict() != null
@@ -416,7 +390,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 					}
 
 					// offset the insertion by the number of previous insertion points in the list
-					// Can not b improved by keeping the number of created insertion points because the given
+					// Cannot be improved by keeping the number of created insertion points because the given
 					// "values" parameter may already contains some insertion points.
 					int realIndex = 0;
 					for (int index = 0; index < insertionIndex && realIndex < ret.size(); realIndex++) {
@@ -430,6 +404,44 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			}
 		}
 		return ret;
+	}
+
+	private boolean isAddOnOppositeSide(Diff diff) {
+		if (diff.getState() != DifferenceState.MERGED && diff.getKind() == DifferenceKind.ADD) {
+			DifferenceSource source = diff.getSource();
+			MergeViewerSide side = getSide();
+			return (source == DifferenceSource.LEFT && side == MergeViewerSide.RIGHT)
+					|| (source == DifferenceSource.RIGHT && side == MergeViewerSide.LEFT);
+		}
+
+		return false;
+	}
+
+	private boolean isDeleteOnSameSide(Diff diff) {
+		if (diff.getState() != DifferenceState.MERGED && diff.getKind() == DifferenceKind.DELETE) {
+			DifferenceSource source = diff.getSource();
+			MergeViewerSide side = getSide();
+			return (source == DifferenceSource.LEFT && side == MergeViewerSide.LEFT)
+					|| (source == DifferenceSource.RIGHT && side == MergeViewerSide.RIGHT);
+		}
+
+		return false;
+	}
+
+	private boolean isInsertOnBothSides(Diff diff, Match match) {
+		return diff.getState() == DifferenceState.MERGED
+				&& (match == null || (match.getLeft() == null && match.getRight() == null));
+	}
+
+	private boolean isPseudoAddConflict(Diff diff) {
+		Conflict conflict = diff.getConflict();
+		return conflict != null && conflict.getKind() == ConflictKind.PSEUDO
+				&& diff.getKind() == DifferenceKind.ADD;
+	}
+
+	private boolean isRealAddConflict(Diff diff, Match match) {
+		// Real add conflict (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=442898)
+		return match.getRight() != null && match.getLeft() != null && isAddOnOppositeSide(diff);
 	}
 
 	/**
@@ -486,6 +498,46 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			}
 		}
 		return ret;
+	}
+
+	protected boolean yieldsMergeViewerItem(Collection<?> values) {
+		Iterable<EObject> elements = filter(values, EObject.class);
+		if (fDiff != null && !Iterables.isEmpty(elements)) {
+			return true;
+		}
+
+		for (EObject element : elements) {
+			Match match = getComparison().getMatch(element);
+			if (match != null && !isMatchWithAllProxyData(match)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	protected boolean yieldsInsertionPoint(Iterable<Diff> diffs) {
+		return Iterables.any(diffs, new Predicate<Diff>() {
+			public boolean apply(Diff diff) {
+				if (isPseudoAddConflict(diff)) {
+					return false;
+				}
+
+				EObject value = (EObject)MergeViewerUtil.getDiffValue(diff);
+				Match match = getComparison().getMatch(value);
+				if (isAddOnOppositeSide(diff) || isDeleteOnSameSide(diff) || isInsertOnBothSides(diff, match)) {
+					if (match == null && diff.getState() == DifferenceState.MERGED) {
+						EObject bestSideValue = (EObject)getBestSideValue();
+						match = getComparison().getMatch(bestSideValue);
+						match = getMatchWithNullValues(match);
+					}
+
+					return match != null && !isRealAddConflict(diff, match);
+				}
+
+				return false;
+			}
+		});
 	}
 
 	/**
@@ -545,27 +597,33 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	}
 
 	/**
-	 * From a list of {@link Diff}s, returns the diffs which are not filtered by a filter of the given list of
-	 * {@link IDifferenceFilter}.
+	 * Returns a list of those of the given diffs that are displayed in a group as provided by the given group
+	 * provider and satisfy the given predicate.
 	 * 
 	 * @param unfilteredDiffs
-	 *            the given list of unfiltered diffs.
-	 * @param filters
-	 *            the given list of IDifferenceFilter.
-	 * @return A filtered list of diffs.
+	 *            the unfiltered diffs
+	 * @param predicate
+	 *            a filter predicate; a {@code null} predicate will be satisfied by any diff
+	 * @param groupProvider
+	 *            the active group provider
+	 * @return a list of the filtered diffs
 	 */
-	protected List<? extends Diff> filteredDiffs(List<? extends Diff> unfilteredDiffs,
-			Predicate<? super EObject> predicate, IDifferenceGroupProvider group) {
-		if (predicate != null) {
-			List<Diff> filteredDiffs = Lists.newArrayList(unfilteredDiffs);
-			for (Diff unfilteredDiff : unfilteredDiffs) {
-				if (!MergeViewerUtil.isVisibleInMergeViewer(unfilteredDiff, group, predicate)) {
-					filteredDiffs.remove(unfilteredDiff);
-				}
-			}
-			return filteredDiffs;
+	protected List<? extends Diff> filteredDiffs(Iterable<? extends Diff> unfilteredDiffs,
+			Predicate<? super EObject> predicate, IDifferenceGroupProvider groupProvider) {
+		return Lists.newArrayList(filter(unfilteredDiffs, visibleInMergeViewer(predicate, groupProvider)));
+	}
+
+	protected Predicate<Diff> visibleInMergeViewer(final Predicate<? super EObject> predicate,
+			final IDifferenceGroupProvider groupProvider) {
+		if (predicate == null) {
+			return Predicates.alwaysTrue();
 		}
-		return unfilteredDiffs;
+
+		return new Predicate<Diff>() {
+			public boolean apply(Diff diff) {
+				return MergeViewerUtil.isVisibleInMergeViewer(diff, groupProvider, predicate);
+			}
+		};
 	}
 
 	public static class Container extends MergeViewerItem implements IMergeViewerItem.Container {
@@ -737,10 +795,90 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem.Container#hasChildren()
+		 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem.Container#hasChildren(IDifferenceGroupProvider,
+		 *      Predicate)
 		 */
-		public boolean hasChildren(IDifferenceGroupProvider group, Predicate<? super EObject> predicate) {
-			return getChildren(group, predicate).length > 0;
+		public boolean hasChildren(IDifferenceGroupProvider groupProvider,
+				Predicate<? super EObject> predicate) {
+			if (getLeft() instanceof NotLoadedFragmentMatch) {
+				NotLoadedFragmentMatch notLoadedFragmentMatch = (NotLoadedFragmentMatch)getLeft();
+				return !notLoadedFragmentMatch.getChildren().isEmpty();
+			}
+
+			Object sideValue = getSideValue(getSide());
+			EObject bestSideValue = (EObject)getBestSideValue();
+			Match match = getComparison().getMatch(bestSideValue);
+
+			Iterable<Diff> differences = match == null ? Collections.<Diff> emptyList() : ImmutableList
+					.copyOf(filter(match.getDifferences(), CONTAINMENT_REFERENCE_CHANGE));
+
+			Collection<? extends EStructuralFeature> childrenFeatures = getChildrenFeatures(bestSideValue);
+			for (EStructuralFeature eStructuralFeature : childrenFeatures) {
+				if (eStructuralFeature instanceof EReference) {
+					if (hasChildrenOfReference(groupProvider, predicate, sideValue, differences,
+							(EReference)eStructuralFeature)) {
+						return true;
+					}
+				} else if (FeatureMapUtil.isFeatureMap(eStructuralFeature)) {
+					if (hasChildrenOfFeatureMap(groupProvider, predicate, sideValue, differences,
+							eStructuralFeature)) {
+						return true;
+					}
+				}
+			}
+
+			return hasNotLoadedFragmentsItems(match);
+		}
+
+		private boolean hasChildrenOfReference(IDifferenceGroupProvider groupProvider,
+				Predicate<? super EObject> predicate, Object container, Iterable<Diff> differences,
+				EReference reference) {
+			List<Object> featureContent = ReferenceUtil.getAsList((EObject)container, reference);
+			if (yieldsMergeViewerItem(featureContent)) {
+				return true;
+			}
+
+			if (getSide() != MergeViewerSide.ANCESTOR) {
+				Iterable<Diff> differencesOnFeature = filter(differences, onFeature(reference.getName()));
+				Iterable<Diff> filteredDiffs = filter(differencesOnFeature, visibleInMergeViewer(predicate,
+						groupProvider));
+				return yieldsInsertionPoint(filteredDiffs);
+			}
+
+			return true;
+		}
+
+		private boolean hasChildrenOfFeatureMap(IDifferenceGroupProvider groupProvider,
+				Predicate<? super EObject> predicate, Object container, Iterable<Diff> differences,
+				EStructuralFeature featureMap) {
+			List<Object> mapContent = ReferenceUtil.getAsList((EObject)container, featureMap);
+			List<Object> featureContent = Lists.newArrayList();
+			Set<EStructuralFeature> derivedFeatures = Sets.newLinkedHashSet();
+			for (Object object : mapContent) {
+				if (object instanceof FeatureMap.Entry) {
+					featureContent.add(((FeatureMap.Entry)object).getValue());
+					derivedFeatures.add(((FeatureMap.Entry)object).getEStructuralFeature());
+				}
+			}
+
+			if (yieldsMergeViewerItem(featureContent)) {
+				return true;
+			}
+
+			if (getSide() != MergeViewerSide.ANCESTOR) {
+				Iterable<Diff> differencesOnFeature = filter(differences, onFeatures(derivedFeatures));
+				Iterable<Diff> filteredDiffs = filter(differencesOnFeature, visibleInMergeViewer(predicate,
+						groupProvider));
+				return yieldsInsertionPoint(filteredDiffs);
+			}
+
+			return false;
+		}
+
+		private boolean hasNotLoadedFragmentsItems(Match match) {
+			Collection<Match> childrenMatches = ResourceUIUtil.getChildrenMatchWithNotLoadedParent(
+					getComparison(), match, getSide());
+			return !childrenMatches.isEmpty();
 		}
 
 		@Override
@@ -752,7 +890,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem.Container#getChildren()
+		 * @see org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem.Container#getChildren(IDifferenceGroupProvider,
+		 *      Predicate)
 		 */
 		public IMergeViewerItem[] getChildren(IDifferenceGroupProvider group,
 				Predicate<? super EObject> predicate) {
@@ -868,8 +1007,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			List<Object> featureContent = ReferenceUtil.getAsList((EObject)container, reference);
 			List<IMergeViewerItem> mergeViewerItem = createMergeViewerItemFrom(featureContent);
 			if (getSide() != MergeViewerSide.ANCESTOR) {
-				List<? extends Diff> differencesOnFeature = ImmutableList.copyOf(filter(differences,
-						onFeature(reference.getName())));
+				Iterable<? extends Diff> differencesOnFeature = filter(differences, onFeature(reference
+						.getName()));
 				List<? extends Diff> filteredDiffs = filteredDiffs(differencesOnFeature, predicate, group);
 				ret.addAll(createInsertionPoints(getComparison(), reference, mergeViewerItem, filteredDiffs));
 			} else {
@@ -907,17 +1046,22 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			}
 			List<IMergeViewerItem> mergeViewerItem = createMergeViewerItemFrom(featureContent);
 			if (getSide() != MergeViewerSide.ANCESTOR) {
-				List<Diff> differencesOnFeature = newArrayList();
-				for (EStructuralFeature derivedFeature : derivedFeatures) {
-					differencesOnFeature.addAll(ImmutableList.copyOf(filter(differences,
-							onFeature(derivedFeature.getName()))));
-				}
+				Iterable<Diff> differencesOnFeature = filter(differences, onFeatures(derivedFeatures));
 				List<? extends Diff> filteredDiffs = filteredDiffs(differencesOnFeature, predicate, group);
 				ret.addAll(createInsertionPoints(getComparison(), featureMap, mergeViewerItem, filteredDiffs));
 			} else {
 				ret.addAll(mergeViewerItem);
 			}
 			return ret;
+		}
+
+		private Predicate<Diff> onFeatures(Iterable<EStructuralFeature> features) {
+			return Predicates.or(Iterables.transform(features,
+					new Function<EStructuralFeature, Predicate<? super Diff>>() {
+						public Predicate<? super Diff> apply(EStructuralFeature feature) {
+							return onFeature(feature.getName());
+						}
+					}));
 		}
 
 		/**
