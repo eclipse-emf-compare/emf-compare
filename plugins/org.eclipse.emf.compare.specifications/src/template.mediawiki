@@ -1,0 +1,39 @@
+= Template of Specifications =
+
+
+The id of the user story has the following pattern : US_RELEASE-VERSION_ID.
+For Eclipse Mars, the first user story is US_310_001.
+For Eclipse Neon, the first user story is US_320_001
+For Older releases, the user stories are US_300_XXX.
+
+
+
+==  US_3XX_YYY - Title of the user story ==
+
+=== Description ===
+
+Insert a short description here.
+
+==== Categories ====
+[[./index.html#Core-related Specifications|Core]], [[./index.html#UI-related Specifications|UI]], [[./index.html#UML-related Specifications|UML]], 
+[[./index.html#Diagram-related Specifications|Diagram]], [[./index.html#Team-related Specifications|Team]], [[./index.html#EGit-related Specifications|EGit]],
+[[./index.html#Command Line-related Specifications|Command Line]], ...
+
+=== Related Bugs & Reviews ====
+
+This user story is linked with these bugs & reviews:
+* https://bugs.eclipse.org/bugs/show_bug.cgi?id=000000
+* https://bugs.eclipse.org/bugs/show_bug.cgi?id=000001
+* https://git.eclipse.org/r/#/c/00002/
+
+=== Related Tests ===
+
+This user storys is linked with these tests:
+* http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare.q7.tests/tests/abc/XXXX.test
+* http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare.tests/src/org/eclipse/emf/compare/tests/abc/yyyyyy.java
+
+=== Content ===
+
+Insert the full content of the user story here. 
+All images associated with this user story are stored in src/images with the pattern REQ_XXX_YYY_myPicture.png.
+All resources associated with this user story (wireframe sketches, ...) are stored in src/spec-resources with the pattern REQ_XXX_YYY_myResource.abc.

@@ -1,0 +1,1 @@
+= Specifications of the EMF Compare Older Releases (Before Eclipse Mars) =

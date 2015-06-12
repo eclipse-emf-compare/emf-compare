@@ -1,0 +1,31 @@
+= Specifications =
+
+== [[./3.2.0-release.html|3.2.0 release (Eclipse Neon)]] ==
+
+* [[./3.2.0-release.html#US_320_001 - UML Dangling stereotypes|US_320_001 - UML Dangling stereotypes]]
+
+== [[./3.1.0-release.html|3.1.0 release (Eclipse Mars)]] ==
+
+
+== [older-releases.html|Older releases] ==
+
+
+== Core-related Specifications ==
+
+* [[./3.2.0-release.html#US_320_001 - UML Dangling stereotypes|US_320_001 - UML Dangling stereotypes]]
+
+== UI-related Specifications ==
+
+* [[./3.2.0-release.html#US_320_001 - UML Dangling stereotypes|US_320_001 - UML Dangling stereotypes]]
+
+== UML-related Specifications ==
+
+* [[./3.2.0-release.html#US_320_001 - UML Dangling stereotypes|US_320_001 - UML Dangling stereotypes]]
+
+== Diagram-related specifications ==
+
+== Team-related Specifications ==
+
+== EGit-related Specifications ==
+
+== Command Line-related Specifications ==

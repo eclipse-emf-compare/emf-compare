@@ -1,0 +1,70 @@
+= Specifications of the EMF Compare 3.2.0 release (Eclipse Neon) =
+
+==  US_320_001 - UML Dangling stereotypes ==
+
+=== Description ===
+
+Support UML dangling stereotypes in comparisons and merges.
+
+==== Categories ====
+[[./index.html#Core-related Specifications|Core]], [[./index.html#UI-related Specifications|UI]], [[./index.html#UML-related Specifications|UML]]
+
+=== Related Bugs & Reviews ===
+
+This user story is linked with these bugs & reviews:
+* https://bugs.eclipse.org/bugs/show_bug.cgi?id=467866
+
+=== Related Tests ===
+
+This user story is linked with these tests:
+* http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare.uml2.tests/src/org/eclipse/emf/compare/uml2/tests/stereotypes/DanglingStereotypeApplicationTest.java
+
+=== Content ===
+
+The problem comes from UML dangling stereotypes in UML models. UML dangling stereotypes happen when a stereotype linked to a model element is still in a model while the model element has been removed.
+
+Papyrus offers the possibility to fix dangling stereotypes by removing them.
+
+In 3.1.0 and before, such changes are wrongly detected and displayed as ResourceAttachmentChanges in the comparison models, and displayed to users as "uncontrolled from xxx.uml".
+
+==== Proposal ====
+
+===== Core =====
+A new type of ResourceAttachmentChange will be created in the org.eclipse.emf.compare.uml2/model/uml2compare.ecore metamodel. It will be a DanglingStereotypeApplication.
+
+No specific merge work will be done on DanglingStereotypeApplication. That means DanglingStereotypeApplications will be mergeable from left to right or right to left (and accept/reject) without specific control. Thus, the dangling references could be merged into a "clean" model and make it "dirty".
+
+===== UI =====
+The DanglingStereotypeApplications will be displayed in red to warn users that there is problem(s) in their models. As a ResourceAttachmentChanges, DanglingStereotypeApplications will be displayed under MatchResources.
+
+'''Current'''
+
+[[Image:./images/US_320_001_2.png]]
+
+'''Proposal'''
+
+[[Image:./images/US_320_001_3.png]]
+
+===== Cases =====
+For all cases, consider the following base model.
+
+[[Image:./images/US_320_001_1.png]]
+
+'''Case 1: Dangling stereotype with nothing on the other side'''
+
+[[Image:./images/US_320_001_3.png]]
+
+A merge from left to right of the DanglingStereotypeApplication will lead to delete the dangling stereotype on the right model.
+A merge from right to left of the DanglingStereotypeApplication will lead to have the dangling stereotype also on the left model.
+
+'''Case 2: Dangling stereotype with class (without stereotype) on the other side'''
+
+[[Image:./images/US_320_001_4.png]]
+
+A merge from left to right of the DanglingStereotypeApplication will lead to delete the dangling stereotype on the right model.
+A merge from right to left of the DanglingStereotypeApplication will lead to have the dangling stereotype also on the left model.
+
+===== Possible Evolution =====
+As a possible evolution, specific work could be done on merge to handle case where classes exist on one side and dangling references on the other side (see case 2 above), in order to "re-connect" class and their stereotype application if it is possible (if the id of the targeted element of the stereotype is still there).
+
+

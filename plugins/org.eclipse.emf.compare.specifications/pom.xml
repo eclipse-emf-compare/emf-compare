@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2015 Obeo.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+
+  Contributors:
+       Obeo - Initial API and implementation
+-->
+
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>emf.compare-parent</artifactId>
+    <groupId>org.eclipse.emf.compare</groupId>
+    <version>3.2.0-SNAPSHOT</version>
+     <relativePath>../../org.eclipse.emf.compare-parent</relativePath>
+  </parent>
+  <groupId>org.eclipse.emf.compare</groupId>
+  <artifactId>org.eclipse.emf.compare.specifications</artifactId>
+  <version>3.2.0-SNAPSHOT</version>
+  <packaging>eclipse-plugin</packaging>
+
+  <properties>
+    <simrel>luna</simrel>
+    <platform-isv>org.eclipse.platform.doc.isv/reference/api</platform-isv>
+    <javadoc-args>
+      -quiet
+      -breakiterator
+      -use
+      -splitIndex
+      -windowtitle "EMF Compare API Specification"
+      -doctitle "EMF Compare API Specification"
+      -header "&lt;span style='font-size:small'&gt;&lt;b&gt;EMF Compare&lt;/b&gt;&lt;br&gt;${unqualifiedVersion}.${buildQualifier}&lt;/span&gt;"
+      -bottom "&lt;br&gt;&lt;span style='font-size:small;float:right'&gt;Copyright (c) 2006, 2014 Obeo and others. All rights reserved.&lt;/span&gt;"
+      -tag 'noimplement:a:Restriction:'
+      -tag 'noextend:a:Restriction:'
+      -tag 'noreference:a:Restriction:'
+      -tag 'noinstantiate:a:Restriction:'
+      -tag 'nooverride:a:Restriction:'
+      -tag 'category:a:Category:'
+      -tag 'generated:a:Generated:'
+      -tag 'model:X'
+      -tag 'ordered:X'
+      -linkoffline http://download.oracle.com/javase/8/docs/api/ ${basedir}/javadoc-offline-package-lists/javase-8
+      -linkoffline http://www.osgi.org/javadoc/r5/core/ ${basedir}/javadoc-offline-package-lists/osgi-core-r5
+      -linkoffline http://www.osgi.org/javadoc/r5/enterprise/ ${basedir}/javadoc-offline-package-lists/osgi-enterprise-r5
+      -linkoffline http://download.eclipse.org/modeling/emf/emf/javadoc/2.9.0/ ${basedir}/javadoc-offline-package-lists/emf-2.9
+    </javadoc-args>
+  </properties>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>.</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>publisher.properties</include>
+        </includes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-packaging-plugin</artifactId>
+        <configuration>
+          <!-- 
+          As the the help folder and the plugin.xml will be generated @ build time 
+          by the o.e.e.c.gendoc WikitexToHTML tool, we can not use the build.properties 
+          file to specify its  inclusion, it would lead to warnings during the PDE build 
+          in the Eclipse workspace. We better include it with the following directive.
+           -->
+          <additionalFileSets>
+            <fileSet>
+              <directory>${project.basedir}/help</directory>
+              <prefix>help/</prefix>
+              <includes>
+                <include>**/*</include>
+              </includes>
+            </fileSet>
+            <fileSet>
+              <directory>${project.basedir}</directory>
+              <includes>
+                <include>plugin.xml</include>
+              </includes>
+            </fileSet>
+          </additionalFileSets>
+        </configuration>
+      </plugin>
+      <plugin>
+        <!--
+        Run the org.e.e.c.gendoc WikitTextToHTML tool to generate Eclipse help and
+        website HTML documentation.
+        -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <id>buid-info-generator</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>${JAVA_HOME}/bin/java</executable>
+              <arguments>
+                <argument>-jar</argument>
+                <argument>${project.basedir}/../../packaging/org.eclipse.emf.compare.gendoc/target/org.eclipse.emf.compare.gendoc-1.0-uberjar.jar</argument>
+                <argument>-location</argument>
+                <argument>${project.basedir}</argument>
+                <argument>-projectid</argument>
+                <argument>${project.artifactId}</argument>
+                <argument>-projectname</argument>
+                <argument>EMF Compare</argument>
+                <argument>-eclipsehelp</argument>
+                <argument>${project.basedir}/help</argument>
+                <argument>-website</argument>
+                <argument>${project.build.directory}/website</argument>
+                <argument>-version</argument>
+                <!-- Please update qualified version for each release. Please also update the publisher.properties.-->
+                <argument>3.2.0.${buildQualifier}</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <!-- Please update qualified version for each release. Please also update the publisher.properties.-->
+          <finalName>${project.artifactId}-website-3.2.0.${buildQualifier}</finalName>
+          <appendAssemblyId>false</appendAssemblyId>
+          <descriptors>
+            <descriptor>assembly.xml</descriptor>
+          </descriptors>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <!--
+        Do the javadoc generation in a profile to keep standard builds (e.g. gerrit) fast.
+      -->
+      <id>javadoc</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho.extras</groupId>
+            <artifactId>tycho-document-bundle-plugin</artifactId>
+            <version>${tycho-version}</version>
+            <executions>
+              <execution>
+                <id>eclipse-javadoc</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>javadoc</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.basedir}/help/developer/javadoc</outputDirectory>
+                  <tocFile>${project.basedir}/help/developer/toc-javadoc.xml</tocFile>
+                  <javadocOptions>
+                    <additionalArguments>
+                      <additionalArgument>${javadoc-args}</additionalArgument>
+                      <additionalArgument>
+                        -linkoffline ./../../../${platform-isv} ${basedir}/javadoc-offline-package-lists/eclipse-platform-${simrel}
+                      </additionalArgument>
+                    </additionalArguments>
+                  </javadocOptions>
+                </configuration>
+              </execution>
+              <execution>
+                <id>website-javadoc</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>javadoc</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/website/developer/javadoc</outputDirectory>
+                  <tocFile>${project.build.directory}/toc-javadoc.xml</tocFile>
+                  <javadocOptions>
+                    <additionalArguments>
+                      <additionalArgument>${javadoc-args}</additionalArgument>
+                      <additionalArgument>
+                        -linkoffline http://help.eclipse.org/${simrel}/topic/${platform-isv} ${basedir}/javadoc-offline-package-lists/eclipse-platform-${simrel}
+                      </additionalArgument>
+                    </additionalArguments>
+                  </javadocOptions>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <!--profile>
+      These should be reactivated when Tycho 0.22 will be used. We will be able to use
+      jvmOptions to add these properties to the javadoc options.
+      <id>env.http.proxyHost</id>
+      <activation>
+        <property>
+          <name>!env.http.proxyHost</name>
+        </property>
+      </activation>
+      <properties>
+         <http.proxyHost>proxy.eclipse.org</http.proxyHost>
+      </properties>
+    </profile>
+    <profile>
+      <id>env.http.proxyPort</id>
+      <activation>
+        <property>
+          <name>!env.http.proxyPort</name>
+        </property>
+      </activation>
+      <properties>
+         <http.proxyPort>proxy.eclipse.org</http.proxyPort>
+      </properties>
+    </profile>
+    <profile>
+      <id>env.https.proxyHost</id>
+      <activation>
+        <property>
+          <name>!env.https.proxyHost</name>
+        </property>
+      </activation>
+      <properties>
+         <https.proxyHost>proxy.eclipse.org</https.proxyHost>
+      </properties>
+    </profile>
+    <profile>
+      <id>env.https.proxyPort</id>
+      <activation>
+        <property>
+          <name>!env.https.proxyPort</name>
+        </property>
+      </activation>
+      <properties>
+         <https.proxyPort>proxy.eclipse.org</https.proxyPort>
+      </properties>
+    </profile-->
+  </profiles>
+</project>
