@@ -83,7 +83,8 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 			discriminant = eResolveProxy(oldDiscriminant);
 			if (discriminant != oldDiscriminant) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, UMLComparePackage.UML_DIFF__DISCRIMINANT, oldDiscriminant, discriminant));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							UMLComparePackage.UML_DIFF__DISCRIMINANT, oldDiscriminant, discriminant));
 			}
 		}
 		return discriminant;
@@ -105,7 +106,8 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 		EObject oldDiscriminant = discriminant;
 		discriminant = newDiscriminant;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, UMLComparePackage.UML_DIFF__DISCRIMINANT, oldDiscriminant, discriminant));
+			eNotify(new ENotificationImpl(this, Notification.SET, UMLComparePackage.UML_DIFF__DISCRIMINANT,
+					oldDiscriminant, discriminant));
 	}
 
 	/**
@@ -118,7 +120,8 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 			eReference = (EReference)eResolveProxy(oldEReference);
 			if (eReference != oldEReference) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, UMLComparePackage.UML_DIFF__EREFERENCE, oldEReference, eReference));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							UMLComparePackage.UML_DIFF__EREFERENCE, oldEReference, eReference));
 			}
 		}
 		return eReference;
@@ -140,7 +143,8 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 		EReference oldEReference = eReference;
 		eReference = newEReference;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, UMLComparePackage.UML_DIFF__EREFERENCE, oldEReference, eReference));
+			eNotify(new ENotificationImpl(this, Notification.SET, UMLComparePackage.UML_DIFF__EREFERENCE,
+					oldEReference, eReference));
 	}
 
 	/**
@@ -164,10 +168,12 @@ public abstract class UMLDiffImpl extends DiffImpl implements UMLDiff {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case UMLComparePackage.UML_DIFF__DISCRIMINANT:
-				if (resolve) return getDiscriminant();
+				if (resolve)
+					return getDiscriminant();
 				return basicGetDiscriminant();
 			case UMLComparePackage.UML_DIFF__EREFERENCE:
-				if (resolve) return getEReference();
+				if (resolve)
+					return getEReference();
 				return basicGetEReference();
 		}
 		return super.eGet(featureID, resolve, coreType);

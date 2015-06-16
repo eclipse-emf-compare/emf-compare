@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.compare.uml2.internal.provider;
 
-
 import java.util.Collection;
 import java.util.List;
 
@@ -73,11 +72,9 @@ public class StereotypedElementChangeItemProvider extends UMLDiffItemProvider {
 	public String getText(Object object) {
 		DifferenceKind labelValue = ((StereotypedElementChange)object).getKind();
 		String label = labelValue == null ? null : labelValue.toString();
-		return label == null || label.length() == 0 ?
-			getString("_UI_StereotypedElementChange_type") : //$NON-NLS-1$
-			getString("_UI_StereotypedElementChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+		return label == null || label.length() == 0 ? getString("_UI_StereotypedElementChange_type") : //$NON-NLS-1$
+				getString("_UI_StereotypedElementChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached

@@ -238,6 +238,29 @@ public class UMLCompareItemProviderAdapterFactory extends UMLCompareAdapterFacto
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2.internal.DanglingStereotypeApplication} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DanglingStereotypeApplicationItemProvider danglingStereotypeApplicationItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2.internal.DanglingStereotypeApplication}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createDanglingStereotypeApplicationAdapter() {
+		if (danglingStereotypeApplicationItemProvider == null) {
+			danglingStereotypeApplicationItemProvider = new DanglingStereotypeApplicationItemProvider(this);
+		}
+
+		return danglingStereotypeApplicationItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->

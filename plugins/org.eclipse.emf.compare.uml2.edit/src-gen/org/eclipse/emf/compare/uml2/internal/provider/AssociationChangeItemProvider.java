@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.compare.uml2.internal.provider;
 
-
 import java.util.Collection;
 import java.util.List;
 
@@ -26,8 +25,7 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
  * <!-- end-user-doc -->
  * @generated
  */
-public class AssociationChangeItemProvider
-	extends UMLDiffItemProvider {
+public class AssociationChangeItemProvider extends UMLDiffItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -74,9 +72,8 @@ public class AssociationChangeItemProvider
 	public String getText(Object object) {
 		DifferenceKind labelValue = ((AssociationChange)object).getKind();
 		String label = labelValue == null ? null : labelValue.toString();
-		return label == null || label.length() == 0 ?
-			getString("_UI_AssociationChange_type") : //$NON-NLS-1$
-			getString("_UI_AssociationChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+		return label == null || label.length() == 0 ? getString("_UI_AssociationChange_type") : //$NON-NLS-1$
+				getString("_UI_AssociationChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

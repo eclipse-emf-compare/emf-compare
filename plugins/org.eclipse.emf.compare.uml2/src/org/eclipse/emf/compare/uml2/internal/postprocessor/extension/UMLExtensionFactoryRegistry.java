@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.profile.UML
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence.UMLExecutionSpecificationChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence.UMLIntervalConstraintChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.sequence.UMLMessageChangeFactory;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.stereotype.UMLDanglingStereotypeApplicationFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.stereotype.UMLStereotypeApplicationChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.stereotype.UMLStereotypeAttributeChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.stereotype.UMLStereotypeReferenceChangeFactory;
@@ -65,6 +66,7 @@ public final class UMLExtensionFactoryRegistry {
 		factories.add(new UMLStereotypeReferenceChangeFactory());
 		factories.add(new UMLStereotypeApplicationChangeFactory());
 		factories.add(new UMLOpaqueElementBodyChangeFactory());
+		factories.add(new UMLDanglingStereotypeApplicationFactory());
 
 		for (IChangeFactory iDiffExtensionFactory : factories) {
 			dataset.put(iDiffExtensionFactory.getExtensionKind(), iDiffExtensionFactory);

@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare.uml2.internal.impl;
 
+import org.eclipse.emf.compare.uml2.internal.*;
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
 import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
 import org.eclipse.emf.compare.uml2.internal.ExecutionSpecificationChange;
@@ -43,12 +44,12 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	 */
 	public static UMLCompareFactory init() {
 		try {
-			UMLCompareFactory theUMLCompareFactory = (UMLCompareFactory)EPackage.Registry.INSTANCE.getEFactory(UMLComparePackage.eNS_URI);
+			UMLCompareFactory theUMLCompareFactory = (UMLCompareFactory)EPackage.Registry.INSTANCE
+					.getEFactory(UMLComparePackage.eNS_URI);
 			if (theUMLCompareFactory != null) {
 				return theUMLCompareFactory;
 			}
-		}
-		catch (Exception exception) {
+		} catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new UMLCompareFactoryImpl();
@@ -70,21 +71,37 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case UMLComparePackage.ASSOCIATION_CHANGE: return createAssociationChange();
-			case UMLComparePackage.EXTEND_CHANGE: return createExtendChange();
-			case UMLComparePackage.GENERALIZATION_SET_CHANGE: return createGeneralizationSetChange();
-			case UMLComparePackage.EXECUTION_SPECIFICATION_CHANGE: return createExecutionSpecificationChange();
-			case UMLComparePackage.INTERVAL_CONSTRAINT_CHANGE: return createIntervalConstraintChange();
-			case UMLComparePackage.MESSAGE_CHANGE: return createMessageChange();
-			case UMLComparePackage.STEREOTYPE_ATTRIBUTE_CHANGE: return createStereotypeAttributeChange();
-			case UMLComparePackage.STEREOTYPE_APPLICATION_CHANGE: return createStereotypeApplicationChange();
-			case UMLComparePackage.STEREOTYPE_REFERENCE_CHANGE: return createStereotypeReferenceChange();
-			case UMLComparePackage.PROFILE_APPLICATION_CHANGE: return createProfileApplicationChange();
-			case UMLComparePackage.DIRECTED_RELATIONSHIP_CHANGE: return createDirectedRelationshipChange();
-			case UMLComparePackage.STEREOTYPED_ELEMENT_CHANGE: return createStereotypedElementChange();
-			case UMLComparePackage.OPAQUE_ELEMENT_BODY_CHANGE: return createOpaqueElementBodyChange();
+			case UMLComparePackage.ASSOCIATION_CHANGE:
+				return createAssociationChange();
+			case UMLComparePackage.EXTEND_CHANGE:
+				return createExtendChange();
+			case UMLComparePackage.GENERALIZATION_SET_CHANGE:
+				return createGeneralizationSetChange();
+			case UMLComparePackage.EXECUTION_SPECIFICATION_CHANGE:
+				return createExecutionSpecificationChange();
+			case UMLComparePackage.INTERVAL_CONSTRAINT_CHANGE:
+				return createIntervalConstraintChange();
+			case UMLComparePackage.MESSAGE_CHANGE:
+				return createMessageChange();
+			case UMLComparePackage.STEREOTYPE_ATTRIBUTE_CHANGE:
+				return createStereotypeAttributeChange();
+			case UMLComparePackage.STEREOTYPE_APPLICATION_CHANGE:
+				return createStereotypeApplicationChange();
+			case UMLComparePackage.STEREOTYPE_REFERENCE_CHANGE:
+				return createStereotypeReferenceChange();
+			case UMLComparePackage.PROFILE_APPLICATION_CHANGE:
+				return createProfileApplicationChange();
+			case UMLComparePackage.DIRECTED_RELATIONSHIP_CHANGE:
+				return createDirectedRelationshipChange();
+			case UMLComparePackage.STEREOTYPED_ELEMENT_CHANGE:
+				return createStereotypedElementChange();
+			case UMLComparePackage.OPAQUE_ELEMENT_BODY_CHANGE:
+				return createOpaqueElementBodyChange();
+			case UMLComparePackage.DANGLING_STEREOTYPE_APPLICATION:
+				return createDanglingStereotypeApplication();
 			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+				throw new IllegalArgumentException(
+						"The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -195,7 +212,7 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 		StereotypedElementChangeImpl stereotypedElementChange = new StereotypedElementChangeImpl();
 		return stereotypedElementChange;
 	}
-	
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -204,6 +221,16 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	public OpaqueElementBodyChange createOpaqueElementBodyChange() {
 		OpaqueElementBodyChangeImpl opaqueElementBodyChange = new OpaqueElementBodyChangeImpl();
 		return opaqueElementBodyChange;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DanglingStereotypeApplication createDanglingStereotypeApplication() {
+		DanglingStereotypeApplicationImpl danglingStereotypeApplication = new DanglingStereotypeApplicationImpl();
+		return danglingStereotypeApplication;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,28 +15,33 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.common.util.ResourceLocator;
+
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.provider.DiffItemProvider;
+
+import org.eclipse.emf.compare.provider.ResourceAttachmentChangeItemProvider;
+
+import org.eclipse.emf.compare.uml2.internal.DanglingStereotypeApplication;
+
 import org.eclipse.emf.compare.uml2.internal.UMLComparePackage;
-import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.uml2.internal.UMLDiff} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.uml2.internal.DanglingStereotypeApplication} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class UMLDiffItemProvider extends DiffItemProvider {
+public class DanglingStereotypeApplicationItemProvider extends ResourceAttachmentChangeItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public UMLDiffItemProvider(AdapterFactory adapterFactory) {
+	public DanglingStereotypeApplicationItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -93,6 +98,17 @@ public class UMLDiffItemProvider extends DiffItemProvider {
 	}
 
 	/**
+	 * This returns DanglingStereotypeApplication.gif.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object getImage(Object object) {
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/DanglingStereotypeApplication")); //$NON-NLS-1$
+	}
+
+	/**
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -100,10 +116,10 @@ public class UMLDiffItemProvider extends DiffItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		DifferenceKind labelValue = ((UMLDiff)object).getKind();
+		DifferenceKind labelValue = ((DanglingStereotypeApplication)object).getKind();
 		String label = labelValue == null ? null : labelValue.toString();
-		return label == null || label.length() == 0 ? getString("_UI_UMLDiff_type") : //$NON-NLS-1$
-				getString("_UI_UMLDiff_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+		return label == null || label.length() == 0 ? getString("_UI_DanglingStereotypeApplication_type") : //$NON-NLS-1$
+				getString("_UI_DanglingStereotypeApplication_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

@@ -61,19 +61,15 @@ public class StereotypeApplicationChangeItemProvider extends UMLDiffItemProvider
 	 * @generated
 	 */
 	protected void addStereotypePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_StereotypeApplicationChange_stereotype_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_StereotypeApplicationChange_stereotype_feature", "_UI_StereotypeApplicationChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 UMLComparePackage.Literals.STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_StereotypeApplicationChange_stereotype_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_StereotypeApplicationChange_stereotype_feature", "_UI_StereotypeApplicationChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						UMLComparePackage.Literals.STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE, true, false,
+						true, null, null, null));
 	}
 
 	/**
@@ -95,9 +91,8 @@ public class StereotypeApplicationChangeItemProvider extends UMLDiffItemProvider
 	public String getText(Object object) {
 		DifferenceKind labelValue = ((StereotypeApplicationChange)object).getKind();
 		String label = labelValue == null ? null : labelValue.toString();
-		return label == null || label.length() == 0 ?
-			getString("_UI_StereotypeApplicationChange_type") : //$NON-NLS-1$
-			getString("_UI_StereotypeApplicationChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+		return label == null || label.length() == 0 ? getString("_UI_StereotypeApplicationChange_type") : //$NON-NLS-1$
+				getString("_UI_StereotypeApplicationChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

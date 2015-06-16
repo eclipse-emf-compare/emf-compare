@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.compare.uml2.internal.provider;
 
-
 import java.util.Collection;
 import java.util.List;
 
@@ -28,8 +27,7 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
  * <!-- end-user-doc -->
  * @generated
  */
-public class ProfileApplicationChangeItemProvider
-	extends UMLDiffItemProvider {
+public class ProfileApplicationChangeItemProvider extends UMLDiffItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -63,19 +61,15 @@ public class ProfileApplicationChangeItemProvider
 	 * @generated
 	 */
 	protected void addProfilePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ProfileApplicationChange_profile_feature"), //$NON-NLS-1$
-				 getString("_UI_PropertyDescriptor_description", "_UI_ProfileApplicationChange_profile_feature", "_UI_ProfileApplicationChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				 UMLComparePackage.Literals.PROFILE_APPLICATION_CHANGE__PROFILE,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_ProfileApplicationChange_profile_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_ProfileApplicationChange_profile_feature", "_UI_ProfileApplicationChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						UMLComparePackage.Literals.PROFILE_APPLICATION_CHANGE__PROFILE, true, false, true,
+						null, null, null));
 	}
 
 	/**
@@ -99,9 +93,8 @@ public class ProfileApplicationChangeItemProvider
 	public String getText(Object object) {
 		DifferenceKind labelValue = ((ProfileApplicationChange)object).getKind();
 		String label = labelValue == null ? null : labelValue.toString();
-		return label == null || label.length() == 0 ?
-			getString("_UI_ProfileApplicationChange_type") : //$NON-NLS-1$
-			getString("_UI_ProfileApplicationChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+		return label == null || label.length() == 0 ? getString("_UI_ProfileApplicationChange_type") : //$NON-NLS-1$
+				getString("_UI_ProfileApplicationChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

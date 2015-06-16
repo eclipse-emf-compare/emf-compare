@@ -70,9 +70,8 @@ public class DirectedRelationshipChangeItemProvider extends UMLDiffItemProvider 
 	public String getText(Object object) {
 		DifferenceKind labelValue = ((DirectedRelationshipChange)object).getKind();
 		String label = labelValue == null ? null : labelValue.toString();
-		return label == null || label.length() == 0 ?
-			getString("_UI_DirectedRelationshipChange_type") : //$NON-NLS-1$
-			getString("_UI_DirectedRelationshipChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+		return label == null || label.length() == 0 ? getString("_UI_DirectedRelationshipChange_type") : //$NON-NLS-1$
+				getString("_UI_DirectedRelationshipChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

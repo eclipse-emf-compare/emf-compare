@@ -24,10 +24,9 @@ import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a
- * {@link org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange} object. <!-- begin-user-doc --> <!--
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange} object.
+ * <!-- begin-user-doc --> <!--
  * end-user-doc -->
- * 
  * @generated
  */
 public class OpaqueElementBodyChangeItemProvider extends UMLDiffItemProvider {
@@ -58,8 +57,8 @@ public class OpaqueElementBodyChangeItemProvider extends UMLDiffItemProvider {
 	}
 
 	/**
-	 * This adds a property descriptor for the Language feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds a property descriptor for the Language feature.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected void addLanguagePropertyDescriptor(Object object) {
@@ -75,8 +74,8 @@ public class OpaqueElementBodyChangeItemProvider extends UMLDiffItemProvider {
 	}
 
 	/**
-	 * This returns OpaqueElementBodyChange.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns OpaqueElementBodyChange.gif.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -85,8 +84,8 @@ public class OpaqueElementBodyChangeItemProvider extends UMLDiffItemProvider {
 	}
 
 	/**
-	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns the label text for the adapted class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -98,10 +97,10 @@ public class OpaqueElementBodyChangeItemProvider extends UMLDiffItemProvider {
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
-	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached
+	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -118,9 +117,9 @@ public class OpaqueElementBodyChangeItemProvider extends UMLDiffItemProvider {
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
-	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+	 * that can be created under this object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override

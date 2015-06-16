@@ -200,9 +200,11 @@ public class TreeNodeCompareInputLabelProvider implements ICompareInputLabelProv
 	}
 
 	private StoragePathAdapter getStoragePathAdapter(Resource resource) {
-		for (Adapter adapter : resource.eAdapters()) {
-			if (adapter instanceof StoragePathAdapter) {
-				return (StoragePathAdapter)adapter;
+		if (resource != null) {
+			for (Adapter adapter : resource.eAdapters()) {
+				if (adapter instanceof StoragePathAdapter) {
+					return (StoragePathAdapter)adapter;
+				}
 			}
 		}
 		return null;

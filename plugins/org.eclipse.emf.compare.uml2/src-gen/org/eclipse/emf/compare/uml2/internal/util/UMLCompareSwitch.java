@@ -13,6 +13,8 @@ package org.eclipse.emf.compare.uml2.internal.util;
 import java.util.List;
 
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.uml2.internal.*;
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
 import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
 import org.eclipse.emf.compare.uml2.internal.ExecutionSpecificationChange;
@@ -77,13 +79,9 @@ public class UMLCompareSwitch<T> {
 	protected T doSwitch(EClass theEClass, EObject theEObject) {
 		if (theEClass.eContainer() == modelPackage) {
 			return doSwitch(theEClass.getClassifierID(), theEObject);
-		}
-		else {
+		} else {
 			List<EClass> eSuperTypes = theEClass.getESuperTypes();
-			return
-				eSuperTypes.isEmpty() ?
-					defaultCase(theEObject) :
-					doSwitch(eSuperTypes.get(0), theEObject);
+			return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch(eSuperTypes.get(0), theEObject);
 		}
 	}
 
@@ -98,115 +96,170 @@ public class UMLCompareSwitch<T> {
 			case UMLComparePackage.ASSOCIATION_CHANGE: {
 				AssociationChange associationChange = (AssociationChange)theEObject;
 				T result = caseAssociationChange(associationChange);
-				if (result == null) result = caseUMLDiff(associationChange);
-				if (result == null) result = caseDiff(associationChange);
-				if (result == null) result = defaultCase(theEObject);
+				if (result == null)
+					result = caseUMLDiff(associationChange);
+				if (result == null)
+					result = caseDiff(associationChange);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
 			case UMLComparePackage.EXTEND_CHANGE: {
 				ExtendChange extendChange = (ExtendChange)theEObject;
 				T result = caseExtendChange(extendChange);
-				if (result == null) result = caseUMLDiff(extendChange);
-				if (result == null) result = caseDiff(extendChange);
-				if (result == null) result = defaultCase(theEObject);
+				if (result == null)
+					result = caseUMLDiff(extendChange);
+				if (result == null)
+					result = caseDiff(extendChange);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
 			case UMLComparePackage.GENERALIZATION_SET_CHANGE: {
 				GeneralizationSetChange generalizationSetChange = (GeneralizationSetChange)theEObject;
 				T result = caseGeneralizationSetChange(generalizationSetChange);
-				if (result == null) result = caseUMLDiff(generalizationSetChange);
-				if (result == null) result = caseDiff(generalizationSetChange);
-				if (result == null) result = defaultCase(theEObject);
+				if (result == null)
+					result = caseUMLDiff(generalizationSetChange);
+				if (result == null)
+					result = caseDiff(generalizationSetChange);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
 			case UMLComparePackage.EXECUTION_SPECIFICATION_CHANGE: {
 				ExecutionSpecificationChange executionSpecificationChange = (ExecutionSpecificationChange)theEObject;
 				T result = caseExecutionSpecificationChange(executionSpecificationChange);
-				if (result == null) result = caseUMLDiff(executionSpecificationChange);
-				if (result == null) result = caseDiff(executionSpecificationChange);
-				if (result == null) result = defaultCase(theEObject);
+				if (result == null)
+					result = caseUMLDiff(executionSpecificationChange);
+				if (result == null)
+					result = caseDiff(executionSpecificationChange);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
 			case UMLComparePackage.INTERVAL_CONSTRAINT_CHANGE: {
 				IntervalConstraintChange intervalConstraintChange = (IntervalConstraintChange)theEObject;
 				T result = caseIntervalConstraintChange(intervalConstraintChange);
-				if (result == null) result = caseUMLDiff(intervalConstraintChange);
-				if (result == null) result = caseDiff(intervalConstraintChange);
-				if (result == null) result = defaultCase(theEObject);
+				if (result == null)
+					result = caseUMLDiff(intervalConstraintChange);
+				if (result == null)
+					result = caseDiff(intervalConstraintChange);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
 			case UMLComparePackage.MESSAGE_CHANGE: {
 				MessageChange messageChange = (MessageChange)theEObject;
 				T result = caseMessageChange(messageChange);
-				if (result == null) result = caseUMLDiff(messageChange);
-				if (result == null) result = caseDiff(messageChange);
-				if (result == null) result = defaultCase(theEObject);
+				if (result == null)
+					result = caseUMLDiff(messageChange);
+				if (result == null)
+					result = caseDiff(messageChange);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
 			case UMLComparePackage.STEREOTYPE_ATTRIBUTE_CHANGE: {
 				StereotypeAttributeChange stereotypeAttributeChange = (StereotypeAttributeChange)theEObject;
 				T result = caseStereotypeAttributeChange(stereotypeAttributeChange);
-				if (result == null) result = caseUMLDiff(stereotypeAttributeChange);
-				if (result == null) result = caseDiff(stereotypeAttributeChange);
-				if (result == null) result = defaultCase(theEObject);
+				if (result == null)
+					result = caseUMLDiff(stereotypeAttributeChange);
+				if (result == null)
+					result = caseDiff(stereotypeAttributeChange);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
 			case UMLComparePackage.STEREOTYPE_APPLICATION_CHANGE: {
 				StereotypeApplicationChange stereotypeApplicationChange = (StereotypeApplicationChange)theEObject;
 				T result = caseStereotypeApplicationChange(stereotypeApplicationChange);
-				if (result == null) result = caseUMLDiff(stereotypeApplicationChange);
-				if (result == null) result = caseDiff(stereotypeApplicationChange);
-				if (result == null) result = defaultCase(theEObject);
+				if (result == null)
+					result = caseUMLDiff(stereotypeApplicationChange);
+				if (result == null)
+					result = caseDiff(stereotypeApplicationChange);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
 			case UMLComparePackage.STEREOTYPE_REFERENCE_CHANGE: {
 				StereotypeReferenceChange stereotypeReferenceChange = (StereotypeReferenceChange)theEObject;
 				T result = caseStereotypeReferenceChange(stereotypeReferenceChange);
-				if (result == null) result = caseUMLDiff(stereotypeReferenceChange);
-				if (result == null) result = caseDiff(stereotypeReferenceChange);
-				if (result == null) result = defaultCase(theEObject);
+				if (result == null)
+					result = caseUMLDiff(stereotypeReferenceChange);
+				if (result == null)
+					result = caseDiff(stereotypeReferenceChange);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
 			case UMLComparePackage.PROFILE_APPLICATION_CHANGE: {
 				ProfileApplicationChange profileApplicationChange = (ProfileApplicationChange)theEObject;
 				T result = caseProfileApplicationChange(profileApplicationChange);
-				if (result == null) result = caseUMLDiff(profileApplicationChange);
-				if (result == null) result = caseDiff(profileApplicationChange);
-				if (result == null) result = defaultCase(theEObject);
+				if (result == null)
+					result = caseUMLDiff(profileApplicationChange);
+				if (result == null)
+					result = caseDiff(profileApplicationChange);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
 			case UMLComparePackage.DIRECTED_RELATIONSHIP_CHANGE: {
 				DirectedRelationshipChange directedRelationshipChange = (DirectedRelationshipChange)theEObject;
 				T result = caseDirectedRelationshipChange(directedRelationshipChange);
-				if (result == null) result = caseUMLDiff(directedRelationshipChange);
-				if (result == null) result = caseDiff(directedRelationshipChange);
-				if (result == null) result = defaultCase(theEObject);
+				if (result == null)
+					result = caseUMLDiff(directedRelationshipChange);
+				if (result == null)
+					result = caseDiff(directedRelationshipChange);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
 			case UMLComparePackage.UML_DIFF: {
 				UMLDiff umlDiff = (UMLDiff)theEObject;
 				T result = caseUMLDiff(umlDiff);
-				if (result == null) result = caseDiff(umlDiff);
-				if (result == null) result = defaultCase(theEObject);
+				if (result == null)
+					result = caseDiff(umlDiff);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
 			case UMLComparePackage.STEREOTYPED_ELEMENT_CHANGE: {
 				StereotypedElementChange stereotypedElementChange = (StereotypedElementChange)theEObject;
 				T result = caseStereotypedElementChange(stereotypedElementChange);
-				if (result == null) result = caseUMLDiff(stereotypedElementChange);
-				if (result == null) result = caseDiff(stereotypedElementChange);
-				if (result == null) result = defaultCase(theEObject);
+				if (result == null)
+					result = caseUMLDiff(stereotypedElementChange);
+				if (result == null)
+					result = caseDiff(stereotypedElementChange);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
 			case UMLComparePackage.OPAQUE_ELEMENT_BODY_CHANGE: {
 				OpaqueElementBodyChange opaqueElementBodyChange = (OpaqueElementBodyChange)theEObject;
 				T result = caseOpaqueElementBodyChange(opaqueElementBodyChange);
-				if (result == null) result = caseUMLDiff(opaqueElementBodyChange);
-				if (result == null) result = caseDiff(opaqueElementBodyChange);
-				if (result == null) result = defaultCase(theEObject);
+				if (result == null)
+					result = caseUMLDiff(opaqueElementBodyChange);
+				if (result == null)
+					result = caseDiff(opaqueElementBodyChange);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
-			default: return defaultCase(theEObject);
+			case UMLComparePackage.DANGLING_STEREOTYPE_APPLICATION: {
+				DanglingStereotypeApplication danglingStereotypeApplication = (DanglingStereotypeApplication)theEObject;
+				T result = caseDanglingStereotypeApplication(danglingStereotypeApplication);
+				if (result == null)
+					result = caseResourceAttachmentChange(danglingStereotypeApplication);
+				if (result == null)
+					result = caseUMLDiff(danglingStereotypeApplication);
+				if (result == null)
+					result = caseDiff(danglingStereotypeApplication);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			default:
+				return defaultCase(theEObject);
 		}
 	}
 
@@ -390,7 +443,7 @@ public class UMLCompareSwitch<T> {
 	public T caseStereotypedElementChange(StereotypedElementChange object) {
 		return null;
 	}
-	
+
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Opaque Element Body Change</em>'.
 	 * <!-- begin-user-doc -->
@@ -407,6 +460,21 @@ public class UMLCompareSwitch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Dangling Stereotype Application</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Dangling Stereotype Application</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDanglingStereotypeApplication(DanglingStereotypeApplication object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Diff</em>'.
 	 * <!-- begin-user-doc
 	 * --> This implementation returns null; returning a non-null result will terminate the switch. <!--
@@ -417,6 +485,21 @@ public class UMLCompareSwitch<T> {
 	 * @generated
 	 */
 	public T caseDiff(Diff object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Resource Attachment Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Resource Attachment Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseResourceAttachmentChange(ResourceAttachmentChange object) {
 		return null;
 	}
 

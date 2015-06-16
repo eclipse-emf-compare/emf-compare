@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.uml2.internal.impl;
 
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
+import org.eclipse.emf.compare.uml2.internal.DanglingStereotypeApplication;
 import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
 import org.eclipse.emf.compare.uml2.internal.ExecutionSpecificationChange;
 import org.eclipse.emf.compare.uml2.internal.ExtendChange;
@@ -119,13 +120,20 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	 * @generated
 	 */
 	private EClass stereotypedElementChangeEClass = null;
-	
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass opaqueElementBodyChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass danglingStereotypeApplicationEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -163,10 +171,13 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	 * @generated
 	 */
 	public static UMLComparePackage init() {
-		if (isInited) return (UMLComparePackage)EPackage.Registry.INSTANCE.getEPackage(UMLComparePackage.eNS_URI);
+		if (isInited)
+			return (UMLComparePackage)EPackage.Registry.INSTANCE.getEPackage(UMLComparePackage.eNS_URI);
 
 		// Obtain or create and register package
-		UMLComparePackageImpl theUMLComparePackage = (UMLComparePackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof UMLComparePackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new UMLComparePackageImpl());
+		UMLComparePackageImpl theUMLComparePackage = (UMLComparePackageImpl)(EPackage.Registry.INSTANCE
+				.get(eNS_URI) instanceof UMLComparePackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI)
+				: new UMLComparePackageImpl());
 
 		isInited = true;
 
@@ -183,7 +194,6 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		// Mark meta-data to indicate it can't be changed
 		theUMLComparePackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(UMLComparePackage.eNS_URI, theUMLComparePackage);
 		return theUMLComparePackage;
@@ -326,7 +336,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	public EClass getStereotypedElementChange() {
 		return stereotypedElementChangeEClass;
 	}
-	
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -343,6 +353,15 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	 */
 	public EAttribute getOpaqueElementBodyChange_Language() {
 		return (EAttribute)opaqueElementBodyChangeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getDanglingStereotypeApplication() {
+		return danglingStereotypeApplicationEClass;
 	}
 
 	/**
@@ -366,7 +385,8 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	 * @generated
 	 */
 	public void createPackageContents() {
-		if (isCreated) return;
+		if (isCreated)
+			return;
 		isCreated = true;
 
 		// Create classes and their features
@@ -399,9 +419,11 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		createEReference(umlDiffEClass, UML_DIFF__EREFERENCE);
 
 		stereotypedElementChangeEClass = createEClass(STEREOTYPED_ELEMENT_CHANGE);
-		
+
 		opaqueElementBodyChangeEClass = createEClass(OPAQUE_ELEMENT_BODY_CHANGE);
 		createEAttribute(opaqueElementBodyChangeEClass, OPAQUE_ELEMENT_BODY_CHANGE__LANGUAGE);
+
+		danglingStereotypeApplicationEClass = createEClass(DANGLING_STEREOTYPE_APPLICATION);
 	}
 
 	/**
@@ -417,7 +439,8 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	 * @generated
 	 */
 	public void initializePackageContents() {
-		if (isInitialized) return;
+		if (isInitialized)
+			return;
 		isInitialized = true;
 
 		// Initialize package
@@ -427,8 +450,10 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 		// Obtain other dependent packages
 		UMLPackage theUMLPackage = (UMLPackage)EPackage.Registry.INSTANCE.getEPackage(UMLPackage.eNS_URI);
-		ComparePackage theComparePackage = (ComparePackage)EPackage.Registry.INSTANCE.getEPackage(ComparePackage.eNS_URI);
-		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+		ComparePackage theComparePackage = (ComparePackage)EPackage.Registry.INSTANCE
+				.getEPackage(ComparePackage.eNS_URI);
+		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE
+				.getEPackage(EcorePackage.eNS_URI);
 
 		// Create type parameters
 
@@ -449,40 +474,79 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		umlDiffEClass.getESuperTypes().add(theComparePackage.getDiff());
 		stereotypedElementChangeEClass.getESuperTypes().add(this.getUMLDiff());
 		opaqueElementBodyChangeEClass.getESuperTypes().add(this.getUMLDiff());
+		danglingStereotypeApplicationEClass.getESuperTypes().add(
+				theComparePackage.getResourceAttachmentChange());
+		danglingStereotypeApplicationEClass.getESuperTypes().add(this.getUMLDiff());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(associationChangeEClass, AssociationChange.class, "AssociationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(associationChangeEClass, AssociationChange.class,
+				"AssociationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(extendChangeEClass, ExtendChange.class, "ExtendChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(extendChangeEClass, ExtendChange.class,
+				"ExtendChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(generalizationSetChangeEClass, GeneralizationSetChange.class, "GeneralizationSetChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(generalizationSetChangeEClass, GeneralizationSetChange.class,
+				"GeneralizationSetChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(executionSpecificationChangeEClass, ExecutionSpecificationChange.class, "ExecutionSpecificationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(executionSpecificationChangeEClass, ExecutionSpecificationChange.class,
+				"ExecutionSpecificationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(intervalConstraintChangeEClass, IntervalConstraintChange.class, "IntervalConstraintChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(intervalConstraintChangeEClass, IntervalConstraintChange.class,
+				"IntervalConstraintChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(messageChangeEClass, MessageChange.class, "MessageChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(messageChangeEClass, MessageChange.class,
+				"MessageChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(stereotypeAttributeChangeEClass, StereotypeAttributeChange.class, "StereotypeAttributeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(stereotypeAttributeChangeEClass, StereotypeAttributeChange.class,
+				"StereotypeAttributeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(stereotypeApplicationChangeEClass, StereotypeApplicationChange.class, "StereotypeApplicationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getStereotypeApplicationChange_Stereotype(), theUMLPackage.getStereotype(), null, "stereotype", null, 0, 1, StereotypeApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(stereotypeApplicationChangeEClass, StereotypeApplicationChange.class,
+				"StereotypeApplicationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getStereotypeApplicationChange_Stereotype(),
+				theUMLPackage.getStereotype(),
+				null,
+				"stereotype", null, 0, 1, StereotypeApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(stereotypeReferenceChangeEClass, StereotypeReferenceChange.class, "StereotypeReferenceChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(stereotypeReferenceChangeEClass, StereotypeReferenceChange.class,
+				"StereotypeReferenceChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(profileApplicationChangeEClass, ProfileApplicationChange.class, "ProfileApplicationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getProfileApplicationChange_Profile(), theUMLPackage.getProfile(), null, "profile", null, 0, 1, ProfileApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(profileApplicationChangeEClass, ProfileApplicationChange.class,
+				"ProfileApplicationChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getProfileApplicationChange_Profile(),
+				theUMLPackage.getProfile(),
+				null,
+				"profile", null, 0, 1, ProfileApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(directedRelationshipChangeEClass, DirectedRelationshipChange.class, "DirectedRelationshipChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(directedRelationshipChangeEClass, DirectedRelationshipChange.class,
+				"DirectedRelationshipChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlDiffEClass, UMLDiff.class, "UMLDiff", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getUMLDiff_Discriminant(), theEcorePackage.getEObject(), null, "discriminant", null, 0, 1, UMLDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getUMLDiff_EReference(), theEcorePackage.getEReference(), null, "eReference", null, 0, 1, UMLDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(umlDiffEClass, UMLDiff.class,
+				"UMLDiff", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getUMLDiff_Discriminant(),
+				theEcorePackage.getEObject(),
+				null,
+				"discriminant", null, 0, 1, UMLDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getUMLDiff_EReference(),
+				theEcorePackage.getEReference(),
+				null,
+				"eReference", null, 0, 1, UMLDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(stereotypedElementChangeEClass, StereotypedElementChange.class, "StereotypedElementChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		
-		initEClass(opaqueElementBodyChangeEClass, OpaqueElementBodyChange.class, "OpaqueElementBodyChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getOpaqueElementBodyChange_Language(), ecorePackage.getEString(), "language", null, 0, 1, OpaqueElementBodyChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(stereotypedElementChangeEClass, StereotypedElementChange.class,
+				"StereotypedElementChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+
+		initEClass(opaqueElementBodyChangeEClass, OpaqueElementBodyChange.class,
+				"OpaqueElementBodyChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getOpaqueElementBodyChange_Language(),
+				ecorePackage.getEString(),
+				"language", null, 0, 1, OpaqueElementBodyChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(danglingStereotypeApplicationEClass, DanglingStereotypeApplication.class,
+				"DanglingStereotypeApplication", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

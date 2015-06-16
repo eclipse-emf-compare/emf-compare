@@ -69,7 +69,9 @@ public class StereotypeApplicationChangeImpl extends UMLDiffSpec implements Ster
 			stereotype = (Stereotype)eResolveProxy(oldStereotype);
 			if (stereotype != oldStereotype) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, UMLComparePackage.STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE, oldStereotype, stereotype));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							UMLComparePackage.STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE, oldStereotype,
+							stereotype));
 			}
 		}
 		return stereotype;
@@ -91,7 +93,8 @@ public class StereotypeApplicationChangeImpl extends UMLDiffSpec implements Ster
 		Stereotype oldStereotype = stereotype;
 		stereotype = newStereotype;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, UMLComparePackage.STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE, oldStereotype, stereotype));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					UMLComparePackage.STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE, oldStereotype, stereotype));
 	}
 
 	/**
@@ -102,7 +105,8 @@ public class StereotypeApplicationChangeImpl extends UMLDiffSpec implements Ster
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case UMLComparePackage.STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE:
-				if (resolve) return getStereotype();
+				if (resolve)
+					return getStereotype();
 				return basicGetStereotype();
 		}
 		return super.eGet(featureID, resolve, coreType);

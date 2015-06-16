@@ -14,6 +14,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.uml2.internal.*;
 import org.eclipse.emf.ecore.EObject;
 
@@ -68,71 +69,96 @@ public class UMLCompareAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	protected UMLCompareSwitch<Adapter> modelSwitch = new UMLCompareSwitch<Adapter>() {
-			@Override
-			public Adapter caseAssociationChange(AssociationChange object) {
-				return createAssociationChangeAdapter();
-			}
-			@Override
-			public Adapter caseExtendChange(ExtendChange object) {
-				return createExtendChangeAdapter();
-			}
-			@Override
-			public Adapter caseGeneralizationSetChange(GeneralizationSetChange object) {
-				return createGeneralizationSetChangeAdapter();
-			}
-			@Override
-			public Adapter caseExecutionSpecificationChange(ExecutionSpecificationChange object) {
-				return createExecutionSpecificationChangeAdapter();
-			}
-			@Override
-			public Adapter caseIntervalConstraintChange(IntervalConstraintChange object) {
-				return createIntervalConstraintChangeAdapter();
-			}
-			@Override
-			public Adapter caseMessageChange(MessageChange object) {
-				return createMessageChangeAdapter();
-			}
-			@Override
-			public Adapter caseStereotypeAttributeChange(StereotypeAttributeChange object) {
-				return createStereotypeAttributeChangeAdapter();
-			}
-			@Override
-			public Adapter caseStereotypeApplicationChange(StereotypeApplicationChange object) {
-				return createStereotypeApplicationChangeAdapter();
-			}
-			@Override
-			public Adapter caseStereotypeReferenceChange(StereotypeReferenceChange object) {
-				return createStereotypeReferenceChangeAdapter();
-			}
-			@Override
-			public Adapter caseProfileApplicationChange(ProfileApplicationChange object) {
-				return createProfileApplicationChangeAdapter();
-			}
-			@Override
-			public Adapter caseDirectedRelationshipChange(DirectedRelationshipChange object) {
-				return createDirectedRelationshipChangeAdapter();
-			}
-			@Override
-			public Adapter caseUMLDiff(UMLDiff object) {
-				return createUMLDiffAdapter();
-			}
-			@Override
-			public Adapter caseStereotypedElementChange(StereotypedElementChange object) {
-				return createStereotypedElementChangeAdapter();
-			}
-			@Override
-			public Adapter caseOpaqueElementBodyChange(OpaqueElementBodyChange object) {
-				return createOpaqueElementBodyChangeAdapter();
-			}
-			@Override
-			public Adapter caseDiff(Diff object) {
-				return createDiffAdapter();
-			}
-			@Override
-			public Adapter defaultCase(EObject object) {
-				return createEObjectAdapter();
-			}
-		};
+		@Override
+		public Adapter caseAssociationChange(AssociationChange object) {
+			return createAssociationChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseExtendChange(ExtendChange object) {
+			return createExtendChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseGeneralizationSetChange(GeneralizationSetChange object) {
+			return createGeneralizationSetChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseExecutionSpecificationChange(ExecutionSpecificationChange object) {
+			return createExecutionSpecificationChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseIntervalConstraintChange(IntervalConstraintChange object) {
+			return createIntervalConstraintChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseMessageChange(MessageChange object) {
+			return createMessageChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseStereotypeAttributeChange(StereotypeAttributeChange object) {
+			return createStereotypeAttributeChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseStereotypeApplicationChange(StereotypeApplicationChange object) {
+			return createStereotypeApplicationChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseStereotypeReferenceChange(StereotypeReferenceChange object) {
+			return createStereotypeReferenceChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseProfileApplicationChange(ProfileApplicationChange object) {
+			return createProfileApplicationChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseDirectedRelationshipChange(DirectedRelationshipChange object) {
+			return createDirectedRelationshipChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseUMLDiff(UMLDiff object) {
+			return createUMLDiffAdapter();
+		}
+
+		@Override
+		public Adapter caseStereotypedElementChange(StereotypedElementChange object) {
+			return createStereotypedElementChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseOpaqueElementBodyChange(OpaqueElementBodyChange object) {
+			return createOpaqueElementBodyChangeAdapter();
+		}
+
+		@Override
+		public Adapter caseDanglingStereotypeApplication(DanglingStereotypeApplication object) {
+			return createDanglingStereotypeApplicationAdapter();
+		}
+
+		@Override
+		public Adapter caseDiff(Diff object) {
+			return createDiffAdapter();
+		}
+
+		@Override
+		public Adapter caseResourceAttachmentChange(ResourceAttachmentChange object) {
+			return createResourceAttachmentChangeAdapter();
+		}
+
+		@Override
+		public Adapter defaultCase(EObject object) {
+			return createEObjectAdapter();
+		}
+	};
 
 	/**
 	 * Creates an adapter for the <code>target</code>.
@@ -317,7 +343,7 @@ public class UMLCompareAdapterFactory extends AdapterFactoryImpl {
 	public Adapter createStereotypedElementChangeAdapter() {
 		return null;
 	}
-	
+
 	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange <em>Opaque Element Body Change</em>}'.
 	 * <!-- begin-user-doc -->
@@ -333,6 +359,20 @@ public class UMLCompareAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2.internal.DanglingStereotypeApplication <em>Dangling Stereotype Application</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.uml2.internal.DanglingStereotypeApplication
+	 * @generated
+	 */
+	public Adapter createDanglingStereotypeApplicationAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.Diff <em>Diff</em>}'. <!--
 	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's
 	 * useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
@@ -342,6 +382,20 @@ public class UMLCompareAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createDiffAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.ResourceAttachmentChange <em>Resource Attachment Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.ResourceAttachmentChange
+	 * @generated
+	 */
+	public Adapter createResourceAttachmentChangeAdapter() {
 		return null;
 	}
 

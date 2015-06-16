@@ -32,5 +32,9 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference uml2compare.ecore#//UMLDiff/eReference"/>
     </genClasses>
     <genClasses provider="Stateful" ecoreClass="uml2compare.ecore#//StereotypedElementChange"/>
+    <genClasses ecoreClass="uml2compare.ecore#//OpaqueElementBodyChange">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute uml2compare.ecore#//OpaqueElementBodyChange/language"/>
+    </genClasses>
+    <genClasses ecoreClass="uml2compare.ecore#//DanglingStereotypeApplication"/>
   </genPackages>
 </genmodel:GenModel>

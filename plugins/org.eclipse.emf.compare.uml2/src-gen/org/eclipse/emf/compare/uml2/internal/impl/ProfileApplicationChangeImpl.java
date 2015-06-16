@@ -69,7 +69,8 @@ public class ProfileApplicationChangeImpl extends UMLDiffSpec implements Profile
 			profile = (Profile)eResolveProxy(oldProfile);
 			if (profile != oldProfile) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, UMLComparePackage.PROFILE_APPLICATION_CHANGE__PROFILE, oldProfile, profile));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							UMLComparePackage.PROFILE_APPLICATION_CHANGE__PROFILE, oldProfile, profile));
 			}
 		}
 		return profile;
@@ -91,7 +92,8 @@ public class ProfileApplicationChangeImpl extends UMLDiffSpec implements Profile
 		Profile oldProfile = profile;
 		profile = newProfile;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, UMLComparePackage.PROFILE_APPLICATION_CHANGE__PROFILE, oldProfile, profile));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					UMLComparePackage.PROFILE_APPLICATION_CHANGE__PROFILE, oldProfile, profile));
 	}
 
 	/**
@@ -102,7 +104,8 @@ public class ProfileApplicationChangeImpl extends UMLDiffSpec implements Profile
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case UMLComparePackage.PROFILE_APPLICATION_CHANGE__PROFILE:
-				if (resolve) return getProfile();
+				if (resolve)
+					return getProfile();
 				return basicGetProfile();
 		}
 		return super.eGet(featureID, resolve, coreType);

@@ -31,6 +31,10 @@
             class="org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.factory.OpaqueElementBodyChangeAccessorFactory"
             ranking="25">
       </factory>
+      <factory
+            class="org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.factory.UMLDanglingStereotypeApplicationAccessorFactory"
+            ranking="25">
+      </factory>
    </extension>
    <extension
          point="org.eclipse.emf.compare.rcp.ui.filters">

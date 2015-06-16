@@ -50,12 +50,8 @@ public final class UMLCompareEditPlugin extends EMFPlugin {
 	 * @generated
 	 */
 	public UMLCompareEditPlugin() {
-		super
-		  (new ResourceLocator [] {
-		     EMFCompareEditPlugin.INSTANCE,
-		     EcoreEditPlugin.INSTANCE,
-		     UMLEditPlugin.INSTANCE,
-		   });
+		super(new ResourceLocator[] {EMFCompareEditPlugin.INSTANCE, EcoreEditPlugin.INSTANCE,
+				UMLEditPlugin.INSTANCE, });
 	}
 
 	/**

@@ -119,9 +119,10 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 	}
 
 	private boolean isUnrelated(ResourceAttachmentChange change, Object resource) {
+		final String resourceURI = change.getResourceURI();
 		return resource == null
-				|| (resource instanceof Resource && !change.getResourceURI().equals(
-						((Resource)resource).getURI().toString()));
+				|| (resource instanceof Resource && resourceURI != null && !resourceURI
+						.equals(((Resource)resource).getURI().toString()));
 	}
 
 	/**

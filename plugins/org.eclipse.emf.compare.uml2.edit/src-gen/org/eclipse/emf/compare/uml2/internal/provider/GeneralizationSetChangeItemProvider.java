@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.compare.uml2.internal.provider;
 
-
 import java.util.Collection;
 import java.util.List;
 
@@ -26,8 +25,7 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
  * <!-- end-user-doc -->
  * @generated
  */
-public class GeneralizationSetChangeItemProvider
-	extends UMLDiffItemProvider {
+public class GeneralizationSetChangeItemProvider extends UMLDiffItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -74,9 +72,8 @@ public class GeneralizationSetChangeItemProvider
 	public String getText(Object object) {
 		DifferenceKind labelValue = ((GeneralizationSetChange)object).getKind();
 		String label = labelValue == null ? null : labelValue.toString();
-		return label == null || label.length() == 0 ?
-			getString("_UI_GeneralizationSetChange_type") : //$NON-NLS-1$
-			getString("_UI_GeneralizationSetChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+		return label == null || label.length() == 0 ? getString("_UI_GeneralizationSetChange_type") : //$NON-NLS-1$
+				getString("_UI_GeneralizationSetChange_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
