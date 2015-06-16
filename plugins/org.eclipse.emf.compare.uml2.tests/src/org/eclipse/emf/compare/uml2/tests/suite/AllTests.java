@@ -45,6 +45,7 @@ import org.eclipse.emf.compare.uml2.tests.opaque.OpaqueElementBodyChangeDiffTest
 import org.eclipse.emf.compare.uml2.tests.opaque.OpaqueElementBodyChangeMergeTest;
 import org.eclipse.emf.compare.uml2.tests.profiles.DynamicProfileTest;
 import org.eclipse.emf.compare.uml2.tests.profiles.StaticProfileTest;
+import org.eclipse.emf.compare.uml2.tests.stereotypes.DanglingStereotypeApplicationTest;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.DynamicStereotypeTest;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.DynamicStereotypedElementChangeTests;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.StaticStereotypeTest;
@@ -72,7 +73,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		DynamicStereotypedElementChangeTests.class, ImplicationsAssociationTest.class,
 		ImplicationsTransitionTest.class, ImplicationsInterfaceRealizationTest.class,
 		StaticStereotypedElementItemProviderTest.class, DynamicStereotypedElementItemProviderTest.class,
-		OpaqueElementBodyChangeDiffTest.class, OpaqueElementBodyChangeMergeTest.class })
+		OpaqueElementBodyChangeDiffTest.class, OpaqueElementBodyChangeMergeTest.class,
+		DanglingStereotypeApplicationTest.class })
 public class AllTests {
 
 	/**
