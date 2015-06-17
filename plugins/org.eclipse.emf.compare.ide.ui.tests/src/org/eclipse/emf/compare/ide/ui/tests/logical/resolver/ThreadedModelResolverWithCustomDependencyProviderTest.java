@@ -207,13 +207,13 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 	}
 
 	private void assertContainsFile(StorageTraversal traversal, final IFile iFile) {
-		Iterables.any(traversal.getStorages(), containsFile(iFile));
+		assertTrue(Iterables.any(traversal.getStorages(), containsFile(iFile)));
 	}
 
 	private static Predicate<IStorage> containsFile(final IFile iFile) {
 		return new Predicate<IStorage>() {
 			public boolean apply(IStorage input) {
-				return iFile.equals(input.getFullPath());
+				return iFile.getFullPath().equals(input.getFullPath());
 			}
 		};
 	}

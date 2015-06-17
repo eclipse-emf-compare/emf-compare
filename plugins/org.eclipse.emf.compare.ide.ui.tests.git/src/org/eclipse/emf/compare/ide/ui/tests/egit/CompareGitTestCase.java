@@ -159,6 +159,11 @@ public class CompareGitTestCase extends CompareTestCase {
 		return new SubscriberStorageAccessor(subscriber);
 	}
 	
+	protected IStorageProviderAccessor createRemoteAccessorForComparison(String sourceRev, String targetRev, IFile file) throws Exception {
+		final Subscriber subscriber = repository.createSubscriberForComparisonWithRemoteMappings(sourceRev, targetRev, file);
+		return new SubscriberStorageAccessor(subscriber);
+	}
+	
 	protected static void assertDiffCount(List<Diff> differences, int expectedOutgoing, int expectedIncoming) {
 		assertEquals(expectedOutgoing + expectedIncoming, differences.size());
 
