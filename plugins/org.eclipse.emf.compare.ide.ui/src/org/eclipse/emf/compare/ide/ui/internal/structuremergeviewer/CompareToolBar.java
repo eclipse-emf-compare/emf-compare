@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.services.IServiceLocator;
@@ -104,11 +105,14 @@ public class CompareToolBar implements ISelectionChangedListener {
 			if (menuService != null) {
 				menuService.populateContributionManager(toolbarManager,
 						"toolbar:org.eclipse.emf.compare.structuremergeviewer.toolbar"); //$NON-NLS-1$
-				toolbarManager.getControl().addDisposeListener(new DisposeListener() {
-					public void widgetDisposed(DisposeEvent e) {
-						menuService.releaseContributions(toolbarManager);
-					}
-				});
+				ToolBar toolbar = toolbarManager.getControl();
+				if (toolbar != null) {
+					toolbar.addDisposeListener(new DisposeListener() {
+						public void widgetDisposed(DisposeEvent e) {
+							menuService.releaseContributions(toolbarManager);
+						}
+					});
+				}
 			}
 
 			boolean leftEditable = compareConfiguration.isLeftEditable();
@@ -233,7 +237,10 @@ public class CompareToolBar implements ISelectionChangedListener {
 	 *            Set to <code>true</code> to enable, <code>false</code> otherwise.
 	 */
 	public void setEnabled(boolean enable) {
-		toolbarManager.getControl().setEnabled(enable);
+		ToolBar toolbar = toolbarManager.getControl();
+		if (toolbar != null) {
+			toolbar.setEnabled(enable);
+		}
 	}
 
 }
