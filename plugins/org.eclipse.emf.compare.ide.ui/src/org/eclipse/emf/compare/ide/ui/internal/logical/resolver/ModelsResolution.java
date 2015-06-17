@@ -518,7 +518,7 @@ public class ModelsResolution extends AbstractResolution {
 		ResourceComputationScheduler<URI> scheduler = context.getScheduler();
 		scheduler.clearComputedElements();
 
-		final URI startURI = ResourceUtil.createURIFor(start);
+		final URI startURI = converter.normalize(ResourceUtil.createURIFor(start));
 		Iterable<URI> urisToResolve = concat(knownVariants, Collections.singleton(startURI));
 		scheduler.computeAll(transform(urisToResolve, resolveRemoteURI(tspm, resourceSet)));
 

@@ -379,6 +379,7 @@ public class GitTestRepository {
 	/**
 	 * Simulate a comparison between the two given references and returns back
 	 * the subscriber that can provide all computed synchronization information.
+	 * It will use the local comparison context for retrieving the resource mappings.
 	 * 
 	 * @param sourceRef
 	 *            Source reference (i.e. "left" side of the comparison).
@@ -394,13 +395,53 @@ public class GitTestRepository {
 		final GitSynchronizeData data = new GitSynchronizeData(repository,
 				sourceRef, targetRef, false);
 		final GitSynchronizeDataSet dataSet = new GitSynchronizeDataSet(data);
-		final ResourceMapping[] mappings = getResourceMappings(comparedFile);
+		final ResourceMapping[] mappings = getResourceMappings(comparedFile, ResourceMappingContext.LOCAL_CONTEXT);
 		final GitResourceVariantTreeSubscriber subscriber = new GitResourceVariantTreeSubscriber(
 				dataSet);
 		subscriber.init(new NullProgressMonitor());
 
 		final RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(
 				subscriber, dataSet);
+		final SubscriberScopeManager manager = new SubscriberScopeManager(
+				subscriber.getName(), mappings, subscriber, remoteContext, true);
+		final GitSubscriberMergeContext context = new GitSubscriberMergeContext(
+				subscriber, manager, dataSet);
+		disposers.add(new Runnable() {
+			public void run() {
+				manager.dispose();
+				context.dispose();
+				subscriber.dispose();
+			}
+		});
+		return context.getSubscriber();
+	}
+	
+	/**
+	 * Simulate a comparison between the two given references and returns back
+	 * the subscriber that can provide all computed synchronization information.
+	 * It will use a remote comparison context for retrieving the resource mappings.
+	 * 
+	 * @param sourceRef
+	 *            Source reference (i.e. "left" side of the comparison).
+	 * @param targetRef
+	 *            Target reference (i.e. "right" side of the comparison).
+	 * @param comparedFile
+	 *            The file we are comparing (that would be the file
+	 *            right-clicked into the workspace).
+	 * @return The created subscriber.
+	 */
+	public Subscriber createSubscriberForComparisonWithRemoteMappings(String sourceRef,
+			String targetRef, IFile comparedFile) throws IOException {
+		final GitSynchronizeData data = new GitSynchronizeData(repository,
+				sourceRef, targetRef, false);
+		final GitSynchronizeDataSet dataSet = new GitSynchronizeDataSet(data);
+		final GitResourceVariantTreeSubscriber subscriber = new GitResourceVariantTreeSubscriber(
+				dataSet);
+		subscriber.init(new NullProgressMonitor());
+
+		final RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(
+				subscriber, dataSet);
+		final ResourceMapping[] mappings = getResourceMappings(comparedFile, remoteContext);
 		final SubscriberScopeManager manager = new SubscriberScopeManager(
 				subscriber.getName(), mappings, subscriber, remoteContext, true);
 		final GitSubscriberMergeContext context = new GitSubscriberMergeContext(
@@ -436,9 +477,11 @@ public class GitTestRepository {
 	 * 
 	 * @param file
 	 *            The file for which we need the associated resource mappings.
+	 * @param context 
+	 *            The {@link ResourceMappingContext} that will be used for retrieving the mappings.
 	 * @return All mappings available for that file.
 	 */
-	private static ResourceMapping[] getResourceMappings(IFile file) {
+	private static ResourceMapping[] getResourceMappings(IFile file, ResourceMappingContext context) {
 		final IModelProviderDescriptor[] modelDescriptors = ModelProvider
 				.getModelProviderDescriptors();
 
@@ -452,7 +495,7 @@ public class GitTestRepository {
 					// resources
 					final ModelProvider model = candidate.getModelProvider();
 					final ResourceMapping[] modelMappings = model.getMappings(
-							file, ResourceMappingContext.LOCAL_CONTEXT, null);
+							file, context, null);
 					for (ResourceMapping mapping : modelMappings) {
 						mappings.add(mapping);
 					}
