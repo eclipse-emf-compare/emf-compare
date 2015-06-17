@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - bug 469355
+ *     Philip Langer - bug 469355, bug 462884, refactorings
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
@@ -34,10 +34,12 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.internal.domain.IMergeAllNonConflictingRunnable;
 import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.internal.utils.Graph;
 import org.eclipse.emf.compare.internal.utils.PruningIterator;
 import org.eclipse.emf.compare.merge.BatchMerger;
@@ -47,11 +49,11 @@ import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.merge.IMerger2;
 
 /**
- * Implements the "merge all non-conflicting" action.
+ * Implements the "merge non-conflicting" and "merge all non-conflicting" action.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class MergeAllNonConflictingRunnable extends AbstractMergeRunnable implements IMergeAllNonConflictingRunnable {
+public class MergeNonConflictingRunnable extends AbstractMergeRunnable implements IMergeAllNonConflictingRunnable, IMergeRunnable {
 	/**
 	 * Default constructor.
 	 * 
@@ -62,7 +64,7 @@ public class MergeAllNonConflictingRunnable extends AbstractMergeRunnable implem
 	 * @param mergeMode
 	 *            Merge mode for this operation.
 	 */
-	public MergeAllNonConflictingRunnable(boolean isLeftEditable, boolean isRightEditable, MergeMode mergeMode) {
+	public MergeNonConflictingRunnable(boolean isLeftEditable, boolean isRightEditable, MergeMode mergeMode) {
 		super(isLeftEditable, isRightEditable, mergeMode);
 	}
 
@@ -71,20 +73,52 @@ public class MergeAllNonConflictingRunnable extends AbstractMergeRunnable implem
 	 */
 	public Iterable<Diff> merge(Comparison comparison, boolean leftToRight, Registry mergerRegistry) {
 		checkState(getMergeMode().isLeftToRight(isLeftEditable(), isRightEditable()) == leftToRight);
+		return doMergeNonConflicting(comparison.getDifferences(), comparison, leftToRight, mergerRegistry);
+	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Differences that are conflicting or that depend on conflicting differences will be left out.
+	 * Non-conflicting differences that are implied or required by the given differences will be merged, also
+	 * if they are not explicitly included in the given list of {@code differences}.
+	 * </p>
+	 */
+	@SuppressWarnings("unchecked")
+	public void merge(List<? extends Diff> differences, boolean leftToRight, Registry mergerRegistry) {
+		checkState(getMergeMode().isLeftToRight(isLeftEditable(), isRightEditable()) == leftToRight);
+		checkState(!differences.isEmpty() && ComparisonUtil.getComparison(differences.get(0)) != null);
+		final Comparison comparison = ComparisonUtil.getComparison(differences.get(0));
+		doMergeNonConflicting((Collection<Diff>)differences, comparison, leftToRight, mergerRegistry);
+	}
+
+	/**
+	 * Performs the merge of the non-conflicting differences in the given {@code differences}.
+	 * 
+	 * @param differences
+	 *            The differences to be merged.
+	 * @param comparison
+	 *            The comparison containing the differences to decide on whether conflicts are in play or not
+	 *            and to determine whether this is a three- or two-way comparison.
+	 * @param leftToRight
+	 *            The direction in which {@code differences} should be merged.
+	 * @param mergerRegistry
+	 *            The registry of mergers.
+	 * @return an iterable over the differences that have actually been merged by this operation.
+	 */
+	private Iterable<Diff> doMergeNonConflicting(Collection<Diff> differences, Comparison comparison,
+			boolean leftToRight, Registry mergerRegistry) {
 		final Iterable<Diff> affectedChanges;
 		if (hasRealConflict(comparison)) {
 			// This is a 3-way comparison, pre-merge what can be.
-			affectedChanges = mergeWithConflicts(comparison.getDifferences(), leftToRight, mergerRegistry);
+			affectedChanges = mergeWithConflicts(differences, leftToRight, mergerRegistry);
 		} else if (comparison.isThreeWay()) {
 			// This is a 3-way comparison without conflicts
-			affectedChanges = mergeThreeWayWithoutConflicts(comparison.getDifferences(), leftToRight,
-					mergerRegistry);
+			affectedChanges = mergeThreeWayWithoutConflicts(differences, leftToRight, mergerRegistry);
 		} else {
 			// This is a 2-way comparison
-			affectedChanges = mergeTwoWay(comparison.getDifferences(), leftToRight, mergerRegistry);
+			affectedChanges = mergeTwoWay(differences, leftToRight, mergerRegistry);
 		}
-
 		return affectedChanges;
 	}
 

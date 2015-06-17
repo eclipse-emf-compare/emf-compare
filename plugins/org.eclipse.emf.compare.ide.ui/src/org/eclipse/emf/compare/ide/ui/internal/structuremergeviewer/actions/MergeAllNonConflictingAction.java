@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,8 +9,6 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
-
-import com.google.common.base.Preconditions;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,21 +50,8 @@ public class MergeAllNonConflictingAction extends MergeAction {
 	public MergeAllNonConflictingAction(ICompareEditingDomain editingDomain, Comparison comparison,
 			IMerger.Registry mergerRegistry, MergeMode mode, boolean isLeftEditable, boolean isRightEditable) {
 		super(editingDomain, mergerRegistry, mode, isLeftEditable, isRightEditable, null);
-
-		Preconditions.checkNotNull(mode);
-		Preconditions.checkState(isLeftEditable || isRightEditable);
-		// if left and right editable, the only accepted mode are LtR or RtL
-		if (isLeftEditable && isRightEditable) {
-			Preconditions.checkState(mode == MergeMode.LEFT_TO_RIGHT || mode == MergeMode.RIGHT_TO_LEFT);
-		}
-		// if mode is accept or reject, left and right can't be both read only (no action should be created in
-		// this case) and can't be both editable.
-		if (isLeftEditable != isRightEditable) {
-			Preconditions.checkState(mode == MergeMode.ACCEPT || mode == MergeMode.REJECT);
-		}
-
 		this.comparison = comparison;
-		this.runnable = new MergeAllNonConflictingRunnable(isLeftEditable, isRightEditable, mode);
+		this.runnable = new MergeNonConflictingRunnable(isLeftEditable, isRightEditable, mode);
 	}
 
 	@Override

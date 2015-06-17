@@ -31,7 +31,7 @@ import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolv
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverWithCustomDependencyProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.NavigatableTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeActionTest;
-import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeAllNonConflictingRunnableTest;
+import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeNonConflictingRunnableTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.PseudoConflictsMergeActionTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.notloadedfragment.NotLoadedFragmentNodeTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.DependenciesTest;
@@ -52,7 +52,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		ThreadedModelResolverWithCustomDependencyProviderTest.class, DependencyGraphUpdaterTest.class,
 		GraphResolutionTest.class, EMFModelProviderTest.class, MergeAllCommandTests.class,
 		LocalMonitoredProxyCreationListenerTest.class, RemoteMonitoredProxyCreationListenerTest.class,
-		MergeAllNonConflictingRunnableTest.class })
+		MergeNonConflictingRunnableTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

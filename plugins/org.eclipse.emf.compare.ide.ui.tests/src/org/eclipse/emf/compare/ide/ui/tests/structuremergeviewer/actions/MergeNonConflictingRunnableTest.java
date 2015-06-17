@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions;
 
+import static java.util.Arrays.asList;
 import static org.eclipse.emf.compare.DifferenceKind.ADD;
 import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.DifferenceSource.LEFT;
@@ -37,8 +38,9 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAllNonConflictingRunnable;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeNonConflictingRunnable;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
@@ -46,18 +48,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests the {@link MergeAllNonConflictingRunnable} according to the specification given in <a
- * href="https://wiki.eclipse.org/EMF_Compare/Specifications/AllNonConflictingActions">the wiki</a>.
+ * Tests the {@link MergeNonConflictingRunnable} according to the specification given in <a
+ * href="https://wiki.eclipse.org/EMF_Compare/Specifications/AllNonConflictingActions">the wiki</a> and
+ * according to its capabilities to only merge a given collection of differences.
  * <p>
- * The goal of this test is to have a more unit-level test of the {@link MergeAllNonConflictingRunnable} (as
- * opposed to o.e.e.compare.ide.ui.tests.command.MergeAllCommandTests, which is more an integration test), as
- * well as to have a test in preparation of the refactorings panned for fixing bug 462884.
+ * The goal of this test is to have a more unit-level test of the {@link MergeNonConflictingRunnable} (as
+ * opposed to o.e.e.compare.ide.ui.tests.command.MergeAllCommandTests, which is more an integration test).
  * </p>
  * 
  * @author Philip Langer <planger@eclipsesource.com>
  */
-@SuppressWarnings("restriction")
-public class MergeAllNonConflictingRunnableTest {
+@SuppressWarnings({"restriction", "nls" })
+public class MergeNonConflictingRunnableTest {
 
 	private Comparison comparison;
 
@@ -89,12 +91,47 @@ public class MergeAllNonConflictingRunnableTest {
 		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
 		addConflictsToMockComparison(newConflict(leftDelete, rightDelete));
 
-		final MergeAllNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
 		sut.merge(comparison, isLeftToRight, mergerRegistry);
 
 		verifyHasBeenMergedLeftToRightOnly(leftAdd);
 		verifyHasNotBeenMerged(leftDelete, rightDelete, rightAdd);
 		verifyStateIsUnchanged(leftDelete, rightDelete, rightAdd);
+	}
+
+	@Test
+	public void testMergeLeftToRightWithConflicts() {
+		final boolean isLeftToRight = true;
+		final MergeMode mergeMode = MergeMode.LEFT_TO_RIGHT;
+
+		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
+		addConflictsToMockComparison(newConflict(leftDelete, rightDelete));
+
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		// leftAdd is in the list and the only non-conflicting
+		sut.merge(asList(leftDelete, rightDelete, leftAdd), isLeftToRight, mergerRegistry);
+
+		// so it should be the only diff that has been merged
+		verifyHasBeenMergedLeftToRightOnly(leftAdd);
+		verifyHasNotBeenMerged(leftDelete, rightDelete, rightAdd);
+		verifyStateIsUnchanged(leftDelete, rightDelete, rightAdd);
+	}
+
+	@Test
+	public void testMergeLeftToRightWithConflictsAndLimitedSetOfDifferences() {
+		final boolean isLeftToRight = true;
+		final MergeMode mergeMode = MergeMode.LEFT_TO_RIGHT;
+
+		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
+		addConflictsToMockComparison(newConflict(leftDelete, rightDelete));
+
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		// leftAdd is not in the list, but the only non-conflicting on the left
+		sut.merge(asList(leftDelete, rightDelete), isLeftToRight, mergerRegistry);
+
+		// so no merge should be performed
+		verifyHasNotBeenMerged(leftAdd, leftDelete, rightDelete, rightAdd);
+		verifyStateIsUnchanged(leftAdd, leftDelete, rightDelete, rightAdd);
 	}
 
 	@Test
@@ -105,12 +142,30 @@ public class MergeAllNonConflictingRunnableTest {
 		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
 		setNoConflictsInMockComparison();
 
-		final MergeAllNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
 		sut.merge(comparison, isLeftToRight, mergerRegistry);
 
 		verifyHasBeenMergedLeftToRightOnly(leftDelete, leftAdd);
 		verifyHasNotBeenMerged(rightDelete, rightAdd);
 		verifyStateIsUnchanged(rightDelete, rightAdd);
+	}
+
+	@Test
+	public void testMergeLeftToRightWithoutConflicts() {
+		final boolean isLeftToRight = true;
+		final MergeMode mergeMode = MergeMode.LEFT_TO_RIGHT;
+
+		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
+		setNoConflictsInMockComparison();
+
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		// leftDelete is in the list, but we do not include leftAdd
+		sut.merge(asList(leftDelete, rightDelete), isLeftToRight, mergerRegistry);
+
+		// so only leftDelete should be merged
+		verifyHasBeenMergedLeftToRightOnly(leftDelete);
+		verifyHasNotBeenMerged(leftAdd, rightDelete, rightAdd);
+		verifyStateIsUnchanged(leftAdd, rightDelete, rightAdd);
 	}
 
 	@Test
@@ -121,12 +176,47 @@ public class MergeAllNonConflictingRunnableTest {
 		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
 		addConflictsToMockComparison(newConflict(leftDelete, rightDelete));
 
-		final MergeAllNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
 		sut.merge(comparison, isLeftToRight, mergerRegistry);
 
 		verifyHasBeenMergedRightToLeftOnly(rightAdd);
 		verifyHasNotBeenMerged(rightDelete, leftDelete, leftAdd);
 		verifyStateIsUnchanged(rightDelete, leftDelete, leftAdd);
+	}
+
+	@Test
+	public void testMergeRightToLeftWithConflicts() {
+		final boolean isLeftToRight = false;
+		final MergeMode mergeMode = MergeMode.RIGHT_TO_LEFT;
+
+		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
+		addConflictsToMockComparison(newConflict(leftDelete, rightDelete));
+
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		// rightAdd is in the list and the only non-conflicting on the right
+		sut.merge(asList(leftDelete, rightDelete, rightAdd), isLeftToRight, mergerRegistry);
+
+		// so it should be the only diff that has been merged
+		verifyHasBeenMergedRightToLeftOnly(rightAdd);
+		verifyHasNotBeenMerged(leftDelete, rightDelete, leftAdd);
+		verifyStateIsUnchanged(leftDelete, rightDelete, leftAdd);
+	}
+
+	@Test
+	public void testMergeRightToLeftWithConflictsAndLimitedSetOfDifferences() {
+		final boolean isLeftToRight = false;
+		final MergeMode mergeMode = MergeMode.RIGHT_TO_LEFT;
+
+		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
+		addConflictsToMockComparison(newConflict(leftDelete, rightDelete));
+
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		// rightAdd is not in the list, but the only non-conflicting
+		sut.merge(asList(leftDelete, rightDelete), isLeftToRight, mergerRegistry);
+
+		// so no merge should be performed
+		verifyHasNotBeenMerged(leftAdd, leftDelete, rightDelete, rightAdd);
+		verifyStateIsUnchanged(leftAdd, leftDelete, rightDelete, rightAdd);
 	}
 
 	@Test
@@ -137,12 +227,30 @@ public class MergeAllNonConflictingRunnableTest {
 		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
 		setNoConflictsInMockComparison();
 
-		final MergeAllNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
 		sut.merge(comparison, isLeftToRight, mergerRegistry);
 
 		verifyHasBeenMergedRightToLeftOnly(rightDelete, rightAdd);
 		verifyHasNotBeenMerged(leftDelete, leftAdd);
 		verifyStateIsUnchanged(leftDelete, leftAdd);
+	}
+
+	@Test
+	public void testMergeRightToLeftWithoutConflicts() {
+		final boolean isLeftToRight = false;
+		final MergeMode mergeMode = MergeMode.RIGHT_TO_LEFT;
+
+		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
+		setNoConflictsInMockComparison();
+
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		// we do not include rightAdd, so it should not be merged
+		// and leftDelete should not be merged, because we merge left to right
+		sut.merge(asList(leftDelete, rightDelete), isLeftToRight, mergerRegistry);
+
+		verifyHasBeenMergedRightToLeftOnly(rightDelete);
+		verifyHasNotBeenMerged(leftAdd, leftDelete, rightAdd);
+		verifyStateIsUnchanged(leftAdd, leftDelete, rightAdd);
 	}
 
 	@Test
@@ -153,12 +261,31 @@ public class MergeAllNonConflictingRunnableTest {
 		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
 		setNoConflictsInMockComparison();
 
-		final MergeAllNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
 		sut.merge(comparison, isLeftToRight, mergerRegistry);
 
 		verifyHasBeenMergedRightToLeftOnly(rightDelete, rightAdd);
 		verifyHasNotBeenMerged(leftDelete, leftAdd);
 		verifyHasBeenMarkedAsMerged(leftAdd, leftDelete);
+	}
+
+	@Test
+	public void testAcceptWithoutConflicts() {
+		final boolean isLeftToRight = false;
+		final MergeMode mergeMode = MergeMode.ACCEPT;
+
+		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
+		setNoConflictsInMockComparison();
+
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		// rightDelete is in the list, but we do not include rightAdd
+		sut.merge(asList(leftAdd, leftDelete, rightDelete), isLeftToRight, mergerRegistry);
+
+		// so only rightDelete should be merged
+		verifyHasBeenMergedRightToLeftOnly(rightDelete);
+		verifyHasNotBeenMerged(leftDelete, leftAdd);
+		verifyHasBeenMarkedAsMerged(leftAdd, leftDelete);
+		verifyStateIsUnchanged(rightAdd);
 	}
 
 	@Test
@@ -169,12 +296,31 @@ public class MergeAllNonConflictingRunnableTest {
 		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
 		setNoConflictsInMockComparison();
 
-		final MergeAllNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
 		sut.merge(comparison, isLeftToRight, mergerRegistry);
 
 		verifyHasBeenMergedRightToLeftOnly(leftDelete, leftAdd);
 		verifyHasNotBeenMerged(rightDelete, rightAdd);
 		verifyHasBeenMarkedAsMerged(rightAdd, rightDelete);
+	}
+
+	@Test
+	public void testRejectWithoutConflicts() {
+		final boolean isLeftToRight = false;
+		final MergeMode mergeMode = MergeMode.REJECT;
+
+		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
+		setNoConflictsInMockComparison();
+
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		// leftDelete is in the list, but we do not include leftAdd
+		sut.merge(asList(leftDelete, rightDelete, rightAdd), isLeftToRight, mergerRegistry);
+
+		// so only leftDelete should be merged
+		verifyHasBeenMergedRightToLeftOnly(leftDelete);
+		verifyHasNotBeenMerged(rightDelete, rightAdd);
+		verifyHasBeenMarkedAsMerged(rightAdd, rightDelete);
+		verifyStateIsUnchanged(leftAdd);
 	}
 
 	@Test
@@ -185,7 +331,7 @@ public class MergeAllNonConflictingRunnableTest {
 		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
 		addConflictsToMockComparison(newConflict(leftDelete, rightDelete));
 
-		final MergeAllNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
 		sut.merge(comparison, isLeftToRight, mergerRegistry);
 
 		verifyHasBeenMergedRightToLeftOnly(rightAdd);
@@ -202,7 +348,7 @@ public class MergeAllNonConflictingRunnableTest {
 		setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide();
 		addConflictsToMockComparison(newConflict(leftDelete, rightDelete));
 
-		final MergeAllNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
 		sut.merge(comparison, isLeftToRight, mergerRegistry);
 
 		verifyHasBeenMergedRightToLeftOnly(leftAdd);
@@ -218,10 +364,25 @@ public class MergeAllNonConflictingRunnableTest {
 
 		setUpTwoWayComparisonWithOneAdditionAndOneDeletion();
 
-		final MergeAllNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
 		sut.merge(comparison, isLeftToRight, mergerRegistry);
 
 		verifyHasBeenMergedLeftToRightOnly(leftDelete, leftAdd);
+	}
+
+	@Test
+	public void testTwoWayMergeLeftToRight() {
+		final boolean isLeftToRight = true;
+		final MergeMode mergeMode = MergeMode.LEFT_TO_RIGHT;
+
+		setUpTwoWayComparisonWithOneAdditionAndOneDeletion();
+
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		sut.merge(asList(leftDelete), isLeftToRight, mergerRegistry);
+
+		verifyHasBeenMergedLeftToRightOnly(leftDelete);
+		verifyHasNotBeenMerged(leftAdd);
+		verifyStateIsUnchanged(leftAdd);
 	}
 
 	@Test
@@ -231,10 +392,25 @@ public class MergeAllNonConflictingRunnableTest {
 
 		setUpTwoWayComparisonWithOneAdditionAndOneDeletion();
 
-		final MergeAllNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
 		sut.merge(comparison, isLeftToRight, mergerRegistry);
 
 		verifyHasBeenMergedRightToLeftOnly(leftDelete, leftAdd);
+	}
+
+	@Test
+	public void testTwoWayMergeRightToLeft() {
+		final boolean isLeftToRight = false;
+		final MergeMode mergeMode = MergeMode.RIGHT_TO_LEFT;
+
+		setUpTwoWayComparisonWithOneAdditionAndOneDeletion();
+
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		sut.merge(asList(leftDelete), isLeftToRight, mergerRegistry);
+
+		verifyHasBeenMergedRightToLeftOnly(leftDelete);
+		verifyHasNotBeenMerged(leftAdd);
+		verifyStateIsUnchanged(leftAdd);
 	}
 
 	@Test
@@ -244,11 +420,26 @@ public class MergeAllNonConflictingRunnableTest {
 
 		setUpTwoWayComparisonWithOneAdditionAndOneDeletion();
 
-		final MergeAllNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
 		sut.merge(comparison, isLeftToRight, mergerRegistry);
 
 		verifyHasNotBeenMerged(leftDelete, leftAdd);
 		verifyHasBeenMarkedAsMerged(leftDelete, leftAdd);
+	}
+
+	@Test
+	public void testTwoWayAccept() {
+		final boolean isLeftToRight = false;
+		final MergeMode mergeMode = MergeMode.ACCEPT;
+
+		setUpTwoWayComparisonWithOneAdditionAndOneDeletion();
+
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		sut.merge(asList(leftDelete), isLeftToRight, mergerRegistry);
+
+		verifyHasNotBeenMerged(leftDelete);
+		verifyHasBeenMarkedAsMerged(leftDelete);
+		verifyStateIsUnchanged(leftAdd);
 	}
 
 	@Test
@@ -258,10 +449,24 @@ public class MergeAllNonConflictingRunnableTest {
 
 		setUpTwoWayComparisonWithOneAdditionAndOneDeletion();
 
-		final MergeAllNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
 		sut.merge(comparison, isLeftToRight, mergerRegistry);
 
 		verifyHasBeenMergedRightToLeftOnly(leftDelete, leftAdd);
+	}
+
+	@Test
+	public void testTwoWayReject() {
+		final boolean isLeftToRight = false;
+		final MergeMode mergeMode = MergeMode.REJECT;
+
+		setUpTwoWayComparisonWithOneAdditionAndOneDeletion();
+
+		final MergeNonConflictingRunnable sut = newMergeAllNonConflictingRunnable(mergeMode);
+		sut.merge(asList(leftAdd), isLeftToRight, mergerRegistry);
+
+		verifyHasBeenMergedRightToLeftOnly(leftAdd);
+		verifyHasNotBeenMerged(leftDelete);
 	}
 
 	private void addConflictsToMockComparison(Conflict... conflicts) {
@@ -270,10 +475,15 @@ public class MergeAllNonConflictingRunnableTest {
 
 	private void addDifferencesToMockComparison(Diff... diffs) {
 		when(comparison.getDifferences()).thenReturn(newEList(diffs));
+		for (Diff diff : diffs) {
+			final Match match = mock(Match.class);
+			when(match.getComparison()).thenReturn(comparison);
+			when(diff.getMatch()).thenReturn(match);
+		}
 	}
 
-	private ReferenceChange mockReferenceChange(DifferenceSource side, DifferenceKind kind) {
-		final ReferenceChange diff = mock(ReferenceChange.class);
+	private ReferenceChange mockReferenceChange(DifferenceSource side, DifferenceKind kind, String name) {
+		final ReferenceChange diff = mock(ReferenceChange.class, name);
 		when(diff.getSource()).thenReturn(side);
 		when(diff.getKind()).thenReturn(kind);
 		when(diff.getState()).thenReturn(UNRESOLVED);
@@ -311,26 +521,26 @@ public class MergeAllNonConflictingRunnableTest {
 	}
 
 	private void setThreeWayComparison() {
-		when(comparison.isThreeWay()).thenReturn(true);
+		when(Boolean.valueOf(comparison.isThreeWay())).thenReturn(Boolean.TRUE);
 	}
 
 	private void setTwoWayComparison() {
-		when(comparison.isThreeWay()).thenReturn(false);
+		when(Boolean.valueOf(comparison.isThreeWay())).thenReturn(Boolean.FALSE);
 	}
 
 	private void setUpThreeWayComparisonWithOneAdditionAndDeletionOnEachSide() {
-		leftDelete = mockReferenceChange(LEFT, DELETE);
-		leftAdd = mockReferenceChange(LEFT, ADD);
-		rightDelete = mockReferenceChange(RIGHT, DELETE);
-		rightAdd = mockReferenceChange(RIGHT, ADD);
+		leftDelete = mockReferenceChange(LEFT, DELETE, "leftDelete");
+		leftAdd = mockReferenceChange(LEFT, ADD, "leftAdd");
+		rightDelete = mockReferenceChange(RIGHT, DELETE, "rightDelete");
+		rightAdd = mockReferenceChange(RIGHT, ADD, "rightAdd");
 
 		addDifferencesToMockComparison(leftDelete, leftAdd, rightDelete, rightAdd);
 		setThreeWayComparison();
 	}
 
 	private void setUpTwoWayComparisonWithOneAdditionAndOneDeletion() {
-		leftDelete = mockReferenceChange(LEFT, DELETE);
-		leftAdd = mockReferenceChange(LEFT, ADD);
+		leftDelete = mockReferenceChange(LEFT, DELETE, "leftDelete");
+		leftAdd = mockReferenceChange(LEFT, ADD, "leftAdd");
 
 		addDifferencesToMockComparison(leftDelete, leftAdd);
 		setNoConflictsInMockComparison();
@@ -390,7 +600,7 @@ public class MergeAllNonConflictingRunnableTest {
 		}
 	}
 
-	private MergeAllNonConflictingRunnable newMergeAllNonConflictingRunnable(MergeMode mergeMode) {
+	private MergeNonConflictingRunnable newMergeAllNonConflictingRunnable(MergeMode mergeMode) {
 		final boolean isLeftEditable;
 		final boolean isRightEditable;
 		switch (mergeMode) {
@@ -409,7 +619,7 @@ public class MergeAllNonConflictingRunnableTest {
 			default:
 				throw new IllegalArgumentException();
 		}
-		return new MergeAllNonConflictingRunnable(isLeftEditable, isRightEditable, mergeMode) {
+		return new MergeNonConflictingRunnable(isLeftEditable, isRightEditable, mergeMode) {
 			@Override
 			protected void addOrUpdateMergeData(Collection<Diff> differences, MergeMode mode) {
 				// do nothing to prevent call of EcoreUtil.getAdapter()
