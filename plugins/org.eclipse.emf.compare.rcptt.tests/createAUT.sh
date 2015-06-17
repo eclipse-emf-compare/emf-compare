@@ -130,6 +130,11 @@ if [[ -d "$simrel_path/Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER}" ]]; t
   rm -rf "$simrel_path/Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER}"
 fi
 
+if [[ -d "$simrel_path/Collaborative-Modeling-Luna-${PLATFORM_SHORT_SPECIFIER}" ]]; then
+  echo "Removing old Collaborative-Modeling-Luna-${PLATFORM_SHORT_SPECIFIER} folder"
+  rm -rf "$simrel_path/Collaborative-Modeling-Luna-${PLATFORM_SHORT_SPECIFIER}"
+fi
+
 if [[ -d "$simrel_path/eclipse" ]]; then
   echo "Removing old eclipse folder"
   rm -rf "$simrel_path/eclipse"
@@ -147,9 +152,14 @@ if [[ -d "$simrel_path/Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER}" ]]; t
   mv "$simrel_path/Collaborative-Modeling-${PLATFORM_SHORT_SPECIFIER}" "$simrel_path/eclipse"
 fi
 
+if [[ -d "$simrel_path/Collaborative-Modeling-Luna-${PLATFORM_SHORT_SPECIFIER}" ]]; then
+  echo "Renaming Collaborative-Modeling-Luna-${PLATFORM_SHORT_SPECIFIER} to eclipse"
+  mv "$simrel_path/Collaborative-Modeling-Luna-${PLATFORM_SHORT_SPECIFIER}" "$simrel_path/eclipse"
+fi
+
 echo "Provisioning AUT"
 echo "  Repositories: $p2_repositories"
 echo "  IUs: $p2_installIUs"
 if [ -n "$p2_repositories" ]; then 
-	$P2_ADMIN_PATH/p2-admin -vm $JAVA_HOME/bin/java -application org.eclipse.equinox.p2.director -repository "$p2_repositories" -installIU "$p2_installIUs" -tag Q7_AUT -destination "$simrel_path/eclipse" -profile SDKProfile
+	$P2_ADMIN_PATH/p2-admin -vm $JAVA_HOME/bin/java -application org.eclipse.equinox.p2.director -repository "$p2_repositories" -installIU "$p2_installIUs" -tag RCPTT_AUT -destination "$simrel_path/eclipse" -profile SDKProfile
 fi
