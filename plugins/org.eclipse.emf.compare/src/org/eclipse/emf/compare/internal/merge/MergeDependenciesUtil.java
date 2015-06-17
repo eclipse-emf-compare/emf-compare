@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo.
+ * Copyright (c) 2014, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 462884
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.merge;
 
@@ -17,6 +18,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -42,14 +44,6 @@ public final class MergeDependenciesUtil {
 	/**
 	 * This will map all the differences from the given comparison in a dependency graph, enabling EMF Compare
 	 * to differentiate what can be safely merged from what cannot.
-	 * <p>
-	 * Typically, all differences that are not in a real conflict with another and that do not depend,
-	 * directly or indirectly, on a conflicting difference can be pre-merged without corrupting the models.
-	 * For example, if adding a reference "ref1" to an added class "C1" depends on the addition of a package
-	 * "P1" (i.e. three additions in a row), but "C1" has also been added in another place in the other model
-	 * (a conflict between two "same" elements added into different containers), then we can safely pre-merge
-	 * the addition of P1, but not the addition of its contained class C1, nor the addition of ref1.
-	 * </p>
 	 * 
 	 * @param comparison
 	 *            The comparison which differences are to be mapped into a dependency graph.
@@ -60,8 +54,36 @@ public final class MergeDependenciesUtil {
 	 * @param mergeMode
 	 *            The merge mode. If MergeMode is null, then no differences will be filtered.
 	 * @return The dependency graph of this comparison's differences.
+	 * @see #mapDifferences(Collection, org.eclipse.emf.compare.merge.IMerger.Registry, boolean, MergeMode)
 	 */
 	public static Graph<Diff> mapDifferences(Comparison comparison, IMerger.Registry mergerRegistry,
+			boolean mergeRightToLeft, MergeMode mergeMode) {
+		return mapDifferences(comparison.getDifferences(), mergerRegistry, mergeRightToLeft, mergeMode);
+	}
+
+	/**
+	 * This will map the given differences in a dependency graph, enabling EMF Compare to differentiate what
+	 * can be safely merged from what cannot.
+	 * <p>
+	 * Typically, all differences that are not in a real conflict with another and that do not depend,
+	 * directly or indirectly, on a conflicting difference can be pre-merged without corrupting the models.
+	 * For example, if adding a reference "ref1" to an added class "C1" depends on the addition of a package
+	 * "P1" (i.e. three additions in a row), but "C1" has also been added in another place in the other model
+	 * (a conflict between two "same" elements added into different containers), then we can safely pre-merge
+	 * the addition of P1, but not the addition of its contained class C1, nor the addition of ref1.
+	 * </p>
+	 * 
+	 * @param differences
+	 *            The differences to be mapped into a dependency graph.
+	 * @param mergerRegistry
+	 *            The {@link IMerger.Registry merger registry} currently in use.
+	 * @param mergeRightToLeft
+	 *            The direction in which we're preparing a merge.
+	 * @param mergeMode
+	 *            The merge mode. If MergeMode is null, then no differences will be filtered.
+	 * @return The dependency graph of this comparison's differences.
+	 */
+	public static Graph<Diff> mapDifferences(Collection<Diff> differences, IMerger.Registry mergerRegistry,
 			boolean mergeRightToLeft, MergeMode mergeMode) {
 		Graph<Diff> differencesGraph = new Graph<Diff>();
 		final Predicate<? super Diff> filter;
@@ -72,7 +94,7 @@ public final class MergeDependenciesUtil {
 		} else {
 			filter = Predicates.alwaysTrue();
 		}
-		for (Diff diff : Iterables.filter(comparison.getDifferences(), filter)) {
+		for (Diff diff : Iterables.filter(differences, filter)) {
 			final IMerger merger = mergerRegistry.getHighestRankingMerger(diff);
 			final Set<Diff> directParents;
 			if (merger instanceof IMerger2) {

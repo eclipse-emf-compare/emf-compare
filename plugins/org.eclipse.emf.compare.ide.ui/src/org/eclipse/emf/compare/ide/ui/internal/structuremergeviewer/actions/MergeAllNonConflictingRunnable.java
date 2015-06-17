@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo.
+ * Copyright (c) 2014, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,14 +7,17 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 469355
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Lists.newArrayList;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.containsConflictOfTypes;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -27,7 +30,6 @@ import java.util.Set;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -68,82 +70,103 @@ public class MergeAllNonConflictingRunnable extends AbstractMergeRunnable implem
 	 * {@inheritDoc}
 	 */
 	public Iterable<Diff> merge(Comparison comparison, boolean leftToRight, Registry mergerRegistry) {
-		Preconditions
-				.checkState(getMergeMode().isLeftToRight(isLeftEditable(), isRightEditable()) == leftToRight);
-		Iterable<Diff> affectedChanges;
+		checkState(getMergeMode().isLeftToRight(isLeftEditable(), isRightEditable()) == leftToRight);
+
+		final Iterable<Diff> affectedChanges;
 		if (hasRealConflict(comparison)) {
-			// This is a 3-way comparison.
-			// pre-merge what can be.
-			affectedChanges = mergeWithConflicts(comparison, leftToRight, mergerRegistry);
+			// This is a 3-way comparison, pre-merge what can be.
+			affectedChanges = mergeWithConflicts(comparison.getDifferences(), leftToRight, mergerRegistry);
+		} else if (comparison.isThreeWay()) {
+			// This is a 3-way comparison without conflicts
+			affectedChanges = mergeThreeWayWithoutConflicts(comparison.getDifferences(), leftToRight,
+					mergerRegistry);
 		} else {
-			// There are no conflicts here.
-			affectedChanges = mergeWithoutConflicts(comparison, leftToRight, mergerRegistry);
+			// This is a 2-way comparison
+			affectedChanges = mergeTwoWay(comparison.getDifferences(), leftToRight, mergerRegistry);
 		}
+
 		return affectedChanges;
 	}
 
 	/**
-	 * Handles the merge of all non-conflicting differences in case of a comparison without conflicts.
+	 * Handles the merge of all non-conflicting differences in case of a three-way comparison without
+	 * conflicts.
 	 * 
-	 * @param comparison
-	 *            The comparison object.
+	 * @param differences
+	 *            The differences to be merged.
 	 * @param leftToRight
 	 *            The direction in which {@code differences} should be merged.
 	 * @param mergerRegistry
 	 *            The registry of mergers.
 	 * @return an iterable over the differences that have actually been merged by this operation.
 	 */
-	private Iterable<Diff> mergeWithoutConflicts(Comparison comparison, boolean leftToRight,
+	private Iterable<Diff> mergeThreeWayWithoutConflicts(Collection<Diff> differences, boolean leftToRight,
 			Registry mergerRegistry) {
 		final List<Diff> affectedDiffs;
-		final Monitor emfMonitor = new BasicMonitor();
 		final IBatchMerger merger = new BatchMerger(mergerRegistry);
-		final boolean threeWay = comparison.isThreeWay();
-		if (threeWay && getMergeMode() == MergeMode.LEFT_TO_RIGHT) {
-			affectedDiffs = Lists.newArrayList(Iterables.filter(comparison.getDifferences(),
-					fromSide(DifferenceSource.LEFT)));
-			merger.copyAllLeftToRight(affectedDiffs, emfMonitor);
-			addOrUpdateMergeData(affectedDiffs, getMergeMode());
-		} else if (threeWay && getMergeMode() == MergeMode.RIGHT_TO_LEFT) {
-			affectedDiffs = Lists.newArrayList(Iterables.filter(comparison.getDifferences(),
-					fromSide(DifferenceSource.RIGHT)));
-			merger.copyAllRightToLeft(affectedDiffs, emfMonitor);
-			addOrUpdateMergeData(affectedDiffs, getMergeMode());
-		} else if (getMergeMode() == MergeMode.ACCEPT || getMergeMode() == MergeMode.REJECT) {
-			List<Diff> diffsToMarkAsMerged = newArrayList();
-			List<Diff> diffsToAccept = newArrayList();
-			List<Diff> diffsToReject = newArrayList();
-			for (Diff diff : comparison.getDifferences()) {
-				MergeOperation mergeAction = getMergeMode().getMergeAction(diff, isLeftEditable(),
-						isRightEditable());
-				if (mergeAction == MergeOperation.MARK_AS_MERGE) {
-					diffsToMarkAsMerged.add(diff);
-				} else {
-					if (isLeftEditable() && leftToRight) {
-						diffsToReject.add(diff);
-					} else {
-						diffsToAccept.add(diff);
-					}
-				}
-			}
-			mergeAll(diffsToAccept, leftToRight, merger, mergerRegistry, emfMonitor);
-			mergeAll(diffsToReject, !leftToRight, merger, mergerRegistry, emfMonitor);
-			markAllAsMerged(diffsToMarkAsMerged, getMergeMode(), mergerRegistry);
-			affectedDiffs = Lists.newArrayList(diffsToAccept);
-			affectedDiffs.addAll(diffsToReject);
-			affectedDiffs.addAll(diffsToMarkAsMerged);
-		} else if (getMergeMode() == MergeMode.LEFT_TO_RIGHT) {
-			// We're in a 2way-comparison, so all differences come from left side.
-			affectedDiffs = Lists.newArrayList(Iterables.filter(comparison.getDifferences(),
-					fromSide(DifferenceSource.LEFT)));
-			merger.copyAllLeftToRight(affectedDiffs, emfMonitor);
+		if (getMergeMode() == MergeMode.LEFT_TO_RIGHT) {
+			affectedDiffs = Lists
+					.newArrayList(Iterables.filter(differences, fromSide(DifferenceSource.LEFT)));
+			merger.copyAllLeftToRight(affectedDiffs, new BasicMonitor());
 			addOrUpdateMergeData(affectedDiffs, getMergeMode());
 		} else if (getMergeMode() == MergeMode.RIGHT_TO_LEFT) {
-			// We're in a 2way-comparison, so all differences come from left side.
-			affectedDiffs = Lists.newArrayList(Iterables.filter(comparison.getDifferences(),
-					fromSide(DifferenceSource.LEFT)));
-			merger.copyAllRightToLeft(affectedDiffs, emfMonitor);
+			affectedDiffs = Lists.newArrayList(Iterables
+					.filter(differences, fromSide(DifferenceSource.RIGHT)));
+			merger.copyAllRightToLeft(affectedDiffs, new BasicMonitor());
 			addOrUpdateMergeData(affectedDiffs, getMergeMode());
+		} else if (getMergeMode() == MergeMode.ACCEPT || getMergeMode() == MergeMode.REJECT) {
+			affectedDiffs = acceptOrRejectWithoutConflicts(differences, leftToRight, mergerRegistry, merger);
+		} else {
+			throw new IllegalStateException();
+		}
+
+		return affectedDiffs;
+	}
+
+	/**
+	 * Returns the {@link MergeOperation} for the given {@code diff}.
+	 * <p>
+	 * The merge operation will be different depending on whether the left-hand side and right-hand side are
+	 * editable in the current context (i.e., the {@link #getMergeMode() merge mode}.
+	 * </p>
+	 * 
+	 * @param diff
+	 *            The difference to get the merge operation for.
+	 * @return The merge operation.
+	 */
+	private MergeOperation getMergeOperation(Diff diff) {
+		return getMergeMode().getMergeAction(diff, isLeftEditable(), isRightEditable());
+	}
+
+	/**
+	 * Handles the merge of all non-conflicting differences in case of a two-way comparison without conflicts.
+	 * 
+	 * @param differences
+	 *            The differences to be merged.
+	 * @param leftToRight
+	 *            The direction in which {@code differences} should be merged.
+	 * @param mergerRegistry
+	 *            The registry of mergers.
+	 * @return an iterable over the differences that have actually been merged by this operation.
+	 */
+	private Iterable<Diff> mergeTwoWay(Collection<Diff> differences, boolean leftToRight,
+			Registry mergerRegistry) {
+		final List<Diff> affectedDiffs;
+		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+
+		// in two-way comparison, difference source is always LEFT
+		if (getMergeMode() == MergeMode.LEFT_TO_RIGHT) {
+			affectedDiffs = Lists
+					.newArrayList(Iterables.filter(differences, fromSide(DifferenceSource.LEFT)));
+			merger.copyAllLeftToRight(affectedDiffs, new BasicMonitor());
+			addOrUpdateMergeData(affectedDiffs, getMergeMode());
+		} else if (getMergeMode() == MergeMode.RIGHT_TO_LEFT) {
+			affectedDiffs = Lists
+					.newArrayList(Iterables.filter(differences, fromSide(DifferenceSource.LEFT)));
+			merger.copyAllRightToLeft(affectedDiffs, new BasicMonitor());
+			addOrUpdateMergeData(affectedDiffs, getMergeMode());
+		} else if (getMergeMode() == MergeMode.ACCEPT || getMergeMode() == MergeMode.REJECT) {
+			affectedDiffs = acceptOrRejectWithoutConflicts(differences, leftToRight, mergerRegistry, merger);
 		} else {
 			throw new IllegalStateException();
 		}
@@ -154,23 +177,22 @@ public class MergeAllNonConflictingRunnable extends AbstractMergeRunnable implem
 	/**
 	 * Handles the merge of all non-conflicting differences in case of a comparison with conflicts.
 	 * 
-	 * @param comparison
-	 *            The comparison object.
+	 * @param differences
+	 *            The differences to be merged.
 	 * @param leftToRight
 	 *            The direction in which {@code differences} should be merged.
 	 * @param mergerRegistry
 	 *            The registry of mergers.
 	 * @return an iterable over the differences that have actually been merged by this operation.
 	 */
-	private Iterable<Diff> mergeWithConflicts(Comparison comparison, boolean leftToRight,
+	private Iterable<Diff> mergeWithConflicts(Collection<Diff> differences, boolean leftToRight,
 			Registry mergerRegistry) {
-		final List<Diff> affectedDiffs;
+		final List<Diff> affectedDiffs = new ArrayList<Diff>();
 		final Monitor emfMonitor = new BasicMonitor();
-		final Graph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison, mergerRegistry,
-				!leftToRight, getMergeMode());
+		final Graph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(differences,
+				mergerRegistry, !leftToRight, getMergeMode());
 		final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
 
-		affectedDiffs = new ArrayList<Diff>();
 		while (iterator.hasNext()) {
 			final Diff next = iterator.next();
 			if (hasConflict(ConflictKind.REAL).apply(next)) {
@@ -184,8 +206,7 @@ public class MergeAllNonConflictingRunnable extends AbstractMergeRunnable implem
 					} else if (getMergeMode() == MergeMode.RIGHT_TO_LEFT) {
 						merger.copyRightToLeft(next, emfMonitor);
 					} else if (getMergeMode() == MergeMode.ACCEPT || getMergeMode() == MergeMode.REJECT) {
-						MergeOperation mergeAction = getMergeMode().getMergeAction(next, isLeftEditable(),
-								isRightEditable());
+						MergeOperation mergeAction = getMergeOperation(next);
 						if (mergeAction == MergeOperation.MARK_AS_MERGE) {
 							markAsMerged(next, getMergeMode(), leftToRight, mergerRegistry);
 						} else {
@@ -206,20 +227,58 @@ public class MergeAllNonConflictingRunnable extends AbstractMergeRunnable implem
 	}
 
 	/**
-	 * Checks whether this comparison presents a real conflict.
+	 * Performs an accept or reject operation in a three-way merge without conflicts or in a two-way merge.
+	 * 
+	 * @param differences
+	 *            The differences to be merged.
+	 * @param leftToRight
+	 *            The direction in which {@code differences} should be merged.
+	 * @param mergerRegistry
+	 *            The registry of mergers.
+	 * @param merger
+	 *            The merger to be used in this operation.
+	 * @return an iterable over the differences that have actually been merged by this operation.
+	 */
+	private List<Diff> acceptOrRejectWithoutConflicts(Collection<Diff> differences, boolean leftToRight,
+			Registry mergerRegistry, final IBatchMerger merger) {
+		final List<Diff> diffsToMarkAsMerged = newArrayList();
+		final List<Diff> diffsToAccept = newArrayList();
+		final List<Diff> diffsToReject = newArrayList();
+
+		for (Diff diff : differences) {
+			final MergeOperation mergeAction = getMergeOperation(diff);
+			if (mergeAction == MergeOperation.MARK_AS_MERGE) {
+				diffsToMarkAsMerged.add(diff);
+			} else {
+				if (isLeftEditable() && leftToRight) {
+					diffsToReject.add(diff);
+				} else {
+					diffsToAccept.add(diff);
+				}
+			}
+		}
+
+		final Monitor emfMonitor = new BasicMonitor();
+		mergeAll(diffsToAccept, leftToRight, merger, mergerRegistry, emfMonitor);
+		mergeAll(diffsToReject, !leftToRight, merger, mergerRegistry, emfMonitor);
+		markAllAsMerged(diffsToMarkAsMerged, getMergeMode(), mergerRegistry);
+
+		final List<Diff> affectedDiffs = Lists.newArrayList(diffsToAccept);
+		affectedDiffs.addAll(diffsToReject);
+		affectedDiffs.addAll(diffsToMarkAsMerged);
+		return affectedDiffs;
+	}
+
+	/**
+	 * Checks whether the given comparison presents a real conflict.
 	 * 
 	 * @param comparison
 	 *            The comparison to check for conflicts.
 	 * @return <code>true</code> if there's at least one {@link ConflictKind#REAL real conflict} within this
 	 *         comparison.
 	 */
-	private static boolean hasRealConflict(Comparison comparison) {
-		for (Conflict conflict : comparison.getConflicts()) {
-			if (conflict.getKind() == ConflictKind.REAL) {
-				return true;
-			}
-		}
-		return false;
+	private boolean hasRealConflict(Comparison comparison) {
+		return any(comparison.getConflicts(), containsConflictOfTypes(ConflictKind.REAL));
 	}
 
 	/**

@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 441172
+ *     Philip Langer - add containsConflictOfTypes(ConflictKind...)
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -853,6 +855,22 @@ public final class EMFComparePredicates {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				return input != null && Arrays.asList(states).contains(input.getState());
+			}
+		};
+	}
+
+	/**
+	 * This can be used to check whether a given Conflict is of one of the given kind.
+	 * 
+	 * @param kinds
+	 *            Type(s) of the conflict(s) we seek.
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Conflict> containsConflictOfTypes(final ConflictKind... kinds) {
+		return new Predicate<Conflict>() {
+			public boolean apply(Conflict input) {
+				return input != null && input.getKind() != null
+						&& Arrays.asList(kinds).contains(input.getKind());
 			}
 		};
 	}
