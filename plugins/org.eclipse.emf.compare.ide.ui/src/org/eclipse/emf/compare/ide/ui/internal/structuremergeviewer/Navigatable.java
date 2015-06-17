@@ -22,6 +22,7 @@ import java.util.List;
 import org.eclipse.compare.INavigatable;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
@@ -40,6 +41,8 @@ public class Navigatable implements INavigatable {
 
 	private final EMFCompareStructureMergeViewerContentProvider contentProvider;
 
+	protected CallbackType uiSyncCallbackType = IN_UI_ASYNC;
+
 	public Navigatable(WrappableTreeViewer viewer,
 			EMFCompareStructureMergeViewerContentProvider contentProvider) {
 		this.viewer = viewer;
@@ -47,7 +50,7 @@ public class Navigatable implements INavigatable {
 	}
 
 	public boolean selectChange(final int flag) {
-		contentProvider.runWhenReady(IN_UI_ASYNC, new Runnable() {
+		contentProvider.runWhenReady(uiSyncCallbackType, new Runnable() {
 			public void run() {
 				TreeItem[] selection = viewer.getTree().getSelection();
 				TreeItem firstSelectedItem = firstOrNull(selection);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Michael Borkowski - public CallbackType visibility for testing
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -276,7 +277,8 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 	 * 
 	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
 	 */
-	static enum CallbackType {
+	// public for testing
+	public static enum CallbackType {
 		/** Run the runnable in the UI thread synchronously. */
 		IN_UI_SYNC,
 		/** Run the runnable in the UI thread asynchronously. */
@@ -533,7 +535,6 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 	 * {@inheritDoc}
 	 * 
 	 * @see IJobChangeListener{@link #aboutToRun(IJobChangeEvent)
-
 	 */
 	public void aboutToRun(IJobChangeEvent event) {
 		/*

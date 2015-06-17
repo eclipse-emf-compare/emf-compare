@@ -7,19 +7,35 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Michael Borkowski - extraction of unnecessarily nested classes 
+ *     Michael Borkowski - extraction of nested classes, TreeItem creation 
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.Navigatable;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.WrappableTreeViewer;
+import org.eclipse.emf.edit.tree.TreeNode;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
  * Utils class used for creating the {@link Tree} and the {@link WrappableTreeViewer}.
@@ -40,6 +56,8 @@ final class TestContext {
 	private WrappableTreeViewer viewer;
 
 	private final Shell currentShell;
+
+	private Object[] currentSelection;
 
 	public TestContext(Shell shell) {
 		super();
@@ -64,7 +82,8 @@ final class TestContext {
 	}
 
 	/**
-	 * Builds a {@link Tree}.
+	 * Builds a {@link Tree} (convenience method for calling {@link #buildTree(int, int, boolean)} with
+	 * useString = <code>true</code>)
 	 * 
 	 * @param depth
 	 *            of the testContext
@@ -73,18 +92,50 @@ final class TestContext {
 	 * @return {@link Navigatable}
 	 */
 	public TestNavigatable buildTree(int depth, int numberOfChildren) {
+		return buildTree(depth, numberOfChildren, true);
+	}
+
+	/**
+	 * Builds a {@link Tree}.
+	 * 
+	 * @param depth
+	 *            of the testContext
+	 * @param numberOfChildren
+	 *            number of children by item.
+	 * @param useStrings
+	 *            whether to use {@link String} data instead of {@link Adapter} data elements.
+	 * @return {@link Navigatable}
+	 */
+	public TestNavigatable buildTree(int depth, int numberOfChildren, boolean useStrings) {
 		if (swtTree == null) {
 			swtTree = new Tree(currentShell, SWT.NONE);
 			swtTree.setData("root"); //$NON-NLS-1$
-			createSubNodes(swtTree, numberOfChildren, depth);
-			viewer = new WrappableTreeViewer(swtTree);
-			return new TestNavigatable(viewer);
+			createSubNodes(swtTree, numberOfChildren, depth, useStrings);
+			viewer = spy(new WrappableTreeViewer(swtTree));
+			doAnswer(selectionChanged()).when(viewer).setSelection(any(ISelection.class));
+			AdapterFactory adapterFactory = mock(AdapterFactory.class);
+			EMFCompareStructureMergeViewerContentProvider contentProvider = new EMFCompareStructureMergeViewerContentProvider(
+					adapterFactory, viewer); // mock(EMFCompareStructureMergeViewerContentProvider.class);
+			return new TestNavigatable(viewer, contentProvider);
 		} else {
 			throw new AssertionError("The tree can only be built once"); //$NON-NLS-1$
 		}
 	}
 
-	private void createSubNodes(Object parent, int numberOfChild, int depth) {
+	private Answer<Void> selectionChanged() {
+		return new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				ISelection selection = (ISelection)invocation.getArguments()[0];
+				if (selection instanceof StructuredSelection) {
+					currentSelection = ((StructuredSelection)selection).toArray();
+				}
+				invocation.callRealMethod();
+				return null;
+			}
+		};
+	}
+
+	private void createSubNodes(Object parent, int numberOfChild, int depth, boolean useStrings) {
 		if (depth > 0) {
 			for (int childIndex = 0; childIndex < numberOfChild; childIndex++) {
 				final TreeItem item;
@@ -96,9 +147,18 @@ final class TestContext {
 				Integer increment = increment();
 				String name = String.valueOf(increment);
 				item.setText(name);
-				item.setData(name);
+				if (useStrings) {
+					item.setData(name);
+				} else {
+					Adapter adapter = mock(Adapter.class);
+					TreeNode notifier = mock(TreeNode.class);
+					Diff diff = mock(Diff.class);
+					when(adapter.getTarget()).thenReturn(notifier);
+					when(notifier.getData()).thenReturn(diff);
+					item.setData(adapter);
+				}
 				itemRetreiver.put(increment, item);
-				createSubNodes(item, numberOfChild, depth - 1);
+				createSubNodes(item, numberOfChild, depth - 1, useStrings);
 			}
 		}
 	}
@@ -110,8 +170,10 @@ final class TestContext {
 	 */
 	public class TestNavigatable extends Navigatable {
 
-		public TestNavigatable(WrappableTreeViewer viewer) {
-			super(viewer, null);
+		public TestNavigatable(WrappableTreeViewer viewer,
+				EMFCompareStructureMergeViewerContentProvider contentProvider) {
+			super(viewer, contentProvider);
+			uiSyncCallbackType = CallbackType.IN_CURRENT_THREAD;
 		}
 
 		@Override
@@ -124,6 +186,15 @@ final class TestContext {
 			return super.getPreviousItem(previousItem);
 		}
 
+	}
+
+	/**
+	 * Returns the current tree selection
+	 * 
+	 * @return
+	 */
+	public Object[] getCurrentSelection() {
+		return currentSelection;
 	}
 
 }

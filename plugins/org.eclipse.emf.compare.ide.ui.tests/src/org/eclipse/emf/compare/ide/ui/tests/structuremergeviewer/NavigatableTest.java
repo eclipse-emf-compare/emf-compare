@@ -7,16 +7,19 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Michael Borkowski - extraction of nested classes 
+ *     Michael Borkowski - extraction of nested classes, additional tests
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Strings;
 
+import org.eclipse.compare.INavigatable;
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.Navigatable;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.TestContext.TestNavigatable;
 import org.eclipse.swt.widgets.Display;
@@ -159,6 +162,29 @@ public class NavigatableTest {
 		// Only tests some use cases to avoid taking to much resources.
 		assertNextIterationStartingOn(navigatable, testContext, 0, 3593, 3843, 3874, 3850, 3904);
 		assertPreviousIterationStartingOn(navigatable, testContext, 0, 3593, 3843, 3874, 3850, 3904);
+	}
+
+	@Test
+	public void testSelectNextChange() {
+		TestNavigatable navigatable = testContext.buildTree(1, 2, false);
+		navigatable.selectChange(INavigatable.NEXT_CHANGE);
+		assertSelectedItemIndex(1);
+	}
+
+	@Test
+	public void testSelectPreviousChange() {
+		TestNavigatable navigatable = testContext.buildTree(1, 3, false);
+		navigatable.selectChange(INavigatable.NEXT_CHANGE);
+		navigatable.selectChange(INavigatable.NEXT_CHANGE);
+		navigatable.selectChange(INavigatable.PREVIOUS_CHANGE);
+		assertSelectedItemIndex(1);
+	}
+
+	private void assertSelectedItemIndex(int index) {
+		Adapter data = ((Adapter)testContext.getTree().getItem(index).getData());
+		Object[] selection = testContext.getCurrentSelection();
+		assertEquals(1, selection.length);
+		assertTrue(data == selection[0]);
 	}
 
 	private void assertAllNextItems(TestNavigatable navigatable, TestContext context) {
