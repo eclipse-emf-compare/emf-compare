@@ -380,7 +380,7 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 	 */
 	@Override
 	public final Object[] getChildren(Object element) {
-		final Object[] children;
+		Object[] children;
 		if (element instanceof CompareInputAdapter) {
 			children = getCompareInputAdapterChildren((CompareInputAdapter)element);
 		} else if (element instanceof ICompareInput) {
@@ -390,6 +390,10 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 		}
 
 		final Object[] compareInputChildren;
+		// Avoid NPE.
+		if (children == null) {
+			children = new Object[] {};
+		}
 		// Do not adapt if it's a pending updater
 		if (!Iterables.all(Arrays.asList(children), Predicates.instanceOf(PendingUpdateAdapter.class))) {
 			Iterable<?> compareInputs = adapt(children, getAdapterFactory(), ICompareInput.class);
