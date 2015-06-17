@@ -29,8 +29,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
- * Abstract Action that manages a merge of a all non-conflicting difference in case of both sides of the
- * comparison are editable.
+ * Action that manages a merge of a all non-conflicting difference.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0

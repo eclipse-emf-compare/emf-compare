@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 467191
+ *     Philip Langer - bug 462884
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -73,6 +74,7 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
@@ -96,6 +98,7 @@ import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressInfoComposite
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressMonitorWrapper;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.FetchListener;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeContainedNonConflictingAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeCompareInputAdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeNodeCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.util.CompareHandlerService;
@@ -404,7 +407,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 *            the context menu to fill.
 	 */
 	private void fillContextMenu(IMenuManager manager) {
-		if (!isDiffSelected()) {
+		if (!isOneMergeableItemSelected()) {
 			return;
 		}
 		boolean leftEditable = getCompareConfiguration().isLeftEditable();
@@ -418,21 +421,45 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		if (rightEditable || leftEditable) {
 			for (MergeMode mode : modes) {
 				IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
-				MergeAction mergeAction = new MergeAction(getCompareConfiguration().getEditingDomain(),
-						mergerRegistry, mode, leftEditable, rightEditable, navigatable,
-						(IStructuredSelection)getSelection());
-				manager.add(mergeAction);
+				if (isOneDiffSelected()) {
+					MergeAction mergeAction = new MergeAction(getCompareConfiguration().getEditingDomain(),
+							mergerRegistry, mode, leftEditable, rightEditable, navigatable,
+							(IStructuredSelection)getSelection());
+					manager.add(mergeAction);
+				} else if (isOneMatchOrResourceMatchSelected()) {
+					final Predicate<TreeNode> filterPredicate = new Predicate<TreeNode>() {
+						public boolean apply(TreeNode input) {
+							return input != null
+									&& JFaceUtil.isFiltered(getViewer(), input, input.getParent());
+						}
+					};
+					MergeContainedNonConflictingAction mergeAction = new MergeContainedNonConflictingAction(
+							getCompareConfiguration().getEditingDomain(), mergerRegistry, mode, leftEditable,
+							rightEditable, navigatable, (IStructuredSelection)getSelection(), filterPredicate);
+					manager.add(mergeAction);
+				}
 			}
 		}
 	}
 
 	/**
-	 * Check if the item selected in this viewer is a single Diff.
+	 * Check if the item selected in this viewer is mergeable; that is, if a {@link Diff}, a {@link Match}, or
+	 * {@link MatchResource} is selected.
 	 * 
-	 * @return true if the item selected is a single Diff, false otherwise.
+	 * @return true if the item selected is mergeable, false otherwise.
 	 */
-	private boolean isDiffSelected() {
-		ISelection selection = getSelection();
+	private boolean isOneMergeableItemSelected() {
+		return isOneDiffSelected() || isOneMatchOrResourceMatchSelected();
+	}
+
+	/**
+	 * Specifies whether the a {@link Match} or a {@link MatchResource} is currently selected in this viewer.
+	 * 
+	 * @return <code>true</code> if an instance of a {@link Match} or a {@link MatchResource} is selected,
+	 *         <code>false</code> otherwise.
+	 */
+	private boolean isOneDiffSelected() {
+		final ISelection selection = getSelection();
 		if (selection instanceof IStructuredSelection && ((IStructuredSelection)selection).size() == 1) {
 			Object element = ((IStructuredSelection)selection).getFirstElement();
 			if (getDataOfTreeNodeOfAdapter(element) instanceof Diff) {
@@ -440,6 +467,35 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Specifies whether the a {@link Match} or a {@link MatchResource} is currently selected in this viewer.
+	 * 
+	 * @return <code>true</code> if an instance of a {@link Match} or a {@link MatchResource} is selected,
+	 *         <code>false</code> otherwise.
+	 */
+	private boolean isOneMatchOrResourceMatchSelected() {
+		final ISelection selection = getSelection();
+		if (selection instanceof IStructuredSelection && ((IStructuredSelection)selection).size() == 1) {
+			Object element = ((IStructuredSelection)selection).getFirstElement();
+			if (isMatchOrMatchResource(getDataOfTreeNodeOfAdapter(element))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Specifies whether the given {@code eObject} is a {@link Match} or a {@link MatchResource}.
+	 * 
+	 * @param eObject
+	 *            The EObject to check.
+	 * @return <code>true</code> if it is an instance a {@link Match} or a {@link MatchResource},
+	 *         <code>false</code> otherwise.
+	 */
+	private boolean isMatchOrMatchResource(EObject eObject) {
+		return eObject instanceof Match || eObject instanceof MatchResource;
 	}
 
 	/**

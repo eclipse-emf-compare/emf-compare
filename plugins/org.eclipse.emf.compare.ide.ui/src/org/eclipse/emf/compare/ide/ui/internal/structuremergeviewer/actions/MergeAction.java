@@ -51,7 +51,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class MergeAction extends BaseSelectionListenerAction {
 
-	private static final Function<? super Adapter, ? extends Notifier> ADAPTER__TARGET = new Function<Adapter, Notifier>() {
+	protected static final Function<? super Adapter, ? extends Notifier> ADAPTER__TARGET = new Function<Adapter, Notifier>() {
 		public Notifier apply(Adapter adapter) {
 			return adapter.getTarget();
 		}
