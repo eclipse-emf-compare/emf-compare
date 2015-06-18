@@ -25,7 +25,7 @@
   <packaging>eclipse-plugin</packaging>
 
   <properties>
-    <simrel>luna</simrel>
+    <simrel>mars</simrel>
     <platform-isv>org.eclipse.platform.doc.isv/reference/api</platform-isv>
     <javadoc-args>
       -quiet
@@ -35,7 +35,7 @@
       -windowtitle "EMF Compare API Specification"
       -doctitle "EMF Compare API Specification"
       -header "&lt;span style='font-size:small'&gt;&lt;b&gt;EMF Compare&lt;/b&gt;&lt;br&gt;${unqualifiedVersion}.${buildQualifier}&lt;/span&gt;"
-      -bottom "&lt;br&gt;&lt;span style='font-size:small;float:right'&gt;Copyright (c) 2006, 2014 Obeo and others. All rights reserved.&lt;/span&gt;"
+      -bottom "&lt;br&gt;&lt;span style='font-size:small;float:right'&gt;Copyright (c) 2006, 2015 Obeo and others. All rights reserved.&lt;/span&gt;"
       -tag 'noimplement:a:Restriction:'
       -tag 'noextend:a:Restriction:'
       -tag 'noreference:a:Restriction:'
