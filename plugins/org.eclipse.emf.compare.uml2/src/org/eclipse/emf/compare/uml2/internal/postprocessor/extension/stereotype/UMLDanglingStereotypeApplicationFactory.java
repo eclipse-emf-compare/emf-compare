@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.Switch;
+import org.eclipse.uml2.uml.util.UMLUtil;
 
 /**
  * Factory of UML Dangling Stereotype Application extensions.
@@ -32,9 +33,20 @@ public class UMLDanglingStereotypeApplicationFactory extends AbstractUMLChangeFa
 
 	@Override
 	public boolean handles(Diff input) {
-		return input instanceof ResourceAttachmentChange
-				&& UMLCompareUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(),
-						input)) == null;
+		final boolean handles;
+		boolean isRAC = input instanceof ResourceAttachmentChange;
+		if (!isRAC) {
+			handles = false;
+		} else {
+			EObject stereotypeApplication = MatchUtil.getContainer(input.getMatch().getComparison(), input);
+			if (stereotypeApplication != null) {
+				handles = UMLUtil.getStereotype(stereotypeApplication) != null
+						&& UMLCompareUtil.getBaseElement(stereotypeApplication) == null;
+			} else {
+				handles = false;
+			}
+		}
+		return handles;
 	}
 
 	@Override

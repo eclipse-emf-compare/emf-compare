@@ -53,6 +53,14 @@ public class DanglingStereotypeApplicationInputData extends AbstractUMLInputData
 		return loadFromClassLoader("case3/right.uml"); //$NON-NLS-1$
 	}
 
+	public Resource getCase4Left() throws IOException {
+		return loadFromClassLoader("case4/left.uml"); //$NON-NLS-1$
+	}
+
+	public Resource getCase4Right() throws IOException {
+		return loadFromClassLoader("case4/right.uml"); //$NON-NLS-1$
+	}
+
 	@Override
 	protected Resource loadFromClassLoader(String string) throws IOException {
 

@@ -130,6 +130,22 @@ public class DanglingStereotypeApplicationTest extends AbstractUMLProfileTest {
 	}
 
 	/**
+	 * Case 4 : a real Resource Attachment Change (a resource has been controlled on one side), but not a
+	 * dangling stereotype application because there are no profiles involved in the comparison. So, In this
+	 * case, no DanglingStereotypeApplication should be detected.
+	 */
+	@Test
+	public void testDetectDanglingStereotypeApplication_Case4() throws IOException {
+		Comparison comparison = compare(input.getCase4Left(), input.getCase4Right(), null);
+		Iterable<ResourceAttachmentChange> racs = filter(comparison.getDifferences(),
+				ResourceAttachmentChange.class);
+		assertEquals(1, size(racs));
+		Iterable<DanglingStereotypeApplication> danglings = filter(comparison.getDifferences(),
+				DanglingStereotypeApplication.class);
+		assertEquals(0, size(danglings));
+	}
+
+	/**
 	 * Case 1: Dangling stereotype with nothing on the other side. A merge from left to right of the
 	 * DanglingStereotypeApplication will lead to delete the dangling stereotype on the right model.
 	 */
