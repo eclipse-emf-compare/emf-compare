@@ -1431,7 +1431,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * the redraw on its sub components under windows platform.
 	 */
 	private void internalRedraw() {
-		getViewer().getTree().redraw();
-		treeRuler.redraw();
+		Tree tree = getViewer().getTree();
+		if (!tree.isDisposed()) {
+			tree.redraw();
+			if (!treeRuler.isDisposed()) {
+				treeRuler.redraw();
+			}
+		}
 	}
 }
