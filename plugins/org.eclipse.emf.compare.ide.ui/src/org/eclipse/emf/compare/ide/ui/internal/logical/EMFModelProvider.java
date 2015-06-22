@@ -44,7 +44,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
@@ -254,6 +253,10 @@ public class EMFModelProvider extends ModelProvider {
 						resourceMappingCache.put(res, syncModel);
 					}
 				}
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("EMFModelProvider - Minimizing model"); //$NON-NLS-1$
+				}
+				new IdenticalResourceMinimizer().minimize(syncModel, monitor);
 			} else if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Cache FOUND entry for " + file); //$NON-NLS-1$
 			}
@@ -271,6 +274,9 @@ public class EMFModelProvider extends ModelProvider {
 	 * trying to compute the model of <code>file1</code>, the returned model will only contained
 	 * <code>file1</code> if called with a {@link ResourceMappingContext#LOCAL_CONTEXT local context}, but it
 	 * will contain both files if called with a {@link RemoteResourceMappingContext remote context}.
+	 * </p>
+	 * <p>
+	 * <b>Note</b> that this will return an unminimized synchronization model.
 	 * </p>
 	 * 
 	 * @param file
@@ -326,9 +332,8 @@ public class EMFModelProvider extends ModelProvider {
 
 			final IModelResolver remoteResolver = EMFCompareIDEUIPlugin.getDefault()
 					.getModelResolverRegistry().getBestResolverFor(leftStorage);
-			final IModelMinimizer minimizer = new IdenticalResourceMinimizer();
-			final ComparisonScopeBuilder builder = new ComparisonScopeBuilder(remoteResolver, minimizer,
-					accessor);
+			final ComparisonScopeBuilder builder = new ComparisonScopeBuilder(remoteResolver,
+					new NullModelMinimizer(), accessor);
 			syncModel = builder.buildSynchronizationModel(left, right, origin, actualMonitor);
 		} else {
 			// TODO wouldn't it be better to use Collections.singleton(file) for the right and origin?
