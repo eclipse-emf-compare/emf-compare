@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
@@ -125,6 +126,21 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 				EObject referenceChangeValue = referenceChange.getValue();
 				if (referenceChangeValue != null) {
 					return Objects.equal(eGet(referenceChangeValue, featureName), value);
+				}
+				return false;
+			}
+		};
+		return find(matches, predicate);
+	}
+	
+	protected AttributeChange getAttributeChangeWithFeatureValue(Iterable<?> c, final String featureName,
+			final Object value) {
+		Iterable<AttributeChange> matches = filter(c, AttributeChange.class);
+		Predicate<AttributeChange> predicate = new Predicate<AttributeChange>() {
+			public boolean apply(AttributeChange attributeChange) {
+				Object attributeChangeValue = attributeChange.getValue();
+				if (attributeChangeValue instanceof EObject) {
+					return Objects.equal(eGet((EObject) attributeChangeValue, featureName), value);
 				}
 				return false;
 			}

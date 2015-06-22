@@ -19,8 +19,10 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.compare.INavigatable;
 import org.eclipse.emf.common.notify.Adapter;
@@ -36,6 +38,7 @@ import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
+import org.eclipse.emf.compare.merge.IMerger2;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -169,7 +172,15 @@ public class MergeAction extends BaseSelectionListenerAction {
 		List<Diff> differencesToMerge = newArrayList(selectedDifferences);
 
 		if (cascadingDifferencesFilterEnabled) {
-			Iterable<Diff> cascadingDifferences = concat(transform(selectedDifferences, ComparisonUtil
+			Set<Diff> setToMerge = Sets.newHashSet(differencesToMerge);
+			for (Diff difftoMerge : differencesToMerge) {
+				IMerger merger = mergerRegistry.getHighestRankingMerger(difftoMerge);
+				if (merger instanceof IMerger2) {
+					addAll(setToMerge, ((IMerger2)merger).getDirectMergeDependencies(difftoMerge,
+							!leftToRight));
+				}
+			}
+			Iterable<Diff> cascadingDifferences = concat(transform(setToMerge, ComparisonUtil
 					.getSubDiffs(leftToRight)));
 			addAll(differencesToMerge, cascadingDifferences);
 		}
