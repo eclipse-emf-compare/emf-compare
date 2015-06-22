@@ -252,11 +252,11 @@ public class EMFModelProvider extends ModelProvider {
 					for (IResource res : syncModel.getResources()) {
 						resourceMappingCache.put(res, syncModel);
 					}
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug("EMFModelProvider - Minimizing model"); //$NON-NLS-1$
+					}
+					new IdenticalResourceMinimizer().minimize(syncModel, monitor);
 				}
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("EMFModelProvider - Minimizing model"); //$NON-NLS-1$
-				}
-				new IdenticalResourceMinimizer().minimize(syncModel, monitor);
 			} else if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Cache FOUND entry for " + file); //$NON-NLS-1$
 			}
