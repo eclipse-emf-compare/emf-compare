@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.LocalMonitoredProxy
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.RemoteMonitoredProxyCreationListenerTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ResolutionEventsTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ResourceComputationSchedulerTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ResourceComputationSchedulerWithEventBusTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverGraphTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverWithCustomDependencyProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.NavigatableTest;
@@ -48,11 +49,11 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({EMFCompareConfigurationTest.class, DependenciesTest.class, MergeActionTest.class,
 		PseudoConflictsMergeActionTest.class, BugsTestSuite.class, NavigatableTest.class,
 		NotLoadedFragmentNodeTest.class, NotLoadedFragmentItemTest.class, ResolutionEventsTest.class,
-		ResourceComputationSchedulerTest.class, ThreadedModelResolverGraphTest.class,
-		ThreadedModelResolverWithCustomDependencyProviderTest.class, DependencyGraphUpdaterTest.class,
-		GraphResolutionTest.class, EMFModelProviderTest.class, MergeAllCommandTests.class,
-		LocalMonitoredProxyCreationListenerTest.class, RemoteMonitoredProxyCreationListenerTest.class,
-		MergeNonConflictingRunnableTest.class })
+		ResourceComputationSchedulerTest.class, ResourceComputationSchedulerWithEventBusTest.class,
+		ThreadedModelResolverGraphTest.class, ThreadedModelResolverWithCustomDependencyProviderTest.class,
+		DependencyGraphUpdaterTest.class, GraphResolutionTest.class, EMFModelProviderTest.class,
+		MergeAllCommandTests.class, LocalMonitoredProxyCreationListenerTest.class,
+		RemoteMonitoredProxyCreationListenerTest.class, MergeNonConflictingRunnableTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

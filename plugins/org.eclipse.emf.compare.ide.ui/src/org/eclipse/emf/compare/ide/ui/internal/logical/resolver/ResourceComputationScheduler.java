@@ -14,6 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -93,6 +94,9 @@ public class ResourceComputationScheduler<T> {
 	/** Unit of the above duration. */
 	private final TimeUnit shutdownWaitUnit;
 
+	/** Event bus used to send state change events */
+	private final EventBus eventBus;
+
 	/**
 	 * Constructor, configured to wait for tasks completion for 5 seconds (will wait at most 10 seconds).
 	 */
@@ -110,12 +114,28 @@ public class ResourceComputationScheduler<T> {
 	 *            Unit to use to interpret the other parameter.
 	 */
 	public ResourceComputationScheduler(int shutdownWaitDuration, TimeUnit shutdownWaitUnit) {
+		this(shutdownWaitDuration, shutdownWaitUnit, null);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param shutdownWaitDuration
+	 *            Time to wait for current tasks completion when shutting down the pools (will wait at most
+	 *            twice this amount of time).
+	 * @param shutdownWaitUnit
+	 *            Unit to use to interpret the other parameter.
+	 * @param eventBus
+	 *            The {@link EventBus} used to post events (shutdown events), can be {@code null}
+	 */
+	public ResourceComputationScheduler(int shutdownWaitDuration, TimeUnit shutdownWaitUnit, EventBus eventBus) {
 		this.lock = new ReentrantLock(true);
 		this.endOfTasks = lock.newCondition();
 		this.currentlyComputing = new HashSet<T>();
 		this.shutdownInProgress = new AtomicBoolean(false);
 		this.shutdownWaitDuration = shutdownWaitDuration;
 		this.shutdownWaitUnit = shutdownWaitUnit;
+		this.eventBus = eventBus;
 	}
 
 	/**
@@ -171,11 +191,20 @@ public class ResourceComputationScheduler<T> {
 	/**
 	 * If {@link #shutdownInProgress shutdown has not been requested before}, it submits a new task to
 	 * {@link #shutdownPools() shut down} {@link #computingPool} and {@link #unloadingPool}. Do nothing if
-	 * current thread already is interrupted.
+	 * current thread already is interrupted. If a shutdown is actually started, events will be posted to the
+	 * scheduler's eventBus if there is one. The events will be:
+	 * <ol>
+	 * <li>STARTED</li>
+	 * <li>SUCCESS if shutdown has succeeded or FAILURE if shutdown has failed</li>
+	 * </ol>
+	 * <b>Note</b> that these events will be sent in the calling Thread.
 	 */
 	public void demandShutdown() {
 		if (!Thread.currentThread().isInterrupted()) {
 			if (shutdownInProgress.compareAndSet(false, true)) {
+				if (eventBus != null) {
+					eventBus.post(ShutdownStatus.STARTED);
+				}
 				Runnable runnable = new Runnable() {
 					public void run() {
 						shutdownPools();
@@ -186,10 +215,16 @@ public class ResourceComputationScheduler<T> {
 				Futures.addCallback(listenableFuture, new FutureCallback<Object>() {
 					public void onSuccess(Object result) {
 						shutdownInProgress.set(false);
+						if (eventBus != null) {
+							eventBus.post(ShutdownStatus.SUCCESS);
+						}
 					}
 
 					public void onFailure(Throwable t) {
 						shutdownInProgress.set(false);
+						if (eventBus != null) {
+							eventBus.post(new ShutdownStatus(t));
+						}
 						EMFCompareIDEUIPlugin.getDefault().log(t);
 					}
 				});
@@ -257,6 +292,16 @@ public class ResourceComputationScheduler<T> {
 	 * <li>{@link #dispose()} has not been called</li>
 	 * </ul>
 	 * </p>
+	 * If the scheduler has an eventBus, it will post the following events:
+	 * <ol>
+	 * <li>SETTING_UP</li>
+	 * <li>SCHEDULED as soon as the set-up is finished</li>
+	 * <li>FAILURE if and only if the given callable throws an exception</li>
+	 * <li>FINISHING as soon as the given callable has finished running (successfully or not)</li>
+	 * <li>FINISHED as soon as the tear-down is finished</li>
+	 * </ol>
+	 * <b>Note</b> that these events will be sent in the Thread that ran the computation, NOT in the calling
+	 * Thread.
 	 * 
 	 * @param callable
 	 *            will be executed as soon as this instance is no longer computing anything. Must not be
@@ -271,9 +316,18 @@ public class ResourceComputationScheduler<T> {
 	public synchronized <U> U call(Callable<U> callable, Runnable postTreatment) {
 		checkNotNull(callable);
 		try {
+			if (eventBus != null) {
+				eventBus.post(CallStatus.SETTING_UP);
+			}
 			setUpComputation();
+			if (eventBus != null) {
+				eventBus.post(CallStatus.SCHEDULED);
+			}
 			return callable.call();
 		} catch (Exception e) {
+			if (eventBus != null) {
+				eventBus.post(new CallStatus(e));
+			}
 			if (e instanceof InterruptedException) {
 				throw new OperationCanceledException();
 			}
@@ -282,9 +336,18 @@ public class ResourceComputationScheduler<T> {
 			}
 			throw new RuntimeException(e);
 		} finally {
-			tearDownComputation();
-			if (postTreatment != null) {
-				postTreatment.run();
+			if (eventBus != null) {
+				eventBus.post(CallStatus.FINISHING);
+			}
+			try {
+				tearDownComputation();
+				if (postTreatment != null) {
+					postTreatment.run();
+				}
+			} finally {
+				if (eventBus != null) {
+					eventBus.post(CallStatus.FINISHED);
+				}
 			}
 		}
 	}
@@ -546,6 +609,83 @@ public class ResourceComputationScheduler<T> {
 			} finally {
 				scheduler.finalizeTask(key);
 			}
+		}
+	}
+
+	public static enum ComputationState {
+		/** Computation is setting-up (preparing pools and so on). */
+		SETTING_UP,
+		/** Computation is set-up and scheduled. */
+		SCHEDULED,
+		/** Computation is over, tear-down and post-treatments are starting. */
+		FINISHING,
+		/** Computation is over and has failed. */
+		FAILED,
+		/** Computation is over and tear-down + post-treatments are finished. */
+		FINISHED;
+	}
+
+	public static class CallStatus {
+		public static final CallStatus SETTING_UP = new CallStatus(ComputationState.SETTING_UP);
+
+		public static final CallStatus SCHEDULED = new CallStatus(ComputationState.SCHEDULED);
+
+		public static final CallStatus FINISHING = new CallStatus(ComputationState.FINISHING);
+
+		public static final CallStatus FINISHED = new CallStatus(ComputationState.FINISHED);
+
+		private final Throwable cause;
+
+		private final ComputationState state;
+
+		private CallStatus(ComputationState state) {
+			this.state = state;
+			this.cause = null;
+		}
+
+		private CallStatus(Throwable cause) {
+			this.state = ComputationState.FAILED;
+			this.cause = cause;
+		}
+
+		public Throwable getCause() {
+			return cause;
+		}
+
+		public ComputationState getState() {
+			return state;
+		}
+	}
+
+	public static enum ShutdownState {
+		STARTED, FINISH_FAILED, FINISH_SUCCESS;
+	}
+
+	public static class ShutdownStatus {
+		public static final ShutdownStatus STARTED = new ShutdownStatus(ShutdownState.STARTED);
+
+		public static final ShutdownStatus SUCCESS = new ShutdownStatus(ShutdownState.FINISH_SUCCESS);
+
+		private final Throwable cause;
+
+		private final ShutdownState state;
+
+		private ShutdownStatus(ShutdownState state) {
+			this.state = state;
+			this.cause = null;
+		}
+
+		private ShutdownStatus(Throwable cause) {
+			this.state = ShutdownState.FINISH_FAILED;
+			this.cause = cause;
+		}
+
+		public Throwable getCause() {
+			return cause;
+		}
+
+		public ShutdownState getState() {
+			return state;
 		}
 	}
 }
