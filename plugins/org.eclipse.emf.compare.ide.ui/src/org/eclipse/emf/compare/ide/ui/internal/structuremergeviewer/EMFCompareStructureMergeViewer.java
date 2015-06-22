@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.size;
 import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_ASYNC;
 import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_SYNC;
@@ -113,6 +115,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.configuration.IMergePreviewModeCh
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.SideLabelProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IColorChangeEvent;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
@@ -260,6 +263,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	private boolean editingDomainNeedsToBeDisposed;
 
 	private FetchListener toolbarUpdaterContentProviderListener;
+
+	private boolean cascadingDifferencesFilterEnabled;
 
 	/**
 	 * Constructor.
@@ -660,6 +665,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	@Subscribe
 	public void handleDifferenceFilterChange(IDifferenceFilterChange event) {
+		final boolean enabled = any(event.getSelectedDifferenceFilters(),
+				instanceOf(CascadingDifferencesFilter.class));
+		setCascadingDifferencesFilterEnabled(enabled);
 		SWTUtil.safeRefresh(this, false, true);
 		getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
 			public void run() {
@@ -670,6 +678,25 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				}
 			}
 		});
+	}
+
+	/**
+	 * Set the state of the cascading filter.
+	 * 
+	 * @param enable
+	 *            true if the filter is enabled, false otherwise.
+	 */
+	private void setCascadingDifferencesFilterEnabled(boolean enable) {
+		this.cascadingDifferencesFilterEnabled = enable;
+	}
+
+	/**
+	 * Get the state of the cascading filter.
+	 * 
+	 * @return true if the filter is enabled, false otherwise.
+	 */
+	private boolean getCascadingDifferencesFilterEnabled() {
+		return this.cascadingDifferencesFilterEnabled;
 	}
 
 	@Subscribe
