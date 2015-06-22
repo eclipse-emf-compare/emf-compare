@@ -24,8 +24,10 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.IComputation;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ResourceComputationScheduler;
+import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ResourceComputationScheduler.ShutdownStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,9 +35,9 @@ import org.junit.Test;
 @SuppressWarnings("nls")
 public class ResourceComputationSchedulerTest {
 
-	private ResourceComputationScheduler<String> scheduler;
+	protected ResourceComputationScheduler<String> scheduler;
 
-	private boolean flag;
+	protected boolean flag;
 
 	@Test
 	public void testInitializeCanBeCalledSeveralTimes() {
@@ -77,6 +79,26 @@ public class ResourceComputationSchedulerTest {
 		assertEquals(Integer.valueOf(42), result);
 		// Flag will be true only if the post-treatment has been called...
 		assertTrue(flag);
+	}
+
+	@Test(expected = OperationCanceledException.class)
+	public void testInterruptedExceptionInCallCausesOperationCanceledException() throws Exception {
+		scheduler.initialize();
+		scheduler.call(new Callable<String>() {
+			public String call() throws Exception {
+				throw new InterruptedException();
+			}
+		}, null);
+	}
+
+	@Test(expected = OperationCanceledException.class)
+	public void testOperationCanceledExceptionCall() throws Exception {
+		scheduler.initialize();
+		scheduler.call(new Callable<String>() {
+			public String call() throws Exception {
+				throw new OperationCanceledException();
+			}
+		}, null);
 	}
 
 	@Test
@@ -265,76 +287,6 @@ public class ResourceComputationSchedulerTest {
 		scheduler.scheduleComputation(new TestSuccessfulComputation(desc, "comp"));
 	}
 
-	@Test
-	public void testDemandShutdownWithLongRunningTaskThatInterruptsImproperly() throws Exception {
-		scheduler.initialize();
-		final CompStatus cs = new CompStatus();
-		Integer result = scheduler.call(new Callable<Integer>() {
-
-			public Integer call() throws Exception {
-				scheduler.scheduleComputation(new TimedComputation(cs, "long1", 1000, false));
-				// We ask for shutdown before the task can complete
-				// The scheduler is configured to wait only 100ms
-				scheduler.demandShutdown();
-
-				return Integer.valueOf(42);
-			}
-		}, null);
-		// desc has not been updated
-		assertFalse(cs.isFailed());
-		assertFalse(cs.isSuccess());
-		assertEquals(Integer.valueOf(42), result);
-		assertTrue(scheduler.getComputedElements().isEmpty());
-		Thread.sleep(1000);
-		checkInterruptedAndSuccess(cs);
-	}
-
-	@Test
-	public void testDemandShutdownWithLongRunningTaskThatInterruptsGracefully() throws Exception {
-		scheduler.initialize();
-		final CompStatus cs = new CompStatus();
-		Integer result = scheduler.call(new Callable<Integer>() {
-
-			public Integer call() throws Exception {
-				scheduler.scheduleComputation(new TimedComputation(cs, "long1", 1000, true));
-				// We ask for shutdown before the task can complete
-				// The scheduler is configured to wait only 100ms
-				scheduler.demandShutdown();
-
-				return Integer.valueOf(42);
-			}
-		}, null);
-		// desc has not been updated
-		assertFalse(cs.isFailed());
-		assertFalse(cs.isSuccess());
-		assertEquals(Integer.valueOf(42), result);
-		assertTrue(scheduler.getComputedElements().isEmpty());
-		Thread.sleep(1000);
-		checkInterruptedAndFailure(cs);
-	}
-
-	@Test
-	public void testDemandShutdownWithRunningTaskThatTerminatesGracefully() throws Exception {
-		scheduler = new ResourceComputationScheduler<String>(1, TimeUnit.SECONDS);
-		scheduler.initialize();
-		final CompStatus desc = new CompStatus();
-		Integer result = scheduler.call(new Callable<Integer>() {
-
-			public Integer call() throws Exception {
-				scheduler.scheduleComputation(new TimedComputation(desc, "long1", 500, false));
-				// We ask for shutdown before the task can complete
-				// The scheduler is configured to wait 1s while the task only takes 500ms
-				scheduler.demandShutdown();
-
-				return Integer.valueOf(42);
-			}
-		}, null);
-		assertEquals(Integer.valueOf(42), result);
-		Thread.sleep(1000);
-		checkSuccess(desc);
-		assertTrue(scheduler.getComputedElements().isEmpty());
-	}
-
 	protected void checkSuccess(CompStatus state) {
 		assertEquals(1, state.getCallCount());
 		assertFalse(state.isInterrupted());
@@ -373,7 +325,7 @@ public class ResourceComputationSchedulerTest {
 
 	@Before
 	public void setUp() {
-		scheduler = new ResourceComputationScheduler<String>(100, TimeUnit.MILLISECONDS);
+		scheduler = new ResourceComputationScheduler<String>(10, TimeUnit.MILLISECONDS, null);
 	}
 
 	@After
@@ -392,15 +344,15 @@ public class ResourceComputationSchedulerTest {
 
 		private final String name;
 
-		private TestSuccessfulComputation(CompStatus desc, String name) {
-			this.cs = desc;
+		private TestSuccessfulComputation(CompStatus cs, String name) {
+			this.cs = cs;
 			this.name = name;
 		}
 
 		public void run() {
 			cs.addCall();
 			try {
-				Thread.sleep(100);
+				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 				cs.interrupt();
@@ -483,86 +435,11 @@ public class ResourceComputationSchedulerTest {
 	}
 
 	/**
-	 * A test computation that systematically throws an exception when run, and updates its {@link CompStatus}
-	 * accordingly if onFailure() is called on its post-treatment.
-	 * 
-	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
-	 */
-	private static class InterruptibleRunnable implements Runnable {
-		protected final CompStatus cs;
-
-		protected final long duration;
-
-		protected final boolean throwOnInterrupt;
-
-		private InterruptibleRunnable(CompStatus desc, long duration, boolean throwOnInterrupt) {
-			this.cs = desc;
-			this.duration = duration;
-			this.throwOnInterrupt = throwOnInterrupt;
-		}
-
-		public void run() {
-			cs.addCall();
-			try {
-				Thread.sleep(duration);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-				cs.interrupt();
-				if (throwOnInterrupt) {
-					throw new RuntimeException("Interrupted");
-				}
-			}
-		}
-	}
-
-	/**
-	 * A test computation lasts for a given time, and updates its {@link CompStatus} accordingly if
-	 * onFailure() is called on its post-treatment.
-	 * 
-	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
-	 */
-	private static final class TimedComputation extends InterruptibleRunnable implements IComputation<String> {
-
-		protected final String name;
-
-		private TimedComputation(CompStatus desc, String name, long duration, boolean throwOnInterrupt) {
-			super(desc, duration, throwOnInterrupt);
-			this.name = name;
-		}
-
-		public FutureCallback<Object> getPostTreatment() {
-			return new FutureCallback<Object>() {
-				public void onFailure(Throwable t) {
-					if (cs.isInterrupted() && throwOnInterrupt) {
-						cs.fail("as expected");
-					} else {
-						cs.fail("onFailure() called on TimedComputation " + name
-								+ ", should have been onSuccess().");
-					}
-				}
-
-				public void onSuccess(Object r) {
-					if (cs.isInterrupted() && throwOnInterrupt) {
-						cs.fail("onSuccess() called on TimedComputation" + name
-								+ ", should have been onFailure().");
-					} else {
-						cs.success("as expected");
-					}
-				}
-			};
-		}
-
-		public String getKey() {
-			return name;
-		}
-	}
-
-	/**
 	 * Computation Status.
 	 * 
 	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
 	 */
-	private static class CompStatus {
+	protected static class CompStatus {
 		private boolean success = false;
 
 		private boolean failed = false;
@@ -570,6 +447,8 @@ public class ResourceComputationSchedulerTest {
 		private int callCount;
 
 		private boolean interrupted;
+
+		private ShutdownStatus shutdownStatus;
 
 		private String message;
 
@@ -611,6 +490,14 @@ public class ResourceComputationSchedulerTest {
 
 		public boolean isInterrupted() {
 			return interrupted;
+		}
+
+		public void setShutdownStatus(ShutdownStatus shutdownStatus) {
+			this.shutdownStatus = shutdownStatus;
+		}
+
+		public ShutdownStatus getShutdownStatus() {
+			return shutdownStatus;
 		}
 	}
 }
