@@ -20,7 +20,6 @@ import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -149,16 +148,13 @@ public class ResourceDependencyLocalResolver implements IResourceDependencyLocal
 		demandResolveAll(recompute, diagnostic, resourceSet, tspm);
 
 		// Re-connect changed resources parents' with their parents
-		demandResolveAll(Iterables.concat(Iterables.transform(Iterables.filter(parentToGrandParents.keySet(),
-				new Predicate<URI>() {
-					public boolean apply(URI uri) {
-						return dependencyGraph.contains(uri);
-					}
-				}), new Function<URI, Collection<URI>>() {
-			public Collection<URI> apply(URI input) {
-				return parentToGrandParents.get(input);
+		Set<URI> toResolve = new LinkedHashSet<URI>();
+		for (URI parentURI : parentToGrandParents.keySet()) {
+			if (dependencyGraph.contains(parentURI)) {
+				toResolve.addAll(parentToGrandParents.get(parentURI));
 			}
-		})), diagnostic, resourceSet, tspm);
+		}
+		demandResolveAll(toResolve, diagnostic, resourceSet, tspm);
 	}
 
 	public void demandResolve(final SynchronizedResourceSet resourceSet, final URI uri,
