@@ -10,15 +10,21 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.preferences;
 
-import static org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin.LOGGER;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_BACKUP_COUNT_KEY;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_BACKUP_DEFAULT;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILENAME_KEY;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILE_DEFAULT;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILE_MAX_SIZE_KEY;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILE_SIZE_DEFAULT;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_LEVEL_DEFAULT;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_LEVEL_KEY;
 
 import java.io.File;
 import java.util.Arrays;
 
-import org.apache.log4j.Level;
-import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -38,6 +44,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * Preference page used to configure logging in EMFCompare.
@@ -45,7 +52,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 public class LoggingPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-	public static final String EMFC_APPENDER_NAME = "EMFCFile"; //$NON-NLS-1$
 
 	private Combo levelCombo;
 
@@ -56,14 +62,6 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 	private Text maxBackupField;
 
 	private final String[] LOG_LEVELS = new String[] {"OFF", "ERROR", "INFO", "DEBUG" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
-
-	public static final String LOG_FILENAME_KEY = "org.eclipse.emf.compare.log.file.name"; //$NON-NLS-1$
-
-	public static final String LOG_LEVEL_KEY = "org.eclipse.emf.compare.log.level"; //$NON-NLS-1$
-
-	public static final String LOG_BACKUP_COUNT_KEY = "org.eclipse.emf.compare.log.backup.count"; //$NON-NLS-1$
-
-	public static final String LOG_FILE_MAX_SIZE_KEY = "org.eclipse.emf.compare.log.file.max.size"; //$NON-NLS-1$
 
 	/**
 	 * Constructor.
@@ -99,11 +97,6 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 	 */
 	public void init(IWorkbench workbench) {
 		// Nothing to do
-	}
-
-	@Override
-	protected IPreferenceStore doGetPreferenceStore() {
-		return EMFCompareRCPUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	@Override
@@ -161,25 +154,30 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 		return gd;
 	}
 
-	protected void savePreferences() {
-		getPreferenceStore().setValue(LOG_FILENAME_KEY, fileField.getText());
-		getPreferenceStore().setValue(LOG_LEVEL_KEY, levelCombo.getText());
-		getPreferenceStore().setValue(LOG_BACKUP_COUNT_KEY, maxBackupField.getText());
-		getPreferenceStore().setValue(LOG_FILE_MAX_SIZE_KEY, maxSizeField.getText());
+	protected void savePreferences() throws BackingStoreException {
+		IEclipsePreferences prefs = EMFCompareRCPPlugin.getDefault().getEMFComparePreferences();
+		prefs.put(LOG_FILENAME_KEY, fileField.getText());
+		String item = levelCombo.getItem(levelCombo.getSelectionIndex());
+		prefs.put(LOG_LEVEL_KEY, item);
+		prefs.put(LOG_BACKUP_COUNT_KEY, maxBackupField.getText());
+		prefs.put(LOG_FILE_MAX_SIZE_KEY, maxSizeField.getText());
+		prefs.flush();
 	}
 
 	protected void resetPreferences() {
-		getPreferenceStore().setToDefault(LOG_FILENAME_KEY);
-		getPreferenceStore().setToDefault(LOG_LEVEL_KEY);
-		getPreferenceStore().setToDefault(LOG_BACKUP_COUNT_KEY);
-		getPreferenceStore().setToDefault(LOG_FILE_MAX_SIZE_KEY);
+		IEclipsePreferences prefs = EMFCompareRCPPlugin.getDefault().getEMFComparePreferences();
+		prefs.put(LOG_FILENAME_KEY, ""); //$NON-NLS-1$
+		prefs.put(LOG_LEVEL_KEY, "OFF"); //$NON-NLS-1$
+		prefs.putInt(LOG_BACKUP_COUNT_KEY, LOG_BACKUP_DEFAULT);
+		prefs.putInt(LOG_FILE_MAX_SIZE_KEY, LOG_FILE_SIZE_DEFAULT);
 	}
 
 	protected void refreshWidgets() {
-		String fileName = getPreferenceStore().getString(LOG_FILENAME_KEY);
-		String level = getPreferenceStore().getString(LOG_LEVEL_KEY);
-		int maxBackupCount = getPreferenceStore().getInt(LOG_BACKUP_COUNT_KEY);
-		int maxSizeInMB = getPreferenceStore().getInt(LOG_FILE_MAX_SIZE_KEY);
+		IEclipsePreferences prefs = EMFCompareRCPPlugin.getDefault().getEMFComparePreferences();
+		String fileName = prefs.get(LOG_FILENAME_KEY, LOG_FILE_DEFAULT);
+		String level = prefs.get(LOG_LEVEL_KEY, LOG_LEVEL_DEFAULT);
+		int maxBackupCount = prefs.getInt(LOG_BACKUP_COUNT_KEY, LOG_BACKUP_DEFAULT);
+		int maxSizeInMB = prefs.getInt(LOG_FILE_MAX_SIZE_KEY, LOG_FILE_SIZE_DEFAULT);
 		levelCombo.select(Arrays.asList(LOG_LEVELS).indexOf(level));
 		levelCombo.pack();
 		fileField.setText(fileName);
@@ -189,11 +187,13 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 
 	@Override
 	public boolean performOk() {
-		String item = levelCombo.getItem(levelCombo.getSelectionIndex());
-		LOGGER.setLevel(Level.toLevel(item));
-		savePreferences();
-		refreshWidgets();
-		return super.performOk();
+		try {
+			savePreferences();
+			refreshWidgets();
+			return super.performOk();
+		} catch (BackingStoreException e) {
+			return false;
+		}
 	}
 
 	@Override
