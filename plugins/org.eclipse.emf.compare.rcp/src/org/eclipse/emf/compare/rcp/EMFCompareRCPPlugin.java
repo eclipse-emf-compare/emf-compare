@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,20 +10,37 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp;
 
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.EMFC_APPENDER_NAME;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_BACKUP_COUNT_KEY;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_BACKUP_DEFAULT;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILENAME_KEY;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILE_MAX_SIZE_KEY;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILE_SIZE_DEFAULT;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_LEVEL_KEY;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_PATTERN;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.RollingFileAppender;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
 import org.eclipse.emf.compare.diff.IDiffEngine;
@@ -37,6 +54,7 @@ import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.provider.EMFCompareEditPlugin;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.rcp.internal.EMFCompareRCPMessages;
 import org.eclipse.emf.compare.rcp.internal.adapterfactory.AdapterFactoryDescriptorRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.DescriptorRegistryEventListener;
@@ -94,6 +112,14 @@ public class EMFCompareRCPPlugin extends Plugin {
 
 	/** The id of the adapter factory extension point. */
 	public static final String FACTORY_PPID = "adapterFactory"; //$NON-NLS-1$
+
+	/**
+	 * Log4j logger to use throughout EMFCompare for logging purposes.
+	 */
+	private static final Logger LOGGER = Logger.getLogger("org.eclipse.emf.compare"); //$NON-NLS-1$
+
+	/** Number of bytes in a MiB. */
+	private static final int MEGABYTE = 1024 * 1024;
 
 	/** This plugin is a singleton, so it's quite ok to keep the plugin in a static field. */
 	private static EMFCompareRCPPlugin plugin;
@@ -167,6 +193,9 @@ public class EMFCompareRCPPlugin extends Plugin {
 	/** The registry listener that will be used to react to weight provider changes. */
 	private WeightProviderDescriptorRegistryListener weightProviderListener;
 
+	/** Will listen to preference changes and update log4j configuration accordingly. */
+	private IPreferenceChangeListener preferenceChangeListener;
+
 	/**
 	 * Instance scope for preferences.
 	 * <p>
@@ -209,6 +238,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 
 		setUpConflictDetectorRegistry(registry);
 
+		initLogging();
 	}
 
 	/**
@@ -365,6 +395,10 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 */
 	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
+		if (preferenceChangeListener != null) {
+			getEMFComparePreferences().removePreferenceChangeListener(preferenceChangeListener);
+		}
+
 		EMFCompareRCPPlugin.plugin = null;
 
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -679,6 +713,104 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 */
 	public IEclipsePreferences getEMFComparePreferences() {
 		return instanceScope.getNode(EMFCompareRCPPlugin.PLUGIN_ID);
+	}
+
+	/**
+	 * Initializes log4j by reading the preferences.
+	 */
+	private void initLogging() {
+		IEclipsePreferences prefs = getEMFComparePreferences();
+		LOGGER.setLevel(Level.toLevel(prefs.get(LOG_LEVEL_KEY, "OFF"))); //$NON-NLS-1$
+		RollingFileAppender appender = (RollingFileAppender)LOGGER.getAppender(EMFC_APPENDER_NAME);
+		String logFileName = prefs.get(LOG_FILENAME_KEY, ""); //$NON-NLS-1$
+		if (logFileName.length() > 0) {
+			if (appender == null) {
+				try {
+					createLogAppender(logFileName);
+				} catch (IOException e) {
+					// Invalidate file name
+					prefs.put(LOG_FILENAME_KEY, ""); //$NON-NLS-1$
+				}
+			} else {
+				appender.setMaxBackupIndex(prefs.getInt(LOG_BACKUP_COUNT_KEY, 10));
+				appender.setMaximumFileSize((prefs.getInt(LOG_FILE_MAX_SIZE_KEY, 100)) * MEGABYTE);
+			}
+		}
+		preferenceChangeListener = new LoggingPreferenceChangeListener();
+		prefs.addPreferenceChangeListener(preferenceChangeListener);
+	}
+
+	/**
+	 * Creates the RollingFileAppender used to log with log4j.
+	 * 
+	 * @param newFileName
+	 *            Path opf the log file
+	 * @throws IOException
+	 *             If an IO problem occurs, like the given path does not represent a file, or it cannot be
+	 *             written;
+	 */
+	private void createLogAppender(String newFileName) throws IOException {
+		RollingFileAppender appender;
+		appender = new RollingFileAppender(new PatternLayout(LOG_PATTERN), newFileName, true);
+		LOGGER.removeAllAppenders(); // We don't want to log elsewhere
+		LOGGER.addAppender(appender);
+		appender.setMaxBackupIndex(getEMFComparePreferences()
+				.getInt(LOG_BACKUP_COUNT_KEY, LOG_BACKUP_DEFAULT));
+		appender.setMaximumFileSize((getEMFComparePreferences().getInt(LOG_FILE_MAX_SIZE_KEY,
+				LOG_FILE_SIZE_DEFAULT))
+				* MEGABYTE);
+	}
+
+	/**
+	 * Listens to logging preference changes to maintain the log4j configuration up-to-date.
+	 * 
+	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
+	 */
+	private static class LoggingPreferenceChangeListener implements IPreferenceChangeListener {
+
+		/**
+		 * Updates the log4j configuration when logging preferences change.
+		 * 
+		 * @param event
+		 *            the preference change event.
+		 */
+		public void preferenceChange(PreferenceChangeEvent event) {
+			if (LOG_FILENAME_KEY.equals(event.getKey())) {
+				String newFileName = (String)event.getNewValue();
+				RollingFileAppender appender = (RollingFileAppender)LOGGER.getAppender(EMFC_APPENDER_NAME);
+				if (newFileName != null && newFileName.length() > 0) {
+					if (appender == null) {
+						try {
+							EMFCompareRCPPlugin.getDefault().createLogAppender(newFileName);
+						} catch (IOException e) {
+							EMFCompareRCPPlugin.getDefault().getEMFComparePreferences().put(LOG_FILENAME_KEY,
+									""); //$NON-NLS-1$
+							getDefault().log(
+									IStatus.ERROR,
+									EMFCompareRCPMessages.getString(
+											"logging.appender.error", newFileName, e.getMessage())); //$NON-NLS-1$
+						}
+					} else {
+						appender.setFile(newFileName);
+					}
+				} else {
+					// No file name, remove appender
+					LOGGER.removeAllAppenders();
+				}
+			} else if (LOG_LEVEL_KEY.equals(event.getKey())) {
+				LOGGER.setLevel(Level.toLevel((String)event.getNewValue()));
+			} else if (LOG_BACKUP_COUNT_KEY.equals(event.getKey())) {
+				RollingFileAppender appender = (RollingFileAppender)LOGGER.getAppender(EMFC_APPENDER_NAME);
+				if (appender != null) {
+					appender.setMaxBackupIndex(Integer.parseInt((String)event.getNewValue()));
+				}
+			} else if (LOG_FILE_MAX_SIZE_KEY.equals(event.getKey())) {
+				RollingFileAppender appender = (RollingFileAppender)LOGGER.getAppender(EMFC_APPENDER_NAME);
+				if (appender != null) {
+					appender.setMaximumFileSize(Integer.parseInt((String)event.getNewValue()) * MEGABYTE);
+				}
+			}
+		}
 	}
 
 }
