@@ -165,7 +165,7 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 	 *            the URI for which we want the {@link IResource}.
 	 * @return the {@link IResource} if found, null otherwise.
 	 */
-	private IResource getResourceFromURI(final URI uri) {
+	public IResource getResourceFromURI(final URI uri) {
 		final IResource targetFile;
 		if (uri.isPlatform()) {
 			IPath platformString = new Path(uri.trimFragment().toPlatformString(true));

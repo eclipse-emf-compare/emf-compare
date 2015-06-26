@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - log messages (bug 461713), bug 465331, refactorings
+ *     Philip Langer - bugs 461713, 465331, 470268, refactorings
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -344,13 +344,17 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 		}
 
 		// delegate all additions from the right storages that have not been performed yet
+		// or, if they have been merged, mark the diff as merged
 		for (IStorage rightStorage : syncModel.getRightTraversal().getStorages()) {
 			final IPath fullPath = ResourceUtil.getFixedPath(rightStorage);
 			if (fullPath != null) {
 				final IDiff diff = mergeContext.getDiffTree().getDiff(fullPath);
-				if (diff != null && IDiff.ADD == diff.getKind()
-						&& !resourceTracker.containsAddedResource(fullPath)) {
-					merge(diff, mergeContext, subMonitor.newChild(1));
+				if (diff != null) {
+					if (IDiff.ADD == diff.getKind() && !resourceTracker.containsAddedResource(fullPath)) {
+						merge(diff, mergeContext, subMonitor.newChild(1));
+					} else {
+						markAsMerged(diff, mergeContext, subMonitor.newChild(1));
+					}
 				}
 			}
 		}

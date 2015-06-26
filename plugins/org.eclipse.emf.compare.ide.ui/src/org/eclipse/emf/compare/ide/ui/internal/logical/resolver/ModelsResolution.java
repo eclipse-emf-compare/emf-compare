@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 470268
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
@@ -18,16 +19,21 @@ import static org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil.a
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.asURI;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -511,7 +517,7 @@ public class ModelsResolution extends AbstractResolution {
 		}
 		final SynchronizedResourceSet resourceSet = remoteResolver.getResourceSetForRemoteResolution(
 				diagnostic, tspm);
-		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
+		final RevisionedURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
 				storageAccessor, side);
 		resourceSet.setURIConverter(converter);
 
@@ -519,7 +525,9 @@ public class ModelsResolution extends AbstractResolution {
 		scheduler.clearComputedElements();
 
 		final URI startURI = converter.normalize(ResourceUtil.createURIFor(start));
-		Iterable<URI> urisToResolve = concat(knownVariants, Collections.singleton(startURI));
+		final Iterable<URI> knownVariantsAndStart = concat(knownVariants, Collections.singleton(startURI));
+		final Iterable<URI> urisToResolve = addRenamedUris(knownVariantsAndStart, converter, side);
+		
 		scheduler.computeAll(transform(urisToResolve, resolveRemoteURI(tspm, resourceSet)));
 
 		if (tspm.isCanceled()) {
@@ -537,7 +545,82 @@ public class ModelsResolution extends AbstractResolution {
 	}
 
 	/**
-	 * Provides a {@link Function} that converts a givn URI into a Computation that can be run by a
+	 * Adds the new {@link URI URIs} of resources in {@code resolvedUris} that have been renamed on the given
+	 * {@code side}.
+	 * <p>
+	 * If the side is {@link DiffSide#ORIGIN}, we check whether the given {@link URI URIs}, which have been
+	 * obtained from the {@link DiffSide#SOURCE}, have been renamed in the {@link DiffSide#SOURCE} and thus
+	 * don't exist in {@link DiffSide#ORIGIN}.
+	 * </p>
+	 * <p>
+	 * If the side is {@link DiffSide#REMOTE}, we check whether the given {@link URI URIs}, which have been
+	 * obtained from the {@link DiffSide#SOURCE}, have been renamed at the {@link DiffSide#REMOTE} and
+	 * therefore don't exist in {@link DiffSide#REMOTE} or whether they are renamed {@link URI URIs} (i.e.,
+	 * they have been renamed in {@link DiffSide#SOURCE}) and thus don't exist in {@link DiffSide#REMOTE}.
+	 * </p>
+	 * 
+	 * @param resolvedUris
+	 *            The list of {@link URI URIs} to check for renames.
+	 * @param converter
+	 *            The converter to be used for obtaining resources from {@link URI URIs}.
+	 * @param side
+	 *            The side to consider.
+	 * @return The given {@link URI URIs} and the renamed {@link URI URIs}.
+	 */
+	private Iterable<URI> addRenamedUris(Iterable<URI> resolvedUris, RevisionedURIConverter converter,
+			DiffSide side) {
+		final Set<URI> renamedUris = new HashSet<URI>();
+		for (URI resolvedUri : resolvedUris) {
+			final IResource iResource = converter.getResourceFromURI(resolvedUri);
+			if (iResource instanceof IFile) {
+				final IFile iFile = (IFile)iResource;
+				final Optional<IFile> fileBeforeRename = Optional.fromNullable(storageAccessor
+						.getFileBeforeRename(iFile, DiffSide.SOURCE));
+				if (DiffSide.ORIGIN.equals(side)) {
+					// file name of the origin side is the file name before the rename that may have
+					// happened on either side, but since we start from the source, we only consider the
+					// renames that may have happened on the source side
+					renamedUris.addAll(resolveRenamedUri(fileBeforeRename, converter));
+				} else if (DiffSide.REMOTE.equals(side)) {
+					// file name of the remote side is the file name after the rename that may have
+					// happened on the remote side, or the file name before the renames that may have
+					// happened on the opposite side (i.e., source side)
+					final Optional<IFile> fileAfterRename = Optional.fromNullable(storageAccessor
+							.getFileAfterRename(iFile, DiffSide.REMOTE));
+					renamedUris.addAll(resolveRenamedUri(fileAfterRename, converter));
+					renamedUris.addAll(resolveRenamedUri(fileBeforeRename, converter));
+				}
+			}
+		}
+		final ImmutableList.Builder<URI> builder = new ImmutableList.Builder<URI>();
+		return builder.addAll(renamedUris).addAll(resolvedUris).build();
+	}
+
+	/**
+	 * Creates a list of {@link URI URIs} that contains the given {@code renamedFile} converted into a
+	 * {@link URI} as well as its implicit dependencies. If the optional {@code renamedFile} is absent, this
+	 * method returns an empty collection.
+	 * 
+	 * @param renamedFile
+	 *            The optional {@code renamedFile}.
+	 * @param converter
+	 *            The converter to be used for {@link URI URIs} from {@code renamedFile} as well as to get its
+	 *            implicit dependencies.
+	 * @return The list of resolved {@link URI URIs}
+	 */
+	private Collection<URI> resolveRenamedUri(Optional<IFile> renamedFile, RevisionedURIConverter converter) {
+		final Set<URI> renamedUris = new HashSet<URI>();
+		if (renamedFile.isPresent()) {
+			final URI unnormalizedRenamedUri = ResourceUtil.createURIFor(renamedFile.get());
+			final URI renamedUri = converter.normalize(unnormalizedRenamedUri);
+			renamedUris.addAll(context.getImplicitDependencies().of(renamedUri, converter));
+			renamedUris.add(renamedUri);
+		}
+		return renamedUris;
+	}
+
+	/**
+	 * Provides a {@link Function} that converts a given URI into a Computation that can be run by a
 	 * {@link ResourceComputationScheduler}.
 	 * 
 	 * @param tspm

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 470268
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -15,6 +16,7 @@ import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
@@ -46,6 +48,9 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	/** The resource variant tree holding data for the source side of the underlying subscriber. */
 	private final IResourceVariantTree sourceTree;
 
+	/** The detector for determining whether a resource has been renamed based on the subscriber's diffs. */
+	private final RenameDetector renameDetector;
+
 	/**
 	 * Wraps the given subscriber within this accessor.
 	 * 
@@ -57,6 +62,7 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 		originTree = initTree(subscriber, "getBaseTree"); //$NON-NLS-1$
 		remoteTree = initTree(subscriber, "getRemoteTree"); //$NON-NLS-1$
 		sourceTree = initTree(subscriber, "getSourceTree"); //$NON-NLS-1$
+		renameDetector = new RenameDetector(subscriber, this);
 	}
 
 	/**
@@ -161,7 +167,7 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	/**
 	 * Wraps the given resource variant as an {@link IStorageProvider}.
 	 * 
-	 * @param revision
+	 * @param variant
 	 *            The wrapped resource variant.
 	 * @return The wrapping storage provider.
 	 */
@@ -181,9 +187,8 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	 * @param diff
 	 *            Diff for which we're searching the common ancestor.
 	 * @return the revision that was used as a common ancestor by the given diff.
-	 * @throws CoreException
 	 */
-	private static IFileRevision getOrigin(IDiff diff) throws CoreException {
+	private static IFileRevision getOrigin(IDiff diff) {
 		IFileRevision revision = null;
 
 		if (diff instanceof IThreeWayDiff) {
@@ -210,9 +215,8 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	 * @param diff
 	 *            Diff for which we're searching the source side.
 	 * @return the revision that was used as the source side by the given diff.
-	 * @throws CoreException
 	 */
-	private static IFileRevision getSource(IDiff diff) throws CoreException {
+	private static IFileRevision getSource(IDiff diff) {
 		IFileRevision revision = null;
 
 		if (diff instanceof IThreeWayDiff) {
@@ -238,9 +242,8 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	 * @param diff
 	 *            Diff for which we're searching the remote side.
 	 * @return the revision that was used as the remote side by the given diff.
-	 * @throws CoreException
 	 */
-	private static IFileRevision getRemote(IDiff diff) throws CoreException {
+	private static IFileRevision getRemote(IDiff diff) {
 		IFileRevision revision = null;
 
 		if (diff instanceof IThreeWayDiff) {
@@ -289,5 +292,15 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 			}
 		}
 		return null;
+	}
+
+	/** {@inheritDoc} */
+	public IFile getFileBeforeRename(IFile sourceOrRemoteFile, DiffSide side) {
+		return renameDetector.getFileBeforeRename(sourceOrRemoteFile, side).orNull();
+	}
+
+	/** {@inheritDoc} */
+	public IFile getFileAfterRename(IFile originFile, DiffSide side) {
+		return renameDetector.getFileAfterRename(originFile, side).orNull();
 	}
 }
