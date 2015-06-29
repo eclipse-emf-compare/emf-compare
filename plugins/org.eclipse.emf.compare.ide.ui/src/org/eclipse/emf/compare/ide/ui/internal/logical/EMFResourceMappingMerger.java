@@ -18,7 +18,12 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.google.common.io.ByteStreams;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -235,7 +240,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 *            The progress monitor to use, 10 ticks will be consumed
 	 */
 	private void mergeMapping(ResourceMapping mapping, final IMergeContext mergeContext,
-			final Set<ResourceMapping> failingMappings, IProgressMonitor monitor) {
+			final Set<ResourceMapping> failingMappings, IProgressMonitor monitor) throws CoreException {
 		final SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
 		// validateMappings() has made sure we only have EMFResourceMappings
 		final SynchronizationModel syncModel = ((EMFResourceMapping)mapping).getLatestModel();
@@ -254,7 +259,8 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 
 		if (hasRealConflict(comparison)) {
 			final Set<URI> conflictingURIs = performPreMerge(comparison, subMonitor.newChild(3)); // 80%
-			save(scope.getLeft());
+			save(scope.getLeft(), syncModel.getLeftTraversal(), syncModel.getRightTraversal(), syncModel
+					.getOriginTraversal());
 			failingMappings.add(mapping);
 			markResourcesAsMerged(mergeContext, scope.getLeft(), conflictingURIs, subMonitor.newChild(2)); // 100%
 		} else {
@@ -262,7 +268,8 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 			try {
 				scope.getLeft().eAdapters().add(resourceTracker);
 				performBatchMerge(comparison, subMonitor.newChild(3)); // 80%
-				save(scope.getLeft());
+				save(scope.getLeft(), syncModel.getLeftTraversal(), syncModel.getRightTraversal(), syncModel
+						.getOriginTraversal());
 				delegateMergeOfUnmergedResourcesAndMarkDiffsAsMerged(syncModel, mergeContext,
 						resourceTracker, subMonitor.newChild(2)); // 100%
 			} finally {
@@ -276,8 +283,8 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	/**
 	 * Removes storages that do not exist from the specified {@code traversal}.
 	 * <p>
-	 * In the current implementation, the check for existence is based on the assumption that the storage
-	 * is an {@link IFile}. This is fine, since we currently need it on the local side only anyways.
+	 * In the current implementation, the check for existence is based on the assumption that the storage is
+	 * an {@link IFile}. This is fine, since we currently need it on the local side only anyways.
 	 * </p>
 	 * 
 	 * @param traversal
@@ -456,7 +463,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 */
 	private void delegateMergeOfUnmergedResourcesAndMarkDiffsAsMerged(SynchronizationModel syncModel,
 			IMergeContext mergeContext, ResourceAdditionAndDeletionTracker resourceTracker,
-			SubMonitor subMonitor) {
+			SubMonitor subMonitor) throws CoreException {
 
 		// mark already deleted files as merged
 		for (IFile deletedFile : resourceTracker.getDeletedIFiles()) {
@@ -490,9 +497,30 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 			final IPath fullPath = ResourceUtil.getFixedPath(rightStorage);
 			if (fullPath != null) {
 				final IDiff diff = mergeContext.getDiffTree().getDiff(fullPath);
-				if (diff != null) {
-					if (IDiff.ADD == diff.getKind() && !resourceTracker.containsAddedResource(fullPath)) {
-						merge(diff, mergeContext, subMonitor.newChild(1));
+				if (diff != null && IDiff.ADD == diff.getKind()) {
+					if (!resourceTracker.containsAddedResource(fullPath)) {
+						IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(fullPath);
+						IProject project = file.getProject();
+						if (project.isAccessible()) {
+							merge(diff, mergeContext, subMonitor.newChild(1));
+						} else {
+							// The project that will contain the resource is not accessible.
+							// We have to copy the file "manually" from the right side to the left side.
+							try {
+								InputStream inputStream = rightStorage.getContents();
+								FileOutputStream outputStream = new FileOutputStream(ResourceUtil
+										.getAbsolutePath(rightStorage).toFile());
+								ByteStreams.copy(inputStream, outputStream);
+								inputStream.close();
+								outputStream.close();
+							} catch (FileNotFoundException e) {
+								EMFCompareIDEUIPlugin.getDefault().log(e);
+								// TODO Should we throw the exception here to interrupt the merge ?
+							} catch (IOException e) {
+								EMFCompareIDEUIPlugin.getDefault().log(e);
+								// TODO Should we throw the exception here to interrupt the merge ?
+							}
+						}
 					} else {
 						markAsMerged(diff, mergeContext, subMonitor.newChild(1));
 					}
@@ -567,13 +595,21 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 * 
 	 * @param notifier
 	 *            The notifier.
+	 * @param leftTraversal
+	 *            The traversal corresponding to the left side.
+	 * @param rightTraversal
+	 *            The traversal corresponding to the right side.
+	 * @param originTraversal
+	 *            The traversal corresponding to the common ancestor of both other side. Can be
+	 *            <code>null</code>.
 	 */
-	private void save(Notifier notifier) {
+	private void save(Notifier notifier, StorageTraversal leftTraversal, StorageTraversal rightTraversal,
+			StorageTraversal originTraversal) {
 		if (notifier instanceof ResourceSet) {
-			ResourceUtil
-					.saveAllResources((ResourceSet)notifier, ImmutableMap.of(
-							Resource.OPTION_SAVE_ONLY_IF_CHANGED,
-							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
+			ResourceUtil.saveAllResources((ResourceSet)notifier,
+					ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER), leftTraversal,
+					rightTraversal, originTraversal);
 		} else if (notifier instanceof Resource) {
 			ResourceUtil
 					.saveResource((Resource)notifier, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,

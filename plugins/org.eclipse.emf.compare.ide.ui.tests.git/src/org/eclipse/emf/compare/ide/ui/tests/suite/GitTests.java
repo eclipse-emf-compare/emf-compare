@@ -27,7 +27,6 @@ import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeWithCustomDependenciesTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalModelTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitMergeTest;
-import org.eclipse.emf.compare.ide.ui.tests.unit.ModelResolverLocalTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.ModelResolverRemoteTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.MovedImplicitResourceAmongChangedResourcesTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.ResourceUtilPathTest;
@@ -54,6 +53,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		// ModelResolverRemoteTest.class,
 		// MovedImplicitResourceAmongChangedResourcesTest.class,
 		// RenamedControlledResourceTests.class,
+		// RemoteNewProjectTests.class,
 		ResourceVariantTest.class,
 		ResourceUtilPathTest.class,
 		RevisionedURIConverterTest.class,

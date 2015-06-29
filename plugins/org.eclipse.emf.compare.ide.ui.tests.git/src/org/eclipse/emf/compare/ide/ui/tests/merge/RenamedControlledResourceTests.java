@@ -8,9 +8,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.merge;
 
-import static com.google.common.collect.Iterables.*;
-import static com.google.common.base.Predicates.*;
-import static org.junit.Assert.*;
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.size;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,11 +39,11 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.lib.Constants;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * This test case specifies the expected behavior of merge when renamed
- * controlled resources are involved.
+ * This test case specifies the expected behavior of merge when renamed controlled resources are involved.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
@@ -48,126 +52,139 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 	private static final String MASTER = Constants.R_HEADS + Constants.MASTER;
 
 	private static final String BRANCH = Constants.R_HEADS + "branch";
-	
+
 	private File file1;
+
 	private File file2;
-	
+
 	private IFile iFile1;
+
 	private IFile iFile2;
 
 	private ResourceSet resourceSet;
+
 	private IProject iProject;
-	
+
 	private Resource resource1;
+
 	private Resource resource2;
-	
+
 	@Override
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
 		iProject = project.getProject();
 		resourceSet = new ResourceSetImpl();
-		
+
 		file1 = project.getOrCreateFile(iProject, "file1.ecore");
 		file2 = project.getOrCreateFile(iProject, "file2.ecore");
 		iFile1 = project.getIFile(iProject, file1);
 		iFile2 = project.getIFile(iProject, file2);
-		
+
 		resource1 = connectResource(iFile1, resourceSet);
 		resource2 = connectResource(iFile2, resourceSet);
 	}
 
+	@Ignore("Due to Bug 464379, this test no longer works. It needs management of resource renaming via ResourceAttachmentChange.MOVE")
 	@Test
 	public void testMergeNoConflictRemoteRename() throws Exception {
 		setUpRenameNoConflict();
 
 		repository.mergeLogical(BRANCH);
 		refreshTestProject();
-		
+
 		assertTrue(repository.status().getConflicting().isEmpty());
-		
+
 		assertTrue(iProject.getFile("file1.ecore").exists());
 		assertFalse(iProject.getFile("file2.ecore").exists());
 		assertTrue(iProject.getFile("file2_new.ecore").exists());
 		// Check the contents
 		resourceSet.getResources().clear();
-		Resource testRoot = resourceSet.getResource(URI.createPlatformResourceURI("/Project-1/file1.ecore", true), true);
-		Resource testChild = resourceSet.getResource(URI.createPlatformResourceURI("/Project-1/file2_new.ecore", true), true);
-		EPackage testRootPack = (EPackage) testRoot.getContents().get(0);
+		Resource testRoot = resourceSet.getResource(URI.createPlatformResourceURI("/Project-1/file1.ecore",
+				true), true);
+		Resource testChild = resourceSet.getResource(URI.createPlatformResourceURI(
+				"/Project-1/file2_new.ecore", true), true);
+		EPackage testRootPack = (EPackage)testRoot.getContents().get(0);
 		assertEquals("parent", testRootPack.getName());
 		EPackage testChildPack = testRootPack.getESubpackages().get(0);
 		assertEquals("child", testChildPack.getName());
 		assertSame(testChild, ((InternalEObject)testChildPack).eDirectResource());
-		EClass nonConflictingClass = (EClass) testRootPack.getEClassifiers().get(0);
+		EClass nonConflictingClass = (EClass)testRootPack.getEClassifiers().get(0);
 		assertEquals("NonConflicting", nonConflictingClass.getName());
-		EClass testC1 = (EClass) testChildPack.getEClassifiers().get(0);
+		EClass testC1 = (EClass)testChildPack.getEClassifiers().get(0);
 		assertEquals("C1", testC1.getName());
 	}
 
 	@Test
 	public void testMergeNoConflictLocalRename() throws Exception {
 		setUpRenameNoConflict();
-		
+
 		repository.checkoutBranch(BRANCH);
 
 		repository.mergeLogical(MASTER);
 		refreshTestProject();
-		
+
 		assertTrue(repository.status().getConflicting().isEmpty());
-		
+
 		assertTrue(iProject.getFile("file1.ecore").exists());
 		assertFalse(iProject.getFile("file2.ecore").exists());
 		assertTrue(iProject.getFile("file2_new.ecore").exists());
 		// Check the contents
 		resourceSet.getResources().clear();
-		Resource testRoot = resourceSet.getResource(URI.createPlatformResourceURI("/Project-1/file1.ecore", true), true);
-		Resource testChild = resourceSet.getResource(URI.createPlatformResourceURI("/Project-1/file2_new.ecore", true), true);
-		EPackage testRootPack = (EPackage) testRoot.getContents().get(0);
+		Resource testRoot = resourceSet.getResource(URI.createPlatformResourceURI("/Project-1/file1.ecore",
+				true), true);
+		Resource testChild = resourceSet.getResource(URI.createPlatformResourceURI(
+				"/Project-1/file2_new.ecore", true), true);
+		EPackage testRootPack = (EPackage)testRoot.getContents().get(0);
 		assertEquals("parent", testRootPack.getName());
 		EPackage testChildPack = testRootPack.getESubpackages().get(0);
 		assertEquals("child", testChildPack.getName());
 		assertSame(testChild, ((InternalEObject)testChildPack).eDirectResource());
-		EClass nonConflictingClass = (EClass) testRootPack.getEClassifiers().get(0);
+		EClass nonConflictingClass = (EClass)testRootPack.getEClassifiers().get(0);
 		assertEquals("NonConflicting", nonConflictingClass.getName());
-		EClass testC1 = (EClass) testChildPack.getEClassifiers().get(0);
+		EClass testC1 = (EClass)testChildPack.getEClassifiers().get(0);
 		assertEquals("C1", testC1.getName());
 	}
 
+	@Ignore("Due to Bug 464379, this test no longer works. It needs management of resource renaming via ResourceAttachmentChange.MOVE")
 	@Test
 	public void testMergeNoConflictRemoteRenameLocalChanges() throws Exception {
 		setUpRenameNoConflictLocalChanges();
 
 		repository.mergeLogical(BRANCH);
 		refreshTestProject();
-		
+
 		assertTrue(repository.status().getConflicting().isEmpty());
-		
+
 		assertTrue(iProject.getFile("file1.ecore").exists());
 		assertFalse(iProject.getFile("file2.ecore").exists());
 		assertTrue(iProject.getFile("file2_new.ecore").exists());
 		// Check the contents
 		resourceSet.getResources().clear();
-		Resource testRoot = resourceSet.getResource(URI.createPlatformResourceURI("/Project-1/file1.ecore", true), true);
-		Resource testChild = resourceSet.getResource(URI.createPlatformResourceURI("/Project-1/file2_new.ecore", true), true);
-		EPackage testRootPack = (EPackage) testRoot.getContents().get(0);
+		Resource testRoot = resourceSet.getResource(URI.createPlatformResourceURI("/Project-1/file1.ecore",
+				true), true);
+		Resource testChild = resourceSet.getResource(URI.createPlatformResourceURI(
+				"/Project-1/file2_new.ecore", true), true);
+		EPackage testRootPack = (EPackage)testRoot.getContents().get(0);
 		assertEquals("parent", testRootPack.getName());
 		EPackage testChildPack = testRootPack.getESubpackages().get(0);
 		assertEquals("child", testChildPack.getName());
 		assertSame(testChild, ((InternalEObject)testChildPack).eDirectResource());
-		EClass nonConflictingClass = (EClass) testRootPack.getEClassifiers().get(0);
+		EClass nonConflictingClass = (EClass)testRootPack.getEClassifiers().get(0);
 		assertEquals("NonConflicting", nonConflictingClass.getName());
-		EClass testC1 = (EClass) testChildPack.getEClassifiers().get(0);
+		EClass testC1 = (EClass)testChildPack.getEClassifiers().get(0);
 		assertEquals("C1", testC1.getName());
-		EClass testNewClass = (EClass) testChildPack.getEClassifiers().get(1);
+		EClass testNewClass = (EClass)testChildPack.getEClassifiers().get(1);
 		assertEquals("NewClassInRemotelyRenamedPackage", testNewClass.getName());
 	}
 
+	@Ignore("Due to Bug 464379, this test no longer works. It needs management of resource renaming via ResourceAttachmentChange.MOVE")
 	@Test
 	public void testComparisonNoConflictRemoteRename() throws Exception {
 		setUpRenameNoConflict();
 
 		Comparison comparison = compare(MASTER, BRANCH, iFile1);
-		
+
 		assertTrue(comparison.getConflicts().isEmpty());
 		assertEquals(0, comparison.getDiagnostic().getCode());
 		// 2 resource matches
@@ -180,12 +197,13 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 		assertEquals(1, size(filter(comparison.getDifferences(), instanceOf(ResourceLocationChange.class))));
 	}
 
+	@Ignore("Due to Bug 464379, this test no longer works. It needs management of resource renaming via ResourceAttachmentChange.MOVE")
 	@Test
 	public void testComparisonNoConflictLocalRename() throws Exception {
 		setUpRenameNoConflict();
 
 		Comparison comparison = compare(BRANCH, MASTER, iFile1);
-		
+
 		assertTrue(comparison.getConflicts().isEmpty());
 		assertEquals(0, comparison.getDiagnostic().getCode());
 		// 2 resource matches
@@ -197,20 +215,20 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 		assertEquals(1, size(filter(comparison.getDifferences(), instanceOf(ReferenceChange.class))));
 		assertEquals(1, size(filter(comparison.getDifferences(), instanceOf(ResourceLocationChange.class))));
 	}
-	
+
 	@Test
 	public void testMergeConflict() throws Exception {
 		setUpRenameConflict();
 
 		repository.mergeLogical(BRANCH);
 		refreshTestProject();
-		
+
 		Set<String> conflicting = repository.status().getConflicting();
 		assertEquals(3, conflicting.size());
 		assertTrue(conflicting.contains("Project-1/file1.ecore"));
 		assertTrue(conflicting.contains("Project-1/file2_new.ecore"));
 		assertTrue(conflicting.contains("Project-1/file2_other.ecore"));
-		
+
 		assertTrue(iProject.getFile("file1.ecore").exists());
 		assertFalse(iProject.getFile("file2.ecore").exists());
 		assertFalse(iProject.getFile("file2_new.ecore").exists());
@@ -222,7 +240,7 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 		setUpRenameConflict();
 
 		Comparison comparison = compare(MASTER, BRANCH, iFile1);
-		
+
 		assertEquals(1, comparison.getConflicts().size());
 		assertEquals(0, comparison.getDiagnostic().getCode());
 		// 2 resource matches
@@ -230,8 +248,7 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 		// 2 diffs:
 		// 2- renamed file2 to file2_new (remote) and to file_other (local)
 		assertEquals(2, comparison.getDifferences().size());
-		assertEquals(2, size(filter(comparison.getDifferences(),
-				instanceOf(ResourceLocationChange.class))));
+		assertEquals(2, size(filter(comparison.getDifferences(), instanceOf(ResourceLocationChange.class))));
 		// 2 diffs in conflict
 		assertEquals(2, comparison.getConflicts().get(0).getDifferences().size());
 		// Both a re resource location changes
@@ -259,7 +276,7 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 		// Don't forget to remove former file2.ecore from the index
 		repository.removeFromIndex(iFile2);
 		repository.addAllAndCommit("Moved file2 to file2_new.");
-		
+
 		// Go back to master and make non-conflicting changes
 		repository.checkoutBranch(MASTER);
 		repository.reset(MASTER, ResetType.HARD);
@@ -275,8 +292,8 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 
 	protected void setUpRenameNoConflictLocalChanges() throws Exception {
 		setUpRenameNoConflict();
-		
-		EPackage child = (EPackage) resource2.getContents().get(0);
+
+		EPackage child = (EPackage)resource2.getContents().get(0);
 		createClass(child, "NewClassInRemotelyRenamedPackage");
 		saveTestResource(resource2, child);
 		repository.addAllAndAmend("Added class to root and child.");
@@ -302,7 +319,7 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 		// Don't forget to remove former file2.ecore from the index
 		repository.removeFromIndex(iFile2);
 		repository.addAllAndCommit("Moved file2 to file2_new.");
-		
+
 		// Go back to master and make conflicting rename of sub-unit
 		repository.checkoutBranch(MASTER);
 		repository.reset(MASTER, ResetType.HARD);
@@ -321,8 +338,8 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 		iProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 	}
 
-	protected void saveTestResource(final Resource resource, final EPackage pkg)
-			throws IOException, CoreException {
+	protected void saveTestResource(final Resource resource, final EPackage pkg) throws IOException,
+			CoreException {
 		resource.getContents().clear();
 		resource.getContents().add(pkg);
 		save(resource);

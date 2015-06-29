@@ -12,16 +12,22 @@
 package org.eclipse.emf.compare.ide.utils;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.common.io.Closeables;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -352,6 +358,31 @@ public final class ResourceUtil {
 	}
 
 	/**
+	 * Returns an absolute path for this storage if one exists. If the storage can be adapted to
+	 * {@link IStoragePathProvider2}, it will call computeAbsolutePath from this interface. If the storage is
+	 * a File, a {@link Path} will be created and then getAbsolutePath will be called. In other cases, the
+	 * method will return the full path of the storage.
+	 * 
+	 * @param storage
+	 *            The storage for which we need an absolute path.
+	 * @return The absolute path to this storage.
+	 * @since 3.3
+	 */
+	public static IPath getAbsolutePath(IStorage storage) {
+		final IPath absolutePath;
+		final Object adapter = Platform.getAdapterManager().loadAdapter(storage,
+				IStoragePathProvider.class.getName());
+		if (adapter instanceof IStoragePathProvider2) {
+			absolutePath = ((IStoragePathProvider2)adapter).computeAbsolutePath(storage);
+		} else if (storage instanceof File) {
+			absolutePath = new Path(((File)storage).getAbsolutePath());
+		} else {
+			absolutePath = storage.getFullPath();
+		}
+		return absolutePath;
+	}
+
+	/**
 	 * Checks if an {@link IStoragePathProvider} exists for the given storage.
 	 * 
 	 * @param storage
@@ -384,6 +415,120 @@ public final class ResourceUtil {
 		for (Resource resource : resources) {
 			saveResource(resource, options);
 		}
+	}
+
+	/**
+	 * This can be called to save all resources contained by the resource set. This will not try and save
+	 * resources that do not support output.
+	 * 
+	 * @param resourceSet
+	 *            The resource set to save.
+	 * @param options
+	 *            The options we are to pass on to {@link Resource#save(Map)}.
+	 * @param leftTraversal
+	 *            The traversal corresponding to the left side.
+	 * @param rightTraversal
+	 *            The traversal corresponding to the right side.
+	 * @param originTraversal
+	 *            The traversal corresponding to the common ancestor of both other side. Can be
+	 *            <code>null</code>.
+	 * @since 3.3
+	 */
+	public static void saveAllResources(ResourceSet resourceSet, Map<?, ?> options,
+			StorageTraversal leftTraversal, StorageTraversal rightTraversal, StorageTraversal originTraversal) {
+
+		// filter out the resources that don't support output
+		List<Resource> resources = Lists.newArrayList(Iterables.filter(resourceSet.getResources(),
+				new Predicate<Resource>() {
+					public boolean apply(Resource input) {
+						return supportsOutput(input);
+					}
+				}));
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+
+		final Set<Resource> wsResources = Sets.newHashSet();
+		final Set<Resource> nonWsResources = Sets.newHashSet();
+
+		for (Resource resource : resources) {
+			String projectName = new Path(resource.getURI().toPlatformString(true)).segment(0);
+			IProject project = root.getProject(projectName);
+			if (project != null && project.isAccessible()) {
+				wsResources.add(resource);
+			} else {
+				nonWsResources.add(resource);
+			}
+		}
+
+		// Save workspace resources first
+		for (Resource resource : wsResources) {
+			saveResource(resource, options);
+		}
+
+		// Delete workspace resources from ResourceSet
+		// Is it really useful ?
+		resources.removeAll(wsResources);
+
+		// Change "platform:/resource/relativePath" URIs of non-workspace resources into "file:/absolutePath"
+		// URIs
+		for (Resource resource : nonWsResources) {
+			String absolutePath = getAbsolutePath(resource, leftTraversal, rightTraversal, originTraversal);
+			URI fileURI = URI.createFileURI(absolutePath);
+			resource.setURI(fileURI);
+		}
+
+		// Save non-workspace resources
+		for (Resource resource : nonWsResources) {
+			saveResource(resource, options);
+		}
+	}
+
+	/**
+	 * Get the absolute path of the given resource.
+	 * 
+	 * @param resource
+	 *            The resource for which we seek an absolute path.
+	 * @param leftTraversal
+	 *            The traversal corresponding to the left side.
+	 * @param rightTraversal
+	 *            The traversal corresponding to the right side.
+	 * @param originTraversal
+	 *            The traversal corresponding to the common ancestor of both other side. Can be
+	 *            <code>null</code>.
+	 * @return the absolute path of the given resource if found, null otherwise.
+	 */
+	private static String getAbsolutePath(Resource resource, StorageTraversal leftTraversal,
+			StorageTraversal rightTraversal, StorageTraversal originTraversal) {
+		URI uri = resource.getURI();
+		String absolutePath = getAbsolutePath(uri, leftTraversal.getStorages());
+		if (absolutePath == null) {
+			absolutePath = getAbsolutePath(uri, rightTraversal.getStorages());
+		}
+		if (absolutePath == null && originTraversal != null) {
+			absolutePath = getAbsolutePath(uri, originTraversal.getStorages());
+		}
+		return absolutePath;
+	}
+
+	/**
+	 * Get the absolute path of the given URI that corresponds to one of the given storages.
+	 * 
+	 * @param uri
+	 *            The URI for which we seek an absolute path.
+	 * @param storages
+	 *            The given storages.
+	 * @return the absolute path of the given URI if found, null otherwise.
+	 */
+	private static String getAbsolutePath(URI uri, Set<? extends IStorage> storages) {
+		for (IStorage storage : storages) {
+			IPath storagePath = getFixedPath(storage);
+			if (storagePath.makeAbsolute().toString().equals(uri.toPlatformString(true))) {
+				IPath absolutePath = getAbsolutePath(storage);
+				if (absolutePath != null) {
+					return absolutePath.toString();
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

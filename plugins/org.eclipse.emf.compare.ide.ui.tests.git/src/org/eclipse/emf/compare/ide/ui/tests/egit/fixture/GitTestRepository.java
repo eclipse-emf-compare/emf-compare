@@ -104,6 +104,10 @@ public class GitTestRepository {
 		this.disposers = new ArrayList<Runnable>();
 	}
 
+	public Repository getRepository() {
+		return this.repository;
+	}
+
 	/**
 	 * Create a file or get an existing one
 	 *
@@ -487,6 +491,18 @@ public class GitTestRepository {
 	 */
 	public void mergeLogical(String refName) throws CoreException {
 		new MergeOperation(repository, refName).execute(null);
+	}
+
+	/**
+	 * Merge the given ref with the current HEAD, using the default (logical) strategy.
+	 * 
+	 * @param refName
+	 *            Name of a commit to merge with the current HEAD.
+	 */
+	public void mergeLogicalWithNewCommit(String refName) throws CoreException {
+		MergeOperation mergeOperation = new MergeOperation(repository, refName);
+		mergeOperation.setCommit(true);
+		mergeOperation.execute(null);
 	}
 
 	/**

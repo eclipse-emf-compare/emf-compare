@@ -25,12 +25,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -100,6 +103,16 @@ public class CompareTestCase {
 			parent.getEClassifiers().add(newClass);
 		}
 		return newClass;
+	}
+
+	protected EAttribute createAttribute(EClass parent, String name, EClassifier type) {
+		final EAttribute newAttribute = EcoreFactory.eINSTANCE.createEAttribute();
+		newAttribute.setName(name);
+		newAttribute.setEType(type);
+		if (parent != null) {
+			parent.getEAttributes().add(newAttribute);
+		}
+		return newAttribute;
 	}
 
 	protected EObject findObject(Resource resource, String namePrefix) {
@@ -254,7 +267,12 @@ public class CompareTestCase {
 					Resource.OPTION_SAVE_ONLY_IF_CHANGED_FILE_BUFFER);
 			resource.save(options);
 		}
-		project.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+		if (project != null) {
+			IProject prj = project.getProject();
+			if (prj != null) {
+				prj.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+			}
+		}
 	}
 
 	protected void save(Resource... resources) throws IOException, CoreException {
@@ -264,7 +282,12 @@ public class CompareTestCase {
 					Resource.OPTION_SAVE_ONLY_IF_CHANGED_FILE_BUFFER);
 			resource.save(options);
 		}
-		project.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+		if (project != null) {
+			IProject prj = project.getProject();
+			if (prj != null) {
+				prj.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+			}
+		}
 	}
 
 	protected static void copyFile(File source, File dest) throws IOException {

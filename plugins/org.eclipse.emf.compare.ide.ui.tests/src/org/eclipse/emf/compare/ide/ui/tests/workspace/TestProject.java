@@ -106,6 +106,27 @@ public class TestProject {
 		return description;
 	}
 
+	/**
+	 * This will create a new project with the given name inside the workspace. If this project already
+	 * existed, it will be deleted and re-created.
+	 * 
+	 * @param name
+	 *            Name of our project.
+	 * @param location
+	 *            Location of our project.
+	 */
+	public TestProject(String name, String location) throws CoreException {
+		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(name);
+		description.setLocation(new Path(location + File.separator + name));
+		project = root.getProject(description.getName());
+		if (project.exists()) {
+			project.delete(true, true, new NullProgressMonitor());
+		}
+		project.create(description, new NullProgressMonitor());
+		project.open(new NullProgressMonitor());
+	}
+
 	public IProject getProject() {
 		return project;
 	}
