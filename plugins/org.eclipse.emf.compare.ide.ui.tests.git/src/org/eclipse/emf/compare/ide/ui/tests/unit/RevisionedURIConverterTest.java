@@ -1,10 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015 Obeo and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Michael Borkowski - conversion of inner classes to mockito mocks
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.unit;
 
@@ -12,6 +15,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.InputStream;
@@ -40,7 +46,10 @@ import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jgit.api.Status;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
+@SuppressWarnings("unchecked")
 public class RevisionedURIConverterTest extends AbstractURITest {
 	/**
 	 * using the "straight" repo from {@link #setupStraightRepo()}, we expect
@@ -142,7 +151,11 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 		final Status status = repository.status();
 		assertFalse(status.hasUncommittedChanges());
 
-		IStorageProviderAccessor accessor = new PathRedirectingStorageAccessor();
+		IStorageProviderAccessor accessor = mock(IStorageProviderAccessor.class);
+		when(
+				accessor.getStorageProvider(any(IResource.class),
+						any(DiffSide.class))).then(
+				getPathRedirectingStorageProvider());
 		URI file1URI = ResourceUtil.createURIFor(iFile1);
 
 		// origin is the "initial-commit" state
@@ -162,7 +175,7 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 	 */
 	@Test
 	public void testNullAccessor() throws Exception {
-		NullStorageAccessor accessor = new NullStorageAccessor();
+		IStorageProviderAccessor accessor = mock(IStorageProviderAccessor.class);
 		URIConverter delegate = new ExtensibleURIConverterImpl();
 		URI fileURI = ResourceUtil.createURIFor(iFile1);
 
@@ -189,7 +202,11 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 	 */
 	@Test
 	public void testExceptionAccessor() throws Exception {
-		ExceptionStorageAccessor accessor = new ExceptionStorageAccessor();
+		IStorageProviderAccessor accessor = mock(IStorageProviderAccessor.class);
+		when(
+				accessor.getStorageProvider(any(IResource.class),
+						any(DiffSide.class))).thenThrow(
+				UnsupportedOperationException.class);
 		URIConverter delegate = new ExtensibleURIConverterImpl();
 		URI fileURI = ResourceUtil.createURIFor(iFile1);
 
@@ -220,50 +237,26 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 		}
 	}
 
-	private static class PathRedirectingStorageAccessor implements
-			IStorageProviderAccessor {
-		public IStorageProvider getStorageProvider(IResource resource,
-				DiffSide side) throws CoreException {
-			assertTrue(resource instanceof IFile && resource.exists());
-			IPath originalPath = resource.getFullPath();
-			String fileName = originalPath.lastSegment();
-			final IPath redirectedPath = originalPath.removeLastSegments(1)
-					.append(side.toString()).append(fileName);
-			return new IStorageProvider() {
-				public IStorage getStorage(IProgressMonitor monitor)
-						throws CoreException {
-					return ResourcesPlugin.getWorkspace().getRoot()
-							.getFile(redirectedPath);
-				}
-			};
-		}
+	private Answer<IStorageProvider> getPathRedirectingStorageProvider() {
+		return new Answer<IStorageProvider>() {
+			public IStorageProvider answer(InvocationOnMock invocation)
+					throws Throwable {
+				IResource resource = (IResource) invocation.getArguments()[0];
+				DiffSide side = (DiffSide) invocation.getArguments()[1];
 
-		public boolean isInSync(IResource resource) throws CoreException {
-			return false;
-		}
-	}
-
-	private static class NullStorageAccessor implements
-			IStorageProviderAccessor {
-		public IStorageProvider getStorageProvider(IResource resource,
-				DiffSide side) throws CoreException {
-			return null;
-		}
-
-		public boolean isInSync(IResource resource) throws CoreException {
-			return false;
-		}
-	}
-
-	private static class ExceptionStorageAccessor implements
-			IStorageProviderAccessor {
-		public IStorageProvider getStorageProvider(IResource resource,
-				DiffSide side) throws CoreException {
-			throw new UnsupportedOperationException();
-		}
-
-		public boolean isInSync(IResource resource) throws CoreException {
-			return false;
-		}
+				assertTrue(resource instanceof IFile && resource.exists());
+				IPath originalPath = resource.getFullPath();
+				String fileName = originalPath.lastSegment();
+				final IPath redirectedPath = originalPath.removeLastSegments(1)
+						.append(side.toString()).append(fileName);
+				return new IStorageProvider() {
+					public IStorage getStorage(IProgressMonitor monitor)
+							throws CoreException {
+						return ResourcesPlugin.getWorkspace().getRoot()
+								.getFile(redirectedPath);
+					}
+				};
+			}
+		};
 	}
 }
