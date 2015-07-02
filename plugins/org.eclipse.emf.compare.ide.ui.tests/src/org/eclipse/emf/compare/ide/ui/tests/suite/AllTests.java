@@ -25,9 +25,11 @@ import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.DependencyGraphUpda
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.GraphResolutionTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.LocalMonitoredProxyCreationListenerTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.RemoteMonitoredProxyCreationListenerTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.RenameDetectorTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ResolutionEventsTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ResourceComputationSchedulerTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ResourceComputationSchedulerWithEventBusTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.SimilarityComputerTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverGraphTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverWithCustomDependencyProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.NavigatableTest;
@@ -53,7 +55,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		ThreadedModelResolverGraphTest.class, ThreadedModelResolverWithCustomDependencyProviderTest.class,
 		DependencyGraphUpdaterTest.class, GraphResolutionTest.class, EMFModelProviderTest.class,
 		MergeAllCommandTests.class, LocalMonitoredProxyCreationListenerTest.class,
-		RemoteMonitoredProxyCreationListenerTest.class, MergeNonConflictingRunnableTest.class })
+		RemoteMonitoredProxyCreationListenerTest.class, MergeNonConflictingRunnableTest.class,
+		RenameDetectorTest.class, SimilarityComputerTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.
