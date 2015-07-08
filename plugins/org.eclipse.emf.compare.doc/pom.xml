@@ -17,11 +17,11 @@
     <artifactId>emf.compare-parent</artifactId>
     <groupId>org.eclipse.emf.compare</groupId>
     <version>3.1.1-SNAPSHOT</version>
-     <relativePath>../../org.eclipse.emf.compare-parent</relativePath>
+    <relativePath>../../org.eclipse.emf.compare-parent</relativePath>
   </parent>
   <groupId>org.eclipse.emf.compare</groupId>
   <artifactId>org.eclipse.emf.compare.doc</artifactId>
-  <version>3.1.1-SNAPSHOT</version>
+  <version>3.2.1-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 
   <properties>
