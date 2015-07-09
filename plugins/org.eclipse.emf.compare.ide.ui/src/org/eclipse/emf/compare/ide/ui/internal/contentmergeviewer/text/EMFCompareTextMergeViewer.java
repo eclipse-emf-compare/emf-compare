@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Alexandra Buzila - Bug 457117
  *     Philip Langer - integrated model update strategy (bug 457839)
+ *     Michael Borkowski - Bug 462863
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
@@ -33,6 +34,7 @@ import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -44,11 +46,13 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.CompareInputAdapter;
+import org.eclipse.emf.compare.ide.ui.mergeresolution.MergeResolutionManager;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.IModelUpdateStrategy;
@@ -81,6 +85,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 	private RedoAction fRedoAction;
 
+	private MergeResolutionManager mergeResolutionManager;
+
 	/**
 	 * @param parent
 	 * @param configuration
@@ -92,6 +98,9 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		editingDomainChange(null, configuration.getEditingDomain());
 
 		configuration.getEventBus().register(this);
+
+		mergeResolutionManager = new MergeResolutionManager(EMFCompareIDEUIPlugin.getDefault()
+				.getMergeResolutionListenerRegistry());
 	}
 
 	/**
@@ -528,5 +537,11 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		public boolean isLeftToRight() {
 			return !MergeViewerSide.LEFT.equals(side);
 		}
+	}
+
+	@Override
+	protected void flushContent(Object oldInput, IProgressMonitor monitor) {
+		super.flushContent(oldInput, monitor);
+		mergeResolutionManager.handleFlush(oldInput);
 	}
 }

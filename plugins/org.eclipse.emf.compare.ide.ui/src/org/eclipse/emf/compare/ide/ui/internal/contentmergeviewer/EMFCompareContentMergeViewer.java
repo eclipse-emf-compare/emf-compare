@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Michael Borkowski - bug 462863
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
@@ -23,6 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
@@ -32,11 +34,13 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
+import org.eclipse.emf.compare.ide.ui.mergeresolution.MergeResolutionManager;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IAdapterFactoryChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
@@ -126,6 +130,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private IDifferenceGroupProvider differenceGroupProvider;
 
+	private MergeResolutionManager mergeResolutionManager;
+
 	/**
 	 * @param style
 	 * @param bundle
@@ -147,6 +153,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		editingDomainChange(null, getCompareConfiguration().getEditingDomain());
 		getCompareConfiguration().getEventBus().register(this);
 
+		mergeResolutionManager = new MergeResolutionManager(EMFCompareIDEUIPlugin.getDefault()
+				.getMergeResolutionListenerRegistry());
 	}
 
 	@Subscribe
@@ -770,5 +778,11 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	@Override
 	protected EMFCompareConfiguration getCompareConfiguration() {
 		return (EMFCompareConfiguration)super.getCompareConfiguration();
+	}
+
+	@Override
+	protected void flushContent(Object input, IProgressMonitor monitor) {
+		super.flushContent(input, monitor);
+		mergeResolutionManager.handleFlush(input);
 	}
 }

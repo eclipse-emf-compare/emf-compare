@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - Bug 456699
+ *     Michael Borkowski - Bug 462863
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal;
 
@@ -27,6 +28,8 @@ import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelRe
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverRegistryListener;
 import org.eclipse.emf.compare.ide.ui.internal.logical.view.registry.LogicalModelViewHandlerRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.logical.view.registry.LogicalModelViewHandlerRegistryListener;
+import org.eclipse.emf.compare.ide.ui.internal.mergeresolution.MergeResolutionListenerRegistry;
+import org.eclipse.emf.compare.ide.ui.internal.mergeresolution.MergeResolutionListenerRegistryListener;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -54,11 +57,17 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	/** Model dependency providers extension point. */
 	private static final String MODEL_DEPENDENCY_PROVIDER_PPID = "modelDependencyProvider"; //$NON-NLS-1$
 
+	/** Merge resolution listener extension point. */
+	private static final String MERGE_RESOLUTION_PPID = "mergeResolutionListener"; //$NON-NLS-1$
+
 	/** keep track of resources that should be freed when exiting. */
 	private static Map<String, Image> resourcesMapper = new HashMap<String, Image>();
 
 	/** Listener for the model resolver extension point. */
 	private AbstractRegistryEventListener modelResolverRegistryListener;
+
+	/** Listener for the merge resolution listener extension point. */
+	private MergeResolutionListenerRegistryListener mergeResolutionListenerRegistryListener;
 
 	/** Registry of model resolvers. */
 	private ModelResolverRegistry modelResolverRegistry;
@@ -74,6 +83,9 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 
 	/** Registry of model dependency providers. */
 	private ModelDependencyProviderRegistry modelDependencyProviderRegistry;
+
+	/** Registry for the merge resolution listener extension point. */
+	private MergeResolutionListenerRegistry mergeResolutionListenerRegistry;
 
 	/** Default constructor. */
 	public EMFCompareIDEUIPlugin() {
@@ -93,6 +105,7 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		modelDependencyProviderRegistry = new ModelDependencyProviderRegistry();
 		modelResolverRegistry = new ModelResolverRegistry();
 		logicalModelViewHandlerRegistry = new LogicalModelViewHandlerRegistry();
+		mergeResolutionListenerRegistry = new MergeResolutionListenerRegistry();
 
 		final IExtensionRegistry globalRegistry = Platform.getExtensionRegistry();
 
@@ -105,6 +118,11 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 				getLog(), modelResolverRegistry);
 		globalRegistry.addListener(modelResolverRegistryListener);
 		modelResolverRegistryListener.readRegistry(globalRegistry);
+
+		mergeResolutionListenerRegistryListener = new MergeResolutionListenerRegistryListener(PLUGIN_ID,
+				MERGE_RESOLUTION_PPID, getLog(), mergeResolutionListenerRegistry);
+		globalRegistry.addListener(mergeResolutionListenerRegistryListener);
+		mergeResolutionListenerRegistryListener.readRegistry(globalRegistry);
 
 		logicalModelViewHandlerRegistryListener = new LogicalModelViewHandlerRegistryListener(PLUGIN_ID,
 				LOGICAL_MODEL_VIEW_HANDLERS_PPID, getLog(), logicalModelViewHandlerRegistry);
@@ -222,6 +240,15 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	 */
 	public ModelDependencyProviderRegistry getModelDependencyProviderRegistry() {
 		return modelDependencyProviderRegistry;
+	}
+
+	/**
+	 * Returns the registry containing all known merge resolution listeners.
+	 * 
+	 * @return the registry containing all known merge resolution listeners.
+	 */
+	public MergeResolutionListenerRegistry getMergeResolutionListenerRegistry() {
+		return mergeResolutionListenerRegistry;
 	}
 
 	/**
