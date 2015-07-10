@@ -10,7 +10,7 @@
     <pluginRepository>
       <id>rcptt-releases</id>
       <name>RCPTT Maven repository</name>
-      <url>http://maven.xored.com/nexus/content/repositories/ci4rcptt-releases/</url>
+      <url>https://repo.eclipse.org/content/repositories/rcptt-releases/</url>
     </pluginRepository>
     <pluginRepository>
       <snapshots>
@@ -18,12 +18,12 @@
       </snapshots>
       <id>rcptt-snapshots</id>
       <name>Xored Maven repository</name>
-      <url>http://maven.xored.com/nexus/content/repositories/ci4rcptt-snapshots/</url>
+      <url>https://repo.eclipse.org/content/repositories/rcptt-snapshots/</url>
     </pluginRepository>
   </pluginRepositories> 
   
   <properties>
-    <ci4rcptt-maven-version>1.5.6-SNAPSHOT</ci4rcptt-maven-version>
+    <rcptt-maven-version>2.0.0-SNAPSHOT</rcptt-maven-version>
     <exec-maven-plugin-version>1.2.1</exec-maven-plugin-version>
     <testFailureIgnore>true</testFailureIgnore>
   </properties>
@@ -63,9 +63,9 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>com.xored.ci4rcptt</groupId>
-            <artifactId>ci4rcptt-maven-plugin</artifactId>
-            <version>${ci4rcptt-maven-version}</version>
+            <groupId>org.eclipse.rcptt</groupId>
+            <artifactId>rcptt-maven-plugin</artifactId>
+            <version>${rcptt-maven-version}</version>
             <extensions>true</extensions>
             <configuration>
               <aut>
@@ -80,7 +80,7 @@
                 <suite>TestSuite.Full</suite>
               </suites>
               <runner>
-                <explicit>${rcpttrunner}</explicit>
+                <version>2.0.0</version>
               </runner>
             </configuration>
           </plugin>
@@ -98,9 +98,9 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>com.xored.ci4rcptt</groupId>
-            <artifactId>ci4rcptt-maven-plugin</artifactId>
-            <version>${ci4rcptt-maven-version}</version>
+            <groupId>org.eclipse.rcptt</groupId>
+            <artifactId>rcptt-maven-plugin</artifactId>
+            <version>${rcptt-maven-version}</version>
             <extensions>true</extensions>
             <configuration>
               <aut>
@@ -115,7 +115,7 @@
                 <suite>TestSuite.Full</suite>
               </suites>
               <runner>
-                <explicit>${rcpttrunner}</explicit>
+                <version>2.0.0</version>
               </runner>
             </configuration>
           </plugin>
@@ -133,9 +133,9 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>com.xored.ci4rcptt</groupId>
-            <artifactId>ci4rcptt-maven-plugin</artifactId>
-            <version>${ci4rcptt-maven-version}</version>
+            <groupId>org.eclipse.rcptt</groupId>
+            <artifactId>rcptt-maven-plugin</artifactId>
+            <version>${rcptt-maven-version}</version>
             <extensions>true</extensions>
             <configuration>
               <aut>
@@ -150,7 +150,7 @@
                 <suite>TestSuite.Full</suite>
               </suites>
               <runner>
-                <explicit>${rcpttrunner}</explicit>
+                <version>2.0.0</version>
               </runner>
             </configuration>
           </plugin>
@@ -182,7 +182,7 @@
                 <suite>TestSuite.Full</suite>
               </suites>
               <runner>
-                <explicit>${rcpttrunner}</explicit>
+                <version>2.0.0</version>
               </runner>
             </configuration>
           </plugin>
@@ -197,9 +197,9 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>com.xored.ci4rcptt</groupId>
-            <artifactId>ci4rcptt-maven-plugin</artifactId>
-            <version>${ci4rcptt-maven-version}</version>
+            <groupId>org.eclipse.rcptt</groupId>
+            <artifactId>rcptt-maven-plugin</artifactId>
+            <version>${rcptt-maven-version}</version>
             <extensions>true</extensions>
             <configuration>
               <aut>
@@ -214,7 +214,7 @@
                 <suite>TestSuite.Core</suite>
               </suites>
               <runner>
-                <explicit>${rcpttrunner}</explicit>
+                <version>2.0.0</version>
               </runner>
             </configuration>
           </plugin>
