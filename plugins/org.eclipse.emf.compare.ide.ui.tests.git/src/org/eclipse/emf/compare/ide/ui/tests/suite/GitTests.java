@@ -35,6 +35,8 @@ import org.junit.runners.Suite.SuiteClasses;
 	// GitLogicalMergeTest.class, Uncomment when all logical model contributions to EGit will be merged.
 	// GitLogicalMergeWithCustomDependenciesTest.class, 
 	// RenamedControlledResourceTests.class,
+	// ThreadedModelResolverResolutionTest.class,
+	// GitMergeTest.class,
 	})
 public class GitTests {
 	/**

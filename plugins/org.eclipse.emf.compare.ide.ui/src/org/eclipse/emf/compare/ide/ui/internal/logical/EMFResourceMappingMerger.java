@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - bugs 461713, 465331, 470268, refactorings
+ *     Alexandra Buzila - bug 470332
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -63,6 +64,7 @@ import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.utils.Graph;
 import org.eclipse.emf.compare.internal.utils.PruningIterator;
 import org.eclipse.emf.compare.merge.BatchMerger;
@@ -272,7 +274,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 */
 	private void performPreMerge(Comparison comparison, SubMonitor subMonitor) {
 		final Graph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison,
-				MERGER_REGISTRY, true, null);
+				MERGER_REGISTRY, true, MergeMode.RIGHT_TO_LEFT);
 		final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
 		final Monitor emfMonitor = BasicMonitor.toMonitor(subMonitor);
 
