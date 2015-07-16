@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -306,6 +307,31 @@ public final class ResourceUtil {
 		}
 
 		return uri;
+	}
+
+	/**
+	 * Tries and retrieve the {@link IResource} associated with the given {@link URI}. This returns a file
+	 * handle, which might point to a non-existing IResource.
+	 * 
+	 * @param uri
+	 *            the URI for which we want the {@link IResource}.
+	 * @return the {@link IResource} if found, null otherwise.
+	 * @since 3.2
+	 */
+	public static IResource getResourceFromURI(final URI uri) {
+		final IResource targetFile;
+		if (uri.isPlatform()) {
+			IPath platformString = new Path(uri.trimFragment().toPlatformString(true));
+			targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(platformString);
+		} else {
+			/*
+			 * FIXME Deresolve the URI against the workspace root, if it cannot be done, delegate to
+			 * super.createInputStream()
+			 */
+			targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
+					new Path(uri.trimFragment().toString()));
+		}
+		return targetFile;
 	}
 
 	/**

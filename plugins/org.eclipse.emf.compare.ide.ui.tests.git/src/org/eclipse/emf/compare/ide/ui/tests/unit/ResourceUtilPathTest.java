@@ -31,7 +31,7 @@ public class ResourceUtilPathTest extends AbstractURITest {
 		RevCommit origin = masterTip.getParent(0);
 		
 		IStorageProviderAccessor accessor = createAccessorForComparison(MASTER,
-				BRANCH, iFile1);
+				BRANCH, false);
 		final String workspaceRelativePath = iFile1.getFullPath().toOSString();
 		
 		IStorageProvider provider = accessor.getStorageProvider(iFile1, DiffSide.ORIGIN);
@@ -84,7 +84,7 @@ public class ResourceUtilPathTest extends AbstractURITest {
 		RevCommit origin = repository.findCommit(masterCommit2.getId().getName()).getParent(0);
 		
 		IStorageProviderAccessor accessor = createAccessorForComparison(MASTER,
-				branch2Name, iFile1);
+				branch2Name, false);
 		final String workspaceRelativePath = iFile1.getFullPath().toOSString();
 		
 		IStorageProvider provider = accessor.getStorageProvider(iFile1, DiffSide.ORIGIN);

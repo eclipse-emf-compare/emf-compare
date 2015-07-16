@@ -18,18 +18,16 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor.DiffSide;
+import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageURIConverter;
 import org.eclipse.emf.ecore.resource.URIConverter;
 
@@ -123,7 +121,7 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 			stream = super.createInputStream(uri, options);
 		} else {
 			// Otherwise, load it from the repository (resource might not yet (or no longer) exist locally)
-			final IResource targetFile = getResourceFromURI(normalizedUri);
+			final IResource targetFile = ResourceUtil.getResourceFromURI(normalizedUri);
 			if (targetFile != null) {
 				stream = openRevisionStream(targetFile);
 			} else {
@@ -145,8 +143,8 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 		boolean exists = false;
 		try {
 			final URI normalizedUri = normalize(uri);
-			IStorageProvider storageProvider = storageAccessor.getStorageProvider(
-					getResourceFromURI(normalizedUri), side);
+			IStorageProvider storageProvider = storageAccessor.getStorageProvider(ResourceUtil
+					.getResourceFromURI(normalizedUri), side);
 			if (storageProvider != null) {
 				exists = storageProvider.getStorage(new NullProgressMonitor()) != null;
 			} else {
@@ -156,29 +154,6 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 			EMFCompareIDEUIPlugin.getDefault().log(IStatus.ERROR, e.getMessage());
 		}
 		return exists;
-	}
-
-	/**
-	 * Retrieve the {@link IResource} associated with the given {@link URI}.
-	 * 
-	 * @param uri
-	 *            the URI for which we want the {@link IResource}.
-	 * @return the {@link IResource} if found, null otherwise.
-	 */
-	public IResource getResourceFromURI(final URI uri) {
-		final IResource targetFile;
-		if (uri.isPlatform()) {
-			IPath platformString = new Path(uri.trimFragment().toPlatformString(true));
-			targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(platformString);
-		} else {
-			/*
-			 * FIXME Deresolve the URI against the workspace root, if it cannot be done, delegate to
-			 * super.createInputStream()
-			 */
-			targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
-					new Path(uri.trimFragment().toString()));
-		}
-		return targetFile;
 	}
 
 	/**

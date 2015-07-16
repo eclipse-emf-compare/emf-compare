@@ -116,7 +116,7 @@ public class CompareGitTestCase extends CompareTestCase {
 	
 	protected Comparison compare(String sourceRev, String targetRev, IFile file) throws Exception {
 		final String fullPath = file.getFullPath().toString();
-		final Subscriber subscriber = repository.createSubscriberForComparison(sourceRev, targetRev, file);
+		final Subscriber subscriber = repository.createSubscriberForComparison(sourceRev, targetRev, file, false);
 		final IStorageProviderAccessor accessor = new SubscriberStorageAccessor(subscriber);
 		final IStorageProvider sourceProvider = accessor.getStorageProvider(file,
 				IStorageProviderAccessor.DiffSide.SOURCE);
@@ -154,8 +154,8 @@ public class CompareGitTestCase extends CompareTestCase {
 		return comparisonBuilder.build().compare(scope, new BasicMonitor());
 	}
 	
-	protected IStorageProviderAccessor createAccessorForComparison(String sourceRev, String targetRev, IFile file) throws Exception {
-		final Subscriber subscriber = repository.createSubscriberForComparison(sourceRev, targetRev, file);
+	protected IStorageProviderAccessor createAccessorForComparison(String sourceRev, String targetRev, boolean includeLocal) throws Exception {
+		final Subscriber subscriber = repository.createSubscriberForResolution(sourceRev, targetRev, includeLocal);
 		return new SubscriberStorageAccessor(subscriber);
 	}
 	

@@ -62,7 +62,7 @@ import com.google.common.collect.Sets;
  * basic model setup will be one package containing two classes, from which we'll create cross-references through the 'suertypes' feature.
  * the model with error preventing its loading will be created by manually modifying a file containing a "basic model" as above to break a metaclass name.
  */
-public class ModelResolverTest extends CompareGitTestCase {
+public class ModelResolverLocalTest extends CompareGitTestCase {
 	private static final String PROJECT2_NAME = "Project-2";
 	
 	private static final String FILE1_NAME = "file1.ecore";

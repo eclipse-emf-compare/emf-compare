@@ -288,6 +288,13 @@ public class ModelsResolution extends AbstractResolution {
 		 * new resources well spread when it happens) not to pose an issue in the most frequent cases.
 		 */
 
+		// Make sure we properly update the dependency graph if our source side is local
+		final boolean sourceIsLocal = Iterables.any(leftSet, new Predicate<IStorage>() {
+			public boolean apply(IStorage input) {
+				return adaptAs(input, IFile.class) != null;
+			}
+		});
+
 		final Set<IStorage> additionalStorages = new LinkedHashSet<IStorage>();
 		final Set<URI> additionalURIs = new LinkedHashSet<URI>();
 		// Have we found new resources in the right as compared to the left?
@@ -301,8 +308,13 @@ public class ModelsResolution extends AbstractResolution {
 			// resource to be present in both traversals to make sure we'll be able to properly detect
 			// potential conflicts. However, since this resource could itself be a part of a larger logical
 			// model, we need to start the resolving again with it.
-			final Set<IStorage> additionalLeft = findAdditionalRemoteTraversal(leftSet, differenceRightLeft,
-					DiffSide.SOURCE, tspm);
+			final Set<IStorage> additionalLeft;
+			if (sourceIsLocal) {
+				additionalLeft = findAdditionalLocalTraversal(leftSet, differenceRightLeft, tspm);
+			} else {
+				additionalLeft = findAdditionalRemoteTraversal(leftSet, differenceRightLeft, DiffSide.SOURCE,
+						tspm);
+			}
 			if (leftSet.addAll(additionalLeft)) {
 				somethingToAdd = true;
 				for (IStorage storage : additionalLeft) {
@@ -443,6 +455,49 @@ public class ModelsResolution extends AbstractResolution {
 	}
 
 	/**
+	 * Tries and resolve the given set of additional storages (as compared to {@code alreadyLoaded}) on the
+	 * source side. Should only be called when said "source" is local.
+	 * 
+	 * @param alreadyLoaded
+	 *            All storages that have already been loaded on the given side. This will prevent us from
+	 *            resolving the same model more than once.
+	 * @param additionalStorages
+	 *            The set of additional storages we are to find and resolve on the source side.
+	 * @param tspm
+	 *            Monitor on which to report progress to the user.
+	 * @return The set of additional storages that are to be added to the source traversal.
+	 * @throws InterruptedException
+	 *             Thrown if the resolution is cancelled or interrupted one way or another.
+	 */
+	private Set<IStorage> findAdditionalLocalTraversal(Set<IStorage> alreadyLoaded,
+			Set<IStorage> additionalStorages, final ThreadSafeProgressMonitor tspm)
+			throws InterruptedException {
+		if (additionalStorages.isEmpty()) {
+			return Collections.emptySet();
+		}
+
+		final Set<IStorage> traversal = new LinkedHashSet<IStorage>();
+		Iterable<URI> urisToResolve = transform(additionalStorages, asURI());
+		urisToResolve = Iterables.filter(urisToResolve, new Predicate<URI>() {
+			public boolean apply(URI input) {
+				return input != null && input.isPlatformResource();
+			}
+		});
+		for (URI resolveMe : urisToResolve) {
+			IResource file = ResourceUtil.getResourceFromURI(resolveMe);
+			if (file instanceof IFile && !alreadyLoaded.contains(file)) {
+				localResolver.updateDependencies(monitor, diagnostic, (IFile)file);
+				if (tspm.isCanceled()) {
+					throw new OperationCanceledException();
+				}
+				traversal.addAll(resolveTraversal((IFile)file, Collections.<URI> emptySet()));
+			}
+		}
+
+		return traversal;
+	}
+
+	/**
 	 * Returns the set of all elements that are contained neither in set1 nor in set2.
 	 * 
 	 * @param set1
@@ -527,7 +582,7 @@ public class ModelsResolution extends AbstractResolution {
 		final URI startURI = converter.normalize(ResourceUtil.createURIFor(start));
 		final Iterable<URI> knownVariantsAndStart = concat(knownVariants, Collections.singleton(startURI));
 		final Iterable<URI> urisToResolve = addRenamedUris(knownVariantsAndStart, converter, side);
-		
+
 		scheduler.computeAll(transform(urisToResolve, resolveRemoteURI(tspm, resourceSet)));
 
 		if (tspm.isCanceled()) {
@@ -571,7 +626,7 @@ public class ModelsResolution extends AbstractResolution {
 			DiffSide side) {
 		final Set<URI> renamedUris = new HashSet<URI>();
 		for (URI resolvedUri : resolvedUris) {
-			final IResource iResource = converter.getResourceFromURI(resolvedUri);
+			final IResource iResource = ResourceUtil.getResourceFromURI(resolvedUri);
 			if (iResource instanceof IFile) {
 				final IFile iFile = (IFile)iResource;
 				final Optional<IFile> fileBeforeRename = Optional.fromNullable(storageAccessor

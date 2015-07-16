@@ -62,7 +62,7 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 		setupStraightRepo();
 
 		IStorageProviderAccessor accessor = createAccessorForComparison(MASTER,
-				BRANCH, iFile1);
+				BRANCH, false);
 		URI file1URI = ResourceUtil.createURIFor(iFile1);
 
 		// origin is the "initial-commit" state
@@ -86,7 +86,7 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 		setupMultipleCommitsRepo(branch1Name, branch2Name);
 
 		IStorageProviderAccessor accessor = createAccessorForComparison(MASTER,
-				branch2Name, iFile1);
+				branch2Name, false);
 		URI file1URI = ResourceUtil.createURIFor(iFile1);
 
 		// origin is the "commit-master-1" state, which we initialized to be the
