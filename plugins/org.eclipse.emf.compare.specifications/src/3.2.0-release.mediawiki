@@ -68,3 +68,177 @@ A merge from right to left of the DanglingStereotypeApplication will lead to hav
 As a possible evolution, specific work could be done on merge to handle case where classes exist on one side and dangling references on the other side (see case 2 above), in order to "re-connect" class and their stereotype application if it is possible (if the id of the targeted element of the stereotype is still there).
 
 
+==  US_320_002 - Toolbar actions: contextual tooltips ==
+
+=== Description ===
+
+Add contextual tooltips for action buttons in EMF Compare UI.
+
+==== Categories ====
+[[./index.html#UI-related Specifications|UI]]
+
+=== Content ===
+
+The tooltips are not contextualized. Each button has the same tooltip for all possible cases. It is confusing for the user. Tooltips for actions and right click menu labels must be context specific. 
+
+==== Proposal ====
+
+===== UI =====
+
+The tooltip must display the best information depending of the context.
+
+'''Proposal'''
+
+The following list suggests tooltips for each possible case.
+
+====== With only one editable model ======
+
+Accept All Non-Conflicting Changes &rarr; Accept All Non-Conflicting Changes. The left changes will be accepted and the right changes will be merged into the left-hand side.
+
+Reject All Non-Conflicting Changes &rarr; Reject All Non-Conflicting Changes. The left changes will be rejected and the right changes will not be used.
+
+<u>Accept Change</u>
+# single selection:
+#* set:
+#** in left/local model &rarr; Accept the change. Keep '''{left value}''' in '''{feature name}''' of this '''{left element type}''' on the left-hand side. The left-hand side will remain unchanged.
+#** in right/remote model (left value not empty) &rarr; Accept the change. Set the '''{feature name}''' of this '''{left element type}''' to '''{right value}''' (instead of '''{left value}'''). The left-hand side will be modified.
+#** in right/remote model (left value empty) &rarr; Accept the change. Set the '''{feature name}''' of this '''{left element type}''' to '''{right value}'''. The left-hand side will be modified.
+#* unset:
+#** in left/local model &rarr; Accept the change. Keep the '''{feature name}''' of this '''{left element type}''' unset on the left-hand side. The left-hand side will remain unchanged.
+#** in right/remote model &rarr; Accept the change. Unset the '''{feature name}''' of this '''{left element type}''' (currently '''{left value}''') on the left-hand side. The left-hand side will be modified.
+#* move:
+#** in left/local model:
+#*** move of container &rarr; Accept the change. Keep '''{left element}''' in '''{left element container}''' on the left-hand side. The left-hand side will remain unchanged.
+#*** move of position (containment reference) &rarr; Accept the change. Keep '''{left element}''' at its current position in '''{left element container}''' on the left-hand side. The left-hand side will remain unchanged.
+#*** move of position (non containment reference) &rarr; Accept the change. Keep '''{left element}''' at its current position on the left-hand side. The left-hand side will remain unchanged.
+#** in right/remote model:
+#*** move of container &rarr; Accept the change. Move '''{left element}''' in '''{right element container}''' (currently in '''{left element container}''') on the left-hand side. The left-hand side will be modified.
+#*** move of position (containment reference) &rarr; Accept the change. Move the position of '''{left element}''' in '''{left element container}''' on the left-hand side. The left-hand side will be modified.
+#*** move of position (non containment reference) &rarr; Accept the change. Move the position of '''{left element}''' on the left-hand side. The left-hand side will be modified.
+#* add:
+#** in left/local model:
+#*** in containment feature &rarr; Accept the change. Keep '''{left element}''' in '''{left element container}''' on the left-hand side. The left-hand side will remain unchanged.
+#*** in a reference &rarr; Accept the change. Keep '''{left element}''' on the left-hand side. The left-hand side will remain unchanged.
+#*** in an attribute &rarr; Accept the change. Keep '''{left element}''' in '''{left element container}''' on the left-hand side. The left-hand side will remain unchanged.
+#** in right/remote model:
+#*** in containment feature &rarr; Accept the change. Add '''{right element}''' in '''{right element container}''' on the left-hand side. The left-hand side will be modified.
+#*** in a reference &rarr; Accept the change. Add '''{right element}''' on the left-hand side. The left-hand side will be modified.
+#*** in an attribute &rarr; Accept the change. Add '''{right element}''' in '''{right element container}''' on the left-hand side. The left-hand side will be modified.
+#* delete:
+#** in left/local model:
+#*** from a containment change &rarr; Accept the change. Keep the deletion of '''{right element}''' from '''{right element container}''' on the left-hand side. The left-hand side will remain unchanged.
+#*** from other features &rarr; Accept the change. Keep the deletion of '''{right element}''' on the left-hand side. The left-hand side will remain unchanged.
+#** in right/remote model:
+#*** from a containment change &rarr; Accept the change. Delete '''{left element}''' in '''{left element container}''' on the left-hand side. The left-hand side will be modified.
+#*** from other features &rarr; Accept the change. Delete '''{left element}''' on the left-hand side. The left-hand side will be modified.
+# multiple selection &rarr; Accept all non-conflicting changes from the current selection.
+<u>Reject Change</u>
+# single selection:
+#* set:
+#** in left/local model (right not empty) &rarr; Reject the change. Restore the '''{feature name}''' of this '''{left element type}''' to '''{right value}''' (instead of '''{left value}''') on the left-hand side. The left-hand side will be modified.
+#** in left/local model (right empty) &rarr; Reject the change. Clear the '''{feature name}''' of this '''{left element type}''' (currently '''{left value}''') on the left-hand side. The left-hand side will be modified.
+#** in right/remote model (left not empty) &rarr; Reject the change. Keep the '''{feature name}''' of this '''{right element type}''' set to '''{left value}''' on the left-hand side. The left-hand side will remain unchanged.
+#** in right/remote model (left empty) &rarr; Reject the change. Keep the '''{feature name}''' of this '''{right element type}''' empty on the left-hand side. The left-hand side will remain unchanged.
+#* unset:
+#** in left/local model &rarr; Reject the change. Restore the '''{feature name}''' of this '''{left element type}''' to '''{right value}''' on the left-hand side. The left-hand side will be modified.
+#** in right/remote model &rarr; Reject the change. Keep the '''{feature name}''' of this '''{right element type}''' set to '''{left value}''' on the left-hand side. The left-hand side will remain unchanged.
+#* move:
+#** in left/local model:
+#*** move of container &rarr; Reject the change. Restore '''{left element}''' in '''{right element container}''' (currently in '''{left element container}''') on the left-hand side. The left-hand side will be modified.
+#*** move of position &rarr; Reject the change. Restore the original position of '''{left element}''' on the left-hand side. The left-hand side will be modified.
+#** in right/remote model:
+#*** move of container &rarr; Reject the change. Keep '''{right element}''' in '''{left element container}''' on the left-hand side. The left-hand side will remain unchanged.
+#*** move of position (containment reference) &rarr; Reject the change. Keep '''{right element}''' at its current position in '''{right element container}''' on the left-hand side. The left-hand side will remain unchanged.
+#*** move of position (containment reference) &rarr; Reject the change. Keep '''{right element}''' at its current position on the left-hand side. The left-hand side will remain unchanged.
+#* add:
+#** in left/local model:
+#*** in containment feature &rarr; Reject the change. Delete '''{left element}''' in '''{left element container}''' on the left-hand side. The left-hand side will be modified.
+#*** in a reference &rarr; Reject the change. Delete '''{left element}''' on the left-hand side. The left-hand side will be modified.
+#*** in an attribute &rarr; Reject the change. Delete '''{left element}''' from '''{left element container}''' on the left-hand side. The left-hand side will be modified.
+#** in right/remote model:
+#*** in containment feature &rarr; Reject the change. Do not add '''{right element}''' in '''{right element container}''' on the left-hand side. The left-hand side will remain unchanged.
+#*** in a reference &rarr; Reject the change. Do not add '''{right element}''' on the left-hand side. The left-hand side will remain unchanged.
+#*** in an attribute &rarr; Reject the change. Do not add '''{right element}''' under '''{right element container}''' on the left-hand side. The left-hand side will remain unchanged.
+#* delete:
+#** in left/local model:
+#*** from a containment change &rarr; Reject the change. Restore '''{right element}''' in '''{right element container}''' on the left-hand side.  The left-hand side will be modified.
+#*** from other features &rarr; Reject the change. Restore '''{right element}''' on the left-hand side. The left-hand side will be modified.
+#** in right/remote model:
+#*** from a containment change &rarr; Reject the change. Keep '''{left element}''' in '''{left element container}''' on the left-hand side. The left-hand side will remain unchanged.
+#*** from other features &rarr; Reject the change. Keep '''{left element}''' on the left-hand side. The left-hand side will remain unchanged.
+# multiple selection &rarr; Reject all non-conflicting changes from the current selection.
+
+====== With both models editable ======
+
+Copy All Non-Conflicting Changes from Left to Right &rarr; Apply all left changes on the right-hand side. The left-hand side will remain unchanged.
+
+Copy All Non-Conflicting Changes from Right to Left &rarr; Apply all right changes on the left-hand side. The right-hand side will remain unchanged.
+
+<u>Copy Current Change from Left to Right</u>
+# single selection:
+#* set:
+#** in left model (right value not empty) &rarr; Set the '''{feature name}''' of this '''{right element type}''' to '''{left value}''' on the right-hand side (currently '''{right value}'''). The left-hand side will remain unchanged. The right-hand side will be modified.
+#** in left model (right value empty) &rarr; Set the '''{feature name}''' of this '''{right element type}''' to '''{left value}''' on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+#** in right model (right value not empty) &rarr; Set the '''{feature name}''' of this '''{right element type}''' to '''{left value}''' on the right-hand side (instead of '''{right value}'''). The left-hand side will remain unchanged. The right-hand side will be modified.
+#** in right model (right value empty) &rarr; Clear the '''{feature name}''' of this '''{right element type}''' (currently '''{right value}''') on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+#* unset:
+#** in left model &rarr; Unset the '''{feature name}''' of this '''{right element type}''' on the right-hand side (currently '''{right value}'''). The left-hand side will remain unchanged. The right-hand side will be modified.
+#** in right model &rarr; Restore the '''{feature name}''' of this '''{right element type}''' to '''{left value}''' on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+#* move:
+#** in left model:
+#*** move of container &rarr; Move '''{right element}''' in '''{left element container}''' (currently in '''{right element container}''') on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+#*** move of position &rarr; Move '''{right element}''' on the right-hand side to match its left-hand side position. The left-hand side will remain unchanged. The right-hand side will be modified. The right-hand side will be modified.
+#** in right model:
+#*** move of container &rarr; Move '''{right element}''' in '''{left element container}''' (currently in '''{right element container}''') on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+#*** move of position &rarr; Move '''{right element}''' on the right-hand side to match its left-hand side position. The left-hand side will remain unchanged. The right-hand side will be modified.
+#* add:
+#** in left model:
+#*** in containment feature &rarr; Add '''{left element}''' in '''{left element container}''' on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+#*** in a reference &rarr; Add '''{left element}''' on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+#*** in an attribute &rarr; Add '''{left element}''' in '''{left element container}''' on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+#** in right model:
+#*** in containment feature &rarr; Delete '''{right element}''' in '''{right element container}''' on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+#*** in a reference &rarr; Remove '''{right element}''' on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+#*** in an attribute &rarr; Delete '''{right element}''' in '''{right element container}''' on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+#* delete:
+#** in left model:
+#*** from a containment change &rarr; Delete '''{right element}''' from '''{right element container}''' on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+#*** from other features &rarr; Delete '''{left element}''' on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+#** in right model:
+#*** from a containment change &rarr; Undo the deletion of '''{left element}''' from '''{left element container}''' on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+#*** from other features &rarr; Undo the deletion of '''{right element}''' on the right-hand side. The left-hand side will remain unchanged. The right-hand side will be modified.
+# multiple selection &rarr; Apply all non-conflicting changes from the current selection on the left-hand side.
+<u>Copy Current Change from Right to Left</u>
+# single selection:
+#* set:
+#** in right model (left value not empty) &rarr; Set the '''{feature name}''' of this '''{left element type}''' to '''{right value}''' on the left-hand side (instead of '''{left value}'''). The left-hand side will be modified. The right-hand side will remain unchanged.
+#** in right model (left value empty) &rarr; Set the '''{feature name}''' of this '''{left element type}''' to '''{right value}''' on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
+#** in left model (right value not empty) &rarr; Set the '''{feature name}''' of this '''{left element type}''' to '''{right value}''' on the left-hand side (instead of '''{left value}'''). The left-hand side will be modified. The right-hand side will remain unchanged.
+#** in left model (right value empty) &rarr; Clear the '''{feature name}''' of this '''{left element type}''' on the left-hand side (currently '''{left value}'''). The left-hand side will be modified. The right-hand side will remain unchanged.
+#* unset:
+#** in right model &rarr; Unset the '''{feature name}''' of this '''{left element type}''' on the left-hand side (currently '''{left value}'''). The left-hand side will be modified. The right-hand side will remain unchanged.
+#** in left model &rarr; Restore the '''{feature name}''' of this '''{left element type}''' to '''{right value}''' on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
+#* move:
+#** in right model:
+#*** move of container &rarr; Move '''{left element}''' in '''{right element container}''' (currently in '''{left element container}''') on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
+#*** move of position &rarr; Move '''{left element}''' on the left-hand side to match its right-hand side position. The left-hand side will be modified. The right-hand side will remain unchanged.
+#** in left model:
+#*** move of container &rarr; Move '''{left element}''' in '''{right element container}''' (currently in '''{left element container}''') on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
+#*** move of position &rarr; Move the '''{left element}''' on the left-hand side to match its right-hand side position. The left-hand side will be modified. The right-hand side will remain unchanged.
+#* add:
+#** in right model:
+#*** in containment feature &rarr; Add '''{right element}''' in '''{right element container}''' on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
+#*** in a reference &rarr; Add '''{right element}''' on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
+#*** in an attribute &rarr; Add '''{right element}''' in '''{right element container}''' on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
+#** in left model:
+#*** in containment feature &rarr; Delete '''{left element}''' in '''{left element container}''' on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
+#*** in a reference &rarr; Remove '''{left element}''' on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
+#*** in an attribute &rarr; Delete '''{left element}''' in '''{left element container}''' on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
+#* delete:
+#** in right model:
+#*** from a containment change &rarr; Delete '''{left element}''' from '''{left element container}''' on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
+#*** from other features &rarr; Delete '''{right element}''' on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
+#** in left model:
+#*** from a containment change &rarr; Undo the deletion of '''{right element}''' in '''{right element position}''' on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
+#*** from other features &rarr; Undo the deletion of '''{left element}''' on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
+# multiple selection &rarr; Apply all non-conflicting changes from the current selection on the left-hand side.
