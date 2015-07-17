@@ -76,10 +76,11 @@
     </module>
     <module name="UnusedImports">
       <property name="severity" value="error"/>
+      <property name="processJavadoc" value="true"/>
     </module>
     <module name="AnonInnerLength">
       <property name="severity" value="error"/>
-      <property name="max" value="25"/>
+      <property name="max" value="75"/>
     </module>
     <module name="ExecutableStatementCount">
       <property name="severity" value="error"/>
@@ -229,7 +230,7 @@
     </module>
     <module name="NestedIfDepth">
       <property name="severity" value="error"/>
-      <property name="max" value="2"/>
+      <property name="max" value="3"/>
     </module>
     <module name="NestedTryDepth">
       <property name="severity" value="error"/>
@@ -255,6 +256,7 @@
     </module>
     <module name="ReturnCount">
       <property name="severity" value="error"/>
+      <property name="max" value="4"/>
       <property name="format" value="^$"/>
     </module>
     <module name="SimplifyBooleanExpression">
@@ -300,7 +302,7 @@
       <property name="protectedAllowed" value="true"/>
     </module>
     <module name="BooleanExpressionComplexity">
-      <property name="severity" value="error"/>
+      <property name="severity" value="warning"/>
     </module>
     <module name="ClassDataAbstractionCoupling">
       <property name="severity" value="info"/>
