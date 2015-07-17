@@ -17,6 +17,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
@@ -28,7 +29,7 @@ import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class MatchItemProviderSpec extends MatchItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
+public class MatchItemProviderSpec extends MatchItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider, ISemanticObjectLabelProvider {
 	/** The image provider used with this item provider. */
 	private final OverlayImageProvider overlayProvider;
 
@@ -122,6 +123,26 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		ComposedStyledString styledString = new ComposedStyledString(getText(object));
 		return styledString;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider#getSemanticObjectLabel(java.lang.Object)
+	 * @since 4.2
+	 */
+	public String getSemanticObjectLabel(Object object) {
+		Match match = (Match)object;
+		String ret = itemDelegator.getText(match.getLeft());
+
+		if (isNullOrEmpty(ret)) {
+			ret = itemDelegator.getText(match.getOrigin());
+		}
+
+		if (isNullOrEmpty(ret)) {
+			ret = itemDelegator.getText(match.getRight());
+		}
+		return ret;
 	}
 
 	/**

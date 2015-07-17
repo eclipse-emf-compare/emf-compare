@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.provider.ExtendedAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 import org.eclipse.emf.compare.provider.spec.Strings;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
@@ -30,7 +31,7 @@ import org.eclipse.emf.ecore.EObject;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class UMLDiffCustomItemProvider extends UMLDiffItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
+public class UMLDiffCustomItemProvider extends UMLDiffItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider, ISemanticObjectLabelProvider {
 
 	/**
 	 * The maximum length of displayed text.
@@ -58,6 +59,16 @@ public class UMLDiffCustomItemProvider extends UMLDiffItemProvider implements II
 	 */
 	public String getDescription(Object object) {
 		return itemDelegator.getDescription(object);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider#getSemanticObjectLabel(java.lang.Object)
+	 */
+	public String getSemanticObjectLabel(Object object) {
+		final UMLDiff umlDiff = (UMLDiff)object;
+		return getValueText(umlDiff);
 	}
 
 	/**

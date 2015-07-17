@@ -17,6 +17,7 @@ import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.compare.internal.EMFCompareEditMessages;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 import org.eclipse.emf.compare.provider.ResourceLocationChangeItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
@@ -30,7 +31,7 @@ import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class ResourceLocationChangeItemProviderSpec extends ResourceLocationChangeItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
+public class ResourceLocationChangeItemProviderSpec extends ResourceLocationChangeItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider, ISemanticObjectLabelProvider {
 
 	/** Unsupported string constant. */
 	private static final String UNSUPPORTED = "Unsupported "; //$NON-NLS-1$
@@ -106,6 +107,17 @@ public class ResourceLocationChangeItemProviderSpec extends ResourceLocationChan
 		}
 
 		return ret.append("]", Style.DECORATIONS_STYLER); //$NON-NLS-1$
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider#getSemanticObjectLabel(java.lang.Object)
+	 * @since 4.2
+	 */
+	public String getSemanticObjectLabel(Object object) {
+		final ResourceLocationChange resourceLocationChange = (ResourceLocationChange)object;
+		return resourceLocationChange.getBaseLocation();
 	}
 
 	/**

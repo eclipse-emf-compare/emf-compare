@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.internal.EMFCompareEditMessages;
 import org.eclipse.emf.compare.provider.AttributeChangeItemProvider;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
@@ -41,7 +42,7 @@ import org.eclipse.emf.edit.provider.IItemFontProvider;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
+public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider, ISemanticObjectLabelProvider {
 
 	/** The elide length. */
 	private static final int ELIDE_LENGTH = 50;
@@ -202,6 +203,17 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 		ret.append("]", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 
 		return ret;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider#getSemanticObjectLabel(java.lang.Object)
+	 * @since 4.2
+	 */
+	public String getSemanticObjectLabel(Object object) {
+		final AttributeChange attChange = (AttributeChange)object;
+		return getValueText(attChange);
 	}
 
 	/**
