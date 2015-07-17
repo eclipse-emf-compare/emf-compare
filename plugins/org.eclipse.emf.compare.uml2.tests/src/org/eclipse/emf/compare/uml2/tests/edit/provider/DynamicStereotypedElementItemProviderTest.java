@@ -19,6 +19,8 @@ import org.eclipse.emf.compare.uml2.tests.AbstractDynamicProfileTest;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.edit.provider.data.ModelInputData;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -29,6 +31,16 @@ import org.junit.Test;
 public class DynamicStereotypedElementItemProviderTest extends AbstractDynamicProfileTest {
 
 	private ModelInputData inputData = new ModelInputData();
+
+	@BeforeClass
+	public static void setupClass() {
+		initEPackageNsURIToProfileLocationMap();
+	}
+
+	@AfterClass
+	public static void teardownClass() {
+		resetEPackageNsURIToProfileLocationMap();
+	}
 
 	@Override
 	protected AbstractUMLInputData getInput() {

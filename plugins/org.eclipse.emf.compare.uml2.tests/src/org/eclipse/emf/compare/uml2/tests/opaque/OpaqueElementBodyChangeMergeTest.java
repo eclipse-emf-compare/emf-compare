@@ -40,6 +40,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.OpaqueAction;
 import org.eclipse.uml2.uml.OpaqueBehavior;
 import org.eclipse.uml2.uml.OpaqueExpression;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -119,6 +121,16 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 	};
 
 	private OpaqueInputData input = new OpaqueInputData();
+
+	@BeforeClass
+	public static void setupClass() {
+		fillRegistries();
+	}
+
+	@AfterClass
+	public static void teardownClass() {
+		resetRegistries();
+	}
 
 	@Test
 	public void testA1UseCaseRtoL() throws IOException {

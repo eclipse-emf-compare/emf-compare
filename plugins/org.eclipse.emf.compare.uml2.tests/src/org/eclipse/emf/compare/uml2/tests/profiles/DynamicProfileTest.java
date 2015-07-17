@@ -35,12 +35,24 @@ import org.eclipse.emf.compare.uml2.tests.profiles.data.dynamic.DynamicProfileIn
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.UMLPackage;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
 public class DynamicProfileTest extends AbstractDynamicProfileTest {
 
 	private DynamicProfileInputData input = new DynamicProfileInputData();
+
+	@BeforeClass
+	public static void setupClass() {
+		initEPackageNsURIToProfileLocationMap();
+	}
+
+	@AfterClass
+	public static void teardownClass() {
+		resetEPackageNsURIToProfileLocationMap();
+	}
 
 	@Test
 	public void testDynamicA10UseCase() throws IOException {

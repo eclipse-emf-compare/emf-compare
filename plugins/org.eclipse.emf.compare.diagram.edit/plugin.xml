@@ -25,7 +25,8 @@
                org.eclipse.emf.edit.provider.IItemLabelProvider
                org.eclipse.emf.edit.provider.IItemPropertySource
                org.eclipse.emf.compare.provider.IItemStyledLabelProvider
-               org.eclipse.emf.compare.provider.IItemDescriptionLabelProvider"/>
+               org.eclipse.emf.compare.provider.IItemDescriptionLabelProvider
+               org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider"/>
    </extension>
    <extension
          point="org.eclipse.emf.compare.edit.adapterFactory">
@@ -42,6 +43,15 @@
             ranking="10"
             label="Notation item provider"
             description="Customizes the way notation elements are displayed in EMF Compare."
+            uri="http://www.eclipse.org/gmf/runtime/1.0.2/notation">
+      </factory>
+      <factory
+            class="org.eclipse.emf.compare.diagram.internal.tooltips.DiagramTooltipLabelProviderFactory"
+            supportedTypes=
+              "org.eclipse.emf.compare.provider.ITooltipLabelProvider"
+            ranking="10"
+            label="Diagram tooltips item provider"
+            description="Customizes the way diagram linked tooltips are displayed in EMF Compare."
             uri="http://www.eclipse.org/gmf/runtime/1.0.2/notation">
       </factory>
    </extension>

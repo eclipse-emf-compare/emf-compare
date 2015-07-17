@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.EMFCompareEditMessages;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 import org.eclipse.emf.compare.provider.ResourceAttachmentChangeItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
@@ -33,7 +34,7 @@ import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 3.0
  */
-public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachmentChangeItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
+public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachmentChangeItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider, ISemanticObjectLabelProvider {
 
 	/** The image provider used with this item provider. */
 	private final OverlayImageProvider overlayProvider;
@@ -95,18 +96,8 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
 	public IComposedStyledString getStyledText(Object object) {
-		ResourceAttachmentChange resourceAttachmentChange = (ResourceAttachmentChange)object;
-		final Match match = resourceAttachmentChange.getMatch();
-		String value = itemDelegator.getText(match.getLeft());
-		if (isNullOrEmpty(value)) {
-			value = itemDelegator.getText(match.getRight());
-		}
-		if (isNullOrEmpty(value)) {
-			value = itemDelegator.getText(match.getOrigin());
-		}
-		if (isNullOrEmpty(value)) {
-			value = super.getText(object);
-		}
+		final ResourceAttachmentChange resourceAttachmentChange = (ResourceAttachmentChange)object;
+		String value = doGetSemanticObjectLabel(resourceAttachmentChange, object);
 
 		ComposedStyledString ret = new ComposedStyledString(value);
 		ret.append(" [", Style.DECORATIONS_STYLER); //$NON-NLS-1$
@@ -136,22 +127,47 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider#getSemanticObjectLabel(java.lang.Object)
+	 * @since 4.2
+	 */
+	public String getSemanticObjectLabel(Object object) {
+		final ResourceAttachmentChange resourceAttachmentChange = (ResourceAttachmentChange)object;
+		return doGetSemanticObjectLabel(resourceAttachmentChange, object);
+	}
+
+	/**
+	 * Compute and return the label of the given object.
+	 * 
+	 * @param resourceAttachmentChange
+	 *            The resource attachment change
+	 * @param object
+	 *            The given Object
+	 * @return the label of the given object
+	 */
+	private String doGetSemanticObjectLabel(ResourceAttachmentChange resourceAttachmentChange, Object object) {
+		final Match match = resourceAttachmentChange.getMatch();
+		String value = itemDelegator.getText(match.getLeft());
+		if (isNullOrEmpty(value)) {
+			value = itemDelegator.getText(match.getRight());
+		}
+		if (isNullOrEmpty(value)) {
+			value = itemDelegator.getText(match.getOrigin());
+		}
+		if (isNullOrEmpty(value)) {
+			value = super.getText(object);
+		}
+		return value;
+	}
+
+	/**
+	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.provider.IItemDescriptionProvider#getDescription(java.lang.Object)
 	 */
 	public String getDescription(Object object) {
 		final ResourceAttachmentChange rac = (ResourceAttachmentChange)object;
-		final Match match = rac.getMatch();
-		String valueText = itemDelegator.getText(match.getLeft());
-		if (isNullOrEmpty(valueText)) {
-			valueText = itemDelegator.getText(match.getRight());
-		}
-		if (isNullOrEmpty(valueText)) {
-			valueText = itemDelegator.getText(match.getOrigin());
-		}
-		if (isNullOrEmpty(valueText)) {
-			valueText = super.getText(object);
-		}
+		String valueText = doGetSemanticObjectLabel(rac, object);
 
 		String hasBeenAndSide = EMFCompareEditMessages.getString("change.local"); //$NON-NLS-1$
 		if (rac.getSource() == DifferenceSource.RIGHT) {

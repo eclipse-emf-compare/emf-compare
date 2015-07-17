@@ -57,6 +57,22 @@ import org.eclipse.uml2.uml.util.UMLUtil;
  */
 public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLProfileTest {
 
+	/**
+	 * Each sublass of AbstractUMLTest have to call this method in a @BeforeClass annotated method. This allow
+	 * each test to customize its context.
+	 */
+	public static void beforeClass() {
+		addProfilePathmap();
+	}
+
+	/**
+	 * Each sublass of AbstractUMLTest have to call this method in a @BeforeClass annotated method. This allow
+	 * each test to safely delete its context.
+	 */
+	public static void afterClass() {
+		resetProfilePathmap();
+	}
+
 	@Override
 	protected void registerPostProcessors(
 			org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry<String> postProcessorRegistry) {

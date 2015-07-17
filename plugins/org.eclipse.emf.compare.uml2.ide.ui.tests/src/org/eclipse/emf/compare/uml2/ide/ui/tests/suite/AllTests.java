@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
+import org.eclipse.emf.compare.uml2.ide.ui.tests.comparison.tooltip.UMLTooltipProviderTest;
 import org.eclipse.emf.compare.uml2.ide.ui.tests.logical.ComparisonScopeBuilderTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -25,7 +26,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({ComparisonScopeBuilderTest.class })
+@SuiteClasses({ComparisonScopeBuilderTest.class, UMLTooltipProviderTest.class })
 public class AllTests {
 
 	/**

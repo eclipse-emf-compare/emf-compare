@@ -46,6 +46,7 @@ public class DynamicStereotypedElementChangeTests extends AbstractStereotypedEle
 
 	@BeforeClass
 	public static void initEPackageNsURIToProfileLocationMap() {
+		beforeClass();
 		if (!EMFPlugin.IS_ECLIPSE_RUNNING) {
 			// It is required to link the EPackage to the UML package of the UML Profile
 			UMLPlugin
@@ -69,6 +70,7 @@ public class DynamicStereotypedElementChangeTests extends AbstractStereotypedEle
 					registeredURI);
 			EPackage.Registry.INSTANCE.put(UML2CompareTestProfilePackage.eNS_URI, registeredPackage);
 		}
+		afterClass();
 	}
 
 	@Before

@@ -37,12 +37,24 @@ import org.eclipse.emf.compare.uml2.tests.generalizationSet.data.GeneralizationS
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.UMLPackage;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
 public class AddGeneralizationSetTest extends AbstractUMLTest {
 
 	private GeneralizationSetInputData input = new GeneralizationSetInputData();
+
+	@BeforeClass
+	public static void setupClass() {
+		fillRegistries();
+	}
+
+	@AfterClass
+	public static void teardownClass() {
+		resetRegistries();
+	}
 
 	@Test
 	public void testA10UseCase() throws IOException {

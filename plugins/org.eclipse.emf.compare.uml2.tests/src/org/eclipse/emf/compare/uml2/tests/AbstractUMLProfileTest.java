@@ -16,13 +16,15 @@ import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.uml2.uml.resources.ResourcesPlugin;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 
 public abstract class AbstractUMLProfileTest extends AbstractUMLTest {
 
-	@BeforeClass
+	/**
+	 * Each sublass of AbstractUMLTest have to call this method in a @BeforeClass annotated method. This allow
+	 * each test to customize its context.
+	 */
 	public static void addProfilePathmap() {
+		fillRegistries();
 		if (!EMFPlugin.IS_ECLIPSE_RUNNING) {
 			final URL UMLJarredFileLocation = ResourcesPlugin.class.getResource("ResourcesPlugin.class");
 			String UMLJarPath = UMLJarredFileLocation.toString();
@@ -32,11 +34,15 @@ public abstract class AbstractUMLProfileTest extends AbstractUMLTest {
 		}
 	}
 
-	@AfterClass
+	/**
+	 * Each sublass of AbstractUMLTest have to call this method in a @BeforeClass annotated method. This allow
+	 * each test to safely delete its context.
+	 */
 	public static void resetProfilePathmap() {
 		if (!EMFPlugin.IS_ECLIPSE_RUNNING) {
 			URIConverter.URI_MAP.remove(URI.createURI("pathmap://UML_COMPARE_TESTS_PROFILE/"));
 		}
+		resetRegistries();
 	}
 
 	protected static String getProfilePath() {

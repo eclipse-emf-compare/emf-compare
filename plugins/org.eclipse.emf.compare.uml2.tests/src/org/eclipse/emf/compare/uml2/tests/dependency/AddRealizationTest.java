@@ -36,6 +36,8 @@ import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.dependency.data.DependencyInputData;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 //TODO To extend from AddDependencyTest and change only descriptions.
@@ -43,6 +45,16 @@ import org.junit.Test;
 public class AddRealizationTest extends AbstractUMLTest {
 
 	private DependencyInputData input = new DependencyInputData();
+
+	@BeforeClass
+	public static void setupClass() {
+		fillRegistries();
+	}
+
+	@AfterClass
+	public static void teardownClass() {
+		resetRegistries();
+	}
 
 	@Test
 	public void testA60UseCase() throws IOException {

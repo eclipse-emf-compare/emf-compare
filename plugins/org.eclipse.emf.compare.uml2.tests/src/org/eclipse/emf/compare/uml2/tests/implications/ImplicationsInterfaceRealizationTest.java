@@ -34,6 +34,8 @@ import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.implications.data.ImplicationsInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.UMLPackage;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
@@ -42,6 +44,16 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 	private static final int NB_DIFFS = 9;
 
 	private ImplicationsInputData input = new ImplicationsInputData();
+
+	@BeforeClass
+	public static void setupClass() {
+		fillRegistries();
+	}
+
+	@AfterClass
+	public static void teardownClass() {
+		resetRegistries();
+	}
 
 	private DiffsOfInterest getDiffs(Comparison comparison, TestKind kind) {
 		final List<Diff> differences = comparison.getDifferences();

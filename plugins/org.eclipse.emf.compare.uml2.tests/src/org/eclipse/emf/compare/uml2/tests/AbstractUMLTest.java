@@ -65,9 +65,7 @@ import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.internal.resource.UMLResourceFactoryImpl;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 
 /**
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
@@ -75,11 +73,14 @@ import org.junit.BeforeClass;
 @SuppressWarnings("nls")
 public abstract class AbstractUMLTest {
 
-	private EMFCompare emfCompare;
+	protected EMFCompare emfCompare;
 
 	private IMerger.Registry mergerRegistry;
 
-	@BeforeClass
+	/**
+	 * Each sublass of AbstractUMLTest have to call this method in a @BeforeClass annotated method. This allow
+	 * each test to customize its context.
+	 */
 	public static void fillRegistries() {
 		if (!EMFPlugin.IS_ECLIPSE_RUNNING) {
 			EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
@@ -93,7 +94,10 @@ public abstract class AbstractUMLTest {
 		}
 	}
 
-	@AfterClass
+	/**
+	 * Each sublass of AbstractUMLTest have to call this method in a @BeforeClass annotated method. This allow
+	 * each test to safely delete its context.
+	 */
 	public static void resetRegistries() {
 		if (!EMFPlugin.IS_ECLIPSE_RUNNING) {
 			Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().remove("uml");

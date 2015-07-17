@@ -30,6 +30,8 @@ import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.conflict.data.ConflictInputData;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -43,6 +45,16 @@ public class PseudoConflictTest extends AbstractUMLTest {
 	 * Test input data.
 	 */
 	private ConflictInputData input = new ConflictInputData();
+
+	@BeforeClass
+	public static void setupClass() {
+		fillRegistries();
+	}
+
+	@AfterClass
+	public static void teardownClass() {
+		resetRegistries();
+	}
 
 	/**
 	 * Tests if EMF Compare uses the {@link PseudoConflictMerger} when merging pseudo conflicts of UML models.

@@ -26,7 +26,9 @@ import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.edit.provider.data.ModelInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -37,6 +39,16 @@ import org.junit.Test;
 public class StaticStereotypedElementItemProviderTest extends AbstractStaticProfileTest {
 
 	private ModelInputData inputData = new ModelInputData();
+
+	@BeforeClass
+	public static void setupClass() {
+		fillRegistriesForStatic();
+	}
+
+	@AfterClass
+	public static void teardownClass() {
+		resetRegistriesForStatic();
+	}
 
 	@Override
 	protected AbstractUMLInputData getInput() {

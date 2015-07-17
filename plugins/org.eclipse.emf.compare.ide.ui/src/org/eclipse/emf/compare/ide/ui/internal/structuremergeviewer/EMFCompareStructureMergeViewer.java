@@ -1141,8 +1141,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					((NotLoadingResourceSet)originResourceSet).setAllowResourceLoad(true);
 				}
 
-				initToolbar();
-
 				IStorage leftStorage = PlatformElementUtil.findFile(left);
 				if (leftStorage == null) {
 					leftStorage = StreamAccessorStorage.fromTypedElement(left);
@@ -1155,6 +1153,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(compareConfiguration);
 				}
 
+				initToolbar();
 				compareInputChanged(scope, compareResult);
 			}
 			// Protect compare actions from over-enthusiast users

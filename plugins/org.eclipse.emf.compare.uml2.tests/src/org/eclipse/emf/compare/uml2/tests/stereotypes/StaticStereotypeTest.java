@@ -45,12 +45,24 @@ import org.eclipse.emf.compare.uml2.tests.stereotypes.data.static_.StaticStereot
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.UMLPackage;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
 public class StaticStereotypeTest extends AbstractStaticProfileTest {
 
 	private StaticStereotypeInputData input = new StaticStereotypeInputData();
+
+	@BeforeClass
+	public static void setupClass() {
+		fillRegistriesForStatic();
+	}
+
+	@AfterClass
+	public static void teardownClass() {
+		resetRegistriesForStatic();
+	}
 
 	@Test
 	public void testB10UseCase() throws IOException {

@@ -17,13 +17,15 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.uml2.uml.UMLPlugin;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 
 public abstract class AbstractStaticProfileTest extends AbstractUMLProfileTest {
 
-	@BeforeClass
+	/**
+	 * Each sublass of AbstractUMLTest have to call this method in a @BeforeClass annotated method. This allow
+	 * each test to customize its context.
+	 */
 	public static void fillRegistriesForStatic() {
+		addProfilePathmap();
 		if (!EMFPlugin.IS_ECLIPSE_RUNNING) {
 			EPackage.Registry.INSTANCE.put(UML2CompareTestProfilePackage.eNS_URI,
 					UML2CompareTestProfilePackage.eINSTANCE); // registers
@@ -38,11 +40,15 @@ public abstract class AbstractStaticProfileTest extends AbstractUMLProfileTest {
 		}
 	}
 
-	@AfterClass
+	/**
+	 * Each sublass of AbstractUMLTest have to call this method in a @BeforeClass annotated method. This allow
+	 * each test to safely delete its context.
+	 */
 	public static void resetRegistriesForStatic() {
 		if (!EMFPlugin.IS_ECLIPSE_RUNNING) {
 			UMLPlugin.getEPackageNsURIToProfileLocationMap().remove(UML2CompareTestProfilePackage.eNS_URI);
 			EPackage.Registry.INSTANCE.remove(UML2CompareTestProfilePackage.eNS_URI);
 		}
+		resetProfilePathmap();
 	}
 }

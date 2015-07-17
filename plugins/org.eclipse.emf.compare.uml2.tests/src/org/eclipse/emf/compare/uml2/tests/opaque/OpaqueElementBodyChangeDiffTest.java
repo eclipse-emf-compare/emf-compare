@@ -38,6 +38,8 @@ import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.opaque.data.OpaqueInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.OpaqueAction;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -57,6 +59,16 @@ public class OpaqueElementBodyChangeDiffTest extends AbstractUMLTest {
 	private static final String OPAQUE_ACTION1_ID = "_opaqueAction1";
 
 	private OpaqueInputData input = new OpaqueInputData();
+
+	@BeforeClass
+	public static void setupClass() {
+		fillRegistries();
+	}
+
+	@AfterClass
+	public static void teardownClass() {
+		resetRegistries();
+	}
 
 	@Test
 	public void testA1UseCaseLeft() throws IOException {

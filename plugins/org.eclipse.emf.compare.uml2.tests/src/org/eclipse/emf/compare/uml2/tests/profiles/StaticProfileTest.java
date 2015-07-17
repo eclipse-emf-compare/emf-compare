@@ -35,12 +35,24 @@ import org.eclipse.emf.compare.uml2.tests.profiles.data.static_.StaticProfileInp
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.UMLPackage;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
 public class StaticProfileTest extends AbstractStaticProfileTest {
 
 	private StaticProfileInputData input = new StaticProfileInputData();
+
+	@BeforeClass
+	public static void setupClass() {
+		fillRegistriesForStatic();
+	}
+
+	@AfterClass
+	public static void teardownClass() {
+		resetRegistriesForStatic();
+	}
 
 	@Test
 	public void testStaticA10UseCase() throws IOException {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,12 +23,13 @@ import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 
 /**
  * An item provider adapter factory delegator that supports our custom item provider interfaces:
- * {@link IItemStyledLabelProvider} and {@link IItemDescriptionProvider}.
+ * {@link IItemStyledLabelProvider}, {@link IItemDescriptionProvider} and {@link ISemanticObjectLabelProvider}
+ * .
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  * @since 4.0
  */
-public class ExtendedAdapterFactoryItemDelegator extends AdapterFactoryItemDelegator implements IItemStyledLabelProvider, IItemDescriptionProvider {
+public class ExtendedAdapterFactoryItemDelegator extends AdapterFactoryItemDelegator implements IItemStyledLabelProvider, IItemDescriptionProvider, ISemanticObjectLabelProvider {
 
 	/**
 	 * Creates a new instance that will use the given adapter factory to respond to its implemented protocol.
@@ -78,6 +79,26 @@ public class ExtendedAdapterFactoryItemDelegator extends AdapterFactoryItemDeleg
 			} else {
 				result = new ComposedStyledString(getText(object));
 			}
+		}
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider#getSemanticObjectLabel(java.lang.Object)
+	 * @since 4.2
+	 */
+	public String getSemanticObjectLabel(Object object) {
+		ISemanticObjectLabelProvider itemLabelProvider = (ISemanticObjectLabelProvider)adapterFactory.adapt(
+				object, ISemanticObjectLabelProvider.class);
+		String result;
+		if (itemLabelProvider != null) {
+			result = itemLabelProvider.getSemanticObjectLabel(object);
+		} else if (object == null) {
+			result = ""; //$NON-NLS-1$
+		} else {
+			result = getText(object);
 		}
 		return result;
 	}

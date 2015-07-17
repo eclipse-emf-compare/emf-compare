@@ -45,12 +45,24 @@ import org.eclipse.emf.compare.uml2.tests.stereotypes.data.dynamic.DynamicStereo
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.UMLPackage;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
 public class DynamicStereotypeTest extends AbstractDynamicProfileTest {
 
 	private DynamicStereotypeInputData input = new DynamicStereotypeInputData();
+
+	@BeforeClass
+	public static void setupClass() {
+		initEPackageNsURIToProfileLocationMap();
+	}
+
+	@AfterClass
+	public static void teardownClass() {
+		resetEPackageNsURIToProfileLocationMap();
+	}
 
 	@Test
 	public void testA10UseCase() throws IOException {

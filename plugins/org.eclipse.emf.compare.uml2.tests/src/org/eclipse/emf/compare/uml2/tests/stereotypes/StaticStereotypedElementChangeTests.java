@@ -43,6 +43,7 @@ public class StaticStereotypedElementChangeTests extends AbstractStereotypedElem
 
 	@BeforeClass
 	public static void fillRegistriesForStatic() {
+		beforeClass();
 		if (!EMFPlugin.IS_ECLIPSE_RUNNING) {
 			EPackage.Registry.INSTANCE.put(UML2CompareTestProfilePackage.eNS_URI,
 					UML2CompareTestProfilePackage.eINSTANCE); // registers
@@ -63,6 +64,7 @@ public class StaticStereotypedElementChangeTests extends AbstractStereotypedElem
 			UMLPlugin.getEPackageNsURIToProfileLocationMap().remove(UML2CompareTestProfilePackage.eNS_URI);
 			EPackage.Registry.INSTANCE.remove(UML2CompareTestProfilePackage.eNS_URI);
 		}
+		afterClass();
 	}
 
 	@Before

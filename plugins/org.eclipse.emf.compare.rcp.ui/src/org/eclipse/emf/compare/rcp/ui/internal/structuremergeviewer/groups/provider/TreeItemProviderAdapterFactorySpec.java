@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.prov
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 import org.eclipse.emf.edit.provider.IItemColorProvider;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
 import org.eclipse.emf.edit.tree.provider.TreeItemProviderAdapterFactory;
@@ -34,6 +35,7 @@ public class TreeItemProviderAdapterFactorySpec extends TreeItemProviderAdapterF
 		supportedTypes.add(IItemColorProvider.class);
 		supportedTypes.add(IItemStyledLabelProvider.class);
 		supportedTypes.add(IItemDescriptionProvider.class);
+		supportedTypes.add(ISemanticObjectLabelProvider.class);
 	}
 
 	/**

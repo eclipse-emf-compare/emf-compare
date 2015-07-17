@@ -32,11 +32,23 @@ import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.association.data.AssociationInputData;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
 public class ExtensionMergeTest extends AbstractUMLTest {
 	private AssociationInputData input = new AssociationInputData();
+
+	@BeforeClass
+	public static void setupClass() {
+		fillRegistries();
+	}
+
+	@AfterClass
+	public static void teardownClass() {
+		resetRegistries();
+	}
 
 	@Test
 	public void testInstantiationMerger() throws IOException {

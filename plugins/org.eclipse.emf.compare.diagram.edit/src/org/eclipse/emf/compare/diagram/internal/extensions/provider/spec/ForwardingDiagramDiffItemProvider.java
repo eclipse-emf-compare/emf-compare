@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
 import org.eclipse.emf.compare.provider.ForwardingItemProvider;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 import org.eclipse.emf.compare.provider.spec.OverlayImageProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
@@ -36,7 +37,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
+public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider, ISemanticObjectLabelProvider {
 
 	/** Used to describe the change. */
 	protected static final String HAS_BEEN = " has been "; //$NON-NLS-1$
@@ -283,4 +284,15 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider im
 						+ kind);
 		}
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider#getSemanticObjectLabel(java.lang.Object)
+	 */
+	public String getSemanticObjectLabel(Object object) {
+		final DiagramDiff diagramDiff = (DiagramDiff)object;
+		return getValueText(diagramDiff);
+	}
+
 }

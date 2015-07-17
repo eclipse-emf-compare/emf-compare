@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 
 <!--
-Copyright (c) 2011, 2012 Obeo.
+Copyright (c) 2011, 2015 Obeo.
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
 which accompanies this distribution, and is available at
@@ -26,17 +26,15 @@ Contributors:
                org.eclipse.emf.edit.provider.IItemPropertySource
                org.eclipse.emf.edit.provider.IItemColorProvider
                org.eclipse.emf.edit.provider.IItemFontProvider"/>
-   </extension>
-   
-   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
-      <factory
+       <factory
             uri="http://www.eclipse.org/emf/compare/uml2/2.0"
             class="org.eclipse.emf.compare.uml2.internal.provider.custom.UMLCompareCustomItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.compare.provider.IItemStyledLabelProvider
-               org.eclipse.emf.compare.provider.IItemDescriptionProvider"/>
+               org.eclipse.emf.compare.provider.IItemDescriptionProvider
+               org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider"/>
    </extension>
-   
+
     <extension
          point="org.eclipse.emf.compare.edit.adapterFactory">
       <factory
@@ -55,18 +53,25 @@ Contributors:
             label="Stereotyped element item provider"
             uri="http://www.eclipse.org/uml2/5.0.0/UML">
       </factory>
-   </extension>
-    <extension
-          point="org.eclipse.emf.compare.edit.adapterFactory">
-       <factory
-             class="org.eclipse.emf.compare.uml2.internal.provider.profile.ProfiledUMLCompareItemProviderAdapterFactory"
-             ranking="60"
-             optional="true"
-             description="This providers displays the properties of a stereotype the same way the properties of the base element are."
-             label="Stereotyped element property item provider"
-             uri="http://www.eclipse.org/emf/compare/uml2/2.0"
-              supportedTypes=
+            <factory
+            class="org.eclipse.emf.compare.uml2.internal.provider.tooltips.UMLTooltipLabelProviderFactory"
+            supportedTypes=
+              "org.eclipse.emf.compare.provider.ITooltipLabelProvider"
+            description="Customizes the way UML linked tooltips are displayed in EMF Compare."
+            ranking="10"
+            optional="true"
+            label="UML tooltips item provider"
+            uri="http://www.eclipse.org/emf/compare/uml2/2.0">
+      </factory>
+      <factory
+            class="org.eclipse.emf.compare.uml2.internal.provider.profile.ProfiledUMLCompareItemProviderAdapterFactory"
+            ranking="60"
+            optional="true"
+            description="This providers displays the properties of a stereotype the same way the properties of the base element are."
+            label="Stereotyped element property item provider"
+            uri="http://www.eclipse.org/emf/compare/uml2/2.0"
+             supportedTypes=
               "org.eclipse.emf.compare.provider.IItemStyledLabelProvider
                org.eclipse.emf.compare.provider.IItemDescriptionProvider"/>
-    </extension>
+   </extension>
 </plugin>

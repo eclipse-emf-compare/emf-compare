@@ -17,6 +17,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
+import org.eclipse.emf.compare.diagram.papyrus.tests.comparison.DiagramTooltipProviderTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.AssocMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.EdgeMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.NodeMergeTest;
@@ -45,9 +46,9 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @SuppressWarnings("restriction")
 @RunWith(Suite.class)
-@SuiteClasses({ AssocMergeTest.class, EdgeMergeTest.class, NodeMergeTest.class,
-		ModelExtensionUtilTest.class, SaveParameterHookTest.class,
-		SaveParameterHookIntegrationTest.class, URIAttachmentTest.class, })
+@SuiteClasses({AssocMergeTest.class, EdgeMergeTest.class, NodeMergeTest.class, ModelExtensionUtilTest.class,
+		SaveParameterHookTest.class, SaveParameterHookIntegrationTest.class, URIAttachmentTest.class,
+		DiagramTooltipProviderTest.class })
 public class AllTests {
 
 	/**
@@ -60,8 +61,7 @@ public class AllTests {
 	}
 
 	/**
-	 * This will return a suite populated with all tests available through this
-	 * class.
+	 * This will return a suite populated with all tests available through this class.
 	 * 
 	 * @generated
 	 */
@@ -71,23 +71,17 @@ public class AllTests {
 
 	@BeforeClass
 	public static void fillEMFRegistries() {
-		EPackage.Registry.INSTANCE.put(ComparePackage.eNS_URI,
-				ComparePackage.eINSTANCE);
-		EPackage.Registry.INSTANCE.put(ExtensionsPackage.eNS_URI,
-				ExtensionsPackage.eINSTANCE);
-		EPackage.Registry.INSTANCE
-				.put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
-		EPackage.Registry.INSTANCE.put(NotationPackage.eNS_URI,
-				NotationPackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(ComparePackage.eNS_URI, ComparePackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(ExtensionsPackage.eNS_URI, ExtensionsPackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(NotationPackage.eNS_URI, NotationPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(DiPackage.eNS_URI, DiPackage.eINSTANCE);
 
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("di", //$NON-NLS-1$
 				new DiResourceFactoryImpl());
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(
-				"notation", //$NON-NLS-1$
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("notation", //$NON-NLS-1$
 				new GMFResourceFactory());
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(
-				"uml", //$NON-NLS-1$
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("uml", //$NON-NLS-1$
 				new UMLResourceFactoryImpl());
 	}
 }

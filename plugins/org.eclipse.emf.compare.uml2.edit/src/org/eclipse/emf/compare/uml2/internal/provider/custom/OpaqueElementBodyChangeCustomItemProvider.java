@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2014, 2015 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,15 +54,43 @@ public class OpaqueElementBodyChangeCustomItemProvider extends UMLDiffCustomItem
 		final OpaqueElementBodyChange bodyChange = (OpaqueElementBodyChange)object;
 		final EObject discriminant = bodyChange.getDiscriminant();
 
-		final ComposedStyledString text = new ComposedStyledString();
-		text.append(bodyChange.getLanguage());
-		text.append(" body of ");
-		text.append(itemDelegator.getText(discriminant));
-		text.append(" ");
-		text.append(getChangeKindLabel(bodyChange));
+		final ComposedStyledString text = doGetSemanticObjectLabel(bodyChange, discriminant);
 
 		final String opaqueElementType = getOpaqueElementTypeLabel(discriminant);
 		return text.append(" [" + opaqueElementType + " body change]", Style.DECORATIONS_STYLER);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider#getSemanticObjectLabel(java.lang.Object)
+	 */
+	@Override
+	public String getSemanticObjectLabel(Object object) {
+		final OpaqueElementBodyChange bodyChange = (OpaqueElementBodyChange)object;
+		final EObject discriminant = bodyChange.getDiscriminant();
+		return doGetSemanticObjectLabel(bodyChange, discriminant).getString();
+	}
+
+	/**
+	 * Compute the label for the given bodyChange object.
+	 * 
+	 * @param bodyChange
+	 *            The given object
+	 * @param discriminant
+	 *            The discriminant of the bodyChange
+	 * @return the label
+	 */
+	private ComposedStyledString doGetSemanticObjectLabel(OpaqueElementBodyChange bodyChange,
+			EObject discriminant) {
+		final ComposedStyledString text = new ComposedStyledString();
+		text.append(bodyChange.getLanguage());
+		text.append(" body of "); //$NON-NLS-1$
+		text.append(itemDelegator.getText(discriminant));
+		text.append(" "); //$NON-NLS-1$
+		text.append(getChangeKindLabel(bodyChange));
+
+		return text;
 	}
 
 	/**

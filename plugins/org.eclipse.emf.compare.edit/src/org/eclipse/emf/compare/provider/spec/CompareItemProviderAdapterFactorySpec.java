@@ -14,6 +14,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
+import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 
 /**
  * Specialized {@link CompareItemProviderAdapterFactory} returning ItemProviderAdapter with nice
@@ -31,6 +32,7 @@ public class CompareItemProviderAdapterFactorySpec extends CompareItemProviderAd
 		super();
 		supportedTypes.add(IItemStyledLabelProvider.class);
 		supportedTypes.add(IItemDescriptionProvider.class);
+		supportedTypes.add(ISemanticObjectLabelProvider.class);
 	}
 
 	/**
