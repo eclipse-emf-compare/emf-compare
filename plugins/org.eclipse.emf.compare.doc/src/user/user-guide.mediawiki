@@ -191,13 +191,21 @@ When you compare models with one in a read-only mode, some of actions proposed b
 # Allows you to accept all non conflicting changes at once.
 # Allows you to reject all non conflicting changes at once.
 
-==== Contextual menu on differences ====
+==== Contextual menu in the overview of differences ====
 
-If you do a right-click on a difference in the viewer, a contextual menu now offers you to merge the selected difference. These actions are the same than those in the [#Toolbar|toolbar].
+In the area that shows the overview of differences, you also can perform merge actions using the contextual menu (i.e., right-click an item in the tree). These actions correspond to those in the [#Toolbar|toolbar].
+
+If you do a right-click on a ''difference'' in the viewer, a contextual menu offers you to merge the selected difference.
 * With local models
 [[Image:./../images/EMF_Compare_ContextualMenu_Differences.png|center|EMF Compare's user interface contextual menu]]
 * With a read-only side (comparison with EGit)
 [[Image:./../images/EMF_Compare_ContextualMenu_Differences_02.png|center|EMF Compare's user interface contextual menu]]
+
+If you do a right-click on a ''model element'' or a ''resource'', you can merge all contained non-conflicting differences with one click.
+* With local models
+[[Image:./../images/EMF_Compare_ContextualMenu_ContainedDifferences.png|center|EMF Compare's user interface contextual menu]]
+* With a read-only side (comparison with EGit)
+[[Image:./../images/EMF_Compare_ContextualMenu_ContainedDifferences_02.png|center|EMF Compare's user interface contextual menu]]
 
 ==== Signification of icons associated with differences ====
 
