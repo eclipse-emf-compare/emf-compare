@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,14 +63,14 @@ public class CompareInNewEditor extends AbstractCompareHandler {
 
 			if (origin != null) {
 				Shell shell = HandlerUtil.getActiveShell(event);
-				SelectAncestorDialog dialog = new SelectAncestorDialog(shell, adapterFactory, new Notifier[] {
-						left, right, origin });
+				SelectAncestorDialog<Notifier> dialog = new SelectAncestorDialog<Notifier>(shell,
+						adapterFactory, new Notifier[] {left, right, origin });
 				if (dialog.open() == Window.CANCEL) {
 					return null;
 				} else {
-					left = dialog.leftNotifier;
-					right = dialog.rightNotifier;
-					origin = dialog.originNotifier;
+					left = dialog.leftElement;
+					right = dialog.rightElement;
+					origin = dialog.originElement;
 				}
 			}
 

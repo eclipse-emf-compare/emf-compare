@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2014 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,14 +13,20 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.handler;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.compare.internal.CompareMessages;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.compare.provider.AdapterFactoryUtil;
+import org.eclipse.emf.compare.ide.ui.source.IEMFComparisonSource;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -30,28 +36,28 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.model.IWorkbenchAdapter;
 
 /* Initially copy/pasted from org.eclipse.compare.internal.ResourceCompareInput.SelectAncestorDialog. */
-public class SelectAncestorDialog extends MessageDialog {
-	private Notifier[] notifiers;
+public class SelectAncestorDialog<T> extends MessageDialog {
+	private List<T> elements;
 
-	Notifier originNotifier;
+	T originElement;
 
-	Notifier leftNotifier;
+	T leftElement;
 
-	Notifier rightNotifier;
+	T rightElement;
 
 	private Button[] buttons;
 
 	private final AdapterFactory adapterFactory;
 
-	public SelectAncestorDialog(Shell parentShell, AdapterFactory adapterFactory, Notifier[] theResources) {
+	public SelectAncestorDialog(Shell parentShell, AdapterFactory adapterFactory, T[] theResources) {
 		super(parentShell, CompareMessages.SelectAncestorDialog_title, null,
 				CompareMessages.SelectAncestorDialog_message, MessageDialog.QUESTION, new String[] {
 						IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 		this.adapterFactory = adapterFactory;
-		this.notifiers = new Notifier[theResources.length];
-		System.arraycopy(theResources, 0, this.notifiers, 0, this.notifiers.length);
+		this.elements = new ArrayList<T>(Arrays.asList(theResources));
 	}
 
 	@Override
@@ -62,10 +68,9 @@ public class SelectAncestorDialog extends MessageDialog {
 		for (int i = 0; i < 3; i++) {
 			buttons[i] = new Button(composite, SWT.RADIO);
 			buttons[i].addSelectionListener(selectionListener);
-			@SuppressWarnings("deprecation")
-			String text = "'" + AdapterFactoryUtil.getText(adapterFactory, notifiers[i]) + "'"; //$NON-NLS-1$ //$NON-NLS-2$
-			if (notifiers[i] instanceof EObject) {
-				text = text + " (" + EcoreUtil.getURI(((EObject)notifiers[i])) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			String text = "'" + getText(elements.get(i)) + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+			if (elements.get(i) instanceof EObject) {
+				text = text + " (" + EcoreUtil.getURI(((EObject)elements.get(i))) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			buttons[i].setText(text);
 			buttons[i].setFont(parent.getFont());
@@ -77,9 +82,9 @@ public class SelectAncestorDialog extends MessageDialog {
 	}
 
 	private void pickOrigin(int i) {
-		originNotifier = notifiers[i];
-		leftNotifier = notifiers[i == 0 ? 1 : 0];
-		rightNotifier = notifiers[i == 2 ? 1 : 2];
+		originElement = elements.get(i);
+		leftElement = elements.get(i == 0 ? 1 : 0);
+		rightElement = elements.get(i == 2 ? 1 : 2);
 	}
 
 	private SelectionListener selectionListener = new SelectionAdapter() {
@@ -96,4 +101,31 @@ public class SelectAncestorDialog extends MessageDialog {
 			}
 		}
 	};
+
+	private String getText(Object object) {
+		IEMFComparisonSource emfComparisonSourceAdapter = (IEMFComparisonSource)Platform.getAdapterManager()
+				.getAdapter(object, IEMFComparisonSource.class);
+		if (emfComparisonSourceAdapter != null) {
+			return emfComparisonSourceAdapter.getName();
+		}
+
+		Object itemLabelProvider = adapterFactory.adapt(object, IItemLabelProvider.class);
+		if (itemLabelProvider instanceof IItemLabelProvider) {
+			return ((IItemLabelProvider)itemLabelProvider).getText(object);
+		}
+
+		ILabelProvider labelProvider = (ILabelProvider)Platform.getAdapterManager().getAdapter(object,
+				ILabelProvider.class);
+		if (labelProvider != null) {
+			return labelProvider.getText(object);
+		}
+
+		IWorkbenchAdapter workbenchAdapter = (IWorkbenchAdapter)Platform.getAdapterManager().getAdapter(
+				object, IWorkbenchAdapter.class);
+		if (workbenchAdapter != null) {
+			return workbenchAdapter.getLabel(object);
+		}
+
+		return object.toString();
+	}
 }

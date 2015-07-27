@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?>
 
 <!--
- Copyright (c) 2013, 2015 Obeo and others.
+ Copyright (c) 2013, 2016 Obeo and others.
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
  which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  
  Contributors:
      Obeo - initial API and implementation
-     Stefan Dirix - Bug 456699
+     Stefan Dirix - Bugs 456699, 474723
 -->
 
 <plugin>
@@ -48,5 +48,15 @@
             class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.merge.PapyrusResourceAttachmentChangeMerger"
             ranking="100">
       </merger>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.papyrus.infra.onefile.model.IPapyrusFile"
+            class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.comparesource.EMFCompareSourceAdapterFactory">
+         <adapter
+               type="org.eclipse.emf.compare.ide.ui.source.IEMFComparisonSource">
+         </adapter>
+      </factory>
    </extension>
 </plugin>
