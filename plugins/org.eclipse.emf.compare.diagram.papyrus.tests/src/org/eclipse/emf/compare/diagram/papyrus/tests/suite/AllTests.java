@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Stefan Dirix - add ModelExtensionUtilTest and SaveParameterHook tests
+ *     Stefan Dirix - add ModelExtensionUtil, SaveParameterHook and URIAttachment tests
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests.suite;
 
@@ -25,6 +25,7 @@ import org.eclipse.emf.compare.diagram.papyrus.tests.renaming.MergeRenamingMatch
 import org.eclipse.emf.compare.diagram.papyrus.tests.renaming.MergeRenamingMatchResource3WayTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.saveparameter.SaveParameterHookIntegrationTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.saveparameter.SaveParameterHookTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.uriattachment.URIAttachmentTest;
 import org.eclipse.emf.compare.tests.suite.CompareTestSuite;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -48,7 +49,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({AssocMergeTest.class, EdgeMergeTest.class, NodeMergeTest.class,
 		ModelExtensionUtilTest.class, SaveParameterHookTest.class,
-		SaveParameterHookIntegrationTest.class,
+		SaveParameterHookIntegrationTest.class, URIAttachmentTest.class,
 		MergeRenamingMatchResource2WayTest.class,
 		MergeRenamingMatchResource3WayTest.class })
 public class AllTests {

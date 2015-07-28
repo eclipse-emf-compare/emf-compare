@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 473730 (ignore URI type descriptions)
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
@@ -230,11 +231,34 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 		final URI uri1 = uriCache.getUnchecked(object1);
 		final URI uri2 = uriCache.getUnchecked(object2);
 		if (uri1.hasFragment() && uri2.hasFragment()) {
-			equal = uri1.fragment().equals(uri2.fragment());
+			final String uri1Fragment = removeURIAttachment(uri1.fragment());
+			final String uri2Fragment = removeURIAttachment(uri2.fragment());
+			equal = uri1Fragment.equals(uri2Fragment);
 		} else {
 			equal = uri1.equals(uri2);
 		}
 		return equal;
+	}
+
+	/**
+	 * To some {@link URI}s a human friendly description is attached describing the type the {@link URI}
+	 * is pointing to. The description is marked by a "?" at the beginning and end. This method returns
+	 * the fragment without the attached type description.
+	 * 
+	 * @param fragment
+	 *                The {@link URI} fragment to check for a type description attachment
+	 * @return The fragment of the {@link URI} stripped from type description if it has one, otherwise the
+	 *         original fragment is returned.
+	 */
+	private String removeURIAttachment(String fragment) {
+		// check if fragment contains at least two question marks
+		final int questionMark1 = fragment.indexOf('?');
+		final boolean hasTwoQuestionMarks = questionMark1 != -1
+				&& fragment.indexOf('?', questionMark1 + 1) != -1;
+		if (hasTwoQuestionMarks) {
+			return fragment.substring(0, questionMark1);
+		}
+		return fragment;
 	}
 
 	/**
