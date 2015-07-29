@@ -47,6 +47,7 @@ Export-Package: org.eclipse.emf.compare.ide.ui.dependency;x-friends:="org.eclips
  org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;x-friends:="org.eclipse.emf.compare.ide.ui.tests",
  org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.treecontentmanager;x-friends:="org.eclipse.emf.compare.ide.ui.e4",
  org.eclipse.emf.compare.ide.ui.internal.util;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.logical,
  org.eclipse.emf.compare.ide.ui.mergeresolution,

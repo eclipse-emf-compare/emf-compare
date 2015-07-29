@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 473985
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
@@ -38,6 +39,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -79,7 +81,7 @@ public class SaveComparisonModelAction extends Action {
 	 */
 	@Override
 	public void run() {
-		Shell parent = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+		Shell parent = getShell();
 
 		FileDialog fileDialog = new FileDialog(parent, SWT.SAVE);
 		String filePath = fileDialog.open();
@@ -103,6 +105,18 @@ public class SaveComparisonModelAction extends Action {
 		}
 
 		super.run();
+	}
+
+	/**
+	 * Returns the active shell from the workbench (if running) or the default display.
+	 * 
+	 * @return The active shell.
+	 */
+	private Shell getShell() {
+		if (PlatformUI.isWorkbenchRunning()) {
+			return PlatformUI.getWorkbench().getDisplay().getActiveShell();
+		}
+		return Display.getDefault().getActiveShell();
 	}
 
 	/**

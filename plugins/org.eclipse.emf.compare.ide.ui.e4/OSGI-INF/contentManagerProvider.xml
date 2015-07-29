@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.eclipse.emf.compare.ide.ui.e4.contentmanagerprovider">
+   <implementation class="org.eclipse.emf.compare.ide.ui.e4.EMFCompareDeferredTreeContentManagerProviderImpl"/>
+   <service>
+      <provide interface="org.eclipse.emf.compare.ide.ui.internal.treecontentmanager.EMFCompareDeferredTreeContentManagerProvider"/>
+   </service>
+</scr:component>

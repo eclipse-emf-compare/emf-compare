@@ -84,6 +84,7 @@
     <module>../plugins/org.eclipse.emf.compare.edit</module>
     <module>../plugins/org.eclipse.emf.compare.ide</module>
     <module>../plugins/org.eclipse.emf.compare.ide.ui</module>
+    <module>../plugins/org.eclipse.emf.compare.ide.ui.e4</module>
     <module>../plugins/org.eclipse.emf.compare.ide.ui.tests</module>
     <module>../plugins/org.eclipse.emf.compare.ide.tests</module>
 

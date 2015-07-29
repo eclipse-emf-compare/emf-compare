@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 473985
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -95,19 +96,20 @@ public class CompareToolBar implements ISelectionChangedListener {
 			compareConfiguration.getEventBus().register(this);
 
 			// Add extension point contributions to the structure merge viewer toolbar
-			IServiceLocator workbench = PlatformUI.getWorkbench();
-
-			final IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
-			if (menuService != null) {
-				menuService.populateContributionManager(toolbarManager,
-						"toolbar:org.eclipse.emf.compare.structuremergeviewer.toolbar"); //$NON-NLS-1$
-				ToolBar toolbar = toolbarManager.getControl();
-				if (toolbar != null) {
-					toolbar.addDisposeListener(new DisposeListener() {
-						public void widgetDisposed(DisposeEvent e) {
-							menuService.releaseContributions(toolbarManager);
-						}
-					});
+			if (PlatformUI.isWorkbenchRunning()) {
+				IServiceLocator workbench = PlatformUI.getWorkbench();
+				final IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
+				if (menuService != null) {
+					menuService.populateContributionManager(toolbarManager,
+							"toolbar:org.eclipse.emf.compare.structuremergeviewer.toolbar"); //$NON-NLS-1$
+					ToolBar toolbar = toolbarManager.getControl();
+					if (toolbar != null) {
+						toolbar.addDisposeListener(new DisposeListener() {
+							public void widgetDisposed(DisposeEvent e) {
+								menuService.releaseContributions(toolbarManager);
+							}
+						});
+					}
 				}
 			}
 

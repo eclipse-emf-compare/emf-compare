@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 462863
+ *     Stefan Dirix - bug 473985
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
@@ -313,13 +314,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		fRight = createMergeViewer(composite, MergeViewerSide.RIGHT);
 		fRight.addSelectionChangedListener(this);
 
-		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-		final ITheme currentTheme;
-		if (themeManager != null) {
-			currentTheme = themeManager.getCurrentTheme();
-		} else {
-			currentTheme = null;
-		}
+		final ITheme currentTheme = getCurrentTheme();
+
 		boolean leftIsLocal = getCompareConfiguration().getBooleanProperty("LEFT_IS_LOCAL", false);
 		fColors = new EMFCompareColor(composite.getDisplay(), leftIsLocal, currentTheme,
 				getCompareConfiguration().getEventBus());
@@ -333,6 +329,21 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 				// Do nothing.
 			}
 		});
+	}
+
+	/**
+	 * Determines the current used theme.
+	 * 
+	 * @return The currently used theme if available, {@code null} otherwise.
+	 */
+	private ITheme getCurrentTheme() {
+		if (PlatformUI.isWorkbenchRunning()) {
+			final IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+			if (themeManager != null) {
+				return themeManager.getCurrentTheme();
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -359,16 +370,18 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		}
 
 		// Add extension point contributions to the content merge viewer toolbar
-		IServiceLocator workbench = PlatformUI.getWorkbench();
-		final IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
-		if (menuService != null) {
-			menuService.populateContributionManager(toolBarManager,
-					"toolbar:org.eclipse.emf.compare.contentmergeviewer.toolbar"); //$NON-NLS-1$
-			toolBarManager.getControl().addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent e) {
-					menuService.releaseContributions(toolBarManager);
-				}
-			});
+		if (PlatformUI.isWorkbenchRunning()) {
+			IServiceLocator workbench = PlatformUI.getWorkbench();
+			final IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
+			if (menuService != null) {
+				menuService.populateContributionManager(toolBarManager,
+						"toolbar:org.eclipse.emf.compare.contentmergeviewer.toolbar"); //$NON-NLS-1$
+				toolBarManager.getControl().addDisposeListener(new DisposeListener() {
+					public void widgetDisposed(DisposeEvent e) {
+						menuService.releaseContributions(toolBarManager);
+					}
+				});
+			}
 		}
 	}
 
@@ -620,6 +633,11 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 *            the given selection.
 	 */
 	private void updatePropertiesView(ISelection selection) {
+		if (!PlatformUI.isWorkbenchRunning()) {
+			// no update of property view outside of workbench
+			return;
+		}
+
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection)selection;
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

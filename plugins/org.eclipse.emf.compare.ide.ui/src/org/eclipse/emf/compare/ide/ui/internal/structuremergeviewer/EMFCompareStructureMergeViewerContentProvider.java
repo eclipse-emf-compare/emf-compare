@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - public CallbackType visibility for testing
+ *     Stefan Dirix - bug 473985
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -39,6 +40,8 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
+import org.eclipse.emf.compare.ide.ui.internal.treecontentmanager.EMFCompareDeferredTreeContentManager;
+import org.eclipse.emf.compare.ide.ui.internal.treecontentmanager.EMFCompareDeferredTreeContentManagerUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider2;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -208,7 +211,7 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 	}
 
 	/** {@link DeferredTreeContentManager} use to fetch groups in a external {@link Job}. */
-	private final DeferredTreeContentManager contenManagerAdapter;
+	private final EMFCompareDeferredTreeContentManager contentManagerAdapter;
 
 	/** Holds true if this content provider is currently fetching children. */
 	private boolean isFetchingGroup;
@@ -234,8 +237,9 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 	public EMFCompareStructureMergeViewerContentProvider(AdapterFactory adapterFactory,
 			AbstractTreeViewer viewer) {
 		super(adapterFactory);
-		contenManagerAdapter = new DeferredTreeContentManager(viewer);
-		contenManagerAdapter.addUpdateCompleteListener(this);
+		contentManagerAdapter = EMFCompareDeferredTreeContentManagerUtil
+				.createEMFDeferredTreeContentManager(viewer);
+		contentManagerAdapter.addUpdateCompleteListener(this);
 		lock = new ReentrantLock();
 		listeners = new CopyOnWriteArrayList<EMFCompareStructureMergeViewerContentProvider.FetchListener>();
 		callbacks = new CopyOnWriteArrayList<EMFCompareStructureMergeViewerContentProvider.CallbackHolder>();
@@ -451,7 +455,7 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 			}
 			compareInputAdapter
 					.setDeferredAdapter(new EMFCompareStructureMergeViewerContentProviderDeferredAdapter(this));
-			pending = contenManagerAdapter.getChildren(compareInputAdapter);
+			pending = contentManagerAdapter.getChildren(compareInputAdapter);
 		}
 		return pending;
 	}
@@ -484,7 +488,7 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 	@Override
 	public void dispose() {
 		super.dispose();
-		contenManagerAdapter.removeUpdateCompleteListener(this);
+		contentManagerAdapter.removeUpdateCompleteListener(this);
 		listeners.clear();
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 473985
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.ui;
 
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 /**
@@ -70,7 +72,8 @@ public class SynchronizerDialog extends MessageDialogWithToggle {
 	 */
 	@Override
 	protected Control createCustomArea(Composite parent) {
-		if (preferencePageID != null) {
+		// only add hyperlink if workbench is running since the preference dialog depends on it
+		if (preferencePageID != null && PlatformUI.isWorkbenchRunning()) {
 			Composite container = new Composite(parent, SWT.NONE);
 			GridLayout layout = new GridLayout(1, true);
 			container.setLayout(layout);

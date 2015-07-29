@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2014 IBM Corporation and others.
+ * Copyright (c) 2007, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Obeo - adapted for EMF Compare
+ *     Stefan Dirix - bug 473985
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.util;
 
@@ -47,6 +48,10 @@ public class CompareHandlerService {
 			if (service != null) {
 				return new CompareHandlerService(container, null);
 			}
+		}
+		if (!PlatformUI.isWorkbenchRunning() && shell != null) {
+			Expression e = new ActiveShellExpression(shell);
+			return new CompareHandlerService(container, e);
 		}
 		if (container.getWorkbenchPart() == null && shell != null) {
 			// We're in a dialog so we can use an active shell expression
@@ -99,7 +104,8 @@ public class CompareHandlerService {
 					fHandlerService = service;
 				}
 			}
-			if (fHandlerService == null && fContainer.getWorkbenchPart() == null && fExpression != null) {
+			if (PlatformUI.isWorkbenchRunning() && fHandlerService == null
+					&& fContainer.getWorkbenchPart() == null && fExpression != null) {
 				// We're in a dialog so we can use an active shell expression
 				IHandlerService service = (IHandlerService)PlatformUI.getWorkbench().getService(
 						IHandlerService.class);

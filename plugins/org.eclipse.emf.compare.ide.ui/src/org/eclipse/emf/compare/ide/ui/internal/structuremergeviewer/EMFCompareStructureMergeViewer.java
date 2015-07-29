@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo and others.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 467191
  *     Philip Langer - bug 462884
- *     Stefan Dirix - bug 474030
+ *     Stefan Dirix - bugs 473985 and 474030
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -609,13 +609,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		tabFolder.setData(CompareUI.COMPARE_VIEWER_TITLE, EMFCompareIDEUIMessages
 				.getString("EMFCompareStructureMergeViewer.title")); //$NON-NLS-1$
 
-		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-		final ITheme currentTheme;
-		if (themeManager != null) {
-			currentTheme = themeManager.getCurrentTheme();
-		} else {
-			currentTheme = null;
-		}
+		final ITheme currentTheme = getCurrentTheme();
+
 		boolean leftIsLocal = getCompareConfiguration().getBooleanProperty("LEFT_IS_LOCAL", false); //$NON-NLS-1$
 		fColors = new EMFCompareColor(control.getDisplay(), leftIsLocal, currentTheme,
 				getCompareConfiguration().getEventBus());
@@ -628,6 +623,21 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		treeRuler.setLayoutData(rulerLayoutData);
 
 		return ControlAndViewer.create(tabFolder, treeViewer);
+	}
+
+	/**
+	 * Determines the current used theme.
+	 * 
+	 * @return The currently used theme if available, {@code null} otherwise.
+	 */
+	private ITheme getCurrentTheme() {
+		if (PlatformUI.isWorkbenchRunning()) {
+			final IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+			if (themeManager != null) {
+				return themeManager.getCurrentTheme();
+			}
+		}
+		return null;
 	}
 
 	/**
