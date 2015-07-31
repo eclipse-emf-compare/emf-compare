@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,6 +59,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompare.Builder;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
@@ -74,6 +76,7 @@ import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.team.core.diff.IDiff;
@@ -81,6 +84,10 @@ import org.eclipse.team.core.mapping.IMergeContext;
 import org.eclipse.team.core.mapping.IResourceMappingMerger;
 import org.eclipse.team.core.mapping.provider.MergeStatus;
 
+/*
+ * Illegally implements IResourceMappingMerger, but we need none of the behavior from the abstract
+ * ResourceMappingMerger. Filtered in the API filters.
+ */
 /**
  * A customized merger for the {@link EMFResourceMapping}s. This will use EMF Compare to recompute the logical
  * model of the mappings it needs to merge, then merge everything to the left model if there are no conflicts,
@@ -94,10 +101,6 @@ import org.eclipse.team.core.mapping.provider.MergeStatus;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @see EMFLogicalModelAdapterFactory
  */
-/*
- * Illegally implements IResourceMappingMerger, but we need none of the behavior from the abstract
- * ResourceMappingMerger. Filtered in the API filters.
- */
 public class EMFResourceMappingMerger implements IResourceMappingMerger {
 
 	/** The merger registry. */
@@ -107,13 +110,15 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	public IStatus merge(IMergeContext mergeContext, IProgressMonitor monitor) throws CoreException {
 		final ResourceMapping[] emfMappings = getEMFMappings(mergeContext);
 		log(IStatus.OK, "EMFResourceMappingMerger.startingModelMerge", emfMappings); //$NON-NLS-1$
+		IStatus shortcutStatus = Status.OK_STATUS;
 		if (emfMappings.length <= 0) {
-			return new Status(IStatus.ERROR, EMFCompareIDEUIPlugin.PLUGIN_ID, EMFCompareIDEUIMessages
-					.getString("EMFResourceMappingMerger.mergeFailedGeneric")); //$NON-NLS-1$
+			shortcutStatus = new Status(IStatus.ERROR, EMFCompareIDEUIPlugin.PLUGIN_ID,
+					EMFCompareIDEUIMessages.getString("EMFResourceMappingMerger.mergeFailedGeneric")); //$NON-NLS-1$
+		} else {
+			shortcutStatus = validateMappings(emfMappings);
 		}
-		final IStatus hasInvalidMappings = validateMappings(emfMappings);
-		if (hasInvalidMappings.getSeverity() != IStatus.OK) {
-			return hasInvalidMappings;
+		if (shortcutStatus.getSeverity() != IStatus.OK) {
+			return shortcutStatus;
 		}
 
 		// Use a sub-monitor with 10 ticks per child
@@ -125,14 +130,16 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 				mergeMapping(mapping, mergeContext, failingMappings, subMonitor.newChild(1));
 			}
 
+			IStatus status = Status.OK_STATUS;
 			if (!failingMappings.isEmpty()) {
 				final ResourceMapping[] failingArray = failingMappings
 						.toArray(new ResourceMapping[failingMappings.size()]);
-				return new MergeStatus(EMFCompareIDEUIPlugin.PLUGIN_ID, EMFCompareIDEUIMessages
+				status = new MergeStatus(EMFCompareIDEUIPlugin.PLUGIN_ID, EMFCompareIDEUIMessages
 						.getString("EMFResourceMappingMerger.mergeFailedConflicts"), failingArray); //$NON-NLS-1$
+			} else {
+				log(IStatus.OK, "EMFResourceMappingMerger.successfulModelMerge", emfMappings); //$NON-NLS-1$
 			}
-			log(IStatus.OK, "EMFResourceMappingMerger.successfulModelMerge", emfMappings); //$NON-NLS-1$
-			return Status.OK_STATUS;
+			return status;
 		} finally {
 			if (monitor != null) {
 				monitor.done();
@@ -221,11 +228,11 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 *            The merge context
 	 * @param failingMappings
 	 *            The set of failing mappings
-	 * @param subMonitor
+	 * @param monitor
 	 *            The progress monitor to use, 10 ticks will be consumed
 	 */
 	private void mergeMapping(ResourceMapping mapping, final IMergeContext mergeContext,
-			final Set<ResourceMapping> failingMappings, IProgressMonitor monitor) throws CoreException {
+			final Set<ResourceMapping> failingMappings, IProgressMonitor monitor) {
 		final SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
 		// validateMappings() has made sure we only have EMFResourceMappings
 		final SynchronizationModel syncModel = ((EMFResourceMapping)mapping).getLatestModel();
@@ -241,9 +248,10 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 				BasicMonitor.toMonitor(SubMonitor.convert(subMonitor.newChild(1), 10))); // 50%
 
 		if (hasRealConflict(comparison)) {
-			performPreMerge(comparison, subMonitor.newChild(5)); // 100 %
+			final Set<URI> conflictingURIs = performPreMerge(comparison, subMonitor.newChild(3)); // 80%
 			save(scope.getLeft());
 			failingMappings.add(mapping);
+			markResourcesAsMerged(mergeContext, scope.getLeft(), conflictingURIs, subMonitor.newChild(2)); // 100%
 		} else {
 			final ResourceAdditionAndDeletionTracker resourceTracker = new ResourceAdditionAndDeletionTracker();
 			try {
@@ -271,20 +279,121 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 *            The comparison to pre-merge.
 	 * @param subMonitor
 	 *            The progress monitor to use.
+	 * @return the set of the uri for resources on which conflicts were not auto-mergeable.
 	 */
-	private void performPreMerge(Comparison comparison, SubMonitor subMonitor) {
+	private Set<URI> performPreMerge(Comparison comparison, SubMonitor subMonitor) {
 		final Graph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison,
 				MERGER_REGISTRY, true, MergeMode.RIGHT_TO_LEFT);
 		final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
 		final Monitor emfMonitor = BasicMonitor.toMonitor(subMonitor);
 
+		final Set<URI> conflictingURIs = new LinkedHashSet<URI>();
 		while (iterator.hasNext()) {
 			final Diff next = iterator.next();
 			if (hasConflict(ConflictKind.REAL).apply(next)) {
 				iterator.prune();
+				conflictingURIs.addAll(collectConflictingResources(differencesGraph.treeIterator(next)));
 			} else if (next.getState() != DifferenceState.MERGED) {
 				final IMerger merger = MERGER_REGISTRY.getHighestRankingMerger(next);
 				merger.copyRightToLeft(next, emfMonitor);
+			}
+		}
+		return conflictingURIs;
+	}
+
+	/**
+	 * Iterates over the given diffs to collect the resources they impact. This will be called in case of
+	 * conflicts in order to know exactly which resources should be marked as conflicting.
+	 * 
+	 * @param diffIterator
+	 *            Iterator over the conflicting differences and their dependant diffs.
+	 * @return The uris of all resources impacted by conficting differences.
+	 */
+	private Set<URI> collectConflictingResources(Iterator<Diff> diffIterator) {
+		final Set<URI> conflictingURIs = new LinkedHashSet<URI>();
+		while (diffIterator.hasNext()) {
+			final Match next = diffIterator.next().getMatch();
+			final URI leftURI = resourceURIorNull(next.getLeft());
+			final URI rightURI = resourceURIorNull(next.getRight());
+			final URI originURI = resourceURIorNull(next.getOrigin());
+			if (leftURI != null) {
+				conflictingURIs.add(leftURI);
+			}
+			if (rightURI != null) {
+				conflictingURIs.add(rightURI);
+			}
+			if (originURI != null) {
+				conflictingURIs.add(originURI);
+			}
+		}
+		return conflictingURIs;
+	}
+
+	/**
+	 * Returns either the URI of the resource containing the given EObject, or <code>null</code> if none.
+	 * 
+	 * @param eObject
+	 *            The EObject for which we need a resource URI.
+	 * @return The URI of the resource containing the given EObject, <code>null</code> if none.
+	 */
+	private URI resourceURIorNull(EObject eObject) {
+		if (eObject != null) {
+			final Resource res = eObject.eResource();
+			if (res != null) {
+				return res.getURI();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Marks the resources from the given {@code notifier} as merged if their URIs are not included in the
+	 * given set of known {@code conflictingURIs}.
+	 * 
+	 * @param context
+	 *            The current merge context.
+	 * @param notifier
+	 *            The notifier which resources are to be marked.
+	 * @param conflictingURIs
+	 *            The set of known {@code conflictingURIs}.
+	 * @param subMonitor
+	 *            Monitor on which to report progress to the user.
+	 */
+	private void markResourcesAsMerged(IMergeContext context, Notifier notifier, Set<URI> conflictingURIs,
+			SubMonitor subMonitor) {
+		if (notifier instanceof Resource) {
+			final URI uri = ((Resource)notifier).getURI();
+			if (!conflictingURIs.contains(uri)) {
+				markAsMerged(context, uri, subMonitor);
+			}
+		} else if (notifier instanceof ResourceSet) {
+			for (Resource resource : ((ResourceSet)notifier).getResources()) {
+				final URI uri = resource.getURI();
+				if (!conflictingURIs.contains(uri)) {
+					markAsMerged(context, uri, subMonitor);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Mark the resource at the given URI as merged.
+	 * 
+	 * @param context
+	 *            The current merge context.
+	 * @param uri
+	 *            URI of the resource to mark as merged.
+	 * @param subMonitor
+	 *            Monitor on which to report progress to the user.
+	 */
+	private void markAsMerged(IMergeContext context, URI uri, SubMonitor subMonitor) {
+		final IResource resource = ResourceUtil.getResourceFromURI(uri);
+		IDiff diff = context.getDiffTree().getDiff(resource);
+		if (diff != null) {
+			try {
+				context.markAsMerged(diff, true, subMonitor);
+			} catch (CoreException e) {
+				EMFCompareIDEUIPlugin.getDefault().log(e);
 			}
 		}
 	}
@@ -317,7 +426,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 */
 	private void delegateMergeOfUnmergedResourcesAndMarkDiffsAsMerged(SynchronizationModel syncModel,
 			IMergeContext mergeContext, ResourceAdditionAndDeletionTracker resourceTracker,
-			SubMonitor subMonitor) throws CoreException {
+			SubMonitor subMonitor) {
 
 		// mark already deleted files as merged
 		for (IFile deletedFile : resourceTracker.getDeletedIFiles()) {

@@ -11,11 +11,14 @@
 package org.eclipse.emf.compare.tests.utils;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.emf.compare.internal.utils.Graph;
@@ -79,5 +82,181 @@ public class GraphTest {
 			iterator.next();
 			iterator.prune();
 		}
+	}
+
+	@Test
+	public void testBreadthFirstIteration() {
+		Graph<String> graph = new Graph<String>();
+		//@formatter:off
+		/*
+		 * With the following Graph:
+		 *
+		 *     A       I    J
+		 *    / \     /    / \
+		 *   B   C   G    K   L
+		 *  /   / \ / \      / \
+		 * D   E   F   H    M   N
+		 * 
+		 * We expect our iteration to go in the following order:
+		 * three first items, in unspecified order : A, I, J
+		 * next five, in unspecified order :         B, C, G, K, L
+		 * finally, still in unspecified order :     D, E, F, H, M, N
+		 */
+		//@formatter:on
+		graph.addChildren("A", ImmutableSet.of("B", "C"));
+		graph.addChildren("B", ImmutableSet.of("D"));
+		graph.addChildren("C", ImmutableSet.of("E", "F"));
+		graph.addChildren("I", ImmutableSet.of("G"));
+		graph.addChildren("G", ImmutableSet.of("F", "H"));
+		graph.addChildren("J", ImmutableSet.of("K", "L"));
+		graph.addChildren("L", ImmutableSet.of("M", "N"));
+
+		Set<String> firstThree = Sets.newHashSet("A", "I", "J");
+		Set<String> nextFive = Sets.newHashSet("B", "C", "G", "K", "L");
+		Set<String> finalSix = Sets.newHashSet("D", "E", "F", "H", "M", "N");
+
+		PruningIterator<String> iterator = graph.breadthFirstIterator();
+		assertTrue(firstThree.remove(iterator.next()));
+		assertTrue(firstThree.remove(iterator.next()));
+		assertTrue(firstThree.remove(iterator.next()));
+		assertTrue(firstThree.isEmpty());
+
+		assertTrue(nextFive.remove(iterator.next()));
+		assertTrue(nextFive.remove(iterator.next()));
+		assertTrue(nextFive.remove(iterator.next()));
+		assertTrue(nextFive.remove(iterator.next()));
+		assertTrue(nextFive.remove(iterator.next()));
+		assertTrue(nextFive.isEmpty());
+
+		assertTrue(finalSix.remove(iterator.next()));
+		assertTrue(finalSix.remove(iterator.next()));
+		assertTrue(finalSix.remove(iterator.next()));
+		assertTrue(finalSix.remove(iterator.next()));
+		assertTrue(finalSix.remove(iterator.next()));
+		assertTrue(finalSix.remove(iterator.next()));
+		assertTrue(finalSix.isEmpty());
+		assertFalse(iterator.hasNext());
+	}
+
+	@Test
+	public void testTreeIteration_1() {
+		Graph<String> graph = new Graph<String>();
+		//@formatter:off
+		/*
+		 * With the following Graph:
+		 *
+		 *     A       I    J
+		 *    / \     /    / \
+		 *   B   C   G    K   L
+		 *  /   / \ / \      / \
+		 * D   E   F   H    M   N
+		 */
+		//@formatter:on
+		graph.addChildren("A", ImmutableSet.of("B", "C"));
+		graph.addChildren("B", ImmutableSet.of("D"));
+		graph.addChildren("C", ImmutableSet.of("E", "F"));
+		graph.addChildren("I", ImmutableSet.of("G"));
+		graph.addChildren("G", ImmutableSet.of("F", "H"));
+		graph.addChildren("J", ImmutableSet.of("K", "L"));
+		graph.addChildren("L", ImmutableSet.of("M", "N"));
+
+		Iterator<String> iteratorOnA = graph.treeIterator("A");
+		assertEquals("A", iteratorOnA.next());
+		assertEquals("B", iteratorOnA.next());
+		assertEquals("D", iteratorOnA.next());
+		assertEquals("C", iteratorOnA.next());
+		assertEquals("E", iteratorOnA.next());
+		assertEquals("F", iteratorOnA.next());
+		assertFalse(iteratorOnA.hasNext());
+	}
+
+	@Test
+	public void testTreeIteration_2() {
+		Graph<String> graph = new Graph<String>();
+		//@formatter:off
+		/*
+		 * With the following Graph:
+		 *
+		 *     A       I    J
+		 *    / \     /    / \
+		 *   B   C   G    K   L
+		 *  /   / \ / \      / \
+		 * D   E   F   H    M   N
+		 */
+		//@formatter:on
+		graph.addChildren("A", ImmutableSet.of("B", "C"));
+		graph.addChildren("B", ImmutableSet.of("D"));
+		graph.addChildren("C", ImmutableSet.of("E", "F"));
+		graph.addChildren("I", ImmutableSet.of("G"));
+		graph.addChildren("G", ImmutableSet.of("F", "H"));
+		graph.addChildren("J", ImmutableSet.of("K", "L"));
+		graph.addChildren("L", ImmutableSet.of("M", "N"));
+
+		Iterator<String> iteratorOnC = graph.treeIterator("C");
+		assertEquals("C", iteratorOnC.next());
+		assertEquals("E", iteratorOnC.next());
+		assertEquals("F", iteratorOnC.next());
+		assertFalse(iteratorOnC.hasNext());
+	}
+
+	@Test
+	public void testTreeIteration_3() {
+		Graph<String> graph = new Graph<String>();
+		//@formatter:off
+		/*
+		 * With the following Graph:
+		 *
+		 *     A       I    J
+		 *    / \     /    / \
+		 *   B   C   G    K   L
+		 *  /   / \ / \      / \
+		 * D   E   F   H    M   N
+		 */
+		//@formatter:on
+		graph.addChildren("A", ImmutableSet.of("B", "C"));
+		graph.addChildren("B", ImmutableSet.of("D"));
+		graph.addChildren("C", ImmutableSet.of("E", "F"));
+		graph.addChildren("I", ImmutableSet.of("G"));
+		graph.addChildren("G", ImmutableSet.of("F", "H"));
+		graph.addChildren("J", ImmutableSet.of("K", "L"));
+		graph.addChildren("L", ImmutableSet.of("M", "N"));
+
+		Iterator<String> iteratorOnI = graph.treeIterator("I");
+		assertEquals("I", iteratorOnI.next());
+		assertEquals("G", iteratorOnI.next());
+		assertEquals("F", iteratorOnI.next());
+		assertEquals("H", iteratorOnI.next());
+		assertFalse(iteratorOnI.hasNext());
+	}
+
+	@Test
+	public void testTreeIteration_4() {
+		Graph<String> graph = new Graph<String>();
+		//@formatter:off
+		/*
+		 * With the following Graph:
+		 *
+		 *     A       I    J
+		 *    / \     /    / \
+		 *   B   C   G    K   L
+		 *  /   / \ / \      / \
+		 * D   E   F   H    M   N
+		 */
+		//@formatter:on
+		graph.addChildren("A", ImmutableSet.of("B", "C"));
+		graph.addChildren("B", ImmutableSet.of("D"));
+		graph.addChildren("C", ImmutableSet.of("E", "F"));
+		graph.addChildren("I", ImmutableSet.of("G"));
+		graph.addChildren("G", ImmutableSet.of("F", "H"));
+		graph.addChildren("J", ImmutableSet.of("K", "L"));
+		graph.addChildren("L", ImmutableSet.of("M", "N"));
+
+		Iterator<String> iteratorOnJ = graph.treeIterator("J");
+		assertEquals("J", iteratorOnJ.next());
+		assertEquals("K", iteratorOnJ.next());
+		assertEquals("L", iteratorOnJ.next());
+		assertEquals("M", iteratorOnJ.next());
+		assertEquals("N", iteratorOnJ.next());
+		assertFalse(iteratorOnJ.hasNext());
 	}
 }

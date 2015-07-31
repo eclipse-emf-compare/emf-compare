@@ -25,6 +25,8 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -381,14 +383,44 @@ public class Graph<E> {
 	 * level. This will never visit the same element twice, nor will it ever visit an element which parents
 	 * haven't all been iterated over yet.
 	 * <p>
-	 * The returned iterator does not support removal, and will fail or returned undefined results if this
-	 * graph is modified after the iterator's creation.
+	 * The returned iterator does not support removal, and will fail or return undefined results if this graph
+	 * is modified after the iterator's creation.
 	 * </p>
 	 * 
 	 * @return A breadth-first iterator over this whole graph.
 	 */
 	public PruningIterator<E> breadthFirstIterator() {
 		return new BreadthFirstIterator();
+	}
+
+	/**
+	 * Returns a tree iterator created with the given element as root.
+	 * <p>
+	 * The root will be returned first, then the left-most child of that root, then the left-most child of
+	 * that child if any, or the closest sibling to the right of the current element. For example, with the
+	 * following tree:
+	 * 
+	 * <pre>
+	 *     A
+	 *    / \
+	 *   B   C
+	 *  /   / \
+	 * D   E   F
+	 * </pre>
+	 * 
+	 * The iteration order will be : A, B, D, C, E, F.
+	 * </p>
+	 * <p>
+	 * The returned iterator does not support removal, and will fail or return undefined results if this graph
+	 * is modified after the iterator's creation.
+	 * </p>
+	 * 
+	 * @param root
+	 *            The root of the tree over which we need to iterate.
+	 * @return An iterator over the tree starting from the given root.
+	 */
+	public Iterator<E> treeIterator(E root) {
+		return new ChildrenIterator(root);
 	}
 
 	/**
@@ -805,6 +837,79 @@ public class Graph<E> {
 	}
 
 	/**
+	 * A custom iterator implementing a tree iteration algorithm over the underlying graph, using a given node
+	 * as root.
+	 * <p>
+	 * <b>Note</b> that this iterator doesn't allow clients to structurally change the graph after its
+	 * creation. Any attempt at doing so will make the next call to {@link #next()} fail in
+	 * ConcurrentModificationException.
+	 * </p>
+	 * <p>
+	 * This iterator does not support removal of values from its underlying graph.
+	 * </p>
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	private class ChildrenIterator implements Iterator<E> {
+		/**
+		 * The expected {@link Graph#modcount} for this iterator. Any attempt at calling {@link #next()} after
+		 * the underlying graph has been modified will fail in {@link ConcurrentModificationException}.
+		 */
+		private final int expectedModCount;
+
+		/** The current stack of iterators. */
+		private LinkedList<Iterator<Node<E>>> iteratorStack;
+
+		/**
+		 * Creates an iterator over the tree starting from the given root element.
+		 * 
+		 * @param root
+		 *            Root of the tree we are to iterate over.
+		 */
+		public ChildrenIterator(E root) {
+			this.expectedModCount = Graph.this.modcount;
+			this.iteratorStack = new LinkedList<Iterator<Node<E>>>();
+			iteratorStack.add(Iterators.singletonIterator(Graph.this.nodes.get(root)));
+		}
+
+		/** {@inheritDoc} */
+		public boolean hasNext() {
+			return !iteratorStack.isEmpty() && iteratorStack.getLast().hasNext();
+		}
+
+		/** {@inheritDoc} */
+		public E next() {
+			if (Graph.this.modcount != expectedModCount) {
+				throw new ConcurrentModificationException();
+			}
+			if (iteratorStack.isEmpty()) {
+				throw new NoSuchElementException();
+			}
+			Node<E> resultNode = iteratorStack.getLast().next();
+			// no check for emptiness, would be redundant with the following loop
+			iteratorStack.add(resultNode.getChildren().iterator());
+
+			// remove the iterators we've consumed entirely from the stack.
+			ListIterator<Iterator<Node<E>>> reverseStackIterator = iteratorStack.listIterator(iteratorStack
+					.size());
+			while (reverseStackIterator.hasPrevious() && !reverseStackIterator.previous().hasNext()) {
+				reverseStackIterator.remove();
+			}
+
+			return resultNode.getElement();
+		}
+
+		/**
+		 * Unsupported.
+		 * 
+		 * @throws UnsupportedOperationException
+		 */
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+	}
+
+	/**
 	 * A custom iterator implementing a breadth-first iteration algorithm over the underlying graph. This will
 	 * start from the graph's {@link Graph#roots roots} and carry the iteration downward to each individual
 	 * node, never iterating twice on the same node, and never iterating over a node which parents have yet to
@@ -857,7 +962,7 @@ public class Graph<E> {
 		 * The expected {@link Graph#modcount} for this iterator. Any attempt at calling {@link #next()} after
 		 * the underlying graph has been modified will fail in {@link ConcurrentModificationException}.
 		 */
-		private int expectedModCount;
+		private final int expectedModCount;
 
 		/** Default constructor. */
 		public BreadthFirstIterator() {
