@@ -165,9 +165,9 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>com.xored.ci4rcptt</groupId>
-            <artifactId>ci4rcptt-maven-plugin</artifactId>
-            <version>${ci4rcptt-maven-version}</version>
+            <groupId>org.eclipse.rcptt</groupId>
+            <artifactId>rcptt-maven-plugin</artifactId>
+            <version>${rcptt-maven-version}</version>
             <extensions>true</extensions>
             <configuration>
               <aut>
