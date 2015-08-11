@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmi:id="_P" name="P">
+  <eSubpackages xmi:id="_P1" name="P1">
+    <eClassifiers xsi:type="ecore:EClass" xmi:id="_C11" name="C11"/>
+    <eClassifiers xsi:type="ecore:EClass" xmi:id="_C13" name="C13">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ref131" eType="ecore:EClass types.ecore#_DataType"/>
+    </eClassifiers>
+  </eSubpackages>
+</ecore:EPackage>

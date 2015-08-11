@@ -18,20 +18,18 @@ import junit.textui.TestRunner;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.ide.ui.tests.merge.DirCacheResourceVariantTreeProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.GitResourceVariantTreeSubscriberTest;
-import org.eclipse.emf.compare.ide.ui.tests.merge.RenamedControlledResourceTests;
 import org.eclipse.emf.compare.ide.ui.tests.merge.ResourceVariantTest;
-import org.eclipse.emf.compare.ide.ui.tests.merge.StrategyRecursiveModelTest;
-import org.eclipse.emf.compare.ide.ui.tests.merge.StrategyRecursiveModelWithDeepProjectTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.TreeWalkResourceVariantTreeProviderTest;
-import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeTest;
-import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeWithCustomDependenciesTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalModelTest;
-import org.eclipse.emf.compare.ide.ui.tests.unit.GitMergeTest;
-import org.eclipse.emf.compare.ide.ui.tests.unit.ModelResolverRemoteTest;
-import org.eclipse.emf.compare.ide.ui.tests.unit.MovedImplicitResourceAmongChangedResourcesTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.ResourceUtilPathTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.RevisionedURIConverterTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.ThreadedModelResolverResolutionTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.incoming.IncomingMultiEReferenceTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.incoming.IncomingSingleEReferenceOldSerializationTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.incoming.IncomingSingleEReferenceTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.outgoing.OutgoingMultiEReferenceTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.outgoing.OutgoingSingleEReferenceOldSerializationTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.outgoing.OutgoingSingleEReferenceTest;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
 import org.eclipse.emf.ecore.EPackage;
@@ -49,6 +47,12 @@ import org.junit.runners.Suite.SuiteClasses;
 		GitLogicalModelTest.class,
 		// GitMergeTest.class,
 		GitResourceVariantTreeSubscriberTest.class,
+		IncomingMultiEReferenceTest.class,
+		IncomingSingleEReferenceOldSerializationTest.class,
+		IncomingSingleEReferenceTest.class,
+		OutgoingSingleEReferenceOldSerializationTest.class,
+		OutgoingSingleEReferenceTest.class,
+		OutgoingMultiEReferenceTest.class,
 		// ModelResolverLocalTest.class,
 		// ModelResolverRemoteTest.class,
 		// MovedImplicitResourceAmongChangedResourcesTest.class,

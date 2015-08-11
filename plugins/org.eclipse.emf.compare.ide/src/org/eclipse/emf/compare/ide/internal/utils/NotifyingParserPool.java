@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal.utils;
 
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.ListenerList;
@@ -148,6 +151,9 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 		/** <code>true</code> only when we're parsing the very first element. */
 		private boolean isRoot;
 
+		/** The helper currently in use by our delegate. */
+		private XMLHelper delegateHelper;
+
 		/**
 		 * Constructs a wrapper given its delegate.
 		 * 
@@ -176,6 +182,28 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 				isRoot = false;
 			}
 			super.startElement(arg0, arg1, arg2, arg3);
+		}
+
+		@Override
+		public void endElement(String arg0, String arg1, String arg2) throws SAXException {
+			if (delegateHelper instanceof NotifyingXMLHelper) {
+				((NotifyingXMLHelper)delegateHelper).checkProxies();
+			}
+			super.endElement(arg0, arg1, arg2);
+		}
+
+		@Override
+		public void endDocument() throws SAXException {
+			if (delegateHelper instanceof NotifyingXMLHelper) {
+				((NotifyingXMLHelper)delegateHelper).checkProxies();
+			}
+			super.endDocument();
+		}
+
+		@Override
+		public void prepare(XMLResource resource, XMLHelper helper, Map<?, ?> options) {
+			super.prepare(resource, helper, options);
+			delegateHelper = helper;
 		}
 
 		/**
@@ -222,6 +250,12 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 		private final boolean containmentOnly;
 
 		/**
+		 * Some EObjects are passed to us before their proxy URI is set. We'll keep track of these and check
+		 * them afterwards.
+		 */
+		private Set<ProxyEntry> potentialProxies = new LinkedHashSet<ProxyEntry>();
+
+		/**
 		 * Constructs a wrapper given its delegate XMLHelper.
 		 * 
 		 * @param delegate
@@ -239,16 +273,43 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 		@Override
 		public void setValue(EObject eObject, EStructuralFeature eStructuralFeature, Object value,
 				int position) {
-			if (!containmentOnly
-					|| (eStructuralFeature instanceof EReference && ((EReference)eStructuralFeature)
-							.isContainment())) {
+			boolean isContainment = eStructuralFeature instanceof EReference
+					&& ((EReference)eStructuralFeature).isContainment();
+			if (!containmentOnly || isContainment) {
 				super.setValue(eObject, eStructuralFeature, value, position);
 			}
-			if (value instanceof EObject && ((EObject)value).eIsProxy()) {
-				for (Object listener : proxyListeners.getListeners()) {
-					((IProxyCreationListener)listener).proxyCreated(getResource(), eObject,
-							eStructuralFeature, (EObject)value, position);
+			if (value instanceof EObject) {
+				final ProxyEntry entry = new ProxyEntry(eObject, eStructuralFeature, (EObject)value, position);
+				if (((EObject)value).eIsProxy()) {
+					notifyProxy(entry);
+				} else if (!isContainment) {
+					potentialProxies.add(entry);
 				}
+			}
+		}
+
+		/** Check the {@link #potentialProxies} list for {@link EObject#eIsProxy() actual proxies}. */
+		public void checkProxies() {
+			Iterator<ProxyEntry> candidateIterator = potentialProxies.iterator();
+			while (candidateIterator.hasNext()) {
+				final ProxyEntry candidate = candidateIterator.next();
+				if (candidate.getValue().eIsProxy()) {
+					notifyProxy(candidate);
+				}
+				candidateIterator.remove();
+			}
+		}
+
+		/**
+		 * Tells our registered listeners about a proxy we've found.
+		 * 
+		 * @param proxy
+		 *            The proxy we found in the model.
+		 */
+		private void notifyProxy(ProxyEntry proxy) {
+			for (Object listener : proxyListeners.getListeners()) {
+				((IProxyCreationListener)listener).proxyCreated(getResource(), proxy.getEObject(), proxy
+						.getFeature(), proxy.getValue(), proxy.getPosition());
 			}
 		}
 
@@ -260,6 +321,56 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 		 */
 		public void addProxyListener(IProxyCreationListener listener) {
 			proxyListeners.add(listener);
+		}
+	}
+
+	/** Keeps track of a potential proxy as it was passed to us. */
+	private static class ProxyEntry {
+		/** The EObject which may reference a proxy. */
+		private EObject eObject;
+
+		/** Feature on which we've set a new EObject. */
+		private EStructuralFeature feature;
+
+		/** The actual object that may {@link EObject#eIsProxy() be a proxy}. */
+		private EObject value;
+
+		/** The position in {@link #feature} at which {@link #value} has been added. */
+		private int position;
+
+		/**
+		 * Constructs our DTO given its content.
+		 * 
+		 * @param eObject
+		 *            see {@link #eObject}.
+		 * @param feature
+		 *            see {@link #feature}.
+		 * @param value
+		 *            see {@link #value}.
+		 * @param position
+		 *            see {@link #position}.
+		 */
+		public ProxyEntry(EObject eObject, EStructuralFeature feature, EObject value, int position) {
+			this.eObject = eObject;
+			this.feature = feature;
+			this.value = value;
+			this.position = position;
+		}
+
+		public EObject getEObject() {
+			return eObject;
+		}
+
+		public EStructuralFeature getFeature() {
+			return feature;
+		}
+
+		public EObject getValue() {
+			return value;
+		}
+
+		public int getPosition() {
+			return position;
 		}
 	}
 }
