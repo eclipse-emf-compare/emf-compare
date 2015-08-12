@@ -362,6 +362,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		inputChangedTask.setPriority(Job.LONG);
 
 		config.getEventBus().register(this);
+
+		// Bug 473190: NPE when using merge tool after a conflicting merge
+		EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(getCompareConfiguration());
 	}
 
 	/**
@@ -917,10 +920,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	void compareInputChanged(ComparisonScopeInput input, IProgressMonitor monitor) {
-		EMFCompare comparator = getCompareConfiguration().getEMFComparator();
-
 		IComparisonScope comparisonScope = input.getComparisonScope();
 		EMFCompareConfiguration compareConfiguration = getCompareConfiguration();
+
+		EMFCompare comparator = compareConfiguration.getEMFComparator();
 		compareConfiguration.setLeftEditable(input.isLeftEditable());
 		compareConfiguration.setRightEditable(input.isRightEditable());
 		// setup defaults
