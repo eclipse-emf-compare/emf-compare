@@ -401,6 +401,11 @@
         <module>../packaging/org.eclipse.emf.compare.egit-feature</module>
         <module>../plugins/org.eclipse.emf.compare.subversive</module>
         <module>../packaging/org.eclipse.emf.compare.subversive-feature</module>
+        
+        <module>../plugins/org.eclipse.emf.compare.diagram.sirius</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.sirius</module>
+        <module>../packaging/org.eclipse.emf.compare.diagram.sirius-feature</module>
+        
       </modules>
     </profile>
     <profile>

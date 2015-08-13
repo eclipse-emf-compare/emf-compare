@@ -7,6 +7,7 @@ include "fragments/perf.tpd"
 include "fragments/papyrus.tpd"
 include "fragments/uml2-interim.tpd"
 include "fragments/swtbot.tpd"
+include "fragments/sirius.tpd"
 
 with source, requirements
 

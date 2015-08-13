@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Mars SDK with Logical Model and Papyrus" sequenceNumber="1445260732">
+<target name="EMF Compare based on Mars SDK with Logical Model and Papyrus" sequenceNumber="1450798538">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -43,6 +43,10 @@
       <repository location="http://download.eclipse.org/technology/swtbot/releases/2.3.0/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.obeonetwork.dsl.uml2.runtime.feature.feature.group" version="6.0.0.201510191019"/>
+      <repository location="http://releases.umldesigner.org/6.0.0/repository/"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.platform.sdk" version="0.0.0"/>
       <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.transaction.sdk.feature.group" version="0.0.0"/>
@@ -51,6 +55,9 @@
       <unit id="org.eclipse.emf.ecoretools.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.team.svn.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.jdt.annotation" version="1.1.100.v20140704-0625"/>
+      <unit id="org.eclipse.acceleo.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.acceleo.query.feature.group" version="3.6.0.201506080954"/>
+      <unit id="org.eclipse.sirius" version="0.0.0"/>
       <repository location="http://download.eclipse.org/releases/mars"/>
     </location>
   </locations>

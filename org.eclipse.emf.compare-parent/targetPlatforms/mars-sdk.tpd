@@ -4,7 +4,7 @@ include "fragments/licence.tpd"
 include "fragments/orbit.tpd"
 include "fragments/egit-nightly.tpd"
 include "fragments/perf.tpd"
-
+include "fragments/sirius.tpd"
 
 with source, requirements
 
