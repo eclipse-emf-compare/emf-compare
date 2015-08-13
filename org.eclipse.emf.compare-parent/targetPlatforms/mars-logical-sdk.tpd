@@ -1,4 +1,4 @@
-target "EMF Compare based on Mars SDK"
+target "EMF Compare based on Mars SDK with Logical Model"
 
 include "fragments/licence.tpd"
 include "fragments/orbit.tpd"
