@@ -494,57 +494,53 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			} else {
 				parent = ((IMergeViewerItem)data).getAncestor();
 			}
+			Comparison comparison = getCompareConfiguration().getComparison();
 
 			if (parent instanceof NotLoadedFragmentMatch) {
-				IMergeViewerItem.Container left = new MergeViewerItem.Container(getCompareConfiguration()
-						.getComparison(), null, (Match)parent, MergeViewerSide.LEFT, fAdapterFactory);
-				IMergeViewerItem.Container right = new MergeViewerItem.Container(getCompareConfiguration()
-						.getComparison(), null, (Match)parent, MergeViewerSide.RIGHT, fAdapterFactory);
+				IMergeViewerItem.Container left = new MergeViewerItem.Container(comparison, null,
+						(Match)parent, MergeViewerSide.LEFT, fAdapterFactory);
+				IMergeViewerItem.Container right = new MergeViewerItem.Container(comparison, null,
+						(Match)parent, MergeViewerSide.RIGHT, fAdapterFactory);
 				toBeExpanded.add(left);
 				toBeExpanded.add(right);
 			} else if (parent instanceof EObject) {
-				Comparison comparison = getCompareConfiguration().getComparison();
 				Match match = comparison.getMatch((EObject)parent);
 				if (match != null) {
-					for (Diff referenceChange : filter(match.getDifferences(), and(
+					// We get all move differencies in order to detect the move of an element with an original
+					// position outside the actual match of the diff. We have to do that since move
+					// differencies are registered only under one container (left or right depending on the
+					// situation)
+					for (Diff referenceChange : filter(comparison.getDifferences(), and(
 							instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE)))) {
-						if (getLeftMergeViewer() == mergeTreeViewer) {
-							Match matchOfValue = comparison.getMatch(((ReferenceChange)referenceChange)
-									.getValue());
-							if (matchOfValue != null) {
-								EObject right = matchOfValue.getRight();
-								EObject eContainer; // XXX: use itemProvider.getParent().
-								if (right != null) {
-									eContainer = right.eContainer();
-								} else {
-									EObject ancestor = matchOfValue.getOrigin();
-									eContainer = ancestor.eContainer();
-								}
-								Match match2 = comparison.getMatch(eContainer);
-								if (match2 != null && match2.getLeft() != parent) {
+						Match matchOfValue = comparison.getMatch(((ReferenceChange)referenceChange)
+								.getValue());
+						if (matchOfValue != null) {
+							Match leftContainerMatch = getContainerMatch(comparison, matchOfValue.getLeft());
+							Match rightContainerMatch = getContainerMatch(comparison, matchOfValue.getRight());
+							Match originContainerMatch = getContainerMatch(comparison, matchOfValue
+									.getOrigin());
+
+							// if one of the container match is equal to the diff match, then the move have is
+							// origin or destination in the eContainer of the diff. We have to expend the
+							// eContainer of the diff too
+							if (leftContainerMatch == match || rightContainerMatch == match
+									|| originContainerMatch == match) {
+								if (leftContainerMatch != null && leftContainerMatch != match) {
 									IMergeViewerItem.Container container = new MergeViewerItem.Container(
-											getCompareConfiguration().getComparison(), null, match2,
-											MergeViewerSide.RIGHT, fAdapterFactory);
+											comparison, null, leftContainerMatch, MergeViewerSide.LEFT,
+											fAdapterFactory);
 									toBeExpanded.add(container);
 								}
-							}
-						} else if (getRightMergeViewer() == mergeTreeViewer) {
-							Match matchOfValue = comparison.getMatch(((ReferenceChange)referenceChange)
-									.getValue());
-							if (matchOfValue != null) {
-								EObject left = matchOfValue.getLeft();
-								EObject eContainer; // XXX: use itemProvider.getParent().
-								if (left != null) {
-									eContainer = left.eContainer();
-								} else {
-									EObject ancestor = matchOfValue.getOrigin();
-									eContainer = ancestor.eContainer();
-								}
-								Match match2 = comparison.getMatch(eContainer);
-								if (match2 != null && match2.getRight() != parent) {
+								if (rightContainerMatch != null && rightContainerMatch != match) {
 									IMergeViewerItem.Container container = new MergeViewerItem.Container(
-											getCompareConfiguration().getComparison(), null, match2,
-											MergeViewerSide.LEFT, fAdapterFactory);
+											comparison, null, rightContainerMatch, MergeViewerSide.RIGHT,
+											fAdapterFactory);
+									toBeExpanded.add(container);
+								}
+								if (originContainerMatch != null && originContainerMatch != match) {
+									IMergeViewerItem.Container container = new MergeViewerItem.Container(
+											comparison, null, originContainerMatch, MergeViewerSide.ANCESTOR,
+											fAdapterFactory);
 									toBeExpanded.add(container);
 								}
 							}
@@ -566,6 +562,24 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 				fSyncExpandedState.set(false);
 			}
 		}
+	}
+
+	/**
+	 * Return the eContainer match of the given eObject.
+	 * 
+	 * @param comparison
+	 *            The actual comparison
+	 * @param value
+	 *            The element of which we want the container match
+	 * @return the match if found, null otherwise
+	 */
+	private Match getContainerMatch(Comparison comparison, EObject value) {
+		EObject eContainer; // XXX: use itemProvider.getParent().
+		if (value != null) {
+			eContainer = value.eContainer();
+			return comparison.getMatch(eContainer);
+		}
+		return null;
 	}
 
 }
