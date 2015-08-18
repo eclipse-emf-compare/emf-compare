@@ -42,7 +42,7 @@
       xsi:type="setup:VariableTask"
       id="compare.target.platform"
       name="compare.target.platform"
-      defaultValue="EMF Compare based on Mars SDK"
+      defaultValue="EMF Compare based on Mars SDK with Logical Model and Papyrus"
       label="Target Platform - Compare">
     <choice
         value="EMF Compare based on Mars SDK"
@@ -88,7 +88,7 @@
     <requirement
         name="net.jeeeyul.pdetools.feature.feature.group"/>
     <requirement
-        name="fr.obeo.releng.targetplatform-feature_3.8.feature.group"/>
+        name="fr.obeo.releng.targetplatform-feature.feature.group"/>
     <requirement
         name="org.eclipselabs.emf.loophole.feature.group"/>
     <repository
@@ -104,9 +104,11 @@
     <repository
         url="http://jeeeyul.github.io/update/"/>
     <repository
-        url="http://mbarbero.github.com/fr.obeo.releng.targetplatform/p2/3.8"/>
+        url="http://mbarbero.github.io/fr.obeo.releng.targetplatform/p2/latest/"/>
     <repository
         url="http://mbarbero.github.io/emf-loophole/2.9"/>
+    <repository
+        url="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
   </setupTask>
   <setupTask
       xsi:type="git:GitCloneTask"
