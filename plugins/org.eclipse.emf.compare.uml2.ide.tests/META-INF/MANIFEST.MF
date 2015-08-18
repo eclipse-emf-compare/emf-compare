@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-SymbolicName: org.eclipse.emf.compare.uml2.ide.tests;singleton:=true
-Bundle-Version: 3.1.0.qualifier
+Bundle-Version: 3.2.0.qualifier
 Bundle-Activator: org.eclipse.emf.compare.uml2.ide.tests.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
