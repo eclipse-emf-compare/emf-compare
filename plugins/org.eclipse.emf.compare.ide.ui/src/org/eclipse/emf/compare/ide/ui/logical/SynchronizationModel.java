@@ -138,12 +138,28 @@ public final class SynchronizationModel implements IDiagnosable {
 	public Diagnostic getDiagnostic() {
 		BasicDiagnostic ret = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, EMFCompareIDEUIMessages
 				.getString("SynchronizationModel.diagnosticMesg"), new Object[] {this, }); //$NON-NLS-1$
-		ret.merge(this.diagnostic);
-
-		ret.add(leftTraversal.getDiagnostic());
-		ret.add(originTraversal.getDiagnostic());
-		ret.add(rightTraversal.getDiagnostic());
+		BasicDiagnostic first = new BasicDiagnostic(
+				diagnostic.getSource(),
+				diagnostic.getCode(),
+				diagnostic.getChildren(),
+				EMFCompareIDEUIMessages.getString("SynchronizationModel.root"), diagnostic.getData().toArray()); //$NON-NLS-1$
+		if (!diagnostic.getChildren().isEmpty()) {
+			first.merge(diagnostic);
+		}
+		ret.add(getDiagnosticForSide(leftTraversal.getDiagnostic(), "left")); //$NON-NLS-1$
+		ret.add(getDiagnosticForSide(originTraversal.getDiagnostic(), "origin")); //$NON-NLS-1$
+		ret.add(getDiagnosticForSide(rightTraversal.getDiagnostic(), "right")); //$NON-NLS-1$
 		return ret;
+	}
+
+	private BasicDiagnostic getDiagnosticForSide(Diagnostic toAdd, String side) {
+		BasicDiagnostic d;
+		d = new BasicDiagnostic(toAdd.getSeverity(), toAdd.getSource(), 0, EMFCompareIDEUIMessages
+				.getString("SynchronizationModel." + side), null); //$NON-NLS-1$
+		if (!toAdd.getChildren().isEmpty()) {
+			d.merge(toAdd);
+		}
+		return d;
 	}
 
 	/**
