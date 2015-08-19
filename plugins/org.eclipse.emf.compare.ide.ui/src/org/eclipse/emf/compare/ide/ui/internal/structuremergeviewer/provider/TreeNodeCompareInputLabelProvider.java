@@ -119,13 +119,9 @@ public class TreeNodeCompareInputLabelProvider implements ICompareInputLabelProv
 	public String getLeftLabel(Object input) {
 		final Match match = getMatch(getTreeNode(input));
 		if (match != null) {
-			if (match.getLeft() != null) {
-				final EObject left = match.getLeft();
-				final Resource leftResource = left.eResource();
-				final StoragePathAdapter adapter = getStoragePathAdapter(leftResource);
-				if (adapter != null) {
-					return computeLabel(adapter);
-				}
+			StoragePathAdapter adapter = getLeftAdapter(match);
+			if (adapter != null) {
+				return computeLabel(adapter);
 			} else {
 				return computeFallbackLabel(match, Side.LEFT);
 			}
@@ -150,13 +146,9 @@ public class TreeNodeCompareInputLabelProvider implements ICompareInputLabelProv
 	public String getRightLabel(Object input) {
 		final Match match = getMatch(getTreeNode(input));
 		if (match != null) {
-			if (match.getRight() != null) {
-				final EObject right = match.getRight();
-				final Resource rightResource = right.eResource();
-				final StoragePathAdapter adapter = getStoragePathAdapter(rightResource);
-				if (adapter != null) {
-					return computeLabel(adapter);
-				}
+			StoragePathAdapter adapter = getRightAdapter(match);
+			if (adapter != null) {
+				return computeLabel(adapter);
 			} else {
 				return computeFallbackLabel(match, Side.RIGHT);
 			}
@@ -210,12 +202,67 @@ public class TreeNodeCompareInputLabelProvider implements ICompareInputLabelProv
 		return null;
 	}
 
-	private String computeLabel(StoragePathAdapter adapter) {
-		if (adapter.isLocal()) {
-			return "Local: " + adapter.getStoragePath();
-		} else {
-			return "Remote: " + adapter.getStoragePath();
+	/**
+	 * Get the left adapter for a match.
+	 * 
+	 * @param match
+	 *            The given match
+	 * @return the adapter
+	 */
+	private StoragePathAdapter getLeftAdapter(Match match) {
+		if (match != null) {
+			if (match.getLeft() != null) {
+				final EObject left = match.getLeft();
+				final Resource leftResource = left.eResource();
+				final StoragePathAdapter adapter = getStoragePathAdapter(leftResource);
+				return adapter;
+			}
 		}
+		return null;
+	}
+
+	/**
+	 * Get the right adapter for a match.
+	 * 
+	 * @param match
+	 *            The given match
+	 * @return the adapter
+	 */
+	private StoragePathAdapter getRightAdapter(Match match) {
+		if (match != null) {
+			if (match.getRight() != null) {
+				final EObject right = match.getRight();
+				final Resource rightResource = right.eResource();
+				final StoragePathAdapter adapter = getStoragePathAdapter(rightResource);
+				return adapter;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Compute the label used as title in the ContentMergeViewer.
+	 * 
+	 * @param adapter
+	 *            The adapter containing file informations
+	 * @return the label
+	 */
+	private String computeLabel(StoragePathAdapter adapter) {
+		String commitId = adapter.getCommitId();
+		String username = adapter.getUsername();
+		String computedLabel;
+		if (adapter.isLocal()) {
+			computedLabel = "Local: " + adapter.getStoragePath(); //$NON-NLS-1$
+		} else {
+			computedLabel = adapter.getStoragePath();
+		}
+		if (commitId != null && !"".equals(commitId)) { //$NON-NLS-1$
+			computedLabel += " " + commitId.substring(0, 7); //$NON-NLS-1$
+		}
+		if (username != null && !"".equals(username)) { //$NON-NLS-1$
+			computedLabel += " (" + username + ")"; //$NON-NLS-1$//$NON-NLS-2$
+		}
+		return computedLabel;
 	}
 
 	private String computeFallbackLabel(Match match, Side side) {

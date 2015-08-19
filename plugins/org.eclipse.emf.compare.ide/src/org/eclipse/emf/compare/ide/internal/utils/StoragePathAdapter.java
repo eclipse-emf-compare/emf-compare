@@ -24,6 +24,12 @@ public class StoragePathAdapter extends AdapterImpl {
 	/** Whether this storage was local. */
 	private final boolean isLocal;
 
+	/** The identifier of the commit. */
+	private String commitId;
+
+	/** The username of the owner of the commit. */
+	private String username;
+
 	/**
 	 * Default constructor.
 	 * 
@@ -37,9 +43,46 @@ public class StoragePathAdapter extends AdapterImpl {
 		this.isLocal = isLocal;
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param storagePath
+	 *            The storage path to remember.
+	 * @param isLocal
+	 *            Whether this storage was local.
+	 * @param commitId
+	 *            The identifier of the commit.
+	 * @param username
+	 *            The username of the owner of the commit.
+	 */
+	public StoragePathAdapter(String storagePath, boolean isLocal, String commitId, String username) {
+		this.storagePath = storagePath;
+		this.isLocal = isLocal;
+		this.commitId = commitId;
+		this.username = username;
+	}
+
 	@Override
 	public boolean isAdapterForType(Object type) {
 		return type == StoragePathAdapter.class;
+	}
+
+	/**
+	 * Getter for the commit id.
+	 * 
+	 * @return the commit it
+	 */
+	public String getCommitId() {
+		return commitId;
+	}
+
+	/**
+	 * Getter for the commit owner username.
+	 * 
+	 * @return the username of the owner
+	 */
+	public String getUsername() {
+		return username;
 	}
 
 	public String getStoragePath() {

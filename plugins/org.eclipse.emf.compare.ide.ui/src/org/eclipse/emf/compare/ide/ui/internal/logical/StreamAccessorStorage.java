@@ -31,6 +31,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.compare.ide.internal.utils.StoragePathAdapter;
+import org.eclipse.emf.compare.ide.utils.IStoragePathAdapterProvider;
 import org.eclipse.emf.compare.ide.utils.IStoragePathProvider;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.history.IFileRevision;
@@ -43,7 +46,7 @@ import org.eclipse.ui.IEditorInput;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class StreamAccessorStorage implements IStorage {
+public class StreamAccessorStorage implements IStorage, IStoragePathAdapterProvider {
 	/** The wrapped accessor. */
 	private final IStreamContentAccessor accessor;
 
@@ -138,6 +141,32 @@ public class StreamAccessorStorage implements IStorage {
 			}
 		}
 		return fullPath;
+	}
+
+	/**
+	 * Get the commit id for the given element
+	 * 
+	 * @param element
+	 *            The element for which we want the commit id
+	 * @return the commit id
+	 */
+	public static IFileRevision findCommitId(ITypedElement element) {
+		return findFileRevision(element);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see IStoragePathAdapterProvider#createStoragePathAdapter()
+	 */
+	public Adapter createStoragePathAdapter(String path, boolean isLocal) {
+		IFileRevision findFileRevision = findFileRevision((ITypedElement)accessor);
+		if (findFileRevision != null) {
+			return new StoragePathAdapter(path, isLocal, findFileRevision.getContentIdentifier(),
+					findFileRevision.getAuthor());
+		} else {
+			return new StoragePathAdapter(path, isLocal);
+		}
 	}
 
 	/**

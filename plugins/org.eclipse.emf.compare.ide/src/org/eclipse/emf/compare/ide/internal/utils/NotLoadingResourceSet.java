@@ -52,6 +52,7 @@ import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.hook.IResourceSetHook;
 import org.eclipse.emf.compare.ide.internal.EMFCompareIDEMessages;
 import org.eclipse.emf.compare.ide.internal.hook.ResourceSetHookRegistry;
+import org.eclipse.emf.compare.ide.utils.IStoragePathAdapterProvider;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
@@ -415,7 +416,12 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 			loadFromStorage(loaded, storage);
 			final String fullPath = storage.getFullPath().toString();
 			boolean isLocal = storage instanceof IFile;
-			loaded.eAdapters().add(new StoragePathAdapter(fullPath, isLocal));
+			if (storage instanceof IStoragePathAdapterProvider) {
+				loaded.eAdapters().add(
+						((IStoragePathAdapterProvider)storage).createStoragePathAdapter(fullPath, isLocal));
+			} else {
+				loaded.eAdapters().add(new StoragePathAdapter(fullPath, isLocal));
+			}
 			monitor.worked(1);
 		} catch (IOException e) {
 			logLoadingFromStorageFailed(loaded, storage, e);
