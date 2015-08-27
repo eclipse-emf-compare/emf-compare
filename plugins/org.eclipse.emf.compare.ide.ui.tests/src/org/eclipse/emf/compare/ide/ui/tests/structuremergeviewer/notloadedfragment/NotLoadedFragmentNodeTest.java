@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 475401
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.notloadedfragment;
 
@@ -418,6 +419,14 @@ public class NotLoadedFragmentNodeTest {
 		nlfc = Iterables.filter(children, NOT_LOADED_FRAGMENT);
 		assertEquals(3, Iterables.size(nlfc));
 		Iterator<?> children2ndLevel = nlfc.iterator();
+		// 2nd level
+		TreeNode r3TreeNode = (TreeNode)children2ndLevel.next();
+		assertEquals(ELLIPSIS + " (R3.ecore)", itemDelegator.getText(r3TreeNode));
+		// 3rd level
+		children = r3TreeNode.getChildren();
+		assertEquals(1, children.size());
+		TreeNode treeNodeC = (TreeNode)children.iterator().next();
+		assertEquals("C", itemDelegator.getText(treeNodeC));
 		TreeNode r5TreeNode = (TreeNode)children2ndLevel.next();
 		assertEquals(ELLIPSIS + " (R5.ecore)", itemDelegator.getText(r5TreeNode));
 		// 3rd level
@@ -433,14 +442,6 @@ public class NotLoadedFragmentNodeTest {
 		assertEquals(1, children.size());
 		TreeNode treeNodeH = (TreeNode)children.iterator().next();
 		assertEquals("H", itemDelegator.getText(treeNodeH));
-		// 2nd level
-		TreeNode r3TreeNode = (TreeNode)children2ndLevel.next();
-		assertEquals(ELLIPSIS + " (R3.ecore)", itemDelegator.getText(r3TreeNode));
-		// 3rd level
-		children = r3TreeNode.getChildren();
-		assertEquals(1, children.size());
-		TreeNode treeNodeC = (TreeNode)children.iterator().next();
-		assertEquals("C", itemDelegator.getText(treeNodeC));
 	}
 
 	/*
@@ -781,14 +782,6 @@ public class NotLoadedFragmentNodeTest {
 		nlfc = Iterables.filter(children, NOT_LOADED_FRAGMENT);
 		assertEquals(2, Iterables.size(nlfc));
 		Iterator<?> children3rdLevel = nlfc.iterator();
-		TreeNode r6TreeNode = (TreeNode)children3rdLevel.next();
-		assertEquals(ELLIPSIS + " (R6.ecore)", itemDelegator.getText(r6TreeNode));
-		// 4th level
-		children = r6TreeNode.getChildren();
-		assertEquals(1, children.size());
-		TreeNode treeNodeH = (TreeNode)children.iterator().next();
-		assertEquals("H", itemDelegator.getText(treeNodeH));
-		// 3rd level
 		TreeNode r3TreeNode = (TreeNode)children3rdLevel.next();
 		assertEquals(ELLIPSIS + " (R3.ecore)", itemDelegator.getText(r3TreeNode));
 		// 4th level
@@ -796,6 +789,14 @@ public class NotLoadedFragmentNodeTest {
 		assertEquals(1, children.size());
 		TreeNode treeNodeC = (TreeNode)children.iterator().next();
 		assertEquals("C", itemDelegator.getText(treeNodeC));
+		// 3rd level
+		TreeNode r6TreeNode = (TreeNode)children3rdLevel.next();
+		assertEquals(ELLIPSIS + " (R6.ecore)", itemDelegator.getText(r6TreeNode));
+		// 4th level
+		children = r6TreeNode.getChildren();
+		assertEquals(1, children.size());
+		TreeNode treeNodeH = (TreeNode)children.iterator().next();
+		assertEquals("H", itemDelegator.getText(treeNodeH));
 	}
 
 	@Test
@@ -844,14 +845,6 @@ public class NotLoadedFragmentNodeTest {
 		nlfc = Iterables.filter(children, NOT_LOADED_FRAGMENT);
 		assertEquals(2, Iterables.size(nlfc));
 		Iterator<?> children3rdLevel = nlfc.iterator();
-		TreeNode r6TreeNode = (TreeNode)children3rdLevel.next();
-		assertEquals(ELLIPSIS + " (R6.ecore)", itemDelegator.getText(r6TreeNode));
-		// 4th level
-		children = r6TreeNode.getChildren();
-		assertEquals(1, children.size());
-		TreeNode treeNodeH = (TreeNode)children.iterator().next();
-		assertEquals("H", itemDelegator.getText(treeNodeH));
-		// 3rd level
 		TreeNode r3TreeNode = (TreeNode)children3rdLevel.next();
 		assertEquals(ELLIPSIS + " (R3.ecore)", itemDelegator.getText(r3TreeNode));
 		// 4th level
@@ -859,5 +852,13 @@ public class NotLoadedFragmentNodeTest {
 		assertEquals(1, children.size());
 		TreeNode treeNodeC = (TreeNode)children.iterator().next();
 		assertEquals("C", itemDelegator.getText(treeNodeC));
+		// 3rd level
+		TreeNode r6TreeNode = (TreeNode)children3rdLevel.next();
+		assertEquals(ELLIPSIS + " (R6.ecore)", itemDelegator.getText(r6TreeNode));
+		// 4th level
+		children = r6TreeNode.getChildren();
+		assertEquals(1, children.size());
+		TreeNode treeNodeH = (TreeNode)children.iterator().next();
+		assertEquals("H", itemDelegator.getText(treeNodeH));
 	}
 }

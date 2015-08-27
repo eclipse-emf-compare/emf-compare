@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,14 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - sort resources before matching
  *******************************************************************************/
 package org.eclipse.emf.compare.match.resource;
 
 import com.google.common.collect.Lists;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,6 +33,25 @@ import org.eclipse.emf.ecore.resource.Resource;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class StrategyResourceMatcher implements IResourceMatcher {
+
+	/**
+	 * Compares resources according to the string representation of their {@link URI}s.
+	 */
+	protected Comparator<Resource> resourceURIComparator = new Comparator<Resource>() {
+		public int compare(Resource arg0, Resource arg1) {
+			if (arg0.getURI() == null && arg1.getURI() == null) {
+				return 0;
+			}
+			if (arg0.getURI() == null) {
+				return -1;
+			}
+			if (arg1.getURI() == null) {
+				return 1;
+			}
+			return arg0.getURI().toString().compareTo(arg1.getURI().toString());
+		}
+	};
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -44,6 +66,10 @@ public class StrategyResourceMatcher implements IResourceMatcher {
 		final List<? extends Resource> leftCopy = Lists.newArrayList(leftResources);
 		final List<? extends Resource> rightCopy = Lists.newArrayList(rightResources);
 		final List<? extends Resource> originCopy = Lists.newArrayList(originResources);
+
+		Collections.sort(leftCopy, resourceURIComparator);
+		Collections.sort(rightCopy, resourceURIComparator);
+		Collections.sort(originCopy, resourceURIComparator);
 
 		// Detect matching resources
 		final IResourceMatchingStrategy[] strategies = getResourceMatchingStrategies();

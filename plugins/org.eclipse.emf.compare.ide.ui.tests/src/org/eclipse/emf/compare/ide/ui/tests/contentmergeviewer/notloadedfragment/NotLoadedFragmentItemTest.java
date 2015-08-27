@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 475401
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.notloadedfragment;
 
@@ -609,22 +610,22 @@ public class NotLoadedFragmentItemTest {
 		assertEquals(3, item_Ellipsis_Children.length);
 		item_Ellipsis = (IMergeViewerItem.Container)item_Ellipsis_Children[0];
 		assertEquals(ELLIPSIS, itemDelegator.getText(item_Ellipsis.getSideValue(MergeViewerSide.LEFT)));
+		IMergeViewerItem[] item_R3_Children = item_Ellipsis.getChildren(null, null);
+		assertEquals(1, item_R3_Children.length);
+		IMergeViewerItem.Container item_C = (IMergeViewerItem.Container)item_R3_Children[0];
+		assertEquals("C", itemDelegator.getText(item_C.getSideValue(MergeViewerSide.LEFT)));
+		item_Ellipsis = (IMergeViewerItem.Container)item_Ellipsis_Children[1];
+		assertEquals(ELLIPSIS, itemDelegator.getText(item_Ellipsis.getSideValue(MergeViewerSide.LEFT)));
 		IMergeViewerItem[] item_R5_Children = item_Ellipsis.getChildren(null, null);
 		assertEquals(1, item_R5_Children.length);
 		item_G = (IMergeViewerItem.Container)item_R5_Children[0];
 		assertEquals("G", itemDelegator.getText(item_G.getSideValue(MergeViewerSide.LEFT)));
-		item_Ellipsis = (IMergeViewerItem.Container)item_Ellipsis_Children[1];
+		item_Ellipsis = (IMergeViewerItem.Container)item_Ellipsis_Children[2];
 		assertEquals(ELLIPSIS, itemDelegator.getText(item_Ellipsis.getSideValue(MergeViewerSide.LEFT)));
 		IMergeViewerItem[] item_R6_Children = item_Ellipsis.getChildren(null, null);
 		assertEquals(1, item_R6_Children.length);
 		IMergeViewerItem.Container item_H = (IMergeViewerItem.Container)item_R6_Children[0];
 		assertEquals("H", itemDelegator.getText(item_H.getSideValue(MergeViewerSide.LEFT)));
-		item_Ellipsis = (IMergeViewerItem.Container)item_Ellipsis_Children[2];
-		assertEquals(ELLIPSIS, itemDelegator.getText(item_Ellipsis.getSideValue(MergeViewerSide.LEFT)));
-		IMergeViewerItem[] item_R3_Children = item_Ellipsis.getChildren(null, null);
-		assertEquals(1, item_R3_Children.length);
-		IMergeViewerItem.Container item_C = (IMergeViewerItem.Container)item_R3_Children[0];
-		assertEquals("C", itemDelegator.getText(item_C.getSideValue(MergeViewerSide.LEFT)));
 
 		// Test Right Side
 		item_I = new MergeViewerItem.Container(comparison, diff_I, match_I, MergeViewerSide.LEFT,
@@ -642,22 +643,22 @@ public class NotLoadedFragmentItemTest {
 		assertEquals(3, item_Ellipsis_Children.length);
 		item_Ellipsis = (IMergeViewerItem.Container)item_Ellipsis_Children[0];
 		assertEquals(ELLIPSIS, itemDelegator.getText(item_Ellipsis.getSideValue(MergeViewerSide.RIGHT)));
+		item_R3_Children = item_Ellipsis.getChildren(null, null);
+		assertEquals(1, item_R3_Children.length);
+		item_C = (IMergeViewerItem.Container)item_R3_Children[0];
+		assertEquals("C", itemDelegator.getText(item_C.getSideValue(MergeViewerSide.RIGHT)));
+		item_Ellipsis = (IMergeViewerItem.Container)item_Ellipsis_Children[1];
+		assertEquals(ELLIPSIS, itemDelegator.getText(item_Ellipsis.getSideValue(MergeViewerSide.RIGHT)));
 		item_R5_Children = item_Ellipsis.getChildren(null, null);
 		assertEquals(1, item_R5_Children.length);
 		item_G = (IMergeViewerItem.Container)item_R5_Children[0];
 		assertEquals("G", itemDelegator.getText(item_G.getSideValue(MergeViewerSide.RIGHT)));
-		item_Ellipsis = (IMergeViewerItem.Container)item_Ellipsis_Children[1];
+		item_Ellipsis = (IMergeViewerItem.Container)item_Ellipsis_Children[2];
 		assertEquals(ELLIPSIS, itemDelegator.getText(item_Ellipsis.getSideValue(MergeViewerSide.RIGHT)));
 		item_R6_Children = item_Ellipsis.getChildren(null, null);
 		assertEquals(1, item_R6_Children.length);
 		item_H = (IMergeViewerItem.Container)item_R6_Children[0];
 		assertEquals("H", itemDelegator.getText(item_H.getSideValue(MergeViewerSide.RIGHT)));
-		item_Ellipsis = (IMergeViewerItem.Container)item_Ellipsis_Children[2];
-		assertEquals(ELLIPSIS, itemDelegator.getText(item_Ellipsis.getSideValue(MergeViewerSide.RIGHT)));
-		item_R3_Children = item_Ellipsis.getChildren(null, null);
-		assertEquals(1, item_R3_Children.length);
-		item_C = (IMergeViewerItem.Container)item_R3_Children[0];
-		assertEquals("C", itemDelegator.getText(item_C.getSideValue(MergeViewerSide.RIGHT)));
 
 	}
 }
