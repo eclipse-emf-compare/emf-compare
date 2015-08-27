@@ -122,6 +122,195 @@ public class MatchInputData extends AbstractInputData {
 		return result;
 	}
 
+	public List<Resource> getRootIDThreeWayA1Left() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a1/left.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a1/left2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA1Right() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a1/right.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a1/right2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA1Origin() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a1/origin.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a1/origin2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA2Left() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a2/left.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a2/left2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA2Right() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a2/right.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a2/right2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA2Origin() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a2/origin.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a2/origin2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA3Left() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a3/left.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a3/left2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA3Right() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a3/right.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a3/right2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA3Origin() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a3/origin.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a3/origin2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA4Left() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a4/left.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a4/left2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA4Right() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a4/right.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a4/right2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA4Origin() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a4/origin.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a4/origin2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA5Left() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a5/left.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a5/left2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA5Right() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a5/right.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a5/right2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA5Origin() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a5/origin.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a5/origin2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA6Left() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a6/left.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a6/left2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA6Right() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a6/right.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a6/right2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA6Origin() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a6/origin.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a6/origin2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA7Left() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a7/left.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a7/left2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA7Right() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a7/right.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a7/right2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA7Origin() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a7/origin.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a7/origin2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA8Left() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a8/left.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a8/left2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA8Right() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a8/right.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a8/right2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA8Origin() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a8/origin.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a8/origin2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA9Left() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a9/left.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a9/left2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA9Right() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a9/right.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a9/right2.nodes"));
+		return result;
+	}
+
+	public List<Resource> getRootIDThreeWayA9Origin() throws IOException {
+		List<Resource> result = Lists.newLinkedList();
+		result.add(loadFromClassLoader("rootid/threeway/a9/origin.nodes"));
+		result.add(loadFromClassLoader("rootid/threeway/a9/origin2.nodes"));
+		return result;
+	}
+
 	public Resource getSetIDAttributeLeft() throws IOException {
 		return loadFromClassLoader("setidattribute/left.nodes");
 	}
