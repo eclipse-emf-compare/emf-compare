@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,14 +7,18 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - only return unique matches
  *******************************************************************************/
 package org.eclipse.emf.compare.match.resource;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.compare.CompareFactory;
@@ -31,43 +35,177 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class RootIDMatchingStrategy implements IResourceMatchingStrategy {
+
 	/**
-	 * {@inheritDoc}
+	 * Matches the given resources according to the IDs found in their roots.
+	 * <p>
+	 * When the root IDs of two resources intersect, they are considered as matching. This strategy will only
+	 * return unique matches between all resources.
+	 * </p>
 	 * 
-	 * @see org.eclipse.emf.compare.match.resource.IResourceMatchingStrategy#matchResources(java.lang.Iterable,
-	 *      java.lang.Iterable, java.lang.Iterable)
+	 * @param left
+	 *            Resources we are to match in the left.
+	 * @param right
+	 *            Resources we are to match in the right.
+	 * @param origin
+	 *            Resources we are to match in the origin.
+	 * @return The list of unique mappings this strategy managed to determine.
 	 */
 	public List<MatchResource> matchResources(Iterable<? extends Resource> left,
 			Iterable<? extends Resource> right, Iterable<? extends Resource> origin) {
 		final List<MatchResource> mappings = Lists.newArrayList();
 
+		final List<Resource> leftCopy = Lists.newArrayList(left);
 		final List<Resource> rightCopy = Lists.newArrayList(right);
 		final List<Resource> originCopy = Lists.newArrayList(origin);
 
-		// Can we find matches for the left resource in either left or origin?
-		for (Resource leftResource : left) {
-			final Resource matchingRight = findMatch(leftResource, rightCopy);
-			final Resource matchingOrigin = findMatch(leftResource, originCopy);
+		final Map<Resource, List<Resource>> leftRightMap = new LinkedHashMap<Resource, List<Resource>>();
+		final Map<Resource, List<Resource>> leftOriginMap = new LinkedHashMap<Resource, List<Resource>>();
+		final Map<Resource, List<Resource>> rightOriginMap = new LinkedHashMap<Resource, List<Resource>>();
 
-			if (matchingRight != null || matchingOrigin != null) {
-				rightCopy.remove(matchingRight);
-				originCopy.remove(matchingOrigin);
-				mappings.add(createMatchResource(leftResource, matchingRight, matchingOrigin));
-			}
+		for (Resource leftResource : leftCopy) {
+			final List<Resource> matchingRights = findMatches(leftResource, rightCopy);
+			leftRightMap.put(leftResource, matchingRights);
+
+			final List<Resource> matchingOrigins = findMatches(leftResource, originCopy);
+			leftOriginMap.put(leftResource, matchingOrigins);
 		}
-
-		// We no longer have to check in the left, but we may have matches of the right resources in the
-		// origin list
 		for (Resource rightResource : rightCopy) {
-			final Resource matchingOrigin = findMatch(rightResource, originCopy);
-			originCopy.remove(matchingOrigin);
+			final List<Resource> matchingLefts = findMatches(rightResource, leftCopy);
+			leftRightMap.put(rightResource, matchingLefts);
 
-			if (matchingOrigin != null) {
-				mappings.add(createMatchResource(null, rightResource, matchingOrigin));
+			final List<Resource> matchingOrigins = findMatches(rightResource, originCopy);
+			rightOriginMap.put(rightResource, matchingOrigins);
+		}
+		for (Resource originResource : originCopy) {
+			final List<Resource> matchingLefts = findMatches(originResource, leftCopy);
+			leftOriginMap.put(originResource, matchingLefts);
+
+			final List<Resource> matchingRights = findMatches(originResource, rightCopy);
+			rightOriginMap.put(originResource, matchingRights);
+		}
+
+		for (Resource leftResource : leftCopy) {
+			List<Resource> rightObjects = leftRightMap.get(leftResource);
+
+			Resource rightResource = null;
+			Resource originResource = null;
+
+			if (rightObjects.size() > 1) {
+				rightCopy.removeAll(rightObjects);
+				continue;
+			}
+
+			if (rightObjects.size() == 1) {
+				final Resource rightCandidate = rightObjects.get(0);
+				// check left
+				if (leftRightMap.get(rightCandidate).size() == 1) {
+					rightResource = rightCandidate;
+				}
+			}
+
+			// check origins
+			if (!originCopy.isEmpty()) {
+				Set<Resource> originObjects = Sets.newHashSet();
+				originObjects.addAll(leftOriginMap.get(leftResource));
+				if (rightResource != null) {
+					originObjects.addAll(rightOriginMap.get(rightResource));
+				}
+				if (originObjects.size() > 1) {
+					rightCopy.remove(rightResource);
+					continue;
+				}
+				if (originObjects.size() == 1) {
+					final Resource originCandidate = originObjects.iterator().next();
+					// check origin does not map to more
+					Set<Resource> mappedResources = Sets.newHashSet();
+					mappedResources.addAll(leftOriginMap.get(originCandidate));
+					mappedResources.addAll(rightOriginMap.get(originCandidate));
+					mappedResources.add(leftResource);
+					mappedResources.add(rightResource);
+					if (mappedResources.size() > 2) {
+						rightCopy.remove(rightResource);
+						continue;
+					} else {
+						originResource = originCandidate;
+					}
+				}
+			}
+			if (rightResource != null || originResource != null) {
+				mappings.add(createMatchResource(leftResource, rightResource, originResource));
+				rightCopy.remove(rightResource);
 			}
 		}
 
+		if (!originCopy.isEmpty()) {
+			for (Resource rightResource : rightCopy) {
+
+				Resource leftResource = null;
+				Resource originResource = null;
+
+				List<Resource> originObjects = rightOriginMap.get(rightResource);
+				if (originObjects.size() == 1) {
+					originResource = originObjects.get(0);
+					// check right side
+					if (rightOriginMap.get(originResource).size() > 1) {
+						continue;
+					}
+					// check left side
+					List<Resource> leftCandidates = leftOriginMap.get(originResource);
+					if (leftCandidates.size() > 1) {
+						continue;
+					} else if (leftCandidates.size() == 1) {
+						Resource leftCandidate = leftCandidates.get(0);
+
+						// check right and origin
+						if (leftOriginMap.get(leftCandidate).size() > 1) {
+							continue;
+						}
+						if (!leftRightMap.get(leftCandidate).isEmpty()) {
+							continue;
+						}
+						leftResource = leftCandidate;
+					}
+					mappings.add(createMatchResource(leftResource, rightResource, originResource));
+				}
+			}
+		}
 		return mappings;
+	}
+
+	/**
+	 * Returns the first two matches of <code>reference</code> in <code>candidates</code>. This implementation
+	 * will consider two Resources to be "matches" if their roots have IDs, and these IDs intersect.
+	 * <p>
+	 * Subclasses may return more than two elements if considered useful.
+	 * </p>
+	 * 
+	 * @param reference
+	 *            The reference resource.
+	 * @param candidates
+	 *            The list of potential candidates that may match <code>reference</code>.
+	 * @return The first two matches of <code>reference</code> in <code>candidates</code>. Empty list if none.
+	 * @since 3.3
+	 */
+	protected List<Resource> findMatches(Resource reference, Iterable<Resource> candidates) {
+		final Set<String> referenceIDs = getResourceIdentifiers(reference);
+		if (referenceIDs.isEmpty()) {
+			return Lists.newArrayList();
+		}
+
+		final List<Resource> matches = new ArrayList<Resource>(2);
+		final Iterator<Resource> candidateIterator = candidates.iterator();
+
+		// optimize for size 2 since we do not need more at the moment
+		while (candidateIterator.hasNext() && matches.size() < 2) {
+			final Resource candidate = candidateIterator.next();
+			final Set<String> candidateIDs = getResourceIdentifiers(candidate);
+			if (!candidateIDs.isEmpty() && !Sets.intersection(candidateIDs, referenceIDs).isEmpty()) {
+				matches.add(candidate);
+			}
+		}
+
+		return matches;
 	}
 
 	/**
@@ -80,7 +218,9 @@ public class RootIDMatchingStrategy implements IResourceMatchingStrategy {
 	 *            The list of potential candidates that may match <code>reference</code>.
 	 * @return The first match of <code>reference</code> in <code>candidates</code>. <code>null</code> if
 	 *         none.
+	 * @deprecated use {@link RootIDMatchingStrategy#findMatches(Resource, Iterable)} instead.
 	 */
+	@Deprecated
 	protected Resource findMatch(Resource reference, Iterable<Resource> candidates) {
 		final Set<String> referenceIDs = getResourceIdentifiers(reference);
 		if (referenceIDs.isEmpty()) {

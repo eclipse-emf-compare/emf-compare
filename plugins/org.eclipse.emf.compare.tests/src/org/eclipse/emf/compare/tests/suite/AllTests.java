@@ -39,6 +39,7 @@ import org.eclipse.emf.compare.tests.match.IdentifierEObjectMatcherTest;
 import org.eclipse.emf.compare.tests.match.MatchEngineFactoryRegistryTest;
 import org.eclipse.emf.compare.tests.match.ProximityIndexTest;
 import org.eclipse.emf.compare.tests.match.ProxyMatchingTest;
+import org.eclipse.emf.compare.tests.match.RootIDMatchingTest;
 import org.eclipse.emf.compare.tests.match.XMIMatchingTest;
 import org.eclipse.emf.compare.tests.merge.ConflictMergeTest;
 import org.eclipse.emf.compare.tests.merge.ExtensionMergeTest;
@@ -83,7 +84,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		ExtensionMergeTest.class, IndividualMergeOutOfScopeValuesTest.class, ProximityComparisonTest.class,
 		DynamicInstanceComparisonTest.class, URIDistanceTest.class, FragmentationTest.class,
 		AllEditTests.class, CommandStackTestSuite.class, MatchEngineFactoryRegistryTest.class,
-		XMIMatchingTest.class, ProxyMatchingTest.class, ConflictMergeTest.class,
+		RootIDMatchingTest.class, XMIMatchingTest.class, ProxyMatchingTest.class, ConflictMergeTest.class,
 		PseudoConflictMergeTest.class, ProximityIndexTest.class, AllRCPTests.class,
 		FeatureMaps2wayMergeTest.class, FeatureMaps3wayMergeTest.class, FeatureMapsConflictsMergeTest.class,
 		FeatureMapsPseudoConflictsMergeTest.class, TwoWayBatchMergingTest.class, EqualityHelperTest.class,
