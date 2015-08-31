@@ -161,10 +161,10 @@
       <id>luna</id>
       <properties>
         <profile-id>luna</profile-id>
+      </properties>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
-      </properties>
       <build>
         <plugins>
           <plugin>
