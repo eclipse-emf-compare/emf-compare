@@ -161,6 +161,9 @@
       <id>luna</id>
       <properties>
         <profile-id>luna</profile-id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
       </properties>
       <build>
         <plugins>
