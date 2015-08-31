@@ -1,0 +1,67 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_NQgrUE_eEeWqpPs2GegP7A
+Element-Name: ts008_tc005_move_with_different_containers
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: https://bugs.eclipse.org/bugs/show_bug.cgi?id=411485
+Id: _gpiK8E_dEeWqpPs2GegP7A
+Runtime-Version: 2.0.0.201506120617
+Save-Time: 8/31/15 4:31 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate the expend behaviour when a resource is copied from a container to another.
+TEST STEPS
+	1) Select the 2 uml models extlibraryLeft.uml and extlibraryRight.uml in the folder named "Library" and run a 2-way comparison
+	2) In the SMV, Double-click on the "title : EString [eStructuralFeature move]" inside container Book difference.
+	//asserts that the left and the right part of the CMV have the container Book expended
+    //asserts that the left and the right part of the CMV have the container Library expended
+	3) In the SMV, Double-click on the fullName : eString [eStructuralFeature add] inside container Person difference.
+    //asserts that the left and the right part of the CMV have the container Person expended
+	//asserts that the left and the right part of the CMV have the container Book expended
+    //asserts that the left and the right part of the CMV have the container Library expended
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Package Explorer" | get-tree] {
+    select "Library/extlibraryLeft.ecore" | key-type "M2+ARROW_DOWN"
+    select "Library/extlibraryLeft.ecore" "Library/extlibraryRight.ecore"
+    get-menu "Compare With/Each Other" | click
+}
+get-editor "Compare ('Library/extlibraryLeft.ecore' - 'Library/extlibraryRight.ecore')" | get-tree 
+    | select "> extlibrary/> Book -> CirculatingItem/title : EString [eStructuralFeatures add]" | double-click
+with [get-editor "Compare ('Library/extlibraryLeft.ecore' - 'Library/extlibraryRight.ecore')"] {
+    get-tree -after [get-label "Local: /Library/extlibraryRight.ecore"] | get-item "extlibrary/Book -> CirculatingItem" 
+        | get-property "getExpanded()" | equals true | verify-true
+    get-tree -after [get-label "Local: /Library/extlibraryRight.ecore"] -index 1 
+        | get-item "extlibrary/Book -> CirculatingItem, TitledItem" | get-property "getExpanded()" | equals true 
+        | verify-true
+    get-tree -after [get-label "Local: /Library/extlibraryRight.ecore"] | get-item "extlibrary/Library -> Addressable" 
+        | get-property "getExpanded()" | equals true | verify-true
+    get-tree -after [get-label "Local: /Library/extlibraryRight.ecore"] -index 1 
+        | get-item "extlibrary/Library -> Addressable" | get-property "getExpanded()" | equals true | verify-true
+}
+get-editor "Compare ('Library/extlibraryLeft.ecore' - 'Library/extlibraryRight.ecore')" | get-tree 
+    | select "> extlibrary/> Person -> Addressable/fullName : EString [eStructuralFeatures add]" | double-click
+with [get-editor "Compare ('Library/extlibraryLeft.ecore' - 'Library/extlibraryRight.ecore')"] {
+    with [get-tree -after [get-label "Local: /Library/extlibraryRight.ecore"]] {
+        get-item "extlibrary/Book -> CirculatingItem" | get-property "getExpanded()" | equals false | verify-true
+        get-item "extlibrary/Library -> Addressable" | get-property "getExpanded()" | equals false | verify-true
+    }
+    with [get-tree -after [get-label "Local: /Library/extlibraryRight.ecore"] -index 1] {
+        get-item "extlibrary/Book -> CirculatingItem, TitledItem" | get-property "getExpanded()" | equals false 
+            | verify-true
+        get-item "extlibrary/Library -> Addressable" | get-property "getExpanded()" | equals false | verify-true
+    }
+    get-tree -after [get-label "Local: /Library/extlibraryRight.ecore"] | get-item "extlibrary/Person -> Addressable" 
+        | get-property "getExpanded()" | equals true | verify-true
+    get-tree -after [get-label "Local: /Library/extlibraryRight.ecore"] -index 1 
+        | get-item "extlibrary/Person -> Addressable" | get-property "getExpanded()" | equals true | verify-true
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
