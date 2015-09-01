@@ -5,6 +5,10 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *     Florian Zoubek - rebase method added
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.egit.fixture;
 
@@ -38,6 +42,7 @@ import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.egit.core.op.DisconnectProviderOperation;
 import org.eclipse.egit.core.op.IgnoreOperation;
 import org.eclipse.egit.core.op.MergeOperation;
+import org.eclipse.egit.core.op.RebaseOperation;
 import org.eclipse.egit.core.op.ResetOperation;
 import org.eclipse.egit.core.synchronize.GitResourceVariantTreeSubscriber;
 import org.eclipse.egit.core.synchronize.GitSubscriberMergeContext;
@@ -517,6 +522,16 @@ public class GitTestRepository {
 	 */
 	public void mergeTextual(String refName) throws CoreException {
 		new MergeOperation(repository, refName, MergeStrategy.RECURSIVE.getName()).execute(null);
+	}
+	
+	/**
+	 * Rebase the current HEAD on the given ref, using the default (logical) strategy.
+	 * 
+	 * @param refName
+	 *            Name of a commit to rebase the current HEAD on.
+	 */
+	public void rebaseLogical(String refName) throws CoreException, IOException{
+		new RebaseOperation(repository, repository.getRef(refName)).execute(null);
 	}
 
 	/**

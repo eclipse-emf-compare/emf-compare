@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - adds GitLogicalMergeWithCustomDependenciesTest
+ *     Philip Langer - adds further test cases
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.suite;
 
@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.ide.ui.tests.merge.StrategyRecursiveModelWithDeep
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeWithCustomDependenciesTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalModelTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitMergeTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.MovedImplicitResourceAmongChangedResourcesTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.ThreadedModelResolverResolutionTest;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
@@ -42,6 +43,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	RenamedControlledResourceTests.class,
 	ThreadedModelResolverResolutionTest.class,
 	GitMergeTest.class,
+	MovedImplicitResourceAmongChangedResourcesTest.class
 	})
 public class GitTests {
 	/**
