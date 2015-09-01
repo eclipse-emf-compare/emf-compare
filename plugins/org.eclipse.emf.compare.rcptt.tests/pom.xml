@@ -5,23 +5,7 @@
   <artifactId>org.eclipse.emf.compare.rcptt.test</artifactId>
   <version>4.0.0-SNAPSHOT</version>
   <packaging>rcpttTest</packaging>
-    
-  <pluginRepositories>
-    <pluginRepository>
-      <id>rcptt-releases</id>
-      <name>RCPTT Maven repository</name>
-      <url>https://repo.eclipse.org/content/repositories/rcptt-releases/</url>
-    </pluginRepository>
-    <pluginRepository>
-      <snapshots>
-        <updatePolicy>always</updatePolicy>
-      </snapshots>
-      <id>rcptt-snapshots</id>
-      <name>Xored Maven repository</name>
-      <url>https://repo.eclipse.org/content/repositories/rcptt-snapshots/</url>
-    </pluginRepository>
-  </pluginRepositories> 
-  
+
   <properties>
     <rcptt-maven-version>2.0.0-SNAPSHOT</rcptt-maven-version>
     <exec-maven-plugin-version>1.2.1</exec-maven-plugin-version>
@@ -50,7 +34,7 @@
       </plugin>
     </plugins>
   </build>
- 
+
   <profiles>
     <profile>
       <id>collaborative-modeling</id>
@@ -80,7 +64,7 @@
                 <suite>TestSuite.Full</suite>
               </suites>
               <runner>
-                <version>2.0.0</version>
+                <explicit>{$rcpttrunner}</explicit>
               </runner>
             </configuration>
           </plugin>
@@ -115,7 +99,7 @@
                 <suite>TestSuite.Full</suite>
               </suites>
               <runner>
-                <version>2.0.0</version>
+                <explicit>{$rcpttrunner}</explicit>
               </runner>
             </configuration>
           </plugin>
@@ -150,7 +134,7 @@
                 <suite>TestSuite.Full</suite>
               </suites>
               <runner>
-                <version>2.0.0</version>
+                <explicit>{$rcpttrunner}</explicit>
               </runner>
             </configuration>
           </plugin>
@@ -185,7 +169,7 @@
                 <suite>TestSuite.Full</suite>
               </suites>
               <runner>
-                <version>2.0.0</version>
+                <explicit>{$rcpttrunner}</explicit>
               </runner>
             </configuration>
           </plugin>
@@ -217,7 +201,7 @@
                 <suite>TestSuite.Core</suite>
               </suites>
               <runner>
-                <version>2.0.0</version>
+                <explicit>{$rcpttrunner}</explicit>
               </runner>
             </configuration>
           </plugin>
