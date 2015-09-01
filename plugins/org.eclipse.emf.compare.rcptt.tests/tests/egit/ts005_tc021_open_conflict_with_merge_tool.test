@@ -1,0 +1,41 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _esl5McFSEeOYLdsfVxYNxQ,_LOMGYGrvEeK_JdLra2Bk5A,_Ad-gEE_2EeW8uKW5PR0u9g,_hQZiYE_4EeW8uKW5PR0u9g
+Element-Name: ts005_tc021_open_conflict_with_merge_tool
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _wRuJUE_0EeW8uKW5PR0u9g
+Runtime-Version: 2.0.0.201506120617
+Save-Time: 10/27/15 3:51 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test validate that the EMFCompareConfiguration is set when the comparison is launched from the mergeTool action. The StructureMergeViewer should display all the labels.
+
+TEST STEPS
+	1) Right-click on testMerge_3 project, in "team", select context menu "Merge"
+    2) Select the branch "mergeMe"
+    3) Dismiss the Merge Result view (by clicking OK)
+   4) Right-click on the file "model.ecore". In the contextual menu select "Model Merge Tool" under "Team"
+        // assert that the label "Conflict [X out of X conflicts unresolved]" is present
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+get-view "Package Explorer" | get-tree | select "testMerge_3  [testMerge_3 master]" | get-menu "Team/Merge..." | click
+get-window "Merge 'master'" | get-tree | select "Local/mergeMe 520eb13 mergeMe" | click -default
+get-window "Merge Result" | get-button OK | click
+get-view "Package Explorer" | get-tree | select "testMerge_3  [testMerge_3|Conflicts master]/model.ecore"
+exec-with-options {
+    get-view "Package Explorer" | get-tree | get-menu "Team/Model Merge Tool (with EMFCompare)" | click
+} -allowStatusDialog
+
+get-editor "Repository 'testMerge_3': Merging 'mergeMe' into 'refs/heads/master'" | get-tree 
+    | get-item "> Conflicts/> Conflict \\[[0-9] out of [0-9] conflicts unresolved\\]" | get-property caption 
+    | equals "> Conflict \\[[0-9] out of [0-9] conflicts unresolved\\]" | verify-true
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

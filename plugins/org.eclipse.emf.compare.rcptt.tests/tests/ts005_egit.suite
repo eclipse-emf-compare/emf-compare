@@ -38,6 +38,7 @@ _AcvXEL_sEeOYOO8-bD9VkQ	// kind: 'test' name: 'ts005_tc017_compare_with_git_inde
 _cR-YkL_sEeOYOO8-bD9VkQ	// kind: 'test' name: 'ts005_tc018_compare_with_branch_master_from_editor' path: 'egit/ts005_tc018_compare_with_branch_master_from_editor.test'
 _qrJEQL_xEeOYOO8-bD9VkQ	// kind: 'test' name: 'ts005_tc019_commit_viewer_compare_with_workspace' path: 'egit/ts005_tc019_commit_viewer_compare_with_workspace.test'
 _I0mWoJKiEeSdjeXOy8KSHw	// kind: 'test' name: 'ts005_tc020_merge_branch1_into_master' path: 'egit/ts005_tc020_merge_branch1_into_master.test'
+_wRuJUE_0EeW8uKW5PR0u9g	// kind: 'test' name: 'ts005_tc021_open_conflict_with_merge_tool' path: 'egit/ts005_tc021_open_conflict_with_merge_tool.test'
 _wXTuUFCAEeWzYYatGYnhhw	// kind: 'test' name: 'ts005_tc022_CMV_titles_from_egit_history' path: 'egit/ts005_tc022_CMV_titles_from_egit_history.test'
 
 ------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8--
