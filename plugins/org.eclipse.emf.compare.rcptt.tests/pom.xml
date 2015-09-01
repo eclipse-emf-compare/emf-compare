@@ -72,7 +72,7 @@
                 <suite>TestSuite.Full</suite>
               </suites>
               <runner>
-                <explicit>{$rcpttrunner}</explicit>
+                <explicit>${rcpttrunner}</explicit>
               </runner>
             </configuration>
           </plugin>
@@ -107,7 +107,7 @@
                 <suite>TestSuite.Full</suite>
               </suites>
               <runner>
-                <explicit>{$rcpttrunner}</explicit>
+                <explicit>${rcpttrunner}</explicit>
               </runner>
             </configuration>
           </plugin>
@@ -142,7 +142,7 @@
                 <suite>TestSuite.Full</suite>
               </suites>
               <runner>
-                <explicit>{$rcpttrunner}</explicit>
+                <explicit>${rcpttrunner}</explicit>
               </runner>
             </configuration>
           </plugin>
@@ -177,7 +177,7 @@
                 <suite>TestSuite.Full</suite>
               </suites>
               <runner>
-                <explicit>{$rcpttrunner}</explicit>
+                <explicit>${rcpttrunner}</explicit>
               </runner>
             </configuration>
           </plugin>
@@ -209,7 +209,7 @@
                 <suite>TestSuite.Core</suite>
               </suites>
               <runner>
-                <explicit>{$rcpttrunner}</explicit>
+                <explicit>${rcpttrunner}</explicit>
               </runner>
             </configuration>
           </plugin>
