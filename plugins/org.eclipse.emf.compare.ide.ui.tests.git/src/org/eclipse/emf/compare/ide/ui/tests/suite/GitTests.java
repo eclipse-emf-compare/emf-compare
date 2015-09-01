@@ -16,10 +16,14 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.ide.ui.tests.merge.DirCacheResourceVariantTreeProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.RenamedControlledResourceTests;
-import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeTest;
+import org.eclipse.emf.compare.ide.ui.tests.merge.StrategyRecursiveModelTest;
+import org.eclipse.emf.compare.ide.ui.tests.merge.StrategyRecursiveModelWithDeepProjectTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeWithCustomDependenciesTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalModelTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.GitMergeTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.ThreadedModelResolverResolutionTest;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
 import org.eclipse.emf.ecore.EPackage;
@@ -31,12 +35,13 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({GitLogicalModelTest.class,
-	// FIXME
-	// GitLogicalMergeTest.class, Uncomment when all logical model contributions to EGit will be merged.
-	// GitLogicalMergeWithCustomDependenciesTest.class, 
-	// RenamedControlledResourceTests.class,
-	// ThreadedModelResolverResolutionTest.class,
-	// GitMergeTest.class,
+	DirCacheResourceVariantTreeProviderTest.class,
+	StrategyRecursiveModelTest.class,
+	StrategyRecursiveModelWithDeepProjectTest.class,
+	GitLogicalMergeWithCustomDependenciesTest.class, 
+	RenamedControlledResourceTests.class,
+	ThreadedModelResolverResolutionTest.class,
+	GitMergeTest.class,
 	})
 public class GitTests {
 	/**

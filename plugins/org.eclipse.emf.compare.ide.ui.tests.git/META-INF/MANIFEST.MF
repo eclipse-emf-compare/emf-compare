@@ -1,10 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.emf.compare.ide.ui.tests.git
+Bundle-SymbolicName: org.eclipse.emf.compare.ide.ui.tests.git;singleton:=true
 Bundle-Version: 4.2.0.qualifier
 Bundle-Vendor: %providerName
 Fragment-Host: org.eclipse.emf.compare.ide.ui.tests
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.eclipse.egit.core;bundle-version="3.0.0",
+Require-Bundle: org.eclipse.emf.compare.egit;bundle-version="1.1.0",
+ org.eclipse.egit.core;bundle-version="3.0.0",
  org.eclipse.jgit;bundle-version="3.0.0"

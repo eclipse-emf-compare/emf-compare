@@ -23,10 +23,12 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare.rcp.ui.tests,
  org.eclipse.emf.compare.rcp.ui,
  org.mockito;bundle-version="[1.9.0,2.0.0)",
- org.hamcrest;bundle-version="[1.1.0,2.0.0)"
+ org.hamcrest;bundle-version="[1.1.0,2.0.0)",
+ org.eclipse.core.filesystem
 Bundle-Activator: org.eclipse.emf.compare.ide.ui.tests.Activator
 Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
  com.google.common.collect;version="[11.0.0,16.0.0)",
  com.google.common.eventbus;version="[11.0.0,16.0.0)",
  com.google.common.util.concurrent;version="[11.0.0,16.0.0)"
 Export-Package: org.eclipse.emf.compare.ide.ui.tests.workspace
+Bundle-ActivationPolicy: lazy

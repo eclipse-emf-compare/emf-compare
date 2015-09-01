@@ -12,8 +12,10 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -28,6 +30,11 @@ import org.eclipse.core.runtime.Path;
 
 @SuppressWarnings("nls")
 public class TestProject {
+
+	private File workspaceSupplement;
+
+	private String location;
+
 	/** The underlying eclipse project. */
 	private IProject project;
 
@@ -43,18 +50,60 @@ public class TestProject {
 	 * This will create a new project with the given name inside the workspace. If this project already
 	 * existed, it will be deleted and re-created.
 	 * 
-	 * @param name
+	 * @param path
 	 *            Name of our project.
 	 */
-	public TestProject(String name) throws CoreException {
+	public TestProject(String path) throws CoreException {
+		this(path, true, null);
+	}
+
+	/**
+	 * This will create a new project with the given name inside the workspace. If this project already
+	 * existed, it will be deleted and re-created.
+	 * 
+	 * @param path
+	 *            Name of our project.
+	 * @param workspaceSupplement
+	 *            File to host the workspace
+	 */
+	public TestProject(String path, boolean delete, File workspaceSupplement) throws CoreException {
 		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(name);
+		this.workspaceSupplement = workspaceSupplement;
+		IProjectDescription description = createDescription(path, true, root, workspaceSupplement);
 		project = root.getProject(description.getName());
-		if (project.exists()) {
-			project.delete(true, true, new NullProgressMonitor());
+		if (delete) {
+			project.delete(true, true, null);
 		}
-		project.create(description, new NullProgressMonitor());
-		project.open(new NullProgressMonitor());
+		IPath locationBefore = description.getLocation();
+		if (locationBefore == null) {
+			locationBefore = root.getRawLocation().append(path);
+		}
+		location = locationBefore.toOSString();
+		project.create(description, null);
+		project.open(null);
+	}
+
+	private IProjectDescription createDescription(String path, boolean insidews, IWorkspaceRoot root,
+			File workspaceSupplement) {
+		Path ppath = new Path(path);
+		String projectName = ppath.lastSegment();
+		URI locationURI;
+		URI top;
+		if (insidews) {
+			top = root.getRawLocationURI();
+		} else {
+			top = URIUtil.toURI(workspaceSupplement.getAbsolutePath());
+		}
+		if (!insidews || !ppath.lastSegment().equals(path)) {
+			locationURI = URIUtil.toURI(URIUtil.toPath(top).append(path));
+		} else {
+			locationURI = null;
+		}
+		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projectName);
+
+		description.setName(projectName);
+		description.setLocationURI(locationURI);
+		return description;
 	}
 
 	public IProject getProject() {

@@ -11,5 +11,11 @@
          </adapter>
       </factory>
    </extension>
-
+   <extension
+         point="org.eclipse.egit.core.mergeStrategy">
+      <strategy
+            class="org.eclipse.emf.compare.egit.internal.merge.StrategyRecursiveModel"
+            label="%StrategyRecursiveModel-Label">
+      </strategy>
+   </extension>
 </plugin>

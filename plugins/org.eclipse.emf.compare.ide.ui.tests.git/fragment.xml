@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<fragment>
+   <extension
+         id="org.eclipse.emf.compare.ide.ui.tests.models.sampleModelProvider"
+         name="Sample Test Model"
+         point="org.eclipse.core.resources.modelProviders">
+      <modelProvider
+            class="org.eclipse.emf.compare.ide.ui.tests.models.SampleModelProvider">
+      </modelProvider>
+      <enablement>
+         <and>
+            <adapt
+                  type="org.eclipse.core.resources.IFile">
+               <test
+                     forcePluginActivation="true"
+                     property="org.eclipse.core.resources.name"
+                     value="*.sample">
+               </test>
+            </adapt>
+         </and>
+      </enablement>
+      <extends-model
+            id="org.eclipse.core.resources.modelProvider">
+      </extends-model>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.emf.compare.ide.ui.tests.models.SampleModelProvider"
+            class="org.eclipse.emf.compare.ide.ui.tests.models.SampleModelAdapterFactory">
+         <adapter
+               type="org.eclipse.team.core.mapping.IResourceMappingMerger">
+         </adapter>
+      </factory>
+   </extension>
+</fragment>
