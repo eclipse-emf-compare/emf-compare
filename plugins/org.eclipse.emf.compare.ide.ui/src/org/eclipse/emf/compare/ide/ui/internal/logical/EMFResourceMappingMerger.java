@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - bugs 461713, 465331, 470268, 476417, refactorings
+ *     Philip Langer - bugs 461713, 465331, 470268, 476363, 476417, refactorings
  *     Alexandra Buzila - bug 470332
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
@@ -67,6 +67,7 @@ import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
+import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.utils.Graph;
@@ -238,6 +239,8 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 		final SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
 		// validateMappings() has made sure we only have EMFResourceMappings
 		final SynchronizationModel syncModel = ((EMFResourceMapping)mapping).getLatestModel();
+		// we may have non-existing storages in the left traversal, so let's get rid of them
+		removeNonExistingStorages(syncModel.getLeftTraversal());
 
 		final IModelMinimizer minimizer = new IdenticalResourceMinimizer();
 		minimizer.minimize(syncModel, subMonitor.newChild(1)); // 10%
@@ -268,6 +271,24 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 		}
 
 		subMonitor.setWorkRemaining(0);
+	}
+
+	/**
+	 * Removes storages that do not exist from the specified {@code traversal}.
+	 * <p>
+	 * In the current implementation, the check for existence is based on the assumption that the storage
+	 * is an {@link IFile}. This is fine, since we currently need it on the local side only anyways.
+	 * </p>
+	 * 
+	 * @param traversal
+	 *            The traversal to remove non-existing storages from.
+	 */
+	private void removeNonExistingStorages(StorageTraversal traversal) {
+		for (IStorage storage : Sets.newHashSet(traversal.getStorages())) {
+			if (storage instanceof IFile && !((IFile)storage).exists()) {
+				traversal.removeStorage(storage);
+			}
+		}
 	}
 
 	/**
