@@ -11,7 +11,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.team.core;bundle-version="3.5.0",
  org.eclipse.emf.ecore;bundle-version="2.5.0",
  org.eclipse.emf.ecore.xmi;bundle-version="2.5.0",
- org.eclipse.jgit;bundle-version="4.0.0",
  org.mockito;bundle-version="1.8.0",
  org.hamcrest;bundle-version="1.1.0"
 Bundle-ActivationPolicy: lazy

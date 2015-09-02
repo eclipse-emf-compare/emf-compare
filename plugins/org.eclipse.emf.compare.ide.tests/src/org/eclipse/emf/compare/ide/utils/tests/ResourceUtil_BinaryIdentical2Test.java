@@ -33,26 +33,28 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
-import org.eclipse.jgit.lib.ObjectStream.SmallStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.osgi.framework.Bundle;
 
 @SuppressWarnings({"nls", "resource" })
 public class ResourceUtil_BinaryIdentical2Test {
+
+	private static final String PATH1 = "src/org/eclipse/emf/compare/ide/utils/tests/data/binaryequalitytestinputdata1";
+	
+	private static final String PATH2 = "src/org/eclipse/emf/compare/ide/utils/tests/data/binaryequalitytestinputdata2";
+
 	File file1, file2;
 
-	IStorage storage1_stream, storage1_smallStream, storage2_stream, storage2_smallStream;
+	IStorage storage1_stream, storage1_stream2, storage2_stream;
 
 	@Before
 	public void setUp() throws IOException {
 		Bundle bundle = Platform.getBundle("org.eclipse.emf.compare.ide.tests");
-		URL file1Entry = bundle
-				.getEntry("src/org/eclipse/emf/compare/ide/utils/tests/data/binaryequalitytestinputdata1");
+		URL file1Entry = bundle.getEntry(PATH1);
 		URL file1URL = FileLocator.resolve(file1Entry);
 		String file1Path = file1URL.getPath();
-		URL file2Entry = bundle
-				.getEntry("src/org/eclipse/emf/compare/ide/utils/tests/data/binaryequalitytestinputdata2");
+		URL file2Entry = bundle.getEntry(PATH2);
 		URL file2URL = FileLocator.resolve(file2Entry);
 		String file2Path = file2URL.getPath();
 
@@ -60,34 +62,18 @@ public class ResourceUtil_BinaryIdentical2Test {
 		file2 = new File(file2Path);
 
 		storage1_stream = mockStorage(new FileInputStream(file1));
-		storage1_smallStream = mockStorage(new SmallStream(0, Files.toByteArray(file1)));
+		storage1_stream2 = mockStorage(new FileInputStream(file1));
 		storage2_stream = mockStorage(new FileInputStream(file2));
-		storage2_smallStream = mockStorage(new SmallStream(0, Files.toByteArray(file2)));
 	}
 
 	@Test
 	public void testBinaryIdentical_2_sameData() throws IOException {
-		assertTrue(ResourceUtil.binaryIdentical(storage1_stream, storage1_smallStream));
+		assertTrue(ResourceUtil.binaryIdentical(storage1_stream, storage1_stream2));
 	}
 
 	@Test
-	public void testBinaryIdentical_2_differentData_Stream_Stream() {
+	public void testBinaryIdentical_2_differentData() {
 		assertFalse(ResourceUtil.binaryIdentical(storage1_stream, storage2_stream));
-	}
-
-	@Test
-	public void testBinaryIdentical_2_differentData_Stream_SmallStream() {
-		assertFalse(ResourceUtil.binaryIdentical(storage1_stream, storage2_smallStream));
-	}
-
-	@Test
-	public void testBinaryIdentical_2_differentData_SmallStream_Stream() {
-		assertFalse(ResourceUtil.binaryIdentical(storage1_smallStream, storage2_stream));
-	}
-
-	@Test
-	public void testBinaryIdentical_2_differentData_SmallStream_SmallStream() {
-		assertFalse(ResourceUtil.binaryIdentical(storage1_smallStream, storage2_smallStream));
 	}
 
 	@Test
@@ -119,8 +105,8 @@ public class ResourceUtil_BinaryIdentical2Test {
 		IStorage storage1Buffered = mockStorage(buffer(file1, 1024));
 		IStorage storage2Buffered = mockStorage(buffer(file2, 1024));
 
-		assertTrue(ResourceUtil.binaryIdentical(storage1_smallStream, storage1Buffered));
-		assertFalse(ResourceUtil.binaryIdentical(storage1_smallStream, storage2Buffered));
+		assertTrue(ResourceUtil.binaryIdentical(storage1_stream2, storage1Buffered));
+		assertFalse(ResourceUtil.binaryIdentical(storage1_stream2, storage2Buffered));
 	}
 
 	@Test
