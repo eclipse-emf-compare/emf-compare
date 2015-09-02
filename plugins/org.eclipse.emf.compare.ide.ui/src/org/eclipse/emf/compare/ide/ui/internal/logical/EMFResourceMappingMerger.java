@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - bugs 461713, 465331, 470268, refactorings
+ *     Philip Langer - bugs 461713, 465331, 470268, 476417, refactorings
  *     Alexandra Buzila - bug 470332
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
@@ -16,6 +16,8 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -306,24 +308,29 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 * conflicts in order to know exactly which resources should be marked as conflicting.
 	 * 
 	 * @param diffIterator
-	 *            Iterator over the conflicting differences and their dependant diffs.
-	 * @return The uris of all resources impacted by conficting differences.
+	 *            Iterator over the conflicting differences and their dependent diffs.
+	 * @return The uris of all resources impacted by conflicting differences.
 	 */
 	private Set<URI> collectConflictingResources(Iterator<Diff> diffIterator) {
 		final Set<URI> conflictingURIs = new LinkedHashSet<URI>();
 		while (diffIterator.hasNext()) {
-			final Match next = diffIterator.next().getMatch();
-			final URI leftURI = resourceURIorNull(next.getLeft());
-			final URI rightURI = resourceURIorNull(next.getRight());
-			final URI originURI = resourceURIorNull(next.getOrigin());
-			if (leftURI != null) {
-				conflictingURIs.add(leftURI);
-			}
-			if (rightURI != null) {
-				conflictingURIs.add(rightURI);
-			}
-			if (originURI != null) {
-				conflictingURIs.add(originURI);
+			final Diff diff = diffIterator.next();
+			final ImmutableSet.Builder<Diff> builder = ImmutableSet.builder();
+			builder.addAll(diff.getConflict().getDifferences()).add(diff);
+			for (Diff conflictingDiff : builder.build()) {
+				final Match next = conflictingDiff.getMatch();
+				final URI leftURI = resourceURIorNull(next.getLeft());
+				final URI rightURI = resourceURIorNull(next.getRight());
+				final URI originURI = resourceURIorNull(next.getOrigin());
+				if (leftURI != null) {
+					conflictingURIs.add(leftURI);
+				}
+				if (rightURI != null) {
+					conflictingURIs.add(rightURI);
+				}
+				if (originURI != null) {
+					conflictingURIs.add(originURI);
+				}
 			}
 		}
 		return conflictingURIs;
