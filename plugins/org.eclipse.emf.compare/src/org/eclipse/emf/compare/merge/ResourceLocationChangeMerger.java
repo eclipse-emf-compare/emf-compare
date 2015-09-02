@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 476363
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
@@ -14,12 +15,14 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 
 /**
  * This specific implementation of {@link AbstractMerger} will be used to merge resource location changes.
@@ -83,7 +86,7 @@ public class ResourceLocationChangeMerger extends AbstractMerger {
 
 		if (rightToLeft && DifferenceSource.LEFT == resourceLocationChange.getSource()) {
 			// Move content of changed resource in a new resource that has base resource name.
-			final Resource newChangedResource = changedResource.getResourceSet().createResource(
+			final Resource newChangedResource = createAndReplaceResource(changedResource.getResourceSet(),
 					baseResource.getURI());
 			final List<EObject> changedContents = changedResource.getContents();
 			newChangedResource.getContents().addAll(changedContents);
@@ -97,7 +100,7 @@ public class ResourceLocationChangeMerger extends AbstractMerger {
 			}
 		} else if (rightToLeft && DifferenceSource.RIGHT == resourceLocationChange.getSource()) {
 			// Move content of base resource in a new resource that has changed resource name.
-			final Resource newBaseResource = baseResource.getResourceSet().createResource(
+			final Resource newBaseResource = createAndReplaceResource(baseResource.getResourceSet(),
 					changedResource.getURI());
 			final List<EObject> baseContents = baseResource.getContents();
 			newBaseResource.getContents().addAll(baseContents);
@@ -113,6 +116,27 @@ public class ResourceLocationChangeMerger extends AbstractMerger {
 			// We can't modify the remote side of the comparison.
 			// Nothing to do here.
 		}
+	}
+
+	/**
+	 * Creates a resource with the specified {@code uri} in the specified {@code resourceSet}.
+	 * <p>
+	 * If the resource set contains a resource with that URI already, it will remove it and add a new one
+	 * instead in the resource set.
+	 * </p>
+	 * 
+	 * @param resourceSet
+	 *            the resource set to get from or create the resource in.
+	 * @param uri
+	 *            the URI of the resource.
+	 * @return The created resource.
+	 */
+	private Resource createAndReplaceResource(ResourceSet resourceSet, URI uri) {
+		final Resource existingResource = resourceSet.getResource(uri, false);
+		if (existingResource != null) {
+			resourceSet.getResources().remove(existingResource);
+		}
+		return resourceSet.createResource(uri);
 	}
 
 	/**
