@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?>
 <fragment>
    <extension
-         id="org.eclipse.egit.core.tests.sampleModelProvider"
+         id="org.eclipse.emf.compare.ide.ui.tests.models.sampleModelProvider"
          name="Sample Test Model"
          point="org.eclipse.core.resources.modelProviders">
       <modelProvider

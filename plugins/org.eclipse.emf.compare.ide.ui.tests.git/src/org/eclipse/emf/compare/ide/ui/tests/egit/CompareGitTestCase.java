@@ -59,7 +59,7 @@ public class CompareGitTestCase extends CompareTestCase {
 	protected GitTestRepository repository;
 
 	// The ".git" folder of the test repository
-	private File gitDir;
+	protected File gitDir;
 
 	@BeforeClass
 	public static void setUpClass() {

@@ -199,9 +199,8 @@ public class GitTestRepository {
 	}
 
 	public RevCommit addAllAndCommit(String commitMessage) throws Exception {
-		Git git = null;
+		Git git = new Git(repository);
 		try {
-			git = new Git(repository);
 			git.add().addFilepattern(".").call();
 			return commit(commitMessage);
 		} finally {
@@ -219,9 +218,8 @@ public class GitTestRepository {
 	 *             if anything goes wrong.
 	 */
 	public RevCommit addAllAndAmend(String message) throws Exception {
-		Git git = null;
+		Git git = new Git(repository);
 		try {
-			git = new Git(repository);
 			git.add().addFilepattern(".").call();
 			return git.commit().setAmend(true).setMessage(message).call();
 		} finally {
@@ -243,6 +241,89 @@ public class GitTestRepository {
 	public RevCommit addAndCommit(TestProject testProject, String commitMessage, File... files)
 			throws Exception {
 		addToIndex(testProject, files);
+		return commit(commitMessage);
+	}
+
+	/**
+	 * Track, add to index and finally commit given file
+	 *
+	 * @param project
+	 * @param file
+	 * @param commitMessage
+	 * @return commit object
+	 * @throws Exception
+	 */
+	public RevCommit addAndCommit(IProject project, String commitMessage, File... files) throws Exception {
+		for (File file : files) {
+			track(file);
+			addToIndex(project, file);
+		}
+		return commit(commitMessage);
+	}
+
+	/**
+	 * Adds the given file to the index
+	 *
+	 * @param project
+	 * @param file
+	 * @throws Exception
+	 */
+	public void addToIndex(IProject project, File file) throws Exception {
+		IFile iFile = getIFile(project, file);
+		addToIndex(iFile);
+	}
+
+	/**
+	 * Adds the given resource to the index
+	 *
+	 * @param resource
+	 * @throws CoreException
+	 * @throws IOException
+	 * @throws GitAPIException
+	 * @throws NoFilepatternException
+	 */
+	public void addToIndex(IResource resource) throws CoreException, IOException, NoFilepatternException,
+			GitAPIException {
+		String repoPath = getRepoRelativePath(resource.getLocation().toString());
+		Git git = new Git(repository);
+		try {
+			git.add().addFilepattern(repoPath).call();
+		} finally {
+			git.close();
+		}
+	}
+
+	/**
+	 * Appends file content to given file, then track, add to index and finally commit it.
+	 *
+	 * @param project
+	 * @param file
+	 * @param content
+	 * @param commitMessage
+	 * @return commit object
+	 * @throws Exception
+	 */
+	public RevCommit appendContentAndCommit(IProject project, File file, byte[] content, String commitMessage)
+			throws Exception {
+		return appendContentAndCommit(project, file, new String(content, "UTF-8"), commitMessage);
+	}
+
+	/**
+	 * Appends file content to given file, then track, add to index and finally commit it.
+	 *
+	 * @param project
+	 * @param file
+	 * @param content
+	 * @param commitMessage
+	 * @return commit object
+	 * @throws Exception
+	 */
+	public RevCommit appendContentAndCommit(IProject project, File file, String content, String commitMessage)
+			throws Exception {
+		appendFileContent(file, content);
+		track(file);
+		addToIndex(project, file);
+
 		return commit(commitMessage);
 	}
 
@@ -290,9 +371,8 @@ public class GitTestRepository {
 	 */
 	public void addToIndex(IResource... resources) throws CoreException, IOException, NoFilepatternException,
 			GitAPIException {
-		Git git = null;
+		Git git = new Git(repository);
 		try {
-			git = new Git(repository);
 			for (IResource resource : resources) {
 				String repoPath = getRepoRelativePath(resource.getLocation().toString());
 				git.add().addFilepattern(repoPath).call();
@@ -310,9 +390,8 @@ public class GitTestRepository {
 	 */
 	public void removeFromIndex(IResource... resources) throws CoreException, IOException,
 			NoFilepatternException, GitAPIException {
-		Git git = null;
+		Git git = new Git(repository);
 		try {
-			git = new Git(repository);
 			for (IResource resource : resources) {
 				String repoPath = getRepoRelativePath(resource.getLocation().toString());
 				git.rm().addFilepattern(repoPath).call();
@@ -330,9 +409,8 @@ public class GitTestRepository {
 	 * @return commit object
 	 */
 	public RevCommit commit(String message) throws Exception {
-		Git git = null;
+		Git git = new Git(repository);
 		try {
-			git = new Git(repository);
 			CommitCommand commitCommand = git.commit();
 			commitCommand.setAuthor("J. Git", "j.git@egit.org");
 			commitCommand.setCommitter(commitCommand.getAuthor());
@@ -432,52 +510,6 @@ public class GitTestRepository {
 	}
 
 	/**
-	 * Appends file content to given file, then track, add to index and finally commit it.
-	 *
-	 * @param project
-	 * @param file
-	 * @param content
-	 * @param commitMessage
-	 * @return commit object
-	 * @throws Exception
-	 */
-	public RevCommit appendContentAndCommit(IProject project, File file, byte[] content, String commitMessage)
-			throws Exception {
-		return appendContentAndCommit(project, file, new String(content, "UTF-8"), commitMessage);
-	}
-
-	/**
-	 * Appends file content to given file, then track, add to index and finally commit it.
-	 *
-	 * @param project
-	 * @param file
-	 * @param content
-	 * @param commitMessage
-	 * @return commit object
-	 * @throws Exception
-	 */
-	public RevCommit appendContentAndCommit(IProject project, File file, String content, String commitMessage)
-			throws Exception {
-		appendFileContent(file, content);
-		track(file);
-		addToIndex(project, file);
-
-		return commit(commitMessage);
-	}
-
-	/**
-	 * Adds the given file to the index
-	 *
-	 * @param project
-	 * @param file
-	 * @throws Exception
-	 */
-	public void addToIndex(IProject project, File file) throws Exception {
-		IFile iFile = getIFile(project, file);
-		addToIndex(iFile);
-	}
-
-	/**
 	 * Creates a new branch and immediately checkout it.
 	 *
 	 * @param refName
@@ -518,20 +550,15 @@ public class GitTestRepository {
 	}
 
 	/**
-	 * Adds the given resource to the index
-	 *
-	 * @param resource
-	 * @throws CoreException
-	 * @throws IOException
-	 * @throws GitAPIException
-	 * @throws NoFilepatternException
+	 * Returns the status of this repository's files as would "git status".
+	 * 
+	 * @return
+	 * @throws Exception
 	 */
-	public void addToIndex(IResource resource) throws CoreException, IOException, NoFilepatternException,
-			GitAPIException {
-		String repoPath = getRepoRelativePath(resource.getLocation().toString());
+	public Status status() throws Exception {
 		Git git = new Git(repository);
 		try {
-			git.add().addFilepattern(repoPath).call();
+			return git.status().call();
 		} finally {
 			git.close();
 		}
@@ -550,22 +577,6 @@ public class GitTestRepository {
 		Git git = new Git(repository);
 		try {
 			git.add().addFilepattern(repoPath).call();
-		} finally {
-			git.close();
-		}
-	}
-
-	/**
-	 * Returns the status of this repository's files as would "git status".
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	public Status status() throws Exception {
-		Git git = null;
-		try {
-			git = new Git(repository);
-			return git.status().call();
 		} finally {
 			git.close();
 		}
@@ -711,7 +722,7 @@ public class GitTestRepository {
 		return getRepoRelativePath(new Path(file.getPath()).toString());
 	}
 
-	private String getRepoRelativePath(String path) {
+	public String getRepoRelativePath(String path) {
 		final int pfxLen = workdirPrefix.length();
 		final int pLen = path.length();
 		if (pLen > pfxLen) {

@@ -18,9 +18,18 @@ import junit.textui.TestRunner;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.ide.ui.tests.merge.DirCacheResourceVariantTreeProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.GitResourceVariantTreeSubscriberTest;
+import org.eclipse.emf.compare.ide.ui.tests.merge.RenamedControlledResourceTests;
 import org.eclipse.emf.compare.ide.ui.tests.merge.ResourceVariantTest;
+import org.eclipse.emf.compare.ide.ui.tests.merge.StrategyRecursiveModelTest;
+import org.eclipse.emf.compare.ide.ui.tests.merge.StrategyRecursiveModelWithDeepProjectTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.TreeWalkResourceVariantTreeProviderTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeWithCustomDependenciesTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalModelTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.GitMergeTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.ModelResolverLocalTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.ModelResolverRemoteTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.MovedImplicitResourceAmongChangedResourcesTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.ResourceUtilPathTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.RevisionedURIConverterTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.ThreadedModelResolverResolutionTest;
@@ -34,19 +43,24 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({GitLogicalModelTest.class, DirCacheResourceVariantTreeProviderTest.class,
-		GitResourceVariantTreeSubscriberTest.class, ResourceVariantTest.class,
-		TreeWalkResourceVariantTreeProviderTest.class, ResourceUtilPathTest.class,
-		RevisionedURIConverterTest.class, ThreadedModelResolverResolutionTest.class,
-// ModelResolverLocalTest.class,
-// ModelResolverRemoteTest.class,
-// RenamedControlledResourceTests.class,
-// GitLogicalMergeTest.class,
-// StrategyRecursiveModelTest.class,
-// StrategyRecursiveModelWithDeepProjectTest.class,
-// GitLogicalMergeWithCustomDependenciesTest.class,
-// GitMergeTest.class,
-// MovedImplicitResourceAmongChangedResourcesTest.class
+@SuiteClasses({
+		DirCacheResourceVariantTreeProviderTest.class,
+		// GitLogicalMergeTest.class,
+		// GitLogicalMergeWithCustomDependenciesTest.class,
+		GitLogicalModelTest.class,
+		// GitMergeTest.class,
+		GitResourceVariantTreeSubscriberTest.class,
+		// ModelResolverLocalTest.class,
+		// ModelResolverRemoteTest.class,
+		// MovedImplicitResourceAmongChangedResourcesTest.class,
+		// RenamedControlledResourceTests.class,
+		ResourceVariantTest.class,
+		ResourceUtilPathTest.class,
+		RevisionedURIConverterTest.class,
+		// StrategyRecursiveModelTest.class,
+		// StrategyRecursiveModelWithDeepProjectTest.class,
+		ThreadedModelResolverResolutionTest.class,
+		TreeWalkResourceVariantTreeProviderTest.class,
 })
 public class GitTests {
 	/**
