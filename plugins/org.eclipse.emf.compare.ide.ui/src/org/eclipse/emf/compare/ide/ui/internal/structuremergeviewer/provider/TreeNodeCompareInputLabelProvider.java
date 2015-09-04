@@ -248,19 +248,25 @@ public class TreeNodeCompareInputLabelProvider implements ICompareInputLabelProv
 	 * @return the label
 	 */
 	private String computeLabel(StoragePathAdapter adapter) {
-		String commitId = adapter.getCommitId();
-		String username = adapter.getUsername();
-		String computedLabel;
-		if (adapter.isLocal()) {
-			computedLabel = "Local: " + adapter.getStoragePath(); //$NON-NLS-1$
-		} else {
-			computedLabel = adapter.getStoragePath();
-		}
-		if (commitId != null && !"".equals(commitId)) { //$NON-NLS-1$
-			computedLabel += " " + commitId.substring(0, 7); //$NON-NLS-1$
-		}
-		if (username != null && !"".equals(username)) { //$NON-NLS-1$
-			computedLabel += " (" + username + ")"; //$NON-NLS-1$//$NON-NLS-2$
+		String computedLabel = ""; //$NON-NLS-1$
+		if (adapter != null) {
+			String commitId = adapter.getCommitId();
+			String username = adapter.getUsername();
+			if (adapter.isLocal()) {
+				computedLabel = "Local: " + adapter.getStoragePath(); //$NON-NLS-1$
+			} else {
+				computedLabel = adapter.getStoragePath();
+			}
+			if (commitId != null) {
+				// For merge conflicts, the commit ID from EGit can be "Index"
+				if (commitId.length() > 7) {
+					commitId = commitId.substring(0, 7);
+				}
+				computedLabel = String.format("%s %s", computedLabel, commitId).trim(); //$NON-NLS-1$
+			}
+			if (username != null && !"".equals(username)) { //$NON-NLS-1$
+				computedLabel += " (" + username + ")"; //$NON-NLS-1$//$NON-NLS-2$
+			}
 		}
 		return computedLabel;
 	}

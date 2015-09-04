@@ -161,11 +161,16 @@ public class StreamAccessorStorage implements IStorage, IStoragePathAdapterProvi
 	 */
 	public Adapter createStoragePathAdapter(String path, boolean isLocal) {
 		IFileRevision findFileRevision = findFileRevision((ITypedElement)accessor);
-		if (findFileRevision != null) {
-			return new StoragePathAdapter(path, isLocal, findFileRevision.getContentIdentifier(),
+		IFile file = findFile((ITypedElement)accessor);
+		// The parameter isLocal is overwritten because more informations are available here to determine
+		// whether the file is local or remote
+		boolean local = file != null;
+
+		if (!isLocal && findFileRevision != null) {
+			return new StoragePathAdapter(path, local, findFileRevision.getContentIdentifier(),
 					findFileRevision.getAuthor());
 		} else {
-			return new StoragePathAdapter(path, isLocal);
+			return new StoragePathAdapter(path, local);
 		}
 	}
 
