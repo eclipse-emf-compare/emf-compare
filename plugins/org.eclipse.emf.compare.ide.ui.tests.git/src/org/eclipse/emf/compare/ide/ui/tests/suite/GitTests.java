@@ -16,15 +16,7 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
-import org.eclipse.emf.compare.ide.ui.tests.merge.DirCacheResourceVariantTreeProviderTest;
-import org.eclipse.emf.compare.ide.ui.tests.merge.RenamedControlledResourceTests;
-import org.eclipse.emf.compare.ide.ui.tests.merge.StrategyRecursiveModelTest;
-import org.eclipse.emf.compare.ide.ui.tests.merge.StrategyRecursiveModelWithDeepProjectTest;
-import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeWithCustomDependenciesTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalModelTest;
-import org.eclipse.emf.compare.ide.ui.tests.unit.GitMergeTest;
-import org.eclipse.emf.compare.ide.ui.tests.unit.MovedImplicitResourceAmongChangedResourcesTest;
-import org.eclipse.emf.compare.ide.ui.tests.unit.ThreadedModelResolverResolutionTest;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
 import org.eclipse.emf.ecore.EPackage;
@@ -36,15 +28,15 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({GitLogicalModelTest.class,
-	DirCacheResourceVariantTreeProviderTest.class,
-	StrategyRecursiveModelTest.class,
-	StrategyRecursiveModelWithDeepProjectTest.class,
-	GitLogicalMergeWithCustomDependenciesTest.class, 
-	RenamedControlledResourceTests.class,
-	ThreadedModelResolverResolutionTest.class,
-	GitMergeTest.class,
-	MovedImplicitResourceAmongChangedResourcesTest.class
-	})
+// DirCacheResourceVariantTreeProviderTest.class,
+// StrategyRecursiveModelTest.class,
+// StrategyRecursiveModelWithDeepProjectTest.class,
+// GitLogicalMergeWithCustomDependenciesTest.class,
+// RenamedControlledResourceTests.class,
+// ThreadedModelResolverResolutionTest.class,
+// GitMergeTest.class,
+// MovedImplicitResourceAmongChangedResourcesTest.class
+})
 public class GitTests {
 	/**
 	 * Launches the test with the given arguments.
@@ -64,7 +56,7 @@ public class GitTests {
 	public static Test suite() {
 		return new JUnit4TestAdapter(GitTests.class);
 	}
-	
+
 	@BeforeClass
 	public static void fillEMFRegistries() {
 		EPackage.Registry.INSTANCE.put(ComparePackage.eNS_URI, ComparePackage.eINSTANCE);

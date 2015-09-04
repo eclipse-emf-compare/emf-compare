@@ -13,13 +13,8 @@
 package org.eclipse.emf.compare.ide.ui.tests.egit.fixture;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,7 +34,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
-import org.eclipse.egit.core.op.DisconnectProviderOperation;
 import org.eclipse.egit.core.op.IgnoreOperation;
 import org.eclipse.egit.core.op.MergeOperation;
 import org.eclipse.egit.core.op.RebaseOperation;
@@ -63,7 +57,6 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.merge.MergeStrategy;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.util.FileUtils;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberScopeManager;
 
@@ -105,8 +98,9 @@ public class GitTestRepository {
 	}
 
 	public RevCommit addAllAndCommit(String commitMessage) throws Exception {
-		Git git = new Git(repository);
+		Git git = null;
 		try {
+			git = new Git(repository);
 			git.add().addFilepattern(".").call();
 			return commit(commitMessage);
 		} finally {
@@ -124,8 +118,9 @@ public class GitTestRepository {
 	 *             if anything goes wrong.
 	 */
 	public RevCommit addAllAndAmend(String message) throws Exception {
-		Git git = new Git(repository);
+		Git git = null;
 		try {
+			git = new Git(repository);
 			git.add().addFilepattern(".").call();
 			return git.commit().setAmend(true).setMessage(message).call();
 		} finally {
@@ -147,145 +142,6 @@ public class GitTestRepository {
 	public RevCommit addAndCommit(TestProject testProject, String commitMessage, File... files)
 			throws Exception {
 		addToIndex(testProject, files);
-		return commit(commitMessage);
-	}
-
-	/**
-	 * Track, add to index and finally commit given file
-	 *
-	 * @param project
-	 * @param file
-	 * @param commitMessage
-	 * @return commit object
-	 * @throws Exception
-	 */
-	public RevCommit addAndCommit(IProject project, String commitMessage, File... files) throws Exception {
-		for (File file : files) {
-			track(file);
-			addToIndex(project, file);
-		}
-		return commit(commitMessage);
-	}
-
-	/**
-	 * Appends content to end of given file.
-	 *
-	 * @param file
-	 * @param content
-	 * @throws IOException
-	 */
-	public void appendFileContent(File file, byte[] content) throws IOException {
-		appendFileContent(file, new String(content, "UTF-8"), true);
-	}
-
-	/**
-	 * Appends content to end of given file.
-	 *
-	 * @param file
-	 * @param content
-	 * @throws IOException
-	 */
-	public void appendFileContent(File file, String content) throws IOException {
-		appendFileContent(file, content, true);
-	}
-
-	/**
-	 * Appends content to given file.
-	 *
-	 * @param file
-	 * @param content
-	 * @param append
-	 *            if true, then bytes will be written to the end of the file rather than the beginning
-	 * @throws IOException
-	 */
-	public void appendFileContent(File file, byte[] content, boolean append) throws IOException {
-		appendFileContent(file, new String(content, "UTF-8"), append);
-	}
-
-	/**
-	 * Appends content to given file.
-	 *
-	 * @param file
-	 * @param content
-	 * @param append
-	 *            if true, then bytes will be written to the end of the file rather than the beginning
-	 * @throws IOException
-	 */
-	public void appendFileContent(File file, String content, boolean append) throws IOException {
-		Writer fw = null;
-		try {
-			fw = new OutputStreamWriter(new FileOutputStream(file, append), "UTF-8");
-			fw.append(content);
-		} finally {
-			if (fw != null) {
-				fw.close();
-			}
-		}
-	}
-
-	/**
-	 * Adds the given file to the index
-	 *
-	 * @param project
-	 * @param file
-	 * @throws Exception
-	 */
-	public void addToIndex(IProject project, File file) throws Exception {
-		IFile iFile = getIFile(project, file);
-		addToIndex(iFile);
-	}
-
-	/**
-	 * Adds the given resource to the index
-	 *
-	 * @param resource
-	 * @throws CoreException
-	 * @throws IOException
-	 * @throws GitAPIException
-	 * @throws NoFilepatternException
-	 */
-	public void addToIndex(IResource resource) throws CoreException, IOException, NoFilepatternException,
-			GitAPIException {
-		String repoPath = getRepoRelativePath(resource.getLocation().toString());
-		Git git = new Git(repository);
-		try {
-			git.add().addFilepattern(repoPath).call();
-		} finally {
-			git.close();
-		}
-	}
-
-	/**
-	 * Appends file content to given file, then track, add to index and finally commit it.
-	 *
-	 * @param project
-	 * @param file
-	 * @param content
-	 * @param commitMessage
-	 * @return commit object
-	 * @throws Exception
-	 */
-	public RevCommit appendContentAndCommit(IProject project, File file, byte[] content, String commitMessage)
-			throws Exception {
-		return appendContentAndCommit(project, file, new String(content, "UTF-8"), commitMessage);
-	}
-
-	/**
-	 * Appends file content to given file, then track, add to index and finally commit it.
-	 *
-	 * @param project
-	 * @param file
-	 * @param content
-	 * @param commitMessage
-	 * @return commit object
-	 * @throws Exception
-	 */
-	public RevCommit appendContentAndCommit(IProject project, File file, String content, String commitMessage)
-			throws Exception {
-		appendFileContent(file, content);
-		track(file);
-		addToIndex(project, file);
-
 		return commit(commitMessage);
 	}
 
@@ -333,8 +189,9 @@ public class GitTestRepository {
 	 */
 	public void addToIndex(IResource... resources) throws CoreException, IOException, NoFilepatternException,
 			GitAPIException {
-		Git git = new Git(repository);
+		Git git = null;
 		try {
+			git = new Git(repository);
 			for (IResource resource : resources) {
 				String repoPath = getRepoRelativePath(resource.getLocation().toString());
 				git.add().addFilepattern(repoPath).call();
@@ -352,8 +209,9 @@ public class GitTestRepository {
 	 */
 	public void removeFromIndex(IResource... resources) throws CoreException, IOException,
 			NoFilepatternException, GitAPIException {
-		Git git = new Git(repository);
+		Git git = null;
 		try {
+			git = new Git(repository);
 			for (IResource resource : resources) {
 				String repoPath = getRepoRelativePath(resource.getLocation().toString());
 				git.rm().addFilepattern(repoPath).call();
@@ -371,8 +229,9 @@ public class GitTestRepository {
 	 * @return commit object
 	 */
 	public RevCommit commit(String message) throws Exception {
-		Git git = new Git(repository);
+		Git git = null;
 		try {
+			git = new Git(repository);
 			CommitCommand commitCommand = git.commit();
 			commitCommand.setAuthor("J. Git", "j.git@egit.org");
 			commitCommand.setCommitter(commitCommand.getAuthor());
@@ -392,69 +251,6 @@ public class GitTestRepository {
 	public void connect(IProject project) throws CoreException {
 		ConnectProviderOperation op = new ConnectProviderOperation(project, repository.getDirectory());
 		op.execute(null);
-	}
-
-	/**
-	 * Disconnects provider from project
-	 *
-	 * @param project
-	 * @throws CoreException
-	 */
-	public void disconnect(IProject project) throws CoreException {
-		Collection<IProject> projects = Collections.singleton(project.getProject());
-		DisconnectProviderOperation disconnect = new DisconnectProviderOperation(projects);
-		disconnect.execute(null);
-	}
-
-	/**
-	 * Create a file or get an existing one
-	 *
-	 * @param project
-	 *            instance of project inside with file will be created
-	 * @param name
-	 *            name of file
-	 * @return nearly created file
-	 * @throws IOException
-	 */
-	public File createFile(IProject project, String name) throws IOException {
-		String path = project.getLocation().append(name).toOSString();
-		int lastSeparator = path.lastIndexOf(File.separator);
-		FileUtils.mkdirs(new File(path.substring(0, lastSeparator)), true);
-
-		File file = new File(path);
-		if (!file.exists()) {
-			FileUtils.createNewFile(file);
-		}
-
-		return file;
-	}
-
-	public IFile getIFile(IProject project, File file) throws CoreException {
-		String relativePath = getRepoRelativePath(file.getAbsolutePath());
-
-		// In case the project is not at the root of the repository
-		// we need to remove the whole path before the project name.
-		int index = relativePath.indexOf(project.getName());
-		if (index >= 0) {
-			relativePath = relativePath.substring(index + project.getName().length());
-		}
-		IFile iFile = project.getFile(relativePath);
-		iFile.refreshLocal(0, null);
-
-		return iFile;
-	}
-
-	/**
-	 * Creates a new branch and immediately checkout it.
-	 *
-	 * @param refName
-	 *            starting point for the new branch
-	 * @param newRefName
-	 * @throws Exception
-	 */
-	public void createAndCheckoutBranch(String refName, String newRefName) throws Exception {
-		createBranch(refName, newRefName);
-		checkoutBranch(newRefName);
 	}
 
 	/**
@@ -541,27 +337,10 @@ public class GitTestRepository {
 	 * @throws Exception
 	 */
 	public Status status() throws Exception {
-		Git git = new Git(repository);
+		Git git = null;
 		try {
+			git = new Git(repository);
 			return git.status().call();
-		} finally {
-			git.close();
-		}
-	}
-
-	/**
-	 * Adds file to version control
-	 *
-	 * @param file
-	 * @throws IOException
-	 * @throws GitAPIException
-	 * @throws NoFilepatternException
-	 */
-	public void track(File file) throws IOException, NoFilepatternException, GitAPIException {
-		String repoPath = getRepoRelativePath(new Path(file.getPath()).toString());
-		Git git = new Git(repository);
-		try {
-			git.add().addFilepattern(repoPath).call();
 		} finally {
 			git.close();
 		}
@@ -707,7 +486,7 @@ public class GitTestRepository {
 		return getRepoRelativePath(new Path(file.getPath()).toString());
 	}
 
-	public String getRepoRelativePath(String path) {
+	private String getRepoRelativePath(String path) {
 		final int pfxLen = workdirPrefix.length();
 		final int pLen = path.length();
 		if (pLen > pfxLen) {
