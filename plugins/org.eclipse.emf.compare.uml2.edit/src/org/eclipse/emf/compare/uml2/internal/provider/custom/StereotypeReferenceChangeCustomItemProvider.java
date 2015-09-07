@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.provider.ExtendedAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
-import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.ecore.EObject;
@@ -49,18 +48,6 @@ public class StereotypeReferenceChangeCustomItemProvider extends UMLDiffCustomIt
 	 */
 	@Override
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
-		IComposedStyledString stereotypeText = getInternalText(object);
-		return stereotypeText.append(" [stereotype reference changed]", Style.DECORATIONS_STYLER);
-	}
-
-	/**
-	 * Compute the label of the given object.
-	 * 
-	 * @param object
-	 *            The object
-	 * @return The label of the object
-	 */
-	private IStyledString.IComposedStyledString getInternalText(Object object) {
 		final UMLDiff umlDiff = (UMLDiff)object;
 
 		EObject discriminant = umlDiff.getDiscriminant();
@@ -75,12 +62,8 @@ public class StereotypeReferenceChangeCustomItemProvider extends UMLDiffCustomIt
 			// Can't really do more
 			stereotypeText.append(prefix);
 		}
-		return stereotypeText;
-	}
 
-	@Override
-	public String getSemanticObjectLabel(Object object) {
-		return getInternalText(object).getString();
+		return stereotypeText.append(" [stereotype reference changed]", Style.DECORATIONS_STYLER);
 	}
 
 }

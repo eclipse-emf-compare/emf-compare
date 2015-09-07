@@ -19,7 +19,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
-import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 import org.eclipse.emf.compare.uml2.internal.util.UMLCompareAdapterFactory;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
@@ -65,7 +64,6 @@ public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapte
 	public UMLCompareCustomItemProviderAdapterFactory() {
 		supportedTypes.add(IItemStyledLabelProvider.class);
 		supportedTypes.add(IItemDescriptionProvider.class);
-		supportedTypes.add(ISemanticObjectLabelProvider.class);
 	}
 
 	/**

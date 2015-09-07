@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo.
+ * Copyright (c) 2014 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,6 @@ import org.eclipse.emf.compare.internal.EMFCompareEditMessages;
 import org.eclipse.emf.compare.provider.FeatureMapChangeItemProvider;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
-import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
@@ -36,7 +35,7 @@ import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 4.1
  */
-public class FeatureMapChangeItemProviderSpec extends FeatureMapChangeItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider, ISemanticObjectLabelProvider {
+public class FeatureMapChangeItemProviderSpec extends FeatureMapChangeItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider {
 
 	/** The elide length. */
 	private static final int ELIDE_LENGTH = 50;
@@ -179,17 +178,6 @@ public class FeatureMapChangeItemProviderSpec extends FeatureMapChangeItemProvid
 		ret.append("]", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 
 		return ret;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider#getSemanticObjectLabel(java.lang.Object)
-	 * @since 4.2
-	 */
-	public String getSemanticObjectLabel(Object object) {
-		final FeatureMapChange featureMapChange = (FeatureMapChange)object;
-		return getValueText(featureMapChange);
 	}
 
 	/**

@@ -26,10 +26,8 @@ import java.util.Set;
 
 import org.eclipse.compare.INavigatable;
 import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
@@ -41,8 +39,6 @@ import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.merge.IMerger2;
-import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
-import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -79,16 +75,6 @@ public class MergeAction extends BaseSelectionListenerAction {
 	private final INavigatable navigatable;
 
 	/**
-	 * The merge mode used for the comparison.
-	 */
-	private MergeMode selectedMode;
-
-	/**
-	 * The adapter factory for the comparison.
-	 */
-	private AdapterFactory adapterFactory;
-
-	/**
 	 * Constructor.
 	 * 
 	 * @param configuration
@@ -97,13 +83,8 @@ public class MergeAction extends BaseSelectionListenerAction {
 	public MergeAction(ICompareEditingDomain editingDomain, IMerger.Registry mergerRegistry, MergeMode mode,
 			boolean isLeftEditable, boolean isRightEditable, INavigatable navigatable) {
 		super(""); //$NON-NLS-1$
-		IEMFCompareConfiguration emfCompareConfiguration = EMFCompareRCPUIPlugin.getDefault()
-				.getEMFCompareConfiguration();
-		if (emfCompareConfiguration != null) {
-			adapterFactory = emfCompareConfiguration.getAdapterFactory();
-		}
-
 		this.navigatable = navigatable;
+
 		Preconditions.checkNotNull(mode);
 		// at least should be editable
 		Preconditions.checkState(isLeftEditable || isRightEditable);
@@ -122,7 +103,6 @@ public class MergeAction extends BaseSelectionListenerAction {
 		this.leftToRight = mode.isLeftToRight(isLeftEditable, isRightEditable);
 		this.mergeRunnable = createMergeRunnable(mode, isLeftEditable, isRightEditable);
 		this.selectedDifferences = newArrayList();
-		this.selectedMode = mode;
 
 		initToolTipAndImage(mode);
 	}
@@ -164,74 +144,6 @@ public class MergeAction extends BaseSelectionListenerAction {
 				setToolTipText(EMFCompareIDEUIMessages.getString("reject.change.tooltip")); //$NON-NLS-1$
 				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
 						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/reject_change.gif")); //$NON-NLS-1$
-				break;
-			default:
-				throw new IllegalStateException();
-		}
-	}
-
-	/**
-	 * This method is used to created contextual tooltips.
-	 */
-	protected void contextualizeTooltip() {
-
-		if (this.selectedDifferences.size() > 1) {
-			// multiple selection
-			setMultipleTooltip(this.selectedMode);
-		} else if (this.selectedDifferences.isEmpty()) {
-			// no selection
-			initToolTipAndImage(this.selectedMode);
-		} else {
-			String tooltip;
-			Diff diff = this.selectedDifferences.get(0);
-			boolean isFromLeft = diff.getSource().equals(DifferenceSource.LEFT);
-			switch (diff.getKind()) {
-				case ADD:
-					AddTooltipManager addTooltipManager = (AddTooltipManager)TooltipFactory
-							.getTooltipManager(this.adapterFactory, diff);
-					tooltip = addTooltipManager.setAddTooltip(this.selectedMode, diff, isFromLeft);
-					break;
-				case CHANGE:
-					ChangeTooltipManager changeTooltipManager = (ChangeTooltipManager)TooltipFactory
-							.getTooltipManager(this.adapterFactory, diff);
-					tooltip = changeTooltipManager.setChangeTooltip(this.selectedMode, diff, isFromLeft);
-					break;
-				case DELETE:
-					DeleteTooltipManager deleteTooltipManager = (DeleteTooltipManager)TooltipFactory
-							.getTooltipManager(this.adapterFactory, diff);
-					tooltip = deleteTooltipManager.setDeleteTooltip(this.selectedMode, diff, isFromLeft);
-					break;
-				case MOVE:
-					MoveTooltipManager moveTooltipManager = (MoveTooltipManager)TooltipFactory
-							.getTooltipManager(this.adapterFactory, diff);
-					tooltip = moveTooltipManager.setMoveTooltip(this.selectedMode, diff, isFromLeft);
-					break;
-				default:
-					throw new IllegalStateException();
-			}
-			setToolTipText(tooltip);
-		}
-	}
-
-	/**
-	 * Set the tooltips for multiple selection.
-	 *
-	 * @param mode
-	 *            The comparison mode
-	 */
-	private void setMultipleTooltip(MergeMode mode) {
-		switch (mode) {
-			case LEFT_TO_RIGHT:
-				setToolTipText(EMFCompareIDEUIMessages.getString("merged.multiple.to.right.tooltip")); //$NON-NLS-1$
-				break;
-			case RIGHT_TO_LEFT:
-				setToolTipText(EMFCompareIDEUIMessages.getString("merged.multiple.to.left.tooltip")); //$NON-NLS-1$
-				break;
-			case ACCEPT:
-				setToolTipText(EMFCompareIDEUIMessages.getString("accept.multiple.changes.tooltip")); //$NON-NLS-1$
-				break;
-			case REJECT:
-				setToolTipText(EMFCompareIDEUIMessages.getString("reject.multiple.changes.tooltip")); //$NON-NLS-1$
 				break;
 			default:
 				throw new IllegalStateException();
@@ -288,9 +200,6 @@ public class MergeAction extends BaseSelectionListenerAction {
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
 		addAll(selectedDifferences, getSelectedDifferences(selection));
-		if (this.adapterFactory != null) {
-			contextualizeTooltip();
-		}
 		return selection.toList().size() == selectedDifferences.size();
 	}
 

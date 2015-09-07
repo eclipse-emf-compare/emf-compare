@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo.
+ * Copyright (c) 2014 Obeo.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -38,11 +38,6 @@ public class MockMergeAction extends MergeAction {
 	@Override
 	public boolean updateSelection(IStructuredSelection selection) {
 		return super.updateSelection(selection);
-	}
-
-	@Override
-	protected void clearCache() {
-		super.clearCache();
 	}
 
 	@Override

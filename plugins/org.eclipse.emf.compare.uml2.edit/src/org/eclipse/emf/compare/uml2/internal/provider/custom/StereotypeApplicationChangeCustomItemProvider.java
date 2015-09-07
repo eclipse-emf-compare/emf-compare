@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.provider.ExtendedAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
-import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
@@ -54,7 +53,21 @@ public class StereotypeApplicationChangeCustomItemProvider extends UMLDiffCustom
 	@Override
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		final UMLDiff umlDiff = (UMLDiff)object;
-		IComposedStyledString stereotypeText = getInternalText(object);
+
+		Stereotype stereotype = ((StereotypeApplicationChange)umlDiff).getStereotype();
+		if (stereotype == null) {
+			stereotype = UMLUtil.getStereotype(umlDiff.getDiscriminant());
+		}
+
+		final ComposedStyledString stereotypeText = new ComposedStyledString();
+		if (stereotype != null) {
+			stereotypeText.append(itemDelegator.getText(stereotype) + ' ');
+		} else if (umlDiff.getDiscriminant() instanceof NamedElement) {
+			stereotypeText.append("Stereotype " + ((NamedElement)umlDiff.getDiscriminant()).getName() + ' '); //$NON-NLS-1$
+		} else {
+			// Can't really do more
+			stereotypeText.append("Stereotype "); //$NON-NLS-1$
+		}
 
 		final String action;
 		switch (umlDiff.getKind()) {
@@ -76,39 +89,6 @@ public class StereotypeApplicationChangeCustomItemProvider extends UMLDiffCustom
 		}
 
 		return stereotypeText.append(" [stereotype " + action + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$ 
-	}
-
-	/**
-	 * Compute the label of the given object.
-	 * 
-	 * @param object
-	 *            The object
-	 * @return the label of the object
-	 */
-	private IStyledString.IComposedStyledString getInternalText(Object object) {
-		final UMLDiff umlDiff = (UMLDiff)object;
-
-		Stereotype stereotype = ((StereotypeApplicationChange)umlDiff).getStereotype();
-		if (stereotype == null) {
-			stereotype = UMLUtil.getStereotype(umlDiff.getDiscriminant());
-		}
-
-		final ComposedStyledString stereotypeText = new ComposedStyledString();
-		if (stereotype != null) {
-			stereotypeText.append(itemDelegator.getText(stereotype) + ' ');
-		} else if (umlDiff.getDiscriminant() instanceof NamedElement) {
-			stereotypeText.append("Stereotype " + ((NamedElement)umlDiff.getDiscriminant()).getName() + ' '); //$NON-NLS-1$
-		} else {
-			// Can't really do more
-			stereotypeText.append("Stereotype "); //$NON-NLS-1$
-		}
-
-		return stereotypeText;
-	}
-
-	@Override
-	public String getSemanticObjectLabel(Object object) {
-		return getInternalText(object).getString();
 	}
 
 }

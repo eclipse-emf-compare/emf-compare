@@ -36,7 +36,6 @@ import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.NavigatableTest
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeActionTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeNonConflictingRunnableTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.PseudoConflictsMergeActionTest;
-import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TooltipManagerTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.notloadedfragment.NotLoadedFragmentNodeTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.DependenciesTest;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
@@ -57,7 +56,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		DependencyGraphUpdaterTest.class, GraphResolutionTest.class, EMFModelProviderTest.class,
 		MergeAllCommandTests.class, LocalMonitoredProxyCreationListenerTest.class,
 		RemoteMonitoredProxyCreationListenerTest.class, MergeNonConflictingRunnableTest.class,
-		RenameDetectorTest.class, SimilarityComputerTest.class, TooltipManagerTest.class })
+		RenameDetectorTest.class, SimilarityComputerTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

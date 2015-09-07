@@ -51,22 +51,6 @@ public class DanglingStereotypeApplicationCustomItemProvider extends UMLDiffCust
 	 */
 	@Override
 	public IComposedStyledString getStyledText(Object object) {
-		ComposedStyledString ret = new ComposedStyledString(getInternalText(object));
-		ret.append(
-				" [" + EMFCompareUML2EditMessages.getString("DanglingStereotypeApplication.message") + "]", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				Style.DECORATIONS_STYLER);
-
-		return ret;
-	}
-
-	/**
-	 * Compute the label of the given object.
-	 * 
-	 * @param object
-	 *            The given object
-	 * @return the label of the object
-	 */
-	private String getInternalText(Object object) {
 		DanglingStereotypeApplication danglingStereotypeApplication = (DanglingStereotypeApplication)object;
 		final Match match = danglingStereotypeApplication.getMatch();
 		String value = itemDelegator.getText(match.getLeft());
@@ -80,12 +64,12 @@ public class DanglingStereotypeApplicationCustomItemProvider extends UMLDiffCust
 			value = super.getText(object);
 		}
 
-		return value;
-	}
+		ComposedStyledString ret = new ComposedStyledString(value);
+		ret.append(
+				" [" + EMFCompareUML2EditMessages.getString("DanglingStereotypeApplication.message") + "]", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				Style.DECORATIONS_STYLER);
 
-	@Override
-	public String getSemanticObjectLabel(Object object) {
-		return getInternalText(object);
+		return ret;
 	}
 
 }

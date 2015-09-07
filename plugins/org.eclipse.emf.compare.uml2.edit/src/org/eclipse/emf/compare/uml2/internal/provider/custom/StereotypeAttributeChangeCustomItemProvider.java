@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.provider.ExtendedAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
-import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.ecore.EAttribute;
@@ -50,9 +49,21 @@ public class StereotypeAttributeChangeCustomItemProvider extends UMLDiffCustomIt
 	 */
 	@Override
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
-		IComposedStyledString stereotypeText = getInternalText(object);
-
 		final UMLDiff umlDiff = (UMLDiff)object;
+
+		EObject discriminant = umlDiff.getDiscriminant();
+
+		final ComposedStyledString stereotypeText = new ComposedStyledString();
+		final String prefix = "Stereotype Property ";
+		if (discriminant instanceof NamedElement) {
+			stereotypeText.append(prefix + ((NamedElement)discriminant).getName() + ' ');
+		} else if (discriminant instanceof EAttribute) {
+			stereotypeText.append(prefix + ((EAttribute)discriminant).getName() + ' ');
+		} else {
+			// Can't really do more
+			stereotypeText.append(prefix);
+		}
+
 		final String action;
 		switch (umlDiff.getKind()) {
 			case ADD:
@@ -73,37 +84,6 @@ public class StereotypeAttributeChangeCustomItemProvider extends UMLDiffCustomIt
 		}
 
 		return stereotypeText.append(" [stereotype attribute " + action + "]", Style.DECORATIONS_STYLER);
-	}
-
-	/**
-	 * Compute the label of the given object.
-	 * 
-	 * @param object
-	 *            The object
-	 * @return the label of the object
-	 */
-	private IStyledString.IComposedStyledString getInternalText(Object object) {
-		final UMLDiff umlDiff = (UMLDiff)object;
-
-		EObject discriminant = umlDiff.getDiscriminant();
-
-		final ComposedStyledString stereotypeText = new ComposedStyledString();
-		final String prefix = "Stereotype Property ";
-		if (discriminant instanceof NamedElement) {
-			stereotypeText.append(prefix + ((NamedElement)discriminant).getName() + ' ');
-		} else if (discriminant instanceof EAttribute) {
-			stereotypeText.append(prefix + ((EAttribute)discriminant).getName() + ' ');
-		} else {
-			// Can't really do more
-			stereotypeText.append(prefix);
-		}
-
-		return stereotypeText;
-	}
-
-	@Override
-	public String getSemanticObjectLabel(Object object) {
-		return getInternalText(object).getString();
 	}
 
 }
