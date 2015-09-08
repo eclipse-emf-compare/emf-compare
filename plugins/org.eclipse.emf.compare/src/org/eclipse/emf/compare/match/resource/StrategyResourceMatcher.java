@@ -150,7 +150,7 @@ public class StrategyResourceMatcher implements IResourceMatcher {
 	protected IResourceMatchingStrategy[] getResourceMatchingStrategies() {
 		final IResourceMatchingStrategy idStrategy = new RootIDMatchingStrategy();
 		final IResourceMatchingStrategy nameStrategy = new NameMatchingStrategy();
-		return new IResourceMatchingStrategy[] {idStrategy, nameStrategy };
+		return new IResourceMatchingStrategy[] {nameStrategy, idStrategy, };
 	}
 
 	/**
