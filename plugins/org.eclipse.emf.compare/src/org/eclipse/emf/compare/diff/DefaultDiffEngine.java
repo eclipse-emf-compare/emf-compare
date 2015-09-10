@@ -173,43 +173,50 @@ public class DefaultDiffEngine implements IDiffEngine {
 			return;
 		}
 
-		final boolean originIsRoot = isRoot(match.getOrigin());
+		final EObject left = match.getLeft();
+		final EObject right = match.getRight();
+		final EObject origin = match.getOrigin();
 
-		if (comparison.isThreeWay()) {
+		final boolean originIsRoot = isRoot(origin);
+
+		boolean threeWay = comparison.isThreeWay();
+		if (threeWay) {
 			if (originIsRoot) {
 				// Uncontrol or delete, the "resource attachment" is a deletion
-				if (!isRoot(match.getLeft())) {
-					final String uri = match.getOrigin().eResource().getURI().toString();
+				if (!isRoot(left)) {
+					final String uri = origin.eResource().getURI().toString();
 					getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
 							DifferenceSource.LEFT);
 				}
-				if (!isRoot(match.getRight())) {
-					final String uri = match.getOrigin().eResource().getURI().toString();
+				if (!isRoot(right)) {
+					final String uri = origin.eResource().getURI().toString();
 					getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
 							DifferenceSource.RIGHT);
 				}
+				// Cases where isRoot(left) == true or isRoot(right) == true
+				// are handled in org.eclipse.emf.compare.egit by EGitPostProcessor#postDiff
 			} else {
 				// Control or add, the "resource attachment" is an addition
-				if (isRoot(match.getLeft())) {
-					final String uri = match.getLeft().eResource().getURI().toString();
+				if (isRoot(left)) {
+					final String uri = left.eResource().getURI().toString();
 					getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.ADD,
 							DifferenceSource.LEFT);
 				}
-				if (isRoot(match.getRight())) {
-					final String uri = match.getRight().eResource().getURI().toString();
+				if (isRoot(right)) {
+					final String uri = right.eResource().getURI().toString();
 					getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.ADD,
 							DifferenceSource.RIGHT);
 				}
 			}
 		} else {
-			final boolean leftIsRoot = isRoot(match.getLeft());
-			final boolean rightIsRoot = isRoot(match.getRight());
+			final boolean leftIsRoot = isRoot(left);
+			final boolean rightIsRoot = isRoot(right);
 			if (leftIsRoot && !rightIsRoot) {
-				final String uri = match.getLeft().eResource().getURI().toString();
+				final String uri = left.eResource().getURI().toString();
 				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.ADD,
 						DifferenceSource.LEFT);
 			} else if (!leftIsRoot && rightIsRoot) {
-				final String uri = match.getRight().eResource().getURI().toString();
+				final String uri = right.eResource().getURI().toString();
 				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.DELETE,
 						DifferenceSource.LEFT);
 			}
@@ -232,8 +239,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final Resource leftResource = matchResource.getLeft();
 		final Resource rightResource = matchResource.getRight();
 		if (!ComparisonUtil.bothResourceHaveResourceSet(leftResource, rightResource)
-				|| !ComparisonUtil.bothArePlatformResourcesAndOnlyOneExists(leftResource,
-						rightResource)) {
+				|| !ComparisonUtil.bothArePlatformResourcesAndOnlyOneExists(leftResource, rightResource)) {
 			return;
 		}
 

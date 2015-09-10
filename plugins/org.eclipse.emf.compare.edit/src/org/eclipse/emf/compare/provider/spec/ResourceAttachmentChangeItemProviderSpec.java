@@ -121,6 +121,11 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 						.getString("ResourceAttachmentChangeItemProviderSpec.decoration.uncontrol") + ' ', //$NON-NLS-1$
 						Style.DECORATIONS_STYLER);
 				break;
+			case MOVE:
+				ret.append(EMFCompareEditMessages
+						.getString("ResourceAttachmentChangeItemProviderSpec.decoration.move") + ' ', //$NON-NLS-1$
+						Style.DECORATIONS_STYLER);
+				break;
 			default:
 				break;
 		}

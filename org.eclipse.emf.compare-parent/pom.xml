@@ -375,6 +375,7 @@
       <modules>
         <module>../packaging/org.eclipse.emf.compare.update</module>
         <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests.git</module>
         <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
         <module>../plugins/org.eclipse.emf.compare.uml2</module>
         <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>

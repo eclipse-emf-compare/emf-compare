@@ -44,6 +44,7 @@ import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
@@ -188,15 +189,81 @@ public final class MergeViewerUtil {
 	 *            The given comparison.
 	 * @param side
 	 *            The given side.
+	 * @param diff
+	 *            The given diff (a {@link ResourceAttachmentChange}.
 	 * @return The current resource on the given side of the given comparison.
 	 */
 	public static Resource getResource(Comparison comparison, MergeViewerSide side, Diff diff) {
+		if (!(diff instanceof ResourceAttachmentChange)) {
+			return null;
+		}
+		Resource resource = getResourceViaMatch(side, (ResourceAttachmentChange)diff);
+
+		if (resource == null) {
+			resource = getResourceViaMatchResource(comparison, side, (ResourceAttachmentChange)diff);
+		}
+
+		return resource;
+	}
+
+	/**
+	 * Returns the current resource on the given side of the given {@link ResourceAttachmentChange}. The
+	 * resource is obtained via the match of the given {@link ResourceAttachmentChange}.
+	 * 
+	 * @param side
+	 *            The given side.
+	 * @param diff
+	 *            The given {@link ResourceAttachmentChange}.
+	 * @return The current resource on the given side of the given comparison.
+	 */
+	private static Resource getResourceViaMatch(MergeViewerSide side, ResourceAttachmentChange diff) {
+		Resource resource = null;
+		final Match match = diff.getMatch();
+		switch (side) {
+			case ANCESTOR:
+				EObject origin = match.getOrigin();
+				if (origin instanceof MinimalEObjectImpl) {
+					resource = ((MinimalEObjectImpl)origin).eDirectResource();
+				}
+				break;
+			case LEFT:
+				EObject left = match.getLeft();
+				if (left instanceof MinimalEObjectImpl) {
+					resource = ((MinimalEObjectImpl)left).eDirectResource();
+				}
+				break;
+			case RIGHT:
+				EObject right = match.getRight();
+				if (right instanceof MinimalEObjectImpl) {
+					resource = ((MinimalEObjectImpl)right).eDirectResource();
+				}
+				break;
+			default:
+				throw new IllegalStateException();
+		}
+
+		return resource;
+	}
+
+	/**
+	 * Returns the current resource on the given side of the given {@link ResourceAttachmentChange}. The
+	 * resource is obtained via the {@link MatchResource} that corresponds to the URI of the given
+	 * {@link ResourceAttachmentChange}.
+	 * 
+	 * @param comparison
+	 *            The given comparison.
+	 * @param side
+	 *            The given side.
+	 * @param diff
+	 *            The given {@link ResourceAttachmentChange}.
+	 * @return The current resource on the given side of the given comparison.
+	 */
+	private static Resource getResourceViaMatchResource(Comparison comparison, MergeViewerSide side,
+			ResourceAttachmentChange diff) {
 		Resource resource = null;
 		Collection<MatchResource> matchResources = comparison.getMatchedResources();
-		String diffResourceURI = null;
-		if (diff != null) {
-			diffResourceURI = ((ResourceAttachmentChange)diff).getResourceURI();
-		}
+		String diffResourceURI = diff.getResourceURI();
+
 		for (MatchResource matchResource : matchResources) {
 			switch (side) {
 				case ANCESTOR:

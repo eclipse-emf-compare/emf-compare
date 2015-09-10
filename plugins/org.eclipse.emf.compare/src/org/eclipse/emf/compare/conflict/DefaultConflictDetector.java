@@ -917,6 +917,13 @@ public class DefaultConflictDetector implements IConflictDetector {
 					if (getMatchResource(comparison, diffRes) == getMatchResource(comparison, candidateRes)) {
 						kind = ConflictKind.PSEUDO;
 					}
+				} else if (candidate.getKind() == DifferenceKind.MOVE
+						&& diff.getKind() == DifferenceKind.MOVE) {
+					String lhsURI = diff.getResourceURI();
+					String rhsURI = ((ResourceAttachmentChange)candidate).getResourceURI();
+					if (lhsURI.equals(rhsURI)) {
+						kind = ConflictKind.PSEUDO;
+					}
 				}
 				conflictOn(comparison, diff, candidate, kind);
 			}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:style="http://www.eclipse.org/papyrus/infra/viewpoints/policy/style" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML">
+  <notation:Diagram xmi:id="_Sog24FeWEeWmnLjjRpJKCg" type="PapyrusUMLClassDiagram" name="Class Diagram" measurementUnit="Pixel">
+    <children xmi:type="notation:Shape" xmi:id="_U9H90FeWEeWmnLjjRpJKCg" type="2007">
+      <children xmi:type="notation:DecorationNode" xmi:id="_U9JL8FeWEeWmnLjjRpJKCg" type="5026"/>
+      <children xmi:type="notation:BasicCompartment" xmi:id="_U9JL8VeWEeWmnLjjRpJKCg" type="7016">
+        <styles xmi:type="notation:TitleStyle" xmi:id="_U9JL8leWEeWmnLjjRpJKCg"/>
+        <layoutConstraint xmi:type="notation:Bounds" xmi:id="_U9JL81eWEeWmnLjjRpJKCg"/>
+      </children>
+      <element xmi:type="uml:Package" href="model.uml#_U9ACAFeWEeWmnLjjRpJKCg"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_U9H90VeWEeWmnLjjRpJKCg" x="85" y="99"/>
+    </children>
+    <styles xmi:type="notation:StringValueStyle" xmi:id="_Sog24VeWEeWmnLjjRpJKCg" name="diagram_compatibility_version" stringValue="1.1.0"/>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_Sog24leWEeWmnLjjRpJKCg"/>
+    <styles xmi:type="style:PapyrusViewStyle" xmi:id="_Sog241eWEeWmnLjjRpJKCg">
+      <owner xmi:type="uml:Model" href="model.uml#_Sk5iMFeWEeWmnLjjRpJKCg"/>
+    </styles>
+    <element xmi:type="uml:Model" href="model.uml#_Sk5iMFeWEeWmnLjjRpJKCg"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_aRs10FeWEeWmnLjjRpJKCg" type="PapyrusUMLClassDiagram" name="ClassDiagramP2" measurementUnit="Pixel">
+    <styles xmi:type="notation:StringValueStyle" xmi:id="_aRs10VeWEeWmnLjjRpJKCg" name="diagram_compatibility_version" stringValue="1.1.0"/>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_aRs10leWEeWmnLjjRpJKCg"/>
+    <styles xmi:type="style:PapyrusViewStyle" xmi:id="_aRs101eWEeWmnLjjRpJKCg">
+      <owner xmi:type="uml:Package" href="model.uml#_W3Z5MFeWEeWmnLjjRpJKCg"/>
+    </styles>
+    <element xmi:type="uml:Package" href="model.uml#_W3Z5MFeWEeWmnLjjRpJKCg"/>
+  </notation:Diagram>
+</xmi:XMI>

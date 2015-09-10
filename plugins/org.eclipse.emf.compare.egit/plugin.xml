@@ -18,4 +18,16 @@
             label="%StrategyRecursiveModel-Label">
       </strategy>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.rcp.postProcessor">
+      <processor
+            class="org.eclipse.emf.compare.egit.internal.postprocessor.EgitPostProcessor"
+            description="Post processor used in postDiff step to detect resource attachment changes of kind Move."
+            label="EGit Post Processor"
+            ordinal="15">
+         <nsURI
+               value=".*">
+         </nsURI>
+      </processor>
+   </extension>
 </plugin>

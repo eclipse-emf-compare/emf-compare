@@ -61,6 +61,13 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 				// Delete that same root from right
 				removeFromTarget(resourceAttachmentChange, rightToLeft);
 				break;
+			case MOVE:
+				// Move that same root from right. A move of a ResourceAttachmentChange can only happens with
+				// non local comparison. So if it is a Remote diff, only ACCEPT will actually merge the diff.
+				// REJECT will do nothing. If it is a Local diff, only REJECT will actually change the model.
+				// ACCEPT will do nothing.
+				move(resourceAttachmentChange, rightToLeft);
+				break;
 			default:
 				// other cases are unknown at the time of writing
 				break;
@@ -84,10 +91,29 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 				// re-create this element
 				addInTarget(resourceAttachmentChange, rightToLeft);
 				break;
+			case MOVE:
+				// Move that same root from right. A move of a ResourceAttachmentChange can only happens with
+				// non local comparison. So if it is a Remote diff, only ACCEPT will actually merge the diff.
+				// REJECT will do nothing. If it is a Local diff, only REJECT will actually change the model.
+				// ACCEPT will do nothing.
+				move(resourceAttachmentChange, rightToLeft);
+				break;
 			default:
 				// other cases are unknown at the time of writing
 				break;
 		}
+	}
+
+	/**
+	 * Handle moves of {@link ResourceAttachmentChange}s.
+	 * 
+	 * @param diff
+	 *            The difference we are to merge.
+	 * @param rightToLeft
+	 *            Tells us whether we are to add an object on the left or right side.
+	 */
+	protected void move(ResourceAttachmentChange diff, boolean rightToLeft) {
+		addInTarget(diff, rightToLeft);
 	}
 
 	/**
