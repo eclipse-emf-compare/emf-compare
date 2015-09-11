@@ -359,6 +359,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		inputChangedTask.setPriority(Job.LONG);
 
 		config.getEventBus().register(this);
+
+		final boolean enabled = any(config.getStructureMergeViewerFilter().getSelectedDifferenceFilters(),
+				instanceOf(CascadingDifferencesFilter.class));
+		setCascadingDifferencesFilterEnabled(enabled);
 	}
 
 	/**
@@ -426,6 +430,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				MergeAction mergeAction = new MergeAction(getCompareConfiguration().getEditingDomain(),
 						mergerRegistry, mode, leftEditable, rightEditable, navigatable,
 						(IStructuredSelection)getSelection());
+				mergeAction.setCascadingDifferencesFilterEnabled(getCascadingDifferencesFilterEnabled());
 				manager.add(mergeAction);
 			}
 		}
