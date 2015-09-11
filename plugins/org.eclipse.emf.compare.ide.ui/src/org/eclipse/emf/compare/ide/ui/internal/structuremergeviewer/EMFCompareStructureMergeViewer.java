@@ -365,6 +365,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		// Bug 473190: NPE when using merge tool after a conflicting merge
 		EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(getCompareConfiguration());
+
+		final boolean enabled = any(config.getStructureMergeViewerFilter().getSelectedDifferenceFilters(),
+				instanceOf(CascadingDifferencesFilter.class));
+		setCascadingDifferencesFilterEnabled(enabled);
 	}
 
 	/**

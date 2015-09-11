@@ -153,6 +153,10 @@ public class CompareToolBar implements ISelectionChangedListener {
 
 			toolbarManager.update(true);
 
+			final boolean enabled = any(this.compareConfiguration.getStructureMergeViewerFilter()
+					.getSelectedDifferenceFilters(), instanceOf(CascadingDifferencesFilter.class));
+			updateMergeActions(enabled);
+
 			this.doOnce = true;
 		}
 	}
@@ -209,6 +213,10 @@ public class CompareToolBar implements ISelectionChangedListener {
 	public void selectedDifferenceFiltersChange(IDifferenceFilterChange event) {
 		final boolean enabled = any(event.getSelectedDifferenceFilters(),
 				instanceOf(CascadingDifferencesFilter.class));
+		updateMergeActions(enabled);
+	}
+
+	private void updateMergeActions(final boolean enabled) {
 		for (MergeAction mergeAction : mergeActions) {
 			mergeAction.setCascadingDifferencesFilterEnabled(enabled);
 		}
