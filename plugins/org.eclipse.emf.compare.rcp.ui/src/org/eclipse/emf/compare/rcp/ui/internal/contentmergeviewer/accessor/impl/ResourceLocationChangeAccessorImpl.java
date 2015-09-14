@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableList;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.MatchResource;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.IResourceContentsAccessor;
@@ -32,7 +33,10 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 4.0
+ * @deprecated {@link org.eclipse.emf.compare.ResourceLocationChange}s have been replaced by
+ *             {@link ResourceAttachmentChange}s of kind Move.
  */
+@Deprecated
 public class ResourceLocationChangeAccessorImpl extends AbstractTypedElementAdapter implements ICompareAccessor {
 
 	/** The difference performed. */

@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.diff.IDiffProcessor;
 import org.eclipse.emf.compare.ide.internal.utils.StoragePathAdapter;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -76,7 +77,7 @@ public class EgitPostProcessor implements IPostProcessor {
 	 */
 	public void postDiff(Comparison comparison, Monitor monitor) {
 		for (Match rootMatch : comparison.getMatches()) {
-			checkResourceAttachment(rootMatch, monitor);
+			checkForDifferences(rootMatch, monitor);
 		}
 	}
 
@@ -132,6 +133,21 @@ public class EgitPostProcessor implements IPostProcessor {
 	 */
 	protected IDiffProcessor getDiffProcessor() {
 		return diffProcessor;
+	}
+
+	/**
+	 * Check all matches.
+	 * 
+	 * @param match
+	 *            The match that is to be checked.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation.
+	 */
+	protected void checkForDifferences(Match match, Monitor monitor) {
+		checkResourceAttachment(match, monitor);
+		for (Match subMatch : match.getSubmatches()) {
+			checkForDifferences(subMatch, monitor);
+		}
 	}
 
 	/**
@@ -244,13 +260,13 @@ public class EgitPostProcessor implements IPostProcessor {
 		final String leftURI;
 		final String rightURI;
 
-		if (left != null) {
-			leftResource = left.eResource();
+		if (left instanceof InternalEObject) {
+			leftResource = ((InternalEObject)left).eDirectResource();
 		} else {
 			leftResource = null;
 		}
-		if (right != null) {
-			rightResource = right.eResource();
+		if (right instanceof InternalEObject) {
+			rightResource = ((InternalEObject)right).eDirectResource();
 		} else {
 			rightResource = null;
 		}

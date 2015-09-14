@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.MatchResource;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -28,7 +29,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * This specific implementation of {@link AbstractMerger} will be used to merge resource location changes.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
+ * @deprecated {@link org.eclipse.emf.compare.ResourceLocationChange}s have been replaced by
+ *             {@link ResourceAttachmentChange}s of kind Move.
  */
+@Deprecated
 public class ResourceLocationChangeMerger extends AbstractMerger {
 
 	/**
@@ -37,7 +41,7 @@ public class ResourceLocationChangeMerger extends AbstractMerger {
 	 * @see org.eclipse.emf.compare.merge.IMerger#isMergerFor(org.eclipse.emf.compare.Diff)
 	 */
 	public boolean isMergerFor(Diff target) {
-		return target instanceof ResourceLocationChange;
+		return false;
 	}
 
 	@Override

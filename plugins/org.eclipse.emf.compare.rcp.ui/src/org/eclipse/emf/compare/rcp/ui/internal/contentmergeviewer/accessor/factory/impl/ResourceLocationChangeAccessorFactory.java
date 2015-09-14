@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl.ResourceLocationChangeAccessorImpl;
@@ -22,7 +23,10 @@ import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 4.1
+ * @deprecated {@link org.eclipse.emf.compare.ResourceLocationChange}s have been replaced by
+ *             {@link ResourceAttachmentChange}s of kind Move.
  */
+@Deprecated
 public class ResourceLocationChangeAccessorFactory extends AbstractAccessorFactory {
 
 	/**

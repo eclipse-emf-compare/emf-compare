@@ -19,7 +19,6 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -104,14 +103,12 @@ public class DiffBuilder implements IDiffProcessor {
 	 * @see org.eclipse.emf.compare.diff.IDiffProcessor#resourceLocationChange(org.eclipse.emf.compare.
 	 *      MatchResource, java.lang.String, java.lang.String org.eclipse.emf.compare.DifferenceKind,
 	 *      org.eclipse.emf.compare.DifferenceSource)
+	 * @deprecated {@link org.eclipse.emf.compare.ResourceLocationChange}s have been replaced by
+	 *             {@link ResourceAttachmentChange}s of kind Move.
 	 */
+	@Deprecated
 	public void resourceLocationChange(MatchResource matchResource, String baseLocation,
 			String changedLocation, DifferenceKind kind, DifferenceSource source) {
-		final ResourceLocationChange change = CompareFactory.eINSTANCE.createResourceLocationChange();
-		change.setBaseLocation(baseLocation);
-		change.setChangedLocation(changedLocation);
-		change.setKind(kind);
-		change.setSource(source);
-		matchResource.getLocationChanges().add(change);
+		// Nothing to do here.
 	}
 }

@@ -8,9 +8,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.merge;
 
+import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.size;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
@@ -27,8 +29,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.ResourceLocationChange;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.ide.ui.tests.egit.CompareGitTestCase;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -39,7 +42,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.lib.Constants;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -85,7 +87,6 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 		resource2 = connectResource(iFile2, resourceSet);
 	}
 
-	@Ignore("Due to Bug 464379, this test no longer works. It needs management of resource renaming via ResourceAttachmentChange.MOVE")
 	@Test
 	public void testMergeNoConflictRemoteRename() throws Exception {
 		setUpRenameNoConflict();
@@ -146,7 +147,6 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 		assertEquals("C1", testC1.getName());
 	}
 
-	@Ignore("Due to Bug 464379, this test no longer works. It needs management of resource renaming via ResourceAttachmentChange.MOVE")
 	@Test
 	public void testMergeNoConflictRemoteRenameLocalChanges() throws Exception {
 		setUpRenameNoConflictLocalChanges();
@@ -178,7 +178,6 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 		assertEquals("NewClassInRemotelyRenamedPackage", testNewClass.getName());
 	}
 
-	@Ignore("Due to Bug 464379, this test no longer works. It needs management of resource renaming via ResourceAttachmentChange.MOVE")
 	@Test
 	public void testComparisonNoConflictRemoteRename() throws Exception {
 		setUpRenameNoConflict();
@@ -187,17 +186,17 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 
 		assertTrue(comparison.getConflicts().isEmpty());
 		assertEquals(0, comparison.getDiagnostic().getCode());
-		// 2 resource matches
-		assertEquals(2, comparison.getMatchedResources().size());
+		// 3 resource matches
+		assertEquals(3, comparison.getMatchedResources().size());
 		// 2 diffs:
 		// 1- added class "NotConflicting" in MASTER
 		// 2- renamed file2 to file2_new
 		assertEquals(2, comparison.getDifferences().size());
 		assertEquals(1, size(filter(comparison.getDifferences(), instanceOf(ReferenceChange.class))));
-		assertEquals(1, size(filter(comparison.getDifferences(), instanceOf(ResourceLocationChange.class))));
+		assertEquals(1, size(filter(comparison.getDifferences(), and(
+				instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 	}
 
-	@Ignore("Due to Bug 464379, this test no longer works. It needs management of resource renaming via ResourceAttachmentChange.MOVE")
 	@Test
 	public void testComparisonNoConflictLocalRename() throws Exception {
 		setUpRenameNoConflict();
@@ -206,14 +205,15 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 
 		assertTrue(comparison.getConflicts().isEmpty());
 		assertEquals(0, comparison.getDiagnostic().getCode());
-		// 2 resource matches
-		assertEquals(2, comparison.getMatchedResources().size());
+		// 3 resource matches
+		assertEquals(3, comparison.getMatchedResources().size());
 		// 2 diffs:
 		// 1- added class "NotConflicting" in MASTER
 		// 2- renamed file2 to file2_new
 		assertEquals(2, comparison.getDifferences().size());
 		assertEquals(1, size(filter(comparison.getDifferences(), instanceOf(ReferenceChange.class))));
-		assertEquals(1, size(filter(comparison.getDifferences(), instanceOf(ResourceLocationChange.class))));
+		assertEquals(1, size(filter(comparison.getDifferences(), and(
+				instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 	}
 
 	@Test
@@ -248,12 +248,13 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 		// 2 diffs:
 		// 2- renamed file2 to file2_new (remote) and to file_other (local)
 		assertEquals(2, comparison.getDifferences().size());
-		assertEquals(2, size(filter(comparison.getDifferences(), instanceOf(ResourceLocationChange.class))));
+		assertEquals(2, size(filter(comparison.getDifferences(), and(
+				instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 		// 2 diffs in conflict
 		assertEquals(2, comparison.getConflicts().get(0).getDifferences().size());
 		// Both a re resource location changes
-		assertEquals(2, size(filter(comparison.getConflicts().get(0).getDifferences(),
-				instanceOf(ResourceLocationChange.class))));
+		assertEquals(2, size(filter(comparison.getConflicts().get(0).getDifferences(), and(
+				instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 	}
 
 	protected void setUpRenameNoConflict() throws Exception {

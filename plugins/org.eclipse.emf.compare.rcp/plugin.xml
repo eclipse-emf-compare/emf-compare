@@ -57,10 +57,6 @@
             class="org.eclipse.emf.compare.merge.ConflictMerger"
             ranking="100">
       </merger>
-      <merger
-            class="org.eclipse.emf.compare.merge.ResourceLocationChangeMerger"
-            ranking="10">
-      </merger>
    </extension>
    <extension
          point="org.eclipse.core.contenttype.contentTypes">

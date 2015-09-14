@@ -56,7 +56,6 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
@@ -624,10 +623,6 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			TreeNode buildSubTree = buildSubTree(matchResource, racForMatchResource);
 			if (buildSubTree != null) {
 				matchResourceSubTrees.add(buildSubTree);
-				// Add ResourceLocationChanges
-				for (ResourceLocationChange rlc : filter(matchResource.getLocationChanges(), filter)) {
-					buildSubTree.getChildren().add(wrap(rlc));
-				}
 			}
 
 		}

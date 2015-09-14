@@ -11,9 +11,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -113,7 +115,55 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 	 *            Tells us whether we are to add an object on the left or right side.
 	 */
 	protected void move(ResourceAttachmentChange diff, boolean rightToLeft) {
-		addInTarget(diff, rightToLeft);
+		final Match match = diff.getMatch();
+		final Comparison comparison = match.getComparison();
+		final Resource expectedContainer = findOrCreateTargetResource(match, rightToLeft);
+
+		if (expectedContainer == null) {
+			// TODO log
+			diff.setState(DifferenceState.UNRESOLVED);
+			return;
+		}
+
+		// This is a move, match.getRight() & match.getLeft() can't be null
+		final EObject sourceValue;
+		if (rightToLeft) {
+			sourceValue = match.getRight();
+		} else {
+			sourceValue = match.getLeft();
+		}
+
+		final EObject expectedValue;
+		if (rightToLeft) {
+			expectedValue = match.getLeft();
+		} else {
+			expectedValue = match.getRight();
+		}
+
+		// We have the container, reference and value. We need to know the insertion index.
+		final Resource initialResource = sourceValue.eResource();
+		final Resource oldResource = expectedValue.eResource();
+		final List<EObject> sourceList = initialResource.getContents();
+		final List<EObject> targetList = expectedContainer.getContents();
+		final int insertionIndex = findInsertionIndex(comparison, sourceList, targetList, expectedValue);
+		addAt(targetList, expectedValue, insertionIndex);
+
+		// Copy XMI ID when applicable.
+		if (initialResource instanceof XMIResource && expectedContainer instanceof XMIResource) {
+			((XMIResource)expectedContainer).setID(expectedValue, ((XMIResource)initialResource)
+					.getID(sourceValue));
+		}
+
+		// If after a move of a {@link ResourceAttachmentChange} the initial resource is empty, we have to
+		// delete this resource
+		EList<EObject> contents = oldResource.getContents();
+		if (contents == null || contents.isEmpty()) {
+			try {
+				oldResource.delete(Collections.emptyMap());
+			} catch (IOException e) {
+				// FIXME log exception.
+			}
+		}
 	}
 
 	/**
@@ -320,10 +370,14 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 			currentFromSourceSide = matchCurrent.getLeft();
 		}
 
-		// Case of control/uncontrol
-		final URI relativeTargetURI = sourceResource.getURI().deresolve(currentFromSourceSide.getURI());
-
-		return relativeTargetURI.resolve(currentResource.getURI());
+		if (currentFromSourceSide != null) {
+			// Case of control/uncontrol
+			final URI relativeTargetURI = sourceResource.getURI().deresolve(currentFromSourceSide.getURI());
+			return relativeTargetURI.resolve(currentResource.getURI());
+		} else {
+			// Case of move
+			return sourceResource.getURI();
+		}
 	}
 
 	/**

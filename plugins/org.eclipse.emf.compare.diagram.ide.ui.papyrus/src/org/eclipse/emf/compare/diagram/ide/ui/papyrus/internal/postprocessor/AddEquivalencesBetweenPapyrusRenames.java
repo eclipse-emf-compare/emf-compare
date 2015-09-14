@@ -11,14 +11,19 @@
 package org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.postprocessor;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.filter;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.MatchResource;
-import org.eclipse.emf.compare.ResourceLocationChange;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.CompareUIPapyrusMessages;
 import org.eclipse.papyrus.uml.tools.model.UmlModel;
 
@@ -40,7 +45,7 @@ public class AddEquivalencesBetweenPapyrusRenames {
 	private final Monitor monitor;
 
 	/** Index used to easily find changes. */
-	private final Multimap<String, ResourceLocationChange> changesByTrimmedURI = LinkedHashMultimap.create(
+	private final Multimap<String, ResourceAttachmentChange> changesByTrimmedURI = LinkedHashMultimap.create(
 			10, 4);
 
 	/**
@@ -60,20 +65,20 @@ public class AddEquivalencesBetweenPapyrusRenames {
 	public void run() {
 		monitor.subTask(CompareUIPapyrusMessages.getString("AddEquivalencesBetweenPapyrusRenames.TaskLabel")); //$NON-NLS-1$
 		indexLocationChanges();
-		for (ResourceLocationChange resourceLocationChange : changesByTrimmedURI.values()) {
-			final String baseLocation = resourceLocationChange.getBaseLocation();
-			if (baseLocation.endsWith(UML_EXTENSION)) {
-				addEquivalences(resourceLocationChange);
+		for (ResourceAttachmentChange resourceAttachmentChange : changesByTrimmedURI.values()) {
+			final String resourceURI = resourceAttachmentChange.getResourceURI();
+			if (resourceURI.endsWith(UML_EXTENSION)) {
+				addEquivalences(resourceAttachmentChange);
 			}
 		}
 	}
 
 	/** Index the location changes in the model. */
 	private void indexLocationChanges() {
-		for (MatchResource matchResource : comparison.getMatchedResources()) {
-			for (ResourceLocationChange change : matchResource.getLocationChanges()) {
-				changesByTrimmedURI.put(getIndexKey(change), change);
-			}
+		for (Diff change : filter(comparison.getDifferences(), and(
+				instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))) {
+			changesByTrimmedURI.put(getIndexKey((ResourceAttachmentChange)change),
+					(ResourceAttachmentChange)change);
 		}
 	}
 
@@ -83,8 +88,8 @@ public class AddEquivalencesBetweenPapyrusRenames {
 	 * @param umlLocationChange
 	 *            The change
 	 */
-	private void addEquivalences(ResourceLocationChange umlLocationChange) {
-		for (ResourceLocationChange relatedChange : changesByTrimmedURI.get(getIndexKey(umlLocationChange))) {
+	private void addEquivalences(ResourceAttachmentChange umlLocationChange) {
+		for (ResourceAttachmentChange relatedChange : changesByTrimmedURI.get(getIndexKey(umlLocationChange))) {
 			if (relatedChange != umlLocationChange
 					&& relatedChange.getSource() == umlLocationChange.getSource()) {
 				umlLocationChange.getRequires().add(relatedChange);
@@ -100,8 +105,8 @@ public class AddEquivalencesBetweenPapyrusRenames {
 	 *            The change
 	 * @return the key that should identify the given change in the index.
 	 */
-	private String getIndexKey(ResourceLocationChange change) {
-		String uri = change.getBaseLocation();
+	private String getIndexKey(ResourceAttachmentChange change) {
+		String uri = change.getResourceURI();
 		int dot = uri.lastIndexOf("."); //$NON-NLS-1$
 		if (dot >= 0) {
 			return uri.substring(0, dot);

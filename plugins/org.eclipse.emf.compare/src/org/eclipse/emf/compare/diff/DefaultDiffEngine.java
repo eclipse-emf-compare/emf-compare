@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
@@ -114,9 +115,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 		monitor.subTask(EMFCompareMessages.getString("DefaultDiffEngine.monitor.diff")); //$NON-NLS-1$
 		for (Match rootMatch : comparison.getMatches()) {
 			checkForDifferences(rootMatch, monitor);
-		}
-		for (MatchResource matchResource : comparison.getMatchedResources()) {
-			checkResourceLocationChange(matchResource, monitor);
 		}
 	}
 
@@ -230,44 +228,12 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *            The matchResource that is to be checked.
 	 * @param monitor
 	 *            The monitor to report progress or to check for cancellation.
+	 * @deprecated {@link org.eclipse.emf.compare.ResourceLocationChange}s have been replaced by
+	 *             {@link ResourceAttachmentChange}s of kind Move.
 	 */
+	@Deprecated
 	protected void checkResourceLocationChange(MatchResource matchResource, Monitor monitor) {
-		final String left = matchResource.getLeftURI();
-		final String right = matchResource.getRightURI();
-
-		// It is a local comparison, we don't handle it for now.
-		final Resource leftResource = matchResource.getLeft();
-		final Resource rightResource = matchResource.getRight();
-		if (!ComparisonUtil.bothResourceHaveResourceSet(leftResource, rightResource)
-				|| !ComparisonUtil.bothArePlatformResourcesAndOnlyOneExists(leftResource, rightResource)) {
-			return;
-		}
-
-		if (matchResource.getComparison().isThreeWay()) {
-			final String origin = matchResource.getOriginURI();
-			// If a side of the comparison is null, then it is not a renaming, it is a deletion of a resource.
-			if (left == null || right == null || origin == null) {
-				return;
-			}
-			if (!left.equals(right) && left.equals(origin)) {
-				// Only right location has changed
-				getDiffProcessor().resourceLocationChange(matchResource, left, right, DifferenceKind.CHANGE,
-						DifferenceSource.RIGHT);
-			} else if (!right.equals(left) && right.equals(origin)) {
-				// Only left location has changed
-				getDiffProcessor().resourceLocationChange(matchResource, right, left, DifferenceKind.CHANGE,
-						DifferenceSource.LEFT);
-			} else if (!origin.equals(left) && !origin.equals(right)) {
-				// left & right locations have changed
-				getDiffProcessor().resourceLocationChange(matchResource, origin, left, DifferenceKind.CHANGE,
-						DifferenceSource.LEFT);
-				getDiffProcessor().resourceLocationChange(matchResource, origin, right,
-						DifferenceKind.CHANGE, DifferenceSource.RIGHT);
-			}
-		} else if (left != null && right != null && !left.equals(right)) {
-			getDiffProcessor().resourceLocationChange(matchResource, left, right, DifferenceKind.CHANGE,
-					DifferenceSource.LEFT);
-		}
+		// Nothing to do here.
 	}
 
 	/**

@@ -193,8 +193,6 @@ public interface IMerger {
 			featureMapMerger.setRanking(defaultRanking);
 			final IMerger resourceAttachmentMerger = new ResourceAttachmentChangeMerger();
 			resourceAttachmentMerger.setRanking(defaultRanking);
-			final IMerger resourceLocationMerger = new ResourceLocationChangeMerger();
-			resourceLocationMerger.setRanking(defaultRanking);
 			final IMerger pseudoConflictMerger = new PseudoConflictMerger();
 			pseudoConflictMerger.setRanking(pseudoConflictRanking);
 			final IMerger conflictMerger = new ConflictMerger();

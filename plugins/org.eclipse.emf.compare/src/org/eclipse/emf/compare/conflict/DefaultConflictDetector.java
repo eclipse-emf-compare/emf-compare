@@ -113,32 +113,6 @@ public class DefaultConflictDetector implements IConflictDetector {
 
 		handlePseudoUnderRealAdd(comparison);
 
-		handleResourceLocationChangesConflicts(comparison);
-	}
-
-	/**
-	 * Handles conflicts on resource location changes.
-	 * 
-	 * @param comparison
-	 *            The originating comparison of those diffs.
-	 */
-	private void handleResourceLocationChangesConflicts(Comparison comparison) {
-		for (MatchResource matchResource : comparison.getMatchedResources()) {
-			List<ResourceLocationChange> changes = matchResource.getLocationChanges();
-			if (changes.size() == 2) {
-				Conflict conflict = CompareFactory.eINSTANCE.createConflict();
-				conflict.getDifferences().addAll(changes);
-				comparison.getConflicts().add(conflict);
-				final String origin = matchResource.getOriginURI();
-				final String left = matchResource.getLeftURI();
-				final String right = matchResource.getRightURI();
-				if (origin != null && !origin.equals(left) && !origin.equals(right)) {
-					conflict.setKind(ConflictKind.REAL);
-				} else {
-					conflict.setKind(ConflictKind.PSEUDO);
-				}
-			}
-		}
 	}
 
 	/**

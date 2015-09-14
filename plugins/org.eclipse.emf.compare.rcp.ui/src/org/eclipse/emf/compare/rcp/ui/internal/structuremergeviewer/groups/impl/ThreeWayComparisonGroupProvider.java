@@ -12,8 +12,6 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.filter;
 import static com.google.common.collect.Iterators.transform;
@@ -42,7 +40,6 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
@@ -149,27 +146,12 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		protected TreeNode buildSubTree(Conflict conflict) {
 			TreeNode ret = wrap(conflict);
 
-			if (isResourceLocationConflict(conflict)) {
-				for (Diff diff : conflict.getDifferences()) {
-					ret.getChildren().add(wrap(diff));
-				}
-			} else {
-				for (Match match : getComparison().getMatches()) {
-					buildSubTree(ret, conflict, match);
-				}
+			for (Match match : getComparison().getMatches()) {
+				buildSubTree(ret, conflict, match);
 			}
 
 			return ret;
 
-		}
-
-		/**
-		 * @param conflict
-		 * @return
-		 */
-		private boolean isResourceLocationConflict(Conflict conflict) {
-			return conflict != null
-					&& size(filter(conflict.getDifferences(), ResourceLocationChange.class)) > 0;
 		}
 
 		/**
