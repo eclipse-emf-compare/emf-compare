@@ -243,8 +243,8 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 
 		assertEquals(1, comparison.getConflicts().size());
 		assertEquals(0, comparison.getDiagnostic().getCode());
-		// 2 resource matches
-		assertEquals(2, comparison.getMatchedResources().size());
+		// 4 resource matches
+		assertEquals(4, comparison.getMatchedResources().size());
 		// 2 diffs:
 		// 2- renamed file2 to file2_new (remote) and to file_other (local)
 		assertEquals(2, comparison.getDifferences().size());

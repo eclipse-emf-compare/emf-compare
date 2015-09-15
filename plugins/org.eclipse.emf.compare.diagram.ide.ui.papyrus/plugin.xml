@@ -43,6 +43,13 @@
       </dependency>
    </extension>
    <extension
+         point="org.eclipse.emf.compare.rcp.merger">
+      <merger
+            class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.merge.PapyrusResourceAttachmentChangeMerger"
+            ranking="100">
+      </merger>
+   </extension>
+   <extension
          point="org.eclipse.emf.compare.rcp.postProcessor">
       <processor
             class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.postprocessor.PapyrusPostProcessor"

@@ -23,7 +23,9 @@ Require-Bundle: org.eclipse.ui.ide;bundle-version="3.5.0",
  org.eclipse.papyrus.infra.emf;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
- com.google.common.collect;version="[11.0.0,16.0.0)"
+ com.google.common.collect;version="[11.0.0,16.0.0)",
+ com.google.common.io;version="[11.0.0,16.0.0)",
+ org.apache.log4j;version="1.2.15"
 Export-Package: org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal,
  org.eclipse.emf.compare.diagram.ide.ui.papyrus.dependency,
  org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.logical.view,

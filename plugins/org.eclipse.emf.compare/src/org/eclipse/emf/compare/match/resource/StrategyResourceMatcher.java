@@ -148,9 +148,8 @@ public class StrategyResourceMatcher implements IResourceMatcher {
 	 * @return The resource matching strategies that should be used by this matcher.
 	 */
 	protected IResourceMatchingStrategy[] getResourceMatchingStrategies() {
-		final IResourceMatchingStrategy idStrategy = new RootIDMatchingStrategy();
-		final IResourceMatchingStrategy nameStrategy = new NameMatchingStrategy();
-		return new IResourceMatchingStrategy[] {nameStrategy, idStrategy, };
+		final IResourceMatchingStrategy locationStrategy = new LocationMatchingStrategy();
+		return new IResourceMatchingStrategy[] {locationStrategy, };
 	}
 
 	/**

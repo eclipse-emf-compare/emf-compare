@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.common.util.EList;
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -37,6 +37,9 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ResourceAttachmentChangeMerger extends AbstractMerger {
+	/** The logger. */
+	private static final Logger LOGGER = Logger.getLogger(ResourceAttachmentChangeMerger.class);
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -117,17 +120,20 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 	protected void move(ResourceAttachmentChange diff, boolean rightToLeft) {
 		final Match match = diff.getMatch();
 		final Comparison comparison = match.getComparison();
-		final Resource expectedContainer = findOrCreateTargetResource(match, rightToLeft);
+		final Resource expectedResource = findOrCreateTargetResource(match, rightToLeft);
 
-		if (expectedContainer == null) {
+		if (expectedResource == null) {
 			// TODO log
 			diff.setState(DifferenceState.UNRESOLVED);
 			return;
 		}
 
-		// This is a move, match.getRight() & match.getLeft() can't be null
 		final EObject sourceValue;
-		if (rightToLeft) {
+		if (comparison.isThreeWay()) {
+			// This is a 3-way move, match.getOrigin() can't be null
+			sourceValue = match.getOrigin();
+		} else if (rightToLeft) {
+			// This is a 2-way move, match.getRight() & match.getLeft() can't be null
 			sourceValue = match.getRight();
 		} else {
 			sourceValue = match.getLeft();
@@ -144,26 +150,78 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 		final Resource initialResource = sourceValue.eResource();
 		final Resource oldResource = expectedValue.eResource();
 		final List<EObject> sourceList = initialResource.getContents();
-		final List<EObject> targetList = expectedContainer.getContents();
+		final List<EObject> targetList = expectedResource.getContents();
 		final int insertionIndex = findInsertionIndex(comparison, sourceList, targetList, expectedValue);
 		addAt(targetList, expectedValue, insertionIndex);
 
 		// Copy XMI ID when applicable.
-		if (initialResource instanceof XMIResource && expectedContainer instanceof XMIResource) {
-			((XMIResource)expectedContainer).setID(expectedValue, ((XMIResource)initialResource)
+		if (initialResource instanceof XMIResource && expectedResource instanceof XMIResource) {
+			((XMIResource)expectedResource).setID(expectedValue, ((XMIResource)initialResource)
 					.getID(sourceValue));
 		}
 
-		// If after a move of a {@link ResourceAttachmentChange} the initial resource is empty, we have to
-		// delete this resource
-		EList<EObject> contents = oldResource.getContents();
-		if (contents == null || contents.isEmpty()) {
-			try {
-				oldResource.delete(Collections.emptyMap());
-			} catch (IOException e) {
-				// FIXME log exception.
-			}
+		deleteFormerResourceIfNecessary(comparison, oldResource, rightToLeft);
+	}
+
+	/**
+	 * A move of an EObject to a different resource has just been made. Do whatever post-treatment is needed.
+	 * The default implementation deletes the former resource if it's no longer supposed to be here.
+	 * 
+	 * @param comparison
+	 *            The comparison
+	 * @param oldResource
+	 *            The resource from where the EObject has been moved
+	 * @param rightToLeft
+	 *            The direction of the change
+	 */
+	protected void deleteFormerResourceIfNecessary(final Comparison comparison, final Resource oldResource,
+			boolean rightToLeft) {
+		if (oldResource == null) {
+			return;
 		}
+		// If after a move of a {@link ResourceAttachmentChange} the initial resource is empty, we have to
+		// delete this resource ONLY IF it does not exist on the target side
+		MatchResource matchResource = getMatchResource(comparison, oldResource);
+		if (!resourceExistsInSource(matchResource, rightToLeft)) {
+			deleteResource(oldResource);
+		}
+	}
+
+	/**
+	 * Delete the given resource.
+	 * 
+	 * @param resource
+	 *            The resource to delete, must not be null.
+	 */
+	protected void deleteResource(final Resource resource) {
+		try {
+			resource.delete(Collections.emptyMap());
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Deleted resource " + resource.getURI()); //$NON-NLS-1$
+			}
+		} catch (IOException e) {
+			// FIXME log exception.
+		}
+	}
+
+	/**
+	 * Indicates whether a non-null resource exists in the source side for the given MatchResource.
+	 * 
+	 * @param matchResource
+	 *            The matchResource
+	 * @param rightToLeft
+	 *            The direction of the merge
+	 * @return true if the given MatchResource has a non-null resource for the side indicated by rightToLeft
+	 *         (i.e. on the left if true, on the right if false).
+	 */
+	protected boolean resourceExistsInSource(MatchResource matchResource, boolean rightToLeft) {
+		boolean existsInTarget;
+		if (rightToLeft) {
+			existsInTarget = matchResource.getRight() != null;
+		} else {
+			existsInTarget = matchResource.getLeft() != null;
+		}
+		return existsInTarget;
 	}
 
 	/**
@@ -256,9 +314,17 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 		final Comparison comparison = match.getComparison();
 		final Resource sourceRes;
 		if (rightToLeft) {
-			sourceRes = match.getRight().eResource();
+			if (match.getRight() != null) {
+				sourceRes = match.getRight().eResource();
+			} else {
+				sourceRes = match.getOrigin().eResource();
+			}
 		} else {
-			sourceRes = match.getLeft().eResource();
+			if (match.getLeft() != null) {
+				sourceRes = match.getLeft().eResource();
+			} else {
+				sourceRes = match.getOrigin().eResource();
+			}
 		}
 
 		final MatchResource soughtMatch = getMatchResource(comparison, sourceRes);
@@ -305,6 +371,9 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 						+ "' already exists at that location."); //$NON-NLS-1$
 			} else {
 				target = targetSet.createResource(targetURI);
+				if (LOGGER.isInfoEnabled()) {
+					LOGGER.info("Created resource " + targetURI); //$NON-NLS-1$
+				}
 
 				if (rightToLeft) {
 					soughtMatch.setLeft(target);
@@ -330,7 +399,7 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 	 *         valid target URI.
 	 */
 	protected URI computeTargetURI(Match match, boolean rightToLeft) {
-		final EObject sourceObject;
+		EObject sourceObject;
 		final EObject targetObject;
 		if (rightToLeft) {
 			sourceObject = match.getRight();
@@ -338,6 +407,9 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 		} else {
 			sourceObject = match.getLeft();
 			targetObject = match.getRight();
+		}
+		if (sourceObject == null) {
+			sourceObject = match.getOrigin();
 		}
 
 		final Resource currentResource;
@@ -447,10 +519,13 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 
 		// if this is a pseudo conflict, we have no value to remove
 		if (expectedValue != null) {
+			final Resource resource = ((InternalEObject)expectedValue).eDirectResource();
 			// We only wish to remove the element from its containing resource, not from its container.
 			// This will not affect the match.
-			final Resource resource = ((InternalEObject)expectedValue).eDirectResource();
 			resource.getContents().remove(expectedValue);
+
+			// We maybe need to delete the former resource
+			deleteFormerResourceIfNecessary(diff.getMatch().getComparison(), resource, rightToLeft);
 		}
 	}
 
