@@ -21,8 +21,6 @@ import org.eclipse.emf.compare.diagram.papyrus.tests.merge.AssocMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.EdgeMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.NodeMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.modelextension.ModelExtensionUtilTest;
-import org.eclipse.emf.compare.diagram.papyrus.tests.renaming.MergeRenamingMatchResource2WayTest;
-import org.eclipse.emf.compare.diagram.papyrus.tests.renaming.MergeRenamingMatchResource3WayTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.saveparameter.SaveParameterHookIntegrationTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.saveparameter.SaveParameterHookTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.uriattachment.URIAttachmentTest;
@@ -47,11 +45,9 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @SuppressWarnings("restriction")
 @RunWith(Suite.class)
-@SuiteClasses({AssocMergeTest.class, EdgeMergeTest.class, NodeMergeTest.class,
+@SuiteClasses({ AssocMergeTest.class, EdgeMergeTest.class, NodeMergeTest.class,
 		ModelExtensionUtilTest.class, SaveParameterHookTest.class,
-		SaveParameterHookIntegrationTest.class, URIAttachmentTest.class,
-		MergeRenamingMatchResource2WayTest.class,
-		MergeRenamingMatchResource3WayTest.class })
+		SaveParameterHookIntegrationTest.class, URIAttachmentTest.class, })
 public class AllTests {
 
 	/**

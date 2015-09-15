@@ -51,13 +51,7 @@ public class PapyrusPostProcessor implements IPostProcessor {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postMatch(Comparison comparison, Monitor monitor) {
-		final AbstractMergeRenamingMatchResources trt;
-		if (comparison.isThreeWay()) {
-			trt = new MergeRenamingMatchResources3Ways(comparison, monitor);
-		} else {
-			trt = new MergeRenamingMatchResources2Ways(comparison, monitor);
-		}
-		trt.run();
+		// Nothing to do here
 	}
 
 	/**
