@@ -8,7 +8,6 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 475401
- *     Florian Zoubek - bug 475473
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.notloadedfragment;
 
@@ -124,34 +123,8 @@ public class NotLoadedFragmentNodeTest {
 			return false;
 		}
 	};
-	
-	/**
-	 * Initializes the comparison for the given project name. Resources will be treated as identical if they
-	 * are binary identical even if their paths are not equal.
-	 * 
-	 * @param projectName
-	 *            The name of the project to load the data from.
-	 * @return The initialized comparison
-	 * @throws IOException
-	 * @throws CoreException
-	 */
+
 	private Comparison initComparison(String projectName) throws IOException, CoreException {
-		return initComparison(projectName, false);
-	}
-	
-	/**
-	 * Initializes the comparison for the given project name.
-	 * 
-	 * @param projectName
-	 *            The name of the project to load the data from.
-	 * @param checkIdenticalPaths
-	 *            Specifies whether resources should be treated as identical during comparison
-	 *            only if also their paths are equal (true) or not (false).
-	 * @return The initialized comparison
-	 * @throws IOException
-	 * @throws CoreException
-	 */
-	private Comparison initComparison(String projectName, boolean checkIdenticalPaths) throws IOException, CoreException {
 		Bundle bundle = Platform.getBundle("org.eclipse.emf.compare.ide.ui.tests");
 		URL entry = bundle.getEntry("src" + SEP + "org" + SEP + "eclipse" + SEP + "emf" + SEP + "compare"
 				+ SEP + "ide" + SEP + "ui" + SEP + "tests" + SEP + "structuremergeviewer" + SEP
@@ -183,7 +156,7 @@ public class NotLoadedFragmentNodeTest {
 		assertTrue(resolver instanceof ThreadedModelResolver);
 
 		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
-				new IdenticalResourceMinimizer(checkIdenticalPaths), null);
+				new IdenticalResourceMinimizer(), null);
 		final IComparisonScope scope = scopeBuilder.build(left, right, origin, new NullProgressMonitor());
 		final Comparison comparison = EMFCompare.builder().build().compare(scope);
 
@@ -199,29 +172,6 @@ public class NotLoadedFragmentNodeTest {
 	 * Default Group Provider Tests
 	 */
 
-	@Test
-	public void testCase0_DefaultGroupProvider_withIdenticalPathCheck() throws IOException, CoreException {
-		final Comparison comparison = initComparison("case0", true);
-		TreeNode groupTreeNode = TreeFactory.eINSTANCE.createTreeNode();
-		groupTreeNode.setData(comparison);
-		groupTreeNode.eAdapters().add(new DefaultGroupProvider());
-		Collection<?> children = itemDelegator.getChildren(groupTreeNode);
-		assertEquals(3, children.size());
-		Iterable<?> nlfc = Iterables.filter(children, NOT_LOADED_FRAGMENT);
-		assertEquals(0, Iterables.size(nlfc));
-		// 1st level of the Tree
-		TreeNode rootTreeNode = (TreeNode)children.iterator().next();
-		assertEquals("A", itemDelegator.getText(rootTreeNode));
-		// 2nd level
-		children = rootTreeNode.getChildren();
-		assertEquals(2, children.size());
-		Iterator<?> childIterator = children.iterator();
-		TreeNode treeNodeC = (TreeNode)childIterator.next();
-		assertEquals("C", itemDelegator.getText(treeNodeC));
-		TreeNode treeNodeB = (TreeNode)childIterator.next();
-		assertEquals("B", itemDelegator.getText(treeNodeB));
-	}
-	
 	@Test
 	public void testCase0_DefaultGroupProvider() throws IOException, CoreException {
 		final Comparison comparison = initComparison("case0");

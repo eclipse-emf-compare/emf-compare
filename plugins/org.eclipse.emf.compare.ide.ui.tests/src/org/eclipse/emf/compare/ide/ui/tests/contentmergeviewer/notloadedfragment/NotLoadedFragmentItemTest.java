@@ -8,7 +8,6 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 475401
- *     Florian Zoubek - bug 475473
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.notloadedfragment;
 
@@ -122,7 +121,7 @@ public class NotLoadedFragmentItemTest {
 		assertTrue(resolver instanceof ThreadedModelResolver);
 
 		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
-				new IdenticalResourceMinimizer(false), null);
+				new IdenticalResourceMinimizer(), null);
 		final IComparisonScope scope = scopeBuilder.build(left, right, null, new NullProgressMonitor());
 		final Comparison comparison = EMFCompare.builder().build().compare(scope);
 

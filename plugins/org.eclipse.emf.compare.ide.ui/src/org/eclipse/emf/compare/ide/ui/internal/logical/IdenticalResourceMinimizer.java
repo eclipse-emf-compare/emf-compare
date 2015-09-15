@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo and others.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,8 +7,6 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Florian Zoubek - bug 475473
- *     Philip Langer - bug 475473
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -22,11 +20,9 @@ import java.util.Set;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
-import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 
 /**
@@ -35,10 +31,7 @@ import org.eclipse.emf.compare.ide.utils.StorageTraversal;
  * <p>
  * This default implementation will consider that all files that are binary identical between the two (or
  * three) sides of the comparison can be safely removed from the scope. Likewise, unmatched read-only files
- * will be removed from the scope. The default implementation, however, will keep resources with changed paths
- * (i.e., moved files), unless you set {@link #keepResourcesWithChangedPaths} to <code>false</code>. Setting
- * this option to <code>false</code> is mainly useful for testing where you want to compare files from
- * different paths.
+ * will be removed from the scope.
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
@@ -46,40 +39,8 @@ import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 public class IdenticalResourceMinimizer implements IModelMinimizer {
 
 	/**
-	 * Indicates whether this minimizer should keep identical resources if they have been moved (i.e.,
-	 * path change) in the {@link SynchronizationModel}. The default is <code>true</code>.
-	 */
-	private boolean keepResourcesWithChangedPaths;
-
-	/**
-	 * Default constructor.
-	 * <p>
-	 * The constructed minimizer will {@link #keepResourcesWithChangedPaths keep resources with changed
-	 * paths}.
-	 * </p>
-	 */
-	public IdenticalResourceMinimizer() {
-		this(true);
-	}
-
-	/**
-	 * Constructor specifying whether this minimizer will {@link #keepResourcesWithChangedPaths keep
-	 * resources with changed paths}, irrespectively of whether they are binary identical.
-	 * 
-	 * @param keepResourcesWithChangedPaths
-	 *                Specifies whether this minimizer will {@link #keepResourcesWithChangedPaths keep
-	 *                resources with changed paths}.
-	 */
-	public IdenticalResourceMinimizer(boolean keepResourcesWithChangedPaths) {
-		this.keepResourcesWithChangedPaths = keepResourcesWithChangedPaths;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Specifically, we'll remove all resources that can be seen as binary identical (we match resources
-	 * through exact equality of their names).
-	 * </p>
+	 * {@inheritDoc} Specifically, we'll remove all resources that can be seen as binary identical (we match
+	 * resources through exact equality of their names).
 	 * 
 	 * @see org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer#minimize(org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
@@ -103,18 +64,19 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 			final IStorage right = removeLikeNamedStorageFrom(left, rightCopy);
 			if (right != null && threeWay) {
 				final IStorage origin = removeLikeNamedStorageFrom(left, originCopy);
-				if (shouldMinimize(left, right, origin)) {
+
+				if (origin != null && equals(left, right, origin)) {
 					leftTraversal.removeStorage(left);
 					rightTraversal.removeStorage(right);
 					originTraversal.removeStorage(origin);
 				}
-			} else if (shouldMinimize(left, right)) {
+			} else if (right != null && equals(left, right)) {
 				leftTraversal.removeStorage(left);
 				rightTraversal.removeStorage(right);
 			} else if (right == null && isIgnoredStorage(left)) {
 				/*
-				 * This has no match and is in plugins. We would detect an insane number of
-				 * false positives on it (every element "added"), so remove it from the scope.
+				 * This has no match and is in plugins. We would detect an insane number of false positives on
+				 * it (every element "added"), so remove it from the scope.
 				 */
 				leftTraversal.getStorages().remove(left);
 			}
@@ -147,68 +109,18 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 	}
 
 	/**
-	 * Specifies whether the storages {@code left} and {@code right} should be removed from the
-	 * synchronization model (i.e., to be minimized).
-	 * <p>
-	 * If this minimizer is configured to {@link #keepResourcesWithChangedPaths keep resources with
-	 * changed paths}, we minimize only if the parent paths of all resources, as well as there content, is
-	 * equal. If this minimizer is not configured to {@link #keepResourcesWithChangedPaths keep resources
-	 * with changed paths} or if one of the storages has no paths, we only check for equal contents.
-	 * </p>
-	 * 
-	 * @param left
-	 *                The left storage.
-	 * @param right
-	 *                The right storage.
-	 * @return <code>true</code> if it should be minimized, <code>false</code> otherwise.
-	 */
-	private boolean shouldMinimize(IStorage left, IStorage right) {
-		if (keepResourcesWithChangedPaths && hasPath(left) && hasPath(right)) {
-			return equalsPaths(left, right) && equals(left, right);
-		}
-		return right != null && equals(left, right);
-	}
-
-	/**
-	 * Specifies whether the storages {@code left}, {@code right}, and {@code origin} should be removed
-	 * from the synchronization model (i.e., to be minimized).
-	 * <p>
-	 * If this minimizer is configured to {@link #keepResourcesWithChangedPaths keep resources with
-	 * changed paths}, we minimize only if the parent paths of all resources, as well as there content, is
-	 * equal. If this minimizer is not configured to {@link #keepResourcesWithChangedPaths keep resources
-	 * with changed paths} or if one of the storages has no paths, we only check for equal contents.
-	 * </p>
-	 * 
-	 * @param left
-	 *                The left storage.
-	 * @param right
-	 *                The right storage.
-	 * @param origin
-	 *                The origin storage.
-	 * @return <code>true</code> if it should be minimized, <code>false</code> otherwise.
-	 */
-	private boolean shouldMinimize(IStorage left, IStorage right, IStorage origin) {
-		if (keepResourcesWithChangedPaths && hasPath(left) && hasPath(right) && hasPath(origin)) {
-			return equalsPaths(left, right) && equalsPaths(left, origin)
-					&& equals(left, right, origin);
-		}
-		return origin != null && equals(left, right, origin);
-	}
-
-	/**
 	 * Checks whether the three given (non-<code>null</code>) resources are identical. This default
-	 * implementation checks that the three are identical binary-wise and that their parent paths are
-	 * equal if the resources provide a path.
+	 * implementation only checks that the three are identical binary-wise.
 	 * <p>
 	 * Identical resources will be filtered out of the comparison scope.
 	 * </p>
 	 * 
 	 * @param left
-	 *                Left of the resources to consider.
+	 *            Left of the resources to consider.
 	 * @param right
-	 *                Right of the resources to consider.
+	 *            Right of the resources to consider.
 	 * @param origin
-	 *                Common ancestor of the left and right resources.
+	 *            Common ancestor of the left and right resources.
 	 * @return <code>true</code> if the given resources are to be considered identical, <code>false</code>
 	 *         otherwise.
 	 */
@@ -224,9 +136,9 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 	 * </p>
 	 * 
 	 * @param left
-	 *                Left of the resources to consider.
+	 *            Left of the resources to consider.
 	 * @param rightRight
-	 *                of the resources to consider.
+	 *            of the resources to consider.
 	 * @return <code>true</code> if the given resources are to be considered identical, <code>false</code>
 	 *         otherwise.
 	 */
@@ -239,9 +151,9 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 	 * storage, removing it if there is one.
 	 * 
 	 * @param reference
-	 *                The storage for which we'll seek a match into {@code candidates}.
+	 *            The storage for which we'll seek a match into {@code candidates}.
 	 * @param candidates
-	 *                The set of candidates into which to look up for a match to {@code reference}.
+	 *            The set of candidates into which to look up for a match to {@code reference}.
 	 * @return The first storage from the set of candidates that matches the {@code reference}, if any.
 	 *         <code>null</code> if none match.
 	 */
@@ -265,41 +177,10 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 	 * files is meaningless).
 	 * 
 	 * @param storage
-	 *                The storage we need to test.
+	 *            The storage we need to test.
 	 * @return <code>true</code> if this storage should be ignored and removed from this scope.
 	 */
 	private boolean isIgnoredStorage(IStorage storage) {
 		return storage.getFullPath().toString().startsWith("platform:/plugin"); //$NON-NLS-1$
-	}
-
-	/**
-	 * Specifies whether the the specified {@code storage} has a path.
-	 * 
-	 * @param storage
-	 *                Storage to check.
-	 * @return <code>true</code> {@code storage} has a path; <code>false</code> otherwise.
-	 */
-	private boolean hasPath(IStorage storage) {
-		return storage != null && ResourceUtil.createURIFor(storage) != null;
-	}
-
-	/**
-	 * Specifies whether the parent path of {@code one} equals the parent path of {@code other}.
-	 * <p>
-	 * If one of the storages' paths is <code>null</code>, this method will return <code>false</code>.
-	 * </p>
-	 * 
-	 * @param one
-	 *                One storage to check.
-	 * @param other
-	 *                The other storage to check.
-	 * @return <code>true</code> if both storage's have equal paths and none of them has no path;
-	 *         <code>false</code> otherwise.
-	 */
-	private boolean equalsPaths(IStorage one, IStorage other) {
-		final URI uriOne = ResourceUtil.createURIFor(one);
-		final URI uriOther = ResourceUtil.createURIFor(other);
-		return uriOne != null && uriOther != null
-				&& uriOne.trimSegments(1).equals(uriOther.trimSegments(1));
 	}
 }
