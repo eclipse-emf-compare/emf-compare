@@ -924,15 +924,42 @@ public class DefaultConflictDetector implements IConflictDetector {
 
 		// [381143] Every Diff "under" a root deletion conflicts with it.
 		if (diff.getKind() == DifferenceKind.DELETE) {
-			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
-			for (Diff extendedCandidate : Iterables.filter(match.getAllDifferences(), candidateFilter)) {
-				if (isDeleteOrUnsetDiff(extendedCandidate)) {
-					conflictOn(comparison, diff, extendedCandidate, ConflictKind.PSEUDO);
-				} else {
-					conflictOn(comparison, diff, extendedCandidate, ConflictKind.REAL);
+			// [477607] DELETE does not necessarily mean that the element is removed from the model
+			EObject o = getRelatedModelElement(diff);
+			if (o != null && o.eContainer() == null) {
+				final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
+				for (Diff extendedCandidate : Iterables.filter(match.getAllDifferences(), candidateFilter)) {
+					if (isDeleteOrUnsetDiff(extendedCandidate)) {
+						conflictOn(comparison, diff, extendedCandidate, ConflictKind.PSEUDO);
+					} else {
+						conflictOn(comparison, diff, extendedCandidate, ConflictKind.REAL);
+					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * Provide the model element the given diff applies to.
+	 * 
+	 * @param diff
+	 *            The change
+	 * @return The modele element of the given diff, or null if it cannot be found.
+	 */
+	private EObject getRelatedModelElement(ResourceAttachmentChange diff) {
+		Match m = diff.getMatch();
+		EObject o;
+		switch (diff.getSource()) {
+			case LEFT:
+				o = m.getLeft();
+				break;
+			case RIGHT:
+				o = m.getRight();
+				break;
+			default:
+				o = null;
+		}
+		return o;
 	}
 
 	/**
@@ -984,12 +1011,16 @@ public class DefaultConflictDetector implements IConflictDetector {
 			// other
 			conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 		} else if (diff.getKind() == DifferenceKind.DELETE) {
-			// The root has been deleted.
-			// Anything other than a delete of this value in a reference is a conflict.
-			if (candidate.getKind() == DifferenceKind.DELETE) {
-				// No conflict here
-			} else {
-				conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+			// [477607] DELETE does not necessarily mean that the element is removed from the model
+			EObject o = getRelatedModelElement(diff);
+			if (o != null && o.eContainer() == null) {
+				// The root has been deleted.
+				// Anything other than a delete of this value in a reference is a conflict.
+				if (candidate.getKind() == DifferenceKind.DELETE) {
+					// No conflict here
+				} else {
+					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+				}
 			}
 		}
 	}
