@@ -17,6 +17,7 @@
 == UI-related Specifications ==
 
 * [[./3.2.0-release.html#US_320_001 - UML Dangling stereotypes|US_320_001 - UML Dangling stereotypes]]
+* [[./3.2.0-release.html#US_320_003 - Synchronize view integration|US_320_003 - Synchronize view integration]]
 
 == UML-related Specifications ==
 
@@ -25,6 +26,8 @@
 == Diagram-related specifications ==
 
 == Team-related Specifications ==
+
+* [[./3.2.0-release.html#US_320_003 - Synchronize view integration|US_320_003 - Synchronize view integration]]
 
 == EGit-related Specifications ==
 

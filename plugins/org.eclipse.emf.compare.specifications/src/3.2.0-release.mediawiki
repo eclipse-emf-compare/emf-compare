@@ -242,3 +242,52 @@ Copy All Non-Conflicting Changes from Right to Left &rarr; Apply all right chang
 #*** from a containment change &rarr; Undo the deletion of '''{right element}''' in '''{right element position}''' on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
 #*** from other features &rarr; Undo the deletion of '''{left element}''' on the left-hand side. The left-hand side will be modified. The right-hand side will remain unchanged.
 # multiple selection &rarr; Apply all non-conflicting changes from the current selection on the left-hand side.
+
+== US_320_003 - Synchronize view integration ==
+
+=== Description ===
+Integration of EMF resource mappings with the Synchronize view. 
+
+==== Categories ====
+[[./index.html#Team-related Specifications|Team]], [[./index.html#UI-related Specifications|UI]]
+
+=== Content ===
+As a user, I want to easily keep track of the EMF resource mappings (''logical models'' and its containing resources) that I'm currently merging using the Team Synchronizing perspective.
+
+Currently, the Synchronize view shows all resources that have been changed, added, or deleted in the scope of the synchronization. If I double-click a model resource, EMF Compare's merge viewer shows all differences that relate to the double-clicked model resource or the model resources that are part of the same EMF resource mapping as the double-clicked model resource. Consequently, if I double-click ''another'' model resource in the Synchronize view that is part ''of the same EMF resource mapping'', the merge viewer will show the very same changes, but in a different order. If I however double-click ''another'' model resource that is part of ''another EMF resource mapping'', the differences of another (not obviously visible) set of model resources are shown. As a result, users easily get lost during the comparison or merge in the Team Synchronizing perspective. 
+
+In general, it is a problem that EMF Compare's merge viewer operates on the level of EMF resource mappings that potentially span multiple resources while the Synchronize view displays the single resources only that may or may not be part of EMF resource mappings. Especially when multiple EMF resource mappings are in the scope of a synchronization, it is hard to keep track, causing the following issues:
+
+# Users don't see the EMF resource mappings in the Synchronize view
+# Users don't see which model resources they are currently working on in EMF Compare's merge viewer (except if they switch to the ''By Resource'' group)
+# Users don't easily see which model resources relate to which resource in the Synchronize view even when using the ''By Resource'' group (as it only shows the file names but not the project and path, doesn't use the same hierarchy and icons, etc.)
+# Users don't see how many EMF resource mappings are in the scope of the change that need to be merged or resolved
+
+==== Proposal ====
+The goal of this proposal is three-fold and should be addressed in three iterations:
+# ''Extend the Synchronize view'' to be aware of and display EMF resource mappings
+# ''Extend the structure merge viewer'' content so that users can directly relate its content to the structure in the Synchronize view
+# ''Link the Synchronize view and the structure merge viewer'' so that it shows which model resource we have currently selected
+
+===== 1. Extend the Synchronize view =====
+
+To realize the first goal, we propose to use the extension points ''org.eclipse.team.ui.teamContentProviders'' and ''org.eclipse.ui.navigator.navigatorContent'' as done for Git commits. Once those extension points are implemented, we obtain a new ''model'' (in the sense of the Team API) that we suggest to name ''EMF Logical Models''.
+
+[[Image:./images/US_320_003_1_1.png]]
+
+Once ''EMF Logical Models'' is selected, the Synchronize view shows only model resources and groups them according to the logical models. 
+
+[[Image:./images/US_320_003_1_2.png]]
+
+===== 2. Extend the structure merge viewer =====
+
+To make it easier for users to relate the content of the structure merge viewer to the content of the Synchronize view, we propose to add an ''EMF resource mapping'' group for the structure merge viewer that shows the exact same content as in the Synchronize view for the respective EMF resource mapping currently compared, but ''in addition'' the differences of the involved model resources.
+
+[[Image:./images/US_320_003_2.png]]
+
+===== 3. Link the Synchronize view and the structure merge viewer =====
+
+Without having a concrete technical solution in mind, we think users would benefit from linking the selections between the structure merge viewer and the Synchronize view: if a match or difference is selected in the content merge viewer, EMF Compare should select the respective resource that contains the selected match or the match that contains the selected difference in the Synchronize view. Vice versa, if a model resource is selected or double-clicked (and the content merge viewer shows the same EMF resource mapping already), EMF Compare should leave the content of the content merge viewer unchanged and select the respective resource in the content merge viewer tree. Users should however be able to activate or deactivate linking among views, as usual in Eclipse.
+
+Note that it seems that we unfortunately cannot directly use ''Link with Editor'' of the Synchronize view as it requires the comparison editor to have an editor input that adapts to the respective resource to be linked. However, in the content merge viewer, we would have to change the respective resource according to the selection.
+ 
