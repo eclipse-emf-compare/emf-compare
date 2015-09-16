@@ -337,20 +337,22 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 		while (diffIterator.hasNext()) {
 			final Diff diff = diffIterator.next();
 			final ImmutableSet.Builder<Diff> builder = ImmutableSet.builder();
-			builder.addAll(diff.getConflict().getDifferences()).add(diff);
-			for (Diff conflictingDiff : builder.build()) {
-				final Match next = conflictingDiff.getMatch();
-				final URI leftURI = resourceURIorNull(next.getLeft());
-				final URI rightURI = resourceURIorNull(next.getRight());
-				final URI originURI = resourceURIorNull(next.getOrigin());
-				if (leftURI != null) {
-					conflictingURIs.add(leftURI);
-				}
-				if (rightURI != null) {
-					conflictingURIs.add(rightURI);
-				}
-				if (originURI != null) {
-					conflictingURIs.add(originURI);
+			if (diff.getConflict() != null) {
+				builder.addAll(diff.getConflict().getDifferences()).add(diff);
+				for (Diff conflictingDiff : builder.build()) {
+					final Match next = conflictingDiff.getMatch();
+					final URI leftURI = resourceURIorNull(next.getLeft());
+					final URI rightURI = resourceURIorNull(next.getRight());
+					final URI originURI = resourceURIorNull(next.getOrigin());
+					if (leftURI != null) {
+						conflictingURIs.add(leftURI);
+					}
+					if (rightURI != null) {
+						conflictingURIs.add(rightURI);
+					}
+					if (originURI != null) {
+						conflictingURIs.add(originURI);
+					}
 				}
 			}
 		}
