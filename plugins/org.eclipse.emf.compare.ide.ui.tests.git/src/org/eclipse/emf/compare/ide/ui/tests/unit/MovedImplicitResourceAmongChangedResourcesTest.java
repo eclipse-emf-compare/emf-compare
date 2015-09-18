@@ -165,10 +165,10 @@ public class MovedImplicitResourceAmongChangedResourcesTest extends CompareGitTe
 	}
 
 	/**
-	 * Sets up a git repository with a model and a submodel with an implicit dependency in the master
-	 * branch, and two branches that base on the master branch: A branch {@link #MOVED_MODEL_BRANCH} with
-	 * the submodel and implicit dependency moved into another directory, as well as a branch
-	 * {@link #CHANGED_MODEL_BRANCH} with the submodel changed.
+	 * Sets up a git repository with a model and a submodel with an implicit dependency in the master branch,
+	 * and two branches that base on the master branch: A branch {@link #MOVED_MODEL_BRANCH} with the submodel
+	 * and implicit dependency moved into another directory, as well as a branch {@link #CHANGED_MODEL_BRANCH}
+	 * with the submodel changed.
 	 */
 	public void setUpMovedIdenticalResourceAndChangedResourceBranches() throws Exception {
 		EPackage root = createPackage(null, "parent1");
@@ -261,8 +261,7 @@ public class MovedImplicitResourceAmongChangedResourcesTest extends CompareGitTe
 			final ImmutableMap<String, ImmutableSet<String>> dependencies) {
 		getModelDependencyProviderRegistry().addProvider("mock",
 				new DependencyProviderDescriptor(null, null) {
-					private final IDependencyProvider mock = new MockDependencyProvider(
-							dependencies);
+					private final IDependencyProvider mock = new MockDependencyProvider(dependencies);
 
 					@Override
 					public IDependencyProvider getDependencyProvider() {

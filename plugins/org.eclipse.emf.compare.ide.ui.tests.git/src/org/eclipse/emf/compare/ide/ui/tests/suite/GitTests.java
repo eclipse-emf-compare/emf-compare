@@ -16,7 +16,14 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.ide.ui.tests.merge.DirCacheResourceVariantTreeProviderTest;
+import org.eclipse.emf.compare.ide.ui.tests.merge.GitResourceVariantTreeSubscriberTest;
+import org.eclipse.emf.compare.ide.ui.tests.merge.ResourceVariantTest;
+import org.eclipse.emf.compare.ide.ui.tests.merge.TreeWalkResourceVariantTreeProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalModelTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.ResourceUtilPathTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.RevisionedURIConverterTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.ThreadedModelResolverResolutionTest;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
 import org.eclipse.emf.ecore.EPackage;
@@ -27,13 +34,17 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({GitLogicalModelTest.class,
-// DirCacheResourceVariantTreeProviderTest.class,
+@SuiteClasses({GitLogicalModelTest.class, DirCacheResourceVariantTreeProviderTest.class,
+		GitResourceVariantTreeSubscriberTest.class, ResourceVariantTest.class,
+		TreeWalkResourceVariantTreeProviderTest.class, ResourceUtilPathTest.class,
+		RevisionedURIConverterTest.class, ThreadedModelResolverResolutionTest.class,
+// ModelResolverLocalTest.class,
+// ModelResolverRemoteTest.class,
+// RenamedControlledResourceTests.class,
+// GitLogicalMergeTest.class,
 // StrategyRecursiveModelTest.class,
 // StrategyRecursiveModelWithDeepProjectTest.class,
 // GitLogicalMergeWithCustomDependenciesTest.class,
-// RenamedControlledResourceTests.class,
-// ThreadedModelResolverResolutionTest.class,
 // GitMergeTest.class,
 // MovedImplicitResourceAmongChangedResourcesTest.class
 })

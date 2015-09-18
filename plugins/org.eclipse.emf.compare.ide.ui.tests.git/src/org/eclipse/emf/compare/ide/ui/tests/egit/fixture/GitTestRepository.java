@@ -13,8 +13,13 @@
 package org.eclipse.emf.compare.ide.ui.tests.egit.fixture;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +39,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
+import org.eclipse.egit.core.op.DisconnectProviderOperation;
 import org.eclipse.egit.core.op.IgnoreOperation;
 import org.eclipse.egit.core.op.MergeOperation;
 import org.eclipse.egit.core.op.RebaseOperation;
@@ -57,6 +63,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.merge.MergeStrategy;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.util.FileUtils;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberScopeManager;
 
@@ -95,6 +102,100 @@ public class GitTestRepository {
 		}
 
 		this.disposers = new ArrayList<Runnable>();
+	}
+
+	/**
+	 * Create a file or get an existing one
+	 *
+	 * @param project
+	 *            instance of project inside with file will be created
+	 * @param name
+	 *            name of file
+	 * @return nearly created file
+	 * @throws IOException
+	 */
+	public File createFile(IProject project, String name) throws IOException {
+		String path = project.getLocation().append(name).toOSString();
+		int lastSeparator = path.lastIndexOf(File.separator);
+		FileUtils.mkdirs(new File(path.substring(0, lastSeparator)), true);
+
+		File file = new File(path);
+		if (!file.exists()) {
+			FileUtils.createNewFile(file);
+		}
+
+		return file;
+	}
+
+	public IFile getIFile(IProject project, File file) throws CoreException {
+		String relativePath = getRepoRelativePath(file.getAbsolutePath());
+
+		// In case the project is not at the root of the repository
+		// we need to remove the whole path before the project name.
+		int index = relativePath.indexOf(project.getName());
+		if (index >= 0) {
+			relativePath = relativePath.substring(index + project.getName().length());
+		}
+		IFile iFile = project.getFile(relativePath);
+		iFile.refreshLocal(0, null);
+
+		return iFile;
+	}
+
+	/**
+	 * Appends content to end of given file.
+	 *
+	 * @param file
+	 * @param content
+	 * @throws IOException
+	 */
+	public void appendFileContent(File file, byte[] content) throws IOException {
+		appendFileContent(file, new String(content, "UTF-8"), true);
+	}
+
+	/**
+	 * Appends content to end of given file.
+	 *
+	 * @param file
+	 * @param content
+	 * @throws IOException
+	 */
+	public void appendFileContent(File file, String content) throws IOException {
+		appendFileContent(file, content, true);
+	}
+
+	/**
+	 * Appends content to given file.
+	 *
+	 * @param file
+	 * @param content
+	 * @param append
+	 *            if true, then bytes will be written to the end of the file rather than the beginning
+	 * @throws IOException
+	 */
+	public void appendFileContent(File file, byte[] content, boolean append) throws IOException {
+		appendFileContent(file, new String(content, "UTF-8"), append);
+	}
+
+	/**
+	 * Appends content to given file.
+	 *
+	 * @param file
+	 * @param content
+	 * @param append
+	 *            if true, then bytes will be written to the end of the file rather than the beginning
+	 * @throws IOException
+	 */
+	public void appendFileContent(File file, String content, boolean append) throws IOException {
+		Writer fw = null;
+		try {
+			fw = new OutputStreamWriter(new FileOutputStream(file, append), "UTF-8");
+			fw.append(content);
+		} finally {
+			if (fw != null) {
+				fw.close();
+			}
+		}
 	}
 
 	public RevCommit addAllAndCommit(String commitMessage) throws Exception {
@@ -319,15 +420,139 @@ public class GitTestRepository {
 	public void mergeTextual(String refName) throws CoreException {
 		new MergeOperation(repository, refName, MergeStrategy.RECURSIVE.getName()).execute(null);
 	}
-	
+
 	/**
 	 * Rebase the current HEAD on the given ref, using the default (logical) strategy.
 	 * 
 	 * @param refName
 	 *            Name of a commit to rebase the current HEAD on.
 	 */
-	public void rebaseLogical(String refName) throws CoreException, IOException{
+	public void rebaseLogical(String refName) throws CoreException, IOException {
 		new RebaseOperation(repository, repository.getRef(refName)).execute(null);
+	}
+
+	/**
+	 * Appends file content to given file, then track, add to index and finally commit it.
+	 *
+	 * @param project
+	 * @param file
+	 * @param content
+	 * @param commitMessage
+	 * @return commit object
+	 * @throws Exception
+	 */
+	public RevCommit appendContentAndCommit(IProject project, File file, byte[] content, String commitMessage)
+			throws Exception {
+		return appendContentAndCommit(project, file, new String(content, "UTF-8"), commitMessage);
+	}
+
+	/**
+	 * Appends file content to given file, then track, add to index and finally commit it.
+	 *
+	 * @param project
+	 * @param file
+	 * @param content
+	 * @param commitMessage
+	 * @return commit object
+	 * @throws Exception
+	 */
+	public RevCommit appendContentAndCommit(IProject project, File file, String content, String commitMessage)
+			throws Exception {
+		appendFileContent(file, content);
+		track(file);
+		addToIndex(project, file);
+
+		return commit(commitMessage);
+	}
+
+	/**
+	 * Adds the given file to the index
+	 *
+	 * @param project
+	 * @param file
+	 * @throws Exception
+	 */
+	public void addToIndex(IProject project, File file) throws Exception {
+		IFile iFile = getIFile(project, file);
+		addToIndex(iFile);
+	}
+
+	/**
+	 * Creates a new branch and immediately checkout it.
+	 *
+	 * @param refName
+	 *            starting point for the new branch
+	 * @param newRefName
+	 * @throws Exception
+	 */
+	public void createAndCheckoutBranch(String refName, String newRefName) throws Exception {
+		createBranch(refName, newRefName);
+		checkoutBranch(newRefName);
+	}
+
+	/**
+	 * Removes file from version control
+	 *
+	 * @param file
+	 * @throws IOException
+	 */
+	public void untrack(File file) throws IOException {
+		String repoPath = getRepoRelativePath(new Path(file.getPath()).toString());
+		try {
+			new Git(repository).rm().addFilepattern(repoPath).call();
+		} catch (GitAPIException e) {
+			throw new IOException(e.getMessage());
+		}
+	}
+
+	/**
+	 * Disconnects provider from project
+	 *
+	 * @param project
+	 * @throws CoreException
+	 */
+	public void disconnect(IProject project) throws CoreException {
+		Collection<IProject> projects = Collections.singleton(project.getProject());
+		DisconnectProviderOperation disconnect = new DisconnectProviderOperation(projects);
+		disconnect.execute(null);
+	}
+
+	/**
+	 * Adds the given resource to the index
+	 *
+	 * @param resource
+	 * @throws CoreException
+	 * @throws IOException
+	 * @throws GitAPIException
+	 * @throws NoFilepatternException
+	 */
+	public void addToIndex(IResource resource) throws CoreException, IOException, NoFilepatternException,
+			GitAPIException {
+		String repoPath = getRepoRelativePath(resource.getLocation().toString());
+		Git git = new Git(repository);
+		try {
+			git.add().addFilepattern(repoPath).call();
+		} finally {
+			git.close();
+		}
+	}
+
+	/**
+	 * Adds file to version control
+	 *
+	 * @param file
+	 * @throws IOException
+	 * @throws GitAPIException
+	 * @throws NoFilepatternException
+	 */
+	public void track(File file) throws IOException, NoFilepatternException, GitAPIException {
+		String repoPath = getRepoRelativePath(new Path(file.getPath()).toString());
+		Git git = new Git(repository);
+		try {
+			git.add().addFilepattern(repoPath).call();
+		} finally {
+			git.close();
+		}
 	}
 
 	/**
