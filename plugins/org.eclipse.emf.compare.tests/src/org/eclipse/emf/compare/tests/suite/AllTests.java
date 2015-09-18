@@ -59,7 +59,6 @@ import org.eclipse.emf.compare.tests.monitor.MonitorCancelTest;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
 import org.eclipse.emf.compare.tests.postprocess.PostProcessorTest;
-import org.eclipse.emf.compare.tests.rcp.AllRCPTests;
 import org.eclipse.emf.compare.tests.req.ReqComputingTest;
 import org.eclipse.emf.compare.tests.scope.DefaultComparisonScopeTest;
 import org.eclipse.emf.compare.tests.utils.EqualityHelperTest;
@@ -85,8 +84,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		DynamicInstanceComparisonTest.class, URIDistanceTest.class, FragmentationTest.class,
 		AllEditTests.class, CommandStackTestSuite.class, MatchEngineFactoryRegistryTest.class,
 		RootIDMatchingTest.class, XMIMatchingTest.class, ProxyMatchingTest.class, ConflictMergeTest.class,
-		PseudoConflictMergeTest.class, ProximityIndexTest.class, AllRCPTests.class,
-		FeatureMaps2wayMergeTest.class, FeatureMaps3wayMergeTest.class, FeatureMapsConflictsMergeTest.class,
+		PseudoConflictMergeTest.class, ProximityIndexTest.class, FeatureMaps2wayMergeTest.class,
+		FeatureMaps3wayMergeTest.class, FeatureMapsConflictsMergeTest.class,
 		FeatureMapsPseudoConflictsMergeTest.class, TwoWayBatchMergingTest.class, EqualityHelperTest.class,
 		FeatureFilterTest.class, ThreeWayBatchMergingTest.class,
 		MultiLineAttributeConflictDetectionTest.class, ThreeWayTextDiffTest.class,

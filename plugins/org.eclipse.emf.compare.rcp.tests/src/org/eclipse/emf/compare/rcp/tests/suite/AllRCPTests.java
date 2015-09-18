@@ -8,8 +8,10 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.rcp;
+package org.eclipse.emf.compare.rcp.tests.suite;
 
+import org.eclipse.emf.compare.rcp.tests.ItemRegistryTest;
+import org.eclipse.emf.compare.rcp.tests.MatchEngineFactoryRegistryWrapperTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;

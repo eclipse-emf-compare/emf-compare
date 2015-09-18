@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.rcp;
+package org.eclipse.emf.compare.rcp.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
@@ -34,9 +34,9 @@ import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
 import org.eclipse.emf.compare.rcp.internal.match.MatchEngineFactoryRegistryWrapper;
 import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
+import org.eclipse.emf.compare.rcp.tests.data.EcoreInputData;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.tests.rcp.data.EcoreInputData;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

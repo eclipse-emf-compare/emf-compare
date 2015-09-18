@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.rcp;
+package org.eclipse.emf.compare.rcp.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.rcp.data;
+package org.eclipse.emf.compare.rcp.tests.data;
 
 import java.io.IOException;
 
