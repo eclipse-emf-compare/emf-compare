@@ -16,6 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,6 +36,7 @@ import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
 import org.eclipse.emf.compare.match.eobject.WeightProvider;
 import org.eclipse.emf.compare.match.eobject.WeightProviderDescriptorRegistryImpl;
 import org.eclipse.emf.compare.match.resource.IResourceMatcher;
+import org.eclipse.emf.compare.match.resource.IResourceMatchingStrategy;
 import org.eclipse.emf.compare.match.resource.StrategyResourceMatcher;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
@@ -60,6 +62,9 @@ public class DefaultMatchEngine implements IMatchEngine {
 	/** The delegate {@link IEObjectMatcher matcher} that will actually pair EObjects together. */
 	private final IEObjectMatcher eObjectMatcher;
 
+	/** The strategy that will actually pair Resources together. */
+	private final IResourceMatcher resourceMatcher;
+
 	/** The factory that will be use to instantiate Comparison as return by match() methods. */
 	private final IComparisonFactory comparisonFactory;
 
@@ -73,7 +78,24 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * @since 3.0
 	 */
 	public DefaultMatchEngine(IEObjectMatcher matcher, IComparisonFactory comparisonFactory) {
-		this.eObjectMatcher = checkNotNull(matcher);
+		this(matcher, new StrategyResourceMatcher(), comparisonFactory);
+	}
+
+	/**
+	 * This default engine delegates the pairing of EObjects to an {@link IEObjectMatcher}.
+	 * 
+	 * @param eObjectMatcher
+	 *            The matcher that will be in charge of pairing EObjects together for this comparison process.
+	 * @param resourceMatcher
+	 *            The matcher that will be in charge of pairing EObjects together for this comparison process.
+	 * @param comparisonFactory
+	 *            factory that will be use to instantiate Comparison as return by match() methods.
+	 * @since 3.2
+	 */
+	public DefaultMatchEngine(IEObjectMatcher eObjectMatcher, IResourceMatcher resourceMatcher,
+			IComparisonFactory comparisonFactory) {
+		this.eObjectMatcher = checkNotNull(eObjectMatcher);
+		this.resourceMatcher = checkNotNull(resourceMatcher);
 		this.comparisonFactory = checkNotNull(comparisonFactory);
 	}
 
@@ -158,11 +180,9 @@ public class DefaultMatchEngine implements IMatchEngine {
 			originChildren = Iterators.emptyIterator();
 		}
 
-		final IResourceMatcher resourceMatcher = createResourceMatcher();
-
 		// TODO Change API to pass the monitor to createMappings()
-		final Iterable<MatchResource> mappings = resourceMatcher.createMappings(leftChildren, rightChildren,
-				originChildren);
+		final Iterable<MatchResource> mappings = this.resourceMatcher.createMappings(leftChildren,
+				rightChildren, originChildren);
 
 		final List<Iterator<? extends EObject>> leftIterators = Lists.newLinkedList();
 		final List<Iterator<? extends EObject>> rightIterators = Lists.newLinkedList();
@@ -329,9 +349,21 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * 
 	 * @return An {@link IResourceMatcher} that can be used to retrieve the {@link MatchResource}s for this
 	 *         comparison.
+	 * @deprecated use {@link DefaultMatchEngine} constructor with {@link StrategyResourceMatcher} parameter
+	 *             instead.
 	 */
+	@Deprecated
 	protected IResourceMatcher createResourceMatcher() {
 		return new StrategyResourceMatcher();
+	}
+
+	/**
+	 * Returns the Resource matcher associated with this match engine.
+	 * 
+	 * @return The Resource matcher associated with this match engine.
+	 */
+	protected final IResourceMatcher getResourceMatcher() {
+		return this.resourceMatcher;
 	}
 
 	/**
@@ -385,11 +417,37 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 */
 	public static IMatchEngine create(UseIdentifiers useIDs,
 			WeightProvider.Descriptor.Registry weightProviderRegistry) {
+		return create(useIDs, weightProviderRegistry, null);
+	}
+
+	/**
+	 * Helper creator method that instantiate a {@link DefaultMatchEngine} that will use identifiers as
+	 * specified by the given {@code useIDs} enumeration.
+	 * 
+	 * @param useIDs
+	 *            the kinds of matcher to use.
+	 * @param weightProviderRegistry
+	 *            the match engine needs a WeightProvider in case of this match engine do not use identifiers.
+	 * @param strategies
+	 *            the matching strategies you want to use for the match step.
+	 * @return a new {@link DefaultMatchEngine} instance.
+	 */
+	public static IMatchEngine create(UseIdentifiers useIDs,
+			WeightProvider.Descriptor.Registry weightProviderRegistry,
+			Collection<IResourceMatchingStrategy> strategies) {
 		final IComparisonFactory comparisonFactory = new DefaultComparisonFactory(
 				new DefaultEqualityHelperFactory());
-		final IEObjectMatcher matcher = createDefaultEObjectMatcher(useIDs, weightProviderRegistry);
+		final IEObjectMatcher eObjectMatcher = createDefaultEObjectMatcher(useIDs, weightProviderRegistry);
 
-		final IMatchEngine matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
+		final IResourceMatcher resourceMatcher;
+		if (strategies == null || strategies.isEmpty()) {
+			resourceMatcher = new StrategyResourceMatcher();
+		} else {
+			resourceMatcher = new StrategyResourceMatcher(strategies);
+		}
+
+		final IMatchEngine matchEngine = new DefaultMatchEngine(eObjectMatcher, resourceMatcher,
+				comparisonFactory);
 		return matchEngine;
 	}
 

@@ -30,4 +30,13 @@
          </nsURI>
       </processor>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.rcp.matchEngine">
+      <engineFactory
+            class="org.eclipse.emf.compare.egit.internal.match.EGitMatchEngineFactory"
+            description="EGit implementation of the Matching engine provided by EMF Compare"
+            label="EGit Match Engine"
+            ranking="10">
+      </engineFactory>
+   </extension>
 </plugin>

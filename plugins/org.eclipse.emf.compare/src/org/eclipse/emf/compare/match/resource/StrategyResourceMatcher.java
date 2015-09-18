@@ -11,8 +11,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.resource;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -51,6 +53,30 @@ public class StrategyResourceMatcher implements IResourceMatcher {
 			return arg0.getURI().toString().compareTo(arg1.getURI().toString());
 		}
 	};
+
+	/**
+	 * The known strategies.
+	 */
+	private final ImmutableSet<IResourceMatchingStrategy> knownStrategies;
+
+	/**
+	 * Default constructor with two strategies: {@link NameMatchingStrategy} & {@link RootIDMatchingStrategy}.
+	 */
+	public StrategyResourceMatcher() {
+		this.knownStrategies = ImmutableSet.of(new NameMatchingStrategy(), new RootIDMatchingStrategy());
+
+	}
+
+	/**
+	 * Constructor that allows to give your own {@link IResourceMatchingStrategy}.
+	 * 
+	 * @param strategies
+	 *            the strategies you want to use for the match step. A defensive copy of the provided
+	 *            strategies will be done.
+	 */
+	public StrategyResourceMatcher(Collection<IResourceMatchingStrategy> strategies) {
+		this.knownStrategies = ImmutableSet.copyOf(strategies);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -148,8 +174,7 @@ public class StrategyResourceMatcher implements IResourceMatcher {
 	 * @return The resource matching strategies that should be used by this matcher.
 	 */
 	protected IResourceMatchingStrategy[] getResourceMatchingStrategies() {
-		final IResourceMatchingStrategy locationStrategy = new LocationMatchingStrategy();
-		return new IResourceMatchingStrategy[] {locationStrategy, };
+		return knownStrategies.toArray(new IResourceMatchingStrategy[] {});
 	}
 
 	/**

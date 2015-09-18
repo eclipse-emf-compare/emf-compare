@@ -643,7 +643,6 @@ public class FragmentationTest {
 	}
 
 	// This only tests the merge. Will fail if testControledObjectFolderResourceSet does.
-	@Ignore("To ignore while an Egit merge strategy hasn't be provided.")
 	@Test
 	public void testMergeControledObjectFolderResourceSetLtR() throws IOException {
 		final Resource left = input.getControlLeftFolder();
@@ -956,7 +955,6 @@ public class FragmentationTest {
 	}
 
 	// This only tests the merge. Will fail if testDeletedRootResourceSet does.
-	@Ignore("To ignore while an Egit merge strategy hasn't be provided.")
 	@Test
 	public void testMergeDeletedRootResourceSetRtL() throws IOException {
 		final Resource left = input.getDeletedRootLeft();
@@ -1101,7 +1099,6 @@ public class FragmentationTest {
 	}
 
 	// This only tests the merge. Will fail if testNewRootResourceSet does.
-	@Ignore("To ignore while an Egit merge strategy hasn't be provided.")
 	@Test
 	public void testMergeNewRootResourceSetLtR() throws IOException {
 		final Resource left = input.getNewRootLeft();
