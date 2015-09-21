@@ -53,6 +53,7 @@ import org.eclipse.emf.compare.ide.ui.tests.egit.CompareGitTestCase;
 import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
+import org.eclipse.emf.compare.internal.utils.Graph;
 import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -613,6 +614,7 @@ public class ModelResolverRemoteTest extends CompareGitTestCase {
 	private ResolvingResult resolveTraversalOf(IStorageProviderAccessor accessor, IFile file)
 			throws Exception {
 		ThreadedModelResolver resolver = new ThreadedModelResolver();
+		resolver.setGraph(new Graph<URI>());
 		resolver.initialize();
 		IProgressMonitor nullMonitor = new NullProgressMonitor();
 		IStorage leftStorage = accessor.getStorageProvider(file, DiffSide.SOURCE).getStorage(nullMonitor);

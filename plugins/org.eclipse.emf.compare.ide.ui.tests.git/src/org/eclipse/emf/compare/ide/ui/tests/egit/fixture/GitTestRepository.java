@@ -292,6 +292,14 @@ public class GitTestRepository {
 		Git git = new Git(repository);
 		try {
 			git.add().addFilepattern(repoPath).call();
+			// removed files cannot be added to the index through this add command.
+			// see bug 494323 for more details on this limitation, but
+			// git.add().addFilepattern(".").call();
+			// Will add all of the files from the repository to the index, excepted deleted files, while
+			// git.add().setUpdate(true).addFilepattern(".").call();
+			// Will add all of the files from the repository to the index, excepted untracked files (new files
+			// added to the repository)
+			git.add().addFilepattern(repoPath).setUpdate(true).call();
 		} finally {
 			git.close();
 		}
@@ -546,8 +554,8 @@ public class GitTestRepository {
 	 */
 	public void untrack(File file) throws IOException {
 		String repoPath = getRepoRelativePath(new Path(file.getPath()).toString());
-		try {
-			new Git(repository).rm().addFilepattern(repoPath).call();
+		try (Git git = new Git(repository)) {
+			git.rm().addFilepattern(repoPath).call();
 		} catch (GitAPIException e) {
 			throw new IOException(e.getMessage());
 		}

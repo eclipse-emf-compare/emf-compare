@@ -18,9 +18,17 @@ import org.eclipse.emf.compare.ide.ui.tests.merge.DirCacheResourceVariantTreePro
 import org.eclipse.emf.compare.ide.ui.tests.merge.EMFResourceMappingMergerPreMergeTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.GitResourceVariantTreeSubscriberTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.MultipleAncestorsTest;
+import org.eclipse.emf.compare.ide.ui.tests.merge.RemoteNewProjectTests;
+import org.eclipse.emf.compare.ide.ui.tests.merge.RenamedControlledResourceTests;
 import org.eclipse.emf.compare.ide.ui.tests.merge.ResourceVariantTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.TreeWalkResourceVariantTreeProviderTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalMergeWithCustomDependenciesTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalModelTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.GitMergeTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.ModelResolverLocalTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.ModelResolverRemoteTest;
+import org.eclipse.emf.compare.ide.ui.tests.unit.MovedImplicitResourceAmongChangedResourcesTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.ResourceUtilPathTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.RevisionedURIConverterTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.ThreadedModelResolverResolutionTest;
@@ -41,24 +49,16 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({AdditiveMergeTests.class, DirCacheResourceVariantTreeProviderTest.class,
-		// GitLogicalMergeTest.class,
-		// GitLogicalMergeWithCustomDependenciesTest.class,
-		GitLogicalModelTest.class,
-		// GitMergeTest.class,
-		GitResourceVariantTreeSubscriberTest.class, IncomingMultiEReferenceTest.class,
+		GitLogicalMergeTest.class, GitLogicalMergeWithCustomDependenciesTest.class, GitLogicalModelTest.class,
+		GitMergeTest.class, GitResourceVariantTreeSubscriberTest.class, IncomingMultiEReferenceTest.class,
 		IncomingSingleEReferenceOldSerializationTest.class, IncomingSingleEReferenceTest.class,
 		OutgoingSingleEReferenceOldSerializationTest.class, OutgoingSingleEReferenceTest.class,
-		OutgoingMultiEReferenceTest.class,
-		// ModelResolverLocalTest.class,
-		// ModelResolverRemoteTest.class,
-		// MovedImplicitResourceAmongChangedResourcesTest.class,
-		// RenamedControlledResourceTests.class,
-		// RemoteNewProjectTests.class,
-		ResourceVariantTest.class, ResourceUtilPathTest.class, RevisionedURIConverterTest.class,
-		// StrategyRecursiveModelTest.class,
-		// StrategyRecursiveModelWithDeepProjectTest.class,
-		ThreadedModelResolverResolutionTest.class, TreeWalkResourceVariantTreeProviderTest.class,
-		EMFResourceMappingMergerPreMergeTest.class, MultipleAncestorsTest.class, })
+		OutgoingMultiEReferenceTest.class, ModelResolverLocalTest.class, ModelResolverRemoteTest.class,
+		MovedImplicitResourceAmongChangedResourcesTest.class, RenamedControlledResourceTests.class,
+		RemoteNewProjectTests.class, ResourceVariantTest.class, ResourceUtilPathTest.class,
+		RevisionedURIConverterTest.class, ThreadedModelResolverResolutionTest.class,
+		TreeWalkResourceVariantTreeProviderTest.class, EMFResourceMappingMergerPreMergeTest.class,
+		MultipleAncestorsTest.class, })
 public class GitTests {
 
 	@BeforeClass
