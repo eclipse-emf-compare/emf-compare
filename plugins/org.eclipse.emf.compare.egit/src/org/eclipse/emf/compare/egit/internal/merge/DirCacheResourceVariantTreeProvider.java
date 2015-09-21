@@ -14,9 +14,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.egit.core.internal.storage.IndexResourceVariant;
 import org.eclipse.emf.compare.egit.internal.ModelEGitResourceUtil;
 import org.eclipse.emf.compare.egit.internal.storage.GitLocalResourceVariant;
+import org.eclipse.emf.compare.egit.internal.storage.IndexResourceVariant;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheEntry;
 import org.eclipse.jgit.lib.FileMode;

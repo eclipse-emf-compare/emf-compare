@@ -47,6 +47,7 @@ import org.eclipse.team.core.variants.IResourceVariantTree;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
+@SuppressWarnings("restriction")
 public class TreeWalkResourceVariantTreeProvider implements GitResourceVariantTreeProvider {
 	private final IResourceVariantTree baseTree;
 

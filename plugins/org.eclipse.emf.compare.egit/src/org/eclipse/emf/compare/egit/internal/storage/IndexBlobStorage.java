@@ -27,6 +27,7 @@ import org.eclipse.jgit.lib.Repository;
  * @see CommitBlobStorage
  * @author Jens Baumgart <jens.baumgart@sap.com>
  */
+@SuppressWarnings("restriction")
 public class IndexBlobStorage extends GitBlobStorage {
 
 	IndexBlobStorage(final Repository repository, final String fileName, final ObjectId blob) {

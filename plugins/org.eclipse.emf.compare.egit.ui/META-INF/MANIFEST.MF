@@ -4,6 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.egit.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.emf.compare.egit,
  org.eclipse.egit.ui,
  org.eclipse.core.runtime,
@@ -16,4 +17,3 @@ Require-Bundle: org.eclipse.emf.compare.egit,
  org.eclipse.egit.core,
  org.eclipse.ui.ide
 Bundle-Vendor: %providerName
-Bundle-RequiredExecutionEnvironment: J2SE-1.5

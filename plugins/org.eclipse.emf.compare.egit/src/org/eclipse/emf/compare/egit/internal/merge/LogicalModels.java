@@ -38,6 +38,7 @@ import org.eclipse.egit.core.Activator;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
+@SuppressWarnings("restriction")
 public final class LogicalModels {
 	/**
 	 * These model providers are active on most (for the first, "all") files. They provide a default merger

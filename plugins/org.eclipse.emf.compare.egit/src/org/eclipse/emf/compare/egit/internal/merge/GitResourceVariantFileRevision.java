@@ -20,6 +20,7 @@ import org.eclipse.team.internal.core.mapping.ResourceVariantFileRevision;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
+@SuppressWarnings("restriction")
 class GitResourceVariantFileRevision extends ResourceVariantFileRevision {
 
 	public GitResourceVariantFileRevision(GitRemoteResource variant) {
