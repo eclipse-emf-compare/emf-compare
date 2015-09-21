@@ -61,7 +61,7 @@ public class PapyrusPostProcessor implements IPostProcessor {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postDiff(Comparison comparison, Monitor monitor) {
-		new AddEquivalencesBetweenPapyrusRenames(comparison, monitor).run();
+		new AddEquivalencesBetweenPapyrusResourceLocationChanges(comparison, monitor).run();
 	}
 
 	/**

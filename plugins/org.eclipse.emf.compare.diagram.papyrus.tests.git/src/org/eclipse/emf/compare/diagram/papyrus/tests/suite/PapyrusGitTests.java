@@ -16,6 +16,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
+import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.implication.AttachmentChangeImplicationTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.ResourceAttachmentChangeMoveConflictTests;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.ResourceAttachmentChangeMoveNoConflictTests;
 import org.eclipse.emf.ecore.EPackage;
@@ -34,7 +35,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuppressWarnings("restriction")
 @RunWith(Suite.class)
 @SuiteClasses({ResourceAttachmentChangeMoveNoConflictTests.class,
-	ResourceAttachmentChangeMoveConflictTests.class
+	ResourceAttachmentChangeMoveConflictTests.class, AttachmentChangeImplicationTest.class
 	})
 public class PapyrusGitTests {
 	/**

@@ -61,11 +61,6 @@ import org.osgi.framework.Bundle;
 public class AbstractResourceAttachmentChangeMoveTests extends CompareTestCase {
 
 	/**
-	 * Path to the test data.
-	 */
-	protected static final String TEST_DATA_PATH = "src/org/eclipse/emf/compare/diagram/papyrus/tests/resourceattachmentchange/move/data/";
-
-	/**
 	 * The bundle containing this test.
 	 */
 	protected static final String TEST_BUNDLE = "org.eclipse.emf.compare.diagram.papyrus.tests.git";
@@ -140,21 +135,21 @@ public class AbstractResourceAttachmentChangeMoveTests extends CompareTestCase {
 	}
 	
 	/**
-	 * Copies the file located in {@link #TEST_DATA_PATH} + {@code filePath} to the given
+	 * Copies the file located in {@link #testDataPath} + {@code filePath} to the given
 	 * {@code destinationPath} in {@code iProject}.
 	 * 
 	 * @param iProject
 	 *            The {@link IProject} to which the file is added.
 	 * @param filePath
-	 *            The path relative to {@link #TEST_DATA_PATH} where the file is originally located.
+	 *            The path relative to {@link #testDataPath} where the file is originally located.
 	 * @param destinationPath
 	 *            The path in the {@code iProject} to which the file will be copied.
 	 * @return The newly created {@link IFile}.
 	 */
-	protected IFile addToProject(TestProject project, IProject iProject, String filePath, String destinationPath)
+	protected IFile addToProject(String testDataPath, TestProject project, IProject iProject, String filePath, String destinationPath)
 			throws IOException, URISyntaxException, CoreException {
 		final Bundle bundle = Platform.getBundle(TEST_BUNDLE);
-		final URI fileUri = getFileUri(bundle.getEntry(TEST_DATA_PATH + filePath));
+		final URI fileUri = getFileUri(bundle.getEntry(testDataPath + filePath));
 
 		final File file = project.getOrCreateFile(iProject, destinationPath + fileUri.lastSegment());
 

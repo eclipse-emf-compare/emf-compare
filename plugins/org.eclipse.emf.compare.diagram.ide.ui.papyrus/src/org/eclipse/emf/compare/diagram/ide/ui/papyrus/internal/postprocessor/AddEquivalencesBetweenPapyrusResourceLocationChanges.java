@@ -14,29 +14,36 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.CompareUIPapyrusMessages;
+import org.eclipse.papyrus.infra.core.resource.sasheditor.DiModel;
+import org.eclipse.papyrus.infra.gmfdiag.common.model.NotationModel;
 import org.eclipse.papyrus.uml.tools.model.UmlModel;
 
 /**
  * Treatment that adds equivalences (bi-directional "requires") between equivalent papyrus resource renames.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
- * @since 2.4
+ * @since 2.5
  */
-public class AddEquivalencesBetweenPapyrusRenames {
+public class AddEquivalencesBetweenPapyrusResourceLocationChanges {
 
 	/** UML files extension. */
-	private static final String UML_EXTENSION = "." + UmlModel.UML_FILE_EXTENSION; //$NON-NLS-1$
+	private static final String UML_EXTENSION = '.' + UmlModel.UML_FILE_EXTENSION;
+
+	/** UML files extension. */
+	private static final String NOTATION_EXTENSION = '.' + NotationModel.NOTATION_FILE_EXTENSION;
+
+	/** UML files extension. */
+	private static final String DI_EXTENSION = '.' + DiModel.DI_FILE_EXTENSION;
 
 	/** The comparison. */
 	private final Comparison comparison;
@@ -44,7 +51,11 @@ public class AddEquivalencesBetweenPapyrusRenames {
 	/** The monitor. */
 	private final Monitor monitor;
 
-	/** Index used to easily find changes. */
+	/** Index used to easily find move changes. */
+	private final Multimap<String, ResourceAttachmentChange> moveChangesByTrimmedURI = LinkedHashMultimap
+			.create(10, 4);
+
+	/** Index used to easily find other changes. */
 	private final Multimap<String, ResourceAttachmentChange> changesByTrimmedURI = LinkedHashMultimap.create(
 			10, 4);
 
@@ -56,7 +67,7 @@ public class AddEquivalencesBetweenPapyrusRenames {
 	 * @param monitor
 	 *            The monitor, must no be {@code null}.
 	 */
-	public AddEquivalencesBetweenPapyrusRenames(Comparison comparison, Monitor monitor) {
+	public AddEquivalencesBetweenPapyrusResourceLocationChanges(Comparison comparison, Monitor monitor) {
 		this.comparison = checkNotNull(comparison);
 		this.monitor = checkNotNull(monitor);
 	}
@@ -64,36 +75,66 @@ public class AddEquivalencesBetweenPapyrusRenames {
 	/** Executes this treatment. */
 	public void run() {
 		monitor.subTask(CompareUIPapyrusMessages.getString("AddEquivalencesBetweenPapyrusRenames.TaskLabel")); //$NON-NLS-1$
-		indexLocationChanges();
+		indexAttachmentChanges();
+		for (ResourceAttachmentChange resourceAttachmentChange : moveChangesByTrimmedURI.values()) {
+			final String resourceURI = resourceAttachmentChange.getResourceURI();
+			if (resourceURI.endsWith(UML_EXTENSION)) {
+				addEquivalences(resourceAttachmentChange, moveChangesByTrimmedURI);
+			}
+		}
 		for (ResourceAttachmentChange resourceAttachmentChange : changesByTrimmedURI.values()) {
 			final String resourceURI = resourceAttachmentChange.getResourceURI();
 			if (resourceURI.endsWith(UML_EXTENSION)) {
-				addEquivalences(resourceAttachmentChange);
+				addEquivalences(resourceAttachmentChange, moveChangesByTrimmedURI);
+				addEquivalences(resourceAttachmentChange, changesByTrimmedURI);
+			}
+		}
+
+	}
+
+	/** Index the attachment changes in the model. */
+	private void indexAttachmentChanges() {
+		Predicate<? super Diff> isKindNotNull = new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input != null;
+			}
+		};
+
+		for (Diff change : filter(comparison.getDifferences(), and(
+				instanceOf(ResourceAttachmentChange.class), isKindNotNull))) {
+			ResourceAttachmentChange attachmentChange = (ResourceAttachmentChange)change;
+			switch (attachmentChange.getKind()) {
+				case ADD:
+					// Voluntary pass-through
+				case DELETE:
+					changesByTrimmedURI.put(getIndexKey(attachmentChange), attachmentChange);
+					break;
+				case MOVE:
+					moveChangesByTrimmedURI.put(getIndexKey(attachmentChange), attachmentChange);
+					break;
+				default:
+					break;
 			}
 		}
 	}
 
-	/** Index the location changes in the model. */
-	private void indexLocationChanges() {
-		for (Diff change : filter(comparison.getDifferences(), and(
-				instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))) {
-			changesByTrimmedURI.put(getIndexKey((ResourceAttachmentChange)change),
-					(ResourceAttachmentChange)change);
-		}
-	}
-
 	/**
-	 * Adds equivalences to relevant changes.
+	 * Add bi-directional implications between the given UML change and the related changes (notation, di)
+	 * found in the map for the given change.
 	 * 
-	 * @param umlLocationChange
+	 * @param umlAttachmentChange
 	 *            The change
+	 * @param attachmentChangeByKey
+	 *            The map of attachment changes by keys
 	 */
-	private void addEquivalences(ResourceAttachmentChange umlLocationChange) {
-		for (ResourceAttachmentChange relatedChange : changesByTrimmedURI.get(getIndexKey(umlLocationChange))) {
-			if (relatedChange != umlLocationChange
-					&& relatedChange.getSource() == umlLocationChange.getSource()) {
-				umlLocationChange.getRequires().add(relatedChange);
-				relatedChange.getRequires().add(umlLocationChange);
+	private void addEquivalences(ResourceAttachmentChange umlAttachmentChange,
+			Multimap<String, ResourceAttachmentChange> attachmentChangeByKey) {
+		for (ResourceAttachmentChange relatedChange : attachmentChangeByKey
+				.get(getIndexKey(umlAttachmentChange))) {
+			if (relatedChange != umlAttachmentChange
+					&& relatedChange.getSource() == umlAttachmentChange.getSource()) {
+				umlAttachmentChange.getRequires().add(relatedChange);
+				relatedChange.getRequires().add(umlAttachmentChange);
 			}
 		}
 	}

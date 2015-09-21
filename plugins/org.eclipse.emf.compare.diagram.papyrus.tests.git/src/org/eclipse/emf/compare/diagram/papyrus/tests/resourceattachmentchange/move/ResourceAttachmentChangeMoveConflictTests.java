@@ -105,6 +105,11 @@ import com.google.common.collect.Iterables;
 @SuppressWarnings({"restriction", "nls", "unused" })
 public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceAttachmentChangeMoveTests {
 
+	/**
+	 * Path to the test data.
+	 */
+	private static String TEST_DATA_PATH = "src/org/eclipse/emf/compare/diagram/papyrus/tests/resourceattachmentchange/move/data/";
+
 	private ResourceSetImpl resourceSet;
 	private IProject iProject;
 	private TestProject testProject1;
@@ -440,21 +445,21 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 		
 		// 1st commit: a model with 2 packages. 
 		// 1 class diagram associated to the model, and 1 class diagram associated to the 2nd package.
-		modelDi = addToProject(testProject1, iProject, "case002/commit1/model.di", "");
-		modelNotation = addToProject(testProject1, iProject, "case002/commit1/model.notation", "");
-		modelUml = addToProject(testProject1, iProject, "case002/commit1/model.uml", "");
+		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/model.di", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/model.notation", "");
+		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/model.uml", "");
 
 		repository.addAllAndCommit("1st-commit");
 		repository.createBranch(MASTER, BRANCH_1);
 
 		// 2nd commit: the 2nd package is fragmented. 
 		// The class diagram associated is moved in a new resource (notation model).
-		modelDi = addToProject(testProject1, iProject, "case002/commit2/model.di", "");
-		modelNotation = addToProject(testProject1, iProject, "case002/commit2/model.notation", "");
-		modelUml = addToProject(testProject1, iProject, "case002/commit2/model.uml", "");
-		fragmentDi = addToProject(testProject1, iProject, "case002/commit2/fragment.di", "");
-		fragmentNotation = addToProject(testProject1, iProject, "case002/commit2/fragment.notation", "");
-		fragmentUml = addToProject(testProject1, iProject, "case002/commit2/fragment.uml", "");
+		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/model.di", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/model.notation", "");
+		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/model.uml", "");
+		fragmentDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/fragment.di", "");
+		fragmentNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/fragment.notation", "");
+		fragmentUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/fragment.uml", "");
 		repository.addAllAndCommit("2nd-commit");
 		repository.createBranch(MASTER, BRANCH_2);
 
@@ -463,9 +468,9 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 
 		// 3rd commit: reset to the 1st commit. 
 		// Remove the 2nd package. Also remove it from the diagram.
-		modelDi = addToProject(testProject1, iProject, "case002/commit3/model.di", "");
-		modelNotation = addToProject(testProject1, iProject, "case002/commit3/model.notation", "");
-		modelUml = addToProject(testProject1, iProject, "case002/commit3/model.uml", "");
+		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit3/model.di", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit3/model.notation", "");
+		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit3/model.uml", "");
 		repository.addAllAndCommit("3rd-commit");
 		repository.createBranch(MASTER, BRANCH_3);
 		
@@ -488,21 +493,21 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 		
 		// 1st commit: a model with 2 packages. 
 		// 1 class diagram associated to the model, and 1 class diagram associated to the 2nd package.
-		modelDi = addToProject(testProject1, iProject, "case003/commit1/model.di", "");
-		modelNotation = addToProject(testProject1, iProject, "case003/commit1/model.notation", "");
-		modelUml = addToProject(testProject1, iProject, "case003/commit1/model.uml", "");
+		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit1/model.di", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit1/model.notation", "");
+		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit1/model.uml", "");
 
 		repository.addAllAndCommit("1st-commit");
 		repository.createBranch(MASTER, BRANCH_1);
 
 		// 2nd commit: the 2nd package is fragmented. 
 		// The class diagram associated is moved in a new resource X (notation model).
-		modelDi = addToProject(testProject1, iProject, "case003/commit2/model.di", "");
-		modelNotation = addToProject(testProject1, iProject, "case003/commit2/model.notation", "");
-		modelUml = addToProject(testProject1, iProject, "case003/commit2/model.uml", "");
-		fragmentDi = addToProject(testProject1, iProject, "case003/commit2/fragment.di", "");
-		fragmentNotation = addToProject(testProject1, iProject, "case003/commit2/fragment.notation", "");
-		fragmentUml = addToProject(testProject1, iProject, "case003/commit2/fragment.uml", "");
+		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit2/model.di", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit2/model.notation", "");
+		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit2/model.uml", "");
+		fragmentDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit2/fragment.di", "");
+		fragmentNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit2/fragment.notation", "");
+		fragmentUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit2/fragment.uml", "");
 		repository.addAllAndCommit("2nd-commit");
 		repository.createBranch(MASTER, BRANCH_2);
 
@@ -511,12 +516,12 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 
 		// 3rd commit: the 2nd package is fragmented. 
 		// The class diagram associated is moved in a new resource Y (notation model).
-		modelDi = addToProject(testProject1, iProject, "case003/commit3/model.di", "");
-		modelNotation = addToProject(testProject1, iProject, "case003/commit3/model.notation", "");
-		modelUml = addToProject(testProject1, iProject, "case003/commit3/model.uml", "");
-		IFile controlDi = addToProject(testProject1, iProject, "case003/commit3/control.di", "");
-		IFile controlNotation = addToProject(testProject1, iProject, "case003/commit3/control.notation", "");
-		IFile controlUml = addToProject(testProject1, iProject, "case003/commit3/control.uml", "");
+		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/model.di", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/model.notation", "");
+		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/model.uml", "");
+		IFile controlDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/control.di", "");
+		IFile controlNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/control.notation", "");
+		IFile controlUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/control.uml", "");
 		repository.addAllAndCommit("3rd-commit");
 		repository.createBranch(MASTER, BRANCH_3);
 		
