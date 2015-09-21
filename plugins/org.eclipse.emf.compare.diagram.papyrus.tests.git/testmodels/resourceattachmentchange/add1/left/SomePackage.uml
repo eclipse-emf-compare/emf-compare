@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_OHxv0EvTEeW_uLfHB0QPcg" name="SomePackage">
+  <packagedElement xmi:type="uml:Class" xmi:id="_PeTd4EvTEeW_uLfHB0QPcg" name="C">
+    <ownedAttribute xmi:id="_RSfYU0vTEeW_uLfHB0QPcg" name="b">
+      <type xmi:type="uml:Class" href="model.uml#_NZP14EvTEeW_uLfHB0QPcg"/>
+      <association href="model.uml#_RSexQEvTEeW_uLfHB0QPcg"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_RqtEAUvTEeW_uLfHB0QPcg" name="d" type="_QedTUEvTEeW_uLfHB0QPcg">
+      <association href="model.uml#_Rqr14EvTEeW_uLfHB0QPcg"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_QedTUEvTEeW_uLfHB0QPcg" name="D">
+    <ownedAttribute xmi:id="_RqtrEEvTEeW_uLfHB0QPcg" name="c" type="_PeTd4EvTEeW_uLfHB0QPcg">
+      <association href="model.uml#_Rqr14EvTEeW_uLfHB0QPcg"/>
+    </ownedAttribute>
+  </packagedElement>
+</uml:Package>

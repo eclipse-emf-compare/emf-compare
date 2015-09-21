@@ -10,12 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests.suite;
 
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.textui.TestRunner;
-
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
+import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChangeAddGitMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.implication.AttachmentChangeImplicationTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.ResourceAttachmentChangeMoveConflictTests;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.ResourceAttachmentChangeMoveNoConflictTests;
@@ -32,10 +29,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import junit.framework.JUnit4TestAdapter;
+import junit.framework.Test;
+import junit.textui.TestRunner;
+
 @SuppressWarnings("restriction")
 @RunWith(Suite.class)
 @SuiteClasses({ResourceAttachmentChangeMoveNoConflictTests.class,
-	ResourceAttachmentChangeMoveConflictTests.class, AttachmentChangeImplicationTest.class
+	ResourceAttachmentChangeMoveConflictTests.class, AttachmentChangeImplicationTest.class,
+	ResourceAttachmentChangeAddGitMergeTest.class,
 	})
 public class PapyrusGitTests {
 	/**
