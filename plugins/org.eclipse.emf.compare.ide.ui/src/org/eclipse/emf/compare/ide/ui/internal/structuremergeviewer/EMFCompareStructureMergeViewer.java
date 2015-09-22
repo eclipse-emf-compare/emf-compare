@@ -930,6 +930,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		EMFCompare comparator = compareConfiguration.getEMFComparator();
 		compareConfiguration.setLeftEditable(input.isLeftEditable());
 		compareConfiguration.setRightEditable(input.isRightEditable());
+
+		if (input.isLeftEditable() && input.isRightEditable()) {
+			compareConfiguration.setMergePreviewMode(MergeMode.RIGHT_TO_LEFT);
+		} else {
+			compareConfiguration.setMergePreviewMode(MergeMode.ACCEPT);
+		}
+
 		// setup defaults
 		if (compareConfiguration.getEditingDomain() == null) {
 			ICompareEditingDomain domain = EMFCompareEditingDomain.create(comparisonScope.getLeft(),
