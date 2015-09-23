@@ -18,6 +18,8 @@ import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
 import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChangeAdd1GitMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChangeAdd2GitMergeTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChangeDelete1GitMergeTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChangeDelete2GitMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.implication.AttachmentChangeImplicationTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.ResourceAttachmentChangeMoveConflictTests;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.ResourceAttachmentChangeMoveNoConflictTests;
@@ -42,7 +44,8 @@ import junit.textui.TestRunner;
 @RunWith(Suite.class)
 @SuiteClasses({ ResourceAttachmentChangeMoveNoConflictTests.class, ResourceAttachmentChangeMoveConflictTests.class,
 		AttachmentChangeImplicationTest.class, ResourceAttachmentChangeMoveConflictTests.class,
-		ResourceAttachmentChangeAdd1GitMergeTest.class, ResourceAttachmentChangeAdd2GitMergeTest.class, })
+		ResourceAttachmentChangeAdd1GitMergeTest.class, ResourceAttachmentChangeAdd2GitMergeTest.class,
+		ResourceAttachmentChangeDelete1GitMergeTest.class, ResourceAttachmentChangeDelete2GitMergeTest.class, })
 public class PapyrusGitTests {
 	/**
 	 * Launches the test with the given arguments.
