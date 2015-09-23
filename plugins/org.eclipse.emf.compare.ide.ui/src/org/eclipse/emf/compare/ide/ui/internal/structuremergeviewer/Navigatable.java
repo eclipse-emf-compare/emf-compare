@@ -150,7 +150,8 @@ public class Navigatable implements INavigatable {
 			case NEXT_UNRESOLVED_CHANGE:
 				return getNextUnresolvedDiff(thisOrFirstItem(firstSelectedItem)) != null;
 			case FIRST_CHANGE:
-				return getNextDiff(getFirstItemInTree()) != null;
+				TreeItem firstItemInTree = getFirstItemInTree();
+				return firstItemInTree != null && getNextDiff(firstItemInTree) != null;
 			default:
 				throw new IllegalStateException();
 		}
