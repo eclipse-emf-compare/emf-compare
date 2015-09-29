@@ -18,6 +18,7 @@ import com.google.common.collect.Sets;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -346,7 +347,7 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 	 * @return The found differences.
 	 */
 	protected Set<Diff> getAllContainedDifferences(Diff input) {
-		final Set<Diff> result = new HashSet<Diff>();
+		final Set<Diff> result = new LinkedHashSet<Diff>();
 
 		final Comparison comparison = ComparisonUtil.getComparison(input);
 

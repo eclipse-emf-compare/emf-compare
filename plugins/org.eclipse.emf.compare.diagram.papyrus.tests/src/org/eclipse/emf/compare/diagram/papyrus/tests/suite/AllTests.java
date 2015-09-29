@@ -18,6 +18,7 @@ import junit.textui.TestRunner;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
 import org.eclipse.emf.compare.diagram.papyrus.tests.comparison.DiagramTooltipProviderTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.groups.PapyrusConflictsGroupProviderTests;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.AssocMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.EdgeMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.NodeMergeTest;
@@ -48,7 +49,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({AssocMergeTest.class, EdgeMergeTest.class, NodeMergeTest.class, ModelExtensionUtilTest.class,
 		SaveParameterHookTest.class, SaveParameterHookIntegrationTest.class, URIAttachmentTest.class,
-		DiagramTooltipProviderTest.class })
+		DiagramTooltipProviderTest.class, PapyrusConflictsGroupProviderTests.class })
 public class AllTests {
 
 	/**
