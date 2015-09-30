@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _HfAiEMC_EeO8eNTYV1NAnA
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 9/15/15 9:41 AM
+Save-Time: 9/30/15 5:45 PM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -29,8 +29,8 @@ get-preferences-menu | click
 with [get-window Preferences] {
  	get-tree | select "EMF Compare/Post Processors"
     with [get-table] {
-        get-property "getItems().TableItem[0].getText()" | equals "Papyrus Post Processor" | verify-true
-        get-property "getItems().TableItem[1].getText()" | equals "EGit Post Processor" | verify-true
+        get-property "getItems().TableItem[0].getText()" | equals "EGit Post Processor" | verify-true
+        get-property "getItems().TableItem[1].getText()" | equals "Papyrus Post Processor" | verify-true
         get-property "getItems().TableItem[2].getText()" | equals "UML Post Processor" | verify-true
         get-property "getItems().TableItem[3].getText()" | equals "Opaque Element Change Processor" | verify-true
         get-property "getItems().TableItem[4].getText()" | equals "Stereotyped element change post processor" | verify-true
@@ -42,7 +42,7 @@ with [get-window Preferences] {
    		get-property "getItems().TableItem[4].getChecked()" | equals true | verify-true
    		get-property "getItems().TableItem[5].getChecked()" | equals true | verify-true
     }
-    get-group Description | get-property "getChildren().Control[0].getText()" | equals "Post processor used in postMatch step for matching notation and di resources with different names" | verify-true
+    get-group Description | get-property "getChildren().Control[0].getText()" | equals "Post processor used in postDiff step to detect resource attachment changes of kind Move." | verify-true
 }
 //Checks description update
 get-window Preferences | get-table | select "Diagram Post processor"
