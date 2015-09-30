@@ -290,4 +290,38 @@ To make it easier for users to relate the content of the structure merge viewer 
 Without having a concrete technical solution in mind, we think users would benefit from linking the selections between the structure merge viewer and the Synchronize view: if a match or difference is selected in the content merge viewer, EMF Compare should select the respective resource that contains the selected match or the match that contains the selected difference in the Synchronize view. Vice versa, if a model resource is selected or double-clicked (and the content merge viewer shows the same EMF resource mapping already), EMF Compare should leave the content of the content merge viewer unchanged and select the respective resource in the content merge viewer tree. Users should however be able to activate or deactivate linking among views, as usual in Eclipse.
 
 Note that it seems that we unfortunately cannot directly use ''Link with Editor'' of the Synchronize view as it requires the comparison editor to have an editor input that adapts to the respective resource to be linked. However, in the content merge viewer, we would have to change the respective resource according to the selection.
- 
+
+== US_320_004 - Comparisons and merges involving resource changes ==
+
+=== Description ===
+Management of resource moves and renames with ResourceAttachmentChanges.
+Management of the move of a root node of a model resource that contains one or several root nodes (which is necessary for Papyrus notation resources for instance).
+
+==== Categories ====
+[[./index.html#Core-related Specifications|Core]], [[./index.html#Team-related Specifications|Team]], [[./index.html#UI-related Specifications|UI]]
+
+=== Content ===
+
+The notion of <code>ResourceLocationChange</code> introduced in a previous version of EMFCompare has limits as soon as resources with several roots are involved in comparisons.
+Actually, <code>ResourceLocationChange</code> is only relevant for resources with one root, which is limited and wrong.
+Consequently, we introduce the notion of <code>ResourceAttachmentChange</code> with kind <code>MOVE</code>. <code>ResourceLocationChange</code> is consequently deprecated.
+
+This change also implies to modify the way we handle the matching of resources.
+Before, when using <code>ResourceLocationChange</code>s to manage the renaming or move or resources, we had to be able to match 2 resources that did not have the same name or path.
+Now, with the use of <code>ResourceAttachmentChange/MOVE</code>, we don't have to artificially match 2 resources located in different places.
+This is especially more robust when working with git repositories, since in this case comparisons can be handled by matching resources accroding only to their path.
+When dealing with EGit, 2 resources with different paths will never be matched.
+This does not prevent a <code>ResourceAttachmentChange</code> of kind <code>MOVE</code> to be created, since such a change is attached to the moved root element.
+
+'''''IMPORTANT RESTRICTION'''''<br/>
+''Please note that this specification only supports moves of root nodes for EGit comparisons.''<br/>
+''Such moves will not be properly detected for local comparisons, since the paths of resources will then always be different.''
+
+However, this solution is more robust, more powerful since it allows to manage resource with several roots (which is the case of GMF notaionf resources for instance), and also more elegant since it does not break the general contract of diffs like <code>ResourceLocationChange</code> did.
+
+This change is accompanied by EGit-specific and papyrus-specific classes registered through extension points:
+
+* <code>EGitPostProcessor</code> in project <code>org.eclipse.emf.compare.egit</code>
+** is used to actually create the <code>ResourceAttachmentChange</code> with kind <code>MOVE</code>
+* <code>PapyrusResourceAttachmentChangeMerger</code> in project <code>org.eclipse.emf.compare.diagram.ide.ui.papyrus</code>
+** is used to merge papyrus-specific empty resources, which contain no model element to which any diff can be attached. This is necessary to properly create or delete empty resources such as *.di files, or sometimes empty *.notation files also.
