@@ -66,8 +66,11 @@ public class PapyrusResourceAttachmentChangeMerger extends ResourceAttachmentCha
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * <p>
 	 * Manages move of empty resources related to the model element move from one resource to another. Then
 	 * delegates to the super implementation to actually perform the move.
+	 * </p>
 	 */
 	@Override
 	protected void move(final ResourceAttachmentChange diff, boolean rightToLeft) {
