@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - javadoc fixes
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.logical;
 
@@ -27,12 +28,8 @@ public interface IModelMinimizer {
 	/**
 	 * This will be called to reduce the number of resources in this model's traversals.
 	 * 
-	 * @param leftTraversal
-	 *            The traversal corresponding to the left side.
-	 * @param rightTraversal
-	 *            The traversal corresponding to the right side.
-	 * @param originTraversal
-	 *            The traversal, if any, corresponding to the common ancestor of left and right sides.
+	 * @param syncModel
+	 *            The synchronization model to be minimized.
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
 	 */

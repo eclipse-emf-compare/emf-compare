@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - bug 470268
+ *     Philip Langer - bug 470268, checkstyle fixes
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.logical;
 
@@ -68,7 +68,7 @@ public interface IStorageProviderAccessor {
 	 *            {@link DiffSide#REMOTE} are valid).
 	 * @return The file before the rename, if it has been renamed at all, <code>null</code> otherwise.
 	 */
-	public IFile getFileBeforeRename(IFile sourceOrRemoteFile, DiffSide side);
+	IFile getFileBeforeRename(IFile sourceOrRemoteFile, DiffSide side);
 
 	/**
 	 * Given an origin file, this method optionally returns the corresponding {@link IFile} after it has
@@ -84,7 +84,7 @@ public interface IStorageProviderAccessor {
 	 *            {@link DiffSide#REMOTE} are valid).
 	 * @return The file after the rename, if it has been renamed at all, <code>null</code> otherwise.
 	 */
-	public IFile getFileAfterRename(IFile originFile, DiffSide side);
+	IFile getFileAfterRename(IFile originFile, DiffSide side);
 
 	/** Used by the resolution process to determine the side of the revision to fetch. */
 	public static enum DiffSide {

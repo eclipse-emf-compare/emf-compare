@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2015 Obeo.
+ * Copyright (c) 2011, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - checkstyle and javadoc fixes
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.logical;
 
@@ -50,9 +51,10 @@ public final class SynchronizationModel implements IDiagnosable {
 	/** The traversal corresponding to the common ancestor of both other side. */
 	private final StorageTraversal originTraversal;
 
-	/** The diagnostic that may have been issued for this synchronization model */
+	/** The diagnostic that may have been issued for this synchronization model. */
 	private Diagnostic diagnostic;
 
+	/** The resources that are part of this synchronization model. */
 	private ImmutableSet<IResource> resources;
 
 	/**
@@ -70,7 +72,7 @@ public final class SynchronizationModel implements IDiagnosable {
 			StorageTraversal originTraversal) {
 		this(leftTraversal, rightTraversal, originTraversal, new BasicDiagnostic(
 				EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null, new Object[] {leftTraversal, rightTraversal,
-						originTraversal }));
+						originTraversal, }));
 	}
 
 	/**
@@ -135,6 +137,11 @@ public final class SynchronizationModel implements IDiagnosable {
 		return originTraversal;
 	}
 
+	/**
+	 * Returns the diagnostics that may have been issued for the left, right, and origin side.
+	 * 
+	 * @return The diagnostics of the left, right, and origin side.
+	 */
 	public Diagnostic getDiagnostic() {
 		BasicDiagnostic ret = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, EMFCompareIDEUIMessages
 				.getString("SynchronizationModel.diagnosticMesg"), new Object[] {this, }); //$NON-NLS-1$
@@ -152,6 +159,15 @@ public final class SynchronizationModel implements IDiagnosable {
 		return ret;
 	}
 
+	/**
+	 * Creates a diagnostic for the given diagnostic {@code toAdd} of the given {@code side}.
+	 * 
+	 * @param toAdd
+	 *            The diagnostic to be added to the created diagnostic.
+	 * @param side
+	 *            The side, either left, right, or origin.
+	 * @return The created diagnostic.
+	 */
 	private BasicDiagnostic getDiagnosticForSide(Diagnostic toAdd, String side) {
 		BasicDiagnostic d;
 		d = new BasicDiagnostic(toAdd.getSeverity(), toAdd.getSource(), 0, EMFCompareIDEUIMessages
@@ -215,13 +231,13 @@ public final class SynchronizationModel implements IDiagnosable {
 	 *            empty set will be returned.
 	 * @return The converted traversal.
 	 */
-	private static Set<IResource> collectResources(StorageTraversal aTraversal) {
+	private static Set<IResource> collectResources(StorageTraversal traversal) {
 		final Set<IResource> resources = new LinkedHashSet<IResource>();
-		if (aTraversal == null) {
+		if (traversal == null) {
 			return resources;
 		}
 
-		for (IStorage storage : aTraversal.getStorages()) {
+		for (IStorage storage : traversal.getStorages()) {
 			if (storage instanceof IFile) {
 				resources.add((IFile)storage);
 			} else {
