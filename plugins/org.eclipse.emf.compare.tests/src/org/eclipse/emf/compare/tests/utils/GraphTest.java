@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Alexandra Buzila - bug 478620
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.utils;
 
@@ -140,27 +141,9 @@ public class GraphTest {
 
 	@Test
 	public void testTreeIteration_1() {
-		Graph<String> graph = new Graph<String>();
-		//@formatter:off
-		/*
-		 * With the following Graph:
-		 *
-		 *     A       I    J
-		 *    / \     /    / \
-		 *   B   C   G    K   L
-		 *  /   / \ / \      / \
-		 * D   E   F   H    M   N
-		 */
-		//@formatter:on
-		graph.addChildren("A", ImmutableSet.of("B", "C"));
-		graph.addChildren("B", ImmutableSet.of("D"));
-		graph.addChildren("C", ImmutableSet.of("E", "F"));
-		graph.addChildren("I", ImmutableSet.of("G"));
-		graph.addChildren("G", ImmutableSet.of("F", "H"));
-		graph.addChildren("J", ImmutableSet.of("K", "L"));
-		graph.addChildren("L", ImmutableSet.of("M", "N"));
+		Graph<String> graph = getAcyclicGraph();
 
-		Iterator<String> iteratorOnA = graph.treeIterator("A");
+		Iterator<String> iteratorOnA = graph.depthFirstIterator("A");
 		assertEquals("A", iteratorOnA.next());
 		assertEquals("B", iteratorOnA.next());
 		assertEquals("D", iteratorOnA.next());
@@ -172,27 +155,9 @@ public class GraphTest {
 
 	@Test
 	public void testTreeIteration_2() {
-		Graph<String> graph = new Graph<String>();
-		//@formatter:off
-		/*
-		 * With the following Graph:
-		 *
-		 *     A       I    J
-		 *    / \     /    / \
-		 *   B   C   G    K   L
-		 *  /   / \ / \      / \
-		 * D   E   F   H    M   N
-		 */
-		//@formatter:on
-		graph.addChildren("A", ImmutableSet.of("B", "C"));
-		graph.addChildren("B", ImmutableSet.of("D"));
-		graph.addChildren("C", ImmutableSet.of("E", "F"));
-		graph.addChildren("I", ImmutableSet.of("G"));
-		graph.addChildren("G", ImmutableSet.of("F", "H"));
-		graph.addChildren("J", ImmutableSet.of("K", "L"));
-		graph.addChildren("L", ImmutableSet.of("M", "N"));
+		Graph<String> graph = getAcyclicGraph();
 
-		Iterator<String> iteratorOnC = graph.treeIterator("C");
+		Iterator<String> iteratorOnC = graph.depthFirstIterator("C");
 		assertEquals("C", iteratorOnC.next());
 		assertEquals("E", iteratorOnC.next());
 		assertEquals("F", iteratorOnC.next());
@@ -201,27 +166,9 @@ public class GraphTest {
 
 	@Test
 	public void testTreeIteration_3() {
-		Graph<String> graph = new Graph<String>();
-		//@formatter:off
-		/*
-		 * With the following Graph:
-		 *
-		 *     A       I    J
-		 *    / \     /    / \
-		 *   B   C   G    K   L
-		 *  /   / \ / \      / \
-		 * D   E   F   H    M   N
-		 */
-		//@formatter:on
-		graph.addChildren("A", ImmutableSet.of("B", "C"));
-		graph.addChildren("B", ImmutableSet.of("D"));
-		graph.addChildren("C", ImmutableSet.of("E", "F"));
-		graph.addChildren("I", ImmutableSet.of("G"));
-		graph.addChildren("G", ImmutableSet.of("F", "H"));
-		graph.addChildren("J", ImmutableSet.of("K", "L"));
-		graph.addChildren("L", ImmutableSet.of("M", "N"));
+		Graph<String> graph = getAcyclicGraph();
 
-		Iterator<String> iteratorOnI = graph.treeIterator("I");
+		Iterator<String> iteratorOnI = graph.depthFirstIterator("I");
 		assertEquals("I", iteratorOnI.next());
 		assertEquals("G", iteratorOnI.next());
 		assertEquals("F", iteratorOnI.next());
@@ -231,18 +178,90 @@ public class GraphTest {
 
 	@Test
 	public void testTreeIteration_4() {
+		Graph<String> graph = getAcyclicGraph();
+
+		Iterator<String> iteratorOnJ = graph.depthFirstIterator("J");
+		assertEquals("J", iteratorOnJ.next());
+		assertEquals("K", iteratorOnJ.next());
+		assertEquals("L", iteratorOnJ.next());
+		assertEquals("M", iteratorOnJ.next());
+		assertEquals("N", iteratorOnJ.next());
+		assertFalse(iteratorOnJ.hasNext());
+	}
+
+	@Test
+	public void testDepthIterationWithCycles_1() {
+		Graph<String> graph = getGraphWithCycles();
+
+		Iterator<String> iteratorOnA = graph.depthFirstIterator("A");
+		assertEquals("A", iteratorOnA.next());
+		assertEquals("B", iteratorOnA.next());
+		assertEquals("D", iteratorOnA.next());
+		assertEquals("E", iteratorOnA.next());
+		assertEquals("C", iteratorOnA.next());
+		assertEquals("F", iteratorOnA.next());
+		assertEquals("H", iteratorOnA.next());
+
+		assertFalse(iteratorOnA.hasNext());
+	}
+
+	@Test
+	public void testDepthIterationWithCycles_2() {
+		Graph<String> graph = getGraphWithCycles();
+
+		Iterator<String> iteratorOnC = graph.depthFirstIterator("C");
+		assertEquals("C", iteratorOnC.next());
+		assertEquals("A", iteratorOnC.next());
+		assertEquals("B", iteratorOnC.next());
+		assertEquals("D", iteratorOnC.next());
+		assertEquals("E", iteratorOnC.next());
+		assertEquals("F", iteratorOnC.next());
+		assertEquals("H", iteratorOnC.next());
+
+		assertFalse(iteratorOnC.hasNext());
+	}
+
+	@Test
+	public void testDepthIterationWithCycles_3() {
+		Graph<String> graph = getGraphWithCycles();
+
+		Iterator<String> iteratorOnI = graph.depthFirstIterator("I");
+		assertEquals("I", iteratorOnI.next());
+		assertEquals("G", iteratorOnI.next());
+		assertEquals("F", iteratorOnI.next());
+		assertEquals("H", iteratorOnI.next());
+
+		assertFalse(iteratorOnI.hasNext());
+	}
+
+	@Test
+	public void testDepthIterationWithCycles_4() {
+		Graph<String> graph = getGraphWithCycles();
+
+		Iterator<String> iteratorOnJ = graph.depthFirstIterator("J");
+		assertEquals("J", iteratorOnJ.next());
+		assertEquals("K", iteratorOnJ.next());
+		assertEquals("M", iteratorOnJ.next());
+		assertEquals("L", iteratorOnJ.next());
+		assertEquals("N", iteratorOnJ.next());
+
+		assertFalse(iteratorOnJ.hasNext());
+	}
+
+	/**
+	 * @return The following acyclic graph:
+	 * 
+	 *         <pre>
+	 *     A       I    J
+	 *    / \     /    / \
+	 *   B   C   G    K   L
+	 *  /   / \ / \      / \
+	 * D   E   F   H    M   N
+	 * </pre>
+	 */
+	private Graph<String> getAcyclicGraph() {
 		Graph<String> graph = new Graph<String>();
-		//@formatter:off
-		/*
-		 * With the following Graph:
-		 *
-		 *     A       I    J
-		 *    / \     /    / \
-		 *   B   C   G    K   L
-		 *  /   / \ / \      / \
-		 * D   E   F   H    M   N
-		 */
-		//@formatter:on
+
 		graph.addChildren("A", ImmutableSet.of("B", "C"));
 		graph.addChildren("B", ImmutableSet.of("D"));
 		graph.addChildren("C", ImmutableSet.of("E", "F"));
@@ -251,12 +270,37 @@ public class GraphTest {
 		graph.addChildren("J", ImmutableSet.of("K", "L"));
 		graph.addChildren("L", ImmutableSet.of("M", "N"));
 
-		Iterator<String> iteratorOnJ = graph.treeIterator("J");
-		assertEquals("J", iteratorOnJ.next());
-		assertEquals("K", iteratorOnJ.next());
-		assertEquals("L", iteratorOnJ.next());
-		assertEquals("M", iteratorOnJ.next());
-		assertEquals("N", iteratorOnJ.next());
-		assertFalse(iteratorOnJ.hasNext());
+		return graph;
 	}
+
+	/**
+	 * @return The following cyclic graph:
+	 * 
+	 *         <pre>
+	 *     A       I    J
+	 *    / \\    /    /  \
+	 *   B   C   G    K    L
+	 *  /   / \ / \    \ // \
+	 * D - E   F = H    M    N
+	 * </pre>
+	 */
+	private Graph<String> getGraphWithCycles() {
+		Graph<String> graph = new Graph<String>();
+
+		graph.addChildren("A", ImmutableSet.of("B", "C"));
+		graph.addChildren("B", ImmutableSet.of("D"));
+		graph.addChildren("D", ImmutableSet.of("E"));
+		graph.addChildren("C", ImmutableSet.of("A", "E", "F"));
+		graph.addChildren("I", ImmutableSet.of("G"));
+		graph.addChildren("G", ImmutableSet.of("F", "H"));
+		graph.addChildren("J", ImmutableSet.of("K", "L"));
+		graph.addChildren("K", ImmutableSet.of("M"));
+		graph.addChildren("M", ImmutableSet.of("L"));
+		graph.addChildren("L", ImmutableSet.of("M", "N"));
+		graph.addChildren("F", ImmutableSet.of("H"));
+		graph.addChildren("H", ImmutableSet.of("F"));
+
+		return graph;
+	}
+
 }

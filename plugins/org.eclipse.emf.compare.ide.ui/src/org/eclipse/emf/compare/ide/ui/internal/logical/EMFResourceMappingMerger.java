@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - bugs 461713, 465331, 470268, 476363, 476417, refactorings
- *     Alexandra Buzila - bug 470332
+ *     Alexandra Buzila - bugs 470332, 478620
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -322,7 +322,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 			final Diff next = iterator.next();
 			if (hasConflict(ConflictKind.REAL).apply(next)) {
 				iterator.prune();
-				conflictingURIs.addAll(collectConflictingResources(differencesGraph.treeIterator(next)));
+				conflictingURIs.addAll(collectConflictingResources(differencesGraph.depthFirstIterator(next)));
 			} else if (next.getState() != DifferenceState.MERGED) {
 				final IMerger merger = MERGER_REGISTRY.getHighestRankingMerger(next);
 				merger.copyRightToLeft(next, emfMonitor);

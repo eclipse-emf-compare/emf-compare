@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Alexandra Buzila - bug 478620
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
 
@@ -22,6 +23,7 @@ import com.google.common.collect.Iterators;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -394,7 +396,8 @@ public class Graph<E> {
 	}
 
 	/**
-	 * Returns a tree iterator created with the given element as root.
+	 * Returns a depth first iterator created with the given element as root. If the graph contains cycles,
+	 * the same node won't be returned twice.
 	 * <p>
 	 * The root will be returned first, then the left-most child of that root, then the left-most child of
 	 * that child if any, or the closest sibling to the right of the current element. For example, with the
@@ -419,7 +422,7 @@ public class Graph<E> {
 	 *            The root of the tree over which we need to iterate.
 	 * @return An iterator over the tree starting from the given root.
 	 */
-	public Iterator<E> treeIterator(E root) {
+	public Iterator<E> depthFirstIterator(E root) {
 		return new ChildrenIterator(root);
 	}
 
@@ -850,7 +853,7 @@ public class Graph<E> {
 	 * 
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
-	private class ChildrenIterator implements Iterator<E> {
+	private class ChildrenIterator implements Iterator<E>, Predicate<Node<E>> {
 		/**
 		 * The expected {@link Graph#modcount} for this iterator. Any attempt at calling {@link #next()} after
 		 * the underlying graph has been modified will fail in {@link ConcurrentModificationException}.
@@ -858,7 +861,14 @@ public class Graph<E> {
 		private final int expectedModCount;
 
 		/** The current stack of iterators. */
-		private LinkedList<Iterator<Node<E>>> iteratorStack;
+		private final LinkedList<Iterator<Node<E>>> iteratorStack;
+
+		/**
+		 * The set of all nodes from the underlying graph we've already iterated over. This will prevent us
+		 * from cycling over nodes if there are cycles in our graph, and will also prevent us from iterating
+		 * twice over the same node (when a node has multiple parents).
+		 */
+		private final Set<Node<E>> consumedNodes;
 
 		/**
 		 * Creates an iterator over the tree starting from the given root element.
@@ -870,6 +880,7 @@ public class Graph<E> {
 			this.expectedModCount = Graph.this.modcount;
 			this.iteratorStack = new LinkedList<Iterator<Node<E>>>();
 			iteratorStack.add(Iterators.singletonIterator(Graph.this.nodes.get(root)));
+			consumedNodes = new HashSet<Node<E>>();
 		}
 
 		/** {@inheritDoc} */
@@ -886,8 +897,10 @@ public class Graph<E> {
 				throw new NoSuchElementException();
 			}
 			Node<E> resultNode = iteratorStack.getLast().next();
-			// no check for emptiness, would be redundant with the following loop
-			iteratorStack.add(resultNode.getChildren().iterator());
+			if (consumedNodes.add(resultNode)) {
+				// no check for emptiness, would be redundant with the following loop
+				iteratorStack.add(Iterators.filter(resultNode.getChildren().iterator(), this));
+			}
 
 			// remove the iterators we've consumed entirely from the stack.
 			ListIterator<Iterator<Node<E>>> reverseStackIterator = iteratorStack.listIterator(iteratorStack
@@ -906,6 +919,17 @@ public class Graph<E> {
 		 */
 		public void remove() {
 			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * Predicate implementation, only nodes that are not consumed will be accepted.
+		 * 
+		 * @param input
+		 *            The node to filter
+		 * @return true If and only if the given node is not in comsumedNodes.
+		 */
+		public boolean apply(Node<E> input) {
+			return !consumedNodes.contains(input);
 		}
 	}
 
