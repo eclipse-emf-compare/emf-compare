@@ -54,6 +54,7 @@ import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
+import org.eclipse.jgit.api.RmCommand;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
@@ -67,6 +68,8 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.util.FileUtils;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.subscribers.SubscriberScopeManager;
+
+import com.google.common.collect.Iterables;
 
 /**
  * This class is largely inspired from org.eclipse.egit.core.test.TestRepository. It has been copied here in
@@ -109,11 +112,66 @@ public class GitTestRepository {
 		return this.repository;
 	}
 	
+	/**
+	 * Adds all changes and creates a commit.
+	 * <p>
+	 * This is a convenience method for
+	 * {@link #addAllAndCommit(String, boolean)}, whereas deleted or missing
+	 * files are <em>not</em> added to the index.
+	 * </p>
+	 * 
+	 * @param commitMessage
+	 *            The commit message.
+	 * @return The reference to the created commit.
+	 * @throws Exception
+	 *             if anything goes wrong.
+	 */
 	public RevCommit addAllAndCommit(String commitMessage) throws Exception {
+		return addAllAndCommit(commitMessage, false);
+	}
+
+	/**
+	 * Adds all changes and creates a commit.
+	 * 
+	 * @param commitMessage
+	 *            The commit message.
+	 * @param addDeleted
+	 *            Specifies whether missing or deleted files should added to
+	 *            index, too.
+	 * @return The reference to the created commit.
+	 * @throws Exception
+	 *             if anything goes wrong.
+	 */
+	public RevCommit addAllAndCommit(String commitMessage, boolean addDeleted) throws Exception {
 		Git git = new Git(repository);
 		try {
 			git.add().addFilepattern(".").call();
+			if (addDeleted) {
+				addDeletedFiles();
+			}
 			return commit(commitMessage);
+		} finally {
+			git.close();
+		}
+	}
+
+	/**
+	 * Adds all missing or deleted files to the index.
+	 * 
+	 * @throws Exception
+	 *             if anything goes wrong.
+	 */
+	public void addDeletedFiles() throws Exception {
+		Git git = new Git(repository);
+		try {
+			Status status = git.status().call();
+			if (!status.getMissing().isEmpty() || !status.getRemoved().isEmpty()) {
+				RmCommand rm = git.rm();
+				for (String deletedFile : Iterables.concat(status.getMissing(), status.getRemoved())) {
+					rm.addFilepattern(deletedFile);
+				}
+				rm.call();
+			}
 		} finally {
 			git.close();
 		}
