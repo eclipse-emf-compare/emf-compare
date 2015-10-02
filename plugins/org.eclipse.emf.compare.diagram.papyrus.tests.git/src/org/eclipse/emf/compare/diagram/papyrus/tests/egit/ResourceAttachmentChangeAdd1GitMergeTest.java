@@ -43,7 +43,7 @@ import org.eclipse.uml2.uml.Property;
  *
  * @author Philip Langer <planger@eclipsesource.com>
  */
-public class ResourceAttachmentChangeAddGitMergeTest extends AbstractGitMergeTestCase {
+public class ResourceAttachmentChangeAdd1GitMergeTest extends AbstractGitMergeTestCase {
 
 	private static final String TEST_SCENARIO_PATH = "testmodels/resourceattachmentchange/add1/";
 	private static final String SOME_PACKAGE_UML = "SomePackage.uml";
@@ -96,5 +96,4 @@ public class ResourceAttachmentChangeAddGitMergeTest extends AbstractGitMergeTes
 		assertTrue(resource.getContents().get(0) instanceof org.eclipse.uml2.uml.Package);
 		assertEquals("SomePackage", ((org.eclipse.uml2.uml.Package) resource.getContents().get(0)).getName());
 	}
-
 }

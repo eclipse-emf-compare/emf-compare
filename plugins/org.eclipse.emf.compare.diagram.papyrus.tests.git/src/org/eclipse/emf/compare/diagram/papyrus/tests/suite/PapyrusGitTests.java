@@ -7,12 +7,17 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+<<<<<<< HEAD
+=======
+ *     Philip Langer - added further tests
+>>>>>>> Add additional test case with unrelated file that is deleted
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests.suite;
 
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
-import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChangeAddGitMergeTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChangeAdd1GitMergeTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChangeAdd2GitMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.implication.AttachmentChangeImplicationTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.ResourceAttachmentChangeMoveConflictTests;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.ResourceAttachmentChangeMoveNoConflictTests;
@@ -35,10 +40,9 @@ import junit.textui.TestRunner;
 
 @SuppressWarnings("restriction")
 @RunWith(Suite.class)
-@SuiteClasses({ResourceAttachmentChangeMoveNoConflictTests.class,
-	ResourceAttachmentChangeMoveConflictTests.class, AttachmentChangeImplicationTest.class,
-	ResourceAttachmentChangeAddGitMergeTest.class,
-	})
+@SuiteClasses({ ResourceAttachmentChangeMoveNoConflictTests.class, ResourceAttachmentChangeMoveConflictTests.class,
+		AttachmentChangeImplicationTest.class, ResourceAttachmentChangeMoveConflictTests.class,
+		ResourceAttachmentChangeAdd1GitMergeTest.class, ResourceAttachmentChangeAdd2GitMergeTest.class, })
 public class PapyrusGitTests {
 	/**
 	 * Launches the test with the given arguments.
