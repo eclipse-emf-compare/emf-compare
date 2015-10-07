@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -37,6 +38,7 @@ import org.junit.Before;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
+import com.google.common.eventbus.EventBus;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
@@ -46,9 +48,12 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 
 	protected static TreeItemProviderAdapterFactorySpec treeItemProviderAdapterFactory;
 
+	protected EventBus eventBus;
+	
 	@Before
 	public void before() throws IOException {
-		treeItemProviderAdapterFactory = new TreeItemProviderAdapterFactorySpec();
+		eventBus = new EventBus();
+		treeItemProviderAdapterFactory = new TreeItemProviderAdapterFactorySpec(new StructureMergeViewerFilter(eventBus));
 	}
 
 	/**

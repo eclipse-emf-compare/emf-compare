@@ -22,8 +22,9 @@ import com.google.common.collect.Sets;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.emf.compare.graph.IGraph;
+import org.eclipse.emf.compare.graph.PruningIterator;
 import org.eclipse.emf.compare.internal.utils.Graph;
-import org.eclipse.emf.compare.internal.utils.PruningIterator;
 import org.junit.Test;
 
 /**
@@ -36,7 +37,7 @@ public class GraphTest {
 
 	@Test
 	public void testBuildSubGraph() {
-		Graph<String> graph = new Graph<String>();
+		IGraph<String> graph = new Graph<String>();
 		//@formatter:off
 		/*
 		 * Add the following graph:
@@ -64,7 +65,7 @@ public class GraphTest {
 	 */
 	@Test
 	public void testPrune() {
-		Graph<String> graph = new Graph<String>();
+		IGraph<String> graph = new Graph<String>();
 		//@formatter:off
 		/*
 		 * Add the following graph:
@@ -87,7 +88,7 @@ public class GraphTest {
 
 	@Test
 	public void testBreadthFirstIteration() {
-		Graph<String> graph = new Graph<String>();
+		IGraph<String> graph = new Graph<String>();
 		//@formatter:off
 		/*
 		 * With the following Graph:
@@ -141,7 +142,7 @@ public class GraphTest {
 
 	@Test
 	public void testTreeIteration_1() {
-		Graph<String> graph = getAcyclicGraph();
+		IGraph<String> graph = getAcyclicGraph();
 
 		Iterator<String> iteratorOnA = graph.depthFirstIterator("A");
 		assertEquals("A", iteratorOnA.next());
@@ -155,7 +156,7 @@ public class GraphTest {
 
 	@Test
 	public void testTreeIteration_2() {
-		Graph<String> graph = getAcyclicGraph();
+		IGraph<String> graph = getAcyclicGraph();
 
 		Iterator<String> iteratorOnC = graph.depthFirstIterator("C");
 		assertEquals("C", iteratorOnC.next());
@@ -166,7 +167,7 @@ public class GraphTest {
 
 	@Test
 	public void testTreeIteration_3() {
-		Graph<String> graph = getAcyclicGraph();
+		IGraph<String> graph = getAcyclicGraph();
 
 		Iterator<String> iteratorOnI = graph.depthFirstIterator("I");
 		assertEquals("I", iteratorOnI.next());
@@ -178,7 +179,7 @@ public class GraphTest {
 
 	@Test
 	public void testTreeIteration_4() {
-		Graph<String> graph = getAcyclicGraph();
+		IGraph<String> graph = getAcyclicGraph();
 
 		Iterator<String> iteratorOnJ = graph.depthFirstIterator("J");
 		assertEquals("J", iteratorOnJ.next());
@@ -191,7 +192,7 @@ public class GraphTest {
 
 	@Test
 	public void testDepthIterationWithCycles_1() {
-		Graph<String> graph = getGraphWithCycles();
+		IGraph<String> graph = getGraphWithCycles();
 
 		Iterator<String> iteratorOnA = graph.depthFirstIterator("A");
 		assertEquals("A", iteratorOnA.next());
@@ -207,7 +208,7 @@ public class GraphTest {
 
 	@Test
 	public void testDepthIterationWithCycles_2() {
-		Graph<String> graph = getGraphWithCycles();
+		IGraph<String> graph = getGraphWithCycles();
 
 		Iterator<String> iteratorOnC = graph.depthFirstIterator("C");
 		assertEquals("C", iteratorOnC.next());
@@ -223,7 +224,7 @@ public class GraphTest {
 
 	@Test
 	public void testDepthIterationWithCycles_3() {
-		Graph<String> graph = getGraphWithCycles();
+		IGraph<String> graph = getGraphWithCycles();
 
 		Iterator<String> iteratorOnI = graph.depthFirstIterator("I");
 		assertEquals("I", iteratorOnI.next());
@@ -236,7 +237,7 @@ public class GraphTest {
 
 	@Test
 	public void testDepthIterationWithCycles_4() {
-		Graph<String> graph = getGraphWithCycles();
+		IGraph<String> graph = getGraphWithCycles();
 
 		Iterator<String> iteratorOnJ = graph.depthFirstIterator("J");
 		assertEquals("J", iteratorOnJ.next());
@@ -259,8 +260,8 @@ public class GraphTest {
 	 * D   E   F   H    M   N
 	 * </pre>
 	 */
-	private Graph<String> getAcyclicGraph() {
-		Graph<String> graph = new Graph<String>();
+	private IGraph<String> getAcyclicGraph() {
+		IGraph<String> graph = new Graph<String>();
 
 		graph.addChildren("A", ImmutableSet.of("B", "C"));
 		graph.addChildren("B", ImmutableSet.of("D"));
@@ -284,8 +285,8 @@ public class GraphTest {
 	 * D - E   F = H    M    N
 	 * </pre>
 	 */
-	private Graph<String> getGraphWithCycles() {
-		Graph<String> graph = new Graph<String>();
+	private IGraph<String> getGraphWithCycles() {
+		IGraph<String> graph = new Graph<String>();
 
 		graph.addChildren("A", ImmutableSet.of("B", "C"));
 		graph.addChildren("B", ImmutableSet.of("D"));

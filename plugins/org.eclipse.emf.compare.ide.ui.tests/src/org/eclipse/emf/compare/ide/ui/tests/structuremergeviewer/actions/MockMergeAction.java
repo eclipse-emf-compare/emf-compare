@@ -15,10 +15,10 @@ import java.util.List;
 
 import org.eclipse.compare.INavigatable;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAction;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -30,9 +30,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 @SuppressWarnings("restriction")
 public class MockMergeAction extends MergeAction {
 
-	public MockMergeAction(ICompareEditingDomain editingDomain, Registry mergerRegistry, MergeMode mode,
-			boolean isLeftEditable, boolean isRightEditable, INavigatable navigatable) {
-		super(editingDomain, mergerRegistry, mode, isLeftEditable, isRightEditable, navigatable);
+	public MockMergeAction(IEMFCompareConfiguration compareConfiguration, Registry mergerRegistry,
+			MergeMode mode, INavigatable navigatable) {
+		super(compareConfiguration, mergerRegistry, mode, navigatable);
 	}
 
 	@Override

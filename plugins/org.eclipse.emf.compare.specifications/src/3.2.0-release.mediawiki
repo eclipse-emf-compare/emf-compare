@@ -325,3 +325,33 @@ This change is accompanied by EGit-specific and papyrus-specific classes registe
 ** is used to actually create the <code>ResourceAttachmentChange</code> with kind <code>MOVE</code>
 * <code>PapyrusResourceAttachmentChangeMerger</code> in project <code>org.eclipse.emf.compare.diagram.ide.ui.papyrus</code>
 ** is used to merge papyrus-specific empty resources, which contain no model element to which any diff can be attached. This is necessary to properly create or delete empty resources such as *.di files, or sometimes empty *.notation files also.
+
+== US_320_007 - Remove EMFCompareConfiguration from EMFCompareRCPUIPlugin and extract Graph in a separate plug-in ==
+
+=== Description ===
+Depreciate the access to <code>EMFCompareConfiguration</code> in the <code>EMFCompareRCPUIPlugin</code>.<br/>
+Depreciate the access to <code>Graph</code> in <code>EMFCompareConfiguration</code>.<br/>
+Extract the management of the dependency graph from EMFCompare to its own plugin.
+
+==== Categories ====
+[[./index.html#Core-related Specifications|Core]]
+
+=== Content ===
+
+==== specification ====
+The graphs used by EMFCompare are currently computed and managed by an internal class in <code>org.eclipse.emf.compare</code> bundle. The URI resources graph is shared by all comparisons, its instance being held by the <code>ThreadedModelResolver</code>. Since the bundle <code>org.eclipse.emf.compare.ide.ui</code> needs to access this graph, it is passed throught the <code>EMFCompareConfiguration</code> which is accessible in the <code>EMFCompareRCPUIPlugin</code>.
+The <code>EMFCompareRCPUIPlugin</code> and the URI resources Graph are singletons and used for all comparisons. On the other hand, the <code>EMFCompareConfiguration</code> is specific to each comparison and recreated each time. 
+It seems that the <code>EMFCompareConfiguration</code> has been put in the <code>EMFCompareRCPUIPlugin</code> only to allow the transfert of the URI resources graph and the <code>StructureMergeViewerFilter</code> between plugins. A solution to give access to the URI resources graph is to create a new plugin with the creation and managment of graphs as responsibility. The <code>StructureMergeViewerFilter</code> which is given by the <code>EMFCompareConfiguration</code> through the <code>EMFCompareRCPUIPlugin</code> must be give in another way. A solution is to give it through the <code>TreeItemAdapterFactorySpec</code>. 
+This work done, the field <code>compareConfiguration</code> and the methods <code>getEMFCompareConfiguration</code> and <code>setEMFCompareConfiguration</code> will be deprecated, and will not have any effects anymore.
+
+==== design ====
+Several different graphs are used during a comparison. The URI resources graph is the only one to be unique for all comparisons. The other graphs are comparison specific.
+To handle the previously expressed needs, several actions must be performed:
+* Extract the classes <code>Graph</code> and <code>ReadOnlyGraph</code> in a new plugin <code>org.eclipse.emf.compare.graph</code>
+* The plugin must be a singleton
+* The resource graph must be accessible from the plugin added
+* The class <code>Graph</code> must remain accessible for comparison needs.
+
+==== test cases ====
+The work will be tested by non-regression tests
+ 

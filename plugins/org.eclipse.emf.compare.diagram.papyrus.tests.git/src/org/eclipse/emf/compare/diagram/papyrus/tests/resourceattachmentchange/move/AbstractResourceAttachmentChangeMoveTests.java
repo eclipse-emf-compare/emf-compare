@@ -43,6 +43,8 @@ import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.tests.CompareTestCase;
 import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
+import org.eclipse.emf.compare.internal.utils.Graph;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -189,6 +191,7 @@ public class AbstractResourceAttachmentChangeMoveTests extends CompareTestCase {
 		final ITypedElement right = new StorageTypedElement(remoteProvider.getStorage(monitor), fullPath);
 		final ITypedElement origin = new StorageTypedElement(ancestorProvider.getStorage(monitor), fullPath);
 		final ThreadedModelResolver resolver = new ThreadedModelResolver();
+		resolver.setGraph(new Graph<URI>());
 		resolver.initialize();
 		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
 				new IdenticalResourceMinimizer(), storageAccessor);

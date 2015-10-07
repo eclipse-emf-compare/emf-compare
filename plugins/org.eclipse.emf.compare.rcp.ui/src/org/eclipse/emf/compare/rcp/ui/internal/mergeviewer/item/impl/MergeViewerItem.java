@@ -51,9 +51,9 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.graph.IGraphView;
 import org.eclipse.emf.compare.internal.spec.EObjectUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
-import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
 import org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.util.ResourceUIUtil;
@@ -731,7 +731,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			for (Match match : children) {
 				URI uri = ResourceUIUtil.getDataURI(match, getSide());
 				if (uri != null) {
-					ReadOnlyGraph<URI> graph = ResourceUIUtil.getResourcesURIGraph();
+					IGraphView<URI> graph = ResourceUIUtil.getResourcesURIGraph();
 					URI parentData = graph.getParentData(uri);
 					ResourceSet rs = ResourceUIUtil.getDataResourceSet(match, getSide());
 					Resource resourceParent = ResourceUIUtil.getParent(rs, uri);

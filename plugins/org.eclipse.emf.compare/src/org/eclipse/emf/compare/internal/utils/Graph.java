@@ -35,6 +35,8 @@ import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.eclipse.emf.common.util.AbstractTreeIterator;
+import org.eclipse.emf.compare.graph.IGraph;
+import org.eclipse.emf.compare.graph.PruningIterator;
 
 /**
  * This structure will be used to maintain a undirected graph of elements.
@@ -54,7 +56,7 @@ import org.eclipse.emf.common.util.AbstractTreeIterator;
  *            Kind of elements used as this graph's nodes.
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class Graph<E> {
+public class Graph<E> implements IGraph<E> {
 	/** Keeps track of this graph's individual nodes. */
 	private final Map<E, Node<E>> nodes;
 

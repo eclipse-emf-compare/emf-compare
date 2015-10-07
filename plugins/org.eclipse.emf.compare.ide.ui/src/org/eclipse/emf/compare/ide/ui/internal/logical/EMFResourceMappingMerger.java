@@ -67,6 +67,8 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.graph.IGraph;
+import org.eclipse.emf.compare.graph.PruningIterator;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
@@ -75,8 +77,6 @@ import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
-import org.eclipse.emf.compare.internal.utils.Graph;
-import org.eclipse.emf.compare.internal.utils.PruningIterator;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
@@ -312,7 +312,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 * @return the set of the uri for resources on which conflicts were not auto-mergeable.
 	 */
 	private Set<URI> performPreMerge(Comparison comparison, SubMonitor subMonitor) {
-		final Graph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison,
+		final IGraph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison,
 				MERGER_REGISTRY, true, MergeMode.RIGHT_TO_LEFT);
 		final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
 		final Monitor emfMonitor = BasicMonitor.toMonitor(subMonitor);
@@ -322,7 +322,8 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 			final Diff next = iterator.next();
 			if (hasConflict(ConflictKind.REAL).apply(next)) {
 				iterator.prune();
-				conflictingURIs.addAll(collectConflictingResources(differencesGraph.depthFirstIterator(next)));
+				conflictingURIs
+						.addAll(collectConflictingResources(differencesGraph.depthFirstIterator(next)));
 			} else if (next.getState() != DifferenceState.MERGED) {
 				final IMerger merger = MERGER_REGISTRY.getHighestRankingMerger(next);
 				merger.copyRightToLeft(next, emfMonitor);

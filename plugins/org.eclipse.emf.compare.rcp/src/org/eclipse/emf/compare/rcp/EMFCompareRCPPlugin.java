@@ -27,7 +27,9 @@ import com.google.common.collect.Multimaps;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -42,11 +44,14 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
+import org.eclipse.emf.compare.graph.IGraphView;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptorRegistryImpl;
+import org.eclipse.emf.compare.internal.utils.Graph;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.eobject.WeightProvider;
 import org.eclipse.emf.compare.match.eobject.WeightProviderDescriptorRegistryImpl;
@@ -54,6 +59,7 @@ import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.provider.EMFCompareEditPlugin;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.rcp.graph.IGraphConsumer;
 import org.eclipse.emf.compare.rcp.internal.EMFCompareRCPMessages;
 import org.eclipse.emf.compare.rcp.internal.adapterfactory.AdapterFactoryDescriptorRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
@@ -195,6 +201,11 @@ public class EMFCompareRCPPlugin extends Plugin {
 
 	/** Will listen to preference changes and update log4j configuration accordingly. */
 	private IPreferenceChangeListener preferenceChangeListener;
+
+	/**
+	 * Keep all resources graphs identified by their id.
+	 */
+	private Map<String, IGraphView<URI>> graphsById = new HashMap<String, IGraphView<URI>>();
 
 	/**
 	 * Instance scope for preferences.
@@ -811,6 +822,37 @@ public class EMFCompareRCPPlugin extends Plugin {
 				}
 			}
 		}
+	}
+
+	/**
+	 * This method creates a new Graph of URI, passes it to the given consumer and then keeps track of the
+	 * given graph to be able to provide a read only view of it on demand.
+	 * 
+	 * @param consumer
+	 *            An instance of graph consumer, for instance the ThreadedModelResolver instance.
+	 * @throws IllegalArgumentException
+	 *             if the consumer uses an ID that is already registered.
+	 * @since 2.4
+	 */
+	public void register(IGraphConsumer consumer) {
+		consumer.setGraph(new Graph<URI>());
+		String id = consumer.getId();
+		if (graphsById.containsKey(id)) {
+			throw new IllegalArgumentException(EMFCompareRCPMessages.getString("duplicate.graph.id.msg", id)); //$NON-NLS-1$
+		}
+		graphsById.put(id, consumer.getGraphView());
+	}
+
+	/**
+	 * Return the graph view associated with the given id, or null if it does not exist.
+	 * 
+	 * @param id
+	 *            The id of the graph
+	 * @return The graph view registered for the given ID, which can be null.
+	 * @since 2.4
+	 */
+	public IGraphView<URI> getGraphView(String id) {
+		return graphsById.get(id);
 	}
 
 }

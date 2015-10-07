@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.graph.IGraphView;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
@@ -38,7 +39,6 @@ import org.eclipse.emf.compare.ide.ui.internal.logical.StreamAccessorStorage;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
 import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
-import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
 import org.junit.Test;
 import org.osgi.framework.Bundle;
 
@@ -55,7 +55,7 @@ public class ThreadedModelResolverGraphTest {
 
 	private static String PLATFORM_RESOURCE = "platform:" + URI_SEP + "resource";
 
-	private ReadOnlyGraph<URI> initGraph(String projectName) throws IOException, CoreException {
+	private IGraphView<URI> initGraph(String projectName) throws IOException, CoreException {
 		Bundle bundle = Platform.getBundle("org.eclipse.emf.compare.ide.ui.tests");
 		URL entry = bundle.getEntry("src" + SEP + "org" + SEP + "eclipse" + SEP + "emf" + SEP + "compare"
 				+ SEP + "ide" + SEP + "ui" + SEP + "tests" + SEP + "structuremergeviewer" + SEP
@@ -87,13 +87,13 @@ public class ThreadedModelResolverGraphTest {
 				new IdenticalResourceMinimizer(), null);
 		scopeBuilder.build(left, right, null, new NullProgressMonitor());
 
-		return ((ThreadedModelResolver)resolver).getDependencyGraph();
+		return ((ThreadedModelResolver)resolver).getGraphView();
 	}
 
 	@Test
 	public void testCase0_GetParentData() throws IOException, CoreException {
 		String projectName = "case0";
-		final ReadOnlyGraph<URI> graph = initGraph(projectName);
+		final IGraphView<URI> graph = initGraph(projectName);
 		// Left
 		String leftPath = projectName + URI_SEP + LEFT + URI_SEP;
 		URI parentData = graph.getParentData(URI.createPlatformResourceURI(leftPath + URI_SEP + "R1.ecore",
@@ -112,7 +112,7 @@ public class ThreadedModelResolverGraphTest {
 	@Test
 	public void testCase1_GetParentData() throws IOException, CoreException {
 		String projectName = "case1";
-		final ReadOnlyGraph<URI> graph = initGraph(projectName);
+		final IGraphView<URI> graph = initGraph(projectName);
 		// Left
 		String leftPath = projectName + URI_SEP + LEFT + URI_SEP;
 		URI parentData = graph.getParentData(URI.createPlatformResourceURI(leftPath + "R1.ecore", false));
@@ -134,7 +134,7 @@ public class ThreadedModelResolverGraphTest {
 	@Test
 	public void testCase2_GetParentData() throws IOException, CoreException {
 		String projectName = "case2";
-		final ReadOnlyGraph<URI> graph = initGraph(projectName);
+		final IGraphView<URI> graph = initGraph(projectName);
 		// Left
 		String leftPath = projectName + URI_SEP + LEFT + URI_SEP;
 		URI parentData = graph.getParentData(URI.createPlatformResourceURI(leftPath + "R1.ecore", false));
@@ -156,7 +156,7 @@ public class ThreadedModelResolverGraphTest {
 	@Test
 	public void testCase3_GetParentData() throws IOException, CoreException {
 		String projectName = "case3";
-		final ReadOnlyGraph<URI> graph = initGraph(projectName);
+		final IGraphView<URI> graph = initGraph(projectName);
 		// Left
 		String leftPath = projectName + URI_SEP + LEFT + URI_SEP;
 		URI parentData = graph.getParentData(URI.createPlatformResourceURI(leftPath + "R1.ecore", false));
@@ -182,7 +182,7 @@ public class ThreadedModelResolverGraphTest {
 	@Test
 	public void testCase4_GetParentData() throws IOException, CoreException {
 		String projectName = "case4";
-		final ReadOnlyGraph<URI> graph = initGraph(projectName);
+		final IGraphView<URI> graph = initGraph(projectName);
 		// Left
 		String leftPath = projectName + URI_SEP + LEFT + URI_SEP;
 		URI parentData = graph.getParentData(URI.createPlatformResourceURI(leftPath + "R1.ecore", false));
@@ -204,7 +204,7 @@ public class ThreadedModelResolverGraphTest {
 	@Test
 	public void testCase5_GetParentData() throws IOException, CoreException {
 		String projectName = "case5";
-		final ReadOnlyGraph<URI> graph = initGraph(projectName);
+		final IGraphView<URI> graph = initGraph(projectName);
 		// Left
 		String leftPath = projectName + URI_SEP + LEFT + URI_SEP;
 		URI parentData = graph.getParentData(URI.createPlatformResourceURI(leftPath + "R1.ecore", false));
@@ -242,7 +242,7 @@ public class ThreadedModelResolverGraphTest {
 	@Test
 	public void testCase6_GetParentData() throws IOException, CoreException {
 		String projectName = "case6";
-		final ReadOnlyGraph<URI> graph = initGraph(projectName);
+		final IGraphView<URI> graph = initGraph(projectName);
 		// Left
 		String leftPath = projectName + URI_SEP + LEFT + URI_SEP;
 		URI parentData = graph.getParentData(URI.createPlatformResourceURI(leftPath + "R1.ecore", false));
@@ -276,7 +276,7 @@ public class ThreadedModelResolverGraphTest {
 	@Test
 	public void testCase7_GetParentData() throws IOException, CoreException {
 		String projectName = "case7";
-		final ReadOnlyGraph<URI> graph = initGraph(projectName);
+		final IGraphView<URI> graph = initGraph(projectName);
 		// Left
 		String leftPath = projectName + URI_SEP + LEFT + URI_SEP;
 		URI parentData = graph.getParentData(URI.createPlatformResourceURI(leftPath + "R1.ecore", false));

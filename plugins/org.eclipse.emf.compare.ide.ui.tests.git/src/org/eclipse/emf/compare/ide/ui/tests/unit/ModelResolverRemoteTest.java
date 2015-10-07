@@ -39,6 +39,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.graph.IGraphView;
+import org.eclipse.emf.compare.graph.PruningIterator;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.logical.EMFModelProvider;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope;
@@ -51,7 +53,6 @@ import org.eclipse.emf.compare.ide.ui.tests.egit.CompareGitTestCase;
 import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
-import org.eclipse.emf.compare.internal.utils.PruningIterator;
 import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -730,11 +731,11 @@ public class ModelResolverRemoteTest extends CompareGitTestCase {
 				DiffSide.ORIGIN).getStorage(nullMonitor);
 		SynchronizationModel syncModel = resolver.resolveModels(accessor,
 				leftStorage, rightStorage, originStorage, nullMonitor);
-		Set<Set<URI>> subGraphs = getSubGraphs(resolver.getDependencyGraph());
+		Set<Set<URI>> subGraphs = getSubGraphs(resolver.getGraphView());
 		return new ResolvingResult(subGraphs, syncModel);
 	}
 
-	private Set<Set<URI>> getSubGraphs(ReadOnlyGraph<URI> graph) {
+	private Set<Set<URI>> getSubGraphs(IGraphView<URI> graph) {
 		PruningIterator<URI> iterator = graph.breadthFirstIterator();
 		Set<URI> roots = new LinkedHashSet<URI>();
 		while (iterator.hasNext()) {

@@ -49,7 +49,7 @@ public class TestBasicDifferenceGroupImpl extends AbstractTestTreeNodeItemProvid
 		
 		final Collection<AdapterFactory> factories = Lists.newArrayList();
 		factories.add(new CompareItemProviderAdapterFactorySpec());
-		factories.add(new TreeItemProviderAdapterFactorySpec());
+		factories.add(treeItemProviderAdapterFactory);
 		factories.add(new EcoreItemProviderAdapterFactory());
 		factories.add(new ReflectiveItemProviderAdapterFactory());
 		

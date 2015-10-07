@@ -19,6 +19,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.UnmodifiableIterator;
+import com.google.common.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -39,7 +40,8 @@ import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.provider.TooltipLabelAdapterFactory;
 import org.eclipse.emf.compare.provider.spec.CompareItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeNodeItemProviderSpec;
@@ -76,26 +78,31 @@ public class UMLTooltipProviderTest extends AbstractUMLTest {
 
 	private TreeNode moveEdge;
 
+	private EventBus eventBus;
+
 	@BeforeClass
 	public static void setupClass() {
 		fillRegistries();
-		final Collection<AdapterFactory> factories = Lists.newArrayList();
-		factories.add(new CompareItemProviderAdapterFactorySpec());
-		factories.add(new TreeItemProviderAdapterFactorySpec());
-		factories.add(new EcoreItemProviderAdapterFactory());
-		factories.add(new ReflectiveItemProviderAdapterFactory());
-		factories.add(new TooltipLabelAdapterFactory());
-		composedAdapterFactory = new ComposedAdapterFactory(factories);
 	}
 
 	@AfterClass
 	public static void teardownClass() {
-		EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(null);
 		resetRegistries();
 	}
 
 	public void setup_001() throws Exception {
-		TreeItemProviderAdapterFactorySpec treeItemProviderAdapterFactorySpec = new TreeItemProviderAdapterFactorySpec();
+		eventBus = new EventBus();
+		TreeItemProviderAdapterFactorySpec treeItemProviderAdapterFactorySpec = new TreeItemProviderAdapterFactorySpec(
+				new StructureMergeViewerFilter(eventBus));
+
+		final Collection<AdapterFactory> factories = Lists.newArrayList();
+		factories.add(new CompareItemProviderAdapterFactorySpec());
+		factories.add(treeItemProviderAdapterFactorySpec);
+		factories.add(new EcoreItemProviderAdapterFactory());
+		factories.add(new ReflectiveItemProviderAdapterFactory());
+		factories.add(new TooltipLabelAdapterFactory());
+		composedAdapterFactory = new ComposedAdapterFactory(factories);
+
 		itemProvider = (TreeNodeItemProviderSpec)treeItemProviderAdapterFactorySpec.createTreeNodeAdapter();
 		mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 
@@ -146,15 +153,8 @@ public class UMLTooltipProviderTest extends AbstractUMLTest {
 		final boolean leftEditable = true;
 		final boolean rightEditable = false;
 
-		CompareConfiguration cc = new CompareConfiguration();
-		cc.setLeftEditable(leftEditable);
-		cc.setRightEditable(rightEditable);
-		EMFCompareConfiguration emfCC = new EMFCompareConfiguration(cc);
-		emfCC.setAdapterFactory(composedAdapterFactory);
-		EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(emfCC);
-
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// Get tooltip for a diff on a move of an edge.
 		action.updateSelection(new StructuredSelection(moveEdge));
@@ -170,15 +170,8 @@ public class UMLTooltipProviderTest extends AbstractUMLTest {
 		final boolean leftEditable = true;
 		final boolean rightEditable = false;
 
-		CompareConfiguration cc = new CompareConfiguration();
-		cc.setLeftEditable(leftEditable);
-		cc.setRightEditable(rightEditable);
-		EMFCompareConfiguration emfCC = new EMFCompareConfiguration(cc);
-		emfCC.setAdapterFactory(composedAdapterFactory);
-		EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(emfCC);
-
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// Get tooltip for a diff on a move of an edge.
 		action.updateSelection(new StructuredSelection(moveEdge));
@@ -194,15 +187,8 @@ public class UMLTooltipProviderTest extends AbstractUMLTest {
 		final boolean leftEditable = true;
 		final boolean rightEditable = true;
 
-		CompareConfiguration cc = new CompareConfiguration();
-		cc.setLeftEditable(leftEditable);
-		cc.setRightEditable(rightEditable);
-		EMFCompareConfiguration emfCC = new EMFCompareConfiguration(cc);
-		emfCC.setAdapterFactory(composedAdapterFactory);
-		EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(emfCC);
-
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// Get tooltip for a diff on a move of an edge.
 		action.updateSelection(new StructuredSelection(moveEdge));
@@ -218,15 +204,8 @@ public class UMLTooltipProviderTest extends AbstractUMLTest {
 		final boolean leftEditable = true;
 		final boolean rightEditable = true;
 
-		CompareConfiguration cc = new CompareConfiguration();
-		cc.setLeftEditable(leftEditable);
-		cc.setRightEditable(rightEditable);
-		EMFCompareConfiguration emfCC = new EMFCompareConfiguration(cc);
-		emfCC.setAdapterFactory(composedAdapterFactory);
-		EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(emfCC);
-
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// Get tooltip for a diff on a move of an edge.
 		action.updateSelection(new StructuredSelection(moveEdge));
@@ -262,5 +241,16 @@ public class UMLTooltipProviderTest extends AbstractUMLTest {
 			return false;
 		}
 	};
+
+	private IEMFCompareConfiguration createConfiguration(boolean leftEditable, boolean rightEditable) {
+		CompareConfiguration cc = new CompareConfiguration();
+		cc.setLeftEditable(leftEditable);
+		cc.setRightEditable(rightEditable);
+		EMFCompareConfiguration emfCC = new EMFCompareConfiguration(cc);
+		emfCC.setEditingDomain(editingDomain);
+		emfCC.setAdapterFactory(composedAdapterFactory);
+
+		return emfCC;
+	}
 
 }

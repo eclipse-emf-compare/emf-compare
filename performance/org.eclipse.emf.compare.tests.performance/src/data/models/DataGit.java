@@ -57,6 +57,7 @@ import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.req.DefaultReqEngine;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -161,6 +162,7 @@ public class DataGit {
 			final ITypedElement right = new StorageTypedElement(remoteProvider.getStorage(m), fullPath);
 			final ITypedElement origin = new StorageTypedElement(ancestorProvider.getStorage(m), fullPath);
 			final ThreadedModelResolver resolver = new ThreadedModelResolver();
+			EMFCompareRCPPlugin.getDefault().register(resolver);
 			resolver.initialize();
 			final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
 					new IdenticalResourceMinimizer(), storageAccessor);

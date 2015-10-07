@@ -41,7 +41,6 @@ import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.merge.IMerger2;
 import org.eclipse.emf.compare.provider.ITooltipLabelProvider;
-import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.ecore.EObject;
@@ -94,14 +93,13 @@ public class MergeAction extends BaseSelectionListenerAction {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public MergeAction(ICompareEditingDomain editingDomain, IMerger.Registry mergerRegistry, MergeMode mode,
-			boolean isLeftEditable, boolean isRightEditable, INavigatable navigatable) {
+	public MergeAction(IEMFCompareConfiguration compareConfiguration, IMerger.Registry mergerRegistry,
+			MergeMode mode, INavigatable navigatable) {
 		super(""); //$NON-NLS-1$
-		IEMFCompareConfiguration emfCompareConfiguration = EMFCompareRCPUIPlugin.getDefault()
-				.getEMFCompareConfiguration();
-		if (emfCompareConfiguration != null) {
-			adapterFactory = emfCompareConfiguration.getAdapterFactory();
-		}
+
+		adapterFactory = compareConfiguration.getAdapterFactory();
+		boolean isLeftEditable = compareConfiguration.isLeftEditable();
+		boolean isRightEditable = compareConfiguration.isRightEditable();
 
 		this.navigatable = navigatable;
 		Preconditions.checkNotNull(mode);
@@ -117,7 +115,7 @@ public class MergeAction extends BaseSelectionListenerAction {
 			Preconditions.checkState(mode == MergeMode.ACCEPT || mode == MergeMode.REJECT);
 		}
 
-		this.editingDomain = editingDomain;
+		this.editingDomain = compareConfiguration.getEditingDomain();
 		this.mergerRegistry = mergerRegistry;
 		this.leftToRight = mode.isLeftToRight(isLeftEditable, isRightEditable);
 		this.mergeRunnable = createMergeRunnable(mode, isLeftEditable, isRightEditable);
@@ -127,10 +125,9 @@ public class MergeAction extends BaseSelectionListenerAction {
 		initToolTipAndImage(mode);
 	}
 
-	public MergeAction(ICompareEditingDomain editingDomain, IMerger.Registry mergerRegistry, MergeMode mode,
-			boolean isLeftEditable, boolean isRightEditable, INavigatable navigatable,
-			IStructuredSelection selection) {
-		this(editingDomain, mergerRegistry, mode, isLeftEditable, isRightEditable, navigatable);
+	public MergeAction(IEMFCompareConfiguration compareConfiguration, IMerger.Registry mergerRegistry,
+			MergeMode mode, INavigatable navigatable, IStructuredSelection selection) {
+		this(compareConfiguration, mergerRegistry, mode, navigatable);
 		updateSelection(selection);
 	}
 

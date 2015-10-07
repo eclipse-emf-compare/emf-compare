@@ -71,6 +71,8 @@ public abstract class AbstractDifferenceOrderTest {
 
 	private AdapterFactoryItemDelegator itemDelegator;
 
+	protected EventBus eventBus;
+
 	/**
 	 * Predicate mocking the {@link StructureMergeViewerFilter} behavior.
 	 */

@@ -163,16 +163,15 @@ public class CompareToolBar implements ISelectionChangedListener {
 
 	private MergeAction createMergeAction(MergeMode mergeMode, EMFCompareConfiguration cc, INavigatable nav) {
 		IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
-		MergeAction mergeAction = new MergeAction(cc.getEditingDomain(), mergerRegistry, mergeMode, cc
-				.isLeftEditable(), cc.isRightEditable(), nav);
+		MergeAction mergeAction = new MergeAction(this.compareConfiguration, mergerRegistry, mergeMode, nav);
 		mergeActions.add(mergeAction);
 		return mergeAction;
 	}
 
 	private MergeAction createMergeAllNonConflictingAction(MergeMode mergeMode, IEMFCompareConfiguration cc) {
 		IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
-		MergeAllNonConflictingAction mergeAction = new MergeAllNonConflictingAction(cc.getEditingDomain(), cc
-				.getComparison(), mergerRegistry, mergeMode, cc.isLeftEditable(), cc.isRightEditable());
+		MergeAllNonConflictingAction mergeAction = new MergeAllNonConflictingAction(
+				this.compareConfiguration, cc.getComparison(), mergerRegistry, mergeMode);
 		mergeAllNonConflictingActions.add(mergeAction);
 		return mergeAction;
 	}

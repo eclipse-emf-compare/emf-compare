@@ -17,7 +17,7 @@ import com.google.common.eventbus.EventBus;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.internal.utils.Graph;
+import org.eclipse.emf.compare.graph.IGraph;
 
 /**
  * Default implementation of {@link IResolutionContext}.
@@ -28,7 +28,7 @@ public class DefaultResolutionContext implements IResolutionContext {
 
 	private final EventBus eventBus;
 
-	private final Graph<URI> graph;
+	private final IGraph<URI> graph;
 
 	private final DependencyGraphUpdater<URI> graphUpdater;
 
@@ -44,7 +44,7 @@ public class DefaultResolutionContext implements IResolutionContext {
 
 	private IImplicitDependencies implicitDependencies;
 
-	public DefaultResolutionContext(EventBus eventBus, Graph<URI> graph,
+	public DefaultResolutionContext(EventBus eventBus, IGraph<URI> graph,
 			DependencyGraphUpdater<URI> graphUpdater, ResourceComputationScheduler<URI> scheduler,
 			ModelResourceListener modelResourceListener) {
 		this.eventBus = checkNotNull(eventBus);
@@ -58,7 +58,7 @@ public class DefaultResolutionContext implements IResolutionContext {
 		return eventBus;
 	}
 
-	public Graph<URI> getGraph() {
+	public IGraph<URI> getGraph() {
 		return graph;
 	}
 

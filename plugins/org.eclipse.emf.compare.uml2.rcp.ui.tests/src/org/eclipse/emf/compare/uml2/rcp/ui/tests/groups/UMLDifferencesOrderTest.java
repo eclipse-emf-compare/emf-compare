@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.uml2.rcp.ui.tests.groups;
 import static com.google.common.base.Predicates.alwaysTrue;
 
 import com.google.common.collect.Lists;
+import com.google.common.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.eclipse.emf.compare.postprocessor.BasicPostProcessorDescriptorImpl;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.provider.spec.CompareItemProviderAdapterFactorySpec;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.EmptyMatchedResourcesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.IdenticalElementsFilter;
@@ -70,9 +72,11 @@ public class UMLDifferencesOrderTest extends AbstractDifferenceOrderTest {
 
 	@Override
 	protected List<AdapterFactory> getAdaptersFactory() {
+		eventBus = new EventBus();
 		return Lists.<AdapterFactory> newArrayList(new CompareItemProviderAdapterFactorySpec(),
-				new TreeItemProviderAdapterFactorySpec(), new UMLCompareCustomItemProviderAdapterFactory(),
-				new UMLItemProviderAdapterFactory(), new UMLCompareItemProviderDecoratorAdapterFactory(),
+				new TreeItemProviderAdapterFactorySpec(new StructureMergeViewerFilter(eventBus)),
+				new UMLCompareCustomItemProviderAdapterFactory(), new UMLItemProviderAdapterFactory(),
+				new UMLCompareItemProviderDecoratorAdapterFactory(),
 				new ReflectiveItemProviderAdapterFactory());
 	}
 

@@ -17,13 +17,16 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.graph.IGraph;
+import org.eclipse.emf.compare.graph.IGraphView;
 import org.eclipse.emf.compare.ide.ui.logical.AbstractModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
-import org.eclipse.emf.compare.internal.utils.Graph;
 import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
+import org.eclipse.emf.compare.rcp.graph.IGraphConsumer;
+import org.eclipse.emf.compare.rcp.ui.internal.util.ResourceUIUtil;
 
 /**
  * This implementation of an {@link IModelResolver} will look up all of the models located in a set container
@@ -51,17 +54,22 @@ import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class ThreadedModelResolver extends AbstractModelResolver {
+public class ThreadedModelResolver extends AbstractModelResolver implements IGraphConsumer {
 
 	private IResolutionContext context;
+
+	/**
+	 * The URI Graph instance.
+	 */
+	private IGraph<URI> graph;
 
 	/**
 	 * Convert the dependency graph to its read-only version.
 	 * 
 	 * @return a read-only version of the dependency graph associated to this model resolver.
 	 */
-	public ReadOnlyGraph<URI> getDependencyGraph() {
-		return ReadOnlyGraph.toReadOnlyGraph(context.getGraph());
+	public IGraphView<URI> getGraphView() {
+		return ReadOnlyGraph.toReadOnlyGraph(graph);
 	}
 
 	/**
@@ -75,8 +83,10 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	@Override
 	public void initialize() {
 		super.initialize();
+		if (graph == null) {
+			throw new IllegalStateException();
+		}
 		EventBus eventBus = new EventBus();
-		Graph<URI> graph = new Graph<URI>();
 		this.context = createContext(eventBus, graph);
 		context.initialize();
 	}
@@ -92,13 +102,12 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 	 * For testing purposes, this method is protected.
 	 * 
 	 * @param eventBus
-	 * @param graph
+	 * @param aGraph
 	 * @return The resolution context to use.
 	 */
-	protected DefaultResolutionContext createContext(EventBus eventBus, Graph<URI> graph) {
-		return new DefaultResolutionContext(eventBus, graph,
-				new DependencyGraphUpdater<URI>(graph, eventBus), new ResourceComputationScheduler<URI>(),
-				new ModelResourceListener());
+	protected DefaultResolutionContext createContext(EventBus eventBus, IGraph<URI> aGraph) {
+		return new DefaultResolutionContext(eventBus, aGraph, new DependencyGraphUpdater<URI>(aGraph,
+				eventBus), new ResourceComputationScheduler<URI>(), new ModelResourceListener());
 	}
 
 	/** {@inheritDoc} */
@@ -150,5 +159,22 @@ public class ThreadedModelResolver extends AbstractModelResolver {
 			throws InterruptedException {
 		ModelsResolution comp = new ModelsResolution(context, monitor, storageAccessor, left, right, origin);
 		return comp.run();
+	}
+
+	/**
+	 * Getter for the ID of the Resource Graph.
+	 */
+	public String getId() {
+		return ResourceUIUtil.RESOURCES_GRAPH_ID;
+	}
+
+	/**
+	 * Setter for the URI Graph istance.
+	 * 
+	 * @param graph
+	 *            The URI Graph
+	 */
+	public void setGraph(IGraph<URI> graph) {
+		this.graph = graph;
 	}
 }

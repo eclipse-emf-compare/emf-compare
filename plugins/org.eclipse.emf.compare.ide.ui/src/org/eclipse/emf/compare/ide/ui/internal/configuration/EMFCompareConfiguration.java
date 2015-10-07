@@ -22,13 +22,11 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.ICompareInputLabelProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
-import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.CompareEditingDomainChange;
@@ -69,8 +67,6 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 
 	private static final String SMV_GROUP_PROVIDERS = EMFCompareIDEUIPlugin.PLUGIN_ID
 			+ ".SMV_GROUP_PROVIDERS"; //$NON-NLS-1$;
-
-	private static final String RESOURCES_GRAPH = EMFCompareRCPUIPlugin.PLUGIN_ID + ".RESOURCES_GRAPH"; //$NON-NLS-1$;
 
 	private final PropertyChangeListener propertyChangeListener;
 
@@ -146,7 +142,6 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		compareConfiguration.setProperty(ADAPTER_FACTORY, null);
 		compareConfiguration.setProperty(SMV_GROUP_PROVIDERS, null);
 		compareConfiguration.setProperty(PREVIEW_MERGE_MODE, null);
-		compareConfiguration.setProperty(RESOURCES_GRAPH, null);
 	}
 
 	public boolean getBooleanProperty(String key, boolean dflt) {
@@ -289,15 +284,6 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	 */
 	public StructureMergeViewerFilter getStructureMergeViewerFilter() {
 		return (StructureMergeViewerFilter)getProperty(SMV_FILTERS);
-	}
-
-	@SuppressWarnings("unchecked")
-	public ReadOnlyGraph<URI> getResourcesGraph() {
-		return (ReadOnlyGraph<URI>)getProperty(RESOURCES_GRAPH);
-	}
-
-	public void setResourcesGraph(ReadOnlyGraph<URI> graph) {
-		setProperty(RESOURCES_GRAPH, graph);
 	}
 
 	public void setLabelProvider(Class<? extends ICompareInput> inputType,

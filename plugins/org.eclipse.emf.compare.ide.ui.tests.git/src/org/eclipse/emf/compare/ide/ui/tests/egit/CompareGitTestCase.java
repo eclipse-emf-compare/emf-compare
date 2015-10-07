@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.GitCorePreferences;
 import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
@@ -40,6 +41,7 @@ import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.tests.CompareTestCase;
 import org.eclipse.emf.compare.ide.ui.tests.egit.fixture.GitTestRepository;
 import org.eclipse.emf.compare.ide.ui.tests.egit.fixture.MockSystemReader;
+import org.eclipse.emf.compare.internal.utils.Graph;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -136,6 +138,7 @@ public class CompareGitTestCase extends CompareTestCase {
 		final ITypedElement right = new StorageTypedElement(remoteProvider.getStorage(monitor), fullPath);
 		final ITypedElement origin = new StorageTypedElement(ancestorProvider.getStorage(monitor), fullPath);
 		final ThreadedModelResolver resolver = new ThreadedModelResolver();
+		resolver.setGraph(new Graph<URI>());
 		resolver.initialize();
 		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
 				new IdenticalResourceMinimizer(), storageAccessor);

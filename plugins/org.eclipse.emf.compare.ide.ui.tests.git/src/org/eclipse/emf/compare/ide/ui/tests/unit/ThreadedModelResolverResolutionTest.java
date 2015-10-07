@@ -22,12 +22,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.logical.StorageTypedElement;
 import org.eclipse.emf.compare.ide.ui.internal.logical.StreamAccessorStorage;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
+import org.eclipse.emf.compare.internal.utils.Graph;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
@@ -56,73 +58,74 @@ public class ThreadedModelResolverResolutionTest extends AbstractGitLogicalModel
 	@Test
 	public void testRemoteResolutionWithIncomingLogicalModel() throws Exception {
 
-	setupRepositoryWithRemoteIncomingLogicalModel();
+		setupRepositoryWithRemoteIncomingLogicalModel();
 
-	ThreadedModelResolver resolver = new ThreadedModelResolver();
-	resolver.initialize();
+		ThreadedModelResolver resolver = new ThreadedModelResolver();
+		resolver.setGraph(new Graph<URI>());
+		resolver.initialize();
 
-	IStorageProviderAccessor storageAccessor = createRemoteAccessorForComparison(MASTER, BRANCH, iFile3);
+		IStorageProviderAccessor storageAccessor = createRemoteAccessorForComparison(MASTER, BRANCH, iFile3);
 
-	StreamAccessorStorage file3Storage = StreamAccessorStorage.fromTypedElement(new StorageTypedElement(
-		iFile3, iFile3.getFullPath().toOSString()));
+		StreamAccessorStorage file3Storage = StreamAccessorStorage.fromTypedElement(new StorageTypedElement(
+				iFile3, iFile3.getFullPath().toOSString()));
 
-	SynchronizationModel synchronizationModel = resolver.resolveModels(storageAccessor, iFile3,
-		file3Storage, null, monitor);
+		SynchronizationModel synchronizationModel = resolver.resolveModels(storageAccessor, iFile3,
+				file3Storage, null, monitor);
 
-	StorageTraversal rightTraversal = synchronizationModel.getRightTraversal();
-	StorageTraversal leftTraversal = synchronizationModel.getLeftTraversal();
+		StorageTraversal rightTraversal = synchronizationModel.getRightTraversal();
+		StorageTraversal leftTraversal = synchronizationModel.getLeftTraversal();
 
-	/*
-	 * leftTraversal should be empty, since file3 and file4 do not exist locally
-	 */
-	assertTrue(leftTraversal.getStorages().isEmpty());
+		/*
+		 * leftTraversal should be empty, since file3 and file4 do not exist locally
+		 */
+		assertTrue(leftTraversal.getStorages().isEmpty());
 
-	/*
-	 * rightTraversal should contain file3 and file4, since file3 has a reference to file4
-	 */
-	assertEquals(2, rightTraversal.getStorages().size());
-	assertContainsFile(rightTraversal, iFile3);
-	assertContainsFile(rightTraversal, iFile4);
+		/*
+		 * rightTraversal should contain file3 and file4, since file3 has a reference to file4
+		 */
+		assertEquals(2, rightTraversal.getStorages().size());
+		assertContainsFile(rightTraversal, iFile3);
+		assertContainsFile(rightTraversal, iFile4);
 	}
 
 	/**
 	 * Creates a repository in which branch BRANCH forks from MASTER and contains two new files forming a
-	 * logical model (file3 and file4, with file3 containing a reference to file4). Checked out is MASTER
-	 * and file3 and file4 do not exist locally.
+	 * logical model (file3 and file4, with file3 containing a reference to file4). Checked out is MASTER and
+	 * file3 and file4 do not exist locally.
 	 * 
 	 * @throws Exception
 	 *             if something went wrong.
 	 */
 	private void setupRepositoryWithRemoteIncomingLogicalModel() throws Exception {
-	resource1.getContents().add(createBasicModel("1"));
-	resource2.getContents().add(createBasicModel("2"));
-	makeCrossReference(resource1, resource2);
-	save(resource1, resource2);
+		resource1.getContents().add(createBasicModel("1"));
+		resource2.getContents().add(createBasicModel("2"));
+		makeCrossReference(resource1, resource2);
+		save(resource1, resource2);
 
-	repository.addAndCommit(project, "master-commit-1", file1, file2);
+		repository.addAndCommit(project, "master-commit-1", file1, file2);
 
-	resource3 = createAndConnectResource("file3.ecore");
-	resource3.getContents().add(createBasicModel("3"));
-	save(resource3);
-	file3 = project.getOrCreateFile(iProject, "file3.ecore");
-	iFile3 = project.getIFile(iProject, file3);
+		resource3 = createAndConnectResource("file3.ecore");
+		resource3.getContents().add(createBasicModel("3"));
+		save(resource3);
+		file3 = project.getOrCreateFile(iProject, "file3.ecore");
+		iFile3 = project.getIFile(iProject, file3);
 
-	resource4 = createAndConnectResource("file4.ecore");
-	resource4.getContents().add(createBasicModel("4"));
-	save(resource4);
-	file4 = project.getOrCreateFile(iProject, "file4.ecore");
-	iFile4 = project.getIFile(iProject, file4);
+		resource4 = createAndConnectResource("file4.ecore");
+		resource4.getContents().add(createBasicModel("4"));
+		save(resource4);
+		file4 = project.getOrCreateFile(iProject, "file4.ecore");
+		iFile4 = project.getIFile(iProject, file4);
 
-	makeCrossReference(resource3, resource4);
-	save(resource3, resource4);
+		makeCrossReference(resource3, resource4);
+		save(resource3, resource4);
 
-	repository.createBranch(MASTER, BRANCH);
-	repository.checkoutBranch(BRANCH);
-	reload(resource1, resource2, resource3, resource4);
-	repository.addAndCommit(project, "branch-commit-1", file3, file4);
+		repository.createBranch(MASTER, BRANCH);
+		repository.checkoutBranch(BRANCH);
+		reload(resource1, resource2, resource3, resource4);
+		repository.addAndCommit(project, "branch-commit-1", file3, file4);
 
-	repository.checkoutBranch(MASTER);
-	reload(resource1, resource2);
+		repository.checkoutBranch(MASTER);
+		reload(resource1, resource2);
 	}
 
 	/**
@@ -134,15 +137,15 @@ public class ThreadedModelResolverResolutionTest extends AbstractGitLogicalModel
 	 *            The file to look for in the traversal.
 	 */
 	private void assertContainsFile(StorageTraversal traversal, final IFile iFile) {
-	assertTrue(Iterables.any(traversal.getStorages(), containsFile(iFile)));
+		assertTrue(Iterables.any(traversal.getStorages(), containsFile(iFile)));
 	}
 
 	private static Predicate<IStorage> containsFile(final IFile iFile) {
-	return new Predicate<IStorage>() {
-		public boolean apply(IStorage input) {
-		return iFile.getName().equals(input.getName());
-		}
-	};
+		return new Predicate<IStorage>() {
+			public boolean apply(IStorage input) {
+				return iFile.getName().equals(input.getName());
+			}
+		};
 	}
 
 }

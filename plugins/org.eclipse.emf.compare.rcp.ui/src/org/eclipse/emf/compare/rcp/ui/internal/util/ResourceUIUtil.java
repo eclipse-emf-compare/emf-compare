@@ -25,10 +25,9 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
+import org.eclipse.emf.compare.graph.IGraphView;
 import org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch;
-import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
-import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
@@ -43,6 +42,9 @@ import org.eclipse.emf.edit.tree.TreeNode;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
 public class ResourceUIUtil {
+
+	/** ID of the graph of EMF resources used by EMFCompare to compute the logical model. */
+	public static final String RESOURCES_GRAPH_ID = "org.eclipse.emf.compare.resources.graph"; //$NON-NLS-1$
 
 	/**
 	 * Function that retrieve the data of the given TreeNode.
@@ -64,13 +66,8 @@ public class ResourceUIUtil {
 	 * 
 	 * @return the graph if it exists, <code>null</code> otherwise.
 	 */
-	public static ReadOnlyGraph<URI> getResourcesURIGraph() {
-		final IEMFCompareConfiguration configuration = EMFCompareRCPUIPlugin.getDefault()
-				.getEMFCompareConfiguration();
-		if (configuration != null) {
-			return configuration.getResourcesGraph();
-		}
-		return null;
+	public static IGraphView<URI> getResourcesURIGraph() {
+		return EMFCompareRCPPlugin.getDefault().getGraphView(RESOURCES_GRAPH_ID);
 	}
 
 	/**
@@ -94,7 +91,7 @@ public class ResourceUIUtil {
 	 * @return <code>true</code> if the given URI is a fragment of a model, <code>false</code> otherwise.
 	 */
 	public static boolean isFragment(URI uri) {
-		final ReadOnlyGraph<URI> graph = getResourcesURIGraph();
+		final IGraphView<URI> graph = getResourcesURIGraph();
 		if (uri != null && graph != null) {
 			URI parentData = graph.getParentData(uri);
 			if (parentData != null) {
@@ -137,7 +134,7 @@ public class ResourceUIUtil {
 	 * @return <code>true</code> if the given URI is a fragment of a model, <code>false</code> otherwise.
 	 */
 	public static boolean isFirstLevelFragment(URI uri) {
-		final ReadOnlyGraph<URI> graph = getResourcesURIGraph();
+		final IGraphView<URI> graph = getResourcesURIGraph();
 		if (uri != null && graph != null) {
 			URI parentData = graph.getParentData(uri);
 			if (parentData != null) {
@@ -162,7 +159,7 @@ public class ResourceUIUtil {
 	 */
 	public static URI getRootResourceURI(URI uri) {
 		final URI uriRoot;
-		final ReadOnlyGraph<URI> graph = getResourcesURIGraph();
+		final IGraphView<URI> graph = getResourcesURIGraph();
 		if (uri != null && graph != null) {
 			URI parentData = graph.getParentData(uri);
 			if (parentData == null) {
@@ -222,7 +219,7 @@ public class ResourceUIUtil {
 	 */
 	public static Resource getParent(ResourceSet rs, URI uri) {
 		final Resource resource;
-		final ReadOnlyGraph<URI> graph = getResourcesURIGraph();
+		final IGraphView<URI> graph = getResourcesURIGraph();
 		if (uri != null && graph != null) {
 			URI parentData = graph.getParentData(uri);
 			if (parentData != null) {
@@ -282,7 +279,7 @@ public class ResourceUIUtil {
 	 */
 	private static Entry<URI, Resource> getResourceParent(ResourceSet rs, URI uri) {
 		Entry<URI, Resource> entry = null;
-		final ReadOnlyGraph<URI> graph = getResourcesURIGraph();
+		final IGraphView<URI> graph = getResourcesURIGraph();
 		if (uri != null && graph != null) {
 			URI parentData = graph.getParentData(uri);
 			if (parentData != null) {
@@ -557,7 +554,7 @@ public class ResourceUIUtil {
 			MergeViewerSide side) {
 		final Collection<Match> childrenMatches = Sets.newLinkedHashSet();
 		final Collection<Match> matches = comparison.getMatches();
-		final ReadOnlyGraph<URI> graph = getResourcesURIGraph();
+		final IGraphView<URI> graph = getResourcesURIGraph();
 		if (graph == null) {
 			return childrenMatches;
 		}
@@ -602,7 +599,7 @@ public class ResourceUIUtil {
 	 *         otherwise.
 	 */
 	public static boolean isChildOf(URI uri, Collection<URI> uris) {
-		final ReadOnlyGraph<URI> graph = getResourcesURIGraph();
+		final IGraphView<URI> graph = getResourcesURIGraph();
 		URI parentData = graph.getParentData(uri);
 		while (parentData != null) {
 			URI parent = parentData.trimFragment();

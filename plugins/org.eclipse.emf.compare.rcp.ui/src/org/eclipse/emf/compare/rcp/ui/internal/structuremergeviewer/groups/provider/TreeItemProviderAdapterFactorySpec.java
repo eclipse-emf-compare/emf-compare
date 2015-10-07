@@ -14,6 +14,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.edit.provider.IItemColorProvider;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
 import org.eclipse.emf.edit.tree.provider.TreeItemProviderAdapterFactory;
@@ -26,11 +27,18 @@ import org.eclipse.emf.edit.tree.provider.TreeItemProviderAdapterFactory;
  */
 public class TreeItemProviderAdapterFactorySpec extends TreeItemProviderAdapterFactory {
 
+	/** An instance of {@code StructureMergeViewerFilter}. */
+	private final StructureMergeViewerFilter filter;
+
 	/**
 	 * Constructor.
+	 * 
+	 * @param filter
+	 *            The given StructureMergeViewerFilter
 	 */
-	public TreeItemProviderAdapterFactorySpec() {
+	public TreeItemProviderAdapterFactorySpec(StructureMergeViewerFilter filter) {
 		super();
+		this.filter = filter;
 		supportedTypes.add(IItemFontProvider.class);
 		supportedTypes.add(IItemColorProvider.class);
 		supportedTypes.add(IItemStyledLabelProvider.class);
@@ -45,6 +53,6 @@ public class TreeItemProviderAdapterFactorySpec extends TreeItemProviderAdapterF
 	 */
 	@Override
 	public Adapter createTreeNodeAdapter() {
-		return new TreeNodeItemProviderSpec(this);
+		return new TreeNodeItemProviderSpec(this, filter);
 	}
 }

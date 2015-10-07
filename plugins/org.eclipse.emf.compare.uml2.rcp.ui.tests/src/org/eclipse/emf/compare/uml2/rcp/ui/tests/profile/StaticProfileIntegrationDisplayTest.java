@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.uml2.rcp.ui.tests.profile;
 import static com.google.common.base.Predicates.alwaysTrue;
 
 import com.google.common.collect.Lists;
+import com.google.common.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.eclipse.emf.compare.postprocessor.BasicPostProcessorDescriptorImpl;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.provider.spec.CompareItemProviderAdapterFactorySpec;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.EmptyMatchedResourcesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.IdenticalElementsFilter;
@@ -80,9 +82,11 @@ public class StaticProfileIntegrationDisplayTest extends AbstractDifferenceOrder
 	protected List<AdapterFactory> getAdaptersFactory() {
 		// Adds UML2CompareTestProfileItemProviderAdapterFactory item adapter factory to use the custom icon
 		// defined in it.
+		eventBus = new EventBus();
 		return Lists.<AdapterFactory> newArrayList(new ProfiledUMLCompareItemProviderAdapterFactory(),
 				new UMLProfileItemProviderAdapterFactoryDecorator(),
-				new CompareItemProviderAdapterFactorySpec(), new TreeItemProviderAdapterFactorySpec(),
+				new CompareItemProviderAdapterFactorySpec(), new TreeItemProviderAdapterFactorySpec(
+						new StructureMergeViewerFilter(eventBus)),
 				new UMLCompareCustomItemProviderAdapterFactory(),
 				new UML2CompareTestProfileItemProviderAdapterFactory(), new UMLItemProviderAdapterFactory(),
 				new UMLCompareItemProviderDecoratorAdapterFactory(),

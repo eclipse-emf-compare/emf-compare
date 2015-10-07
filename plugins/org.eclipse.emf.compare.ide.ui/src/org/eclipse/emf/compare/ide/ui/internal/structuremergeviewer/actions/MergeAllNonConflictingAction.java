@@ -18,13 +18,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
-import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.internal.domain.IMergeAllNonConflictingRunnable;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -46,11 +46,12 @@ public class MergeAllNonConflictingAction extends MergeAction {
 	 * @param configuration
 	 *            The compare configuration object.
 	 */
-	public MergeAllNonConflictingAction(ICompareEditingDomain editingDomain, Comparison comparison,
-			IMerger.Registry mergerRegistry, MergeMode mode, boolean isLeftEditable, boolean isRightEditable) {
-		super(editingDomain, mergerRegistry, mode, isLeftEditable, isRightEditable, null);
+	public MergeAllNonConflictingAction(IEMFCompareConfiguration compareConfiguration, Comparison comparison,
+			IMerger.Registry mergerRegistry, MergeMode mode) {
+		super(compareConfiguration, mergerRegistry, mode, null);
 		this.comparison = comparison;
-		this.runnable = new MergeNonConflictingRunnable(isLeftEditable, isRightEditable, mode);
+		this.runnable = new MergeNonConflictingRunnable(compareConfiguration.isLeftEditable(),
+				compareConfiguration.isRightEditable(), mode);
 	}
 
 	@Override

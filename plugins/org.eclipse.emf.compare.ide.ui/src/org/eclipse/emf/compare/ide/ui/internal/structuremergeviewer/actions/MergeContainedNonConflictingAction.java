@@ -26,12 +26,12 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -82,10 +82,10 @@ public class MergeContainedNonConflictingAction extends MergeAction {
 	 * @param isFiltered
 	 *            The predicate to use for determining whether a {@link TreeNode} is filtered.
 	 */
-	public MergeContainedNonConflictingAction(ICompareEditingDomain editingDomain, Registry mergerRegistry,
-			MergeMode mode, boolean isLeftEditable, boolean isRightEditable, INavigatable navigatable,
+	public MergeContainedNonConflictingAction(IEMFCompareConfiguration compareConfiguration,
+			Registry mergerRegistry, MergeMode mode, INavigatable navigatable,
 			IStructuredSelection selection, Predicate<TreeNode> isFiltered) {
-		super(editingDomain, mergerRegistry, mode, isLeftEditable, isRightEditable, navigatable);
+		super(compareConfiguration, mergerRegistry, mode, navigatable);
 		this.isFiltered = isFiltered;
 		updateSelection(selection);
 	}

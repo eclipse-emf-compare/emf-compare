@@ -24,15 +24,14 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeNodeItemProviderSpec;
-import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.AbstractTestTreeNodeItemProviderAdapter;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.ecore.EObject;
@@ -49,13 +48,11 @@ import org.junit.Test;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
 @SuppressWarnings({"nls", "restriction" })
-public class TestBug470503 extends AbstractTestTreeNodeItemProviderAdapter {
+public class TestBug470503 extends AbstractTestUITreeNodeItemProviderAdapter {
 
 	private static TreeNodeItemProviderSpec itemProvider;
 
 	private IMerger.Registry mergerRegistry;
-
-	private ICompareEditingDomain editingDomain;
 
 	private TreeNode titledItemESuperTypesDelete;
 
@@ -115,8 +112,9 @@ public class TestBug470503 extends AbstractTestTreeNodeItemProviderAdapter {
 		final boolean leftEditable = true;
 		final boolean rightEditable = true;
 		final boolean cascadingFilter = true;
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, rightToLeft,
-				leftEditable, rightEditable, null);
+
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, rightToLeft, null);
 
 		// Merge from right to left TitledItem [eSuperTypes delete] difference difference
 		Diff titledItemESuperTypesDeleteDiff = (Diff)titledItemESuperTypesDelete.getData();
@@ -141,8 +139,9 @@ public class TestBug470503 extends AbstractTestTreeNodeItemProviderAdapter {
 		final boolean leftEditable = true;
 		final boolean rightEditable = true;
 		final boolean cascadingFilter = false;
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, rightToLeft,
-				leftEditable, rightEditable, null);
+
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, rightToLeft, null);
 
 		// Merge from right to left TitledItem [eSuperTypes delete] difference difference
 		Diff titledItemESuperTypesDeleteDiff = (Diff)titledItemESuperTypesDelete.getData();

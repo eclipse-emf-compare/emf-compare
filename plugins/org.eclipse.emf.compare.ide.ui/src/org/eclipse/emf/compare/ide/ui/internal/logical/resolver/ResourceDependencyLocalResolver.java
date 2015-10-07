@@ -32,9 +32,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.graph.IGraph;
 import org.eclipse.emf.compare.ide.ui.internal.util.ThreadSafeProgressMonitor;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
-import org.eclipse.emf.compare.internal.utils.Graph;
 
 /**
  * The default implementation of the {@link IResourceDependencyProvider}.
@@ -52,7 +52,7 @@ public class ResourceDependencyLocalResolver implements IResourceDependencyLocal
 	private final EventBus eventBus;
 
 	/** The dependency graph. */
-	private final Graph<URI> dependencyGraph;
+	private final IGraph<URI> dependencyGraph;
 
 	/** The resource listener. */
 	private final ModelResourceListener resourceListener;

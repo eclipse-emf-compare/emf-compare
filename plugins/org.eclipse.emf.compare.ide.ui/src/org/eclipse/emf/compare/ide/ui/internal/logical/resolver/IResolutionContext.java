@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 import com.google.common.eventbus.EventBus;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.internal.utils.Graph;
+import org.eclipse.emf.compare.graph.IGraph;
 
 /**
  * A resolution context provides the different elements that can be involved in a comparison taking logical
@@ -27,7 +27,7 @@ public interface IResolutionContext {
 	EventBus getEventBus();
 
 	/** The graph of dependencies. */
-	Graph<URI> getGraph();
+	IGraph<URI> getGraph();
 
 	/** The graph updater, in charge of making changes to the dependency graph. */
 	DependencyGraphUpdater<URI> getGraphUpdater();

@@ -30,7 +30,6 @@ import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.Collection;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
@@ -38,10 +37,8 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompare.Builder;
-import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
-import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.data.tooltips.NodeTooltipsInputData;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IMerger;
@@ -49,11 +46,9 @@ import org.eclipse.emf.compare.provider.TooltipLabelAdapterFactory;
 import org.eclipse.emf.compare.provider.spec.CompareItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
-import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeNodeItemProviderSpec;
-import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.AbstractTestTreeNodeItemProviderAdapter;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory;
@@ -62,21 +57,17 @@ import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.tree.TreeFactory;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 @SuppressWarnings({"nls", "restriction" })
-public class TooltipProviderTest extends AbstractTestTreeNodeItemProviderAdapter {
+public class TooltipProviderTest extends AbstractTestUITreeNodeItemProviderAdapter {
 
 	private static AdapterFactory composedAdapterFactory;
 
 	private static TreeNodeItemProviderSpec itemProvider;
 
 	private IMerger.Registry mergerRegistry;
-
-	private ICompareEditingDomain editingDomain;
 
 	private TreeNode leftAttributeAdd;
 
@@ -130,26 +121,18 @@ public class TooltipProviderTest extends AbstractTestTreeNodeItemProviderAdapter
 
 	private TreeNode rightReferenceUnset;
 
-	@BeforeClass
-	public static void beforeClass() {
-		final Collection<AdapterFactory> factories = Lists.newArrayList();
-		factories.add(new CompareItemProviderAdapterFactorySpec());
-		factories.add(new TreeItemProviderAdapterFactorySpec());
-		factories.add(new EcoreItemProviderAdapterFactory());
-		factories.add(new ReflectiveItemProviderAdapterFactory());
-		factories.add(new TooltipLabelAdapterFactory());
-		composedAdapterFactory = new ComposedAdapterFactory(factories);
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(null);
-	}
-
 	@Override
 	@Before
 	public void before() throws IOException {
 		super.before();
+
+		final Collection<AdapterFactory> factories = Lists.newArrayList();
+		factories.add(new CompareItemProviderAdapterFactorySpec());
+		factories.add(new EcoreItemProviderAdapterFactory());
+		factories.add(new ReflectiveItemProviderAdapterFactory());
+		factories.add(treeItemProviderAdapterFactory);
+		factories.add(new TooltipLabelAdapterFactory());
+		composedAdapterFactory = new ComposedAdapterFactory(factories);
 
 		itemProvider = (TreeNodeItemProviderSpec)treeItemProviderAdapterFactory.createTreeNodeAdapter();
 		mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
@@ -312,15 +295,9 @@ public class TooltipProviderTest extends AbstractTestTreeNodeItemProviderAdapter
 		final boolean leftEditable = true;
 		final boolean rightEditable = false;
 
-		CompareConfiguration cc = new CompareConfiguration();
-		cc.setLeftEditable(leftEditable);
-		cc.setRightEditable(rightEditable);
-		EMFCompareConfiguration emfCC = new EMFCompareConfiguration(cc);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
 		emfCC.setAdapterFactory(composedAdapterFactory);
-		EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(emfCC);
-
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// Get tooltip for the REJECT of a String Set on the Left side
 		action.updateSelection(new StructuredSelection(leftStringSet));
@@ -542,15 +519,9 @@ public class TooltipProviderTest extends AbstractTestTreeNodeItemProviderAdapter
 		final boolean leftEditable = true;
 		final boolean rightEditable = false;
 
-		CompareConfiguration cc = new CompareConfiguration();
-		cc.setLeftEditable(leftEditable);
-		cc.setRightEditable(rightEditable);
-		EMFCompareConfiguration emfCC = new EMFCompareConfiguration(cc);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
 		emfCC.setAdapterFactory(composedAdapterFactory);
-		EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(emfCC);
-
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// Get tooltip for the ACCEPT of a String Set on the Left side
 		action.updateSelection(new StructuredSelection(leftStringSet));
@@ -755,15 +726,9 @@ public class TooltipProviderTest extends AbstractTestTreeNodeItemProviderAdapter
 		final boolean leftEditable = true;
 		final boolean rightEditable = true;
 
-		CompareConfiguration cc = new CompareConfiguration();
-		cc.setLeftEditable(leftEditable);
-		cc.setRightEditable(rightEditable);
-		EMFCompareConfiguration emfCC = new EMFCompareConfiguration(cc);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
 		emfCC.setAdapterFactory(composedAdapterFactory);
-		EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(emfCC);
-
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// Get tooltip for the LEFT_TO_RIGHT copy of a String Set on the Left side
 		action.updateSelection(new StructuredSelection(leftStringSet));
@@ -976,15 +941,9 @@ public class TooltipProviderTest extends AbstractTestTreeNodeItemProviderAdapter
 		final boolean leftEditable = true;
 		final boolean rightEditable = true;
 
-		CompareConfiguration cc = new CompareConfiguration();
-		cc.setLeftEditable(leftEditable);
-		cc.setRightEditable(rightEditable);
-		EMFCompareConfiguration emfCC = new EMFCompareConfiguration(cc);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
 		emfCC.setAdapterFactory(composedAdapterFactory);
-		EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(emfCC);
-
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// Get tooltip for the RIGHT_TO_LEFT copy of a String Set on the Left side
 		action.updateSelection(new StructuredSelection(leftStringSet));
@@ -1214,4 +1173,5 @@ public class TooltipProviderTest extends AbstractTestTreeNodeItemProviderAdapter
 		builder.append(footer);
 		return builder.toString();
 	}
+
 }

@@ -35,13 +35,13 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
+import org.eclipse.emf.compare.graph.IGraph;
+import org.eclipse.emf.compare.graph.PruningIterator;
 import org.eclipse.emf.compare.internal.domain.IMergeAllNonConflictingRunnable;
 import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
-import org.eclipse.emf.compare.internal.utils.Graph;
-import org.eclipse.emf.compare.internal.utils.PruningIterator;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
@@ -223,7 +223,7 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 			Registry mergerRegistry) {
 		final List<Diff> affectedDiffs = new ArrayList<Diff>();
 		final Monitor emfMonitor = new BasicMonitor();
-		final Graph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(differences,
+		final IGraph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(differences,
 				mergerRegistry, !leftToRight, getMergeMode());
 		final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
 

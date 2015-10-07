@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.diagram.papyrus.tests.groups;
 import static com.google.common.base.Predicates.alwaysTrue;
 
 import com.google.common.collect.Lists;
+import com.google.common.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,6 +29,7 @@ import org.eclipse.emf.compare.postprocessor.BasicPostProcessorDescriptorImpl;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.provider.spec.CompareItemProviderAdapterFactorySpec;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.EmptyMatchedResourcesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.IdenticalElementsFilter;
@@ -53,8 +55,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests the order of the differences they would be displayed in the structure
- * merge viewer for MDT Papyrus model.
+ * Tests the order of the differences they would be displayed in the structure merge viewer for MDT Papyrus
+ * model.
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
@@ -64,6 +66,8 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 	 * Data holding expecting result.
 	 */
 	private ExpectedResultData expectedResultData;
+
+	private EventBus eventBus;
 
 	@Before
 	@Override
@@ -83,15 +87,13 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 		PostProcessorDescriptorRegistryImpl<Object> postProcessorRegistry = new PostProcessorDescriptorRegistryImpl<Object>();
 		// Adds UML post processor
 		BasicPostProcessorDescriptorImpl descriptor = new BasicPostProcessorDescriptorImpl(
-				new UMLPostProcessor(),
-				Pattern.compile("http://www.eclipse.org/uml2/\\d.0.0/UML"), null); //$NON-NLS-1$
+				new UMLPostProcessor(), Pattern.compile("http://www.eclipse.org/uml2/\\d.0.0/UML"), null); //$NON-NLS-1$
 		postProcessorRegistry.put(UMLPostProcessor.class.getName(), descriptor);
 		// Adds Diagram post processor
 		BasicPostProcessorDescriptorImpl descriptor2 = new BasicPostProcessorDescriptorImpl(
-				new CompareDiagramPostProcessor(),
-				Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null); //$NON-NLS-1$
-		postProcessorRegistry.put(CompareDiagramPostProcessor.class.getName(),
-				descriptor2);
+				new CompareDiagramPostProcessor(), Pattern
+						.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null); //$NON-NLS-1$
+		postProcessorRegistry.put(CompareDiagramPostProcessor.class.getName(), descriptor2);
 		return postProcessorRegistry;
 	}
 
@@ -102,17 +104,14 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 
 	@Override
 	protected List<AdapterFactory> getAdaptersFactory() {
-		return Lists.<AdapterFactory> newArrayList(
-				new CompareItemProviderAdapterFactorySpec(),
-				new TreeItemProviderAdapterFactorySpec(),
-				new UMLCompareCustomItemProviderAdapterFactory(),
-				new UMLItemProviderAdapterFactory(),
+		eventBus = new EventBus();
+		return Lists.<AdapterFactory> newArrayList(new CompareItemProviderAdapterFactorySpec(),
+				new TreeItemProviderAdapterFactorySpec(new StructureMergeViewerFilter(eventBus)),
+				new UMLCompareCustomItemProviderAdapterFactory(), new UMLItemProviderAdapterFactory(),
 				new UMLCompareItemProviderDecoratorAdapterFactory(),
-				new ReflectiveItemProviderAdapterFactory(),
-				new NotationAdapterFactory(),
+				new ReflectiveItemProviderAdapterFactory(), new NotationAdapterFactory(),
 				new ExtensionsItemProviderAdapterFactorySpec(),
-				new DiagramCompareItemProviderAdapterFactorySpec(),
-				new NotationItemProviderAdapterFactory());
+				new DiagramCompareItemProviderAdapterFactorySpec(), new NotationItemProviderAdapterFactory());
 	}
 
 	@Test
@@ -120,8 +119,8 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 		GMFRefinedElementsFilter diagramFilter = new GMFRefinedElementsFilter();
 		getFilter().removeFilter(diagramFilter);
 
-		IDifferenceGroup group = new BasicDifferenceGroupImpl(getComparison(),
-				alwaysTrue(), getCrossReferenceAdapter());
+		IDifferenceGroup group = new BasicDifferenceGroupImpl(getComparison(), alwaysTrue(),
+				getCrossReferenceAdapter());
 		List<? extends TreeNode> roots = group.getChildren();
 
 		// Uncomment the following lines to reserialize the expected model
@@ -129,8 +128,7 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 		// writerHelper.createExpectedModel(PATH_TO_MODEL_FILE+"/expectedResult_DiagRefineOff.nodes",
 		// roots,false);
 
-		compareTree(expectedResultData.getExpectedReseultWithFilterOff(),
-				roots, false);
+		compareTree(expectedResultData.getExpectedReseultWithFilterOff(), roots, false);
 	}
 
 	@Test
@@ -138,8 +136,8 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 		GMFRefinedElementsFilter diagramFilter = new GMFRefinedElementsFilter();
 		getFilter().addFilter(diagramFilter);
 
-		IDifferenceGroup group = new BasicDifferenceGroupImpl(getComparison(),
-				alwaysTrue(), getCrossReferenceAdapter());
+		IDifferenceGroup group = new BasicDifferenceGroupImpl(getComparison(), alwaysTrue(),
+				getCrossReferenceAdapter());
 		List<? extends TreeNode> roots = group.getChildren();
 
 		// Uncomment the following lines to reserialize the expected model
@@ -147,8 +145,7 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 		// writerHelper.createExpectedModel(PATH_TO_MODEL_FILE+"/expectedResult_DiagRefineOn.nodes",
 		// roots);
 
-		compareTree(expectedResultData.getExpectedReseultWithFilterOn(), roots,
-				false);
+		compareTree(expectedResultData.getExpectedReseultWithFilterOn(), roots, false);
 	}
 
 	/**
@@ -172,22 +169,18 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 	 * 
 	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
 	 */
-	private static final class InputData extends DiagramInputData implements
-			NotifierScopeProvider {
+	private static final class InputData extends DiagramInputData implements NotifierScopeProvider {
 
 		public ResourceSet getLeft() throws IOException {
-			return loadFromClassLoader("data/a1/left.notation")
-					.getResourceSet();
+			return loadFromClassLoader("data/a1/left.notation").getResourceSet();
 		}
 
 		public ResourceSet getRight() throws IOException {
-			return loadFromClassLoader("data/a1/right.notation")
-					.getResourceSet();
+			return loadFromClassLoader("data/a1/right.notation").getResourceSet();
 		}
 
 		public ResourceSet getOrigin() throws IOException {
-			return loadFromClassLoader("data/a1/origin.notation")
-					.getResourceSet();
+			return loadFromClassLoader("data/a1/origin.notation").getResourceSet();
 		}
 	}
 

@@ -27,6 +27,7 @@ import com.google.common.collect.UnmodifiableIterator;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
@@ -40,7 +41,7 @@ import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
-import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.ecore.EObject;
@@ -61,14 +62,21 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 	/** A map of IDifferenceGroupProvider, GroupItemProviderAdapter. */
 	private Multimap<IDifferenceGroupProvider, GroupItemProviderAdapter> groupItemProviderAdapters;
 
+	/** An instance of {@code StructureMergeViewerFilter}. */
+	private StructureMergeViewerFilter structureMergeViewerFilter;
+
 	/**
 	 * This constructs an instance from a factory.
 	 * 
 	 * @param adapterFactory
 	 *            the given factory
+	 * @param structureMergeViewerFilter
+	 * 			  the given structure merge viewer filter
 	 */
-	public TreeNodeItemProviderSpec(AdapterFactory adapterFactory) {
+	public TreeNodeItemProviderSpec(AdapterFactory adapterFactory,
+			StructureMergeViewerFilter structureMergeViewerFilter) {
 		super(adapterFactory);
+		this.structureMergeViewerFilter = structureMergeViewerFilter;
 		itemDelegator = new ExtendedAdapterFactoryItemDelegator(getRootAdapterFactory());
 	}
 
@@ -244,9 +252,9 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 
 	/**
 	 * Due to filters (especially UML & Diagram Refined elements filters), refining & refined elements are
-	 * store in the same conflicts. But refining & refined elements will never be display together. It leads
-	 * to have a number of unresolved diffs who is confusing because it counts refining & refined unresolved
-	 * diffs together. So only counts visible unresolved nodes.
+	 * store in the same conflicts. But refining & refined elements will never be displayed together. It leads
+	 * to have a number of unresolved diffs that is confusing because it counts refining & refined unresolved
+	 * diffs together. This method makes sure to only count visible unresolved nodes.
 	 * 
 	 * @param conflict
 	 *            the conflict for which we want to get the text to display.
@@ -255,8 +263,8 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 	private IComposedStyledString getTreeNodeText(TreeNode treeNode, Conflict conflict) {
 		final ComposedStyledString ret = new ComposedStyledString();
 
-		final Predicate<? super EObject> unfilteredNode = EMFCompareRCPUIPlugin.getDefault()
-				.getEMFCompareConfiguration().getStructureMergeViewerFilter().getAggregatedPredicate();
+		Assert.isNotNull(structureMergeViewerFilter);
+		final Predicate<? super EObject> unfilteredNode = structureMergeViewerFilter.getAggregatedPredicate();
 
 		final UnmodifiableIterator<EObject> visibleNodes = Iterators.filter(treeNode.eAllContents(),
 				unfilteredNode);

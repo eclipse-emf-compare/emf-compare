@@ -17,10 +17,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.tests.CompareTestCase;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
+import org.eclipse.emf.compare.internal.utils.Graph;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -59,6 +61,7 @@ public class DependenciesTest extends CompareTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		resolver = new ThreadedModelResolver();
+		((ThreadedModelResolver)resolver).setGraph(new Graph<URI>());
 		resolver.initialize();
 		monitor = new NullProgressMonitor();
 

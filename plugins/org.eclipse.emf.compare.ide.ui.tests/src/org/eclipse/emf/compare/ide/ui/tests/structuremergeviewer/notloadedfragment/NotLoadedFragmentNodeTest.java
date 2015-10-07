@@ -18,6 +18,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.eventbus.EventBus;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +26,6 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -38,11 +38,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
 import org.eclipse.emf.compare.ide.ui.internal.logical.StorageTypedElement;
@@ -50,10 +48,9 @@ import org.eclipse.emf.compare.ide.ui.internal.logical.StreamAccessorStorage;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
 import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
-import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
 import org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch;
 import org.eclipse.emf.compare.provider.spec.CompareItemProviderAdapterFactorySpec;
-import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.ThreeWayComparisonGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.GroupItemProviderAdapter;
@@ -66,7 +63,7 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.tree.TreeFactory;
 import org.eclipse.emf.edit.tree.TreeNode;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.osgi.framework.Bundle;
 
@@ -85,11 +82,14 @@ public class NotLoadedFragmentNodeTest {
 
 	private static AdapterFactoryItemDelegator itemDelegator;
 
-	@BeforeClass
-	public static void beforeClass() {
+	private EventBus eventBus;
+
+	@Before
+	public void setup() {
 		final Collection<AdapterFactory> factories = Lists.newArrayList();
 		factories.add(new CompareItemProviderAdapterFactorySpec());
-		factories.add(new TreeItemProviderAdapterFactorySpec());
+		eventBus = new EventBus();
+		factories.add(new TreeItemProviderAdapterFactorySpec(new StructureMergeViewerFilter(eventBus)));
 		factories.add(new EcoreItemProviderAdapterFactory());
 		factories.add(new ReflectiveItemProviderAdapterFactory());
 
@@ -159,11 +159,6 @@ public class NotLoadedFragmentNodeTest {
 				new IdenticalResourceMinimizer(), null);
 		final IComparisonScope scope = scopeBuilder.build(left, right, origin, new NullProgressMonitor());
 		final Comparison comparison = EMFCompare.builder().build().compare(scope);
-
-		ReadOnlyGraph<URI> graph = ((ThreadedModelResolver)resolver).getDependencyGraph();
-		EMFCompareConfiguration emfCC = new EMFCompareConfiguration(new CompareConfiguration());
-		emfCC.setResourcesGraph(graph);
-		EMFCompareRCPUIPlugin.getDefault().setEMFCompareConfiguration(emfCC);
 
 		return comparison;
 	}

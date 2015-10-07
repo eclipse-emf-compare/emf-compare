@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.rcp.graph.IGraphConsumer;
 
 /**
  * Descriptor of an {@link IModelResolver}.
@@ -139,6 +141,9 @@ public class ModelResolverDescriptor {
 			try {
 				resolver = (IModelResolver)configurationElement
 						.createExecutableExtension(resolverClassPropertyName);
+				if (resolver instanceof IGraphConsumer) {
+					EMFCompareRCPPlugin.getDefault().register((IGraphConsumer)resolver);
+				}
 				resolver.initialize();
 			} catch (CoreException e) {
 				// Shouldn't happen since the registry listener should have checked that.

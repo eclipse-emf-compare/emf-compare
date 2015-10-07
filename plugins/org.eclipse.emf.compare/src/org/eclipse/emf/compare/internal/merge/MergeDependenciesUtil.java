@@ -26,6 +26,7 @@ import java.util.Set;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.graph.IGraph;
 import org.eclipse.emf.compare.internal.utils.Graph;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger2;
@@ -56,7 +57,7 @@ public final class MergeDependenciesUtil {
 	 * @return The dependency graph of this comparison's differences.
 	 * @see #mapDifferences(Collection, org.eclipse.emf.compare.merge.IMerger.Registry, boolean, MergeMode)
 	 */
-	public static Graph<Diff> mapDifferences(Comparison comparison, IMerger.Registry mergerRegistry,
+	public static IGraph<Diff> mapDifferences(Comparison comparison, IMerger.Registry mergerRegistry,
 			boolean mergeRightToLeft, MergeMode mergeMode) {
 		return mapDifferences(comparison.getDifferences(), mergerRegistry, mergeRightToLeft, mergeMode);
 	}
@@ -83,9 +84,9 @@ public final class MergeDependenciesUtil {
 	 *            The merge mode. If MergeMode is null, then no differences will be filtered.
 	 * @return The dependency graph of this comparison's differences.
 	 */
-	public static Graph<Diff> mapDifferences(Collection<Diff> differences, IMerger.Registry mergerRegistry,
+	public static IGraph<Diff> mapDifferences(Collection<Diff> differences, IMerger.Registry mergerRegistry,
 			boolean mergeRightToLeft, MergeMode mergeMode) {
-		Graph<Diff> differencesGraph = new Graph<Diff>();
+		IGraph<Diff> differencesGraph = new Graph<Diff>();
 		final Predicate<? super Diff> filter;
 		if (mergeMode == MergeMode.RIGHT_TO_LEFT) {
 			filter = fromSide(DifferenceSource.RIGHT);

@@ -29,16 +29,15 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompare.Builder;
-import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeNodeItemProviderSpec;
-import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.AbstractTestTreeNodeItemProviderAdapter;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.merge.data.IndividualDiffInputData;
@@ -52,13 +51,11 @@ import org.junit.Test;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
 @SuppressWarnings({"restriction" })
-public class PseudoConflictsMergeActionTest extends AbstractTestTreeNodeItemProviderAdapter {
+public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemProviderAdapter {
 
 	private static TreeNodeItemProviderSpec itemProvider;
 
 	private IMerger.Registry mergerRegistry;
-
-	private ICompareEditingDomain editingDomain;
 
 	private TreeNode leftAdd;
 
@@ -140,8 +137,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestTreeNodeItemProv
 		final TreeNode localChange = leftChange;
 		final TreeNode remoteChange = rightChange;
 
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// ACCEPT Local Add difference
 		Diff localAddDiff = (Diff)localAdd.getData();
@@ -192,8 +189,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestTreeNodeItemProv
 		final TreeNode localChange = leftChange;
 		final TreeNode remoteChange = rightChange;
 
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, reject, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, reject, null);
 
 		// REJECT Local Add difference
 		Diff localAddDiff = (Diff)localAdd.getData();
@@ -243,8 +240,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestTreeNodeItemProv
 		final TreeNode localChange = leftChange;
 		final TreeNode remoteChange = rightChange;
 
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// ACCEPT Remote Add difference
 		Diff localAddDiff = (Diff)localAdd.getData();
@@ -294,8 +291,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestTreeNodeItemProv
 		final TreeNode localChange = leftChange;
 		final TreeNode remoteChange = rightChange;
 
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, reject, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, reject, null);
 
 		// REJECT Remote Add difference
 		Diff localAddDiff = (Diff)localAdd.getData();
@@ -346,8 +343,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestTreeNodeItemProv
 		final TreeNode localChange = rightChange;
 		final TreeNode remoteChange = leftChange;
 
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// ACCEPT Local Add difference
 		Diff localAddDiff = (Diff)localAdd.getData();
@@ -398,8 +395,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestTreeNodeItemProv
 		final TreeNode localChange = rightChange;
 		final TreeNode remoteChange = leftChange;
 
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, reject, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, reject, null);
 
 		// REJECT Local Add difference
 		Diff localAddDiff = (Diff)localAdd.getData();
@@ -449,8 +446,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestTreeNodeItemProv
 		final TreeNode localChange = rightChange;
 		final TreeNode remoteChange = leftChange;
 
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// ACCEPT Remote Add difference
 		Diff localAddDiff = (Diff)localAdd.getData();
@@ -500,8 +497,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestTreeNodeItemProv
 		final TreeNode localChange = rightChange;
 		final TreeNode remoteChange = leftChange;
 
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, reject, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, reject, null);
 
 		// REJECT Remote Add difference
 		Diff localAddDiff = (Diff)localAdd.getData();

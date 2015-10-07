@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.graph.IGraph;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.DefaultResolutionContext;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.DependencyGraphUpdater;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.IImplicitDependencies;
@@ -70,7 +71,7 @@ import org.osgi.framework.Bundle;
  * 
  * @author Philip Langer <planger@eclipsesource.com>
  */
-@SuppressWarnings({"nls", "restriction" })
+@SuppressWarnings({"nls" })
 public class ThreadedModelResolverWithCustomDependencyProviderTest extends CompareTestCase {
 
 	private static final String TEST_BUNDLE = "org.eclipse.emf.compare.ide.ui.tests";
@@ -220,6 +221,7 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 
 	private ThreadedModelResolver createModelResolver() {
 		ThreadedModelResolver resolver = new ThreadedModelResolver();
+		resolver.setGraph(new Graph<URI>());
 		resolver.initialize();
 		return resolver;
 	}
@@ -227,7 +229,7 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 	private ThreadedModelResolver createModelResolverWithCustomImplicitDependencies() {
 		ThreadedModelResolver resolver = new ThreadedModelResolver() {
 			@Override
-			protected DefaultResolutionContext createContext(EventBus eventBus, Graph<URI> graph) {
+			protected DefaultResolutionContext createContext(EventBus eventBus, IGraph<URI> graph) {
 				return new DefaultResolutionContext(eventBus, graph, new DependencyGraphUpdater<URI>(graph,
 						eventBus), new ResourceComputationScheduler<URI>(), new ModelResourceListener()) {
 					@Override
@@ -252,6 +254,7 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 				};
 			}
 		};
+		resolver.setGraph(new Graph<URI>());
 		resolver.initialize();
 		return resolver;
 	}

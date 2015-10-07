@@ -22,8 +22,8 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.graph.IGraph;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
-import org.eclipse.emf.compare.internal.utils.Graph;
 
 /**
  * The default implementation of the {@link IResourceDependencyProvider}.
@@ -33,7 +33,7 @@ import org.eclipse.emf.compare.internal.utils.Graph;
 public class ResourceDependencyProvider implements IResourceDependencyProvider {
 
 	/** The dependency graph. */
-	private final Graph<URI> dependencyGraph;
+	private final IGraph<URI> dependencyGraph;
 
 	/**
 	 * Constructor.

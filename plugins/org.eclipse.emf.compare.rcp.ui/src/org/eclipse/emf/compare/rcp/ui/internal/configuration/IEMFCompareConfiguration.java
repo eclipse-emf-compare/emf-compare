@@ -13,12 +13,10 @@ package org.eclipse.emf.compare.rcp.ui.internal.configuration;
 import com.google.common.eventbus.EventBus;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
-import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -61,8 +59,4 @@ public interface IEMFCompareConfiguration {
 	void setMergePreviewMode(MergeMode mergePreviewMode);
 
 	boolean getBooleanProperty(String key, boolean dflt);
-
-	ReadOnlyGraph<URI> getResourcesGraph();
-
-	void setResourcesGraph(ReadOnlyGraph<URI> graph);
 }

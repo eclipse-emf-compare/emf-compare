@@ -22,15 +22,14 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeNodeItemProviderSpec;
-import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.AbstractTestTreeNodeItemProviderAdapter;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.data.ecore.a1.EcoreA1InputData;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeFactory;
@@ -43,13 +42,11 @@ import org.junit.Test;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
 @SuppressWarnings({"nls", "restriction" })
-public class MergeActionTest extends AbstractTestTreeNodeItemProviderAdapter {
+public class MergeActionTest extends AbstractTestUITreeNodeItemProviderAdapter {
 
 	private static TreeNodeItemProviderSpec itemProvider;
 
 	private IMerger.Registry mergerRegistry;
-
-	private ICompareEditingDomain editingDomain;
 
 	private TreeNode leftAdd;
 
@@ -121,8 +118,8 @@ public class MergeActionTest extends AbstractTestTreeNodeItemProviderAdapter {
 		final TreeNode remoteAdd = rightAdd;
 		final TreeNode remoteDelete = rightDelete;
 
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// ACCEPT Local add difference
 		Diff localAddDiff = (Diff)localAdd.getData();
@@ -173,8 +170,8 @@ public class MergeActionTest extends AbstractTestTreeNodeItemProviderAdapter {
 		final TreeNode remoteAdd = rightAdd;
 		final TreeNode remoteDelete = rightDelete;
 
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// REJECT Local add difference
 		Diff localAddDiff = (Diff)localAdd.getData();
@@ -225,8 +222,8 @@ public class MergeActionTest extends AbstractTestTreeNodeItemProviderAdapter {
 		final TreeNode remoteAdd = leftAdd;
 		final TreeNode remoteDelete = leftDelete;
 
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// ACCEPT Local add difference
 		Diff localAddDiff = (Diff)localAdd.getData();
@@ -277,8 +274,8 @@ public class MergeActionTest extends AbstractTestTreeNodeItemProviderAdapter {
 		final TreeNode remoteAdd = leftAdd;
 		final TreeNode remoteDelete = leftDelete;
 
-		MockMergeAction action = new MockMergeAction(editingDomain, mergerRegistry, accept, leftEditable,
-				rightEditable, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// REJECT Local add difference
 		Diff localAddDiff = (Diff)localAdd.getData();
@@ -327,4 +324,5 @@ public class MergeActionTest extends AbstractTestTreeNodeItemProviderAdapter {
 		Iterable<?> matches = filter(children, matchTreeNode);
 		return (TreeNode)matches.iterator().next();
 	}
+
 }

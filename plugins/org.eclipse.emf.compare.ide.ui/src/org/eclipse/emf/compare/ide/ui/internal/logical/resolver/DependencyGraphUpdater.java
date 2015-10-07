@@ -19,7 +19,7 @@ import com.google.common.eventbus.Subscribe;
 import java.util.Collections;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.compare.internal.utils.Graph;
+import org.eclipse.emf.compare.graph.IGraph;
 
 /**
  * This class's responsibility is to maintain the state of its graph when notified that a new model resource
@@ -30,7 +30,7 @@ import org.eclipse.emf.compare.internal.utils.Graph;
 public class DependencyGraphUpdater<T> {
 
 	/** The graph of dependencies between the resources. */
-	private final Graph<T> dependencyGraph;
+	private final IGraph<T> dependencyGraph;
 
 	/** The logger. */
 	private static final Logger LOGGER = Logger.getLogger(DependencyGraphUpdater.class);
@@ -43,7 +43,7 @@ public class DependencyGraphUpdater<T> {
 	 * @param eventBus
 	 *            The event bus that will fire events to record.
 	 */
-	public DependencyGraphUpdater(Graph<T> graph, EventBus eventBus) {
+	public DependencyGraphUpdater(IGraph<T> graph, EventBus eventBus) {
 		this.dependencyGraph = checkNotNull(graph);
 		eventBus.register(this);
 	}

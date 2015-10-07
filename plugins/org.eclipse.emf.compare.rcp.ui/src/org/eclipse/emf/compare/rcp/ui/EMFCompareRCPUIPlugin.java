@@ -118,6 +118,7 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 
 	private ConfigurationUIRegistryEventListener matchEngineConfiguratorRegistryListener;
 
+	@Deprecated
 	private IEMFCompareConfiguration compareConfiguration;
 
 	/**
@@ -376,21 +377,29 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * @return the compare configuration object.
+	 * The compareConfiguration is not provided by the RCPUI plugin anymore. This plugin provide cross
+	 * comparison elements and the compareConfiguration is configuration dependent.
+	 * 
+	 * @return null
+	 * @deprecated
 	 * @since 4.1
 	 */
+	@Deprecated
 	public IEMFCompareConfiguration getEMFCompareConfiguration() {
-		return compareConfiguration;
+		return null;
 	}
 
 	/**
-	 * Set the compare configuration object.
+	 * The compareConfiguration is not provided by the RCPUI plugin anymore. This plugin provide cross
+	 * comparison elements and the compareConfiguration is configuration dependent.
 	 * 
 	 * @param compareConfiguration
 	 *            the compare configuration object
+	 * @deprecated
 	 * @since 4.1
 	 */
+	@Deprecated
 	public void setEMFCompareConfiguration(IEMFCompareConfiguration compareConfiguration) {
-		this.compareConfiguration = compareConfiguration;
+		// Do nothing
 	}
 }

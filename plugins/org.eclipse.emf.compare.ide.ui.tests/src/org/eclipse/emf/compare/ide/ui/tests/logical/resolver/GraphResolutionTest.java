@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.graph.IGraphView;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
@@ -25,7 +26,7 @@ import org.eclipse.emf.compare.ide.ui.internal.logical.StorageTypedElement;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.tests.CompareTestCase;
-import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
+import org.eclipse.emf.compare.internal.utils.Graph;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.junit.Test;
 
@@ -103,7 +104,7 @@ public class GraphResolutionTest extends CompareTestCase {
 				new NullProgressMonitor());
 		final Comparison comparison = EMFCompare.builder().build().compare(scope);
 
-		ReadOnlyGraph<URI> graph = ((ThreadedModelResolver)resolver).getDependencyGraph();
+		IGraphView<URI> graph = ((ThreadedModelResolver)resolver).getGraphView();
 
 		assertTrue(graph.getDirectParents(getURI(leftR4)).contains(getURI(leftR3)));
 		assertTrue(graph.getDirectParents(getURI(leftR3)).contains(getURI(leftR2)));
@@ -136,9 +137,10 @@ public class GraphResolutionTest extends CompareTestCase {
 	@Test
 	public void testModelResolver() throws Exception {
 		ThreadedModelResolver resolver = new ThreadedModelResolver();
+		resolver.setGraph(new Graph<URI>());
 		resolver.initialize();
 		resolver.resolveLocalModels(leftR1, rightR1, originR1, new NullProgressMonitor());
-		ReadOnlyGraph<URI> graph = resolver.getDependencyGraph();
+		IGraphView<URI> graph = resolver.getGraphView();
 
 		assertTrue(graph.getDirectParents(getURI(leftR4)).contains(getURI(leftR3)));
 		assertTrue(graph.getDirectParents(getURI(leftR3)).contains(getURI(leftR2)));

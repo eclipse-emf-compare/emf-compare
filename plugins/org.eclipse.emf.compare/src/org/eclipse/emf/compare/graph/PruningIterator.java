@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.internal.utils;
+package org.eclipse.emf.compare.graph;
 
 import java.util.Iterator;
 
@@ -21,6 +21,7 @@ import java.util.Iterator;
  * @param <E>
  *            Kind of elements this iterator is for.
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @since 3.3
  */
 public interface PruningIterator<E> extends Iterator<E> {
 	/**
