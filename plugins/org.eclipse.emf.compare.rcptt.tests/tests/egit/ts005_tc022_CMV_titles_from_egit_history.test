@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _wXTuUFCAEeWzYYatGYnhhw
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 9/2/15 10:32 AM
+Save-Time: 9/30/15 5:58 PM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -23,7 +23,7 @@ TEST STEPS
     4) Right-click and select "Compare with each other"
 	4) The Compare editor must show one diff : Library [eClassifiers delete] under library package.
 		//Asserts that the compare editor is open.
-		//Assert that the labels of the ContentMergeViewer are "Remote: library/library.ecore. Commit ID: 9763e97" and "Remote: library/library.ecore. Commit ID: db84a95"
+		//Assert that the labels of the ContentMergeViewer are "Remote: library/library.ecore 9763e97 (Axel Richard)" and "Remote: library/library.ecore db84a95 (Axel Richard)"
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
 Content-Type: text/ecl
@@ -37,9 +37,9 @@ with [get-view History | get-table] {
 }
 get-tab-folder -index 1 | get-property activePage | equals "Compare library.ecore 9763e97 and db84a95" | verify-true
 with [get-editor "Compare library.ecore 9763e97 and db84a95"] {
-    get-label "Remote: library/library.ecore" | get-property caption 
-        | equals "library/library.ecore 9763e97 (Axel Richard)" | verify-true
-    get-label "Remote: library/library.ecore" -after [get-label "Remote: library/library.ecore"] | get-property caption 
-        | equals "library/library.ecore db84a95 (Axel Richard)" | verify-true
+    get-label "(Remote: )?library/library.ecore 9763e97 \(Axel Richard\)" | get-property caption 
+        | equals "(Remote: )?library/library.ecore 9763e97 \(Axel Richard\)" | verify-true
+    get-label "(Remote: )?library/library.ecore db84a95 \(Axel Richard\)" -after [get-label "(Remote: )?library/library.ecore 9763e97 \(Axel Richard\)"] | get-property caption 
+        | equals "(Remote: )?library/library.ecore db84a95 \(Axel Richard\)" | verify-true
 }
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
