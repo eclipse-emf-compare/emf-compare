@@ -190,13 +190,27 @@ public class SynchronizedResourceSet extends ResourceSetImpl implements Disposab
 	 * 
 	 * @param uri
 	 *            The uri to load.
+	 * @param normalized
+	 *            the normalized form of this URI.
 	 * @return The loaded resource.
 	 */
-	private Resource loadPackage(URI uri) {
+	private Resource loadPackage(URI uri, URI normalized) {
 		final URI trimmed = uri.trimFragment();
 		final Resource resource = createResource(trimmed, ContentHandler.UNSPECIFIED_CONTENT_TYPE);
 		if (resource == null) {
 			return null;
+		}
+
+		// cache this asap. there might be recursive calls to "getResource" with this package URI (as can be
+		// observed with the UML Ecore profile for example) during the loading itself; in which case we need
+		// to return that same "currently loading" instance.
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource - caching package " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		Resource former = uriCache.putIfAbsent(normalized, resource);
+		if (former != null) {
+			// There was already a resource cached (multi-threading makes it possible)
+			return former;
 		}
 
 		InputStream stream = null;
@@ -271,12 +285,14 @@ public class SynchronizedResourceSet extends ResourceSetImpl implements Disposab
 			final EPackage ePackage = getPackageRegistry().getEPackage(uri.toString());
 			if (ePackage != null) {
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource - found in package registry : " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+					LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) //$NON-NLS-1$
+							+ ".getResource - found in package registry : " + uri); //$NON-NLS-1$
 				}
 				demanded = ePackage.eResource();
 				if (demanded != null) {
 					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource - caching " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+						LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource - caching " //$NON-NLS-1$ //$NON-NLS-2$
+								+ uri);
 					}
 					Resource former = uriCache.putIfAbsent(normalized, demanded);
 					if (former != null) {
@@ -309,18 +325,10 @@ public class SynchronizedResourceSet extends ResourceSetImpl implements Disposab
 			Resource demanded = uriCache.get(normalized);
 			if (demanded == null) {
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource - loaded package normally : " + uri); //$NON-NLS-1$ //$NON-NLS-2$
+					LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) //$NON-NLS-1$
+							+ ".getResource - loaded package normally : " + uri); //$NON-NLS-1$
 				}
-				demanded = loadPackage(uri);
-				if (demanded != null) {
-					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("SRS@" + Integer.toHexString(hashCode()) + ".getResource - caching package " + uri); //$NON-NLS-1$ //$NON-NLS-2$
-					}
-					Resource former = uriCache.putIfAbsent(normalized, demanded);
-					if (former != null) {
-						demanded = former;
-					}
-				}
+				demanded = loadPackage(uri, normalized);
 			}
 			return demanded;
 		} finally {
