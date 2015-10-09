@@ -191,13 +191,10 @@ public final class MatchUtil {
 	 */
 	// public for testing
 	public static boolean featureContains(EObject eObject, EStructuralFeature feature, Object value) {
-		URI proxyUri = null;
-		if (value instanceof EObject) {
-			EObject eObjectValue = (EObject)value;
-			proxyUri = EcoreUtil.getURI(eObjectValue);
-		}
-
 		boolean contains = false;
+
+		// only compute the value's URI once, and only if needed
+		URI valueURI = null;
 
 		for (Object element : getAsList(eObject, feature)) {
 			if (element == value) {
@@ -208,9 +205,12 @@ public final class MatchUtil {
 				contains = true;
 				break;
 			}
-			if (proxyUri != null && element instanceof EObject) {
-				EObject eObjectElement = (EObject)element;
-				if (eObjectElement.eIsProxy() && EcoreUtil.getURI(eObjectElement).equals(proxyUri)) {
+
+			if (element instanceof EObject && ((EObject)element).eIsProxy()) {
+				if (valueURI == null && value instanceof EObject) {
+					valueURI = EcoreUtil.getURI((EObject)value);
+				}
+				if (EcoreUtil.getURI((EObject)element).equals(valueURI)) {
 					contains = true;
 					break;
 				}
