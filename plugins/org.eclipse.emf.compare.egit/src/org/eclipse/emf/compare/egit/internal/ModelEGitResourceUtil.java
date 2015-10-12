@@ -37,9 +37,9 @@ public class ModelEGitResourceUtil extends ResourceUtil {
 		final File file = path.toFile();
 		if (file.exists()) {
 			if (isFolder) {
-				return ResourceUtil.getContainerForLocation(path);
+				return ResourceUtil.getContainerForLocation(path, false);
 			}
-			return ResourceUtil.getFileForLocation(path);
+			return ResourceUtil.getFileForLocation(path, false);
 		}
 
 		// This is a file that no longer exists locally, yet we still need to

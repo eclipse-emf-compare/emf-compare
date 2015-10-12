@@ -211,9 +211,9 @@ public class TreeWalkResourceVariantTreeProvider implements GitResourceVariantTr
 		final File file = path.toFile();
 		if (file.exists()) {
 			if (isFolder) {
-				resource = ResourceUtil.getContainerForLocation(path);
+				resource = ResourceUtil.getContainerForLocation(path, false);
 			} else {
-				resource = ResourceUtil.getFileForLocation(path);
+				resource = ResourceUtil.getFileForLocation(path, false);
 			}
 		}
 

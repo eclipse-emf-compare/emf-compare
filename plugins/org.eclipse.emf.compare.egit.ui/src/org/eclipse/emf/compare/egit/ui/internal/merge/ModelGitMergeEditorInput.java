@@ -278,7 +278,7 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 						resourcesInOperation.addAll(getConflictingFilesFrom(project));
 						foundMatchInWS = true;
 					} else if (project.getLocation().isPrefixOf(path)) {
-						final IResource resource = ModelEGitResourceUtil.getResourceForLocation(path);
+						final IResource resource = ModelEGitResourceUtil.getResourceForLocation(path, false);
 						if (resource instanceof IContainer) {
 							resourcesInOperation.addAll(getConflictingFilesFrom((IContainer)resource));
 						} else {
@@ -603,7 +603,7 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 
 				Path repositoryPath = new Path(repository.getWorkTree().getAbsolutePath());
 				IPath location = repositoryPath.append(fit.getEntryPathString());
-				IFile file = ModelEGitResourceUtil.getFileForLocation(location);
+				IFile file = ModelEGitResourceUtil.getFileForLocation(location, false);
 				if (!conflicting || useWorkspace) {
 					if (file != null) {
 						rev = new LocalFileRevision(file);
