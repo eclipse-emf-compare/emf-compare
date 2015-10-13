@@ -54,7 +54,9 @@ with [get-view "Model Explorer" | get-tree] {
 }
 with [get-editor "model.di" | get-diagram -index 1 | get-edit-part -name Package2] {
     get-edit-part -name Class1 | get-edit-part -text Class1 | get-property text | equals Class1 | verify-true
-    get-edit-part -name Class2 | get-edit-part -text Class2 | get-property text | equals Class2 | verify-true
+    try -command {
+    	get-edit-part -name Class2 | get-edit-part -text Class2 | get-property text | equals Class2 | verify-true
+	} -catch { wait 500 } -times 30
 }
 with [get-view "Model Explorer" | get-tree] {
     get-item "root/Diagram NewPackageDiagram" | click

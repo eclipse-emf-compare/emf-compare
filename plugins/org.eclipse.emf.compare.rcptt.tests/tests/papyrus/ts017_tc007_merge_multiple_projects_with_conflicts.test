@@ -1,13 +1,13 @@
 --- RCPTT testcase ---
 Format-Version: 1.0
-Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_iRDjwHJKEeW0UJaeREW8jA,_d_GLMHDdEeWhSZQCADl_Kg
+Contexts: _aLjwYHc5EeW4qNishx0z-w,_LOMGYGrvEeK_JdLra2Bk5A,_iRDjwHJKEeW0UJaeREW8jA,_d_GLMHDdEeWhSZQCADl_Kg
 Element-Name: ts017_tc007_merge_multiple_projects_with_conflicts
 Element-Type: testcase
 Element-Version: 3.0
 External-Reference: 
 Id: _AXnCoHKCEeW0UJaeREW8jA
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 10/20/15 2:18 PM
+Save-Time: 10/20/15 5:06 PM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -75,7 +75,7 @@ get-view "Package Explorer" | get-tree
 // Open Model Merge Tool
 get-view "Package Explorer" | get-tree 
     | select "Design_EMFCompare  [emf-compare-papyrus-egit|Conflicts conflict_add_postprocessor]/Main.notation" 
-    | get-menu "Team/Merge Tool" | click
+    | get-menu "Team/Model Merge Tool \\(with EMFCompare\\)" | click
     
 // Assert their is 4 conflict categories
 with [get-editor "Repository 'emf-compare-papyrus-egit': Merging 'Add IMerger and UMLMerger' into 'refs/heads/conflict_add_postprocessor'" 

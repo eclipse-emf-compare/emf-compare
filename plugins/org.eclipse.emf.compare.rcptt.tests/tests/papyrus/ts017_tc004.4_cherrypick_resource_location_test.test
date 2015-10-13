@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _yrW4UHMhEeWJlLI5frq0hw
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 10/20/15 2:14 PM
+Save-Time: 10/20/15 5:25 PM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -65,8 +65,10 @@ with [get-view "Model Explorer" | get-tree] {
     get-item "root/Package2/Diagram ClassDiagramP2" | click
     select "root/Package2/Diagram ClassDiagramP2" | double-click
 }
-with [get-editor "model.di" | get-diagram -index 1 | get-edit-part -name Package2] {
-    get-edit-part -name Class1 | get-edit-part -text Class1 | get-property text | equals Class1 | verify-true
-    get-edit-part -name Class2 | get-edit-part -text Class2 | get-property text | equals Class2 | verify-true
-}
+try -command {
+	with [get-editor "model.di" | get-diagram -index 1 | get-edit-part -name Package2] {
+    	get-edit-part -name Class1 | get-edit-part -text Class1 | get-property text | equals Class1 | verify-true
+    	get-edit-part -name Class2 | get-edit-part -text Class2 | get-property text | equals Class2 | verify-true
+	}
+} -catch { wait 500 } -times 30
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
