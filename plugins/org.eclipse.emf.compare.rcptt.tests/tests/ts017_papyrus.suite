@@ -1,0 +1,48 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Element-Name: ts017_papyrus
+Element-Type: testsuite
+Element-Version: 2.0
+Id: _IpyRIHD2EeWm0qH5utCWQg
+Runtime-Version: 2.0.0.201506120617
+Save-Time: 10/15/15 5:15 PM
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test suite must validate Papyrus linked comparisons
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8
+Content-Type: text/testcase
+Entry-Name: testcase-items
+
+_FwPWUHDkEeW6i4fYQ8EsGg	// kind: 'test' name: 'ts017_tc001.1_merge_resource_location_test' path: 'papyrus/ts017_tc001.1_merge_resource_location_test.test'
+_Mvr6IG3CEeWIusgcIwVxMw	// kind: 'test' name: 'ts017_tc001.2_merge_resource_location_test' path: 'papyrus/ts017_tc001.2_merge_resource_location_test.test'
+_LBil8HDmEeWe1Z7OfbALag	// kind: 'test' name: 'ts017_tc001.3_cherrypick_resource_location_test' path: 'papyrus/ts017_tc001.3_cherrypick_resource_location_test.test'
+_WbAjIHDnEeWe1Z7OfbALag	// kind: 'test' name: 'ts017_tc001.4_cherrypick_resource_location_test' path: 'papyrus/ts017_tc001.4_cherrypick_resource_location_test.test'
+_ifSicHDpEeWJYNX-sKKymg	// kind: 'test' name: 'ts017_tc001.5_rebase_resource_location_test' path: 'papyrus/ts017_tc001.5_rebase_resource_location_test.test'
+_ifZQIHDpEeWJYNX-sKKymg	// kind: 'test' name: 'ts017_tc001.6_rebase_resource_location_test' path: 'papyrus/ts017_tc001.6_rebase_resource_location_test.test'
+_37Bj4HDsEeWm0qH5utCWQg	// kind: 'test' name: 'ts017_tc002.1_merge_resource_location_test' path: 'papyrus/ts017_tc002.1_merge_resource_location_test.test'
+_37QNYHDsEeWm0qH5utCWQg	// kind: 'test' name: 'ts017_tc002.2_merge_resource_location_test' path: 'papyrus/ts017_tc002.2_merge_resource_location_test.test'
+_37YwQHDsEeWm0qH5utCWQg	// kind: 'test' name: 'ts017_tc002.3_cherrypick_resource_location_test' path: 'papyrus/ts017_tc002.3_cherrypick_resource_location_test.test'
+_37gsEHDsEeWm0qH5utCWQg	// kind: 'test' name: 'ts017_tc002.4_cherrypick_resource_location_test' path: 'papyrus/ts017_tc002.4_cherrypick_resource_location_test.test'
+_37s5UHDsEeWm0qH5utCWQg	// kind: 'test' name: 'ts017_tc002.5_rebase_resource_location_test' path: 'papyrus/ts017_tc002.5_rebase_resource_location_test.test'
+_373RYHDsEeWm0qH5utCWQg	// kind: 'test' name: 'ts017_tc002.6_rebase_resource_location_test' path: 'papyrus/ts017_tc002.6_rebase_resource_location_test.test'
+_A7tXcHGAEeW2QO9QoqyAmA	// kind: 'test' name: 'ts017_tc003.1_merge_resource_location_test' path: 'papyrus/ts017_tc003.1_merge_resource_location_test.test'
+_A70FIHGAEeW2QO9QoqyAmA	// kind: 'test' name: 'ts017_tc003.2_merge_resource_location_test' path: 'papyrus/ts017_tc003.2_merge_resource_location_test.test'
+_A76y0HGAEeW2QO9QoqyAmA	// kind: 'test' name: 'ts017_tc003.3_cherrypick_resource_location_test' path: 'papyrus/ts017_tc003.3_cherrypick_resource_location_test.test'
+_A8FK4HGAEeW2QO9QoqyAmA	// kind: 'test' name: 'ts017_tc003.4_cherrypick_resource_location_test' path: 'papyrus/ts017_tc003.4_cherrypick_resource_location_test.test'
+_A8KDYHGAEeW2QO9QoqyAmA	// kind: 'test' name: 'ts017_tc003.5_rebase_resource_location_test' path: 'papyrus/ts017_tc003.5_rebase_resource_location_test.test'
+_A8O74HGAEeW2QO9QoqyAmA	// kind: 'test' name: 'ts017_tc003.6_rebase_resource_location_test' path: 'papyrus/ts017_tc003.6_rebase_resource_location_test.test'
+_EfI1QHMdEeW_bZHq03AR-A	// kind: 'test' name: 'ts017_tc004.1_merge_resource_location_test' path: 'papyrus/ts017_tc004.1_merge_resource_location_test.test'
+_QIqLMHMfEeWJlLI5frq0hw	// kind: 'test' name: 'ts017_tc004.2_merge_resource_location_test' path: 'papyrus/ts017_tc004.2_merge_resource_location_test.test'
+_Q5rGgHMhEeWJlLI5frq0hw	// kind: 'test' name: 'ts017_tc004.3_cherrypick_resource_location_test' path: 'papyrus/ts017_tc004.3_cherrypick_resource_location_test.test'
+_yrW4UHMhEeWJlLI5frq0hw	// kind: 'test' name: 'ts017_tc004.4_cherrypick_resource_location_test' path: 'papyrus/ts017_tc004.4_cherrypick_resource_location_test.test'
+_WzvmUHMjEeWJlLI5frq0hw	// kind: 'test' name: 'ts017_tc004.5_rebase_resource_location_test' path: 'papyrus/ts017_tc004.5_rebase_resource_location_test.test'
+_aprXQHM9EeWJlLI5frq0hw	// kind: 'test' name: 'ts017_tc004.6_rebase_resource_location_test' path: 'papyrus/ts017_tc004.6_rebase_resource_location_test.test'
+_bT8nsHJKEeW0UJaeREW8jA	// kind: 'test' name: 'ts017_tc005_rebase_multiple_commits' path: 'papyrus/ts017_tc005_rebase_multiple_commits.test'
+_J7VuYHJQEeW0UJaeREW8jA	// kind: 'test' name: 'ts017_tc006.1_merge_multiple_projects_without_conflicts' path: 'papyrus/ts017_tc006.1_merge_multiple_projects_without_conflicts.test'
+_AXnCoHKCEeW0UJaeREW8jA	// kind: 'test' name: 'ts017_tc007_merge_multiple_projects_with_conflicts' path: 'papyrus/ts017_tc007_merge_multiple_projects_with_conflicts.test'
+
+------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8--

@@ -1,0 +1,73 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Context-Type: org.eclipse.rcptt.ctx.ecl
+Element-Name: Papyrus-EGit-Init
+Element-Type: context
+Element-Version: 2.0
+Id: _d_GLMHDdEeWhSZQCADl_Kg
+Runtime-Version: 2.0.0.201506120617
+Save-Time: 10/12/15 3:08 PM
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This ecl script add the existing local Git Repository named "emf-compare-papyrus-egit" that is contained in the "Papyrus-Egit" project in the workspace previously import by the Papyrus linked WorkspaceContexts to the Egit view.
+Then it imports from the repositiory the project named "papyrus" in the workspace.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
+Content-Type: text/ecl
+Entry-Name: .ecl.context
+
+get-button "Open Perspective" | click
+with [get-window "Open Perspective"] {
+    get-table | select "Git"
+    get-button OK | click
+}
+//Removes all existing repositories if needed
+try {
+	if  [get-view "Git Repositories" | get-tree | is-empty] {
+		// Do nothing
+	} -else {
+		with [get-view "Git Repositories" | get-tree] {
+			get-items | foreach {
+				select-item
+    				| get-menu "Remove Repository from View" | click
+    			try {
+    				get-window "Confirm Project Deletion" | get-button Yes | click
+    			} -catch {
+					// Do nothing
+				}
+			}
+		}
+	}
+} -catch {
+	// Do nothing
+}
+
+get-button "Add an existing local Git Repository to this view" | click
+set-dialog-result Folder "platform:/resource/Papyrus-EGit/emf-compare-papyrus-egit"
+get-window "Add Git Repositories" | get-group "Search criteria" | get-button "Browse..." | click
+get-window "Add Git Repositories" | get-checkbox "Check All Repositories" | click
+get-window "Add Git Repositories" | get-button Finish | click
+try -command {
+get-view "Git Repositories" | get-tree | get-property itemCount | equals 1 | verify-true
+} -catch {wait 500} -times 30
+
+get-view "Git Repositories" | get-tree 
+    | select "(> )?emf-compare-papyrus-egit .*" 
+    | get-menu "Import Projects..." | click
+get-window "Import Projects from Git Repository .*" 
+    | get-button "Next >" | click
+get-window "Import Projects from Git Repository .*" 
+    | get-button Finish | click
+get-button "Open Perspective" | click
+with [get-window "Open Perspective"] {
+    get-table | select "Papyrus"
+    get-button OK | click
+}
+
+//remove from the workspace the project that contains repo
+get-view "Project Explorer" | get-tree | select "Papyrus-EGit" | get-menu Delete | click
+get-window "Delete Resources" | get-button OK | click
+------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--

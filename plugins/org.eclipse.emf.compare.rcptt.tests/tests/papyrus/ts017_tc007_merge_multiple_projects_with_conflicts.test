@@ -1,0 +1,126 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_iRDjwHJKEeW0UJaeREW8jA,_d_GLMHDdEeWhSZQCADl_Kg
+Element-Name: ts017_tc007_merge_multiple_projects_with_conflicts
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _AXnCoHKCEeW0UJaeREW8jA
+Runtime-Version: 2.0.0.201506120617
+Save-Time: 10/16/15 10:01 AM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate the "Model Merge Tool (EMFCompare)". After a conflicting merge, the files in conflict are open with the Model Merge Tool. The informations displayed must be correct.
+
+TEST STEPS
+	1) Checkout the branch conflict_add_postprocessor
+	2) Import the projects Design_EGit in the workspace
+	3) Select the project Design_EMFCompare, right-click and merge with branch conflict_add_merger
+	// Assert that the merge end with conflicts
+	4) Open the file main.notation with the Model Merge Tool
+	// Assert that the result is good (conflicts representation, etc)
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+// checkout branch add_merge_strategy and import new project in the workspace
+get-view "Project Explorer" | get-tree | select "Design_EMFCompare  [emf-compare-papyrus-egit uml2]" 
+    | get-menu "Team/Switch To/conflict_add_postprocessor" | click
+get-button Papyrus | click
+get-button Git | click
+get-view "Git Repositories" | get-tree 
+    | select "(> )?emf-compare-papyrus-egit .*" 
+    | get-menu "Import Projects..." | click
+get-window "Import Projects from Git Repository .*" 
+    | get-button "Next >" | click
+get-window "Import Projects from Git Repository .*" 
+    | get-button Finish | click
+get-button "Open Perspective" | click
+with [get-window "Open Perspective"] {
+    get-table | select "Java"
+    get-button OK | click
+}
+
+// assert the presence of the two projects
+with [get-view "Package Explorer" | get-tree] {
+    get-item "Design_EGit  \\[emf-compare-papyrus-egit conflict_add_postprocessor\\]" | get-property caption 
+        | equals "Design_EGit  [emf-compare-papyrus-egit conflict_add_postprocessor]" | verify-true
+    get-item "Design_EMFCompare  \\[emf-compare-papyrus-egit conflict_add_postprocessor\\]" | get-property caption 
+        | equals "Design_EMFCompare  [emf-compare-papyrus-egit conflict_add_postprocessor]" | verify-true
+}
+
+//merge with branch extract_jgit_newproject
+get-view "Package Explorer" | get-tree | select "Design_EMFCompare  [emf-compare-papyrus-egit conflict_add_postprocessor]" 
+    | get-menu "Team/Merge..." | click
+with [get-window "Merge 'conflict_add_postprocessor'"] {
+    get-tree | select "Local/conflict_add_merger d147b8f Add IMerger and UMLMerger"
+    get-button "Merge" | click
+}
+
+try -command {
+get-window "Merge Result" | get-editbox -after [get-label "Result"] | get-property text | equals Conflicting | verify-true
+get-window "Merge Result" | get-button OK | click
+} -catch {wait 500} -times 30
+
+// Assert the file Main.notation is in conflict
+get-view "Package Explorer" | get-tree 
+    | get-item "Design_EMFCompare  \\[emf-compare-papyrus-egit|Conflicts conflict_add_postprocessor\\]/Main.notation" 
+    | get-property "image.decorations[0].path" | equals "org.eclipse.egit.ui/icons/ovr/conflict.gif" | verify-true
+
+// Open Model Merge Tool
+get-view "Package Explorer" | get-tree 
+    | select "Design_EMFCompare  [emf-compare-papyrus-egit|Conflicts conflict_add_postprocessor]/Main.notation" 
+    | get-menu "Team/Merge Tool" | click
+    
+// Assert their is 4 conflict categories
+with [get-editor "Repository 'emf-compare-papyrus-egit': Merging 'Add IMerger and UMLMerger' into 'refs/heads/conflict_add_postprocessor'" 
+    | get-tree] {
+    get-item "> Conflicts" | get-property childCount | equals 4 | verify-true
+}
+
+// Assert each conflict categories contains 2 conflicts
+with [get-editor "Repository 'emf-compare-papyrus-egit': Merging 'Add IMerger and UMLMerger' into 'refs/heads/conflict_add_postprocessor'" 
+    | get-tree] {
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 1 
+        | get-property caption | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 1 
+        | get-property childCount | equals 2 | verify-true
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 2 
+        | get-property caption | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 2 
+        | get-property childCount | equals 2 | verify-true
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 3 
+        | get-property caption | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 3 
+        | get-property childCount | equals 2 | verify-true
+}
+
+// Verify the conflicts
+with [get-editor "Repository 'emf-compare-papyrus-egit': Merging 'Add IMerger and UMLMerger' into 'refs/heads/conflict_add_postprocessor'" 
+    | get-tree] {
+    get-item "> Conflicts/> Conflict \\[2 out of 2 conflicts unresolved\\]/Shape <Port> \\[coordinates change\\]" 
+        | get-property caption | equals "Shape <Port> [coordinates change]" | verify-true
+    get-item "> Conflicts/> Conflict \\[2 out of 2 conflicts unresolved\\]" 
+        | get-item "Shape <Port> \\[coordinates change\\]" -index 1 | get-property caption 
+        | equals "Shape <Port> [coordinates change]" | verify-true
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 1 
+        | get-item "Shape <Component> \\[coordinates change\\]" | get-property caption 
+        | equals "Shape <Component> [coordinates change]" | verify-true
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 1 
+        | get-item "Shape <Component> \\[coordinates change\\]" -index 1 | get-property caption 
+        | equals "Shape <Component> [coordinates change]" | verify-true
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 2 
+        | get-item "197 \\[width changed\\]" | get-property caption | equals "197 [width changed]" | verify-true
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 2 
+        | get-item "195 \\[width changed\\]" | get-property caption | equals "195 [width changed]" | verify-true
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 3 
+        | get-item "145 \\[height changed\\]" | get-property caption | equals "145 [height changed]" | verify-true
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 3 
+        | get-item "285 \\[height changed\\]" | get-property caption | equals "285 [height changed]" | verify-true
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

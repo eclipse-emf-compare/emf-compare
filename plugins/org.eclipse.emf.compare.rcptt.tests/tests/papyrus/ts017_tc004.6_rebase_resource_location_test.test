@@ -1,0 +1,74 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_Lp3WkHMdEeW_bZHq03AR-A,_d_GLMHDdEeWhSZQCADl_Kg
+Element-Name: ts017_tc004.6_rebase_resource_location_test
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _aprXQHM9EeWJlLI5frq0hw
+Runtime-Version: 2.0.0.201506120617
+Save-Time: 10/16/15 11:45 AM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate the hability to merge a ResourceLocationChange. 
+- The initial state of the repository is a model with a resource controlled (the original model contains a diagram and the controlled resource contains uml elements and diagrams)
+- On a second branch, a new element is added in the controlled resource (and in all the diagrams)
+- On another branch based on the first one, the controlled resource is uncontrolled.
+
+TEST STEPS
+	1) Checkout the branch branch2
+	2) Select the project, right-click and rebase on branch3
+	// Assert that the result contains the new uml element
+	// Assert that the controlled resource has been uncontrolled the result fragment has been renamed
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Project Explorer" | get-tree] {
+    select "papyrus  [emf-compare-papyrus-egit branch1]" | get-menu "Team/Switch To/branch3" | click
+    select "papyrus  [emf-compare-papyrus-egit branch3]" | get-menu "Team/Rebase..." | click
+}
+with [get-window "Rebase 'branch3'"] {
+    get-tree | select "Local/branch2 9ca073f Commit 2"
+    get-button "Rebase" | click
+}
+
+try -command {
+get-window "Rebase Result" | get-label "Rebase finished successfully" | get-property caption 
+    | equals "Rebase finished successfully" | verify-true
+get-window "Rebase Result" | get-button OK | click
+} -catch {wait 500} -times 30
+
+with [get-view "Project Explorer" | get-tree] {
+    get-item "papyrus  \\[emf-compare-papyrus-egit branch3\\]" | get-property childCount | equals 1 | verify-true
+    get-item "papyrus  \\[emf-compare-papyrus-egit branch3\\]/model" | get-property caption | equals model | verify-true
+}
+get-view "Project Explorer" | get-tree | select "papyrus  \\[emf-compare-papyrus-egit branch3\\]/model" | double-click
+with [get-view "Model Explorer" | get-tree] {
+    get-item "root/Diagram NewPackageDiagram" | click
+    get-item "root/Diagram NewPackageDiagram" | click
+    select "root/Diagram NewPackageDiagram" | double-click
+}
+
+try -command {
+with [get-editor "model.di" | get-diagram -index 1 | get-edit-part -name root | get-edit-part -name Package2] {
+    get-edit-part -text Package2 | get-property text | equals Package2 | verify-true
+    get-edit-part -className PackagePackageableElementCompartmentEditPart | get-edit-part -name Class2 | get-edit-part 
+        -text Class2 | get-property text | equals Class2 | verify-true
+}
+with [get-view "Model Explorer" | get-tree] {
+    get-item "root/Package2/Diagram ClassDiagramP2" | click
+    get-item "root/Package2/Diagram ClassDiagramP2" | click
+    select "root/Package2/Diagram ClassDiagramP2" | double-click
+}
+with [get-editor "model.di" | get-diagram -index 1 | get-edit-part -name Package2] {
+    get-edit-part -name Class1 | get-edit-part -text Class1 | get-property text | equals Class1 | verify-true
+    get-edit-part -name Class2 | get-edit-part -text Class2 | get-property text | equals Class2 | verify-true
+}
+} -catch {wait 500} -times 30
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

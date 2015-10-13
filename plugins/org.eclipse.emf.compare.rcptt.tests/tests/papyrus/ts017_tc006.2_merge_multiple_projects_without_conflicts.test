@@ -1,0 +1,102 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_iRDjwHJKEeW0UJaeREW8jA,_d_GLMHDdEeWhSZQCADl_Kg
+Element-Name: ts017_tc006.2_merge_multiple_projects_without_conflicts
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _R-yVsHJ3EeW0UJaeREW8jA
+Runtime-Version: 2.0.0.201506120617
+Save-Time: 10/16/15 10:18 AM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate the hability to merge two branch containing a papyrus diagram splited in multiple projects inside the workspace.
+
+TEST STEPS
+	1) Checkout the branch extract_jgit_newproject
+	2) Import the projects Design_EGit and Design_JGit in the workspace
+	3) Select the project Design_EMFCompare, right-click and merge with branch add_merge_strategy
+	// Assert that the three project are present in the workspace
+	// Assert that the packages EGit and JGit have been controlled in their own resource
+	// Assert that the element  ThreeWayMergeStrategy has been added in the diagram EGit components
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+// checkout branch add_merge_strategy and import new project in the workspace
+get-view "Project Explorer" | get-tree | select "Design_EMFCompare  [emf-compare-papyrus-egit uml2]" 
+    | get-menu "Team/Switch To/extract_jgit_newproject" | click
+get-button Papyrus | click
+get-button Git | click
+get-view "Git Repositories" | get-tree 
+    | select "(> )?emf-compare-papyrus-egit .*" 
+    | get-menu "Import Projects..." | click
+get-window "Import Projects from Git Repository .*" 
+    | get-button "Next >" | click
+get-window "Import Projects from Git Repository .*" 
+    | get-button Finish | click
+get-button "Open Perspective" | click
+with [get-window "Open Perspective"] {
+    get-table | select "Java"
+    get-button OK | click
+}
+
+// assert the presence of the three projects
+with [get-view "Package Explorer" | get-tree] {
+    get-item "Design_EGit  \\[emf-compare-papyrus-egit extract_jgit_newproject\\]" | get-property caption 
+        | equals "Design_EGit  [emf-compare-papyrus-egit extract_jgit_newproject]" | verify-true
+    get-item "Design_EMFCompare  \\[emf-compare-papyrus-egit extract_jgit_newproject\\]" | get-property caption 
+        | equals "Design_EMFCompare  [emf-compare-papyrus-egit extract_jgit_newproject]" | verify-true
+        get-item "Design_JGit  \\[emf-compare-papyrus-egit extract_jgit_newproject\\]" | get-property caption 
+        | equals "Design_JGit  [emf-compare-papyrus-egit extract_jgit_newproject]" | verify-true
+}
+
+// TODO FIXME : the merge explode with an error Java Heap Size. The test have been run in a Eclipse with 2048 or 3072Mo of RAM
+
+
+////merge with branch extract_jgit_newproject
+//get-view "Package Explorer" | get-tree | select "Design_EMFCompare  [emf-compare-papyrus-egit extract_jgit_newproject]" 
+//    | get-menu "Team/Merge..." | click
+//with [get-window "Merge 'extract_jgit_newproject'"] {
+//    get-tree | select "Local/add_merge_strategy 0593b78 Add StrategyOneSided in JGit"
+//    get-button "Merge" | click
+//}
+//
+//try -command {
+//get-window "Merge Result" | get-editbox -after [get-label "Result"] | get-property text | equals Merged | verify-true
+//get-window "Merge Result" | get-button OK | click
+//} -catch {wait 500} -times 30
+//
+//get-button Java | click
+//get-button Git | click
+//
+//// assert presence of image decorator on controlled resources
+//get-view "Project Explorer" | get-tree 
+//    | select "Design_EMFCompare  \\[emf-compare-papyrus-egit extract_jgit_newproject\\]/Main" | double-click
+//with [get-view "Model Explorer" | get-tree] {
+//    get-item "RootElement/EGit" | get-property caption | equals EGit | verify-true
+//    get-item "RootElement/EGit" | get-property "image.decorations[0].path" 
+//        | equals "org.eclipse.emf.edit/icons/full/ovr16/ControlledObject.gif" | verify-true
+//}
+//with [get-view "Model Explorer" | get-tree] {
+//    get-item "RootElement/EGit/Diagram EGit Components" | click
+//    get-item "RootElement/EGit/Diagram EGit Components" | click
+//    select "RootElement/EGit/Diagram EGit Components" | double-click
+//}
+//
+//// assert addition of element ThreeWayMergeStrategy
+//get-editor "Main.di" | get-diagram -index 1 | get-edit-part -name EGit | get-edit-part -name ThreeWayMergeStrategy 
+//    | get-edit-part -name ThreeWayMergeStrategy | get-property text | equals ThreeWayMergeStrategy | verify-true
+//with [get-view "Model Explorer" | get-tree] {
+//    get-item "RootElement/JGit" | get-property caption | equals JGit | verify-true
+//    get-item "RootElement/JGit" | get-property "image.decorations[0].path" 
+//        | equals "org.eclipse.emf.edit/icons/full/ovr16/ControlledObject.gif" | verify-true
+//    get-item "RootElement/JGit/jgit/merge/StrategyOneSided" | get-property caption | equals StrategyOneSided 
+//        | verify-true
+//}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

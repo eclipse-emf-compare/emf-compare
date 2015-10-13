@@ -1,20 +1,20 @@
---- Q7 testcase ---
+--- RCPTT testcase ---
 Format-Version: 1.0
-Q7-vendor: www.xored.com/q7
 Element-Name: TestSuite.Full
 Element-Type: testsuite
 Element-Version: 2.0
 Id: _jqSFAGrzEeK_JdLra2Bk5A
-Q7-Runtime-Version: 1.3.13.201408151228
-Save-Time: 10/15/14 10:47 AM
+Runtime-Version: 2.0.0.201506120617
+Save-Time: 10/19/15 4:19 PM
 
 ------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8
 Content-Type: text/testcase
 Entry-Name: testcase-items
 
-_aeNHoepCEeKqnKrf0It1WQ	// kind: 'suite' name: 'ts010-diagram' path: 'tests/ts010-diagram.suite'
-_v7KfMO1eEeOGobrROiM5Sw	// kind: 'suite' name: 'ts003-filters-uml' path: 'tests/ts003-filters-uml.suite'
+_aeNHoepCEeKqnKrf0It1WQ	// kind: 'suite' name: 'ts010_diagram' path: 'tests/ts010_diagram.suite'
+_v7KfMO1eEeOGobrROiM5Sw	// kind: 'suite' name: 'ts003_filters-uml' path: 'tests/ts003_filters-uml.suite'
 _ehdoce1eEeOGobrROiM5Sw	// kind: 'suite' name: 'TestSuite.Core' path: 'TestSuite.Core.suite'
-_LFYlcFREEeSkU9qpHBB-2g	// kind: 'suite' name: 'ts012_profile' path: 'tests/ts012_profile.suite'
+_LFYlcFREEeSkU9qpHBB-2g	// kind: 'suite' name: 'ts013_profile' path: 'tests/ts013_profile.suite'
+_IpyRIHD2EeWm0qH5utCWQg	// kind: 'suite' name: 'ts017_papyrus' path: 'tests/ts017_papyrus.suite'
 
 ------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8--

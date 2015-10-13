@@ -1,0 +1,724 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Context-Type: org.eclipse.rcptt.ctx.workspace
+Element-Name: ts017_tc004_WorkspaceContext
+Element-Type: context
+Element-Version: 2.0
+Id: _Lp3WkHMdEeW_bZHq03AR-A
+Runtime-Version: 2.0.0.201506120617
+Save-Time: 10/15/15 11:18 AM
+
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/77/04b500c4cf1a9caec718128b30d8f6cbb490f9-fb1be975-7a6e-30f0-b4db-3a414dd4cf47
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/77/04b500c4cf1a9caec718128b30d8f6cbb490f9
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAAB7gAR/3icbZDLSsNA
+FIZd5ymG49qZSUNAQyZdSAtqA6ItETclTU6n086NJNr69k4jFBS35/svnH+j3YYk8d1VPj0ZTT6x65Wz
+AmLKgaBtXKusFLBazm9uYVpE+YfRWela1ORkVHbRT3icxJzHEM7a9lmAAnbD4DPGjscjdUZS10nWe2zY
+W/nA/hpC7i8DNlr5HkdTYBOWUk45W5ULGJtVK2D9ekhVOcdqhpWxi/3+xT8+3UsgtjYooHNugCIiJPd1
+c6gltjONBu0wBgxfPmjO7zz/UCC7DrcCtl0tzyoa2PW6St7TfypYmIJdtiiib10eakhQSwcIqDUTE/MA
+AADuAAAAUEsBAhQAFAAICAgAAAAhAKg1ExPzAAAA7gAAAAgACQAAAAAAAAAAAAAAAAAAAC5jb250ZW50
+VVQFAAEAAAAAUEsFBgAAAAABAAEAPwAAADIBAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/77/04b500c4cf1a9caec718128b30d8f6cbb490f9-fb1be975-7a6e-30f0-b4db-3a414dd4cf47--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/model.di-1445907a-79c7-3f52-8b54-5b8668a44a10
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/model.di
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAACzsa/IzVEoSy0qzszP
+s1Uy1DNQUkjNS85PycxLt1UKDXHTtVCyt+OyqcjNtIrw9VQA0XDVRiDVQP15xVZAcVuljJKSAit9/fLy
+cr383HS9/KJ0faAeJX07LgBQSwcIFuttUloAAABnAAAAUEsBAhQAFAAICAgAAAAhABbrbVJaAAAAZwAA
+AAgACQAAAAAAAAAAAAAAAAAAAC5jb250ZW50VVQFAAEAAAAAUEsFBgAAAAABAAEAPwAAAJkAAAAAAA==
+
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/model.di-1445907a-79c7-3f52-8b54-5b8668a44a10--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/pre-applypatch.sample-68141c3d-b4bb-3197-81b7-ec3e015a9a79
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/pre-applypatch.sample
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAB9jzFPwzAQhWf8Kx5p
+1QXSiJUJJCTUFXVHTnqpT419ln2hKYj/jlNasbG+u/u+e4vbpuXQZGcWZoHnAJqsjwPBiRyQu8RRoYIP
+StyfcHRWwRm2lfGct4ROvGdV2hVAe4KNcThFq51Dn8TDFmbtLQ/wlLPd0/qs2rqrw8k47IqXFUdWhyCh
+/qQkyGp1LK5eKRVpHjnsC64cF0eSmNgqXangHjPBBs3zY1klQt31vYtUQMG2pZ660mL23yOVyF+SnueZ
+oIqJ6r8m1dqYNfasdXZ1Jh2jUcqKekK1fN1s3182b81My818+KussFqZG5qo+3dp+fVwVy2fqm/zaH4A
+UEsHCBwlWzn9AAAAjgEAAFBLAQIUABQACAgIAAAAIQAcJVs5/QAAAI4BAAAIAAkAAAAAAAAAAAAAAAAA
+AAAuY29udGVudFVUBQABAAAAAFBLBQYAAAAAAQABAD8AAAA8AQAAAAA=
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/pre-applypatch.sample-68141c3d-b4bb-3197-81b7-ec3e015a9a79--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/pre-rebase.sample-de636904-42ce-398a-9576-ef1536dfd94d
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/pre-rebase.sample
+
+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
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/pre-rebase.sample-de636904-42ce-398a-9576-ef1536dfd94d--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/bf/9abab340f5ecdf972f830c46f57d08d822d01f-ca2aab1f-a05b-3b62-9049-a1a5f595843b
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/bf/9abab340f5ecdf972f830c46f57d08d822d01f
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABaQCW/3icS8rJT1Iw
+NDBmsLGvyM1RKEstKs7Mz7NVMtQzUFJIzUvOT8nMS7dVCg1x07VQsrfjsqnIzbSK8PVUANFw1UYg1UD9
+ecVWQHFbpYySkgIrff3y8nK9/Nx0vfyidH2gHiV9Oy4AsEAjHVBLBwgtSJjObgAAAGkAAABQSwECFAAU
+AAgICAAAACEALUiYzm4AAABpAAAACAAJAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUG
+AAAAAAEAAQA/AAAArQAAAAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/bf/9abab340f5ecdf972f830c46f57d08d822d01f-ca2aab1f-a05b-3b62-9049-a1a5f595843b--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/9c/910f616235ecba6467fd055ace860b3b013f06-64dd3610-d1e2-3f8f-8203-5e96ffd9e941
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/9c/910f616235ecba6467fd055ace860b3b013f06
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABfwOA/HictVfbVuIw
+FJ1nv6KrPk9TigjDEl1eR0dxXOB1XlihhBJNk5KmAn8/adoCtRekzrxB0+x9zt4n6TlDwoZavWX9+HZw
+NHeJ9o64jxnt6DXD1DVEbTbC1OnoD/cX31v60eHOAWUCCvlK+wxDh0NXm7u4vdxmhdskEPXb8nlHnwjh
+tQGYzWYGcx2DcQc8d6+SV2xGx9gJuAJMvYxsgj0fqQ0e9BY88AGmYw7BO0Yzj2EqfJDanmAm8RXCOe4Y
+8IAK7CIgszQskGxJIHyxIGj7cDxGsL0AancCFbikEEiuWaAhIzDBQ/dGV0LiUUcfiOHetX3ZHZ6jp9fe
+9dn+6xvrXzm6JhaeDOsu4pdbTgn0/dgGXaPQlau3aHYH7TfooOWCi6AfcOQiKh4oFhIBzxHRD3c07cCe
+YDLiiCryCH9pcH8CPbQeltmzHwrDskyzqTA3oJ4hm0WO3bJRGr4/Lc66YVr7OvgE/gn0sX3KXA9yEaac
+YrjvOYUMTbO2HyewpTCXfEjfLrt2Pm7drJlL3KriXHL7NyukaJi1vUScL3I8F3G0GrXWWhqShMAFC8Qp
+o77gUJ6APLIbZi+P1joNzdIsZB6pJECSxScTK3FecdaLUpPO19KpqTPs55HcY0FQPznia/Be1h3wScw+
+40LesrmoWT8+i3qBiUC8CDdrANja3BMW0JH/ETkr8380dVp4JqSp1pdNnVaXv8TU6SbxK5o6LZX+K6by
+0uL+16bywktImlr/sqm8uvwlpvJN4lc01d90r1Q21S8t7lxTEVFtxBqFbGLaqg/RtQlH444umyInfMeQ
+K7uDn8eNl5fy4qkYv/zk5pTJXHauZl19TKzWiiabzLaFo3qH50zvsGKolIZCpUWoH6MukD/u9/INeKr/
+aXQv0JNkcOnN62vP+3V9umKoGLVsBLNahOK3LKX9fi1iSGdQdrBEWP+PkARZ5cNuOIct6ndHUZc7sMPb
+ROAhJlgsBvE8omv+CjecacKpBmwIJe6bc8MosCqLph6041b9Uc4IuXD1DFxsC5tRxD/Y3JXdGklMdsM/
+kcP9twYucTg1JK1Bpp4nkS5nhojFI1CMGXfbwCOBgymQY8tyhInnIEPNQcZqDjLiOWgYyGtN7hmhMQyI
+MFKEu4Pm7Mb1bueTcyQ/4u+9Bb5tNSfHSdlEgqrf+UW/vRoH4KPFhzt/AXsL/ABQSwcIuzaMI4QDAAB/
+AwAAUEsBAhQAFAAICAgAAAAhALs2jCOEAwAAfwMAAAgACQAAAAAAAAAAAAAAAAAAAC5jb250ZW50VVQF
+AAEAAAAAUEsFBgAAAAABAAEAPwAAAMMDAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/9c/910f616235ecba6467fd055ace860b3b013f06-64dd3610-d1e2-3f8f-8203-5e96ffd9e941--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/update.sample-7c85f80f-0cc3-307b-95a7-5134c5a81799
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/update.sample
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAACtV1FvIjcQfmZ/xdyC
+woFgSdK35Eh1TdTqHipVbe6pOkVm8bJuFpuuTbi9tv+9n+1d2F04SJSgSDG2Z+abmW9mTPfdZCbkRKdB
+N+jSR0n8K1uuMk6pUo+k41ysDBlFs0zFj5rWkkmpDDN8ToYtNCW5WhKXhudCLiKouGVZhsNZQeFCGMp5
+zMUTH69Y/BjSRpiUWL5YLyGir3CaSLbkpFN2MVbZ3C8k3zg09wqa2QxgTCq0QzSCiJNwO4mwZ4rC9WoO
+SGHkxG6VTMQCi7H7YGEldQRgalNzAAdE91bPTKmMM0maG02blJuU5/uubkSW0YyT04NNIWEaV52enK+U
+FkblRUT0U0FznrB1Zux5QRsl+waiURPLnGfccOg+gcTdQ3i/B+NVIJZqLpLiNAhmrdOSFda2ExIwzhJk
+nuKcMyOUjGpGnToQ4Kjvs5zJOH2u+/42f8sQzLksHPrnQcn5UhmeFaXHhzBBoyi55WEdgQQz+Cu9sOT1
+pAWDl0sm55QJyYOyRqZh7yIMUCM5f8L6MgxQJn79Q1gJ/sESboAu5fFjIBL6k8bfKOz98un+4e7T7yF9
+ubaIZNDhcYqyuXPxyNfSYymr3ZW0BR7XYEQh3ZxdVoL0HsoLtaYNk2bkVrFa2/pdr1YIT2nQGbP6m8LU
+O6cPcOuGPnh/sPDO3Ayqm19BnYsgEUHNjTISIY2V3/DSu+9eyZ6ba80W/OqI1X2jVR5cJ2k3jmnvvW1t
+sTvFRUuV7/SYQbDH9lPS9buDoE3QI9Ltqw3bKN7nGcbFUnDbGU4Jbi8ObOAc+ShROUkFrntSoTkEq1z9
+xWNjt6BRo27HnPoXf/d3DJ3U7oeDIGaa47AmGKKogvCztDyY1yorHNK/FEKkTPlwOKTfvFgdg58YKdO+
+D3BX3s3sd66vA65ZvOWAc8cUK66xAzKWLLOVe45PFEX23wi9ro9adkUj3Mj08cQWSBcF33iupuH5Mz+h
+p/2O0lOsrYoauf3Rg4U29bYCnmnePChTx8zYuT42Ff6B43kZ4aqyRpVBJ+yC3cGZntjJMxmOvHOIcqeL
++ThuDEhs6lTl5qFqWL1/ylW3u9PxH66VrrVrJaR38NLka15zslNL6D16UtvqiHoNqyObF5w3ZwP2alzx
++a5r/owo9G2g7IxDt2Fg01jTl77jsRu7VbezmQUhV2wBCNFOV8meDqLasRxqxM2nx8etpIWPWD0U2/o7
+GYi7aiL6ofwCj4+idBVsIbbzWke5LfYGSjo7I//ce8JTL0c4K07RDaGqnyZyjfl4eXNmrR9ILdzoVyJ9
+uII+Ni/wGBXa6OhAxn51MF4Qg5OpSmGxzfHyUbCNQDVwdtUIqoS9dud1F47k77Z6PbDSwutTWKE/wLS2
+E3tT5iV8eyu8/iXVjrfJ8TNh96w6LHComPbk3sLXltZXOT30eD/KAjJQaTs1XlHaIsgxJOr7P9q7tebk
+fty4gXuF/vco1Ua6gUQqIf/LxzYlRGlXdDhxN5rt3KPbgmtNup+FFDrF29VdOA/+B1BLBwijxKTidgQA
+ABsOAABQSwECFAAUAAgICAAAACEAo8Sk4nYEAAAbDgAACAAJAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRV
+VAUAAQAAAABQSwUGAAAAAAEAAQA/AAAAtQQAAAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/update.sample-7c85f80f-0cc3-307b-95a7-5134c5a81799--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/fragment.notation-599e8721-3c0b-3389-be10-07fd3547f91f
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/fragment.notation
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAC1llFv2jAQx9/7KSLv
+eTikolAEVCqsWleYqlJKtRdkggkGx45sh5B9+jkhoUASysL2hhLf7/6+/5G71t3GpcYaC0k4a4NqxQQG
+ZjafEea0wej14WsD3HWuWowrpPSRZo8gRyDX2LikuQuzojANYrKpn7fBQimvCWEQBBXuOhUuHPg+eEyP
+pKyDc9imxJM4Puu4cyh8poiLoVZUsWAakiKkCikujPeQFwpfQsLmAsE1wYHHCVMSepwSO4RxdIryXVoI
+0u8sWNMKTDga9EF8aTJrgwl6kVXzAY+/4bHL+svli/fjqesAQ4WelvW8za9DuhRJmZQMGAy5+u3+s2cL
+GC5G0hfYxUyNGFE6nGwwBZ0rw2jZC0JnArM48xa+c2K4QB7e00R+j+Xq+2CqNS1fnno3yxUfPu40WabZ
+iJmfUHvY5iL++ZPPDvHvN7IQXzOtWwAv5r8X8Ru1qpnI1wkoCrmvupxJJZB2Ni9Rn9u7ltlPwbIpQq1/
+Jx6m6s+4zD2SxO5y10NCRf4d57ouuk7drNY/rhP3o8xL8EoUxcO0XffQKusEPIM35ELpf3YuMVv7c4gP
+hCosipjZYsO/MvGe+2wmj6nZsv4H8/zCXtfmNS4yzy9X6hPm+acKXdI8v7DMl5i3Lmzcf2neuvBDos27
+vci8dblSnzBvfarQJc0LTn0fSpsXFDZuxjxM44m2h9bDtBnPPmAsBJ63gR7OTnSmot98mRAUTnPGV8ov
+qVmPxJxW2OhNR8+r6MNft7YpDi9wykgV1fwNUT/THvFW8JbdCrZzf7Yd+RM76lpFpoQSFU6SHQoY8oMb
+7WHRJgY/kZIsEbkyaEZGAS1+0ExWlje9K+Xiqhlc4gsPGBZHLj8je4UcnO/z+PpXbZBdnRITtvLi3/kd
+VJLdgsdV61z9AVBLBwgpF4J3qwIAAPwKAABQSwECFAAUAAgICAAAACEAKReCd6sCAAD8CgAACAAJAAAA
+AAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEAAQA/AAAA6gIAAAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/fragment.notation-599e8721-3c0b-3389-be10-07fd3547f91f--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/d3/4a6651d3a24505291588388688eafb361cda9c-ecca7137-fee2-30e0-b8dc-2f0bd10a269b
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/d3/4a6651d3a24505291588388688eafb361cda9c
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABCgH1/nichdBbT4Mw
+GAZgr/kVTe+lBcQYAuxibnFuJGZzwXhjODRY6CkUZfv3dtWQucR42+99n7ZfyWQJboLwKp4dOAOfpNdU
+igR6LoaAiErWVDQJ3D8vr+/gLHXiD86iTNaEgQOn0ZT3sRd4GHvQHDOhIzNM4PswqAihcRxdyRtX9g3S
+ilToJVuhy4JxfxVIxajSxJbMzEehi12M9tkG2ptpncC3XRfSbEnyBcm52LTtVj2u5w0EouAkgb2UA0wd
+AGJVVF3RkHrBCCdisMBwVCZz+s7T9/TMzYPX8G/3J+9b+199zgqtz2xaHMvuISuN3W7X97dtJ3erybZp
+DyL7bHQhm/Wjaf+p8wUR8ZAGUEsHCMdA6cYPAQAACgEAAFBLAQIUABQACAgIAAAAIQDHQOnGDwEAAAoB
+AAAIAAkAAAAAAAAAAAAAAAAAAAAuY29udGVudFVUBQABAAAAAFBLBQYAAAAAAQABAD8AAABOAQAAAAA=
+
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/d3/4a6651d3a24505291588388688eafb361cda9c-ecca7137-fee2-30e0-b8dc-2f0bd10a269b--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/index-6757b755-6c37-3a3a-8ece-9951ab63d37b
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/index
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAABz8QxyZmBgYAJi9jD5
+jDYgzQCjGRkYWBhmBKgzMDQuAfK+AoVEgPjEy7UtE++VpM4xecN34XnZ6a7b0wUVGAQKEgsqi0qL9fUK
+ivKzUpNLGOAgTD7vHQMKAJmHAPtn7drs8PXN/en6zTxuX2s5bihdkGcQhpmXVpSYnpuaV6KXkolqCEFz
+XVW15jhfD7Yzms0rs//Tuxm8QcFbGCQxzM3LL0ksyczPI9rcfxN07m55V5efOf92V/jTFN2Nl09IM4hg
+mFuamwMzL1cQmYaEa+ADtHBNxxoO8HDNzU9JzUEJBELuPOxrsMtiRZHo2h7JoM1PF6yeo3d3FYMYqnkY
+nifC3HKWrQxHzkvNWXdcQqjb4Ma301sm/GQQRDUX5HnjqDapQPlSEbX/Tqo8jyqEP5a0iQMAUEsHCHwD
+mSAzAQAAcAIAAFBLAQIUABQACAgIAAAAIQB8A5kgMwEAAHACAAAIAAkAAAAAAAAAAAAAAAAAAAAuY29u
+dGVudFVUBQABAAAAAFBLBQYAAAAAAQABAD8AAAByAQAAAAA=
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/index-6757b755-6c37-3a3a-8ece-9951ab63d37b--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/00/db6c9266e5cb85d735dd35386299eb978b2b11-6c78a1a9-5387-3fa9-af60-f5b2795f7e47
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/00/db6c9266e5cb85d735dd35386299eb978b2b11
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABrABT/3icnY5BCsIw
+FERd5xR/L5SmqbEBEaEewQv8/vyaYNJImuL11erGrat5DDPMUIrRF2i03JTMDKPWrDQzqoaMJYmjsd3Y
+kJI7Y/bUDVIxaUMCl+JShkiYCy4WDhGL87xUX+OUBk4VpXgE2bZtZ4xRGrZ1U9eC1tHCf9ZF/zkthbg4
+hpgsB6A0FfTTDLhiTiGwhTvSDa8MD+fJ/WQCzi+dLKDo33z2eM0Yn0tPWNJQSwcIWm3sM7EAAACsAAAA
+UEsBAhQAFAAICAgAAAAhAFpt7DOxAAAArAAAAAgACQAAAAAAAAAAAAAAAAAAAC5jb250ZW50VVQFAAEA
+AAAAUEsFBgAAAAABAAEAPwAAAPAAAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/00/db6c9266e5cb85d735dd35386299eb978b2b11-6c78a1a9-5387-3fa9-af60-f5b2795f7e47--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/d0/2d1d844b53eb31adeb65e1d423f0828689da69-80779247-ca5a-3ff6-bac5-8e3f49ecf51f
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/d0/2d1d844b53eb31adeb65e1d423f0828689da69
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABWgOl/HictVhRU+Iw
+GLxnf0Wn93ykwCHIgM6JeiJw44gI3gsTSoRgm9QmpfR+/aWBItKmaitvTJvst9n9miWZWHSi/ayWKt8a
+Zyvb0pbIZZiSpl4sGLqGiEmnmMya+uD+6kdNPzs9ahDKIRdD6hcYzlxoaysb17fTSuE0AURYXTxv6nPO
+nToAvu8XqD0rUHcGRr12NCTCejMOmRZ2GJJjZ/YTcD3CsY2AYFQogWhKBMF4YCHlfAc6gesxgMmTC8ES
+I9+hmHAGHGphMwBydgTl2ZYSSLwrgYpgYIBBr6vLReNpUx/DO1Y0rtDwEg1t0l0s7pybTmumazxwBK3b
+dX0xpWVBxjaS6RqBtni7++y2pGs2gsxzkY0IHxDMxXS8QpZ+eqRpDXOOramLiKy8Bt860Z9DB+1wwv+G
+7Pm6NxGcFnedi+PFM+23t5xKhlGTmO+gXiCTuvLnHzp9Cz86Zkr4ilE60UFu/JEKv1YpGhv6ooAFA+rx
+FiWMu1A4m1SoS81ty+yWIPESgeC/JQ8i9h9YzDlk2GxR24EuD/3br1VWLadqFKuvy5H9yJIK3GNuoX7U
+rjvQPO4E+ABen7pcfNmJiHHtP4J4hS2OXBVmXGzwKRPPqUembB81LusBzPOUvS7Mq+Uyz8smdYp5XprQ
+Gc3zlDLnMW+pbNyvNG+p3EiEeSe5zFtmkzrFvGWa0BnN89P2h8zm+crGjZmHLJloO9AiTOsy+3Rt7qKn
+pi7CeRaOKYg338cYBpOE+IrwM3IWkZjQCivxT0fkVbjxV0vrEm8X8Kngbb/M+eV1zzxQ8LZf8KCthM8f
+vBJ/pML/kuCVJUi8xCGCV9Yqq5aTK3hD6Ju4Ezk+f4kY1z7X5y8x42Ln/PwlalzWA5jXUfZ6ruCV0Nmk
+TjGvkyZ0RvM6SpnzmNdVNu5XmtdVbiS5gldCZ5M6xbxumtAZzeul7Q+ZzespGzd/8P7+VXl8VDdHRs4i
+EhNaQQRv2aisg9dIDN4UI3mo+QO0vFh7yOP4Q/w4vj5wT9dn7bEZdi3HE2xhHow3lxe6xl5xwwuQ8AoE
+vENlc3pPpGHFaCjQ5IP65q7gASM/Ea4Yg9v4Qn2C3D2Xb6H5DGco2edh+W+lF7+z2Jiwpid/J3dQRuwG
+2Fft9Og/VwoxrFBLBwh3SCzPXwMAAFoDAABQSwECFAAUAAgICAAAACEAd0gsz18DAABaAwAACAAJAAAA
+AAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEAAQA/AAAAngMAAAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/d0/2d1d844b53eb31adeb65e1d423f0828689da69-80779247-ca5a-3ff6-bac5-8e3f49ecf51f--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/f6/6e36eea32c9dc1af9d8f2c315997c8b13ec69c-6db46b11-c72c-3789-9614-8a78c8037bf6
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/f6/6e36eea32c9dc1af9d8f2c315997c8b13ec69c
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABMQDO/3icKylKTVUw
+NmEwMQAChYLEgsqi0mKGyS4zZnH0/J8bI8g241HdWa4X8usiACrpD+hQSwcIiLbsVzYAAAAxAAAAUEsB
+AhQAFAAICAgAAAAhAIi27Fc2AAAAMQAAAAgACQAAAAAAAAAAAAAAAAAAAC5jb250ZW50VVQFAAEAAAAA
+UEsFBgAAAAABAAEAPwAAAHUAAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/f6/6e36eea32c9dc1af9d8f2c315997c8b13ec69c-6db46b11-c72c-3789-9614-8a78c8037bf6--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/da/c79456e8eada118b78ba23d63a84b7fda031f7-8f302ba1-cec7-3949-8f29-4b6ee6657d41
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/da/c79456e8eada118b78ba23d63a84b7fda031f7
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABqANX/HicvVjbctow
+EO1zvsLjPtcyJFzKQDpt0kzbhDQDuU1fGGGEUSJLjixj3K+vLGwHYluhJu0Tg+w9u9qze3ZhStjUODpq
+Hb7rf1p5xFgiHmBGB2bDsk0DUYfNMHUH5s312Yeu+en4oL/ycO9++N1IPvO3m8nb0p4GPXk+MBdC+D0A
+oiiymOdajLtA2mSvOIzOsRtyKJTxxsvIIdgPkDLwoR/zMACYzjkES4win2EqArBlnmFSJvRwrjcHPKQC
+ewjIy1lNkJlkEIGICfr7cHxGsBMDZZ1BhR6pBJLPmqAlI7DBzfDCPD4wjH4WSu8UQ5dDT2UXzwbmREyP
+zp1vw+lXdPcwOj9tPzyy8XfXNETsy1iv1kFJnBMCgyC1Ng0KPfn0EkVX0HmELsofeAgGIUceouKGYiER
+8AoRFYQMw1lgMuOIKvdrD3lk4wX01f2ywOyRc1MZWNO2OynqK7inyGFrKi/ZbNvB+Kn65i272TbBTh6+
+wAA7J8zzIRfJxbd8XI/cSh8du9HOLyGdKIqDMhfXWBA0zipgE/y+AA42EAmMWShOGA0Eh7KaSsNnIZ0F
+L3FpNW4fZNnITxBRlG/AyyrspcVhGguO5gPTk/knlnzwfnJ3+Ks1PEN30oVHLx4eRv6P85NNFzUDlyVT
+TIixGpjdpmnEA7PdyHy8vIQm+WPBpUbdQhIWKUi6p8Tjuj9m666YOEltCDzFBIt4koqaaQTPuIkeJooI
+Xg0m7bTSQCo5K+Kpg17a3rdSbEoBDwuAOUEsooi/4HuYEFzC9vixhbVsbynuBujWeRZtrjVrPz6BYs64
+1wM+CV1MgdTAXA9TUbWUqFrPomqlojoNMRHSZobmMCTC2nL4ftKJLjz/crX4in4+fVuOYnzZ7Sw+P5fQ
+Oq3pt/IeqJOTPnhJ9ysiDkdBwy6C7STim2dXzbdUcPz7LnjUKXh3TwXHv+/bgU7BP+6o4HoPJf29tu+2
+Grb5l2p7wZx8Kdh0UuzdRK9aWtWtOZSUv2JrPw+lzh5DKQEXRU7ATohjxmU3uqWY+kFXjXkmOxzxKlTN
+mKs7hRRuMb3/iMhQt1109yQyrJt0DZGhPuU1iQw1Cd+HyKWmlN+WyGWlzEgiP+5J5LJu0jVELvUpr0lk
+pNeO2kRGmlLeeaFVs7JkmGMYT0sm3Z7rrJqf5etsQ462ZD50mm+7z6pF4ra4SPz3fVYFQqpWxhr7rAJs
+FAC1+2zd3y87LYb1wMtWwz5I/zM5PvgDhKLS7lBLBwj0jc7CrQMAAKgDAABQSwECFAAUAAgICAAAACEA
+9I3Owq0DAACoAwAACAAJAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEAAQA/
+AAAA7AMAAAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/da/c79456e8eada118b78ba23d63a84b7fda031f7-8f302ba1-cec7-3949-8f29-4b6ee6657d41--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/config-a3d20189-9d28-33c8-9c4a-cefb7ff73e76
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/config
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAABNzc0NwjAMBeBzMkVH
+YAEmQRxM+lJZcuLITip1e8wFOH7S+3kUNTxzMgx1nmpXVWs0T5iz9u2+3XKqLGi6IzRtIacX2QeVxEOi
+B4kY6ho7Tfg3xkeP9UL+a46wtvjC6lz+Nt9QSwcIZQbygmMAAACJAAAAUEsBAhQAFAAICAgAAAAhAGUG
+8oJjAAAAiQAAAAgACQAAAAAAAAAAAAAAAAAAAC5jb250ZW50VVQFAAEAAAAAUEsFBgAAAAABAAEAPwAA
+AKIAAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/config-a3d20189-9d28-33c8-9c4a-cefb7ff73e76--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/logs/HEAD-18220bc8-a490-31b1-8ecf-3ce3ab59c226
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/logs/HEAD
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAADFk9tKxDAURZ/tV+RR
+EYZzcj+DiOCX5FZbNA3U1O+34mgVZMg8FPO4CezF2glA22EA0etAXOukgrcqGqFiFEpYzYmSJ2M994gs
+BzdXt0R2l10dxrQcTsFD8akcQsn3DKWUloiEZrfAAa7WNI+VXY/TWEf3cnNkj58Jds3FuxBa9UU4pPBc
+lnpkubyN0xPr55JZdq81zawW5mc3heE/celjJ3sW9wS58fJ2XgoOjOhjQO1QuYRBJyk5WfSAugfTR22C
+1BfxEvx6AN+z8665bg+PCLzBI988inaPCSChQ2vUelkapchEiFZG7p0QYQUIkTiPF/EK+7dH0TXX7eFR
+bfue8Sh+/p93UEsHCOxnnasGAQAAkQQAAFBLAQIUABQACAgIAAAAIQDsZ52rBgEAAJEEAAAIAAkAAAAA
+AAAAAAAAAAAAAAAuY29udGVudFVUBQABAAAAAFBLBQYAAAAAAQABAD8AAABFAQAAAAA=
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/logs/HEAD-18220bc8-a490-31b1-8ecf-3ce3ab59c226--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/description-06ebd51d-4983-3311-b994-6c16ffe49fb9
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/description
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAALzctLzE1NUShKLcgv
+zizJL6q0VkhNySxRKMnILFZIy8xJVVBPSS1OLsosKMnMz1NXKMlXAOkAyqciadLjAgBQSwcIN4sHHz8A
+AABJAAAAUEsBAhQAFAAICAgAAAAhADeLBx8/AAAASQAAAAgACQAAAAAAAAAAAAAAAAAAAC5jb250ZW50
+VVQFAAEAAAAAUEsFBgAAAAABAAEAPwAAAH4AAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/description-06ebd51d-4983-3311-b994-6c16ffe49fb9--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/45/252a9c43d7533e329b0d1cbff2ee980d5253b4-990a08f4-609a-35cf-940a-d8cea487c2b9
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/45/252a9c43d7533e329b0d1cbff2ee980d5253b4
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABugJF/XictZZRb9ow
+EMf3zKeIvOfhkIqWIqBSYdW6woRKW9BekAkmmDp2ZDuE9NPPCQmlJKEsbG8o8f3u7/sfuZtRPjOsRs36
+0rrZuNRYYyEJZ21Qq5rAwMzmc8KcNnh+uvvWADedSotxhZQ+0uwR5AjkGhuXNHdhVhSmQUw29fM2WCrl
+NSEMgqDKXafKhQMng/v0SMr6cA7blHgSx2cddwGFzxRxMdSKqhZMQ1KEVCHFhfEe8kLhS0jYQiC4Jjjw
+OGFKQo9TYocwjk5RvksLQfqdBetagQmfB30QX5rM22CKHmXNvMPj73jssv5q9ej9fOg6wFChp2UNt/l1
+SJciKZOSAYMhV7/dfza0gOFiJH2BXczUMyNKh5MNpqBTMYyWvSR0LjCLM2/hOydGS+ThPU3kbSxffwxm
+WtPq8aF3uXrlo/udJss0GzHzE2oP21zEP3/x+Uf85FIW4uumdQ3g2fxJEb9Rr5mJfJ2AopD7qsuZVAJp
+Z/MS9bm9a5n9FCybItT6d+Jhqv6Ey9wiSewudz0kVOTfYa6LoutcmbWr9+vE/SjzEjwRRfEobdc9tMo6
+AU/gjbhQ+p+dS8zW/hTiHaEKiyJmttjwr0y85T6by0Nqtqz/wTy/sNe1eY2zzPPLlfqIef6xQpc0zy8s
+8znmrQsb91+aty78kGjzrs8yb12u1EfMWx8rdEnzgmPfh9LmBYWNmzEP03ii7aH1MG3Gsw8YS4EXbaCH
+sxOdqeo3X6cEhbOc8ZXyS2rWIzGnFTZ609HzKvrwX1nbFB8vcMxIFdX8BVE/0x7xVvCS3Qq2c3++HflT
+O+paRWaEEhVOkx0KGPKdG+1h0SYGP5GSLBG5MmhGRgEtftBMVpYXvSvl4moZXOILDxgWBy4Pkf2KHJzv
+8/jid32QXZ0SE7by4t/5HVSS3YKHVetU/gAV/LdwUEsHCJpItU2/AgAAugIAAFBLAQIUABQACAgIAAAA
+IQCaSLVNvwIAALoCAAAIAAkAAAAAAAAAAAAAAAAAAAAuY29udGVudFVUBQABAAAAAFBLBQYAAAAAAQAB
+AD8AAAD+AgAAAAA=
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/45/252a9c43d7533e329b0d1cbff2ee980d5253b4-990a08f4-609a-35cf-940a-d8cea487c2b9--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/93/44989a088cff9d5c110698e27ecd0ae81fae58-b777b1ee-ab49-397a-8126-d86224aebd53
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/93/44989a088cff9d5c110698e27ecd0ae81fae58
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAAB0gAt/3icKylKTVUw
+MjdlMDQwMDMxUdArKMrPSk0uYXi5tmXivZLUOSZv+C48LzvddXu6oAJUTVpRYnpual6JXkomw/5ZuzY7
+fH1zf7p+M4/b11qOG0oX5NGV5eWXJJZk5ucxuKpqzXG+HmxnNJtXZv+ndzN4g4K3oCsuzc1h+DdB5+6W
+d3X5mfNvd4U/TdHdePmENFRdbn5Kag4BiyFq4LYe9jXYZbGiSHRtj2TQ5qcLVs/Ru7sKRSXIynKWrQxH
+zkvNWXdcQqjb4Ma301sm/AQAQtF0/lBLBwhtCuvj1wAAANIAAABQSwECFAAUAAgICAAAACEAbQrr49cA
+AADSAAAACAAJAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEAAQA/AAAAFgEA
+AAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/93/44989a088cff9d5c110698e27ecd0ae81fae58-b777b1ee-ab49-397a-8126-d86224aebd53--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/82/424bf12e8ecc5a1bc9cf6e72a7babec9a1a28b-b8c3da43-a29b-3592-916a-646bf8f1746c
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/82/424bf12e8ecc5a1bc9cf6e72a7babec9a1a28b
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABAwH8/nicnZBLT8JA
+FIVd91dM7t7OTLFqmrbEIAhCE4OSihvTx6S2nVeYKvDvHaoh6MKFy3vPOd995Fzl6IJenYXDneDog21M
+rWQE1CWAmCxUWcsqgtXT5PwahrETvgsePGRFm1UM7UQdHBMeoQNKCAXb5tIEVozgret0gPF2u3WVqFy1
+qbDRrMDPyQz/DljyjwAreK0N60NW87DvEpfgVbKAfnJdRvCaDl78ZMLSMUuFXDTNUt/PRxUgmQkWwfei
+HsQOQqH+qsoxZ4LJrod0e219h6NGPDPmhFxn+7ydJrklN8v57WXTqsfZkdy7KeB/gO9u/PV6mhR/gL0D
+OMQnv46dT/+sibRQSwcIKAHgKQgBAAADAQAAUEsBAhQAFAAICAgAAAAhACgB4CkIAQAAAwEAAAgACQAA
+AAAAAAAAAAAAAAAAAC5jb250ZW50VVQFAAEAAAAAUEsFBgAAAAABAAEAPwAAAEcBAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/82/424bf12e8ecc5a1bc9cf6e72a7babec9a1a28b-b8c3da43-a29b-3592-916a-646bf8f1746c--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/refs/heads/branch2-70b5211c-4d0f-3202-99c9-148292da6e0b
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/refs/heads/branch2
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAAFwUEBACAIA8C/aZji
+kDiI0D+Cd54htvolGNhRSJbq9IMrYIv1o6VyfFBLBwiDkZjXKQAAACkAAABQSwECFAAUAAgICAAAACEA
+g5GY1ykAAAApAAAACAAJAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEAAQA/
+AAAAaAAAAAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/refs/heads/branch2-70b5211c-4d0f-3202-99c9-148292da6e0b--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/refs/heads/branch3-cf47fa17-e744-322a-a68e-23f4746d0c4e
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/refs/heads/branch3
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAAFwUEBACAIA8C/aXAO
+gTjq6F/BuzbreWaGFzbDvUKmpHDPWo/kUwEaH1BLBwhVJzVxKQAAACkAAABQSwECFAAUAAgICAAAACEA
+VSc1cSkAAAApAAAACAAJAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEAAQA/
+AAAAaAAAAAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/refs/heads/branch3-cf47fa17-e744-322a-a68e-23f4746d0c4e--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/refs/heads/branch1-72fa877d-3c40-307c-886b-9bf97599780a
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/refs/heads/branch1
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAAFwccRADAIA7B/pqEc
+bR1j9l8hkgiRO5Z5sehgeZAe3mkzh6mGQfV9UEsHCNsijpIoAAAAKQAAAFBLAQIUABQACAgIAAAAIQDb
+Io6SKAAAACkAAAAIAAkAAAAAAAAAAAAAAAAAAAAuY29udGVudFVUBQABAAAAAFBLBQYAAAAAAQABAD8A
+AABnAAAAAAA=
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/refs/heads/branch1-72fa877d-3c40-307c-886b-9bf97599780a--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/fragment.di-58b24bba-e8d4-305a-89ea-2b38515e740b
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/fragment.di
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAACzsa/IzVEoSy0qzszP
+s1Uy1DNQUkjNS85PycxLt1UKDXHTtVCyt+OyqcjNtIrw9VQA0XDVRiDVQP15xVZAcVuljJKSAit9/fLy
+cr383HS9/KJ0faAeJX07LgBQSwcIFuttUloAAABnAAAAUEsBAhQAFAAICAgAAAAhABbrbVJaAAAAZwAA
+AAgACQAAAAAAAAAAAAAAAAAAAC5jb250ZW50VVQFAAEAAAAAUEsFBgAAAAABAAEAPwAAAJkAAAAAAA==
+
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/fragment.di-58b24bba-e8d4-305a-89ea-2b38515e740b--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/pre-push.sample-fa62f179-ae1e-3d68-8d4c-a70b8bad3bf2
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/pre-push.sample
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAACNVGFr2zAQ/Rz9ipsT
+1g2atCn7VJbCKIwVRhljZR/Gtsr2ORKVJU+S67a/fneSnaRjsBVCZenu3XvvTpq/OCm1PQlKiDm8s4AP
+su0MgnLuDkLldRchOrhHr5tHGJSMoAPI0vVpv0To+qCwXgFcSmOwhvIRiq2OBMcnBcgmogcdQckAlcLq
+joKiQvDYuogQoox9OIaSEEtsnEeQ9jEqbbcppUS0I1gqc9VQNnEYyeGDjgEGHRVIsM4un9C7EZS+M86g
+jTngKuYE+IVBkkz6X2XuCYa5Nc4YN3BqJ71skSSE85S2WMNyCde0B6451EFuDEpXOZ8LMW6JjFE7i5x6
+xqk3nz/+O5aiSSefZPpRseF94C+SSdXrXV3lAlnmt32LNlmRteKvXpos9cqSra2M2tmpdVS3cm2bvEtM
+JPmeGWSTmFHou85oWlMbjLYYiDjBcTIZbGvpKcx2hKftaJtvs00Ab40jV4llczGtg5Jr+hiJ55NpCvho
+35eQpzAoN3CTBnas83hPCrNf5P2eP3pM5Y3bQoshyG0i6GMgvNTT4uvVpwJeDc7fMdfOu62nwNcrITKB
+TbFYF6L3hhZnhRBPb043p//5JwRZaFiQrCEp/UnaxhUJGzuVNscl7YraiZlu4BsUi11oARtYUG34Lmak
+yIrZbA4fyGqCr9HQHNLOuZihCbwa0/egh/kTACFc4wCll7ZSx+mGUy+BJn6ykIPodMsu7KnQ7liGEG66
+WuYhpwsXIs/Jn4CWivwFcE9utXqO3miR9F3yo8CzA9SlEYIO8mJzS48J2Xa/NFQXlhb4AlL3Ojj6QfFH
+rJ9LFbeTIRRTLHJ28cwIrJSDi5dnULx3va0PyvFQLHatO+aHY7p9RcqkVwbWmTP/0i0VafdU/AZQSwcI
+BNiPsZ0CAABEBQAAUEsBAhQAFAAICAgAAAAhAATYj7GdAgAARAUAAAgACQAAAAAAAAAAAAAAAAAAAC5j
+b250ZW50VVQFAAEAAAAAUEsFBgAAAAABAAEAPwAAANwCAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/pre-push.sample-fa62f179-ae1e-3d68-8d4c-a70b8bad3bf2--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/e1/dcf3d146903e577e3115262d47376e6b219fbd-b63e4650-d827-3bf1-af84-076dde825364
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/e1/dcf3d146903e577e3115262d47376e6b219fbd
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABkgBt/3icKylKTVUw
+NDVkMDQwMDMxUdArKMrPSk0uYXi5tmXivZLUOSZv+C48LzvddXu6oAJUTW5+SmqOXkomw/5ZuzY7fH1z
+f7p+M4/b11qOG0oX5FHU5OWXJJZk5ucx3Do+JezFq1uC3RW7lK9ZtWz/u8DwO4rK0twchsteaYGXF7my
+aop2WLR1vPptJnNrDgAxq0KmUEsHCDKVTWWXAAAAkgAAAFBLAQIUABQACAgIAAAAIQAylU1llwAAAJIA
+AAAIAAkAAAAAAAAAAAAAAAAAAAAuY29udGVudFVUBQABAAAAAFBLBQYAAAAAAQABAD8AAADWAAAAAAA=
+
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/e1/dcf3d146903e577e3115262d47376e6b219fbd-b63e4650-d827-3bf1-af84-076dde825364--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/COMMIT_EDITMSG-82576a12-3621-34f0-afc9-ada49e52936c
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/COMMIT_EDITMSG
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAABzzs/NzSxRMObiCs1L
+zs8rKcrPyUlNUShITM5OTE8FAFBLBwh+aT9bIAAAAB4AAABQSwECFAAUAAgICAAAACEAfmk/WyAAAAAe
+AAAACAAJAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEAAQA/AAAAXwAAAAAA
+
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/COMMIT_EDITMSG-82576a12-3621-34f0-afc9-ada49e52936c--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/fe/902cddb4ee7e6f699fdb8a57e5642db1d3c81b-732bfb67-01c3-3775-baee-c78487a17688
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/fe/902cddb4ee7e6f699fdb8a57e5642db1d3c81b
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAAB9AAL/3icXZBbT8JA
+EIV97q/YzLvdbRsMadrygBARmhiQ1PhiepnUbfcWtgr8e9dqCPo4M+d8M3MqoSsShdObZHaSgnziwXKt
+Ugh8BgRVrRuu2hT2z8vbKcwyL/mQIn4q675skZwkjy+OkAVRwFgAri2Ujd0whfdhMDGlx+PR17L19aGl
+1mBNX/IV/W9w5D8GrAU3FkeTm4V04jOf0X2+gXEzb1J4K6LXSb7EYoGFVJuu25rH9bwFokqJKfweGkLm
+EZKYn6pZCJSohhEynI3TfT81F6W1V2Renqv+Ia8cuduu7++6Xu9WF/KoDoC6ROhVJJn3Be1ibHBQSwcI
+5kqLkfkAAAD0AAAAUEsBAhQAFAAICAgAAAAhAOZKi5H5AAAA9AAAAAgACQAAAAAAAAAAAAAAAAAAAC5j
+b250ZW50VVQFAAEAAAAAUEsFBgAAAAABAAEAPwAAADgBAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/fe/902cddb4ee7e6f699fdb8a57e5642db1d3c81b-732bfb67-01c3-3775-baee-c78487a17688--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/applypatch-msg.sample-7672a465-f354-307f-a11d-291627954f39
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/applypatch-msg.sample
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAB9kD1Pw0AMhmfuV5i0
+6gJJxMpUJCTUFXVH19TJWbkvnR21BfHfuWsJ7cRqvX6e117ctzvyLRu1UAt48YBH7aJFMCGMwF2iKCAB
+OoPdCGIQuuAcCdgwgENmPSCIHtHD7pQJOkZ7ilo6A30KDnQm1k6TncPNWbQ1s8GEye6zNSMPJAZ88PUn
+pgAsWiYG3QsmIOaJ/JBxF0cKMZEW/KtAPRSC9sKlLkuIN20buBqJC8LacMB9ieI+L94cNhN7snPZHPJ6
+l58ihvhMeYSUR+53UqIFVV2vrx0PVaNUAwNJzaZmlCkqQRaoj1At3zbbj9fNe1to3F7c5yVYrdQdHrH7
+N7T8enqoluvqWz2rH1BLBwhg95FYCgEAAMQBAABQSwECFAAUAAgICAAAACEAYPeRWAoBAADEAQAACAAJ
+AAAAAAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEAAQA/AAAASQEAAAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/applypatch-msg.sample-7672a465-f354-307f-a11d-291627954f39--
+------=_contents/Papyrus-EGit/.project-4b4f15f6-9100-3a5b-ac00-3a310d6f39bd
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/.project
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAACzsa/IzVEoSy0qzszP
+s1Uy1DNQUkjNS85PycxLt1UKDXHTtVCyt+OyKSjKz0pNLnFJLU4uyiwoASq24+K0yUvMTbULSCyoLCot
+1nV1zyyx0QcLAaWS83NzU/NK7Gz0YSygINSUYhBbH5mTVJqZkxJckJoMlkHh5SWWlBalQrTA2XDdKA4C
+AFBLBwgwWaAThgAAAM0AAABQSwECFAAUAAgICAAAACEAMFmgE4YAAADNAAAACAAJAAAAAAAAAAAAAAAA
+AAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEAAQA/AAAAxQAAAAAA
+------=_contents/Papyrus-EGit/.project-4b4f15f6-9100-3a5b-ac00-3a310d6f39bd--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/info/exclude-a83929db-9c89-3d6d-b758-b72edf0d7cd3
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/info/exclude
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAAtjUEKwjAURPeeYqCL
+qth2L7gSXHkDcRHbnzaS5Jfkh9iNZzeV7obHvJkKoxHY2GhjKaJpWCYKa6BPb9NAjQ7sLm1pdcZr7ja8
+q3A3vhgyKUEUFQTZyIS6qqECoWfnyEtsS/PGAQpz4Df1AsdR7ALjcT0VnaDZWs7Gj8ic7IAXlfbIPCCS
+gHVZ2F4xKxEKPmKf/PawTjgYjYUTsloBI0X688O5yMf2weq5hu/uB1BLBwh3Pc0hrQAAAPAAAABQSwEC
+FAAUAAgICAAAACEAdz3NIa0AAADwAAAACAAJAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQ
+SwUGAAAAAAEAAQA/AAAA7AAAAAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/info/exclude-a83929db-9c89-3d6d-b758-b72edf0d7cd3--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/e9/ad8491de74659c34ec0ed0e776cb8adb971120-bceaf80a-0ea4-3ddd-9f87-82967991b11b
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/e9/ad8491de74659c34ec0ed0e776cb8adb971120
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABjgBx/3icVY5NDsIg
+EEbd2lMQ9gq6ckHppvEC6gGATgymDIQfo7cXqzZ29943801Gj16TPecr0T3cSO4Qk/XY0t2WUwJo/GDx
+2tLL+bg50E42IkR/A5N7SCbakOuybNYClQMZVHjGkgSbrKbGOweYpWA/quH3QHoz+xdd7DicAphpsjBU
+uUT4VGae24tfXs/cRNVQSwcIx9GjapMAAACOAAAAUEsBAhQAFAAICAgAAAAhAMfRo2qTAAAAjgAAAAgA
+CQAAAAAAAAAAAAAAAAAAAC5jb250ZW50VVQFAAEAAAAAUEsFBgAAAAABAAEAPwAAANIAAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/e9/ad8491de74659c34ec0ed0e776cb8adb971120-bceaf80a-0ea4-3ddd-9f87-82967991b11b--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/prepare-commit-msg.sample-56205fc8-2e42-36a3-bef7-7ed9b46b3829
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/prepare-commit-msg.sample
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAB1U11z0zAQfCa/4pAz
+TT8sm8JbO+1MKQz0hc7Q8JZpq9hnW1SRXEmmlMmP5yQ5IR0gkwfllN3b2z1lr8ul1KXrJtkkgwsN+FOs
+eoXQGfMArrKy9+AN9BZ7YRF8h1CZ1Up6UKaFFTonWiwIeymUwhqWz8Bauk1/YvAkfRdRWqwQTBPPjVSB
+SnjohAsVwo+sI2MOjVHKPCXGgKkxqZFGb2gShLAjaObAmcFWWADMuzQD1frB9sYhSBcmwZq6/AsdVRHy
+KpFHAxohlUszCNBG819oDTgv/OBygu7YQexiaazHuohezqmVFss4KN0FuhwsRhtiJZlggI3e8kTEV65l
+xSQwbHAgdaUGMoCAFnGTkRvHbKR1yXDU3oEZ/GgpuzS6UbLy7oQBtfDBOEHz2nYje9RKLA4ro+vdVhio
++iGiYqa1bBrgPIzAkwfALSO81DRHAGzT+z6QpCU2ZtyZiE8YNtIGq4NtY/akPYSNlRhCVtTNoNOzMFiP
+KQLOqTNpNDb9do+DcB3W2+1xf8Yhi2293WZR1xQP3MhWY81N03DaKiV1DOCF8LiVldBE47xUihTFlaFY
+ISVCX0txqWcibI0hy2oUFFglSDebvs2n7xg5MoFkdH5AJ4BycDY+tR6tAi6LpXgATgJmrrwtMyhzoEMG
+WZmVIBsob7fhlVAUQOVTeoXk9IyaHDM4PQ07kq890oTChz7Zf/uQg7N4TZ9IAmyhGRRwv5NrJSoy86+A
+7yfZq6SIlO3twTTu29ERnJ3Bmx0xAIcH4YBOVEHazfX7s+l+4P8hLHy6mt9dfJt/vv56d/Xh45c5rGnj
+qJmOBiz2i8PzxUFxOC1fZHQCi+Oyn4XRWnolwB8dsNspUbPUeL0GrDp6RKl2fh7Lk99QSwcIFwK9vpcC
+AADXBAAAUEsBAhQAFAAICAgAAAAhABcCvb6XAgAA1wQAAAgACQAAAAAAAAAAAAAAAAAAAC5jb250ZW50
+VVQFAAEAAAAAUEsFBgAAAAABAAEAPwAAANYCAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/prepare-commit-msg.sample-56205fc8-2e42-36a3-bef7-7ed9b46b3829--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/53/4d0e7a978279eaf36d39db17d16dc6c70f5705-d4c19711-17e8-3b0e-9b90-55650008c04c
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/53/4d0e7a978279eaf36d39db17d16dc6c70f5705
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABMQDO/3icKylKTVUw
+NmEwMQAChYLEgsqi0mKGGCu+RWIy0/aJlLEtdbGqlGv4s8AMAAy3DchQSwcISvpOETYAAAAxAAAAUEsB
+AhQAFAAICAgAAAAhAEr6ThE2AAAAMQAAAAgACQAAAAAAAAAAAAAAAAAAAC5jb250ZW50VVQFAAEAAAAA
+UEsFBgAAAAABAAEAPwAAAHUAAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/53/4d0e7a978279eaf36d39db17d16dc6c70f5705-d4c19711-17e8-3b0e-9b90-55650008c04c--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/e0/0e1a1875926475597d0d84d2ba33c444cd922d-f2905a25-9f9b-30f5-9eb8-9810c2899453
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/e0/0e1a1875926475597d0d84d2ba33c444cd922d
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABqQBW/3icnY9LigMh
+FACz9hTuB8JTn7ZCCIGcYQ7g++RDYhvEvn9gJifItqCgintr92k95t0cqpYWFMFMkBMTOJIknhGwhOiC
+xiR4ScRczKsOXacFEEpcfEoamXKUJUSREENOvhSlsmTy5Jyp27z1YRvXMesm9tDqvN1123/AqZP2Pfd2
+tA4RC4AL2f6ABzD8Fzn1S92c/yeDMb8r93WO/nyq2FflR73qG8wiT+VQSwcIyE1otK4AAACpAAAAUEsB
+AhQAFAAICAgAAAAhAMhNaLSuAAAAqQAAAAgACQAAAAAAAAAAAAAAAAAAAC5jb250ZW50VVQFAAEAAAAA
+UEsFBgAAAAABAAEAPwAAAO0AAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/e0/0e1a1875926475597d0d84d2ba33c444cd922d-f2905a25-9f9b-30f5-9eb8-9810c2899453--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/logs/refs/heads/branch1-9f0cc6d8-8f96-35f9-93ec-4817b6315679
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/logs/refs/heads/branch1
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAACNyEsKAjEMANC1niJ7
+Ycj0HxERPEnSRMZFLXQ693fjAXzLh/gfQFRJlVxKFquUqNlHVR99SY7IhHIRJ+sKrfKYfCjcGs/tbcfy
+i0cX60vt7Q5rCKEQUfZwQYd4ksGful3hOYynKbxGb9B4nzbOX1BLBwgxKV7obgAAAKMAAABQSwECFAAU
+AAgICAAAACEAMSle6G4AAACjAAAACAAJAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUG
+AAAAAAEAAQA/AAAArQAAAAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/logs/refs/heads/branch1-9f0cc6d8-8f96-35f9-93ec-4817b6315679--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/5c/3a0ea2161c96be147606a5443a791e80fca036-f0716370-f871-3b02-877b-d0c214dbd8d3
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/5c/3a0ea2161c96be147606a5443a791e80fca036
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAAB0QAu/3icKylKTVUw
+MjdlMDQwMDMxUdArKMrPSk0uYXi5tmXivZLUOSZv+C48LzvddXu6oAJUTVpRYnpual6JXkomw/5ZuzY7
+fH1zf7p+M4/b11qOG0oX5NGV5eWXJJZk5ucxXNCVbfEOfm249nXqwyvKH5raOm9loisuzc1haHLy/qjX
+dyZK+uT5vKLlu/adXLioG6ouNz8lNYeAxRA1cFvnTORPTDJ9sysl/S9r1Lk2bmtGezYUlSAry1m2Mhw5
+LzVn3XEJoW6DG99Ob5nwEwAq63SNUEsHCFLoKljWAAAA0QAAAFBLAQIUABQACAgIAAAAIQBS6CpY1gAA
+ANEAAAAIAAkAAAAAAAAAAAAAAAAAAAAuY29udGVudFVUBQABAAAAAFBLBQYAAAAAAQABAD8AAAAVAQAA
+AAA=
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/5c/3a0ea2161c96be147606a5443a791e80fca036-f0716370-f871-3b02-877b-d0c214dbd8d3--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/model.notation-90f46466-3504-32db-851a-79a53600c4dc
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/model.notation
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAACdlNtS2zAQhu95Co+4
+ruWE5jCeGKYNMFBIyiQEmN5kFFtxFHQwkozjt698CjGJofTOlrTfrvZf/YOzDaPWK5aKCO6Blu0AC3Nf
+BISHHpjdX37rg7PTowEXGmlzxD0nKJSIWRtG3G1YOwszIK5cs+6BldaRC2GSJLZgoS1kCJ9G19URX/Al
+CWOZA2uHsU9JpHAeEKEolbGChC8lgq8EJ5EgXCtYC6+YVX2NuJAtoYy5JgxDc0u7DauQCqF0SvHXy4kE
+JX4K8+gKFTPaCDJ7bdgxFThwNroFeSNJ4IG5Xny/8a9Giwv8uJ7cnHfXz2J6HQJLp5Ep667Ib0KGFClV
+ygAsjpjZHePkDvnPKMTbDYaRiiVmmOsZJ9oQyAZTcHpkWQN/RWggMc+TF/ytwNMVivBuWc7EnzWW1Xac
+Xs78hHqOfVEoNhZBHT99ab51x2l3AfwH/k+kiD8ULEJSZ1euZbifhI0Zek6rW17ApMhVVIcS3BNN8bQS
+eRf9tIeGWx5FqYj1UHClJTLjcrB0EfNAvafyJuoAVn0o/zHNRd5BmxFzy3EA1kripQfM0IbZKdvsHc8f
+T/50Rpf40WRg/Ha9nkS/boZvGf6zajMn+72wNh7ot4GVeqDbKjLUb/BBz6daGht6QDTe73z2WA5kK55D
+UDyCuZ8NhCYLQolO56VdAUu9cTPLy0wPflJK+awOltEg1T4tX3DLl/xgLOQg7mQPV8oiEo7lO5lH5jXR
+SmSW/RQKT5875AOFax66g6ytV5VuLaXIElGkl0IyF0Y0DgmHxtW2DlfapJ3bpP1mk3Zpk4uYUG1iArxE
+MdV2LeHxvJfcsmi8WV3g3y9Xr5OUjPu91Y9qbIqG5t+Hh/7r3RjA9xKfHv0FUEsHCF1BcCOSAgAAFAcA
+AFBLAQIUABQACAgIAAAAIQBdQXAjkgIAABQHAAAIAAkAAAAAAAAAAAAAAAAAAAAuY29udGVudFVUBQAB
+AAAAAFBLBQYAAAAAAQABAD8AAADRAgAAAAA=
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/model.notation-90f46466-3504-32db-851a-79a53600c4dc--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/9c/a073fdc16a15ae1c6e442981b016f07fd67c46-8541d084-efda-3023-b8d2-460a78eaaa37
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/9c/a073fdc16a15ae1c6e442981b016f07fd67c46
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABzwAw/3icnY9RasMw
+EET7rVPsZ0ohrCVLsqCUlJ5kpd3EJpZlZJnS29dtc4L+PuYNM6nkPDUwaJ9aFQFrekbxFPygfRC6Gscm
+cOw8d46TSx6v1qNVK1VZGiBydClo58SmOFj2xjIbawanQ5B49EQdu07R3sZSISeqjXaG10xtnGQ/P8Cl
+RCnnVPIbdH3fB0QMCC+oEVX6Hdnkn7r6+DuplXpnBoJFPiHNtG0wLdBGgVSWVss8C8NK6U43gRNP2zrT
+14EOtTxyP5LiiW6V8vM3SSdjDFBLBwjRuzmH1AAAAM8AAABQSwECFAAUAAgICAAAACEA0bs5h9QAAADP
+AAAACAAJAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEAAQA/AAAAEwEAAAAA
+
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/9c/a073fdc16a15ae1c6e442981b016f07fd67c46-8541d084-efda-3023-b8d2-460a78eaaa37--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/fragment.uml-a4ae9ac8-3c9e-3d5d-bbcb-d64d5e4f4db6
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/fragment.uml
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAABdkEFPwzAMhe/9FZHv
+NGmnIVQ13WFsYmyV0NhUxAV1rRXSJmm0FLr9e0JB0+Bo+73P9ktnJ63IJx6d7AyHKGRA0FRdLY3gsN8t
+b+5glgXph1bJU1m1pUBy0jK5OGIWTSLGIvBtZVzihxze+94mlA7DEHZahN1RUGexoi/5iv43ePIfA1ZK
+Woejyc9iOg1ZyOg+38C4WdYc3orJ6zRfYrHAQptN02zt43ougJhSI4ffQ2PIAkJS+1PVC4UaTT9C+rP1
+uu+n5qp07oosy/OhfcgPntxs1/e3Tds9ry7kUR0B9YnQq0iy4AtQSwcI8SPUJ+cAAABIAQAAUEsBAhQA
+FAAICAgAAAAhAPEj1CfnAAAASAEAAAgACQAAAAAAAAAAAAAAAAAAAC5jb250ZW50VVQFAAEAAAAAUEsF
+BgAAAAABAAEAPwAAACYBAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/fragment.uml-a4ae9ac8-3c9e-3d5d-bbcb-d64d5e4f4db6--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/model.uml-f69c3b3e-3f9d-3ce2-b74a-fd05b10ab50a
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/model.uml
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAABtkF1LwzAUhu/7K8Lx
+2iTdKEhpugvZQF1B1FHxZpT2LMuWL9po5783qzCYeHue94PzFouT0eQL+0E5KyClHAja1nXKSgGbt9Xt
+HSzKpPg0Oq9ch5qcjMov+hlP5ynnKcSztkMeoYB9CD5nbBxH6oykrpds8Niy9+qB/TXE3CsDtlr5ASdT
+ZDOWUU4521RrmJpVJ2D7esxUtcJ6ibWx68PhxT8+3UsgtjEooHcuQJkQUvimPTYSu6VGgzZMAeHbR835
+nedfCmTf407Arm/kWUUju9nW84/snwoWp2CXLcrkB1BLBwiZ4Lw94AAAAD8BAABQSwECFAAUAAgICAAA
+ACEAmeC8PeAAAAA/AQAACAAJAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEA
+AQA/AAAAHwEAAAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/model.uml-f69c3b3e-3f9d-3ce2-b74a-fd05b10ab50a--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/logs/refs/heads/branch3-492c90c8-a548-372f-bb7b-4a368070995f
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/logs/refs/heads/branch3
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAACNjksKwzAMRNfNKbQv
+BPlvlVIKPYltqSQLN+A6968pOUBmMzAMvId4LoDI2RfS3osrOToOxjEbZ6LXRJIpxKyzUlBLaj3tDPea
++rLKPh/Dc8uyzWWrD1DW2khEwcMVNeIlt/Qpyw1eTVIXhnfbKtT07dKm02RBFJVUDG6cbXCOAiNHyzon
+Y8pgFiat+bQiISoTD8Wx1rUPxX+DmX5QSwcI4DS8B5wAAAA7AQAAUEsBAhQAFAAICAgAAAAhAOA0vAec
+AAAAOwEAAAgACQAAAAAAAAAAAAAAAAAAAC5jb250ZW50VVQFAAEAAAAAUEsFBgAAAAABAAEAPwAAANsA
+AAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/logs/refs/heads/branch3-492c90c8-a548-372f-bb7b-4a368070995f--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/logs/refs/heads/branch2-dfbaf067-f7d4-3bb6-868c-e55bbeb5362b
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/logs/refs/heads/branch2
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAACNj0EKAjEMRdd6iuwF
+STtt2oiI4EnSNIMu6kDt3N9BPMD8zYe3+e8j7gsg1kLKnsiilhxrmmKtU5wyeWYrnHLxxTloKn3IWuHa
+ZDxftp7/4L4UW866tBu4EEJm5hThhB7xULq89XmBRzcZVmHuS4Mmn2H9uHuZVTBNc1VH4qKYU7IQPGdX
+0NGMaa6UNNBuRd6OM/4VN9peY1P8NfjjF1BLBwjuXaOwngAAADsBAABQSwECFAAUAAgICAAAACEA7l2j
+sJ4AAAA7AQAACAAJAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEAAQA/AAAA
+3QAAAAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/logs/refs/heads/branch2-dfbaf067-f7d4-3bb6-868c-e55bbeb5362b--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/pre-commit.sample-ea027b25-8aba-3488-8789-511f352ab9ef
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/pre-commit.sample
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAABtVGFv2zYQ/Rz9iqsT
+JA1g2Y7hBknWBDC8FAsQbMAaYB/aYqDEo8VFIlWSsuOi2G/fIyW7C9Bvoni8e+/duzt+My20mfoqO86O
+aWmIX0TT1kyVtc/kS6fbQMHShp1WO9pWIpD2JArbpf8FU2mbRofAcoIMK1HXLKnY0Witw3A3oq0OFRlL
+wq27hk3wE6Knal+lsl0t8Zhf8GQINfk3dpZ8EKFDPRXYobDvtFmTMCTa1tnWaRGYGvZerJm0Qo6YQaBA
+BOeDbSlUe4iTxPHJEhtRgGKowCQiGJPDr2b4o3S8szRqHecDgUmWaUWRkeNN3grnmfJ8EOW3++WvdDeV
+vJmarq5pfnd6kaGsyY7EWmjjw20Mybj2nB0d04PRQYt6QHVDUitFQ2Tkxk0bdhQcM9niHy7DjzyL4mr+
+TpaXi3lZXHJxLWaXM363KNSVvLyeX12pgnlxPVtkSmfg+qBoZ7skSGSE3tht0nb5cfXwkJhG3p48h578
+RkDTohcguI4nWXqEN8KXWt+evO3bapReQ4HC2jpJ6Cev4s5j9T9Zagf4BK+0vV18kOzcJOMXLuni7nQe
+41bOek9tLYKyriE0NpJGB9nIBHtjtfwZ7F8QyxvYCUmgd0PK2QaWTB6RktPr2H/HrfU6WLeb0F8Mn7W1
+1SFdKVHGD5FOyANPmZAUcMLAVDCgA5b+nnwrStipEg7P4EgBhEDpe9cGXUsoBqd8otHJK0FG9OaWRlHR
+EX2h09Pog99t4ENp6mApq6hA5meOFZ3tkF2gDQMUtAfTUrHjMb3V4czHJJE/+H3tILUcExSk1jow0LWO
+LrL00dZoqqeL2ZmnaeddmvjgzsfktSmTJRO3r51wvAeAEQ4wRoVBQwGkUeBD2qRQyV6vDWZP9tAm2RGC
+A/XuSH7O81KUFQLyPPYqt6be4Tve5WggxLtdUv6NTvbG/54dET2u/l4+Pt6uIulc0tknyv/98nl2Rt9p
+W1JenkcZZ8NwlVDu/fvP9398yO6ds+6GllhDTb+w0H9o99o0FJFglJ+i00tMWimi6jAc+t14LJBX47K1
+7rlvbMs27kRryKK0O3jVx2RpCfaaI0b3+1FutN/P0WG5cEKBN8NcPhuMY1qp8RTFlzZ6N54iPLnPkfBW
+XD7DJQi4yTKi/83hTwYwDW8WpTlKW/Xix0aIDDhV21YabUuW5iigH/f2T1CtUnB2hHOQzie/K6HrYYL3
+3c61kfwSe55AHnp/aG6eZ/8BUEsHCCUwqFyjAwAAagYAAFBLAQIUABQACAgIAAAAIQAlMKhcowMAAGoG
+AAAIAAkAAAAAAAAAAAAAAAAAAAAuY29udGVudFVUBQABAAAAAFBLBQYAAAAAAQABAD8AAADiAwAAAAA=
+
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/pre-commit.sample-ea027b25-8aba-3488-8789-511f352ab9ef--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/post-update.sample-4940521f-56ce-3ccf-bb8b-af41bd3638a1
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/post-update.sample
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAAtzVESgjAMBND/nmKF
+X4EzeAcvECCVDtJ0kuDg7a3o5+7OvG0vw5jyYEtoQ4tbBh+0lSdjEVlhk6bicEFRLqQMQqFp5Rk1iyUX
+fSOKYjeGvFgrMu/bCFfKVkTd+lO+CzjTWGFfkp36tRqZtn8T03cTNJX1bi8zOTd9CHzwhEdy/KrOWOtN
+l3KU8AFQSwcImgz3wIoAAAC9AAAAUEsBAhQAFAAICAgAAAAhAJoM98CKAAAAvQAAAAgACQAAAAAAAAAA
+AAAAAAAAAC5jb250ZW50VVQFAAEAAAAAUEsFBgAAAAABAAEAPwAAAMkAAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/post-update.sample-4940521f-56ce-3ccf-bb8b-af41bd3638a1--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/.project-af4bce60-3d6b-36c4-96f6-a3818bc562e9
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/.project
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAACzsa/IzVEoSy0qzszP
+s1Uy1DNQUkjNS85PycxLt1UKDXHTtVCyt+OyKSjKz0pNLnFJLU4uyiwoASq24+K0yUvMTbUrSCyoLCot
+ttEH84Ciyfm5ual5JXY2+jAWUBBqQDGIrY/MSSrNzEkJLkhNBsug8PISS0qLUiFa4Gy4bhS3AABQSwcI
+BoqT5oEAAADIAAAAUEsBAhQAFAAICAgAAAAhAAaKk+aBAAAAyAAAAAgACQAAAAAAAAAAAAAAAAAAAC5j
+b250ZW50VVQFAAEAAAAAUEsFBgAAAAABAAEAPwAAAMAAAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/papyrus/.project-af4bce60-3d6b-36c4-96f6-a3818bc562e9--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/HEAD-0ea3efb6-3e28-386d-8775-f79f7eefce2d
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/HEAD
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAArSk2zUihKTSvWz0hN
+TCnWTypKzEvOMOQCAFBLBwi0ovx9GgAAABgAAABQSwECFAAUAAgICAAAACEAtKL8fRoAAAAYAAAACAAJ
+AAAAAAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEAAQA/AAAAWQAAAAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/HEAD-0ea3efb6-3e28-386d-8775-f79f7eefce2d--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/commit-msg.sample-bdc3c42f-ed56-3b4e-9ec0-cf1528fcfe82
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/commit-msg.sample
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAB9kl9v0zAUxZ+bT3FI
+K9JWTaPyiLRKgyLYC5NY90Tp5CY3ibXEzmyH8ad8d64dqhUm8RJF1/f+zj3HHr/IDlJlto7G0RiXCvRN
+tF1DqLW+h82N7BycRl5Tfg9XE3LdttKh0RVaslZUtOTJt6JpqMDhO+KKT4emGI/S1dCKIEzVt6TcIjCU
+aAm6DP+lbIgBrhYOtbDnGic+sK1PG9W6bwreko8DXGmV/iCjGWGdcL2FKB0ZSGt7qSoIBdF1RndGCkcn
+JGQJTxDKWW/POt15ZaYM2ueakplNox/ZH7dSwYPPlww+liHFLTcpceAQXc2znrGAoWA6VHyrR8UDIm1t
+FS8jnrxVvsIxBYEDsajvE0UBgRtZKSpSXZYpx9xIFRi+8eweNtqbDiqSnT8ZwEEUkAUJX69IkRHNAod+
+kOoMdcJQ+rQQs06zrTYETtMNAXA4webN9ZuLydTf9ldh8P5qe3d5u/1w/enuavPu4xZHWO5PFRKb7XfT
+5Xy9my3nk+wvG6+xW2VdMmNcxSsgfbCI9xNGx4gnqxjHIyivOaqhtl6Hss9q6z2eXmsuHL9Qi6LvGpn7
+i36eluWIHVmHOMYFY6ZBMdn/s1DyRzgawWrj2Eev5APS/OSIkGT7zxh9ma/8NyuSWdjzZzQKq65fvsLm
+/3uMwvtdRb+i31BLBwjp+MoQ9wEAAIADAABQSwECFAAUAAgICAAAACEA6fjKEPcBAACAAwAACAAJAAAA
+AAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEAAQA/AAAANgIAAAAA
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/hooks/commit-msg.sample-bdc3c42f-ed56-3b4e-9ec0-cf1528fcfe82--
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf
+Content-Type: q7/binary
+Entry-Name: .q7.content
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAACdWNtu20YQfc9XCHqX
+tPeLYScIEqMJUKNFGyBFX4zZmVlZtSSyIl07f9/1NbFoUwzfJPLsnN0zh7Oze/zuZrOe/Me7ZlVtT6Zy
+LqYT3mJFq+3yZHrV5lmYvnv75rjaLeeM61Xd8HyHddvOsb2ZX1e7y6YG5KOvj78+VNuWb9rJzWZ19BRW
+3YYtRNvmqDw/mV60bX20WFxfX8+rzXJegi/+Ovv8CDnA9TT8EXM7/A63KLjFE2462cKmoNtGSH/eohDm
+fH+a08mKTqbnv9b66+WnMzrlr+fp70//Cv3+j9n76ds3k8kx3iK37e3v8q/eVf8wts1D7N+h/ra7aman
+v6za6T2kgPJqzY+I+cOI6eL762pNRZkHAG/yDKtNDTue1Q/hePlDuM6I+fO3e4Qffjs7+/zl/PTj5y9n
+f/7ynbYDLAvLq2UPgLjB3apuSwp7UJ9O33/seb3aEt/sv3+2nLSDLV5w0wu6qKrL5tmi93igrtffamjx
+YrZplvMGNvWan4fsrH+zWbVD0XXVtLOrmqDlQfCSze9TGjrifkpD0fVVMzjyjhM0Q2d+58Wfk6dHmePF
+Qyp70rva5qovu3yD6ysaEXhdLXtt03VvJ8SO836Irj0ZqAva47o3utynewWnBuJ0F/eiMK/pNUDEKt3V
+vI6Oz0BCvCDSj9UkOYzKObaYgiWvLZG2OjgVI6foQ1JJdsR5bSnPuY3t51ZWQUSjyVutWauYBElMOSvm
+GARZZXUy47it7uc2JNhDWZ/ykSFrRzpSkp6kI3ToRbZe2JHc2M+tQTAo6SRGl1ga74QDa4wGHyUHkRGE
+duO4ve/nFiZZIdBglkV7YPQySBWSFhSyw5RMFDmO4w7qgObKpCwVB0a0IBNGzI69Ap8gMUaQUGYyjjse
+yreJIYIIAXOOZFFK4WJg5RlJAAeZgW0YyX0g31GK7KRT2jImcMb5TMLa0u8EJ5JOQuosOvne30mF15lQ
+OpAWWKJjY1QMsox2WZSIzqMZaZp0wDSGyIQkQvGHkIkcKTTCRG2lZuvIZJcQR5om5QPiQTGHNuV7LJnK
+0ascdPGvK98niUBBKRIyj+PGg0VCiwQ6QPCqqE4BZbQqlUWDgBRRMRHAOG46UJgVSQqmfK2ak5ZAnJxl
+SUYVrwQVXIgEbqTmdGjd4JyVpEEZK6yK0oagQ+EMpVQmXQoXleIxkhv6udFHY12pEUAgZUhlBwKlyWkI
+JhWbl9Iosx/HzQc0FyxBBm/Lhmi8tbE4rOSAVPGARmMMUix2G8ktD2zEmDVJ46Io9vKetZRWOUXGa+/Y
+JSVjTmO5Yz93cbaJktgbZyNqwyj4dn/05YMPQKUNkFKJcdzZ9XM71o4ZtMJYqhuU4hyyQi1tjB5DKhUG
+3VivZT5QW4RComSYPbvsYsxU1mt9KWpGlW6ANJYCO477rnfub2HLiffy53vnFxrfQW3vsKZ3WMs7pOEd
+JlMLy/0jZnfcS4/2pbw7or9+/u4e+DuQvIPlhrftnFZDUNuqhQOH8Cfs1WbdA9tUxOt+1nvIAMp74B5f
+R7+9B8eLxwuUu7uVxdPlyvHiZ2+Y3r75H1BLBwgqI+DrmgQAALwSAABQSwECFAAUAAgICAAAACEAKiPg
+65oEAAC8EgAACAAJAAAAAAAAAAAAAAAAAAAALmNvbnRlbnRVVAUAAQAAAABQSwUGAAAAAAEAAQA/AAAA
+2QQAAAAA
+------=_.q7.content-3d2e0690-ce48-3609-83e0-c704d49f1eaf--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/c3/4d30ba38a87215ad8c1952b3e5a0ab9c2eddaa-dc9d8a0e-b14f-3f14-8bad-42cd6995d501
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/c3/4d30ba38a87215ad8c1952b3e5a0ab9c2eddaa
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAAABoQJe/XicnZTbUtsw
+EIZ7zVN4xHUtxzSH8cQwbYCBQlImIcD0JqPYiqOggyvJJH77yqcQkxhK72xJ++1q/9U/p2JutXot90v/
+bMOo9YKlIoL7oGU7wMI8ECHhkQ+m95dfe+Ds9KjPhUbaHPHOCYokYtaGEW8b5mZhBsSVZ9Z9sNQ69iBc
+r9e2YJEtZASfhtfVkUDwBYkSmQNrh3FASaxwHhCjOJWJgoQvJIIvBK9jQbhWsBZeMav6GnERW0CZcE0Y
+huaWtgurkAqhdErx58uJBSVBCvPoCpUw2ggyey5smwocOB3egryRJPTBTM+/3QRXw/kFflyNb847q2cx
+uY6ApdPYlHVX5DchA4qUKmUAFkfM7I7w+g4FzyjC2w2GkUokZpjrKSfaEMgGU3B6ZFn9YEloKDHPkxf8
+rcCTJYrxblnOOJg2luU6TjdnfkA9x4EoFBuJsI6f/Gm+ddtxOwD+A/8HUiQYCBYjqbMr1zLcj6PGDF2n
+1SkvYFLkKqpDCe6JpnhSibyLftpDwy2PolQkeiC40hKZcTlYukh4qN5SeRO1D6s+lP+Y5iLvoM2IeeU4
+AGsp8cIHZmij7JRt9o5njye/28NL/GgyMH67Wo3jnzeD1wz/WbWZk/1eWBsf9FxgpT7otIoM9Ru80/OJ
+lsaGHhBN9jufPZYD2YrnEBaPYBZkA6HJnFCi01lpV8BSr9zM8jLTgx+UUj6rg2U0SLVPyxe88iU/GAs5
+iDvZw5WyiDXH8o3MQ/OaaCUyy34KhSfPbfKOwjUP3UHW1qtKt5ZSZIkp0gshmQdjmkSEQ+NqW4crbdLO
+bdJ+tUm7tMl5Qqg2MSFeoIRqu5bweNZd37J4tFle4F9/rl7GKRn1usvv1dgUDc2/Dw/957vRh28lPj36
+C4y4ct1QSwcIR2OfXqYCAAChAgAAUEsBAhQAFAAICAgAAAAhAEdjn16mAgAAoQIAAAgACQAAAAAAAAAA
+AAAAAAAAAC5jb250ZW50VVQFAAEAAAAAUEsFBgAAAAABAAEAPwAAAOUCAAAAAA==
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/c3/4d30ba38a87215ad8c1952b3e5a0ab9c2eddaa-dc9d8a0e-b14f-3f14-8bad-42cd6995d501--
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/b7/4dd48b086cb01bd6d2c40493513e56d4f6bcc9-54992fc5-6485-3ba2-8272-8836c202623c
+Content-Type: q7/binary
+Entry-Name: contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/b7/4dd48b086cb01bd6d2c40493513e56d4f6bcc9
+
+UEsDBBQACAgIAAAAIQAAAAAAAAAAAAAAAAAIAAkALmNvbnRlbnRVVAUAAQAAAACrmKOt6eUbamCWaGDI
+wNTadKTp1KJLSW3t5XbxJbMTxOPSNVYte503b/pai3p9BsMmfnMAUEsHCMfLCMc0AAAAMQAAAFBLAQIU
+ABQACAgIAAAAIQDHywjHNAAAADEAAAAIAAkAAAAAAAAAAAAAAAAAAAAuY29udGVudFVUBQABAAAAAFBL
+BQYAAAAAAQABAD8AAABzAAAAAAA=
+------=_contents/Papyrus-EGit/emf-compare-papyrus-egit/.git/objects/b7/4dd48b086cb01bd6d2c40493513e56d4f6bcc9-54992fc5-6485-3ba2-8272-8836c202623c--

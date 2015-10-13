@@ -1,0 +1,73 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _SapwEL4pEeOsAoUpt_cnqw,_LOMGYGrvEeK_JdLra2Bk5A,_WJ3zwHF_EeW2QO9QoqyAmA,_d_GLMHDdEeWhSZQCADl_Kg
+Element-Name: ts017_tc003.2_merge_resource_location_test
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _A70FIHGAEeW2QO9QoqyAmA
+Runtime-Version: 2.0.0.201506120617
+Save-Time: 10/15/15 5:39 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+This test must validate the hability to merge a ResourceLocationChange. 
+- The initial state of the repository is a model with a package containing another package. The inner package contains a class diagram
+- On a second branch,the inner package is controlled in a new resource
+- On another branch based on the initial state, a new uml element is added in the inner package and displayed on the class diagram
+
+TEST STEPS
+	1) Checkout the branch branch3
+	2) Select the project, right-click and merge with branch2
+	// Assert that the result contains the new uml element
+	// Assert that the result fragment has been renamed
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+with [get-view "Project Explorer" | get-tree] {
+    select "papyrus  [emf-compare-papyrus-egit branch1]" | get-menu "Team/Switch To/branch3" | click
+    select "papyrus  [emf-compare-papyrus-egit branch3]" | get-menu Refresh | click
+    select "papyrus  [emf-compare-papyrus-egit branch3]" | get-menu "Team/Merge..." | click
+}
+
+with [get-window "Merge 'branch3'"] {
+    get-tree | select "Local/branch2 ca28692 Commit 2"
+    get-button "Merge" | click
+}
+
+try -command {
+get-window "Merge Result" | get-editbox -after [get-label "Result"] | get-property text | equals Merged | verify-true
+get-window "Merge Result" | get-button OK | click
+} -catch {wait 500} -times 30
+
+with [get-view "Project Explorer" | get-tree] {
+    get-item "papyrus  \\[emf-compare-papyrus-egit branch3\\]" | get-property childCount | equals 2 | verify-true
+    get-item "papyrus  \\[emf-compare-papyrus-egit branch3\\]/fragment" | get-property caption | equals fragment 
+        | verify-true
+    get-item "papyrus  \\[emf-compare-papyrus-egit branch3\\]/model" | get-property caption | equals model | verify-true
+}
+get-view "Project Explorer" | get-tree | select "papyrus  [emf-compare-papyrus-egit branch3]/model" | click -default
+with [get-view "Model Explorer" | get-tree] {
+    get-item "root/Diagram Class Diagram" | click
+    get-item "root/Diagram Class Diagram" | click
+    double-click
+}
+
+with [get-view "Model Explorer" | get-tree] {
+    get-item "root/Package2/Diagram ClassDiagramP2" | click
+    get-item "root/Package2/Diagram ClassDiagramP2" | click
+    select "root/Package2/Diagram ClassDiagramP2" | double-click
+}
+with [get-view "Model Explorer" | get-tree] {
+    get-item "root/Package2" | get-property caption | equals Package2 | verify-true
+    get-item "root/Package2" | get-property "image.decorations[0].path" 
+        | equals "org.eclipse.emf.edit/icons/full/ovr16/ControlledObject.gif" | verify-true
+}
+get-editor "model.di" | get-diagram -index 1 | get-edit-part -name Package2 | get-edit-part -name Class1 
+    | get-edit-part -text Class1 | get-property text | equals Class1 | verify-true
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
