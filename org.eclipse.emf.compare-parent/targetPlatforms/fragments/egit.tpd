@@ -3,5 +3,5 @@ target "EGit"
 with source, requirements
 
 location "http://download.eclipse.org/egit/updates" {
-	org.eclipse.egit.feature.group lazy
+	org.eclipse.egit.feature.group [4.1.0,4.2.0)
 }
