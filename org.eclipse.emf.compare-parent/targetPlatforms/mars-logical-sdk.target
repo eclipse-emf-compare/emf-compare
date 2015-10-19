@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Mars SDK with Logical Model" sequenceNumber="1439468919">
+<target name="EMF Compare based on Mars SDK with Logical Model" sequenceNumber="1445260690">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -25,6 +25,12 @@
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="fr.obeo.performance" version="1.0.0.201402071743"/>
       <repository location="http://axelrichard.github.io/fr.obeo.performance/"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.swtbot.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="0.0.0"/>
+      <repository location="http://download.eclipse.org/technology/swtbot/releases/2.3.0/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.platform.sdk" version="0.0.0"/>

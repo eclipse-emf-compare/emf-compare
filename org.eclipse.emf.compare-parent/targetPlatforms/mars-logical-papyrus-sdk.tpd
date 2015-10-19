@@ -6,6 +6,7 @@ include "fragments/egit-logical-nightly.tpd"
 include "fragments/perf.tpd"
 include "fragments/papyrus.tpd"
 include "fragments/uml2-interim.tpd"
+include "fragments/swtbot.tpd"
 
 with source, requirements
 
