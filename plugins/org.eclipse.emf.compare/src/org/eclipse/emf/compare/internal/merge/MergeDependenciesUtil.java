@@ -210,7 +210,7 @@ public final class MergeDependenciesUtil {
 				resultingRejections.addAll(newRejections);
 				rejections = new LinkedHashSet<Diff>();
 				for (Diff rejected : newRejections) {
-					final IMerger merger = mergerRegistry.getHighestRankingMerger(diff);
+					final IMerger merger = mergerRegistry.getHighestRankingMerger(rejected);
 					if (merger instanceof IMerger2) {
 						rejections.addAll(((IMerger2)merger).getDirectMergeDependencies(rejected,
 								mergeRightToLeft));

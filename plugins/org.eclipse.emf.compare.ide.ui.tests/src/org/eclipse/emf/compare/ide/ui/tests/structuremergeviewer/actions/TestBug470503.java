@@ -15,8 +15,11 @@ import static com.google.common.collect.Iterables.transform;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import com.google.common.collect.Iterables;
+
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Map;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -27,6 +30,8 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
+import org.eclipse.emf.compare.merge.AbstractMerger;
+import org.eclipse.emf.compare.merge.IMergeOptionAware;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
@@ -122,7 +127,7 @@ public class TestBug470503 extends AbstractTestUITreeNodeItemProviderAdapter {
 		assertEquals(MergeOperation.MERGE, rightToLeft.getMergeAction(titledItemESuperTypesDeleteDiff,
 				leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(titledItemESuperTypesDelete));
-		action.setCascadingDifferencesFilterEnabled(cascadingFilter);
+		setCascadingDifferencesFilterEnabled(cascadingFilter);
 		action.run();
 		assertEquals(DifferenceState.MERGED, titledItemESuperTypesDeleteDiff.getState());
 
@@ -149,7 +154,7 @@ public class TestBug470503 extends AbstractTestUITreeNodeItemProviderAdapter {
 		assertEquals(MergeOperation.MERGE, rightToLeft.getMergeAction(titledItemESuperTypesDeleteDiff,
 				leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(titledItemESuperTypesDelete));
-		action.setCascadingDifferencesFilterEnabled(cascadingFilter);
+		setCascadingDifferencesFilterEnabled(cascadingFilter);
 		action.run();
 		assertEquals(DifferenceState.MERGED, titledItemESuperTypesDeleteDiff.getState());
 
@@ -158,6 +163,14 @@ public class TestBug470503 extends AbstractTestUITreeNodeItemProviderAdapter {
 
 		Diff titleESFDeleteDiff = (Diff)titleESFDelete.getData();
 		assertEquals(DifferenceState.UNRESOLVED, titleESFDeleteDiff.getState());
+	}
+
+	private void setCascadingDifferencesFilterEnabled(boolean enabled) {
+		for (IMergeOptionAware merger : Iterables.filter(this.mergerRegistry.getMergers(null),
+				IMergeOptionAware.class)) {
+			Map<Object, Object> mergeOptions = merger.getMergeOptions();
+			mergeOptions.put(AbstractMerger.SUB_DIFF_AWARE_OPTION, Boolean.valueOf(enabled));
+		}
 	}
 
 	private static TreeNode getExtlibrary_EPackageMatch(Comparison comparison) throws IOException {

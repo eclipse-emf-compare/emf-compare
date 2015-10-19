@@ -14,7 +14,10 @@ package org.eclipse.emf.compare.merge;
 
 import static com.google.common.base.Predicates.in;
 import static com.google.common.base.Predicates.or;
+import static com.google.common.collect.Iterables.addAll;
 import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.transform;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasSameReferenceAs;
@@ -26,6 +29,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import java.util.Collection;
@@ -33,6 +37,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.Monitor;
@@ -63,12 +68,26 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @since 3.0
  */
-public abstract class AbstractMerger implements IMerger2 {
+public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
+
+	/** The key of the merge option that allows to the mergers to consider sub-diffs of a diff as a whole. */
+	public static final String SUB_DIFF_AWARE_OPTION = "subDiffAwareOption"; //$NON-NLS-1$
+
 	/** Ranking of this merger. */
 	private int ranking;
 
-	/** Registry from which this merger has been created.. */
+	/** Registry from which this merger has been created. */
 	private Registry registry;
+
+	/** The map of all merge options that this merger should be aware of. */
+	private Map<Object, Object> mergeOptions;
+
+	/**
+	 * Default constructor.
+	 */
+	public AbstractMerger() {
+		this.mergeOptions = Maps.newHashMap();
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -111,6 +130,38 @@ public abstract class AbstractMerger implements IMerger2 {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.merge.IMergeOptionAware#getMergeOptions()
+	 */
+	public Map<Object, Object> getMergeOptions() {
+		return this.mergeOptions;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.merge.IMergeOptionAware#setMergeOptions(java.util.Map)
+	 * @since 3.3
+	 */
+	public void setMergeOptions(Map<Object, Object> options) {
+		this.mergeOptions = options;
+	}
+
+	/**
+	 * Check the SUB_DIFF_AWARE_OPTION state.
+	 * 
+	 * @return true if the SUB_DIFF_AWARE_OPTION of the merge options is set to true, false otherwise.
+	 */
+	private boolean isHandleSubDiffs() {
+		if (this.mergeOptions != null) {
+			Object subDiffs = this.mergeOptions.get(SUB_DIFF_AWARE_OPTION);
+			return subDiffs == Boolean.TRUE;
+		}
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
 	 * 
 	 * @since 3.2
 	 */
@@ -139,6 +190,13 @@ public abstract class AbstractMerger implements IMerger2 {
 			if (masterEquivalence != null && masterEquivalence != diff) {
 				dependencies.add(masterEquivalence);
 			}
+		}
+
+		if (isHandleSubDiffs()) {
+			final Set<Diff> dependenciesToMerge = Sets.newHashSet(dependencies);
+			Iterable<Diff> subDiffs = concat(transform(dependenciesToMerge, ComparisonUtil
+					.getSubDiffs(!mergeRightToLeft)));
+			addAll(dependencies, subDiffs);
 		}
 		return dependencies;
 	}
@@ -195,7 +253,14 @@ public abstract class AbstractMerger implements IMerger2 {
 			}
 		}
 
+		if (isHandleSubDiffs()) {
+			final Set<Diff> resultingToMerge = Sets.newHashSet(resulting);
+			Iterable<Diff> subDiffs = concat(transform(resultingToMerge, ComparisonUtil
+					.getSubDiffs(!mergeRightToLeft)));
+			addAll(resulting, subDiffs);
+		}
 		return resulting;
+
 	}
 
 	/**
@@ -309,6 +374,14 @@ public abstract class AbstractMerger implements IMerger2 {
 						fromSide(DifferenceSource.RIGHT)));
 			}
 		}
+
+		if (isHandleSubDiffs()) {
+			final Set<Diff> directlyImpliedToReject = Sets.newHashSet(directlyImpliedRejections);
+			Iterable<Diff> subDiffs = concat(transform(directlyImpliedToReject, ComparisonUtil
+					.getSubDiffs(!mergeRightToLeft)));
+			addAll(directlyImpliedRejections, subDiffs);
+		}
+
 		return directlyImpliedRejections;
 	}
 
@@ -621,6 +694,10 @@ public abstract class AbstractMerger implements IMerger2 {
 
 		final Set<Diff> dependencies = getDirectMergeDependencies(target, false);
 
+		if (isHandleSubDiffs()) {
+			addAll(dependencies, ComparisonUtil.getSubDiffs(true).apply(target));
+		}
+
 		// We'll redo some of the work from getDirectMergeDependencies here in order to ensure we haven't been
 		// merged by another diff (equivalence or implication).
 		// requiresMerging must be executed before actually merging the dependencies because
@@ -661,6 +738,10 @@ public abstract class AbstractMerger implements IMerger2 {
 		target.setState(DifferenceState.MERGED);
 
 		final Set<Diff> dependencies = getDirectMergeDependencies(target, true);
+
+		if (isHandleSubDiffs()) {
+			addAll(dependencies, ComparisonUtil.getSubDiffs(true).apply(target));
+		}
 
 		// We'll redo some of the work from getDirectMergeDependencies here in order to ensure we haven't been
 		// merged by another diff (equivalence or implication).
@@ -904,11 +985,10 @@ public abstract class AbstractMerger implements IMerger2 {
 	 *            The monitor we should use to report progress.
 	 */
 	protected void mergeDiff(Diff diff, boolean rightToLeft, Monitor monitor) {
+		final IMerger delegate = getRegistry().getHighestRankingMerger(diff);
 		if (rightToLeft) {
-			final IMerger delegate = getRegistry().getHighestRankingMerger(diff);
 			delegate.copyRightToLeft(diff, monitor);
 		} else {
-			final IMerger delegate = getRegistry().getHighestRankingMerger(diff);
 			delegate.copyLeftToRight(diff, monitor);
 		}
 	}

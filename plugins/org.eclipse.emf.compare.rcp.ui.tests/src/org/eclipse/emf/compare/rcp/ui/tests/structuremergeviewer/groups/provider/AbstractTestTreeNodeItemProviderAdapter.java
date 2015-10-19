@@ -146,8 +146,12 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 				Object attributeChangeValue = attributeChange.getValue();
 				if (attributeChangeValue instanceof EObject) {
 					return Objects.equal(eGet((EObject) attributeChangeValue, featureName), value);
+				} else if (attributeChangeValue instanceof String) {
+					return featureName.equals(attributeChange.getAttribute().getName()) && value.equals(attributeChangeValue);
+				} else {
+					//attributeChangeValue can be an instance of Integer or something else that has not been managed yet.
+					throw new IllegalStateException("Developers need to implement missing cases.");
 				}
-				return false;
 			}
 		};
 		return find(matches, predicate);

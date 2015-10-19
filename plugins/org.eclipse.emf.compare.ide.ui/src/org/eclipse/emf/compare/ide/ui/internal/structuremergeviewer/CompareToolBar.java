@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
 
 import com.google.common.eventbus.Subscribe;
@@ -39,10 +37,8 @@ import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfigur
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.FilterActionMenu;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.GroupActionMenu;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilterChange;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
@@ -153,25 +149,21 @@ public class CompareToolBar implements ISelectionChangedListener {
 
 			toolbarManager.update(true);
 
-			final boolean enabled = any(this.compareConfiguration.getStructureMergeViewerFilter()
-					.getSelectedDifferenceFilters(), instanceOf(CascadingDifferencesFilter.class));
-			updateMergeActions(enabled);
-
 			this.doOnce = true;
 		}
 	}
 
 	private MergeAction createMergeAction(MergeMode mergeMode, EMFCompareConfiguration cc, INavigatable nav) {
 		IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
-		MergeAction mergeAction = new MergeAction(this.compareConfiguration, mergerRegistry, mergeMode, nav);
+		MergeAction mergeAction = new MergeAction(cc, mergerRegistry, mergeMode, nav);
 		mergeActions.add(mergeAction);
 		return mergeAction;
 	}
 
 	private MergeAction createMergeAllNonConflictingAction(MergeMode mergeMode, IEMFCompareConfiguration cc) {
 		IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
-		MergeAllNonConflictingAction mergeAction = new MergeAllNonConflictingAction(
-				this.compareConfiguration, cc.getComparison(), mergerRegistry, mergeMode);
+		MergeAllNonConflictingAction mergeAction = new MergeAllNonConflictingAction(cc, cc.getComparison(),
+				mergerRegistry, mergeMode);
 		mergeAllNonConflictingActions.add(mergeAction);
 		return mergeAction;
 	}
@@ -205,22 +197,6 @@ public class CompareToolBar implements ISelectionChangedListener {
 		}
 		for (MergeAction mergeAction : mergeAllNonConflictingActions) {
 			mergeAction.setEditingDomain(event.getNewValue());
-		}
-	}
-
-	@Subscribe
-	public void selectedDifferenceFiltersChange(IDifferenceFilterChange event) {
-		final boolean enabled = any(event.getSelectedDifferenceFilters(),
-				instanceOf(CascadingDifferencesFilter.class));
-		updateMergeActions(enabled);
-	}
-
-	private void updateMergeActions(final boolean enabled) {
-		for (MergeAction mergeAction : mergeActions) {
-			mergeAction.setCascadingDifferencesFilterEnabled(enabled);
-		}
-		for (MergeAction mergeAction : mergeAllNonConflictingActions) {
-			mergeAction.setCascadingDifferencesFilterEnabled(enabled);
 		}
 	}
 

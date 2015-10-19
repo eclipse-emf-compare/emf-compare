@@ -16,6 +16,7 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -120,7 +121,8 @@ public interface IMerger {
 		IMerger getHighestRankingMerger(Diff target);
 
 		/**
-		 * Returns the list of the candidate mergers for the given difference.
+		 * Returns the list of the candidate mergers for the given difference. If the given difference is
+		 * null, return all known mergers.
 		 * 
 		 * @param target
 		 *            The given difference.
@@ -297,7 +299,13 @@ public interface IMerger {
 		 * @see org.eclipse.emf.compare.merge.IMerger.Registry#getMergers(org.eclipse.emf.compare.Diff)
 		 */
 		public Collection<IMerger> getMergers(Diff target) {
-			Iterable<IMerger> mergers = filter(map.values(), isMergerFor(target));
+			final Predicate<IMerger> mergerFor;
+			if (target == null) {
+				mergerFor = Predicates.alwaysTrue();
+			} else {
+				mergerFor = isMergerFor(target);
+			}
+			Iterable<IMerger> mergers = filter(map.values(), mergerFor);
 			List<IMerger> ret = newArrayList();
 			for (IMerger merger : mergers) {
 				ret.add(merger);

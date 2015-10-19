@@ -10,13 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
@@ -101,17 +97,6 @@ public class MergeAllNonConflictingAction extends MergeAction {
 					new Status(IStatus.ERROR, EMFCompareIDEUIPlugin.PLUGIN_ID,
 							"Couldn't create the copy all command.")); //$NON-NLS-1$
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAction#getDifferencesToMerge()
-	 */
-	@Override
-	protected List<Diff> getDifferencesToMerge() {
-		// We're overriding #run(), so this has no effect
-		return Collections.emptyList();
 	}
 
 	/**

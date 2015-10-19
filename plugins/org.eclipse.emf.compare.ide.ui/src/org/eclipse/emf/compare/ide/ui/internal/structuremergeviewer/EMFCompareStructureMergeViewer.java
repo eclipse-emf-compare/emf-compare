@@ -429,7 +429,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				if (isOneDiffSelected()) {
 					MergeAction mergeAction = new MergeAction(getCompareConfiguration(), mergerRegistry,
 							mode, navigatable, (IStructuredSelection)getSelection());
-					mergeAction.setCascadingDifferencesFilterEnabled(getCascadingDifferencesFilterEnabled());
 					manager.add(mergeAction);
 				} else if (isOneMatchOrResourceMatchSelected()) {
 					final Predicate<TreeNode> filterPredicate = new Predicate<TreeNode>() {
@@ -441,7 +440,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					MergeContainedNonConflictingAction mergeAction = new MergeContainedNonConflictingAction(
 							getCompareConfiguration(), mergerRegistry, mode, navigatable,
 							(IStructuredSelection)getSelection(), filterPredicate);
-					mergeAction.setCascadingDifferencesFilterEnabled(getCascadingDifferencesFilterEnabled());
 					manager.add(mergeAction);
 				}
 			}
