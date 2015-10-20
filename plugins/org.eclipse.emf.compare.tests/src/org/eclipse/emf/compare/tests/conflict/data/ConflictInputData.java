@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 479449
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.conflict.data;
 
@@ -164,6 +165,18 @@ public class ConflictInputData extends AbstractInputData {
 
 	public Resource getB3ReferenceRight() throws IOException {
 		return loadFromClassLoader("b3/conflict_b3_reference_right.nodes");
+	}
+
+	public Resource getB3ContainmentReferenceLeft() throws IOException {
+		return loadFromClassLoader("b3/conflict_b3_containment_reference_left.nodes");
+	}
+
+	public Resource getB3ContainmentReferenceOrigin() throws IOException {
+		return loadFromClassLoader("b3/conflict_b3_containment_reference_origin.nodes");
+	}
+
+	public Resource getB3ContainmentReferenceRight() throws IOException {
+		return loadFromClassLoader("b3/conflict_b3_containment_reference_right.nodes");
 	}
 
 	public Resource getB4AttributeLeft() throws IOException {

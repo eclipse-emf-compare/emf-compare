@@ -1,5 +1,5 @@
 /*******************************************************************************
-( * Copyright (c) 2012, 2015 Obeo.
+( * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,13 +7,14 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - [446947] Adds support for mergeable String attributes
+ *     Philip Langer - bugs 446947, 479449
  *******************************************************************************/
 package org.eclipse.emf.compare.conflict;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.isEmpty;
+import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isAddOrSetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isFeatureMapContainment;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
@@ -211,20 +212,22 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 */
 	protected void checkContainmentConflict(Comparison comparison, ReferenceChange diff,
 			Iterable<ReferenceChange> candidates) {
-		final Match valueMatch = comparison.getMatch(diff.getValue());
-
 		for (ReferenceChange candidate : candidates) {
-			EObject candidateValue = candidate.getValue();
-			if (valueMatch.getLeft() == candidateValue || valueMatch.getRight() == candidateValue
-					|| valueMatch.getOrigin() == candidateValue) {
+			if (isMatchingValues(comparison, diff, candidate)) {
 				checkContainmentConflict(comparison, diff, candidate);
+			} else if (isConflictingAdditionToSingleValuedReference(diff, candidate)) {
+				if (comparison.getEqualityHelper().matchingValues(candidate.getValue(), diff.getValue())) {
+					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
+				} else {
+					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+				}
 			}
 		}
 
 		// [381143] Every Diff "under" a containment deletion conflicts with it.
 		if (diff.getKind() == DifferenceKind.DELETE) {
 			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
-			final DiffTreeIterator diffIterator = new DiffTreeIterator(valueMatch);
+			final DiffTreeIterator diffIterator = new DiffTreeIterator(comparison.getMatch(diff.getValue()));
 			diffIterator.setFilter(candidateFilter);
 			diffIterator.setPruningFilter(isContainmentDelete());
 
@@ -237,6 +240,46 @@ public class DefaultConflictDetector implements IConflictDetector {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Specifies whether the given differences <code>diff</code> and <code>candidate</code> are conflicting
+	 * additions to single-valued references.
+	 * <p>
+	 * They are, if the changed reference is single-valued and both are additions to the same object.
+	 * </p>
+	 * 
+	 * @param diff
+	 *            The reference diff to check.
+	 * @param candidate
+	 *            The candidate diff to check.
+	 * @return <code>true</code> if they are conflicting additions to single-valued references,
+	 *         <code>false</code> otherwise.
+	 */
+	private boolean isConflictingAdditionToSingleValuedReference(ReferenceChange diff,
+			ReferenceChange candidate) {
+		return (diff.getReference() == candidate.getReference() && !diff.getReference().isMany())
+				&& (isAddOrSetDiff(diff) && isAddOrSetDiff(candidate))
+				&& diff.getMatch() == candidate.getMatch();
+	}
+
+	/**
+	 * Specifies whether the values of the given differences <code>diff</code> and <code>candidate</code>
+	 * match.
+	 * 
+	 * @param comparison
+	 *            The originating comparison of those diffs.
+	 * @param diff
+	 *            The one difference.
+	 * @param candidate
+	 *            The other difference.
+	 * @return <code>true</code> if the values of the differences match, <code>false</code> otherwise.
+	 */
+	private boolean isMatchingValues(Comparison comparison, ReferenceChange diff, ReferenceChange candidate) {
+		final Match valueMatch = comparison.getMatch(diff.getValue());
+		final EObject candidateValue = candidate.getValue();
+		return valueMatch.getLeft() == candidateValue || valueMatch.getRight() == candidateValue
+				|| valueMatch.getOrigin() == candidateValue;
 	}
 
 	/**

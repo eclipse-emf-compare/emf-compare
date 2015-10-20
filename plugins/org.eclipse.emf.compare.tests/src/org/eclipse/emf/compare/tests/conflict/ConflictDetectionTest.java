@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 479449
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.conflict;
 
@@ -20,6 +21,9 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.moved;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.movedInAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.movedInReference;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.onEObject;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.referenceValueMatch;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
@@ -39,6 +43,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
@@ -49,6 +54,35 @@ import org.junit.Test;
 
 @SuppressWarnings("nls")
 public class ConflictDetectionTest {
+
+	/**
+	 * This predicate can be used to check whether a given Diff represents the setting of a value in a
+	 * single-valued reference going by {@code referenceName} on an EObject which name matches
+	 * {@code qualifiedName}.
+	 * <p>
+	 * Note that in order for this to work, we expect the EObjects to have a "name" feature returning a String
+	 * for us to compare it with the given qualified name.
+	 * </p>
+	 * <p>
+	 * TODO this is only here to allow us to avoid changing API; should be moved to EMFComparePredicates
+	 * </p>
+	 * 
+	 * @param qualifiedName
+	 *            Qualified name of the EObject which we expect to present a ReferenceChange.
+	 * @param referenceName
+	 *            Name of the multi-valued reference on which we expect a change.
+	 * @param addedQualifiedName
+	 *            Qualified name of the EObject which we expect to have been added to this reference.
+	 * @return The created predicate.
+	 */
+	@SuppressWarnings("unchecked")
+	private static Predicate<? super Diff> setOfReference(final String qualifiedName,
+			final String referenceName, final String addedQualifiedName) {
+		// This is only meant for multi-valued references
+		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), referenceValueMatch(referenceName,
+				addedQualifiedName, false));
+	}
+
 	private ConflictInputData input = new ConflictInputData();
 
 	@Test
@@ -513,6 +547,45 @@ public class ConflictDetectionTest {
 				"singleValuedReference", null, "root.left");
 		final Predicate<? super Diff> rightDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", null, "root.right");
+
+		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
+				rightDiffDescription));
+
+		assertNotNull(leftDiff);
+		assertNotNull(rightDiff);
+
+		// We know there's only one conflict
+		final Conflict conflict = conflicts.get(0);
+
+		final List<Diff> conflictDiff = conflict.getDifferences();
+		assertEquals(2, conflictDiff.size());
+		assertTrue(conflictDiff.contains(leftDiff));
+		assertTrue(conflictDiff.contains(rightDiff));
+		assertSame(ConflictKind.REAL, conflict.getKind());
+	}
+
+	@Test
+	public void testB3UseCaseForContainmentReference() throws IOException {
+		final Resource left = input.getB3ContainmentReferenceLeft();
+		final Resource origin = input.getB3ContainmentReferenceOrigin();
+		final Resource right = input.getB3ContainmentReferenceRight();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		// We should have no less and no more than 2 differences, composing a single conflict
+		assertEquals(2, differences.size());
+		assertEquals(1, conflicts.size());
+
+		final Predicate<? super Diff> leftDiffDescription = setOfReference("root.conflictHolder",
+				"singleValueContainment", "root.conflictHolder.newleft");
+		final Predicate<? super Diff> rightDiffDescription = setOfReference("root.conflictHolder",
+				"singleValueContainment", "root.conflictHolder.newright");
 
 		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
 				leftDiffDescription));
