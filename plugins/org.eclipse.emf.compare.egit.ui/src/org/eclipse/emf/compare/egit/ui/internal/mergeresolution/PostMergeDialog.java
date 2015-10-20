@@ -33,7 +33,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 /**
  * Dialog for displaying a dialog after resolving a merge conflict.
  * 
- * @author <mborkowski@eclipsesource.com>
+ * @author Michael Borkowski <mborkowski@eclipsesource.com>
  */
 public class PostMergeDialog extends Dialog {
 	/**

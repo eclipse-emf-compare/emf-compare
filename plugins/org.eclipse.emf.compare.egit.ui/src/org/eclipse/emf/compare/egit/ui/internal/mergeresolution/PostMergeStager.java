@@ -38,7 +38,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * Responsible for prompting the user about staging files after merge conflict resolution.
  * 
- * @author <mborkowski@eclipsesource.com>
+ * @author Michael Borkowski <mborkowski@eclipsesource.com>
  */
 @SuppressWarnings({"restriction" })
 public class PostMergeStager implements IMergeResolutionListener {
