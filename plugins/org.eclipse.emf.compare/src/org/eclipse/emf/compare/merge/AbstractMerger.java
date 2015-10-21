@@ -740,7 +740,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 		final Set<Diff> dependencies = getDirectMergeDependencies(target, true);
 
 		if (isHandleSubDiffs()) {
-			addAll(dependencies, ComparisonUtil.getSubDiffs(true).apply(target));
+			addAll(dependencies, ComparisonUtil.getSubDiffs(false).apply(target));
 		}
 
 		// We'll redo some of the work from getDirectMergeDependencies here in order to ensure we haven't been

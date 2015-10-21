@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.merge;
 
+import static com.google.common.collect.Iterables.addAll;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 
 import com.google.common.base.Predicate;
@@ -27,7 +28,10 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.graph.IGraph;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.internal.utils.Graph;
+import org.eclipse.emf.compare.merge.AbstractMerger;
+import org.eclipse.emf.compare.merge.IMergeOptionAware;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger2;
 
@@ -181,7 +185,18 @@ public final class MergeDependenciesUtil {
 			directImplications = Collections.emptySet();
 		}
 
-		return Sets.newLinkedHashSet(Sets.union(directParents, directImplications));
+		final LinkedHashSet<Diff> directRelated = Sets.newLinkedHashSet(Sets.union(directParents,
+				directImplications));
+
+		if (merger instanceof IMergeOptionAware) {
+			Object subDiffs = ((IMergeOptionAware)merger).getMergeOptions().get(
+					AbstractMerger.SUB_DIFF_AWARE_OPTION);
+			if (subDiffs == Boolean.TRUE) {
+				addAll(directRelated, ComparisonUtil.getSubDiffs(!mergeRightToLeft).apply(diff));
+			}
+		}
+
+		return directRelated;
 	}
 
 	/**
