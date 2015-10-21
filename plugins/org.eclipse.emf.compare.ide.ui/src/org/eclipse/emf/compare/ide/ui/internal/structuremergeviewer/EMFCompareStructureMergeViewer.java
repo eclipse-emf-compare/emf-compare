@@ -38,6 +38,7 @@ import java.util.EventObject;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.compare.CompareUI;
@@ -106,6 +107,8 @@ import org.eclipse.emf.compare.ide.ui.internal.util.CompareHandlerService;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.merge.AbstractMerger;
+import org.eclipse.emf.compare.merge.IMergeOptionAware;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
@@ -746,6 +749,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 */
 	private void setCascadingDifferencesFilterEnabled(boolean enable) {
 		this.cascadingDifferencesFilterEnabled = enable;
+		IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
+		for (IMergeOptionAware merger : Iterables.filter(mergerRegistry.getMergers(null),
+				IMergeOptionAware.class)) {
+			Map<Object, Object> mergeOptions = merger.getMergeOptions();
+			mergeOptions.put(AbstractMerger.SUB_DIFF_AWARE_OPTION, Boolean.valueOf(enable));
+		}
 	}
 
 	/**

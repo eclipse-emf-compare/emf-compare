@@ -10,21 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.collect.Iterables.any;
-
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.common.eventbus.Subscribe;
 
-import java.util.Map;
-
-import org.eclipse.emf.compare.merge.AbstractMerger;
-import org.eclipse.emf.compare.merge.IMergeOptionAware;
-import org.eclipse.emf.compare.merge.IMerger;
-import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilterChange;
@@ -131,14 +120,6 @@ public abstract class AbstractMergeViewer extends ContentViewer implements IMerg
 	@Subscribe
 	public void handleDifferenceFilterChange(IDifferenceFilterChange event) {
 		differenceFilter = event.getPredicate();
-		final boolean enabled = any(event.getSelectedDifferenceFilters(),
-				instanceOf(CascadingDifferencesFilter.class));
-		IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
-		for (IMergeOptionAware merger : Iterables.filter(mergerRegistry.getMergers(null),
-				IMergeOptionAware.class)) {
-			Map<Object, Object> mergeOptions = merger.getMergeOptions();
-			mergeOptions.put(AbstractMerger.SUB_DIFF_AWARE_OPTION, Boolean.valueOf(enabled));
-		}
 		SWTUtil.safeRefresh(this, true, true);
 	}
 
