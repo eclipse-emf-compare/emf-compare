@@ -11,7 +11,6 @@
  
  Contributors:
      Obeo - initial API and implementation
-     Michael Borkowski - bug 462863 (Automatic staging of changes after merge resolution)
 -->
 
 
@@ -32,11 +31,5 @@
                menubarPath="team.main/group4">
          </action>
       </objectContribution>
-   </extension>
-   <extension
-         point="org.eclipse.emf.compare.ide.ui.mergeResolutionListener">
-      <listener
-            class="org.eclipse.emf.compare.egit.ui.internal.mergeresolution.PostMergeStager">
-      </listener>
    </extension>
 </plugin>

@@ -81,7 +81,7 @@ public class MergeResolutionManager {
 								.hasState(DifferenceState.UNRESOLVED));
 			}
 		};
-		if (!Iterables.any(comparison.getConflicts(), unresolvedConflict)) {
+		if (Iterables.any(comparison.getConflicts(), unresolvedConflict)) {
 			mergeResolutionListenerRegistry.mergeResolutionCompleted(comparison);
 		}
 	}
