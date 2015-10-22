@@ -5,6 +5,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Michael Borkowski - initial API and implementation
  *******************************************************************************/
 package org.eclipse.emf.compare.egit.ui.internal.merge;
 
@@ -731,6 +734,11 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		protected void makeInSync(IDiff diff, IProgressMonitor monitor) throws CoreException {
 			// Won't be used as a merging context
 		}
+	}
+
+	@Override
+	protected void flushViewers(IProgressMonitor monitor) {
+		super.flushViewers(monitor);
 	}
 }
 // CHECKSTYLE:ON

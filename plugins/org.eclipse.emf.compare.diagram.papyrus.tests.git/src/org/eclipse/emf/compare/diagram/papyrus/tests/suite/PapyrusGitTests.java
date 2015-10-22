@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChan
 import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChangeDelete1GitMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChangeDelete2GitMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.egit.StereotypeConflictTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.egit.mergeresolution.MergeResolutionManagerTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.AdditiveMergeDiagramTests;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.implication.AttachmentChangeImplicationTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.ResourceAttachmentChangeMoveConflictTests;
@@ -50,7 +51,8 @@ import junit.textui.TestRunner;
 		ResourceAttachmentChangeDelete2GitMergeTest.class, ResourceAttachmentChangeMoveConflictTests.class,
 		ResourceAttachmentChangeMoveNoConflictTests.class, ResourceAttachmentChangeMoveOrderTests.class,
 		StereotypeConflictTest.class, IgnoreDiFileChangesInGitMergeTest.class,
-		MoveOfDiagramConflictDetectionTest.class, AdditiveMergeDiagramTests.class, })
+		MoveOfDiagramConflictDetectionTest.class, AdditiveMergeDiagramTests.class,
+		MergeResolutionManagerTest.class, })
 public class PapyrusGitTests {
 	/**
 	 * Launches the test with the given arguments.

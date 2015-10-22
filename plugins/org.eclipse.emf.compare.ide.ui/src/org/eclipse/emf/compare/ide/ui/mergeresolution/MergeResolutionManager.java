@@ -16,10 +16,7 @@ import com.google.common.collect.Iterables;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
-import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
-import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ide.ui.internal.mergeresolution.MergeResolutionListenerRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeNodeCompareInput;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
@@ -31,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  * merge conflicts are resolved and the users saves the merge result.
  * 
  * @author Michael Borkowski <mborkowski@eclipsesource.com>
+ * @since 4.2
  */
 public class MergeResolutionManager {
 
@@ -59,8 +57,8 @@ public class MergeResolutionManager {
 	 * contents, but does not necessarily mean that all conflicts are resolved.
 	 * 
 	 * @param input
-	 *            The content of the merge resolution being flushed. This can either be a {@link Match}, a
-	 *            {@link Diff} or a {@link MatchResource} object.
+	 *            The content of the merge resolution being flushed. This must be a
+	 *            {@link TreeNodeCompareInput} object.
 	 */
 	public void handleFlush(Object input) {
 		// We only know how to handle TreeNodeCompareInput
@@ -77,13 +75,17 @@ public class MergeResolutionManager {
 			return;
 		}
 
+		if (comparison.getConflicts().size() == 0) {
+			return;
+		}
+
 		Predicate<Conflict> unresolvedConflict = new Predicate<Conflict>() {
 			public boolean apply(Conflict conflict) {
 				return conflict != null && conflict.getKind() != ConflictKind.PSEUDO && Iterables.any(
 						conflict.getDifferences(), EMFComparePredicates.hasState(DifferenceState.UNRESOLVED));
 			}
 		};
-		if (Iterables.any(comparison.getConflicts(), unresolvedConflict)) {
+		if (!Iterables.any(comparison.getConflicts(), unresolvedConflict)) {
 			mergeResolutionListenerRegistry.mergeResolutionCompleted(comparison);
 		}
 	}

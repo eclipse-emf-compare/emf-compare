@@ -17,4 +17,8 @@ Require-Bundle: org.eclipse.emf.compare.egit;bundle-version="1.1.0",
  org.eclipse.papyrus.uml.tools,
  org.eclipse.emf.compare.rcp,
  org.eclipse.emf.compare.ide.ui.tests.git.framework,
- org.eclipse.emf.compare.ide.ui.tests.framework
+ org.eclipse.emf.compare.ide.ui.tests.framework,
+ org.mockito;bundle-version="1.8.0",
+ org.hamcrest;bundle-version="1.1.0",
+ org.eclipse.emf.common;bundle-version="2.11.0"
+Import-Package: org.eclipse.emf.compare.ide.ui.tests
