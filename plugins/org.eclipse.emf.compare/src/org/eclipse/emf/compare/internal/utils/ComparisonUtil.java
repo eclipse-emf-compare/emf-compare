@@ -94,7 +94,31 @@ public final class ComparisonUtil {
 	 * @since 3.0
 	 */
 	public static Function<Diff, Iterable<Diff>> getSubDiffs(final boolean leftToRight) {
-		return getSubDiffs(leftToRight, new LinkedHashSet<Diff>());
+		return getSubDiffs(leftToRight, false, new LinkedHashSet<Diff>());
+	}
+
+	/**
+	 * When merging a {@link Diff}, returns the first level of sub diffs of this given diff, and all
+	 * associated diffs (see {@link DiffUtil#getAssociatedDiffs(Iterable, boolean, Diff)}) of these sub diffs.
+	 * <p>
+	 * If the diff is an {@link org.eclipse.emf.compare.AttributeChange}, a
+	 * {@link org.eclipse.emf.compare.FeatureMapChange} or a
+	 * {@link org.eclipse.emf.compare.ResourceAttachmentChange} , this method will return an empty iterable.
+	 * </p>
+	 * <p>
+	 * If the diff is a {@link ReferenceChange} this method will return the first level differences contained
+	 * in the match that contains the value of the reference change, and all associated diffs of these
+	 * differences.
+	 * </p>
+	 * 
+	 * @param leftToRight
+	 *            the direction of merge.
+	 * @return an iterable containing the first level of sub diffs of this given diff, and all associated
+	 *         diffs of these sub diffs.
+	 * @since 3.3
+	 */
+	public static Function<Diff, Iterable<Diff>> getDirectSubDiffs(final boolean leftToRight) {
+		return getSubDiffs(leftToRight, true, new LinkedHashSet<Diff>());
 	}
 
 	/**
@@ -327,6 +351,8 @@ public final class ComparisonUtil {
 	 * 
 	 * @param leftToRight
 	 *            the direction of merge.
+	 * @param firstLevelOnly
+	 *            to get only the first level of subDiffs.
 	 * @param processedDiffs
 	 *            a set of diffs which have been already processed.
 	 * @return an iterable containing the sub diffs of this given diff, and all associated diffs of these sub
@@ -334,7 +360,7 @@ public final class ComparisonUtil {
 	 * @since 3.0
 	 */
 	private static Function<Diff, Iterable<Diff>> getSubDiffs(final boolean leftToRight,
-			final LinkedHashSet<Diff> processedDiffs) {
+			final boolean firstLevelOnly, final LinkedHashSet<Diff> processedDiffs) {
 		return new Function<Diff, Iterable<Diff>>() {
 			public Iterable<Diff> apply(Diff diff) {
 				if (diff instanceof ReferenceChange) {
@@ -345,14 +371,16 @@ public final class ComparisonUtil {
 						// if the diff is a Move diff, we don't want its children.
 						if (ofKind(DifferenceKind.MOVE).apply(diff)) {
 							subDiffs = ImmutableList.of();
-						} else if (matchOfValue != null) {
+						} else if (matchOfValue != null && !firstLevelOnly) {
 							subDiffs = filter(matchOfValue.getAllDifferences(), CASCADING_DIFF);
+						} else if (matchOfValue != null && firstLevelOnly) {
+							subDiffs = filter(matchOfValue.getDifferences(), CASCADING_DIFF);
 						} else {
 							subDiffs = ImmutableList.of();
 						}
 						addAll(processedDiffs, subDiffs);
 						final Iterable<Diff> associatedDiffs = getAssociatedDiffs(diff, subDiffs,
-								processedDiffs, leftToRight);
+								processedDiffs, leftToRight, firstLevelOnly);
 						return ImmutableSet.copyOf(concat(subDiffs, associatedDiffs));
 					}
 				}
@@ -392,12 +420,14 @@ public final class ComparisonUtil {
 	 *            a set of diffs which have been already processed.
 	 * @param leftToRight
 	 *            the direction of merge.
+	 * @param firstLevelOnly
+	 *            to get only the first level of subDiffs.
 	 * @return an iterable containing the associated diffs of these given sub diffs, and all sub diffs of
 	 *         these associated diffs.
 	 * @since 3.0
 	 */
 	private static Iterable<Diff> getAssociatedDiffs(final Diff diffRoot, Iterable<Diff> subDiffs,
-			LinkedHashSet<Diff> processedDiffs, boolean leftToRight) {
+			LinkedHashSet<Diff> processedDiffs, boolean leftToRight, boolean firstLevelOnly) {
 		Collection<Diff> associatedDiffs = new HashSet<Diff>();
 		for (Diff diff : subDiffs) {
 			final Collection<Diff> reqs = new LinkedHashSet<Diff>();
@@ -416,10 +446,12 @@ public final class ComparisonUtil {
 			}
 			reqs.remove(diffRoot);
 			associatedDiffs.addAll(reqs);
+			associatedDiffs.addAll(diff.getRefines());
 			for (Diff req : reqs) {
 				if (!Iterables.contains(subDiffs, req) && !processedDiffs.contains(req)) {
 					processedDiffs.add(req);
-					addAll(associatedDiffs, getSubDiffs(leftToRight, processedDiffs).apply(req));
+					addAll(associatedDiffs, getSubDiffs(leftToRight, firstLevelOnly, processedDiffs).apply(
+							req));
 				}
 			}
 		}

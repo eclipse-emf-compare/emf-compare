@@ -40,6 +40,7 @@ import org.eclipse.emf.compare.uml2.tests.implications.ImplicationsInterfaceReal
 import org.eclipse.emf.compare.uml2.tests.implications.ImplicationsTransitionTest;
 import org.eclipse.emf.compare.uml2.tests.include.AddIncludeTest;
 import org.eclipse.emf.compare.uml2.tests.merge.ExtensionMergeTest;
+import org.eclipse.emf.compare.uml2.tests.merge.MergeDiffInvolvingRefineDiffTest;
 import org.eclipse.emf.compare.uml2.tests.message.AddMessageTest;
 import org.eclipse.emf.compare.uml2.tests.opaque.OpaqueElementBodyChangeDiffTest;
 import org.eclipse.emf.compare.uml2.tests.opaque.OpaqueElementBodyChangeMergeTest;
@@ -74,7 +75,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		ImplicationsTransitionTest.class, ImplicationsInterfaceRealizationTest.class,
 		StaticStereotypedElementItemProviderTest.class, DynamicStereotypedElementItemProviderTest.class,
 		OpaqueElementBodyChangeDiffTest.class, OpaqueElementBodyChangeMergeTest.class,
-		DanglingStereotypeApplicationTest.class })
+		DanglingStereotypeApplicationTest.class, MergeDiffInvolvingRefineDiffTest.class })
 public class AllTests {
 
 	/**

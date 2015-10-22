@@ -192,12 +192,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 			}
 		}
 
-		if (isHandleSubDiffs()) {
-			final Set<Diff> dependenciesToMerge = Sets.newHashSet(dependencies);
-			Iterable<Diff> subDiffs = concat(transform(dependenciesToMerge, ComparisonUtil
-					.getSubDiffs(!mergeRightToLeft)));
-			addAll(dependencies, subDiffs);
-		}
 		return dependencies;
 	}
 
@@ -254,7 +248,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 		}
 
 		if (isHandleSubDiffs()) {
-			final Set<Diff> resultingToMerge = Sets.newHashSet(resulting);
+			final Set<Diff> resultingToMerge = Sets.newLinkedHashSet(resulting);
 			Iterable<Diff> subDiffs = concat(transform(resultingToMerge, ComparisonUtil
 					.getSubDiffs(!mergeRightToLeft)));
 			addAll(resulting, subDiffs);
@@ -373,13 +367,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 				Iterables.addAll(directlyImpliedRejections, Iterables.filter(conflict.getDifferences(),
 						fromSide(DifferenceSource.RIGHT)));
 			}
-		}
-
-		if (isHandleSubDiffs()) {
-			final Set<Diff> directlyImpliedToReject = Sets.newHashSet(directlyImpliedRejections);
-			Iterable<Diff> subDiffs = concat(transform(directlyImpliedToReject, ComparisonUtil
-					.getSubDiffs(!mergeRightToLeft)));
-			addAll(directlyImpliedRejections, subDiffs);
 		}
 
 		return directlyImpliedRejections;
@@ -694,10 +681,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 
 		final Set<Diff> dependencies = getDirectMergeDependencies(target, false);
 
-		if (isHandleSubDiffs()) {
-			addAll(dependencies, ComparisonUtil.getSubDiffs(true).apply(target));
-		}
-
 		// We'll redo some of the work from getDirectMergeDependencies here in order to ensure we haven't been
 		// merged by another diff (equivalence or implication).
 		// requiresMerging must be executed before actually merging the dependencies because
@@ -717,6 +700,13 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 				accept(target, false);
 			} else {
 				reject(target, false);
+			}
+		}
+
+		if (isHandleSubDiffs()) {
+			Set<Diff> subDiffs = Sets.newLinkedHashSet(ComparisonUtil.getDirectSubDiffs(true).apply(target));
+			for (Diff subDiff : subDiffs) {
+				mergeDiff(subDiff, false, monitor);
 			}
 		}
 	}
@@ -739,10 +729,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 
 		final Set<Diff> dependencies = getDirectMergeDependencies(target, true);
 
-		if (isHandleSubDiffs()) {
-			addAll(dependencies, ComparisonUtil.getSubDiffs(false).apply(target));
-		}
-
 		// We'll redo some of the work from getDirectMergeDependencies here in order to ensure we haven't been
 		// merged by another diff (equivalence or implication).
 		// requiresMerging must be executed before actually merging the dependencies because
@@ -762,6 +748,13 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 				reject(target, true);
 			} else {
 				accept(target, true);
+			}
+		}
+
+		if (isHandleSubDiffs()) {
+			Set<Diff> subDiffs = Sets.newLinkedHashSet(ComparisonUtil.getDirectSubDiffs(false).apply(target));
+			for (Diff subDiff : subDiffs) {
+				mergeDiff(subDiff, true, monitor);
 			}
 		}
 	}
