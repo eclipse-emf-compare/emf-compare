@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
@@ -86,6 +87,9 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	 */
 	public static class ConflictsGroupImpl extends BasicDifferenceGroupImpl {
 
+		/** Stores possible duplicates to remove. */
+		private Collection<Diff> possibleDuplicates;
+
 		/**
 		 * {@inheritDoc}.
 		 * 
@@ -95,6 +99,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		public ConflictsGroupImpl(Comparison comparison, Predicate<? super Diff> filter, String name,
 				ECrossReferenceAdapter crossReferenceAdapter) {
 			super(comparison, filter, name, crossReferenceAdapter);
+			this.possibleDuplicates = Sets.newHashSet();
 		}
 
 		/**
@@ -150,8 +155,56 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 				buildSubTree(ret, conflict, match);
 			}
 
+			// Check for possible duplicates. Maybe a root TreeNode of the conflict already exists in another
+			// TreeNode.
+			Collection<TreeNode> duplicates = Sets.newHashSet();
+			for (TreeNode treeNode : ret.getChildren()) {
+				EObject data = TREE_NODE_DATA.apply(treeNode);
+				if (this.possibleDuplicates.contains(data)) {
+					duplicates.add(treeNode);
+				}
+			}
+			ret.getChildren().removeAll(duplicates);
+
 			return ret;
 
+		}
+
+		/**
+		 * Check if the difference associated with the given TreeNode is refined by another difference and the
+		 * difference associated with its parent TreeNode is also refined by another difference. In this case,
+		 * it means that it can exist a possible duplicate of the given TreeNode at the root of the tree.
+		 * 
+		 * @param treeNode
+		 *            the given TreeNode.
+		 * @return true if the difference associated with the given TreeNode is refined by another difference
+		 *         and the difference associated with its parent TreeNode is also refined by another
+		 *         difference, false otherwise.
+		 */
+		private boolean isSubRefinedDiffOfRefinedDiff(TreeNode treeNode) {
+			if (isRefinedBy(treeNode) && isRefinedBy(treeNode.getParent())) {
+				return true;
+			}
+			return false;
+		}
+
+		/**
+		 * Checks if the difference associated with the given TreeNode is refined by another difference.
+		 * 
+		 * @param treeNode
+		 *            the given TreeNode.
+		 * @return true if the difference associated with the given TreeNode is refined by another difference,
+		 *         false otherwise.
+		 */
+		private boolean isRefinedBy(TreeNode treeNode) {
+			EObject data = TREE_NODE_DATA.apply(treeNode);
+			if (data instanceof Diff) {
+				EList<Diff> refinedBy = ((Diff)data).getRefinedBy();
+				if (!refinedBy.isEmpty()) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		/**
@@ -174,6 +227,11 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 				if (!isParentPseudoConflictFromOtherSide(diff, parentNode.getData())) {
 					TreeNode wrap = wrap(diff);
 					parentNode.getChildren().add(wrap);
+					// The diff is refined by other diffs. It is also a sub-diff of a diff refined by other
+					// diffs. We don't want to see several tree nodes for the same diff in this case.
+					if (isSubRefinedDiffOfRefinedDiff(wrap)) {
+						possibleDuplicates.add(diff);
+					}
 					if (isContainment(diff)) {
 						final Match diffMatch = ComparisonUtil.getComparison(diff).getMatch(
 								((ReferenceChange)diff).getValue());

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,10 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.structuremergeviewer.filters.groups.extenders;
 
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
+
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl;
@@ -44,10 +47,17 @@ public class DiagramDiffExtender implements IDifferenceGroupExtender {
 			Comparison comparison = diagramDiff.getMatch().getComparison();
 			Match match = comparison.getMatch(view);
 			if (match != null) {
-				for (Match subMatch : match.getSubmatches()) {
+				Diff primeRefining = diagramDiff.getPrimeRefining();
+				if (CONTAINMENT_REFERENCE_CHANGE.apply(primeRefining)) {
 					List<TreeNode> buildSubTree = ((BasicDifferenceGroupImpl)group)
-							.buildContainmentSubTree(subMatch);
+							.buildContainmentSubTree(match);
 					treeNode.getChildren().addAll(buildSubTree);
+				} else {
+					for (Match subMatch : match.getSubmatches()) {
+						List<TreeNode> buildSubTree = ((BasicDifferenceGroupImpl)group)
+								.buildContainmentSubTree(subMatch);
+						treeNode.getChildren().addAll(buildSubTree);
+					}
 				}
 			}
 		}

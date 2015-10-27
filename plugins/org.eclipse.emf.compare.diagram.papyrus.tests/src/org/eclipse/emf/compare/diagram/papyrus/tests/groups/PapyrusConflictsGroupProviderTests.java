@@ -26,11 +26,13 @@ import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.structuremergeviewer.filters.GMFRefinedElementsFilter;
+import org.eclipse.emf.compare.diagram.internal.extensions.EdgeChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.NodeChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.provider.spec.ExtensionsItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.diagram.internal.matchs.provider.spec.DiagramCompareItemProviderAdapterFactorySpec;
@@ -219,6 +221,122 @@ public class PapyrusConflictsGroupProviderTests extends AbstractTest {
 		assertTrue(diagramFilterDisabled.apply(shapeAtt1));
 		shapeAtt1Children = shapeAtt1.getChildren();
 		assertEquals(0, shapeAtt1Children.size());
+	}
+
+	/**
+	 * The comparison produces one conflict. This conflict concerns the diagram.
+	 * It involves 4 differences: 1 ReferenceChange, 1 AttributeChange and 2
+	 * EdgeChanges. The EdgeChanges are part of the conflict because they refine
+	 * the ReferenceChanges. When the "Diagram refined elements " filer is
+	 * enabled, the conflict group must show both EdgeChanges. When the
+	 * "Diagram refined elements " filer is disabled, the conflict group must
+	 * show 1 ReferenceChange & 1 AttributeChange.
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void testBug480437() throws IOException {
+
+		final Resource left = input.getBug480437Left();
+		final Resource right = input.getBug480437Right();
+		final Resource origin = input.getBug480437Origin();
+
+		Comparison comparison = buildComparison(left, right, origin);
+
+		EList<Conflict> conflicts = comparison.getConflicts();
+		assertEquals(1, conflicts.size());
+
+		Conflict conflict = conflicts.get(0);
+		EList<Diff> conflictedDiffs = conflict.getDifferences();
+		assertEquals(4, conflictedDiffs.size());
+		assertEquals(2, size(filter(conflictedDiffs, EdgeChange.class)));
+		assertEquals(1, size(filter(conflictedDiffs, ReferenceChange.class)));
+		assertEquals(1, size(filter(conflictedDiffs, AttributeChange.class)));
+
+		TreeNode groupTreeNode = TreeFactory.eINSTANCE.createTreeNode();
+		groupTreeNode.setData(comparison);
+		groupTreeNode.eAdapters().add(new ThreeWayComparisonGroupProvider());
+
+		Predicate<? super EObject> diagramFilterEnabled = new GMFRefinedElementsFilter()
+				.getPredicateWhenSelected();
+		Predicate<? super EObject> diagramFilterDisabled = new GMFRefinedElementsFilter()
+				.getPredicateWhenUnselected();
+
+		Collection<?> children = itemDelegator.getChildren(groupTreeNode);
+		assertEquals(3, children.size());
+
+		GroupItemProviderAdapter conflictGroup = (GroupItemProviderAdapter) children
+				.iterator().next();
+		Collection<?> conflictGroupChildren = itemDelegator
+				.getChildren(conflictGroup);
+		assertEquals(1, conflictGroupChildren.size());
+
+		TreeNode firstConflict = (TreeNode) conflictGroupChildren.iterator()
+				.next();
+		assertEquals("> Conflict [4 out of 4 conflicts unresolved]",
+				itemDelegator.getText(firstConflict));
+		EList<TreeNode> firstConflictChildren = firstConflict.getChildren();
+		// the first conflict contains 2 children: a ReferenceChange and a
+		// EdgeChange.
+		assertEquals(2, firstConflictChildren.size());
+
+		// the EdgeChange delete on Connector Class1
+		TreeNode edgeDeleteConnectorClass1 = firstConflictChildren.get(0);
+		assertEquals("Connector <Abstraction> Class1 [edges delete]",
+				itemDelegator.getText(edgeDeleteConnectorClass1));
+		// visible when filter is enabled because this is a diagram diff
+		assertFalse(diagramFilterEnabled.apply(edgeDeleteConnectorClass1));
+		assertTrue(diagramFilterDisabled.apply(edgeDeleteConnectorClass1));
+		EList<TreeNode> edgeDeleteConnectorClass1Children = edgeDeleteConnectorClass1
+				.getChildren();
+		assertEquals(2, edgeDeleteConnectorClass1Children.size());
+
+		// the children of EdgeChange delete on Connector Class1
+		// first child : the ReferenceChange on Identity Anchor
+		TreeNode identityAnchor = edgeDeleteConnectorClass1Children.get(0);
+		assertEquals("Identity Anchor (0.0,0.38) [sourceAnchor delete]",
+				itemDelegator.getText(identityAnchor));
+		// visible when filter is disabled because this is refined by a diagram
+		// diff
+		assertTrue(diagramFilterEnabled.apply(identityAnchor));
+		assertFalse(diagramFilterDisabled.apply(identityAnchor));
+		EList<TreeNode> identityAnchorChildren = identityAnchor.getChildren();
+		assertEquals(1, identityAnchorChildren.size());
+
+		// second child : the EdgeChange change on Connector Class1
+		TreeNode lookChangeConnectorClass1 = edgeDeleteConnectorClass1Children
+				.get(1);
+		assertEquals("Connector <Abstraction> Class1 [look change]",
+				itemDelegator.getText(lookChangeConnectorClass1));
+		// visible when filter is enabled because this is a diagram diff
+		assertFalse(diagramFilterEnabled.apply(lookChangeConnectorClass1));
+		assertTrue(diagramFilterDisabled.apply(lookChangeConnectorClass1));
+		EList<TreeNode> lookChangeChildren = lookChangeConnectorClass1
+				.getChildren();
+		assertEquals(1, lookChangeChildren.size());
+
+		// the ReferenceChange on Identity Anchor
+		identityAnchor = firstConflictChildren.get(1);
+		assertEquals("Identity Anchor (0.0,0.38) [sourceAnchor delete]",
+				itemDelegator.getText(identityAnchor));
+		// visible when filter is disabled because this is refined by a diagram
+		// diff
+		assertTrue(diagramFilterEnabled.apply(identityAnchor));
+		assertFalse(diagramFilterDisabled.apply(identityAnchor));
+		identityAnchorChildren = identityAnchor.getChildren();
+		assertEquals(1, identityAnchorChildren.size());
+
+		// the children of ReferenceChange on Identity Anchor
+		// first child : the AttributeChange
+		TreeNode idSet = identityAnchorChildren.get(0);
+		assertEquals("(0.0,0.7) [id set]", itemDelegator.getText(idSet));
+		// visible when filter is disabled because this is refined by a diagram
+		// diff
+		assertTrue(diagramFilterEnabled.apply(idSet));
+		assertFalse(diagramFilterDisabled.apply(idSet));
+		EList<TreeNode> idSetChildren = idSet.getChildren();
+		assertEquals(0, idSetChildren.size());
+
 	}
 
 	@Override

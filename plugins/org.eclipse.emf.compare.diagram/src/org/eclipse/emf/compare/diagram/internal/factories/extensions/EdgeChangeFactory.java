@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,8 @@
  *     Obeo - initial API and implementation
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.internal.factories.extensions;
+
+import static com.google.common.collect.Collections2.filter;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -27,6 +29,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.extensions.EdgeChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsFactory;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -39,6 +42,7 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
+@SuppressWarnings("restriction")
 public class EdgeChangeFactory extends NodeChangeFactory {
 
 	/**
@@ -79,10 +83,15 @@ public class EdgeChangeFactory extends NodeChangeFactory {
 
 	@Override
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
-		super.setRefiningChanges(extension, extensionKind, refiningDiff);
+		extension.getRefinedBy().add(refiningDiff);
+		final Collection<Diff> allDifferences = getAllContainedDifferences(refiningDiff);
 		if (extensionKind == DifferenceKind.CHANGE) {
-			extension.getRefinedBy().addAll(getAllDifferencesForChange(refiningDiff));
+			allDifferences.addAll(getAllDifferencesForChange(refiningDiff));
 		}
+		// An edge change can only refine differences from the same side that its own side.
+		Collection<? extends Diff> allDifferencesWithExtensionSide = filter(allDifferences,
+				EMFComparePredicates.fromSide(extension.getSource()));
+		extension.getRefinedBy().addAll(allDifferencesWithExtensionSide);
 	}
 
 	/**
