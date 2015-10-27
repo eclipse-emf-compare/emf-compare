@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_3kjxsHldEeWaf6FMPUIi4Q" name="RootElement">
-  <packagedElement xmi:type="uml:Class" xmi:id="_6wzrQHldEeWaf6FMPUIi4Q" name="Class1"/>
-  <packagedElement xmi:type="uml:Class" xmi:id="_7XZKIHldEeWaf6FMPUIi4Q" name="Class2"/>
-  <packagedElement xmi:type="uml:Abstraction" xmi:id="_C-_0sHleEeWaf6FMPUIi4Q" client="_7XZKIHldEeWaf6FMPUIi4Q" supplier="_6wzrQHldEeWaf6FMPUIi4Q"/>
-</uml:Model>

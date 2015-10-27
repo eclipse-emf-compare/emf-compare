@@ -29,16 +29,4 @@ public class ConflictsGroupInputData extends DiagramInputData {
 		return loadFromClassLoader("bug478539/right/model.notation");
 	}
 
-	public Resource getBug480437Left() throws IOException {
-		return loadFromClassLoader("bug480437/left/model.notation");
-	}
-
-	public Resource getBug480437Origin() throws IOException {
-		return loadFromClassLoader("bug480437/origin/model.notation");
-	}
-
-	public Resource getBug480437Right() throws IOException {
-		return loadFromClassLoader("bug480437/right/model.notation");
-	}
-
 }

@@ -66,12 +66,14 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 
 		final DifferenceKind extensionKind = getRelatedExtensionKind(input);
 		ret.setKind(extensionKind);
-		ret.setSource(input.getSource());
 
 		setRefiningChanges(ret, extensionKind, input);
 
+		ret.setSource(input.getSource());
+
 		// FIXME: Maybe it would be better to get all conflict objects from all conflicting unit differences
-		// and create a new conflict object with these differences, to set on the macroscopic change (ret).
+		// and
+		// create a new conflict object with these differences, to set on the macroscopic change (ret).
 		Diff conflictingDiff = Iterators.find(ret.getRefinedBy().iterator(), new Predicate<Diff>() {
 			public boolean apply(Diff difference) {
 				return difference.getConflict() != null;
