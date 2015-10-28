@@ -73,17 +73,15 @@ public class MergeResolutionManager {
 			return;
 		}
 
-		if (comparison.getConflicts().size() == 0) {
-			return;
-		}
-
 		Predicate<Conflict> unresolvedConflict = new Predicate<Conflict>() {
 			public boolean apply(Conflict conflict) {
-				return conflict != null && conflict.getKind() != ConflictKind.PSEUDO && Iterables.any(conflict
-						.getDifferences(), EMFComparePredicates.hasState(DifferenceState.UNRESOLVED));
+				return conflict != null
+						&& conflict.getKind() != ConflictKind.PSEUDO
+						&& Iterables.any(conflict.getDifferences(), EMFComparePredicates
+								.hasState(DifferenceState.UNRESOLVED));
 			}
 		};
-		if (!Iterables.any(comparison.getConflicts(), unresolvedConflict)) {
+		if (Iterables.any(comparison.getConflicts(), unresolvedConflict)) {
 			mergeResolutionListenerRegistry.mergeResolutionCompleted(comparison);
 		}
 	}
