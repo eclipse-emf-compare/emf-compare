@@ -19,7 +19,7 @@ The differencing phases detected a number of differences between the compared mo
 ==== Requirements ====
 For the purpose of merging differences, there might be dependencies between them. For example, the addition of a class C1 in package P1 depends on the addition of package P1 itself. During this phase, we'll browse through all detected differences and link them together when we determine that one cannot be merged without the other.
 ==== Conflicts ====
-When we're comparing our file with one from a Version Control System (CVS, SVN, Git, Clearcase...), there might actually be conflicts between the changes we've made locally, and the changes that were made to the file on the remote repository. This phase will browse through all detected differences and detect these conflicts.
+When we're comparing our file with one from EGit, there might actually be conflicts between the changes we've made locally, and the changes that were made to the file on the remote repository. This phase will browse through all detected differences and detect these conflicts. It could also happen on three-way comparisons.
 
 The Model resolving phase itself can be further decomposed in its own two distinct phases. More on the logical model and its resolution can be found on the [[./logical-model.html|dedicated page]].
 

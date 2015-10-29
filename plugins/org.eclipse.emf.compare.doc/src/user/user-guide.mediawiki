@@ -371,7 +371,7 @@ To avoid this, the idea is to display intermediate node(s) (represented as [ ...
 
 == Launch Comparison ==
 
-Once installed, you can compare your files (locally or from any Version Control System) as usual using the '''Compare With''' menu.
+Once installed, you can compare your files (locally or from EGit Version Control System) as usual using the '''Compare With''' menu. See [[#Known_Bugs_and_Limitations]] section to see how to benefit from EGit support.
 
 === Compare with local models ===
 
@@ -393,7 +393,8 @@ You can also compare your local model with one of its previous version available
 
 === Compare with remote models (EGit) ===
 
-The following displays the important part of a model life cycle with regards to the comparison. The full life cycle can be followed on [[./sample-use-case.html| Sample Use Case]]
+The following displays the important part of a model life cycle with regards to the comparison. The full life cycle can be followed on [[./sample-use-case.html| Sample Use Case]].
+See [[#Known_Bugs_and_Limitations]] section to see how to benefit from EGit support.
 
 ==== Compare with latest ====
 
@@ -555,7 +556,7 @@ PENDING UPDATE, this demo displays EMF Compare 1.3
 
 === Graphical Comparison  ===
 
-EMF compare provides the ability to compare models with Papyrus graphical modeler (GMF Diagrams). To get the graphical comparison, the ''EMF Compare Papyrus integration'' feature and Papyrus have to be installed.
+EMF compare provides the ability to compare models with Papyrus graphical modeler (GMF Diagrams). To get the graphical comparison, the ''EMF Compare Papyrus integration'' feature and Papyrus have to be installed. Note that the developments about Papyrus integration are not finished yet: the results might be not relevant.
 The graphical comparison will be launched if you compare diagrams files (.di), or if you compare models that have diagrams associated in the same folder.
 In the same way as the semantic model comparison, the graphical model comparison uses the same color coding, to distinguish <span style="color:blue">incoming</span> and <span style="color:gray">outgoing</span> changes, and <span style="color:red">conflicts</span>. To put in relief the graphical differences, some decorators are used:
 *On one hand, to focus on the impacted objects, identifying them with markers. These markers are simple transparent rectangles which are set down above the concerned objects and are lightly larger.
@@ -614,6 +615,7 @@ PENDING UPDATE
 === UML Specialization  ===
 
 A specific work has been done with EMF Compare for UML. It consists in an additional filter named '''UML refined elements'''. This filter is active by default when a comparison involves UML resources.
+Note that the developments about UML integration are not finished yet: the results might be not relevant.
 
 [[Image:./../images/EMF_Compare_UML_Filter.png]]
 
@@ -859,10 +861,10 @@ Through this menu, you will able to open the item selected, access to its proper
 Here is the list of all open bugs of EMF Compare:
 [https://bugs.eclipse.org/bugs/buglist.cgi?bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&classification=Modeling&columnlist=bug_id%2Cproduct%2Ccomponent%2Cbug_status%2Ctarget_milestone%2Cresolution%2Cchangeddate%2Cshort_desc&known_name=EMFCompare%20all%20open&list_id=11857684&order=changeddate%20DESC%2Ccomponent%2Cbug_id%20DESC&product=EMFCompare&query_based_on=EMFCompare%20all%20open&query_format=advanced EMF Compare bugs]
 
-Developments to properly compare shared models (via EGit) are not all included in offical releases EGit and EMF Compare yet. In order to let the customers to benefit such type of comparisons, you can download and install in your eclipse environment customs builds of EGit and EMF Compare that includes these additionnal developments.
+Developments to compare shared models (via EGit) are not all included in offical releases EGit and EMF Compare yet. In order to let the customers to benefit such type of comparisons, you can download and install in your eclipse environment customs builds of EGit and EMF Compare that includes these additionnal developments. Note that the developments to fully supports comparisons  with shared models via EGit are not finished yet: the results might be not relevant.
 Here are the update sites:
-* EGit (4.0.0) with additionnal developments to fully support comparisons with shared models: [http://download.eclipse.org/modeling/emf/compare/updates/egit-logical/nightly/]
-* EMF Compare (3.1.0) with additionnal developments to fully support comparisons with shared models: [http://download.eclipse.org/modeling/emf/compare/updates/logical/emf.compare/nightly/latest/]
+* EGit (4.2.0) with additionnal developments to fully support comparisons with shared models: [http://download.eclipse.org/modeling/emf/compare/updates/egit-logical/integration/]
+* EMF Compare (3.2.0) with additionnal developments to fully support comparisons with shared models: [http://download.eclipse.org/modeling/emf/compare/updates/logical/emf.compare/integration/latest/]
 
 == Other Materials ==
 
