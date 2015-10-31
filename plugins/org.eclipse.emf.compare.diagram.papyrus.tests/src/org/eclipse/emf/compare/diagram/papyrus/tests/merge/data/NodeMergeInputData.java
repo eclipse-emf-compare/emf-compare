@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 482404
  */
 package org.eclipse.emf.compare.diagram.papyrus.tests.merge.data;
 
@@ -57,5 +58,13 @@ public class NodeMergeInputData extends DiagramInputData {
 
 	public Resource getA4NodeChangeOrigin() throws IOException {
 		return loadFromClassLoader("nodes/a4/ancestor.notation");
+	}
+
+	public Resource getA5NodeChangeLeft() throws IOException {
+		return loadFromClassLoader("nodes/a5/left.notation");
+	}
+
+	public Resource getA5NodeChangeRight() throws IOException {
+		return loadFromClassLoader("nodes/a5/right.notation");
 	}
 }

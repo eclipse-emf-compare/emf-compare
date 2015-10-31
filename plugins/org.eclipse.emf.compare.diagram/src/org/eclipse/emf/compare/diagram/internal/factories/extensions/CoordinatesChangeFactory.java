@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 482404
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.internal.factories.extensions;
 
@@ -36,6 +37,7 @@ import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.Bounds;
+import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
@@ -196,11 +198,13 @@ public class CoordinatesChangeFactory extends NodeChangeFactory {
 		final Comparison comparison = diff.getMatch().getComparison();
 		final EObject left = MatchUtil.getContainer(comparison, diff);
 		final EObject right = MatchUtil.getOriginContainer(comparison, diff);
-		if (left instanceof Bounds && right instanceof Bounds) {
-			final int leftX = ((Bounds)left).getX();
-			final int leftY = ((Bounds)left).getY();
-			final int rightX = ((Bounds)right).getX();
-			final int rightY = ((Bounds)right).getY();
+		final CoordinateProvider leftCoordinateProvider = new CoordinateProvider(left);
+		final CoordinateProvider rightCoordinateProvider = new CoordinateProvider(right);
+		if (leftCoordinateProvider.hasCoordinates() && rightCoordinateProvider.hasCoordinates()) {
+			final int leftX = leftCoordinateProvider.getX();
+			final int leftY = leftCoordinateProvider.getY();
+			final int rightX = rightCoordinateProvider.getX();
+			final int rightY = rightCoordinateProvider.getY();
 			final int deltaX = Math.abs(leftX - rightX);
 			final int deltaY = Math.abs(leftY - rightY);
 			int threshold = 0;
@@ -210,5 +214,73 @@ public class CoordinatesChangeFactory extends NodeChangeFactory {
 			return deltaX + deltaY > threshold;
 		}
 		return false;
+	}
+
+	/**
+	 * A provider for coordinates.
+	 * <p>
+	 * This provider can return the coordinates of either a shape with {@link Bounds} or a decoration node
+	 * with a {@link Location}.
+	 * </p>
+	 * 
+	 * @author Philip Langer <planger@eclipsesource.com>
+	 */
+	private static class CoordinateProvider {
+
+		/** The element this provider should return the coordinates of. */
+		private EObject element;
+
+		/**
+		 * Creates a provider for the given {@code element}.
+		 * 
+		 * @param element
+		 *            The element this provider should return the coordinates of.
+		 */
+		public CoordinateProvider(EObject element) {
+			this.element = element;
+		}
+
+		/**
+		 * Specifies whether this provider can provide coordinates for its element.
+		 * 
+		 * @return <code>true</code> if it can provide coordinates, <code>false</code> otherwise.
+		 */
+		public boolean hasCoordinates() {
+			return element instanceof Bounds || element instanceof Location;
+		}
+
+		/**
+		 * Returns the X value.
+		 * 
+		 * @return The X value.
+		 */
+		public int getX() {
+			final int x;
+			if (element instanceof Bounds) {
+				x = ((Bounds)element).getX();
+			} else if (element instanceof Location) {
+				x = ((Location)element).getX();
+			} else {
+				x = -1;
+			}
+			return x;
+		}
+
+		/**
+		 * Returns the Y value.
+		 * 
+		 * @return The Y value.
+		 */
+		public int getY() {
+			final int y;
+			if (element instanceof Bounds) {
+				y = ((Bounds)element).getY();
+			} else if (element instanceof Location) {
+				y = ((Location)element).getY();
+			} else {
+				y = -1;
+			}
+			return y;
+		}
 	}
 }

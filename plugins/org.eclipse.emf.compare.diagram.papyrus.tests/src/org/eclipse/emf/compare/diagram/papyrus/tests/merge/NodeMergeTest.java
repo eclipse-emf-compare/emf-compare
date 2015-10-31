@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 482404
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests.merge;
 
@@ -1462,6 +1463,31 @@ public class NodeMergeTest extends AbstractTest {
 		comparison = buildComparison(left, right, ancestor);
 		feature = Iterables.find(comparison.getDifferences(), feature7, null);
 		assertTrue(isMergedFor3way(comparison, feature));
+
+	}
+
+	/**
+	 * Tests whether moving a label of an UML Initial Node is detected as CoordinatesChange.
+	 */
+	@Test
+	public void testIfMoveOfLabelIsDetectedAsCoordinatesChange() throws IOException {
+		final Resource left = input.getA5NodeChangeLeft();
+		final Resource right = input.getA5NodeChangeRight();
+
+		Comparison comparison = buildComparison(left, right);
+
+		Predicate<Diff> coordinatesChangeLabel = and(instanceOf(CoordinatesChange.class),
+				ofKind(DifferenceKind.CHANGE), valueIs(NotationPackage.Literals.DECORATION_NODE));
+
+		diffsChecking(comparison, 3, new ExpectedStat(coordinatesChangeLabel, 1));
+
+		// ** MERGE **
+		Diff node = Iterables.find(comparison.getDifferences(), coordinatesChangeLabel);
+		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
+
+		// ** MERGE CHECKING **
+		comparison = buildComparison(left, right);
+		diffsChecking(comparison, 0, new ExpectedStat(coordinatesChangeLabel, 0));
 
 	}
 
