@@ -314,7 +314,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	private Iterable<? extends Diff> getDiffsWithValue(EObject expectedValue, Match parentMatch) {
 		Iterable<? extends Diff> diffs = filter(fComparison.getDifferences(expectedValue),
 				CONTAINMENT_REFERENCE_CHANGE);
-		if (size(diffs) > 1) {
+		if (size(diffs) > 1 && fSide != MergeViewerSide.ANCESTOR) {
 			diffs = filter(diffs, fromSide(fSide.convertToDifferenceSource()));
 			if (size(diffs) > 1) {
 				throw new IllegalStateException(
