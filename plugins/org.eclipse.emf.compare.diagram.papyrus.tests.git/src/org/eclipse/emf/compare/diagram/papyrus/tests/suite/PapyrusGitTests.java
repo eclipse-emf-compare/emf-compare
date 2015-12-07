@@ -42,10 +42,15 @@ import junit.textui.TestRunner;
 
 @SuppressWarnings("restriction")
 @RunWith(Suite.class)
-@SuiteClasses({ ResourceAttachmentChangeMoveNoConflictTests.class, ResourceAttachmentChangeMoveConflictTests.class,
-		AttachmentChangeImplicationTest.class, ResourceAttachmentChangeMoveConflictTests.class,
-		ResourceAttachmentChangeAdd1GitMergeTest.class, ResourceAttachmentChangeAdd2GitMergeTest.class,
-		ResourceAttachmentChangeDelete1GitMergeTest.class, ResourceAttachmentChangeDelete2GitMergeTest.class, })
+@SuiteClasses({
+	AttachmentChangeImplicationTest.class,
+	ResourceAttachmentChangeAdd1GitMergeTest.class, 
+	ResourceAttachmentChangeAdd2GitMergeTest.class,
+	ResourceAttachmentChangeDelete1GitMergeTest.class, 
+	ResourceAttachmentChangeDelete2GitMergeTest.class,
+	ResourceAttachmentChangeMoveConflictTests.class,
+	ResourceAttachmentChangeMoveNoConflictTests.class,
+	})
 public class PapyrusGitTests {
 	/**
 	 * Launches the test with the given arguments.

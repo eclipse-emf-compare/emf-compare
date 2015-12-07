@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.egit.internal.postprocessor;
 
+import java.io.File;
+
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
@@ -177,18 +179,18 @@ public class EgitPostProcessor implements IPostProcessor {
 		boolean threeWay = comparison.isThreeWay();
 		if (threeWay) {
 			final EObject origin = match.getOrigin();
-			if (!isLocalComparison(left, origin) && !haveSameResourceURI(left, origin)) {
+			if (!isLocalComparison(left, origin) && areNotRootsOfSameResource(left, origin)) {
 				final String uri = left.eResource().getURI().toString();
 				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.MOVE,
 						DifferenceSource.LEFT);
 			}
-			if (!isLocalComparison(right, origin) && !haveSameResourceURI(right, origin)) {
+			if (!isLocalComparison(right, origin) && areNotRootsOfSameResource(right, origin)) {
 				final String uri = right.eResource().getURI().toString();
 				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.MOVE,
 						DifferenceSource.RIGHT);
 			}
 		} else {
-			if (!isLocalComparison(left, right) && !haveSameResourceURI(left, right)) {
+			if (!isLocalComparison(left, right) && areNotRootsOfSameResource(left, right)) {
 				final String uri = right.eResource().getURI().toString();
 				getDiffProcessor().resourceAttachmentChange(match, uri, DifferenceKind.MOVE,
 						DifferenceSource.LEFT);
@@ -206,10 +208,8 @@ public class EgitPostProcessor implements IPostProcessor {
 	 * @return true, if it is a local comparison. false otherwise.
 	 */
 	protected boolean isLocalComparison(EObject left, EObject right) {
-
 		final Resource leftResource;
 		final Resource rightResource;
-
 		if (left != null) {
 			leftResource = left.eResource();
 		} else {
@@ -244,62 +244,60 @@ public class EgitPostProcessor implements IPostProcessor {
 	}
 
 	/**
-	 * Check if the left and right objects have same resource's URI.
+	 * Only return false if left and right objects are roots of the "same" resource, i.e. of resources that
+	 * match.
 	 * 
 	 * @param left
 	 *            the first object to check.
 	 * @param right
 	 *            the second object to check.
-	 * @return true, if left and right objects have same resource's URI, false otherwise.
+	 * @return <code>true</code> UNLESS left and right objects are roots of the same resource.
 	 */
-	protected boolean haveSameResourceURI(EObject left, EObject right) {
-
-		final Resource leftResource;
-		final Resource rightResource;
-
-		final String leftURI;
-		final String rightURI;
-
-		if (left instanceof InternalEObject) {
-			leftResource = ((InternalEObject)left).eDirectResource();
-		} else {
-			leftResource = null;
-		}
-		if (right instanceof InternalEObject) {
-			rightResource = ((InternalEObject)right).eDirectResource();
-		} else {
-			rightResource = null;
-		}
-
-		if (leftResource != null) {
-			URI uri = leftResource.getURI();
-			if (uri.isPlatform()) {
-				leftURI = uri.toPlatformString(true);
-			} else if (uri.isFile()) {
-				leftURI = uri.toFileString();
-			} else {
-				leftURI = uri.toString();
+	protected boolean areNotRootsOfSameResource(EObject left, EObject right) {
+		URI leftURI = getDirectResourceURI(left);
+		URI rightURI = getDirectResourceURI(right);
+		if (leftURI != null && rightURI != null) {
+			if (leftURI.equals(rightURI) || isMatchingResourceAndFileURI(leftURI, rightURI)
+					|| isMatchingResourceAndFileURI(rightURI, leftURI)) {
+				return false;
 			}
-		} else {
-			leftURI = null;
+			return true;
 		}
-		if (rightResource != null) {
-			URI uri = rightResource.getURI();
-			if (uri.isPlatform()) {
-				rightURI = uri.toPlatformString(true);
-			} else if (uri.isFile()) {
-				rightURI = uri.toFileString();
-			} else {
-				rightURI = uri.toString();
-			}
-		} else {
-			rightURI = null;
-		}
+		return false;
+	}
 
-		if (leftURI != null && rightURI != null && !leftURI.equals(rightURI)) {
-			return false;
-		}
+	/**
+	 * Indicate whether the 2 provided URIs reprensent the same resource with different schemes.
+	 * 
+	 * @param leftURI
+	 *            uri that will be checked if it's a platform resource URI
+	 * @param rightURI
+	 *            uri that will be checked if it's a file URI
+	 * @return <code>true</code> if rightURI is a file URI that ends with leftURI.
+	 */
+	private boolean isMatchingResourceAndFileURI(URI leftURI, URI rightURI) {
+		return leftURI.isPlatformResource()
+				&& rightURI.isFile()
+				&& rightURI.toFileString().replace(File.separatorChar, '/').endsWith(
+						leftURI.toPlatformString(true));
+	}
 
-		return true;
+	/**
+	 * Provide the URI of the given EObject's direct reource. This will be non-null only if the given EObject
+	 * is a root of a resource.
+	 * 
+	 * @param o
+	 *            The EObject
+	 * @return The given EObject's direct resource URI, can be null.
+	 */
+	private URI getDirectResourceURI(EObject o) {
+		if (!(o instanceof InternalEObject)) {
+			return null; // includes cases where o is null
+		}
+		final Resource directResource = ((InternalEObject)o).eDirectResource();
+		if (directResource != null) {
+			return directResource.getURI();
+		}
+		return null;
 	}
 }
