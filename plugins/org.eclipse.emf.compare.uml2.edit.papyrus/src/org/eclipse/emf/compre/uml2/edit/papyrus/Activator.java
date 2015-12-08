@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,9 +7,15 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Alexandra Buzila - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compre.uml2.edit.papyrus;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.papyrus.infra.core.services.ServiceException;
+import org.eclipse.papyrus.infra.services.labelprovider.service.LabelProviderService;
+import org.eclipse.papyrus.infra.services.labelprovider.service.impl.LabelProviderServiceImpl;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -23,6 +29,8 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+
+	private LabelProviderService labelProviderService;
 
 	/**
 	 * The constructor
@@ -47,6 +55,15 @@ public class Activator extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		if (labelProviderService != null) {
+			try {
+				labelProviderService.disposeService();
+			} catch (ServiceException ex) {
+				Activator.getDefault().getLog().log(
+						new Status(IStatus.WARNING, Activator.PLUGIN_ID,
+								"Unable to dispose Papyrus Label Provider Service", ex)); //$NON-NLS-1$
+			}
+		}
 		super.stop(context);
 	}
 
@@ -57,6 +74,22 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static Activator getDefault() {
 		return plugin;
+	}
+
+	public LabelProviderService getLabelProviderService() {
+		if (labelProviderService == null) {
+			labelProviderService = new LabelProviderServiceImpl();
+			try {
+				labelProviderService.startService();
+			} catch (ServiceException ex) {
+				// prevent service from being used if it could not be started
+				labelProviderService = null;
+				getDefault().getLog().log(
+						new Status(IStatus.WARNING, Activator.PLUGIN_ID,
+								"Unable to start Papyrus Label Provider Service", ex)); //$NON-NLS-1$
+			}
+		}
+		return labelProviderService;
 	}
 
 }

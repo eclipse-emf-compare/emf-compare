@@ -10,7 +10,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.compare.uml2.edit,
  org.eclipse.papyrus.uml.tools.utils,
  org.eclipse.emf.compare.edit,
- org.eclipse.uml2.uml
+ org.eclipse.uml2.uml,
+ org.eclipse.papyrus.infra.services.labelprovider,
+ org.eclipse.papyrus.infra.core
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Alexandra Buzila - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compre.uml2.edit.papyrus.internal.decorator;
 
@@ -18,35 +19,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.compare.uml2.internal.provider.decorator.StereotypedElementItemProviderDecorator;
+import org.eclipse.emf.compre.uml2.edit.papyrus.Activator;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.papyrus.infra.services.labelprovider.service.LabelProviderService;
 import org.eclipse.papyrus.uml.tools.utils.StereotypeUtil;
 import org.eclipse.uml2.common.util.UML2Util;
 import org.eclipse.uml2.uml.Stereotype;
 
 /**
- * Decorator used to retreive an icon for a stereotyped element. It prevents using icons that are defining
- * shapes.
+ * Decorator that reuses the label provider of Papyrus.
  * 
- * @see org.eclipse.papyrus.uml.tools.utils.StereotypeUtil#getShapes(Stereotype)
+ * @see org.eclipse.papyrus.infra.services.labelprovider.service.LabelProviderService
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
 public class PapyrusStereotypedElementItemProviderDecorator extends StereotypedElementItemProviderDecorator {
 
-	/**
-	 * @param adapterFactory
-	 */
 	public PapyrusStereotypedElementItemProviderDecorator(ComposeableAdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.uml2.internal.provider.decorator.StereotypedElementItemProviderDecorator#getStereotypeIconsFromProfile(org.eclipse.uml2.uml.Stereotype)
-	 */
+	@Override
+	public String getText(Object object) {
+		LabelProviderService labelProviderService = Activator.getDefault().getLabelProviderService();
+		if (labelProviderService != null) {
+			return labelProviderService.getLabelProvider(object).getText(object);
+		}
+		return super.getText(object);
+	}
+
+	@Override
+	public Object getImage(Object object) {
+		LabelProviderService labelProviderService = Activator.getDefault().getLabelProviderService();
+		if (labelProviderService != null) {
+			return labelProviderService.getLabelProvider(object).getImage(object);
+		}
+		return super.getImage(object);
+	}
+
 	@Override
 	protected List<Object> getStereotypeIconsFromProfile(Stereotype appliedStereotype) {
-
 		List<Object> images = new ArrayList<Object>();
 
 		// Filter out images representing a shape. Shapes are usually to big to be used as icons.
