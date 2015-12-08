@@ -73,9 +73,11 @@ get-view "Package Explorer" | get-tree
     | get-property "image.decorations[0].path" | equals "org.eclipse.egit.ui/icons/ovr/conflict.gif" | verify-true
 
 // Open Model Merge Tool
+try -command {
 get-view "Package Explorer" | get-tree 
     | select "Design_EMFCompare  [emf-compare-papyrus-egit|Conflicts conflict_add_postprocessor]/Main.notation" 
     | get-menu "Team/Model Merge Tool \\(with EMFCompare\\)" | click
+} -times 10 -delay 500
     
 // Assert their is 4 conflict categories
 with [get-editor "Repository 'emf-compare-papyrus-egit': Merging 'Add IMerger and UMLMerger' into 'refs/heads/conflict_add_postprocessor'" 

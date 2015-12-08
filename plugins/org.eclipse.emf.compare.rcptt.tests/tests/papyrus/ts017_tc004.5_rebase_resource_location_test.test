@@ -45,7 +45,7 @@ get-window "Rebase Result" | get-button OK | click
 } -catch {wait 500} -times 30
 
 with [get-view "Project Explorer" | get-tree] {
-    get-item "papyrus  \\[emf-compare-papyrus-egit branch2\\]" | get-property childCount | equals 2 | verify-true
+    get-item "papyrus  \\[emf-compare-papyrus-egit branch2\\]" | get-property childCount | equals 1 | verify-true
     get-item "papyrus  \\[emf-compare-papyrus-egit branch2\\]/model" | get-property caption | equals model | verify-true
 }
 get-view "Project Explorer" | get-tree | select "papyrus  \\[emf-compare-papyrus-egit branch2\\]/model" | double-click
