@@ -49,6 +49,7 @@ import org.eclipse.egit.core.internal.indexdiff.IndexDiffData;
 import org.eclipse.egit.core.internal.job.RuleUtil;
 import org.eclipse.egit.core.internal.storage.GitFileRevision;
 import org.eclipse.egit.core.internal.storage.WorkingTreeFileRevision;
+import org.eclipse.egit.core.internal.util.ResourceUtil;
 import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.egit.ui.Activator;
 import org.eclipse.egit.ui.internal.CompareUtils;
@@ -59,7 +60,6 @@ import org.eclipse.egit.ui.internal.revision.GitCompareFileRevisionEditorInput.E
 import org.eclipse.egit.ui.internal.revision.LocalFileRevision;
 import org.eclipse.egit.ui.internal.revision.LocationEditableRevision;
 import org.eclipse.egit.ui.internal.revision.ResourceEditableRevision;
-import org.eclipse.emf.compare.egit.internal.ModelEGitResourceUtil;
 import org.eclipse.emf.compare.egit.internal.merge.DirCacheResourceVariantTreeProvider;
 import org.eclipse.emf.compare.egit.internal.merge.GitResourceVariantTreeProvider;
 import org.eclipse.emf.compare.egit.internal.merge.GitResourceVariantTreeSubscriber;
@@ -138,7 +138,7 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 	}
 
 	@Override
-	public Object getAdapter(Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if ((adapter == IFile.class || adapter == IResource.class) && isUIThread()) {
 			Object selectedEdition = getSelectedEdition();
 			if (selectedEdition instanceof DiffNode) {
@@ -163,7 +163,7 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		monitor.beginTask(UIText.GitMergeEditorInput_CheckingResourcesTaskName, IProgressMonitor.UNKNOWN);
 
 		// Make sure all resources belong to the same repository
-		final Map<Repository, Collection<String>> pathsByRepository = ModelEGitResourceUtil
+		final Map<Repository, Collection<String>> pathsByRepository = ResourceUtil
 				.splitPathsByRepository(Arrays.asList(locations));
 		if (pathsByRepository.size() != 1) {
 			throw new InvocationTargetException(new IllegalStateException(
@@ -206,8 +206,10 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 			throw new InvocationTargetException(e);
 		} finally {
 			if (rw != null) {
+				rw.close();
 				rw.dispose();
 			}
+			repository.close();
 			monitor.done();
 		}
 	}
@@ -278,7 +280,7 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 						resourcesInOperation.addAll(getConflictingFilesFrom(project));
 						foundMatchInWS = true;
 					} else if (project.getLocation().isPrefixOf(path)) {
-						final IResource resource = ModelEGitResourceUtil.getResourceForLocation(path, false);
+						final IResource resource = ResourceUtil.getResourceForLocation(path, false);
 						if (resource instanceof IContainer) {
 							resourcesInOperation.addAll(getConflictingFilesFrom((IContainer)resource));
 						} else {
@@ -311,7 +313,7 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 				// We cannot reliably tell whether they are related enough to be
 				// in the same compare editor.
 				throw new InvocationTargetException(new IllegalStateException(EMFCompareEGitUIMessages
-						.getString("GitMergeEditorInput_OutOfWSResources")));
+						.getString("GitMergeEditorInput_OutOfWSResources"))); //$NON-NLS-1$
 			} else if (resourcesInOperation.isEmpty()) {
 				// All resources are out of the workspace.
 				// Fall back to the workspace-unaware "prepareDiffInput"
@@ -333,7 +335,7 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 							// The merge tool needs to be launched manually on
 							// each distinct logical model.
 							throw new RuntimeException(EMFCompareEGitUIMessages
-									.getString("GitMergeEditorInput_MultipleModels"));
+									.getString("GitMergeEditorInput_MultipleModels")); //$NON-NLS-1$
 						} else {
 							// No use going further : we know these resource all
 							// belong to the same model.
@@ -603,7 +605,7 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 
 				Path repositoryPath = new Path(repository.getWorkTree().getAbsolutePath());
 				IPath location = repositoryPath.append(fit.getEntryPathString());
-				IFile file = ModelEGitResourceUtil.getFileForLocation(location, false);
+				IFile file = ResourceUtil.getFileForLocation(location, false);
 				if (!conflicting || useWorkspace) {
 					if (file != null) {
 						rev = new LocalFileRevision(file);
