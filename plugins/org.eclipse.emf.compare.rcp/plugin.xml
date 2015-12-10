@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?>
 
 <!--
- Copyright (c) 2013, 2015 Obeo and others.
+ Copyright (c) 2013, 2016 Obeo and others.
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
  which accompanies this distribution, and is available at
@@ -70,7 +70,7 @@
          point="org.eclipse.emf.compare.rcp.matchEngine">
       <engineFactory
             class="org.eclipse.emf.compare.rcp.internal.match.DefaultRCPMatchEngineFactory"
-            description="Default implementation of the Matching engine provided by EMF Compare"
+            description="Default implementation of the Matching engine provided by EMF Compare. Any user-provided engine should have a ranking &gt; 0."
             label="Default Match engine"
             ranking="0">
       </engineFactory>
