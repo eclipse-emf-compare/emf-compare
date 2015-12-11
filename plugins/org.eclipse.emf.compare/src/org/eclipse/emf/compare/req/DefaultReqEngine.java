@@ -23,7 +23,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -83,8 +82,8 @@ public class DefaultReqEngine implements IReqEngine {
 	 */
 	protected void checkForRequiredDifferences(Comparison comparison, Diff difference) {
 
-		Set<Diff> requiredDifferences = new HashSet<Diff>();
-		Set<Diff> requiredByDifferences = new HashSet<Diff>();
+		Set<Diff> requiredDifferences = new LinkedHashSet<Diff>();
+		Set<Diff> requiredByDifferences = new LinkedHashSet<Diff>();
 
 		Match match = difference.getMatch();
 		EObject value = getValue(comparison, difference);
@@ -189,7 +188,7 @@ public class DefaultReqEngine implements IReqEngine {
 	 * @return The found differences.
 	 */
 	private Set<Diff> getDELOriginValueOnContainmentRefSingle(Comparison comparison, Diff sourceDifference) {
-		Set<Diff> result = new HashSet<Diff>();
+		Set<Diff> result = new LinkedHashSet<Diff>();
 		if (!(sourceDifference instanceof ReferenceChange)) {
 			return result;
 		}
@@ -280,7 +279,7 @@ public class DefaultReqEngine implements IReqEngine {
 	 */
 	private Set<Diff> getDifferenceOnGivenObject(Comparison comparison, List<EObject> objects,
 			DifferenceSource source, DifferenceKind kind) {
-		Set<Diff> result = new HashSet<Diff>();
+		Set<Diff> result = new LinkedHashSet<Diff>();
 		for (EObject object : objects) {
 			result.addAll(getDifferenceOnGivenObject(comparison, object, source, kind));
 		}
@@ -298,7 +297,7 @@ public class DefaultReqEngine implements IReqEngine {
 	 * @return The found differences.
 	 */
 	private Set<Diff> getDELOutgoingReferences(Comparison comparison, Diff sourceDifference) {
-		Set<Diff> result = new HashSet<Diff>();
+		Set<Diff> result = new LinkedHashSet<Diff>();
 
 		EObject value = getValue(comparison, sourceDifference);
 
@@ -329,7 +328,7 @@ public class DefaultReqEngine implements IReqEngine {
 	 * @return The found differences.
 	 */
 	private Set<ReferenceChange> getMOVEContainedObjects(Comparison comparison, Diff sourceDifference) {
-		Set<ReferenceChange> result = new HashSet<ReferenceChange>();
+		Set<ReferenceChange> result = new LinkedHashSet<ReferenceChange>();
 		EObject value = getValue(comparison, sourceDifference);
 		if (value != null) {
 			List<EObject> contents = value.eContents();

@@ -17,7 +17,6 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -145,8 +144,8 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 	 *            The macroscopic change.
 	 */
 	private void fillRequiredDifferencesForMacroToMacro(Diff macro) {
-		Set<Diff> requiredExtensions = new HashSet<Diff>();
-		Set<Diff> requiringExtensions = new HashSet<Diff>();
+		Set<Diff> requiredExtensions = new LinkedHashSet<Diff>();
+		Set<Diff> requiringExtensions = new LinkedHashSet<Diff>();
 		for (Diff refiningDiff : macro.getRefinedBy()) {
 			requiredExtensions.addAll(getDistinctRefinedDifferences(refiningDiff.getRequires()));
 			requiringExtensions.addAll(getDistinctRefinedDifferences(refiningDiff.getRequiredBy()));
@@ -169,8 +168,8 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 	 *            The macroscopic change.
 	 */
 	private void fillRequiredDifferencesForUnitToMacro(Diff macro) {
-		Set<Diff> requiredExtensions = new HashSet<Diff>();
-		Set<Diff> requiringExtensions = new HashSet<Diff>();
+		Set<Diff> requiredExtensions = new LinkedHashSet<Diff>();
+		Set<Diff> requiringExtensions = new LinkedHashSet<Diff>();
 		for (Diff refiningDiff : macro.getRefinedBy()) {
 			for (Diff unit : refiningDiff.getRequires()) {
 				if (unit.getRefines().isEmpty()) {
@@ -446,7 +445,7 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 	 */
 	private Set<Diff> getDistinctRefinedDifferences(List<Diff> refiningDifferences) {
 		Iterator<Diff> unitDiffs = refiningDifferences.iterator();
-		Set<Diff> extensions = new HashSet<Diff>();
+		Set<Diff> extensions = new LinkedHashSet<Diff>();
 		while (unitDiffs.hasNext()) {
 			Diff unitDiff = unitDiffs.next();
 			extensions.addAll(unitDiff.getRefines());

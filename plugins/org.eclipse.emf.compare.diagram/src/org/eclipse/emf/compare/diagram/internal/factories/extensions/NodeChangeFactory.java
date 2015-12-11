@@ -19,7 +19,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.emf.compare.Comparison;
@@ -110,8 +110,8 @@ public class NodeChangeFactory extends AbstractDiagramChangeFactory {
 	 *            the node change.
 	 */
 	private void fillRequiredDifferencesForMove(Comparison comparison, Diff extension) {
-		Set<Diff> requiredExtensions = new HashSet<Diff>();
-		Set<Diff> requiringExtensions = new HashSet<Diff>();
+		Set<Diff> requiredExtensions = new LinkedHashSet<Diff>();
+		Set<Diff> requiringExtensions = new LinkedHashSet<Diff>();
 		final Predicate<Diff> moveReference = and(instanceOf(ReferenceChange.class),
 				ofKind(DifferenceKind.MOVE), fromSide(extension.getSource()));
 		Collection<Diff> refiningMoves = Collections2.filter(extension.getRefinedBy(), moveReference);

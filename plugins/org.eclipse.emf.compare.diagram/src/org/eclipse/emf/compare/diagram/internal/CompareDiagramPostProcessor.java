@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.internal;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -100,8 +100,7 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 	public void postComparison(Comparison comparison, Monitor monitor) {
 		final Map<Class<? extends Diff>, IChangeFactory> mapDiagramExtensionFactories = DiagramExtensionFactoryRegistry
 				.createExtensionFactories(configuration);
-		diagramExtensionFactories = new HashSet<IChangeFactory>(mapDiagramExtensionFactories
-				.values());
+		diagramExtensionFactories = new LinkedHashSet<IChangeFactory>(mapDiagramExtensionFactories.values());
 
 		// Creation of the diagram difference extensions
 		for (Diff diff : comparison.getDifferences()) {
@@ -112,8 +111,7 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 		for (Diff diff : comparison.getDifferences()) {
 			if (diff instanceof DiagramDiff) {
 				final Class<?> classDiffElement = diff.eClass().getInstanceClass();
-				final IChangeFactory diffFactory = mapDiagramExtensionFactories
-						.get(classDiffElement);
+				final IChangeFactory diffFactory = mapDiagramExtensionFactories.get(classDiffElement);
 				if (diffFactory != null) {
 					diffFactory.fillRequiredDifferences(comparison, diff);
 				}

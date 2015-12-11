@@ -29,7 +29,6 @@ import com.google.common.collect.Iterables;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 import org.eclipse.emf.common.util.EList;
@@ -428,7 +427,7 @@ public final class ComparisonUtil {
 	 */
 	private static Iterable<Diff> getAssociatedDiffs(final Diff diffRoot, Iterable<Diff> subDiffs,
 			LinkedHashSet<Diff> processedDiffs, boolean leftToRight, boolean firstLevelOnly) {
-		Collection<Diff> associatedDiffs = new HashSet<Diff>();
+		Collection<Diff> associatedDiffs = new LinkedHashSet<Diff>();
 		for (Diff diff : subDiffs) {
 			final Collection<Diff> reqs = new LinkedHashSet<Diff>();
 			if (leftToRight) {
