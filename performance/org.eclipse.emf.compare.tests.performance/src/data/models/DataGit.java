@@ -47,17 +47,18 @@ import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.diff.IDiffProcessor;
 import org.eclipse.emf.compare.equi.DefaultEquiEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
 import org.eclipse.emf.compare.ide.ui.internal.logical.StorageTypedElement;
 import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
-import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
+import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverRegistry;
+import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
-import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.req.DefaultReqEngine;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -97,17 +98,6 @@ public class DataGit {
 	private File repoFile;
 
 	private Repository repository;
-
-	private static ThreadedModelResolver resolver;
-
-	protected static synchronized ThreadedModelResolver getModelResolver() {
-		if (resolver == null) {
-			resolver = new ThreadedModelResolver();
-			EMFCompareRCPPlugin.getDefault().register(resolver);
-			resolver.initialize();
-		}
-		return resolver;
-	}
 
 	public DataGit(String zippedRepoLocation, String repoName, String rootProjectName, String modelName) {
 		try {
@@ -172,7 +162,9 @@ public class DataGit {
 			final ITypedElement left = new StorageTypedElement(sourceProvider.getStorage(m), fullPath);
 			final ITypedElement right = new StorageTypedElement(remoteProvider.getStorage(m), fullPath);
 			final ITypedElement origin = new StorageTypedElement(ancestorProvider.getStorage(m), fullPath);
-			final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(getModelResolver(),
+			ModelResolverRegistry mrr = EMFCompareIDEUIPlugin.getDefault().getModelResolverRegistry();
+			IModelResolver resolver = mrr.getBestResolverFor(sourceProvider.getStorage(m));
+			final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
 					new IdenticalResourceMinimizer(), storageAccessor);
 			scope = scopeBuilder.build(left, right, origin, m);
 
