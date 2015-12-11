@@ -98,6 +98,17 @@ public class DataGit {
 
 	private Repository repository;
 
+	private static ThreadedModelResolver resolver;
+
+	protected static synchronized ThreadedModelResolver getModelResolver() {
+		if (resolver == null) {
+			resolver = new ThreadedModelResolver();
+			EMFCompareRCPPlugin.getDefault().register(resolver);
+			resolver.initialize();
+		}
+		return resolver;
+	}
+
 	public DataGit(String zippedRepoLocation, String repoName, String rootProjectName, String modelName) {
 		try {
 			this.disposers = new ArrayList<Runnable>();
@@ -161,10 +172,7 @@ public class DataGit {
 			final ITypedElement left = new StorageTypedElement(sourceProvider.getStorage(m), fullPath);
 			final ITypedElement right = new StorageTypedElement(remoteProvider.getStorage(m), fullPath);
 			final ITypedElement origin = new StorageTypedElement(ancestorProvider.getStorage(m), fullPath);
-			final ThreadedModelResolver resolver = new ThreadedModelResolver();
-			EMFCompareRCPPlugin.getDefault().register(resolver);
-			resolver.initialize();
-			final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
+			final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(getModelResolver(),
 					new IdenticalResourceMinimizer(), storageAccessor);
 			scope = scopeBuilder.build(left, right, origin, m);
 
