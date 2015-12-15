@@ -180,12 +180,12 @@ public class ReferenceChangeTooltipProvider extends AbstractTooltipProvider<Refe
 			EObject left, EObject right, EObject ancestor) {
 		String value = getLabel(diff);
 		String leftContainerValue = ""; //$NON-NLS-1$
-		if (left.eContainer() != null) {
+		if (left != null) {
 			leftContainerValue = getLabelFromObject(left.eContainer());
 		}
 
 		String rightContainerValue = ""; //$NON-NLS-1$
-		if (right.eContainer() != null) {
+		if (right != null) {
 			rightContainerValue = getLabelFromObject(right.eContainer());
 		}
 

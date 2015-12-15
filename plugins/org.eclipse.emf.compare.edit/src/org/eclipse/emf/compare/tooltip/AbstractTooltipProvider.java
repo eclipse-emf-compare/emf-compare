@@ -206,9 +206,12 @@ public abstract class AbstractTooltipProvider<T extends Diff> extends AdapterImp
 	 *
 	 * @param eObject
 	 *            The object
-	 * @return the label of the object
+	 * @return the label of the object, or an empty String if <code>eObject</code> is <code>null</code>
 	 */
 	protected String getLabelFromObject(EObject eObject) {
+		if (eObject == null) {
+			return ""; //$NON-NLS-1$
+		}
 		return this.labelProvider.getText(eObject);
 	}
 
