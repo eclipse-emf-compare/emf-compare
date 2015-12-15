@@ -760,7 +760,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		differenceGroupProvider = null;
 		undoAction = null;
 		redoAction = null;
-		fAdapterFactoryContentProvider.setAdapterFactory(null);
+		if (fAdapterFactoryContentProvider != null) {
+			fAdapterFactoryContentProvider.setAdapterFactory(null);
+		}
 		super.handleDispose(event);
 	}
 
