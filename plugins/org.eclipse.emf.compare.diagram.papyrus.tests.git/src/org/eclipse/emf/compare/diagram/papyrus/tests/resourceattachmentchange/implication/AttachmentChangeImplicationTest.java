@@ -2,7 +2,6 @@ package org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.i
 
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.*;
 
 import com.google.common.collect.Iterables;
@@ -21,6 +20,7 @@ import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.papyrus.infra.gmfdiag.common.model.NotationModel;
 import org.eclipse.papyrus.uml.tools.model.UmlModel;
+import org.junit.Ignore;
 import org.junit.Test;
 
 @SuppressWarnings({"nls", "unused" })
@@ -122,6 +122,7 @@ public class AttachmentChangeImplicationTest extends AbstractResourceAttachmentC
 	}
 
 	@Test
+	@Ignore("This test is now wrong, no such requirement should exist")
 	public void testControlledPackagedWithDiagram() throws Exception {
 		setupTestControlledPackagedWithDiagram();
 
@@ -166,6 +167,7 @@ public class AttachmentChangeImplicationTest extends AbstractResourceAttachmentC
 	}
 
 	@Test
+	@Ignore("This test is now wrong, no such requirement should exist")
 	public void testControlledPackagedWithoutDiagram() throws Exception {
 		setupTestControlledPackagedWithoutDiagram();
 

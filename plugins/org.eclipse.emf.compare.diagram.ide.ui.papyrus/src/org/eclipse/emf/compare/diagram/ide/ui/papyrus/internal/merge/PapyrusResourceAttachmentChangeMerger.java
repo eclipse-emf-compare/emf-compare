@@ -14,7 +14,9 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -28,12 +30,15 @@ import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.CompareDiagramIDEUIPapyrusPlugin;
 import org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.CompareUIPapyrusMessages;
-import org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.postprocessor.PapyrusPostProcessor;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.merge.ResourceAttachmentChangeMerger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.papyrus.infra.core.resource.sasheditor.DiModel;
+import org.eclipse.papyrus.infra.core.resource.sasheditor.SashModel;
+import org.eclipse.papyrus.infra.gmfdiag.common.model.NotationModel;
+import org.eclipse.papyrus.uml.tools.model.UmlModel;
 
 /**
  * This Merger deals with ResourceAttachmentChanges as soon as there is Papyrus involved. Its purpose it to
@@ -44,6 +49,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  */
 @SuppressWarnings("restriction")
 public class PapyrusResourceAttachmentChangeMerger extends ResourceAttachmentChangeMerger {
+
+	/** List of file extensions managed by this post-processor. */
+	public static final List<String> FILE_EXTENSIONS = Arrays.asList(UmlModel.UML_FILE_EXTENSION,
+			DiModel.DI_FILE_EXTENSION, NotationModel.NOTATION_FILE_EXTENSION,
+			SashModel.SASH_MODEL_FILE_EXTENSION);
+
 	/** The logger. */
 	private static final Logger LOGGER = Logger.getLogger(PapyrusResourceAttachmentChangeMerger.class);
 
@@ -218,7 +229,7 @@ public class PapyrusResourceAttachmentChangeMerger extends ResourceAttachmentCha
 				o = match.getOrigin();
 			}
 		}
-		return PapyrusPostProcessor.FILE_EXTENSIONS.contains(o.eResource().getURI().fileExtension());
+		return FILE_EXTENSIONS.contains(o.eResource().getURI().fileExtension());
 	}
 
 	/**

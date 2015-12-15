@@ -29,5 +29,4 @@ Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
 Export-Package: org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal,
  org.eclipse.emf.compare.diagram.ide.ui.papyrus.dependency,
  org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.logical.view,
- org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.postprocessor,
  org.eclipse.emf.compare.diagram.ide.ui.papyrus.util
