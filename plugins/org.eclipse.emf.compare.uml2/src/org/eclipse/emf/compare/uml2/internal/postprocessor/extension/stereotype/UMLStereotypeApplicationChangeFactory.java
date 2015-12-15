@@ -120,8 +120,8 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFact
 					.getDifferences().iterator();
 			while (changes.hasNext()) {
 				final Diff diff = changes.next();
-				if (diff instanceof AttributeChange || diff instanceof ReferenceChange
-						|| diff instanceof ResourceAttachmentChange) {
+				if ((diff instanceof AttributeChange || diff instanceof ReferenceChange || diff instanceof ResourceAttachmentChange)
+						&& diff.getSource() == extension.getSource()) {
 					extension.getRefinedBy().add(diff);
 				}
 			}
@@ -239,7 +239,8 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFact
 			if (setting.getEStructuralFeature() == UMLPackage.Literals.PROFILE_APPLICATION__APPLIED_PROFILE) {
 				final ProfileApplication profileApplication = (ProfileApplication)setting.getEObject();
 				for (Diff diff : comparison.getDifferences(profileApplication)) {
-					if (diff instanceof ProfileApplicationChange && diff.getKind() == DifferenceKind.ADD) {
+					if (diff instanceof ProfileApplicationChange && diff.getKind() == DifferenceKind.ADD
+							&& diff.getSource() == stereotypeApplicationChange.getSource()) {
 						stereotypeApplicationChange.getRequires().add(diff);
 					}
 				}

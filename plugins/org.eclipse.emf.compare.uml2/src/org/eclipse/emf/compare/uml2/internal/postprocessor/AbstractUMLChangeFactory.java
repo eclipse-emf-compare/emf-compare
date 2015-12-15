@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.uml2.internal.postprocessor;
 import static com.google.common.base.Predicates.instanceOf;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
@@ -32,6 +33,7 @@ import org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFa
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -517,7 +519,9 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 			Predicate<Diff> p) {
 		if (lookup instanceof EObject) {
 			List<Diff> crossReferences = findCrossReferences(comparison, (EObject)lookup, p);
-			refinedExtension.getRefinedBy().addAll(crossReferences);
+			refinedExtension.getRefinedBy().addAll(
+					Collections2.filter(crossReferences, EMFComparePredicates.fromSide(refinedExtension
+							.getSource())));
 		}
 	}
 

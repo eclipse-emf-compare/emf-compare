@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.internal.postprocessor.factories;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -31,6 +32,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.util.CompareSwitch;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 
@@ -66,10 +68,11 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 
 		final DifferenceKind extensionKind = getRelatedExtensionKind(input);
 		ret.setKind(extensionKind);
+		// It's important to set the source before calling setRefiningChanges()
+		// because refines/refinedBy EReferences demand diffs on the same side
+		ret.setSource(input.getSource());
 
 		setRefiningChanges(ret, extensionKind, input);
-
-		ret.setSource(input.getSource());
 
 		// FIXME: Maybe it would be better to get all conflict objects from all conflicting unit differences
 		// and
@@ -152,8 +155,10 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 		requiredExtensions.remove(macro);
 		requiringExtensions.remove(macro);
 
-		macro.getRequires().addAll(requiredExtensions);
-		macro.getRequiredBy().addAll(requiringExtensions);
+		macro.getRequires().addAll(
+				Collections2.filter(requiredExtensions, EMFComparePredicates.fromSide(macro.getSource())));
+		macro.getRequiredBy().addAll(
+				Collections2.filter(requiringExtensions, EMFComparePredicates.fromSide(macro.getSource())));
 	}
 
 	/**
@@ -178,8 +183,10 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 				}
 			}
 		}
-		macro.getRequires().addAll(requiredExtensions);
-		macro.getRequiredBy().addAll(requiringExtensions);
+		macro.getRequires().addAll(
+				Collections2.filter(requiredExtensions, EMFComparePredicates.fromSide(macro.getSource())));
+		macro.getRequiredBy().addAll(
+				Collections2.filter(requiringExtensions, EMFComparePredicates.fromSide(macro.getSource())));
 	}
 
 	/**

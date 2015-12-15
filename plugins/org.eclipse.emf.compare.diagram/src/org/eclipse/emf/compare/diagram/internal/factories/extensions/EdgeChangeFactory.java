@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diagram.internal.factories.extensions;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
@@ -27,6 +28,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.extensions.EdgeChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsFactory;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -81,7 +83,9 @@ public class EdgeChangeFactory extends NodeChangeFactory {
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
 		super.setRefiningChanges(extension, extensionKind, refiningDiff);
 		if (extensionKind == DifferenceKind.CHANGE) {
-			extension.getRefinedBy().addAll(getAllDifferencesForChange(refiningDiff));
+			extension.getRefinedBy().addAll(
+					Collections2.filter(getAllDifferencesForChange(refiningDiff), EMFComparePredicates
+							.fromSide(extension.getSource())));
 		}
 	}
 

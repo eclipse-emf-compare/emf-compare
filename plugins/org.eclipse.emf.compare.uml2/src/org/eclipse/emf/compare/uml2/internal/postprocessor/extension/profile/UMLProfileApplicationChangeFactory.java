@@ -110,7 +110,8 @@ public class UMLProfileApplicationChangeFactory extends AbstractUMLChangeFactory
 					final EObject eObject = stereotypeApplications.next();
 					for (Diff diff : comparison.getDifferences(eObject)) {
 						if (diff instanceof StereotypeApplicationChange
-								&& diff.getKind() == DifferenceKind.DELETE) {
+								&& diff.getKind() == DifferenceKind.DELETE
+								&& diff.getSource() == profileApplicationChange.getSource()) {
 							profileApplicationChange.getRequires().add(diff);
 						}
 					}

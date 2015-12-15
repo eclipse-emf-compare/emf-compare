@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,7 +56,9 @@ public class HideFactory extends AbstractDiagramChangeFactory {
 	 */
 	@Override
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
-		extension.getRefinedBy().add(refiningDiff);
+		if (refiningDiff.getSource() == extension.getSource()) {
+			extension.getRefinedBy().add(refiningDiff);
+		}
 	}
 
 	/**

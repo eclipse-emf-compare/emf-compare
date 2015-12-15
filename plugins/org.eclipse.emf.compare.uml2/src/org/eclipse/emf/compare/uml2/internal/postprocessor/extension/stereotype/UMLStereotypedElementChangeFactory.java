@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor.extension.stereotype;
 
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 
 import java.util.Collections;
@@ -24,6 +25,7 @@ import org.eclipse.emf.compare.uml2.internal.StereotypedElementChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.Switch;
 import org.eclipse.uml2.uml.Element;
@@ -95,8 +97,12 @@ public class UMLStereotypedElementChangeFactory extends AbstractUMLChangeFactory
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
 		// super.setRefiningChanges(extension, extensionKind, refiningDiff);
 		List<StereotypeApplicationChange> stereotypeApplicationChanges = getStereotypeApplicationChanges((ReferenceChange)refiningDiff);
-		extension.getRefinedBy().addAll(stereotypeApplicationChanges);
-		extension.getRefinedBy().add(refiningDiff);
+		if (refiningDiff.getSource() == extension.getSource()) {
+			extension.getRefinedBy().add(refiningDiff);
+			extension.getRefinedBy().addAll(
+					Collections2.filter(stereotypeApplicationChanges, EMFComparePredicates.fromSide(extension
+							.getSource())));
+		}
 
 	}
 

@@ -71,12 +71,14 @@ public class UMLDanglingStereotypeApplicationFactory extends AbstractUMLChangeFa
 
 	@Override
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
-		extension.getRefinedBy().add(refiningDiff);
-		// Unfortunate, don't know how to set the resourceURI elsewhere than here.
-		if (refiningDiff instanceof ResourceAttachmentChange
-				&& extension instanceof DanglingStereotypeApplication) {
-			((DanglingStereotypeApplication)extension)
-					.setResourceURI(((ResourceAttachmentChange)refiningDiff).getResourceURI());
+		if (refiningDiff.getSource() == extension.getSource()) {
+			extension.getRefinedBy().add(refiningDiff);
+			// Unfortunate, don't know how to set the resourceURI elsewhere than here.
+			if (refiningDiff instanceof ResourceAttachmentChange
+					&& extension instanceof DanglingStereotypeApplication) {
+				((DanglingStereotypeApplication)extension)
+						.setResourceURI(((ResourceAttachmentChange)refiningDiff).getResourceURI());
+			}
 		}
 	}
 

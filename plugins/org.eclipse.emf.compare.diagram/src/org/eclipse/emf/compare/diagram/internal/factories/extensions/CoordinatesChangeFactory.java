@@ -89,7 +89,9 @@ public class CoordinatesChangeFactory extends NodeChangeFactory {
 	@Override
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
 		if (extensionKind == DifferenceKind.CHANGE) {
-			extension.getRefinedBy().addAll(getAllDifferencesForChange(refiningDiff));
+			extension.getRefinedBy().addAll(
+					Collections2.filter(getAllDifferencesForChange(refiningDiff), fromSide(extension
+							.getSource())));
 		}
 	}
 

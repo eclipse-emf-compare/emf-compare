@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diagram.internal.factories.extensions;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -20,6 +21,7 @@ import org.eclipse.emf.compare.diagram.internal.extensions.DiagramChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsFactory;
 import org.eclipse.emf.compare.diagram.internal.factories.AbstractDiagramChangeFactory;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -69,13 +71,19 @@ public class DiagramChangeFactory extends AbstractDiagramChangeFactory {
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
 		// Macroscopic change on a diagram is refined by the unit main change and all unit children related
 		// changes.
-		extension.getRefinedBy().add(refiningDiff);
-		extension.getRefinedBy().addAll(getAllContainedDifferences(refiningDiff));
+		if (refiningDiff.getSource() == extension.getSource()) {
+			extension.getRefinedBy().add(refiningDiff);
+			extension.getRefinedBy().addAll(
+					Collections2.filter(getAllContainedDifferences(refiningDiff), EMFComparePredicates
+							.fromSide(extension.getSource())));
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#fillRequiredDifferences(org.eclipse.emf.compare.Comparison, org.eclipse.emf.compare.Diff)
+	 * 
+	 * @see org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory#fillRequiredDifferences(org.eclipse.emf.compare.Comparison,
+	 *      org.eclipse.emf.compare.Diff)
 	 */
 	@Override
 	public void fillRequiredDifferences(Comparison comparison, Diff extension) {

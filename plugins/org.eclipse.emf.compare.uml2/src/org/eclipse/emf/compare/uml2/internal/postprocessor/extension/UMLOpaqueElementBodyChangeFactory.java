@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2014, 2015 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Philip Langer - initial API and implementation
+ *     Obeo - Prevent mixing sides in requires/implies/refines
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor.extension;
 
@@ -274,8 +275,10 @@ public class UMLOpaqueElementBodyChangeFactory extends AbstractUMLChangeFactory 
 	@Override
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
 		final OpaqueElementBodyChange bodyChange = (OpaqueElementBodyChange)extension;
-		bodyChange.getRefinedBy().add(refiningDiff);
-		collectAndAddOtherRefiningDiffs(bodyChange, refiningDiff);
+		if (refiningDiff.getSource() == bodyChange.getSource()) {
+			bodyChange.getRefinedBy().add(refiningDiff);
+			collectAndAddOtherRefiningDiffs(bodyChange, refiningDiff);
+		}
 	}
 
 	/**
@@ -292,7 +295,9 @@ public class UMLOpaqueElementBodyChangeFactory extends AbstractUMLChangeFactory 
 		final RefinementCollector collector = new RefinementCollector((AttributeChange)refiningDiff);
 		Iterable<Diff> collectedRefiningDiffs = collector.collect();
 		for (Diff otherRefiningDiff : collectedRefiningDiffs) {
-			bodyChange.getRefinedBy().add(otherRefiningDiff);
+			if (otherRefiningDiff.getSource() == bodyChange.getSource()) {
+				bodyChange.getRefinedBy().add(otherRefiningDiff);
+			}
 		}
 	}
 
@@ -463,7 +468,8 @@ public class UMLOpaqueElementBodyChangeFactory extends AbstractUMLChangeFactory 
 		 *         otherwise.
 		 */
 		private boolean isChangeOfBodyOrLanguageAttribute(AttributeChange attributeChange) {
-			return isChangeOfOpaqueElementBodyAttribute(attributeChange) || isChangeOfOpaqueElementLanguageAttribute(attributeChange);
+			return isChangeOfOpaqueElementBodyAttribute(attributeChange)
+					|| isChangeOfOpaqueElementLanguageAttribute(attributeChange);
 		}
 
 	}

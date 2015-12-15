@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.diagram.internal.factories.extensions;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Predicate;
@@ -29,6 +30,7 @@ import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsFactory;
 import org.eclipse.emf.compare.diagram.internal.extensions.NodeChange;
 import org.eclipse.emf.compare.diagram.internal.factories.AbstractDiagramChangeFactory;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.Node;
@@ -76,11 +78,14 @@ public class NodeChangeFactory extends AbstractDiagramChangeFactory {
 	 */
 	@Override
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
-		// Macroscopic change on a node is refined by the unit main change and unit children related changes.
-		extension.getRefinedBy().add(refiningDiff);
-		// if (extensionKind != DifferenceKind.MOVE) {
-		extension.getRefinedBy().addAll(getAllContainedDifferences(refiningDiff));
-		// }
+		if (refiningDiff.getSource() == extension.getSource()) {
+			// Macroscopic change on a node is refined by the unit main change and unit children related
+			// changes.
+			extension.getRefinedBy().add(refiningDiff);
+			extension.getRefinedBy().addAll(
+					Collections2.filter(getAllContainedDifferences(refiningDiff), EMFComparePredicates
+							.fromSide(extension.getSource())));
+		}
 	}
 
 	/**
@@ -108,7 +113,7 @@ public class NodeChangeFactory extends AbstractDiagramChangeFactory {
 		Set<Diff> requiredExtensions = new HashSet<Diff>();
 		Set<Diff> requiringExtensions = new HashSet<Diff>();
 		final Predicate<Diff> moveReference = and(instanceOf(ReferenceChange.class),
-				ofKind(DifferenceKind.MOVE));
+				ofKind(DifferenceKind.MOVE), fromSide(extension.getSource()));
 		Collection<Diff> refiningMoves = Collections2.filter(extension.getRefinedBy(), moveReference);
 		for (Diff diff : refiningMoves) {
 			EObject target = ((ReferenceChange)diff).getValue();

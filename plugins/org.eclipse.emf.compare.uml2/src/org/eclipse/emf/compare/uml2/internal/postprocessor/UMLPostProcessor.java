@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2015 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -332,10 +332,10 @@ public class UMLPostProcessor implements IPostProcessor {
 			Comparison comparison = diff.getMatch().getComparison();
 			for (Diff superSetDiff : comparison.getDifferences(superSet)) {
 				// Only keep diffs on the same ref and value where parent matches
-				if (superSetDiff instanceof ReferenceChange
+				if (superSetDiff instanceof ReferenceChange && superSetDiff.getSource() == diff.getSource()
 						&& ((ReferenceChange)superSetDiff).getReference() == superSet
 						&& ((ReferenceChange)superSetDiff).getValue() == diff.getValue()
-						&& ((ReferenceChange)superSetDiff).getMatch() == diff.getMatch()) {
+						&& superSetDiff.getMatch() == diff.getMatch()) {
 					if (isAddOrSetDiff(diff) && isAddOrSetDiff(superSetDiff)) {
 						diff.getImplies().add(superSetDiff);
 					} else if (isDeleteOrUnsetDiff(diff) && isDeleteOrUnsetDiff(superSetDiff)) {
@@ -354,9 +354,9 @@ public class UMLPostProcessor implements IPostProcessor {
 				Comparison comparison = diff.getMatch().getComparison();
 				for (Diff superSetDiff : comparison.getDifferences(superSet)) {
 					if (superSetDiff instanceof ReferenceChange
+							&& superSetDiff.getSource() == diff.getSource()
 							&& ((ReferenceChange)superSetDiff).getReference() == superSet
-							&& ((ReferenceChange)superSetDiff).getMatch() == comparison.getMatch(diff
-									.getValue())) {
+							&& superSetDiff.getMatch() == comparison.getMatch(diff.getValue())) {
 						if (isAddOrSetDiff(diff) && isAddOrSetDiff(superSetDiff)) {
 							diff.getImplies().add(superSetDiff);
 						} else if (isDeleteOrUnsetDiff(diff) && isDeleteOrUnsetDiff(superSetDiff)) {

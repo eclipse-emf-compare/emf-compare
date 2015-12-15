@@ -128,7 +128,9 @@ public class UMLStereotypeAttributeChangeFactory extends AbstractUMLChangeFactor
 	 */
 	@Override
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
-		extension.getRefinedBy().add(refiningDiff);
+		if (refiningDiff.getSource() == extension.getSource()) {
+			extension.getRefinedBy().add(refiningDiff);
+		}
 	}
 
 	/**

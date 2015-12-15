@@ -555,6 +555,24 @@ public final class EMFComparePredicates {
 	}
 
 	/**
+	 * This can be used to check that a given Diff originates from the given {@code source} side.
+	 * 
+	 * @param diff
+	 *            The diff the side of which will be used to filter.
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Diff> sameSideAs(final Diff diff) {
+		if (diff == null) {
+			throw new IllegalArgumentException();
+		}
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input != null && input.getSource() == diff.getSource();
+			}
+		};
+	}
+
+	/**
 	 * This can be used in order to check that a Diff has been detected on the given EObject.
 	 * 
 	 * @param eObject

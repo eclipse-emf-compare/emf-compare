@@ -39,6 +39,7 @@ import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -167,8 +168,12 @@ public class DefaultReqEngine implements IReqEngine {
 						.getSource(), DifferenceKind.ADD));
 			}
 
-			difference.getRequires().addAll(requiredDifferences);
-			difference.getRequiredBy().addAll(requiredByDifferences);
+			difference.getRequires().addAll(
+					Collections2.filter(requiredDifferences, EMFComparePredicates.fromSide(difference
+							.getSource())));
+			difference.getRequiredBy().addAll(
+					Collections2.filter(requiredByDifferences, EMFComparePredicates.fromSide(difference
+							.getSource())));
 		}
 
 	}
@@ -302,7 +307,8 @@ public class DefaultReqEngine implements IReqEngine {
 			if (valueMatch != null) {
 				for (Diff candidate : filter(valueMatch.getDifferences(), or(
 						instanceOf(ReferenceChange.class), instanceOf(FeatureMapChange.class)))) {
-					if (candidate.getKind() == DifferenceKind.DELETE || isDeleteOrUnsetDiff(candidate)) {
+					if (candidate.getSource() == sourceDifference.getSource()
+							&& (candidate.getKind() == DifferenceKind.DELETE || isDeleteOrUnsetDiff(candidate))) {
 						result.add(candidate);
 					}
 				}

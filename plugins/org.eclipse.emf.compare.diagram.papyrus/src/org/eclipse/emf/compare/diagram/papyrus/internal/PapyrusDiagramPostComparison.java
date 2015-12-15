@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.internal;
 
-import com.google.common.collect.Sets;
-
-import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.emf.compare.Comparison;
@@ -70,7 +67,11 @@ public class PapyrusDiagramPostComparison implements Runnable {
 			Set<Diff> diffs = indexer.getEquivalentDiffs(key);
 			if (diffs.size() > 1) {
 				for (Diff diff : diffs) {
-					diff.getRequires().addAll(Sets.difference(diffs, Collections.singleton(diff)));
+					for (Diff other : diffs) {
+						if (other != diff && other.getSource() == diff.getSource()) {
+							diff.getRequires().add(other);
+						}
+					}
 				}
 			}
 		}
