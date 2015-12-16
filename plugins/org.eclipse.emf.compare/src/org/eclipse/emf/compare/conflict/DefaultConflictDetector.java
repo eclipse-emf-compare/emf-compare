@@ -795,7 +795,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 			if (comparison.getEqualityHelper().matchingValues(deletedValue, movedValue)) {
 				if (candidate.getKind() == DifferenceKind.MOVE) {
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
-				} else {
+				} else if (diff.getMatch() == candidate.getMatch()) {
 					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
 				}
 			}
