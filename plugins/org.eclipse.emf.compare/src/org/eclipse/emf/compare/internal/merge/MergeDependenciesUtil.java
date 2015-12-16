@@ -144,14 +144,16 @@ public final class MergeDependenciesUtil {
 		final Set<Diff> resultingMerges = new LinkedHashSet<Diff>();
 		resultingMerges.add(diff);
 
-		Set<Diff> relations = internalGetResultingMerges(diff, mergerRegistry, mergeRightToLeft);
+		Set<Diff> relations = internalGetResultingMerges(diff, mergerRegistry, mergeRightToLeft, diff
+				.getSource());
 		Set<Diff> difference = Sets.difference(relations, resultingMerges);
 		while (!difference.isEmpty()) {
 			final Set<Diff> newRelations = new LinkedHashSet<Diff>(difference);
 			resultingMerges.addAll(newRelations);
 			relations = new LinkedHashSet<Diff>();
 			for (Diff newRelation : newRelations) {
-				relations.addAll(internalGetResultingMerges(newRelation, mergerRegistry, mergeRightToLeft));
+				relations.addAll(internalGetResultingMerges(newRelation, mergerRegistry, mergeRightToLeft,
+						diff.getSource()));
 			}
 			difference = Sets.difference(relations, resultingMerges);
 		}
@@ -169,22 +171,33 @@ public final class MergeDependenciesUtil {
 	 *            The {@link IMerger.Registry merger registry} currently in use.
 	 * @param mergeRightToLeft
 	 *            The direction in which we're considering a merge.
+	 * @param originalSource
+	 *            The original side of the diff the dependencies of which we are computing
 	 * @return The set of all differences <b>directly</b> related to the given one.
 	 */
 	private static Set<Diff> internalGetResultingMerges(Diff diff, IMerger.Registry mergerRegistry,
-			boolean mergeRightToLeft) {
+			boolean mergeRightToLeft, DifferenceSource originalSource) {
 		final IMerger merger = mergerRegistry.getHighestRankingMerger(diff);
-
+		// If a (pseudo-)conflict makes use merge diffs from the other side,
+		// we must then look for the consequences of these diffs
+		// as if they had been merged the other way around.
+		final boolean direction;
+		if (diff.getSource() == originalSource) {
+			direction = mergeRightToLeft;
+		} else {
+			direction = !mergeRightToLeft;
+		}
 		final Set<Diff> directParents;
 		final Set<Diff> directImplications;
 		if (merger instanceof IMerger2) {
-			directParents = ((IMerger2)merger).getDirectMergeDependencies(diff, mergeRightToLeft);
-			directImplications = ((IMerger2)merger).getDirectResultingMerges(diff, mergeRightToLeft);
+			directParents = ((IMerger2)merger).getDirectMergeDependencies(diff, direction);
+			directImplications = ((IMerger2)merger).getDirectResultingMerges(diff, direction);
 		} else {
 			directParents = Collections.emptySet();
 			directImplications = Collections.emptySet();
 		}
 
+		// FIXME [PERF] Useless copy
 		final LinkedHashSet<Diff> directRelated = Sets.newLinkedHashSet(Sets.union(directParents,
 				directImplications));
 
@@ -192,7 +205,7 @@ public final class MergeDependenciesUtil {
 			Object subDiffs = ((IMergeOptionAware)merger).getMergeOptions().get(
 					AbstractMerger.SUB_DIFF_AWARE_OPTION);
 			if (subDiffs == Boolean.TRUE) {
-				addAll(directRelated, ComparisonUtil.getSubDiffs(!mergeRightToLeft).apply(diff));
+				addAll(directRelated, ComparisonUtil.getSubDiffs(!direction).apply(diff));
 			}
 		}
 
@@ -218,7 +231,8 @@ public final class MergeDependenciesUtil {
 
 		final Set<Diff> allResultingMerges = getAllResultingMerges(diff, mergerRegistry, mergeRightToLeft);
 		for (Diff resulting : allResultingMerges) {
-			Set<Diff> rejections = internalGetResultingRejections(resulting, mergerRegistry, mergeRightToLeft);
+			Set<Diff> rejections = internalGetResultingRejections(resulting, mergerRegistry,
+					mergeRightToLeft, diff.getSource());
 			Set<Diff> difference = Sets.difference(rejections, resultingRejections);
 			while (!difference.isEmpty()) {
 				final Set<Diff> newRejections = new LinkedHashSet<Diff>(difference);
@@ -250,14 +264,22 @@ public final class MergeDependenciesUtil {
 	 *            The {@link IMerger.Registry merger registry} currently in use.
 	 * @param mergeRightToLeft
 	 *            The direction in which we're considering a merge.
+	 * @param originalSource
+	 *            The original side of the diff the dependencies of which we are computing
 	 * @return The set of all directly related differences that will be rejected if <code>diff</code> is
 	 *         merged in the given direction.
 	 */
 	private static Set<Diff> internalGetResultingRejections(Diff diff, IMerger.Registry mergerRegistry,
-			boolean mergeRightToLeft) {
+			boolean mergeRightToLeft, DifferenceSource originalSource) {
+		final boolean direction;
+		if (diff.getSource() == originalSource) {
+			direction = mergeRightToLeft;
+		} else {
+			direction = !mergeRightToLeft;
+		}
 		final IMerger merger = mergerRegistry.getHighestRankingMerger(diff);
 		if (merger instanceof IMerger2) {
-			return ((IMerger2)merger).getDirectResultingRejections(diff, mergeRightToLeft);
+			return ((IMerger2)merger).getDirectResultingRejections(diff, direction);
 		}
 		return Collections.emptySet();
 	}

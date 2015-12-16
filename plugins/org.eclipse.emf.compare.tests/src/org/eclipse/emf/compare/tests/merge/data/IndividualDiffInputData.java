@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2014 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -786,5 +786,29 @@ public class IndividualDiffInputData extends AbstractInputData {
 
 	public Resource getLeftAddRightDeleteRightEEnumConflictScope() throws IOException {
 		return loadFromClassLoader("conflictscope/leftadd_rightdelete/eenum/right.nodes");
+	}
+
+	public Resource getConflictAndPseudoConflictImplicationsAncestor() throws IOException {
+		return loadFromClassLoader("dependencies/bug_484579/ancestor.ecore");
+	}
+
+	public Resource getConflictAndPseudoConflictImplicationsLeft() throws IOException {
+		return loadFromClassLoader("dependencies/bug_484579/left.ecore");
+	}
+
+	public Resource getConflictAndPseudoConflictImplicationsRight() throws IOException {
+		return loadFromClassLoader("dependencies/bug_484579/right.ecore");
+	}
+
+	public Resource getMoveConflictAndPseudoConflictImplicationsAncestor() throws IOException {
+		return loadFromClassLoader("dependencies/bug_484579/ancestor.uml");
+	}
+
+	public Resource getMoveConflictAndPseudoConflictImplicationsLeft() throws IOException {
+		return loadFromClassLoader("dependencies/bug_484579/left.uml");
+	}
+
+	public Resource getMoveConflictAndPseudoConflictImplicationsRight() throws IOException {
+		return loadFromClassLoader("dependencies/bug_484579/right.uml");
 	}
 }
