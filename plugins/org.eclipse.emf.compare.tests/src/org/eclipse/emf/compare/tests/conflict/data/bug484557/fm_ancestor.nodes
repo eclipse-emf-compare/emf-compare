@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes">
+  <nodes:Node
+      xmi:id="_1uWuQOyMEeO1JodpgTFWaz"
+      name="Root 2">
+    <containmentRef1
+        xmi:id="_R8TWoLLnEeWRJankREeKLQ"
+        name="A"/>
+    <containmentRef1
+        xmi:id="_SjZy4LLnEeWRJankREeKLQ"
+        name="B"/>
+  </nodes:Node>
+  <nodes:NodeFeatureMapNonContainment
+      xmi:id="_1uWuQOyMEeO1JodpgTFWvw"
+      name="Root 1">
+    <secondKeyNC
+        href="#_1uWuQOyMEeO1JodpgTFWaz"/>
+    <firstKeyNC
+        href="#_R8TWoLLnEeWRJankREeKLQ"/>
+  </nodes:NodeFeatureMapNonContainment>
+</xmi:XMI>

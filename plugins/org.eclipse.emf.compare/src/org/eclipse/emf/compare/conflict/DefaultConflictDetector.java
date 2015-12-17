@@ -52,6 +52,7 @@ import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.compare.internal.SubMatchIterator;
 import org.eclipse.emf.compare.internal.ThreeWayTextDiff;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
@@ -911,10 +912,39 @@ public class DefaultConflictDetector implements IConflictDetector {
 		final EObject originVal = match.getOrigin();
 		for (Diff candidate : candidates) {
 			if (candidate instanceof ReferenceChange) {
-				// Any ReferenceChange that references the affected root is a possible conflict
-				final EObject candidateValue = ((ReferenceChange)candidate).getValue();
-				if (candidateValue == leftVal || candidateValue == rightVal || candidateValue == originVal) {
-					checkResourceAttachmentConflict(comparison, diff, (ReferenceChange)candidate);
+				if (diff.getKind() == DifferenceKind.DELETE && match == candidate.getMatch()
+						&& getRelatedModelElement(diff) == null) {
+					// The EObject that owns the changed EReference has been deleted on the other side
+					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+				} else {
+					// Any ReferenceChange that references the affected root is a possible conflict
+					final EObject candidateValue = ((ReferenceChange)candidate).getValue();
+					if (candidateValue == leftVal || candidateValue == rightVal
+							|| candidateValue == originVal) {
+						checkResourceAttachmentConflict(comparison, diff, (ReferenceChange)candidate);
+					}
+				}
+			} else if (candidate instanceof AttributeChange) {
+				// The change of an attribute on an EObject that has been removed from a root on the other
+				// side is a conflict
+				if (diff.getKind() == DifferenceKind.DELETE && match == candidate.getMatch()
+						&& getRelatedModelElement(diff) == null) {
+					if (ComparisonUtil.isDeleteOrUnsetDiff(candidate)) {
+						conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
+					} else {
+						conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+					}
+				}
+			} else if (candidate instanceof FeatureMapChange) {
+				// The change of a FM on an EObject that has been removed from a root on the other side
+				// is a conflict
+				if (diff.getKind() == DifferenceKind.DELETE && match == candidate.getMatch()
+						&& getRelatedModelElement(diff) == null) {
+					if (ComparisonUtil.isDeleteOrUnsetDiff(candidate)) {
+						conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
+					} else {
+						conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+					}
 				}
 			} else if (candidate instanceof ResourceAttachmentChange && match == candidate.getMatch()) {
 				// This can only be a conflict. All we need to know is its kind.
@@ -968,7 +998,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 * 
 	 * @param diff
 	 *            The change
-	 * @return The modele element of the given diff, or null if it cannot be found.
+	 * @return The model element of the given diff, or null if it cannot be found.
 	 */
 	private EObject getRelatedModelElement(ResourceAttachmentChange diff) {
 		Match m = diff.getMatch();

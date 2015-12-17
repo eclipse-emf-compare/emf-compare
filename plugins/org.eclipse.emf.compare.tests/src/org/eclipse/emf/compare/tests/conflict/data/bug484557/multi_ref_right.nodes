@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes">
+  <nodes:NodeMultiValueReference
+      xmi:id="_1uWuQOyMEeO1JodpgTFWvw"
+      name="Root 1"
+      multiValuedReference="_elCb8LLrEeWRJankREeKLQ _fq87ILLrEeWRJankREeKLQ"/>
+  <nodes:Node
+      xmi:id="_1uWuQOyMEeO1JodpgTFWaz"
+      name="Root 2">
+    <containmentRef1
+        xmi:id="_elCb8LLrEeWRJankREeKLQ"
+        name="A"/>
+    <containmentRef1
+        xmi:id="_fq87ILLrEeWRJankREeKLQ"
+        name="B"/>
+  </nodes:Node>
+</xmi:XMI>

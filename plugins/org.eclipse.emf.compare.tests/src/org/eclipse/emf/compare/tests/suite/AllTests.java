@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.tests.command.CommandStackTestSuite;
 import org.eclipse.emf.compare.tests.conflict.ConflictDetectionTest;
 import org.eclipse.emf.compare.tests.conflict.MultiLineAttributeConflictDetectionTest;
+import org.eclipse.emf.compare.tests.conflict.data.bug484557.Bug484557ConflictTest;
 import org.eclipse.emf.compare.tests.diff.ComparisonUtilTest;
 import org.eclipse.emf.compare.tests.diff.DiffUtilTest;
 import org.eclipse.emf.compare.tests.diff.FeatureFilterTest;
@@ -90,7 +91,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		FeatureFilterTest.class, ThreeWayBatchMergingTest.class,
 		MultiLineAttributeConflictDetectionTest.class, ThreeWayTextDiffTest.class,
 		MultiLineAttributeMergeTest.class, MonitorCancelTest.class, IdentifierEObjectMatcherTest.class,
-		MatchUtilFeatureContainsTest.class, RefineMergeTest.class })
+		MatchUtilFeatureContainsTest.class, RefineMergeTest.class, Bug484557ConflictTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
