@@ -12,10 +12,12 @@ package org.eclipse.emf.compare.tooltip;
 
 import static org.eclipse.emf.compare.internal.EMFCompareEditMessages.getString;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.provider.ITooltipLabelProvider;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 
@@ -175,20 +177,8 @@ public class ResourceAttachmentChangeTooltipProvider extends AbstractTooltipProv
 		EObject right = diff.getMatch().getRight();
 		EObject origin = diff.getMatch().getOrigin();
 
-		String leftUri = ""; //$NON-NLS-1$
-		if (left != null) {
-			leftUri = left.eResource().getURI().toString();
-		}
-
-		String rightUri = ""; //$NON-NLS-1$
-		if (right != null) {
-			rightUri = right.eResource().getURI().toString();
-		}
-
-		String originUri = ""; //$NON-NLS-1$
-		if (origin != null) {
-			originUri = origin.eResource().getURI().toString();
-		}
+		String leftUri = getResourceUri(left);
+		String rightUri = getResourceUri(right);
 
 		String tooltip;
 		String body;
@@ -225,15 +215,16 @@ public class ResourceAttachmentChangeTooltipProvider extends AbstractTooltipProv
 				}
 				break;
 			case REJECT:
+				String originUri = getResourceUri(origin);
 				if (isFromLeft) {
-					if (originUri == null || "".equals(originUri)) { //$NON-NLS-1$
+					if ("".equals(originUri)) { //$NON-NLS-1$
 						originUri = rightUri;
 					}
 					body = getString("ContextualTooltip.rac.uncontrol.left.reject", value, //$NON-NLS-1$
 							originUri);
 					tooltip = rejectAndChanged(body);
 				} else {
-					if (originUri == null || "".equals(originUri)) { //$NON-NLS-1$
+					if ("".equals(originUri)) { //$NON-NLS-1$
 						originUri = leftUri;
 					}
 					body = getString("ContextualTooltip.rac.uncontrol.right.reject", value, //$NON-NLS-1$
@@ -245,6 +236,27 @@ public class ResourceAttachmentChangeTooltipProvider extends AbstractTooltipProv
 				throw new IllegalStateException();
 		}
 		return tooltip;
+	}
+
+	/**
+	 * Provides a String representation of the given object's resource URI, never <code>null</code>.
+	 * 
+	 * @param o
+	 *            The EObject we want the resource URI of
+	 * @return A String representation of the given object's resource URI, or an empty String. Never
+	 *         <code>null</code>.
+	 */
+	private String getResourceUri(EObject o) {
+		if (o != null) {
+			Resource resource = o.eResource();
+			if (resource != null) {
+				URI uri = resource.getURI();
+				if (uri != null) {
+					return uri.toString();
+				}
+			}
+		}
+		return ""; //$NON-NLS-1$
 	}
 
 }
