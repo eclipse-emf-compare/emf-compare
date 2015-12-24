@@ -165,7 +165,23 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		 *            the given match.
 		 */
 		protected void buildSubTree(TreeNode parentNode, Conflict conflict, Match match) {
+			buildSubTree(parentNode, conflict, match, Sets.<Match> newHashSet());
+		}
 
+		/**
+		 * Build sub tree for the given Match.
+		 * 
+		 * @param parentNode
+		 *            the parent node of the given match.
+		 * @param conflict
+		 *            the conflict of the tree.
+		 * @param match
+		 *            the given match.
+		 * @param alreadyProcessedMatches
+		 *            already processed matches.
+		 */
+		private void buildSubTree(TreeNode parentNode, Conflict conflict, Match match,
+				Collection<Match> alreadyProcessedMatches) {
 			// Use a LinkedHashSet for the first argument of Sets.intersection, in order to keep the order of
 			// differences.
 			SetView<Diff> setView = Sets.intersection(Sets.newLinkedHashSet(match.getDifferences()), Sets
@@ -179,12 +195,11 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 								((ReferenceChange)diff).getValue());
 						buildSubTree(wrap, conflict, diffMatch);
 					} else {
-						Collection<Match> alreadyProcessedMatches = Sets.newHashSet();
 						alreadyProcessedMatches.add(match);
 						for (Diff refinedBy : diff.getRefinedBy()) {
 							Match refinedByMatch = refinedBy.getMatch();
 							if (!alreadyProcessedMatches.contains(refinedByMatch)) {
-								buildSubTree(wrap, conflict, refinedByMatch);
+								buildSubTree(wrap, conflict, refinedByMatch, alreadyProcessedMatches);
 								alreadyProcessedMatches.add(refinedByMatch);
 							}
 						}
@@ -193,10 +208,9 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 			}
 			for (Match subMatch : match.getSubmatches()) {
 				if (!isMatchOfConflictContainmentDiff(conflict, subMatch)) {
-					buildSubTree(parentNode, conflict, subMatch);
+					buildSubTree(parentNode, conflict, subMatch, alreadyProcessedMatches);
 				}
 			}
-
 		}
 
 		/**
