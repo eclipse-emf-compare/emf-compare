@@ -561,7 +561,7 @@ public final class EMFComparePredicates {
 	 *            The diff the side of which will be used to filter.
 	 * @return The created predicate.
 	 */
-	public static Predicate<? super Diff> sameSideAs(final Diff diff) {
+	public static Predicate<Diff> sameSideAs(final Diff diff) {
 		if (diff == null) {
 			throw new IllegalArgumentException();
 		}
