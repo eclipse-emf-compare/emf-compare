@@ -223,10 +223,11 @@ public class UMLStereotypeApplicationChangeFeatureAccessor extends ManyStructura
 				if (element instanceof EObject) {
 					final Comparison comparison = diff.getMatch().getComparison();
 					final Match match = comparison.getMatch((EObject)element);
-
-					return Iterables.any(match.getDifferences(), and(
-							instanceOf(StereotypeApplicationChange.class),
-							hasState(DifferenceState.UNRESOLVED)));
+					if (match != null) {
+						return Iterables.any(match.getDifferences(), and(
+								instanceOf(StereotypeApplicationChange.class),
+								hasState(DifferenceState.UNRESOLVED)));
+					}
 				}
 				return false;
 			}

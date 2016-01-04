@@ -225,19 +225,7 @@ public class DefaultEquiEngine implements IEquiEngine {
 			final Object entryValue = ((FeatureMap.Entry)featureMapEntry).getValue();
 
 			if (entryValue instanceof EObject) {
-				final EObject entryValueObject = (EObject)entryValue;
-				final Match entryValueMatch = comparison.getMatch(entryValueObject);
-				differences.addAll(entryValueMatch.getDifferences());
-
-				if (entryValueMatch.getLeft() != null) {
-					final Match leftParentMatch = comparison.getMatch(entryValueMatch.getLeft().eContainer());
-					differences.addAll(leftParentMatch.getDifferences());
-				}
-				if (entryValueMatch.getRight() != null) {
-					final Match leftParentMatch = comparison
-							.getMatch(entryValueMatch.getRight().eContainer());
-					differences.addAll(leftParentMatch.getDifferences());
-				}
+				addMatchDifferences(comparison.getMatch((EObject)entryValue), comparison, differences);
 			}
 
 			final EStructuralFeature entryKey = ((FeatureMap.Entry)featureMapEntry).getEStructuralFeature();
@@ -268,6 +256,35 @@ public class DefaultEquiEngine implements IEquiEngine {
 				equivalence.getDifferences().add(featureMapChange);
 				// Add the MapFeature-derived references to the equivalence
 				equivalence.getDifferences().addAll(equivalentDiffs);
+			}
+		}
+	}
+
+	/**
+	 * Add the differences of the given match.
+	 * 
+	 * @param match
+	 *            The match to deal with, can be <code>null</code>
+	 * @param comparison
+	 *            The comparison
+	 * @param differences
+	 *            The set of differences to add to, its content will be modified
+	 */
+	private void addMatchDifferences(final Match match, final Comparison comparison,
+			final Set<Diff> differences) {
+		if (match != null) {
+			differences.addAll(match.getDifferences());
+			if (match.getLeft() != null) {
+				final Match leftParentMatch = comparison.getMatch(match.getLeft().eContainer());
+				if (leftParentMatch != null) {
+					differences.addAll(leftParentMatch.getDifferences());
+				}
+			}
+			if (match.getRight() != null) {
+				final Match rightParentMatch = comparison.getMatch(match.getRight().eContainer());
+				if (rightParentMatch != null) {
+					differences.addAll(rightParentMatch.getDifferences());
+				}
 			}
 		}
 	}
