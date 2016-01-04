@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
 
 import com.google.common.eventbus.Subscribe;
@@ -79,16 +80,16 @@ public class CompareToolBar implements ISelectionChangedListener {
 	 */
 	public CompareToolBar(ToolBarManager toolbarManager, StructureMergeViewerGrouper viewerGrouper,
 			StructureMergeViewerFilter viewerFilter, EMFCompareConfiguration compareConfiguration) {
-		this.toolbarManager = toolbarManager;
-		this.compareConfiguration = compareConfiguration;
+		this.toolbarManager = checkNotNull(toolbarManager);
+		this.compareConfiguration = checkNotNull(compareConfiguration);
 		mergeActions = newArrayListWithCapacity(2);
 		mergeAllNonConflictingActions = newArrayListWithCapacity(2);
 
-		groupActionMenu = new GroupActionMenu(viewerGrouper, EMFCompareRCPUIPlugin.getDefault()
+		groupActionMenu = new GroupActionMenu(checkNotNull(viewerGrouper), EMFCompareRCPUIPlugin.getDefault()
 				.getDifferenceGroupProviderRegistry());
 
-		filterActionMenu = new FilterActionMenu(viewerFilter, EMFCompareRCPUIPlugin.getDefault()
-				.getDifferenceFilterRegistry());
+		filterActionMenu = new FilterActionMenu(checkNotNull(viewerFilter), EMFCompareRCPUIPlugin
+				.getDefault().getDifferenceFilterRegistry());
 	}
 
 	public final void initToolbar(AbstractTreeViewer viewer, INavigatable nav) {
@@ -172,7 +173,10 @@ public class CompareToolBar implements ISelectionChangedListener {
 
 	public void dispose() {
 		toolbarManager.removeAll();
-		compareConfiguration.getEventBus().unregister(this);
+		if (doOnce) {
+			// doOnce makes sure we have been registered with the eventBus
+			compareConfiguration.getEventBus().unregister(this);
+		}
 		this.doOnce = false;
 	}
 
