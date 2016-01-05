@@ -5,7 +5,7 @@ Element-Type: testsuite
 Element-Version: 2.0
 Id: _IpyRIHD2EeWm0qH5utCWQg
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 10/15/15 5:15 PM
+Save-Time: 1/5/16 2:15 PM
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
 Content-Type: text/plain
@@ -36,13 +36,11 @@ _A8FK4HGAEeW2QO9QoqyAmA	// kind: 'test' name: 'ts017_tc003.4_cherrypick_resource
 _A8KDYHGAEeW2QO9QoqyAmA	// kind: 'test' name: 'ts017_tc003.5_rebase_resource_location_test' path: 'papyrus/ts017_tc003.5_rebase_resource_location_test.test'
 _A8O74HGAEeW2QO9QoqyAmA	// kind: 'test' name: 'ts017_tc003.6_rebase_resource_location_test' path: 'papyrus/ts017_tc003.6_rebase_resource_location_test.test'
 _EfI1QHMdEeW_bZHq03AR-A	// kind: 'test' name: 'ts017_tc004.1_merge_resource_location_test' path: 'papyrus/ts017_tc004.1_merge_resource_location_test.test'
-_QIqLMHMfEeWJlLI5frq0hw	// kind: 'test' name: 'ts017_tc004.2_merge_resource_location_test' path: 'papyrus/ts017_tc004.2_merge_resource_location_test.test'
 _Q5rGgHMhEeWJlLI5frq0hw	// kind: 'test' name: 'ts017_tc004.3_cherrypick_resource_location_test' path: 'papyrus/ts017_tc004.3_cherrypick_resource_location_test.test'
 _yrW4UHMhEeWJlLI5frq0hw	// kind: 'test' name: 'ts017_tc004.4_cherrypick_resource_location_test' path: 'papyrus/ts017_tc004.4_cherrypick_resource_location_test.test'
 _WzvmUHMjEeWJlLI5frq0hw	// kind: 'test' name: 'ts017_tc004.5_rebase_resource_location_test' path: 'papyrus/ts017_tc004.5_rebase_resource_location_test.test'
 _aprXQHM9EeWJlLI5frq0hw	// kind: 'test' name: 'ts017_tc004.6_rebase_resource_location_test' path: 'papyrus/ts017_tc004.6_rebase_resource_location_test.test'
 _bT8nsHJKEeW0UJaeREW8jA	// kind: 'test' name: 'ts017_tc005_rebase_multiple_commits' path: 'papyrus/ts017_tc005_rebase_multiple_commits.test'
 _J7VuYHJQEeW0UJaeREW8jA	// kind: 'test' name: 'ts017_tc006.1_merge_multiple_projects_without_conflicts' path: 'papyrus/ts017_tc006.1_merge_multiple_projects_without_conflicts.test'
-_AXnCoHKCEeW0UJaeREW8jA	// kind: 'test' name: 'ts017_tc007_merge_multiple_projects_with_conflicts' path: 'papyrus/ts017_tc007_merge_multiple_projects_with_conflicts.test'
 
 ------=_testcase-items-62c497da-4241-31f4-811a-6b453a3ecff8--

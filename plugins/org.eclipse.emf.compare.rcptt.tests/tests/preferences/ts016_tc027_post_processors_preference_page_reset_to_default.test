@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _z9E-EMC_EeO8eNTYV1NAnA
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 9/15/15 9:44 AM
+Save-Time: 1/4/16 3:11 PM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -28,8 +28,8 @@ Entry-Name: .content
 get-preferences-menu | click
 with [get-window Preferences | get-table] {
     get-property "getItems().TableItem[0].getChecked()" | equals true | verify-true
-    get-property "getItems().TableItem[1].getChecked()" | equals true | verify-true
-    get-property "getItems().TableItem[2].getChecked()" | equals false | verify-true
+    get-property "getItems().TableItem[1].getChecked()" | equals false | verify-true
+    get-property "getItems().TableItem[2].getChecked()" | equals true | verify-true
     get-property "getItems().TableItem[3].getChecked()" | equals true | verify-true
 }
 get-window Preferences | get-button "Restore Defaults" | click
@@ -40,6 +40,5 @@ with [get-window Preferences | get-table] {
     get-property "getItems().TableItem[3].getChecked()" | equals true | verify-true
     get-property "getItems().TableItem[4].getChecked()" | equals true | verify-true
     get-property "getItems().TableItem[5].getChecked()" | equals true | verify-true
-    get-property "getItems().TableItem[6].getChecked()" | equals true | verify-true
 }
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
