@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,7 @@ import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -275,20 +276,23 @@ public class EditionDistance implements DistanceFunction {
 		public void referenceChange(Match match, EReference reference, EObject value, DifferenceKind kind,
 				DifferenceSource source) {
 			if (!alreadyChanged.contains(reference)) {
-				switch (kind) {
-					case MOVE:
-						distance += weightProviderRegistry.getHighestRankingWeightProvider(
-								reference.eClass().getEPackage()).getWeight(reference)
-								* orderChangeCoef;
-						break;
-					case ADD:
-					case DELETE:
-					case CHANGE:
-						distance += weightProviderRegistry.getHighestRankingWeightProvider(
-								reference.eClass().getEPackage()).getWeight(reference);
-						break;
-					default:
-						break;
+				EClassifier eType = reference.getEType();
+				if (eType != null) { // Do not update distance in case of untyped reference
+					switch (kind) {
+						case MOVE:
+							distance += weightProviderRegistry.getHighestRankingWeightProvider(
+									eType.getEPackage()).getWeight(reference)
+									* orderChangeCoef;
+							break;
+						case ADD:
+						case DELETE:
+						case CHANGE:
+							distance += weightProviderRegistry.getHighestRankingWeightProvider(
+									eType.getEPackage()).getWeight(reference);
+							break;
+						default:
+							break;
+					}
 				}
 				alreadyChanged.add(reference);
 			} else {
@@ -302,28 +306,31 @@ public class EditionDistance implements DistanceFunction {
 		public void attributeChange(Match match, EAttribute attribute, Object value, DifferenceKind kind,
 				DifferenceSource source) {
 			if (!alreadyChanged.contains(attribute)) {
-				Object aValue = ReferenceUtil.safeEGet(match.getLeft(), attribute);
-				Object bValue = ReferenceUtil.safeEGet(match.getRight(), attribute);
-				switch (kind) {
-					case MOVE:
-						distance += weightProviderRegistry.getHighestRankingWeightProvider(
-								attribute.eClass().getEPackage()).getWeight(attribute)
-								* orderChangeCoef;
-						break;
-					case ADD:
-					case DELETE:
-					case CHANGE:
-						if (aValue instanceof String && bValue instanceof String) {
+				EClassifier eType = attribute.getEType();
+				if (eType != null) { // Do not update distance in case of untyped attribute
+					Object aValue = ReferenceUtil.safeEGet(match.getLeft(), attribute);
+					Object bValue = ReferenceUtil.safeEGet(match.getRight(), attribute);
+					switch (kind) {
+						case MOVE:
 							distance += weightProviderRegistry.getHighestRankingWeightProvider(
-									attribute.eClass().getEPackage()).getWeight(attribute)
-									* (1 - DiffUtil.diceCoefficient((String)aValue, (String)bValue));
-						} else {
-							distance += weightProviderRegistry.getHighestRankingWeightProvider(
-									attribute.eClass().getEPackage()).getWeight(attribute);
-						}
-						break;
-					default:
-						break;
+									eType.getEPackage()).getWeight(attribute)
+									* orderChangeCoef;
+							break;
+						case ADD:
+						case DELETE:
+						case CHANGE:
+							if (aValue instanceof String && bValue instanceof String) {
+								distance += weightProviderRegistry.getHighestRankingWeightProvider(
+										eType.getEPackage()).getWeight(attribute)
+										* (1 - DiffUtil.diceCoefficient((String)aValue, (String)bValue));
+							} else {
+								distance += weightProviderRegistry.getHighestRankingWeightProvider(
+										eType.getEPackage()).getWeight(attribute);
+							}
+							break;
+						default:
+							break;
+					}
 				}
 				alreadyChanged.add(attribute);
 			} else {
@@ -337,28 +344,31 @@ public class EditionDistance implements DistanceFunction {
 		public void featureMapChange(Match match, EAttribute attribute, Object value, DifferenceKind kind,
 				DifferenceSource source) {
 			if (!alreadyChanged.contains(attribute)) {
-				Object aValue = ReferenceUtil.safeEGet(match.getLeft(), attribute);
-				Object bValue = ReferenceUtil.safeEGet(match.getRight(), attribute);
-				switch (kind) {
-					case MOVE:
-						distance += weightProviderRegistry.getHighestRankingWeightProvider(
-								attribute.eClass().getEPackage()).getWeight(attribute)
-								* orderChangeCoef;
-						break;
-					case ADD:
-					case DELETE:
-					case CHANGE:
-						if (aValue instanceof String && bValue instanceof String) {
+				EClassifier eType = attribute.getEType();
+				if (eType != null) { // Do not update distance in case of untyped attribute
+					Object aValue = ReferenceUtil.safeEGet(match.getLeft(), attribute);
+					Object bValue = ReferenceUtil.safeEGet(match.getRight(), attribute);
+					switch (kind) {
+						case MOVE:
 							distance += weightProviderRegistry.getHighestRankingWeightProvider(
-									attribute.eClass().getEPackage()).getWeight(attribute)
-									* (1 - DiffUtil.diceCoefficient((String)aValue, (String)bValue));
-						} else {
-							distance += weightProviderRegistry.getHighestRankingWeightProvider(
-									attribute.eClass().getEPackage()).getWeight(attribute);
-						}
-						break;
-					default:
-						break;
+									eType.getEPackage()).getWeight(attribute)
+									* orderChangeCoef;
+							break;
+						case ADD:
+						case DELETE:
+						case CHANGE:
+							if (aValue instanceof String && bValue instanceof String) {
+								distance += weightProviderRegistry.getHighestRankingWeightProvider(
+										eType.getEPackage()).getWeight(attribute)
+										* (1 - DiffUtil.diceCoefficient((String)aValue, (String)bValue));
+							} else {
+								distance += weightProviderRegistry.getHighestRankingWeightProvider(
+										eType.getEPackage()).getWeight(attribute);
+							}
+							break;
+						default:
+							break;
+					}
 				}
 				alreadyChanged.add(attribute);
 			} else {
@@ -635,9 +645,12 @@ public class EditionDistance implements DistanceFunction {
 				public Iterator<EReference> getReferencesToCheck(Match match) {
 					return Iterators.filter(super.getReferencesToCheck(match), new Predicate<EReference>() {
 						public boolean apply(EReference input) {
-							return weightProviderRegistry.getHighestRankingWeightProvider(
-									input.eClass().getEPackage()).getWeight(input) != 0;
-
+							EClassifier eType = input.getEType();
+							if (eType != null) {
+								return weightProviderRegistry.getHighestRankingWeightProvider(
+										eType.getEPackage()).getWeight(input) != 0;
+							}
+							return false; // We refuse to use untyped references
 						}
 					});
 				}
@@ -646,8 +659,12 @@ public class EditionDistance implements DistanceFunction {
 				public Iterator<EAttribute> getAttributesToCheck(Match match) {
 					return Iterators.filter(super.getAttributesToCheck(match), new Predicate<EAttribute>() {
 						public boolean apply(EAttribute input) {
-							return weightProviderRegistry.getHighestRankingWeightProvider(
-									input.eClass().getEPackage()).getWeight(input) != 0;
+							EClassifier eType = input.getEType();
+							if (eType != null) {
+								return weightProviderRegistry.getHighestRankingWeightProvider(
+										eType.getEPackage()).getWeight(input) != 0;
+							}
+							return false; // We refuse to use untyped attributes
 						}
 					});
 				}
@@ -671,11 +688,14 @@ public class EditionDistance implements DistanceFunction {
 		int nbFeatures = 0;
 
 		for (EStructuralFeature feat : eObj.eClass().getEAllStructuralFeatures()) {
-			int featureWeight = weightProviderRegistry.getHighestRankingWeightProvider(
-					feat.eClass().getEPackage()).getWeight(feat);
-			if (featureWeight != 0 && eObj.eIsSet(feat)) {
-				max += featureWeight;
-				nbFeatures++;
+			EClassifier eType = feat.getEType();
+			if (eType != null) { // Do not update amount in case of untyped feature
+				int featureWeight = weightProviderRegistry.getHighestRankingWeightProvider(
+						eType.getEPackage()).getWeight(feat);
+				if (featureWeight != 0 && eObj.eIsSet(feat)) {
+					max += featureWeight;
+					nbFeatures++;
+				}
 			}
 		}
 
