@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,8 @@ package org.eclipse.emf.compare;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.collect.Iterators;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -21,6 +23,7 @@ import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.DiagnosticChain;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.conflict.DefaultConflictDetector;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
@@ -196,6 +199,10 @@ public class EMFCompare {
 	public Comparison compare(IComparisonScope scope, final Monitor monitor) {
 		checkNotNull(scope);
 		checkNotNull(monitor);
+
+		// Used to compute the time spent in the method
+		long startTime = System.currentTimeMillis();
+
 		if (LOGGER.isInfoEnabled()) {
 			LOGGER.info("compare() - START"); //$NON-NLS-1$
 		}
@@ -294,9 +301,31 @@ public class EMFCompare {
 		}
 
 		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info("compare() - FINISH"); //$NON-NLS-1$
+			logEndOfComparison(comparison, startTime);
 		}
 		return comparison;
+	}
+
+	/**
+	 * Log useful informations at the end of the comparison process.
+	 * 
+	 * @param comparison
+	 *            The comparison
+	 * @param start
+	 *            The time when the method start
+	 */
+	private void logEndOfComparison(Comparison comparison, long start) {
+		long duration = System.currentTimeMillis() - start;
+		int diffQuantity = comparison.getDifferences().size();
+		int conflictQuantity = comparison.getConflicts().size();
+		int matchQuantity = 0;
+		EList<Match> matches = comparison.getMatches();
+		for (Match match : matches) {
+			matchQuantity++;
+			matchQuantity += Iterators.size(match.getAllSubmatches().iterator());
+		}
+		LOGGER.info("compare() - FINISH - " + matchQuantity + " matches, " + diffQuantity + " diffs and " + conflictQuantity //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ " conflicts found in " + duration + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

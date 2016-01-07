@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
@@ -72,6 +73,9 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 
 	/** The key of the merge option that allows to the mergers to consider sub-diffs of a diff as a whole. */
 	public static final String SUB_DIFF_AWARE_OPTION = "subDiffAwareOption"; //$NON-NLS-1$
+
+	/** The logger. */
+	private static final Logger LOGGER = Logger.getLogger(AbstractMerger.class);
 
 	/** Ranking of this merger. */
 	private int ranking;
@@ -166,6 +170,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 	 * @since 3.2
 	 */
 	public Set<Diff> getDirectMergeDependencies(Diff diff, boolean mergeRightToLeft) {
+		long start = System.currentTimeMillis();
 		final Set<Diff> dependencies = new LinkedHashSet<Diff>();
 		if (mergeRightToLeft) {
 			if (DifferenceSource.LEFT == diff.getSource()) {
@@ -192,6 +197,14 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 			}
 		}
 
+		if (LOGGER.isDebugEnabled()) {
+			Long duration = new Long(System.currentTimeMillis() - start);
+			String log = String.format(
+					"getDirectMergeDependencies(Diff, boolean) - %d dependencies found in %d ms for diff %d", //$NON-NLS-1$
+					new Integer(dependencies.size()), duration, new Integer(diff.hashCode()));
+			LOGGER.debug(log);
+		}
+
 		return dependencies;
 	}
 
@@ -201,6 +214,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 	 * @since 3.2
 	 */
 	public Set<Diff> getDirectResultingMerges(Diff target, boolean mergeRightToLeft) {
+		long start = System.currentTimeMillis();
 		final Set<Diff> resulting = new LinkedHashSet<Diff>();
 		if (mergeRightToLeft) {
 			if (DifferenceSource.LEFT == target.getSource()) {
@@ -253,6 +267,15 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 					.getSubDiffs(!mergeRightToLeft)));
 			addAll(resulting, subDiffs);
 		}
+
+		if (LOGGER.isDebugEnabled()) {
+			Long duration = new Long(System.currentTimeMillis() - start);
+			String log = String
+					.format("getDirectResultingMerges(Diff, boolean) - %d resulting merges found in %d ms for diff %d", //$NON-NLS-1$
+							new Integer(resulting.size()), duration, new Integer(target.hashCode()));
+			LOGGER.debug(log);
+		}
+
 		return resulting;
 
 	}
@@ -357,6 +380,8 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 	 * @since 3.2
 	 */
 	public Set<Diff> getDirectResultingRejections(Diff target, boolean mergeRightToLeft) {
+		long start = System.currentTimeMillis();
+
 		final Set<Diff> directlyImpliedRejections = new LinkedHashSet<Diff>();
 		final Conflict conflict = target.getConflict();
 		if (conflict != null && conflict.getKind() == ConflictKind.REAL) {
@@ -367,6 +392,15 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 				Iterables.addAll(directlyImpliedRejections, Iterables.filter(conflict.getDifferences(),
 						fromSide(DifferenceSource.RIGHT)));
 			}
+		}
+
+		if (LOGGER.isDebugEnabled()) {
+			Long duration = new Long(System.currentTimeMillis() - start);
+			String log = String
+					.format("getDirectResultingMerges(Diff, boolean) - %d implied rejections found in %d ms for diff %d", //$NON-NLS-1$
+							new Integer(directlyImpliedRejections.size()), duration, new Integer(target
+									.hashCode()));
+			LOGGER.debug(log);
 		}
 
 		return directlyImpliedRejections;
@@ -675,6 +709,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 		if (target.getState() != DifferenceState.UNRESOLVED) {
 			return;
 		}
+		long start = System.currentTimeMillis();
 
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		target.setState(DifferenceState.MERGED);
@@ -709,6 +744,12 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 				mergeDiff(subDiff, false, monitor);
 			}
 		}
+
+		if (LOGGER.isDebugEnabled()) {
+			long duration = System.currentTimeMillis() - start;
+			LOGGER.debug("copyLeftToRight(Diff, Monitor) - diff " + target.hashCode() + " merged in " //$NON-NLS-1$ //$NON-NLS-2$
+					+ duration + "ms"); //$NON-NLS-1$
+		}
 	}
 
 	/**
@@ -723,6 +764,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 		if (target.getState() != DifferenceState.UNRESOLVED) {
 			return;
 		}
+		long start = System.currentTimeMillis();
 
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		target.setState(DifferenceState.MERGED);
@@ -756,6 +798,12 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 			for (Diff subDiff : subDiffs) {
 				mergeDiff(subDiff, true, monitor);
 			}
+		}
+
+		if (LOGGER.isDebugEnabled()) {
+			long duration = System.currentTimeMillis() - start;
+			LOGGER.debug("copyLeftToRight(Diff, Monitor) - diff " + target.hashCode() + " merged in " //$NON-NLS-1$ //$NON-NLS-2$
+					+ duration + "ms"); //$NON-NLS-1$
 		}
 	}
 
@@ -977,6 +1025,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 	 * @param monitor
 	 *            The monitor we should use to report progress.
 	 */
+
 	protected void mergeDiff(Diff diff, boolean rightToLeft, Monitor monitor) {
 		final IMerger delegate = getRegistry().getHighestRankingMerger(diff);
 		if (rightToLeft) {
@@ -1320,4 +1369,5 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 			}
 		}
 	}
+
 }

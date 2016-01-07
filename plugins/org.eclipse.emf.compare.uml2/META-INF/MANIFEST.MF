@@ -16,7 +16,8 @@ Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.emf.compare.uml2.internal.UMLComparePlugin
 Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
  com.google.common.collect;version="[11.0.0,16.0.0)",
- com.google.common.primitives;version="[11.0.0,16.0.0)"
+ com.google.common.primitives;version="[11.0.0,16.0.0)",
+ org.apache.log4j;version="1.2.15"
 Export-Package: org.eclipse.emf.compare.uml2.internal;
   x-friends:="org.eclipse.emf.compare.uml2.edit,
    org.eclipse.emf.compare.uml2.rcp,

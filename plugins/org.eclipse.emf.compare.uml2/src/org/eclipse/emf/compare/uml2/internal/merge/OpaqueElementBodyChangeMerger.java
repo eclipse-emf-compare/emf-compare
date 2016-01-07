@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2014, 2016 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -49,6 +50,9 @@ import org.eclipse.emf.ecore.EObject;
  * @author Philip Langer <planger@eclipsesource.com>
  */
 public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
+
+	/** The logger. */
+	private static final Logger LOGGER = Logger.getLogger(OpaqueElementBodyChangeMerger.class);
 
 	@Override
 	public boolean isMergerFor(Diff target) {
@@ -114,6 +118,13 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 		final Optional<OpaqueElementBodyChange> possibleBodyChange = getOpaqueElementBodyChange(diff);
 		if (possibleBodyChange.isPresent()) {
 			final OpaqueElementBodyChange bodyChange = getOpaqueElementBodyChange(diff).get();
+
+			if (LOGGER.isDebugEnabled()) {
+				int refinedElementCount = bodyChange.getRefinedBy().size();
+				LOGGER.debug("accept(Diff, boolean) - " + refinedElementCount //$NON-NLS-1$
+						+ " refined diffs to merge for diff " + diff.hashCode()); //$NON-NLS-1$
+			}
+
 			switch (bodyChange.getKind()) {
 				case ADD:
 					acceptRefiningDiffs(bodyChange, rightToLeft);
@@ -139,6 +150,13 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 		final Optional<OpaqueElementBodyChange> possibleBodyChange = getOpaqueElementBodyChange(diff);
 		if (possibleBodyChange.isPresent()) {
 			final OpaqueElementBodyChange bodyChange = possibleBodyChange.get();
+
+			if (LOGGER.isDebugEnabled()) {
+				int refinedElementCount = bodyChange.getRefinedBy().size();
+				LOGGER.debug("Reject(Diff, boolean)" + refinedElementCount //$NON-NLS-1$
+						+ " refined diffs to merge for diff " + diff.hashCode()); //$NON-NLS-1$
+			}
+
 			switch (bodyChange.getKind()) {
 				case ADD:
 					rejectRefiningDiffs(bodyChange, rightToLeft);

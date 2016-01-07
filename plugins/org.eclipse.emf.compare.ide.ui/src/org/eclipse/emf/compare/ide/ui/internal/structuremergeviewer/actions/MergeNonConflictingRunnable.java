@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo and others.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
@@ -54,6 +55,10 @@ import org.eclipse.emf.compare.merge.IMerger2;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class MergeNonConflictingRunnable extends AbstractMergeRunnable implements IMergeAllNonConflictingRunnable, IMergeRunnable {
+
+	/** The logger. */
+	private static final Logger LOGGER = Logger.getLogger(MergeNonConflictingRunnable.class);
+
 	/**
 	 * Default constructor.
 	 * 
@@ -235,6 +240,12 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 				if (next.getState() != DifferenceState.MERGED) {
 					affectedDiffs.add(next);
 					final IMerger merger = mergerRegistry.getHighestRankingMerger(next);
+
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug("mergeWithConflicts(Collection<Diff>, boolean, Registry) - Selected merger for diff " //$NON-NLS-1$
+								+ next.hashCode() + ": " + merger.getClass().getSimpleName()); //$NON-NLS-1$
+					}
+
 					if (getMergeMode() == MergeMode.LEFT_TO_RIGHT) {
 						merger.copyLeftToRight(next, emfMonitor);
 					} else if (getMergeMode() == MergeMode.RIGHT_TO_LEFT) {
@@ -339,6 +350,12 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 
 		for (Diff difference : differences) {
 			final IMerger diffMerger = mergerRegistry.getHighestRankingMerger(difference);
+
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("mergeAll - Selected merger for diff " + difference.hashCode() //$NON-NLS-1$
+						+ ": " + merger.getClass().getSimpleName()); //$NON-NLS-1$
+			}
+
 			if (diffMerger instanceof IMerger2) {
 				final Set<Diff> resultingMerges = MergeDependenciesUtil.getAllResultingMerges(difference,
 						mergerRegistry, !leftToRight);
