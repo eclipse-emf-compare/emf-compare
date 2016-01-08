@@ -1,5 +1,5 @@
 /*******************************************************************************
-( * Copyright (c) 2012, 2015 Obeo and others.
+( * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -107,6 +107,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 		final int diffCount = differences.size();
 
 		for (int i = 0; i < diffCount; i++) {
+			monitor.subTask(EMFCompareMessages.getString("DefaultConflictDetector.monitor.detect", //$NON-NLS-1$
+					Integer.valueOf(i + 1), Integer.valueOf(diffCount)));
 			final Diff diff = differences.get(i);
 
 			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
@@ -161,14 +163,11 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 *            An iterable over the Diffs that possible candidates for conflicts.
 	 */
 	protected void checkConflict(Comparison comparison, Diff diff, Iterable<Diff> candidates) {
-		/*
-		 * DELETE diffs can conflict with every other if on containment references, only with MOVE or other
-		 * DELETE otherwise.
-		 */
-		/*
-		 * ADD diffs can only conflict with "DELETE" or "ADD" ones ... Most will be detected on the DELETE.
-		 * However, ADD diffs on containment reference can conflict with other ADDs on the same match.
-		 */
+		// DELETE diffs can conflict with every other if on containment references, only with MOVE or other
+		// DELETE otherwise.
+		// ADD diffs can only conflict with "DELETE" or "ADD" ones ... Most will be detected on the DELETE.
+		// However, ADD diffs on containment reference can conflict with other ADDs on the same match.
+		//
 		// CHANGE diffs can only conflict with other CHANGE or DELETE ... here again detected on the DELETE
 		// MOVE diffs can conflict with DELETE ones, detected on the delete, or with other MOVE diffs.
 		if (diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment()) {
