@@ -25,5 +25,16 @@
          </nsURI>
       </processor>
    </extension>
-
+   <extension
+         point="org.eclipse.emf.compare.rcp.postProcessor">
+      <processor
+            class="org.eclipse.emf.compare.diagram.papyrus.internal.IgnoreDiFilePostProcessor"
+            description="Post-processor that causes changes applied to the contents of di-files to be ignored."
+            label="Ignore Papyrus Di-files Post-Processor"
+            ordinal="35">
+         <nsURI
+               value="http://www.eclipse.org/papyrus/\d.\d.\d/sashdi">
+         </nsURI>
+      </processor>
+   </extension>
 </plugin>

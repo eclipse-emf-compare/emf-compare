@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo and others.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,16 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - add ModelExtensionUtil, SaveParameterHook and URIAttachment tests
+ *     Philip Langer - add IngoreDiFileModelElementsTest
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests.suite;
-
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
 import org.eclipse.emf.compare.diagram.papyrus.tests.comparison.DiagramTooltipProviderTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.difile.IgnoreDiFilePostProcessorTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.groups.PapyrusConflictsGroupProviderTests;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.AssocMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.EdgeMergeTest;
@@ -40,6 +38,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import junit.framework.JUnit4TestAdapter;
+import junit.framework.Test;
+import junit.textui.TestRunner;
+
 /**
  * This test suite allows us to launch all tests for EMF Compare at once.
  * 
@@ -47,9 +49,9 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @SuppressWarnings("restriction")
 @RunWith(Suite.class)
-@SuiteClasses({AssocMergeTest.class, EdgeMergeTest.class, NodeMergeTest.class, ModelExtensionUtilTest.class,
+@SuiteClasses({ AssocMergeTest.class, EdgeMergeTest.class, NodeMergeTest.class, ModelExtensionUtilTest.class,
 		SaveParameterHookTest.class, SaveParameterHookIntegrationTest.class, URIAttachmentTest.class,
-		DiagramTooltipProviderTest.class, PapyrusConflictsGroupProviderTests.class })
+		DiagramTooltipProviderTest.class, PapyrusConflictsGroupProviderTests.class, IgnoreDiFilePostProcessorTest.class })
 public class AllTests {
 
 	/**
@@ -62,7 +64,8 @@ public class AllTests {
 	}
 
 	/**
-	 * This will return a suite populated with all tests available through this class.
+	 * This will return a suite populated with all tests available through this
+	 * class.
 	 * 
 	 * @generated
 	 */
