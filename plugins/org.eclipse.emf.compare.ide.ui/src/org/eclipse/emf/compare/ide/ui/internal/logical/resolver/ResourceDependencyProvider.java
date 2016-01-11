@@ -97,7 +97,7 @@ public class ResourceDependencyProvider implements IResourceDependencyProvider {
 			public boolean apply(URI input) {
 				if (input != null) {
 					final IFile pointedFile = ResolutionUtil.getFileAt(input);
-					if (pointedFile != null) {
+					if (pointedFile != null && pointedFile.getLocation() != null) {
 						return container.getLocation().isPrefixOf(pointedFile.getLocation());
 					}
 				}
