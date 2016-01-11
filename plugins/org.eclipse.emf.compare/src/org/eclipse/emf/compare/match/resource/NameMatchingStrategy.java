@@ -79,12 +79,35 @@ public class NameMatchingStrategy implements IResourceMatchingStrategy {
 	protected Resource findMatch(Resource reference, Iterable<Resource> candidates) {
 		final URI referenceURI = reference.getURI();
 		for (Resource candidate : candidates) {
-			if (referenceURI == candidate.getURI() || referenceURI != null && candidate.getURI() != null
-					&& referenceURI.lastSegment().equals(candidate.getURI().lastSegment())) {
+			if (urisLastSegmentMatch(referenceURI, candidate.getURI())) {
 				return candidate;
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Indicates whether the given URIs are equal or have the same last segment.
+	 * 
+	 * @param referenceURI
+	 *            Reference URI
+	 * @param otherURI
+	 *            Candidate URI
+	 * @return <code>true</code> if both URIs are null, or if they are equal, or if they have the same
+	 *         non-null last segment.
+	 */
+	private boolean urisLastSegmentMatch(URI referenceURI, URI otherURI) {
+		if (referenceURI == otherURI) {
+			return true;
+		}
+		if (referenceURI != null && otherURI != null) {
+			if (referenceURI.equals(otherURI)) {
+				return true;
+			}
+			String lastSegment = referenceURI.lastSegment();
+			return lastSegment != null && lastSegment.equals(otherURI.lastSegment());
+		}
+		return false;
 	}
 
 	/**
