@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.core.Activator;
@@ -35,6 +36,7 @@ import org.eclipse.egit.core.internal.job.RuleUtil;
 import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.emf.compare.egit.internal.storage.AbstractGitResourceVariant;
 import org.eclipse.emf.compare.egit.internal.storage.TreeParserResourceVariant;
+import org.eclipse.emf.compare.egit.internal.wrapper.JGitProgressMonitorWrapper;
 import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.dircache.DirCacheBuildIterator;
 import org.eclipse.jgit.dircache.DirCacheBuilder;
@@ -45,6 +47,7 @@ import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.FileMode;
+import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.merge.MergeResult;
 import org.eclipse.jgit.merge.RecursiveMerger;
@@ -133,11 +136,17 @@ public class RecursiveModelMerger extends RecursiveMerger {
 			return super.mergeTreeWalk(treeWalk, ignoreConflicts);
 		}
 
+		monitor.beginTask(MergeText.RecursiveModelMerger_BuildLogicalModels, ProgressMonitor.UNKNOWN);
 		// Eager lookup for the logical models to avoid issues in case we
 		// iterate over a file that does not exist locally before the rest of
 		// its logical model.
 		final LogicalModels logicalModels = new LogicalModels();
 		logicalModels.build(variantTreeProvider.getKnownResources(), remoteMappingContext);
+		monitor.endTask();
+
+		if (monitor.isCancelled()) {
+			throw new OperationCanceledException();
+		}
 
 		// We are done with the setup. We can now iterate over the tree walk and
 		// either delegate to the logical model's merger if any or fall back to
@@ -194,8 +203,9 @@ public class RecursiveModelMerger extends RecursiveMerger {
 			}
 			if (modelMerger != null) {
 				enterSubtree = true;
+
 				boolean success = new ModelMerge(this, subscriber, remoteMappingContext, path, logicalModel,
-						modelMerger).run();
+						modelMerger).run(new JGitProgressMonitorWrapper(monitor));
 				if (!success) {
 					if (LOGGER.isInfoEnabled()) {
 						LOGGER.info("FAILED - Recursive model merge."); //$NON-NLS-1$
@@ -371,10 +381,11 @@ public class RecursiveModelMerger extends RecursiveMerger {
 			this.modelMerger = modelMerger;
 		}
 
-		private boolean run() throws CorruptObjectException, IOException {
+		private boolean run(IProgressMonitor monitor) throws CorruptObjectException, IOException {
+			SubMonitor progress = SubMonitor.convert(monitor, 1);
 			try {
 				final IMergeContext mergeContext = prepareMergeContext();
-				final IStatus status = modelMerger.merge(mergeContext, new NullProgressMonitor());
+				final IStatus status = modelMerger.merge(mergeContext, progress.newChild(1));
 				registerHandledFiles(mergeContext, status);
 			} catch (CoreException e) {
 				Activator.logError(e.getMessage(), e);

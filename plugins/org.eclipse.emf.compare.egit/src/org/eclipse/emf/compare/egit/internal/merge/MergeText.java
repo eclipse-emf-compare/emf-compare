@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2015, Obeo.
+ * Copyright (C) 2015, 2016 Obeo.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -22,13 +22,15 @@ public class MergeText extends NLS {
 	 * Do not in-line this into the static initializer as the "Find Broken Externalized Strings" tool will not
 	 * be able to find the corresponding bundle file.
 	 */
-	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.egit.core.internal.merge.mergetext"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.egit.internal.merge.mergetext"; //$NON-NLS-1$
 
 	public static String RecursiveModelMerger_RefreshError;
 
 	public static String RecursiveModelMerger_AdaptError;
 
 	public static String RecursiveModelMerger_ScopeInitializationInterrupted;
+
+	public static String RecursiveModelMerger_BuildLogicalModels;
 
 	static {
 		initializeMessages(BUNDLE_NAME, MergeText.class);

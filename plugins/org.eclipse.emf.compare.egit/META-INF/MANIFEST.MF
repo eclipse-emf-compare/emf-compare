@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.egit.core;bundle-version="4.1.0",
  org.eclipse.emf.compare.ide;bundle-version="3.2.0",
  org.eclipse.emf.compare.rcp,
- org.eclipse.emf.compare
+ org.eclipse.emf.compare,
+ org.eclipse.egit.ui;bundle-version="4.2.0"
 Import-Package: com.google.common.collect;version="[11.0.0,16.0.0)",
  org.apache.log4j;version="1.2.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
