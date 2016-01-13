@@ -63,6 +63,10 @@ public class MergeResolutionManager {
 	 *            {@link Diff} or a {@link MatchResource} object.
 	 */
 	public void handleFlush(Object input) {
+		// We only know how to handle TreeNodeCompareInput
+		if (!(input instanceof TreeNodeCompareInput)) {
+			return;
+		}
 		TreeNodeCompareInput treeNodeCompareInput = (TreeNodeCompareInput)input;
 		EObject eobject = treeNodeCompareInput.getComparisonObject();
 
