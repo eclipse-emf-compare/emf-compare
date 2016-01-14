@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,7 +38,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.conflict.DefaultConflictDetector;
+import org.eclipse.emf.compare.conflict.MatchBasedConflictDetector;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
@@ -209,7 +209,7 @@ public class DataGit {
 	}
 	
 	public void conflict() {
-		final IConflictDetector conflictDetector = new DefaultConflictDetector();
+		final IConflictDetector conflictDetector = new MatchBasedConflictDetector();
 		conflictDetector.detect(comparison, new BasicMonitor());
 	}
 	

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -90,14 +90,13 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	@Override
 	public String toString() {
 		// @formatter:off
-		return Objects.toStringHelper(this)
+		StringBuilder b = new StringBuilder();
+		return b.append(getState()).append(' ').append(getSource()).append(' ').append(getKind()).append(' ').append(
+				Objects.toStringHelper(this)
 					.add("reference", getReference().getEContainingClass().getName() + "." + getReference().getName())
 					.add("value", EObjectUtil.getLabel(getValue()))
 					.add("parentMatch", getMatch().toString())
-					.add("match of value", getMatch().getComparison().getMatch(getValue()))
-					.add("kind", getKind())
-					.add("source", getSource())
-					.add("state", getState()).toString();
+					.add("match of value", getMatch().getComparison().getMatch(getValue()))).toString();
 		// @formatter:on
 	}
 

@@ -25,8 +25,8 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
-import org.eclipse.emf.compare.conflict.DefaultConflictDetector;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
+import org.eclipse.emf.compare.conflict.MatchBasedConflictDetector;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.DiffBuilder;
 import org.eclipse.emf.compare.diff.IDiffEngine;
@@ -658,7 +658,7 @@ public class EMFCompare {
 				registry = new PostProcessorDescriptorRegistryImpl<Object>();
 			}
 			if (conflictDetector == null) {
-				conflictDetector = new DefaultConflictDetector();
+				conflictDetector = new MatchBasedConflictDetector();
 			}
 			return new EMFCompare(this.matchEngineFactoryRegistry, this.diffEngine, this.reqEngine,
 					this.equiEngine, this.conflictDetector, this.registry);

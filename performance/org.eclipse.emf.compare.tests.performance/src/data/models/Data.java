@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.conflict.DefaultConflictDetector;
+import org.eclipse.emf.compare.conflict.MatchBasedConflictDetector;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
@@ -139,7 +139,7 @@ public abstract class Data {
 	}
 	
 	public void conflict() {
-		final IConflictDetector conflictDetector = new DefaultConflictDetector();
+		final IConflictDetector conflictDetector = new MatchBasedConflictDetector();
 		conflictDetector.detect(comparison, new BasicMonitor());
 	}
 	

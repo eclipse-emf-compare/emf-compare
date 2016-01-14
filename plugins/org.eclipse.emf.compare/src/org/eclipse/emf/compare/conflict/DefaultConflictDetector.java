@@ -21,20 +21,17 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REF
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.possiblyConflictingWith;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.Monitor;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
@@ -50,9 +47,8 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.ResourceLocationChange;
-import org.eclipse.emf.compare.internal.SubMatchIterator;
 import org.eclipse.emf.compare.internal.ThreeWayTextDiff;
+import org.eclipse.emf.compare.internal.conflict.DiffTreeIterator;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
@@ -121,8 +117,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 			}
 			final Diff diff = differences.get(i);
 
-			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
-			checkConflict(comparison, diff, Iterables.filter(differences, candidateFilter));
+			checkConflict(comparison, diff, Iterables.filter(differences, possiblyConflictingWith(diff)));
 		}
 
 		handlePseudoUnderRealAdd(comparison);
@@ -239,9 +234,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 
 		// [381143] Every Diff "under" a containment deletion conflicts with it.
 		if (diff.getKind() == DifferenceKind.DELETE) {
-			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
 			final DiffTreeIterator diffIterator = new DiffTreeIterator(comparison.getMatch(diff.getValue()));
-			diffIterator.setFilter(candidateFilter);
+			diffIterator.setFilter(possiblyConflictingWith(diff));
 			diffIterator.setPruningFilter(isContainmentDelete());
 
 			while (diffIterator.hasNext()) {
@@ -392,9 +386,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 
 		// [381143] Every Diff "under" a containment deletion conflicts with it.
 		if (diff.getKind() == DifferenceKind.DELETE) {
-			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
 			final DiffTreeIterator diffIterator = new DiffTreeIterator(valueMatch);
-			diffIterator.setFilter(candidateFilter);
+			diffIterator.setFilter(possiblyConflictingWith(diff));
 			diffIterator.setPruningFilter(isContainmentDelete());
 
 			while (diffIterator.hasNext()) {
@@ -993,8 +986,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 			// [477607] DELETE does not necessarily mean that the element is removed from the model
 			EObject o = getRelatedModelElement(diff);
 			if (o != null && o.eContainer() == null) {
-				final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
-				for (Diff extendedCandidate : Iterables.filter(match.getAllDifferences(), candidateFilter)) {
+				for (Diff extendedCandidate : Iterables.filter(match.getAllDifferences(),
+						possiblyConflictingWith(diff))) {
 					if (isDeleteOrUnsetDiff(extendedCandidate)) {
 						conflictOn(comparison, diff, extendedCandidate, ConflictKind.PSEUDO);
 					} else {
@@ -1286,202 +1279,5 @@ public class DefaultConflictDetector implements IConflictDetector {
 		}
 
 		// This diff may have equivalences. These equivalences
-	}
-
-	/**
-	 * This will be used to filter out the list of potential candidates for conflict with a given Diff.
-	 * 
-	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
-	 */
-	private static final class ConflictCandidateFilter implements Predicate<Diff> {
-		/** The Diff for which we seek conflict candidates. */
-		private final Diff reference;
-
-		/**
-		 * Instantiates our filtering Predicate given the reference Diff for which to seek potential
-		 * conflicts.
-		 * 
-		 * @param reference
-		 *            The Diff for which we seek conflict candidates.
-		 */
-		public ConflictCandidateFilter(Diff reference) {
-			this.reference = reference;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see com.google.common.base.Predicate#apply(java.lang.Object)
-		 */
-		public boolean apply(Diff input) {
-			return !(input instanceof ResourceLocationChange) && canConflictWith(reference, input);
-		}
-
-		/**
-		 * Checks if the given {@link Diff diff1} can be in conflict with the given {@link Diff diff2}.
-		 * <p>
-		 * Notably, we don't need to try and detect a conflict between two diffs if they're one and the same
-		 * or if they have already been detected as a conflicting couple. Likewise, there can be no conflict
-		 * if the two diffs originate from the same side.
-		 * </p>
-		 * <p>
-		 * bug 381143 : we'll also remove any containment deletion diff on other Matches from here.
-		 * </p>
-		 * 
-		 * @param diff1
-		 *            First of the two differences to consider for conflict detection.
-		 * @param diff2
-		 *            Second of the two differences to consider for conflict detection.
-		 * @return {@code true} if the two given diffs can conflict, {@code false} otherwise.
-		 */
-		private boolean canConflictWith(Diff diff1, Diff diff2) {
-			if (diff1 == diff2 || diff1.getSource() == diff2.getSource()) {
-				return false;
-			}
-			final Conflict conflict = diff1.getConflict();
-
-			boolean canConflict = false;
-			if (conflict == null || !conflict.getDifferences().contains(diff2)) {
-				if (diff1.getMatch() != diff2.getMatch() && diff2 instanceof ReferenceChange
-						&& ((ReferenceChange)diff2).getReference().isContainment()) {
-					canConflict = !isDeleteOrUnsetDiff(diff2);
-				} else {
-					canConflict = true;
-				}
-			}
-			return canConflict;
-		}
-	}
-
-	/**
-	 * A custom iterator that will walk a Match->submatch tree, and allow iteration over the Diffs of these
-	 * Matches.
-	 * <p>
-	 * Since we're walking over Matches but returning Diffs, this is not a good candidate for guava's filters.
-	 * We're providing the custom {@link DiffTreeIterator#setFilter(Predicate)} and
-	 * {@link DiffTreeIterator#setPruningFilter(Predicate)} to allow for filtering or pruning the the
-	 * iteration.
-	 * </p>
-	 * 
-	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
-	 */
-	private static class DiffTreeIterator implements Iterator<Diff> {
-		/**
-		 * The tree iterator that will walk over our Match tree. Some of the paths can be pruned through the
-		 * use of a {@link #pruningFilter}.
-		 */
-		private final TreeIterator<Match> subMatchIterator;
-
-		/** An iterator over the differences of the current Match. */
-		private Iterator<Diff> diffIterator;
-
-		/** Current match. */
-		private Match current;
-
-		/** The Diff that will be returned by the next call to {@link #next()}. */
-		private Diff nextDiff;
-
-		/** Only Diffs that meet this criterion will be returned by this iterator. */
-		private Predicate<? super Diff> filter = Predicates.alwaysTrue();
-
-		/**
-		 * This particular filter can be used in order to prune a given Match and all of its differences and
-		 * sub-differences.
-		 */
-		private Predicate<? super Match> pruningFilter = Predicates.alwaysFalse();
-
-		/**
-		 * Constructs our iterator given the root of the Match tree to iterate over.
-		 * 
-		 * @param start
-		 *            Starting match of the tree we'll iterate over.
-		 */
-		public DiffTreeIterator(Match start) {
-			this.current = start;
-			this.subMatchIterator = new SubMatchIterator(start);
-			this.diffIterator = start.getDifferences().iterator();
-		}
-
-		/**
-		 * Sets the criterion that Diffs must meet to be returned by this iterator.
-		 * 
-		 * @param filter
-		 *            The filter differences must meet.
-		 */
-		public void setFilter(Predicate<? super Diff> filter) {
-			this.filter = filter;
-		}
-
-		/**
-		 * Sets the pruning filter for this iterator. Any Match that meets this criterion will be pruned along
-		 * with all of its differences and sub-differences.
-		 * 
-		 * @param pruningFilter
-		 *            The pruning filter for this iterator.
-		 */
-		public void setPruningFilter(Predicate<? super Match> pruningFilter) {
-			this.pruningFilter = pruningFilter;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see java.util.Iterator#hasNext()
-		 */
-		public boolean hasNext() {
-			if (nextDiff != null) {
-				return true;
-			}
-			if (!diffIterator.hasNext()) {
-				computeNextMatch();
-			}
-			while (nextDiff == null && diffIterator.hasNext()) {
-				final Diff next = diffIterator.next();
-				if (filter.apply(next)) {
-					nextDiff = next;
-				}
-			}
-			return nextDiff != null;
-		}
-
-		/**
-		 * Computes the next match within the sub-match tree, pruning those that may meet
-		 * {@link #pruningFilter}.
-		 */
-		private void computeNextMatch() {
-			final Match old = current;
-			while (current == old && subMatchIterator.hasNext()) {
-				final Match next = subMatchIterator.next();
-				if (pruningFilter.apply(next)) {
-					subMatchIterator.prune();
-				} else {
-					current = next;
-					diffIterator = current.getDifferences().iterator();
-				}
-			}
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see java.util.Iterator#next()
-		 */
-		public Diff next() {
-			if (!hasNext()) {
-				throw new NoSuchElementException();
-			}
-			final Diff next = nextDiff;
-			nextDiff = null;
-			return next;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see java.util.Iterator#remove()
-		 */
-		public void remove() {
-			diffIterator.remove();
-		}
 	}
 }

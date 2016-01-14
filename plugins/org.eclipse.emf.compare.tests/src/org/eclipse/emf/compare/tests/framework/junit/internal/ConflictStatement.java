@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.conflict.DefaultConflictDetector;
+import org.eclipse.emf.compare.conflict.MatchBasedConflictDetector;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.DiffBuilder;
@@ -87,7 +87,7 @@ public class ConflictStatement extends Statement {
 		final IComparisonScope scope = createComparisonScope(tuple, annotation);
 		final IMatchEngine matchEngine = createMatchEngine(annotation);
 		final IDiffEngine diffEngine = createDiffEngine(annotation);
-		final IConflictDetector detector = new DefaultConflictDetector();
+		final IConflictDetector detector = new MatchBasedConflictDetector();
 		final Monitor monitor = new BasicMonitor();
 
 		final Comparison comparison = matchEngine.match(scope, new BasicMonitor());

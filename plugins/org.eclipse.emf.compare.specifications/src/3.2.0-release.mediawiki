@@ -355,3 +355,38 @@ To handle the previously expressed needs, several actions must be performed:
 ==== test cases ====
 The work will be tested by non-regression tests
  
+== Improve performance of conflict detection on large model ==
+=== Description ===
+As a '''user''',<br/>
+I want to '''be able to compare large model (50'000 model elements) with many differences (~30'000 differences) in a reasonable time (less than 1 minute)'''<br/>
+so that '''I can compare large models without disrupting my work flow'''
+==== Categories ====
+[[./index.html#Core-related Specifications|Core]]
+
+=== Content ===
+==== Analysis ====
+Users who deal with large models complain about the duration of comparisons, especially when a large number of differences is involved.
+This is mostly due to:
+* The logical model computation (which has however been deeply optimized and for which we lack ideas for improvements)
+* The computation of conflicts, because the algorithm implement in class <code>DefaultConflictDetector</code> is ''O(n²)''
+An analysis of this algorithm showed that it could be improved to scale much better
+
+==== Design ====
+We introduce a new implementation of <code>IConflictDetector</code> called <code>FastConflictDetector</code>.
+
+Instead of iterating over each diff and, for each of them, going over every other diff to check whether it conflicts with it,
+the fast conflict detector iterates over each diff and, for each of them, looks for conflict candidates in specific relevant places.
+These places are:
+* The current diff's <code>Match</code>
+* The (indexed) <code>ReferenceChange</code>s that point to the "same" value as the current diff, only if diff is a '''containment''' <code>ReferenceChange</code>.
+Consequently, the number of candidates to check for conflict is much smaller than in the default algorithm.
+
+[[Image:./images/FastConflictDetection.png]]
+
+Technically, the implementation delegates the search for candidates to an instance of a specific class, which is instantiated by a factory which takes into account the type and the kind of the diff. This allows the code to be more readable and thus maintainable than previously, because each method acts in a more specific context, which reduces the number of <code>fi</code> statements, for instance. Each of these classes shares behavior by extending a common abstract class.
+
+==== Test Cases ====
+The testing strategy is the following:
+* to run all the existing tests with both the DefaultConflictDetector and the FastConflictDetector, and to check the results are identical.
+* to run manual tests on large models to make sure the user time is reasonable (less than 1 minute for a model as described above)
+* to verify the positive impact on the nightly EMFCompare performance measurements

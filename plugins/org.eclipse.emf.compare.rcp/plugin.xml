@@ -104,6 +104,13 @@
             label="Default Conflict Detector"
             ranking="100">
       </descriptor>
+      <descriptor
+            description="Faster and more scalable conflict detector provided by EMF Compare."
+            id="org.eclipse.emf.compare.rcp.fast.conflictDetector"
+            impl="org.eclipse.emf.compare.conflict.MatchBasedConflictDetector"
+            label="Scalable Conflict Detector"
+            ranking="100">
+      </descriptor>
    </extension>
    <extension
          point="org.eclipse.emf.compare.rcp.reqEngine">
