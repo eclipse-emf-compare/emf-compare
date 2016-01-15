@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,8 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
-<<<<<<< HEAD
-=======
  *     Philip Langer - added further tests
->>>>>>> Add additional test case with unrelated file that is deleted
+ *     Alexandra Buzila - additional tests
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests.suite;
 
@@ -20,6 +18,7 @@ import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChan
 import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChangeAdd2GitMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChangeDelete1GitMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.egit.ResourceAttachmentChangeDelete2GitMergeTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.egit.StereotypeConflictTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.implication.AttachmentChangeImplicationTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.ResourceAttachmentChangeMoveConflictTests;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.ResourceAttachmentChangeMoveNoConflictTests;
@@ -50,6 +49,7 @@ import junit.textui.TestRunner;
 	ResourceAttachmentChangeDelete2GitMergeTest.class,
 	ResourceAttachmentChangeMoveConflictTests.class,
 	ResourceAttachmentChangeMoveNoConflictTests.class,
+	StereotypeConflictTest.class
 	})
 public class PapyrusGitTests {
 	/**

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ModelElements="http://www.eclipse.org/papyrus/0.7.0/SysML/ModelElements" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http://www.eclipse.org/papyrus/0.7.0/SysML/ModelElements http://www.eclipse.org/papyrus/0.7.0/SysML#//modelelements">
+  <uml:Model xmi:id="_CK4s0LttEeWie_gObMDHbA" name="RootElement">
+    <packagedElement xmi:type="uml:Package" xmi:id="_KrZVULttEeWie_gObMDHbA" name="View1"/>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_I_aUoLttEeWie_gObMDHbA">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_I_kFoLttEeWie_gObMDHbA" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/0.7.0/SysML#//modelelements"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://SysML_PROFILES/SysML.profile.uml#_Gx8MgLX7EduFmqQsrNB9lw"/>
+    </profileApplication>
+  </uml:Model>
+  <ModelElements:View xmi:id="_KrifQLttEeWie_gObMDHbA" base_Package="_KrZVULttEeWie_gObMDHbA"/>
+</xmi:XMI>
