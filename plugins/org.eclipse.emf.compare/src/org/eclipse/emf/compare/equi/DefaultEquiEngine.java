@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import com.google.common.collect.Sets;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
@@ -49,6 +50,9 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  */
 public class DefaultEquiEngine implements IEquiEngine {
 
+	/** The logger. */
+	private static final Logger LOGGER = Logger.getLogger(DefaultEquiEngine.class);
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -56,12 +60,20 @@ public class DefaultEquiEngine implements IEquiEngine {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void computeEquivalences(Comparison comparison, Monitor monitor) {
+		long start = System.currentTimeMillis();
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(String.format("detect equivalences - START")); //$NON-NLS-1$
+		}
 		monitor.subTask(EMFCompareMessages.getString("DefaultEquiEngine.monitor.eq")); //$NON-NLS-1$
 		for (Diff difference : comparison.getDifferences()) {
 			if (monitor.isCanceled()) {
 				throw new ComparisonCanceledException();
 			}
 			checkForEquivalences(comparison, difference);
+		}
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info(String
+					.format("detect equivalences - END - Took %d ms", Long.valueOf(System.currentTimeMillis() - start))); //$NON-NLS-1$
 		}
 	}
 

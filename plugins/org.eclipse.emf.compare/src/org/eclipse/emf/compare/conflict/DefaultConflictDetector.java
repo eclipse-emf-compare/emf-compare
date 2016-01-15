@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.AttributeChange;
@@ -75,6 +76,9 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  */
 public class DefaultConflictDetector implements IConflictDetector {
 
+	/** The logger. */
+	private static final Logger LOGGER = Logger.getLogger(DefaultConflictDetector.class);
+
 	/**
 	 * This can be used to check whether a given conflict involves add containment reference changes.
 	 */
@@ -103,12 +107,18 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void detect(Comparison comparison, Monitor monitor) {
+		long start = System.currentTimeMillis();
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("detect conflicts - START"); //$NON-NLS-1$
+		}
 		final List<Diff> differences = comparison.getDifferences();
 		final int diffCount = differences.size();
 
 		for (int i = 0; i < diffCount; i++) {
-			monitor.subTask(EMFCompareMessages.getString("DefaultConflictDetector.monitor.detect", //$NON-NLS-1$
-					Integer.valueOf(i + 1), Integer.valueOf(diffCount)));
+			if (i % 100 == 0) {
+				monitor.subTask(EMFCompareMessages.getString("DefaultConflictDetector.monitor.detect", //$NON-NLS-1$
+						Integer.valueOf(i + 1), Integer.valueOf(diffCount)));
+			}
 			final Diff diff = differences.get(i);
 
 			final Predicate<? super Diff> candidateFilter = new ConflictCandidateFilter(diff);
@@ -116,7 +126,10 @@ public class DefaultConflictDetector implements IConflictDetector {
 		}
 
 		handlePseudoUnderRealAdd(comparison);
-
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info(String.format(
+					"detect conflicts - END - Took %d ms", Long.valueOf(System.currentTimeMillis() - start))); //$NON-NLS-1$
+		}
 	}
 
 	/**

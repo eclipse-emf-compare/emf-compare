@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ComparisonCanceledException;
@@ -57,18 +58,29 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  */
 public class DefaultReqEngine implements IReqEngine {
 
+	/** The logger. */
+	private static final Logger LOGGER = Logger.getLogger(DefaultReqEngine.class);
+
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.req.IReqEngine#computeRequirements(Comparison, Monitor)
 	 */
 	public void computeRequirements(Comparison comparison, Monitor monitor) {
+		long start = System.currentTimeMillis();
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(String.format("detect requirements - START")); //$NON-NLS-1$
+		}
 		monitor.subTask(EMFCompareMessages.getString("DefaultReqEngine.monitor.req")); //$NON-NLS-1$
 		for (Diff difference : comparison.getDifferences()) {
 			if (monitor.isCanceled()) {
 				throw new ComparisonCanceledException();
 			}
 			checkForRequiredDifferences(comparison, difference);
+		}
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info(String
+					.format("detect requirement - END - Took %d ms", Long.valueOf(System.currentTimeMillis() - start))); //$NON-NLS-1$
 		}
 	}
 
