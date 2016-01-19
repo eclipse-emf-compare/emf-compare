@@ -193,7 +193,9 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 					if (isContainment(diff)) {
 						final Match diffMatch = ComparisonUtil.getComparison(diff).getMatch(
 								((ReferenceChange)diff).getValue());
-						buildSubTree(wrap, conflict, diffMatch);
+						if (diffMatch != null) {
+							buildSubTree(wrap, conflict, diffMatch);
+						}
 					} else {
 						alreadyProcessedMatches.add(match);
 						for (Diff refinedBy : diff.getRefinedBy()) {
