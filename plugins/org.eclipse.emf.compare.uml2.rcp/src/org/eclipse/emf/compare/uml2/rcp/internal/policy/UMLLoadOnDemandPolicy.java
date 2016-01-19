@@ -29,7 +29,7 @@ import org.eclipse.uml2.uml.UMLPlugin;
  * policy will compare the input URI with the URIs registered as profile in the platform. However it does not
  * handle the case of non registered dynamic profile (profile that are not registered against the UML profile
  * extension). In order to take into account such profile an approximation has been made. Any URI that as
- * thier extension file equal to ".profile.uml" will be considered as referencing a profile model and so will
+ * their extension file equal to ".profile.uml" will be considered as referencing a profile model and so will
  * be automatically loaded.
  * </p>
  * <p>
