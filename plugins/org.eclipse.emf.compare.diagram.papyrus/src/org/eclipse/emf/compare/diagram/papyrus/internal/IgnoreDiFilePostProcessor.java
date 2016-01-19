@@ -21,6 +21,15 @@ import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
+/**
+ * Post-processor that causes changes applied to the contents of di-files to be ignored.
+ * <p>
+ * This post-processor removes the matches of model elements contained in di-files. Thus, those elements will
+ * be ignored in the subsequent phases of the comparison.
+ * </p>
+ *
+ * @author Philip Langer <planger@eclipsesource.com>
+ */
 public class IgnoreDiFilePostProcessor implements IPostProcessor {
 
 	/** The name of the class that represents the di-file's root container. */
