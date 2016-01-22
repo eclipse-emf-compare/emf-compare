@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,7 @@ import org.eclipse.emf.compare.tests.match.ProximityIndexTest;
 import org.eclipse.emf.compare.tests.match.ProxyMatchingTest;
 import org.eclipse.emf.compare.tests.match.RootIDMatchingTest;
 import org.eclipse.emf.compare.tests.match.XMIMatchingTest;
+import org.eclipse.emf.compare.tests.merge.Bug485266_MoveDeleteConflict_Test;
 import org.eclipse.emf.compare.tests.merge.ConflictMergeTest;
 import org.eclipse.emf.compare.tests.merge.ExtensionMergeTest;
 import org.eclipse.emf.compare.tests.merge.FeatureMaps2wayMergeTest;
@@ -91,7 +92,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		FeatureFilterTest.class, ThreeWayBatchMergingTest.class,
 		MultiLineAttributeConflictDetectionTest.class, ThreeWayTextDiffTest.class,
 		MultiLineAttributeMergeTest.class, MonitorCancelTest.class, IdentifierEObjectMatcherTest.class,
-		MatchUtilFeatureContainsTest.class, RefineMergeTest.class, Bug484557ConflictTest.class })
+		MatchUtilFeatureContainsTest.class, RefineMergeTest.class, Bug484557ConflictTest.class,
+		Bug485266_MoveDeleteConflict_Test.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmi:id="_root" name="root" nsURI="http://www.eclipse.org/emf/compare/conflicts/move/delete"
+    nsPrefix="r">
+  <eSubpackages xmi:id="_packageA" name="packageA">
+    <eSubpackages xmi:id="_shouldNotBePresentAfterMerge0" name="shouldNotBePresentAfterMerge0"/>
+    <eSubpackages xmi:id="_elementMoved1" name="elementMoved1">
+      <eSubpackages xmi:id="_shouldNotBePresentAfterMerge1" name="shouldNotBePresentAfterMerge1"/>
+    </eSubpackages>
+    <eSubpackages xmi:id="_elementMoved2" name="elementMoved2">
+      <eSubpackages xmi:id="_shouldNotBePresentAfterMerge2" name="shouldNotBePresentAfterMerge2"/>
+    </eSubpackages>
+  </eSubpackages>
+</ecore:EPackage>
