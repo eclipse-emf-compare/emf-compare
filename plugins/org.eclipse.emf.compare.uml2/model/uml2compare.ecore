@@ -25,4 +25,5 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="language" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DanglingStereotypeApplication" eSuperTypes="platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//ResourceAttachmentChange #//UMLDiff"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiplicityElementChange" eSuperTypes="#//UMLDiff"/>
 </ecore:EPackage>

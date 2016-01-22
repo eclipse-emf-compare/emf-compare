@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.diagram.papyrus.tests;singleton:=true
-Bundle-Version: 2.5.0.qualifier
+Bundle-Version: 2.5.1.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.osgi,
@@ -26,9 +26,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare.rcp.ui;bundle-version="4.0.0",
  org.eclipse.emf.compare.ide;bundle-version="3.2.0",
  org.eclipse.emf.compare.ide.ui,
- org.eclipse.emf.compare.uml2;bundle-version="2.1.0",
- org.eclipse.emf.compare.uml2.edit;bundle-version="2.2.0",
- org.eclipse.emf.compare.uml2.rcp.ui;bundle-version="2.2.0",
+ org.eclipse.emf.compare.uml2;bundle-version="2.5.0",
+ org.eclipse.emf.compare.uml2.edit;bundle-version="2.5.0",
+ org.eclipse.emf.compare.uml2.rcp.ui;bundle-version="2.5.0",
  org.eclipse.emf.compare.diagram,
  org.eclipse.emf.compare.diagram.edit;bundle-version="2.3.0",
  org.eclipse.emf.compare.diagram.ide.ui;bundle-version="3.1.0",

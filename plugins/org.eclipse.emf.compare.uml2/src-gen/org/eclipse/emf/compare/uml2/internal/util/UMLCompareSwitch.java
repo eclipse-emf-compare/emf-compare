@@ -258,6 +258,17 @@ public class UMLCompareSwitch<T> {
 					result = defaultCase(theEObject);
 				return result;
 			}
+			case UMLComparePackage.MULTIPLICITY_ELEMENT_CHANGE: {
+				MultiplicityElementChange multiplicityElementChange = (MultiplicityElementChange)theEObject;
+				T result = caseMultiplicityElementChange(multiplicityElementChange);
+				if (result == null)
+					result = caseUMLDiff(multiplicityElementChange);
+				if (result == null)
+					result = caseDiff(multiplicityElementChange);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
 			default:
 				return defaultCase(theEObject);
 		}
@@ -471,6 +482,21 @@ public class UMLCompareSwitch<T> {
 	 * @generated
 	 */
 	public T caseDanglingStereotypeApplication(DanglingStereotypeApplication object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Multiplicity Element Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Multiplicity Element Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMultiplicityElementChange(MultiplicityElementChange object) {
 		return null;
 	}
 

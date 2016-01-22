@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -159,8 +159,8 @@ public class ChangeAssociationTest extends AbstractUMLTest {
 	private void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		// We should have no less and no more than 5 differences
-		assertEquals(6, differences.size());
+		// We should have no less and no more than 7 differences
+		assertEquals(8, differences.size());
 
 		Predicate<? super Diff> addPropertyClass2Description = null;
 		Predicate<? super Diff> addRefAssociationInPropertyClass2Description = null;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo and others.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - bug 482404
+ *     Alexandra Buzila - Bug 479449
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests.merge;
 
@@ -23,6 +24,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.AttributeChange;
@@ -38,7 +40,9 @@ import org.eclipse.emf.compare.diagram.internal.extensions.NodeChange;
 import org.eclipse.emf.compare.diagram.papyrus.tests.AbstractTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.DiagramInputData;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.data.NodeMergeInputData;
+import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.MultiplicityElementChangePostProcessor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.uml2.uml.UMLPackage;
@@ -68,7 +72,7 @@ public class NodeMergeTest extends AbstractTest {
 
 	private static final int A1_ELTCHANGES_NB = 8 * A1_ELTCHANGE1_NB;
 
-	private static final int A1_ASSOCHANGE1_NB = 14;
+	private static final int A1_ASSOCHANGE1_NB = 18;
 
 	private static final int A1_ASSOCHANGES_NB = 3 * A1_ASSOCHANGE1_NB;
 
@@ -1507,6 +1511,18 @@ public class NodeMergeTest extends AbstractTest {
 						&& input.getConflict().getDifferences().contains(diff);
 			}
 		};
+	}
+
+	@Override
+	protected void registerPostProcessors() {
+		super.registerPostProcessors();
+		getPostProcessorRegistry()
+				.put(MultiplicityElementChangePostProcessor.class.getName(),
+						new TestPostProcessor.TestPostProcessorDescriptor(
+								Pattern.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"),
+								null,
+								new MultiplicityElementChangePostProcessor(),
+								25));
 	}
 
 }

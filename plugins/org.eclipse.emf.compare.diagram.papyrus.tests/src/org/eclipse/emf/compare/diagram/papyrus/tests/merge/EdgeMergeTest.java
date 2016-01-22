@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
@@ -30,8 +31,10 @@ import org.eclipse.emf.compare.diagram.internal.extensions.NodeChange;
 import org.eclipse.emf.compare.diagram.papyrus.tests.AbstractTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.DiagramInputData;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.data.EdgeMergeInputData;
+import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
 import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.MultiplicityElementChangePostProcessor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.uml2.uml.UMLPackage;
@@ -42,12 +45,12 @@ public class EdgeMergeTest extends AbstractTest {
 	private EdgeMergeInputData input = new EdgeMergeInputData();
 	
 	private static final int A1_EDGECHANGE_NB = 19;
-	private static final int A1_ASSOCHANGE_NB = 14;
+	private static final int A1_ASSOCHANGE_NB = 18;
 	private static final int A1_DIFFS_NB = A1_EDGECHANGE_NB + A1_ASSOCHANGE_NB;
 	
 	private static final int A2_EDGECHANGE_NB = 19;
 	private static final int A2_NODECHANGE_NB = 26;
-	private static final int A2_ASSOCHANGE_NB = 14;
+	private static final int A2_ASSOCHANGE_NB = 18;
 	private static final int A2_CLASSCHANGE_NB = 1;
 	private static final int A2_DIFFS_NB = A2_EDGECHANGE_NB + A2_NODECHANGE_NB + A2_ASSOCHANGE_NB + A2_CLASSCHANGE_NB;
 	
@@ -107,7 +110,7 @@ public class EdgeMergeTest extends AbstractTest {
 	private static final int A6_SUBSTITUTION_CHANGE1_NB = 6;
 	private static final int A6_IREAL_CHANGE1_NB = 6;
 	private static final int A6_DEPENDENCY_CHANGES_NB = 8 * A6_DEPENDENCY_CHANGE1_NB + 2 * A6_SUBSTITUTION_CHANGE1_NB + A6_IREAL_CHANGE1_NB;
-	private static final int A6_ASSO_CHANGE1_NB = 14;
+	private static final int A6_ASSO_CHANGE1_NB = 18;
 	private static final int A6_ASSO_CHANGES_NB = 2 * A6_ASSO_CHANGE1_NB;
 	private static final int A6_IMPORT_CHANGE1_NB = 3;
 	private static final int A6_IMPORT_CHANGES_NB = 2 * A6_IMPORT_CHANGE1_NB;
@@ -1739,5 +1742,17 @@ public class EdgeMergeTest extends AbstractTest {
 	protected DiagramInputData getInput() {
 		return input;
 	}
-	
+
+	@Override
+	protected void registerPostProcessors() {
+		super.registerPostProcessors();
+		getPostProcessorRegistry()
+				.put(MultiplicityElementChangePostProcessor.class.getName(),
+						new TestPostProcessor.TestPostProcessorDescriptor(
+								Pattern.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"),
+								null,
+								new MultiplicityElementChangePostProcessor(),
+								25));
+	}
+
 }

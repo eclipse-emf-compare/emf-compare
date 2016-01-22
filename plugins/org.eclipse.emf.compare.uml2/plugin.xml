@@ -50,6 +50,15 @@ Contributors:
                value="http://www.eclipse.org/uml2/\d.0.0/UML">
          </nsURI>
       </processor>
+     <processor
+           class="org.eclipse.emf.compare.uml2.internal.postprocessor.MultiplicityElementChangePostProcessor"
+           description="Post Processor for handling UML MultiplicityElement changes"
+           label="Multiplicity Element Change Post Processor"
+           ordinal="25">
+        <nsURI
+              value="http://www.eclipse.org/uml2/\d.0.0/UML">
+        </nsURI>
+     </processor>
    </extension>
    <extension
          point="org.eclipse.emf.compare.rcp.merger">

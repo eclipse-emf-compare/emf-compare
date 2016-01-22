@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,11 +29,16 @@ import com.google.common.collect.Iterators;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry;
+import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
+import org.eclipse.emf.compare.uml2.internal.MultiplicityElementChange;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.MultiplicityElementChangePostProcessor;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.association.data.AssociationInputData;
@@ -160,7 +165,7 @@ public class AddAssociation3Test extends AbstractUMLTest {
 	private void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		assertEquals(14, differences.size());
+		assertEquals(18, differences.size());
 
 		Predicate<? super Diff> addAssociationDescription = null;
 		Predicate<? super Diff> addPropertyClass1Description = null;
@@ -274,18 +279,28 @@ public class AddAssociation3Test extends AbstractUMLTest {
 		assertNotNull(addUMLAssociation);
 		assertEquals(13, addUMLAssociation.getRefinedBy().size());
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass1));
-		assertTrue(addUMLAssociation.getRefinedBy().contains(addLiteralIntegerInClass1));
-		assertTrue(addUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass1));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addRefAssociationInPropertyClass1));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass0));
-		assertTrue(addUMLAssociation.getRefinedBy().contains(addLiteralIntegerInClass0));
-		assertTrue(addUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass0));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addRefAssociationInPropertyClass0));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addAssociation));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addPropertyClass0));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addPropertyClass1));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addPropertyClass1InAssociation));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addPropertyClass0InAssociation));
+
+		// MultiplicityElementChanges
+		assertTrue(addUMLAssociation.getRefinedBy().contains(
+				Iterators.find(addLiteralIntegerInClass1.getRefines().iterator(),
+						instanceOf(MultiplicityElementChange.class))));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(
+				Iterators.find(addUnlimitedNaturalInClass1.getRefines().iterator(),
+						instanceOf(MultiplicityElementChange.class))));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(
+				Iterators.find(addLiteralIntegerInClass0.getRefines().iterator(),
+						instanceOf(MultiplicityElementChange.class))));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(
+				Iterators.find(addUnlimitedNaturalInClass0.getRefines().iterator(),
+						instanceOf(MultiplicityElementChange.class))));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
@@ -354,7 +369,6 @@ public class AddAssociation3Test extends AbstractUMLTest {
 			assertTrue(addAssociation.getRequires().contains(addPropertyClass0InAssociation));
 
 			assertEquals(0, addUMLAssociation.getRequires().size());
-
 			assertEquals(0, addLiteralIntegerInClass1.getRequires().size());
 			assertEquals(0, addUnlimitedNaturalInClass1.getRequires().size());
 			assertEquals(0, addLiteralIntegerInClass0.getRequires().size());
@@ -387,5 +401,14 @@ public class AddAssociation3Test extends AbstractUMLTest {
 	@Override
 	protected AbstractUMLInputData getInput() {
 		return input;
+	}
+
+	@Override
+	protected void registerPostProcessors(Registry<String> postProcessorRegistry) {
+		super.registerPostProcessors(postProcessorRegistry);
+		postProcessorRegistry.put(MultiplicityElementChangePostProcessor.class.getName(),
+				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
+						.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null,
+						new MultiplicityElementChangePostProcessor(), 25));
 	}
 }

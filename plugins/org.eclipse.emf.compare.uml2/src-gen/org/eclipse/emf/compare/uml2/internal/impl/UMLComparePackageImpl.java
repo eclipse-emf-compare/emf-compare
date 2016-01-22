@@ -19,6 +19,7 @@ import org.eclipse.emf.compare.uml2.internal.ExtendChange;
 import org.eclipse.emf.compare.uml2.internal.GeneralizationSetChange;
 import org.eclipse.emf.compare.uml2.internal.IntervalConstraintChange;
 import org.eclipse.emf.compare.uml2.internal.MessageChange;
+import org.eclipse.emf.compare.uml2.internal.MultiplicityElementChange;
 import org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange;
 import org.eclipse.emf.compare.uml2.internal.ProfileApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
@@ -38,112 +39,130 @@ import org.eclipse.uml2.uml.UMLPackage;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass associationChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass extendChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass generalizationSetChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass executionSpecificationChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass intervalConstraintChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass messageChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass stereotypeAttributeChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass stereotypeApplicationChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass stereotypeReferenceChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass profileApplicationChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass directedRelationshipChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass umlDiffEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass stereotypedElementChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass opaqueElementBodyChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass danglingStereotypeApplicationEClass = null;
 
 	/**
-	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
-	 * package URI value.
-	 * <p>Note: the correct way to create the package is via the static
-	 * factory method {@link #init init()}, which also performs
-	 * initialization of the package, or returns the registered package,
-	 * if one already exists.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass multiplicityElementChangeEClass = null;
+
+	/**
+	 * Creates an instance of the model <b>Package</b>, registered with
+	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package package URI value.
+	 * <p>
+	 * Note: the correct way to create the package is via the static factory method {@link #init init()},
+	 * which also performs initialization of the package, or returns the registered package, if one already
+	 * exists. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.emf.compare.uml2.internal.UMLComparePackage#eNS_URI
 	 * @see #init()
@@ -155,24 +174,28 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private static boolean isInited = false;
 
 	/**
-	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
+	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it
+	 * depends.
+	 * <p>
+	 * This method is used to initialize {@link UMLComparePackage#eINSTANCE} when that field is accessed.
+	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the
+	 * package. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * <p>This method is used to initialize {@link UMLComparePackage#eINSTANCE} when that field is accessed.
-	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #eNS_URI
 	 * @see #createPackageContents()
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
 	public static UMLComparePackage init() {
-		if (isInited)
+		if (isInited) {
 			return (UMLComparePackage)EPackage.Registry.INSTANCE.getEPackage(UMLComparePackage.eNS_URI);
+		}
 
 		// Obtain or create and register package
 		UMLComparePackageImpl theUMLComparePackage = (UMLComparePackageImpl)(EPackage.Registry.INSTANCE
@@ -201,6 +224,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getAssociationChange() {
@@ -209,6 +233,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getExtendChange() {
@@ -217,6 +242,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getGeneralizationSetChange() {
@@ -225,6 +251,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getExecutionSpecificationChange() {
@@ -233,6 +260,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getIntervalConstraintChange() {
@@ -241,6 +269,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getMessageChange() {
@@ -248,8 +277,8 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getStereotypeAttributeChange() {
@@ -258,6 +287,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getStereotypeApplicationChange() {
@@ -266,6 +296,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getStereotypeApplicationChange_Stereotype() {
@@ -274,6 +305,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getStereotypeReferenceChange() {
@@ -282,6 +314,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getProfileApplicationChange() {
@@ -290,6 +323,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getProfileApplicationChange_Profile() {
@@ -298,6 +332,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getDirectedRelationshipChange() {
@@ -306,6 +341,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getUMLDiff() {
@@ -314,6 +350,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getUMLDiff_Discriminant() {
@@ -322,6 +359,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getUMLDiff_EReference() {
@@ -329,8 +367,8 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getStereotypedElementChange() {
@@ -338,8 +376,8 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getOpaqueElementBodyChange() {
@@ -347,8 +385,8 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EAttribute getOpaqueElementBodyChange_Language() {
@@ -356,8 +394,8 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getDanglingStereotypeApplication() {
@@ -366,6 +404,16 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EClass getMultiplicityElementChange() {
+		return multiplicityElementChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public UMLCompareFactory getUMLCompareFactory() {
@@ -374,19 +422,21 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private boolean isCreated = false;
 
 	/**
-	 * Creates the meta-model objects for the package.  This method is
-	 * guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Creates the meta-model objects for the package. This method is guarded to have no affect on any
+	 * invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void createPackageContents() {
-		if (isCreated)
+		if (isCreated) {
 			return;
+		}
 		isCreated = true;
 
 		// Create classes and their features
@@ -424,23 +474,27 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		createEAttribute(opaqueElementBodyChangeEClass, OPAQUE_ELEMENT_BODY_CHANGE__LANGUAGE);
 
 		danglingStereotypeApplicationEClass = createEClass(DANGLING_STEREOTYPE_APPLICATION);
+
+		multiplicityElementChangeEClass = createEClass(MULTIPLICITY_ELEMENT_CHANGE);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private boolean isInitialized = false;
 
 	/**
-	 * Complete the initialization of the package and its meta-model.  This
-	 * method is guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Complete the initialization of the package and its meta-model. This method is guarded to have no affect
+	 * on any invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void initializePackageContents() {
-		if (isInitialized)
+		if (isInitialized) {
 			return;
+		}
 		isInitialized = true;
 
 		// Initialize package
@@ -477,6 +531,7 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 		danglingStereotypeApplicationEClass.getESuperTypes().add(
 				theComparePackage.getResourceAttachmentChange());
 		danglingStereotypeApplicationEClass.getESuperTypes().add(this.getUMLDiff());
+		multiplicityElementChangeEClass.getESuperTypes().add(this.getUMLDiff());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(associationChangeEClass, AssociationChange.class,
@@ -547,6 +602,9 @@ public class UMLComparePackageImpl extends EPackageImpl implements UMLComparePac
 
 		initEClass(danglingStereotypeApplicationEClass, DanglingStereotypeApplication.class,
 				"DanglingStereotypeApplication", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+
+		initEClass(multiplicityElementChangeEClass, MultiplicityElementChange.class,
+				"MultiplicityElementChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

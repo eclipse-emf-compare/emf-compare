@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - added OpaqueElementBodyChange adapter
+ *     Alexandra Buzila - MultiplicityElementChange adapter
  */
 package org.eclipse.emf.compare.uml2.internal.provider.custom;
 
@@ -126,6 +127,11 @@ public class UMLCompareCustomItemProviderAdapterFactory extends UMLCompareAdapte
 	@Override
 	public Adapter createDanglingStereotypeApplicationAdapter() {
 		return new DanglingStereotypeApplicationCustomItemProvider(this);
+	}
+
+	@Override
+	public Adapter createMultiplicityElementChangeAdapter() {
+		return new MultiplicityElementCustomItemProvider(this);
 	}
 
 	/**

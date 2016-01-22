@@ -99,6 +99,8 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 				return createOpaqueElementBodyChange();
 			case UMLComparePackage.DANGLING_STEREOTYPE_APPLICATION:
 				return createDanglingStereotypeApplication();
+			case UMLComparePackage.MULTIPLICITY_ELEMENT_CHANGE:
+				return createMultiplicityElementChange();
 			default:
 				throw new IllegalArgumentException(
 						"The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -231,6 +233,16 @@ public class UMLCompareFactoryImpl extends EFactoryImpl implements UMLCompareFac
 	public DanglingStereotypeApplication createDanglingStereotypeApplication() {
 		DanglingStereotypeApplicationImpl danglingStereotypeApplication = new DanglingStereotypeApplicationImpl();
 		return danglingStereotypeApplication;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MultiplicityElementChange createMultiplicityElementChange() {
+		MultiplicityElementChangeImpl multiplicityElementChange = new MultiplicityElementChangeImpl();
+		return multiplicityElementChange;
 	}
 
 	/**

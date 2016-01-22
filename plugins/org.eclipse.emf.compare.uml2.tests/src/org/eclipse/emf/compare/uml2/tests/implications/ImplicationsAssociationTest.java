@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
+import org.eclipse.emf.compare.uml2.internal.MultiplicityElementChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.implications.data.ImplicationsInputData;
@@ -46,7 +47,8 @@ import org.junit.Test;
 @SuppressWarnings("nls")
 public class ImplicationsAssociationTest extends AbstractUMLTest {
 
-	private static final int NB_DIFFS = 16;
+	// 16 diffs of interest and 4 MultiplicityElementChanges
+	private static final int NB_DIFFS = 20;
 
 	private ImplicationsInputData input = new ImplicationsInputData();
 
@@ -265,7 +267,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 	}
 
 	private void checkMergeDeleteNavigableOwnedEnd(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 7, comparison.getDifferences().size());
+		// 7 diffs of interest + 2 MultiplicityElementChanges
+		assertEquals(NB_DIFFS - 9, comparison.getDifferences().size());
 		assertNull(diffs.addNavigableOwnedEndClass1InAssociation);
 		assertNull(diffs.addOwnedEndClass1InAssociation);
 		assertNull(diffs.addMemberEndClass1InAssociation);
@@ -343,7 +346,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 	}
 
 	private void checkMergeDeleteOwnedEnd(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 7, comparison.getDifferences().size());
+		// 7 diffs of interest+ 2 MultiplicityElementChanges
+		assertEquals(NB_DIFFS - 9, comparison.getDifferences().size());
 		assertNull(diffs.addOwnedEndClass1InAssociation);
 		assertNull(diffs.addMemberEndClass1InAssociation);
 		assertNull(diffs.addRefAssociationInPropertyClass1);
@@ -1018,19 +1022,32 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 	}
 
 	private static Predicate<? super Diff> addedLowerValueIn(final String qualifiedName) {
-		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), onFeature("lowerValue"));
+		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), onFeature("lowerValue"),
+				refinesMultiplicityElementChange());
 	}
 
 	private static Predicate<? super Diff> addedUpperValueIn(final String qualifiedName) {
-		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), onFeature("upperValue"));
+		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), onFeature("upperValue"),
+				refinesMultiplicityElementChange());
 	}
 
 	private static Predicate<? super Diff> removedLowerValueIn(final String qualifiedName) {
-		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), onFeature("lowerValue"));
+		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), onFeature("lowerValue"),
+				refinesMultiplicityElementChange());
 	}
 
 	private static Predicate<? super Diff> removedUpperValueIn(final String qualifiedName) {
-		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), onFeature("upperValue"));
+		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), onFeature("upperValue"),
+				refinesMultiplicityElementChange());
+	}
+
+	private static Predicate<? super Diff> refinesMultiplicityElementChange() {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return Iterators.any(input.getRefines().iterator(), instanceOf(
+						MultiplicityElementChange.class));
+			}
+		};
 	}
 
 	private class DiffsOfInterest {

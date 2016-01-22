@@ -145,6 +145,11 @@ public class UMLCompareAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseMultiplicityElementChange(MultiplicityElementChange object) {
+			return createMultiplicityElementChangeAdapter();
+		}
+
+		@Override
 		public Adapter caseDiff(Diff object) {
 			return createDiffAdapter();
 		}
@@ -369,6 +374,20 @@ public class UMLCompareAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createDanglingStereotypeApplicationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2.internal.MultiplicityElementChange <em>Multiplicity Element Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.uml2.internal.MultiplicityElementChange
+	 * @generated
+	 */
+	public Adapter createMultiplicityElementChangeAdapter() {
 		return null;
 	}
 

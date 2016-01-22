@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,11 +29,16 @@ import com.google.common.collect.Iterators;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry;
+import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
+import org.eclipse.emf.compare.uml2.internal.MultiplicityElementChange;
+import org.eclipse.emf.compare.uml2.internal.postprocessor.MultiplicityElementChangePostProcessor;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.association.data.AssociationInputData;
@@ -160,8 +165,8 @@ public class AddAssociationTest extends AbstractUMLTest {
 	private void testAB1(TestKind kind, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
 
-		// We should have no less and no more than 16 differences
-		assertEquals(16, differences.size());
+		// We should have no less and no more than 20 differences
+		assertEquals(20, differences.size());
 
 		Predicate<? super Diff> addAssociationDescription = null;
 		Predicate<? super Diff> addNavigableOwnedEndClass1InAssociationDescription = null;
@@ -298,14 +303,23 @@ public class AddAssociationTest extends AbstractUMLTest {
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass1));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addRefAssociationInPropertyClass2));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addRefTypeInPropertyClass2));
-		assertTrue(addUMLAssociation.getRefinedBy().contains(addLiteralIntegerInClass1));
-		assertTrue(addUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass1));
-		assertTrue(addUMLAssociation.getRefinedBy().contains(addLiteralIntegerInClass2));
-		assertTrue(addUMLAssociation.getRefinedBy().contains(addUnlimitedNaturalInClass2));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addMemberEndClass1InAssociation));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addMemberEndClass2InAssociation));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addOwnedEndClass1InAssociation));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addOwnedEndClass2InAssociation));
+		// MultiplicityElementChanges
+		assertTrue(addUMLAssociation.getRefinedBy().contains(
+				Iterators.find(addLiteralIntegerInClass1.getRefines().iterator(),
+						instanceOf(MultiplicityElementChange.class))));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(
+				Iterators.find(addUnlimitedNaturalInClass1.getRefines().iterator(),
+						instanceOf(MultiplicityElementChange.class))));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(
+				Iterators.find(addLiteralIntegerInClass2.getRefines().iterator(),
+						instanceOf(MultiplicityElementChange.class))));
+		assertTrue(addUMLAssociation.getRefinedBy().contains(
+				Iterators.find(addUnlimitedNaturalInClass2.getRefines().iterator(),
+						instanceOf(MultiplicityElementChange.class))));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
@@ -370,7 +384,6 @@ public class AddAssociationTest extends AbstractUMLTest {
 			assertTrue(addAssociation.getRequires().contains(addMemberEndClass2InAssociation));
 
 			assertEquals(0, addUMLAssociation.getRequires().size());
-
 			assertEquals(0, addLiteralIntegerInClass1.getRequires().size());
 			assertEquals(0, addUnlimitedNaturalInClass1.getRequires().size());
 			assertEquals(0, addLiteralIntegerInClass2.getRequires().size());
@@ -399,5 +412,14 @@ public class AddAssociationTest extends AbstractUMLTest {
 	@Override
 	protected AbstractUMLInputData getInput() {
 		return input;
+	}
+
+	@Override
+	protected void registerPostProcessors(Registry<String> postProcessorRegistry) {
+		super.registerPostProcessors(postProcessorRegistry);
+		postProcessorRegistry.put(MultiplicityElementChangePostProcessor.class.getName(),
+				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
+						.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null,
+						new MultiplicityElementChangePostProcessor(), 25));
 	}
 }

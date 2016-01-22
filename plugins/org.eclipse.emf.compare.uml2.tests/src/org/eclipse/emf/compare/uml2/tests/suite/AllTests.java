@@ -13,6 +13,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.suite;
 
+import junit.framework.JUnit4TestAdapter;
+import junit.framework.Test;
+import junit.textui.TestRunner;
+
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociation2Test;
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociation3Test;
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociationTest;
@@ -39,6 +43,7 @@ import org.eclipse.emf.compare.uml2.tests.include.AddIncludeTest;
 import org.eclipse.emf.compare.uml2.tests.merge.ExtensionMergeTest;
 import org.eclipse.emf.compare.uml2.tests.merge.MergeDiffInvolvingRefineDiffTest;
 import org.eclipse.emf.compare.uml2.tests.message.AddMessageTest;
+import org.eclipse.emf.compare.uml2.tests.multiplicitychanges.MultiplicityElementChangesTest;
 import org.eclipse.emf.compare.uml2.tests.nonreg.bug484576_pseudoconflicts.TestNonRegPseudoConflict_484576;
 import org.eclipse.emf.compare.uml2.tests.opaque.OpaqueElementBodyChangeDiffTest;
 import org.eclipse.emf.compare.uml2.tests.opaque.OpaqueElementBodyChangeMergeTest;
@@ -54,10 +59,6 @@ import org.eclipse.emf.compare.uml2.tests.timeConstraint.AddTimeConstraintTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.textui.TestRunner;
 
 /**
  * This test suite allows us to launch all tests for EMF Compare at once.
@@ -79,7 +80,8 @@ import junit.textui.TestRunner;
 		StaticStereotypedElementItemProviderTest.class, DynamicStereotypedElementItemProviderTest.class,
 		OpaqueElementBodyChangeDiffTest.class, OpaqueElementBodyChangeMergeTest.class,
 		DanglingStereotypeApplicationTest.class, MergeDiffInvolvingRefineDiffTest.class,
-		TestNonRegPseudoConflict_484576.class, RemoveStereotypeApplicationPseudoConflictTest.class })
+		TestNonRegPseudoConflict_484576.class, RemoveStereotypeApplicationPseudoConflictTest.class,
+		MultiplicityElementChangesTest.class })
 public class AllTests {
 
 	/**
