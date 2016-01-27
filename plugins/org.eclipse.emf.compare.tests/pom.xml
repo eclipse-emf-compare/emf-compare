@@ -28,6 +28,22 @@
   </build>
   <profiles>
     <profile>
+     <id>neon</id>
+     <build>
+      <plugins>
+       <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-surefire-plugin</artifactId>
+        <configuration>
+         <includes>
+          <include>org/eclipse/emf/compare/tests/suite/AtLeastLunaVersionTests.class</include>
+         </includes>
+        </configuration>
+       </plugin>
+      </plugins>
+     </build>
+    </profile>
+    <profile>
      <id>mars</id>
      <build>
       <plugins>
