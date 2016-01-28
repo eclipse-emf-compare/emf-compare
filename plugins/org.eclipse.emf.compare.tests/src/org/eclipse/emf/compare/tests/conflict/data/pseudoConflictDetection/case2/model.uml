@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_jqC_YMQtEeWHJZXr_M-_cQ">
+  <packagedElement xmi:type="uml:Package" xmi:id="_pD71MMQtEeWHJZXr_M-_cQ" name="package1">
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_sfPXEMQwEeWHJZXr_M-_cQ" name="type1">
+      <ownedAttribute xmi:id="_hHlQYMQyEeWJMeruo-MCUA" name="property1">
+        <lowerValue xmi:type="uml:DurationInterval" xmi:id="_68k4cMQyEeWJMeruo-MCUA"/>
+      </ownedAttribute>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>

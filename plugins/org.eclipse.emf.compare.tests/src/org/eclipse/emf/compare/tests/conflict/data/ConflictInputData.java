@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,11 @@ import java.io.IOException;
 
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.uml2.uml.UMLPackage;
+import org.eclipse.uml2.uml.resource.UMLResource;
 
 /**
  * This will provide the input model for all of our "conflict detection" tests.
@@ -669,5 +674,51 @@ public class ConflictInputData extends AbstractInputData {
 
 	public Resource getComplexRight() throws IOException {
 		return loadFromClassLoader("complex/conflict_complex_right.nodes");
+	}
+
+	public ResourceSet getPseudoConflictCase1Ancestor() throws IOException {
+		ResourceSet resourceSet = createResourceSet();
+		loadFromClassLoader("pseudoConflictDetection/case1/ancestor/model.uml", resourceSet);
+		EcoreUtil.resolveAll(resourceSet);
+		return resourceSet;
+	}
+
+	public ResourceSet getPseudoConflictCase1RightAndLeftModel() throws IOException {
+		ResourceSet resourceSet = createResourceSet();
+		loadFromClassLoader("pseudoConflictDetection/case1/model.uml", resourceSet);
+		EcoreUtil.resolveAll(resourceSet);
+		return resourceSet;
+	}
+
+	public Resource getPseudoConflictCase2Ancestor() throws IOException {
+		return loadFromClassLoader("pseudoConflictDetection/case2/ancestor/model.uml");
+	}
+
+	public Resource getPseudoConflictCase2RightAndLeftModel() throws IOException {
+		return loadFromClassLoader("pseudoConflictDetection/case2/model.uml");
+	}
+
+	public Resource getPseudoConflictCase3Ancestor() throws IOException {
+		return loadFromClassLoader("pseudoConflictDetection/case3/ancestor/model.uml");
+	}
+
+	public Resource getPseudoConflictCase3RightAndLeftModel() throws IOException {
+		return loadFromClassLoader("pseudoConflictDetection/case3/model.uml");
+	}
+
+	public Resource getPseudoConflictCase4Ancestor() throws IOException {
+		return loadFromClassLoader("pseudoConflictDetection/case4/ancestor/model.uml");
+	}
+
+	public Resource getPseudoConflictCase4RightAndLeftModel() throws IOException {
+		return loadFromClassLoader("pseudoConflictDetection/case4/model.uml");
+	}
+
+	protected ResourceSet createResourceSet() {
+		ResourceSet resourceSet = new ResourceSetImpl();
+		resourceSet.getPackageRegistry().put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
+		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(UMLResource.FILE_EXTENSION,
+				UMLResource.Factory.INSTANCE);
+		return resourceSet;
 	}
 }

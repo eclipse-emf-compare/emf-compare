@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.internal.conflict;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
+import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.DifferenceKind.ADD;
 import static org.eclipse.emf.compare.DifferenceKind.DELETE;
@@ -107,7 +108,7 @@ public class ResourceAttachmentChangeConflictSearch {
 						candidateRes = match.getLeft().eResource();
 					}
 					if (getMatchResource(diffRes) == getMatchResource(candidateRes)) {
-						kind = ConflictKind.PSEUDO;
+						kind = PSEUDO;
 					}
 				}
 				conflict(candidate, kind);
@@ -127,15 +128,15 @@ public class ResourceAttachmentChangeConflictSearch {
 			if (candidate.getReference().isContainment()) {
 				// The element is a new root on one side, but it has been moved to an EObject container on the
 				// other
-				conflict(candidate, ConflictKind.REAL);
-			} else if (diff.getKind() == DifferenceKind.DELETE) {
+				conflict(candidate, REAL);
+			} else if (diff.getKind() == DELETE) {
 				// [477607] DELETE does not necessarily mean that the element is removed from the model
 				EObject o = getRelatedModelElement(diff);
 				if (o == null) {
 					// The root has been deleted.
 					// Anything other than a delete of this value in a reference is a conflict.
-					if (candidate.getKind() != DifferenceKind.DELETE) {
-						conflict(candidate, ConflictKind.REAL);
+					if (candidate.getKind() != DELETE) {
+						conflict(candidate, REAL);
 					}
 				}
 			}
@@ -228,7 +229,7 @@ public class ResourceAttachmentChangeConflictSearch {
 					diffRes = match.getOrigin().eResource();
 					candidateRes = match.getOrigin().eResource();
 					if (getMatchResource(diffRes) == getMatchResource(candidateRes)) {
-						kind = ConflictKind.PSEUDO;
+						kind = PSEUDO;
 					}
 				}
 				conflict(candidate, kind);
@@ -236,14 +237,17 @@ public class ResourceAttachmentChangeConflictSearch {
 
 			// [381143] Every Diff "under" a root deletion conflicts with it.
 			// [477607] DELETE does not necessarily mean that the element is removed from the model
+			// Each element under a pseudo-conflicting diff should have its own conflict and not be just a
+			// dependence of the existing conflict
 			EObject o = getRelatedModelElement(diff);
-			if (o == null || o.eContainer() == null) {
+			if ((o == null || o.eContainer() == null)
+					&& (diff.getConflict() == null || diff.getConflict().getKind() != PSEUDO)) {
 				for (Diff extendedCandidate : Iterables.filter(match.getAllDifferences(),
 						possiblyConflictingWith(diff))) {
 					if (isDeleteOrUnsetDiff(extendedCandidate)) {
-						conflict(extendedCandidate, ConflictKind.PSEUDO);
+						conflict(extendedCandidate, PSEUDO);
 					} else {
-						conflict(extendedCandidate, ConflictKind.REAL);
+						conflict(extendedCandidate, REAL);
 					}
 				}
 			}

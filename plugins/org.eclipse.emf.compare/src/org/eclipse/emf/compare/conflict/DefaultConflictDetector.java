@@ -923,8 +923,10 @@ public class DefaultConflictDetector implements IConflictDetector {
 			if (candidate instanceof ReferenceChange) {
 				if (diff.getKind() == DifferenceKind.DELETE && match == candidate.getMatch()
 						&& getRelatedModelElement(diff) == null) {
-					// The EObject that owns the changed EReference has been deleted on the other side
-					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+					if (candidate.getKind() != DifferenceKind.DELETE) {
+						// The EObject that owns the changed EReference has been deleted on the other side
+						conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+					}
 				} else {
 					// Any ReferenceChange that references the affected root is a possible conflict
 					final EObject candidateValue = ((ReferenceChange)candidate).getValue();

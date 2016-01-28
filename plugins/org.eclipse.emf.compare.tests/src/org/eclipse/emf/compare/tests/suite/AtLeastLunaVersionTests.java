@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.tests.conflict.PseudoConflictDetectionTest;
 import org.eclipse.emf.compare.tests.merge.ConflictImplicationsTest_Bug484579;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
@@ -32,7 +33,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({ConflictImplicationsTest_Bug484579.class })
+@SuiteClasses({ConflictImplicationsTest_Bug484579.class, PseudoConflictDetectionTest.class })
 public class AtLeastLunaVersionTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
