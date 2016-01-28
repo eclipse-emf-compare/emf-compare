@@ -35,6 +35,7 @@ import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ComparisonCanceledException;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
@@ -114,6 +115,9 @@ public class DefaultConflictDetector implements IConflictDetector {
 			if (i % 100 == 0) {
 				monitor.subTask(EMFCompareMessages.getString("DefaultConflictDetector.monitor.detect", //$NON-NLS-1$
 						Integer.valueOf(i + 1), Integer.valueOf(diffCount)));
+			}
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
 			}
 			final Diff diff = differences.get(i);
 

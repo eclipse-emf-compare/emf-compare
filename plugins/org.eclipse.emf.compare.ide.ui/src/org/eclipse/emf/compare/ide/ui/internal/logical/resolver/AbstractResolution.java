@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
@@ -154,6 +155,9 @@ public abstract class AbstractResolution {
 							if (dependentFile != null && traversalSet.add(dependentFile)
 									&& !knownURIs.contains(dep)) {
 								filesToResolve.add(dependentFile);
+							}
+							if (monitor.isCanceled()) {
+								throw new OperationCanceledException();
 							}
 						}
 					}
