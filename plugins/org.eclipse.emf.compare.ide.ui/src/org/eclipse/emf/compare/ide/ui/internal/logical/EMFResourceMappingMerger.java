@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo and others.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - bugs 461713, 465331, 470268, 476363, 476417, refactorings
+ *     Philip Langer - bugs 461713, 465331, 470268, 476363, 476417, 486940, refactorings
  *     Alexandra Buzila - bugs 470332, 478620
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
@@ -246,6 +246,8 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 		final SynchronizationModel syncModel = ((EMFResourceMapping)mapping).getLatestModel();
 		// we may have non-existing storages in the left traversal, so let's get rid of them
 		removeNonExistingStorages(syncModel.getLeftTraversal());
+		// get the involved resources before we run the minimizer
+		final Set<IResource> resources = Sets.newLinkedHashSet(syncModel.getResources());
 
 		final IModelMinimizer minimizer = new IdenticalResourceMinimizer();
 		minimizer.minimize(syncModel, subMonitor.newChild(1)); // 10%
@@ -262,7 +264,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 			save(scope.getLeft(), syncModel.getLeftTraversal(), syncModel.getRightTraversal(), syncModel
 					.getOriginTraversal());
 			failingMappings.add(mapping);
-			markResourcesAsMerged(mergeContext, scope.getLeft(), conflictingURIs, subMonitor.newChild(2)); // 100%
+			markResourcesAsMerged(mergeContext, resources, conflictingURIs, subMonitor.newChild(2)); // 100%
 		} else {
 			final ResourceAdditionAndDeletionTracker resourceTracker = new ResourceAdditionAndDeletionTracker();
 			try {
@@ -385,30 +387,26 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	}
 
 	/**
-	 * Marks the resources from the given {@code notifier} as merged if their URIs are not included in the
-	 * given set of known {@code conflictingURIs}.
+	 * Marks the resources as merged if their URIs are not included in the given set of known
+	 * {@code conflictingURIs}.
 	 * 
 	 * @param context
 	 *            The current merge context.
-	 * @param notifier
-	 *            The notifier which resources are to be marked.
+	 * @param resources
+	 *            The resources to be marked as merged.
 	 * @param conflictingURIs
 	 *            The set of known {@code conflictingURIs}.
 	 * @param subMonitor
 	 *            Monitor on which to report progress to the user.
 	 */
-	private void markResourcesAsMerged(IMergeContext context, Notifier notifier, Set<URI> conflictingURIs,
-			SubMonitor subMonitor) {
-		if (notifier instanceof Resource) {
-			final URI uri = ((Resource)notifier).getURI();
-			if (!conflictingURIs.contains(uri)) {
-				markAsMerged(context, uri, subMonitor);
-			}
-		} else if (notifier instanceof ResourceSet) {
-			for (Resource resource : ((ResourceSet)notifier).getResources()) {
-				final URI uri = resource.getURI();
+	private void markResourcesAsMerged(IMergeContext context, Set<IResource> resources,
+			Set<URI> conflictingURIs, SubMonitor subMonitor) {
+		for (IResource resource : resources) {
+			if (resource instanceof IFile) {
+				final IFile iFile = (IFile)resource;
+				final URI uri = ResourceUtil.createURIFor(iFile);
 				if (!conflictingURIs.contains(uri)) {
-					markAsMerged(context, uri, subMonitor);
+					markAsMerged(context, resource, subMonitor);
 				}
 			}
 		}
@@ -419,13 +417,12 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 * 
 	 * @param context
 	 *            The current merge context.
-	 * @param uri
-	 *            URI of the resource to mark as merged.
+	 * @param resource
+	 *            The resource to mark as merged.
 	 * @param subMonitor
 	 *            Monitor on which to report progress to the user.
 	 */
-	private void markAsMerged(IMergeContext context, URI uri, SubMonitor subMonitor) {
-		final IResource resource = ResourceUtil.getResourceFromURI(uri);
+	private void markAsMerged(IMergeContext context, IResource resource, SubMonitor subMonitor) {
 		IDiff diff = context.getDiffTree().getDiff(resource);
 		if (diff != null) {
 			try {
