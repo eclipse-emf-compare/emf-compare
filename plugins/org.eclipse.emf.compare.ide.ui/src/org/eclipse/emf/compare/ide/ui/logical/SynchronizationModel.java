@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2015 Obeo and others.
+ * Copyright (c) 2011, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -153,6 +153,7 @@ public final class SynchronizationModel implements IDiagnosable {
 		if (!diagnostic.getChildren().isEmpty()) {
 			first.merge(diagnostic);
 		}
+		ret.add(first);
 		ret.add(getDiagnosticForSide(leftTraversal.getDiagnostic(), "left")); //$NON-NLS-1$
 		ret.add(getDiagnosticForSide(originTraversal.getDiagnostic(), "origin")); //$NON-NLS-1$
 		ret.add(getDiagnosticForSide(rightTraversal.getDiagnostic(), "right")); //$NON-NLS-1$
