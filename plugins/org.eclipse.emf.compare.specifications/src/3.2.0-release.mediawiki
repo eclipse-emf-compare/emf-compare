@@ -420,3 +420,37 @@ In older versions of Papyrus, additional information, such as the open diagram t
 This is aggravated by the fact that the contents of the di-file is serialized as a model without XMI:IDs or attribute values that allow EMF Compare to match the elements in the di-file accordingly.
 
 Therefore, we introduce a post processor that removes conflicts among changes that affect model elements located in the di-file. If the user opts to include those changes in the comparison anyway, he/she still can deactivate the "Ignore Papyrus Di-files Post-Processor".
+
+==  US_320_009 - Multiplicity Element Change ==
+
+=== Description ===
+
+As a '''Papyrus user''',<br/>
+I want to '''see conflicts of multiplicity changes only if they are different'''<br/>
+so that '''the list of changes is more concise and the list of conflicts is minimal'''
+
+==== Categories ====
+[[./index.html#UML-related Specifications|UML]]
+
+=== Related Bugs & Reviews ===
+
+This user story is linked with these bugs & reviews:
+* https://bugs.eclipse.org/bugs/show_bug.cgi?id=479449
+
+=== Content ===
+
+==== Analysis ====
+Users would expect that setting the multiplicity to the ''same'' values on both sides wouldn't result in a real conflict -- only a pseudo conflict. EMF Compare does already raise a conflict only if the same feature value is changed on both sides to ''different'' values. For simple-type values, such as integers, it compares the values directly and for EObject values, it uses the match model to determine whether the values are actually different.
+
+In a UML multiplicity element, its lower and upper value are represented as UML instance specifications, which are EObjects, rather than simple integer values. When now a multiplicity element is set to the same value on both sides, the Papyrus editor will create new UML instance specification objects, which represent the same value, but which have different XMI:IDs. As they have different XMI:IDs, they have not been matched by the ID-based match engine and thus are considered as different. Consequently, EMF Compare always raises a conflict on a concurrent multiplicity change, even if the changes set the multiplicity to the same value.
+
+==== Design ====
+There are two different ways of addressing this issue:
+# Register a specific EqualityHelper that, if asked for equality of UML instance specifications, determines the equality based on the actual simple-typed value they carry rather than relying on the match model.
+# Introduce a specific UML diff type ''MultiplicityChange'' and specific conflict handling in the UML post-processor.
+
+Whereas the first option is simpler, it may have unwanted side-effects, because all instance specifications that carry the same value would then be considered as equal by the EqualityHelper, whether they are inside a multiplicity element or not. As instance specifications are used all over the place in UML, this seems to be risky without analyzing the consequences in detail.
+
+The second option has not only the advantage that it has no unforeseen side-effects, it also allows represent multiplicity changes in a more user-friendly way. That is, EMF Compare would not only show "lowerValue changed", but could elaborate that the lower value ''of the multiplicity'' has changed. In the user interface of Papyrus, the UI control to change the lower and upper value is also called ''multiplicity''. Thus, mentioning ''multiplicity'' will be more in line with what the user expects.
+
+In summary, we advocate for the second option: the UML diff type.

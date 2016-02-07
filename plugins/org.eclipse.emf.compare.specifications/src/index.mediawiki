@@ -23,6 +23,7 @@
 
 * [[./3.2.0-release.html#US_320_001 - UML Dangling stereotypes|US_320_001 - UML Dangling stereotypes]]
 * [[./3.2.0-release.html#US_320_008 - Ignore changes in Papyrus di-files|US_320_008 - Ignore changes in Papyrus di-files]]
+* [[./3.2.0-release.html#US_320_009 - Multiplicity Element Change|US_320_009 - Multiplicity Element Change]]
 
 == Diagram-related specifications ==
 
