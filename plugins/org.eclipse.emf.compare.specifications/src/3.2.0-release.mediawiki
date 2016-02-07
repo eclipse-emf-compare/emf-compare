@@ -390,3 +390,33 @@ The testing strategy is the following:
 * to run all the existing tests with both the DefaultConflictDetector and the FastConflictDetector, and to check the results are identical.
 * to run manual tests on large models to make sure the user time is reasonable (less than 1 minute for a model as described above)
 * to verify the positive impact on the nightly EMFCompare performance measurements
+
+==  US_320_008 - Ignore changes in Papyrus di-files ==
+
+=== Description ===
+
+As a '''Papyrus user''',<br/>
+I want to '''see only model and diagram changes that I applied and not usage-caused changes of meta-information in di-files'''<br/>
+so that '''the list of changes is more concise and I can more easily understand the changes applied between two versions'''
+
+==== Categories ====
+[[./index.html#UML-related Specifications|UML]]
+
+=== Related Bugs & Reviews ===
+
+This user story is linked with these bugs & reviews:
+* https://bugs.eclipse.org/bugs/show_bug.cgi?id=485494
+
+=== Related Tests ===
+
+This user story is linked with these tests:
+* https://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare.diagram.papyrus.tests/src/org/eclipse/emf/compare/diagram/papyrus/tests/difile/IgnoreDiFilePostProcessorTest.java
+* https://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare.diagram.papyrus.tests.git/src/org/eclipse/emf/compare/diagram/papyrus/tests/egit/IgnoreDiFileChangesInGitMergeTest.java
+
+=== Content ===
+
+In older versions of Papyrus, additional information, such as the open diagram tabs, are stored in the di-files of the Papyrus model. Also with new versions, this information is updated while the user, for instance, changes the open tabs, if the respective content storing this information already exists in the di-file. Users consequently manipulate the di-file "unconsciously" by opening or closing diagrams and may be faced with unclear and rather unimportant merge conflicts during a git merge of Papyrus models.
+
+This is aggravated by the fact that the contents of the di-file is serialized as a model without XMI:IDs or attribute values that allow EMF Compare to match the elements in the di-file accordingly.
+
+Therefore, we introduce a post processor that removes conflicts among changes that affect model elements located in the di-file. If the user opts to include those changes in the comparison anyway, he/she still can deactivate the "Ignore Papyrus Di-files Post-Processor".
