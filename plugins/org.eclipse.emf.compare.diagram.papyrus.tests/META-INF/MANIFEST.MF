@@ -44,5 +44,7 @@ Bundle-Vendor: %providerName
 Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
  com.google.common.collect;version="[11.0.0,16.0.0)",
  com.google.common.eventbus;version="[11.0.0,16.0.0)",
- com.google.common.io;version="[11.0.0,16.0.0)"
+ com.google.common.io;version="[11.0.0,16.0.0)",
+ org.eclipse.papyrus.infra.core.sashwindows.di,
+ org.eclipse.papyrus.infra.core.sashwindows.di.util
 Export-Package: org.eclipse.emf.compare.diagram.papyrus.tests
