@@ -21,6 +21,7 @@
       <configuration>
         <includes>
           <include>org/eclipse/emf/compare/tests/suite/AllTests.class</include>
+          <include>org/eclipse/emf/compare/tests/suite/AtLeastLunaVersionTests.class</include>
         </includes> 
       </configuration>
      </plugin>
@@ -28,7 +29,7 @@
   </build>
   <profiles>
     <profile>
-     <id>neon</id>
+     <id>kepler</id>
      <build>
       <plugins>
        <plugin>
@@ -36,7 +37,7 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
          <includes>
-          <include>org/eclipse/emf/compare/tests/suite/AtLeastLunaVersionTests.class</include>
+          <include>org/eclipse/emf/compare/tests/suite/AllTests.class</include>
          </includes>
         </configuration>
        </plugin>
@@ -44,7 +45,7 @@
      </build>
     </profile>
     <profile>
-     <id>mars</id>
+     <id>juno</id>
      <build>
       <plugins>
        <plugin>
@@ -52,7 +53,7 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
          <includes>
-          <include>org/eclipse/emf/compare/tests/suite/AtLeastLunaVersionTests.class</include>
+          <include>org/eclipse/emf/compare/tests/suite/AllTests.class</include>
          </includes>
         </configuration>
        </plugin>
@@ -60,7 +61,7 @@
      </build>
     </profile>
     <profile>
-     <id>luna</id>
+     <id>indigo</id>
      <build>
       <plugins>
        <plugin>
@@ -68,7 +69,23 @@
        <artifactId>tycho-surefire-plugin</artifactId>
        <configuration>
         <includes>
-         <include>org/eclipse/emf/compare/tests/suite/AtLeastLunaVersionTests.class</include>
+         <include>org/eclipse/emf/compare/tests/suite/AllTests.class</include>
+        </includes>
+       </configuration>
+      </plugin>
+     </plugins>
+    </build>
+   </profile>
+   <profile>
+     <id>helios</id>
+     <build>
+      <plugins>
+       <plugin>
+       <groupId>org.eclipse.tycho</groupId>
+       <artifactId>tycho-surefire-plugin</artifactId>
+       <configuration>
+        <includes>
+         <include>org/eclipse/emf/compare/tests/suite/AllTests.class</include>
         </includes>
        </configuration>
       </plugin>
