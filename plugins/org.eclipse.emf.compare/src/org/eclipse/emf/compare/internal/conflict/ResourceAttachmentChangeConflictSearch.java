@@ -25,7 +25,6 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -112,33 +111,6 @@ public class ResourceAttachmentChangeConflictSearch {
 					}
 				}
 				conflict(candidate, kind);
-			}
-		}
-
-		/**
-		 * This will be called from
-		 * {@link #checkResourceAttachmentConflict(Comparison, ResourceAttachmentChange, Iterable)} for each
-		 * ReferenceChange in the comparison model that is on the other side and that impacts the changed
-		 * root.
-		 * 
-		 * @param candidate
-		 *            A reference change that point to the same value as {@code diff}.
-		 */
-		protected void checkResourceAttachmentConflict(ReferenceChange candidate) {
-			if (candidate.getReference().isContainment()) {
-				// The element is a new root on one side, but it has been moved to an EObject container on the
-				// other
-				conflict(candidate, REAL);
-			} else if (diff.getKind() == DELETE) {
-				// [477607] DELETE does not necessarily mean that the element is removed from the model
-				EObject o = getRelatedModelElement(diff);
-				if (o == null) {
-					// The root has been deleted.
-					// Anything other than a delete of this value in a reference is a conflict.
-					if (candidate.getKind() != DELETE) {
-						conflict(candidate, REAL);
-					}
-				}
 			}
 		}
 	}
