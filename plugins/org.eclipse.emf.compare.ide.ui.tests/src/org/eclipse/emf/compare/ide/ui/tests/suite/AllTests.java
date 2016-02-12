@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Philip Langer - adds test classes
  *     Stefan Dirix - add EMFModelProviderTest
+ *     Alexandra Buzila - SynchronizationModelDiagnosticTest
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.suite;
 
@@ -32,6 +33,7 @@ import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ResourceComputation
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.SimilarityComputerTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverGraphTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverWithCustomDependencyProviderTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.synchronizationmodel.SynchronizationModelDiagnosticTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.NavigatableTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeActionTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeNonConflictingRunnableTest;
@@ -57,7 +59,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		DependencyGraphUpdaterTest.class, GraphResolutionTest.class, EMFModelProviderTest.class,
 		MergeAllCommandTests.class, LocalMonitoredProxyCreationListenerTest.class,
 		RemoteMonitoredProxyCreationListenerTest.class, MergeNonConflictingRunnableTest.class,
-		RenameDetectorTest.class, SimilarityComputerTest.class, TooltipProviderTest.class })
+		RenameDetectorTest.class, SimilarityComputerTest.class, TooltipProviderTest.class,
+		SynchronizationModelDiagnosticTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

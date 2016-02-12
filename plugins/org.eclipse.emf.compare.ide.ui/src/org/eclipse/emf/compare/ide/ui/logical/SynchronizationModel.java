@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - checkstyle and javadoc fixes
+ *     Alexandra Buzila - bug 487119
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.logical;
 
@@ -18,20 +19,27 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.internal.resources.ResourceStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.utils.IDiagnosable;
+import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * This class acts as a simple DTO that allows us to store the three traversals corresponding to the three
@@ -40,6 +48,7 @@ import org.eclipse.emf.compare.utils.IDiagnosable;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @since 4.0
  */
+@SuppressWarnings("restriction")
 @Beta
 public final class SynchronizationModel implements IDiagnosable {
 	/** The traversal corresponding to the left side. */
@@ -56,6 +65,12 @@ public final class SynchronizationModel implements IDiagnosable {
 
 	/** The resources that are part of this synchronization model. */
 	private ImmutableSet<IResource> resources;
+
+	/**
+	 * Provider for the composed diagnostic that aggregates the diagnostics of the logical model resolution
+	 * and resource traversals.
+	 */
+	private SynchronizationModelDiagnosticProvider diagnosticProvider;
 
 	/**
 	 * Constructs our logical model given the three traversal for our sides.
@@ -108,6 +123,7 @@ public final class SynchronizationModel implements IDiagnosable {
 		} else {
 			this.originTraversal = originTraversal;
 		}
+		diagnosticProvider = new SynchronizationModelDiagnosticProvider(this);
 	}
 
 	/**
@@ -138,45 +154,13 @@ public final class SynchronizationModel implements IDiagnosable {
 	}
 
 	/**
-	 * Returns the diagnostics that may have been issued for the left, right, and origin side.
+	 * Returns the diagnostics that may have been issued for the synchronization model, as well as for the
+	 * left, right, and origin side.
 	 * 
-	 * @return The diagnostics of the left, right, and origin side.
+	 * @return The diagnostics of the synchronization model, left, right, and origin side.
 	 */
 	public Diagnostic getDiagnostic() {
-		BasicDiagnostic ret = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, EMFCompareIDEUIMessages
-				.getString("SynchronizationModel.diagnosticMesg"), new Object[] {this, }); //$NON-NLS-1$
-		BasicDiagnostic first = new BasicDiagnostic(
-				diagnostic.getSource(),
-				diagnostic.getCode(),
-				diagnostic.getChildren(),
-				EMFCompareIDEUIMessages.getString("SynchronizationModel.root"), diagnostic.getData().toArray()); //$NON-NLS-1$
-		if (!diagnostic.getChildren().isEmpty()) {
-			first.merge(diagnostic);
-		}
-		ret.add(first);
-		ret.add(getDiagnosticForSide(leftTraversal.getDiagnostic(), "left")); //$NON-NLS-1$
-		ret.add(getDiagnosticForSide(originTraversal.getDiagnostic(), "origin")); //$NON-NLS-1$
-		ret.add(getDiagnosticForSide(rightTraversal.getDiagnostic(), "right")); //$NON-NLS-1$
-		return ret;
-	}
-
-	/**
-	 * Creates a diagnostic for the given diagnostic {@code toAdd} of the given {@code side}.
-	 * 
-	 * @param toAdd
-	 *            The diagnostic to be added to the created diagnostic.
-	 * @param side
-	 *            The side, either left, right, or origin.
-	 * @return The created diagnostic.
-	 */
-	private BasicDiagnostic getDiagnosticForSide(Diagnostic toAdd, String side) {
-		BasicDiagnostic d;
-		d = new BasicDiagnostic(toAdd.getSeverity(), toAdd.getSource(), 0, EMFCompareIDEUIMessages
-				.getString("SynchronizationModel." + side), null); //$NON-NLS-1$
-		if (!toAdd.getChildren().isEmpty()) {
-			d.merge(toAdd);
-		}
-		return d;
+		return diagnosticProvider.getDiagnostic();
 	}
 
 	/**
@@ -253,5 +237,133 @@ public final class SynchronizationModel implements IDiagnosable {
 			}
 		}
 		return resources;
+	}
+
+	/**
+	 * Provides a BasicDiagnostic for the synchronization model that aggregates the diagnostics from the model
+	 * resolution and the diagnostics from the left, origin and right resource traversals.
+	 */
+	private static class SynchronizationModelDiagnosticProvider {
+		private BasicDiagnostic syncModelDiagnostic;
+
+		private HashSet<IPath> resourcePathCache;
+
+		private SynchronizationModel syncModel;
+
+		SynchronizationModelDiagnosticProvider(SynchronizationModel syncModel) {
+			this.syncModel = syncModel;
+		}
+
+		public Diagnostic getDiagnostic() {
+			if (syncModelDiagnostic == null) {
+				buildDiagnostic();
+			}
+			return syncModelDiagnostic;
+		}
+
+		private void buildDiagnostic() {
+			syncModelDiagnostic = new BasicDiagnostic(
+					EMFCompareIDEUIPlugin.PLUGIN_ID,
+					0,
+					EMFCompareIDEUIMessages.getString("SynchronizationModel.diagnosticMesg"), new Object[] {syncModel, }); //$NON-NLS-1$
+			// synchronization model child diagnostics
+			syncModelDiagnostic.add(getSynchronizationModelDiagnostic());
+			// resource traversals child diagnostics
+			syncModelDiagnostic
+					.add(getDiagnosticForSide(syncModel.getLeftTraversal().getDiagnostic(), "left")); //$NON-NLS-1$
+			syncModelDiagnostic.add(getDiagnosticForSide(syncModel.getOriginTraversal().getDiagnostic(),
+					"origin")); //$NON-NLS-1$
+			syncModelDiagnostic.add(getDiagnosticForSide(syncModel.getRightTraversal().getDiagnostic(),
+					"right")); //$NON-NLS-1$
+		}
+
+		/**
+		 * Filters out from the existing diagnostic all child diagnostics that don't belong to resources that
+		 * are part of the logical model.
+		 */
+		private BasicDiagnostic getSynchronizationModelDiagnostic() {
+			BasicDiagnostic d = new BasicDiagnostic(syncModel.diagnostic.getSource(), syncModel.diagnostic
+					.getCode(), null, EMFCompareIDEUIMessages.getString("SynchronizationModel.root"), null); //$NON-NLS-1$
+
+			for (Diagnostic child : syncModel.diagnostic.getChildren()) {
+				List<?> diagnosticData = child.getData();
+				if (diagnosticData.isEmpty()) {
+					continue;
+				}
+				// source of problem
+				Object object = diagnosticData.get(0);
+
+				if (object instanceof ResourceStatus) {
+					ResourceStatus status = (ResourceStatus)object;
+					final IPath resourceIPath = status.getPath();
+					if (containsResourceWithPath(resourceIPath)) {
+						d.merge(child);
+					}
+				} else if (object instanceof Resource.Diagnostic) {
+					Resource.Diagnostic resourceDiagnostic = (Resource.Diagnostic)object;
+					String location = resourceDiagnostic.getLocation();
+					URI locationUri = URI.createURI(location, false);
+					String fullPath = null;
+					if (locationUri.isPlatform()) {
+						fullPath = locationUri.toPlatformString(true);
+					} else {
+						fullPath = locationUri.toString();
+					}
+					if (fullPath == null) {
+						continue;
+					}
+					final Path path = new Path(fullPath);
+					if (containsResourceWithPath(path)) {
+						d.merge(child);
+					}
+				} else {
+					// best guess - if the source of the problem is one of the resources, we are interested in
+					// the diagnostic
+					if (syncModel.getResources().contains(object)) {
+						d.merge(child);
+					}
+				}
+			}
+			return d;
+		}
+
+		/**
+		 * Creates a diagnostic for the given diagnostic {@code toAdd} of the given {@code side}.
+		 * 
+		 * @param toAdd
+		 *            The diagnostic to be added to the created diagnostic.
+		 * @param side
+		 *            The side, either left, right, or origin.
+		 * @return The created diagnostic.
+		 */
+		private BasicDiagnostic getDiagnosticForSide(Diagnostic toAdd, String side) {
+			BasicDiagnostic d = new BasicDiagnostic(toAdd.getSeverity(), toAdd.getSource(), 0,
+					EMFCompareIDEUIMessages.getString("SynchronizationModel." + side), null); //$NON-NLS-1$
+			if (!toAdd.getChildren().isEmpty()) {
+				d.merge(toAdd);
+			}
+			return d;
+		}
+
+		/**
+		 * Returns <code>true</code> if the given resource {@link IPath} belongs to a resource that is part of
+		 * the synchronization model.
+		 */
+		private boolean containsResourceWithPath(final IPath resourcePath) {
+			if (resourcePathCache == null) {
+				buildResourcePathCache();
+			}
+			return resourcePathCache.contains(resourcePath);
+		}
+
+		/** Caches the {@link IPath paths} of the synchronization model's resources. */
+		private void buildResourcePathCache() {
+			resourcePathCache = new HashSet<IPath>();
+			for (IResource resource : syncModel.getResources()) {
+				if (resource.getFullPath() != null) {
+					resourcePathCache.add(resource.getFullPath());
+				}
+			}
+		}
 	}
 }

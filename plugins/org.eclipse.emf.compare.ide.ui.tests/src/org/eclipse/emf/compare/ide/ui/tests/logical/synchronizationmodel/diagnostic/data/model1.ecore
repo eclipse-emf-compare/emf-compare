@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model1">
+  <eClassifiers xsi:type="ecore:EClass" name="model1_c1">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ref_m1_m2" eType="ecore:EClass model2.ecore#//model2_c1"/>
+  </eClassifiers>
+</ecore:EPackage>
