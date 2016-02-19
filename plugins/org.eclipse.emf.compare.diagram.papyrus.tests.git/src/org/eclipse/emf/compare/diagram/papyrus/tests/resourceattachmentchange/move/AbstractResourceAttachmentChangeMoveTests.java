@@ -160,6 +160,10 @@ public class AbstractResourceAttachmentChangeMoveTests extends CompareTestCase {
 		return project.getIFile(iProject, file);
 	}
 
+	protected void removeFromProject(IProject iProject, String name) throws CoreException {
+		iProject.getFile(name).delete(true, null);
+	}
+
 	protected URI getFileUri(final URL bundleUrl) throws IOException {
 		URL fileLocation = FileLocator.toFileURL(bundleUrl);
 		return URI.createFileURI(fileLocation.getPath());
@@ -187,7 +191,7 @@ public class AbstractResourceAttachmentChangeMoveTests extends CompareTestCase {
 		final IProgressMonitor monitor = new NullProgressMonitor();
 		// do we really need to create a new one?
 		final IStorageProviderAccessor storageAccessor = new SubscriberStorageAccessor(subscriber);
-		final ITypedElement left = new StorageTypedElement(sourceProvider.getStorage(monitor), fullPath);
+		final ITypedElement left = new StorageTypedElement(file, fullPath);
 		final ITypedElement right = new StorageTypedElement(remoteProvider.getStorage(monitor), fullPath);
 		final ITypedElement origin = new StorageTypedElement(ancestorProvider.getStorage(monitor), fullPath);
 		final ThreadedModelResolver resolver = new ThreadedModelResolver();

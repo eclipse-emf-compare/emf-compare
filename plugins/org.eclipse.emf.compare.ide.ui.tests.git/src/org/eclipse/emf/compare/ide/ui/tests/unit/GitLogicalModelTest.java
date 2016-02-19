@@ -15,7 +15,6 @@ package org.eclipse.emf.compare.ide.ui.tests.unit;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Before;
 import org.junit.Test;
@@ -118,7 +117,7 @@ public class GitLogicalModelTest extends AbstractGitLogicalModelTest {
 		commits[6] = repository.addAndCommit(project, "branch-commit-2", file2);
 
 		masterTipSynonyms = new String[] {MASTER, commits[4].getName(), };
-		branchTipSynonyms = new String[] {BRANCH, commits[6].getName(), Constants.HEAD, };
+		branchTipSynonyms = new String[] {BRANCH, commits[6].getName(), };
 	}
 
 	@Test
