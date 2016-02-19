@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:style="http://www.eclipse.org/papyrus/infra/viewpoints/policy/style" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_oOYr8Fe-EeW4eJv2hqevuw" type="PapyrusUMLComponentDiagram" name="TimeTracking Component" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="_oq2lgFe-EeW4eJv2hqevuw" type="3205">
+    <children xmi:type="notation:DecorationNode" xmi:id="_oq2lgle-EeW4eJv2hqevuw" type="5266"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_oq3MkFe-EeW4eJv2hqevuw" type="6031">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_oq3MkVe-EeW4eJv2hqevuw" y="5"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_oq3Mkle-EeW4eJv2hqevuw" type="7008">
+      <styles xmi:type="notation:TitleStyle" xmi:id="_oq3Mk1e-EeW4eJv2hqevuw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_oq3MlFe-EeW4eJv2hqevuw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_oq3MlVe-EeW4eJv2hqevuw"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_oq3Mlle-EeW4eJv2hqevuw"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_oq3Ml1e-EeW4eJv2hqevuw" type="7009">
+      <styles xmi:type="notation:TitleStyle" xmi:id="_oq3MmFe-EeW4eJv2hqevuw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_oq3MmVe-EeW4eJv2hqevuw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_oq3Mmle-EeW4eJv2hqevuw"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_oq3Mm1e-EeW4eJv2hqevuw"/>
+    </children>
+    <element xmi:type="uml:Interface" href="TimeTracking.uml#_R119oFezEeW4eJv2hqevuw"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_oq2lgVe-EeW4eJv2hqevuw" x="280" y="239"/>
+  </children>
+  <styles xmi:type="notation:StringValueStyle" xmi:id="_oOYr8Ve-EeW4eJv2hqevuw" name="diagram_compatibility_version" stringValue="1.1.0"/>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_oOYr8le-EeW4eJv2hqevuw"/>
+  <styles xmi:type="style:PapyrusViewStyle" xmi:id="_oOYr81e-EeW4eJv2hqevuw">
+    <owner xmi:type="uml:Package" href="TimeTracking.uml#_l4iA8FeUEeWgZ-JGsc7XXg"/>
+  </styles>
+  <element xmi:type="uml:Package" href="TimeTracking.uml#_l4iA8FeUEeWgZ-JGsc7XXg"/>
+</notation:Diagram>

@@ -12,5 +12,8 @@ Require-Bundle: org.eclipse.emf.compare.egit;bundle-version="1.1.0",
  org.eclipse.egit.core;bundle-version="4.1.0",
  org.eclipse.emf.compare.rcp.ui,
  org.eclipse.compare,
+ org.eclipse.papyrus.infra.core,
+ org.eclipse.papyrus.infra.gmfdiag.common,
+ org.eclipse.papyrus.uml.tools,
  org.eclipse.emf.compare.rcp
 Import-Package: org.eclipse.emf.compare.ide.ui.tests

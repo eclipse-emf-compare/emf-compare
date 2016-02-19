@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_hG1zkFeUEeWgZ-JGsc7XXg" name="RootElement">
+  <packagedElement xmi:type="uml:Package" xmi:id="_lHCAoFeWEeWKEqTNFdy41w" name="Employee">
+    <packagedElement xmi:type="uml:Interface" xmi:id="_A1MFkFyAEeWmfY3-CYsIIw" name="PersonalFile"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_l4iA8FeUEeWgZ-JGsc7XXg" name="TimeTracking">
+    <packagedElement xmi:type="uml:Interface" xmi:id="_R119oFezEeW4eJv2hqevuw" name="IActivity"/>
+  </packagedElement>
+</uml:Model>

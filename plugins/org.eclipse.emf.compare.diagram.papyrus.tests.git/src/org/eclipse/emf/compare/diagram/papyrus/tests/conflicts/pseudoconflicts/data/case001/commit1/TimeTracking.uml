@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_l4iA8FeUEeWgZ-JGsc7XXg" name="TimeTracking">
+  <packagedElement xmi:type="uml:Interface" xmi:id="_R119oFezEeW4eJv2hqevuw" name="IActivity"/>
+</uml:Package>

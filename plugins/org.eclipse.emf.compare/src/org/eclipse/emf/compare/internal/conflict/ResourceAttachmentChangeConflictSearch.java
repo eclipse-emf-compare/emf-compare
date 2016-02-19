@@ -16,6 +16,7 @@ import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.DifferenceKind.ADD;
 import static org.eclipse.emf.compare.DifferenceKind.DELETE;
+import static org.eclipse.emf.compare.DifferenceKind.MOVE;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.possiblyConflictingWith;
 
@@ -259,6 +260,23 @@ public class ResourceAttachmentChangeConflictSearch {
 					// the other
 					conflict(candidate, REAL);
 				}
+			}
+
+			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
+			for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
+					instanceOf(ResourceAttachmentChange.class)))) {
+				ConflictKind kind = REAL;
+				if (candidate.getKind() == MOVE) {
+					final Match match = diff.getMatch();
+					final Resource diffRes;
+					final Resource candidateRes;
+					diffRes = match.getOrigin().eResource();
+					candidateRes = match.getOrigin().eResource();
+					if (getMatchResource(diffRes) == getMatchResource(candidateRes)) {
+						kind = PSEUDO;
+					}
+				}
+				conflict(candidate, kind);
 			}
 		}
 	}

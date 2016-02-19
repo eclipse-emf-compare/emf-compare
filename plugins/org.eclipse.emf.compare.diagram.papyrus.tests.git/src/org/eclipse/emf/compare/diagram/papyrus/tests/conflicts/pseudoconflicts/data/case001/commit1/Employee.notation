@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:style="http://www.eclipse.org/papyrus/infra/viewpoints/policy/style" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_4Qrt4Fx_EeWmfY3-CYsIIw" type="PapyrusUMLComponentDiagram" name="Employee component" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="_A1Pv8FyAEeWmfY3-CYsIIw" type="3205">
+    <children xmi:type="notation:DecorationNode" xmi:id="_A1Pv8lyAEeWmfY3-CYsIIw" type="5266"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_A1Pv81yAEeWmfY3-CYsIIw" type="6031">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_A1Pv9FyAEeWmfY3-CYsIIw" y="5"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_A1QXAFyAEeWmfY3-CYsIIw" type="7008">
+      <styles xmi:type="notation:TitleStyle" xmi:id="_A1QXAVyAEeWmfY3-CYsIIw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_A1QXAlyAEeWmfY3-CYsIIw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_A1QXA1yAEeWmfY3-CYsIIw"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_A1QXBFyAEeWmfY3-CYsIIw"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_A1QXBVyAEeWmfY3-CYsIIw" type="7009">
+      <styles xmi:type="notation:TitleStyle" xmi:id="_A1QXBlyAEeWmfY3-CYsIIw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_A1QXB1yAEeWmfY3-CYsIIw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_A1QXCFyAEeWmfY3-CYsIIw"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_A1QXCVyAEeWmfY3-CYsIIw"/>
+    </children>
+    <element xmi:type="uml:Interface" href="Employee.uml#_A1MFkFyAEeWmfY3-CYsIIw"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_A1Pv8VyAEeWmfY3-CYsIIw" x="416" y="47"/>
+  </children>
+  <styles xmi:type="notation:StringValueStyle" xmi:id="_4Qrt4Vx_EeWmfY3-CYsIIw" name="diagram_compatibility_version" stringValue="1.1.0"/>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_4Qrt4lx_EeWmfY3-CYsIIw"/>
+  <styles xmi:type="style:PapyrusViewStyle" xmi:id="_4Qrt41x_EeWmfY3-CYsIIw">
+    <owner xmi:type="uml:Package" href="Employee.uml#_lHCAoFeWEeWKEqTNFdy41w"/>
+  </styles>
+  <element xmi:type="uml:Package" href="Employee.uml#_lHCAoFeWEeWKEqTNFdy41w"/>
+</notation:Diagram>
