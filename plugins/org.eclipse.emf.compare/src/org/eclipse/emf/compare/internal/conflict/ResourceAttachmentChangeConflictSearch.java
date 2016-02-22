@@ -267,13 +267,10 @@ public class ResourceAttachmentChangeConflictSearch {
 					instanceOf(ResourceAttachmentChange.class)))) {
 				ConflictKind kind = REAL;
 				if (candidate.getKind() == MOVE) {
-					final Match match = diff.getMatch();
-					final Resource diffRes;
-					final Resource candidateRes;
-					diffRes = match.getOrigin().eResource();
-					candidateRes = match.getOrigin().eResource();
-					if (getMatchResource(diffRes) == getMatchResource(candidateRes)) {
-						kind = PSEUDO;
+					String lhsURI = diff.getResourceURI();
+					String rhsURI = ((ResourceAttachmentChange)candidate).getResourceURI();
+					if (lhsURI.equals(rhsURI)) {
+						kind = ConflictKind.PSEUDO;
 					}
 				}
 				conflict(candidate, kind);

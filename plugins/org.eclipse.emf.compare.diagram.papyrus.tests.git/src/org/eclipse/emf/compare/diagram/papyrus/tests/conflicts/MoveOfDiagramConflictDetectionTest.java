@@ -6,7 +6,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.emf.compare.diagram.papyrus.tests.conflicts.pseudoconflicts;
+package org.eclipse.emf.compare.diagram.papyrus.tests.conflicts;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,12 +25,12 @@ import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.junit.Test;
 
 @SuppressWarnings({"nls", "unused" })
-public class MoveOfDiagramPseudoConflictDetection extends AbstractResourceAttachmentChangeMoveTests {
+public class MoveOfDiagramConflictDetectionTest extends AbstractResourceAttachmentChangeMoveTests {
 
 	/**
 	 * Path to the test data.
 	 */
-	private static String TEST_DATA_PATH = "src/org/eclipse/emf/compare/diagram/papyrus/tests/conflicts/pseudoconflicts/data/";
+	private static String TEST_DATA_PATH = "src/org/eclipse/emf/compare/diagram/papyrus/tests/conflicts/data/";
 
 	private ResourceSetImpl resourceSet;
 	private IProject iProject;
@@ -44,27 +44,40 @@ public class MoveOfDiagramPseudoConflictDetection extends AbstractResourceAttach
 	private IFile timeTrackingDi;
 	private IFile timeTrackingNotation;
 	private IFile timeTrackingUml;
-	
+
 	@Test
 	public void pseudoConflictsOnResourceRootTest() throws Exception {
-		setUpRepositoryMoveOfDiagrams();
+		setUpRepositoryMoveOfDiagramsCase001();
 		repository.checkoutBranch(BRANCH_1);
 		Comparison comparison = compare(BRANCH_1, BRANCH_2, modelUml);
 		assertEquals(16, comparison.getDifferences().size());
 		assertEquals(4, comparison.getConflicts().size());
-		
+
 		for (Conflict conflict : comparison.getConflicts()) {
 			assertEquals(ConflictKind.PSEUDO, conflict.getKind());
 		}
 	}
-	
-	private void setUpRepositoryMoveOfDiagrams() throws Exception {
+
+	@Test
+	public void conflictsOnResourceRootTest() throws Exception {
+		setUpRepositoryMoveOfDiagramsCase002();
+		repository.checkoutBranch(BRANCH_1);
+		Comparison comparison = compare(BRANCH_1, BRANCH_2, modelUml);
+		assertEquals(4, comparison.getDifferences().size());
+		assertEquals(2, comparison.getConflicts().size());
+
+		for (Conflict conflict : comparison.getConflicts()) {
+			assertEquals(ConflictKind.REAL, conflict.getKind());
+		}
+	}
+
+	private void setUpRepositoryMoveOfDiagramsCase001() throws Exception {
 		resourceSet = new ResourceSetImpl();
 		File workingDirectory = repository.getRepository().getWorkTree();
 		testProject1 = new TestProject("Project1", workingDirectory.getAbsolutePath());
 		iProject = testProject1.getProject();
 		repository.connect(iProject);
-		
+
 		// 1st commit: a model with two controlled packages. 
 		// The model and each packages contains a diagram
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit1/model.di", "");
@@ -77,11 +90,11 @@ public class MoveOfDiagramPseudoConflictDetection extends AbstractResourceAttach
 		timeTrackingNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit1/TimeTracking.notation", "");
 		timeTrackingUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit1/TimeTracking.uml", "");
 		repository.addAllAndCommit("1st-commit");
-		
+
 		// Create branchs.
 		repository.createBranch(MASTER, BRANCH_1);
 		repository.createBranch(MASTER, BRANCH_2);
-		
+
 		// 2nd commit: Uncontrol the packages. 
 		repository.checkoutBranch(BRANCH_1);
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/model.di", "");
@@ -94,7 +107,7 @@ public class MoveOfDiagramPseudoConflictDetection extends AbstractResourceAttach
 		removeFromProject(iProject, timeTrackingNotation.getName());
 		removeFromProject(iProject, timeTrackingUml.getName());
 		repository.addAllAndCommit("2nd-commit");
-		
+
 		// 3rd commit: small changes on the model from master. 
 		// The model have just a small change to make it different from master
 		repository.checkoutBranch(BRANCH_2);
@@ -102,8 +115,53 @@ public class MoveOfDiagramPseudoConflictDetection extends AbstractResourceAttach
 		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit3/model.notation", "");
 		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit3/model.uml", "");
 		repository.addAllAndCommit("3rd-commit");
-		
+
 		repository.checkoutBranch(MASTER);
 	}
-	
+
+	private void setUpRepositoryMoveOfDiagramsCase002() throws Exception {
+		resourceSet = new ResourceSetImpl();
+		File workingDirectory = repository.getRepository().getWorkTree();
+		testProject1 = new TestProject("Project1", workingDirectory.getAbsolutePath());
+		iProject = testProject1.getProject();
+		repository.connect(iProject);
+
+		// 1st commit: a model with two controlled packages. 
+		// The model and each packages contains a diagram
+		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/model.di", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/model.notation", "");
+		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/model.uml", "");
+		employeeDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/Package1.di", "");
+		employeeNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/Package1.notation", "");
+		employeeUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/Package1.uml", "");
+		repository.addAllAndCommit("1st-commit");
+
+		// Create branchs.
+		repository.createBranch(MASTER, BRANCH_1);
+		repository.createBranch(MASTER, BRANCH_2);
+
+		// 2nd commit: Uncontrol the packages. 
+		repository.checkoutBranch(BRANCH_1);
+		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/model.di", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/model.notation", "");
+		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/model.uml", "");
+		removeFromProject(iProject, employeeDi.getName());
+		removeFromProject(iProject, employeeNotation.getName());
+		removeFromProject(iProject, employeeUml.getName());
+		repository.addAllAndCommit("2nd-commit");
+
+		// 3rd commit: small changes on the model from master. 
+		// The model have just a small change to make it different from master
+		repository.checkoutBranch(BRANCH_2);
+		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit3/model.di", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit3/model.notation", "");
+		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit3/model.uml", "");
+		employeeDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit3/Package.di", "");
+		employeeNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit3/Package.notation", "");
+		employeeUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit3/Package.uml", "");
+		repository.addAllAndCommit("3rd-commit");
+
+		repository.checkoutBranch(MASTER);
+	}
+
 }
