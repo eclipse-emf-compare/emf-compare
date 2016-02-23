@@ -24,9 +24,7 @@ import org.eclipse.core.resources.mapping.ResourceMappingContext;
 import org.eclipse.core.resources.mapping.ResourceTraversal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
-import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 
 /**
@@ -117,12 +115,6 @@ public class EMFResourceMapping extends ResourceMapping {
 		}
 
 		latestModel = syncModel;
-
-		if (syncModel.getDiagnostic().getSeverity() >= Diagnostic.ERROR) {
-			EMFCompareIDEUIPlugin.getDefault().getLog().log(
-					BasicDiagnostic.toIStatus(syncModel.getDiagnostic()));
-			return createSingletonTraversal(resource);
-		}
 
 		return convertToTraversal(syncModel);
 	}
