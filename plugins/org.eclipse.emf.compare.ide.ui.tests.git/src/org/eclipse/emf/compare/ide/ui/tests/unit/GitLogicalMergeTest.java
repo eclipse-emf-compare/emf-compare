@@ -22,6 +22,8 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -437,7 +439,9 @@ public class GitLogicalMergeTest extends AbstractGitLogicalModelTest {
 		 * the cross reference).
 		 */
 		compareBothDirectionsAndCheck(iFile1, MASTER, BRANCH, 1, 1, 1);
-		compareBothDirectionsAndCheck(iFile2, MASTER, BRANCH, 0, 1, 0);
+		compareADirectionAndCheck(iFile2, MASTER, BRANCH, 0, 1, 0);
+		compareADirectionAndCheck(iFile2, BRANCH, MASTER, 1, 1, 1);
+		repository.checkoutBranch(MASTER);
 	}
 
 	/**
@@ -490,7 +494,8 @@ public class GitLogicalMergeTest extends AbstractGitLogicalModelTest {
 		 * remote file1), but not when starting from file1 (since in such a case, we have no way to discover
 		 * the cross reference).
 		 */
-		compareBothDirectionsAndCheck(iFile1, MASTER, BRANCH, 0, 1, 0);
+		compareADirectionAndCheck(iFile1, MASTER, BRANCH, 0, 1, 0);
+		compareADirectionAndCheck(iFile1, BRANCH, MASTER, 1, 1, 1);
 		compareBothDirectionsAndCheck(iFile2, MASTER, BRANCH, 1, 1, 1);
 	}
 
@@ -552,13 +557,8 @@ public class GitLogicalMergeTest extends AbstractGitLogicalModelTest {
 		final Status status = repository.status();
 		assertFalse(status.hasUncommittedChanges());
 
-		/*
-		 * The files are related locally, but EMF Compare cannot detect that when starting from file2 (it is
-		 * file1 that references file2) since the three sides of this comparison are created using the
-		 * subscriber's data.
-		 */
 		compareBothDirectionsAndCheck(iFile1, MASTER, BRANCH, 0, 1, 3);
-		compareBothDirectionsAndCheck(iFile2, MASTER, BRANCH, 0, 0, 1);
+		compareBothDirectionsAndCheck(iFile2, MASTER, BRANCH, 0, 1, 3);
 	}
 
 	/**
@@ -613,13 +613,9 @@ public class GitLogicalMergeTest extends AbstractGitLogicalModelTest {
 		final Status status = repository.status();
 		assertFalse(status.hasUncommittedChanges());
 
-		/*
-		 * The files are related locally, but EMF Compare cannot detect that when starting from file2 (it is
-		 * file1 that references file2) since the three sides of this comparison are created using the
-		 * subscriber's data.
-		 */
 		compareBothDirectionsAndCheck(iFile1, MASTER, BRANCH, 0, 1, 1);
-		compareBothDirectionsAndCheck(iFile2, MASTER, BRANCH, 0, 0, 1);
+		compareBothDirectionsAndCheck(iFile2, MASTER, BRANCH, 0, 1, 1);
+
 	}
 
 	/*
@@ -1218,5 +1214,14 @@ public class GitLogicalMergeTest extends AbstractGitLogicalModelTest {
 
 		assertTrue(class1.getESuperTypes().contains(class3));
 		assertEquals(1, class1.getESuperTypes().size());
+	}
+
+	private void compareADirectionAndCheck(IFile file, String source, String destination,
+			int expectedConflicts, int diffsInSource, int diffsInDestination) throws Exception {
+		repository.checkoutBranch(source);
+		Comparison compareResult = compare(source, destination, file);
+
+		assertEquals(expectedConflicts, compareResult.getConflicts().size());
+		assertDiffCount(compareResult.getDifferences(), diffsInSource, diffsInDestination);
 	}
 }

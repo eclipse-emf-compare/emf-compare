@@ -116,6 +116,9 @@ public class CompareGitTestCase extends CompareTestCase {
 
 		assertEquals(expectedConflicts, compareResult.getConflicts().size());
 		assertDiffCount(compareResult.getDifferences(), diffsInDestination, diffsInSource);
+
+		// Other test call this method. The repository must be on the same branch at the end.
+		repository.checkoutBranch(source);
 	}
 
 	protected Comparison compare(String sourceRev, String targetRev, IFile file) throws Exception {
