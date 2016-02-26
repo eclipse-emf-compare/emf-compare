@@ -39,16 +39,17 @@ public class NullParameterModel extends AbstractBaseModel implements IModel {
 		return null;
 	}
 
-	public <T> T getAdapter(Class<T> adapter) {
-		return null;
-	}
-
-	public boolean canPersist(EObject arg0) {
+	// since Papyrus 2.0 we have to implement canPersist
+	// we omit @Override on purpose to be backward compatible
+	@SuppressWarnings("all")
+	public boolean canPersist(EObject eObject) {
 		return false;
 	}
 
-	public void persist(EObject arg0) {
-
+	// since Papyrus 2.0 we have to implement persist
+	// we omit @Override on purpose to be backward compatible
+	@SuppressWarnings("all")
+	public void persist(EObject object) {
+		// no implementation
 	}
-
 }

@@ -176,6 +176,11 @@ public final class ModelExtensionUtil {
 	 * before version 1.1.0.
 	 */
 	private static class DefaultSaveOptionsClass extends AbstractBaseModel {
+
+		public Map<?, ?> getMyDefaultSaveOptions() {
+			return getSaveOptions();
+		}
+
 		@Override
 		protected String getModelFileExtension() {
 			return null;
@@ -186,46 +191,18 @@ public final class ModelExtensionUtil {
 			return null;
 		}
 
-		public Map<?, ?> getMyDefaultSaveOptions() {
-			return getSaveOptions();
-		}
-
-		/**
-		 * {@inheritedDoc}.
-		 *
-		 * @see org.eclipse.papyrus.infra.core.resource.IModel#getAdapter(java.lang.Class)
-		 * @param <T>
-		 *            type.
-		 * @param adapter
-		 *            adapter.
-		 * @return the adapter.
-		 */
-		public <T> T getAdapter(Class<T> adapter) {
-			return null;
-		}
-
-		/**
-		 * {@inheritedDoc}.
-		 *
-		 * @see org.eclipse.papyrus.infra.core.resource.IEMFModel#canPersist(org.eclipse.emf.ecore.EObject)
-		 * @param arg0
-		 *            the object.
-		 * @return true if the object can persist.
-		 */
-		public boolean canPersist(EObject arg0) {
+		// since Papyrus 2.0 we have to implement canPersist
+		// we omit @Override on purpose to be backward compatible
+		@SuppressWarnings("all")
+		public boolean canPersist(EObject eObject) {
 			return false;
 		}
 
-		/**
-		 * {@inheritedDoc}.
-		 *
-		 * @see org.eclipse.papyrus.infra.core.resource.IEMFModel#persist(org.eclipse.emf.ecore.EObject)
-		 * @param arg0
-		 *            the object.
-		 */
-		public void persist(EObject arg0) {
-
+		// since Papyrus 2.0 we have to implement persist
+		// we omit @Override on purpose to be backward compatible
+		@SuppressWarnings("all")
+		public void persist(EObject object) {
+			// no implementation
 		}
 	}
-
 }

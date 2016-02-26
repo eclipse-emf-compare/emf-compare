@@ -11,13 +11,10 @@
 package org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diagram.ide.ui.papyrus.util.ModelExtensionUtil;
-import org.eclipse.emf.compare.ide.hook.AbstractResourceSetHooks;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -31,33 +28,7 @@ import org.eclipse.papyrus.infra.gmfdiag.common.model.NotationModel;
  * @author Stefan Dirix <sdirix@eclipsesource.com>
  * @since 2.4
  */
-public class SaveParameterHook extends AbstractResourceSetHooks {
-
-	/**
-	 * File extensions registered in Papyrus.
-	 */
-	private final Set<String> fileExtensions;
-
-	/**
-	 * Constructs and initializes the SaveParameterHook by checking the platform registry for registered file
-	 * extensions in Papyrus.
-	 */
-	public SaveParameterHook() {
-		fileExtensions = new HashSet<String>(ModelExtensionUtil.getRegisteredFileExtensions());
-	}
-
-	/**
-	 * Hooks in when any of the file extensions registered in Papyrus are loaded. {@inheritDoc}
-	 */
-	@Override
-	public boolean isHookFor(final Collection<? extends URI> uris) {
-		for (final URI uri : uris) {
-			if (fileExtensions.contains(uri.fileExtension())) {
-				return true;
-			}
-		}
-		return false;
-	}
+public class SaveParameterHook extends AbstractPapyrusResourceSetHook {
 
 	/**
 	 * Adjust the default save parameters of Papyrus resources. The {@link ResourceSet} is checked if it

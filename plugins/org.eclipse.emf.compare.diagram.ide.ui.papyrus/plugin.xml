@@ -28,6 +28,9 @@
       <resourceSetHook
             class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.SaveParameterHook">
       </resourceSetHook>
+      <resourceSetHook
+            class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.ElementTypeSetConfigurationRegistryInitializingHook">
+      </resourceSetHook>
    </extension>
    <extension
          point="org.eclipse.emf.compare.ide.ui.logicalModelViewHandlers">
