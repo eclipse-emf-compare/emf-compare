@@ -1361,7 +1361,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				setActivePage(lastEditorPage);
 				updateLayout(false, true);
 			}
-		} else if (diagnostic.getSeverity() != Diagnostic.OK) {
+		} else if (diagnostic.getSeverity() != Diagnostic.OK && !getControl().isDisposed()) {
 			ProblemIndicationComposite problemIndicationComposite = new ProblemIndicationComposite(
 					getControl(), SWT.NONE);
 			problemIndicationComposite.setDiagnostic(diagnostic);
