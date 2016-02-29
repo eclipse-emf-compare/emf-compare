@@ -58,7 +58,7 @@ with [get-editor "Compare (\'442897_AddConflict/k2/conflict_k2_right.uml\' - \'4
     get-property "getItems().length" | equals 3 | verify-true
     get-property "getItems().TreeItem[0].getItems().length" | equals 3 | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
-        | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
+        | equals "> Conflict [2 out of 2 differences unresolved]" | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 2 | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
         | equals "<Class> D [nestedClassifier add]" | verify-true
@@ -69,7 +69,7 @@ with [get-editor "Compare (\'442897_AddConflict/k2/conflict_k2_right.uml\' - \'4
     get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[1].getItems().length" | equals 0 
         | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[1].getText()" 
-        | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
+        | equals "> Conflict [2 out of 2 differences unresolved]" | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().length" | equals 2 | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getText()" 
         | equals "<Class> G [nestedClassifier add]" | verify-true
@@ -80,7 +80,7 @@ with [get-editor "Compare (\'442897_AddConflict/k2/conflict_k2_right.uml\' - \'4
     get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[1].getItems().length" | equals 0 
         | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[2].getText()" 
-        | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
+        | equals "> Conflict [2 out of 2 differences unresolved]" | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[2].getItems().length" | equals 2 | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[2].getItems().TreeItem[0].getText()" 
         | equals "<Class> C [nestedClassifier add]" | verify-true

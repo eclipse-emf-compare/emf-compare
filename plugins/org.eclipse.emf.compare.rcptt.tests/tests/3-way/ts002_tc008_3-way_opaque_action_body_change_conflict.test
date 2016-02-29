@@ -59,25 +59,25 @@ with [get-window "Select Common Ancestor"] {
 
 with [get-editor "Compare ('OpaqueActionBodyChange/right.uml' - 'OpaqueActionBodyChange/left.uml' - 'OpaqueActionBodyChange/right.uml')" 
     | get-tree] {
-    get-item "> Conflicts/> Conflict \\[2 out of 2 conflicts unresolved\\]" | get-property childCount | equals 2 
+    get-item "> Conflicts/> Conflict \\[2 out of 2 differences unresolved\\]" | get-property childCount | equals 2 
         | verify-true
-    get-item "> Conflicts/> Conflict \\[2 out of 2 conflicts unresolved\\]/JAVA body of <Opaque Action> OpaqueAction1 changed \\[opaque action body change\\]" 
+    get-item "> Conflicts/> Conflict \\[2 out of 2 differences unresolved\\]/JAVA body of <Opaque Action> OpaqueAction1 changed \\[opaque action body change\\]" 
         | get-property caption 
         | equals "JAVA body of <Opaque Action> OpaqueAction1 changed [opaque action body change]" | verify-true
-    get-item "> Conflicts/> Conflict \\[2 out of 2 conflicts unresolved\\]/JAVA body of <Opaque Action> OpaqueAction1 changed \\[opaque action body change\\]" 
+    get-item "> Conflicts/> Conflict \\[2 out of 2 differences unresolved\\]/JAVA body of <Opaque Action> OpaqueAction1 changed \\[opaque action body change\\]" 
         | get-property childCount | equals 0 | verify-true
-    get-item "> Conflicts/> Conflict \\[2 out of 2 conflicts unresolved\\]" 
+    get-item "> Conflicts/> Conflict \\[2 out of 2 differences unresolved\\]" 
         | get-item "JAVA body of <Opaque Action> OpaqueAction1 changed \\[opaque action body change\\]" -index 1 
         | get-property caption 
         | equals "JAVA body of <Opaque Action> OpaqueAction1 changed [opaque action body change]" | verify-true
-    get-item "> Conflicts/> Conflict \\[2 out of 2 conflicts unresolved\\]" 
+    get-item "> Conflicts/> Conflict \\[2 out of 2 differences unresolved\\]" 
         | get-item "JAVA body of <Opaque Action> OpaqueAction1 changed \\[opaque action body change\\]" -index 1 
         | get-property childCount | equals 0 | verify-true
 }
 
 get-editor "Compare ('OpaqueActionBodyChange/right.uml' - 'OpaqueActionBodyChange/left.uml' - 'OpaqueActionBodyChange/right.uml')" 
     | get-tree 
-    | select "> Conflicts/> Conflict \\[2 out of 2 conflicts unresolved\\]/JAVA body of <Opaque Action> OpaqueAction1 changed \\[opaque action body change\\]" 
+    | select "> Conflicts/> Conflict \\[2 out of 2 differences unresolved\\]/JAVA body of <Opaque Action> OpaqueAction1 changed \\[opaque action body change\\]" 
     | double-click
 with [get-editor "Compare ('OpaqueActionBodyChange/right.uml' - 'OpaqueActionBodyChange/left.uml' - 'OpaqueActionBodyChange/right.uml')"] {
     get-text-viewer | get-property text | equals "This is a JAVA\n"
@@ -93,7 +93,7 @@ with [get-editor "Compare ('OpaqueActionBodyChange/right.uml' - 'OpaqueActionBod
         + "of them." | verify-true
 }
 get-editor "Compare ('OpaqueActionBodyChange/right.uml' - 'OpaqueActionBodyChange/left.uml' - 'OpaqueActionBodyChange/right.uml')" 
-    | get-tree | select [get-item "> Conflicts/> Conflict \\[2 out of 2 conflicts unresolved\\]" 
+    | get-tree | select [get-item "> Conflicts/> Conflict \\[2 out of 2 differences unresolved\\]" 
     | get-item "JAVA body of <Opaque Action> OpaqueAction1 changed \\[opaque action body change\\]" -index 1] 
     | double-click
 with [get-editor "Compare ('OpaqueActionBodyChange/right.uml' - 'OpaqueActionBodyChange/left.uml' - 'OpaqueActionBodyChange/right.uml')"] {
@@ -140,9 +140,9 @@ with [get-editor "Compare ('OpaqueActionBodyChange/right.uml' - 'OpaqueActionBod
 }
 with [get-editor "Compare ('OpaqueActionBodyChange/right.uml' - 'OpaqueActionBodyChange/left.uml' - 'OpaqueActionBodyChange/right.uml')" 
     | get-tree] {
-    select "> Conflicts/> Conflict \\[2 out of 2 conflicts unresolved\\]/JAVA body of <Opaque Action> OpaqueAction1 changed \\[opaque action body change\\]" 
+    select "> Conflicts/> Conflict \\[2 out of 2 differences unresolved\\]/JAVA body of <Opaque Action> OpaqueAction1 changed \\[opaque action body change\\]" 
         | double-click
-    select "> Conflicts/> Conflict [2 out of 2 conflicts unresolved]/JAVA body of <Opaque Action> OpaqueAction1 changed [opaque action body change]" 
+    select "> Conflicts/> Conflict [2 out of 2 differences unresolved]/JAVA body of <Opaque Action> OpaqueAction1 changed [opaque action body change]" 
         | get-menu "Copy Current Change From Left To Right" | click
 }
 get-editor "Compare ('OpaqueActionBodyChange/right.uml' - 'OpaqueActionBodyChange/left.uml' - 'OpaqueActionBodyChange/right.uml')" 

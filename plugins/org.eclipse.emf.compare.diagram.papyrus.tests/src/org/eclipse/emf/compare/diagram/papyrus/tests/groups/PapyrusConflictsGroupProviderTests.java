@@ -71,8 +71,7 @@ public class PapyrusConflictsGroupProviderTests extends AbstractTest {
 	public static void beforeClass() {
 		final Collection<AdapterFactory> factories = Lists.newArrayList();
 		factories.add(new CompareItemProviderAdapterFactorySpec());
-		factories.add(new TreeItemProviderAdapterFactorySpec(
-				new StructureMergeViewerFilter(new EventBus())));
+		factories.add(new TreeItemProviderAdapterFactorySpec(new StructureMergeViewerFilter(new EventBus())));
 		factories.add(new EcoreItemProviderAdapterFactory());
 		factories.add(new ReflectiveItemProviderAdapterFactory());
 		factories.add(new UMLCompareCustomItemProviderAdapterFactory());
@@ -82,8 +81,7 @@ public class PapyrusConflictsGroupProviderTests extends AbstractTest {
 		factories.add(new ExtensionsItemProviderAdapterFactorySpec());
 		factories.add(new DiagramCompareItemProviderAdapterFactorySpec());
 		factories.add(new NotationItemProviderAdapterFactory());
-		final AdapterFactory composedAdapterFactory = new ComposedAdapterFactory(
-				factories);
+		final AdapterFactory composedAdapterFactory = new ComposedAdapterFactory(factories);
 		itemDelegator = new AdapterFactoryItemDelegator(composedAdapterFactory);
 	}
 
@@ -120,24 +118,18 @@ public class PapyrusConflictsGroupProviderTests extends AbstractTest {
 		groupTreeNode.setData(comparison);
 		groupTreeNode.eAdapters().add(new ThreeWayComparisonGroupProvider());
 
-		Predicate<? super EObject> diagramFilterEnabled = new GMFRefinedElementsFilter()
-				.getPredicateWhenSelected();
-		Predicate<? super EObject> diagramFilterDisabled = new GMFRefinedElementsFilter()
-				.getPredicateWhenUnselected();
+		Predicate<? super EObject> diagramFilterEnabled = new GMFRefinedElementsFilter().getPredicateWhenSelected();
+		Predicate<? super EObject> diagramFilterDisabled = new GMFRefinedElementsFilter().getPredicateWhenUnselected();
 
 		Collection<?> children = itemDelegator.getChildren(groupTreeNode);
 		assertEquals(3, children.size());
 
-		GroupItemProviderAdapter conflictGroup = (GroupItemProviderAdapter) children
-				.iterator().next();
-		Collection<?> conflictGroupChildren = itemDelegator
-				.getChildren(conflictGroup);
+		GroupItemProviderAdapter conflictGroup = (GroupItemProviderAdapter) children.iterator().next();
+		Collection<?> conflictGroupChildren = itemDelegator.getChildren(conflictGroup);
 		assertEquals(2, conflictGroupChildren.size());
 
-		TreeNode firstConflict = (TreeNode) conflictGroupChildren.iterator()
-				.next();
-		assertEquals("> Conflict [4 out of 4 conflicts unresolved]",
-				itemDelegator.getText(firstConflict));
+		TreeNode firstConflict = (TreeNode) conflictGroupChildren.iterator().next();
+		assertEquals("> Conflict [4 out of 4 differences unresolved]", itemDelegator.getText(firstConflict));
 		EList<TreeNode> firstConflictChildren = firstConflict.getChildren();
 		// the first conflict contains 2 children: a ReferenceChange and a
 		// NodeChange.
@@ -145,8 +137,7 @@ public class PapyrusConflictsGroupProviderTests extends AbstractTest {
 
 		// the NodeChange on Class1
 		TreeNode shapeClass1 = firstConflictChildren.get(0);
-		assertEquals("Shape <Class> Class1 [children delete]",
-				itemDelegator.getText(shapeClass1));
+		assertEquals("Shape <Class> Class1 [children delete]", itemDelegator.getText(shapeClass1));
 		// visible when filter is enabled because this is a diagram diff
 		assertFalse(diagramFilterEnabled.apply(shapeClass1));
 		assertTrue(diagramFilterDisabled.apply(shapeClass1));
@@ -156,8 +147,7 @@ public class PapyrusConflictsGroupProviderTests extends AbstractTest {
 		// the children of NodeChange on Class1
 		// first child : the ReferenceChange on Class1
 		TreeNode bcClass1 = shapeClass1Children.get(0);
-		assertEquals("BasicCompartment <Class> Class1 [children delete]",
-				itemDelegator.getText(bcClass1));
+		assertEquals("BasicCompartment <Class> Class1 [children delete]", itemDelegator.getText(bcClass1));
 		// visible when filter is disabled because this is refined by a diagram
 		// diff
 		assertTrue(diagramFilterEnabled.apply(bcClass1));
@@ -167,8 +157,7 @@ public class PapyrusConflictsGroupProviderTests extends AbstractTest {
 
 		// second child : the ReferenceChange on Property att1
 		TreeNode shapeAtt1 = shapeClass1Children.get(1);
-		assertEquals("Shape <Property> att1 : Class2 [children add]",
-				itemDelegator.getText(shapeAtt1));
+		assertEquals("Shape <Property> att1 : Class2 [children add]", itemDelegator.getText(shapeAtt1));
 		// visible when filter is disabled because this is refined by a diagram
 		// diff
 		assertTrue(diagramFilterEnabled.apply(shapeAtt1));
@@ -178,8 +167,7 @@ public class PapyrusConflictsGroupProviderTests extends AbstractTest {
 
 		// third child : the NodeChange on Property att1
 		shapeAtt1 = shapeClass1Children.get(2);
-		assertEquals("Shape <Property> att1 : Class2 [children add]",
-				itemDelegator.getText(shapeAtt1));
+		assertEquals("Shape <Property> att1 : Class2 [children add]", itemDelegator.getText(shapeAtt1));
 		// visible when filter is enabled because this is a diagram diff
 		assertFalse(diagramFilterEnabled.apply(shapeAtt1));
 		assertTrue(diagramFilterDisabled.apply(shapeAtt1));
@@ -188,21 +176,18 @@ public class PapyrusConflictsGroupProviderTests extends AbstractTest {
 
 		// the ReferenceChange on Class1
 		TreeNode basicCompartmentClass1 = firstConflictChildren.get(1);
-		assertEquals("BasicCompartment <Class> Class1 [children delete]",
-				itemDelegator.getText(basicCompartmentClass1));
+		assertEquals("BasicCompartment <Class> Class1 [children delete]", itemDelegator.getText(basicCompartmentClass1));
 		// visible when filter is disabled because this is refined by a diagram
 		// diff
 		assertTrue(diagramFilterEnabled.apply(basicCompartmentClass1));
 		assertFalse(diagramFilterDisabled.apply(basicCompartmentClass1));
-		EList<TreeNode> basicCompartmentClass1Children = basicCompartmentClass1
-				.getChildren();
+		EList<TreeNode> basicCompartmentClass1Children = basicCompartmentClass1.getChildren();
 		assertEquals(2, basicCompartmentClass1Children.size());
 
 		// the children of ReferenceChange on Class1
 		// first child : the ReferenceChange on Property att1
 		shapeAtt1 = basicCompartmentClass1Children.get(0);
-		assertEquals("Shape <Property> att1 : Class2 [children add]",
-				itemDelegator.getText(shapeAtt1));
+		assertEquals("Shape <Property> att1 : Class2 [children add]", itemDelegator.getText(shapeAtt1));
 		// visible when filter is disabled because this is refined by a diagram
 		// diff
 		assertTrue(diagramFilterEnabled.apply(shapeAtt1));
@@ -212,8 +197,7 @@ public class PapyrusConflictsGroupProviderTests extends AbstractTest {
 
 		// second child : the NodeChange on Property att1
 		shapeAtt1 = basicCompartmentClass1Children.get(1);
-		assertEquals("Shape <Property> att1 : Class2 [children add]",
-				itemDelegator.getText(shapeAtt1));
+		assertEquals("Shape <Property> att1 : Class2 [children add]", itemDelegator.getText(shapeAtt1));
 		// visible when filter is enabled because this is a diagram diff
 		assertFalse(diagramFilterEnabled.apply(shapeAtt1));
 		assertTrue(diagramFilterDisabled.apply(shapeAtt1));
@@ -229,10 +213,10 @@ public class PapyrusConflictsGroupProviderTests extends AbstractTest {
 	@Override
 	public void registerPostProcessors() {
 		super.registerPostProcessors();
-		getPostProcessorRegistry()
-				.put(PapyrusDiagramPostProcessor.class.getName(),
-						new TestPostProcessor.TestPostProcessorDescriptor(
-								Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"),
-								null, new PapyrusDiagramPostProcessor(), 35));
+		getPostProcessorRegistry().put(
+				PapyrusDiagramPostProcessor.class.getName(),
+				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
+						.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null,
+						new PapyrusDiagramPostProcessor(), 35));
 	}
 }

@@ -88,41 +88,41 @@ with [get-editor "Repository 'emf-compare-papyrus-egit': Merging 'Add IMerger an
 // Assert each conflict categories contains 2 conflicts
 with [get-editor "Repository 'emf-compare-papyrus-egit': Merging 'Add IMerger and UMLMerger' into 'refs/heads/conflict_add_postprocessor'" 
     | get-tree] {
-    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 1 
-        | get-property caption | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
-    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 1 
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 differences unresolved\\]" -index 1 
+        | get-property caption | equals "> Conflict [2 out of 2 differences unresolved]" | verify-true
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 differences unresolved\\]" -index 1 
         | get-property childCount | equals 2 | verify-true
-    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 2 
-        | get-property caption | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
-    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 2 
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 differences unresolved\\]" -index 2 
+        | get-property caption | equals "> Conflict [2 out of 2 differences unresolved]" | verify-true
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 differences unresolved\\]" -index 2 
         | get-property childCount | equals 2 | verify-true
-    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 3 
-        | get-property caption | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
-    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 3 
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 differences unresolved\\]" -index 3 
+        | get-property caption | equals "> Conflict [2 out of 2 differences unresolved]" | verify-true
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 differences unresolved\\]" -index 3 
         | get-property childCount | equals 2 | verify-true
 }
 
 // Verify the conflicts
 with [get-editor "Repository 'emf-compare-papyrus-egit': Merging 'Add IMerger and UMLMerger' into 'refs/heads/conflict_add_postprocessor'" 
     | get-tree] {
-    get-item "> Conflicts/> Conflict \\[2 out of 2 conflicts unresolved\\]/Shape <Port> \\[coordinates change\\]" 
+    get-item "> Conflicts/> Conflict \\[2 out of 2 differences unresolved\\]/Shape <Port> \\[coordinates change\\]" 
         | get-property caption | equals "Shape <Port> [coordinates change]" | verify-true
-    get-item "> Conflicts/> Conflict \\[2 out of 2 conflicts unresolved\\]" 
+    get-item "> Conflicts/> Conflict \\[2 out of 2 differences unresolved\\]" 
         | get-item "Shape <Port> \\[coordinates change\\]" -index 1 | get-property caption 
         | equals "Shape <Port> [coordinates change]" | verify-true
-    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 1 
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 differences unresolved\\]" -index 1 
         | get-item "Shape <Component> \\[coordinates change\\]" | get-property caption 
         | equals "Shape <Component> [coordinates change]" | verify-true
-    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 1 
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 differences unresolved\\]" -index 1 
         | get-item "Shape <Component> \\[coordinates change\\]" -index 1 | get-property caption 
         | equals "Shape <Component> [coordinates change]" | verify-true
-    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 2 
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 differences unresolved\\]" -index 2 
         | get-item "197 \\[width changed\\]" | get-property caption | equals "197 [width changed]" | verify-true
-    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 2 
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 differences unresolved\\]" -index 2 
         | get-item "195 \\[width changed\\]" | get-property caption | equals "195 [width changed]" | verify-true
-    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 3 
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 differences unresolved\\]" -index 3 
         | get-item "145 \\[height changed\\]" | get-property caption | equals "145 [height changed]" | verify-true
-    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 conflicts unresolved\\]" -index 3 
+    get-item "> Conflicts" | get-item "> Conflict \\[2 out of 2 differences unresolved\\]" -index 3 
         | get-item "285 \\[height changed\\]" | get-property caption | equals "285 [height changed]" | verify-true
 }
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

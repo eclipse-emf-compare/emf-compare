@@ -48,7 +48,7 @@ get-tab-folder -index 1 | get-property activePage | contains "Compare" | verify-
 
 
 with [get-editor "Compare (\'Library/extlibraryRight.ecore\' - \'Library/extlibraryLeft.ecore\' - \'Library/extlibraryRight.ecore\')"] {
-    get-tree | get-item "> Conflicts/> Conflict [2 out of 2 conflicts unresolved]/length \\[name changed\\]" | get-property selected | equals true 
+    get-tree | get-item "> Conflicts/> Conflict [2 out of 2 differences unresolved]/length \\[name changed\\]" | get-property selected | equals true 
         | verify-true
     get-text-viewer | get-property text | equals length | verify-true
     get-text-viewer -after [get-label "(Local: /)?Library/extlibraryRight.ecore"] -index 1 | get-property text | equals minutes 

@@ -64,7 +64,7 @@ with [get-editor "Compare .*"
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItemCount()" | equals 0 | verify-true
     get-item "> Conflicts" 
-        | get-property "getItems().TreeItem[0].getText()" | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
+        | get-property "getItems().TreeItem[0].getText()" | equals "> Conflict [2 out of 2 differences unresolved]" | verify-true
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
         | equals "familyName [name set]" | verify-true
@@ -77,7 +77,7 @@ with [get-editor "Compare .*"
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[1].getItems().TreeItem[0].getItemCount()" | equals 1 | verify-true
     get-item "> Conflicts" 
-        | get-property "getItems().TreeItem[1].getText()" | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
+        | get-property "getItems().TreeItem[1].getText()" | equals "> Conflict [2 out of 2 differences unresolved]" | verify-true
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[2].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
         | equals "TitledItem [eSuperTypes add]" | verify-true
@@ -95,7 +95,7 @@ with [get-editor "Compare .*"
     get-item "> Conflicts" 
         | get-property "getItems().TreeItem[2].getItems().TreeItem[1].getItemCount()" | equals 0 | verify-true
     get-item "> Conflicts" 
-        | get-property "getItems().TreeItem[2].getText()" | equals "> Conflict [3 out of 3 conflicts unresolved]" | verify-true
+        | get-property "getItems().TreeItem[2].getText()" | equals "> Conflict [3 out of 3 differences unresolved]" | verify-true
 }
 get-editor "Compare .*" 
     | get-tree | select "> Library\\/extlibraryLeft.ecore" | expand-all

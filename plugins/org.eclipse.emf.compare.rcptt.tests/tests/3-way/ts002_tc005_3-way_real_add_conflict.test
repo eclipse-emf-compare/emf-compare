@@ -58,14 +58,14 @@ with [get-editor "Compare (\'442897_AddConflict/k1/conflict_k1_right.uml\' - \'4
     get-property "getItems().TreeItem[0].getText()" | equals "> Conflicts" | verify-true
     get-property "getItems().TreeItem[0].getItems().length" | equals 2 | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
-        | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
+        | equals "> Conflict [2 out of 2 differences unresolved]" | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().length" | equals 2 | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[0].getText()" 
         | equals "<Class> D [nestedClassifier add]" | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[0].getItems().TreeItem[1].getText()" 
         | equals "<Class> D [nestedClassifier add]" | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[1].getText()" 
-        | equals "> Conflict [2 out of 2 conflicts unresolved]" | verify-true
+        | equals "> Conflict [2 out of 2 differences unresolved]" | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().length" | equals 2 | verify-true
     get-property "getItems().TreeItem[0].getItems().TreeItem[1].getItems().TreeItem[0].getText()" 
         | equals "<Class> C [nestedClassifier add]" | verify-true

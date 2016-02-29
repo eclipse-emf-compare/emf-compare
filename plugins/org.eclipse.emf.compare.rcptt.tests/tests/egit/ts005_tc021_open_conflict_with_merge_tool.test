@@ -21,7 +21,7 @@ TEST STEPS
     2) Select the branch "mergeMe"
     3) Dismiss the Merge Result view (by clicking OK)
    4) Right-click on the file "model.ecore". In the contextual menu select "Model Merge Tool" under "Team"
-        // assert that the label "Conflict [X out of X conflicts unresolved]" is present
+        // assert that the label "Conflict [X out of X differences unresolved]" is present
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
 Content-Type: text/ecl
@@ -36,6 +36,6 @@ exec-with-options {
 } -allowStatusDialog
 
 get-editor "Repository 'testMerge_3': Merging 'mergeMe' into 'refs/heads/master'" | get-tree 
-    | get-item "> Conflicts/> Conflict \\[[0-9] out of [0-9] conflicts unresolved\\]" | get-property caption 
-    | equals "> Conflict \\[[0-9] out of [0-9] conflicts unresolved\\]" | verify-true
+    | get-item "> Conflicts/> Conflict \\[[0-9] out of [0-9] differences unresolved\\]" | get-property caption 
+    | equals "> Conflict \\[[0-9] out of [0-9] differences unresolved\\]" | verify-true
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
