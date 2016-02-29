@@ -200,7 +200,7 @@ public class RenamedControlledResourceTests extends CompareGitTestCase {
 	@Test
 	public void testComparisonNoConflictLocalRename() throws Exception {
 		setUpRenameNoConflict();
-
+		repository.checkoutBranch(BRANCH);
 		Comparison comparison = compare(BRANCH, MASTER, iFile1);
 
 		assertTrue(comparison.getConflicts().isEmpty());
