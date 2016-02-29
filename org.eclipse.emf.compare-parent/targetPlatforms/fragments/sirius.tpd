@@ -7,7 +7,7 @@ location "http://download.eclipse.org/releases/mars" {
 	org.eclipse.acceleo.query.feature.group [3.6.0,3.7.0)
 }
 
-location "http://download.eclipse.org/sirius/updates/releases/3.0.0/mars" {
+location "http://download.eclipse.org/sirius/updates/releases/3.1.4/mars" {
 	org.eclipse.sirius lazy
 	org.eclipse.sirius.runtime.acceleo.feature.group lazy
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Mars SDK" sequenceNumber="1450799658">
+<target name="EMF Compare based on Mars SDK" sequenceNumber="1456735826">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -9,6 +9,7 @@
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="com.google.guava" version="11.0.2.v201303041551"/>
+      <unit id="com.google.gson" version="2.2.4.v201311231704"/>
       <unit id="org.junit" version="4.12.0.v201504281640"/>
       <unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
       <unit id="javaewah" version="0.7.9.v201401101600"/>
@@ -29,7 +30,7 @@
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.sirius" version="0.0.0"/>
       <unit id="org.eclipse.sirius.runtime.acceleo.feature.group" version="0.0.0"/>
-      <repository location="http://download.eclipse.org/sirius/updates/releases/3.0.0/mars"/>
+      <repository location="http://download.eclipse.org/sirius/updates/releases/3.1.4/mars"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.obeonetwork.dsl.uml2.runtime.feature.feature.group" version="6.0.0.201510191019"/>
