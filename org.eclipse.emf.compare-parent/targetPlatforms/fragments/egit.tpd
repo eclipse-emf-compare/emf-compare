@@ -2,6 +2,6 @@ target "EGit"
 
 with source, requirements
 
-location "http://download.eclipse.org/egit/updates" {
+location "http://download.eclipse.org/egit/updates-4.1" {
 	org.eclipse.egit.feature.group [4.1.0,4.2.0)
 }
