@@ -898,4 +898,17 @@
       </properties>
     </profile>
   </profiles>
+  
+  <distributionManagement>
+    <repository>
+      <id>repo.eclipse.org</id>
+      <name>EMF Compare Repository - Releases</name>
+      <url>https://repo.eclipse.org/content/repositories/emfcompare-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>repo.eclipse.org</id>
+      <name>EMF Compare Repository - Snapshots</name>
+      <url>https://repo.eclipse.org/content/repositories/emfcompare-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 </project>
