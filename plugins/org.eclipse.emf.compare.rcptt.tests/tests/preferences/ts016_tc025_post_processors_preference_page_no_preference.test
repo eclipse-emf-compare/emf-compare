@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _HfAiEMC_EeO8eNTYV1NAnA
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 1/4/16 3:09 PM
+Save-Time: 3/21/16 10:54 AM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -34,13 +34,15 @@ with [get-window Preferences] {
         get-property "getItems().TableItem[2].getText()" | equals "Opaque Element Change Processor" | verify-true
         get-property "getItems().TableItem[3].getText()" | equals "Stereotyped element change post processor" | verify-true
         get-property "getItems().TableItem[4].getText()" | equals "Diagram Post processor" | verify-true
-        get-property "getItems().TableItem[5].getText()" | equals "Papyrus Diagram Post-Processor" | verify-true
+        get-property "getItems().TableItem[5].getText()" | equals "Ignore Papyrus Di-files Post-Processor" | verify-true
+        get-property "getItems().TableItem[6].getText()" | equals "Papyrus Diagram Post-Processor" | verify-true
         get-property "getItems().TableItem[0].getChecked()" | equals true | verify-true
    		get-property "getItems().TableItem[1].getChecked()" | equals true | verify-true
    		get-property "getItems().TableItem[2].getChecked()" | equals true | verify-true
    		get-property "getItems().TableItem[3].getChecked()" | equals true | verify-true
    		get-property "getItems().TableItem[4].getChecked()" | equals true | verify-true
    		get-property "getItems().TableItem[5].getChecked()" | equals true | verify-true
+   		get-property "getItems().TableItem[6].getChecked()" | equals true | verify-true
     }
     get-group Description | get-property "getChildren().Control[0].getText()" | equals "Post processor used in postDiff step to detect resource attachment changes of kind Move." | verify-true
 }

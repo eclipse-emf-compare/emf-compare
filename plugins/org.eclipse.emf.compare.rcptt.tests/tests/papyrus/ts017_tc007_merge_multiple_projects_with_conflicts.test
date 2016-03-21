@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _AXnCoHKCEeW0UJaeREW8jA
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 10/20/15 5:06 PM
+Save-Time: 3/21/16 5:10 PM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -29,7 +29,7 @@ Content-Type: text/ecl
 Entry-Name: .content
 
 // checkout branch add_merge_strategy and import new project in the workspace
-get-view "Project Explorer" | get-tree | select "Design_EMFCompare  [emf-compare-papyrus-egit uml2]" 
+get-view "Project Explorer" | get-tree | select "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit uml2\\]" 
     | get-menu "Team/Switch To/conflict_add_postprocessor" | click
 get-button Papyrus | click
 get-button Git | click
@@ -48,14 +48,14 @@ with [get-window "Open Perspective"] {
 
 // assert the presence of the two projects
 with [get-view "Package Explorer" | get-tree] {
-    get-item "Design_EGit  \\[emf-compare-papyrus-egit conflict_add_postprocessor\\]" | get-property caption 
-        | equals "Design_EGit  [emf-compare-papyrus-egit conflict_add_postprocessor]" | verify-true
-    get-item "Design_EMFCompare  \\[emf-compare-papyrus-egit conflict_add_postprocessor\\]" | get-property caption 
-        | equals "Design_EMFCompare  [emf-compare-papyrus-egit conflict_add_postprocessor]" | verify-true
+    get-item "Design_EGit[ ]+\\[emf-compare-papyrus-egit conflict_add_postprocessor\\]" | get-property caption 
+        | equals "Design_EGit[ ]+\\[emf-compare-papyrus-egit conflict_add_postprocessor\\]" | verify-true
+    get-item "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit conflict_add_postprocessor\\]" | get-property caption 
+        | equals "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit conflict_add_postprocessor\\]" | verify-true
 }
 
 //merge with branch extract_jgit_newproject
-get-view "Package Explorer" | get-tree | select "Design_EMFCompare  [emf-compare-papyrus-egit conflict_add_postprocessor]" 
+get-view "Package Explorer" | get-tree | select "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit conflict_add_postprocessor\\]" 
     | get-menu "Team/Merge..." | click
 with [get-window "Merge 'conflict_add_postprocessor'"] {
     get-tree | select "Local/conflict_add_merger d147b8f Add IMerger and UMLMerger"
@@ -69,13 +69,13 @@ get-window "Merge Result" | get-button OK | click
 
 // Assert the file Main.notation is in conflict
 get-view "Package Explorer" | get-tree 
-    | get-item "Design_EMFCompare  \\[emf-compare-papyrus-egit|Conflicts conflict_add_postprocessor\\]/Main.notation" 
+    | get-item "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit|Conflicts conflict_add_postprocessor\\]/Main.notation" 
     | get-property "image.decorations[0].path" | equals "org.eclipse.egit.ui/icons/ovr/conflict.gif" | verify-true
 
 // Open Model Merge Tool
 try -command {
 get-view "Package Explorer" | get-tree 
-    | select "Design_EMFCompare  [emf-compare-papyrus-egit|Conflicts conflict_add_postprocessor]/Main.notation" 
+    | select "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit|Conflicts conflict_add_postprocessor\\]/Main.notation" 
     | get-menu "Team/Model Merge Tool \\(with EMFCompare\\)" | click
 } -times 10 -delay 500
     

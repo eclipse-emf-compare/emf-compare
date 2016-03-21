@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _J7VuYHJQEeW0UJaeREW8jA
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 10/20/15 2:18 PM
+Save-Time: 3/21/16 5:08 PM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -30,7 +30,7 @@ Content-Type: text/ecl
 Entry-Name: .content
 
 // checkout branch add_merge_strategy and import new project in the workspace
-get-view "Project Explorer" | get-tree | select "Design_EMFCompare  [emf-compare-papyrus-egit uml2]" 
+get-view "Project Explorer" | get-tree | select "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit uml2\\]" 
     | get-menu "Team/Switch To/add_merge_strategy" | click
 get-button Papyrus | click
 get-button Git | click
@@ -49,14 +49,14 @@ with [get-window "Open Perspective"] {
 
 // assert the presence of the two projects
 with [get-view "Package Explorer" | get-tree] {
-    get-item "Design_EGit  \\[emf-compare-papyrus-egit add_merge_strategy\\]" | get-property caption 
-        | equals "Design_EGit  [emf-compare-papyrus-egit add_merge_strategy]" | verify-true
-    get-item "Design_EMFCompare  \\[emf-compare-papyrus-egit add_merge_strategy\\]" | get-property caption 
-        | equals "Design_EMFCompare  [emf-compare-papyrus-egit add_merge_strategy]" | verify-true
+    get-item "Design_EGit[ ]+\\[emf-compare-papyrus-egit add_merge_strategy\\]" | get-property caption 
+        | equals "Design_EGit[ ]+\\[emf-compare-papyrus-egit add_merge_strategy\\]" | verify-true
+    get-item "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit add_merge_strategy\\]" | get-property caption 
+        | equals "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit add_merge_strategy\\]" | verify-true
 }
 
 //merge with branch extract_jgit_newproject and import new project
-get-view "Package Explorer" | get-tree | select "Design_EMFCompare  [emf-compare-papyrus-egit add_merge_strategy]" 
+get-view "Package Explorer" | get-tree | select "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit add_merge_strategy\\]" 
     | get-menu "Team/Merge..." | click
 with [get-window "Merge 'add_merge_strategy'"] {
     get-tree | select "Local/extract_jgit_newproject 450a559 Extract JGit to new project"
@@ -86,21 +86,21 @@ with [get-window "Open Perspective"] {
 
 // assert presence of the 3 projects and their respective resources
 with [get-view "Project Explorer" | get-tree] {
-    get-item "Design_EGit  \\[emf-compare-papyrus-egit add_merge_strategy\\]" | get-property caption 
-        | equals "Design_EGit  [emf-compare-papyrus-egit add_merge_strategy]" | verify-true
-    get-item "Design_EMFCompare  \\[emf-compare-papyrus-egit add_merge_strategy\\]" | get-property caption 
-        | equals "Design_EMFCompare  [emf-compare-papyrus-egit add_merge_strategy]" | verify-true
-    get-item "Design_JGit  \\[emf-compare-papyrus-egit add_merge_strategy\\]" | get-property caption 
-        | equals "Design_JGit  [emf-compare-papyrus-egit add_merge_strategy]" | verify-true
-    get-item "Design_EGit  \\[emf-compare-papyrus-egit add_merge_strategy\\]/EGit" | get-property caption | equals EGit 
+    get-item "Design_EGit[ ]+\\[emf-compare-papyrus-egit add_merge_strategy\\]" | get-property caption 
+        | equals "Design_EGit[ ]+\\[emf-compare-papyrus-egit add_merge_strategy\\]" | verify-true
+    get-item "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit add_merge_strategy\\]" | get-property caption 
+        | equals "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit add_merge_strategy\\]" | verify-true
+    get-item "Design_JGit[ ]+\\[emf-compare-papyrus-egit add_merge_strategy\\]" | get-property caption 
+        | equals "Design_JGit[ ]+\\[emf-compare-papyrus-egit add_merge_strategy\\]" | verify-true
+    get-item "Design_EGit[ ]+\\[emf-compare-papyrus-egit add_merge_strategy\\]/EGit" | get-property caption | equals EGit 
         | verify-true
-    get-item "Design_JGit  \\[emf-compare-papyrus-egit add_merge_strategy\\]/JGit" | get-property caption | equals JGit 
+    get-item "Design_JGit[ ]+\\[emf-compare-papyrus-egit add_merge_strategy\\]/JGit" | get-property caption | equals JGit 
         | verify-true
 }
 
 // assert presence of image decorator on controlled resources
 get-view "Project Explorer" | get-tree 
-    | select "Design_EMFCompare  \\[emf-compare-papyrus-egit add_merge_strategy\\]/Main" | double-click
+    | select "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit add_merge_strategy\\]/Main" | double-click
 with [get-view "Model Explorer" | get-tree] {
     get-item "RootElement/EGit" | get-property caption | equals EGit | verify-true
     get-item "RootElement/EGit" | get-property "image.decorations[0].path" 

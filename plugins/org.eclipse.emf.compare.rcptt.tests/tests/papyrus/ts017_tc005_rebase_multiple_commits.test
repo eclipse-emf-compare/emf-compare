@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _bT8nsHJKEeW0UJaeREW8jA
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 10/16/15 10:04 AM
+Save-Time: 3/21/16 5:06 PM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -27,9 +27,9 @@ Content-Type: text/ecl
 Entry-Name: .content
 
 with [get-view "Project Explorer" | get-tree] {
-    select "Design_EMFCompare  [emf-compare-papyrus-egit uml2]" | get-menu "Team/Switch To/rename_post_processor" 
+    select "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit uml2\\]" | get-menu "Team/Switch To/rename_post_processor" 
         | click
-    select "Design_EMFCompare  [emf-compare-papyrus-egit rename_post_processor]" | get-menu "Team/Rebase..." | click
+    select "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit rename_post_processor\\]" | get-menu "Team/Rebase..." | click
 }
 with [get-window "Rebase 'rename_post_processor'"] {
     get-tree | select "Local/uml2 89d4b0b Add EMFCompare UML2 component"
@@ -43,13 +43,13 @@ get-window "Rebase Result" | get-button OK | click
 } -catch {wait 500} -times 30
 
 with [get-view "Project Explorer" | get-tree] {
-    get-item "Design_EMFCompare  \\[emf-compare-papyrus-egit rename_post_processor\\]" | get-property "getItemCount()" 
+    get-item "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit rename_post_processor\\]" | get-property "getItemCount()" 
         | equals 9 | verify-true
-    get-item "Design_EMFCompare  \\[emf-compare-papyrus-egit rename_post_processor\\]/postprocessor" 
+    get-item "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit rename_post_processor\\]/postprocessor" 
         | get-property caption | equals postprocessor | verify-true
 }
 get-view "Project Explorer" | get-tree 
-    | select "Design_EMFCompare  \\[emf-compare-papyrus-egit rename_post_processor\\]/Main" | double-click
+    | select "Design_EMFCompare[ ]+\\[emf-compare-papyrus-egit rename_post_processor\\]/Main" | double-click
 with [get-view "Model Explorer" | get-tree] {
     get-item "RootElement/EMFCompare/emf.compare.uml2" | get-property caption | equals "emf.compare.uml2" | verify-true
     get-item "RootElement/EMFCompare/emf.compare.uml2" | get-property "getItemCount()" | equals 1 | verify-true

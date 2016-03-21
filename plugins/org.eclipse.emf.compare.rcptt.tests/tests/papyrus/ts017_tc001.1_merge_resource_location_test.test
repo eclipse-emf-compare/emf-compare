@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _FwPWUHDkEeW6i4fYQ8EsGg
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 10/20/15 2:08 PM
+Save-Time: 3/21/16 4:44 PM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -30,8 +30,8 @@ Content-Type: text/ecl
 Entry-Name: .content
 
 with [get-view "Project Explorer" | get-tree] {
-    select "papyrus  [emf-compare-papyrus-egit branch1]" | get-menu "Team/Switch To/branch2" | click
-    select "papyrus  [emf-compare-papyrus-egit branch2]" | get-menu "Team/Merge..." | click
+    select "papyrus[ ]+\\[emf-compare-papyrus-egit branch1\\]" | get-menu "Team/Switch To/branch2" | click
+    select "papyrus[ ]+\\[emf-compare-papyrus-egit branch2\\]" | get-menu "Team/Merge..." | click
 }
 with [get-window "Merge 'branch2'"] {
     get-tree | select "Local/branch3 8255805 Commit 3"
@@ -43,14 +43,14 @@ get-window "Merge Result" | get-editbox -after [get-label "Result"] | get-proper
 get-window "Merge Result" | get-button OK | click
 } -catch {wait 500} -times 30
 
-get-view "Project Explorer" | get-tree | get-item "papyrus  \\[emf-compare-papyrus-egit branch2\\]" 
+get-view "Project Explorer" | get-tree | get-item "papyrus[ ]+\\[emf-compare-papyrus-egit branch2\\]" 
     | get-property childCount | equals 2 | verify-true
 with [get-view "Project Explorer" | get-tree] {
-    get-item "papyrus  \\[emf-compare-papyrus-egit branch2\\]/control" | get-property caption | equals control 
+    get-item "papyrus[ ]+\\[emf-compare-papyrus-egit branch2\\]/control" | get-property caption | equals control 
         | verify-true
-    get-item "papyrus  \\[emf-compare-papyrus-egit branch2\\]/model" | get-property caption | equals model | verify-true
+    get-item "papyrus[ ]+\\[emf-compare-papyrus-egit branch2\\]/model" | get-property caption | equals model | verify-true
 }
-get-view "Project Explorer" | get-tree | select "papyrus  [emf-compare-papyrus-egit branch2]/model" | double-click
+get-view "Project Explorer" | get-tree | select "papyrus[ ]+\\[emf-compare-papyrus-egit branch2\\]/model" | double-click
 
 with [get-view "Model Explorer" | get-tree] {
     get-item "RootElement/Diagram ClassDiagram" | click

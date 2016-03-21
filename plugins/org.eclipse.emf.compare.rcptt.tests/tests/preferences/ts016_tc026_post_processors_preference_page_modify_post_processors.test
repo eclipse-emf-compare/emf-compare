@@ -7,7 +7,7 @@ Element-Version: 3.0
 External-Reference: 
 Id: _taYtIMC_EeO8eNTYV1NAnA
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 1/4/16 3:09 PM
+Save-Time: 3/21/16 10:57 AM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -29,12 +29,13 @@ get-preferences-menu | click
 with [get-window Preferences] {
     get-tree | select "EMF Compare/Post Processors"
     with [get-table] {
-        get-item "Papyrus Diagram Post-Processor" | uncheck
         get-item "EGit Post Processor" | uncheck
         get-item "UML Post Processor" | uncheck
-        get-item "Diagram Post processor" | uncheck
-        get-item "Stereotyped element change post processor" | uncheck
         get-item "Opaque Element Change Processor" | uncheck
+        get-item "Stereotyped element change post processor" | uncheck
+        get-item "Diagram Post processor" | uncheck
+        get-item "Ignore Papyrus Di-files Post-Processor" | uncheck
+        get-item "Papyrus Diagram Post-Processor" | uncheck
     }
     get-button OK | click
 }
@@ -46,6 +47,8 @@ with [get-window Preferences | get-table] {
     get-property "getItems().TableItem[3].getChecked()" | equals false | verify-true
     get-property "getItems().TableItem[4].getChecked()" | equals false | verify-true
     get-property "getItems().TableItem[5].getChecked()" | equals false | verify-true
+    get-property "getItems().TableItem[5].getChecked()" | equals false | verify-true
+    get-property "getItems().TableItem[6].getChecked()" | equals false | verify-true
 }
 get-window Preferences | get-button OK | click
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
