@@ -399,6 +399,8 @@
         <module>../packaging/org.eclipse.emf.compare.egit-feature</module>
         <module>../plugins/org.eclipse.emf.compare.subversive</module>
         <module>../packaging/org.eclipse.emf.compare.subversive-feature</module>
+        
+        <module>../maven/org.eclipse.emf.compare.maven.tests</module>
       </modules>
     </profile>
     <profile>
