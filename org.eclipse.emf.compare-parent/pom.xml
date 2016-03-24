@@ -75,6 +75,7 @@
   -->
   <modules>
     <!-- This one must remain the first module in the list -->
+    <module>bundle-parent</module>
     <module>../packaging/org.eclipse.emf.compare.gendoc</module>
     <module>../packaging/org.eclipse.emf.compare-feature</module>
     <module>../plugins/org.eclipse.emf.compare</module>
