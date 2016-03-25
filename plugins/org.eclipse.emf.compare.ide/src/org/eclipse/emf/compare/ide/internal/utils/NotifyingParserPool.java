@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal.utils;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -76,7 +77,17 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 		for (Object listener : namespaceDeclarationListeners.getListeners()) {
 			handlerWrapper.addNamespaceDeclarationListener((INamespaceDeclarationListener)listener);
 		}
-		handlerWrapper.prepare(resource, wrapper, options);
+		// The helper may now have extendedMetadata that we'll need to keep
+		// in case there is an unknown feature in the XML file
+		// and the option to record the unknown features is set
+		// See bug 490430
+		Map<Object, Object> tmpMap = new HashMap<Object, Object>();
+		tmpMap.putAll(options);
+		ExtendedMetaData extendedMetaData = helper.getExtendedMetaData();
+		if (extendedMetaData != null && !options.containsKey(XMLResource.OPTION_EXTENDED_META_DATA)) {
+			tmpMap.put(XMLResource.OPTION_EXTENDED_META_DATA, extendedMetaData);
+		}
+		handlerWrapper.prepare(resource, wrapper, tmpMap);
 		return handlerWrapper;
 	}
 
