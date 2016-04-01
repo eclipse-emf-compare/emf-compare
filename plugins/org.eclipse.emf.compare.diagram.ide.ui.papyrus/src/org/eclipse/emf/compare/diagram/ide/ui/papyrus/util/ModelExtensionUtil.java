@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.CompareDiagramIDEUIPapyrusPlugin;
 import org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.CompareUIPapyrusMessages;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.papyrus.infra.core.resource.AbstractBaseModel;
 import org.eclipse.papyrus.infra.core.resource.IModel;
 import org.eclipse.papyrus.infra.core.resource.ModelsReader;
@@ -187,6 +188,43 @@ public final class ModelExtensionUtil {
 
 		public Map<?, ?> getMyDefaultSaveOptions() {
 			return getSaveOptions();
+		}
+
+		/**
+		 * {@inheritedDoc}.
+		 *
+		 * @see org.eclipse.papyrus.infra.core.resource.IModel#getAdapter(java.lang.Class)
+		 * @param <T>
+		 *            type.
+		 * @param adapter
+		 *            adapter.
+		 * @return the adapter.
+		 */
+		public <T> T getAdapter(Class<T> adapter) {
+			return null;
+		}
+
+		/**
+		 * {@inheritedDoc}.
+		 *
+		 * @see org.eclipse.papyrus.infra.core.resource.IEMFModel#canPersist(org.eclipse.emf.ecore.EObject)
+		 * @param arg0
+		 *            the object.
+		 * @return true if the object can persist.
+		 */
+		public boolean canPersist(EObject arg0) {
+			return false;
+		}
+
+		/**
+		 * {@inheritedDoc}.
+		 *
+		 * @see org.eclipse.papyrus.infra.core.resource.IEMFModel#persist(org.eclipse.emf.ecore.EObject)
+		 * @param arg0
+		 *            the object.
+		 */
+		public void persist(EObject arg0) {
+
 		}
 	}
 

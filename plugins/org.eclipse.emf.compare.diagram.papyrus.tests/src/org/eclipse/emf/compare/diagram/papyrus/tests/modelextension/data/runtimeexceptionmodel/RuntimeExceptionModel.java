@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.diagram.papyrus.tests.modelextension.data.runtim
 
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.papyrus.infra.core.resource.AbstractBaseModel;
 import org.eclipse.papyrus.infra.core.resource.IModel;
 
@@ -36,6 +37,18 @@ public class RuntimeExceptionModel extends AbstractBaseModel implements IModel {
 	@Override
 	protected Map<Object, Object> getSaveOptions() {
 		throw new NullPointerException();
+	}
+
+	public <T> T getAdapter(Class<T> adapter) {
+		return null;
+	}
+
+	public boolean canPersist(EObject arg0) {
+		return false;
+	}
+
+	public void persist(EObject arg0) {
+
 	}
 
 }

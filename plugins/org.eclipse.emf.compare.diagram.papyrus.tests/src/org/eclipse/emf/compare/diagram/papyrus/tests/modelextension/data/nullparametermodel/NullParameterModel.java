@@ -12,11 +12,13 @@ package org.eclipse.emf.compare.diagram.papyrus.tests.modelextension.data.nullpa
 
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.papyrus.infra.core.resource.AbstractBaseModel;
 import org.eclipse.papyrus.infra.core.resource.IModel;
 
 /**
- * Test Model Class to test for models which return {@code null} as save parameter.
+ * Test Model Class to test for models which return {@code null} as save
+ * parameter.
  * 
  * @author Stefan Dirix <sdirix@eclipsesource.com>
  */
@@ -35,6 +37,18 @@ public class NullParameterModel extends AbstractBaseModel implements IModel {
 	@Override
 	protected Map<Object, Object> getSaveOptions() {
 		return null;
+	}
+
+	public <T> T getAdapter(Class<T> adapter) {
+		return null;
+	}
+
+	public boolean canPersist(EObject arg0) {
+		return false;
+	}
+
+	public void persist(EObject arg0) {
+
 	}
 
 }

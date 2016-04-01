@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.diagram.papyrus.tests.modelextension.data.custom
 
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.papyrus.infra.core.resource.AbstractBaseModel;
 import org.eclipse.papyrus.infra.core.resource.IModel;
 
@@ -56,5 +57,17 @@ public class CustomParameterModel extends AbstractBaseModel implements IModel {
 		Map<Object, Object> options = super.getSaveOptions();
 		options.put(CUSTOM_OPTION_KEY, CUSTOM_OPTION_VALUE);
 		return options;
+	}
+
+	public <T> T getAdapter(Class<T> adapter) {
+		return null;
+	}
+
+	public boolean canPersist(EObject arg0) {
+		return false;
+	}
+
+	public void persist(EObject arg0) {
+
 	}
 }
