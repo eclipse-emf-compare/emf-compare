@@ -6,7 +6,7 @@ Element-Type: context
 Element-Version: 2.0
 Id: _zFx5wJKhEeSdjeXOy8KSHw
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 8/31/15 3:21 PM
+Save-Time: 4/1/16 3:39 PM
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
 Content-Type: text/ecl
@@ -73,7 +73,11 @@ with [get-view "Package Explorer" | get-tree] {
     }
 }
 
-// remove outer project since this may cause issues
-get-view "Package Explorer" | get-tree | select "Library-EGit-Multiple-Branches" | get-menu Delete | click
-get-window "Delete Resources" | get-button OK | click
+try  {
+	// remove outer project since this may cause issues
+	get-view "Package Explorer" | get-tree | select "Library-EGit-Multiple-Branches" | get-menu Delete | click
+	get-window "Delete Resources" | get-button OK | click
+} -catch {
+	// Do nothing
+}
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--

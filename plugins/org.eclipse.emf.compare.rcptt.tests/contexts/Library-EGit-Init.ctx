@@ -6,7 +6,7 @@ Element-Type: context
 Element-Version: 2.0
 Id: _pj0X4HBcEeKTzKjv1SXOgA
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 8/31/15 3:06 PM
+Save-Time: 4/1/16 3:37 PM
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
 Content-Type: text/plain
@@ -80,7 +80,11 @@ with [get-view "Package Explorer" | get-tree] {
     }
 }
 
-//remove from the workspace the project that contains repo
-get-view "Package Explorer" | get-tree | select "Library-EGit" | get-menu Delete | click
-get-window "Delete Resources" | get-button OK | click
+try {
+	//remove from the workspace the project that contains repo
+	get-view "Package Explorer" | get-tree | select "Library-EGit" | get-menu Delete | click
+	get-window "Delete Resources" | get-button OK | click
+} -catch {
+	// Do nothing
+}
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998--
