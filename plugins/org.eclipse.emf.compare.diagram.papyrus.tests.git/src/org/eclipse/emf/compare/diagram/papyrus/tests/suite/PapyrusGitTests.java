@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.diagram.papyrus.tests.egit.StereotypeConflictTest
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.implication.AttachmentChangeImplicationTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.ResourceAttachmentChangeMoveConflictTests;
 import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.ResourceAttachmentChangeMoveNoConflictTests;
+import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.ResourceAttachmentChangeMoveOrderTests;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
@@ -51,6 +52,7 @@ import junit.textui.TestRunner;
 	ResourceAttachmentChangeDelete2GitMergeTest.class,
 	ResourceAttachmentChangeMoveConflictTests.class,
 	ResourceAttachmentChangeMoveNoConflictTests.class,
+	ResourceAttachmentChangeMoveOrderTests.class,
 	StereotypeConflictTest.class,
 	IgnoreDiFileChangesInGitMergeTest.class,
 	MoveOfDiagramConflictDetectionTest.class

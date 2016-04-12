@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:style="http://www.eclipse.org/papyrus/infra/viewpoints/policy/style" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="__Q3NEAJ4EeaTnZrqlDPR7g" type="PapyrusUMLComponentDiagram" name="ComponentDiagramModel3" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="_BaTl0AJ5EeaTnZrqlDPR7g" type="2002">
+    <children xmi:type="notation:DecorationNode" xmi:id="_BaUM4AJ5EeaTnZrqlDPR7g" type="5004"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_BaUM4QJ5EeaTnZrqlDPR7g" type="6030">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_BaUM4gJ5EeaTnZrqlDPR7g" y="5"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_BaUM4wJ5EeaTnZrqlDPR7g" type="7001">
+      <styles xmi:type="notation:TitleStyle" xmi:id="_BaUM5AJ5EeaTnZrqlDPR7g"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BaUM5QJ5EeaTnZrqlDPR7g"/>
+    </children>
+    <element xmi:type="uml:Component" href="model3.uml#_AIyTkAJ5EeaTnZrqlDPR7g"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BaTl0QJ5EeaTnZrqlDPR7g" x="152" y="101"/>
+  </children>
+  <styles xmi:type="notation:StringValueStyle" xmi:id="__Q3NEQJ4EeaTnZrqlDPR7g" name="diagram_compatibility_version" stringValue="1.1.0"/>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="__Q3NEgJ4EeaTnZrqlDPR7g"/>
+  <styles xmi:type="style:PapyrusViewStyle" xmi:id="__Q3NEwJ4EeaTnZrqlDPR7g">
+    <owner xmi:type="uml:Package" href="model3.uml#_wvhqkAJ4EeaTnZrqlDPR7g"/>
+  </styles>
+  <element xmi:type="uml:Package" href="model3.uml#_wvhqkAJ4EeaTnZrqlDPR7g"/>
+</notation:Diagram>

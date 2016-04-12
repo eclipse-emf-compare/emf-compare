@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - fix bug 465329
+ *     Simon Delisle - fix bug 488089
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
@@ -131,7 +132,19 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 		final EObject sourceValue;
 		if (comparison.isThreeWay()) {
 			// This is a 3-way move, match.getOrigin() can't be null
-			sourceValue = match.getOrigin();
+			if (rightToLeft) {
+				if (match.getRight() != null) {
+					sourceValue = match.getRight();
+				} else {
+					sourceValue = match.getOrigin();
+				}
+			} else {
+				if (match.getLeft() != null) {
+					sourceValue = match.getLeft();
+				} else {
+					sourceValue = match.getOrigin();
+				}
+			}
 		} else if (rightToLeft) {
 			// This is a 2-way move, match.getRight() & match.getLeft() can't be null
 			sourceValue = match.getRight();
