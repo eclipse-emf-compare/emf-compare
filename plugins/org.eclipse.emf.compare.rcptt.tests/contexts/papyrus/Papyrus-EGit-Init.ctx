@@ -6,7 +6,7 @@ Element-Type: context
 Element-Version: 2.0
 Id: _d_GLMHDdEeWhSZQCADl_Kg
 Runtime-Version: 2.0.0.201506120617
-Save-Time: 4/1/16 3:43 PM
+Save-Time: 4/18/16 4:02 PM
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
 Content-Type: text/plain
@@ -54,9 +54,16 @@ try -command {
 get-view "Git Repositories" | get-tree | get-property itemCount | equals 1 | verify-true
 } -catch {wait 500} -times 30
 
-get-view "Git Repositories" | get-tree 
-    | select "(> )?emf-compare-papyrus-egit .*" 
-    | get-menu "Import Projects..." | click
+try {
+	get-view "Git Repositories" | get-tree 
+    	| select "(> )?emf-compare-papyrus-egit .*" 
+    	| get-menu "Import Projects..." | click
+} -catch {
+	get-view "Git Repositories" | get-tree 
+    	| select "(> )?workspace .*" 
+    	| get-menu "Import Projects..." | click
+}
+
 get-window "Import Projects from Git Repository .*" 
     | get-button "Next >" | click
 get-window "Import Projects from Git Repository .*" 
