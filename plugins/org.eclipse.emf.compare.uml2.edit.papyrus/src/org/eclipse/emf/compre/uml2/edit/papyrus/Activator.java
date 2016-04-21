@@ -20,20 +20,23 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * The activator class controls the plug-in life cycle
+ * The activator class controls the plug-in life cycle.
+ * 
+ * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
 public class Activator extends AbstractUIPlugin {
 
-	// The plug-in ID
+	/** The plug-in ID. */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compre.uml2.edit.papyrus"; //$NON-NLS-1$
 
-	// The shared instance
+	/** The shared instance. */
 	private static Activator plugin;
 
+	/** The label provider service. */
 	private LabelProviderService labelProviderService;
 
 	/**
-	 * The constructor
+	 * The constructor.
 	 */
 	public Activator() {
 	}
@@ -59,16 +62,15 @@ public class Activator extends AbstractUIPlugin {
 			try {
 				labelProviderService.disposeService();
 			} catch (ServiceException ex) {
-				Activator.getDefault().getLog().log(
-						new Status(IStatus.WARNING, Activator.PLUGIN_ID,
-								"Unable to dispose Papyrus Label Provider Service", ex)); //$NON-NLS-1$
+				Activator.getDefault().getLog().log(new Status(IStatus.WARNING, Activator.PLUGIN_ID,
+						"Unable to dispose Papyrus Label Provider Service", ex)); //$NON-NLS-1$
 			}
 		}
 		super.stop(context);
 	}
 
 	/**
-	 * Returns the shared instance
+	 * Returns the shared instance.
 	 *
 	 * @return the shared instance
 	 */
@@ -76,6 +78,11 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	/**
+	 * Returns the Papyrus {@link LabelProviderService}.
+	 * 
+	 * @return the label provider service or <code>null</code> if the service could not be started
+	 */
 	public LabelProviderService getLabelProviderService() {
 		if (labelProviderService == null) {
 			labelProviderService = new LabelProviderServiceImpl();
@@ -84,9 +91,8 @@ public class Activator extends AbstractUIPlugin {
 			} catch (ServiceException ex) {
 				// prevent service from being used if it could not be started
 				labelProviderService = null;
-				getDefault().getLog().log(
-						new Status(IStatus.WARNING, Activator.PLUGIN_ID,
-								"Unable to start Papyrus Label Provider Service", ex)); //$NON-NLS-1$
+				getDefault().getLog().log(new Status(IStatus.WARNING, Activator.PLUGIN_ID,
+						"Unable to start Papyrus Label Provider Service", ex)); //$NON-NLS-1$
 			}
 		}
 		return labelProviderService;

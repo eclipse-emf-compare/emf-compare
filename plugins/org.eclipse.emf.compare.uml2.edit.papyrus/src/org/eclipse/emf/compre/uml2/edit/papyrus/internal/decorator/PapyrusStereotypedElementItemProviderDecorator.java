@@ -34,6 +34,15 @@ import org.eclipse.uml2.uml.Stereotype;
  */
 public class PapyrusStereotypedElementItemProviderDecorator extends StereotypedElementItemProviderDecorator {
 
+	/** Context id for the comparison papyrus label providers. */
+	private static final String PAPYRUS_LABEL_PROVIDER_COMPARE_CONTEXT = "org.eclipse.emf.compare.uml2.edit.papyrus"; //$NON-NLS-1$
+
+	/**
+	 * Default constructor.
+	 * 
+	 * @param adapterFactory
+	 *            the adapter factory to be used by the label providers.
+	 */
 	public PapyrusStereotypedElementItemProviderDecorator(ComposeableAdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -42,7 +51,8 @@ public class PapyrusStereotypedElementItemProviderDecorator extends StereotypedE
 	public String getText(Object object) {
 		LabelProviderService labelProviderService = Activator.getDefault().getLabelProviderService();
 		if (labelProviderService != null) {
-			return labelProviderService.getLabelProvider(object).getText(object);
+			return labelProviderService.getLabelProvider(PAPYRUS_LABEL_PROVIDER_COMPARE_CONTEXT, object)
+					.getText(object);
 		}
 		return super.getText(object);
 	}

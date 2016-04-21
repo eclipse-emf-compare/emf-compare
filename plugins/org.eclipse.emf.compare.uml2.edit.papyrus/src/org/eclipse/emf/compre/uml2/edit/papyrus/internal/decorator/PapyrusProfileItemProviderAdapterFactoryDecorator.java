@@ -14,6 +14,8 @@ import org.eclipse.emf.compare.uml2.internal.provider.decorator.UMLProfileItemPr
 import org.eclipse.emf.edit.provider.IItemProviderDecorator;
 
 /**
+ * Decorator adapter factory for Papyrus UML stereotyped element.
+ * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
 public class PapyrusProfileItemProviderAdapterFactoryDecorator extends UMLProfileItemProviderAdapterFactoryDecorator {

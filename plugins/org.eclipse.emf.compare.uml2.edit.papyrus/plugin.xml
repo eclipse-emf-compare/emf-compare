@@ -20,5 +20,18 @@
             uri="http://www.eclipse.org/uml2/5.0.0/UML">
       </factory>
    </extension>
+    <extension
+          point="org.eclipse.papyrus.infra.services.labelprovider.labelProvider">
+       <labelProvider
+             priority="10"
+             provider="org.eclipse.emf.compre.uml2.edit.papyrus.internal.decorator.PapyrusElementFilteredLabelProvider">
+          <labelProviderContext
+                context="org.eclipse.emf.compare.uml2.edit.papyrus">
+          </labelProviderContext>
+       </labelProvider>
+       <context
+             id="org.eclipse.emf.compare.uml2.edit.papyrus">
+       </context>
+    </extension>
 
 </plugin>
