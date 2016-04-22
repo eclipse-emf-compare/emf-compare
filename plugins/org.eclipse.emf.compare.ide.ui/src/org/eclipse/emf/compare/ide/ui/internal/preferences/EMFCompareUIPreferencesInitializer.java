@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,5 +29,6 @@ public class EMFCompareUIPreferencesInitializer extends AbstractPreferenceInitia
 		store.setDefault(EMFCompareUIPreferences.DISABLE_THREADING_PREFERENCE, false);
 		store.setDefault(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE,
 				CrossReferenceResolutionScope.CONTAINER.name());
+		store.setDefault(EMFCompareUIPreferences.PRE_MERGE_MODELS_WHEN_CONFLICT, false);
 	}
 }

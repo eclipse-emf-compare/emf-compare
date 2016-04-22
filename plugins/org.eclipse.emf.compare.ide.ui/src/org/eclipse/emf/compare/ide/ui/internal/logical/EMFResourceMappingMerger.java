@@ -71,6 +71,7 @@ import org.eclipse.emf.compare.graph.IGraph;
 import org.eclipse.emf.compare.graph.PruningIterator;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
@@ -87,6 +88,7 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.mapping.IMergeContext;
 import org.eclipse.team.core.mapping.IResourceMappingMerger;
@@ -314,6 +316,12 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 * @return the set of the uri for resources on which conflicts were not auto-mergeable.
 	 */
 	private Set<URI> performPreMerge(Comparison comparison, SubMonitor subMonitor) {
+		final IPreferenceStore store = EMFCompareIDEUIPlugin.getDefault().getPreferenceStore();
+		boolean preMerge = store.getBoolean(EMFCompareUIPreferences.PRE_MERGE_MODELS_WHEN_CONFLICT);
+		return performPreMerge(comparison, preMerge, subMonitor);
+	}
+
+	private Set<URI> performPreMerge(Comparison comparison, boolean preMerge, SubMonitor subMonitor) {
 		final IGraph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison,
 				MERGER_REGISTRY, true, MergeMode.RIGHT_TO_LEFT);
 		final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
@@ -326,7 +334,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 				iterator.prune();
 				conflictingURIs
 						.addAll(collectConflictingResources(differencesGraph.depthFirstIterator(next)));
-			} else if (next.getState() != DifferenceState.MERGED) {
+			} else if (next.getState() != DifferenceState.MERGED && preMerge) {
 				final IMerger merger = MERGER_REGISTRY.getHighestRankingMerger(next);
 				merger.copyRightToLeft(next, emfMonitor);
 			}

@@ -39,4 +39,11 @@ public interface EMFCompareUIPreferences {
 	 * {@link org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope}.
 	 */
 	String RESOLUTION_SCOPE_PREFERENCE = EMFCompareIDEUIPlugin.PLUGIN_ID + ".preference.resolutionScope"; //$NON-NLS-1$
+
+	/**
+	 * Preference indicating whether a pre-merge must be performed when a REAL conflict is detected. The
+	 * expected values are <code>true</code> or <code>false</code>.
+	 */
+	String PRE_MERGE_MODELS_WHEN_CONFLICT = EMFCompareIDEUIPlugin.PLUGIN_ID
+			+ ".preference.preMergeOnConflict"; //$NON-NLS-1$
 }

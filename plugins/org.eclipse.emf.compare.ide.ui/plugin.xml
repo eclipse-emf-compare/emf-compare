@@ -432,6 +432,12 @@
             id="org.eclipse.emf.compare.ide.ui.preferencepage.resolvers"
             name="Resolution strategy">
       </page>
+      <page
+            category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
+            class="org.eclipse.emf.compare.ide.ui.internal.preferences.MergePreferencesPage"
+            id="org.eclipse.emf.compare.ide.ui.preferencepage.merge"
+            name="Merge">
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
