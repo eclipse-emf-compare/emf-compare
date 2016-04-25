@@ -78,4 +78,22 @@ public class FragmentationInputData extends AbstractInputData {
 	public Resource getNewRootRight() throws IOException {
 		return loadFromClassLoader("newroot/right.nodes", new ResourceSetImpl());
 	}
+
+	public Resource getRootElementImplicationLeft() throws IOException {
+		return loadFromClassLoader("rootelementimplication/left/origin.nodes", new ResourceSetImpl());
+	}
+
+	public Resource getRootElementImplicationUncontrolOrigin() throws IOException {
+		return loadFromClassLoader("rootelementimplication/ancestor/uncontrol/origin.nodes",
+				new ResourceSetImpl());
+	}
+
+	public Resource getRootElementImplicationControlOrigin() throws IOException {
+		return loadFromClassLoader("rootelementimplication/ancestor/control/origin.nodes",
+				new ResourceSetImpl());
+	}
+
+	public Resource getRootElementImplicationRight() throws IOException {
+		return loadFromClassLoader("rootelementimplication/right/origin.nodes", new ResourceSetImpl());
+	}
 }

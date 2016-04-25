@@ -32,6 +32,7 @@ import org.eclipse.emf.compare.tests.diff.URIDistanceTest;
 import org.eclipse.emf.compare.tests.edit.AllEditTests;
 import org.eclipse.emf.compare.tests.equi.EquiComputingTest;
 import org.eclipse.emf.compare.tests.fragmentation.FragmentationTest;
+import org.eclipse.emf.compare.tests.fragmentation.ResourceAttachmentChangeBug492261;
 import org.eclipse.emf.compare.tests.fullcomparison.DynamicInstanceComparisonTest;
 import org.eclipse.emf.compare.tests.fullcomparison.ExtLibraryTest;
 import org.eclipse.emf.compare.tests.fullcomparison.IdentifierComparisonTest;
@@ -93,7 +94,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		MultiLineAttributeConflictDetectionTest.class, ThreeWayTextDiffTest.class,
 		MultiLineAttributeMergeTest.class, MonitorCancelTest.class, IdentifierEObjectMatcherTest.class,
 		MatchUtilFeatureContainsTest.class, RefineMergeTest.class, Bug484557ConflictTest.class,
-		Bug485266_MoveDeleteConflict_Test.class })
+		Bug485266_MoveDeleteConflict_Test.class, ResourceAttachmentChangeBug492261.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
