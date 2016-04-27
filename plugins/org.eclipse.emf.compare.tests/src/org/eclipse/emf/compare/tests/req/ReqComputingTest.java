@@ -23,9 +23,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -33,10 +36,13 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.req.data.ReqInputData;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
@@ -646,6 +652,111 @@ public class ReqComputingTest {
 		assertTrue(added2.getRequires().contains(added1));
 		assertEquals(1, singleChange.getRequires().size());
 		assertTrue(singleChange.getRequires().contains(added2));
+	}
+
+	@Test
+	public void testH1UseCase() throws IOException {
+		final Resource left = input.getH1Left();
+		final Resource origin = input.getH1Ancestor();
+		final Resource right = input.getH1Right();
+
+		final ResourceSet leftSet = left.getResourceSet();
+		final ResourceSet originSet = origin.getResourceSet();
+		final ResourceSet rightSet = right.getResourceSet();
+
+		assertNotNull(leftSet);
+		assertNotNull(originSet);
+		assertNotNull(rightSet);
+
+		EcoreUtil.resolveAll(leftSet);
+		EcoreUtil.resolveAll(originSet);
+		EcoreUtil.resolveAll(rightSet);
+
+		assertEquals(1, leftSet.getResources().size());
+		assertEquals(2, originSet.getResources().size());
+		assertEquals(2, rightSet.getResources().size());
+
+		IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		testH(TestKind.DELETE, comparison);
+
+		scope = new DefaultComparisonScope(rightSet, leftSet, originSet);
+		comparison = EMFCompare.builder().build().compare(scope);
+		testH(TestKind.DELETE, comparison);
+	}
+
+	@Test
+	public void testH2UseCase() throws IOException {
+		final Resource left = input.getH2Left();
+		final Resource origin = input.getH2Ancestor();
+		final Resource right = input.getH2Right();
+
+		final ResourceSet leftSet = left.getResourceSet();
+		final ResourceSet originSet = origin.getResourceSet();
+		final ResourceSet rightSet = right.getResourceSet();
+
+		assertNotNull(leftSet);
+		assertNotNull(originSet);
+		assertNotNull(rightSet);
+
+		EcoreUtil.resolveAll(leftSet);
+		EcoreUtil.resolveAll(originSet);
+		EcoreUtil.resolveAll(rightSet);
+
+		assertEquals(2, leftSet.getResources().size());
+		assertEquals(1, originSet.getResources().size());
+		assertEquals(1, rightSet.getResources().size());
+
+		IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		testH(TestKind.ADD, comparison);
+
+		scope = new DefaultComparisonScope(rightSet, leftSet, originSet);
+		comparison = EMFCompare.builder().build().compare(scope);
+		testH(TestKind.ADD, comparison);
+	}
+
+	private void testH(TestKind testKind, Comparison comparison) {
+
+		EList<Diff> differences = comparison.getDifferences();
+		Collection<Diff> racs = Collections2.filter(differences, Predicates
+				.instanceOf(ResourceAttachmentChange.class));
+		assertEquals(1, racs.size());
+		Diff rac = racs.iterator().next();
+
+		Predicate<? super Diff> deleteFragmentedDiffDescription = null;
+		Predicate<? super Diff> deleteInnerNodeDiffDescription = null;
+
+		if (testKind == TestKind.DELETE) {
+			deleteFragmentedDiffDescription = removed("root.fragmented"); //$NON-NLS-1$			
+			deleteInnerNodeDiffDescription = removed("root.fragmented.innerNode"); //$NON-NLS-1$
+		} else {
+			deleteFragmentedDiffDescription = added("root.fragmented"); //$NON-NLS-1$			
+			deleteInnerNodeDiffDescription = added("root.fragmented.innerNode"); //$NON-NLS-1$
+		}
+
+		final Diff deleteFragmentedDiff = Iterators.find(differences.iterator(),
+				deleteFragmentedDiffDescription);
+		final Diff deleteInnerNodeDiff = Iterators.find(differences.iterator(),
+				deleteInnerNodeDiffDescription);
+
+		if (testKind == TestKind.DELETE) {
+			assertEquals(1, rac.getRequiredBy().size());
+			assertEquals(deleteFragmentedDiff, rac.getRequiredBy().get(0));
+			assertEquals(0, rac.getRequires().size());
+
+			assertEquals(1, deleteInnerNodeDiff.getRequiredBy().size());
+			assertEquals(deleteFragmentedDiff, deleteInnerNodeDiff.getRequiredBy().get(0));
+			assertEquals(0, deleteInnerNodeDiff.getRequires().size());
+		} else {
+			assertEquals(1, rac.getRequires().size());
+			assertEquals(deleteFragmentedDiff, rac.getRequires().get(0));
+			assertEquals(0, rac.getRequiredBy().size());
+
+			assertEquals(1, deleteInnerNodeDiff.getRequires().size());
+			assertEquals(deleteFragmentedDiff, deleteInnerNodeDiff.getRequires().get(0));
+			assertEquals(0, deleteInnerNodeDiff.getRequiredBy().size());
+		}
 	}
 
 	private void testAB1(TestKind kind, final Comparison comparison) {

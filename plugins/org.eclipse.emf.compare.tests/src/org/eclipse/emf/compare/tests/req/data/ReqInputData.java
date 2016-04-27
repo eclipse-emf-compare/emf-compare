@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 public class ReqInputData extends AbstractInputData {
 	public Resource getA1Left() throws IOException {
@@ -414,5 +415,29 @@ public class ReqInputData extends AbstractInputData {
 
 	public Resource getG1Right() throws IOException {
 		return loadFromClassLoader("g1/right.nodes"); //$NON-NLS-1$
+	}
+
+	public Resource getH1Left() throws IOException {
+		return loadFromClassLoader("h1/left/origin.nodes", new ResourceSetImpl()); //$NON-NLS-1$
+	}
+
+	public Resource getH1Right() throws IOException {
+		return loadFromClassLoader("h1/right/origin.nodes", new ResourceSetImpl()); //$NON-NLS-1$
+	}
+
+	public Resource getH1Ancestor() throws IOException {
+		return loadFromClassLoader("h1/ancestor/origin.nodes", new ResourceSetImpl()); //$NON-NLS-1$
+	}
+
+	public Resource getH2Left() throws IOException {
+		return loadFromClassLoader("h2/left/origin.nodes", new ResourceSetImpl()); //$NON-NLS-1$
+	}
+
+	public Resource getH2Right() throws IOException {
+		return loadFromClassLoader("h2/right/origin.nodes", new ResourceSetImpl()); //$NON-NLS-1$
+	}
+
+	public Resource getH2Ancestor() throws IOException {
+		return loadFromClassLoader("h2/ancestor/origin.nodes", new ResourceSetImpl()); //$NON-NLS-1$
 	}
 }

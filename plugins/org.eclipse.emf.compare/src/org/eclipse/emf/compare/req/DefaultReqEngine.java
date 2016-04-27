@@ -15,6 +15,10 @@ import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.filter;
+import static org.eclipse.emf.compare.DifferenceKind.ADD;
+import static org.eclipse.emf.compare.DifferenceKind.CHANGE;
+import static org.eclipse.emf.compare.DifferenceKind.DELETE;
+import static org.eclipse.emf.compare.DifferenceKind.MOVE;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isAddOrSetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isFeatureMapContainment;
@@ -28,6 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ComparisonCanceledException;
@@ -105,12 +110,15 @@ public class DefaultReqEngine implements IReqEngine {
 			boolean isAddition = isAddOrSetDiff(difference);
 			boolean isDeletion = !isAddition && isDeleteOrUnsetDiff(difference);
 
-			// ADD object
-			if (isAddition && isReferenceContainment(difference)) {
+			if (isAddition && isDeleteOrAddResourceAttachmentChange(comparison, difference)) {
+				requiredDifferences.addAll(getDiffsThatShouldDependOn((ResourceAttachmentChange)difference));
+				// ADD object
+			} else if (isAddition && isReferenceContainment(difference)) {
+				// if (isAddition && isReferenceContainment(difference)) {
 
 				// -> requires ADD on the container of the object
 				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value.eContainer(),
-						difference.getSource(), DifferenceKind.ADD));
+						difference.getSource(), ADD));
 
 				// -> requires DELETE of the origin value on the same containment mono-valued reference
 				requiredDifferences.addAll(getDELOriginValueOnContainmentRefSingle(comparison, difference));
@@ -120,24 +128,27 @@ public class DefaultReqEngine implements IReqEngine {
 
 				// -> requires ADD of the value of the reference (target object)
 				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value, difference
-						.getSource(), DifferenceKind.ADD));
+						.getSource(), ADD));
 
 				// -> requires ADD of the object containing the reference
 				final EObject container = MatchUtil.getContainer(comparison, difference);
 				if (container != null) {
 					requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, container, difference
-							.getSource(), DifferenceKind.ADD));
+							.getSource(), ADD));
 				}
 				requiredDifferences.addAll(Collections2.filter(match.getDifferences(), and(
-						instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.ADD))));
+						instanceOf(ResourceAttachmentChange.class), ofKind(ADD))));
 
+			} else if (isDeletion && isDeleteOrAddResourceAttachmentChange(comparison, difference)) {
+				requiredByDifferences
+						.addAll(getDiffsThatShouldDependOn((ResourceAttachmentChange)difference));
 				// DELETE object
 			} else if (isDeletion && isReferenceContainment(difference)) {
 
 				// -> requires DELETE of the outgoing references and contained objects
 				requiredDifferences.addAll(getDELOutgoingReferences(comparison, difference));
 				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value.eContents(),
-						difference.getSource(), DifferenceKind.DELETE));
+						difference.getSource(), DELETE));
 
 				// -> requires MOVE of contained objects
 				requiredDifferences.addAll(getMOVEContainedObjects(comparison, difference));
@@ -150,33 +161,32 @@ public class DefaultReqEngine implements IReqEngine {
 
 				// -> is required by DELETE of the target object
 				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison, value, difference
-						.getSource(), DifferenceKind.DELETE));
+						.getSource(), DELETE));
 
 				// MOVE object
-			} else if (kind == DifferenceKind.MOVE && isReferenceContainment(difference)) {
+			} else if (kind == MOVE && isReferenceContainment(difference)) {
 
 				EObject container = value.eContainer();
 
 				// -> requires ADD on the container of the object
 				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, container, difference
-						.getSource(), DifferenceKind.ADD));
+						.getSource(), ADD));
 
 				// -> requires MOVE of the container of the object
 				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, container, difference
-						.getSource(), DifferenceKind.MOVE));
+						.getSource(), MOVE));
 
 				// CHANGE reference
-			} else if (kind == DifferenceKind.CHANGE && !isAddition && !isDeletion
+			} else if (kind == CHANGE && !isAddition && !isDeletion
 					&& !(difference instanceof FeatureMapChange)) {
 
 				// -> is required by DELETE of the origin target object
 				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison, MatchUtil.getOriginValue(
-						comparison, (ReferenceChange)difference), difference.getSource(),
-						DifferenceKind.DELETE));
+						comparison, (ReferenceChange)difference), difference.getSource(), DELETE));
 
 				// -> requires ADD of the value of the reference (target object) if required
 				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value, difference
-						.getSource(), DifferenceKind.ADD));
+						.getSource(), ADD));
 			}
 
 			difference.getRequires().addAll(
@@ -187,6 +197,54 @@ public class DefaultReqEngine implements IReqEngine {
 							.getSource())));
 		}
 
+	}
+
+	/**
+	 * Checks whether the given diff corresponds to a reference change associated with the addition or the
+	 * deletion of an object.
+	 * 
+	 * @param comparison
+	 *            The comparison
+	 * @param diff
+	 *            The diff to consider
+	 * @return <code>true</code> if the given {@code diff} is to be considered a ResourceAttachmentChange with
+	 *         ADD or DELETE dependencies, <code>false</code> otherwise.
+	 */
+	private boolean isDeleteOrAddResourceAttachmentChange(Comparison comparison, Diff diff) {
+		if (diff instanceof ResourceAttachmentChange && (diff.getKind() == ADD || diff.getKind() == DELETE)) {
+			EObject container = MatchUtil.getContainer(comparison, diff);
+			if (container != null) {
+				EList<Diff> differences = comparison.getDifferences(container);
+				for (Diff containedDiff : differences) {
+					if (containedDiff instanceof ReferenceChange
+							&& ((ReferenceChange)containedDiff).getReference().isContainment()
+							&& containedDiff.getKind() == diff.getKind()) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Compute the dependencies specific to ResourceAttachmentChanges DELETE or ADD. (The addition or deletion
+	 * of the package controlled/uncontrolled must be a dependency of the RAC)
+	 * 
+	 * @param diff
+	 *            The given difference
+	 * @return a list of dependencies
+	 */
+	private Set<ReferenceChange> getDiffsThatShouldDependOn(ResourceAttachmentChange diff) {
+		Set<ReferenceChange> result = new LinkedHashSet<ReferenceChange>();
+		Comparison comparison = diff.getMatch().getComparison();
+		EObject container = MatchUtil.getContainer(comparison, diff);
+		for (ReferenceChange rc : filter(comparison.getDifferences(container), ReferenceChange.class)) {
+			if (diff.getSource() == rc.getSource() && diff.getKind() == rc.getKind()) {
+				result.add(rc);
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -211,7 +269,7 @@ public class DefaultReqEngine implements IReqEngine {
 				Object originValue = ReferenceUtil.safeEGet(originContainer, reference);
 				if (originValue instanceof EObject) {
 					result = getDifferenceOnGivenObject(comparison, (EObject)originValue, sourceDifference
-							.getSource(), DifferenceKind.DELETE);
+							.getSource(), DELETE);
 				}
 			}
 		}
@@ -319,7 +377,7 @@ public class DefaultReqEngine implements IReqEngine {
 				for (Diff candidate : filter(valueMatch.getDifferences(), or(
 						instanceOf(ReferenceChange.class), instanceOf(FeatureMapChange.class)))) {
 					if (candidate.getSource() == sourceDifference.getSource()
-							&& (candidate.getKind() == DifferenceKind.DELETE || isDeleteOrUnsetDiff(candidate))) {
+							&& (candidate.getKind() == DELETE || isDeleteOrUnsetDiff(candidate))) {
 						result.add(candidate);
 					}
 				}
@@ -351,7 +409,7 @@ public class DefaultReqEngine implements IReqEngine {
 							ReferenceChange.class)) {
 						if (difference.getReference().isContainment()
 								&& difference.getSource() == sourceDifference.getSource()
-								&& difference.getKind() == DifferenceKind.MOVE) {
+								&& difference.getKind() == MOVE) {
 							result.add(difference);
 						}
 

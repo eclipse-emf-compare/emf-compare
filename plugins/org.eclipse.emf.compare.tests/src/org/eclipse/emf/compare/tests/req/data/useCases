@@ -34,3 +34,7 @@ d - many business model object dependency - right changes
 e - 3-way tests - left changes
 
 f - 3 way tests - right changes
+
+h - resource attachment change tests
+	h1 - resource attachment change on a deleted object
+	h2 - resource attachment change on a added object
