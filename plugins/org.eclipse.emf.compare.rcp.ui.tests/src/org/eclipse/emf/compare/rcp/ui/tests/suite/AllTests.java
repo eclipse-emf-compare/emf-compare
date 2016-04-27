@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 486923
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.tests.suite;
 
@@ -24,6 +25,7 @@ import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.TestBasi
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.TestComparisonTreeNodeItemProviderSpec;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.TestMatchTreeNodeItemProviderSpec;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.TestReferenceChangeTreeNodeItemProviderSpec;
+import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.ThreeWayComparisonGroupProviderTest;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
 import org.eclipse.emf.ecore.EPackage;
@@ -34,13 +36,11 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({TestComparisonTreeNodeItemProviderSpec.class, 
-			   TestMatchTreeNodeItemProviderSpec.class, 
-			   TestReferenceChangeTreeNodeItemProviderSpec.class,
-			   MergeViewerItemTest.class, MergeViewerItemPseudoConflictTest.class, MergeViewerItemFeatureMapsTest.class,
-			   TestBasicDifferenceGroupImpl.class, BugsTestSuite.class,
-			   TestFeatureMapDifferencesFilter.class,
-			   RCPMatchEngineFactoryRegistryTest.class})
+@SuiteClasses({ TestComparisonTreeNodeItemProviderSpec.class, TestMatchTreeNodeItemProviderSpec.class,
+		TestReferenceChangeTreeNodeItemProviderSpec.class, MergeViewerItemTest.class,
+		MergeViewerItemPseudoConflictTest.class, MergeViewerItemFeatureMapsTest.class,
+		TestBasicDifferenceGroupImpl.class, BugsTestSuite.class, TestFeatureMapDifferencesFilter.class,
+		RCPMatchEngineFactoryRegistryTest.class, ThreeWayComparisonGroupProviderTest.class, })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.
@@ -60,7 +60,7 @@ public class AllTests {
 	public static Test suite() {
 		return new JUnit4TestAdapter(AllTests.class);
 	}
-	
+
 	@BeforeClass
 	public static void fillEMFRegistries() {
 		EPackage.Registry.INSTANCE.put(ComparePackage.eNS_URI, ComparePackage.eINSTANCE);

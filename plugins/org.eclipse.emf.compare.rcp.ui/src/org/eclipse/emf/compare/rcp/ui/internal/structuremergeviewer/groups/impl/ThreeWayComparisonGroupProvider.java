@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,8 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 488941
+ *     Simon Delisle, Edgar Mueller - bug 486923
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
@@ -30,6 +32,7 @@ import com.google.common.collect.UnmodifiableIterator;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Comparison;
@@ -147,7 +150,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 			TreeNode ret = wrap(conflict);
 
 			for (Match match : getComparison().getMatches()) {
-				buildSubTree(ret, conflict, match);
+				buildSubTree(ret, conflict, match, Sets.<Match> newLinkedHashSet());
 			}
 
 			return ret;
@@ -163,9 +166,13 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		 *            the conflict of the tree.
 		 * @param match
 		 *            the given match.
+		 * @param alreadyProcessedContainedMatches
+		 *            already processed matches that are contained in the given <code>match</code>.
 		 */
-		protected void buildSubTree(TreeNode parentNode, Conflict conflict, Match match) {
-			buildSubTree(parentNode, conflict, match, Sets.<Match> newHashSet());
+		protected void buildSubTree(TreeNode parentNode, Conflict conflict, Match match,
+				Collection<Match> alreadyProcessedContainedMatches) {
+			buildSubTree(parentNode, conflict, match, alreadyProcessedContainedMatches, Sets
+					.<Match> newHashSet());
 		}
 
 		/**
@@ -177,31 +184,39 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		 *            the conflict of the tree.
 		 * @param match
 		 *            the given match.
+		 * @param alreadyProcessedContainedMatches
+		 *            already processed matches that are contained in the given <code>match</code>.
 		 * @param alreadyProcessedMatches
 		 *            already processed matches.
 		 */
 		private void buildSubTree(TreeNode parentNode, Conflict conflict, Match match,
-				Collection<Match> alreadyProcessedMatches) {
+				Collection<Match> alreadyProcessedContainedMatches, Collection<Match> alreadyProcessedMatches) {
 			// Use a LinkedHashSet for the first argument of Sets.intersection, in order to keep the order of
 			// differences.
 			SetView<Diff> setView = Sets.intersection(Sets.newLinkedHashSet(match.getDifferences()), Sets
 					.newHashSet(conflict.getDifferences()));
 			for (Diff diff : setView) {
 				if (!isParentPseudoConflictFromOtherSide(diff, parentNode.getData())) {
-					TreeNode wrap = wrap(diff);
-					parentNode.getChildren().add(wrap);
+					TreeNode diffNode = wrap(diff);
+					parentNode.getChildren().add(diffNode);
 					if (isContainment(diff)) {
 						final Match diffMatch = ComparisonUtil.getComparison(diff).getMatch(
 								((ReferenceChange)diff).getValue());
-						if (diffMatch != null) {
-							buildSubTree(wrap, conflict, diffMatch);
+						if (diffMatch != null && !alreadyProcessedContainedMatches.contains(diffMatch)) {
+							// we don't want callers deeper in the tree to modify the sets of already
+							// processed contained matches
+							LinkedHashSet<Match> updatedProcessedContainedMatches = Sets
+									.newLinkedHashSet(alreadyProcessedContainedMatches);
+							updatedProcessedContainedMatches.add(diffMatch);
+							buildSubTree(diffNode, conflict, diffMatch, updatedProcessedContainedMatches);
 						}
 					} else {
 						alreadyProcessedMatches.add(match);
 						for (Diff refinedBy : diff.getRefinedBy()) {
 							Match refinedByMatch = refinedBy.getMatch();
 							if (alreadyProcessedMatches.add(refinedByMatch)) {
-								buildSubTree(wrap, conflict, refinedByMatch, alreadyProcessedMatches);
+								buildSubTree(diffNode, conflict, refinedByMatch,
+										alreadyProcessedContainedMatches, alreadyProcessedMatches);
 							}
 						}
 					}
@@ -209,7 +224,9 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 			}
 			for (Match subMatch : match.getSubmatches()) {
 				if (!isMatchOfConflictContainmentDiff(conflict, subMatch)) {
-					buildSubTree(parentNode, conflict, subMatch, alreadyProcessedMatches);
+					buildSubTree(parentNode, conflict, subMatch, alreadyProcessedContainedMatches,
+							alreadyProcessedMatches);
+					alreadyProcessedMatches.add(subMatch);
 				}
 			}
 		}
