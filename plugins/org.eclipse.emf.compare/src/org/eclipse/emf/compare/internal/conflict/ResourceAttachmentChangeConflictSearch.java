@@ -212,10 +212,9 @@ public class ResourceAttachmentChangeConflictSearch {
 			// [477607] DELETE does not necessarily mean that the element is removed from the model
 			// Each element under a pseudo-conflicting diff should have its own conflict and not be just a
 			// dependence of the existing conflict
-			EObject o = getRelatedModelElement(diff);
-			if ((o == null || o.eContainer() == null)
+			if (isDanglingRootDeletion()
 					&& (diff.getConflict() == null || diff.getConflict().getKind() != PSEUDO)) {
-				for (Diff extendedCandidate : Iterables.filter(match.getAllDifferences(),
+				for (Diff extendedCandidate : Iterables.filter(match.getDifferences(),
 						possiblyConflictingWith(diff))) {
 					if (isDeleteOrUnsetDiff(extendedCandidate)) {
 						conflict(extendedCandidate, PSEUDO);
@@ -224,6 +223,18 @@ public class ResourceAttachmentChangeConflictSearch {
 					}
 				}
 			}
+		}
+
+		protected boolean isDanglingRootDeletion() {
+			EObject o = getRelatedModelElement(diff);
+			if (o != null) {
+				return false;
+			}
+			EObject ancestorRoot = diff.getMatch().getOrigin();
+			if (ancestorRoot.eContainer() == null) {
+				return true;
+			}
+			return false;
 		}
 	}
 

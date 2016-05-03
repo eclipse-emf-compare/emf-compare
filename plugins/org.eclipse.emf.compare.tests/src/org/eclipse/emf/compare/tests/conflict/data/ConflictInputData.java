@@ -714,6 +714,27 @@ public class ConflictInputData extends AbstractInputData {
 		return loadFromClassLoader("pseudoConflictDetection/case4/model.uml");
 	}
 
+	public ResourceSet getRACDanglingConflictAncestorModel() throws IOException {
+		return newResourceSetWith(loadFromClassLoader("rac_dangling/ancestor/main.nodes"));
+	}
+
+	public ResourceSet getRACDanglingConflictLeftModel() throws IOException {
+		return newResourceSetWith(loadFromClassLoader("rac_dangling/left/main.nodes"));
+	}
+
+	public ResourceSet getRACDanglingConflictRightModel() throws IOException {
+		return newResourceSetWith(loadFromClassLoader("rac_dangling/right/main.nodes"));
+	}
+
+	private ResourceSet newResourceSetWith(Resource... resources) {
+		ResourceSet rs = new ResourceSetImpl();
+		for (Resource r : resources) {
+			rs.getResources().add(r);
+		}
+		EcoreUtil.resolveAll(rs);
+		return rs;
+	}
+
 	protected ResourceSet createResourceSet() {
 		ResourceSet resourceSet = new ResourceSetImpl();
 		resourceSet.getPackageRegistry().put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);

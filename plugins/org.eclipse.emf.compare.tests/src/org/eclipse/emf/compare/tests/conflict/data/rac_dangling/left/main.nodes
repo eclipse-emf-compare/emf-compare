@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes">
+  <nodes:Node
+      xmi:id="_ORexoLlNEeGmS9ESxeCLvg"
+      name="root1">
+    <containmentRef1
+      href="fragment.nodes#_QE6YYAcQEeKTxJtDIb3mMw"/>
+  </nodes:Node>
+  <nodes:Node
+      xmi:id="_ORexoLlNEeGmS9ESxe0123"
+      name="root2_renamed"/>
+</xmi:XMI>

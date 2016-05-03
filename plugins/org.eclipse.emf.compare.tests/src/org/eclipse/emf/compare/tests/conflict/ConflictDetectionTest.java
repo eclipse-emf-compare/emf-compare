@@ -12,12 +12,16 @@
 package org.eclipse.emf.compare.tests.conflict;
 
 import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.not;
+import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
+import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.moved;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.movedInAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.movedInReference;
@@ -34,6 +38,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 import java.io.IOException;
@@ -41,15 +46,16 @@ import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
-import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.conflict.data.ConflictInputData;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
@@ -120,7 +126,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -168,7 +174,7 @@ public class ConflictDetectionTest {
 		assertTrue(conflictDiff.contains(leftReferenceDiff));
 		assertTrue(conflictDiff.contains(rightReferenceDiff));
 		assertTrue(conflictDiff.contains(rightDeleteDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -205,7 +211,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -243,7 +249,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -281,7 +287,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -329,7 +335,7 @@ public class ConflictDetectionTest {
 		assertTrue(conflictDiff.contains(leftReferenceDiff));
 		assertTrue(conflictDiff.contains(rightReferenceDiff));
 		assertTrue(conflictDiff.contains(rightDeleteDiff));
-		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -368,7 +374,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -407,7 +413,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -446,7 +452,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -485,7 +491,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -524,7 +530,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -563,7 +569,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -602,7 +608,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -641,7 +647,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -680,7 +686,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -719,7 +725,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -758,7 +764,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -797,7 +803,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -836,7 +842,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -874,7 +880,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -932,7 +938,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftReferenceDiff));
 		assertTrue(conflictDiff.contains(rightDeleteDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -970,7 +976,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -1030,7 +1036,7 @@ public class ConflictDetectionTest {
 		assertTrue(conflictDiff.contains(leftReferenceDiff));
 		assertTrue(conflictDiff.contains(rightDeleteDiff));
 		assertTrue(conflictDiff.contains(rightReferenceDiff1));
-		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -1068,7 +1074,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -1106,7 +1112,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftReferenceDiff));
 		assertTrue(conflictDiff.contains(rightDeleteDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -1160,7 +1166,7 @@ public class ConflictDetectionTest {
 		assertTrue(conflictDiff.contains(leftAttributeDiff2));
 		assertTrue(conflictDiff.contains(leftAttributeDiff3));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -1226,7 +1232,7 @@ public class ConflictDetectionTest {
 		assertTrue(conflictDiff.contains(rightReferenceDiff1));
 		assertTrue(conflictDiff.contains(rightReferenceDiff2));
 		assertTrue(conflictDiff.contains(rightReferenceDiff3));
-		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -1264,7 +1270,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -1322,7 +1328,7 @@ public class ConflictDetectionTest {
 		assertTrue(conflictDiff.contains(leftReferenceDiff));
 		assertTrue(conflictDiff.contains(rightDeleteDiff));
 		assertTrue(conflictDiff.contains(rightReferenceDiff1));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -1361,7 +1367,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -1400,7 +1406,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -1439,7 +1445,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -1478,7 +1484,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -1517,7 +1523,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -1556,7 +1562,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -1613,7 +1619,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiffs1.size());
 		assertTrue(conflictDiffs1.contains(leftAttributeDiff1));
 		assertTrue(conflictDiffs1.contains(rightAttributeDiff1));
-		assertSame(ConflictKind.PSEUDO, conflict1.getKind());
+		assertSame(PSEUDO, conflict1.getKind());
 
 		final Conflict conflict2 = conflicts.get(1);
 
@@ -1621,7 +1627,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiffs2.size());
 		assertTrue(conflictDiffs2.contains(leftAttributeDiff2));
 		assertTrue(conflictDiffs2.contains(rightAttributeDiff2));
-		assertSame(ConflictKind.PSEUDO, conflict2.getKind());
+		assertSame(PSEUDO, conflict2.getKind());
 
 		final Conflict conflict3 = conflicts.get(2);
 
@@ -1629,7 +1635,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiffs3.size());
 		assertTrue(conflictDiffs3.contains(leftAttributeDiff3));
 		assertTrue(conflictDiffs3.contains(rightAttributeDiff3));
-		assertSame(ConflictKind.PSEUDO, conflict3.getKind());
+		assertSame(PSEUDO, conflict3.getKind());
 	}
 
 	@Test
@@ -1686,7 +1692,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiffs1.size());
 		assertTrue(conflictDiffs1.contains(leftReferenceDiff1));
 		assertTrue(conflictDiffs1.contains(rightReferenceDiff1));
-		assertSame(ConflictKind.PSEUDO, conflict1.getKind());
+		assertSame(PSEUDO, conflict1.getKind());
 
 		final Conflict conflict2 = conflicts.get(1);
 
@@ -1694,7 +1700,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiffs2.size());
 		assertTrue(conflictDiffs2.contains(leftReferenceDiff2));
 		assertTrue(conflictDiffs2.contains(rightReferenceDiff2));
-		assertSame(ConflictKind.PSEUDO, conflict2.getKind());
+		assertSame(PSEUDO, conflict2.getKind());
 
 		final Conflict conflict3 = conflicts.get(2);
 
@@ -1702,7 +1708,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiffs3.size());
 		assertTrue(conflictDiffs3.contains(leftReferenceDiff3));
 		assertTrue(conflictDiffs3.contains(rightReferenceDiff3));
-		assertSame(ConflictKind.PSEUDO, conflict3.getKind());
+		assertSame(PSEUDO, conflict3.getKind());
 	}
 
 	@Test
@@ -1739,7 +1745,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -1776,7 +1782,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -1813,7 +1819,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -1850,7 +1856,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.PSEUDO, conflict.getKind());
+		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -1888,7 +1894,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -1926,7 +1932,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -1965,7 +1971,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -2004,7 +2010,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -2042,7 +2048,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -2080,7 +2086,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftDiff));
 		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(ConflictKind.REAL, conflict.getKind());
+		assertSame(REAL, conflict.getKind());
 	}
 
 	@Test
@@ -2099,7 +2105,7 @@ public class ConflictDetectionTest {
 		assertEquals(1, conflicts.size());
 
 		Conflict soleConflict = conflicts.get(0);
-		assertSame(ConflictKind.PSEUDO, soleConflict.getKind());
+		assertSame(PSEUDO, soleConflict.getKind());
 	}
 
 	@Test
@@ -2118,7 +2124,7 @@ public class ConflictDetectionTest {
 		assertEquals(1, conflicts.size());
 
 		Conflict soleConflict = conflicts.get(0);
-		assertSame(ConflictKind.PSEUDO, soleConflict.getKind());
+		assertSame(PSEUDO, soleConflict.getKind());
 	}
 
 	@Test
@@ -2137,7 +2143,7 @@ public class ConflictDetectionTest {
 		assertEquals(2, conflicts.size());
 
 		for (Conflict conflict : conflicts) {
-			assertSame(ConflictKind.REAL, conflict.getKind());
+			assertSame(REAL, conflict.getKind());
 		}
 	}
 
@@ -2157,7 +2163,7 @@ public class ConflictDetectionTest {
 		assertEquals(3, conflicts.size());
 
 		for (Conflict conflict : conflicts) {
-			assertSame(ConflictKind.REAL, conflict.getKind());
+			assertSame(REAL, conflict.getKind());
 		}
 	}
 
@@ -2177,7 +2183,7 @@ public class ConflictDetectionTest {
 		assertEquals(3, conflicts.size());
 
 		for (Conflict conflict : conflicts) {
-			assertSame(ConflictKind.REAL, conflict.getKind());
+			assertSame(REAL, conflict.getKind());
 		}
 	}
 
@@ -2196,8 +2202,8 @@ public class ConflictDetectionTest {
 		assertEquals(4, differences.size());
 		assertEquals(2, conflicts.size());
 
-		assertEquals(ConflictKind.PSEUDO, conflicts.get(0).getKind());
-		assertEquals(ConflictKind.REAL, conflicts.get(1).getKind());
+		assertEquals(PSEUDO, conflicts.get(0).getKind());
+		assertEquals(REAL, conflicts.get(1).getKind());
 
 	}
 
@@ -2301,22 +2307,50 @@ public class ConflictDetectionTest {
 			assertEquals(2, conflictDiffs.size());
 			if (conflictDiffs.contains(leftDiff6)) {
 				assertTrue(conflictDiffs.contains(rightDiff8));
-				assertSame(ConflictKind.REAL, conflict.getKind());
+				assertSame(REAL, conflict.getKind());
 			} else if (conflictDiffs.contains(leftDiff2)) {
 				assertTrue(conflictDiffs.contains(rightDiff9));
-				assertSame(ConflictKind.REAL, conflict.getKind());
+				assertSame(REAL, conflict.getKind());
 			} else if (conflictDiffs.contains(leftDiff4)) {
 				assertTrue(conflictDiffs.contains(rightDiff10));
-				assertSame(ConflictKind.REAL, conflict.getKind());
+				assertSame(REAL, conflict.getKind());
 			} else if (conflictDiffs.contains(leftDiff3)) {
 				assertTrue(conflictDiffs.contains(rightDiff11));
-				assertSame(ConflictKind.REAL, conflict.getKind());
+				assertSame(REAL, conflict.getKind());
 			} else if (conflictDiffs.contains(leftDiff5)) {
 				assertTrue(conflictDiffs.contains(rightDiff12));
-				assertSame(ConflictKind.PSEUDO, conflict.getKind());
+				assertSame(PSEUDO, conflict.getKind());
 			} else {
 				fail("unexpected conflict");
 			}
 		}
+	}
+
+	/**
+	 * Make sure that and RAC:DELETE is not in conflict with a change on its EObject if this EObject had an
+	 * eContainer in the ancestor (i.e. when there is a ReferenceChange:DLETE of a containment reference to
+	 * conflict with)
+	 */
+	@Test
+	public void testDanglingRACTest() throws Exception {
+		ResourceSet rsAncestor = input.getRACDanglingConflictAncestorModel();
+		ResourceSet rsLeft = input.getRACDanglingConflictLeftModel();
+		ResourceSet rsRight = input.getRACDanglingConflictRightModel();
+
+		IComparisonScope scope = new DefaultComparisonScope(rsLeft, rsRight, rsAncestor);
+		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		List<Diff> differences = comparison.getDifferences();
+		List<Conflict> conflicts = comparison.getConflicts();
+
+		assertEquals(5, differences.size());
+		assertEquals(2, conflicts.size());
+		assertEquals(4, Iterables.size(Iterables.filter(differences, hasConflict(REAL))));
+		Iterable<Diff> nonConflictingDiffs = Iterables.filter(differences, not(hasConflict(REAL, PSEUDO)));
+		assertEquals(1, Iterables.size(nonConflictingDiffs));
+		Diff nonConflictingDiff = nonConflictingDiffs.iterator().next();
+		assertTrue(nonConflictingDiff instanceof ResourceAttachmentChange);
+		assertEquals(DifferenceSource.RIGHT, nonConflictingDiff.getSource());
+		assertTrue(((ResourceAttachmentChange)nonConflictingDiff).getResourceURI().endsWith("fragment.nodes"));
 	}
 }
