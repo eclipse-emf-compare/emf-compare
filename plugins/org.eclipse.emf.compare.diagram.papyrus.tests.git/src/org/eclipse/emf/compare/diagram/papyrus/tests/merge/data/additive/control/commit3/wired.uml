@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_LIQ-cAeTEeapseY6dvJNJQ" name="wired">
+  <packagedElement xmi:type="uml:Class" xmi:id="_RhjbwAeTEeapseY6dvJNJQ" name="Rooter1"/>
+  <packagedElement xmi:type="uml:Realization" xmi:id="_eya04AeTEeapseY6dvJNJQ" client="_RhjbwAeTEeapseY6dvJNJQ">
+    <supplier xmi:type="uml:Interface" href="model.uml#_b9l80AeTEeapseY6dvJNJQ"/>
+  </packagedElement>
+</uml:Package>

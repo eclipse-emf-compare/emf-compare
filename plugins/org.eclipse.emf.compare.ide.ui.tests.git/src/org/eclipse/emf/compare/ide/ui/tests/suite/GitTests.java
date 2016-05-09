@@ -16,6 +16,7 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.ide.ui.tests.merge.AdditiveMergeTests;
 import org.eclipse.emf.compare.ide.ui.tests.merge.DirCacheResourceVariantTreeProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.GitResourceVariantTreeSubscriberTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.ResourceVariantTest;
@@ -40,7 +41,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({DirCacheResourceVariantTreeProviderTest.class,
+@SuiteClasses({AdditiveMergeTests.class, DirCacheResourceVariantTreeProviderTest.class,
 		// GitLogicalMergeTest.class,
 		// GitLogicalMergeWithCustomDependenciesTest.class,
 		GitLogicalModelTest.class,

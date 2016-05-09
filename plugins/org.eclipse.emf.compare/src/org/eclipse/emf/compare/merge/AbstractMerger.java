@@ -69,7 +69,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @since 3.0
  */
-public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
+public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMergeCriterionAware {
 
 	/** The key of the merge option that allows to the mergers to consider sub-diffs of a diff as a whole. */
 	public static final String SUB_DIFF_AWARE_OPTION = "subDiffAwareOption"; //$NON-NLS-1$
@@ -77,14 +77,18 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 	/** The logger. */
 	private static final Logger LOGGER = Logger.getLogger(AbstractMerger.class);
 
+	/**
+	 * The map of all merge options that this merger should be aware of.
+	 * 
+	 * @since 3.4
+	 */
+	protected Map<Object, Object> mergeOptions;
+
 	/** Ranking of this merger. */
 	private int ranking;
 
 	/** Registry from which this merger has been created. */
-	private Registry registry;
-
-	/** The map of all merge options that this merger should be aware of. */
-	private Map<Object, Object> mergeOptions;
+	private Registry2 registry;
 
 	/**
 	 * Default constructor.
@@ -129,7 +133,23 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 		if (this.registry != null && registry != null) {
 			throw new IllegalStateException("The registry has to be set only once."); //$NON-NLS-1$
 		}
-		this.registry = registry;
+		if (!(registry instanceof Registry2)) {
+			throw new IllegalArgumentException("The registry must implement Registry2"); //$NON-NLS-1$
+		}
+		this.registry = (Registry2)registry;
+	}
+
+	/**
+	 * Default implementation of apply for mergers that extends this class. Will accept <code>null</code> or
+	 * AdditiveMergeCriterion.INSTANCE.
+	 * 
+	 * @param criterion
+	 *            The merge criterion
+	 * @return <code>true</code> if the given criterion is null or is AdditiveMergeCriterion.INSTANCE.
+	 * @since 3.4
+	 */
+	public boolean apply(IMergeCriterion criterion) {
+		return criterion == null || criterion == AdditiveMergeCriterion.INSTANCE;
 	}
 
 	/**
@@ -1025,14 +1045,53 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 	 * @param monitor
 	 *            The monitor we should use to report progress.
 	 */
-
 	protected void mergeDiff(Diff diff, boolean rightToLeft, Monitor monitor) {
-		final IMerger delegate = getRegistry().getHighestRankingMerger(diff);
+		final DelegatingMerger delegate = getMergerDelegate(diff);
 		if (rightToLeft) {
 			delegate.copyRightToLeft(diff, monitor);
 		} else {
 			delegate.copyLeftToRight(diff, monitor);
 		}
+	}
+
+	/**
+	 * Find the best merger for diff and wrap it in a delegate that will take the current merge criterion into
+	 * account. The current merge criterion should be stored in the merger's mergeOptions map using
+	 * IMergeCriterion.OPTION_MERGE_CRITERION as a key.
+	 * 
+	 * @param diff
+	 *            The diff
+	 * @return the best merger to use for merging the diff
+	 * @since 3.4
+	 */
+	protected DelegatingMerger getMergerDelegate(Diff diff) {
+		IMergeCriterion criterion = (IMergeCriterion)getMergeOptions()
+				.get(IMergeCriterion.OPTION_MERGE_CRITERION);
+		return getMergerDelegate(diff, (Registry2)getRegistry(), criterion);
+	}
+
+	/**
+	 * Find the best merger for diff and wrap it in a delegate that will take the given merge criterion into
+	 * account. This is NOT Thread-safe!
+	 * 
+	 * @param diff
+	 *            The diff
+	 * @param registry
+	 *            The registry of mergers where to look for mergers
+	 * @param criterion
+	 *            The merge criterion to use
+	 * @return The best merger for diff and criterion, wrapped in a delegate to deal with setting/restoring
+	 *         the criterion in the merger used.
+	 * @since 3.4
+	 */
+	public static DelegatingMerger getMergerDelegate(Diff diff, Registry2 registry,
+			IMergeCriterion criterion) {
+		Iterator<IMerger> it = registry.getMergersByRankDescending(diff, criterion);
+		if (!it.hasNext()) {
+			throw new IllegalStateException("No merger found for diff " + diff.getClass().getSimpleName()); //$NON-NLS-1$
+		}
+		IMerger merger = it.next();
+		return new DelegatingMerger(merger, criterion);
 	}
 
 	/**

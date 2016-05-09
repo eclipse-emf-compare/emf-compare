@@ -15,7 +15,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.AbstractResourceAttachmentChangeMoveTests;
+import org.eclipse.emf.compare.diagram.papyrus.tests.AbstractGitTestCase;
 import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.papyrus.infra.gmfdiag.common.model.NotationModel;
@@ -24,7 +24,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 @SuppressWarnings({"nls", "unused" })
-public class AttachmentChangeImplicationTest extends AbstractResourceAttachmentChangeMoveTests {
+public class AttachmentChangeImplicationTest extends AbstractGitTestCase {
 
 	/**
 	 * Path to the test data.

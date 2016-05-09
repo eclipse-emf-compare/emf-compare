@@ -51,6 +51,10 @@
             class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.merge.PapyrusResourceAttachmentChangeMerger"
             ranking="100">
       </merger>
+      <merger
+            class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.merge.AdditivePapyrusResourceAttachmentChangeMerger"
+            ranking="100">
+      </merger>
    </extension>
    <extension
          point="org.eclipse.core.runtime.adapters">

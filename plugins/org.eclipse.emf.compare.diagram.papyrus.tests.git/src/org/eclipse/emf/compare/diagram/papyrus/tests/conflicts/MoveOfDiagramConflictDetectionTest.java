@@ -20,7 +20,6 @@ import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.conflict.DefaultConflictDetector;
 import org.eclipse.emf.compare.conflict.MatchBasedConflictDetector;
-import org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move.AbstractResourceAttachmentChangeMoveTests;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestRunner;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitCompare;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitInput;

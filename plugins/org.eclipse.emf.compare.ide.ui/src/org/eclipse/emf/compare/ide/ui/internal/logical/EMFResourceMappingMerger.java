@@ -81,7 +81,7 @@ import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
-import org.eclipse.emf.compare.merge.IMerger.Registry;
+import org.eclipse.emf.compare.merge.IMerger.Registry2;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -114,7 +114,8 @@ import org.eclipse.team.core.mapping.provider.MergeStatus;
 public class EMFResourceMappingMerger implements IResourceMappingMerger {
 
 	/** The merger registry. */
-	private static final Registry MERGER_REGISTRY = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
+	protected static final Registry2 MERGER_REGISTRY = (Registry2)EMFCompareRCPPlugin.getDefault()
+			.getMergerRegistry();
 
 	/** {@inheritDoc} */
 	public IStatus merge(IMergeContext mergeContext, IProgressMonitor monitor) throws CoreException {
@@ -242,7 +243,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 * @param monitor
 	 *            The progress monitor to use, 10 ticks will be consumed
 	 */
-	private void mergeMapping(ResourceMapping mapping, final IMergeContext mergeContext,
+	protected void mergeMapping(ResourceMapping mapping, final IMergeContext mergeContext,
 			final Set<ResourceMapping> failingMappings, IProgressMonitor monitor) throws CoreException {
 		final SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
 		// validateMappings() has made sure we only have EMFResourceMappings
@@ -295,7 +296,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 * @param traversal
 	 *            The traversal to remove non-existing storages from.
 	 */
-	private void removeNonExistingStorages(StorageTraversal traversal) {
+	protected void removeNonExistingStorages(StorageTraversal traversal) {
 		for (IStorage storage : traversal.getStorages()) {
 			if (storage instanceof IFile && !((IFile)storage).exists()) {
 				traversal.removeStorage(storage);
@@ -351,7 +352,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 *            Iterator over the conflicting differences and their dependent diffs.
 	 * @return The uris of all resources impacted by conflicting differences.
 	 */
-	private Set<URI> collectConflictingResources(Iterator<Diff> diffIterator) {
+	protected Set<URI> collectConflictingResources(Iterator<Diff> diffIterator) {
 		final Set<URI> conflictingURIs = new LinkedHashSet<URI>();
 		while (diffIterator.hasNext()) {
 			final Diff diff = diffIterator.next();
@@ -408,7 +409,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 * @param subMonitor
 	 *            Monitor on which to report progress to the user.
 	 */
-	private void markResourcesAsMerged(IMergeContext context, Set<IResource> resources,
+	protected void markResourcesAsMerged(IMergeContext context, Set<IResource> resources,
 			Set<URI> conflictingURIs, SubMonitor subMonitor) {
 		for (IResource resource : resources) {
 			if (resource instanceof IFile) {
@@ -468,7 +469,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 * @param subMonitor
 	 *            The progress monitor to use.
 	 */
-	private void delegateMergeOfUnmergedResourcesAndMarkDiffsAsMerged(SynchronizationModel syncModel,
+	protected void delegateMergeOfUnmergedResourcesAndMarkDiffsAsMerged(SynchronizationModel syncModel,
 			IMergeContext mergeContext, ResourceAdditionAndDeletionTracker resourceTracker,
 			SubMonitor subMonitor) throws CoreException {
 
@@ -547,7 +548,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 * @param subMonitor
 	 *            The process monitor to use.
 	 */
-	private void merge(IDiff diff, IMergeContext mergeContext, SubMonitor subMonitor) {
+	protected void merge(IDiff diff, IMergeContext mergeContext, SubMonitor subMonitor) {
 		try {
 			mergeContext.merge(diff, false, subMonitor);
 		} catch (CoreException e) {
@@ -565,7 +566,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 * @param subMonitor
 	 *            The progress monitor to use.
 	 */
-	private void markAsMerged(final IDiff diff, IMergeContext mergeContext, SubMonitor subMonitor) {
+	protected void markAsMerged(final IDiff diff, IMergeContext mergeContext, SubMonitor subMonitor) {
 		try {
 			mergeContext.markAsMerged(diff, true, subMonitor);
 		} catch (CoreException e) {
@@ -611,7 +612,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 *            The traversal corresponding to the common ancestor of both other side. Can be
 	 *            <code>null</code>.
 	 */
-	private void save(Notifier notifier, StorageTraversal leftTraversal, StorageTraversal rightTraversal,
+	protected void save(Notifier notifier, StorageTraversal leftTraversal, StorageTraversal rightTraversal,
 			StorageTraversal originTraversal) {
 		if (notifier instanceof ResourceSet) {
 			ResourceUtil.saveAllResources((ResourceSet)notifier,
@@ -668,7 +669,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 		return Status.OK_STATUS;
 	}
 
-	private static class ResourceAdditionAndDeletionTracker extends AdapterImpl {
+	protected static class ResourceAdditionAndDeletionTracker extends AdapterImpl {
 
 		private final Set<String> urisOfAddedResources = new HashSet<String>();
 

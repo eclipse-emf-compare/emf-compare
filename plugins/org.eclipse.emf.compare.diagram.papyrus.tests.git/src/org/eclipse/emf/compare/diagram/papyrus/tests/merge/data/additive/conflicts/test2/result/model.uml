@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_fXBloAYFEea42MxsVYThfw" name="RootElement">
+  <packagedElement xmi:type="uml:Package" xmi:id="_3FXDMAYFEea42MxsVYThfw" name="wired">
+    <packagedElement xmi:type="uml:Class" xmi:id="_A-kkAAYGEea42MxsVYThfw" name="Rooter2Bis"/>
+    <packagedElement xmi:type="uml:Realization" xmi:id="_Gq84AAYGEea42MxsVYThfw" client="_A-kkAAYGEea42MxsVYThfw" supplier="_9oMeEAYFEea42MxsVYThfw"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_RXeFEAYGEea42MxsVYThfw" name="Switch"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_UsUEgAYHEea42MxsVYThfw" name="NewRooter"/>
+    <packagedElement xmi:type="uml:Realization" xmi:id="_WTxKgAYHEea42MxsVYThfw" client="_UsUEgAYHEea42MxsVYThfw" supplier="_9oMeEAYFEea42MxsVYThfw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_4HfOkAYFEea42MxsVYThfw" name="wave">
+    <packagedElement xmi:type="uml:Class" xmi:id="_CFz44AYGEea42MxsVYThfw" name="WifiRooter"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_VjuqIAYGEea42MxsVYThfw" name="Antenna"/>
+    <packagedElement xmi:type="uml:Realization" xmi:id="_oVRoIAYHEea42MxsVYThfw" client="_VjuqIAYGEea42MxsVYThfw" supplier="_mWdLAAYHEea42MxsVYThfw"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_qXxEUAYHEea42MxsVYThfw" name="NewAntenna"/>
+    <packagedElement xmi:type="uml:Realization" xmi:id="_s_CokAYHEea42MxsVYThfw" client="_qXxEUAYHEea42MxsVYThfw" supplier="_mWdLAAYHEea42MxsVYThfw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_5DTWkAYFEea42MxsVYThfw" name="commons">
+    <packagedElement xmi:type="uml:Interface" xmi:id="_9oMeEAYFEea42MxsVYThfw" name="Rooter"/>
+    <packagedElement xmi:type="uml:Interface" xmi:id="_mWdLAAYHEea42MxsVYThfw" name="IAntenna"/>
+  </packagedElement>
+</uml:Model>

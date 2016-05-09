@@ -38,7 +38,15 @@
             ranking="10">
       </merger>
       <merger
+            class="org.eclipse.emf.compare.merge.AdditiveResourceAttachmentChangeMerger"
+            ranking="10">
+      </merger>
+      <merger
             class="org.eclipse.emf.compare.merge.ReferenceChangeMerger"
+            ranking="10">
+      </merger>
+      <merger
+            class="org.eclipse.emf.compare.merge.AdditiveReferenceChangeMerger"
             ranking="10">
       </merger>
       <merger
@@ -55,6 +63,10 @@
       </merger>
       <merger
             class="org.eclipse.emf.compare.merge.ConflictMerger"
+            ranking="100">
+      </merger>
+      <merger
+            class="org.eclipse.emf.compare.merge.AdditiveConflictMerger"
             ranking="100">
       </merger>
    </extension>

@@ -17,12 +17,9 @@ import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEIsSet;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.safeESet;
 
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Sets;
 
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
@@ -54,6 +51,11 @@ public class ReferenceChangeMerger extends AbstractMerger {
 	 */
 	public boolean isMergerFor(Diff target) {
 		return target instanceof ReferenceChange;
+	}
+
+	@Override
+	public boolean apply(IMergeCriterion criterion) {
+		return criterion == null;
 	}
 
 	/**
@@ -400,6 +402,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 		final EReference reference = diff.getReference();
 		final EObject expectedValue;
 		final Match valueMatch = comparison.getMatch(diff.getValue());
+		boolean needXmiId = false;
 		if (valueMatch == null) {
 			// This is an out of scope value.
 			if (diff.getValue().eIsProxy()) {
@@ -410,16 +413,18 @@ public class ReferenceChangeMerger extends AbstractMerger {
 				expectedValue = diff.getValue();
 			}
 		} else if (rightToLeft) {
-			if (reference.isContainment() || isImplyingContainmentAddition(diff, rightToLeft)) {
+			if (reference.isContainment() || valueMatch.getLeft() == null) {
 				expectedValue = createCopy(diff.getValue());
 				valueMatch.setLeft(expectedValue);
+				needXmiId = true;
 			} else {
 				expectedValue = valueMatch.getLeft();
 			}
 		} else {
-			if (reference.isContainment() || isImplyingContainmentAddition(diff, rightToLeft)) {
+			if (reference.isContainment() || valueMatch.getRight() == null) {
 				expectedValue = createCopy(diff.getValue());
 				valueMatch.setRight(expectedValue);
+				needXmiId = true;
 			} else {
 				expectedValue = valueMatch.getRight();
 			}
@@ -435,7 +440,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 			safeESet(expectedContainer, reference, expectedValue);
 		}
 
-		if (reference.isContainment() || isImplyingContainmentAddition(diff, rightToLeft)) {
+		if (needXmiId) {
 			// Copy XMI ID when applicable.
 			final Resource initialResource = diff.getValue().eResource();
 			final Resource targetResource = expectedValue.eResource();
@@ -446,35 +451,6 @@ public class ReferenceChangeMerger extends AbstractMerger {
 		}
 
 		checkImpliedDiffsOrdering(diff, rightToLeft);
-	}
-
-	/**
-	 * Checks whether the given diff implies the merge of a containment reference, in which case we need to
-	 * create the object (it hasn't been created through our requirements yet).
-	 * 
-	 * @param target
-	 *            The diff we're merging.
-	 * @param mergeRightToLeft
-	 *            The direction in which we're merging.
-	 * @return <code>true</code> if this diff implies the merge of a containment reference.
-	 */
-	private boolean isImplyingContainmentAddition(Diff target, boolean mergeRightToLeft) {
-		final Set<Diff> implications = new LinkedHashSet<Diff>();
-		Set<Diff> newImplications = getDirectResultingMerges(target, mergeRightToLeft);
-		while (!newImplications.isEmpty()) {
-			final Set<Diff> copy = new LinkedHashSet<Diff>(newImplications);
-			implications.addAll(newImplications);
-			newImplications = new LinkedHashSet<Diff>();
-			for (Diff implied : copy) {
-				if (implied instanceof ReferenceChange
-						&& ((ReferenceChange)implied).getReference().isContainment()) {
-					return true;
-				}
-				newImplications.addAll(getDirectResultingMerges(implied, mergeRightToLeft));
-			}
-			newImplications = Sets.difference(newImplications, implications);
-		}
-		return false;
 	}
 
 	/**
@@ -592,8 +568,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 			originContainer = match.getLeft();
 		}
 
-		if (originContainer == null || !safeEIsSet(targetContainer, reference)
-				|| !safeEIsSet(originContainer, reference)) {
+		if (originContainer == null || !safeEIsSet(originContainer, reference)) {
 			targetContainer.eUnset(reference);
 		} else {
 			final EObject originalValue = (EObject)safeEGet(originContainer, reference);

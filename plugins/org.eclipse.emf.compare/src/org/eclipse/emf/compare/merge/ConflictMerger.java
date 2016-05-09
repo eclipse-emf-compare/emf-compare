@@ -23,7 +23,6 @@ import java.util.Iterator;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 
@@ -42,6 +41,11 @@ public class ConflictMerger extends AbstractMerger {
 	 */
 	public boolean isMergerFor(Diff target) {
 		return target.getConflict() != null && target.getConflict().getKind() == REAL;
+	}
+
+	@Override
+	public boolean apply(IMergeCriterion criterion) {
+		return criterion == null;
 	}
 
 	/**
@@ -72,7 +76,7 @@ public class ConflictMerger extends AbstractMerger {
 		}
 
 		// Call the appropriate merger for the current diff
-		getHighestRankingMerger(target).copyLeftToRight(target, monitor);
+		getMergerDelegate(target).copyLeftToRight(target, monitor);
 
 	}
 
@@ -104,7 +108,7 @@ public class ConflictMerger extends AbstractMerger {
 		}
 
 		// Call the appropriate merger for the current diff
-		getHighestRankingMerger(target).copyRightToLeft(target, monitor);
+		getMergerDelegate(target).copyRightToLeft(target, monitor);
 	}
 
 	/**
@@ -149,46 +153,29 @@ public class ConflictMerger extends AbstractMerger {
 	 */
 	private void mergeConflictedDiff(Diff conflictedDiff, boolean leftToRight, Monitor monitor) {
 		if (conflictedDiff.getKind() != MOVE) {
-			IMerger highestRankingMerger = getHighestRankingMerger(conflictedDiff);
+			DelegatingMerger delegate = getMergerDelegate(conflictedDiff);
 			if (leftToRight) {
-				highestRankingMerger.copyLeftToRight(conflictedDiff, monitor);
+				delegate.copyLeftToRight(conflictedDiff, monitor);
 			} else {
-				highestRankingMerger.copyRightToLeft(conflictedDiff, monitor);
+				delegate.copyRightToLeft(conflictedDiff, monitor);
 			}
 		} else {
 			conflictedDiff.setState(MERGED);
 		}
 	}
 
-	/**
-	 * Returns the highest ranking merger without taking into account this merger (Conflict Merger).
-	 * 
-	 * @param target
-	 *            The given target difference.
-	 * @return The found merger.
-	 */
-	private IMerger getHighestRankingMerger(Diff target) {
-		Iterator<IMerger> mergers = getRegistry().getMergers(target).iterator();
-
-		IMerger ret = null;
-
-		if (mergers.hasNext()) {
-			IMerger highestRanking = mergers.next();
-			while (mergers.hasNext()) {
-				IMerger merger = mergers.next();
-				if (highestRanking == this
-						|| (merger != this && (merger.getRanking() > highestRanking.getRanking()))) {
-					highestRanking = merger;
-				}
-			}
-			ret = highestRanking;
+	@Override
+	protected DelegatingMerger getMergerDelegate(Diff diff) {
+		IMergeCriterion criterion = (IMergeCriterion)getMergeOptions().get(
+				IMergeCriterion.OPTION_MERGE_CRITERION);
+		Iterator<IMerger> it = ((Registry2)getRegistry()).getMergersByRankDescending(diff, criterion);
+		IMerger merger = this;
+		while (it.hasNext() && merger == this) {
+			merger = it.next();
 		}
-
-		if (ret == null) {
-			throw new IllegalStateException(EMFCompareMessages.getString("IMerger.MissingMerger", target //$NON-NLS-1$
-					.getClass().getSimpleName()));
+		if (merger == null) {
+			throw new IllegalStateException("No merger found for diff " + diff.getClass().getSimpleName()); //$NON-NLS-1$
 		}
-
-		return ret;
+		return new DelegatingMerger(merger, criterion);
 	}
 }

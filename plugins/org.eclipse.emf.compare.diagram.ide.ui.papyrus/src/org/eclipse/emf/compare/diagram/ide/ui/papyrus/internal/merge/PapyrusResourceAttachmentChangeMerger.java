@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.merge;
 
+import static org.eclipse.emf.compare.DifferenceSource.LEFT;
+import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
@@ -31,6 +34,7 @@ import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.CompareDiagramIDEUIPapyrusPlugin;
 import org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.CompareUIPapyrusMessages;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
+import org.eclipse.emf.compare.merge.IMergeCriterion;
 import org.eclipse.emf.compare.merge.ResourceAttachmentChangeMerger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -76,6 +80,11 @@ public class PapyrusResourceAttachmentChangeMerger extends ResourceAttachmentCha
 		return false;
 	}
 
+	@Override
+	public boolean apply(IMergeCriterion criterion) {
+		return criterion == null;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * <p>
@@ -116,9 +125,9 @@ public class PapyrusResourceAttachmentChangeMerger extends ResourceAttachmentCha
 				concernsTheSamePapyrusVirtualNodeAs(diff));
 		final ResourceSet targetRS;
 		if (rightToLeft) {
-			targetRS = getResourceSet(comp, DifferenceSource.LEFT);
+			targetRS = getResourceSet(comp, LEFT);
 		} else {
-			targetRS = getResourceSet(comp, DifferenceSource.RIGHT);
+			targetRS = getResourceSet(comp, RIGHT);
 		}
 		for (MatchResource mr : relatedMatchResource) {
 			if (rightToLeft) {
@@ -305,7 +314,7 @@ public class PapyrusResourceAttachmentChangeMerger extends ResourceAttachmentCha
 				URI uri = input.getRight().getURI();
 				return !rightURI.equals(uri) && rightURI.trimFileExtension().equals(uri.trimFileExtension());
 			}
-			if (input.getOrigin() != null && originURI.trimFileExtension() != null) {
+			if (input.getOrigin() != null && originURI != null && originURI.trimFileExtension() != null) {
 				URI uri = input.getOrigin().getURI();
 				return !originURI.equals(uri)
 						&& originURI.trimFileExtension().equals(uri.trimFileExtension());

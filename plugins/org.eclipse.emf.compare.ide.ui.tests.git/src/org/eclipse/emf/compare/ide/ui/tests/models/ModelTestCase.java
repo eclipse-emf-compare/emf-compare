@@ -82,6 +82,10 @@ public abstract class ModelTestCase extends CompareGitTestCase {
 		new MergeOperation(repo, refName).execute(null);
 	}
 
+	protected void merge(Repository repo, String refName, String strategyName) throws CoreException {
+		new MergeOperation(repo, refName, strategyName).execute(null);
+	}
+
 	protected Status status(Repository repo) throws Exception {
 		Git git = new Git(repo);
 		try {

@@ -188,7 +188,7 @@ public class RecursiveModelMerger extends RecursiveMerger {
 				try {
 					// We need to refresh because new resources may have been added
 					refreshRoots(subscriber.roots());
-					modelMerger = LogicalModels.findAdapter(logicalModel, IResourceMappingMerger.class);
+					modelMerger = getResourceMappingMerger(logicalModel);
 				} catch (CoreException e) {
 					Activator.logError(MergeText.RecursiveModelMerger_AdaptError, e);
 					// ignore this model and fall back to default
@@ -239,6 +239,11 @@ public class RecursiveModelMerger extends RecursiveMerger {
 			LOGGER.info("SUCCESS - Recursive model merge."); //$NON-NLS-1$
 		}
 		return true;
+	}
+
+	protected IResourceMappingMerger getResourceMappingMerger(Set<IResource> logicalModel)
+			throws CoreException {
+		return LogicalModels.findAdapter(logicalModel, IResourceMappingMerger.class);
 	}
 
 	private boolean fallBackToDefaultMerge(TreeWalk treeWalk, boolean ignoreConflicts)

@@ -13,14 +13,21 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.egit.core.Activator;
@@ -41,6 +48,7 @@ import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.tests.CompareTestCase;
 import org.eclipse.emf.compare.ide.ui.tests.egit.fixture.GitTestRepository;
 import org.eclipse.emf.compare.ide.ui.tests.egit.fixture.MockSystemReader;
+import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
 import org.eclipse.emf.compare.internal.utils.Graph;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -52,12 +60,18 @@ import org.eclipse.team.core.subscribers.Subscriber;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.osgi.framework.Bundle;
 
 /**
  * The set up and tear down of this class were mostly copied from org.eclipse.egit.core.test.GitTestCase.
  */
 @SuppressWarnings({"restriction", "nls", })
 public class CompareGitTestCase extends CompareTestCase {
+	/**
+	 * The bundle containing this test.
+	 */
+	protected static final String TEST_BUNDLE = "org.eclipse.emf.compare.ide.ui.tests.git";
+
 	protected GitTestRepository repository;
 
 	// The ".git" folder of the test repository
@@ -198,5 +212,26 @@ public class CompareGitTestCase extends CompareTestCase {
 
 		assertEquals(expectedOutgoing, outgoingCount);
 		assertEquals(expectedIncoming, incomingCount);
+	}
+
+	protected IFile addToProject(String testDataPath, TestProject testProject, IProject testIProject,
+			String filePath, String destinationPath) throws IOException, URISyntaxException, CoreException {
+		final Bundle bundle = Platform.getBundle(TEST_BUNDLE);
+		final URI fileUri = getFileUri(bundle.getEntry(testDataPath + filePath));
+
+		final File file = testProject.getOrCreateFile(testIProject, destinationPath + fileUri.lastSegment());
+
+		copyFile(toFile(fileUri), file);
+
+		return testProject.getIFile(testIProject, file);
+	}
+
+	private URI getFileUri(final URL bundleUrl) throws IOException {
+		URL fileLocation = FileLocator.toFileURL(bundleUrl);
+		return URI.createFileURI(fileLocation.getPath());
+	}
+
+	private File toFile(final URI fileUri) throws URISyntaxException {
+		return new File(fileUri.toFileString());
 	}
 }

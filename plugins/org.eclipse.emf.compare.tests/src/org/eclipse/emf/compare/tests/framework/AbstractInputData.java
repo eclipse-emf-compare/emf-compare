@@ -14,11 +14,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
@@ -97,5 +99,13 @@ public abstract class AbstractInputData {
 		}
 
 		return resource;
+	}
+
+	public ResourceSet loadFromClassLoader(List<String> paths, ResourceSet resourceSet) throws IOException {
+		for (String path : paths) {
+			loadFromClassLoader(path, resourceSet);
+			EcoreUtil.resolveAll(resourceSet);
+		}
+		return resourceSet;
 	}
 }

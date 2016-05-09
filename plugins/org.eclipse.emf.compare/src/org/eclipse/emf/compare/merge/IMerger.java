@@ -17,8 +17,12 @@ import static com.google.common.collect.Lists.newArrayList;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.collect.Iterators;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -155,10 +159,35 @@ public interface IMerger {
 	}
 
 	/**
+	 * Registry that can provide its mergers sorted by rank descending.
+	 * 
+	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
+	 * @since 3.3
+	 */
+	public interface Registry2 extends Registry {
+
+		/**
+		 * Provide the merger with the highest ranking among those that:
+		 * <ul>
+		 * <li>Are compatible with the given diff;</li>
+		 * <li>Match the given non-null criterion.</li>
+		 * </ul>
+		 * 
+		 * @param diff
+		 *            The diff
+		 * @param criterion
+		 *            The criterion
+		 * @return The best merger found, should never be null (throw an exception if no merger found)
+		 */
+		Iterator<IMerger> getMergersByRankDescending(Diff diff, IMergeCriterion criterion);
+
+	}
+
+	/**
 	 * A default implementation of an {@link IMerger.Registry}. This is the implementation EMF Compare will
 	 * use through its GUI.
 	 */
-	class RegistryImpl implements Registry {
+	class RegistryImpl implements Registry2 {
 		/**
 		 * Map which references the registered mergers per their class name.
 		 */
@@ -191,6 +220,8 @@ public interface IMerger {
 			attributeMerger.setRanking(defaultRanking);
 			final IMerger referenceMerger = new ReferenceChangeMerger();
 			referenceMerger.setRanking(defaultRanking);
+			final IMerger additiveReferenceMerger = new AdditiveReferenceChangeMerger();
+			additiveReferenceMerger.setRanking(defaultRanking);
 			final IMerger featureMapMerger = new FeatureMapChangeMerger();
 			featureMapMerger.setRanking(defaultRanking);
 			final IMerger resourceAttachmentMerger = new ResourceAttachmentChangeMerger();
@@ -199,13 +230,17 @@ public interface IMerger {
 			pseudoConflictMerger.setRanking(pseudoConflictRanking);
 			final IMerger conflictMerger = new ConflictMerger();
 			conflictMerger.setRanking(conflictRanking);
+			final IMerger additiveConflictMerger = new AdditiveConflictMerger();
+			additiveConflictMerger.setRanking(conflictRanking);
 
 			registry.add(attributeMerger);
 			registry.add(referenceMerger);
+			registry.add(additiveReferenceMerger);
 			registry.add(featureMapMerger);
 			registry.add(resourceAttachmentMerger);
 			registry.add(pseudoConflictMerger);
 			registry.add(conflictMerger);
+			registry.add(additiveConflictMerger);
 
 			return registry;
 		}
@@ -270,27 +305,43 @@ public interface IMerger {
 		 * @see org.eclipse.emf.compare.merge.IMerger.Registry#getHighestRankingMerger(org.eclipse.emf.compare.Diff)
 		 */
 		public IMerger getHighestRankingMerger(Diff target) {
-			Iterator<IMerger> mergers = getMergers(target).iterator();
-
-			IMerger ret = null;
-
+			Iterator<IMerger> mergers = getMergersByRankDescending(target, null);
 			if (mergers.hasNext()) {
-				IMerger highestRanking = mergers.next();
-				while (mergers.hasNext()) {
-					IMerger merger = mergers.next();
-					if (merger.getRanking() > highestRanking.getRanking()) {
-						highestRanking = merger;
-					}
+				return mergers.next();
+			}
+			throw new IllegalStateException(EMFCompareMessages.getString("IMerger.MissingMerger", target //$NON-NLS-1$
+					.getClass().getSimpleName()));
+		}
+
+		/**
+		 * Provide the mergers sorted by rank descending.
+		 * 
+		 * @param diff
+		 *            The diff
+		 * @param criterion
+		 *            The merge criterion, can be <code>null</code>
+		 * @return the registered mergers valid for the given diff and criterion, sorted by rank descending.
+		 * @since 3.3
+		 */
+		public Iterator<IMerger> getMergersByRankDescending(Diff diff, final IMergeCriterion criterion) {
+			List<IMerger> mergers = new ArrayList<IMerger>(getMergers(diff));
+			Collections.sort(mergers, new Comparator<IMerger>() {
+				public int compare(IMerger o1, IMerger o2) {
+					// Sort from largest to smallest
+					return o2.getRanking() - o1.getRanking();
 				}
-				ret = highestRanking;
-			}
-
-			if (ret == null) {
-				throw new IllegalStateException(EMFCompareMessages.getString("IMerger.MissingMerger", target //$NON-NLS-1$
-						.getClass().getSimpleName()));
-			}
-
-			return ret;
+			});
+			return Iterators.filter(mergers.iterator(), new Predicate<IMerger>() {
+				public boolean apply(IMerger input) {
+					if (input instanceof IMergeCriterionAware) {
+						if (((IMergeCriterionAware)input).apply(criterion)) {
+							return true;
+						}
+						return false;
+					}
+					return true;
+				}
+			});
 		}
 
 		/**
@@ -306,10 +357,7 @@ public interface IMerger {
 				mergerFor = isMergerFor(target);
 			}
 			Iterable<IMerger> mergers = filter(map.values(), mergerFor);
-			List<IMerger> ret = newArrayList();
-			for (IMerger merger : mergers) {
-				ret.add(merger);
-			}
+			List<IMerger> ret = newArrayList(mergers);
 			return ret;
 		}
 	}

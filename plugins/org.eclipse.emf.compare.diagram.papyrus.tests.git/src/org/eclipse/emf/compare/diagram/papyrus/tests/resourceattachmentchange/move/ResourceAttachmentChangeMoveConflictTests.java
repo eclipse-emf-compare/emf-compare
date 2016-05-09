@@ -50,6 +50,7 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramChange;
+import org.eclipse.emf.compare.diagram.papyrus.tests.AbstractGitTestCase;
 import org.eclipse.emf.compare.diagram.papyrus.tests.egit.fixture.GitTestRepository;
 import org.eclipse.emf.compare.diagram.papyrus.tests.egit.fixture.MockSystemReader;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -103,7 +104,7 @@ import com.google.common.collect.Iterables;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
 @SuppressWarnings({"restriction", "nls", "unused" })
-public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceAttachmentChangeMoveTests {
+public class ResourceAttachmentChangeMoveConflictTests extends AbstractGitTestCase {
 
 	/**
 	 * Path to the test data.

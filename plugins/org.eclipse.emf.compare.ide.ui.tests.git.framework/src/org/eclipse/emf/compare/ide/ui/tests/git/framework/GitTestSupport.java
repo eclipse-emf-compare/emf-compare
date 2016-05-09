@@ -324,7 +324,6 @@ public class GitTestSupport extends InternalGitTestSupport {
 		assertNotNull(ancestorProvider);
 
 		final IProgressMonitor monitor = new NullProgressMonitor();
-		// do we really need to create a new one?
 		final ITypedElement left = new StorageTypedElement(file, fullPath);
 		final ITypedElement right = new StorageTypedElement(remoteProvider.getStorage(monitor), fullPath);
 		final ITypedElement origin = new StorageTypedElement(ancestorProvider.getStorage(monitor), fullPath);

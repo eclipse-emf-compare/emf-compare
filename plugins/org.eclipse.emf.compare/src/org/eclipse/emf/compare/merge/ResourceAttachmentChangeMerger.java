@@ -50,6 +50,11 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 		return target instanceof ResourceAttachmentChange;
 	}
 
+	@Override
+	public boolean apply(IMergeCriterion criterion) {
+		return criterion == null;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -273,11 +278,14 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 			return;
 		}
 
-		final EObject sourceValue;
+		EObject sourceValue;
 		if (rightToLeft) {
 			sourceValue = match.getRight();
 		} else {
 			sourceValue = match.getLeft();
+		}
+		if (sourceValue == null) {
+			sourceValue = match.getOrigin();
 		}
 
 		final EObject expectedValue;

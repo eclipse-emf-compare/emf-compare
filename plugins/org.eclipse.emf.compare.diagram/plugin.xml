@@ -40,6 +40,10 @@
             class="org.eclipse.emf.compare.diagram.internal.merge.CompareDiagramMerger"
             ranking="20">
       </merger>
+      <merger
+            class="org.eclipse.emf.compare.diagram.internal.merge.AdditiveCompareDiagramMerger"
+            ranking="20">
+      </merger>
    </extension>
 
 </plugin>

@@ -17,6 +17,10 @@
             class="org.eclipse.emf.compare.egit.internal.merge.StrategyRecursiveModel"
             label="%StrategyRecursiveModel-Label">
       </strategy>
+      <strategy
+            class="org.eclipse.emf.compare.egit.internal.merge.StrategyAdditiveModel"
+            label="%StrategyAdditiveModel-Label">
+      </strategy>
    </extension>
    <extension
          point="org.eclipse.emf.compare.rcp.postProcessor">

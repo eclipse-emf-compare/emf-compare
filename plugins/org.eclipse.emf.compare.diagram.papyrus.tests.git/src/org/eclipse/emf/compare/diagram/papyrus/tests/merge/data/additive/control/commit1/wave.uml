@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_MQcHcAeTEeapseY6dvJNJQ" name="wave">
+  <packagedElement xmi:type="uml:Class" xmi:id="_XoQ7UAeTEeapseY6dvJNJQ" name="Antenna"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_YnjOEAeTEeapseY6dvJNJQ" name="WifiRooter"/>
+  <packagedElement xmi:type="uml:Realization" xmi:id="_wsQkQAeTEeapseY6dvJNJQ" client="_YnjOEAeTEeapseY6dvJNJQ">
+    <supplier xmi:type="uml:Interface" href="model.uml#_b9l80AeTEeapseY6dvJNJQ"/>
+  </packagedElement>
+</uml:Package>

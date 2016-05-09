@@ -31,6 +31,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.diagram.internal.merge.CompareDiagramMerger;
+import org.eclipse.emf.compare.diagram.papyrus.tests.AbstractGitTestCase;
 import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.uml2.internal.merge.UMLMerger;
@@ -43,7 +44,7 @@ import org.junit.Test;
 import com.google.common.base.Predicate;
 
 @SuppressWarnings("restriction")
-public class ResourceAttachmentChangeMoveOrderTests extends AbstractResourceAttachmentChangeMoveTests {
+public class ResourceAttachmentChangeMoveOrderTests extends AbstractGitTestCase {
 
 	/** Path to the test data. */
 	private static final String TEST_DATA_PATH = "src/org/eclipse/emf/compare/diagram/papyrus/tests/resourceattachmentchange/move/data/";

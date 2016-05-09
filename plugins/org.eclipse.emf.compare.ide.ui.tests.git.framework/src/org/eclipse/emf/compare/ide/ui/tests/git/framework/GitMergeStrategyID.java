@@ -21,7 +21,7 @@ public enum GitMergeStrategyID {
 
 	MODEL_RECURSIVE("model recursive"), //$NON-NLS-1$
 
-	MODEL_ADDITIVE("model additive merge"); //$NON-NLS-1$
+	MODEL_ADDITIVE("model additive"); //$NON-NLS-1$
 
 	private String value;
 
