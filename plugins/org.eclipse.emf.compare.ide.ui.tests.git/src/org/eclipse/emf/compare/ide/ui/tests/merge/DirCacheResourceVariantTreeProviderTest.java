@@ -12,69 +12,66 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.egit.core.op.MergeOperation;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.compare.egit.internal.merge.DirCacheResourceVariantTreeProvider;
-import org.junit.Test;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestRunner;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitInput;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMerge;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitTest;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.Status;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.NoFilepatternException;
+import org.eclipse.jgit.lib.Repository;
+import org.junit.runner.RunWith;
 
-public class DirCacheResourceVariantTreeProviderTest extends VariantsTestCase {
-	@Test
-	public void testDirCacheAddToIndex() throws Exception {
-		File file1 = repository.createFile(iProject, "file1");
-		IFile iFile1 = repository.getIFile(iProject, file1);
+@RunWith(GitTestRunner.class)
+@SuppressWarnings("unused")
+public class DirCacheResourceVariantTreeProviderTest {
 
-		repository.appendFileContent(file1, INITIAL_CONTENT_1);
+	@GitTest
+	@GitInput("data/dirCacheResourceVariantTreeProvider/dirCacheAddToIndex.zip")
+	public void testDirCacheAddToIndex(Status status, Repository repository, List<IProject> projects)
+			throws Exception {
+		IProject project = projects.get(0);
+		IFile iFile1 = project.getFile("file1"); //$NON-NLS-1$
 
 		// untracked file : not part of the index
-		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(repo, true);
+		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(
+				repository, true);
 		assertTrue(treeProvider.getKnownResources().isEmpty());
 		assertFalse(treeProvider.getBaseTree().hasResourceVariant(iFile1));
 		assertFalse(treeProvider.getSourceTree().hasResourceVariant(iFile1));
 		assertFalse(treeProvider.getRemoteTree().hasResourceVariant(iFile1));
 
-		repository.addToIndex(iFile1);
+		iFile1.toString();
+		addToIndex(repository, iFile1);
 
 		// We now have a stage 0, present in each tree
-		treeProvider = new DirCacheResourceVariantTreeProvider(repo, true);
+		treeProvider = new DirCacheResourceVariantTreeProvider(repository, true);
 		assertEquals(1, treeProvider.getKnownResources().size());
 		assertTrue(treeProvider.getBaseTree().hasResourceVariant(iFile1));
 		assertTrue(treeProvider.getSourceTree().hasResourceVariant(iFile1));
 		assertTrue(treeProvider.getRemoteTree().hasResourceVariant(iFile1));
 	}
 
-	@Test
-	public void testDirCacheTreesNoConflict() throws Exception {
-		File file1 = repository.createFile(iProject, "file1");
-		File file2 = repository.createFile(iProject, "file2");
-
-		repository.appendContentAndCommit(iProject, file1, INITIAL_CONTENT_1, "first file - initial commit");
-		repository.appendContentAndCommit(iProject, file2, INITIAL_CONTENT_2, "second file - initial commit");
-
-		IFile iFile1 = repository.getIFile(iProject, file1);
-		IFile iFile2 = repository.getIFile(iProject, file2);
-
-		repository.createAndCheckoutBranch(MASTER, BRANCH);
-
-		final String branchChanges = "branch changes\n";
-		setContentsAndCommit(repository, iFile2, branchChanges + INITIAL_CONTENT_2, "branch commit");
-
-		repository.checkoutBranch(MASTER);
-
-		final String masterChanges = "\nsome changes";
-		setContentsAndCommit(repository, iFile1, INITIAL_CONTENT_1 + masterChanges, "master commit");
-		iProject.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-		// end setup
-
-		// try and merge the branch into master
-		new MergeOperation(repo, BRANCH).execute(null);
+	@GitMerge(localBranch = "master", remoteBranch = "branch")
+	@GitInput("data/dirCacheResourceVariantTreeProvider/dirCacheTreesNoConflict.zip")
+	public void testDirCacheTreesNoConflict(Status status, Repository repository, List<IProject> projects)
+			throws Exception {
+		IProject iProject = projects.get(0);
+		IFile iFile1 = iProject.getFile("file1"); //$NON-NLS-1$
+		IFile iFile2 = iProject.getFile("file2"); //$NON-NLS-1$
 
 		// no conflict on either file : present in the trees anyway
-		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(repo, true);
-		assertEquals(2, treeProvider.getKnownResources().size());
+		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(
+				repository, true);
+		assertEquals(3, treeProvider.getKnownResources().size());
 
 		assertTrue(treeProvider.getBaseTree().hasResourceVariant(iFile1));
 		assertTrue(treeProvider.getBaseTree().hasResourceVariant(iFile2));
@@ -86,36 +83,18 @@ public class DirCacheResourceVariantTreeProviderTest extends VariantsTestCase {
 		assertTrue(treeProvider.getRemoteTree().hasResourceVariant(iFile2));
 	}
 
-	@Test
-	public void testDirCacheTreesConflictOnOne() throws Exception {
-		File file1 = repository.createFile(iProject, "file1");
-		File file2 = repository.createFile(iProject, "file2");
-
-		repository.appendContentAndCommit(iProject, file1, INITIAL_CONTENT_1, "first file - initial commit");
-		repository.appendContentAndCommit(iProject, file2, INITIAL_CONTENT_2, "second file - initial commit");
-
-		IFile iFile1 = repository.getIFile(iProject, file1);
-		IFile iFile2 = repository.getIFile(iProject, file2);
-
-		repository.createAndCheckoutBranch(MASTER, BRANCH);
-
-		final String branchChanges = "branch changes\n";
-		setContentsAndCommit(repository, iFile1, branchChanges + INITIAL_CONTENT_1, "branch commit");
-		setContentsAndCommit(repository, iFile2, branchChanges + INITIAL_CONTENT_2, "branch commit");
-
-		repository.checkoutBranch(MASTER);
-
-		final String masterChanges = "\nsome changes";
-		setContentsAndCommit(repository, iFile1, INITIAL_CONTENT_1 + masterChanges, "master commit");
-		iProject.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-		// end setup
-
-		// try and merge the branch into master
-		new MergeOperation(repo, BRANCH).execute(null);
+	@GitMerge(localBranch = "master", remoteBranch = "branch")
+	@GitInput("data/dirCacheResourceVariantTreeProvider/dirCacheTreesConflictOnOne.zip")
+	public void testDirCacheTreesConflictOnOne(Status status, Repository repository, List<IProject> projects)
+			throws Exception {
+		IProject iProject = projects.get(0);
+		IFile iFile1 = iProject.getFile("file1"); //$NON-NLS-1$
+		IFile iFile2 = iProject.getFile("file2"); //$NON-NLS-1$
 
 		// conflict on file 1 : present in all three trees
 		// no conflict on file 2 : present anyway
-		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(repo, true);
+		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(
+				repository, true);
 		assertTrue(treeProvider.getKnownResources().contains(iFile1));
 		assertTrue(treeProvider.getKnownResources().contains(iFile2));
 
@@ -129,38 +108,18 @@ public class DirCacheResourceVariantTreeProviderTest extends VariantsTestCase {
 		assertTrue(treeProvider.getRemoteTree().hasResourceVariant(iFile2));
 	}
 
-	@Test
-	public void testDirCacheTreesConflict() throws Exception {
-		File file1 = repository.createFile(iProject, "file1");
-		File file2 = repository.createFile(iProject, "file2");
-
-		repository.appendContentAndCommit(iProject, file1, INITIAL_CONTENT_1, "first file - initial commit");
-
-		IFile iFile1 = repository.getIFile(iProject, file1);
-
-		repository.createAndCheckoutBranch(MASTER, BRANCH);
-
-		final String branchChanges = "branch changes\n";
-		setContentsAndCommit(repository, iFile1, branchChanges + INITIAL_CONTENT_1, "branch commit");
-		repository.appendContentAndCommit(iProject, file2, INITIAL_CONTENT_2 + "branch",
-				"second file - initial commit - branch");
-
-		repository.checkoutBranch(MASTER);
-
-		final String masterChanges = "some changes\n";
-		setContentsAndCommit(repository, iFile1, INITIAL_CONTENT_1 + masterChanges, "master commit - file1");
-		repository.appendContentAndCommit(iProject, file2, INITIAL_CONTENT_2 + "master",
-				"second file - initial commit - master");
-		IFile iFile2 = repository.getIFile(iProject, file2);
-		iProject.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-		// end setup
-
-		// try and merge the branch into master
-		new MergeOperation(repo, BRANCH).execute(null);
+	@GitMerge(localBranch = "master", remoteBranch = "branch")
+	@GitInput("data/dirCacheResourceVariantTreeProvider/dirCacheTreesConflict.zip")
+	public void testDirCacheTreesConflict(Status status, Repository repository, List<IProject> projects)
+			throws Exception {
+		IProject iProject = projects.get(0);
+		IFile iFile1 = iProject.getFile("file1"); //$NON-NLS-1$
+		IFile iFile2 = iProject.getFile("file2"); //$NON-NLS-1$
 
 		// conflict on file 1 : file 1 has three stages.
 		// conflict on file 2, but was not in the base : only stage 2 and 3
-		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(repo, true);
+		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(
+				repository, true);
 		assertTrue(treeProvider.getKnownResources().contains(iFile1));
 		assertTrue(treeProvider.getKnownResources().contains(iFile2));
 
@@ -173,4 +132,27 @@ public class DirCacheResourceVariantTreeProviderTest extends VariantsTestCase {
 		assertTrue(treeProvider.getRemoteTree().hasResourceVariant(iFile1));
 		assertTrue(treeProvider.getRemoteTree().hasResourceVariant(iFile2));
 	}
+
+	private void addToIndex(Repository repository, IFile file) throws CoreException, IOException,
+			NoFilepatternException, GitAPIException {
+		String filePath = file.getProject().getName() + "/" + file.getProjectRelativePath(); //$NON-NLS-1$
+		Git git = new Git(repository);
+		try {
+			git.add().addFilepattern(filePath).call();
+		} finally {
+			git.close();
+		}
+	}
+
+	private String getRepoRelativePath(String repoPath, String path) {
+		final int pfxLen = repoPath.length();
+		final int pLen = path.length();
+		if (pLen > pfxLen) {
+			return path.substring(pfxLen);
+		} else if (path.length() == pfxLen - 1) {
+			return ""; //$NON-NLS-1$
+		}
+		return null;
+	}
+
 }

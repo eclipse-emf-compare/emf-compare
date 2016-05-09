@@ -45,6 +45,7 @@ import org.junit.Test;
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 @SuppressWarnings("restriction")
+// @RunWith(EMFCompareGitTestRunner.class)
 public class StrategyRecursiveModelTest extends ModelTestCase {
 	protected static final String MASTER = Constants.R_HEADS + Constants.MASTER;
 
@@ -95,111 +96,74 @@ public class StrategyRecursiveModelTest extends ModelTestCase {
 		super.tearDown();
 	}
 
-	/**
-	 * This test will initialize a repository with two branches with a few changes each, then try to merge the
-	 * branch into master.
-	 * <p>
-	 * The repository will contain two files, file1.sample and file2.sample, both being in the same container
-	 * and thus considered to be components of a single logical model by the SampleModelProvider.
-	 * </p>
-	 * <p>
-	 * file1 will be modified on both master and the branch, these changes being considered as an
-	 * unresolveable conflict by git (and JGit), but considered as an auto-mergeable conflict by the
-	 * SampleResourceMappingMerger. file2 will only be modified on the branch : it will be deleted.
-	 * </p>
-	 * <p>
-	 * We expect the merge to end successfully, ending with a repository that has no uncommited change.
-	 * </p>
-	 *
-	 * @throws Exception
-	 */
-	@Test
-	public void mergeModelWithDeletedRemoteNoConflict() throws Exception {
-		File file1 = repository.createFile(iProject, "file1." + SAMPLE_FILE_EXTENSION); //$NON-NLS-1$
-		File file2 = repository.createFile(iProject, "file2." + SAMPLE_FILE_EXTENSION); //$NON-NLS-1$
-
-		repository.appendContentAndCommit(iProject, file1, INITIAL_CONTENT_FILE1,
-				"first file - initial commit"); //$NON-NLS-1$
-		repository.appendContentAndCommit(iProject, file2, INITIAL_CONTENT_FILE2,
-				"second file - initial commit"); //$NON-NLS-1$
-
-		IFile iFile1 = repository.getIFile(iProject, file1);
-		IFile iFile2 = repository.getIFile(iProject, file2);
-
-		repository.createAndCheckoutBranch(MASTER, BRANCH);
-
-		setContentsAndCommit(repository, iFile1, BRANCH_CHANGE + INITIAL_CONTENT_FILE1, "branch commit"); //$NON-NLS-1$
-		iFile2.delete(true, new NullProgressMonitor());
-		repository.addAndCommit(iProject, "branch commit - deleted file2." + SAMPLE_FILE_EXTENSION, file2); //$NON-NLS-1$
-
-		repository.checkoutBranch(MASTER);
-
-		setContentsAndCommit(repository, iFile1, INITIAL_CONTENT_FILE1 + MASTER_CHANGE, "master commit"); //$NON-NLS-1$
-		iProject.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-		// end setup
-
-		merge(repo, BRANCH);
-
-		final Status status = status(repo);
-		assertFalse(status.hasUncommittedChanges());
-		assertTrue(status.getConflicting().isEmpty());
-
-		assertContentEquals(iFile1, BRANCH_CHANGE + INITIAL_CONTENT_FILE1 + MASTER_CHANGE);
-		assertFalse(iFile2.exists());
-	}
-
-	/**
-	 * This test will initialize a repository with two branches with a few changes each, then try to merge the
-	 * branch into master.
-	 * <p>
-	 * The repository will contain two files, file1.sample and file2.sample, both being in the same container
-	 * and thus considered to be components of a single logical model by the SampleModelProvider.
-	 * </p>
-	 * <p>
-	 * file1 will be modified on both master and the branch, these changes being considered as an
-	 * unresolveable conflict by git (and JGit), but considered as an auto-mergeable conflict by the
-	 * SampleResourceMappingMerger. file2 will only be modified on master where it will be deleted.
-	 * </p>
-	 * <p>
-	 * We expect the merge to end successfully, ending with a repository that has no uncommited change.
-	 * </p>
-	 *
-	 * @throws Exception
-	 */
-	@Test
-	public void mergeModelWithDeletedLocalNoConflict() throws Exception {
-		File file1 = repository.createFile(iProject, "file1." + SAMPLE_FILE_EXTENSION); //$NON-NLS-1$
-		File file2 = repository.createFile(iProject, "file2." + SAMPLE_FILE_EXTENSION); //$NON-NLS-1$
-
-		repository.appendContentAndCommit(iProject, file1, INITIAL_CONTENT_FILE1,
-				"first file - initial commit"); //$NON-NLS-1$
-		repository.appendContentAndCommit(iProject, file2, INITIAL_CONTENT_FILE2,
-				"second file - initial commit"); //$NON-NLS-1$
-
-		IFile iFile1 = repository.getIFile(iProject, file1);
-		IFile iFile2 = repository.getIFile(iProject, file2);
-
-		repository.createAndCheckoutBranch(MASTER, BRANCH);
-
-		setContentsAndCommit(repository, iFile1, BRANCH_CHANGE + INITIAL_CONTENT_FILE1, "branch commit"); //$NON-NLS-1$
-
-		repository.checkoutBranch(MASTER);
-
-		setContentsAndCommit(repository, iFile1, INITIAL_CONTENT_FILE1 + MASTER_CHANGE, "master commit"); //$NON-NLS-1$
-		iFile2.delete(true, new NullProgressMonitor());
-		repository.addAndCommit(iProject, "master commit - deleted file2." + SAMPLE_FILE_EXTENSION, file2); //$NON-NLS-1$
-		iProject.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-		// end setup
-
-		merge(repo, BRANCH);
-
-		final Status status = status(repo);
-		assertFalse(status.hasUncommittedChanges());
-		assertTrue(status.getConflicting().isEmpty());
-
-		assertContentEquals(iFile1, BRANCH_CHANGE + INITIAL_CONTENT_FILE1 + MASTER_CHANGE);
-		assertFalse(iFile2.exists());
-	}
+	// /**
+	// * This test will initialize a repository with two branches with a few changes each, then try to merge
+	// the
+	// * branch into master.
+	// * <p>
+	// * The repository will contain two files, file1.sample and file2.sample, both being in the same
+	// container
+	// * and thus considered to be components of a single logical model by the SampleModelProvider.
+	// * </p>
+	// * <p>
+	// * file1 will be modified on both master and the branch, these changes being considered as an
+	// * unresolveable conflict by git (and JGit), but considered as an auto-mergeable conflict by the
+	// * SampleResourceMappingMerger. file2 will only be modified on the branch : it will be deleted.
+	// * </p>
+	// * <p>
+	// * We expect the merge to end successfully, ending with a repository that has no uncommited change.
+	// * </p>
+	// *
+	// * @throws Exception
+	// */
+	// @Merge(localBranch = "master", remoteBranch = "branch")
+	// @Input("data/strategyRecursiveModel/deletedRemoteNoConflict.zip")
+	// public void mergeModelWithDeletedRemoteNoConflict(Status status, Repository repository,
+	// List<IProject> projects) throws Exception {
+	// IProject project = projects.get(0);
+	// IFile iFile1 = project.getFile("file1.sample");
+	// IFile iFile2 = project.getFile("file2.sample");
+	//
+	// assertFalse(status.hasUncommittedChanges());
+	// assertTrue(status.getConflicting().isEmpty());
+	//
+	// assertContentEquals(iFile1, BRANCH_CHANGE + INITIAL_CONTENT_FILE1 + MASTER_CHANGE);
+	// assertFalse(iFile2.exists());
+	// }
+	//
+	// /**
+	// * This test will initialize a repository with two branches with a few changes each, then try to merge
+	// the
+	// * branch into master.
+	// * <p>
+	// * The repository will contain two files, file1.sample and file2.sample, both being in the same
+	// container
+	// * and thus considered to be components of a single logical model by the SampleModelProvider.
+	// * </p>
+	// * <p>
+	// * file1 will be modified on both master and the branch, these changes being considered as an
+	// * unresolveable conflict by git (and JGit), but considered as an auto-mergeable conflict by the
+	// * SampleResourceMappingMerger. file2 will only be modified on master where it will be deleted.
+	// * </p>
+	// * <p>
+	// * We expect the merge to end successfully, ending with a repository that has no uncommited change.
+	// * </p>
+	// *
+	// * @throws Exception
+	// */
+	// @Merge(localBranch = "master", remoteBranch = "branch")
+	// @Input("data/strategyRecursiveModel/deletedLocalNoConflict.zip")
+	// public void mergeModelWithDeletedLocalNoConflict(Status status, Repository repository,
+	// List<IProject> projects) throws Exception {
+	// IProject project = projects.get(0);
+	// IFile iFile1 = project.getFile("file1.sample");
+	// IFile iFile2 = project.getFile("file2.sample");
+	// assertFalse(status.hasUncommittedChanges());
+	// assertTrue(status.getConflicting().isEmpty());
+	//
+	// assertContentEquals(iFile1, BRANCH_CHANGE + INITIAL_CONTENT_FILE1 + MASTER_CHANGE);
+	// assertFalse(iFile2.exists());
+	// }
 
 	/**
 	 * This test will initialize a repository with two branches with a few changes each, then try to merge the

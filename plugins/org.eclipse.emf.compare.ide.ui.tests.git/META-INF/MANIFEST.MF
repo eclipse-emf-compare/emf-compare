@@ -8,4 +8,6 @@ Fragment-Host: org.eclipse.emf.compare.ide.ui.tests
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.egit.core;bundle-version="4.1.0",
  org.eclipse.jgit;bundle-version="4.1.0",
- org.eclipse.emf.compare.egit;bundle-version="1.1.0"
+ org.eclipse.emf.compare.egit;bundle-version="1.1.0",
+ org.eclipse.emf.compare.ide.ui.tests.git.framework;bundle-version="1.0.0",
+ org.eclipse.emf.compare.ide.ui.tests.framework;bundle-version="1.0.0"
