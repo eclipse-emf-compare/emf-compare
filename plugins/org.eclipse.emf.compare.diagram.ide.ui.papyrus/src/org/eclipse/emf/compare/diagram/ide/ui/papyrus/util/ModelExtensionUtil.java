@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2015, 2016 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Stefan Dirix - initial API and implementation
  *     Laurent Delaigue - Log invalid configuration
+ *     Philip Langer - javadoc
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.papyrus.util;
 
@@ -191,17 +192,36 @@ public final class ModelExtensionUtil {
 			return null;
 		}
 
-		// since Papyrus 2.0 we have to implement canPersist
-		// we omit @Override on purpose to be backward compatible
+		/**
+		 * Stub implementation, which always returns <code>false</code>.
+		 * <p>
+		 * Since Papyrus 2.0, {@link AbstractBaseModel} forces us to implement
+		 * {@link AbstractBaseModel#canPersist(EObject)}. We omit <code>@Override</code> on purpose to be
+		 * backward compatible.
+		 * </p>
+		 * 
+		 * @param eObject
+		 *            This parameter will be ignored.
+		 * @return <code>false</code>.
+		 */
 		@SuppressWarnings("all")
 		public boolean canPersist(EObject eObject) {
 			return false;
 		}
 
-		// since Papyrus 2.0 we have to implement persist
-		// we omit @Override on purpose to be backward compatible
+		/**
+		 * Stub implementation, which does nothing.
+		 * <p>
+		 * Since Papyrus 2.0, {@link AbstractBaseModel} forces us to implement
+		 * {@link AbstractBaseModel#persist(EObject)}. We omit <code>@Override</code> on purpose to be
+		 * backward compatible.
+		 * </p>
+		 * 
+		 * @param eObject
+		 *            This parameter will be ignored.
+		 */
 		@SuppressWarnings("all")
-		public void persist(EObject object) {
+		public void persist(EObject eObject) {
 			// no implementation
 		}
 	}

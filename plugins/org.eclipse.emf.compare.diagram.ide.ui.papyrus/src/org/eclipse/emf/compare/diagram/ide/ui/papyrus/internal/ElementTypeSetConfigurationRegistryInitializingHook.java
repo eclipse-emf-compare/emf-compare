@@ -36,10 +36,13 @@ import org.osgi.framework.Bundle;
  */
 public class ElementTypeSetConfigurationRegistryInitializingHook extends AbstractPapyrusResourceSetHook {
 
+	/** The id of the bundle containing the class ElementTypeSetConfigurationRegistry. */
 	private static final String BUNDLE_ID = "org.eclipse.papyrus.infra.elementtypesconfigurations"; //$NON-NLS-1$
 
+	/** The method to be invoked in ElementTypeSetConfigurationRegistry. */
 	private static final String GET_INSTANCE = "getInstance"; //$NON-NLS-1$
 
+	/** The qualified class name of ElementTypeSetConfigurationRegistry. */
 	private static final String ELEMENTTYPESETCONFIGREG_CLASS_NAME = "org.eclipse.papyrus.infra.elementtypesconfigurations.registries.ElementTypeSetConfigurationRegistry"; //$NON-NLS-1$
 
 	@Override
@@ -75,6 +78,12 @@ public class ElementTypeSetConfigurationRegistryInitializingHook extends Abstrac
 		});
 	}
 
+	/**
+	 * Logs the specified exception <code>e</code>.
+	 * 
+	 * @param e
+	 *            The exception to be logged.
+	 */
 	private void logException(Exception e) {
 		CompareDiagramIDEUIPapyrusPlugin.getDefault().getLog().log(
 				new Status(IStatus.WARNING, CompareDiagramIDEUIPapyrusPlugin.PLUGIN_ID,
