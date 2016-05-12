@@ -67,6 +67,12 @@ public final class SynchronizationModel implements IDiagnosable {
 	private ImmutableSet<IResource> resources;
 
 	/**
+	 * All resources that are involved in this synchronization model before any minimization that may have
+	 * been applied.
+	 */
+	private final ImmutableSet<IResource> allInvolvedResources;
+
+	/**
 	 * Provider for the composed diagnostic that aggregates the diagnostics of the logical model resolution
 	 * and resource traversals.
 	 */
@@ -124,6 +130,7 @@ public final class SynchronizationModel implements IDiagnosable {
 			this.originTraversal = originTraversal;
 		}
 		diagnosticProvider = new SynchronizationModelDiagnosticProvider(this);
+		allInvolvedResources = computeResources();
 	}
 
 	/**
@@ -191,21 +198,50 @@ public final class SynchronizationModel implements IDiagnosable {
 	}
 
 	/**
-	 * Returns the set of resources this synchronization model spans. The returned set may contain resources
-	 * that do not exist locally.
+	 * Returns the set of resources this synchronization model spans.
+	 * <p>
+	 * The returned set may contain resources that do not exist locally. The set of resources is cached. If no
+	 * cached set is available, this method will compute and cache it. Note that the cache may not be in sync,
+	 * if the traversals of this synchronization model have been changed after {@link #getResources()} has
+	 * been called.
+	 * </p>
 	 * 
 	 * @return The set of resources this synchronization model spans.
 	 * @since 4.1
 	 */
 	public Set<IResource> getResources() {
 		if (resources == null) {
-			final Set<IResource> leftResources = collectResources(getLeftTraversal());
-			final Set<IResource> rightResources = collectResources(getRightTraversal());
-			final Set<IResource> originResources = collectResources(getOriginTraversal());
-			resources = ImmutableSet.<IResource> builder().addAll(leftResources).addAll(rightResources)
-					.addAll(originResources).build();
+			resources = computeResources();
 		}
 		return resources;
+	}
+
+	/**
+	 * Returns the all resources that are involved in this synchronization model.
+	 * <p>
+	 * This is the set of resources involved directly after the instantiation of this synchronization model
+	 * and hence the set of resources before any minimization that may have been applied.
+	 * </p>
+	 * 
+	 * @return The initial set of all resources this synchronization model spans.
+	 * @since 4.3
+	 */
+	public Set<IResource> getAllInvolvedResources() {
+		return allInvolvedResources;
+	}
+
+	/**
+	 * Computes and returns the resources this synchronization model spans. The returned set may contain
+	 * resources that do not exist locally.
+	 * 
+	 * @return The set of resources this synchronization model spans.
+	 */
+	private ImmutableSet<IResource> computeResources() {
+		final Set<IResource> leftResources = collectResources(getLeftTraversal());
+		final Set<IResource> rightResources = collectResources(getRightTraversal());
+		final Set<IResource> originResources = collectResources(getOriginTraversal());
+		return ImmutableSet.<IResource> builder().addAll(leftResources).addAll(rightResources).addAll(
+				originResources).build();
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - add scope of a comparison to its adapters
  *******************************************************************************/
 package org.eclipse.emf.compare;
 
@@ -18,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -303,6 +305,12 @@ public class EMFCompare {
 		if (LOGGER.isInfoEnabled()) {
 			logEndOfComparison(comparison, startTime);
 		}
+
+		// Add scope to the comparison's adapters to make it available throughout the framework
+		if (scope instanceof Adapter) {
+			comparison.eAdapters().add((Adapter)scope);
+		}
+
 		return comparison;
 	}
 

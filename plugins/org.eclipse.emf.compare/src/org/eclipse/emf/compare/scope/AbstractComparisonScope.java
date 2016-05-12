@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - introduce getAllInvolvedResourceURIs and adapter
  *******************************************************************************/
 package org.eclipse.emf.compare.scope;
 
@@ -15,8 +16,10 @@ import com.google.common.collect.Sets;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.utils.IDiagnosable;
 
 /**
@@ -25,7 +28,7 @@ import org.eclipse.emf.compare.utils.IDiagnosable;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public abstract class AbstractComparisonScope implements IComparisonScope, IDiagnosable {
+public abstract class AbstractComparisonScope extends AdapterImpl implements IComparisonScope2, IDiagnosable {
 	/** The left root of this comparison. */
 	protected Notifier left;
 
@@ -45,6 +48,11 @@ public abstract class AbstractComparisonScope implements IComparisonScope, IDiag
 	protected Diagnostic diagnostic;
 
 	/**
+	 * The resources URIs representing the files that have been selected to be in the scope of the comparison.
+	 */
+	protected Set<URI> allInvolvedResourceURIs;
+
+	/**
 	 * This will instantiate a scope with left, right and origin Notifiers defined.
 	 * 
 	 * @param left
@@ -60,6 +68,7 @@ public abstract class AbstractComparisonScope implements IComparisonScope, IDiag
 		this.origin = origin;
 		this.resourceURIs = Sets.newHashSet();
 		this.nsURIs = Sets.newHashSet();
+		this.allInvolvedResourceURIs = Sets.newHashSet();
 		this.diagnostic = new BasicDiagnostic(Diagnostic.OK, "org.eclipse.emf.compare", 0, null, //$NON-NLS-1$
 				new Object[] {this, });
 	}
@@ -125,5 +134,22 @@ public abstract class AbstractComparisonScope implements IComparisonScope, IDiag
 	 */
 	public void setDiagnostic(Diagnostic diagnostic) {
 		this.diagnostic = diagnostic;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.scope.IComparisonScope2#getAllInvolvedResourceURIs()
+	 */
+	public Set<URI> getAllInvolvedResourceURIs() {
+		return allInvolvedResourceURIs;
+	}
+
+	@Override
+	public boolean isAdapterForType(Object type) {
+		if (type == IComparisonScope2.class || type == IComparisonScope.class) {
+			return true;
+		}
+		return super.isAdapterForType(type);
 	}
 }

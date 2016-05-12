@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo and others.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +8,16 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 466607
+ *     Philip Langer - add support for setting initial file URIs to scope
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Collections2.transform;
 import static org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil.findFile;
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.createURIFor;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
@@ -22,6 +25,7 @@ import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -30,6 +34,7 @@ import org.eclipse.compare.ICompareContainer;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -49,6 +54,7 @@ import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
+import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.FilterComparisonScope;
@@ -85,6 +91,19 @@ public final class ComparisonScopeBuilder {
 
 	/** The logger. */
 	private static final Logger LOGGER = Logger.getLogger(ComparisonScopeBuilder.class);
+
+	/** Function transforming an IResource into its URI. */
+	private static final Function<IResource, URI> TO_FILE_URIS = new Function<IResource, URI>() {
+		public URI apply(IResource input) {
+			URI uri;
+			if (input instanceof IStorage) {
+				uri = ResourceUtil.asURI().apply((IStorage)input);
+			} else {
+				uri = URI.createPlatformResourceURI(input.getFullPath().toString(), true);
+			}
+			return uri;
+		}
+	};
 
 	/**
 	 * Constructs a builder given its model resolver and minimizer.
@@ -513,6 +532,10 @@ public final class ComparisonScopeBuilder {
 		final FilterComparisonScope scope = new DefaultComparisonScope(leftResourceSet, rightResourceSet,
 				originResourceSet);
 		scope.setResourceSetContentFilter(isInScope(urisInScope));
+
+		final Set<IResource> involvedResources = syncModel.getAllInvolvedResources();
+		final Collection<URI> involvedResourceURIs = transform(involvedResources, TO_FILE_URIS);
+		scope.getAllInvolvedResourceURIs().addAll(involvedResourceURIs);
 
 		Diagnostic syncModelDiagnostic = syncModel.getDiagnostic();
 		Diagnostic scopeDiagnostic = computeDiagnostics(originResourceSet, leftResourceSet, rightResourceSet);
