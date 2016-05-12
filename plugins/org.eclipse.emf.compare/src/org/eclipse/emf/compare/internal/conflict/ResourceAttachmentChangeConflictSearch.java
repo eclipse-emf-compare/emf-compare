@@ -225,6 +225,12 @@ public class ResourceAttachmentChangeConflictSearch {
 			}
 		}
 
+		/**
+		 * Indicate whether the current diff represents the deletion of a 'dangling' root of a resource. A
+		 * dangling root is an EObject that had no parent in the model.
+		 * 
+		 * @return <code>true</code> if the current diff is a deletion of a dangling root EObject.
+		 */
 		protected boolean isDanglingRootDeletion() {
 			EObject o = getRelatedModelElement(diff);
 			if (o != null) {
