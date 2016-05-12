@@ -11,10 +11,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.unit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.net.URL;
 
@@ -28,7 +24,6 @@ import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.ui.tests.CompareTestCase;
-import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -125,37 +120,16 @@ public class TestBug459131 extends CompareTestCase {
 
 		// 1 change in R2 fragment and 1 change in R3 fragment
 		SynchronizationModel syncModel = resolver.resolveLocalModels(iLeftFile1, iRightFile1, null, monitor);
-
-		StorageTraversal leftTraversal = syncModel.getLeftTraversal();
-		assertEquals(3, leftTraversal.getStorages().size());
-		assertTrue(leftTraversal.getStorages().contains(iLeftFile1));
-		assertTrue(leftTraversal.getStorages().contains(iLeftFile2));
-		assertTrue(leftTraversal.getStorages().contains(iLeftFile3));
-
-		StorageTraversal rightTraversal = syncModel.getRightTraversal();
-		assertEquals(3, rightTraversal.getStorages().size());
-		assertTrue(rightTraversal.getStorages().contains(iRightFile1));
-		assertTrue(rightTraversal.getStorages().contains(iRightFile2));
-		assertTrue(rightTraversal.getStorages().contains(iRightFile3));
+		assertContainsExclusively(syncModel.getLeftTraversal(), iLeftFile1, iLeftFile2, iLeftFile3);
+		assertContainsExclusively(syncModel.getRightTraversal(), iRightFile1, iRightFile2, iRightFile3);
 
 		// Update R3 right model
 		// 1 change in R2 fragment and no change in R3 fragment
 		iRightFile3.setContents(iLeftFile3.getContents(), IResource.FORCE, monitor);
 
 		syncModel = resolver.resolveLocalModels(iLeftFile1, iRightFile1, null, monitor);
-
-		leftTraversal = syncModel.getLeftTraversal();
-		assertEquals(3, leftTraversal.getStorages().size());
-		assertTrue(leftTraversal.getStorages().contains(iLeftFile1));
-		assertTrue(leftTraversal.getStorages().contains(iLeftFile2));
-		assertTrue(leftTraversal.getStorages().contains(iLeftFile3));
-
-		rightTraversal = syncModel.getRightTraversal();
-		assertEquals(3, rightTraversal.getStorages().size());
-		assertTrue(rightTraversal.getStorages().contains(iRightFile1));
-		assertTrue(rightTraversal.getStorages().contains(iRightFile2));
-		assertTrue(rightTraversal.getStorages().contains(iRightFile3));
-
+		assertContainsExclusively(syncModel.getLeftTraversal(), iLeftFile1, iLeftFile2, iLeftFile3);
+		assertContainsExclusively(syncModel.getRightTraversal(), iRightFile1, iRightFile2, iRightFile3);
 	}
 
 	/**
@@ -229,35 +203,14 @@ public class TestBug459131 extends CompareTestCase {
 
 		// 1 change in R2 fragment and 1 change in R3 fragment
 		SynchronizationModel syncModel = resolver.resolveLocalModels(iLeftFile4, iRightFile4, null, monitor);
-
-		StorageTraversal leftTraversal = syncModel.getLeftTraversal();
-		assertEquals(3, leftTraversal.getStorages().size());
-		assertTrue(leftTraversal.getStorages().contains(iLeftFile4));
-		assertTrue(leftTraversal.getStorages().contains(iLeftFile5));
-		assertTrue(leftTraversal.getStorages().contains(iLeftFile6));
-
-		StorageTraversal rightTraversal = syncModel.getRightTraversal();
-		assertEquals(3, rightTraversal.getStorages().size());
-		assertTrue(rightTraversal.getStorages().contains(iRightFile4));
-		assertTrue(rightTraversal.getStorages().contains(iRightFile5));
-		assertTrue(rightTraversal.getStorages().contains(iRightFile6));
+		assertContainsExclusively(syncModel.getLeftTraversal(), iLeftFile4, iLeftFile5, iLeftFile6);
+		assertContainsExclusively(syncModel.getRightTraversal(), iRightFile4, iRightFile5, iRightFile6);
 
 		// Brake dependency between R5 & R6 right models.
 		iRightFile5.setContents(newIRightFile5.getContents(), IResource.FORCE, monitor);
 
 		syncModel = resolver.resolveLocalModels(iLeftFile4, iRightFile4, null, monitor);
-
-		leftTraversal = syncModel.getLeftTraversal();
-		assertEquals(3, leftTraversal.getStorages().size());
-		assertTrue(leftTraversal.getStorages().contains(iLeftFile4));
-		assertTrue(leftTraversal.getStorages().contains(iLeftFile5));
-		assertTrue(leftTraversal.getStorages().contains(iLeftFile6));
-
-		rightTraversal = syncModel.getRightTraversal();
-		assertEquals(2, rightTraversal.getStorages().size());
-		assertTrue(rightTraversal.getStorages().contains(iRightFile4));
-		assertTrue(rightTraversal.getStorages().contains(iRightFile5));
-		assertFalse(rightTraversal.getStorages().contains(iRightFile6));
-
+		assertContainsExclusively(syncModel.getLeftTraversal(), iLeftFile4, iLeftFile5, iLeftFile6);
+		assertContainsExclusively(syncModel.getRightTraversal(), iRightFile4, iRightFile5);
 	}
 }

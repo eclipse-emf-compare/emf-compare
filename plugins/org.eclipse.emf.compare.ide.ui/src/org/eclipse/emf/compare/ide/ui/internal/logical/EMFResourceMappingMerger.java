@@ -296,7 +296,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 *            The traversal to remove non-existing storages from.
 	 */
 	private void removeNonExistingStorages(StorageTraversal traversal) {
-		for (IStorage storage : Sets.newHashSet(traversal.getStorages())) {
+		for (IStorage storage : traversal.getStorages()) {
 			if (storage instanceof IFile && !((IFile)storage).exists()) {
 				traversal.removeStorage(storage);
 			}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 467677
+ *     Philip Langer - optimize use of StorageTraversal.getStorages()
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.utils;
 
@@ -473,8 +474,16 @@ public final class ResourceUtil {
 
 		// Change "platform:/resource/relativePath" URIs of non-workspace resources into "file:/absolutePath"
 		// URIs
+		final Set<? extends IStorage> leftStorages = leftTraversal.getStorages();
+		final Set<? extends IStorage> rightStorages = rightTraversal.getStorages();
+		final Set<? extends IStorage> originStorages;
+		if (originTraversal != null) {
+			originStorages = originTraversal.getStorages();
+		} else {
+			originStorages = null;
+		}
 		for (Resource resource : nonWsResources) {
-			String absolutePath = getAbsolutePath(resource, leftTraversal, rightTraversal, originTraversal);
+			String absolutePath = getAbsolutePath(resource, leftStorages, rightStorages, originStorages);
 			URI fileURI = URI.createFileURI(absolutePath);
 			resource.setURI(fileURI);
 		}
@@ -490,24 +499,23 @@ public final class ResourceUtil {
 	 * 
 	 * @param resource
 	 *            The resource for which we seek an absolute path.
-	 * @param leftTraversal
-	 *            The traversal corresponding to the left side.
-	 * @param rightTraversal
-	 *            The traversal corresponding to the right side.
-	 * @param originTraversal
-	 *            The traversal corresponding to the common ancestor of both other side. Can be
-	 *            <code>null</code>.
+	 * @param leftStorages
+	 *            The storages of the left traversal.
+	 * @param rightStorages
+	 *            The storages of the right traversal.
+	 * @param originStorages
+	 *            The storages of the common ancestor traversal. Can be <code>null</code>.
 	 * @return the absolute path of the given resource if found, null otherwise.
 	 */
-	private static String getAbsolutePath(Resource resource, StorageTraversal leftTraversal,
-			StorageTraversal rightTraversal, StorageTraversal originTraversal) {
+	private static String getAbsolutePath(Resource resource, Set<? extends IStorage> leftStorages,
+			Set<? extends IStorage> rightStorages, Set<? extends IStorage> originStorages) {
 		URI uri = resource.getURI();
-		String absolutePath = getAbsolutePath(uri, leftTraversal.getStorages());
+		String absolutePath = getAbsolutePath(uri, leftStorages);
 		if (absolutePath == null) {
-			absolutePath = getAbsolutePath(uri, rightTraversal.getStorages());
+			absolutePath = getAbsolutePath(uri, rightStorages);
 		}
-		if (absolutePath == null && originTraversal != null) {
-			absolutePath = getAbsolutePath(uri, originTraversal.getStorages());
+		if (absolutePath == null && originStorages != null) {
+			absolutePath = getAbsolutePath(uri, originStorages);
 		}
 		return absolutePath;
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2013, 2015 Obeo and others.
+ * Copyright (C) 2013, 2016 Obeo and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,6 +11,7 @@ package org.eclipse.emf.compare.ide.ui.tests;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterators.filter;
 import static org.eclipse.emf.ecore.util.EcoreUtil.getAllProperContents;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -23,14 +24,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
+import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
@@ -302,5 +306,13 @@ public class CompareTestCase {
 		destChannel.close();
 		fileInputStream.close();
 		fileOutputStream.close();
+	}
+
+	protected static void assertContainsExclusively(StorageTraversal traversal, IFile... files) {
+		Set<? extends IStorage> storages = traversal.getStorages();
+		assertEquals(files.length, storages.size());
+		for (IFile file : files) {
+			assertTrue(storages.contains(file));
+		}
 	}
 }

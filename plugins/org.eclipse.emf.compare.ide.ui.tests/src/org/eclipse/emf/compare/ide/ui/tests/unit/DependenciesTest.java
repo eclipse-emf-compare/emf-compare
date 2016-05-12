@@ -1,15 +1,16 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *     Philip Langer - refactoring
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.unit;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
@@ -97,16 +98,13 @@ public class DependenciesTest extends CompareTestCase {
 	@Test
 	public void testScopeNoDependencies() throws Exception {
 		StorageTraversal traversal = resolver.resolveLocalModel(iFile1, monitor);
-		assertEquals(1, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile1));
+		assertContainsExclusively(traversal, iFile1);
 
 		traversal = resolver.resolveLocalModel(iFile2, monitor);
-		assertEquals(1, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile2));
+		assertContainsExclusively(traversal, iFile2);
 
 		traversal = resolver.resolveLocalModel(iFile3, monitor);
-		assertEquals(1, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile3));
+		assertContainsExclusively(traversal, iFile3);
 	}
 
 	@Test
@@ -115,14 +113,10 @@ public class DependenciesTest extends CompareTestCase {
 		save(resourceSet);
 
 		StorageTraversal traversal = resolver.resolveLocalModel(iFile1, monitor);
-		assertEquals(2, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile1));
-		assertTrue(traversal.getStorages().contains(iFile2));
+		assertContainsExclusively(traversal, iFile1, iFile2);
 
 		traversal = resolver.resolveLocalModel(iFile2, monitor);
-		assertEquals(2, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile1));
-		assertTrue(traversal.getStorages().contains(iFile2));
+		assertContainsExclusively(traversal, iFile1, iFile2);
 	}
 
 	@Test
@@ -134,12 +128,10 @@ public class DependenciesTest extends CompareTestCase {
 		save(resourceSet);
 
 		StorageTraversal traversal = resolver.resolveLocalModel(iFile1, monitor);
-		assertEquals(1, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile1));
+		assertContainsExclusively(traversal, iFile1);
 
 		traversal = resolver.resolveLocalModel(iFile2, monitor);
-		assertEquals(1, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile2));
+		assertContainsExclusively(traversal, iFile2);
 	}
 
 	@Test
@@ -149,22 +141,13 @@ public class DependenciesTest extends CompareTestCase {
 		save(resourceSet);
 
 		StorageTraversal traversal = resolver.resolveLocalModel(iFile1, monitor);
-		assertEquals(3, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile1));
-		assertTrue(traversal.getStorages().contains(iFile2));
-		assertTrue(traversal.getStorages().contains(iFile3));
+		assertContainsExclusively(traversal, iFile1, iFile2, iFile3);
 
 		traversal = resolver.resolveLocalModel(iFile2, monitor);
-		assertEquals(3, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile1));
-		assertTrue(traversal.getStorages().contains(iFile2));
-		assertTrue(traversal.getStorages().contains(iFile3));
+		assertContainsExclusively(traversal, iFile1, iFile2, iFile3);
 
 		traversal = resolver.resolveLocalModel(iFile3, monitor);
-		assertEquals(3, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile1));
-		assertTrue(traversal.getStorages().contains(iFile2));
-		assertTrue(traversal.getStorages().contains(iFile3));
+		assertContainsExclusively(traversal, iFile1, iFile2, iFile3);
 	}
 
 	@Test
@@ -174,39 +157,28 @@ public class DependenciesTest extends CompareTestCase {
 		save(resourceSet);
 
 		StorageTraversal traversal = resolver.resolveLocalModel(iFile1, monitor);
-		assertEquals(3, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile1));
-		assertTrue(traversal.getStorages().contains(iFile2));
-		assertTrue(traversal.getStorages().contains(iFile3));
+		assertContainsExclusively(traversal, iFile1, iFile2, iFile3);
 
 		breakCrossReferences(resource2, resource1);
 		save(resourceSet);
 
 		traversal = resolver.resolveLocalModel(iFile1, monitor);
-		assertEquals(1, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile1));
+		assertContainsExclusively(traversal, iFile1);
 
 		traversal = resolver.resolveLocalModel(iFile2, monitor);
-		assertEquals(2, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile2));
-		assertTrue(traversal.getStorages().contains(iFile3));
+		assertContainsExclusively(traversal, iFile2, iFile3);
 
 		breakCrossReferences(resource3, resource2);
 		makeCrossReference(resource3, resource1);
 		save(resourceSet);
 
 		traversal = resolver.resolveLocalModel(iFile1, monitor);
-		assertEquals(2, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile1));
-		assertTrue(traversal.getStorages().contains(iFile3));
+		assertContainsExclusively(traversal, iFile1, iFile3);
 
 		traversal = resolver.resolveLocalModel(iFile2, monitor);
-		assertEquals(1, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile2));
+		assertContainsExclusively(traversal, iFile2);
 
 		traversal = resolver.resolveLocalModel(iFile3, monitor);
-		assertEquals(2, traversal.getStorages().size());
-		assertTrue(traversal.getStorages().contains(iFile1));
-		assertTrue(traversal.getStorages().contains(iFile3));
+		assertContainsExclusively(traversal, iFile1, iFile3);
 	}
 }

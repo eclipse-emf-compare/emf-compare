@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2015 Obeo.
+ * Copyright (c) 2011, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - improve JavaDoc
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.utils;
 
@@ -67,13 +68,9 @@ public class StorageTraversal implements IAdaptable, IDiagnosable {
 	}
 
 	/**
-	 * Returns the set of resources that are part of this traversal.
-	 * <p>
-	 * Note that this is the original set, and that any modification on the returned {@link Set} will affect
-	 * this traversal.
-	 * </p>
+	 * Returns a mutable copy of the set of resources that are part of this traversal.
 	 * 
-	 * @return The set of resources that are part of this traversal.
+	 * @return A mutable copy of the set of resources that are part of this traversal.
 	 */
 	public Set<? extends IStorage> getStorages() {
 		return new LinkedHashSet<IStorage>(storages);

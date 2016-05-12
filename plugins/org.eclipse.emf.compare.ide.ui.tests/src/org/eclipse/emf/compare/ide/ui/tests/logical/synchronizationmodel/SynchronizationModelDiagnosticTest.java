@@ -22,6 +22,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.internal.resources.ResourceStatus;
 import org.eclipse.core.resources.IFile;
@@ -96,12 +97,14 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 				new NullProgressMonitor());
 
 		/* sanity checks */
-		assertEquals(2, synchronizationModel.getLeftTraversal().getStorages().size());
-		assertTrue(synchronizationModel.getLeftTraversal().getStorages().contains(left));
-		assertTrue(synchronizationModel.getLeftTraversal().getStorages().contains(m2));
+		Set<? extends IStorage> leftStorages = synchronizationModel.getLeftTraversal().getStorages();
+		assertEquals(2, leftStorages.size());
+		assertTrue(leftStorages.contains(left));
+		assertTrue(leftStorages.contains(m2));
 
-		assertEquals(1, synchronizationModel.getRightTraversal().getStorages().size());
-		assertTrue(synchronizationModel.getRightTraversal().getStorages().contains(right));
+		Set<? extends IStorage> rightStorages = synchronizationModel.getRightTraversal().getStorages();
+		assertEquals(1, rightStorages.size());
+		assertTrue(rightStorages.contains(right));
 
 		/* verify */
 		Diagnostic diagnostic = synchronizationModel.getDiagnostic();
@@ -139,12 +142,14 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 				new NullProgressMonitor());
 
 		/* sanity checks */
-		assertEquals(2, synchronizationModel.getLeftTraversal().getStorages().size());
-		assertTrue(synchronizationModel.getLeftTraversal().getStorages().contains(left));
-		assertTrue(synchronizationModel.getLeftTraversal().getStorages().contains(m2));
+		Set<? extends IStorage> leftStorages = synchronizationModel.getLeftTraversal().getStorages();
+		assertEquals(2, leftStorages.size());
+		assertTrue(leftStorages.contains(left));
+		assertTrue(leftStorages.contains(m2));
 
-		assertEquals(1, synchronizationModel.getRightTraversal().getStorages().size());
-		assertTrue(synchronizationModel.getRightTraversal().getStorages().contains(right));
+		Set<? extends IStorage> rightStorages = synchronizationModel.getRightTraversal().getStorages();
+		assertEquals(1, rightStorages.size());
+		assertTrue(rightStorages.contains(right));
 
 		/* verify */
 		Diagnostic diagnostic = synchronizationModel.getDiagnostic();
@@ -183,9 +188,9 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 				new NullProgressMonitor());
 
 		/* sanity checks */
-		assertEquals(2, synchronizationModel.getLeftTraversal().getStorages().size());
-		IStorage[] storages = Iterators
-				.toArray(synchronizationModel.getLeftTraversal().getStorages().iterator(), IStorage.class);
+		Set<? extends IStorage> leftStorages = synchronizationModel.getLeftTraversal().getStorages();
+		assertEquals(2, leftStorages.size());
+		IStorage[] storages = Iterators.toArray(leftStorages.iterator(), IStorage.class);
 		if (storages[0].equals(m1)) {
 			assertTrue(storages[1].getFullPath().toString().contains("model2.ecore"));
 		} else {
@@ -193,8 +198,9 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 			assertTrue(storages[0].getFullPath().toString().contains("model2.ecore"));
 		}
 
-		assertEquals(1, synchronizationModel.getRightTraversal().getStorages().size());
-		assertTrue(synchronizationModel.getRightTraversal().getStorages().contains(m3));
+		final Set<? extends IStorage> rightStorages = synchronizationModel.getRightTraversal().getStorages();
+		assertEquals(1, rightStorages.size());
+		assertTrue(rightStorages.contains(m3));
 
 		/* verify */
 		Diagnostic diagnostic = synchronizationModel.getDiagnostic();
@@ -239,12 +245,8 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 				new NullProgressMonitor());
 
 		/* sanity checks */
-		assertEquals(2, synchronizationModel.getLeftTraversal().getStorages().size());
-		assertTrue(synchronizationModel.getLeftTraversal().getStorages().contains(m1));
-		assertTrue(synchronizationModel.getLeftTraversal().getStorages().contains(m2));
-
-		assertEquals(1, synchronizationModel.getRightTraversal().getStorages().size());
-		assertTrue(synchronizationModel.getRightTraversal().getStorages().contains(m3));
+		assertContainsExclusively(synchronizationModel.getLeftTraversal(), m1, m2);
+		assertContainsExclusively(synchronizationModel.getRightTraversal(), m3);
 
 		/* verify */
 		Diagnostic diagnostic = synchronizationModel.getDiagnostic();

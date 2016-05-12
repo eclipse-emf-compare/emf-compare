@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,11 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - fix use of StorageTraversal.getStorages()
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
 import static org.eclipse.emf.compare.ide.utils.ResourceUtil.binaryIdentical;
-
-import com.google.common.collect.Sets;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -53,18 +52,19 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 		final StorageTraversal rightTraversal = syncModel.getRightTraversal();
 		final StorageTraversal originTraversal = syncModel.getOriginTraversal();
 
-		final boolean threeWay = !originTraversal.getStorages().isEmpty();
-		// Copy the sets to update them as we go.
-		final Set<IStorage> leftCopy = Sets.newLinkedHashSet(leftTraversal.getStorages());
-		final Set<IStorage> rightCopy = Sets.newLinkedHashSet(rightTraversal.getStorages());
-		final Set<IStorage> originCopy = Sets.newLinkedHashSet(originTraversal.getStorages());
+		// StorageTraversal.getStorages() already creates a mutable copy. To change the underlying set, we
+		// need to use StorageTraversal.removeStorage().
+		final Set<? extends IStorage> leftCopy = leftTraversal.getStorages();
+		final Set<? extends IStorage> rightCopy = rightTraversal.getStorages();
+		final Set<? extends IStorage> originCopy = originTraversal.getStorages();
+
+		final boolean threeWay = !originCopy.isEmpty();
 
 		SubMonitor subMonitor = progess.newChild(98).setWorkRemaining(leftCopy.size());
 		for (IStorage left : leftCopy) {
 			final IStorage right = removeLikeNamedStorageFrom(left, rightCopy);
 			if (right != null && threeWay) {
 				final IStorage origin = removeLikeNamedStorageFrom(left, originCopy);
-
 				if (origin != null && equals(left, right, origin)) {
 					leftTraversal.removeStorage(left);
 					rightTraversal.removeStorage(right);
@@ -75,10 +75,10 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 				rightTraversal.removeStorage(right);
 			} else if (right == null && isIgnoredStorage(left)) {
 				/*
-				 * This has no match and is in plugins. We would detect an insane number of false positives on
-				 * it (every element "added"), so remove it from the scope.
+				 * Left has no match in right and is in plugins, so remove it from the scope. Otherwise, we
+				 * would unnecessarily include added models that should be ignored.
 				 */
-				leftTraversal.getStorages().remove(left);
+				leftTraversal.removeStorage(left);
 			}
 			subMonitor.worked(1);
 		}
@@ -157,9 +157,9 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 	 * @return The first storage from the set of candidates that matches the {@code reference}, if any.
 	 *         <code>null</code> if none match.
 	 */
-	protected IStorage removeLikeNamedStorageFrom(IStorage reference, Set<IStorage> candidates) {
+	protected IStorage removeLikeNamedStorageFrom(IStorage reference, Set<? extends IStorage> candidates) {
 		final String referenceName = reference.getName();
-		final Iterator<IStorage> candidatesIterator = candidates.iterator();
+		final Iterator<? extends IStorage> candidatesIterator = candidates.iterator();
 		while (candidatesIterator.hasNext()) {
 			final IStorage candidate = candidatesIterator.next();
 			final String candidateName = candidate.getName();
