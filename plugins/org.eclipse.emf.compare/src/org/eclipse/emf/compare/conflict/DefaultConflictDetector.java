@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - bugs 446947, 479449
+ *     Martin Fleck - bug 493527
  *******************************************************************************/
 package org.eclipse.emf.compare.conflict;
 
@@ -924,8 +925,11 @@ public class DefaultConflictDetector implements IConflictDetector {
 				if (diff.getKind() == DifferenceKind.DELETE && match == candidate.getMatch()
 						&& getRelatedModelElement(diff) == null) {
 					if (candidate.getKind() != DifferenceKind.DELETE) {
-						// The EObject that owns the changed EReference has been deleted on the other side
-						conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+						if (!ComparisonUtil.isDeleteOrUnsetDiff(candidate)) {
+							// The EObject that owns the changed EReference has been deleted on the other side
+							// [493527] deleted or unset references do not conflict with deleted element
+							conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+						}
 					}
 				} else {
 					// Any ReferenceChange that references the affected root is a possible conflict

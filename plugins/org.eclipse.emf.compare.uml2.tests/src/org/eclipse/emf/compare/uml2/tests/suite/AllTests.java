@@ -9,12 +9,9 @@
  *     Obeo - initial API and implementation
  *     Philip Langer - addition of OpaqueTest
  *     Stefan Dirix - addition of PseudoConflictTest
+ *     Martin Fleck - addition of RemoveStereotypeApplicationPseudoConflictTest
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.suite;
-
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociation2Test;
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociation3Test;
@@ -47,6 +44,7 @@ import org.eclipse.emf.compare.uml2.tests.opaque.OpaqueElementBodyChangeDiffTest
 import org.eclipse.emf.compare.uml2.tests.opaque.OpaqueElementBodyChangeMergeTest;
 import org.eclipse.emf.compare.uml2.tests.profiles.DynamicProfileTest;
 import org.eclipse.emf.compare.uml2.tests.profiles.StaticProfileTest;
+import org.eclipse.emf.compare.uml2.tests.resourceattachment.stereotype.RemoveStereotypeApplicationPseudoConflictTest;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.DanglingStereotypeApplicationTest;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.DynamicStereotypeTest;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.DynamicStereotypedElementChangeTests;
@@ -56,6 +54,10 @@ import org.eclipse.emf.compare.uml2.tests.timeConstraint.AddTimeConstraintTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+
+import junit.framework.JUnit4TestAdapter;
+import junit.framework.Test;
+import junit.textui.TestRunner;
 
 /**
  * This test suite allows us to launch all tests for EMF Compare at once.
@@ -77,7 +79,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		StaticStereotypedElementItemProviderTest.class, DynamicStereotypedElementItemProviderTest.class,
 		OpaqueElementBodyChangeDiffTest.class, OpaqueElementBodyChangeMergeTest.class,
 		DanglingStereotypeApplicationTest.class, MergeDiffInvolvingRefineDiffTest.class,
-		TestNonRegPseudoConflict_484576.class })
+		TestNonRegPseudoConflict_484576.class, RemoveStereotypeApplicationPseudoConflictTest.class })
 public class AllTests {
 
 	/**
