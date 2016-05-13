@@ -27,8 +27,8 @@ import org.osgi.framework.Bundle;
  * <p>
  * The class
  * {@link org.eclipse.papyrus.infra.elementtypesconfigurations.registries.ElementTypeSetConfigurationRegistry.ElementTypeSetConfigurationRegistry
- * ElementTypeSetConfigurationRegistry} is not available on Luna, so we have to use reflection to be backwards
- * compatible with Luna.
+ * ElementTypeSetConfigurationRegistry} is not available in Luna and in different bundles in Mars and Neon, so
+ * we have to use reflection to be backwards compatible with all versions of Papyrus
  * </p>
  * 
  * @author Philip Langer <planger@eclipsesource.com>
@@ -36,24 +36,38 @@ import org.osgi.framework.Bundle;
  */
 public class ElementTypeSetConfigurationRegistryInitializingHook extends AbstractPapyrusResourceSetHook {
 
-	/** The id of the bundle containing the class ElementTypeSetConfigurationRegistry. */
-	private static final String BUNDLE_ID = "org.eclipse.papyrus.infra.elementtypesconfigurations"; //$NON-NLS-1$
+	/** The id of the bundle containing the class ElementTypeSetConfigurationRegistry in Mars. */
+	private static final String BUNDLE_ID_MARS = "org.eclipse.papyrus.infra.elementtypesconfigurations"; //$NON-NLS-1$
+
+	/** The id of the bundle containing the class ElementTypeSetConfigurationRegistry in Neon. */
+	private static final String BUNDLE_ID_NEON = "org.eclipse.papyrus.infra.types.core"; //$NON-NLS-1$
 
 	/** The method to be invoked in ElementTypeSetConfigurationRegistry. */
 	private static final String GET_INSTANCE = "getInstance"; //$NON-NLS-1$
 
-	/** The qualified class name of ElementTypeSetConfigurationRegistry. */
-	private static final String ELEMENTTYPESETCONFIGREG_CLASS_NAME = "org.eclipse.papyrus.infra.elementtypesconfigurations.registries.ElementTypeSetConfigurationRegistry"; //$NON-NLS-1$
+	/** The qualified class name of ElementTypeSetConfigurationRegistry in Mars. */
+	private static final String ELEMENTTYPESETCONFIGREG_CLASS_NAME_MARS = "org.eclipse.papyrus.infra.elementtypesconfigurations.registries.ElementTypeSetConfigurationRegistry"; //$NON-NLS-1$
+
+	/** The qualified class name of ElementTypeSetConfigurationRegistry in Neon. */
+	private static final String ELEMENTTYPESETCONFIGREG_CLASS_NAME_NEON = "org.eclipse.papyrus.infra.types.core.registries.ElementTypeSetConfigurationRegistry"; //$NON-NLS-1$
 
 	@Override
 	public void preLoadingHook(ResourceSet resourceSet, Collection<? extends URI> uris) {
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
 				try {
-					// ElementTypeSetConfigurationRegistry is not available on Luna, so we have to use
-					// reflection to be backwards compatible with Luna
-					Bundle bundle = Platform.getBundle(BUNDLE_ID);
-					Class<?> registryClass = bundle.loadClass(ELEMENTTYPESETCONFIGREG_CLASS_NAME);
+					// ElementTypeSetConfigurationRegistry is not available in Luna and in different bundles
+					// in Mars and Neon, so we have to use reflection to be backwards compatible with all
+					// versions of Papyrus
+					Class<?> registryClass;
+					Bundle bundle = Platform.getBundle(BUNDLE_ID_NEON);
+					if (bundle != null) {
+						registryClass = bundle.loadClass(ELEMENTTYPESETCONFIGREG_CLASS_NAME_NEON);
+					} else {
+						// neon bundle is not available, try mars bundle
+						bundle = Platform.getBundle(BUNDLE_ID_MARS);
+						registryClass = bundle.loadClass(ELEMENTTYPESETCONFIGREG_CLASS_NAME_MARS);
+					}
 					Method getInstanceMethod = registryClass.getDeclaredMethod(GET_INSTANCE);
 					getInstanceMethod.invoke(null);
 				} catch (ClassNotFoundException e) {
@@ -69,10 +83,7 @@ public class ElementTypeSetConfigurationRegistryInitializingHook extends Abstrac
 				} catch (InvocationTargetException e) {
 					logException(e);
 				} catch (NullPointerException e) {
-					logException(new RuntimeException(
-							"Papyrus Element TypeSet Configuration Registry could not be found in bundle " //$NON-NLS-1$
-									+ BUNDLE_ID + ", class " + ELEMENTTYPESETCONFIGREG_CLASS_NAME //$NON-NLS-1$
-									+ ", method " + GET_INSTANCE, e)); //$NON-NLS-1$
+					logException(e);
 				}
 			}
 		});
