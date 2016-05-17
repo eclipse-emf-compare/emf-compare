@@ -14,6 +14,7 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
+import org.eclipse.emf.compare.ide.utils.tests.Bug471045Test;
 import org.eclipse.emf.compare.ide.utils.tests.ResourceUtil_BinaryIdentical2Test;
 import org.eclipse.emf.compare.ide.utils.tests.ResourceUtil_BinaryIdentical2_ReadLimitTest;
 import org.eclipse.emf.compare.ide.utils.tests.ResourceUtil_BinaryIdentical3Test;
@@ -24,7 +25,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ResourceUtil_BinaryIdentical2Test.class, ResourceUtil_BinaryIdentical2_ReadLimitTest.class,
-		ResourceUtil_BinaryIdentical3Test.class, ResourceUtil_BinaryIdentical3_ReadLimitTest.class })
+		ResourceUtil_BinaryIdentical3Test.class, ResourceUtil_BinaryIdentical3_ReadLimitTest.class,
+		Bug471045Test.class, })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.
