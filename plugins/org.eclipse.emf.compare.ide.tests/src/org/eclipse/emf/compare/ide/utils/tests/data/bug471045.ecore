@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="p" nsURI="p" nsPrefix="p">
+  <eClassifiers xsi:type="ecore:EClass" name="0"/>
+  <eClassifiers xsi:type="ecore:EClass" name="1" eSuperTypes="//@eClassifiers.0
+                                                              //@eClassifiers.2
+                                                              //@eClassifiers.3
+                                                              //@eClassifiers.4
+                                                              //@eClassifiers.5
+                                                              //@eClassifiers.6
+                                                              //@eClassifiers.7"/>
+  <eClassifiers xsi:type="ecore:EClass" name="2"/>
+  <eClassifiers xsi:type="ecore:EClass" name="3"/>
+  <eClassifiers xsi:type="ecore:EClass" name="4"/>
+  <eClassifiers xsi:type="ecore:EClass" name="5"/>
+  <eClassifiers xsi:type="ecore:EClass" name="6"/>
+  <eClassifiers xsi:type="ecore:EClass" name="7"/>
+</ecore:EPackage>

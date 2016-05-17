@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo.
+ * Copyright (c) 2014, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,9 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal.utils;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -23,10 +25,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.ExtendedMetaData;
+import org.eclipse.emf.ecore.xmi.XMIException;
 import org.eclipse.emf.ecore.xmi.XMLDefaultHandler;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLLoad;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMLHandler;
 import org.eclipse.emf.ecore.xmi.impl.XMLParserPoolImpl;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -280,7 +284,6 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 			this.containmentOnly = containmentOnly;
 		}
 
-		/** {@inheritDoc} */
 		@Override
 		public void setValue(EObject eObject, EStructuralFeature eStructuralFeature, Object value,
 				int position) {
@@ -297,6 +300,35 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 					potentialProxies.add(entry);
 				}
 			}
+		}
+
+		/**
+		 * Called by {@link XMLHandler} to set the values of the given many-valued forward reference. The
+		 * target feature may already contain values resolved from backward references and set by
+		 * {@link #setValue(EObject, EStructuralFeature, Object, int)}. The given reference also specifies the
+		 * insertion indexes necessary to insert the new values at the correct positions.
+		 * <p>
+		 * Note that the super-implementation will throw an {@link ArrayIndexOutOfBoundsException} if the
+		 * insertion indexes do not match the contents of the target feature, that is, if it contains too few
+		 * elements.
+		 * 
+		 * @param reference
+		 *            The reference to set
+		 * @param location
+		 *            The location
+		 * @return An empty list if the reference must be ignored, and the result of the parent implementation
+		 *         otherwise.
+		 */
+		@Override
+		public List<XMIException> setManyReference(ManyReference reference, String location) {
+			EStructuralFeature eStructuralFeature = reference.getFeature();
+			boolean isContainment = eStructuralFeature instanceof EReference
+					&& ((EReference)eStructuralFeature).isContainment();
+			if (!containmentOnly || isContainment) {
+				return super.setManyReference(reference, location);
+			}
+
+			return Collections.emptyList();
 		}
 
 		/** Check the {@link #potentialProxies} list for {@link EObject#eIsProxy() actual proxies}. */
