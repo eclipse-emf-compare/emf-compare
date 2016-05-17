@@ -74,9 +74,11 @@ public class ResourceAttachmentChangeConflictSearch {
 			Collection<ReferenceChange> refChanges = index.getReferenceChangesByValue(value);
 			for (ReferenceChange candidate : Iterables.filter(refChanges, possiblyConflictingWith(diff))) {
 				if (candidate.getReference().isContainment()) {
-					// The element is a new root on one side, but it has been moved to an EObject
-					// container on the other
-					conflict(candidate, REAL);
+					if (candidate.getValue().eContainer() == null) {
+						// The element is a new root on one side, but it has been moved to an EObject
+						// container on the other
+						conflict(candidate, REAL);
+					}
 				} else {
 					// [477607] DELETE does not necessarily mean that the element is removed from the
 					// model

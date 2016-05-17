@@ -88,7 +88,7 @@ public class ContainmentRefChangeConflictSearch {
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
 			if (!feature.isMany()) {
 				for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-						instanceOf(ReferenceChange.class), onFeature(feature)))) {
+						instanceOf(ReferenceChange.class), onFeature(feature), ofKind(ADD, CHANGE)))) {
 					if (comparison.getEqualityHelper().matchingValues(
 							((ReferenceChange)candidate).getValue(), diff.getValue())) {
 						conflict(candidate, PSEUDO);
