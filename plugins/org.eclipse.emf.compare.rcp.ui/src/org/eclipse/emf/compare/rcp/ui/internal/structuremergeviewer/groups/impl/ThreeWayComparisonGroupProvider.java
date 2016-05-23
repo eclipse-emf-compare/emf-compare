@@ -200,9 +200,8 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 						alreadyProcessedMatches.add(match);
 						for (Diff refinedBy : diff.getRefinedBy()) {
 							Match refinedByMatch = refinedBy.getMatch();
-							if (!alreadyProcessedMatches.contains(refinedByMatch)) {
+							if (alreadyProcessedMatches.add(refinedByMatch)) {
 								buildSubTree(wrap, conflict, refinedByMatch, alreadyProcessedMatches);
-								alreadyProcessedMatches.add(refinedByMatch);
 							}
 						}
 					}
