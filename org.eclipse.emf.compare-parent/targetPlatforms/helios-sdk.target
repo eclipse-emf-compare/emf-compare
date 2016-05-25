@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Helios SDK" sequenceNumber="1436775869">
+<target name="EMF Compare based on Helios SDK" sequenceNumber="1464676195">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
       <repository location="http://download.eclipse.org/cbi/updates/license"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="com.google.guava" version="11.0.2.v201303041551"/>
+      <unit id="com.google.guava" version="15.0.0.v201403281430"/>
+      <unit id="com.google.gson" version="2.2.4.v201311231704"/>
       <unit id="org.junit" version="4.12.0.v201504281640"/>
       <unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
       <unit id="javaewah" version="0.7.9.v201401101600"/>

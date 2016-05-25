@@ -514,7 +514,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).contains(eSFFirstKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertEquals(4, comparison.getDifferences().size());
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -602,7 +602,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(((BasicFeatureMap)map).contains(eSFFirstKey, rightNode1));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertEquals(4, comparison.getDifferences().size());
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -2204,7 +2204,7 @@ public class FeatureMaps3wayMergeTest {
 		final Object rightFirstKey = rightMapNode1.eGet(eSFFirstKey);
 		assertTrue(rightFirstKey instanceof List);
 		assertEquals(2, ((List)rightFirstKey).size());
-		assertEquals(rightNode1, ((List)rightFirstKey).get(1));
+		assertEquals(rightNode1, ((List)rightFirstKey).get(0));
 		// mapNode1 references node1 through the map in right
 		final EStructuralFeature eSFmap = rightMapNode1.eClass().getEStructuralFeature("mapNC");
 		assertNotNull(eSFmap);
@@ -2214,10 +2214,10 @@ public class FeatureMaps3wayMergeTest {
 		final Object rightMap = rightMapNode1.eGet(eSFmap);
 		assertTrue(rightMap instanceof BasicFeatureMap);
 		assertEquals(2, ((BasicFeatureMap)rightMap).size());
-		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 1, true));
+		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertEquals(4, comparison.getDifferences().size());
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test
@@ -2312,7 +2312,7 @@ public class FeatureMaps3wayMergeTest {
 		final Object rightFirstKey = rightMapNode1.eGet(eSFFirstKey);
 		assertTrue(rightFirstKey instanceof List);
 		assertEquals(2, ((List)rightFirstKey).size());
-		assertEquals(rightNode1, ((List)rightFirstKey).get(1));
+		assertEquals(rightNode1, ((List)rightFirstKey).get(0));
 		// mapNode1 references node1 through the map in right
 		final EStructuralFeature eSFmap = rightMapNode1.eClass().getEStructuralFeature("mapNC");
 		assertNotNull(eSFmap);
@@ -2322,10 +2322,10 @@ public class FeatureMaps3wayMergeTest {
 		final Object rightMap = rightMapNode1.eGet(eSFmap);
 		assertTrue(rightMap instanceof BasicFeatureMap);
 		assertEquals(2, ((BasicFeatureMap)rightMap).size());
-		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 1, true));
+		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 0, true));
 
 		comparison = EMFCompare.builder().build().compare(scope);
-		assertEquals(4, comparison.getDifferences().size());
+		assertEquals(2, comparison.getDifferences().size());
 	}
 
 	@Test

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.tests.conflict.PseudoConflictDetectionTest;
+import org.eclipse.emf.compare.tests.merge.ComplexMergeTest;
 import org.eclipse.emf.compare.tests.merge.ConflictImplicationsTest_Bug484579;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
@@ -33,7 +34,8 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({ConflictImplicationsTest_Bug484579.class, PseudoConflictDetectionTest.class })
+@SuiteClasses({ConflictImplicationsTest_Bug484579.class, PseudoConflictDetectionTest.class,
+		ComplexMergeTest.class, })
 public class AtLeastLunaVersionTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

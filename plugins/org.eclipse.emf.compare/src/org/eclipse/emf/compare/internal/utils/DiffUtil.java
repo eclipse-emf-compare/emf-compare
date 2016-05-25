@@ -952,7 +952,8 @@ public final class DiffUtil {
 
 			expectedContainer = ComparisonUtil.getExpectedSide(targetMatch, diff.getSource(), rightToLeft);
 		} else {
-			if (diff.getKind() == DifferenceKind.DELETE && match.getOrigin() != null) {
+			if (diff.getKind() == DifferenceKind.DELETE && match.getOrigin() != null
+					&& rightToLeft == (diff.getSource() == DifferenceSource.LEFT)) {
 				expectedContainer = match.getOrigin();
 			} else if (rightToLeft) {
 				expectedContainer = match.getRight();
@@ -1203,7 +1204,9 @@ public final class DiffUtil {
 		 * @see com.google.common.base.Predicate#apply(java.lang.Object)
 		 */
 		public boolean apply(Diff input) {
-			return isUnresolved(input) && matchesTarget(input) && matchesValue(input);
+			return isUnresolved(input) && matchesTarget(input) && matchesValue(input)
+			// Probably ADDs in conflict with an ADD at a different index should also be ignored
+					&& input.getKind() == DifferenceKind.MOVE;
 		}
 
 		/**
