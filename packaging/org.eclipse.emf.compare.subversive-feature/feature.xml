@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.subversive"
       label="%featureName"
-      version="1.0.1.qualifier"
+      version="1.0.1"
       provider-name="%providerName"
       license-feature="org.eclipse.license"
       license-feature-version="1.0.1">
@@ -20,8 +20,8 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.emf.compare" version="3.1.1.qualifier"/>
-      <import feature="org.eclipse.emf.compare.ide.ui" version="3.1.1.qualifier"/>
+      <import feature="org.eclipse.emf.compare" version="3.1.1"/>
+      <import feature="org.eclipse.emf.compare.ide.ui" version="3.1.1"/>
    </requires>
 
    <plugin

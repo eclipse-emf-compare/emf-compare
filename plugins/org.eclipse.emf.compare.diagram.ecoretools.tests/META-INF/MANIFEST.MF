@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.diagram.ecoretools.tests
-Bundle-Version: 2.3.0.qualifier
+Bundle-Version: 2.3.0
 Export-Package: org.eclipse.emf.compare.diagram.ecoretools.tests,
  org.eclipse.emf.compare.diagram.ecoretools.tests.hide
 Require-Bundle: org.eclipse.emf.ecore;bundle-version="2.5.0",

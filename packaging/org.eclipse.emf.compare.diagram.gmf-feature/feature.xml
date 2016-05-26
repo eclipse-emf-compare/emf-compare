@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.diagram.gmf"
       label="%featureName"
-      version="3.1.1.qualifier"
+      version="3.1.1"
       provider-name="%providerName"
       plugin="org.eclipse.emf.compare.diagram"
       license-feature="org.eclipse.license"
@@ -21,8 +21,8 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.emf.compare" version="3.1.1.qualifier"/>
-      <import feature="org.eclipse.emf.compare.ide.ui" version="3.1.1.qualifier"/>
+      <import feature="org.eclipse.emf.compare" version="3.1.1"/>
+      <import feature="org.eclipse.emf.compare.ide.ui" version="3.1.1"/>
       <import feature="org.eclipse.gmf.runtime.notation" version="1.5.0"/>
    </requires>
 
