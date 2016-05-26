@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.ide.ui.tests.git
-Bundle-Version: 4.1.1
+Bundle-Version: 4.1.1.qualifier
 Bundle-Vendor: %providerName
 Fragment-Host: org.eclipse.emf.compare.ide.ui.tests
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

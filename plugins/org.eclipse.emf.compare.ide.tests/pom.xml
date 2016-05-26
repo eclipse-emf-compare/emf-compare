@@ -5,12 +5,12 @@
   <parent>
     <artifactId>emf.compare-test-parent</artifactId>
     <groupId>org.eclipse.emf.compare</groupId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <relativePath>../../org.eclipse.emf.compare-parent/test-parent</relativePath>
   </parent>
   <groupId>org.eclipse.emf.compare</groupId>
   <artifactId>org.eclipse.emf.compare.ide.tests</artifactId>
-  <version>3.2.1</version>
+  <version>3.2.1-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
   
   <build>
