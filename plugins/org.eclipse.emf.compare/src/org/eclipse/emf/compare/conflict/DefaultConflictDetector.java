@@ -624,7 +624,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 		final String changedValue2 = getChangedValue(diff2);
 		final EObject originalContainer = diff1.getMatch().getOrigin();
 		final EAttribute changedAttribute = diff1.getAttribute();
-		final String originalValue = (String)originalContainer.eGet(changedAttribute);
+		final String originalValue = (String)ReferenceUtil.safeEGet(originalContainer, changedAttribute);
 		return isMergeableText(changedValue1, changedValue2, originalValue);
 	}
 
@@ -657,9 +657,9 @@ public class DefaultConflictDetector implements IConflictDetector {
 		final String changedValue;
 		Match match = diff.getMatch();
 		if (DifferenceSource.LEFT.equals(diff.getSource())) {
-			changedValue = (String)match.getLeft().eGet(diff.getAttribute());
+			changedValue = (String)ReferenceUtil.safeEGet(match.getLeft(), diff.getAttribute());
 		} else if (DifferenceSource.RIGHT.equals(diff.getSource())) {
-			changedValue = (String)match.getRight().eGet(diff.getAttribute());
+			changedValue = (String)ReferenceUtil.safeEGet(match.getRight(), diff.getAttribute());
 		} else {
 			changedValue = (String)diff.getValue();
 		}

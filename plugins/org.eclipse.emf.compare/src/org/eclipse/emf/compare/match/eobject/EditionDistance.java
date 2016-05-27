@@ -530,7 +530,7 @@ public class EditionDistance implements DistanceFunction {
 					position = indexFromFeatureMap(a, feat, container);
 				} else if (feat != null) {
 					if (feat.isMany()) {
-						EList<?> eList = (EList<?>)container.eGet(feat, false);
+						EList<?> eList = (EList<?>)ReferenceUtil.safeEGet(container, feat);
 						position = eList.indexOf(a);
 					}
 				}
@@ -550,7 +550,7 @@ public class EditionDistance implements DistanceFunction {
 		 * @return the position of the {@link EObject} a in its container featureMap.
 		 */
 		private int indexFromFeatureMap(EObject a, EStructuralFeature feat, EObject container) {
-			FeatureMap featureMap = (FeatureMap)container.eGet(feat, false);
+			FeatureMap featureMap = (FeatureMap)ReferenceUtil.safeEGet(container, feat);
 			for (int i = 0, size = featureMap.size(); i < size; ++i) {
 				if (featureMap.getValue(i) == a) {
 					EStructuralFeature entryFeature = featureMap.getEStructuralFeature(i);

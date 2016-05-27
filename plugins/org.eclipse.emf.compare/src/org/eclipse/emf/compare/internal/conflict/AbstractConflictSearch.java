@@ -191,7 +191,7 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 		final String changedValue2 = getChangedValue(diff2);
 		final EObject originalContainer = diff1.getMatch().getOrigin();
 		final EAttribute changedAttribute = diff1.getAttribute();
-		final String originalValue = (String)originalContainer.eGet(changedAttribute);
+		final String originalValue = (String)ReferenceUtil.safeEGet(originalContainer, changedAttribute);
 		return isMergeableText(changedValue1, changedValue2, originalValue);
 	}
 
@@ -224,9 +224,9 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 		final String changedValue;
 		Match match = attributeChange.getMatch();
 		if (DifferenceSource.LEFT.equals(attributeChange.getSource())) {
-			changedValue = (String)match.getLeft().eGet(attributeChange.getAttribute());
+			changedValue = (String)ReferenceUtil.safeEGet(match.getLeft(), attributeChange.getAttribute());
 		} else if (DifferenceSource.RIGHT.equals(attributeChange.getSource())) {
-			changedValue = (String)match.getRight().eGet(attributeChange.getAttribute());
+			changedValue = (String)ReferenceUtil.safeEGet(match.getRight(), attributeChange.getAttribute());
 		} else {
 			changedValue = (String)attributeChange.getValue();
 		}

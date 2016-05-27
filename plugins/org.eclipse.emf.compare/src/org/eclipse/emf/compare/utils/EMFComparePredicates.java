@@ -1073,7 +1073,7 @@ public final class EMFComparePredicates {
 				match = featureValue.equals(name);
 			}
 		} else if (featureDelegate != null && !featureDelegate.isMany()) {
-			final Object featureValue = eObject.eGet(featureDelegate, false);
+			final Object featureValue = ReferenceUtil.safeEGet(eObject, featureDelegate);
 			if (featureValue instanceof String) {
 				match = featureValue.equals(name);
 			} else if (featureValue instanceof EObject) {

@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EFactory;
@@ -75,7 +76,7 @@ public class EUriFragmentFunction implements Function<EObject, String> {
 		result.append(actualFeature.getName());
 
 		if (actualFeature instanceof EAttribute) {
-			FeatureMap featureMap = (FeatureMap)container.eGet(actualFeature, false);
+			FeatureMap featureMap = (FeatureMap)ReferenceUtil.safeEGet(container, actualFeature);
 			for (int i = 0, size = featureMap.size(); i < size; ++i) {
 				if (featureMap.getValue(i) == eObject) {
 					EStructuralFeature entryFeature = featureMap.getEStructuralFeature(i);
@@ -90,7 +91,7 @@ public class EUriFragmentFunction implements Function<EObject, String> {
 		} else if (actualFeature.isMany()) {
 			EList<EAttribute> eKeys = ((EReference)actualFeature).getEKeys();
 			if (eKeys.isEmpty()) {
-				EList<?> eList = (EList<?>)container.eGet(actualFeature, false);
+				EList<?> eList = (EList<?>)ReferenceUtil.safeEGet(container, actualFeature);
 				int index = eList.indexOf(eObject);
 				result.append('.');
 				result.append(index);
