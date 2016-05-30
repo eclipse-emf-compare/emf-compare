@@ -16,7 +16,6 @@ location "http://download.eclipse.org/releases/neon" {
 	org.eclipse.emf.ecoretools.sdk.feature.group lazy
 	org.eclipse.papyrus.sdk.feature.feature.group lazy
 	org.eclipse.team.svn.feature.group lazy
-	org.eclipse.jdt.annotation [1.1.100,2.0.0)
 }
 
 location "http://download.eclipse.org/acceleo/updates/nightly/latest" {
