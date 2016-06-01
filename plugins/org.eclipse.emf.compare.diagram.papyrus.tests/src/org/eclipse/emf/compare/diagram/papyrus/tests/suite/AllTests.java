@@ -15,6 +15,7 @@ package org.eclipse.emf.compare.diagram.papyrus.tests.suite;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
 import org.eclipse.emf.compare.diagram.papyrus.tests.comparison.DiagramTooltipProviderTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.context.PapyrusContextUtilTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.difile.IgnoreDiFilePostProcessorTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.groups.PapyrusConflictsGroupProviderTests;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.AssocMergeTest;
@@ -51,7 +52,8 @@ import junit.textui.TestRunner;
 @RunWith(Suite.class)
 @SuiteClasses({ AssocMergeTest.class, EdgeMergeTest.class, NodeMergeTest.class, ModelExtensionUtilTest.class,
 		SaveParameterHookTest.class, SaveParameterHookIntegrationTest.class, URIAttachmentTest.class,
-		DiagramTooltipProviderTest.class, PapyrusConflictsGroupProviderTests.class, IgnoreDiFilePostProcessorTest.class })
+		DiagramTooltipProviderTest.class, PapyrusConflictsGroupProviderTests.class, IgnoreDiFilePostProcessorTest.class,
+		PapyrusContextUtilTest.class })
 public class AllTests {
 
 	/**

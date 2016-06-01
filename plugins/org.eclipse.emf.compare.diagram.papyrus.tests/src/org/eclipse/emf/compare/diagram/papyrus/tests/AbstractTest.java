@@ -15,14 +15,18 @@ import static org.junit.Assert.assertFalse;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
@@ -32,7 +36,8 @@ import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.merge.CompareDiagramMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
-import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
+import org.eclipse.emf.compare.scope.IComparisonScope2;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.uml2.internal.merge.UMLMerger;
@@ -99,23 +104,29 @@ public abstract class AbstractTest {
 	}
 
 	protected Comparison buildComparison(Resource left, Resource right) {
-		final IComparisonScope scope = EMFCompare.createDefaultScope(
-				left.getResourceSet(), right.getResourceSet());
-		Comparison comparison = EMFCompare.builder()
-				.setPostProcessorRegistry(getPostProcessorRegistry()).build()
-				.compare(scope);
-		return comparison;
+		final IComparisonScope2 scope = new DefaultComparisonScope(left.getResourceSet(), right.getResourceSet(), null);
+		final Set<ResourceSet> resourceSets = ImmutableSet.of(left.getResourceSet(), right.getResourceSet());
+		scope.getAllInvolvedResourceURIs().addAll(getResourceURIs(resourceSets));
+		return EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
 	}
 
-	protected Comparison buildComparison(Resource left, Resource right,
-			Resource origin) {
-		final IComparisonScope scope = EMFCompare.createDefaultScope(
-				left.getResourceSet(), right.getResourceSet(),
+	protected Comparison buildComparison(Resource left, Resource right, Resource origin) {
+		final IComparisonScope2 scope = new DefaultComparisonScope(left.getResourceSet(), right.getResourceSet(),
 				origin.getResourceSet());
-		Comparison comparison = EMFCompare.builder()
-				.setPostProcessorRegistry(getPostProcessorRegistry()).build()
-				.compare(scope);
-		return comparison;
+		final Set<ResourceSet> resourceSets = ImmutableSet.of(left.getResourceSet(), right.getResourceSet(),
+				origin.getResourceSet());
+		scope.getAllInvolvedResourceURIs().addAll(getResourceURIs(resourceSets));
+		return EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
+	}
+
+	private Set<URI> getResourceURIs(final Set<ResourceSet> resourceSets) {
+		Builder<URI> uriBuilder = ImmutableSet.builder();
+		for (ResourceSet set : resourceSets) {
+			for (Resource resource : set.getResources()) {
+				uriBuilder.add(resource.getURI());
+			}
+		}
+		return uriBuilder.build();
 	}
 
 	@After
