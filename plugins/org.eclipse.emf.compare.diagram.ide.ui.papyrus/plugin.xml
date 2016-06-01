@@ -62,4 +62,27 @@
          </adapter>
       </factory>
    </extension>
+   <extension
+         point="org.eclipse.compare.contentMergeViewers">
+      <viewer
+            class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer.PapyrusTreeContentMergeViewerCreator"
+            id="org.eclipse.emf.compare.ide.ui.papyrus.PapyrusTreeContentMergeViewer"
+            label="Model Compare (Papyrus)"
+            extensions= 
+              "papyrus-org.eclipse.emf.compare.rcp.ui.eTreeDiff,
+              papyrus-org.eclipse.emf.compare.rcp.ui.eMatch,
+              papyrus-org.eclipse.emf.compare.rcp.ui.eResourceDiff,
+              papyrus-NODE_TYPE__EMF_EOBJECT,
+              papyrus-NODE_TYPE__EMF_RESOURCE,
+              papyrus-NODE_TYPE__EMF_RESOURCESET,
+              papyrus-NODE_TYPE__EMF_COMPARISON">
+      </viewer>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.rcp.ui.accessorFactory">
+      <factory
+            class="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.accessorfactory.PapyrusAccessorFactoryWrapper"
+            ranking="1000">
+      </factory>
+   </extension>
 </plugin>

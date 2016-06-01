@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Stefan Dirix - bug 487595
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.provider.decorator;
 
@@ -48,6 +49,11 @@ public class UMLCompareItemProviderDecoratorAdapterFactory extends DecoratorAdap
 
 		@Override
 		public IItemProviderDecorator caseUMLDiff(UMLDiff object) {
+			return createUMLDiffItemProviderDecorator();
+		}
+
+		@Override
+		public IItemProviderDecorator defaultCase(EObject object) {
 			return createUMLDiffItemProviderDecorator();
 		}
 
