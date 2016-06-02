@@ -36,6 +36,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.MergePreviewMo
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDeactivableDiffFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor;
@@ -241,14 +242,18 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		Collection<IDifferenceFilter> filters = filterRegistry.getFilters(comparisonScope, comparison);
 		Collection<IDifferenceFilter> selectedFilters = Lists.newArrayList();
 		Collection<IDifferenceFilter> unselectedFilters = Lists.newArrayList();
+		Collection<IDifferenceFilter> activeFilters = Lists.newArrayList();
 		for (IDifferenceFilter filter : filters) {
-			if (filter.defaultSelected()) {
-				selectedFilters.add(filter);
-			} else {
-				unselectedFilters.add(filter);
+			if (!(filter instanceof IDeactivableDiffFilter) || ((IDeactivableDiffFilter)filter).isActive()) {
+				if (filter.defaultSelected()) {
+					selectedFilters.add(filter);
+				} else {
+					unselectedFilters.add(filter);
+				}
+				activeFilters.add(filter);
 			}
 		}
-		getStructureMergeViewerFilter().init(selectedFilters, unselectedFilters);
+		getStructureMergeViewerFilter().init(selectedFilters, unselectedFilters, activeFilters);
 	}
 
 	public void setMergePreviewMode(MergeMode previewMergeMode) {

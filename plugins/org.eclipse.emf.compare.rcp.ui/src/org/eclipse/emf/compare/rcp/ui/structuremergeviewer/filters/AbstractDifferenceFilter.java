@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,16 +23,22 @@ import org.eclipse.emf.ecore.EObject;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 4.0
  */
-public abstract class AbstractDifferenceFilter implements IDifferenceFilter {
+public abstract class AbstractDifferenceFilter implements IDeactivableDiffFilter {
 
 	/** A human-readable label for this filter. This will be displayed in the EMF Compare UI. */
 	protected String label;
 
-	/** {@link IDifferenceFilter#getDescription()}*/
+	/** {@link IDifferenceFilter#getDescription()} */
 	protected String description;
 
 	/** The initial activation state of the filter. */
 	protected boolean activeByDefault;
+
+	/**
+	 * Whether this filter is active. A filter that is not active will not be used at all nor displayed in the
+	 * compare editor.
+	 */
+	private boolean active;
 
 	/**
 	 * Constructs the filter with the appropriate predicate.
@@ -76,15 +82,15 @@ public abstract class AbstractDifferenceFilter implements IDifferenceFilter {
 	}
 
 	/**
-	* {@inheritDoc}
-	*/
+	 * {@inheritDoc}
+	 */
 	public String getDescription() {
 		return description;
 	}
 
 	/**
-	* {@inheritDoc}
-	*/
+	 * {@inheritDoc}
+	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -101,10 +107,27 @@ public abstract class AbstractDifferenceFilter implements IDifferenceFilter {
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDeactivableDiffFilter#isActive()
+	 * @since 4.3
+	 */
+	public boolean isActive() {
+		return active;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#setDefaultSelected(boolean)
 	 */
 	public void setDefaultSelected(boolean active) {
 		this.activeByDefault = active;
+	}
+
+	/**
+	 * @since 4.3
+	 */
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	/**

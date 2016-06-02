@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDeactivableDiffFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 
 /**
@@ -103,6 +104,9 @@ public class DifferenceFilterExtensionRegistryListener extends AbstractRegistryE
 				filter.setDefaultSelected(true);
 			} else {
 				filter.setDefaultSelected(false);
+			}
+			if (filter instanceof IDeactivableDiffFilter) {
+				((IDeactivableDiffFilter)filter).setActive(true);
 			}
 			IDifferenceFilter previous = filterRegistry.add(filter);
 			if (previous != null) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2106 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,9 +13,9 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.imp
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
 import org.eclipse.emf.compare.rcp.internal.tracer.TracingConstant;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDeactivableDiffFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 import org.osgi.service.prefs.Preferences;
 
@@ -50,7 +51,10 @@ public class DifferenceFilterManager {
 	/** Preference key for by default disabled filters. */
 	private static final String BY_DEFAULT_DISABLED_FILTER = "org.eclipse.emf.compare.rcp.ui.filters.disabled"; //$NON-NLS-1$
 
-	/** A map that associates the class name to theirs {@link IDifferenceFilter}s. */
+	/** Preference key for inactive (fully ignored) filters. */
+	private static final String INACTIVE_FILTERS_PREF_KEY = "org.eclipse.emf.compare.rcp.ui.filters.inactive"; //$NON-NLS-1$
+
+	/** A map that associates the class name to their {@link IDifferenceFilter}s. */
 	private final Map<String, DifferenceFilterDefaultConfiguration> map;
 
 	/** The {@link Preferences} holding the value for filter preferences. */
@@ -125,23 +129,35 @@ public class DifferenceFilterManager {
 	}
 
 	/**
-	 * {@link Set} of {@link IDifferenceFilter} that are initially activated by default.
+	 * Get all {@link IDifferenceFilter} that should be disabled for next comparison.
+	 * 
+	 * @return A {@link Collection} of {@link IDifferenceFilter} that should be disabled for next comparison.
+	 */
+	public Collection<IDeactivableDiffFilter> getCurrentInactiveFilters() {
+		Set<IDeactivableDiffFilter> inactiveFilters = getInactiveFilters();
+		if (inactiveFilters == null) {
+			return Collections.emptyList();
+		}
+		return inactiveFilters;
+	}
+
+	/**
+	 * {@link Set} of {@link IDifferenceFilter} that are initially enabled by default.
 	 * <p>
 	 * During the first addiction in the registry of these {@link IDifferenceFilter},
 	 * {@link IDifferenceFilter#defaultSelected()} was equal to true
 	 * </p>
 	 * 
-	 * @return {@link Set} of {@link IDifferenceFilter} that are original activated by default.
+	 * @return {@link Set} of {@link IDifferenceFilter} that are original enabled by default.
 	 */
 	public Set<IDifferenceFilter> getInitialByDefaultFilters() {
-		Collection<DifferenceFilterDefaultConfiguration> enableFilter = Collections2.filter(map.values(),
-				new Predicate<DifferenceFilterDefaultConfiguration>() {
-
-					public boolean apply(DifferenceFilterDefaultConfiguration arg0) {
-						return arg0.isDefaultSelectedInitialValue();
-					}
-				});
-		return Sets.newLinkedHashSet(Collections2.transform(enableFilter, TO_FILTER));
+		Set<IDifferenceFilter> result = Sets.newLinkedHashSet();
+		for (DifferenceFilterDefaultConfiguration f : map.values()) {
+			if (f.isDefaultSelectedInitialValue()) {
+				result.add(f.getFilter());
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -151,21 +167,53 @@ public class DifferenceFilterManager {
 	 *            {@link Set} of {@link IDifferenceFilter} to set.
 	 */
 	public void setCurrentByDefaultFilters(Set<IDifferenceFilter> enabledFilter) {
-		final Set<IDifferenceFilter> disableFilter;
+		final Set<IDifferenceFilter> disabledFilter;
 		if (enabledFilter == null) {
-			disableFilter = getAllFilters();
+			disabledFilter = getAllFilters();
 		} else {
-			disableFilter = Sets.difference(getAllFilters(), enabledFilter);
+			disabledFilter = Sets.difference(getAllFilters(), enabledFilter);
 		}
 		SetView<IDifferenceFilter> initialDisabledFilter = Sets.difference(getAllFilters(),
 				getInitialByDefaultFilters());
-		storeInPreferences(disableFilter, initialDisabledFilter);
+		storeInPreferences(disabledFilter, initialDisabledFilter, BY_DEFAULT_DISABLED_FILTER);
 		// Trace preferences values
 		if (TracingConstant.CONFIGURATION_TRACING_ACTIVATED) {
 			StringBuilder builder = new StringBuilder();
 			// Print each preferences
 			builder.append("Preference ").append(BY_DEFAULT_DISABLED_FILTER).append(":\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			String preferenceValue = preferenceStore.get(BY_DEFAULT_DISABLED_FILTER, ""); //$NON-NLS-1$
+			String[] groups = preferenceValue.split(ItemUtil.PREFERENCE_DELIMITER);
+			for (int rank = 0; rank < groups.length; rank++) {
+				builder.append(rank).append(". ").append(groups[rank]).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			builder.append("\n\n"); //$NON-NLS-1$
+			EMFCompareRCPUIPlugin.getDefault().log(IStatus.INFO, builder.toString());
+		}
+	}
+
+	/**
+	 * Set the filters that should be active for the next comparison.
+	 * 
+	 * @param activeFilters
+	 *            {@link Set} of {@link IDifferenceFilter} to set.
+	 */
+	public void setCurrentActiveFilters(Set<IDifferenceFilter> activeFilters) {
+		final Set<IDeactivableDiffFilter> inactiveFilters;
+		Set<IDeactivableDiffFilter> deactivableFilters = Sets.newLinkedHashSet(Iterables.filter(
+				getAllFilters(), IDeactivableDiffFilter.class));
+		if (activeFilters == null) {
+			inactiveFilters = deactivableFilters;
+		} else {
+			inactiveFilters = Sets.difference(deactivableFilters, activeFilters);
+		}
+		storeInPreferences(inactiveFilters, Collections.<IDifferenceFilter> emptySet(),
+				INACTIVE_FILTERS_PREF_KEY);
+		// Trace preferences values
+		if (TracingConstant.CONFIGURATION_TRACING_ACTIVATED) {
+			StringBuilder builder = new StringBuilder();
+			// Print each preferences
+			builder.append("Preference ").append(INACTIVE_FILTERS_PREF_KEY).append(":\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			String preferenceValue = preferenceStore.get(INACTIVE_FILTERS_PREF_KEY, ""); //$NON-NLS-1$
 			String[] groups = preferenceValue.split(ItemUtil.PREFERENCE_DELIMITER);
 			for (int rank = 0; rank < groups.length; rank++) {
 				builder.append(rank).append(". ").append(groups[rank]).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -212,6 +260,37 @@ public class DifferenceFilterManager {
 	}
 
 	/**
+	 * A {@link Set} of deactivated {@link IDeactivableDiffFilter} from preferences.
+	 * <p>
+	 * Those filters will be totally inactive for next comparisons.
+	 * </p>
+	 * 
+	 * @return A {@link Set} of deactivated {@link IDeactivableDiffFilter} from preferences (Filters that do
+	 *         not implement {@link IDeactivableDiffFilter} cannot be deactivated).
+	 */
+	private Set<IDeactivableDiffFilter> getInactiveFilters() {
+		String diffEngineKey = preferenceStore.get(INACTIVE_FILTERS_PREF_KEY, null);
+		Set<IDeactivableDiffFilter> result = null;
+		if (diffEngineKey != null) {
+			String[] diffEngineKeys = diffEngineKey.split(ItemUtil.PREFERENCE_DELIMITER);
+			for (String nonTrimedKey : diffEngineKeys) {
+				String key = nonTrimedKey.trim();
+				DifferenceFilterDefaultConfiguration descriptor = map.get(key);
+				if (descriptor != null) {
+					IDifferenceFilter filter = descriptor.getFilter();
+					if (filter instanceof IDeactivableDiffFilter) {
+						if (result == null) {
+							result = new LinkedHashSet<IDeactivableDiffFilter>();
+						}
+						result.add((IDeactivableDiffFilter)filter);
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Store value in preferences.
 	 * 
 	 * @param currentValue
@@ -219,14 +298,15 @@ public class DifferenceFilterManager {
 	 * @param defaultConf
 	 *            Default value.
 	 */
-	private void storeInPreferences(Set<IDifferenceFilter> currentValue, Set<IDifferenceFilter> defaultConf) {
+	private void storeInPreferences(Set<? extends IDifferenceFilter> currentValue,
+			Set<? extends IDifferenceFilter> defaultConf, String prefKey) {
 		if (currentValue != null && !currentValue.equals(defaultConf)) {
 			Map<String, IDifferenceFilter> toStore = Maps.filterValues(Maps.transformValues(map, TO_FILTER),
 					Predicates.in(currentValue));
 			String preferenceValue = Joiner.on(ItemUtil.PREFERENCE_DELIMITER).join(toStore.keySet());
-			preferenceStore.put(BY_DEFAULT_DISABLED_FILTER, preferenceValue);
+			preferenceStore.put(prefKey, preferenceValue);
 		} else {
-			preferenceStore.remove(BY_DEFAULT_DISABLED_FILTER);
+			preferenceStore.remove(prefKey);
 		}
 	}
 

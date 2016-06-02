@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -75,10 +75,12 @@ public class FilterActionMenu extends Action implements IMenuCreator {
 		menuManager.removeAll();
 		Collection<IDifferenceFilter> filters = registry.getFilters(newScope, newComparison);
 		for (IDifferenceFilter filter : filters) {
-			FilterAction action = new FilterAction(filter.getLabel(), structureMergeViewerFilter, filter);
-			boolean selected = structureMergeViewerFilter.getSelectedDifferenceFilters().contains(filter);
-			action.setChecked(selected);
-			menuManager.add(action);
+			if (structureMergeViewerFilter.getActiveDifferenceFilters().contains(filter)) {
+				FilterAction action = new FilterAction(filter.getLabel(), structureMergeViewerFilter, filter);
+				boolean selected = structureMergeViewerFilter.getSelectedDifferenceFilters().contains(filter);
+				action.setChecked(selected);
+				menuManager.add(action);
+			}
 		}
 	}
 

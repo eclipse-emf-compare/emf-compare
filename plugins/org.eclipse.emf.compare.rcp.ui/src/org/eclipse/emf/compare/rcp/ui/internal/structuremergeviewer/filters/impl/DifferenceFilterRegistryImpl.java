@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDeactivableDiffFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter.Registry;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -50,17 +51,23 @@ public class DifferenceFilterRegistryImpl implements Registry {
 	 *      org.eclipse.emf.compare.Comparison)
 	 */
 	public List<IDifferenceFilter> getFilters(IComparisonScope scope, Comparison comparison) {
-		Collection<IDifferenceFilter> enabledFilter = filterManager.getCurrentByDefaultFilters();
+		Collection<IDifferenceFilter> filtersEnabledByDefault = filterManager.getCurrentByDefaultFilters();
+		Collection<IDeactivableDiffFilter> inactiveFilters = filterManager.getCurrentInactiveFilters();
 		Iterable<IDifferenceFilter> matchingFilters = filter(filterManager.getAllFilters(),
 				isFilterActivable(scope, comparison));
 		/*
 		 * Set the value of default selected using filter manager.
 		 */
 		for (IDifferenceFilter filter : matchingFilters) {
-			if (enabledFilter.contains(filter)) {
+			if (filtersEnabledByDefault.contains(filter)) {
 				filter.setDefaultSelected(true);
 			} else {
 				filter.setDefaultSelected(false);
+			}
+			if (inactiveFilters.contains(filter)) {
+				((IDeactivableDiffFilter)filter).setActive(false);
+			} else if (filter instanceof IDeactivableDiffFilter) {
+				((IDeactivableDiffFilter)filter).setActive(true);
 			}
 		}
 		return newArrayList(matchingFilters);

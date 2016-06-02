@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,6 +66,9 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	/** The set of unselected filters known by this filter. */
 	private final Set<IDifferenceFilter> unselectedDifferenceFilters;
 
+	/** The set of active filters known by this filter. */
+	private final Set<IDifferenceFilter> activeDifferenceFilters;
+
 	/** The {@link EventBus} associated with this filter. */
 	private final EventBus eventBus;
 
@@ -111,6 +114,7 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 		this.predicates = newLinkedHashSet();
 		this.selectedDifferenceFilters = newLinkedHashSet();
 		this.unselectedDifferenceFilters = newLinkedHashSet();
+		this.activeDifferenceFilters = newLinkedHashSet();
 		this.aggregatedPredicate = DEFAULT_PREDICATE;
 	}
 
@@ -157,10 +161,10 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 */
 	public void addFilter(IDifferenceFilter filter) {
 		boolean changed = predicates.remove(filter.getPredicateWhenUnselected());
-		changed |= predicates.add(filter.getPredicateWhenSelected());
+		changed = predicates.add(filter.getPredicateWhenSelected()) || changed;
 
-		changed |= selectedDifferenceFilters.add(filter);
-		changed |= unselectedDifferenceFilters.remove(filter);
+		changed = selectedDifferenceFilters.add(filter) || changed;
+		changed = unselectedDifferenceFilters.remove(filter) || changed;
 
 		if (changed) {
 			aggregatedPredicate = computeAggregatedPredicate();
@@ -207,9 +211,11 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 *            the set of selected filters known by this filter.
 	 * @param unselectedFilters
 	 *            the set of unselected filters known by this filter.
+	 * @param activeFilters
+	 *            the set of activated filters known by this filter.
 	 */
 	public void init(Collection<IDifferenceFilter> selectedFilters,
-			Collection<IDifferenceFilter> unselectedFilters) {
+			Collection<IDifferenceFilter> unselectedFilters, Collection<IDifferenceFilter> activeFilters) {
 		boolean changed = false;
 
 		if (!predicates.isEmpty()) {
@@ -217,13 +223,15 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 			changed = true;
 		}
 
+		activeDifferenceFilters.addAll(activeFilters);
+
 		for (IDifferenceFilter filter : selectedFilters) {
-			changed |= predicates.add(filter.getPredicateWhenSelected());
-			changed |= selectedDifferenceFilters.add(filter);
+			changed = predicates.add(filter.getPredicateWhenSelected()) || changed;
+			changed = selectedDifferenceFilters.add(filter) || changed;
 		}
 		for (IDifferenceFilter filter : unselectedFilters) {
-			changed |= predicates.add(filter.getPredicateWhenUnselected());
-			changed |= unselectedDifferenceFilters.add(filter);
+			changed = predicates.add(filter.getPredicateWhenUnselected()) || changed;
+			changed = unselectedDifferenceFilters.add(filter) || changed;
 		}
 
 		if (changed) {
@@ -240,6 +248,15 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 */
 	public Set<IDifferenceFilter> getSelectedDifferenceFilters() {
 		return selectedDifferenceFilters;
+	}
+
+	/**
+	 * Returns the set of activated filters known by this filter.
+	 * 
+	 * @return the activatedDifferenceFilters the set of activated filters known by this filter.
+	 */
+	public Set<IDifferenceFilter> getActiveDifferenceFilters() {
+		return activeDifferenceFilters;
 	}
 
 	/**

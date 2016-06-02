@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.preferences;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -46,6 +47,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -54,6 +56,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
@@ -76,10 +80,19 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 			MessageDialogWithToggle.NEVER, MessageDialogWithToggle.PROMPT);
 
 	/** Filter manager. Used to retrieve current and default configuration. */
-	private DifferenceFilterManager filterManager;
+	private DifferenceFilterManager filterManager = null;
 
-	/** Interactive content holding UI components. */
-	private InteractiveFilterUIContent filterInteractiveContent;
+	/** Interactive content holding UI components for enabled/disabled filters. */
+	private InteractiveFilterUIContent defaultFilterInteractiveContent;
+
+	/** Interactive content holding UI components for activated/deactivated filters. */
+	private InteractiveFilterUIContent activateFilterInteractiveContent;
+
+	/** The tab used to choose enabled filters. */
+	private Composite enabledFilterTabComposite;
+
+	/** The tab used to choose active filters. */
+	private Composite activateFilterTabComposite;
 
 	public void init(IWorkbench workbench) {
 		// Do not use InstanceScope.Instance to be compatible with Helios.
@@ -92,17 +105,71 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 
 	@Override
 	protected Control createContents(Composite parent) {
-		parent.setLayout(new GridLayout(1, true));
-		Composite container = new Composite(parent, SWT.NONE);
-		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		container.setLayout(new GridLayout(1, true));
+		Composite container = new Composite(parent, SWT.NULL);
+		container.setLayout(new FillLayout(SWT.HORIZONTAL));
+		TabFolder tabFolder = new TabFolder(container, SWT.NONE);
 
-		filterManager = EMFCompareRCPUIPlugin.getDefault().getDifferenceFilterManager();
-
-		filterInteractiveContent = new InteractiveFilterUIContent(container, filterManager.getAllFilters(),
-				filterManager.getCurrentByDefaultFilters());
-		filterInteractiveContent.setComboInput(getCurrentSynchronizationBehavior());
+		// Create tab to choose filters that are enabled by default
+		createDefaultEnabledFilterTab(tabFolder);
+		// Create tab to activate or deactivate totally filters
+		createActivateFilterTab(tabFolder);
 		return container;
+	}
+
+	/**
+	 * Create a tab to choose which filters to enable by default.
+	 * 
+	 * @param tabFolder
+	 */
+	private void createDefaultEnabledFilterTab(TabFolder tabFolder) {
+		enabledFilterTabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
+				.getString("FiltersPreferencePage.select.tab.label"), EMFCompareRCPUIMessages //$NON-NLS-1$
+				.getString("FiltersPreferencePage.selectIntro.text")); //$NON-NLS-1$
+		if (filterManager == null) {
+			filterManager = EMFCompareRCPUIPlugin.getDefault().getDifferenceFilterManager();
+		}
+		defaultFilterInteractiveContent = new InteractiveFilterUIContent(enabledFilterTabComposite,
+				filterManager.getAllFilters(), filterManager.getCurrentByDefaultFilters(), false);
+		defaultFilterInteractiveContent.setComboInput(getCurrentSynchronizationBehavior());
+	}
+
+	/**
+	 * Create a tab to select which filters to activate or deactivate.
+	 * 
+	 * @param tabFolder
+	 */
+	private void createActivateFilterTab(TabFolder tabFolder) {
+		activateFilterTabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
+				.getString("FiltersPreferencePage.activate.tab.label"), EMFCompareRCPUIMessages //$NON-NLS-1$
+				.getString("FiltersPreferencePage.activateIntro.text")); //$NON-NLS-1$
+		if (filterManager == null) {
+			filterManager = EMFCompareRCPUIPlugin.getDefault().getDifferenceFilterManager();
+		}
+		activateFilterInteractiveContent = new InteractiveFilterUIContent(activateFilterTabComposite,
+				filterManager.getAllFilters(), filterManager.getCurrentInactiveFilters(), true);
+	}
+
+	/**
+	 * Create skeleton of a tab.
+	 * 
+	 * @param tabFolder
+	 * @param tabLabel
+	 * @param introText
+	 *            Text use as description a tab
+	 * @return Main composite of the tab
+	 */
+	private Composite createTabSkeleton(TabFolder tabFolder, String tabLabel, String introText) {
+		TabItem tbtmMain = new TabItem(tabFolder, SWT.NONE);
+		tbtmMain.setText(tabLabel);
+		Composite tabComposite = new Composite(tabFolder, SWT.NONE);
+		tbtmMain.setControl(tabComposite);
+		tabComposite.setLayout(new GridLayout(1, true));
+		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
+		tabComposite.setLayoutData(layoutData);
+		// Description text
+		Label introductionText = new Label(tabComposite, SWT.WRAP);
+		introductionText.setText(introText);
+		return tabComposite;
 	}
 
 	/**
@@ -161,8 +228,9 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	 */
 	@Override
 	public boolean performOk() {
-		filterManager.setCurrentByDefaultFilters(filterInteractiveContent.getCheckedFilter());
-		setCurrentSynchronizationBehavior(filterInteractiveContent.getSynchronizationBehavior());
+		filterManager.setCurrentByDefaultFilters(defaultFilterInteractiveContent.getCheckedFilter());
+		filterManager.setCurrentActiveFilters(activateFilterInteractiveContent.getCheckedFilter());
+		setCurrentSynchronizationBehavior(defaultFilterInteractiveContent.getSynchronizationBehavior());
 		return super.performOk();
 	}
 
@@ -171,8 +239,13 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	 */
 	@Override
 	protected void performDefaults() {
-		filterInteractiveContent.checkElements(filterManager.getInitialByDefaultFilters());
-		filterInteractiveContent.setComboInput(getDefaultSynchronizationBehavior());
+		if (activateFilterTabComposite.isVisible()) {
+			activateFilterInteractiveContent.checkElements(filterManager.getAllFilters());
+		}
+		if (enabledFilterTabComposite.isVisible()) {
+			defaultFilterInteractiveContent.checkElements(filterManager.getInitialByDefaultFilters());
+			defaultFilterInteractiveContent.setComboInput(getDefaultSynchronizationBehavior());
+		}
 		super.performDefaults();
 	}
 
@@ -189,8 +262,11 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		/** Viewer of {@link IDifferenceFilter}. */
 		private CheckboxTableViewer viewer;
 
-		/** DataHolder for {@link IDifferenceFilter}. */
+		/** DataHolder for enabled/disabled {@link IDifferenceFilter}. */
 		private FilterDataHolder dataHolder = new FilterDataHolder();
+
+		/** DataHolder for activated/deactivated {@link IDifferenceFilter}. */
+		private FilterDataHolder allFilters = new FilterDataHolder();
 
 		/** Combo holding synchronization behavior preferences. */
 		private Combo combo;
@@ -198,15 +274,21 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		/** Field holding {@link SynchronizationBehavior} */
 		private String synchronizationBehaviorValue;
 
-		private InteractiveFilterUIContent(Composite parent, Collection<IDifferenceFilter> filters,
-				Collection<IDifferenceFilter> defaultCheck) {
+		private InteractiveFilterUIContent(Composite parent, Collection<? extends IDifferenceFilter> filters,
+				Collection<? extends IDifferenceFilter> defaultCheck, boolean isDeactivateTab) {
 			super();
 			Composite contentComposite = new Composite(parent, SWT.BORDER);
 			contentComposite.setLayout(new GridLayout(1, true));
 			contentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 			Label introductionText = new Label(contentComposite, SWT.WRAP);
-			introductionText.setText(EMFCompareRCPUIMessages.getString("FiltersPreferencePage.INTRO_TEXT")); //$NON-NLS-1$
+			if (isDeactivateTab) {
+				introductionText.setText(EMFCompareRCPUIMessages
+						.getString("FiltersPreferencePage.INTRO_DEACTIVATE_TEXT")); //$NON-NLS-1$
+			} else {
+				introductionText.setText(EMFCompareRCPUIMessages
+						.getString("FiltersPreferencePage.INTRO_SELECT_TEXT")); //$NON-NLS-1$
+			}
 			introductionText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 			// Engine chooser composite
 			Composite viewerComposite = new Composite(contentComposite, SWT.NONE);
@@ -215,9 +297,18 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 			viewer = createViewer(viewerComposite);
 			// Descriptor engine Text
 			this.descriptionText = createDescriptionComposite(contentComposite);
-			createSynchronizationBehaviorContent(parent);
+			if (!isDeactivateTab) {
+				createSynchronizationBehaviorContent(parent);
+			}
 			setViewerInput(Lists.newArrayList(filters));
-			bindAndInit(Sets.newLinkedHashSet(defaultCheck));
+			if (isDeactivateTab) {
+				SetView<IDifferenceFilter> activatedFilters = Sets.difference(Sets.newLinkedHashSet(filters),
+						Sets.newLinkedHashSet(defaultCheck));
+				bindAndInit(activatedFilters);
+			} else {
+				bindAndInit(Sets.newLinkedHashSet(defaultCheck));
+			}
+			allFilters.setFilters(Sets.newLinkedHashSet(filters));
 		}
 
 		/**
