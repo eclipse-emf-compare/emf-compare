@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Obeo.
+ * Copyright (c) 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,11 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - support more flexible parameters of test methods
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.git.framework.internal;
 
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.ide.ui.tests.framework.AbstractCompareStatement;
 import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitCompare;
 import org.junit.runners.model.FrameworkMethod;
@@ -21,7 +21,7 @@ import org.junit.runners.model.FrameworkMethod;
  * 
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
-public class GitCompareStatement extends AbstractCompareStatement {
+public class GitCompareStatement extends AbstractGitStatement {
 
 	private final String path;
 

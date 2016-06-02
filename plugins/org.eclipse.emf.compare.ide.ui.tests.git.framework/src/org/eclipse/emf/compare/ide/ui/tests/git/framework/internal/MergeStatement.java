@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Obeo.
+ * Copyright (c) 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - support more flexible parameters of test methods
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.git.framework.internal;
 
@@ -14,7 +15,6 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.GitCorePreferences;
-import org.eclipse.emf.compare.ide.ui.tests.framework.AbstractCompareStatement;
 import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.MergeStrategyID;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMerge;
@@ -26,7 +26,7 @@ import org.junit.runners.model.FrameworkMethod;
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
 @SuppressWarnings("restriction")
-public class MergeStatement extends AbstractCompareStatement {
+public class MergeStatement extends AbstractGitStatement {
 
 	private final MergeStrategyID mergeStrategy;
 
@@ -60,13 +60,8 @@ public class MergeStatement extends AbstractCompareStatement {
 			gitTestsSupport.createRepositoryFromPath(test.getMethod().getDeclaringClass(), path);
 			gitTestsSupport.merge(localBranch, remoteBranch);
 			Class<?>[] paramTypes = test.getMethod().getParameterTypes();
-			if (paramTypes[paramTypes.length - 1].getName().equals(GitTestSupport.class.getName())) {
-				test.invokeExplosively(testObject, gitTestsSupport.getStatus(), gitTestsSupport
-						.getRepository(), gitTestsSupport.getProjects(), gitTestsSupport);
-			} else {
-				test.invokeExplosively(testObject, gitTestsSupport.getStatus(), gitTestsSupport
-						.getRepository(), gitTestsSupport.getProjects());
-			}
+			Object[] parameters = createParameters(paramTypes, gitTestsSupport);
+			test.invokeExplosively(testObject, parameters);
 		} finally {
 			restoreEMFComparePreferences();
 			gitTestsSupport.tearDown();
