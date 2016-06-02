@@ -13,9 +13,13 @@ package org.eclipse.emf.compare.diagram.papyrus.tests.egit;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-
-import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
+import org.eclipse.emf.compare.ide.ui.tests.framework.annotations.ResolutionStrategies;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestRunner;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitInput;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMerge;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.internal.GitTestSupport;
+import org.junit.runner.RunWith;
 
 /**
  * Tests that concurrent changes to di-files do not cause conflicts.
@@ -38,28 +42,18 @@ import org.eclipse.emf.ecore.resource.Resource;
  *
  * @author Philip Langer <planger@eclipsesource.com>
  */
-public class IgnoreDiFileChangesInGitMergeTest extends AbstractGitMergeTestCase {
-
-	@Override
-	protected String getTestScenarioPath() {
-		return "testmodels/ingore-di-file-changes/"; //$NON-NLS-1$
+@SuppressWarnings({ "nls" })
+@RunWith(GitTestRunner.class)
+@ResolutionStrategies(ResolutionStrategyID.WORKSPACE)
+public class IgnoreDiFileChangesInGitMergeTest {
+	
+	@GitMerge(localBranch = "branch1", remoteBranch = "branch2")
+	@GitInput("data/ignore-di-file-changes.zip")
+	public void testIgnoredDiFileChangesAfterGitMerge(GitTestSupport testSupport) throws Exception {
+		assertTrue(testSupport.noConflict());
+		assertTrue(testSupport.fileExists("project1/model.di"));
+		assertTrue(testSupport.fileExists("project1/model.notation"));
+		assertTrue(testSupport.fileExists("project1/model.uml"));
 	}
-
-	@Override
-	protected boolean shouldValidate(File file) {
-		return false;
-	}
-
-	@Override
-	protected void validateResult() throws Exception {
-		assertTrue(noConflict());
-		assertTrue(fileExists("model.di"));
-		assertTrue(fileExists("model.notation"));
-		assertTrue(fileExists("model.uml"));
-	}
-
-	@Override
-	protected void validateResult(Resource resource) throws Exception {
-		// nothing else to validate
-	}
+	
 }

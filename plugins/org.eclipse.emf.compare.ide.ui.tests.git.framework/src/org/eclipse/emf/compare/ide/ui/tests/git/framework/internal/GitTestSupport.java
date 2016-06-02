@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Obeo.
+ * Copyright (c) 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - add convenience methods
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.git.framework.internal;
 
@@ -499,4 +500,30 @@ public class GitTestSupport {
 		}
 	}
 
+	/**
+	 * Specifies whether the repository is in conflict state or not.
+	 * <p>
+	 * This is a convenience method for <code>getStatus().getConflicting().isEmpty()</code>.
+	 * </p>
+	 * 
+	 * @return <code>true</code> if the repository is in a conflict state, <code>false</code> otherwise.
+	 * @throws Exception
+	 *             if the status of the repository could not be created queried.
+	 */
+	public boolean noConflict() throws Exception {
+		return getStatus().getConflicting().isEmpty();
+	}
+
+	/**
+	 * Specifies whether the file given in <code>path</code> currently exists in the working tree of the
+	 * repository.
+	 * 
+	 * @param path
+	 *            The path to the file in question, such as <code>dir1/dir2/file1.txt</code>.
+	 * @return <code>true</code> if the file in the given <code>path</code> exists, <code>false</code>
+	 *         otherwise.
+	 */
+	public boolean fileExists(String path) {
+		return new File(repository.getWorkTree(), path).exists();
+	}
 }
