@@ -61,7 +61,7 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 	 *            containment tree.
 	 */
 	public NotifyingParserPool(boolean containmentOnly) {
-		super(true);
+		super(false);
 		this.proxyListeners = new ListenerList();
 		this.namespaceDeclarationListeners = new ListenerList();
 		this.containmentOnly = containmentOnly;
