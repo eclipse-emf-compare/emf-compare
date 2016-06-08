@@ -15,15 +15,14 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Iterables.size;
 import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_ASYNC;
 import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_SYNC;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -36,7 +35,6 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.EventObject;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -104,6 +102,7 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.Merg
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeCompareInputAdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeNodeCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.util.CompareHandlerService;
+import org.eclipse.emf.compare.ide.ui.internal.util.FilteredIterator;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
@@ -122,6 +121,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.Struc
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilterChange;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProviderChange;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -177,7 +177,7 @@ import org.eclipse.ui.themes.ITheme;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
- * Implementation of {@link AbstractViewerWrapper}.
+ * Implementation of {@link AbstractStructuredViewerWrapper}.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
@@ -679,37 +679,57 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	private void refreshTitle() {
 		// TODO Make sure this is called as little as possible
 		// Or make this asynchronous?
-		if (!getControl().isDisposed()) {
-			Composite parent = getControl().getParent();
-			Comparison comparison = getCompareConfiguration().getComparison();
-			if (parent instanceof CompareViewerSwitchingPane && comparison != null) {
-				final Predicate<? super TreeNode> unfilteredNode = new Predicate<TreeNode>() {
-					public boolean apply(TreeNode input) {
-						return input != null && !JFaceUtil.isFiltered(getViewer(), input, null);
-					}
-				};
-				final IDifferenceGroupProvider groupProvider = getCompareConfiguration()
-						.getStructureMergeViewerGrouper().getProvider();
-				final Set<Diff> differences = new LinkedHashSet<Diff>();
-				final List<Iterable<TreeNode>> allTreeNodes = new ArrayList<Iterable<TreeNode>>();
-				for (Diff diff : comparison.getDifferences()) {
-					differences.add(diff);
-					allTreeNodes.add(groupProvider.getTreeNodes(diff));
-				}
-				final Iterable<TreeNode> treeNodes = Iterables.concat(allTreeNodes);
-				final Set<TreeNode> visibleNodes = ImmutableSet.copyOf(Iterables.filter(treeNodes,
-						unfilteredNode));
-				final Set<Diff> visibleDiffs = ImmutableSet.copyOf(Iterables.filter(Iterables.transform(
-						visibleNodes, TREE_NODE_AS_DIFF), Diff.class));
+		if (getControl().isDisposed() || !(getControl().getParent() instanceof CompareViewerSwitchingPane)) {
+			return;
+		}
 
-				final int filteredDiff = Sets.difference(differences, visibleDiffs).size();
-				final int differencesToMerge = size(Iterables.filter(visibleDiffs,
-						hasState(DifferenceState.UNRESOLVED)));
-				((CompareViewerSwitchingPane)parent).setTitleArgument(EMFCompareIDEUIMessages.getString(
-						"EMFCompareStructureMergeViewer.titleDesc", differencesToMerge, visibleNodes.size(), //$NON-NLS-1$
-						filteredDiff));
+		if (getCompareConfiguration().getComparison() == null) {
+			return;
+		}
+
+		Set<Diff> allDiffs = getAllDiffs();
+		Set<Diff> visibleDiffs = getVisibleDiffs();
+
+		int visibleDiffCount = visibleDiffs.size();
+		int filteredDiffCount = Sets.difference(allDiffs, visibleDiffs).size();
+		int diffsToMergeCount = Iterables.size(Iterables.filter(visibleDiffs, hasState(
+				DifferenceState.UNRESOLVED)));
+		String titleArgument = EMFCompareIDEUIMessages.getString("EMFCompareStructureMergeViewer.titleDesc", //$NON-NLS-1$
+				diffsToMergeCount, visibleDiffCount, filteredDiffCount);
+
+		((CompareViewerSwitchingPane)getControl().getParent()).setTitleArgument(titleArgument);
+	}
+
+	private Set<Diff> getAllDiffs() {
+		Comparison comparison = getCompareConfiguration().getComparison();
+		return Sets.newHashSet(comparison.getDifferences());
+	}
+
+	private Set<Diff> getVisibleDiffs() {
+		Set<Diff> visibleDiffs = Sets.newHashSet();
+
+		EMFCompareConfiguration configuration = getCompareConfiguration();
+		Comparison comparison = configuration.getComparison();
+		IDifferenceGroupProvider groupProvider = configuration.getStructureMergeViewerGrouper().getProvider();
+		Predicate<? super EObject> filterPredicate = configuration.getStructureMergeViewerFilter()
+				.getAggregatedPredicate();
+		for (IDifferenceGroup group : groupProvider.getGroups(comparison)) {
+			for (TreeNode node : group.getChildren()) {
+				if (filterPredicate.apply(node)) {
+					if (node.getData() instanceof Diff) {
+						visibleDiffs.add((Diff)node.getData());
+					}
+
+					Iterator<TreeNode> nodes = Iterators.filter(new FilteredIterator<EObject>(node
+							.eAllContents(), filterPredicate), TreeNode.class);
+					Iterator<Diff> diffs = Iterators.filter(Iterators.transform(nodes, TREE_NODE_AS_DIFF),
+							Predicates.notNull());
+					Iterators.addAll(visibleDiffs, diffs);
+				}
 			}
 		}
+
+		return visibleDiffs;
 	}
 
 	static EObject getDataOfTreeNodeOfAdapter(Object object) {
