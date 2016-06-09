@@ -49,19 +49,23 @@ public class PapyrusStereotypedElementItemProviderDecorator extends StereotypedE
 
 	@Override
 	public String getText(Object object) {
-		LabelProviderService labelProviderService = Activator.getDefault().getLabelProviderService();
-		if (labelProviderService != null) {
-			return labelProviderService.getLabelProvider(PAPYRUS_LABEL_PROVIDER_COMPARE_CONTEXT, object)
-					.getText(object);
+		if (PapyrusStereotypedElementUtil.isPapyrusStereotypedElement(object)) {
+			LabelProviderService labelProviderService = Activator.getDefault().getLabelProviderService();
+			if (labelProviderService != null) {
+				return labelProviderService.getLabelProvider(PAPYRUS_LABEL_PROVIDER_COMPARE_CONTEXT, object)
+						.getText(object);
+			}
 		}
 		return super.getText(object);
 	}
 
 	@Override
 	public Object getImage(Object object) {
-		LabelProviderService labelProviderService = Activator.getDefault().getLabelProviderService();
-		if (labelProviderService != null) {
-			return labelProviderService.getLabelProvider(object).getImage(object);
+		if (PapyrusStereotypedElementUtil.isPapyrusStereotypedElement(object)) {
+			LabelProviderService labelProviderService = Activator.getDefault().getLabelProviderService();
+			if (labelProviderService != null) {
+				return labelProviderService.getLabelProvider(object).getImage(object);
+			}
 		}
 		return super.getImage(object);
 	}
