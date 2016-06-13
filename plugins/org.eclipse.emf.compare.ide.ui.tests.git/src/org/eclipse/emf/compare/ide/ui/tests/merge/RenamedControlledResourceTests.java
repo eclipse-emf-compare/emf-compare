@@ -50,7 +50,7 @@ import org.junit.runner.RunWith;
 @RunWith(GitTestRunner.class)
 public class RenamedControlledResourceTests {
 
-	@GitMerge(localBranch = "master", remoteBranch = "branch")
+	@GitMerge(local = "master", remote = "branch")
 	@GitInput("data/renamedControlledResources/renameNoConflicts.zip")
 	public void testMergeNoConflictRemoteRename(Status status, Repository repository, List<IProject> projects)
 			throws Exception {
@@ -78,7 +78,7 @@ public class RenamedControlledResourceTests {
 		assertEquals("C1", testC1.getName());
 	}
 
-	@GitMerge(localBranch = "branch", remoteBranch = "master")
+	@GitMerge(local = "branch", remote = "master")
 	@GitInput("data/renamedControlledResources/renameNoConflicts.zip")
 	public void testMergeNoConflictLocalRename(Status status, Repository repository, List<IProject> projects)
 			throws Exception {
@@ -106,7 +106,7 @@ public class RenamedControlledResourceTests {
 		assertEquals("C1", testC1.getName());
 	}
 
-	@GitMerge(localBranch = "master", remoteBranch = "branch")
+	@GitMerge(local = "master", remote = "branch")
 	@GitInput("data/renamedControlledResources/renameNoConflictsLocalChanges.zip")
 	public void testMergeNoConflictRemoteRenameLocalChanges(Status status, Repository repository,
 			List<IProject> projects) throws Exception {
@@ -135,7 +135,7 @@ public class RenamedControlledResourceTests {
 		assertEquals("NewClassInRemotelyRenamedPackage", testNewClass.getName());
 	}
 
-	@GitCompare(localBranch = "master", remoteBranch = "branch", fileToCompare = "file1.ecore")
+	@GitCompare(local = "master", remote = "branch", file = "file1.ecore")
 	@GitInput("data/renamedControlledResources/renameNoConflicts.zip")
 	public void testComparisonNoConflictRemoteRename(Comparison comparison) throws Exception {
 		assertTrue(comparison.getConflicts().isEmpty());
@@ -151,7 +151,7 @@ public class RenamedControlledResourceTests {
 				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 	}
 
-	@GitCompare(localBranch = "branch", remoteBranch = "master", fileToCompare = "file1.ecore")
+	@GitCompare(local = "branch", remote = "master", file = "file1.ecore")
 	@GitInput("data/renamedControlledResources/renameNoConflicts.zip")
 	public void testComparisonNoConflictLocalRename(Comparison comparison) throws Exception {
 		assertTrue(comparison.getConflicts().isEmpty());
@@ -167,7 +167,7 @@ public class RenamedControlledResourceTests {
 				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 	}
 
-	@GitMerge(localBranch = "master", remoteBranch = "branch")
+	@GitMerge(local = "master", remote = "branch")
 	@GitInput("data/renamedControlledResources/renameConflicts.zip")
 	public void testMergeConflict(Status status, Repository repository, List<IProject> projects)
 			throws Exception {
@@ -184,7 +184,7 @@ public class RenamedControlledResourceTests {
 		assertTrue(iProject.getFile("file2_other.ecore").exists());
 	}
 
-	@GitCompare(localBranch = "master", remoteBranch = "branch", fileToCompare = "file1.ecore")
+	@GitCompare(local = "master", remote = "branch", file = "file1.ecore")
 	@GitInput("data/renamedControlledResources/renameConflicts.zip")
 	public void testComparisonConflict(Comparison comparison) throws Exception {
 		assertEquals(1, comparison.getConflicts().size());

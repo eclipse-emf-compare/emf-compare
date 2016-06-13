@@ -15,7 +15,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.eclipse.emf.compare.ide.ui.tests.git.framework.MergeStrategyID;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitMergeStrategyID;
 
 /**
  * Annotation used to select the merge strategy used for the test class.
@@ -24,13 +24,13 @@ import org.eclipse.emf.compare.ide.ui.tests.git.framework.MergeStrategyID;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface MergeStrategy {
+public @interface GitMergeStrategy {
 
 	/**
 	 * The merge strategy used for all tests in the class. If the annotation is used empty, the default value
 	 * will be returned. If the annotation is not used the merge strategy defined in the class
 	 * EMFCompareGitTestRunner will be used.
 	 */
-	MergeStrategyID value() default MergeStrategyID.MODEL_RECURSIVE;
+	GitMergeStrategyID value() default GitMergeStrategyID.MODEL_RECURSIVE;
 
 }

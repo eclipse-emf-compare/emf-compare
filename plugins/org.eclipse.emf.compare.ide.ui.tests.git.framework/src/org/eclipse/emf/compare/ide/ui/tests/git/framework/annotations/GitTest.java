@@ -16,7 +16,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.emf.compare.ide.ui.tests.git.framework.internal.GitTestSupport;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestSupport;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.lib.Repository;
 

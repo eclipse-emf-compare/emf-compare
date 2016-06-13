@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.ide.ui.tests.git.framework;
 import org.eclipse.emf.compare.ide.ui.tests.framework.AbstractCompareTestRunner;
 import org.eclipse.emf.compare.ide.ui.tests.framework.EMFCompareTestConfiguration;
 import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
-import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.MergeStrategy;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMergeStrategy;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.internal.GitTestCaseJUnitBlock;
 import org.junit.runners.model.InitializationError;
 
@@ -25,7 +25,7 @@ import org.junit.runners.model.InitializationError;
 public class GitTestRunner extends AbstractCompareTestRunner {
 
 	/** Default merge strategy if the @MergeStrategy annotation is not used. */
-	private static MergeStrategyID defaultMergeStrategy = MergeStrategyID.MODEL_RECURSIVE;
+	private static GitMergeStrategyID defaultMergeStrategy = GitMergeStrategyID.MODEL_RECURSIVE;
 
 	/**
 	 * Constructor.
@@ -41,8 +41,8 @@ public class GitTestRunner extends AbstractCompareTestRunner {
 	@Override
 	public void createRunner(Class<?> testClass, ResolutionStrategyID resolutionStrategy,
 			EMFCompareTestConfiguration configuration) throws InitializationError {
-		MergeStrategy mStrategy = getTestClass().getAnnotation(MergeStrategy.class);
-		final MergeStrategyID mergeStrategy;
+		GitMergeStrategy mStrategy = getTestClass().getAnnotation(GitMergeStrategy.class);
+		final GitMergeStrategyID mergeStrategy;
 		if (mStrategy == null) {
 			mergeStrategy = defaultMergeStrategy;
 		} else {

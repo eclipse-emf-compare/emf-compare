@@ -37,7 +37,7 @@ import org.junit.runner.RunWith;
 @ResolutionStrategies(ResolutionStrategyID.WORKSPACE)
 public class MoveOfDiagramConflictDetectionTest {
 
-	@GitCompare(localBranch = "branch1", remoteBranch = "branch2", fileToCompare = "model.uml")
+	@GitCompare(local = "branch1", remote = "branch2", file = "model.uml")
 	@GitInput("/data/case001.zip")
 	public void pseudoConflictsOnResourceRootTest(Comparison comparison) throws Exception {
 		assertEquals(16, comparison.getDifferences().size());
@@ -48,7 +48,7 @@ public class MoveOfDiagramConflictDetectionTest {
 		}
 	}
 
-	@GitCompare(localBranch = "branch1", remoteBranch = "branch2", fileToCompare = "model.uml")
+	@GitCompare(local = "branch1", remote = "branch2", file = "model.uml")
 	@GitInput("/data/case002.zip")
 	public void conflictsOnResourceRootTest(Comparison comparison) throws Exception {
 		assertEquals(4, comparison.getDifferences().size());

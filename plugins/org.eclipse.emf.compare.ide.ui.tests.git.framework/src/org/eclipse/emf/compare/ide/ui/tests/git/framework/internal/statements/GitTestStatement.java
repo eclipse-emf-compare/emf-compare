@@ -9,10 +9,11 @@
  *     Obeo - initial API and implementation
  *     Philip Langer - support more flexible parameters of test methods
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.tests.git.framework.internal;
+package org.eclipse.emf.compare.ide.ui.tests.git.framework.internal.statements;
 
-import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
 import org.eclipse.emf.compare.ide.ui.tests.framework.EMFCompareTestConfiguration;
+import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestSupport;
 import org.junit.runners.model.FrameworkMethod;
 
 /**
@@ -38,8 +39,7 @@ public class GitTestStatement extends AbstractGitStatement {
 		try {
 			gitTestsSupport.setup();
 			gitTestsSupport.createRepositoryFromPath(test.getMethod().getDeclaringClass(), path);
-			Class<?>[] paramTypes = test.getMethod().getParameterTypes();
-			Object[] parameters = createParameters(paramTypes, gitTestsSupport);
+			Object[] parameters = createParameters(test.getMethod(), gitTestsSupport);
 			test.invokeExplosively(testObject, parameters);
 		} finally {
 			restoreEMFComparePreferences();

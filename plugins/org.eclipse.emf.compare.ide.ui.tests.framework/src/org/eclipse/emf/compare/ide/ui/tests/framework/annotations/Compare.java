@@ -52,6 +52,8 @@ public @interface Compare {
 
 	/**
 	 * Classes of resource set hooks to consider during resource loading.
+	 * 
+	 * @return the value or an empty Array if not used
 	 */
 	Class<?>[] resourceSetHooks() default {};
 }

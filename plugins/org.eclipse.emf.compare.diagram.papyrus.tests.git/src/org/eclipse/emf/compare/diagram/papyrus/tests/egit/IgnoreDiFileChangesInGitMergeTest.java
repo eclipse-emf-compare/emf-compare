@@ -16,9 +16,9 @@ import static org.junit.Assert.assertTrue;
 import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
 import org.eclipse.emf.compare.ide.ui.tests.framework.annotations.ResolutionStrategies;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestRunner;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestSupport;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitInput;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMerge;
-import org.eclipse.emf.compare.ide.ui.tests.git.framework.internal.GitTestSupport;
 import org.junit.runner.RunWith;
 
 /**
@@ -43,7 +43,7 @@ import org.junit.runner.RunWith;
 @ResolutionStrategies(ResolutionStrategyID.WORKSPACE)
 public class IgnoreDiFileChangesInGitMergeTest {
 
-	@GitMerge(localBranch = "branch1", remoteBranch = "branch2")
+	@GitMerge(local = "branch1", remote = "branch2")
 	@GitInput("data/ignore-di-file-changes.zip")
 	public void testIgnoredDiFileChangesAfterGitMerge(GitTestSupport testSupport) throws Exception {
 		assertTrue(testSupport.noConflict());

@@ -26,5 +26,6 @@ Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %providerName
 Export-Package: org.eclipse.emf.compare.ide.ui.tests.git.framework,
  org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations,
- org.eclipse.emf.compare.ide.ui.tests.git.framework.internal
+ org.eclipse.emf.compare.ide.ui.tests.git.framework.internal,
+ org.eclipse.emf.compare.ide.ui.tests.git.framework.internal.statements
 Import-Package: com.google.common.collect;version="[11.0.0,16.0.0)"

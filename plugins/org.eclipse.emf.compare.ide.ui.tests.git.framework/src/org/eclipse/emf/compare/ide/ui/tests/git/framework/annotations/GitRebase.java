@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Obeo.
+ * Copyright (c) 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,43 +15,48 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.eclipse.emf.compare.Comparison;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestSupport;
+import org.eclipse.jgit.api.RebaseResult;
+import org.eclipse.jgit.api.Status;
+import org.eclipse.jgit.lib.Repository;
 
 /**
- * Annotation used to launch a comparison on a git repository.
+ * Annotation used to test the rebase of models.
+ * <p>
+ * The test method may take the following arguments in an arbitrary order. Note that you also may only accept
+ * a subset of these in the signature of the test method:
+ * </p>
+ * <ul>
+ * <li>{@link Status}</li>
+ * <li>{@link Repository}</li>
+ * <li>List<{@link IProject}></li>
+ * <li>{@link RebaseResult}</li>
+ * <li>{@link GitTestSupport}</li>
+ * </ul>
  * 
  * <pre>
- * The signature of the test method must be:
- * public void doTest({@link Comparison} comparison) {}
+ * For instance, the signature of the test method may be:
+ * public void doTest({@link Status} status, {@link Repository} repository, 
+ * 	List<{@link IProject}> projects) {}
  * 
  * If you want to be able to perform extra manipulation on the repository in your 
- * test case (merge, checkout, comparison), the signature of the method must be:
- * public void doTest({@link Comparison} comparison, 
- * 	{@link GitTestSupport} support) {}
+ * test case (merge, checkout, comparison), you can take the {@link GitTestSupport}
+ * as a parameter:
+ * public void doTest({@link Status} status, {@link Repository} repository, 
+ * 	List<{@link IProject}> projects, {@link GitTestSupport} support) {}
  * </pre>
  * 
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface GitCompare {
+public @interface GitRebase {
 
 	/** The name of the local branch. */
 	String local();
 
 	/** The name of the remote branch. */
 	String remote();
-
-	/**
-	 * The path of the file to compare. The path must be project relative
-	 */
-	String file();
-
-	/**
-	 * This value is optional. If not used, the runner will assume that only one project is contained in the
-	 * repository. If used, the value will be used to get the project containing the file to compare.
-	 */
-	String containerProject() default GitTestSupport.COMPARE_NO_PROJECT_SELECTED;
 
 }

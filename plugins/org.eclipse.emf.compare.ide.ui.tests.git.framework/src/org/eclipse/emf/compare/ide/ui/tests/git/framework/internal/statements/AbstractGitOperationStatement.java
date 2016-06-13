@@ -9,36 +9,37 @@
  *     Obeo - initial API and implementation
  *     Philip Langer - support more flexible parameters of test methods
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.tests.git.framework.internal;
+package org.eclipse.emf.compare.ide.ui.tests.git.framework.internal.statements;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.GitCorePreferences;
-import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
 import org.eclipse.emf.compare.ide.ui.tests.framework.EMFCompareTestConfiguration;
-import org.eclipse.emf.compare.ide.ui.tests.git.framework.MergeStrategyID;
-import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMerge;
+import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitMergeStrategyID;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestSupport;
 import org.junit.runners.model.FrameworkMethod;
 
 /**
- * This class handle all merge tests.
+ * This class handle all test related to git operations (merge, rebase, cherry-pick).
  * 
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
 @SuppressWarnings("restriction")
-public class MergeStatement extends AbstractGitStatement {
+public abstract class AbstractGitOperationStatement extends AbstractGitStatement {
 
-	private final MergeStrategyID mergeStrategy;
+	private final GitMergeStrategyID mergeStrategy;
 
 	private final IEclipsePreferences eGitPreferences;
 
-	private final String path;
+	protected final String path;
 
-	private String defaultMergeStrategy = MergeStrategyID.MODEL_RECURSIVE.getValue();
+	private String defaultMergeStrategy = GitMergeStrategyID.MODEL_RECURSIVE.getValue();
 
-	public MergeStatement(Object testObject, FrameworkMethod test, ResolutionStrategyID resolutionStrategy,
-			EMFCompareTestConfiguration configuration, MergeStrategyID mergeStrategy, String path) {
+	public AbstractGitOperationStatement(Object testObject, FrameworkMethod test,
+			ResolutionStrategyID resolutionStrategy, EMFCompareTestConfiguration configuration,
+			GitMergeStrategyID mergeStrategy, String path) {
 		super(testObject, test, resolutionStrategy, configuration);
 		this.mergeStrategy = mergeStrategy;
 		this.eGitPreferences = InstanceScope.INSTANCE.getNode(Activator.getPluginId());
@@ -48,23 +49,28 @@ public class MergeStatement extends AbstractGitStatement {
 	@Override
 	public void evaluate() throws Throwable {
 		setEMFComparePreferences();
-		GitMerge merge = test.getAnnotation(GitMerge.class);
-		String localBranch = GitTestSupport.normalizeBranch(merge.localBranch());
-		String remoteBranch = GitTestSupport.normalizeBranch(merge.remoteBranch());
+		String from = InternalGitTestSupport.normalizeBranch(getCheckoutedBranch());
+		String to = InternalGitTestSupport.normalizeBranch(getOtherBranch());
 
 		GitTestSupport gitTestsSupport = new GitTestSupport();
 		try {
 			gitTestsSupport.setup();
 			gitTestsSupport.createRepositoryFromPath(test.getMethod().getDeclaringClass(), path);
-			gitTestsSupport.merge(localBranch, remoteBranch);
-			Class<?>[] paramTypes = test.getMethod().getParameterTypes();
-			Object[] parameters = createParameters(paramTypes, gitTestsSupport);
+			callGitOperation(gitTestsSupport, from, to);
+			Object[] parameters = createParameters(test.getMethod(), gitTestsSupport);
 			test.invokeExplosively(testObject, parameters);
 		} finally {
 			restoreEMFComparePreferences();
 			gitTestsSupport.tearDown();
 		}
 	}
+
+	protected abstract String getCheckoutedBranch();
+
+	protected abstract String getOtherBranch();
+
+	protected abstract void callGitOperation(GitTestSupport gitTestsSupport, String from, String to)
+			throws Throwable;
 
 	@Override
 	protected void setEMFComparePreferences() {

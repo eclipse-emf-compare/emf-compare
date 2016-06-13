@@ -15,7 +15,7 @@ package org.eclipse.emf.compare.ide.ui.tests.git.framework;
  * 
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
-public enum MergeStrategyID {
+public enum GitMergeStrategyID {
 
 	JGIT_DEFAULT("jgit-default-mergeStrategy"), //$NON-NLS-1$
 
@@ -25,7 +25,7 @@ public enum MergeStrategyID {
 
 	private String value;
 
-	private MergeStrategyID(String value) {
+	private GitMergeStrategyID(String value) {
 		this.value = value;
 	}
 

@@ -60,7 +60,7 @@ public class DirCacheResourceVariantTreeProviderTest {
 		assertTrue(treeProvider.getRemoteTree().hasResourceVariant(iFile1));
 	}
 
-	@GitMerge(localBranch = "master", remoteBranch = "branch")
+	@GitMerge(local = "master", remote = "branch")
 	@GitInput("data/dirCacheResourceVariantTreeProvider/dirCacheTreesNoConflict.zip")
 	public void testDirCacheTreesNoConflict(Status status, Repository repository, List<IProject> projects)
 			throws Exception {
@@ -83,7 +83,7 @@ public class DirCacheResourceVariantTreeProviderTest {
 		assertTrue(treeProvider.getRemoteTree().hasResourceVariant(iFile2));
 	}
 
-	@GitMerge(localBranch = "master", remoteBranch = "branch")
+	@GitMerge(local = "master", remote = "branch")
 	@GitInput("data/dirCacheResourceVariantTreeProvider/dirCacheTreesConflictOnOne.zip")
 	public void testDirCacheTreesConflictOnOne(Status status, Repository repository, List<IProject> projects)
 			throws Exception {
@@ -108,7 +108,7 @@ public class DirCacheResourceVariantTreeProviderTest {
 		assertTrue(treeProvider.getRemoteTree().hasResourceVariant(iFile2));
 	}
 
-	@GitMerge(localBranch = "master", remoteBranch = "branch")
+	@GitMerge(local = "master", remote = "branch")
 	@GitInput("data/dirCacheResourceVariantTreeProvider/dirCacheTreesConflict.zip")
 	public void testDirCacheTreesConflict(Status status, Repository repository, List<IProject> projects)
 			throws Exception {

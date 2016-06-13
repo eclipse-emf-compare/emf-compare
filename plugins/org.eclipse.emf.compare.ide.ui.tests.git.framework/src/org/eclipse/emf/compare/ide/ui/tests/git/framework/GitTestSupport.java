@@ -9,49 +9,37 @@
  *     Obeo - initial API and implementation
  *     Philip Langer - add convenience methods
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.ui.tests.git.framework.internal;
+package org.eclipse.emf.compare.ide.ui.tests.git.framework;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import com.google.common.collect.Lists;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.mapping.RemoteResourceMappingContext;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.resources.mapping.ResourceMappingContext;
 import org.eclipse.core.resources.mapping.ResourceTraversal;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.internal.util.ResourceUtil;
 import org.eclipse.egit.core.op.BranchOperation;
-import org.eclipse.egit.core.op.ConnectProviderOperation;
-import org.eclipse.egit.core.op.DisconnectProviderOperation;
+import org.eclipse.egit.core.op.CherryPickOperation;
 import org.eclipse.egit.core.op.MergeOperation;
+import org.eclipse.egit.core.op.RebaseOperation;
 import org.eclipse.egit.core.op.ResetOperation;
 import org.eclipse.egit.core.synchronize.GitResourceVariantTreeSubscriber;
 import org.eclipse.egit.core.synchronize.GitSubscriberResourceMappingContext;
@@ -69,198 +57,38 @@ import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
+import org.eclipse.emf.compare.ide.ui.tests.git.framework.internal.statements.InternalGitTestSupport;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jgit.api.CheckoutResult;
+import org.eclipse.jgit.api.CherryPickResult;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeResult;
+import org.eclipse.jgit.api.RebaseResult;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.util.FileUtils;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.team.core.subscribers.SubscriberScopeManager;
-import org.eclipse.ui.dialogs.IOverwriteQuery;
-import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
-import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 
 /**
- * This class contains methods to compare a file between two branchs in an existing git repository.
+ * This class contains methods to perform git operations in the context of an EMFCompare test. This class may
+ * be injected in client.
  * 
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
 @SuppressWarnings({"restriction" })
-public class GitTestSupport {
-
-	/**
-	 * Size of the buffer to read/write data
-	 */
-	private static final int BUFFER_SIZE = 4096;
-
-	private final static String GIT_BRANCH_PREFIX = "refs/heads/"; //$NON-NLS-1$
+public class GitTestSupport extends InternalGitTestSupport {
 
 	public final static String COMPARE_NO_PROJECT_SELECTED = "noProject"; //$NON-NLS-1$
 
-	private Repository repository = null;
-
-	private IProject[] projects = null;
-
-	private ArrayList<Runnable> disposers = null;
-
 	private MergeResult mergeResult;
 
-	private IOverwriteQuery overwriteQuery = new IOverwriteQuery() {
-		public String queryOverwrite(String file) {
-			return ALL;
-		}
-	};
+	private RebaseResult rebaseResult;
 
-	protected void createRepositoryFromPath(Class<?> clazz, String path)
-			throws IOException, InvocationTargetException, InterruptedException, CoreException {
-		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		// Delete all projects that can remain in the workspace : prevent errors dues to wrong cleanup of
-		// other tests
-		root.delete(true, new NullProgressMonitor());
-		IPath location = root.getLocation();
-		extractArchive(clazz, path, root);
-		importProjects(new File(location.toString()));
-		connectRepository(new File(location.toString()));
-		projects = root.getProjects();
-		for (IProject project : projects) {
-			connect(project);
-		}
-	}
-
-	private void connectRepository(File file) throws IOException {
-		File gitDir = findGitDir(file);
-		this.repository = Activator.getDefault().getRepositoryCache().lookupRepository(gitDir);
-		this.disposers = new ArrayList<Runnable>();
-	}
-
-	/**
-	 * Connect a project to this repository.
-	 * 
-	 * @param project
-	 *            The project to connect
-	 */
-	private void connect(IProject project) throws CoreException, InterruptedException {
-		ConnectProviderOperation op = new ConnectProviderOperation(project, repository.getDirectory());
-		op.execute(null);
-	}
-
-	private File findGitDir(File file) {
-		for (File child : file.listFiles()) {
-			if (child.isDirectory() && child.getName().equals(".git")) { //$NON-NLS-1$
-				return child;
-			} else if (child.isDirectory()) {
-				File findGitDir = findGitDir(child);
-				if (findGitDir != null) {
-					return findGitDir;
-				}
-			}
-		}
-		return null;
-	}
-
-	private void importProjects(File file)
-			throws InvocationTargetException, InterruptedException, CoreException {
-		for (File child : file.listFiles()) {
-			if (child.isDirectory() && !child.getName().equals(".metadata") //$NON-NLS-1$
-					&& !child.getName().equals(".git")) { //$NON-NLS-1$
-				importProjects(child);
-			} else if (child.getName().equals(".project")) { //$NON-NLS-1$
-				importProject(child);
-			}
-		}
-	}
-
-	private void importProject(File file)
-			throws InvocationTargetException, InterruptedException, CoreException {
-		IProjectDescription description = ResourcesPlugin.getWorkspace()
-				.loadProjectDescription(new Path(file.getAbsolutePath()));
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
-		project.create(description, new NullProgressMonitor());
-		project.open(new NullProgressMonitor());
-
-		ImportOperation importOperation = new ImportOperation(project.getFullPath(), file.getParentFile(),
-				FileSystemStructureProvider.INSTANCE, overwriteQuery);
-		importOperation.setCreateContainerStructure(false);
-		importOperation.run(new NullProgressMonitor());
-	}
-
-	private void extractArchive(Class<?> clazz, String path, IWorkspaceRoot root) throws IOException {
-		InputStream resourceAsStream = clazz.getResourceAsStream(path);
-		ZipInputStream zipIn = new ZipInputStream(resourceAsStream);
-		ZipEntry entry = null;
-		while ((entry = zipIn.getNextEntry()) != null) {
-			String filePath = root.getLocation() + File.separator + entry.getName();
-			if (!entry.isDirectory()) {
-				extractFile(zipIn, filePath);
-			} else {
-				File dir = new File(filePath);
-				dir.mkdir();
-			}
-			zipIn.closeEntry();
-		}
-		zipIn.close();
-	}
-
-	private void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
-		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
-		byte[] bytesIn = new byte[BUFFER_SIZE];
-		int read = 0;
-		while ((read = zipIn.read(bytesIn)) != -1) {
-			bos.write(bytesIn, 0, read);
-		}
-		bos.close();
-	}
-
-	protected void setup() throws CoreException, IOException {
-		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		IProject[] unknownProjects = workspaceRoot.getProjects();
-		if (unknownProjects != null && unknownProjects.length > 0) {
-			for (IProject iProject : unknownProjects) {
-				iProject.delete(true, new NullProgressMonitor());
-			}
-		}
-		Activator.getDefault().getRepositoryCache().clear();
-
-		File file = new File(workspaceRoot.getLocation().toOSString());
-		for (File child : file.listFiles()) {
-			if (!child.getName().equals(".metadata")) { //$NON-NLS-1$
-				FileUtils.delete(child, FileUtils.RECURSIVE | FileUtils.RETRY);
-			}
-		}
-	}
-
-	protected void tearDown() throws CoreException, IOException {
-		if (repository != null) {
-			repository.close();
-			repository = null;
-		}
-		if (disposers != null) {
-			for (Runnable disposer : disposers) {
-				disposer.run();
-			}
-			disposers.clear();
-		}
-
-		Activator.getDefault().getRepositoryCache().clear();
-
-		if (projects != null) {
-			new DisconnectProviderOperation(Arrays.asList(projects)).execute(null);
-			for (IProject iProject : projects) {
-				iProject.delete(true, new NullProgressMonitor());
-			}
-		}
-
-		File file = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString());
-		for (File child : file.listFiles()) {
-			if (!child.getName().equals(".metadata")) { //$NON-NLS-1$
-				FileUtils.delete(child, FileUtils.RECURSIVE | FileUtils.RETRY);
-			}
-		}
-	}
+	private CherryPickResult cherryPickResult;
 
 	public Repository getRepository() {
 		return repository;
@@ -286,22 +114,85 @@ public class GitTestSupport {
 		return mergeResult;
 	}
 
+	public RebaseResult getRebaseResult() {
+		return rebaseResult;
+	}
+
+	public CherryPickResult getCherryPickResult() {
+		return cherryPickResult;
+	}
+
 	/**
 	 * Merge two branches with the given merge strategy.
 	 * 
-	 * @param from
+	 * @param local
 	 *            The checkouted branch (for example "master" or "refs/for/master", both syntaxes are
 	 *            accepted)
-	 * @param to
+	 * @param remote
 	 *            The branch to merge with (for example "master" or "refs/for/master", both syntaxes are
 	 *            accepted)
 	 * @throws CoreException
+	 * @throws IOException
+	 * @throws InterruptedException
 	 */
-	public void merge(String from, String to) throws CoreException, IOException, InterruptedException {
-		checkoutBranch(normalizeBranch(from));
-		MergeOperation op = new MergeOperation(repository, normalizeBranch(to));
+	public void merge(String local, String remote) throws CoreException, IOException, InterruptedException {
+		checkoutBranch(normalizeBranch(local));
+		MergeOperation op = new MergeOperation(repository, normalizeBranch(remote));
 		op.execute(new NullProgressMonitor());
 		mergeResult = op.getResult();
+		for (IProject iProject : projects) {
+			iProject.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+		}
+	}
+
+	/**
+	 * Cherry-pick the commit located on the given "from" branch to the given "to" branch.
+	 * 
+	 * @param local
+	 *            The branch on with the commit will be cherry-picked (for example "master" or
+	 *            "refs/for/master", both syntaxes are accepted)
+	 * @param remote
+	 *            The branch where the commit will be cherry-picked (for example "master" or
+	 *            "refs/for/master", both syntaxes are accepted)
+	 * @throws CoreException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void cherryPick(String local, String remote)
+			throws CoreException, IOException, InterruptedException {
+		checkoutBranch(normalizeBranch(local));
+		RevWalk revWalk = new RevWalk(repository);
+		try {
+			RevCommit commitId = revWalk.parseCommit(repository.findRef(remote).getObjectId());
+			CherryPickOperation op = new CherryPickOperation(repository, commitId);
+			op.execute(new NullProgressMonitor());
+			cherryPickResult = op.getResult();
+			for (IProject iProject : projects) {
+				iProject.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+			}
+		} finally {
+			revWalk.close();
+		}
+	}
+
+	/**
+	 * Rebase the given from branch on the to branch.
+	 * 
+	 * @param local
+	 *            The checkouted branch (for example "master" or "refs/for/master", both syntaxes are
+	 *            accepted)
+	 * @param remote
+	 *            The branch to rebase on (for example "master" or "refs/for/master", both syntaxes are
+	 *            accepted)
+	 * @throws CoreException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void rebase(String local, String remote) throws CoreException, IOException, InterruptedException {
+		checkoutBranch(normalizeBranch(local));
+		RebaseOperation op = new RebaseOperation(repository, repository.findRef(remote));
+		op.execute(new NullProgressMonitor());
+		rebaseResult = op.getResult();
 		for (IProject iProject : projects) {
 			iProject.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 		}
@@ -489,14 +380,6 @@ public class GitTestSupport {
 		CheckoutResult result = op.getResult();
 		if (result.getStatus() != CheckoutResult.Status.OK) {
 			throw new IllegalStateException("Unable to checkout branch " + refName + " result:" + result); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
-
-	protected static String normalizeBranch(String branch) {
-		if (branch.startsWith(GIT_BRANCH_PREFIX)) {
-			return branch;
-		} else {
-			return GIT_BRANCH_PREFIX + branch;
 		}
 	}
 
