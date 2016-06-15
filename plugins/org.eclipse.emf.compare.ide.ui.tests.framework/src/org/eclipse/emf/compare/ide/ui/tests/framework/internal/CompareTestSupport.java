@@ -36,12 +36,29 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 @SuppressWarnings("restriction")
 public class CompareTestSupport {
 
+	/** The left side resourceSet. */
 	private ResourceSet leftRS;
 
+	/** The right side resourceSet. */
 	private ResourceSet rightRS;
 
-	private ResourceSet ancestorRS = null;
+	/** The ancestor side resourceSet. */
+	private ResourceSet ancestorRS;
 
+	/**
+	 * Load the resource for the given paths. The paths must be relative to the given class.
+	 * 
+	 * @param clazz
+	 *            The test class
+	 * @param left
+	 *            The left resource relative path
+	 * @param right
+	 *            The right resource relative path
+	 * @param ancestor
+	 *            The ancestor resource relative path
+	 * @throws IOException
+	 *             If a file cannot be read
+	 */
 	protected void loadResources(Class<?> clazz, String left, String right, String ancestor)
 			throws IOException {
 		leftRS = new ResourceSetImpl();
@@ -106,6 +123,11 @@ public class CompareTestSupport {
 		return resource;
 	}
 
+	/**
+	 * Launch EMFCompare comparison with the known parameters.
+	 * 
+	 * @return the comparison
+	 */
 	public Comparison compare() {
 		DefaultComparisonScope scope = new DefaultComparisonScope(leftRS, rightRS, ancestorRS);
 		final Builder comparisonBuilder = EMFCompare.builder();
@@ -113,6 +135,9 @@ public class CompareTestSupport {
 		return comparisonBuilder.build().compare(scope);
 	}
 
+	/**
+	 * Place for specific tear down treatments to do after the test.
+	 */
 	protected void tearDown() {
 		// TODO is there something to do?
 	}

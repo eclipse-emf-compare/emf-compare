@@ -28,14 +28,24 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Compare {
 
-	/** Path to the file used for the left side. */
+	/**
+	 * Path to the file used for the left side.
+	 * 
+	 * @return the value
+	 */
 	String left();
 
-	/** Path to the file used for the right side. */
+	/**
+	 * Path to the file used for the right side.
+	 * 
+	 * @return the value
+	 */
 	String right();
 
 	/**
 	 * Path to the file used for the ancestor side. If set, the comparison will be 3-way, 2-way otherwise.
+	 * 
+	 * @return the value or an empty String if not used
 	 */
 	String ancestor() default "";
 }

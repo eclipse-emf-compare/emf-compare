@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ide.ui.tests.git.framework.internal;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
+import org.eclipse.emf.compare.ide.ui.tests.framework.EMFCompareTestConfiguration;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitCompare;
 import org.junit.runners.model.FrameworkMethod;
 
@@ -26,11 +27,8 @@ public class GitCompareStatement extends AbstractGitStatement {
 	private final String path;
 
 	public GitCompareStatement(Object testObject, FrameworkMethod test,
-			ResolutionStrategyID resolutionStrategy, Class<?>[] disabledMatchEngineFactory,
-			Class<?> diffEngine, Class<?> eqEngine, Class<?> reqEngine, Class<?> conflictDetector,
-			Class<?>[] disabledPostProcessors, String path) {
-		super(testObject, test, resolutionStrategy, disabledMatchEngineFactory, diffEngine, eqEngine,
-				reqEngine, conflictDetector, disabledPostProcessors);
+			ResolutionStrategyID resolutionStrategy, EMFCompareTestConfiguration configuration, String path) {
+		super(testObject, test, resolutionStrategy, configuration);
 		this.path = normalizePath(path);
 	}
 

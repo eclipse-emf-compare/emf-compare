@@ -31,6 +31,8 @@ public @interface ResolutionStrategies {
 	 * The list of resolution strategies to test. If the annotation is used empty, the default array will be
 	 * returned (only workspace resolution strategy). If the annotation is not used the resolution strategies
 	 * defined in a default array in the class EMFCompareGitTestRunner will be used.
+	 * 
+	 * @return the value or the default array if user specify nothing
 	 */
 	ResolutionStrategyID[] value() default {ResolutionStrategyID.WORKSPACE };
 

@@ -31,6 +31,8 @@ public @interface DiffEngines {
 	 * The list of diff engines to test. If the annotation is used empty, the default array will be returned.
 	 * If the annotation is not used the diff engines defined in a default array in the class
 	 * EMFCompareGitTestRunner will be used.
+	 * 
+	 * @return the value or the default array if user specify nothing
 	 */
 	Class<?>[] value() default {DefaultDiffEngine.class };
 

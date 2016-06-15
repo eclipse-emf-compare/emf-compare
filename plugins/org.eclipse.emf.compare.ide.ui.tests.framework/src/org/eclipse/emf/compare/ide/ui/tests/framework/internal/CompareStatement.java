@@ -12,17 +12,33 @@ package org.eclipse.emf.compare.ide.ui.tests.framework.internal;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ide.ui.tests.framework.AbstractCompareStatement;
+import org.eclipse.emf.compare.ide.ui.tests.framework.EMFCompareTestConfiguration;
 import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
 import org.eclipse.emf.compare.ide.ui.tests.framework.annotations.Compare;
 import org.junit.runners.model.FrameworkMethod;
 
+/**
+ * JUnit statement for simple comparison tests.
+ * 
+ * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
+ */
 public class CompareStatement extends AbstractCompareStatement {
 
+	/**
+	 * Constructor for the classic (no Git) comparison statement.
+	 * 
+	 * @param testObject
+	 *            The test class
+	 * @param test
+	 *            The test method
+	 * @param resolutionStrategy
+	 *            The resolution strategy used for this test
+	 * @param configuration
+	 *            EMFComapre configurations for this test
+	 */
 	public CompareStatement(Object testObject, FrameworkMethod test, ResolutionStrategyID resolutionStrategy,
-			Class<?>[] disabledMatchEngineFactory, Class<?> diffEngine, Class<?> eqEngine, Class<?> reqEngine,
-			Class<?> conflictDetector, Class<?>[] disabledPostProcessors) {
-		super(testObject, test, resolutionStrategy, disabledMatchEngineFactory, diffEngine, eqEngine,
-				reqEngine, conflictDetector, disabledPostProcessors);
+			EMFCompareTestConfiguration configuration) {
+		super(testObject, test, resolutionStrategy, configuration);
 	}
 
 	@Override

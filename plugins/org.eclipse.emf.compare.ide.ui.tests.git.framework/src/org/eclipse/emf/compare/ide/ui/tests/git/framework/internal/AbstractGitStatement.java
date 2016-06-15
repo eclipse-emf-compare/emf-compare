@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.emf.compare.ide.ui.tests.framework.AbstractCompareStatement;
 import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
+import org.eclipse.emf.compare.ide.ui.tests.framework.EMFCompareTestConfiguration;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.lib.Repository;
@@ -27,11 +28,8 @@ import org.junit.runners.model.FrameworkMethod;
 public abstract class AbstractGitStatement extends AbstractCompareStatement {
 
 	public AbstractGitStatement(Object testObject, FrameworkMethod test,
-			ResolutionStrategyID resolutionStrategy, Class<?>[] disabledMatchEngineFactory,
-			Class<?> diffEngine, Class<?> eqEngine, Class<?> reqEngine, Class<?> conflictDetector,
-			Class<?>[] disabledPostProcessors) {
-		super(testObject, test, resolutionStrategy, disabledMatchEngineFactory, diffEngine, eqEngine,
-				reqEngine, conflictDetector, disabledPostProcessors);
+			ResolutionStrategyID resolutionStrategy, EMFCompareTestConfiguration configuration) {
+		super(testObject, test, resolutionStrategy, configuration);
 	}
 
 	protected Object[] createParameters(Class<?>[] paramTypes, GitTestSupport gitTestsSupport)

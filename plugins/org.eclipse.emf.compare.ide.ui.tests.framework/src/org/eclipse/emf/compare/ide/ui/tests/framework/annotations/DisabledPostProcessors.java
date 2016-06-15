@@ -29,6 +29,8 @@ public @interface DisabledPostProcessors {
 	 * The list of post processors disabled for the test. If the annotation is used empty, the default array
 	 * will be returned. If the annotation is not used the post processors defined in a default array in the
 	 * class EMFCompareGitTestRunner will be used.
+	 * 
+	 * @return the value or the default array if user specify nothing
 	 */
 	Class<?>[] value() default {};
 

@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ide.ui.tests.git.framework;
 
 import org.eclipse.emf.compare.ide.ui.tests.framework.AbstractCompareTestRunner;
+import org.eclipse.emf.compare.ide.ui.tests.framework.EMFCompareTestConfiguration;
 import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.MergeStrategy;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.internal.GitTestCaseJUnitBlock;
@@ -39,8 +40,7 @@ public class GitTestRunner extends AbstractCompareTestRunner {
 
 	@Override
 	public void createRunner(Class<?> testClass, ResolutionStrategyID resolutionStrategy,
-			Class<?>[] disabledMatchEngines, Class<?> diffEngine, Class<?> eqEngine, Class<?> reqEngine,
-			Class<?> conflictDetector, Class<?>[] disabledPostProcessors) throws InitializationError {
+			EMFCompareTestConfiguration configuration) throws InitializationError {
 		MergeStrategy mStrategy = getTestClass().getAnnotation(MergeStrategy.class);
 		final MergeStrategyID mergeStrategy;
 		if (mStrategy == null) {
@@ -48,8 +48,7 @@ public class GitTestRunner extends AbstractCompareTestRunner {
 		} else {
 			mergeStrategy = mStrategy.value();
 		}
-		runners.add(new GitTestCaseJUnitBlock(testClass, resolutionStrategy, disabledMatchEngines, diffEngine,
-				eqEngine, reqEngine, conflictDetector, disabledPostProcessors, mergeStrategy));
+		runners.add(new GitTestCaseJUnitBlock(testClass, resolutionStrategy, configuration, mergeStrategy));
 
 	}
 

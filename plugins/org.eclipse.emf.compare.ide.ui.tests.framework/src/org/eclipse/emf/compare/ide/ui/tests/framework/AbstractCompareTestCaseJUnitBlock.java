@@ -21,47 +21,48 @@ import org.junit.runners.model.InitializationError;
  */
 public abstract class AbstractCompareTestCaseJUnitBlock extends BlockJUnit4ClassRunner {
 
+	/** Separator used to construct the name of the test. */
+	private static final String NAME_SEPARATOR = " - "; //$NON-NLS-1$
+
+	/** The resolution strategy to use for the test. */
 	protected final ResolutionStrategyID resolutionStrategy;
 
-	protected final Class<?>[] disabledMatchEngines;
+	/** Wrapper for the configurations of EMFCompare for the test. */
+	protected final EMFCompareTestConfiguration configuration;
 
-	protected final Class<?> diffEngine;
-
-	protected final Class<?> eqEngine;
-
-	protected final Class<?> reqEngine;
-
-	protected final Class<?> conflictDetector;
-
-	protected final Class<?>[] disabledPostProcessors;
-
+	/**
+	 * Constructor for the classic (no Git) comparison statement.
+	 * 
+	 * @param klass
+	 *            The test class
+	 * @param resolutionStrategy
+	 *            The resolution strategy used for this test
+	 * @param configuration
+	 *            EMFCompare configurations for this test
+	 * @throws InitializationError
+	 *             If something went wrong during test initialization
+	 */
 	public AbstractCompareTestCaseJUnitBlock(Class<?> klass, ResolutionStrategyID resolutionStrategy,
-			Class<?>[] disabledMatchEngines, Class<?> diffEngine, Class<?> eqEngine, Class<?> reqEngine,
-			Class<?> conflictDetector, Class<?>[] disabledPostProcessors) throws InitializationError {
+			EMFCompareTestConfiguration configuration) throws InitializationError {
 		super(klass);
 		this.resolutionStrategy = resolutionStrategy;
-		this.disabledMatchEngines = disabledMatchEngines;
-		this.diffEngine = diffEngine;
-		this.eqEngine = eqEngine;
-		this.reqEngine = reqEngine;
-		this.conflictDetector = conflictDetector;
-		this.disabledPostProcessors = disabledPostProcessors;
+		this.configuration = configuration;
 	}
 
 	@Override
 	protected String testName(FrameworkMethod method) {
 		final StringBuilder name = new StringBuilder();
 		name.append(super.testName(method));
-		name.append(" - "); //$NON-NLS-1$
+		name.append(NAME_SEPARATOR);
 		name.append(resolutionStrategy.name().toLowerCase());
-		name.append(" - "); //$NON-NLS-1$
-		name.append(diffEngine.getSimpleName());
-		name.append(" - "); //$NON-NLS-1$
-		name.append(eqEngine.getSimpleName());
-		name.append(" - "); //$NON-NLS-1$
-		name.append(reqEngine.getSimpleName());
-		name.append(" - "); //$NON-NLS-1$
-		name.append(conflictDetector.getSimpleName());
+		name.append(NAME_SEPARATOR);
+		name.append(configuration.getDiffEngine().getSimpleName());
+		name.append(NAME_SEPARATOR);
+		name.append(configuration.getEqEngine().getSimpleName());
+		name.append(NAME_SEPARATOR);
+		name.append(configuration.getReqEngine().getSimpleName());
+		name.append(NAME_SEPARATOR);
+		name.append(configuration.getConflictDetector().getSimpleName());
 
 		return name.toString();
 	}

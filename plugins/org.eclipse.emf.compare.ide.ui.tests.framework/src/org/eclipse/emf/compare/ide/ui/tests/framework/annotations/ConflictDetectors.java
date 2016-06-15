@@ -32,6 +32,8 @@ public @interface ConflictDetectors {
 	 * The list of conflict detectors to test. If the annotation is used empty, the default array will be
 	 * returned. If the annotation is not used the conflict detectors defined in a default array in the class
 	 * EMFCompareGitTestRunner will be used.
+	 * 
+	 * @return the value or the default array if user specify nothing
 	 */
 	Class<?>[] value() default {DefaultConflictDetector.class, MatchBasedConflictDetector.class };
 

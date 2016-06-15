@@ -44,7 +44,7 @@ public abstract class AbstractCompareTestRunner extends ParentRunner<Runner> {
 
 	/** Default list of resolution strategies used if the @ResolutionStrategies annotation is not used. */
 	private final ResolutionStrategyID[] defaultResolutionStrategies = new ResolutionStrategyID[] {
-			ResolutionStrategyID.WORKSPACE };
+			ResolutionStrategyID.WORKSPACE, };
 
 	/** Default list of match engines disabled if the @MatchEngines annotation is not used. */
 	private final Class<?>[] defaultDisabledMatchEngines = new Class<?>[] {};
@@ -65,6 +65,14 @@ public abstract class AbstractCompareTestRunner extends ParentRunner<Runner> {
 	/** Default list of resolution strategies disabled if the @PostProcessors annotation is not used. */
 	private final Class<?>[] defaultDisabledPostProcessors = new Class<?>[] {};
 
+	/**
+	 * The constructor.
+	 * 
+	 * @param testClass
+	 *            The given test class
+	 * @throws InitializationError
+	 *             If the test cannot be created
+	 */
 	public AbstractCompareTestRunner(Class<?> testClass) throws InitializationError {
 		super(testClass);
 
@@ -133,15 +141,19 @@ public abstract class AbstractCompareTestRunner extends ParentRunner<Runner> {
 			disabledPostProcessors = pProcessors.value();
 		}
 
+		// CHECKSTYLE:OFF those embedded fors are necessary to create all the test possibilities
 		for (ResolutionStrategyID resolutionStrategy : resolutionStrategies) {
 			for (Class<?> diffEngine : diffEngines) {
 				for (Class<?> eqEngine : eqEngines) {
 					for (Class<?> reqEngine : reqEngines) {
 						for (Class<?> conflictDetector : conflictDetectors) {
+							// CHECKSTYLE:ON
 							try {
-								createRunner(getTestClass().getJavaClass(), resolutionStrategy,
+								EMFCompareTestConfiguration configuration = new EMFCompareTestConfiguration(
 										disabledMatchEngines, diffEngine, eqEngine, reqEngine,
 										conflictDetector, disabledPostProcessors);
+								createRunner(getTestClass().getJavaClass(), resolutionStrategy,
+										configuration);
 							} catch (InitializationError e) {
 								e.printStackTrace();
 								Assert.fail(e.getMessage());
@@ -160,24 +172,13 @@ public abstract class AbstractCompareTestRunner extends ParentRunner<Runner> {
 	 *            The class to test
 	 * @param resolutionStrategy
 	 *            The resolution strategy used for this runner
-	 * @param disabledMatchEngines
-	 *            The match engines disabled for this runner
-	 * @param diffEngine
-	 *            The diff engine used for this runner
-	 * @param eqEngine
-	 *            The eq engine used for this runner
-	 * @param reqEngine
-	 *            The req engine used for this runner
-	 * @param conflictDetector
-	 *            The conflict detector used for this runner
-	 * @param disabledPostProcessors
-	 *            The post processors disabled for this runner
+	 * @param configuration
+	 *            EMFCompare configurations for the test
 	 * @throws InitializationError
 	 *             If the creation of the runner goes wrong
 	 */
 	public abstract void createRunner(Class<?> testClass, ResolutionStrategyID resolutionStrategy,
-			Class<?>[] disabledMatchEngines, Class<?> diffEngine, Class<?> eqEngine, Class<?> reqEngine,
-			Class<?> conflictDetector, Class<?>[] disabledPostProcessors) throws InitializationError;
+			EMFCompareTestConfiguration configuration) throws InitializationError;
 
 	/**
 	 * {@inheritDoc}

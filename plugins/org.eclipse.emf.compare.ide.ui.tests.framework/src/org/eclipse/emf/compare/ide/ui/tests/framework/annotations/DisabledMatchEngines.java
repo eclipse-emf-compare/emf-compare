@@ -28,6 +28,8 @@ public @interface DisabledMatchEngines {
 	 * The list of match engines disabled for the test. If the annotation is used empty, the default array
 	 * will be returned. If the annotation is not used the match engines defined in a default array in the
 	 * class EMFCompareGitTestRunner will be disabled. Other match engines will be used for the comparison.
+	 * 
+	 * @return the value or the default array if user specify nothing
 	 */
 	Class<?>[] value() default {};
 

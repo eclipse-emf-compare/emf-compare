@@ -15,6 +15,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 import org.eclipse.emf.compare.ide.ui.tests.framework.AbstractCompareTestCaseJUnitBlock;
+import org.eclipse.emf.compare.ide.ui.tests.framework.EMFCompareTestConfiguration;
 import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.MergeStrategyID;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitCompare;
@@ -34,11 +35,9 @@ public class GitTestCaseJUnitBlock extends AbstractCompareTestCaseJUnitBlock {
 	private MergeStrategyID mergeStrategy;
 
 	public GitTestCaseJUnitBlock(Class<?> klass, ResolutionStrategyID resolutionStrategy,
-			Class<?>[] disabledMatchEngines, Class<?> diffEngine, Class<?> eqEngine, Class<?> reqEngine,
-			Class<?> conflictDetector, Class<?>[] disabledPostProcessors, MergeStrategyID mergeStrategy)
+			EMFCompareTestConfiguration configuration, MergeStrategyID mergeStrategy)
 			throws InitializationError {
-		super(klass, resolutionStrategy, disabledMatchEngines, diffEngine, eqEngine, reqEngine,
-				conflictDetector, disabledPostProcessors);
+		super(klass, resolutionStrategy, configuration);
 		this.mergeStrategy = mergeStrategy;
 	}
 
@@ -75,16 +74,13 @@ public class GitTestCaseJUnitBlock extends AbstractCompareTestCaseJUnitBlock {
 		Statement result = null;
 		if (input != null) {
 			if (method.getAnnotation(GitCompare.class) != null) {
-				result = new GitCompareStatement(testObject, method, resolutionStrategy, disabledMatchEngines,
-						diffEngine, eqEngine, reqEngine, conflictDetector, disabledPostProcessors,
+				result = new GitCompareStatement(testObject, method, resolutionStrategy, configuration,
 						input.value());
 			} else if (method.getAnnotation(GitMerge.class) != null) {
-				result = new MergeStatement(testObject, method, resolutionStrategy, disabledMatchEngines,
-						diffEngine, eqEngine, reqEngine, conflictDetector, disabledPostProcessors,
+				result = new MergeStatement(testObject, method, resolutionStrategy, configuration,
 						mergeStrategy, input.value());
 			} else if (method.getAnnotation(GitTest.class) != null) {
-				result = new GitTestStatement(testObject, method, resolutionStrategy, disabledMatchEngines,
-						diffEngine, eqEngine, reqEngine, conflictDetector, disabledPostProcessors,
+				result = new GitTestStatement(testObject, method, resolutionStrategy, configuration,
 						input.value());
 			}
 		}

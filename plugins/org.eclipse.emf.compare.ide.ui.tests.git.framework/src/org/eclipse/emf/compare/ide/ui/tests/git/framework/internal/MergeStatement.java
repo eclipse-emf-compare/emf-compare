@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.GitCorePreferences;
 import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
+import org.eclipse.emf.compare.ide.ui.tests.framework.EMFCompareTestConfiguration;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.MergeStrategyID;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMerge;
 import org.junit.runners.model.FrameworkMethod;
@@ -37,11 +38,8 @@ public class MergeStatement extends AbstractGitStatement {
 	private String defaultMergeStrategy = MergeStrategyID.MODEL_RECURSIVE.getValue();
 
 	public MergeStatement(Object testObject, FrameworkMethod test, ResolutionStrategyID resolutionStrategy,
-			Class<?>[] disabledMatchEngineFactory, Class<?> diffEngine, Class<?> eqEngine, Class<?> reqEngine,
-			Class<?> conflictDetector, Class<?>[] disabledPostProcessors, MergeStrategyID mergeStrategy,
-			String path) {
-		super(testObject, test, resolutionStrategy, disabledMatchEngineFactory, diffEngine, eqEngine,
-				reqEngine, conflictDetector, disabledPostProcessors);
+			EMFCompareTestConfiguration configuration, MergeStrategyID mergeStrategy, String path) {
+		super(testObject, test, resolutionStrategy, configuration);
 		this.mergeStrategy = mergeStrategy;
 		this.eGitPreferences = InstanceScope.INSTANCE.getNode(Activator.getPluginId());
 		this.path = normalizePath(path);

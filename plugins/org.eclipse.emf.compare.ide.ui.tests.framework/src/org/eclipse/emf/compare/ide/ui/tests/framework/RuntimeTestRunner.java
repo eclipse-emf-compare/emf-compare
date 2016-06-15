@@ -20,16 +20,22 @@ import org.junit.runners.model.InitializationError;
  */
 public class RuntimeTestRunner extends AbstractCompareTestRunner {
 
+	/**
+	 * The constructor.
+	 * 
+	 * @param testClass
+	 *            The given test class
+	 * @throws InitializationError
+	 *             If the test cannot be created
+	 */
 	public RuntimeTestRunner(Class<?> testClass) throws InitializationError {
 		super(testClass);
 	}
 
 	@Override
 	public void createRunner(Class<?> testClass, ResolutionStrategyID resolutionStrategy,
-			Class<?>[] disabledMatchEngines, Class<?> diffEngine, Class<?> eqEngine, Class<?> reqEngine,
-			Class<?> conflictDetector, Class<?>[] disabledPostProcessors) throws InitializationError {
-		runners.add(new CompareTestCaseJUnitBlock(testClass, resolutionStrategy, disabledMatchEngines,
-				diffEngine, eqEngine, reqEngine, conflictDetector, disabledPostProcessors));
+			EMFCompareTestConfiguration configuration) throws InitializationError {
+		runners.add(new CompareTestCaseJUnitBlock(testClass, resolutionStrategy, configuration));
 	}
 
 }
