@@ -101,8 +101,8 @@ public class UMLIntervalConstraintChangeFactory extends AbstractUMLChangeFactory
 				final Setting setting = getInverseReferences(object,
 						new Predicate<EStructuralFeature.Setting>() {
 							public boolean apply(EStructuralFeature.Setting input) {
-								return ((input.getEStructuralFeature() == UMLPackage.Literals.INTERVAL__MIN || input
-										.getEStructuralFeature() == UMLPackage.Literals.INTERVAL__MAX))
+								return ((input.getEStructuralFeature() == UMLPackage.Literals.INTERVAL__MIN
+										|| input.getEStructuralFeature() == UMLPackage.Literals.INTERVAL__MAX))
 										&& input.getEObject().eContainer() instanceof IntervalConstraint;
 							}
 						});

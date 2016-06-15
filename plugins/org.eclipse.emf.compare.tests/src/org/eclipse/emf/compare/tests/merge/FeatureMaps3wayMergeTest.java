@@ -1160,12 +1160,12 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(6, differences.size());
 
 		// merge one feature-map-change and one reference-change
-		final Diff featureMapChangeDiff = Iterators.find(differences.iterator(), and(
-				instanceOf(FeatureMapChange.class), fromSide(DifferenceSource.LEFT)));
+		final Diff featureMapChangeDiff = Iterators.find(differences.iterator(),
+				and(instanceOf(FeatureMapChange.class), fromSide(DifferenceSource.LEFT)));
 
-		final Diff referenceChangeDiff = Iterators.find(differences.iterator(), and(
-				instanceOf(ReferenceChange.class), fromSide(DifferenceSource.LEFT),
-				not(isEquivalentTo(featureMapChangeDiff))));
+		final Diff referenceChangeDiff = Iterators.find(differences.iterator(),
+				and(instanceOf(ReferenceChange.class), fromSide(DifferenceSource.LEFT),
+						not(isEquivalentTo(featureMapChangeDiff))));
 
 		// accepting -> element a will be moved into a featuremap
 		mergerRegistry.getHighestRankingMerger(featureMapChangeDiff).copyLeftToRight(featureMapChangeDiff,
@@ -1195,12 +1195,12 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(6, differences.size());
 
 		// merge one feature-map-change and one reference-change
-		final Diff featureMapChangeDiff = Iterators.find(differences.iterator(), and(
-				instanceOf(FeatureMapChange.class), fromSide(DifferenceSource.LEFT)));
+		final Diff featureMapChangeDiff = Iterators.find(differences.iterator(),
+				and(instanceOf(FeatureMapChange.class), fromSide(DifferenceSource.LEFT)));
 
-		final Diff referenceChangeDiff = Iterators.find(differences.iterator(), and(
-				instanceOf(ReferenceChange.class), fromSide(DifferenceSource.LEFT),
-				not(isEquivalentTo(featureMapChangeDiff))));
+		final Diff referenceChangeDiff = Iterators.find(differences.iterator(),
+				and(instanceOf(ReferenceChange.class), fromSide(DifferenceSource.LEFT),
+						not(isEquivalentTo(featureMapChangeDiff))));
 
 		// rejecting means that instead of moving inside the element will be moved outside of the featuremap
 		mergerRegistry.getHighestRankingMerger(featureMapChangeDiff).copyRightToLeft(featureMapChangeDiff,
@@ -1230,26 +1230,26 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(6, differences.size());
 
 		// check if each featuremapchange / referencechange pair is equivalent
-		final Diff leftFeatureMapChangeDiff = Iterators.find(differences.iterator(), and(
-				instanceOf(FeatureMapChange.class), ofKind(DifferenceKind.MOVE),
-				fromSide(DifferenceSource.RIGHT)));
+		final Diff leftFeatureMapChangeDiff = Iterators.find(differences.iterator(),
+				and(instanceOf(FeatureMapChange.class), ofKind(DifferenceKind.MOVE),
+						fromSide(DifferenceSource.RIGHT)));
 
-		final Diff leftReferenceChangeDiff = Iterators.find(differences.iterator(), and(
-				instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
-				fromSide(DifferenceSource.RIGHT), not(isEquivalentTo(leftFeatureMapChangeDiff))));
+		final Diff leftReferenceChangeDiff = Iterators.find(differences.iterator(),
+				and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
+						fromSide(DifferenceSource.RIGHT), not(isEquivalentTo(leftFeatureMapChangeDiff))));
 
-		final Diff rightReferenceChangeDiff = Iterators.find(differences.iterator(), and(
-				instanceOf(ReferenceChange.class), fromSide(DifferenceSource.LEFT)));
+		final Diff rightReferenceChangeDiff = Iterators.find(differences.iterator(),
+				and(instanceOf(ReferenceChange.class), fromSide(DifferenceSource.LEFT)));
 
 		assertEquals(2, leftFeatureMapChangeDiff.getEquivalence().getDifferences().size());
 		assertEquals(2, leftReferenceChangeDiff.getEquivalence().getDifferences().size());
 		assertEquals(2, rightReferenceChangeDiff.getEquivalence().getDifferences().size());
 
 		// accept both
-		mergerRegistry.getHighestRankingMerger(leftFeatureMapChangeDiff).copyLeftToRight(
-				leftFeatureMapChangeDiff, new BasicMonitor());
-		mergerRegistry.getHighestRankingMerger(leftReferenceChangeDiff).copyLeftToRight(
-				leftReferenceChangeDiff, new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(leftFeatureMapChangeDiff)
+				.copyLeftToRight(leftFeatureMapChangeDiff, new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(leftReferenceChangeDiff)
+				.copyLeftToRight(leftReferenceChangeDiff, new BasicMonitor());
 
 		// no differences should be left
 		scope = new DefaultComparisonScope(left, right, null);
@@ -1272,26 +1272,26 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(6, differences.size());
 
 		// check if each featuremapchange / referencechange pair is equivalent
-		final Diff leftFeatureMapChangeDiff = Iterators.find(differences.iterator(), and(
-				instanceOf(FeatureMapChange.class), ofKind(DifferenceKind.MOVE),
-				fromSide(DifferenceSource.RIGHT)));
+		final Diff leftFeatureMapChangeDiff = Iterators.find(differences.iterator(),
+				and(instanceOf(FeatureMapChange.class), ofKind(DifferenceKind.MOVE),
+						fromSide(DifferenceSource.RIGHT)));
 
-		final Diff leftReferenceChangeDiff = Iterators.find(differences.iterator(), and(
-				instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
-				fromSide(DifferenceSource.RIGHT), not(isEquivalentTo(leftFeatureMapChangeDiff))));
+		final Diff leftReferenceChangeDiff = Iterators.find(differences.iterator(),
+				and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
+						fromSide(DifferenceSource.RIGHT), not(isEquivalentTo(leftFeatureMapChangeDiff))));
 
-		final Diff rightReferenceChangeDiff = Iterators.find(differences.iterator(), and(
-				instanceOf(ReferenceChange.class), fromSide(DifferenceSource.LEFT)));
+		final Diff rightReferenceChangeDiff = Iterators.find(differences.iterator(),
+				and(instanceOf(ReferenceChange.class), fromSide(DifferenceSource.LEFT)));
 
 		assertEquals(2, leftFeatureMapChangeDiff.getEquivalence().getDifferences().size());
 		assertEquals(2, leftReferenceChangeDiff.getEquivalence().getDifferences().size());
 		assertEquals(2, rightReferenceChangeDiff.getEquivalence().getDifferences().size());
 
 		// reject both
-		mergerRegistry.getHighestRankingMerger(leftFeatureMapChangeDiff).copyRightToLeft(
-				leftFeatureMapChangeDiff, new BasicMonitor());
-		mergerRegistry.getHighestRankingMerger(leftReferenceChangeDiff).copyRightToLeft(
-				leftReferenceChangeDiff, new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(leftFeatureMapChangeDiff)
+				.copyRightToLeft(leftFeatureMapChangeDiff, new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(leftReferenceChangeDiff)
+				.copyRightToLeft(leftReferenceChangeDiff, new BasicMonitor());
 
 		// no differences should be left
 		scope = new DefaultComparisonScope(left, right, null);

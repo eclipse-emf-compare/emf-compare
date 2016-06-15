@@ -46,7 +46,8 @@ public class BasicPostProcessorDescriptorImpl implements Descriptor {
 	 *            The resourceURI pattern on which the described post processor applied to. May be
 	 *            <code>null</code>
 	 */
-	public BasicPostProcessorDescriptorImpl(IPostProcessor postProcessor, Pattern nsURI, Pattern resourceURI) {
+	public BasicPostProcessorDescriptorImpl(IPostProcessor postProcessor, Pattern nsURI,
+			Pattern resourceURI) {
 		this.postProcessor = postProcessor;
 		this.nsURI = nsURI;
 		this.resourceURI = resourceURI;

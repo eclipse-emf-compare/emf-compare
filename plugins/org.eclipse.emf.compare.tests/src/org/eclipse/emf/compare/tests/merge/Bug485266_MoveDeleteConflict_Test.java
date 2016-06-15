@@ -198,8 +198,8 @@ public class Bug485266_MoveDeleteConflict_Test extends AbstractMergerTest {
 				test3RightToLeft, test3LeftToRight, test5RightToLeft, test5LeftToRight);
 	}
 
-	public Bug485266_MoveDeleteConflict_Test(final Resource origin, final Resource left,
-			final Resource right, final boolean rightToLeft, final Resource expected) {
+	public Bug485266_MoveDeleteConflict_Test(final Resource origin, final Resource left, final Resource right,
+			final boolean rightToLeft, final Resource expected) {
 		super(origin, left, right, rightToLeft, expected, IMerger.RegistryImpl.createStandaloneInstance());
 	}
 

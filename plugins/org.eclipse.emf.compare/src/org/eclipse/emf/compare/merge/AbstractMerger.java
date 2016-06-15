@@ -263,16 +263,16 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 
 		if (isHandleSubDiffs()) {
 			final Set<Diff> resultingToMerge = Sets.newLinkedHashSet(resulting);
-			Iterable<Diff> subDiffs = concat(transform(resultingToMerge, ComparisonUtil
-					.getSubDiffs(!mergeRightToLeft)));
+			Iterable<Diff> subDiffs = concat(
+					transform(resultingToMerge, ComparisonUtil.getSubDiffs(!mergeRightToLeft)));
 			addAll(resulting, subDiffs);
 		}
 
 		if (LOGGER.isDebugEnabled()) {
 			Long duration = new Long(System.currentTimeMillis() - start);
-			String log = String
-					.format("getDirectResultingMerges(Diff, boolean) - %d resulting merges found in %d ms for diff %d", //$NON-NLS-1$
-							new Integer(resulting.size()), duration, new Integer(target.hashCode()));
+			String log = String.format(
+					"getDirectResultingMerges(Diff, boolean) - %d resulting merges found in %d ms for diff %d", //$NON-NLS-1$
+					new Integer(resulting.size()), duration, new Integer(target.hashCode()));
 			LOGGER.debug(log);
 		}
 
@@ -311,8 +311,8 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 				referenceChange.getSource(), mergeRightToLeft);
 
 		if (!sanityChecks && sourceContainer != null) {
-			final Object sourceValue = ReferenceUtil
-					.safeEGet(sourceContainer, referenceChange.getReference());
+			final Object sourceValue = ReferenceUtil.safeEGet(sourceContainer,
+					referenceChange.getReference());
 
 			if (sourceValue == sourceContainer) {
 				// collect all diffs which might be "equal"
@@ -346,8 +346,8 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 	 * @return All differences (and their equivalents) from {@code diffsToCheck} which are indirectly
 	 *         equivalent to {@code referenceChange}. Does not modify the given collection.
 	 */
-	private Collection<? extends Diff> filterInterlockedOneToOneDiffs(
-			Collection<? extends Diff> diffsToCheck, ReferenceChange referenceChange, boolean mergeRightToLeft) {
+	private Collection<? extends Diff> filterInterlockedOneToOneDiffs(Collection<? extends Diff> diffsToCheck,
+			ReferenceChange referenceChange, boolean mergeRightToLeft) {
 
 		final Object sourceContainer = ComparisonUtil.getExpectedSide(referenceChange.getMatch(),
 				referenceChange.getSource(), mergeRightToLeft);
@@ -386,20 +386,19 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 		final Conflict conflict = target.getConflict();
 		if (conflict != null && conflict.getKind() == ConflictKind.REAL) {
 			if (mergeRightToLeft && target.getSource() == DifferenceSource.RIGHT) {
-				Iterables.addAll(directlyImpliedRejections, Iterables.filter(conflict.getDifferences(),
-						fromSide(DifferenceSource.LEFT)));
+				Iterables.addAll(directlyImpliedRejections,
+						Iterables.filter(conflict.getDifferences(), fromSide(DifferenceSource.LEFT)));
 			} else if (!mergeRightToLeft && target.getSource() == DifferenceSource.LEFT) {
-				Iterables.addAll(directlyImpliedRejections, Iterables.filter(conflict.getDifferences(),
-						fromSide(DifferenceSource.RIGHT)));
+				Iterables.addAll(directlyImpliedRejections,
+						Iterables.filter(conflict.getDifferences(), fromSide(DifferenceSource.RIGHT)));
 			}
 		}
 
 		if (LOGGER.isDebugEnabled()) {
 			Long duration = new Long(System.currentTimeMillis() - start);
-			String log = String
-					.format("getDirectResultingMerges(Diff, boolean) - %d implied rejections found in %d ms for diff %d", //$NON-NLS-1$
-							new Integer(directlyImpliedRejections.size()), duration, new Integer(target
-									.hashCode()));
+			String log = String.format(
+					"getDirectResultingMerges(Diff, boolean) - %d implied rejections found in %d ms for diff %d", //$NON-NLS-1$
+					new Integer(directlyImpliedRejections.size()), duration, new Integer(target.hashCode()));
 			LOGGER.debug(log);
 		}
 
@@ -558,13 +557,14 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 		final List<Diff> equivalentDiffs = diff.getEquivalence().getDifferences();
 
 		// We need to lookup the first multi-valued addition
-		final Optional<Diff> multiValuedAddition = Iterators.tryFind(Iterators.filter(equivalentDiffs
-				.iterator(), candidateFilter), new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				return input instanceof ReferenceChange && ((ReferenceChange)input).getReference().isMany()
-						&& isAdd((ReferenceChange)input, mergeRightToLeft);
-			}
-		});
+		final Optional<Diff> multiValuedAddition = Iterators.tryFind(
+				Iterators.filter(equivalentDiffs.iterator(), candidateFilter), new Predicate<Diff>() {
+					public boolean apply(Diff input) {
+						return input instanceof ReferenceChange
+								&& ((ReferenceChange)input).getReference().isMany()
+								&& isAdd((ReferenceChange)input, mergeRightToLeft);
+					}
+				});
 
 		final Iterator<Diff> candidateDiffs = Iterators.filter(equivalentDiffs.iterator(), candidateFilter);
 		if (multiValuedAddition.isPresent()) {
@@ -886,19 +886,19 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware {
 			final Diff equivalent = equivalenceIterator.next();
 			if (equivalent != target && mergeRightToLeft) {
 				if (target.getSource() == DifferenceSource.LEFT) {
-					mergedThroughEquivalentImplication = any(equivalent.getImplies(), in(target
-							.getRequiredBy()));
+					mergedThroughEquivalentImplication = any(equivalent.getImplies(),
+							in(target.getRequiredBy()));
 				} else {
-					mergedThroughEquivalentImplication = any(equivalent.getImpliedBy(), in(target
-							.getRequires()));
+					mergedThroughEquivalentImplication = any(equivalent.getImpliedBy(),
+							in(target.getRequires()));
 				}
 			} else if (equivalent != target) {
 				if (target.getSource() == DifferenceSource.LEFT) {
-					mergedThroughEquivalentImplication = any(equivalent.getImpliedBy(), in(target
-							.getRequires()));
+					mergedThroughEquivalentImplication = any(equivalent.getImpliedBy(),
+							in(target.getRequires()));
 				} else {
-					mergedThroughEquivalentImplication = any(equivalent.getImplies(), in(target
-							.getRequiredBy()));
+					mergedThroughEquivalentImplication = any(equivalent.getImplies(),
+							in(target.getRequiredBy()));
 				}
 			}
 		}

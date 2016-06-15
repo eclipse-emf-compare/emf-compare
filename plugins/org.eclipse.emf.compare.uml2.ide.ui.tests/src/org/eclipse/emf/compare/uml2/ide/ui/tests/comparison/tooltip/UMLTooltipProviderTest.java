@@ -137,8 +137,8 @@ public class UMLTooltipProviderTest extends AbstractUMLTest {
 			}
 		};
 		for (TreeNode nodeRootMatch : nodeRootMatchs) {
-			UnmodifiableIterator<EObject> treeNode = Iterators
-					.filter(nodeRootMatch.eAllContents(), predicate);
+			UnmodifiableIterator<EObject> treeNode = Iterators.filter(nodeRootMatch.eAllContents(),
+					predicate);
 			if (treeNode != null && treeNode.hasNext()) {
 				moveEdge = (TreeNode)treeNode.next();
 				break;

@@ -31,8 +31,8 @@ public class EdgeChangeExtender extends DiagramDiffExtender {
 	public boolean handle(TreeNode treeNode) {
 		if (treeNode != null) {
 			EObject data = treeNode.getData();
-			return data instanceof EdgeChange
-					&& (((EdgeChange)data).getKind() == DifferenceKind.ADD || ((EdgeChange)data).getKind() == DifferenceKind.DELETE);
+			return data instanceof EdgeChange && (((EdgeChange)data).getKind() == DifferenceKind.ADD
+					|| ((EdgeChange)data).getKind() == DifferenceKind.DELETE);
 
 		}
 		return false;

@@ -50,8 +50,8 @@ public class ForwardingXMLHandler extends XMLHandler {
 	 * The cache in which we'll store the fields we access through reflection. Note that this is only used by
 	 * a single field in this implementation.
 	 */
-	private static final LoadingCache<String, Field> FIELD_CACHE = CacheBuilder.newBuilder().build(
-			new CacheLoader<String, Field>() {
+	private static final LoadingCache<String, Field> FIELD_CACHE = CacheBuilder.newBuilder()
+			.build(new CacheLoader<String, Field>() {
 				/**
 				 * {@inheritDoc}
 				 * 

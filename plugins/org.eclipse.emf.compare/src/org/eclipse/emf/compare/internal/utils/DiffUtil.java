@@ -508,8 +508,8 @@ public final class DiffUtil {
 	 * @return The LCS of the two given sequences. Will never be the same instance as one of the input
 	 *         sequences.
 	 */
-	private static <E> List<E> intLongestCommonSubsequence(Comparison comparison,
-			Iterable<E> ignoredElements, List<E> sequence1, List<E> sequence2) {
+	private static <E> List<E> intLongestCommonSubsequence(Comparison comparison, Iterable<E> ignoredElements,
+			List<E> sequence1, List<E> sequence2) {
 		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
@@ -866,8 +866,8 @@ public final class DiffUtil {
 	public static int findInsertionIndex(Comparison comparison, Diff diff, boolean rightToLeft) {
 		final EStructuralFeature targetFeature = getTargetFeature(comparison, diff, rightToLeft);
 		if (!targetFeature.isMany()) {
-			throw new IllegalArgumentException(EMFCompareMessages.getString(
-					"DiffUtil.IllegalFeature", targetFeature.getName())); //$NON-NLS-1$
+			throw new IllegalArgumentException(EMFCompareMessages.getString("DiffUtil.IllegalFeature", //$NON-NLS-1$
+					targetFeature.getName()));
 		}
 
 		final List<Object> sourceList = getSourceList(comparison, diff, rightToLeft);
@@ -898,8 +898,8 @@ public final class DiffUtil {
 		} else if (diff instanceof FeatureMapChange) {
 			feature = ((FeatureMapChange)diff).getAttribute();
 		} else {
-			throw new IllegalArgumentException(EMFCompareMessages.getString(
-					"DiffUtil.IllegalDiff", diff.eClass().getName())); //$NON-NLS-1$
+			throw new IllegalArgumentException(EMFCompareMessages.getString("DiffUtil.IllegalDiff", diff //$NON-NLS-1$
+					.eClass().getName()));
 		}
 		return feature;
 	}
@@ -920,8 +920,8 @@ public final class DiffUtil {
 		} else if (diff instanceof FeatureMapChange) {
 			value = ((FeatureMapChange)diff).getValue();
 		} else {
-			throw new IllegalArgumentException(EMFCompareMessages.getString(
-					"DiffUtil.IllegalDiff", diff.eClass().getName())); //$NON-NLS-1$
+			throw new IllegalArgumentException(EMFCompareMessages.getString("DiffUtil.IllegalDiff", diff //$NON-NLS-1$
+					.eClass().getName()));
 		}
 		return value;
 	}
@@ -1054,7 +1054,8 @@ public final class DiffUtil {
 	 *            'target' the right side, {@code false} otherwise.
 	 * @return The feature that should be used as a target for this merge.
 	 */
-	private static EStructuralFeature getTargetFeature(Comparison comparison, Diff diff, boolean rightToLeft) {
+	private static EStructuralFeature getTargetFeature(Comparison comparison, Diff diff,
+			boolean rightToLeft) {
 		final EStructuralFeature targetFeature;
 
 		final EStructuralFeature diffFeature = getChangedFeature(diff);
@@ -1128,8 +1129,8 @@ public final class DiffUtil {
 		final Set<E> ignored = Sets.newLinkedHashSet();
 		for (E candidate : candidates) {
 			if (candidate instanceof EObject) {
-				final Iterable<? extends Diff> differences = match.getComparison().getDifferences(
-						(EObject)candidate);
+				final Iterable<? extends Diff> differences = match.getComparison()
+						.getDifferences((EObject)candidate);
 				if (Iterables.any(differences, new UnresolvedDiffMatching(diff, candidate, rightToLeft))) {
 					ignored.add(candidate);
 				}
@@ -1178,7 +1179,7 @@ public final class DiffUtil {
 		 *            the direction of the merging, which is used to obtain the diff's target feature and
 		 *            container.
 		 */
-		public UnresolvedDiffMatching(Diff diff, Object value, boolean rightToLeft) {
+		UnresolvedDiffMatching(Diff diff, Object value, boolean rightToLeft) {
 			this.referenceDiff = diff;
 			this.referenceValue = value;
 			this.comparison = ComparisonUtil.getComparison(diff);

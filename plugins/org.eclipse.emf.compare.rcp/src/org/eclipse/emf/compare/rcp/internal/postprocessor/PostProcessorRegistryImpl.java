@@ -88,8 +88,8 @@ public class PostProcessorRegistryImpl implements IPostProcessor.Descriptor.Regi
 		List<IItemDescriptor<Descriptor>> itemDescriptors = baseRegisty.getItemDescriptors();
 		Collections.sort(itemDescriptors);
 
-		Collection<IItemDescriptor<IPostProcessor.Descriptor>> activeDescriptor = Collections2.filter(
-				itemDescriptors, not(in(getDisabledEngines())));
+		Collection<IItemDescriptor<IPostProcessor.Descriptor>> activeDescriptor = Collections2
+				.filter(itemDescriptors, not(in(getDisabledEngines())));
 
 		Collection<IPostProcessor.Descriptor> descriptors = Collections2.transform(activeDescriptor,
 				AbstractItemDescriptor.<IPostProcessor.Descriptor> getItemFunction());
@@ -103,8 +103,8 @@ public class PostProcessorRegistryImpl implements IPostProcessor.Descriptor.Regi
 	 */
 	private Collection<IItemDescriptor<IPostProcessor.Descriptor>> getDisabledEngines() {
 		List<IItemDescriptor<IPostProcessor.Descriptor>> result = ItemUtil.getItemsDescriptor(baseRegisty,
-				EMFComparePreferences.DISABLED_POST_PROCESSOR, EMFCompareRCPPlugin.getDefault()
-						.getEMFComparePreferences());
+				EMFComparePreferences.DISABLED_POST_PROCESSOR,
+				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences());
 		if (result == null) {
 			result = Collections.emptyList();
 		}

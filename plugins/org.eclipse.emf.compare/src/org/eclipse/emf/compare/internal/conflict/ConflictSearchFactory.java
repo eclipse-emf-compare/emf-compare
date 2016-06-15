@@ -141,7 +141,8 @@ public class ConflictSearchFactory extends CompareSwitch<AbstractConflictSearch<
 	}
 
 	@Override
-	public AbstractConflictSearch<? extends Diff> caseResourceAttachmentChange(ResourceAttachmentChange diff) {
+	public AbstractConflictSearch<? extends Diff> caseResourceAttachmentChange(
+			ResourceAttachmentChange diff) {
 		switch (diff.getKind()) {
 			case ADD:
 				return new ResourceAttachmentChangeConflictSearch.Add(diff, index, monitor);

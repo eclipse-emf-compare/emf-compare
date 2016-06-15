@@ -60,14 +60,14 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 
 	private static final String PREVIEW_MERGE_MODE = EMFCompareIDEUIPlugin.PLUGIN_ID + ".PREVIEW_MERGE_MODE"; //$NON-NLS-1$
 
-	private static final String COMPARISON_SCOPE = EMFCompareIDEUIPlugin.PLUGIN_ID + ".COMPARISON_SCOPE"; //$NON-NLS-1$;
+	private static final String COMPARISON_SCOPE = EMFCompareIDEUIPlugin.PLUGIN_ID + ".COMPARISON_SCOPE"; //$NON-NLS-1$ ;
 
-	private static final String SMV_FILTERS = EMFCompareIDEUIPlugin.PLUGIN_ID + ".SMV_FILTERS"; //$NON-NLS-1$;
+	private static final String SMV_FILTERS = EMFCompareIDEUIPlugin.PLUGIN_ID + ".SMV_FILTERS"; //$NON-NLS-1$ ;
 
-	private static final String EVENT_BUS = EMFCompareIDEUIPlugin.PLUGIN_ID + ".EVENT_BUS"; //$NON-NLS-1$;
+	private static final String EVENT_BUS = EMFCompareIDEUIPlugin.PLUGIN_ID + ".EVENT_BUS"; //$NON-NLS-1$ ;
 
 	private static final String SMV_GROUP_PROVIDERS = EMFCompareIDEUIPlugin.PLUGIN_ID
-			+ ".SMV_GROUP_PROVIDERS"; //$NON-NLS-1$;
+			+ ".SMV_GROUP_PROVIDERS"; //$NON-NLS-1$ ;
 
 	private final PropertyChangeListener propertyChangeListener;
 
@@ -214,9 +214,8 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 			initStructureMergeViewerFilter(newComparison, newComparisonScope);
 		}
 
-		getEventBus().post(
-				new ComparisonAndScopeChange(oldComparison, newComparison, oldComparisonScope,
-						newComparisonScope));
+		getEventBus().post(new ComparisonAndScopeChange(oldComparison, newComparison, oldComparisonScope,
+				newComparisonScope));
 	}
 
 	protected void initStructureMergeViewerGroupProvider(Comparison comparison,

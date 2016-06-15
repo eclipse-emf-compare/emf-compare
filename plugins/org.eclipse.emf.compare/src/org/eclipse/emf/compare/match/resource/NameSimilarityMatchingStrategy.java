@@ -162,7 +162,7 @@ public class NameSimilarityMatchingStrategy implements IResourceMatchingStrategy
 		 * @param second
 		 *            Second resource of the couple for which we need a similarity.
 		 */
-		public ResourceSimilarity(Resource first, Resource second) {
+		ResourceSimilarity(Resource first, Resource second) {
 			this.first = first;
 			this.second = second;
 		}

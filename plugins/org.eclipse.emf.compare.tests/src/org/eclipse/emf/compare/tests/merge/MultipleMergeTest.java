@@ -120,15 +120,15 @@ public class MultipleMergeTest {
 
 		// First, reject all conflicts on the right
 		// left: 8923410, right: 62930147
-		final ReferenceChange rightAdOfNode9 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), added("Root.Node9")));
+		final ReferenceChange rightAdOfNode9 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), added("Root.Node9")));
 		mergerRegistry.getHighestRankingMerger(rightAdOfNode9).copyLeftToRight(rightAdOfNode9,
 				new BasicMonitor());
 
 		// left: 8923410, right: 6230147
 
-		final ReferenceChange rightMoveOfNode1 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), moved("Root.Node1", "containmentRef1")));
+		final ReferenceChange rightMoveOfNode1 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), moved("Root.Node1", "containmentRef1")));
 		// revert move of Node 1 in right. It should be re-positioned right before 2
 		mergerRegistry.getHighestRankingMerger(rightMoveOfNode1).copyLeftToRight(rightMoveOfNode1,
 				new BasicMonitor());
@@ -136,16 +136,16 @@ public class MultipleMergeTest {
 
 		// left: 8923410, right: 6123047
 
-		final ReferenceChange rightAddOfNode0 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), added("Root.Node0")));
+		final ReferenceChange rightAddOfNode0 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), added("Root.Node0")));
 		// revert addition of 0 in right
 		mergerRegistry.getHighestRankingMerger(rightAddOfNode0).copyLeftToRight(rightAddOfNode0,
 				new BasicMonitor());
 
 		// left: 8923410, right: 612347
 
-		final ReferenceChange rightMoveOfNode6 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), moved("Root.Node6", "containmentRef1")));
+		final ReferenceChange rightMoveOfNode6 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), moved("Root.Node6", "containmentRef1")));
 		// Revert move of 6 in right.
 		mergerRegistry.getHighestRankingMerger(rightMoveOfNode6).copyLeftToRight(rightMoveOfNode6,
 				new BasicMonitor());
@@ -165,8 +165,8 @@ public class MultipleMergeTest {
 		// And now, accept all other changes
 
 		// add Node8
-		final ReferenceChange leftAddOfNode8 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), added("Root.Node8")));
+		final ReferenceChange leftAddOfNode8 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), added("Root.Node8")));
 		// LCS is currently {2, 3, 4}. Insertion index is right before 2.
 		mergerRegistry.getHighestRankingMerger(leftAddOfNode8).copyLeftToRight(leftAddOfNode8,
 				new BasicMonitor());
@@ -175,8 +175,8 @@ public class MultipleMergeTest {
 		// left: 8923410, right: 1823467
 
 		// add Node9
-		final ReferenceChange leftAddOfNode9 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), added("Root.Node9")));
+		final ReferenceChange leftAddOfNode9 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), added("Root.Node9")));
 		// LCS is now {8, 2, 3, 4}. Insertion should be right after 8
 		mergerRegistry.getHighestRankingMerger(leftAddOfNode9).copyLeftToRight(leftAddOfNode9,
 				new BasicMonitor());
@@ -185,8 +185,8 @@ public class MultipleMergeTest {
 		// left: 8923410, right: 18923467
 
 		// move Node1
-		final ReferenceChange leftMoveOfNode1 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), moved("Root.Node1", "containmentRef1")));
+		final ReferenceChange leftMoveOfNode1 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), moved("Root.Node1", "containmentRef1")));
 		// LCS is {8, 9, 2, 3, 4}. 1 should be moved right after 4.
 		mergerRegistry.getHighestRankingMerger(leftMoveOfNode1).copyLeftToRight(leftMoveOfNode1,
 				new BasicMonitor());
@@ -195,8 +195,8 @@ public class MultipleMergeTest {
 		// left: 8923410, right: 89234167
 
 		// add Node0
-		final ReferenceChange leftAddOfNode0 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), added("Root.Node0")));
+		final ReferenceChange leftAddOfNode0 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), added("Root.Node0")));
 		// LCS is now {8, 9, 2, 3, 4, 1}. 0 should be added right after 1
 		mergerRegistry.getHighestRankingMerger(leftAddOfNode0).copyLeftToRight(leftAddOfNode0,
 				new BasicMonitor());
@@ -224,8 +224,8 @@ public class MultipleMergeTest {
 		// left: 8923410, right: 89234107
 
 		// merge 7 (remove Node7)
-		final ReferenceChange diff7 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), removed("Root.Node7")));
+		final ReferenceChange diff7 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), removed("Root.Node7")));
 		mergerRegistry.getHighestRankingMerger(diff7).copyLeftToRight(diff7, new BasicMonitor());
 		assertValueIndexIs(diff7, false, -1);
 
@@ -270,8 +270,8 @@ public class MultipleMergeTest {
 		// left: 89234610, right: 62930147
 
 		// Revert add of 9 on the left side
-		final ReferenceChange leftAddOfNode9 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), added("Root.Node9")));
+		final ReferenceChange leftAddOfNode9 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), added("Root.Node9")));
 		mergerRegistry.getHighestRankingMerger(leftAddOfNode9).copyRightToLeft(leftAddOfNode9,
 				new BasicMonitor());
 		assertValueIndexIs(leftAddOfNode9, true, -1);
@@ -288,8 +288,8 @@ public class MultipleMergeTest {
 		// left: 8234610, right: 62930147
 
 		// Revert add of 0 on the left side
-		final ReferenceChange leftAddOfNode0 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), added("Root.Node0")));
+		final ReferenceChange leftAddOfNode0 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), added("Root.Node0")));
 		mergerRegistry.getHighestRankingMerger(leftAddOfNode0).copyRightToLeft(leftAddOfNode0,
 				new BasicMonitor());
 		assertValueIndexIs(leftAddOfNode0, true, -1);
@@ -297,8 +297,8 @@ public class MultipleMergeTest {
 		// left: 823461, right: 62930147
 
 		// Revert move of 1 in left
-		final ReferenceChange leftMoveOfNode1 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), moved("Root.Node1", "containmentRef1")));
+		final ReferenceChange leftMoveOfNode1 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), moved("Root.Node1", "containmentRef1")));
 		mergerRegistry.getHighestRankingMerger(leftMoveOfNode1).copyRightToLeft(leftMoveOfNode1,
 				new BasicMonitor());
 		assertValueIndexIs(leftMoveOfNode1, true, 1);
@@ -308,8 +308,8 @@ public class MultipleMergeTest {
 		// And now, let's merge all the others right to left
 
 		// move 6
-		final ReferenceChange rightMoveOfNode6 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), moved("Root.Node6", "containmentRef1")));
+		final ReferenceChange rightMoveOfNode6 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), moved("Root.Node6", "containmentRef1")));
 		mergerRegistry.getHighestRankingMerger(rightMoveOfNode6).copyRightToLeft(rightMoveOfNode6,
 				new BasicMonitor());
 		assertValueIndexIs(rightMoveOfNode6, true, 2);
@@ -317,8 +317,8 @@ public class MultipleMergeTest {
 		// left: 816234, right: 62930147
 
 		// add 9
-		final ReferenceChange rightAddOfNode9 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), added("Root.Node9")));
+		final ReferenceChange rightAddOfNode9 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), added("Root.Node9")));
 		mergerRegistry.getHighestRankingMerger(rightAddOfNode9).copyRightToLeft(rightAddOfNode9,
 				new BasicMonitor());
 		assertValueIndexIs(rightAddOfNode9, true, 4);
@@ -326,8 +326,8 @@ public class MultipleMergeTest {
 		// left: 8162934, right: 62930147
 
 		// add 0
-		final ReferenceChange rightAddOfNode0 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), added("Root.Node0")));
+		final ReferenceChange rightAddOfNode0 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), added("Root.Node0")));
 		mergerRegistry.getHighestRankingMerger(rightAddOfNode0).copyRightToLeft(rightAddOfNode0,
 				new BasicMonitor());
 		assertValueIndexIs(rightAddOfNode0, true, 6);
@@ -335,8 +335,8 @@ public class MultipleMergeTest {
 		// left: 81629304, right: 62930147
 
 		// move 1
-		final ReferenceChange rightMoveOfNode1 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), moved("Root.Node1", "containmentRef1")));
+		final ReferenceChange rightMoveOfNode1 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), moved("Root.Node1", "containmentRef1")));
 		mergerRegistry.getHighestRankingMerger(rightMoveOfNode1).copyRightToLeft(rightMoveOfNode1,
 				new BasicMonitor());
 		assertValueIndexIs(rightMoveOfNode1, true, 6);
@@ -353,8 +353,8 @@ public class MultipleMergeTest {
 		// left: 86293014, right: 62930147
 
 		// revert add 8
-		final ReferenceChange leftAddOfNode8 = (ReferenceChange)Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), added("Root.Node8")));
+		final ReferenceChange leftAddOfNode8 = (ReferenceChange)Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), added("Root.Node8")));
 		mergerRegistry.getHighestRankingMerger(leftAddOfNode8).copyRightToLeft(leftAddOfNode8,
 				new BasicMonitor());
 		assertValueIndexIs(leftAddOfNode8, false, -1);

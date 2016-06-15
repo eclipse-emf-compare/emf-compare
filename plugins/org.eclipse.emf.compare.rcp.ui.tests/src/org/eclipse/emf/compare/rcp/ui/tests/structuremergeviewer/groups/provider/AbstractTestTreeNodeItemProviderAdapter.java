@@ -49,11 +49,12 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 	protected static TreeItemProviderAdapterFactorySpec treeItemProviderAdapterFactory;
 
 	protected EventBus eventBus;
-	
+
 	@Before
 	public void before() throws IOException {
 		eventBus = new EventBus();
-		treeItemProviderAdapterFactory = new TreeItemProviderAdapterFactorySpec(new StructureMergeViewerFilter(eventBus));
+		treeItemProviderAdapterFactory = new TreeItemProviderAdapterFactorySpec(
+				new StructureMergeViewerFilter(eventBus));
 	}
 
 	/**
@@ -61,8 +62,8 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 	 * @throws IOException
 	 */
 	protected static Comparison getComparison(ResourceScopeProvider scopeProvider) throws IOException {
-		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(), scopeProvider
-				.getRight(), scopeProvider.getOrigin());
+		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(),
+				scopeProvider.getRight(), scopeProvider.getOrigin());
 		final Builder builder = EMFCompare.builder();
 		EMFCompareBuilderConfigurator.createDefault().configure(builder);
 		return builder.build().compare(scope);
@@ -81,20 +82,19 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 			return null;
 		}
 	};
-	
+
 	/**
 	 * Function that returns all contents of the given EObject.
 	 */
 	public static final Function<Object, Iterator<EObject>> E_ALL_CONTENTS = new Function<Object, Iterator<EObject>>() {
 		public Iterator<EObject> apply(Object object) {
-			if (object instanceof EObject) {				
+			if (object instanceof EObject) {
 				return ((EObject)object).eAllContents();
 			}
 			return null;
 		}
 	};
-	
-	
+
 	public static TreeNode getTreeNode(TreeNode parent, EObject eObject) {
 		for (TreeNode child : parent.getChildren()) {
 			EObject data = child.getData();
@@ -104,7 +104,7 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 		}
 		return null;
 	}
-	
+
 	public static Predicate<Object> matchTreeNode = new Predicate<Object>() {
 		public boolean apply(Object object) {
 			if (object instanceof TreeNode) {
@@ -116,13 +116,13 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 			return false;
 		}
 	};
-	
+
 	protected Match getMatchWithFeatureValue(Iterable<?> c, final String featureName, final Object value) {
 		Iterable<Match> matches = filter(c, Match.class);
 		Predicate<Match> predicate = hasFeatureValue(featureName, value);
 		return find(matches, predicate);
 	}
-	
+
 	protected ReferenceChange getReferenceChangeWithFeatureValue(Iterable<?> c, final String featureName,
 			final Object value) {
 		Iterable<ReferenceChange> matches = filter(c, ReferenceChange.class);
@@ -137,7 +137,7 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 		};
 		return find(matches, predicate);
 	}
-	
+
 	protected AttributeChange getAttributeChangeWithFeatureValue(Iterable<?> c, final String featureName,
 			final Object value) {
 		Iterable<AttributeChange> matches = filter(c, AttributeChange.class);
@@ -145,18 +145,20 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 			public boolean apply(AttributeChange attributeChange) {
 				Object attributeChangeValue = attributeChange.getValue();
 				if (attributeChangeValue instanceof EObject) {
-					return Objects.equal(eGet((EObject) attributeChangeValue, featureName), value);
+					return Objects.equal(eGet((EObject)attributeChangeValue, featureName), value);
 				} else if (attributeChangeValue instanceof String) {
-					return featureName.equals(attributeChange.getAttribute().getName()) && value.equals(attributeChangeValue);
+					return featureName.equals(attributeChange.getAttribute().getName())
+							&& value.equals(attributeChangeValue);
 				} else {
-					//attributeChangeValue can be an instance of Integer or something else that has not been managed yet.
+					// attributeChangeValue can be an instance of Integer or something else that has not been
+					// managed yet.
 					throw new IllegalStateException("Developers need to implement missing cases.");
 				}
 			}
 		};
 		return find(matches, predicate);
 	}
-	
+
 	protected Predicate<Match> hasFeatureValue(final String featureName, final Object value) {
 		Predicate<Match> predicate = new Predicate<Match>() {
 			public boolean apply(Match match) {
@@ -178,12 +180,12 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 		};
 		return predicate;
 	}
-	
+
 	protected Object eGet(EObject eObject, String featureName) {
 		EStructuralFeature eStructuralFeature = eObject.eClass().getEStructuralFeature(featureName);
 		return eObject.eGet(eStructuralFeature);
 	}
-	
+
 	protected ITreeItemContentProvider adaptAsITreeItemContentProvider(Notifier notifier) {
 		ITreeItemContentProvider contentProvider = (ITreeItemContentProvider)treeItemProviderAdapterFactory
 				.adapt(notifier, ITreeItemContentProvider.class);

@@ -149,8 +149,8 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		IItemDescriptor<T> defaultEngine = ItemUtil.getDefaultItemDescriptor(registry, enginePreferenceKey,
 				pref);
 		InteractiveUIBuilder<T> uiBuilder = new InteractiveUIBuilder<T>(tabComposite, registry);
-		uiBuilder.setSimple(true).setDefaultCheck(Collections.singleton(defaultEngine)).setDefaultSelection(
-				defaultEngine).setHoldingData(dataHolder);
+		uiBuilder.setSimple(true).setDefaultCheck(Collections.singleton(defaultEngine))
+				.setDefaultSelection(defaultEngine).setHoldingData(dataHolder);
 		return uiBuilder.build();
 	}
 
@@ -160,16 +160,17 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 * @param tabFolder
 	 */
 	private void createConflictDetectorTab(TabFolder tabFolder) {
-		IItemRegistry<IConflictDetector> conflictDetectorDescriptorRegistry = EMFCompareRCPPlugin
-				.getDefault().getConflictDetectorDescriptorRegistry();
+		IItemRegistry<IConflictDetector> conflictDetectorDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
+				.getConflictDetectorDescriptorRegistry();
 		// Create tab structure
-		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("EnginesPreferencePage.conflictDetector.tab.label"),//$NON-NLS-1$
+		Composite tabComposite = createTabSkeleton(tabFolder,
+				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.conflictDetector.tab.label"), //$NON-NLS-1$
 				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.conflictDetectorIntro.text"));//$NON-NLS-1$
 
 		InteractiveUIContent interactiveContent = createEngineUIBuilder(conflictDetectorDescriptorRegistry,
-				EMFComparePreferences.CONFLICTS_DETECTOR, EMFCompareRCPPlugin.getDefault()
-						.getEMFComparePreferences(), tabComposite, conflictsDetectorData);
+				EMFComparePreferences.CONFLICTS_DETECTOR,
+				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences(), tabComposite,
+				conflictsDetectorData);
 
 		// Save for reset default
 		interactiveUis.put(EMFComparePreferences.CONFLICTS_DETECTOR, interactiveContent);
@@ -184,13 +185,13 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		IItemRegistry<IReqEngine> reqEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
 				.getReqEngineDescriptorRegistry();
 		// Create tab structure
-		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("EnginesPreferencePage.requirementEngine.tab.label"), //$NON-NLS-1$
+		Composite tabComposite = createTabSkeleton(tabFolder,
+				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.requirementEngine.tab.label"), //$NON-NLS-1$
 				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.reqEngineIntro.text")); //$NON-NLS-1$
 
 		InteractiveUIContent interactiveContent = createEngineUIBuilder(reqEngineDescriptorRegistry,
-				EMFComparePreferences.REQ_ENGINES, EMFCompareRCPPlugin.getDefault()
-						.getEMFComparePreferences(), tabComposite, reqEngineData);
+				EMFComparePreferences.REQ_ENGINES,
+				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences(), tabComposite, reqEngineData);
 
 		// Save for reset default
 		interactiveUis.put(EMFComparePreferences.REQ_ENGINES, interactiveContent);
@@ -205,13 +206,13 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		IItemRegistry<IEquiEngine> equiEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
 				.getEquiEngineDescriptorRegistry();
 		// Create tab structure
-		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("EnginesPreferencePage.equivalenceEngine.tab.label"), //$NON-NLS-1$
+		Composite tabComposite = createTabSkeleton(tabFolder,
+				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.equivalenceEngine.tab.label"), //$NON-NLS-1$
 				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.equiEngineIntro.text")); //$NON-NLS-1$
 
 		InteractiveUIContent interactiveContent = createEngineUIBuilder(equiEngineDescriptorRegistry,
-				EMFComparePreferences.EQUI_ENGINES, EMFCompareRCPPlugin.getDefault()
-						.getEMFComparePreferences(), tabComposite, equiEngineData);
+				EMFComparePreferences.EQUI_ENGINES,
+				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences(), tabComposite, equiEngineData);
 
 		// Save for reset default
 		interactiveUis.put(EMFComparePreferences.EQUI_ENGINES, interactiveContent);
@@ -226,13 +227,14 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		IItemRegistry<IDiffEngine> diffEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
 				.getDiffEngineDescriptorRegistry();
 		// Create tab structure
-		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("EnginesPreferencePage.differenceEngine.tab.label"), EMFCompareRCPUIMessages //$NON-NLS-1$
-				.getString("EnginesPreferencePage.diffEngineIntro.text")); //$NON-NLS-1$
+		Composite tabComposite = createTabSkeleton(tabFolder,
+				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.differenceEngine.tab.label"), //$NON-NLS-1$
+				EMFCompareRCPUIMessages
+						.getString("EnginesPreferencePage.diffEngineIntro.text")); //$NON-NLS-1$
 
 		InteractiveUIContent interactiveContent = createEngineUIBuilder(diffEngineDescriptorRegistry,
-				EMFComparePreferences.DIFF_ENGINES, EMFCompareRCPPlugin.getDefault()
-						.getEMFComparePreferences(), tabComposite, diffEngineData);
+				EMFComparePreferences.DIFF_ENGINES,
+				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences(), tabComposite, diffEngineData);
 
 		// Save for reset default
 		interactiveUis.put(EMFComparePreferences.DIFF_ENGINES, interactiveContent);
@@ -249,16 +251,17 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 				.getMatchEngineFactoryDescriptorRegistry();
 		IItemDescriptor<Factory> defaultMatchEngineDescriptor = matchEngineFactoryDescriptorRegistry
 				.getItemDescriptor(DefaultRCPMatchEngineFactory.class.getCanonicalName());
-		Composite tabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("EnginesPreferencePage.matchEngine.tab.label"), EMFCompareRCPUIMessages //$NON-NLS-1$
-				.getString("EnginesPreferencePage.matchEngineIntro.text")); //$NON-NLS-1$
+		Composite tabComposite = createTabSkeleton(tabFolder,
+				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.matchEngine.tab.label"), //$NON-NLS-1$
+				EMFCompareRCPUIMessages
+						.getString("EnginesPreferencePage.matchEngineIntro.text")); //$NON-NLS-1$
 
 		Map<String, IConfigurationUIFactory> configuratorUIRegistry = EMFCompareRCPUIPlugin.getDefault()
 				.getMatchEngineConfiguratorRegistry();
 		String matchEnginePreferenceKey = EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES;
 
-		Set<IItemDescriptor<Factory>> activeItems = ItemUtil.getActiveItems(
-				matchEngineFactoryDescriptorRegistry, matchEnginePreferenceKey);
+		Set<IItemDescriptor<Factory>> activeItems = ItemUtil
+				.getActiveItems(matchEngineFactoryDescriptorRegistry, matchEnginePreferenceKey);
 
 		InteractiveUIBuilder<IMatchEngine.Factory> builder = new InteractiveUIBuilder<IMatchEngine.Factory>(
 				tabComposite, matchEngineFactoryDescriptorRegistry);
@@ -304,17 +307,22 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 			StringBuilder traceMessage = new StringBuilder("Engines preference serialization:\n"); //$NON-NLS-1$
 			String prefDelimiter = " :\n"; //$NON-NLS-1$
 			String newLine = "\n"; //$NON-NLS-1$
-			traceMessage.append(EMFComparePreferences.DIFF_ENGINES).append(prefDelimiter).append(
-					getPreferenceStore().getString(EMFComparePreferences.DIFF_ENGINES)).append(newLine);
-			traceMessage.append(EMFComparePreferences.EQUI_ENGINES).append(prefDelimiter).append(
-					getPreferenceStore().getString(EMFComparePreferences.EQUI_ENGINES)).append(newLine);
-			traceMessage.append(EMFComparePreferences.REQ_ENGINES).append(prefDelimiter).append(
-					getPreferenceStore().getString(EMFComparePreferences.REQ_ENGINES)).append(newLine);
-			traceMessage.append(EMFComparePreferences.CONFLICTS_DETECTOR).append(prefDelimiter).append(
-					getPreferenceStore().getString(EMFComparePreferences.CONFLICTS_DETECTOR)).append(newLine);
+			traceMessage.append(EMFComparePreferences.DIFF_ENGINES).append(prefDelimiter)
+					.append(getPreferenceStore().getString(EMFComparePreferences.DIFF_ENGINES))
+					.append(newLine);
+			traceMessage.append(EMFComparePreferences.EQUI_ENGINES).append(prefDelimiter)
+					.append(getPreferenceStore().getString(EMFComparePreferences.EQUI_ENGINES))
+					.append(newLine);
+			traceMessage.append(EMFComparePreferences.REQ_ENGINES).append(prefDelimiter)
+					.append(getPreferenceStore().getString(EMFComparePreferences.REQ_ENGINES))
+					.append(newLine);
+			traceMessage.append(EMFComparePreferences.CONFLICTS_DETECTOR).append(prefDelimiter)
+					.append(getPreferenceStore().getString(EMFComparePreferences.CONFLICTS_DETECTOR))
+					.append(newLine);
 			traceMessage.append(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES).append(prefDelimiter)
 					.append(getPreferenceStore()
-							.getString(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES)).append(newLine);
+							.getString(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES))
+					.append(newLine);
 
 			EMFCompareRCPPlugin.getDefault().log(IStatus.INFO, traceMessage.toString());
 		}
@@ -326,18 +334,18 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 */
 	private void setEnginesPreferences() {
 		// Update preferences preferences
-		setEnginePreferences(EMFComparePreferences.DIFF_ENGINES, diffEngineData.getData(), Collections
-				.singleton(EMFCompareRCPPlugin.getDefault().getDiffEngineDescriptorRegistry()
+		setEnginePreferences(EMFComparePreferences.DIFF_ENGINES, diffEngineData.getData(),
+				Collections.singleton(EMFCompareRCPPlugin.getDefault().getDiffEngineDescriptorRegistry()
 						.getHighestRankingDescriptor()));
-		setEnginePreferences(EMFComparePreferences.EQUI_ENGINES, equiEngineData.getData(), Collections
-				.singleton(EMFCompareRCPPlugin.getDefault().getEquiEngineDescriptorRegistry()
+		setEnginePreferences(EMFComparePreferences.EQUI_ENGINES, equiEngineData.getData(),
+				Collections.singleton(EMFCompareRCPPlugin.getDefault().getEquiEngineDescriptorRegistry()
 						.getHighestRankingDescriptor()));
-		setEnginePreferences(EMFComparePreferences.REQ_ENGINES, reqEngineData.getData(), Collections
-				.singleton(EMFCompareRCPPlugin.getDefault().getReqEngineDescriptorRegistry()
+		setEnginePreferences(EMFComparePreferences.REQ_ENGINES, reqEngineData.getData(),
+				Collections.singleton(EMFCompareRCPPlugin.getDefault().getReqEngineDescriptorRegistry()
 						.getHighestRankingDescriptor()));
 		setEnginePreferences(EMFComparePreferences.CONFLICTS_DETECTOR, conflictsDetectorData.getData(),
-				Collections.singleton(EMFCompareRCPPlugin.getDefault()
-						.getConflictDetectorDescriptorRegistry().getHighestRankingDescriptor()));
+				Collections.singleton(EMFCompareRCPPlugin.getDefault().getConflictDetectorDescriptorRegistry()
+						.getHighestRankingDescriptor()));
 		// Set match engine to disable
 		Set<IItemDescriptor<Factory>> matchEngineRegsitry = Sets.newHashSet(EMFCompareRCPPlugin.getDefault()
 				.getMatchEngineFactoryDescriptorRegistry().getItemDescriptors());
@@ -352,8 +360,8 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 */
 	private void storeConfigurations() {
 		for (Entry<String, InteractiveUIContent> interactiveContentEntry : interactiveUis.entrySet()) {
-			for (Entry<String, AbstractConfigurationUI> configuratorEntry : interactiveContentEntry
-					.getValue().getConfigurators().entrySet()) {
+			for (Entry<String, AbstractConfigurationUI> configuratorEntry : interactiveContentEntry.getValue()
+					.getConfigurators().entrySet()) {
 				AbstractConfigurationUI configurator = configuratorEntry.getValue();
 				configurator.storeConfiguration();
 			}
@@ -376,8 +384,8 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 					traceMessage.append(nodeLabel).append(storeNode.absolutePath()).append(prefDelimiter);
 					try {
 						for (String propertyKey : storeNode.keys()) {
-							traceMessage.append(propertyKey).append(doubleDotLabel).append(
-									storeNode.get(propertyKey, emptyLabel)).append(newLine);
+							traceMessage.append(propertyKey).append(doubleDotLabel)
+									.append(storeNode.get(propertyKey, emptyLabel)).append(newLine);
 						}
 					} catch (BackingStoreException e) {
 						e.printStackTrace();
@@ -393,17 +401,20 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 
 	@Override
 	protected void performDefaults() {
-		resetDefaultPreferencesToHighestRank(EMFCompareRCPPlugin.getDefault()
-				.getDiffEngineDescriptorRegistry(), EMFComparePreferences.DIFF_ENGINES, diffEngineData);
-		resetDefaultPreferencesToHighestRank(EMFCompareRCPPlugin.getDefault()
-				.getReqEngineDescriptorRegistry(), EMFComparePreferences.REQ_ENGINES, reqEngineData);
-		resetDefaultPreferencesToHighestRank(EMFCompareRCPPlugin.getDefault()
-				.getEquiEngineDescriptorRegistry(), EMFComparePreferences.EQUI_ENGINES, equiEngineData);
-		resetDefaultPreferencesToHighestRank(EMFCompareRCPPlugin.getDefault()
-				.getConflictDetectorDescriptorRegistry(), EMFComparePreferences.CONFLICTS_DETECTOR,
-				conflictsDetectorData);
-		resetDefaultPreferencesToAll(EMFCompareRCPPlugin.getDefault()
-				.getMatchEngineFactoryDescriptorRegistry(),
+		resetDefaultPreferencesToHighestRank(
+				EMFCompareRCPPlugin.getDefault().getDiffEngineDescriptorRegistry(),
+				EMFComparePreferences.DIFF_ENGINES, diffEngineData);
+		resetDefaultPreferencesToHighestRank(
+				EMFCompareRCPPlugin.getDefault().getReqEngineDescriptorRegistry(),
+				EMFComparePreferences.REQ_ENGINES, reqEngineData);
+		resetDefaultPreferencesToHighestRank(
+				EMFCompareRCPPlugin.getDefault().getEquiEngineDescriptorRegistry(),
+				EMFComparePreferences.EQUI_ENGINES, equiEngineData);
+		resetDefaultPreferencesToHighestRank(
+				EMFCompareRCPPlugin.getDefault().getConflictDetectorDescriptorRegistry(),
+				EMFComparePreferences.CONFLICTS_DETECTOR, conflictsDetectorData);
+		resetDefaultPreferencesToAll(
+				EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryDescriptorRegistry(),
 				EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, matchEnginesData);
 
 		resetConfigurations();
@@ -454,8 +465,8 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 			IItemDescriptor<T> defaultEngine = registry.getHighestRankingDescriptor();
 			interactiveContent.select(defaultEngine);
 			List<IItemDescriptor<T>> itemDescriptors = registry.getItemDescriptors();
-			interactiveContent.checkElements(itemDescriptors.toArray(new IItemDescriptor[itemDescriptors
-					.size()]));
+			interactiveContent
+					.checkElements(itemDescriptors.toArray(new IItemDescriptor[itemDescriptors.size()]));
 			dataObject.setData(Sets.newHashSet(itemDescriptors));
 		}
 	}
@@ -467,11 +478,12 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 * @param currentSelectedEngine
 	 * @param defaultConf
 	 */
-	private <T> void setEnginePreferences(String preferenceKey,
-			Set<IItemDescriptor<T>> currentSelectedEngine, Collection<IItemDescriptor<T>> defaultConf) {
+	private <T> void setEnginePreferences(String preferenceKey, Set<IItemDescriptor<T>> currentSelectedEngine,
+			Collection<IItemDescriptor<T>> defaultConf) {
 		if (currentSelectedEngine != null && !currentSelectedEngine.containsAll(defaultConf)) {
 			StringBuilder descriptorsKey = new StringBuilder();
-			for (Iterator<IItemDescriptor<T>> iterator = currentSelectedEngine.iterator(); iterator.hasNext();) {
+			for (Iterator<IItemDescriptor<T>> iterator = currentSelectedEngine.iterator(); iterator
+					.hasNext();) {
 				IItemDescriptor<T> iItemDescriptor = iterator.next();
 				descriptorsKey.append(iItemDescriptor.getID());
 				if (iterator.hasNext()) {

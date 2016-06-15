@@ -26,7 +26,8 @@ public class EMFCompareDeferredTreeContentManagerProviderImpl implements EMFComp
 	/**
 	 * {@inheritDoc}
 	 */
-	public EMFCompareDeferredTreeContentManager createEMFDeferredTreeContentManager(AbstractTreeViewer viewer) {
+	public EMFCompareDeferredTreeContentManager createEMFDeferredTreeContentManager(
+			AbstractTreeViewer viewer) {
 		return new E4DeferredTreeContentManager(viewer);
 	}
 

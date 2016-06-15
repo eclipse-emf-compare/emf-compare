@@ -57,7 +57,8 @@ public class EMFCompareAssert {
 	 * @param scope
 	 *            The scope that has been used to create the given <code>comparison</code>.
 	 */
-	public static void assertAllMatched(List<EObject> eObjects, Comparison comparison, IComparisonScope scope) {
+	public static void assertAllMatched(List<EObject> eObjects, Comparison comparison,
+			IComparisonScope scope) {
 		final Predicate<? super EObject> scopeFilter;
 		if (scope instanceof FilterComparisonScope) {
 			scopeFilter = getResourceChildrenFilteringPredicate((FilterComparisonScope)scope);
@@ -101,8 +102,8 @@ public class EMFCompareAssert {
 	 */
 	public static void assertChangedReference(List<Diff> differences, String qualifiedName,
 			String referenceName, String fromQualifiedName, String toQualifiedName, DifferenceSource side) {
-		final Predicate<? super Diff> changedReferenceOnSide = and(fromSide(side), changedReference(
-				qualifiedName, referenceName, fromQualifiedName, toQualifiedName));
+		final Predicate<? super Diff> changedReferenceOnSide = and(fromSide(side),
+				changedReference(qualifiedName, referenceName, fromQualifiedName, toQualifiedName));
 		final Diff matchingDiff = removeFirst(differences.iterator(), changedReferenceOnSide);
 		assertNotNull(matchingDiff);
 	}
@@ -132,8 +133,8 @@ public class EMFCompareAssert {
 	 */
 	public static void assertRemovedFromReference(List<Diff> differences, String qualifiedName,
 			String referenceName, String removedValueQualifiedName, DifferenceSource side) {
-		final Predicate<? super Diff> removedFromReferenceOnSide = and(fromSide(side), removedFromReference(
-				qualifiedName, referenceName, removedValueQualifiedName));
+		final Predicate<? super Diff> removedFromReferenceOnSide = and(fromSide(side),
+				removedFromReference(qualifiedName, referenceName, removedValueQualifiedName));
 		final Diff matchingDiff = removeFirst(differences.iterator(), removedFromReferenceOnSide);
 		assertNotNull(matchingDiff);
 	}
@@ -162,8 +163,8 @@ public class EMFCompareAssert {
 	 */
 	public static void assertAddedToReference(List<Diff> differences, String qualifiedName,
 			String referenceName, String addedValueQualifiedName, DifferenceSource side) {
-		final Predicate<? super Diff> addedToReferenceOnSide = and(fromSide(side), addedToReference(
-				qualifiedName, referenceName, addedValueQualifiedName));
+		final Predicate<? super Diff> addedToReferenceOnSide = and(fromSide(side),
+				addedToReference(qualifiedName, referenceName, addedValueQualifiedName));
 		final Diff matchingDiff = removeFirst(differences.iterator(), addedToReferenceOnSide);
 		assertNotNull(matchingDiff);
 	}
@@ -195,8 +196,8 @@ public class EMFCompareAssert {
 	 */
 	public static void assertChangedAttribute(List<Diff> differences, String qualifiedName,
 			String attributeName, Object fromValue, Object toValue, DifferenceSource side) {
-		final Predicate<? super Diff> changedAttributeOnSide = and(fromSide(side), changedAttribute(
-				qualifiedName, attributeName, fromValue, toValue));
+		final Predicate<? super Diff> changedAttributeOnSide = and(fromSide(side),
+				changedAttribute(qualifiedName, attributeName, fromValue, toValue));
 		final Diff matchingDiff = removeFirst(differences.iterator(), changedAttributeOnSide);
 		assertNotNull(matchingDiff);
 	}

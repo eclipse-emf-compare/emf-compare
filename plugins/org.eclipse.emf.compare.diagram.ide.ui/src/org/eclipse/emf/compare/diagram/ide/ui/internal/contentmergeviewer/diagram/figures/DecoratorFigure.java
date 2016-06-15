@@ -129,8 +129,8 @@ public class DecoratorFigure {
 	 */
 	public DecoratorFigure(Diff difference, boolean isThreeWay, ICompareColor compareColor,
 			IFigure referenceFigure, IFigure decoratorFigure, boolean isPhantom) {
-		preFigureCreation(difference, isThreeWay, compareColor, isPhantom, decoratorFigure.getBounds()
-				.getCopy(), referenceFigure, null);
+		preFigureCreation(difference, isThreeWay, compareColor, isPhantom,
+				decoratorFigure.getBounds().getCopy(), referenceFigure, null);
 		fMainDecoratorFigure = decoratorFigure;
 		postFigureCreation();
 	}
@@ -227,8 +227,11 @@ public class DecoratorFigure {
 		return createDefaultFigure();
 	}
 
-/**
-	 * It creates a {@link RectangleFigure) for phantoms or markers by default (if DecoratorFigure#createFigureForPhantom() or DecoratorFigure#createFigureForMarker() are not respectively overridden).
+	/**
+	 * It creates a {@link RectangleFigure) for phantoms or markers by default (if
+	 * DecoratorFigure#createFigureForPhantom() or DecoratorFigure#createFigureForMarker() are not
+	 * respectively overridden).
+	 * 
 	 * @return a {@link RectangleFigure).
 	 */
 	protected RectangleFigure createDefaultFigure() {

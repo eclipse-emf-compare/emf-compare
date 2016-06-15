@@ -61,7 +61,7 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private Text maxBackupField;
 
-	private final String[] LOG_LEVELS = new String[] {"OFF", "ERROR", "INFO", "DEBUG" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+	private final String[] LOG_LEVELS = new String[] {"OFF", "ERROR", "INFO", "DEBUG" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 	/**
 	 * Constructor.
@@ -105,8 +105,8 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 		group.setLayout(new GridLayout(3, false));
 		group.setText(EMFCompareRCPUIMessages.getString("LoggingPreferencePage.preferencePage.description")); //$NON-NLS-1$
 
-		new Label(group, SWT.LEAD).setText(EMFCompareRCPUIMessages
-				.getString("LoggingPreferencePage.log.level")); //$NON-NLS-1$
+		new Label(group, SWT.LEAD)
+				.setText(EMFCompareRCPUIMessages.getString("LoggingPreferencePage.log.level")); //$NON-NLS-1$
 		levelCombo = new Combo(group, SWT.DROP_DOWN);
 		levelCombo.setItems(LOG_LEVELS);
 		levelCombo.setLayoutData(getDefaultFieldGridData(40));

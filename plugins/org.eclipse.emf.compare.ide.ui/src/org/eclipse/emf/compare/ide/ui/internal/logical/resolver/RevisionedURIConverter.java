@@ -143,8 +143,8 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 		boolean exists = false;
 		try {
 			final URI normalizedUri = normalize(uri);
-			IStorageProvider storageProvider = storageAccessor.getStorageProvider(ResourceUtil
-					.getResourceFromURI(normalizedUri), side);
+			IStorageProvider storageProvider = storageAccessor
+					.getStorageProvider(ResourceUtil.getResourceFromURI(normalizedUri), side);
 			if (storageProvider != null) {
 				exists = storageProvider.getStorage(new NullProgressMonitor()) != null;
 			} else {
@@ -176,7 +176,8 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 
 				if (provider != null) {
 					final IStorage storage = provider.getStorage(new NullProgressMonitor());
-					if (storage != null && (!(storage instanceof IResource) || ((IResource)storage).exists())) {
+					if (storage != null
+							&& (!(storage instanceof IResource) || ((IResource)storage).exists())) {
 						getLoadedRevisions().add(storage);
 						return storage.getContents();
 					}

@@ -102,9 +102,9 @@ public class DescriptorRegistryEventListener<T> extends AbstractRegistryEventLis
 				try {
 					Integer.parseInt(rankingStr);
 				} catch (NumberFormatException nfe) {
-					log(IStatus.ERROR, element, EMFCompareRCPMessages.getString(
-							"malformed.extension.attribute", //$NON-NLS-1$
-							RANK_DESCRIPTOR_ATTR));
+					log(IStatus.ERROR, element,
+							EMFCompareRCPMessages.getString("malformed.extension.attribute", //$NON-NLS-1$
+									RANK_DESCRIPTOR_ATTR));
 					return false;
 				}
 				ret = true;
@@ -131,8 +131,8 @@ public class DescriptorRegistryEventListener<T> extends AbstractRegistryEventLis
 		LazyItemDescriptor<T> descriptor = new LazyItemDescriptor<T>(label, description, rank, element, id);
 		IItemDescriptor<T> previous = registry.add(descriptor);
 		if (previous != null) {
-			log(IStatus.WARNING, element, EMFCompareRCPMessages.getString(
-					"duplicate.extension", registry.getClass().getName())); //$NON-NLS-1$
+			log(IStatus.WARNING, element,
+					EMFCompareRCPMessages.getString("duplicate.extension", registry.getClass().getName())); //$NON-NLS-1$
 		}
 		return true;
 	}

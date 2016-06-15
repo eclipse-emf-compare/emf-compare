@@ -150,10 +150,11 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 			if (diff != null) {
 				if (MergeViewerUtil.isVisibleInMergeViewer(diff, getDifferenceGroupProvider(),
 						getDifferenceFilter())
-						&& !MergeViewerUtil.isMarkAsMerged(diff, mergeViewerItem, getCompareConfiguration())) {
+						&& !MergeViewerUtil.isMarkAsMerged(diff, mergeViewerItem,
+								getCompareConfiguration())) {
 					if (mergeViewerItem.isInsertionPoint()) {
-						paintItemDiffBox(event, itemWrapper, diff, getBoundsForInsertionPoint(event,
-								itemWrapper));
+						paintItemDiffBox(event, itemWrapper, diff,
+								getBoundsForInsertionPoint(event, itemWrapper));
 					} else {
 						paintItemDiffBox(event, itemWrapper, diff, getBounds(event, itemWrapper));
 					}
@@ -222,12 +223,13 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 	 * @param g
 	 *            the SWT GC tool.
 	 */
-	private void drawLineFromCenterToBox(AbstractTableOrTreeItemWrapper itemWrapper, Rectangle boxBounds, GC g) {
+	private void drawLineFromCenterToBox(AbstractTableOrTreeItemWrapper itemWrapper, Rectangle boxBounds,
+			GC g) {
 		AbstractTableOrTreeItemWrapper parent = itemWrapper.getParentItem();
 		final int xOffset;
 		if (getContentProvider() instanceof ITreeContentProvider) {
-			final boolean hasChildren = ((ITreeContentProvider)getContentProvider()).hasChildren(itemWrapper
-					.getData());
+			final boolean hasChildren = ((ITreeContentProvider)getContentProvider())
+					.hasChildren(itemWrapper.getData());
 			if (hasChildren) {
 				if (parent != null) {
 					xOffset = parent.getImageBounds(0).x;
@@ -258,7 +260,8 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 	 * @param g
 	 *            the SWT GC tool.
 	 */
-	private void drawLineFromBoxToCenter(AbstractTableOrTreeItemWrapper itemWrapper, Rectangle boxBounds, GC g) {
+	private void drawLineFromBoxToCenter(AbstractTableOrTreeItemWrapper itemWrapper, Rectangle boxBounds,
+			GC g) {
 		Rectangle itemBounds = itemWrapper.getBounds();
 		Rectangle clientArea = itemWrapper.getParent().getClientArea();
 		Point from = new Point(0, 0);

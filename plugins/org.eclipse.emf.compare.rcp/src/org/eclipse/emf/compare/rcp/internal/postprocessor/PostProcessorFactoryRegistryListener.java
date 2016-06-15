@@ -101,9 +101,9 @@ public class PostProcessorFactoryRegistryListener extends AbstractRegistryEventL
 				try {
 					Integer.parseInt(ordinalStr);
 				} catch (NumberFormatException nfe) {
-					log(IStatus.ERROR, element, EMFCompareRCPMessages.getString(
-							"malformed.extension.attribute", //$NON-NLS-1$
-							ATT_ORDINAL));
+					log(IStatus.ERROR, element,
+							EMFCompareRCPMessages.getString("malformed.extension.attribute", //$NON-NLS-1$
+									ATT_ORDINAL));
 					return false;
 				}
 				valid = true;

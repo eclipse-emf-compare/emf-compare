@@ -53,8 +53,8 @@ public class AbstractTestCompareItemProviderAdapter {
 	 * @throws IOException
 	 */
 	protected static Comparison getComparison(ResourceScopeProvider scopeProvider) throws IOException {
-		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(), scopeProvider
-				.getRight(), scopeProvider.getOrigin());
+		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(),
+				scopeProvider.getRight(), scopeProvider.getOrigin());
 		return EMFCompare.builder().build().compare(scope);
 	}
 

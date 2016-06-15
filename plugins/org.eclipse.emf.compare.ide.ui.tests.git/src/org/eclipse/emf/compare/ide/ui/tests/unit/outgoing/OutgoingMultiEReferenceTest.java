@@ -50,12 +50,15 @@ public class OutgoingMultiEReferenceTest extends LocalResolutionTest {
 
 	@Parameters(name = "{index}: scope {0} -> graph {1}, traversal {2}")
 	public static Iterable<Object[]> data1() {
-		return Arrays.asList(new Object[][] {
-				{WORKSPACE, of(of(resourceURI(file1()), resourceURI(file2()))), of(file1(), file2()) },
-				{PROJECT, of(of(resourceURI(file1()), resourceURI(file2()))), of(file1(), file2()) },
-				{CONTAINER, of(of(resourceURI(file1()), resourceURI(file2()))), of(file1(), file2()) },
-				{OUTGOING, of(of(resourceURI(file1()), resourceURI(file2()))), of(file1(), file2()) },
-				{SELF, of(of(resourceURI(file1()))), of(file1()) }, });
+		return Arrays
+				.asList(new Object[][] {
+						{WORKSPACE, of(of(resourceURI(file1()), resourceURI(file2()))),
+								of(file1(), file2()) },
+						{PROJECT, of(of(resourceURI(file1()), resourceURI(file2()))), of(file1(), file2()) },
+						{CONTAINER, of(of(resourceURI(file1()), resourceURI(file2()))),
+								of(file1(), file2()) },
+						{OUTGOING, of(of(resourceURI(file1()), resourceURI(file2()))), of(file1(), file2()) },
+						{SELF, of(of(resourceURI(file1()))), of(file1()) }, });
 	}
 
 	private static String file1() {

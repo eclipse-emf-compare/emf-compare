@@ -33,10 +33,10 @@ public class TestAttributeChangeItemProviderSpec extends AbstractTestCompareItem
 	public void testGetChildren_EcoreA1() throws IOException {
 		Comparison comparison = getComparison(new EcoreA1InputData());
 
-		List<AttributeChange> eAllContent_AttributeChange = newArrayList(filter(comparison.eAllContents(),
-				AttributeChange.class));
-		List<AttributeChange> eAllChildren_AttributeChange = newArrayList(filter(eAllChildren(comparison),
-				AttributeChange.class));
+		List<AttributeChange> eAllContent_AttributeChange = newArrayList(
+				filter(comparison.eAllContents(), AttributeChange.class));
+		List<AttributeChange> eAllChildren_AttributeChange = newArrayList(
+				filter(eAllChildren(comparison), AttributeChange.class));
 
 		assertEquals(eAllContent_AttributeChange.size(), eAllChildren_AttributeChange.size());
 		assertTrue(eAllChildren_AttributeChange.containsAll(eAllContent_AttributeChange));

@@ -241,10 +241,10 @@ public class OpaqueElementBodyChangePostProcessor extends DefaultConflictDetecto
 	 */
 	private boolean areDifferenceKindChangeAndDelete(OpaqueElementBodyChange bodyChange1,
 			OpaqueElementBodyChange bodyChange2) {
-		return (DifferenceKind.CHANGE.equals(bodyChange1.getKind()) && DifferenceKind.DELETE
-				.equals(bodyChange2.getKind()))
-				|| (DifferenceKind.DELETE.equals(bodyChange1.getKind()) && DifferenceKind.CHANGE
-						.equals(bodyChange2.getKind()));
+		return (DifferenceKind.CHANGE.equals(bodyChange1.getKind())
+				&& DifferenceKind.DELETE.equals(bodyChange2.getKind()))
+				|| (DifferenceKind.DELETE.equals(bodyChange1.getKind())
+						&& DifferenceKind.CHANGE.equals(bodyChange2.getKind()));
 	}
 
 	/**

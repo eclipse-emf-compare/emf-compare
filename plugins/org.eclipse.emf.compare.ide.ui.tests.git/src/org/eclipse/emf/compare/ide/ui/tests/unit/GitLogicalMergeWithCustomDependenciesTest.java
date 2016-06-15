@@ -142,8 +142,8 @@ public class GitLogicalMergeWithCustomDependenciesTest extends AbstractGitLogica
 		repository.addAndCommit(project, "branch-commit", dependentFile, file1);
 
 		// install mock dependency provider
-		installMockModelDependencyProvider(ImmutableMap.of(file1.getName(), ImmutableSet
-				.of(DEPENDENT_FILE_NAME)));
+		installMockModelDependencyProvider(
+				ImmutableMap.of(file1.getName(), ImmutableSet.of(DEPENDENT_FILE_NAME)));
 
 		// checkout master and merge branch
 		repository.checkoutBranch(MASTER);
@@ -194,7 +194,8 @@ public class GitLogicalMergeWithCustomDependenciesTest extends AbstractGitLogica
 	}
 
 	private void assertCorrectMergingIfRemoteBranchDeletesUnlinkedButDependentFile(
-			final Collection<EObject> contentsOfDeletedResource) throws IOException, CoreException, Exception {
+			final Collection<EObject> contentsOfDeletedResource)
+			throws IOException, CoreException, Exception {
 		// add another dependent file and commit state as common ancestor commit
 		save(createResourceWithContents(DEPENDENT_FILE_NAME, contentsOfDeletedResource));
 		repository.addAllAndCommit("initial-commit");
@@ -220,8 +221,8 @@ public class GitLogicalMergeWithCustomDependenciesTest extends AbstractGitLogica
 		repository.addAndCommit(project, "branch-commit", file1, dependentFile);
 
 		// install mock dependency provider
-		installMockModelDependencyProvider(ImmutableMap.of(file1.getName(), ImmutableSet
-				.of(DEPENDENT_FILE_NAME)));
+		installMockModelDependencyProvider(
+				ImmutableMap.of(file1.getName(), ImmutableSet.of(DEPENDENT_FILE_NAME)));
 
 		// checkout master and merge branch
 		repository.checkoutBranch(MASTER);

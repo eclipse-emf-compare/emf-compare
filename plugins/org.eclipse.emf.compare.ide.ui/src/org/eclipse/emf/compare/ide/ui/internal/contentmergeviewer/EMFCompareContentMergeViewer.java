@@ -144,8 +144,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		fDynamicObject = new DynamicObject(this);
 
 		if (getCompareConfiguration().getAdapterFactory() != null) {
-			fAdapterFactoryContentProvider = new AdapterFactoryContentProvider(getCompareConfiguration()
-					.getAdapterFactory());
+			fAdapterFactoryContentProvider = new AdapterFactoryContentProvider(
+					getCompareConfiguration().getAdapterFactory());
 		}
 
 		redoAction = new RedoAction(getCompareConfiguration().getEditingDomain());
@@ -154,8 +154,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		editingDomainChange(null, getCompareConfiguration().getEditingDomain());
 		getCompareConfiguration().getEventBus().register(this);
 
-		mergeResolutionManager = new MergeResolutionManager(EMFCompareIDEUIPlugin.getDefault()
-				.getMergeResolutionListenerRegistry());
+		mergeResolutionManager = new MergeResolutionManager(
+				EMFCompareIDEUIPlugin.getDefault().getMergeResolutionListenerRegistry());
 	}
 
 	@Subscribe
@@ -172,7 +172,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	@Subscribe
 	public void colorChanged(
-			@SuppressWarnings("unused")/* necessary for @Subscribe */IColorChangeEvent changeColorEvent) {
+			@SuppressWarnings("unused") /* necessary for @Subscribe */IColorChangeEvent changeColorEvent) {
 		getControl().redraw();
 	}
 
@@ -690,9 +690,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 						propertyPage = (ExtendedPropertySheetPage)currentPage;
 					} else {
 						IEditorPart activeEditor = activePage.getActiveEditor();
-						if (activeEditor != null
-								&& Platform.getAdapterManager().hasAdapter(activeEditor,
-										"org.eclipse.ui.views.properties.IPropertySheetPage")) { //$NON-NLS-1$
+						if (activeEditor != null && Platform.getAdapterManager().hasAdapter(activeEditor,
+								"org.eclipse.ui.views.properties.IPropertySheetPage")) { //$NON-NLS-1$
 							propertySheet.partActivated(activePage.getActivePart());
 						}
 					}

@@ -75,13 +75,13 @@ public class MergeAllCommandTests {
 		IComparisonScope scope = new DefaultComparisonScope(leftResource, rightResource, originResource);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
-		EMFCompareEditingDomain editingDomain = (EMFCompareEditingDomain)EMFCompareEditingDomain.create(
-				leftResource, rightResource, originResource);
+		EMFCompareEditingDomain editingDomain = (EMFCompareEditingDomain)EMFCompareEditingDomain
+				.create(leftResource, rightResource, originResource);
 		ChangeRecorder changeRecorder = editingDomain.getChangeRecorder();
 
 		ImmutableSet.Builder<Notifier> notifiersBuilder = ImmutableSet.builder();
-		ImmutableSet<Notifier> notifiers = notifiersBuilder.add(comparison).addAll(
-				ImmutableList.of(leftResource, rightResource, originResource)).build();
+		ImmutableSet<Notifier> notifiers = notifiersBuilder.add(comparison)
+				.addAll(ImmutableList.of(leftResource, rightResource, originResource)).build();
 
 		MergeNonConflictingRunnable runnable = new MergeNonConflictingRunnable(isLeftEditable,
 				isRightEditable, mergeMode);
@@ -144,13 +144,13 @@ public class MergeAllCommandTests {
 		IComparisonScope scope = new DefaultComparisonScope(leftResource, rightResource, originResource);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
-		EMFCompareEditingDomain editingDomain = (EMFCompareEditingDomain)EMFCompareEditingDomain.create(
-				leftResource, rightResource, originResource);
+		EMFCompareEditingDomain editingDomain = (EMFCompareEditingDomain)EMFCompareEditingDomain
+				.create(leftResource, rightResource, originResource);
 		ChangeRecorder changeRecorder = editingDomain.getChangeRecorder();
 
 		ImmutableSet.Builder<Notifier> notifiersBuilder = ImmutableSet.builder();
-		ImmutableSet<Notifier> notifiers = notifiersBuilder.add(comparison).addAll(
-				ImmutableList.of(leftResource, rightResource, originResource)).build();
+		ImmutableSet<Notifier> notifiers = notifiersBuilder.add(comparison)
+				.addAll(ImmutableList.of(leftResource, rightResource, originResource)).build();
 
 		MergeNonConflictingRunnable runnable = new MergeNonConflictingRunnable(isLeftEditable,
 				isRightEditable, mergeMode);
@@ -213,13 +213,13 @@ public class MergeAllCommandTests {
 		IComparisonScope scope = new DefaultComparisonScope(leftResource, rightResource, originResource);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
-		EMFCompareEditingDomain editingDomain = (EMFCompareEditingDomain)EMFCompareEditingDomain.create(
-				leftResource, rightResource, originResource);
+		EMFCompareEditingDomain editingDomain = (EMFCompareEditingDomain)EMFCompareEditingDomain
+				.create(leftResource, rightResource, originResource);
 		ChangeRecorder changeRecorder = editingDomain.getChangeRecorder();
 
 		ImmutableSet.Builder<Notifier> notifiersBuilder = ImmutableSet.builder();
-		ImmutableSet<Notifier> notifiers = notifiersBuilder.add(comparison).addAll(
-				ImmutableList.of(leftResource, rightResource, originResource)).build();
+		ImmutableSet<Notifier> notifiers = notifiersBuilder.add(comparison)
+				.addAll(ImmutableList.of(leftResource, rightResource, originResource)).build();
 
 		MergeNonConflictingRunnable runnable = new MergeNonConflictingRunnable(isLeftEditable,
 				isRightEditable, mergeMode);
@@ -282,13 +282,13 @@ public class MergeAllCommandTests {
 		IComparisonScope scope = new DefaultComparisonScope(leftResource, rightResource, originResource);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
-		EMFCompareEditingDomain editingDomain = (EMFCompareEditingDomain)EMFCompareEditingDomain.create(
-				leftResource, rightResource, originResource);
+		EMFCompareEditingDomain editingDomain = (EMFCompareEditingDomain)EMFCompareEditingDomain
+				.create(leftResource, rightResource, originResource);
 		ChangeRecorder changeRecorder = editingDomain.getChangeRecorder();
 
 		ImmutableSet.Builder<Notifier> notifiersBuilder = ImmutableSet.builder();
-		ImmutableSet<Notifier> notifiers = notifiersBuilder.add(comparison).addAll(
-				ImmutableList.of(leftResource, rightResource, originResource)).build();
+		ImmutableSet<Notifier> notifiers = notifiersBuilder.add(comparison)
+				.addAll(ImmutableList.of(leftResource, rightResource, originResource)).build();
 
 		MergeNonConflictingRunnable runnable = new MergeNonConflictingRunnable(isLeftEditable,
 				isRightEditable, mergeMode);
@@ -358,13 +358,13 @@ public class MergeAllCommandTests {
 		IComparisonScope scope = new DefaultComparisonScope(leftResource, originResource, null);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
-		EMFCompareEditingDomain editingDomain = (EMFCompareEditingDomain)EMFCompareEditingDomain.create(
-				leftResource, originResource, null);
+		EMFCompareEditingDomain editingDomain = (EMFCompareEditingDomain)EMFCompareEditingDomain
+				.create(leftResource, originResource, null);
 		ChangeRecorder changeRecorder = editingDomain.getChangeRecorder();
 
 		ImmutableSet.Builder<Notifier> notifiersBuilder = ImmutableSet.builder();
-		ImmutableSet<Notifier> notifiers = notifiersBuilder.add(comparison).addAll(
-				ImmutableList.of(leftResource, originResource)).build();
+		ImmutableSet<Notifier> notifiers = notifiersBuilder.add(comparison)
+				.addAll(ImmutableList.of(leftResource, originResource)).build();
 
 		MergeNonConflictingRunnable runnable = new MergeNonConflictingRunnable(isLeftEditable,
 				isRightEditable, mergeMode);

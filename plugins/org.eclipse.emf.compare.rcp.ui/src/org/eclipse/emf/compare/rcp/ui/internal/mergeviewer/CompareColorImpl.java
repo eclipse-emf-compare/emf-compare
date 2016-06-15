@@ -117,8 +117,8 @@ public class CompareColorImpl implements RemovalListener<RGB, Color>, ICompareCo
 	public CompareColorImpl(Display fDisplay, boolean leftIsLocal, ColorRegistry colorRegistry) {
 		this.fDisplay = fDisplay;
 		this.fLeftIsLocal = leftIsLocal;
-		this.fColors = CacheBuilder.newBuilder().maximumSize(MAX_CACHE_SIZE).removalListener(this).build(
-				new CacheLoader<RGB, Color>() {
+		this.fColors = CacheBuilder.newBuilder().maximumSize(MAX_CACHE_SIZE).removalListener(this)
+				.build(new CacheLoader<RGB, Color>() {
 					@Override
 					public Color load(RGB rgb) throws Exception {
 						return new Color(CompareColorImpl.this.fDisplay, rgb);

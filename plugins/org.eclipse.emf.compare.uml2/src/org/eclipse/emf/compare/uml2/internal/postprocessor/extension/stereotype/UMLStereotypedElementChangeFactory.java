@@ -46,9 +46,9 @@ public class UMLStereotypedElementChangeFactory extends AbstractUMLChangeFactory
 	public boolean handles(Diff input) {
 		if (input instanceof ReferenceChange) {
 			ReferenceChange refChange = (ReferenceChange)input;
-			if (refChange.getReference().isContainment()
-					&& refChange.getValue() instanceof Element
-					&& (refChange.getKind() == DifferenceKind.ADD || refChange.getKind() == DifferenceKind.DELETE)) {
+			if (refChange.getReference().isContainment() && refChange.getValue() instanceof Element
+					&& (refChange.getKind() == DifferenceKind.ADD
+							|| refChange.getKind() == DifferenceKind.DELETE)) {
 				return !getStereotypeApplicationChanges(refChange).isEmpty();
 			}
 		}
@@ -62,7 +62,8 @@ public class UMLStereotypedElementChangeFactory extends AbstractUMLChangeFactory
 	 *            Input differences.
 	 * @return The list of {@link StereotypeApplicationChange} linked to the input.
 	 */
-	private List<StereotypeApplicationChange> getStereotypeApplicationChanges(final ReferenceChange refChange) {
+	private List<StereotypeApplicationChange> getStereotypeApplicationChanges(
+			final ReferenceChange refChange) {
 		List<StereotypeApplicationChange> result = Lists.newArrayList();
 
 		final List<Diff> searchScope;
@@ -79,8 +80,8 @@ public class UMLStereotypedElementChangeFactory extends AbstractUMLChangeFactory
 		for (Diff reqBy : searchScope) {
 			if (reqBy instanceof StereotypeApplicationChange) {
 				StereotypeApplicationChange stereoAppChange = (StereotypeApplicationChange)reqBy;
-				if (refChange.getValue().equals(
-						UMLCompareUtil.getBaseElement(stereoAppChange.getDiscriminant()))) {
+				if (refChange.getValue()
+						.equals(UMLCompareUtil.getBaseElement(stereoAppChange.getDiscriminant()))) {
 					result.add(stereoAppChange);
 				}
 			}
@@ -96,12 +97,12 @@ public class UMLStereotypedElementChangeFactory extends AbstractUMLChangeFactory
 	@Override
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
 		// super.setRefiningChanges(extension, extensionKind, refiningDiff);
-		List<StereotypeApplicationChange> stereotypeApplicationChanges = getStereotypeApplicationChanges((ReferenceChange)refiningDiff);
+		List<StereotypeApplicationChange> stereotypeApplicationChanges = getStereotypeApplicationChanges(
+				(ReferenceChange)refiningDiff);
 		if (refiningDiff.getSource() == extension.getSource()) {
 			extension.getRefinedBy().add(refiningDiff);
-			extension.getRefinedBy().addAll(
-					Collections2.filter(stereotypeApplicationChanges, EMFComparePredicates.fromSide(extension
-							.getSource())));
+			extension.getRefinedBy().addAll(Collections2.filter(stereotypeApplicationChanges,
+					EMFComparePredicates.fromSide(extension.getSource())));
 		}
 
 	}

@@ -87,8 +87,8 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 					matchEngineFactoryRegistry, EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
 			engineProvider.configure(builder);
 		} else {
-			builder.setMatchEngineFactoryRegistry(matchEngineFactoryRegistry).setPostProcessorRegistry(
-					EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
+			builder.setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+					.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
 		}
 		EMFCompare comparator = builder.build();
 
@@ -166,9 +166,8 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see 
-		 *      org.eclipse.emf.compare.match.IMatchEngine.Factory.isMatchEngineFactoryFor(org.eclipse.emf.compare
-		 *      .scope.IComparisonScope)
+		 * @see org.eclipse.emf.compare.match.IMatchEngine.Factory.isMatchEngineFactoryFor(org.eclipse.emf.
+		 *      compare .scope.IComparisonScope)
 		 */
 		@Override
 		public boolean isMatchEngineFactoryFor(IComparisonScope scope) {
@@ -195,9 +194,9 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 		 */
 		public MatchEObjectEngine() {
 			// never use id in EObjects comparison
-			super(DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER, EMFCompareRCPPlugin
-					.getDefault().getWeightProviderRegistry()), new DefaultComparisonFactory(
-					new DefaultEqualityHelperFactory()));
+			super(DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER,
+					EMFCompareRCPPlugin.getDefault().getWeightProviderRegistry()),
+					new DefaultComparisonFactory(new DefaultEqualityHelperFactory()));
 		}
 
 		/**

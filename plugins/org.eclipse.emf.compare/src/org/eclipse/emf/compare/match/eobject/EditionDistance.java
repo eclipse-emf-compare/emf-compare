@@ -123,8 +123,8 @@ public class EditionDistance implements DistanceFunction {
 						 */
 						if (object1.eContainer() != null && object2.eContainer() != null
 								&& fakeComparison.getMatch(object1.eContainer()) != null) {
-							return uriDistance.retrieveFragment(object1).equals(
-									uriDistance.retrieveFragment(object2));
+							return uriDistance.retrieveFragment(object1)
+									.equals(uriDistance.retrieveFragment(object2));
 						}
 						return uriDistance.proximity(object1, object2) == 0;
 					}
@@ -165,8 +165,8 @@ public class EditionDistance implements DistanceFunction {
 	public double distance(Comparison inProgress, EObject a, EObject b) {
 		this.uriDistance.setComparison(inProgress);
 		double maxDist = Math.max(getThresholdAmount(a), getThresholdAmount(b));
-		double measuredDist = new CountingDiffEngine(maxDist, this.fakeComparison).measureDifferences(
-				inProgress, a, b);
+		double measuredDist = new CountingDiffEngine(maxDist, this.fakeComparison)
+				.measureDifferences(inProgress, a, b);
 		if (measuredDist > maxDist) {
 			return Double.MAX_VALUE;
 		}
@@ -280,15 +280,16 @@ public class EditionDistance implements DistanceFunction {
 				if (eType != null) { // Do not update distance in case of untyped reference
 					switch (kind) {
 						case MOVE:
-							distance += weightProviderRegistry.getHighestRankingWeightProvider(
-									eType.getEPackage()).getWeight(reference)
+							distance += weightProviderRegistry
+									.getHighestRankingWeightProvider(eType.getEPackage()).getWeight(reference)
 									* orderChangeCoef;
 							break;
 						case ADD:
 						case DELETE:
 						case CHANGE:
-							distance += weightProviderRegistry.getHighestRankingWeightProvider(
-									eType.getEPackage()).getWeight(reference);
+							distance += weightProviderRegistry
+									.getHighestRankingWeightProvider(eType.getEPackage())
+									.getWeight(reference);
 							break;
 						default:
 							break;
@@ -312,20 +313,22 @@ public class EditionDistance implements DistanceFunction {
 					Object bValue = ReferenceUtil.safeEGet(match.getRight(), attribute);
 					switch (kind) {
 						case MOVE:
-							distance += weightProviderRegistry.getHighestRankingWeightProvider(
-									eType.getEPackage()).getWeight(attribute)
+							distance += weightProviderRegistry
+									.getHighestRankingWeightProvider(eType.getEPackage()).getWeight(attribute)
 									* orderChangeCoef;
 							break;
 						case ADD:
 						case DELETE:
 						case CHANGE:
 							if (aValue instanceof String && bValue instanceof String) {
-								distance += weightProviderRegistry.getHighestRankingWeightProvider(
-										eType.getEPackage()).getWeight(attribute)
+								distance += weightProviderRegistry
+										.getHighestRankingWeightProvider(eType.getEPackage())
+										.getWeight(attribute)
 										* (1 - DiffUtil.diceCoefficient((String)aValue, (String)bValue));
 							} else {
-								distance += weightProviderRegistry.getHighestRankingWeightProvider(
-										eType.getEPackage()).getWeight(attribute);
+								distance += weightProviderRegistry
+										.getHighestRankingWeightProvider(eType.getEPackage())
+										.getWeight(attribute);
 							}
 							break;
 						default:
@@ -350,20 +353,22 @@ public class EditionDistance implements DistanceFunction {
 					Object bValue = ReferenceUtil.safeEGet(match.getRight(), attribute);
 					switch (kind) {
 						case MOVE:
-							distance += weightProviderRegistry.getHighestRankingWeightProvider(
-									eType.getEPackage()).getWeight(attribute)
+							distance += weightProviderRegistry
+									.getHighestRankingWeightProvider(eType.getEPackage()).getWeight(attribute)
 									* orderChangeCoef;
 							break;
 						case ADD:
 						case DELETE:
 						case CHANGE:
 							if (aValue instanceof String && bValue instanceof String) {
-								distance += weightProviderRegistry.getHighestRankingWeightProvider(
-										eType.getEPackage()).getWeight(attribute)
+								distance += weightProviderRegistry
+										.getHighestRankingWeightProvider(eType.getEPackage())
+										.getWeight(attribute)
 										* (1 - DiffUtil.diceCoefficient((String)aValue, (String)bValue));
 							} else {
-								distance += weightProviderRegistry.getHighestRankingWeightProvider(
-										eType.getEPackage()).getWeight(attribute);
+								distance += weightProviderRegistry
+										.getHighestRankingWeightProvider(eType.getEPackage())
+										.getWeight(attribute);
 							}
 							break;
 						default:
@@ -438,7 +443,7 @@ public class EditionDistance implements DistanceFunction {
 		 * @param fakeComparison
 		 *            the comparison instance to use while measuring the differences between the two objects.
 		 */
-		public CountingDiffEngine(double maxDistance, Comparison fakeComparison) {
+		CountingDiffEngine(double maxDistance, Comparison fakeComparison) {
 			super(new CountingDiffProcessor());
 			this.maxDistance = maxDistance;
 			// will always return the same instance.
@@ -484,9 +489,8 @@ public class EditionDistance implements DistanceFunction {
 			getCounter().reset();
 			double changes = 0;
 			if (!haveSameContainer(comparisonInProgress, a, b)) {
-				changes += locationChangeCoef
-						* weightProviderRegistry.getHighestRankingWeightProvider(a.eClass().getEPackage())
-								.getParentWeight(a);
+				changes += locationChangeCoef * weightProviderRegistry
+						.getHighestRankingWeightProvider(a.eClass().getEPackage()).getParentWeight(a);
 			} else {
 				int aIndex = getContainmentIndex(a);
 				int bIndex = getContainmentIndex(b);
@@ -500,10 +504,11 @@ public class EditionDistance implements DistanceFunction {
 
 			}
 			if (a.eContainingFeature() != b.eContainingFeature()) {
-				changes += Math.max(weightProviderRegistry.getHighestRankingWeightProvider(
-						a.eClass().getEPackage()).getContainingFeatureWeight(a), weightProviderRegistry
-						.getHighestRankingWeightProvider(b.eClass().getEPackage())
-						.getContainingFeatureWeight(b));
+				changes += Math.max(
+						weightProviderRegistry.getHighestRankingWeightProvider(a.eClass().getEPackage())
+								.getContainingFeatureWeight(a),
+						weightProviderRegistry.getHighestRankingWeightProvider(b.eClass().getEPackage())
+								.getContainingFeatureWeight(b));
 			}
 			if (changes <= maxDistance) {
 				checkForDifferences(fakeMatch, new BasicMonitor());
@@ -647,8 +652,9 @@ public class EditionDistance implements DistanceFunction {
 						public boolean apply(EReference input) {
 							EClassifier eType = input.getEType();
 							if (eType != null) {
-								return weightProviderRegistry.getHighestRankingWeightProvider(
-										eType.getEPackage()).getWeight(input) != 0;
+								return weightProviderRegistry
+										.getHighestRankingWeightProvider(eType.getEPackage())
+										.getWeight(input) != 0;
 							}
 							return false; // We refuse to use untyped references
 						}
@@ -661,8 +667,9 @@ public class EditionDistance implements DistanceFunction {
 						public boolean apply(EAttribute input) {
 							EClassifier eType = input.getEType();
 							if (eType != null) {
-								return weightProviderRegistry.getHighestRankingWeightProvider(
-										eType.getEPackage()).getWeight(input) != 0;
+								return weightProviderRegistry
+										.getHighestRankingWeightProvider(eType.getEPackage())
+										.getWeight(input) != 0;
 							}
 							return false; // We refuse to use untyped attributes
 						}
@@ -690,8 +697,8 @@ public class EditionDistance implements DistanceFunction {
 		for (EStructuralFeature feat : eObj.eClass().getEAllStructuralFeatures()) {
 			EClassifier eType = feat.getEType();
 			if (eType != null) { // Do not update amount in case of untyped feature
-				int featureWeight = weightProviderRegistry.getHighestRankingWeightProvider(
-						eType.getEPackage()).getWeight(feat);
+				int featureWeight = weightProviderRegistry
+						.getHighestRankingWeightProvider(eType.getEPackage()).getWeight(feat);
 				if (featureWeight != 0 && eObj.eIsSet(feat)) {
 					max += featureWeight;
 					nbFeatures++;
@@ -701,9 +708,8 @@ public class EditionDistance implements DistanceFunction {
 
 		// max = max + (locationChangeCoef *
 		// weightProviderRegistry.getHighestRankingWeightProvider(eObj.eClass().getEPackage()).getParentWeight(eObj));
-		max = max
-				+ weightProviderRegistry.getHighestRankingWeightProvider(eObj.eClass().getEPackage())
-						.getContainingFeatureWeight(eObj);
+		max = max + weightProviderRegistry.getHighestRankingWeightProvider(eObj.eClass().getEPackage())
+				.getContainingFeatureWeight(eObj);
 
 		return max * getThresholdRatio(nbFeatures);
 	}

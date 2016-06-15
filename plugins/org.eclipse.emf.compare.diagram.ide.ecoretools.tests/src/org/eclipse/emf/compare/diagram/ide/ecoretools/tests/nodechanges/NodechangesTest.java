@@ -52,53 +52,61 @@ public class NodechangesTest extends AbstractTest {
 	@Override
 	@Before
 	public void before() {
-				
+
 	}
-	
+
 	@Test
 	public void testA10UseCase() throws IOException {
-		CompareDiagramIDEUIPlugin.getDefault().getPreferenceStore().setValue(CompareDiagramConstants.PREFERENCES_KEY_MOVE_THRESHOLD, 0);
-		
+		CompareDiagramIDEUIPlugin.getDefault().getPreferenceStore()
+				.setValue(CompareDiagramConstants.PREFERENCES_KEY_MOVE_THRESHOLD, 0);
+
 		testMove(true);
 	}
-	
+
 	@Test
 	public void testA11UseCase() throws IOException {
-		CompareDiagramIDEUIPlugin.getDefault().getPreferenceStore().setValue(CompareDiagramConstants.PREFERENCES_KEY_MOVE_THRESHOLD, 200);
-		
+		CompareDiagramIDEUIPlugin.getDefault().getPreferenceStore()
+				.setValue(CompareDiagramConstants.PREFERENCES_KEY_MOVE_THRESHOLD, 200);
+
 		testMove(false);
 	}
-	
+
 	@Test
 	public void testA20UseCase() throws IOException {
-		
+
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final IComparisonScope scope = new DefaultComparisonScope(left.getResourceSet(), right.getResourceSet(), null);
-		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(
-				EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build().compare(scope);
-		
+		final IComparisonScope scope = new DefaultComparisonScope(left.getResourceSet(),
+				right.getResourceSet(), null);
+		final Comparison comparison = EMFCompare.builder()
+				.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build()
+				.compare(scope);
+
 		final List<Diff> differences = comparison.getDifferences();
-		
+
 		assertSame(Integer.valueOf(1), Integer.valueOf(differences.size()));
-		
-//		final Diff changeLabel = Iterators.find(differences.iterator(), and(instanceOf(LabelChange.class), ofKind(DifferenceKind.CHANGE)));
-//		assertNotNull(changeLabel);
-		
-		final Diff changeName = Iterators.find(differences.iterator(), changedAttribute("tc01.EClass1", "name", "TheClass", "EClass1"));
+
+		// final Diff changeLabel = Iterators.find(differences.iterator(), and(instanceOf(LabelChange.class),
+		// ofKind(DifferenceKind.CHANGE)));
+		// assertNotNull(changeLabel);
+
+		final Diff changeName = Iterators.find(differences.iterator(),
+				changedAttribute("tc01.EClass1", "name", "TheClass", "EClass1"));
 		assertNotNull(changeName);
-		
+
 	}
-	
+
 	private void testMove(boolean overDetectionThreshold) throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final IComparisonScope scope = new DefaultComparisonScope(left.getResourceSet(), right.getResourceSet(), null);
-		final Comparison comparison = EMFCompare.builder().setPostProcessorRegistry(
-				EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build().compare(scope);
-		
+		final IComparisonScope scope = new DefaultComparisonScope(left.getResourceSet(),
+				right.getResourceSet(), null);
+		final Comparison comparison = EMFCompare.builder()
+				.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build()
+				.compare(scope);
+
 		final List<Diff> differences = comparison.getDifferences();
 
 		if (overDetectionThreshold) {
@@ -108,22 +116,23 @@ public class NodechangesTest extends AbstractTest {
 			// We should have no less and no more than 2 differences
 			assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
 		}
-		
+
 		final Diff changeX = Iterators.find(differences.iterator(), onFeature("x"));
 		final Diff changeY = Iterators.find(differences.iterator(), onFeature("y"));
-		
+
 		if (overDetectionThreshold) {
-			final Diff moveNode = Iterators.find(differences.iterator(), and(instanceOf(CoordinatesChange.class), ofKind(DifferenceKind.CHANGE)));
+			final Diff moveNode = Iterators.find(differences.iterator(),
+					and(instanceOf(CoordinatesChange.class), ofKind(DifferenceKind.CHANGE)));
 			assertSame(Integer.valueOf(2), moveNode.getRefinedBy().size());
 			assertTrue(moveNode.getRefinedBy().contains(changeX));
 			assertTrue(moveNode.getRefinedBy().contains(changeY));
 		}
-		
+
 	}
 
 	@Override
 	protected DiagramInputData getInput() {
 		return input;
 	}
-	
+
 }

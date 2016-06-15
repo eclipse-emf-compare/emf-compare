@@ -62,11 +62,12 @@ public abstract class AbstractUMLInputData extends AbstractInputData {
 			UMLJarPath = UMLJarPath.substring(0, UMLJarPath.indexOf('!'));
 
 			final Map<URI, URI> uriMap = URIConverter.URI_MAP;
-			uriMap.put(URI.createURI(UMLResource.LIBRARIES_PATHMAP), URI.createURI(UMLJarPath
-					+ "!/libraries/"));
-			uriMap.put(URI.createURI(UMLResource.METAMODELS_PATHMAP), URI.createURI(UMLJarPath
-					+ "!/metamodels/"));
-			uriMap.put(URI.createURI(UMLResource.PROFILES_PATHMAP), URI.createURI(UMLJarPath + "!/profiles/"));
+			uriMap.put(URI.createURI(UMLResource.LIBRARIES_PATHMAP),
+					URI.createURI(UMLJarPath + "!/libraries/"));
+			uriMap.put(URI.createURI(UMLResource.METAMODELS_PATHMAP),
+					URI.createURI(UMLJarPath + "!/metamodels/"));
+			uriMap.put(URI.createURI(UMLResource.PROFILES_PATHMAP),
+					URI.createURI(UMLJarPath + "!/profiles/"));
 		}
 
 		Resource resource = resourceSet.createResource(uri);

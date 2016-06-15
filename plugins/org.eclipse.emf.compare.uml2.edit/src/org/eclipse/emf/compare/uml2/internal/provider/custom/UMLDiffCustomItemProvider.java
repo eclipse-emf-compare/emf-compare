@@ -87,16 +87,16 @@ public class UMLDiffCustomItemProvider extends UMLDiffItemProvider implements II
 		ret.append(" [" + referenceText, Style.DECORATIONS_STYLER); //$NON-NLS-1$
 		switch (umlDiff.getKind()) {
 			case ADD:
-				ret.append(" add", Style.DECORATIONS_STYLER); //$NON-NLS-1$ 
+				ret.append(" add", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 				break;
 			case DELETE:
-				ret.append(" delete", Style.DECORATIONS_STYLER); //$NON-NLS-1$ 
+				ret.append(" delete", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 				break;
 			case CHANGE:
-				ret.append(" change", Style.DECORATIONS_STYLER); //$NON-NLS-1$ 
+				ret.append(" change", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 				break;
 			case MOVE:
-				ret.append(" move", Style.DECORATIONS_STYLER); //$NON-NLS-1$ 
+				ret.append(" move", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 				break;
 			default:
 				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$

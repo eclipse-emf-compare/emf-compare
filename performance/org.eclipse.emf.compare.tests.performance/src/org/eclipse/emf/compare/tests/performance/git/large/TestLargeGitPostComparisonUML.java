@@ -23,13 +23,13 @@ import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestLargeGitPostComparisonUML extends AbstractEMFComparePerformanceTest {
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest#setSUTName()
 	 */
 	@Override
@@ -40,7 +40,7 @@ public class TestLargeGitPostComparisonUML extends AbstractEMFComparePerformance
 	@Test
 	public void a_pcUMLUMLLarge() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLLarge");
-		
+
 		final DataGit data = new LargeGitInputData();
 		data.match();
 		data.postMatchUML();
@@ -55,11 +55,11 @@ public class TestLargeGitPostComparisonUML extends AbstractEMFComparePerformance
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void b_pcUMLUMLLargeSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLLargeSplit");
-		
+
 		final DataGit data = new LargeSplitGitInputData();
 		data.match();
 		data.postMatchUML();

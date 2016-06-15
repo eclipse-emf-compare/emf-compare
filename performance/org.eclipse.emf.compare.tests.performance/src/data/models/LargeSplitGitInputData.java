@@ -12,11 +12,11 @@ package data.models;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- *
  */
 public class LargeSplitGitInputData extends DataGit {
 
 	public LargeSplitGitInputData() {
-		super("src/data/models/git/model_size_large_split_repo.zip", "model_size_large_split_repo", "model_size_large_git_model", "model.uml");
+		super("src/data/models/git/model_size_large_split_repo.zip", "model_size_large_split_repo",
+				"model_size_large_git_model", "model.uml");
 	}
 }

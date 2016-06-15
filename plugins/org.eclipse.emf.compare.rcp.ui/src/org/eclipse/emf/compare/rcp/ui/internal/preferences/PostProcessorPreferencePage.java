@@ -100,8 +100,8 @@ public class PostProcessorPreferencePage extends PreferencePage implements IWork
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(1, true));
 		Label introductionText = new Label(container, SWT.WRAP);
-		introductionText.setText(EMFCompareRCPUIMessages
-				.getString("PostProcessorPreferencePage.preferencePage.description")); //$NON-NLS-1$
+		introductionText.setText(
+				EMFCompareRCPUIMessages.getString("PostProcessorPreferencePage.preferencePage.description")); //$NON-NLS-1$
 
 		IItemRegistry<IPostProcessor.Descriptor> postProcessorRegistryDescriptor = EMFCompareRCPPlugin
 				.getDefault().getPostProcessorDescriptorRegistry();
@@ -109,12 +109,12 @@ public class PostProcessorPreferencePage extends PreferencePage implements IWork
 				postProcessorRegistryDescriptor, EMFComparePreferences.DISABLED_POST_PROCESSOR);
 		InteractiveUIBuilder<Descriptor> postProcessorUIBuilder = new InteractiveUIBuilder<IPostProcessor.Descriptor>(
 				container, postProcessorRegistryDescriptor);
-		Set<IItemDescriptor<Descriptor>> descriptors = Sets.newLinkedHashSet(postProcessorRegistryDescriptor
-				.getItemDescriptors());
+		Set<IItemDescriptor<Descriptor>> descriptors = Sets
+				.newLinkedHashSet(postProcessorRegistryDescriptor.getItemDescriptors());
 		postProcessorUIBuilder.setConfigurationNodeKey(EMFComparePreferences.DISABLED_POST_PROCESSOR)
-				.setDefaultCheck(descriptors).setDefaultSelection(
-						postProcessorRegistryDescriptor.getHighestRankingDescriptor()).setHoldingData(
-						dataHolder).setDefaultCheck(activesPostProcessor);
+				.setDefaultCheck(descriptors)
+				.setDefaultSelection(postProcessorRegistryDescriptor.getHighestRankingDescriptor())
+				.setHoldingData(dataHolder).setDefaultCheck(activesPostProcessor);
 		interactiveUI = postProcessorUIBuilder.build();
 
 		return container;
@@ -122,19 +122,19 @@ public class PostProcessorPreferencePage extends PreferencePage implements IWork
 
 	@Override
 	public boolean performOk() {
-		Set<IItemDescriptor<Descriptor>> postProcessorDescriptors = Sets.newLinkedHashSet(EMFCompareRCPPlugin
-				.getDefault().getPostProcessorDescriptorRegistry().getItemDescriptors());
-		SetView<IItemDescriptor<Descriptor>> postProcessorToDisable = Sets.difference(
-				postProcessorDescriptors, dataHolder.getData());
+		Set<IItemDescriptor<Descriptor>> postProcessorDescriptors = Sets.newLinkedHashSet(
+				EMFCompareRCPPlugin.getDefault().getPostProcessorDescriptorRegistry().getItemDescriptors());
+		SetView<IItemDescriptor<Descriptor>> postProcessorToDisable = Sets
+				.difference(postProcessorDescriptors, dataHolder.getData());
 		setEnginePreferences(EMFComparePreferences.DISABLED_POST_PROCESSOR, postProcessorToDisable);
 
 		if (TracingConstant.CONFIGURATION_TRACING_ACTIVATED) {
 			StringBuilder traceMessage = new StringBuilder("Post processor preference serialization:\n"); //$NON-NLS-1$
 			String prefDelimiter = " :\n"; //$NON-NLS-1$
 			String newLine = "\n"; //$NON-NLS-1$
-			traceMessage.append(EMFComparePreferences.DISABLED_POST_PROCESSOR).append(prefDelimiter).append(
-					getPreferenceStore().getString(EMFComparePreferences.DISABLED_POST_PROCESSOR)).append(
-					newLine);
+			traceMessage.append(EMFComparePreferences.DISABLED_POST_PROCESSOR).append(prefDelimiter)
+					.append(getPreferenceStore().getString(EMFComparePreferences.DISABLED_POST_PROCESSOR))
+					.append(newLine);
 			EMFCompareRCPPlugin.getDefault().log(IStatus.INFO, traceMessage.toString());
 		}
 
@@ -143,8 +143,8 @@ public class PostProcessorPreferencePage extends PreferencePage implements IWork
 
 	@Override
 	protected void performDefaults() {
-		Set<IItemDescriptor<Descriptor>> descriptors = Sets.newLinkedHashSet(EMFCompareRCPPlugin.getDefault()
-				.getPostProcessorDescriptorRegistry().getItemDescriptors());
+		Set<IItemDescriptor<Descriptor>> descriptors = Sets.newLinkedHashSet(
+				EMFCompareRCPPlugin.getDefault().getPostProcessorDescriptorRegistry().getItemDescriptors());
 		interactiveUI.checkElements(descriptors.toArray(new IItemDescriptor[descriptors.size()]));
 		dataHolder.setData(descriptors);
 		super.performDefaults();

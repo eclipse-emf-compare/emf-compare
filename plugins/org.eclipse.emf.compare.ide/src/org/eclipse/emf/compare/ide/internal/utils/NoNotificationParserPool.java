@@ -77,7 +77,7 @@ public class NoNotificationParserPool extends NotifyingParserPool {
 		 *            The load options that were specified. Mandatory for the super-constructor, but we'll
 		 *            forward all calls to {@code delegate} anyway.
 		 */
-		public NoNotificationXMLHandler(XMLHandler delegate, XMLResource xmlResource, XMLHelper helper,
+		NoNotificationXMLHandler(XMLHandler delegate, XMLResource xmlResource, XMLHelper helper,
 				Map<?, ?> options) {
 			super(delegate, xmlResource, helper, options);
 		}

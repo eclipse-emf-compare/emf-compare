@@ -198,8 +198,8 @@ public class ModelExtensionUtilTest {
 
 		final Map<?, ?> saveParameters = ModelExtensionUtil.getSaveParameters("customparametermodeltest");
 		final CustomParameterModel customParameterModel = new CustomParameterModel();
-		assertTrue(PapyrusSaveParameterUtil.isEqual(saveParameters, customParameterModel
-				.getSaveParametersForTest()));
+		assertTrue(PapyrusSaveParameterUtil.isEqual(saveParameters,
+				customParameterModel.getSaveParametersForTest()));
 	}
 
 	/**

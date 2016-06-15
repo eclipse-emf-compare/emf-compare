@@ -169,8 +169,8 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 
 		// Copy XMI ID when applicable.
 		if (initialResource instanceof XMIResource && expectedResource instanceof XMIResource) {
-			((XMIResource)expectedResource).setID(expectedValue, ((XMIResource)initialResource)
-					.getID(sourceValue));
+			((XMIResource)expectedResource).setID(expectedValue,
+					((XMIResource)initialResource).getID(sourceValue));
 		}
 
 		deleteFormerResourceIfNecessary(comparison, oldResource, rightToLeft);
@@ -304,8 +304,8 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 
 		// Copy XMI ID when applicable.
 		if (initialResource instanceof XMIResource && expectedContainer instanceof XMIResource) {
-			((XMIResource)expectedContainer).setID(expectedValue, ((XMIResource)initialResource)
-					.getID(sourceValue));
+			((XMIResource)expectedContainer).setID(expectedValue,
+					((XMIResource)initialResource).getID(sourceValue));
 		}
 	}
 
@@ -373,8 +373,8 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 
 			if (targetSet == null) {
 				// Cannot create the target
-				throw new RuntimeException(EMFCompareMessages.getString(
-						"ResourceAttachmentChangeSpec.MissingRS", targetURI.lastSegment())); //$NON-NLS-1$
+				throw new RuntimeException(EMFCompareMessages
+						.getString("ResourceAttachmentChangeSpec.MissingRS", targetURI.lastSegment())); //$NON-NLS-1$
 			}
 
 			// This resource might already exists... in which case we cannot use it
@@ -488,8 +488,8 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 
 		if (soughtMatch == null) {
 			// This should never happen
-			throw new RuntimeException(EMFCompareMessages.getString(
-					"ResourceAttachmentChangeSpec.MissingMatch", resource.getURI().lastSegment())); //$NON-NLS-1$
+			throw new RuntimeException(EMFCompareMessages
+					.getString("ResourceAttachmentChangeSpec.MissingMatch", resource.getURI().lastSegment())); //$NON-NLS-1$
 		}
 
 		return soughtMatch;
@@ -503,7 +503,8 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 	 * <ul>
 	 * <li>Copying from right to left and either
 	 * <ul>
-	 * <li>we are copying a deletion from the right side (we need to remove the same root from the left) or,</li>
+	 * <li>we are copying a deletion from the right side (we need to remove the same root from the left) or,
+	 * </li>
 	 * <li>we are copying an addition to the left side (we need to revert the addition).</li>
 	 * </ul>
 	 * </li>
@@ -566,7 +567,8 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 	 *         target list.
 	 * @see DiffUtil#findInsertionIndex(Comparison, Diff, boolean)
 	 */
-	protected <E> int findInsertionIndex(Comparison comparison, List<E> source, List<E> target, E newElement) {
+	protected <E> int findInsertionIndex(Comparison comparison, List<E> source, List<E> target,
+			E newElement) {
 		return DiffUtil.findInsertionIndex(comparison, source, target, newElement);
 	}
 }

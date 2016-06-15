@@ -29,7 +29,7 @@ import org.eclipse.gmf.runtime.notation.util.NotationSwitch;
 public class DiagramCompareItemProviderAdapterFactorySpec extends NotationItemProviderAdapterFactory {
 
 	/**
-	 * This keeps track of all the item providers created, so that they can be {@link #dispose disposed}. 
+	 * This keeps track of all the item providers created, so that they can be {@link #dispose disposed}.
 	 */
 	protected Disposable disposable = new Disposable();
 

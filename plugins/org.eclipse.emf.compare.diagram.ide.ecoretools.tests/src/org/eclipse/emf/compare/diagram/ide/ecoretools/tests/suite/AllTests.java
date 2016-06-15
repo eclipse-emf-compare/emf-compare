@@ -35,7 +35,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({NodechangesTest.class})
+@SuiteClasses({NodechangesTest.class })
 public class AllTests {
 
 	/**

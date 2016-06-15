@@ -12,8 +12,8 @@
 package org.eclipse.emf.compare.diagram.papyrus.tests.egit;
 
 /**
- * Extends {@link ResourceAttachmentChangeAdd1GitMergeTest} with the deletion of
- * an unrelated file on the right-hand side.
+ * Extends {@link ResourceAttachmentChangeAdd1GitMergeTest} with the deletion of an unrelated file on the
+ * right-hand side.
  *
  * @author Philip Langer <planger@eclipsesource.com>
  */

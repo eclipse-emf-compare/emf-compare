@@ -108,8 +108,9 @@ public class GroupAction extends Action {
 	 */
 	private void handleSynchronization(Event event) {
 		final Shell shell = event.display.getActiveShell();
-		String preferenceValue = preferences.get(GroupsPreferencePage
-				.getGroupSynchronizationPreferenceKey(isThreeWay), MessageDialogWithToggle.PROMPT);
+		String preferenceValue = preferences.get(
+				GroupsPreferencePage.getGroupSynchronizationPreferenceKey(isThreeWay),
+				MessageDialogWithToggle.PROMPT);
 		if (MessageDialogWithToggle.PROMPT.equals(preferenceValue)) {
 			shell.getDisplay().asyncExec(new SynchronizationRunnable(shell));
 		} else if (MessageDialogWithToggle.ALWAYS.equals(preferenceValue)) {
@@ -138,10 +139,8 @@ public class GroupAction extends Action {
 			/*
 			 * If not found then the group provider may have been removed from the registry. Just log warning.
 			 */
-			EMFCompareRCPUIPlugin
-					.getDefault()
-					.log(IStatus.WARNING,
-							"Enable to set selected difference group provider as default group provider. The selected group provider is not in the registry anymore"); //$NON-NLS-1$
+			EMFCompareRCPUIPlugin.getDefault().log(IStatus.WARNING,
+					"Enable to set selected difference group provider as default group provider. The selected group provider is not in the registry anymore"); //$NON-NLS-1$
 		}
 	}
 
@@ -168,14 +167,14 @@ public class GroupAction extends Action {
 		 * {@inheritDoc}
 		 */
 		public void run() {
-			MessageDialogWithToggle dialog = new SynchronizerDialog(shell, EMFCompareRCPUIMessages
-					.getString("GroupAction.synchronization.dialog.title"), //$NON-NLS-1$
+			MessageDialogWithToggle dialog = new SynchronizerDialog(shell,
+					EMFCompareRCPUIMessages.getString("GroupAction.synchronization.dialog.title"), //$NON-NLS-1$
 					EMFCompareRCPUIMessages.getString("GroupAction.synchronization.dialog.message"), //$NON-NLS-1$
 					GroupsPreferencePage.PAGE_ID);
 
 			dialog.setPrefKey(GroupsPreferencePage.getGroupSynchronizationPreferenceKey(isThreeWay));
-			dialog.setPrefStore(new ScopedPreferenceStore(new InstanceScope(),
-					EMFCompareRCPUIPlugin.PLUGIN_ID));
+			dialog.setPrefStore(
+					new ScopedPreferenceStore(new InstanceScope(), EMFCompareRCPUIPlugin.PLUGIN_ID));
 			if (dialog.open() == IDialogConstants.YES_ID) {
 				setSelectedGroupAsDefault();
 			}

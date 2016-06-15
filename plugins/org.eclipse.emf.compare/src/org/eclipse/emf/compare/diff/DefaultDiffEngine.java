@@ -125,8 +125,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 			checkForDifferences(rootMatch, monitor);
 		}
 		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info(String
-					.format("detect differences - END - Took %d ms", Long.valueOf(System.currentTimeMillis() - start))); //$NON-NLS-1$
+			LOGGER.info(String.format("detect differences - END - Took %d ms", Long.valueOf(System //$NON-NLS-1$
+					.currentTimeMillis() - start)));
 		}
 	}
 
@@ -421,8 +421,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 		if (container1 != null && container2 != null) {
 			final EReference containing1 = o1.eContainmentFeature();
 			final EReference containing2 = o2.eContainmentFeature();
-			matchingContainment = (containing1 == containing2 || containing1.getName().equals(
-					containing2.getName()))
+			matchingContainment = (containing1 == containing2
+					|| containing1.getName().equals(containing2.getName()))
 					&& equalityHelper.matchingValues(o1.eContainer(), o2.eContainer());
 		}
 		return matchingContainment;
@@ -667,7 +667,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 			} else if (FeatureMapUtil.isFeatureMap(feature) && diffCandidate instanceof FeatureMap.Entry) {
 				// A value of a FeatureMap changed his key
 				if (isFeatureMapEntryKeyChange(equality, (FeatureMap.Entry)diffCandidate, originValues)) {
-					featureChange(match, feature, diffCandidate, DifferenceKind.CHANGE, DifferenceSource.LEFT);
+					featureChange(match, feature, diffCandidate, DifferenceKind.CHANGE,
+							DifferenceSource.LEFT);
 				} else if (isFeatureMapValueMove(comparison, (FeatureMap.Entry)diffCandidate,
 						DifferenceSource.LEFT)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
@@ -717,7 +718,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 				if ((feature instanceof EReference || match.getLeft() != null)
 						&& !isFeatureMapChangeOrMove(comparison, feature, diffCandidate, leftValues,
 								DifferenceSource.LEFT)) {
-					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE, DifferenceSource.LEFT);
+					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE,
+							DifferenceSource.LEFT);
 				}
 			}
 			if (!contains(comparison, rightValues, diffCandidate)) {
@@ -777,7 +779,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 			} else if (FeatureMapUtil.isFeatureMap(feature) && diffCandidate instanceof FeatureMap.Entry) {
 				// A value of a FeatureMap changed his key
 				if (isFeatureMapEntryKeyChange(equality, (FeatureMap.Entry)diffCandidate, rightValues)) {
-					featureChange(match, feature, diffCandidate, DifferenceKind.CHANGE, DifferenceSource.LEFT);
+					featureChange(match, feature, diffCandidate, DifferenceKind.CHANGE,
+							DifferenceSource.LEFT);
 				} else if (isFeatureMapValueMove(comparison, (FeatureMap.Entry)diffCandidate,
 						DifferenceSource.LEFT)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);

@@ -50,10 +50,10 @@ import junit.textui.TestRunner;
  */
 @SuppressWarnings("restriction")
 @RunWith(Suite.class)
-@SuiteClasses({ AssocMergeTest.class, EdgeMergeTest.class, NodeMergeTest.class, ModelExtensionUtilTest.class,
+@SuiteClasses({AssocMergeTest.class, EdgeMergeTest.class, NodeMergeTest.class, ModelExtensionUtilTest.class,
 		SaveParameterHookTest.class, SaveParameterHookIntegrationTest.class, URIAttachmentTest.class,
-		DiagramTooltipProviderTest.class, PapyrusConflictsGroupProviderTests.class, IgnoreDiFilePostProcessorTest.class,
-		PapyrusContextUtilTest.class })
+		DiagramTooltipProviderTest.class, PapyrusConflictsGroupProviderTests.class,
+		IgnoreDiFilePostProcessorTest.class, PapyrusContextUtilTest.class })
 public class AllTests {
 
 	/**
@@ -66,8 +66,7 @@ public class AllTests {
 	}
 
 	/**
-	 * This will return a suite populated with all tests available through this
-	 * class.
+	 * This will return a suite populated with all tests available through this class.
 	 * 
 	 * @generated
 	 */

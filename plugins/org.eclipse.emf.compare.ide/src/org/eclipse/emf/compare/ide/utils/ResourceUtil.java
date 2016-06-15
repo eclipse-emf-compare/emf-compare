@@ -55,11 +55,13 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  */
 public final class ResourceUtil {
 	/** Content types of the files to consider as potential models. */
-	private static final String[] MODEL_CONTENT_TYPES = new String[] {
-			"org.eclipse.emf.compare.content.type", "org.eclipse.emf.ecore", //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String[] MODEL_CONTENT_TYPES = new String[] {"org.eclipse.emf.compare.content.type", //$NON-NLS-1$
+			"org.eclipse.emf.ecore", //$NON-NLS-1$
 			"org.eclipse.emf.ecore.xmi", }; //$NON-NLS-1$
 
-	/** This can be used in order to convert an Iterable of IStorages to an Iterable over the storage's URIs. */
+	/**
+	 * This can be used in order to convert an Iterable of IStorages to an Iterable over the storage's URIs.
+	 */
 	private static final Function<IStorage, URI> AS_URI = new Function<IStorage, URI>() {
 		public URI apply(IStorage input) {
 			if (input != null) {
@@ -334,8 +336,8 @@ public final class ResourceUtil {
 			 * FIXME Deresolve the URI against the workspace root, if it cannot be done, delegate to
 			 * super.createInputStream()
 			 */
-			targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
-					new Path(uri.trimFragment().toString()));
+			targetFile = ResourcesPlugin.getWorkspace().getRoot()
+					.getFile(new Path(uri.trimFragment().toString()));
 		}
 		return targetFile;
 	}
@@ -435,11 +437,12 @@ public final class ResourceUtil {
 	 * @since 3.3
 	 */
 	public static void saveAllResources(ResourceSet resourceSet, Map<?, ?> options,
-			StorageTraversal leftTraversal, StorageTraversal rightTraversal, StorageTraversal originTraversal) {
+			StorageTraversal leftTraversal, StorageTraversal rightTraversal,
+			StorageTraversal originTraversal) {
 
 		// filter out the resources that don't support output
-		List<Resource> resources = Lists.newArrayList(Iterables.filter(resourceSet.getResources(),
-				new Predicate<Resource>() {
+		List<Resource> resources = Lists
+				.newArrayList(Iterables.filter(resourceSet.getResources(), new Predicate<Resource>() {
 					public boolean apply(Resource input) {
 						return supportsOutput(input);
 					}
@@ -591,8 +594,8 @@ public final class ResourceUtil {
 		// Try a first pass without the file contents, since some content type parsers can be very sluggish
 		// (EMF uses a sax parser to describe its content)
 		final IContentTypeManager ctManager = Platform.getContentTypeManager();
-		final List<IContentType> fileNameTypes = Lists.newArrayList(ctManager.findContentTypesFor(file
-				.getName()));
+		final List<IContentType> fileNameTypes = Lists
+				.newArrayList(ctManager.findContentTypesFor(file.getName()));
 		for (int i = 0; i < MODEL_CONTENT_TYPES.length && !isModel; i++) {
 			isModel = hasContentType(MODEL_CONTENT_TYPES[i], fileNameTypes);
 		}

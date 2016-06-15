@@ -54,8 +54,8 @@ public class SelectAncestorDialog<T> extends MessageDialog {
 
 	public SelectAncestorDialog(Shell parentShell, AdapterFactory adapterFactory, T[] theResources) {
 		super(parentShell, CompareMessages.SelectAncestorDialog_title, null,
-				CompareMessages.SelectAncestorDialog_message, MessageDialog.QUESTION, new String[] {
-						IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
+				CompareMessages.SelectAncestorDialog_message, MessageDialog.QUESTION,
+				new String[] {IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 		this.adapterFactory = adapterFactory;
 		this.elements = new ArrayList<T>(Arrays.asList(theResources));
 	}
@@ -120,8 +120,8 @@ public class SelectAncestorDialog<T> extends MessageDialog {
 			return labelProvider.getText(object);
 		}
 
-		IWorkbenchAdapter workbenchAdapter = (IWorkbenchAdapter)Platform.getAdapterManager().getAdapter(
-				object, IWorkbenchAdapter.class);
+		IWorkbenchAdapter workbenchAdapter = (IWorkbenchAdapter)Platform.getAdapterManager()
+				.getAdapter(object, IWorkbenchAdapter.class);
 		if (workbenchAdapter != null) {
 			return workbenchAdapter.getLabel(object);
 		}

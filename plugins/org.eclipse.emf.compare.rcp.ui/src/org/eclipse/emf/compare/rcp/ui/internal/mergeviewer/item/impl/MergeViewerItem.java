@@ -357,15 +357,14 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 		final List<Object> sideContent = ReferenceUtil.getAsList((EObject)getSideValue(getSide()),
 				eStructuralFeature);
-		final List<Object> oppositeContent = ReferenceUtil.getAsList((EObject)getSideValue(getSide()
-				.opposite()), eStructuralFeature);
+		final List<Object> oppositeContent = ReferenceUtil
+				.getAsList((EObject)getSideValue(getSide().opposite()), eStructuralFeature);
 
 		for (Diff diff : Lists.reverse(differences)) {
 			EObject value = (EObject)MergeViewerUtil.getDiffValue(diff);
 			Match match = getComparison().getMatch(value);
-			if (!isPseudoAddConflict(diff)
-					&& (isAddOnOppositeSide(diff) || isDeleteOnSameSide(diff) || isInsertOnBothSides(diff,
-							match))) {
+			if (!isPseudoAddConflict(diff) && (isAddOnOppositeSide(diff) || isDeleteOnSameSide(diff)
+					|| isInsertOnBothSides(diff, match))) {
 				if (match == null && diff.getState() == DifferenceState.MERGED) {
 					EObject bestSideValue = (EObject)getBestSideValue();
 					match = getComparison().getMatch(bestSideValue);
@@ -373,20 +372,22 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 				}
 
 				if (match != null && !isRealAddConflict(diff, match)) {
-					IMergeViewerItem.Container insertionPoint = new MergeViewerItem.Container(
-							getComparison(), diff, match.getLeft(), match.getRight(), match.getOrigin(),
-							getSide(), getAdapterFactory());
+					IMergeViewerItem.Container insertionPoint = new MergeViewerItem.Container(getComparison(),
+							diff, match.getLeft(), match.getRight(), match.getOrigin(), getSide(),
+							getAdapterFactory());
 
 					final int insertionIndex;
 					if (match.getLeft() == null && match.getRight() == null && diff.getConflict() != null
 							&& diff.getConflict().getKind() == ConflictKind.PSEUDO) {
 						// pseudo conflict delete...
-						insertionIndex = ReferenceUtil.getAsList(
-								(EObject)getSideValue(MergeViewerSide.ANCESTOR), eStructuralFeature).indexOf(
-								value);
+						insertionIndex = ReferenceUtil
+								.getAsList((EObject)getSideValue(MergeViewerSide.ANCESTOR),
+										eStructuralFeature)
+								.indexOf(value);
 					} else {
-						insertionIndex = Math.min(DiffUtil.findInsertionIndex(comparison, oppositeContent,
-								sideContent, value), ret.size());
+						insertionIndex = Math.min(
+								DiffUtil.findInsertionIndex(comparison, oppositeContent, sideContent, value),
+								ret.size());
 					}
 
 					// offset the insertion by the number of previous insertion points in the list
@@ -525,7 +526,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 				EObject value = (EObject)MergeViewerUtil.getDiffValue(diff);
 				Match match = getComparison().getMatch(value);
-				if (isAddOnOppositeSide(diff) || isDeleteOnSameSide(diff) || isInsertOnBothSides(diff, match)) {
+				if (isAddOnOppositeSide(diff) || isDeleteOnSameSide(diff)
+						|| isInsertOnBothSides(diff, match)) {
 					if (match == null && diff.getState() == DifferenceState.MERGED) {
 						EObject bestSideValue = (EObject)getBestSideValue();
 						match = getComparison().getMatch(bestSideValue);
@@ -574,8 +576,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 		Match match = getComparison().getMatch(eObject);
 
-		ReferenceChange referenceChange = (ReferenceChange)getFirst(filter(getComparison().getDifferences(
-				eObject), CONTAINMENT_REFERENCE_CHANGE), null);
+		ReferenceChange referenceChange = (ReferenceChange)getFirst(
+				filter(getComparison().getDifferences(eObject), CONTAINMENT_REFERENCE_CHANGE), null);
 		if (match != null) {
 			return new MergeViewerItem.Container(getComparison(), referenceChange, match, getSide(),
 					getAdapterFactory());
@@ -680,8 +682,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 				ITreeItemContentProvider treeItemContentProvider = (ITreeItemContentProvider)getAdapterFactory()
 						.adapt(sideValue, ITreeItemContentProvider.class);
 
-				Object parent = treeItemContentProvider != null ? treeItemContentProvider
-						.getParent(sideValue) : null;
+				Object parent = treeItemContentProvider != null ? treeItemContentProvider.getParent(sideValue)
+						: null;
 				if (parent instanceof EObject) {
 					ret = createBasicContainer((EObject)parent);
 				} else if (parent instanceof Resource) {
@@ -707,7 +709,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			if (ResourceUIUtil.isFragment(uri)) {
 				final Object object = getBestSideValue();
 				final Match matchOfValue = getComparison().getMatch((EObject)object);
-				final NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(matchOfValue);
+				final NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(
+						matchOfValue);
 				parent = new MergeViewerItem.Container(getComparison(), getDiff(), notLoadedFragmentMatch,
 						notLoadedFragmentMatch, notLoadedFragmentMatch, getSide(), getAdapterFactory());
 			} else {
@@ -809,8 +812,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			EObject bestSideValue = (EObject)getBestSideValue();
 			Match match = getComparison().getMatch(bestSideValue);
 
-			Iterable<Diff> differences = match == null ? Collections.<Diff> emptyList() : ImmutableList
-					.copyOf(filter(match.getDifferences(), CONTAINMENT_REFERENCE_CHANGE));
+			Iterable<Diff> differences = match == null ? Collections.<Diff> emptyList()
+					: ImmutableList.copyOf(filter(match.getDifferences(), CONTAINMENT_REFERENCE_CHANGE));
 
 			Collection<? extends EStructuralFeature> childrenFeatures = getChildrenFeatures(bestSideValue);
 			for (EStructuralFeature eStructuralFeature : childrenFeatures) {
@@ -840,8 +843,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 			if (getSide() != MergeViewerSide.ANCESTOR) {
 				Iterable<Diff> differencesOnFeature = filter(differences, onFeature(reference.getName()));
-				Iterable<Diff> filteredDiffs = filter(differencesOnFeature, visibleInMergeViewer(predicate,
-						groupProvider));
+				Iterable<Diff> filteredDiffs = filter(differencesOnFeature,
+						visibleInMergeViewer(predicate, groupProvider));
 				return yieldsInsertionPoint(filteredDiffs);
 			}
 
@@ -867,8 +870,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 
 			if (getSide() != MergeViewerSide.ANCESTOR) {
 				Iterable<Diff> differencesOnFeature = filter(differences, onFeatures(derivedFeatures));
-				Iterable<Diff> filteredDiffs = filter(differencesOnFeature, visibleInMergeViewer(predicate,
-						groupProvider));
+				Iterable<Diff> filteredDiffs = filter(differencesOnFeature,
+						visibleInMergeViewer(predicate, groupProvider));
 				return yieldsInsertionPoint(filteredDiffs);
 			}
 
@@ -876,8 +879,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		}
 
 		private boolean hasNotLoadedFragmentsItems(Match match) {
-			Collection<Match> childrenMatches = ResourceUIUtil.getChildrenMatchWithNotLoadedParent(
-					getComparison(), match, getSide());
+			Collection<Match> childrenMatches = ResourceUIUtil
+					.getChildrenMatchWithNotLoadedParent(getComparison(), match, getSide());
 			return !childrenMatches.isEmpty();
 		}
 
@@ -904,13 +907,14 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 				Object sideValue = getSideValue(getSide());
 				EObject bestSideValue = (EObject)getBestSideValue();
 
-				final Collection<? extends EStructuralFeature> childrenFeatures = getChildrenFeatures(bestSideValue);
+				final Collection<? extends EStructuralFeature> childrenFeatures = getChildrenFeatures(
+						bestSideValue);
 
 				Match match = getComparison().getMatch(bestSideValue);
 				final ImmutableList<Diff> differences;
 				if (match != null) {
-					differences = ImmutableList.copyOf(filter(match.getDifferences(),
-							CONTAINMENT_REFERENCE_CHANGE));
+					differences = ImmutableList
+							.copyOf(filter(match.getDifferences(), CONTAINMENT_REFERENCE_CHANGE));
 				} else {
 					differences = ImmutableList.of();
 				}
@@ -945,8 +949,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			for (Match match : matches) {
 				final MergeViewerItem.Container container;
 				if (match instanceof NotLoadedFragmentMatch) {
-					container = new MergeViewerItem.Container(getComparison(), getDiff(), match, match,
-							match, getSide(), getAdapterFactory());
+					container = new MergeViewerItem.Container(getComparison(), getDiff(), match, match, match,
+							getSide(), getAdapterFactory());
 				} else {
 					container = new MergeViewerItem.Container(getComparison(), getDiff(), match.getLeft(),
 							match.getRight(), match.getOrigin(), getSide(), getAdapterFactory());
@@ -967,8 +971,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		 */
 		private List<IMergeViewerItem> getNotLoadedFragmentsItems(Match match) {
 			final List<IMergeViewerItem> ret = newArrayList();
-			final Collection<Match> childrenMatches = ResourceUIUtil.getChildrenMatchWithNotLoadedParent(
-					getComparison(), match, getSide());
+			final Collection<Match> childrenMatches = ResourceUIUtil
+					.getChildrenMatchWithNotLoadedParent(getComparison(), match, getSide());
 			if (childrenMatches.size() > 0) {
 				boolean setNames = childrenMatches.size() > 1;
 				for (Match child : childrenMatches) {
@@ -1007,8 +1011,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			List<Object> featureContent = ReferenceUtil.getAsList((EObject)container, reference);
 			List<IMergeViewerItem> mergeViewerItem = createMergeViewerItemFrom(featureContent);
 			if (getSide() != MergeViewerSide.ANCESTOR) {
-				Iterable<? extends Diff> differencesOnFeature = filter(differences, onFeature(reference
-						.getName()));
+				Iterable<? extends Diff> differencesOnFeature = filter(differences,
+						onFeature(reference.getName()));
 				List<? extends Diff> filteredDiffs = filteredDiffs(differencesOnFeature, predicate, group);
 				ret.addAll(createInsertionPoints(getComparison(), reference, mergeViewerItem, filteredDiffs));
 			} else {
@@ -1048,7 +1052,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			if (getSide() != MergeViewerSide.ANCESTOR) {
 				Iterable<Diff> differencesOnFeature = filter(differences, onFeatures(derivedFeatures));
 				List<? extends Diff> filteredDiffs = filteredDiffs(differencesOnFeature, predicate, group);
-				ret.addAll(createInsertionPoints(getComparison(), featureMap, mergeViewerItem, filteredDiffs));
+				ret.addAll(
+						createInsertionPoints(getComparison(), featureMap, mergeViewerItem, filteredDiffs));
 			} else {
 				ret.addAll(mergeViewerItem);
 			}
@@ -1072,7 +1077,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		 */
 		protected Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 			Collection<? extends EStructuralFeature> ret = Lists.newArrayList();
-			Collection<? extends EStructuralFeature> childrenFeaturesFromItemProviderAdapter = getChildrenFeaturesFromItemProviderAdapter(object);
+			Collection<? extends EStructuralFeature> childrenFeaturesFromItemProviderAdapter = getChildrenFeaturesFromItemProviderAdapter(
+					object);
 			if (childrenFeaturesFromItemProviderAdapter == null) {
 				ret = getChildrenFeaturesFromEClass(object);
 			} else {
@@ -1097,8 +1103,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 				Object object) {
 			Collection<? extends EStructuralFeature> ret = null;
 
-			Object treeItemContentProvider = getAdapterFactory()
-					.adapt(object, ITreeItemContentProvider.class);
+			Object treeItemContentProvider = getAdapterFactory().adapt(object,
+					ITreeItemContentProvider.class);
 
 			if (treeItemContentProvider instanceof ItemProviderAdapter) {
 				ItemProviderAdapter itemProviderAdapter = (ItemProviderAdapter)treeItemContentProvider;
@@ -1106,8 +1112,8 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 				try {
 					method = itemProviderAdapter.getClass().getMethod("getChildrenFeatures", Object.class); //$NON-NLS-1$
 					method.setAccessible(true);
-					ret = (Collection<? extends EStructuralFeature>)method
-							.invoke(itemProviderAdapter, object);
+					ret = (Collection<? extends EStructuralFeature>)method.invoke(itemProviderAdapter,
+							object);
 				} catch (SecurityException e) {
 				} catch (NoSuchMethodException e) {
 				} catch (IllegalArgumentException e) {

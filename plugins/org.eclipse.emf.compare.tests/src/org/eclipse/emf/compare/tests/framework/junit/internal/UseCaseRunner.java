@@ -86,8 +86,8 @@ public class UseCaseRunner extends BlockJUnit4ClassRunner {
 	 */
 	@Override
 	protected List<FrameworkMethod> computeTestMethods() {
-		final List<FrameworkMethod> allMethods = Lists.newArrayList(getTestClass().getAnnotatedMethods(
-				MatchTest.class));
+		final List<FrameworkMethod> allMethods = Lists
+				.newArrayList(getTestClass().getAnnotatedMethods(MatchTest.class));
 		allMethods.addAll(getTestClass().getAnnotatedMethods(DiffTest.class));
 		allMethods.addAll(getTestClass().getAnnotatedMethods(ConflictTest.class));
 

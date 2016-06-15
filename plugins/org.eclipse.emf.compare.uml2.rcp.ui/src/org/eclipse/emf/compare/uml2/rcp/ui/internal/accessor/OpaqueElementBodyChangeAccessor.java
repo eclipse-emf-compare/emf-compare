@@ -36,11 +36,11 @@ import org.eclipse.uml2.uml.OpaqueExpression;
 import org.eclipse.uml2.uml.UMLPackage;
 
 /**
- * An accessor for {@link OpaqueElementBodyChange opaque element body changes} that represent
- * <i>additions</i>, <i>deletions</i>, and <i>changes</i> (that is, everything except for moves) of body
- * values of {@link OpaqueAction}, {@link OpaqueBehavior}, and {@link OpaqueExpression}. For such changes of
- * body values, we show the added/deleted/changed body value of the left-hand side and the right-hand side in
- * a textual diff viewer.
+ * An accessor for {@link OpaqueElementBodyChange opaque element body changes} that represent <i>additions</i>
+ * , <i>deletions</i>, and <i>changes</i> (that is, everything except for moves) of body values of
+ * {@link OpaqueAction}, {@link OpaqueBehavior}, and {@link OpaqueExpression}. For such changes of body
+ * values, we show the added/deleted/changed body value of the left-hand side and the right-hand side in a
+ * textual diff viewer.
  * 
  * @author Philip Langer <planger@eclipsesource.com>
  */

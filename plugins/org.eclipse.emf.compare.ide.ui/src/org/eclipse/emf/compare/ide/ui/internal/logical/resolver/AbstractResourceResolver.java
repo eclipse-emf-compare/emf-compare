@@ -56,9 +56,8 @@ abstract class AbstractResourceResolver implements Runnable {
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
 	 */
-	public AbstractResourceResolver(ResourceComputationScheduler<URI> scheduler,
-			DiagnosticSupport diagnostic, SynchronizedResourceSet resourceSet, URI uri,
-			ThreadSafeProgressMonitor monitor) {
+	public AbstractResourceResolver(ResourceComputationScheduler<URI> scheduler, DiagnosticSupport diagnostic,
+			SynchronizedResourceSet resourceSet, URI uri, ThreadSafeProgressMonitor monitor) {
 		this.scheduler = scheduler;
 		this.diagnostic = diagnostic;
 		this.resourceSet = resourceSet;

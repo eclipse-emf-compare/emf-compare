@@ -84,8 +84,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 			addSupplierInSubstitutionDescription = removedFromReference("model.Class0.substitution1",
 					"supplier", "model.Interface0");
 		} else {
-			addInterfaceRealizationDescription = addedToReference(
-					"model.Class0", "interfaceRealization", "model.Class0.InterfaceRealization0"); //$NON-NLS-1$
+			addInterfaceRealizationDescription = addedToReference("model.Class0", "interfaceRealization", //$NON-NLS-1$
+					"model.Class0.InterfaceRealization0");
 			addClientInInterfaceRealizationDescription = addedToReference(
 					"model.Class0.InterfaceRealization0", "client", "model.Class0");
 			addSupplierInInterfaceRealizationDescription = addedToReference(
@@ -114,12 +114,14 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 				addClientInSubstitutionDescription, null);
 		diffs.addSupplierInSubstitution = Iterators.find(differences.iterator(),
 				addSupplierInSubstitutionDescription, null);
-		diffs.addUMLInterfaceRealization = Iterators.find(differences.iterator(), and(
-				instanceOf(DirectedRelationshipChange.class),
-				discriminantInstanceOf(UMLPackage.Literals.INTERFACE_REALIZATION)), null);
-		diffs.addUMLSubstitution = Iterators.find(differences.iterator(), and(
-				instanceOf(DirectedRelationshipChange.class),
-				discriminantInstanceOf(UMLPackage.Literals.SUBSTITUTION)), null);
+		diffs.addUMLInterfaceRealization = Iterators.find(differences.iterator(),
+				and(instanceOf(DirectedRelationshipChange.class),
+						discriminantInstanceOf(UMLPackage.Literals.INTERFACE_REALIZATION)),
+				null);
+		diffs.addUMLSubstitution = Iterators.find(differences.iterator(),
+				and(instanceOf(DirectedRelationshipChange.class),
+						discriminantInstanceOf(UMLPackage.Literals.SUBSTITUTION)),
+				null);
 		return diffs;
 	}
 
@@ -162,8 +164,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization).copyLeftToRight(
-				diffs.addClientInInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+				.copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -188,8 +190,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization).copyLeftToRight(
-				diffs.addClientInInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+				.copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -207,8 +209,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization).copyLeftToRight(
-				diffs.addClientInInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+				.copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -235,8 +237,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization).copyLeftToRight(
-				diffs.addInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+				.copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -261,8 +263,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization).copyLeftToRight(
-				diffs.addInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+				.copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -280,8 +282,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization).copyLeftToRight(
-				diffs.addInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+				.copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -308,8 +310,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization).copyRightToLeft(
-				diffs.addClientInInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+				.copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -327,8 +329,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization).copyRightToLeft(
-				diffs.addClientInInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+				.copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -346,8 +348,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization).copyRightToLeft(
-				diffs.addClientInInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+				.copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -365,8 +367,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization).copyRightToLeft(
-				diffs.addInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+				.copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -384,8 +386,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization).copyRightToLeft(
-				diffs.addInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+				.copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -403,8 +405,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization).copyRightToLeft(
-				diffs.addInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+				.copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -451,8 +453,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization).copyLeftToRight(
-				diffs.addClientInInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+				.copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -470,8 +472,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization).copyLeftToRight(
-				diffs.addClientInInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+				.copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -489,8 +491,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization).copyLeftToRight(
-				diffs.addClientInInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+				.copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -508,8 +510,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization).copyLeftToRight(
-				diffs.addInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+				.copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -527,8 +529,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization).copyLeftToRight(
-				diffs.addInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+				.copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -546,8 +548,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization).copyLeftToRight(
-				diffs.addInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+				.copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -565,8 +567,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization).copyRightToLeft(
-				diffs.addClientInInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+				.copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -584,8 +586,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization).copyRightToLeft(
-				diffs.addClientInInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+				.copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -603,8 +605,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization).copyRightToLeft(
-				diffs.addClientInInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+				.copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -622,8 +624,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization).copyRightToLeft(
-				diffs.addInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+				.copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -641,8 +643,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization).copyRightToLeft(
-				diffs.addInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+				.copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -660,8 +662,8 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization).copyRightToLeft(
-				diffs.addInterfaceRealization, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+				.copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -678,14 +680,14 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 
 		if (kind.equals(TestKind.DELETE)) {
 			assertEquals(1, diffs.addInterfaceRealization.getImpliedBy().size());
-			assertTrue(diffs.addInterfaceRealization.getImpliedBy().contains(
-					diffs.addClientInInterfaceRealization));
+			assertTrue(diffs.addInterfaceRealization.getImpliedBy()
+					.contains(diffs.addClientInInterfaceRealization));
 			assertEquals(1, diffs.addSubstitution.getImpliedBy().size());
 			assertTrue(diffs.addSubstitution.getImpliedBy().contains(diffs.addClientInSubstitution));
 		} else {
 			assertEquals(1, diffs.addInterfaceRealization.getImplies().size());
-			assertTrue(diffs.addInterfaceRealization.getImplies().contains(
-					diffs.addClientInInterfaceRealization));
+			assertTrue(diffs.addInterfaceRealization.getImplies()
+					.contains(diffs.addClientInInterfaceRealization));
 			assertEquals(1, diffs.addSubstitution.getImplies().size());
 			assertTrue(diffs.addSubstitution.getImplies().contains(diffs.addClientInSubstitution));
 		}

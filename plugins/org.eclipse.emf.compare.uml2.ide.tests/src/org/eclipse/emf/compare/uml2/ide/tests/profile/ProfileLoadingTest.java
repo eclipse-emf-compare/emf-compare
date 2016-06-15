@@ -88,8 +88,8 @@ public class ProfileLoadingTest {
 		Set<String> expectedLoadedResource = Sets.newHashSet(PROFILE_URI, umlResourceURI,
 				METAMODEL_PATHMAP_URI, ECORE_PROFILE_PATHMAP_URI, STANDARD_PROFILE_PATHMAP_URI);
 		assertLoadedResources(resourceSet, expectedLoadedResource);
-		EObject stereotypeApplication = getStereotype(resourceSet, umlResourceURI
-				+ "#_XzoewEIyEeSXpd1NJW5urA", //$NON-NLS-1$
+		EObject stereotypeApplication = getStereotype(resourceSet,
+				umlResourceURI + "#_XzoewEIyEeSXpd1NJW5urA", //$NON-NLS-1$
 				ST1_PROFILE_QUALIFIED_NAME);
 		assertTrue(stereotypeApplication instanceof DynamicEObjectImpl);
 
@@ -107,8 +107,8 @@ public class ProfileLoadingTest {
 		Set<String> expectedLoadedResource = Sets.newHashSet(PROFILE_URI, umlResourceURI,
 				METAMODEL_PATHMAP_URI, ECORE_PROFILE_PATHMAP_URI, STANDARD_PROFILE_PATHMAP_URI);
 		assertLoadedResources(resourceSet, expectedLoadedResource);
-		EObject stereotypeApplication = getStereotype(resourceSet, umlResourceURI
-				+ "#_XzoewEIyEeSXpd1NJW5urA", //$NON-NLS-1$
+		EObject stereotypeApplication = getStereotype(resourceSet,
+				umlResourceURI + "#_XzoewEIyEeSXpd1NJW5urA", //$NON-NLS-1$
 				ST1_PROFILE_QUALIFIED_NAME);
 		assertTrue(stereotypeApplication instanceof DynamicEObjectImpl);
 
@@ -125,8 +125,8 @@ public class ProfileLoadingTest {
 		Set<String> expectedLoadedResource = Sets.newHashSet(PROFILE_URI, umlResourceURI,
 				METAMODEL_PATHMAP_URI, ECORE_PROFILE_PATHMAP_URI, STANDARD_PROFILE_PATHMAP_URI);
 		assertLoadedResources(resourceSet, expectedLoadedResource);
-		EObject stereotypeApplication = getStereotype(resourceSet, umlResourceURI
-				+ "#_XzoewEIyEeSXpd1NJW5urA", //$NON-NLS-1$
+		EObject stereotypeApplication = getStereotype(resourceSet,
+				umlResourceURI + "#_XzoewEIyEeSXpd1NJW5urA", //$NON-NLS-1$
 				ST1_PROFILE_QUALIFIED_NAME);
 		assertTrue(stereotypeApplication instanceof DynamicEObjectImpl);
 
@@ -143,8 +143,8 @@ public class ProfileLoadingTest {
 		Set<String> expectedLoadedResource = Sets.newHashSet(PROFILE_URI, umlResourceURI,
 				METAMODEL_PATHMAP_URI, ECORE_PROFILE_PATHMAP_URI, STANDARD_PROFILE_PATHMAP_URI);
 		assertLoadedResources(resourceSet, expectedLoadedResource);
-		EObject stereotypeApplication = getStereotype(resourceSet, umlResourceURI
-				+ "#_XzoewEIyEeSXpd1NJW5urA", //$NON-NLS-1$
+		EObject stereotypeApplication = getStereotype(resourceSet,
+				umlResourceURI + "#_XzoewEIyEeSXpd1NJW5urA", //$NON-NLS-1$
 				ST1_PROFILE_QUALIFIED_NAME);
 		assertTrue(stereotypeApplication instanceof DynamicEObjectImpl);
 
@@ -159,13 +159,12 @@ public class ProfileLoadingTest {
 	public void loadDynamicRegisteredProfile() {
 		String umlResourceURI = BASE_URI + "registered/model.uml"; //$NON-NLS-1$
 		resourceSet = createNotLoadingResourceSet(umlResourceURI);
-		Set<String> expectedLoadedResource = Sets.newHashSet(
-				BASE_URI + "registered/model_profile.uml", //$NON-NLS-1$
+		Set<String> expectedLoadedResource = Sets.newHashSet(BASE_URI + "registered/model_profile.uml", //$NON-NLS-1$
 				umlResourceURI, METAMODEL_PATHMAP_URI, ECORE_PROFILE_PATHMAP_URI,
 				STANDARD_PROFILE_PATHMAP_URI, STANDARD_PROFILE_PATHMAP_URI);
 		assertLoadedResources(resourceSet, expectedLoadedResource);
-		EObject stereotypeApplication = getStereotype(resourceSet, umlResourceURI
-				+ "#_XzoewEIyEeSXpd1NJW5urA", //$NON-NLS-1$
+		EObject stereotypeApplication = getStereotype(resourceSet,
+				umlResourceURI + "#_XzoewEIyEeSXpd1NJW5urA", //$NON-NLS-1$
 				ST1_PROFILE_QUALIFIED_NAME);
 		assertTrue(stereotypeApplication instanceof DynamicEObjectImpl);
 
@@ -182,8 +181,8 @@ public class ProfileLoadingTest {
 		Set<String> expectedLoadedResource = Sets.newHashSet(PROFILE_PATHMAP_URI, umlResourceURI,
 				METAMODEL_PATHMAP_URI, ECORE_PROFILE_PATHMAP_URI, STANDARD_PROFILE_PATHMAP_URI);
 		assertLoadedResources(resourceSet, expectedLoadedResource);
-		EObject stereotypeApplication = getStereotype(resourceSet, umlResourceURI
-				+ "#_XzoewEIyEeSXpd1NJW5urA", //$NON-NLS-1$
+		EObject stereotypeApplication = getStereotype(resourceSet,
+				umlResourceURI + "#_XzoewEIyEeSXpd1NJW5urA", //$NON-NLS-1$
 				ST1_PROFILE_QUALIFIED_NAME);
 		assertTrue(stereotypeApplication instanceof DynamicEObjectImpl);
 
@@ -197,14 +196,12 @@ public class ProfileLoadingTest {
 	public void loadStaticProfile() {
 		String umlResourceURI = BASE_URI + "static_/model.uml"; //$NON-NLS-1$
 		resourceSet = createNotLoadingResourceSet(umlResourceURI);
-		Set<String> expectedLoadedResource = Sets
-				.newHashSet(
-						"pathmap://UML_PROFILES/Ecore.profile.uml", //$NON-NLS-1$
-						umlResourceURI,
-						"pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml", ECORE_PROFILE_PATHMAP_URI, METAMODEL_PATHMAP_URI, STANDARD_PROFILE_PATHMAP_URI); //$NON-NLS-1$
+		Set<String> expectedLoadedResource = Sets.newHashSet("pathmap://UML_PROFILES/Ecore.profile.uml", //$NON-NLS-1$
+				umlResourceURI, "pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml", //$NON-NLS-1$
+				ECORE_PROFILE_PATHMAP_URI, METAMODEL_PATHMAP_URI, STANDARD_PROFILE_PATHMAP_URI);
 		assertLoadedResources(resourceSet, expectedLoadedResource);
-		EObject stereotypeApplication = getStereotype(resourceSet, umlResourceURI
-				+ "#_mg1YkEJqEeSsE-f8QjqLJA", //$NON-NLS-1$
+		EObject stereotypeApplication = getStereotype(resourceSet,
+				umlResourceURI + "#_mg1YkEJqEeSsE-f8QjqLJA", //$NON-NLS-1$
 				"UML2CompareTestProfile::ACliche"); //$NON-NLS-1$
 		assertTrue(stereotypeApplication instanceof ACliche);
 	}

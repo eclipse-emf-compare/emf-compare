@@ -48,8 +48,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests the {@link MergeNonConflictingRunnable} according to the specification given in <a
- * href="https://wiki.eclipse.org/EMF_Compare/Specifications/AllNonConflictingActions">the wiki</a> and
+ * Tests the {@link MergeNonConflictingRunnable} according to the specification given in
+ * <a href="https://wiki.eclipse.org/EMF_Compare/Specifications/AllNonConflictingActions">the wiki</a> and
  * according to its capabilities to only merge a given collection of differences.
  * <p>
  * The goal of this test is to have a more unit-level test of the {@link MergeNonConflictingRunnable} (as
@@ -626,7 +626,8 @@ public class MergeNonConflictingRunnableTest {
 			}
 
 			@Override
-			protected void markAsMerged(Diff diff, MergeMode mode, boolean mergeRightToLeft, Registry registry) {
+			protected void markAsMerged(Diff diff, MergeMode mode, boolean mergeRightToLeft,
+					Registry registry) {
 				// overwritten to prevent call of EcoreUtil.getAdapter()
 				// note that we rely on setting diff state to merged in verifyHasBeenMarkedAsMerged(Diff)
 				diff.setState(MERGED);

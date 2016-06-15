@@ -128,8 +128,8 @@ public class ConflictMerger extends AbstractMerger {
 				if (conflictedDiff instanceof ReferenceChange && conflictedDiff.getKind() == DELETE) {
 					ReferenceChange deleteDiff = (ReferenceChange)conflictedDiff;
 					IEqualityHelper equalityHelper = target.getMatch().getComparison().getEqualityHelper();
-					result = equalityHelper.matchingAttributeValues(moveDiff.getValue(), deleteDiff
-							.getValue());
+					result = equalityHelper.matchingAttributeValues(moveDiff.getValue(),
+							deleteDiff.getValue());
 				}
 			}
 		}

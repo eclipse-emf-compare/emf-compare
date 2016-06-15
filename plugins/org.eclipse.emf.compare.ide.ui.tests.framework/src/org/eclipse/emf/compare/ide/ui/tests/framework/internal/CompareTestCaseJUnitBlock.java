@@ -36,8 +36,8 @@ public class CompareTestCaseJUnitBlock extends AbstractCompareTestCaseJUnitBlock
 
 	@Override
 	protected List<FrameworkMethod> computeTestMethods() {
-		final List<FrameworkMethod> allMethods = Lists.newArrayList(getTestClass().getAnnotatedMethods(
-				Compare.class));
+		final List<FrameworkMethod> allMethods = Lists
+				.newArrayList(getTestClass().getAnnotatedMethods(Compare.class));
 		return allMethods;
 	}
 

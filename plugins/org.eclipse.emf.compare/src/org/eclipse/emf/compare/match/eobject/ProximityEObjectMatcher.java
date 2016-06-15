@@ -42,7 +42,8 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  * <li>Most EObjects have no difference and have their corresponding EObject on the other sides of the model
  * (right and origins)</li>
- * <li>Two consecutive calls on the distance function with the same parameters will give the same distance.</li>
+ * <li>Two consecutive calls on the distance function with the same parameters will give the same distance.
+ * </li>
  * </ul>
  * The scalability you'll get will highly depend on the complexity of the distance function. The
  * implementation is not caching any distance result from two EObjects.
@@ -143,7 +144,8 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 	private void matchAheadOfTime(Comparison comparison, Monitor monitor) {
 		if (index instanceof MatchAheadOfTime) {
 			matchList(comparison, ((MatchAheadOfTime)index).getValuesToMatchAhead(Side.LEFT), false, monitor);
-			matchList(comparison, ((MatchAheadOfTime)index).getValuesToMatchAhead(Side.RIGHT), false, monitor);
+			matchList(comparison, ((MatchAheadOfTime)index).getValuesToMatchAhead(Side.RIGHT), false,
+					monitor);
 		}
 	}
 
@@ -229,8 +231,8 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 				container = container.eContainer();
 			}
 		}
-		Iterator<EObject> containersAndTodo = Iterators.concat(requiredContainers.iterator(), todoList
-				.iterator());
+		Iterator<EObject> containersAndTodo = Iterators.concat(requiredContainers.iterator(),
+				todoList.iterator());
 		while (containersAndTodo.hasNext()) {
 			if (monitor.isCanceled()) {
 				throw new ComparisonCanceledException();
@@ -288,12 +290,12 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 			EObject aObj = closests.get(cSide);
 			if (lObj != null || aObj != null) {
 				// we have at least one other match
-				areMatching(comparison, closests.get(Side.LEFT), closests.get(Side.RIGHT), closests
-						.get(Side.ORIGIN));
+				areMatching(comparison, closests.get(Side.LEFT), closests.get(Side.RIGHT),
+						closests.get(Side.ORIGIN));
 				okToMatch = true;
 			} else if (createUnmatches) {
-				areMatching(comparison, closests.get(Side.LEFT), closests.get(Side.RIGHT), closests
-						.get(Side.ORIGIN));
+				areMatching(comparison, closests.get(Side.LEFT), closests.get(Side.RIGHT),
+						closests.get(Side.ORIGIN));
 				okToMatch = true;
 			}
 		}

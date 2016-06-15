@@ -91,8 +91,8 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 		postProcessorRegistry.put(UMLPostProcessor.class.getName(), descriptor);
 		// Adds Diagram post processor
 		BasicPostProcessorDescriptorImpl descriptor2 = new BasicPostProcessorDescriptorImpl(
-				new CompareDiagramPostProcessor(), Pattern
-						.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null); //$NON-NLS-1$
+				new CompareDiagramPostProcessor(),
+				Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null); //$NON-NLS-1$
 		postProcessorRegistry.put(CompareDiagramPostProcessor.class.getName(), descriptor2);
 		return postProcessorRegistry;
 	}

@@ -75,8 +75,8 @@ public class DynamicProfileIntegrationDisplayTest extends AbstractDifferenceOrde
 
 	@BeforeClass
 	public static void addProfilePathmap() {
-		registeredURI = UMLPlugin.getEPackageNsURIToProfileLocationMap().remove(
-				UML2CompareTestProfilePackage.eNS_URI);
+		registeredURI = UMLPlugin.getEPackageNsURIToProfileLocationMap()
+				.remove(UML2CompareTestProfilePackage.eNS_URI);
 		registeredPackage = EPackage.Registry.INSTANCE.remove(UML2CompareTestProfilePackage.eNS_URI);
 	}
 
@@ -94,8 +94,8 @@ public class DynamicProfileIntegrationDisplayTest extends AbstractDifferenceOrde
 				new UMLPostProcessor(), Pattern.compile("http://www.eclipse.org/uml2/\\d.0.0/UML"), null); //$NON-NLS-1$
 		postProcessorRegistry.put(UMLPostProcessor.class.getName(), umlPostProcessor);
 		BasicPostProcessorDescriptorImpl stereotypeElementPostProcessor = new BasicPostProcessorDescriptorImpl(
-				new StereotypedElementChangePostProcessor(), Pattern
-						.compile("http://www.eclipse.org/uml2/\\d.0.0/UML"), null); //$NON-NLS-1$
+				new StereotypedElementChangePostProcessor(),
+				Pattern.compile("http://www.eclipse.org/uml2/\\d.0.0/UML"), null); //$NON-NLS-1$
 		postProcessorRegistry.put(StereotypedElementChangePostProcessor.class.getName(),
 				stereotypeElementPostProcessor);
 		return postProcessorRegistry;
@@ -106,8 +106,8 @@ public class DynamicProfileIntegrationDisplayTest extends AbstractDifferenceOrde
 		eventBus = new EventBus();
 		return Lists.<AdapterFactory> newArrayList(new ProfiledUMLCompareItemProviderAdapterFactory(),
 				new UMLProfileItemProviderAdapterFactoryDecorator(),
-				new CompareItemProviderAdapterFactorySpec(), new TreeItemProviderAdapterFactorySpec(
-						new StructureMergeViewerFilter(eventBus)),
+				new CompareItemProviderAdapterFactorySpec(),
+				new TreeItemProviderAdapterFactorySpec(new StructureMergeViewerFilter(eventBus)),
 				new UMLCompareCustomItemProviderAdapterFactory(), new UMLItemProviderAdapterFactory(),
 				new UMLCompareItemProviderDecoratorAdapterFactory(),
 				new ReflectiveItemProviderAdapterFactory());

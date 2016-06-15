@@ -35,7 +35,7 @@ public class NodeChangesInputData extends DiagramInputData {
 	public Resource getA1Right() throws IOException {
 		return loadFromClassLoader("a1/TC2.ecorediag"); //$NON-NLS-1$
 	}
-	
+
 	public Resource getA2Left() throws IOException {
 		return loadFromClassLoader("a2/TC01.ecorediag"); //$NON-NLS-1$
 	}
@@ -43,7 +43,7 @@ public class NodeChangesInputData extends DiagramInputData {
 	public Resource getA2Right() throws IOException {
 		return loadFromClassLoader("a2/TC02.ecorediag"); //$NON-NLS-1$
 	}
-	
+
 	public Resource getA3Left() throws IOException {
 		return loadFromClassLoader("a3/TC1.ecorediag"); //$NON-NLS-1$
 	}
@@ -52,7 +52,6 @@ public class NodeChangesInputData extends DiagramInputData {
 		return loadFromClassLoader("a3/TC2.ecorediag"); //$NON-NLS-1$
 	}
 
-	
 	@Override
 	protected Resource loadFromClassLoader(String string) throws IOException {
 		final URL fileURL = getClass().getResource(string);
@@ -75,7 +74,7 @@ public class NodeChangesInputData extends DiagramInputData {
 
 		resource.load(str, Collections.emptyMap());
 		str.close();
-		
+
 		EcoreUtil.resolveAll(resourceSet);
 
 		return resource;

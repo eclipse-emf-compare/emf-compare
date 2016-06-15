@@ -111,18 +111,26 @@ public class ResourceAttachmentChangeMoveNoConflictTests extends AbstractResourc
 	private static String TEST_DATA_PATH = "src/org/eclipse/emf/compare/diagram/papyrus/tests/resourceattachmentchange/move/data/";
 
 	private ResourceSetImpl resourceSet;
+
 	private IProject iProject;
+
 	private TestProject testProject1;
+
 	private IFile modelDi;
+
 	private IFile modelNotation;
+
 	private IFile modelUml;
+
 	private IFile fragmentDi;
+
 	private IFile fragmentNotation;
+
 	private IFile fragmentUml;
-	
+
 	/**
-	 * BRANCH_3 checkouted. Comparison with BRANCH_2 (the move).
-	 * Comparison: No conflicts. Some differences, with just 1 {@link ResourceAttachmentChange} of kind MOVE.
+	 * BRANCH_3 checkouted. Comparison with BRANCH_2 (the move). Comparison: No conflicts. Some differences,
+	 * with just 1 {@link ResourceAttachmentChange} of kind MOVE.
 	 */
 	@Test
 	public void testComparisonMoveRemote() throws Exception {
@@ -131,13 +139,14 @@ public class ResourceAttachmentChangeMoveNoConflictTests extends AbstractResourc
 		repository.checkoutBranch(BRANCH_3);
 		Comparison comparison = compare(BRANCH_3, BRANCH_2, modelNotation);
 		assertTrue(comparison.getConflicts().isEmpty());
-		assertEquals(1, size(filter(comparison.getDifferences(), and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
+		assertEquals(1, size(filter(comparison.getDifferences(),
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_2 checkouted (the move). Comparison with BRANCH_3.
-	 * Comparison: No conflicts. Some differences, with just 1 {@link ResourceAttachmentChange} of kind MOVE.
+	 * BRANCH_2 checkouted (the move). Comparison with BRANCH_3. Comparison: No conflicts. Some differences,
+	 * with just 1 {@link ResourceAttachmentChange} of kind MOVE.
 	 */
 	@Test
 	public void testComparisonMoveLocal() throws Exception {
@@ -146,124 +155,120 @@ public class ResourceAttachmentChangeMoveNoConflictTests extends AbstractResourc
 		repository.checkoutBranch(BRANCH_2);
 		Comparison comparison = compare(BRANCH_2, BRANCH_3, modelNotation);
 		assertTrue(comparison.getConflicts().isEmpty());
-		assertEquals(1, size(filter(comparison.getDifferences(), and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
+		assertEquals(1, size(filter(comparison.getDifferences(),
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_3 checkouted. Merge with BRANCH_2 (the move).
-	 * Merge: No conflicts. The fragmented model and new diagram from 2nd commit have to be in the repository.
-	 * The changes from the 3rd commit have to be there.
+	 * BRANCH_3 checkouted. Merge with BRANCH_2 (the move). Merge: No conflicts. The fragmented model and new
+	 * diagram from 2nd commit have to be in the repository. The changes from the 3rd commit have to be there.
 	 */
 	@Test
 	public void testMergeMoveRemote() throws Exception {
 		setUpRepositoryCase001();
 		repository.checkoutBranch(MASTER);
 		repository.reset(BRANCH_3, ResetType.HARD);
-		
+
 		repository.mergeLogicalWithNewCommit(BRANCH_2);
 
 		checkContentsCase001();
-		
+
 		testProject1.dispose();
 	}
 
 	/**
-	 * BRANCH_2 checkouted (the move). Merge with BRANCH_3.
-	 * Merge: No conflicts. The fragmented model and new diagram from 2nd commit have to be in the repository.
-	 * The changes from the 3rd commit have to be there.
+	 * BRANCH_2 checkouted (the move). Merge with BRANCH_3. Merge: No conflicts. The fragmented model and new
+	 * diagram from 2nd commit have to be in the repository. The changes from the 3rd commit have to be there.
 	 */
 	@Test
 	public void testMergeMoveLocal() throws Exception {
 		setUpRepositoryCase001();
 		repository.checkoutBranch(MASTER);
 		repository.reset(BRANCH_2, ResetType.HARD);
-		
+
 		repository.mergeLogicalWithNewCommit(BRANCH_3);
 
 		checkContentsCase001();
-		
+
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_3 checkouted. Merge with BRANCH_2 (the move).
-	 * Rebase: No conflicts. The fragmented model and new diagram from 2nd commit have to be in the repository.
-	 * The changes from the 3rd commit have to be there.
+	 * BRANCH_3 checkouted. Merge with BRANCH_2 (the move). Rebase: No conflicts. The fragmented model and new
+	 * diagram from 2nd commit have to be in the repository. The changes from the 3rd commit have to be there.
 	 */
 	@Test
 	public void testRebaseMoveRemote() throws Exception {
 		setUpRepositoryCase001();
 		repository.checkoutBranch(MASTER);
 		repository.reset(BRANCH_3, ResetType.HARD);
-		
+
 		repository.rebaseLogical(BRANCH_2);
 
 		checkContentsCase001();
-		
+
 		testProject1.dispose();
 	}
 
 	/**
-	 * BRANCH_2 checkouted (the move). Merge with BRANCH_3.
-	 * Rebase: No conflicts. The fragmented model and new diagram from 2nd commit have to be in the repository.
-	 * The changes from the 3rd commit have to be there.
+	 * BRANCH_2 checkouted (the move). Merge with BRANCH_3. Rebase: No conflicts. The fragmented model and new
+	 * diagram from 2nd commit have to be in the repository. The changes from the 3rd commit have to be there.
 	 */
 	@Test
 	public void testRebaseMoveLocal() throws Exception {
 		setUpRepositoryCase001();
 		repository.checkoutBranch(MASTER);
 		repository.reset(BRANCH_2, ResetType.HARD);
-		
+
 		repository.rebaseLogical(BRANCH_3);
 
 		checkContentsCase001();
-		
+
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_3 checkouted. Merge with BRANCH_2 (the move).
-	 * CherryPick: No conflicts. The fragmented model and new diagram from 2nd commit have to be in the repository.
-	 * The changes from the 3rd commit have to be there.
+	 * BRANCH_3 checkouted. Merge with BRANCH_2 (the move). CherryPick: No conflicts. The fragmented model and
+	 * new diagram from 2nd commit have to be in the repository. The changes from the 3rd commit have to be
+	 * there.
 	 */
 	@Test
 	public void testCherryPickMoveRemote() throws Exception {
 		setUpRepositoryCase001();
 		repository.checkoutBranch(MASTER);
 		repository.reset(BRANCH_3, ResetType.HARD);
-		
+
 		repository.cherryPickLogical(BRANCH_2);
 
 		checkContentsCase001();
-		
+
 		testProject1.dispose();
 	}
 
 	/**
-	 * BRANCH_2 checkouted (the move). Merge with BRANCH_3.
-	 * CherryPick: No conflicts. The fragmented model and new diagram from 2nd commit have to be in the repository.
-	 * The changes from the 3rd commit have to be there.
+	 * BRANCH_2 checkouted (the move). Merge with BRANCH_3. CherryPick: No conflicts. The fragmented model and
+	 * new diagram from 2nd commit have to be in the repository. The changes from the 3rd commit have to be
+	 * there.
 	 */
 	@Test
 	public void testCherryPickMoveLocal() throws Exception {
 		setUpRepositoryCase001();
 		repository.checkoutBranch(MASTER);
 		repository.reset(BRANCH_2, ResetType.HARD);
-		
+
 		repository.cherryPickLogical(BRANCH_3);
 
 		checkContentsCase001();
-		
+
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * Case 001.
-	 * 3 commits. 
-	 * 1st commit: a model with 2 packages. 1 class diagram associated to the model, and 1 class diagram associated to the 2nd package.
-	 * 2nd commit: the 2nd package is fragmented. The class diagram associated is moved in a new resource (notation model).
-	 * 3rd commit: reset to the 1st commit. Add a class under the 2nd package. Also add in the diagram.
+	 * Case 001. 3 commits. 1st commit: a model with 2 packages. 1 class diagram associated to the model, and
+	 * 1 class diagram associated to the 2nd package. 2nd commit: the 2nd package is fragmented. The class
+	 * diagram associated is moved in a new resource (notation model). 3rd commit: reset to the 1st commit.
+	 * Add a class under the 2nd package. Also add in the diagram.
 	 */
 	private void setUpRepositoryCase001() throws Exception {
 		resourceSet = new ResourceSetImpl();
@@ -271,41 +276,46 @@ public class ResourceAttachmentChangeMoveNoConflictTests extends AbstractResourc
 		testProject1 = new TestProject("Project1", workingDirectory.getAbsolutePath());
 		iProject = testProject1.getProject();
 		repository.connect(iProject);
-		
-		// 1st commit: a model with 2 packages. 
+
+		// 1st commit: a model with 2 packages.
 		// 1 class diagram associated to the model, and 1 class diagram associated to the 2nd package.
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit1/model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit1/model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit1/model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit1/model.uml", "");
 
 		repository.addAllAndCommit("1st-commit");
 		repository.createBranch(MASTER, BRANCH_1);
 
-		// 2nd commit: the 2nd package is fragmented. 
+		// 2nd commit: the 2nd package is fragmented.
 		// The class diagram associated is moved in a new resource (notation model).
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/model.uml", "");
 		fragmentDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/fragment.di", "");
-		fragmentNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/fragment.notation", "");
-		fragmentUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/fragment.uml", "");
+		fragmentNotation = addToProject(TEST_DATA_PATH, testProject1, iProject,
+				"case001/commit2/fragment.notation", "");
+		fragmentUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/fragment.uml",
+				"");
 		repository.addAllAndCommit("2nd-commit");
 		repository.createBranch(MASTER, BRANCH_2);
 
 		// Back to 1st commit
 		repository.reset(BRANCH_1, ResetType.HARD);
 
-		// 3rd commit: reset to the 1st commit. 
+		// 3rd commit: reset to the 1st commit.
 		// Add a class under the 2nd package. Also add in the diagram.
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit3/model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit3/model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit3/model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit3/model.uml", "");
 		repository.addAllAndCommit("3rd-commit");
 		repository.createBranch(MASTER, BRANCH_3);
-		
+
 		repository.checkoutBranch(MASTER);
 	}
-	
+
 	private void checkContentsCase001() throws Exception {
 		// No conflicts
 		assertTrue(repository.status().getConflicting().isEmpty());
@@ -321,30 +331,30 @@ public class ResourceAttachmentChangeMoveNoConflictTests extends AbstractResourc
 		assertTrue(fragmentUml.exists());
 
 		// Check resources contents
-		Resource resourceFragmentUml = resourceSet.getResource(URI.createPlatformResourceURI(fragmentUml.getFullPath().toString(),
-				true), true);
-		Resource resourceFragmentNotation = resourceSet.getResource(URI.createPlatformResourceURI(fragmentNotation.getFullPath().toString(),
-				true), true);
-		Resource resourceFragmentDi = resourceSet.getResource(URI.createPlatformResourceURI(fragmentDi.getFullPath().toString(),
-				true), true);
-		Resource resourceModelUml = resourceSet.getResource(URI.createPlatformResourceURI(modelUml.getFullPath().toString(),
-				true), true);
-		Resource resourceModelNotation = resourceSet.getResource(URI.createPlatformResourceURI(modelNotation.getFullPath().toString(),
-				true), true);
-		Resource resourceModelDi = resourceSet.getResource(URI.createPlatformResourceURI(modelDi.getFullPath().toString(),
-				true), true);
-		
+		Resource resourceFragmentUml = resourceSet
+				.getResource(URI.createPlatformResourceURI(fragmentUml.getFullPath().toString(), true), true);
+		Resource resourceFragmentNotation = resourceSet.getResource(
+				URI.createPlatformResourceURI(fragmentNotation.getFullPath().toString(), true), true);
+		Resource resourceFragmentDi = resourceSet
+				.getResource(URI.createPlatformResourceURI(fragmentDi.getFullPath().toString(), true), true);
+		Resource resourceModelUml = resourceSet
+				.getResource(URI.createPlatformResourceURI(modelUml.getFullPath().toString(), true), true);
+		Resource resourceModelNotation = resourceSet.getResource(
+				URI.createPlatformResourceURI(modelNotation.getFullPath().toString(), true), true);
+		Resource resourceModelDi = resourceSet
+				.getResource(URI.createPlatformResourceURI(modelDi.getFullPath().toString(), true), true);
+
 		// ClassDiagramP2 should be in fragment.notation
 		assertEquals(1, resourceFragmentNotation.getContents().size());
 		Diagram diagramP2 = (Diagram)resourceFragmentNotation.getContents().get(0);
 		assertEquals("ClassDiagramP2", diagramP2.getName());
-		
+
 		// It should contains the new graphical representation of semantic object Class1
 		EList<?> children = diagramP2.getChildren();
 		EObject element = ((Shape)children.get(0)).getElement();
 		assertTrue(element instanceof org.eclipse.uml2.uml.Class);
 		assertEquals("Class1", ((org.eclipse.uml2.uml.Class)element).getName());
-		
+
 		// P2 & Class1 should be in fragment.uml
 		assertEquals(1, resourceFragmentUml.getContents().size());
 		Package p2 = (Package)resourceFragmentUml.getContents().get(0);
@@ -353,11 +363,11 @@ public class ResourceAttachmentChangeMoveNoConflictTests extends AbstractResourc
 		assertEquals(1, packagedElements.size());
 		org.eclipse.uml2.uml.Class class1 = (org.eclipse.uml2.uml.Class)packagedElements.get(0);
 		assertEquals("Class1", class1.getName());
-		
+
 		// ClassDiagram should be in model.notation
 		assertEquals(1, resourceModelNotation.getContents().size());
 		Diagram diagram = (Diagram)resourceModelNotation.getContents().get(0);
 		assertEquals("Class Diagram", diagram.getName());
 	}
-	
+
 }

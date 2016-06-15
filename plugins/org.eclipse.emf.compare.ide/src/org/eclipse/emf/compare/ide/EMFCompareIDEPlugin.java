@@ -124,8 +124,8 @@ public class EMFCompareIDEPlugin extends Plugin {
 		resourceSetHookRegistry = new ResourceSetHookRegistry();
 		resourceSetHookRegistryListener = new ResourceSetHookRegistryListener(getLog(),
 				resourceSetHookRegistry);
-		registry.addListener(resourceSetHookRegistryListener, PLUGIN_ID + '.'
-				+ ResourceSetHookRegistryListener.EXT_ID);
+		registry.addListener(resourceSetHookRegistryListener,
+				PLUGIN_ID + '.' + ResourceSetHookRegistryListener.EXT_ID);
 		resourceSetHookRegistryListener.readRegistry(registry);
 
 	}

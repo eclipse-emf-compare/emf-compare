@@ -98,8 +98,8 @@ public class NotLoadedFragmentItemTest {
 				+ SEP + "ide" + SEP + "ui" + SEP + "tests" + SEP + "structuremergeviewer" + SEP
 				+ "notloadedfragment" + SEP + "data" + SEP + projectName + SEP + ".project");
 		URL fileURL = FileLocator.toFileURL(entry);
-		IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(
-				new Path(fileURL.getPath()));
+		IProjectDescription description = ResourcesPlugin.getWorkspace()
+				.loadProjectDescription(new Path(fileURL.getPath()));
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
 		if (!project.exists()) {
 			project.create(description, new NullProgressMonitor());
@@ -132,8 +132,8 @@ public class NotLoadedFragmentItemTest {
 	public void testCase0() throws IOException, CoreException {
 		final Comparison comparison = initComparison("case0");
 		final List<Diff> differences = comparison.getDifferences();
-		final Predicate<? super Diff> predicate_E = EMFComparePredicates.addedToReference("B",
-				"eSubpackages", "B.E");
+		final Predicate<? super Diff> predicate_E = EMFComparePredicates.addedToReference("B", "eSubpackages",
+				"B.E");
 		final Diff diff_E = Iterators.find(differences.iterator(), predicate_E);
 		final EObject value_E = (EObject)MergeViewerUtil.getDiffValue(diff_E);
 		final Match match_E = comparison.getMatch(value_E);
@@ -173,8 +173,8 @@ public class NotLoadedFragmentItemTest {
 	public void testCase1() throws IOException, CoreException {
 		final Comparison comparison = initComparison("case1");
 		final List<Diff> differences = comparison.getDifferences();
-		final Predicate<? super Diff> predicate_F = EMFComparePredicates.addedToReference("D",
-				"eSubpackages", "D.F");
+		final Predicate<? super Diff> predicate_F = EMFComparePredicates.addedToReference("D", "eSubpackages",
+				"D.F");
 		final Diff diff_F = Iterators.find(differences.iterator(), predicate_F);
 		final EObject value_F = (EObject)MergeViewerUtil.getDiffValue(diff_F);
 		final Match match_F = comparison.getMatch(value_F);
@@ -275,8 +275,8 @@ public class NotLoadedFragmentItemTest {
 	public void testCase3() throws IOException, CoreException {
 		final Comparison comparison = initComparison("case3");
 		final List<Diff> differences = comparison.getDifferences();
-		final Predicate<? super Diff> predicate_F = EMFComparePredicates.addedToReference("E",
-				"eSubpackages", "E.F");
+		final Predicate<? super Diff> predicate_F = EMFComparePredicates.addedToReference("E", "eSubpackages",
+				"E.F");
 		final Diff diff_F = Iterators.find(differences.iterator(), predicate_F);
 		final EObject value_F = (EObject)MergeViewerUtil.getDiffValue(diff_F);
 		final Match match_F = comparison.getMatch(value_F);
@@ -509,15 +509,15 @@ public class NotLoadedFragmentItemTest {
 		IMergeViewerItem.Container item_E = (IMergeViewerItem.Container)item_B_Children[0];
 		assertEquals("E", itemDelegator.getText(item_E.getSideValue(MergeViewerSide.LEFT)));
 		item_Ellipsis = (IMergeViewerItem.Container)item_B_Children[1];
-		assertEquals(ELLIPSIS + " (R5.ecore)", itemDelegator.getText(item_Ellipsis
-				.getSideValue(MergeViewerSide.LEFT)));
+		assertEquals(ELLIPSIS + " (R5.ecore)",
+				itemDelegator.getText(item_Ellipsis.getSideValue(MergeViewerSide.LEFT)));
 		IMergeViewerItem[] item_R5_Children = item_Ellipsis.getChildren(null, null);
 		assertEquals(1, item_R5_Children.length);
 		item_G = (IMergeViewerItem.Container)item_R5_Children[0];
 		assertEquals("G", itemDelegator.getText(item_G.getSideValue(MergeViewerSide.LEFT)));
 		item_Ellipsis = (IMergeViewerItem.Container)item_B_Children[2];
-		assertEquals(ELLIPSIS + " (R6.ecore)", itemDelegator.getText(item_Ellipsis
-				.getSideValue(MergeViewerSide.LEFT)));
+		assertEquals(ELLIPSIS + " (R6.ecore)",
+				itemDelegator.getText(item_Ellipsis.getSideValue(MergeViewerSide.LEFT)));
 		IMergeViewerItem[] item_R6_Children = item_Ellipsis.getChildren(null, null);
 		assertEquals(1, item_R6_Children.length);
 		IMergeViewerItem.Container item_H = (IMergeViewerItem.Container)item_R6_Children[0];
@@ -558,15 +558,15 @@ public class NotLoadedFragmentItemTest {
 		item_E = (IMergeViewerItem.Container)item_B_Children[0];
 		assertEquals("", itemDelegator.getText(item_E.getSideValue(MergeViewerSide.RIGHT)));
 		item_Ellipsis = (IMergeViewerItem.Container)item_B_Children[1];
-		assertEquals(ELLIPSIS + " (R5.ecore)", itemDelegator.getText(item_Ellipsis
-				.getSideValue(MergeViewerSide.RIGHT)));
+		assertEquals(ELLIPSIS + " (R5.ecore)",
+				itemDelegator.getText(item_Ellipsis.getSideValue(MergeViewerSide.RIGHT)));
 		item_R5_Children = item_Ellipsis.getChildren(null, null);
 		assertEquals(1, item_R5_Children.length);
 		item_G = (IMergeViewerItem.Container)item_R5_Children[0];
 		assertEquals("G", itemDelegator.getText(item_G.getSideValue(MergeViewerSide.RIGHT)));
 		item_Ellipsis = (IMergeViewerItem.Container)item_B_Children[2];
-		assertEquals(ELLIPSIS + " (R6.ecore)", itemDelegator.getText(item_Ellipsis
-				.getSideValue(MergeViewerSide.RIGHT)));
+		assertEquals(ELLIPSIS + " (R6.ecore)",
+				itemDelegator.getText(item_Ellipsis.getSideValue(MergeViewerSide.RIGHT)));
 		item_R6_Children = item_Ellipsis.getChildren(null, null);
 		assertEquals(1, item_R6_Children.length);
 		item_H = (IMergeViewerItem.Container)item_R6_Children[0];

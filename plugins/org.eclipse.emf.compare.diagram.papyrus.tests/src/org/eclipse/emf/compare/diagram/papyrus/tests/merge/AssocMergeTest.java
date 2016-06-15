@@ -54,9 +54,8 @@ public class AssocMergeTest extends AbstractTest {
 	private AssocMergeInputData input = new AssocMergeInputData();
 
 	/**
-	 * Tests that merging a diff of a Connector that represents an association
-	 * and whose target changes also merges the "equivalent" change of the
-	 * related property whose type has changed accordingly.
+	 * Tests that merging a diff of a Connector that represents an association and whose target changes also
+	 * merges the "equivalent" change of the related property whose type has changed accordingly.
 	 * 
 	 * @throws IOException
 	 */
@@ -72,8 +71,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class3"));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -81,9 +79,8 @@ public class AssocMergeTest extends AbstractTest {
 	}
 
 	/**
-	 * Tests that merging a diff of a Connector that represents an association
-	 * and whose target changes also merges the "equivalent" change of the
-	 * related property whose type has changed accordingly.
+	 * Tests that merging a diff of a Connector that represents an association and whose target changes also
+	 * merges the "equivalent" change of the related property whose type has changed accordingly.
 	 * 
 	 * @throws IOException
 	 */
@@ -100,8 +97,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class3"));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -110,10 +106,9 @@ public class AssocMergeTest extends AbstractTest {
 	}
 
 	/**
-	 * Tests that merging a diff of a Connector that represents an association
-	 * and whose target changes also merges the "equivalent" change of the
-	 * related property whose type has changed accordingly. The association owns
-	 * both ends (contrary to A1).
+	 * Tests that merging a diff of a Connector that represents an association and whose target changes also
+	 * merges the "equivalent" change of the related property whose type has changed accordingly. The
+	 * association owns both ends (contrary to A1).
 	 * 
 	 * @throws IOException
 	 */
@@ -129,8 +124,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class3"));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -138,10 +132,9 @@ public class AssocMergeTest extends AbstractTest {
 	}
 
 	/**
-	 * Tests that merging a diff of a Connector that represents an association
-	 * and whose target changes also merges the "equivalent" change of the
-	 * related property whose type has changed accordingly. The association owns
-	 * both ends (contrary to A1).
+	 * Tests that merging a diff of a Connector that represents an association and whose target changes also
+	 * merges the "equivalent" change of the related property whose type has changed accordingly. The
+	 * association owns both ends (contrary to A1).
 	 * 
 	 * @throws IOException
 	 */
@@ -158,8 +151,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class3"));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -168,9 +160,8 @@ public class AssocMergeTest extends AbstractTest {
 	}
 
 	/**
-	 * Tests that merging a diff of an edge that represents a transition and
-	 * whose target changes also merges the "equivalent" change of the related
-	 * transition whose type has changed accordingly.
+	 * Tests that merging a diff of an edge that represents a transition and whose target changes also merges
+	 * the "equivalent" change of the related transition whose type has changed accordingly.
 	 * 
 	 * @throws IOException
 	 */
@@ -187,8 +178,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("State2"));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -196,9 +186,8 @@ public class AssocMergeTest extends AbstractTest {
 	}
 
 	/**
-	 * Tests that merging a diff of an edge that represents a transition and
-	 * whose target changes also merges the "equivalent" change of the related
-	 * transition whose type has changed accordingly.
+	 * Tests that merging a diff of an edge that represents a transition and whose target changes also merges
+	 * the "equivalent" change of the related transition whose type has changed accordingly.
 	 * 
 	 * @throws IOException
 	 */
@@ -215,8 +204,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("State2"));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -224,9 +212,8 @@ public class AssocMergeTest extends AbstractTest {
 	}
 
 	/**
-	 * Tests that merging a diff of an edge that represents a transition and
-	 * whose target changes also merges the "equivalent" change of the related
-	 * transition whose type has changed accordingly, and reject the 2
+	 * Tests that merging a diff of an edge that represents a transition and whose target changes also merges
+	 * the "equivalent" change of the related transition whose type has changed accordingly, and reject the 2
 	 * conflicts.
 	 * 
 	 * @throws IOException
@@ -241,19 +228,15 @@ public class AssocMergeTest extends AbstractTest {
 
 		EList<Diff> diffs = comparison.getDifferences();
 		assertEquals(1, size(filter(diffs, edgeTargetChangeTo("Class1", LEFT))));
-		assertEquals(1,
-				size(filter(diffs, edgeTargetChangeTo("Class2", RIGHT))));
+		assertEquals(1, size(filter(diffs, edgeTargetChangeTo("Class2", RIGHT))));
 		assertEquals(1, size(filter(diffs, edgeTargetChangeTo("Class3", LEFT))));
-		assertEquals(1,
-				size(filter(diffs, edgeTargetChangeTo("Class4", RIGHT))));
+		assertEquals(1, size(filter(diffs, edgeTargetChangeTo("Class4", RIGHT))));
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class1", LEFT));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
 		node = find(diffs, edgeTargetChangeTo("Class3", LEFT));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -262,9 +245,8 @@ public class AssocMergeTest extends AbstractTest {
 	}
 
 	/**
-	 * Tests that merging a diff of an edge that represents a transition and
-	 * whose target changes also merges the "equivalent" change of the related
-	 * transition whose type has changed accordingly, and reject the 2
+	 * Tests that merging a diff of an edge that represents a transition and whose target changes also merges
+	 * the "equivalent" change of the related transition whose type has changed accordingly, and reject the 2
 	 * conflicts.
 	 * 
 	 * @throws IOException
@@ -279,19 +261,15 @@ public class AssocMergeTest extends AbstractTest {
 
 		EList<Diff> diffs = comparison.getDifferences();
 		assertEquals(1, size(filter(diffs, edgeTargetChangeTo("Class1", LEFT))));
-		assertEquals(1,
-				size(filter(diffs, edgeTargetChangeTo("Class2", RIGHT))));
+		assertEquals(1, size(filter(diffs, edgeTargetChangeTo("Class2", RIGHT))));
 		assertEquals(1, size(filter(diffs, edgeTargetChangeTo("Class3", LEFT))));
-		assertEquals(1,
-				size(filter(diffs, edgeTargetChangeTo("Class4", RIGHT))));
+		assertEquals(1, size(filter(diffs, edgeTargetChangeTo("Class4", RIGHT))));
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class2", RIGHT));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
 		node = find(diffs, edgeTargetChangeTo("Class4", RIGHT));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -300,9 +278,8 @@ public class AssocMergeTest extends AbstractTest {
 	}
 
 	/**
-	 * Tests that merging a diff of an edge that represents a transition and
-	 * whose target changes also merges the "equivalent" change of the related
-	 * transition whose type has changed accordingly, and reject the 2
+	 * Tests that merging a diff of an edge that represents a transition and whose target changes also merges
+	 * the "equivalent" change of the related transition whose type has changed accordingly, and reject the 2
 	 * conflicts.
 	 * 
 	 * @throws IOException
@@ -323,8 +300,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("State3"));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -333,9 +309,8 @@ public class AssocMergeTest extends AbstractTest {
 	}
 
 	/**
-	 * Tests that merging a diff of an edge that represents a transition and
-	 * whose target changes also merges the "equivalent" change of the related
-	 * transition whose type has changed accordingly, and reject the 2
+	 * Tests that merging a diff of an edge that represents a transition and whose target changes also merges
+	 * the "equivalent" change of the related transition whose type has changed accordingly, and reject the 2
 	 * conflicts.
 	 * 
 	 * @throws IOException
@@ -356,8 +331,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("State4"));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -366,9 +340,8 @@ public class AssocMergeTest extends AbstractTest {
 	}
 
 	/**
-	 * Tests that merging a diff of an edge that represents a transition and
-	 * whose target changes also merges the "equivalent" change of the related
-	 * transition whose type has changed accordingly.
+	 * Tests that merging a diff of an edge that represents a transition and whose target changes also merges
+	 * the "equivalent" change of the related transition whose type has changed accordingly.
 	 * 
 	 * @throws IOException
 	 */
@@ -382,16 +355,13 @@ public class AssocMergeTest extends AbstractTest {
 
 		EList<Diff> diffs = comparison.getDifferences();
 		assertEquals(1, size(filter(diffs, edgeTargetChangeTo("State3", LEFT))));
-		assertEquals(1,
-				size(filter(diffs, edgeSourceChangeTo("State3", RIGHT))));
+		assertEquals(1, size(filter(diffs, edgeSourceChangeTo("State3", RIGHT))));
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("State3", LEFT));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
 		node = find(diffs, edgeSourceChangeTo("State3", RIGHT));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -400,9 +370,8 @@ public class AssocMergeTest extends AbstractTest {
 	}
 
 	/**
-	 * Tests that merging a diff of an edge that represents a transition and
-	 * whose target changes also merges the "equivalent" change of the related
-	 * transition whose type has changed accordingly.
+	 * Tests that merging a diff of an edge that represents a transition and whose target changes also merges
+	 * the "equivalent" change of the related transition whose type has changed accordingly.
 	 * 
 	 * @throws IOException
 	 */
@@ -416,16 +385,13 @@ public class AssocMergeTest extends AbstractTest {
 
 		EList<Diff> diffs = comparison.getDifferences();
 		assertEquals(1, size(filter(diffs, edgeTargetChangeTo("Class3", LEFT))));
-		assertEquals(1,
-				size(filter(diffs, edgeTargetChangeTo("Class1", RIGHT))));
+		assertEquals(1, size(filter(diffs, edgeTargetChangeTo("Class1", RIGHT))));
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class3", LEFT));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
 		node = find(diffs, edgeTargetChangeTo("Class1", RIGHT));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -434,9 +400,8 @@ public class AssocMergeTest extends AbstractTest {
 	}
 
 	/**
-	 * Tests that merging a diff of an edge that represents a transition and
-	 * whose target changes also merges the "equivalent" change of the related
-	 * transition whose type has changed accordingly.
+	 * Tests that merging a diff of an edge that represents a transition and whose target changes also merges
+	 * the "equivalent" change of the related transition whose type has changed accordingly.
 	 * 
 	 * @throws IOException
 	 */
@@ -450,16 +415,13 @@ public class AssocMergeTest extends AbstractTest {
 
 		EList<Diff> diffs = comparison.getDifferences();
 		assertEquals(1, size(filter(diffs, edgeTargetChangeTo("Class3", LEFT))));
-		assertEquals(1,
-				size(filter(diffs, edgeTargetChangeTo("Class1", RIGHT))));
+		assertEquals(1, size(filter(diffs, edgeTargetChangeTo("Class1", RIGHT))));
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class3", LEFT));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
 		node = find(diffs, edgeTargetChangeTo("Class1", RIGHT));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -468,9 +430,8 @@ public class AssocMergeTest extends AbstractTest {
 	}
 
 	/**
-	 * Tests that merging a diff of an edge that represents a transition and
-	 * whose target changes also merges the "equivalent" change of the related
-	 * transition whose type has changed accordingly.
+	 * Tests that merging a diff of an edge that represents a transition and whose target changes also merges
+	 * the "equivalent" change of the related transition whose type has changed accordingly.
 	 * 
 	 * @throws IOException
 	 */
@@ -484,16 +445,13 @@ public class AssocMergeTest extends AbstractTest {
 
 		EList<Diff> diffs = comparison.getDifferences();
 		assertEquals(1, size(filter(diffs, edgeTargetChangeTo("State3", LEFT))));
-		assertEquals(1,
-				size(filter(diffs, edgeSourceChangeTo("State3", RIGHT))));
+		assertEquals(1, size(filter(diffs, edgeSourceChangeTo("State3", RIGHT))));
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("State3", LEFT));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
 		node = find(diffs, edgeSourceChangeTo("State3", RIGHT));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node,
-				new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -501,60 +459,51 @@ public class AssocMergeTest extends AbstractTest {
 		assertTrue(comparison.getDifferences().isEmpty());
 	}
 
-	private Predicate<Diff> edgeTargetChangeTo(String name,
-			final DifferenceSource source) {
+	private Predicate<Diff> edgeTargetChangeTo(String name, final DifferenceSource source) {
 		return and(edgeTargetChangeTo(name), fromSide(source));
 	}
 
-	private Predicate<Diff> edgeSourceChangeTo(String name,
-			final DifferenceSource source) {
+	private Predicate<Diff> edgeSourceChangeTo(String name, final DifferenceSource source) {
 		return and(edgeSourceChangeTo(name), fromSide(source));
 	}
 
 	private Predicate<Diff> edgeSourceChangeTo(String name) {
 		return and(
-				isReferenceChange(DifferenceKind.CHANGE,
-						NotationPackage.Literals.EDGE__SOURCE, Shape.class),
+				isReferenceChange(DifferenceKind.CHANGE, NotationPackage.Literals.EDGE__SOURCE, Shape.class),
 				valueIsViewNamed(name));
 	}
 
 	private Predicate<Diff> edgeTargetChangeTo(String name) {
 		return and(
-				isReferenceChange(DifferenceKind.CHANGE,
-						NotationPackage.Literals.EDGE__TARGET, Shape.class),
+				isReferenceChange(DifferenceKind.CHANGE, NotationPackage.Literals.EDGE__TARGET, Shape.class),
 				valueIsViewNamed(name));
 	}
 
 	private Predicate<Diff> transitionTargetToState(String name) {
 		return and(
-				isReferenceChange(DifferenceKind.CHANGE,
-						UMLPackage.Literals.TRANSITION__TARGET, State.class),
+				isReferenceChange(DifferenceKind.CHANGE, UMLPackage.Literals.TRANSITION__TARGET, State.class),
 				valueIsElement(UMLPackage.Literals.STATE, name));
 	}
 
-	private Predicate<Diff> valueIsElement(final EClass eClass,
-			final String name) {
+	private Predicate<Diff> valueIsElement(final EClass eClass, final String name) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				ReferenceChange refChange = (ReferenceChange) input;
+				ReferenceChange refChange = (ReferenceChange)input;
 				EObject value = refChange.getValue();
-				return value instanceof NamedElement
-						&& eClass.isInstance(value)
-						&& name.equals(((NamedElement) value).getName());
+				return value instanceof NamedElement && eClass.isInstance(value)
+						&& name.equals(((NamedElement)value).getName());
 			}
 		};
 	}
 
-	private Predicate<Diff> isReferenceChange(final DifferenceKind kind,
-			final EReference ref, final Class<?> clazz) {
+	private Predicate<Diff> isReferenceChange(final DifferenceKind kind, final EReference ref,
+			final Class<?> clazz) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				if (input instanceof ReferenceChange && input.getKind() == kind) {
-					ReferenceChange refChange = (ReferenceChange) input;
-					return refChange.getReference() == ref
-							&& refChange.getValue() != null
-							&& clazz.isAssignableFrom(refChange.getValue()
-									.getClass());
+					ReferenceChange refChange = (ReferenceChange)input;
+					return refChange.getReference() == ref && refChange.getValue() != null
+							&& clazz.isAssignableFrom(refChange.getValue().getClass());
 				}
 				return false;
 			}
@@ -564,12 +513,11 @@ public class AssocMergeTest extends AbstractTest {
 	private Predicate<Diff> valueIsViewNamed(final String name) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				ReferenceChange refChange = (ReferenceChange) input;
+				ReferenceChange refChange = (ReferenceChange)input;
 				if (refChange.getValue() instanceof View) {
-					View view = (View) refChange.getValue();
+					View view = (View)refChange.getValue();
 					return view.getElement() instanceof NamedElement
-							&& name.equals(((NamedElement) view.getElement())
-									.getName());
+							&& name.equals(((NamedElement)view.getElement()).getName());
 				}
 				return false;
 			}
@@ -584,11 +532,10 @@ public class AssocMergeTest extends AbstractTest {
 	@Override
 	public void registerPostProcessors() {
 		super.registerPostProcessors();
-		getPostProcessorRegistry()
-				.put(PapyrusDiagramPostProcessor.class.getName(),
-						new TestPostProcessor.TestPostProcessorDescriptor(
-								Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"),
-								null, new PapyrusDiagramPostProcessor(), 35));
+		getPostProcessorRegistry().put(PapyrusDiagramPostProcessor.class.getName(),
+				new TestPostProcessor.TestPostProcessorDescriptor(
+						Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null,
+						new PapyrusDiagramPostProcessor(), 35));
 	}
 
 }

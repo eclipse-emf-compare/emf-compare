@@ -48,9 +48,9 @@ class RemoteResolveComputation extends AbstractResourceResolver implements IComp
 	 * @param monitor
 	 *            The progress monitor
 	 */
-	public RemoteResolveComputation(ResourceComputationScheduler<URI> scheduler,
-			DiagnosticSupport diagnostic, SynchronizedResourceSet resourceSet, URI uri,
-			FutureCallback<Object> postTreatment, ThreadSafeProgressMonitor monitor) {
+	public RemoteResolveComputation(ResourceComputationScheduler<URI> scheduler, DiagnosticSupport diagnostic,
+			SynchronizedResourceSet resourceSet, URI uri, FutureCallback<Object> postTreatment,
+			ThreadSafeProgressMonitor monitor) {
 		super(scheduler, diagnostic, resourceSet, uri, monitor);
 		this.postTreatment = postTreatment;
 	}

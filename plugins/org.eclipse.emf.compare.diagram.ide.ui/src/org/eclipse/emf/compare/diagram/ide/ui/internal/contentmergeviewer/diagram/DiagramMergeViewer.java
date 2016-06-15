@@ -133,11 +133,11 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 	 * @param compareConfiguration
 	 *            the compare configuration.
 	 */
-	public DiagramMergeViewer(Composite parent, MergeViewerSide side,
+	DiagramMergeViewer(Composite parent, MergeViewerSide side,
 			IEMFCompareConfiguration compareConfiguration) {
 		super(parent, side, compareConfiguration);
-		((FigureCanvas)fGraphicalViewer.getControl()).getLightweightSystem().setEventDispatcher(
-				new NonEditingEventDispatcher(editDomain, fGraphicalViewer));
+		((FigureCanvas)fGraphicalViewer.getControl()).getLightweightSystem()
+				.setEventDispatcher(new NonEditingEventDispatcher(editDomain, fGraphicalViewer));
 	}
 
 	/**

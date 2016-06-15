@@ -110,13 +110,13 @@ public class FilterAction extends Action {
 	 * Synchronizes UI filter selection with the preferences.
 	 */
 	private void synchonizeFilters() {
-		Set<IDifferenceFilter> byDefaultFilters = Sets.newLinkedHashSet(filterManager
-				.getCurrentByDefaultFilters());
-		//Add newly activated filters
+		Set<IDifferenceFilter> byDefaultFilters = Sets
+				.newLinkedHashSet(filterManager.getCurrentByDefaultFilters());
+		// Add newly activated filters
 		for (IDifferenceFilter activeFilter : structureMergeViewerFilter.getSelectedDifferenceFilters()) {
 			byDefaultFilters.add(activeFilter);
 		}
-		//Remove deactivated filters
+		// Remove deactivated filters
 		for (IDifferenceFilter toDeactivateFilter : structureMergeViewerFilter
 				.getUnSelectedDifferenceFilters()) {
 			byDefaultFilters.remove(toDeactivateFilter);
@@ -149,14 +149,14 @@ public class FilterAction extends Action {
 		 */
 		@SuppressWarnings("deprecation")
 		public void run() {
-			MessageDialogWithToggle dialog = new SynchronizerDialog(shell, EMFCompareRCPUIMessages
-					.getString("FilterAction.synchronization.dialog.title"), //$NON-NLS-1$
+			MessageDialogWithToggle dialog = new SynchronizerDialog(shell,
+					EMFCompareRCPUIMessages.getString("FilterAction.synchronization.dialog.title"), //$NON-NLS-1$
 					EMFCompareRCPUIMessages.getString("FilterAction.synchronization.dialog.message"), //$NON-NLS-1$
 					FiltersPreferencePage.PAGE_ID);
 
 			dialog.setPrefKey(FiltersPreferencePage.SYNCHRONIZATION_BEHAVIOR);
-			dialog.setPrefStore(new ScopedPreferenceStore(new InstanceScope(),
-					EMFCompareRCPUIPlugin.PLUGIN_ID));
+			dialog.setPrefStore(
+					new ScopedPreferenceStore(new InstanceScope(), EMFCompareRCPUIPlugin.PLUGIN_ID));
 			if (dialog.open() == IDialogConstants.YES_ID) {
 				synchonizeFilters();
 			}

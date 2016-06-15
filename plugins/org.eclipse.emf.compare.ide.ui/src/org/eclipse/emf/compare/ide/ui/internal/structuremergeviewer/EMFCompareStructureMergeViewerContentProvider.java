@@ -157,8 +157,8 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 		 * @see {IDeferredWorkbenchAdapter{@link IDeferredWorkbenchAdapter#getLabel(Object)}
 		 */
 		public String getLabel(Object o) {
-			return EMFCompareIDEUIMessages
-					.getString("EMFCompareStructureMergeViewerContentProvider.deferredWorkbenchAdapter.label"); //$NON-NLS-1$
+			return EMFCompareIDEUIMessages.getString(
+					"EMFCompareStructureMergeViewerContentProvider.deferredWorkbenchAdapter.label"); //$NON-NLS-1$
 		}
 
 		/**
@@ -177,7 +177,8 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 		 * @see {IDeferredWorkbenchAdapter
 		 *      {@link IDeferredWorkbenchAdapter#fetchDeferredChildren(Object object, IElementCollector collector, IProgressMonitor monitor)}
 		 */
-		public void fetchDeferredChildren(Object object, IElementCollector collector, IProgressMonitor monitor) {
+		public void fetchDeferredChildren(Object object, IElementCollector collector,
+				IProgressMonitor monitor) {
 			if (!monitor.isCanceled()) {
 				if (object instanceof CompareInputAdapter) {
 					Notifier target = ((Adapter)object).getTarget();
@@ -257,8 +258,8 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 		if (element instanceof CompareInputAdapter) {
 			Object parentNode = super.getParent(((Adapter)element).getTarget());
 			if (parentNode instanceof TreeNode) {
-				final Optional<Adapter> cia = Iterators.tryFind(
-						((TreeNode)parentNode).eAdapters().iterator(), instanceOf(CompareInputAdapter.class));
+				final Optional<Adapter> cia = Iterators.tryFind(((TreeNode)parentNode).eAdapters().iterator(),
+						instanceOf(CompareInputAdapter.class));
 				if (cia.isPresent()) {
 					ret = cia.get();
 				} else {
@@ -453,8 +454,8 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 			for (FetchListener callback : listeners) {
 				callback.startFetching();
 			}
-			compareInputAdapter
-					.setDeferredAdapter(new EMFCompareStructureMergeViewerContentProviderDeferredAdapter(this));
+			compareInputAdapter.setDeferredAdapter(
+					new EMFCompareStructureMergeViewerContentProviderDeferredAdapter(this));
 			pending = contentManagerAdapter.getChildren(compareInputAdapter);
 		}
 		return pending;
@@ -462,8 +463,8 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 
 	private IDifferenceGroupProvider2 getGroupProvider2(TreeNode treeNode) {
 		IDifferenceGroupProvider2 result = null;
-		Optional<Adapter> searchResult = Iterables.tryFind(treeNode.eAdapters(), Predicates
-				.instanceOf(IDifferenceGroupProvider2.class));
+		Optional<Adapter> searchResult = Iterables.tryFind(treeNode.eAdapters(),
+				Predicates.instanceOf(IDifferenceGroupProvider2.class));
 		if (searchResult.isPresent()) {
 			return (IDifferenceGroupProvider2)searchResult.get();
 		}

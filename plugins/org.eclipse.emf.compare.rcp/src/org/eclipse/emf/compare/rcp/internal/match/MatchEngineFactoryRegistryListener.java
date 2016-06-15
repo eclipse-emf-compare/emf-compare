@@ -83,9 +83,9 @@ public class MatchEngineFactoryRegistryListener extends AbstractRegistryEventLis
 				try {
 					Integer.parseInt(rankingStr);
 				} catch (NumberFormatException nfe) {
-					log(IStatus.ERROR, element, EMFCompareRCPMessages.getString(
-							"malformed.extension.attribute", //$NON-NLS-1$
-							ATT_RANKING));
+					log(IStatus.ERROR, element,
+							EMFCompareRCPMessages.getString("malformed.extension.attribute", //$NON-NLS-1$
+									ATT_RANKING));
 					return false;
 				}
 				ret = true;
@@ -113,8 +113,8 @@ public class MatchEngineFactoryRegistryListener extends AbstractRegistryEventLis
 
 		IItemDescriptor<IMatchEngine.Factory> previous = matchEngineFactoryRegistry.add(descriptor);
 		if (previous != null) {
-			log(IStatus.WARNING, element, EMFCompareRCPMessages.getString(
-					"duplicate.extension", matchEngineFactoryRegistry.getClass().getName())); //$NON-NLS-1$
+			log(IStatus.WARNING, element, EMFCompareRCPMessages.getString("duplicate.extension", //$NON-NLS-1$
+					matchEngineFactoryRegistry.getClass().getName()));
 		}
 
 		return true;

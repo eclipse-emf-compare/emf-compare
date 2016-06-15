@@ -177,7 +177,8 @@ public class CompareGitTestCase extends CompareTestCase {
 		return new SubscriberStorageAccessor(subscriber);
 	}
 
-	protected static void assertDiffCount(List<Diff> differences, int expectedOutgoing, int expectedIncoming) {
+	protected static void assertDiffCount(List<Diff> differences, int expectedOutgoing,
+			int expectedIncoming) {
 		assertEquals(expectedOutgoing + expectedIncoming, differences.size());
 
 		int outgoingCount = 0;

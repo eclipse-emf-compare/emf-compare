@@ -12,11 +12,11 @@ package data.models;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- *
  */
 public class NominalSplitGitInputData extends DataGit {
 
 	public NominalSplitGitInputData() {
-		super("src/data/models/git/model_size_nominal_split_repo.zip", "model_size_nominal_split_repo", "model_size_nominal_git_model", "model.uml");
+		super("src/data/models/git/model_size_nominal_split_repo.zip", "model_size_nominal_split_repo",
+				"model_size_nominal_git_model", "model.uml");
 	}
 }

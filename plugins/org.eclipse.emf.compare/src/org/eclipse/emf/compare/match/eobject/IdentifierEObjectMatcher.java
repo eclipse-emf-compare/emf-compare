@@ -62,7 +62,8 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	 * the following logic, in order (i.e. if condition 1 is fulfilled, we will not try conditions 2 and 3) :
 	 * <ol>
 	 * <li>If the given eObject is a proxy, it is uniquely identified by its URI fragment.</li>
-	 * <li>If the eObject is located in an XMI resource and has an XMI ID, use this as its unique identifier.</li>
+	 * <li>If the eObject is located in an XMI resource and has an XMI ID, use this as its unique identifier.
+	 * </li>
 	 * <li>If the eObject's EClass has an eIdAttribute set, use this attribute's value.</li>
 	 * </ol>
 	 */
@@ -107,7 +108,8 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	 * @param idComputation
 	 *            the function used to compute the ID.
 	 */
-	public IdentifierEObjectMatcher(IEObjectMatcher delegateWhenNoID, Function<EObject, String> idComputation) {
+	public IdentifierEObjectMatcher(IEObjectMatcher delegateWhenNoID,
+			Function<EObject, String> idComputation) {
 		this.delegate = Optional.fromNullable(delegateWhenNoID);
 		this.idComputation = idComputation;
 	}
@@ -405,7 +407,8 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 	}
 
 	/**
-	 * Computes matches from eObjects. We'll only iterate once on each of the three sides, building the matches as we go.
+	 * Computes matches from eObjects. We'll only iterate once on each of the three sides, building the
+	 * matches as we go.
 	 * 
 	 * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
 	 */
@@ -466,10 +469,9 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 		 * @param originEObjectsNoID
 		 *            Remaining left objects after matching.
 		 */
-		public MatchComputation(Iterator<? extends EObject> leftEObjects,
-				Iterator<? extends EObject> rightEObjects, Iterator<? extends EObject> originEObjects,
-				final List<EObject> leftEObjectsNoID, final List<EObject> rightEObjectsNoID,
-				final List<EObject> originEObjectsNoID) {
+		MatchComputation(Iterator<? extends EObject> leftEObjects, Iterator<? extends EObject> rightEObjects,
+				Iterator<? extends EObject> originEObjects, final List<EObject> leftEObjectsNoID,
+				final List<EObject> rightEObjectsNoID, final List<EObject> originEObjectsNoID) {
 			this.matches = Sets.newLinkedHashSet();
 			this.leftEObjectsToMatch = Maps.newHashMap();
 			this.rightEObjectsToMatch = Maps.newHashMap();

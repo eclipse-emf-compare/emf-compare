@@ -112,11 +112,11 @@ import org.eclipse.ui.ide.IDE.SharedImages;
 public class ModelGitMergeEditorInput extends CompareEditorInput {
 	private static final String LABELPATTERN = "{0} - {1}"; //$NON-NLS-1$
 
-	private static final Image FOLDER_IMAGE = PlatformUI.getWorkbench().getSharedImages().getImage(
-			ISharedImages.IMG_OBJ_FOLDER);
+	private static final Image FOLDER_IMAGE = PlatformUI.getWorkbench().getSharedImages()
+			.getImage(ISharedImages.IMG_OBJ_FOLDER);
 
-	private static final Image PROJECT_IMAGE = PlatformUI.getWorkbench().getSharedImages().getImage(
-			SharedImages.IMG_OBJ_PROJECT);
+	private static final Image PROJECT_IMAGE = PlatformUI.getWorkbench().getSharedImages()
+			.getImage(SharedImages.IMG_OBJ_PROJECT);
 
 	private final boolean useWorkspace;
 
@@ -158,16 +158,16 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 	}
 
 	@Override
-	protected Object prepareInput(IProgressMonitor monitor) throws InvocationTargetException,
-			InterruptedException {
+	protected Object prepareInput(IProgressMonitor monitor)
+			throws InvocationTargetException, InterruptedException {
 		monitor.beginTask(UIText.GitMergeEditorInput_CheckingResourcesTaskName, IProgressMonitor.UNKNOWN);
 
 		// Make sure all resources belong to the same repository
 		final Map<Repository, Collection<String>> pathsByRepository = ResourceUtil
 				.splitPathsByRepository(Arrays.asList(locations));
 		if (pathsByRepository.size() != 1) {
-			throw new InvocationTargetException(new IllegalStateException(
-					UIText.RepositoryAction_multiRepoSelection));
+			throw new InvocationTargetException(
+					new IllegalStateException(UIText.RepositoryAction_multiRepoSelection));
 		}
 		final Repository repository = pathsByRepository.keySet().iterator().next();
 		final List<String> filterPaths = new ArrayList<String>(pathsByRepository.get(repository));
@@ -312,8 +312,8 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 				// is out of it.
 				// We cannot reliably tell whether they are related enough to be
 				// in the same compare editor.
-				throw new InvocationTargetException(new IllegalStateException(EMFCompareEGitUIMessages
-						.getString("GitMergeEditorInput_OutOfWSResources"))); //$NON-NLS-1$
+				throw new InvocationTargetException(new IllegalStateException(
+						EMFCompareEGitUIMessages.getString("GitMergeEditorInput_OutOfWSResources"))); //$NON-NLS-1$
 			} else if (resourcesInOperation.isEmpty()) {
 				// All resources are out of the workspace.
 				// Fall back to the workspace-unaware "prepareDiffInput"
@@ -334,8 +334,8 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 							// models.
 							// The merge tool needs to be launched manually on
 							// each distinct logical model.
-							throw new RuntimeException(EMFCompareEGitUIMessages
-									.getString("GitMergeEditorInput_MultipleModels")); //$NON-NLS-1$
+							throw new RuntimeException(
+									EMFCompareEGitUIMessages.getString("GitMergeEditorInput_MultipleModels")); //$NON-NLS-1$
 						} else {
 							// No use going further : we know these resource all
 							// belong to the same model.
@@ -394,8 +394,8 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 				for (String conflicting : indexDiffData.getConflicting()) {
 					final IPath resourcePath = workDirPrefix.append(conflicting);
 					if (containerPath.isPrefixOf(resourcePath)) {
-						final IPath containerRelativePath = resourcePath.removeFirstSegments(containerPath
-								.segmentCount());
+						final IPath containerRelativePath = resourcePath
+								.removeFirstSegments(containerPath.segmentCount());
 						conflictingResources.add(container.getFile(containerRelativePath));
 					}
 				}
@@ -406,10 +406,10 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 
 	private ISynchronizationContext prepareSynchronizationContext(final Repository repository,
 			Subscriber subscriber, Set<ResourceMapping> allModelMappings,
-			RemoteResourceMappingContext mappingContext) throws CoreException, OperationCanceledException,
-			InterruptedException {
-		final ResourceMapping[] mappings = allModelMappings.toArray(new ResourceMapping[allModelMappings
-				.size()]);
+			RemoteResourceMappingContext mappingContext)
+			throws CoreException, OperationCanceledException, InterruptedException {
+		final ResourceMapping[] mappings = allModelMappings
+				.toArray(new ResourceMapping[allModelMappings.size()]);
 
 		final ISynchronizationScopeManager manager = new SubscriberScopeManager(subscriber.getName(),
 				mappings, subscriber, mappingContext, true) {
@@ -428,7 +428,8 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		return context;
 	}
 
-	private RevCommit getRightCommit(RevWalk revWalk, Repository repository) throws InvocationTargetException {
+	private RevCommit getRightCommit(RevWalk revWalk, Repository repository)
+			throws InvocationTargetException {
 		try {
 			String target;
 			if (repository.getRepositoryState().equals(RepositoryState.MERGING)) {
@@ -436,8 +437,8 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 			} else if (repository.getRepositoryState().equals(RepositoryState.CHERRY_PICKING)) {
 				target = Constants.CHERRY_PICK_HEAD;
 			} else if (repository.getRepositoryState().equals(RepositoryState.REBASING_INTERACTIVE)) {
-				target = readFile(repository.getDirectory(), RebaseCommand.REBASE_MERGE + File.separatorChar
-						+ RebaseCommand.STOPPED_SHA);
+				target = readFile(repository.getDirectory(),
+						RebaseCommand.REBASE_MERGE + File.separatorChar + RebaseCommand.STOPPED_SHA);
 			} else {
 				target = Constants.ORIG_HEAD;
 			}
@@ -455,8 +456,8 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		try {
 			ObjectId head = repository.resolve(Constants.HEAD);
 			if (head == null) {
-				throw new IOException(NLS
-						.bind(UIText.ValidationUtils_CanNotResolveRefMessage, Constants.HEAD));
+				throw new IOException(
+						NLS.bind(UIText.ValidationUtils_CanNotResolveRefMessage, Constants.HEAD));
 			}
 			return revWalk.parseCommit(head);
 		} catch (IOException e) {
@@ -480,19 +481,19 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 	private void setLabels(Repository repository, RevCommit rightCommit, RevCommit leftCommit,
 			RevCommit ancestorCommit) throws InvocationTargetException {
 		CompareConfiguration config = getCompareConfiguration();
-		config.setRightLabel(NLS.bind(LABELPATTERN, rightCommit.getShortMessage(), CompareUtils
-				.truncatedRevision(rightCommit.name())));
+		config.setRightLabel(NLS.bind(LABELPATTERN, rightCommit.getShortMessage(),
+				CompareUtils.truncatedRevision(rightCommit.name())));
 
 		if (!useWorkspace) {
-			config.setLeftLabel(NLS.bind(LABELPATTERN, leftCommit.getShortMessage(), CompareUtils
-					.truncatedRevision(leftCommit.name())));
+			config.setLeftLabel(NLS.bind(LABELPATTERN, leftCommit.getShortMessage(),
+					CompareUtils.truncatedRevision(leftCommit.name())));
 		} else {
 			config.setLeftLabel(UIText.GitMergeEditorInput_WorkspaceHeader);
 		}
 
 		if (ancestorCommit != null) {
-			config.setAncestorLabel(NLS.bind(LABELPATTERN, ancestorCommit.getShortMessage(), CompareUtils
-					.truncatedRevision(ancestorCommit.name())));
+			config.setAncestorLabel(NLS.bind(LABELPATTERN, ancestorCommit.getShortMessage(),
+					CompareUtils.truncatedRevision(ancestorCommit.name())));
 		}
 
 		// set title and icon
@@ -502,9 +503,11 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		} catch (IOException e) {
 			throw new InvocationTargetException(e);
 		}
-		setTitle(NLS.bind(UIText.GitMergeEditorInput_MergeEditorTitle, new Object[] {
-				Activator.getDefault().getRepositoryUtil().getRepositoryName(repository),
-				rightCommit.getShortMessage(), fullBranch }));
+		setTitle(
+				NLS.bind(UIText.GitMergeEditorInput_MergeEditorTitle,
+						new Object[] {
+								Activator.getDefault().getRepositoryUtil().getRepositoryName(repository),
+								rightCommit.getShortMessage(), fullBranch }));
 	}
 
 	@Override
@@ -663,7 +666,8 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		}
 	}
 
-	private IDiffContainer getFileParent(IDiffContainer root, IPath repositoryPath, IFile file, IPath location) {
+	private IDiffContainer getFileParent(IDiffContainer root, IPath repositoryPath, IFile file,
+			IPath location) {
 		int projectSegment = -1;
 		String projectName = null;
 		if (file != null) {

@@ -63,10 +63,10 @@ public class RenamedControlledResourceTests {
 		assertTrue(iProject.getFile("file2_new.ecore").exists());
 		// Check the contents
 		ResourceSet resourceSet = new ResourceSetImpl();
-		Resource testRoot = resourceSet.getResource(URI.createPlatformResourceURI(
-				"/renameNoConflicts/file1.ecore", true), true);
-		Resource testChild = resourceSet.getResource(URI.createPlatformResourceURI(
-				"/renameNoConflicts/file2_new.ecore", true), true);
+		Resource testRoot = resourceSet
+				.getResource(URI.createPlatformResourceURI("/renameNoConflicts/file1.ecore", true), true);
+		Resource testChild = resourceSet
+				.getResource(URI.createPlatformResourceURI("/renameNoConflicts/file2_new.ecore", true), true);
 		EPackage testRootPack = (EPackage)testRoot.getContents().get(0);
 		assertEquals("parent", testRootPack.getName());
 		EPackage testChildPack = testRootPack.getESubpackages().get(0);
@@ -91,10 +91,10 @@ public class RenamedControlledResourceTests {
 		assertTrue(iProject.getFile("file2_new.ecore").exists());
 		// Check the contents
 		ResourceSet resourceSet = new ResourceSetImpl();
-		Resource testRoot = resourceSet.getResource(URI.createPlatformResourceURI(
-				"/renameNoConflicts/file1.ecore", true), true);
-		Resource testChild = resourceSet.getResource(URI.createPlatformResourceURI(
-				"/renameNoConflicts/file2_new.ecore", true), true);
+		Resource testRoot = resourceSet
+				.getResource(URI.createPlatformResourceURI("/renameNoConflicts/file1.ecore", true), true);
+		Resource testChild = resourceSet
+				.getResource(URI.createPlatformResourceURI("/renameNoConflicts/file2_new.ecore", true), true);
 		EPackage testRootPack = (EPackage)testRoot.getContents().get(0);
 		assertEquals("parent", testRootPack.getName());
 		EPackage testChildPack = testRootPack.getESubpackages().get(0);
@@ -118,10 +118,10 @@ public class RenamedControlledResourceTests {
 		assertTrue(iProject.getFile("file2_new.ecore").exists());
 		// Check the contents
 		ResourceSet resourceSet = new ResourceSetImpl();
-		Resource testRoot = resourceSet.getResource(URI.createPlatformResourceURI(
-				"/renameNoConflictsLocalChanges/file1.ecore", true), true);
-		Resource testChild = resourceSet.getResource(URI.createPlatformResourceURI(
-				"/renameNoConflictsLocalChanges/file2_new.ecore", true), true);
+		Resource testRoot = resourceSet.getResource(
+				URI.createPlatformResourceURI("/renameNoConflictsLocalChanges/file1.ecore", true), true);
+		Resource testChild = resourceSet.getResource(
+				URI.createPlatformResourceURI("/renameNoConflictsLocalChanges/file2_new.ecore", true), true);
 		EPackage testRootPack = (EPackage)testRoot.getContents().get(0);
 		assertEquals("parent", testRootPack.getName());
 		EPackage testChildPack = testRootPack.getESubpackages().get(0);
@@ -147,8 +147,8 @@ public class RenamedControlledResourceTests {
 		// 2- renamed file2 to file2_new
 		assertEquals(2, comparison.getDifferences().size());
 		assertEquals(1, size(filter(comparison.getDifferences(), instanceOf(ReferenceChange.class))));
-		assertEquals(1, size(filter(comparison.getDifferences(), and(
-				instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
+		assertEquals(1, size(filter(comparison.getDifferences(),
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 	}
 
 	@GitCompare(localBranch = "branch", remoteBranch = "master", fileToCompare = "file1.ecore")
@@ -163,8 +163,8 @@ public class RenamedControlledResourceTests {
 		// 2- renamed file2 to file2_new
 		assertEquals(2, comparison.getDifferences().size());
 		assertEquals(1, size(filter(comparison.getDifferences(), instanceOf(ReferenceChange.class))));
-		assertEquals(1, size(filter(comparison.getDifferences(), and(
-				instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
+		assertEquals(1, size(filter(comparison.getDifferences(),
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 	}
 
 	@GitMerge(localBranch = "master", remoteBranch = "branch")
@@ -194,13 +194,13 @@ public class RenamedControlledResourceTests {
 		// 2 diffs:
 		// 2- renamed file2 to file2_new (remote) and to file_other (local)
 		assertEquals(2, comparison.getDifferences().size());
-		assertEquals(2, size(filter(comparison.getDifferences(), and(
-				instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
+		assertEquals(2, size(filter(comparison.getDifferences(),
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 		// 2 diffs in conflict
 		assertEquals(2, comparison.getConflicts().get(0).getDifferences().size());
 		// Both a re resource location changes
-		assertEquals(2, size(filter(comparison.getConflicts().get(0).getDifferences(), and(
-				instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
+		assertEquals(2, size(filter(comparison.getConflicts().get(0).getDifferences(),
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 	}
 
 }

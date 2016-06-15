@@ -68,11 +68,11 @@ public class DependencyData {
 			rejectedDiffs = newHashSet();
 			for (Diff diff : selectedDiffs) {
 				boolean leftToRight = mergePreviewMode.isLeftToRight(diff, leftEditable, rightEditable);
-				requires.addAll(MergeDependenciesUtil.getAllResultingMerges(diff, mergerRegistry,
-						!leftToRight));
+				requires.addAll(
+						MergeDependenciesUtil.getAllResultingMerges(diff, mergerRegistry, !leftToRight));
 				requires.remove(diff);
-				rejectedDiffs.addAll(MergeDependenciesUtil.getAllResultingRejections(diff, mergerRegistry,
-						!leftToRight));
+				rejectedDiffs.addAll(
+						MergeDependenciesUtil.getAllResultingRejections(diff, mergerRegistry, !leftToRight));
 				rejectedDiffs.remove(diff);
 			}
 		}

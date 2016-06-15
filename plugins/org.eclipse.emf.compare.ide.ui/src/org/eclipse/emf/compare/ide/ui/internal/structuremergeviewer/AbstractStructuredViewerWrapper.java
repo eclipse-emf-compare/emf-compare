@@ -84,8 +84,8 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 
 		fWrappedViewerSelectionChangedListener = new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				fireSelectionChanged(new SelectionChangedEvent(AbstractStructuredViewerWrapper.this, event
-						.getSelection()));
+				fireSelectionChanged(new SelectionChangedEvent(AbstractStructuredViewerWrapper.this,
+						event.getSelection()));
 			}
 		};
 		fViewer.addSelectionChangedListener(fWrappedViewerSelectionChangedListener);
@@ -106,7 +106,8 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 		fWrappedViewerDoubleClickListener = new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				if (event.getSelection() instanceof TreeSelection
-						&& ((TreeSelection)event.getSelection()).getFirstElement() instanceof GroupItemProviderAdapter
+						&& ((TreeSelection)event.getSelection())
+								.getFirstElement() instanceof GroupItemProviderAdapter
 						&& fViewer instanceof TreeViewer) {
 					// In case of double-click on a group item, expand this group to the second level (in
 					// mostly cases, the second level is the level under the root elements of the models
@@ -115,8 +116,8 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 							.getSelection()).getFirstElement();
 					((TreeViewer)fViewer).expandToLevel(groupItem, 2);
 				} else {
-					fireDoubleClick(new DoubleClickEvent(AbstractStructuredViewerWrapper.this, event
-							.getSelection()));
+					fireDoubleClick(
+							new DoubleClickEvent(AbstractStructuredViewerWrapper.this, event.getSelection()));
 				}
 			}
 		};
@@ -133,7 +134,8 @@ public abstract class AbstractStructuredViewerWrapper<C extends Control, V exten
 		fWrappedViewerOpenListener = new IOpenListener() {
 			public void open(OpenEvent event) {
 				if (event.getSelection() instanceof TreeSelection
-						&& ((TreeSelection)event.getSelection()).getFirstElement() instanceof GroupItemProviderAdapter
+						&& ((TreeSelection)event.getSelection())
+								.getFirstElement() instanceof GroupItemProviderAdapter
 						&& fViewer instanceof TreeViewer) {
 					// In case of double-click on a group item, Do nothing. The panes below this structured
 					// viewer will still display the content of the previous selection. The merge action will

@@ -189,8 +189,8 @@ public class ChangeAssociationTest extends AbstractUMLTest {
 					null, "model.Class2");
 			addLiteralIntegerInClass2Description = addedLowerValueIn("model.class1_class0_0.Class2");
 			addUnlimitedNaturalInClass2Description = addedUpperValueIn("model.class1_class0_0.Class2");
-			addPropertyClass2InAssociationDescription = addedToReference("model.class1_class0_0",
-					"memberEnd", "model.class1_class0_0.Class2");
+			addPropertyClass2InAssociationDescription = addedToReference("model.class1_class0_0", "memberEnd",
+					"model.class1_class0_0.Class2");
 		}
 
 		final Diff addPropertyClass2 = Iterators.find(differences.iterator(), addPropertyClass2Description);
@@ -215,8 +215,8 @@ public class ChangeAssociationTest extends AbstractUMLTest {
 		// CHECK EXTENSION
 		// No extension anymore
 		assertEquals(0, count(differences, instanceOf(AssociationChange.class)));
-		Diff changeUMLAssociation = Iterators.find(differences.iterator(), and(
-				instanceOf(AssociationChange.class), ofKind(DifferenceKind.CHANGE)), null);
+		Diff changeUMLAssociation = Iterators.find(differences.iterator(),
+				and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.CHANGE)), null);
 		assertNull(changeUMLAssociation);
 		// assertNotNull(changeUMLAssociation);
 		// assertEquals(5, changeUMLAssociation.getRefinedBy().size());

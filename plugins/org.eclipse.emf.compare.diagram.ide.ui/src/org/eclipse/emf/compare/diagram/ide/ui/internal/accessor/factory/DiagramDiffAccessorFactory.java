@@ -17,7 +17,6 @@ import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedE
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AbstractAccessorFactory;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 
-
 /**
  * Factory for graphical differences accessors.
  * 

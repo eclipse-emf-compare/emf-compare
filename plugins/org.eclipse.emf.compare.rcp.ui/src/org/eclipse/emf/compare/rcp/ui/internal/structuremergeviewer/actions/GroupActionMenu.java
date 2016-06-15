@@ -71,20 +71,20 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	 */
 	public void updateMenu(IComparisonScope scope, Comparison comparison) {
 		menuManager.removeAll();
-		DifferenceGroupManager groupManager = new DifferenceGroupManager(EMFCompareRCPUIPlugin.getDefault()
-				.getEMFCompareUIPreferences(), EMFCompareRCPUIPlugin.getDefault()
-				.getItemDifferenceGroupProviderRegistry());
+		DifferenceGroupManager groupManager = new DifferenceGroupManager(
+				EMFCompareRCPUIPlugin.getDefault().getEMFCompareUIPreferences(),
+				EMFCompareRCPUIPlugin.getDefault().getItemDifferenceGroupProviderRegistry());
 		for (IDifferenceGroupProvider.Descriptor dgp : registry.getGroupProviders(scope, comparison)) {
 			IDifferenceGroupProvider gp = dgp.createGroupProvider();
 			if (gp != null) {
 				final IAction action;
 				if (gp.getClass() == structureMergeViewerGrouper.getProvider().getClass()) {
-					action = new GroupAction(structureMergeViewerGrouper, dgp, structureMergeViewerGrouper
-							.getProvider(), groupManager, comparison.isThreeWay());
+					action = new GroupAction(structureMergeViewerGrouper, dgp,
+							structureMergeViewerGrouper.getProvider(), groupManager, comparison.isThreeWay());
 					action.setChecked(true);
 				} else {
-					action = new GroupAction(structureMergeViewerGrouper, dgp, gp, groupManager, comparison
-							.isThreeWay());
+					action = new GroupAction(structureMergeViewerGrouper, dgp, gp, groupManager,
+							comparison.isThreeWay());
 				}
 				menuManager.add(action);
 			}

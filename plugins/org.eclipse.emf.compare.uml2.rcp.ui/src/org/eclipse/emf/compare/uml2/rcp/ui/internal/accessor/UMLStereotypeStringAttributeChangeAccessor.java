@@ -116,8 +116,8 @@ public class UMLStereotypeStringAttributeChangeAccessor implements ITypedElement
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.wrapper.compare.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		return ExtendedImageRegistry.getInstance().getImage(
-				EcoreEditPlugin.getPlugin().getImage("full/obj16/EAttribute")); //$NON-NLS-1$
+		return ExtendedImageRegistry.getInstance()
+				.getImage(EcoreEditPlugin.getPlugin().getImage("full/obj16/EAttribute")); //$NON-NLS-1$
 	}
 
 	/**

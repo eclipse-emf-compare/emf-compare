@@ -24,23 +24,21 @@ import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Package;
 
 /**
- * Tests the re-integration of a UML Package from a sub-model with parallel
- * addition of an element to re-integrated UML Package. This scenario contains
- * two diagrams, one for the root of the model and another for the extracted
- * package.
+ * Tests the re-integration of a UML Package from a sub-model with parallel addition of an element to
+ * re-integrated UML Package. This scenario contains two diagrams, one for the root of the model and another
+ * for the extracted package.
  * <dl>
  * <dt>Origin:</dt>
- * <dd>Given is a UML Class Diagram that refers to an extracted UML Package
- * contained in the resource <em>Package1.uml</em>, which in turn contains one
- * class. We have two diagrams, one is contained in <em>model.notation</em> and
- * shows the root model, the other is contained in <em>Package1.notation</em>
- * and shows the extracted package.</dd>
+ * <dd>Given is a UML Class Diagram that refers to an extracted UML Package contained in the resource
+ * <em>Package1.uml</em>, which in turn contains one class. We have two diagrams, one is contained in
+ * <em>model.notation</em> and shows the root model, the other is contained in <em>Package1.notation</em> and
+ * shows the extracted package.</dd>
  * <dt>Left:</dt>
- * <dd>A second class is added to the extracted package in <em>Package1.uml</em>
- * . Also a shape is added to the diagram in <em>Package1.notation</em>.</dd>
+ * <dd>A second class is added to the extracted package in <em>Package1.uml</em> . Also a shape is added to
+ * the diagram in <em>Package1.notation</em>.</dd>
  * <dt>Right:</dt>
- * <dd>The extracted package <em>Package1</em> (di, notation, and uml) is
- * re-integrated into <em>model</em> (di, notation, and uml).</dd>
+ * <dd>The extracted package <em>Package1</em> (di, notation, and uml) is re-integrated into <em>model</em>
+ * (di, notation, and uml).</dd>
  * </dl>
  *
  * @author Philip Langer <planger@eclipsesource.com>
@@ -48,7 +46,9 @@ import org.eclipse.uml2.uml.Package;
 public class ResourceAttachmentChangeDelete1GitMergeTest extends AbstractGitMergeTestCase {
 
 	private static final String TEST_SCENARIO_PATH = "testmodels/resourceattachmentchange/delete1/";
+
 	private static final String MODEL_UML = "model.uml";
+
 	private static final String MODEL_NOTATION = "model.notation";
 
 	@Override
@@ -84,14 +84,14 @@ public class ResourceAttachmentChangeDelete1GitMergeTest extends AbstractGitMerg
 
 	private void validateModelResource(Resource resource) {
 		// assert changes of the left-hand side: addition of Class2
-		final Model rootElement = (Model) resource.getContents().get(0);
+		final Model rootElement = (Model)resource.getContents().get(0);
 		assertEquals("RootElement", rootElement.getName());
-		final Package package1 = (Package) rootElement.getOwnedElements().get(0);
+		final Package package1 = (Package)rootElement.getOwnedElements().get(0);
 		assertTrue(package1.getOwnedElements().size() == 2);
 		assertTrue(package1.getOwnedElements().get(0) instanceof Class);
 		assertTrue(package1.getOwnedElements().get(1) instanceof Class);
-		final Class class1 = (Class) package1.getOwnedElements().get(0);
-		final Class class2 = (Class) package1.getOwnedElements().get(1);
+		final Class class1 = (Class)package1.getOwnedElements().get(0);
+		final Class class2 = (Class)package1.getOwnedElements().get(1);
 		assertEquals("Class1", class1.getName());
 		assertEquals("Class2", class2.getName());
 	}
@@ -99,7 +99,7 @@ public class ResourceAttachmentChangeDelete1GitMergeTest extends AbstractGitMerg
 	private void validateModelNotation(Resource resource) {
 		// assert changes of the right-hand side: integration of second diagram
 		assertEquals(2, resource.getContents().size());
-		assertEquals("Class Diagram", ((Diagram) resource.getContents().get(0)).getName());
-		assertEquals("ClassDiagram2", ((Diagram) resource.getContents().get(1)).getName());
+		assertEquals("Class Diagram", ((Diagram)resource.getContents().get(0)).getName());
+		assertEquals("ClassDiagram2", ((Diagram)resource.getContents().get(1)).getName());
 	}
 }

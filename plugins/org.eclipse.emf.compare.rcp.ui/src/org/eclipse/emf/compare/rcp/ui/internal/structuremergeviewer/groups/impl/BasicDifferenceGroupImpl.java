@@ -133,9 +133,10 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 */
 	public BasicDifferenceGroupImpl(Comparison comparison, Predicate<? super Diff> filter,
 			ECrossReferenceAdapter crossReferenceAdapter) {
-		this(comparison, filter,
-				EMFCompareRCPUIMessages.getString("BasicDifferenceGroup.name"), EMFCompareRCPUIPlugin //$NON-NLS-1$
-						.getImage("icons/full/toolb16/group.gif"), crossReferenceAdapter); //$NON-NLS-1$
+		this(comparison, filter, EMFCompareRCPUIMessages.getString("BasicDifferenceGroup.name"), //$NON-NLS-1$
+				EMFCompareRCPUIPlugin
+						.getImage("icons/full/toolb16/group.gif"), //$NON-NLS-1$
+				crossReferenceAdapter);
 	}
 
 	/**
@@ -539,9 +540,8 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			final ChildrenSide side;
 			if (diff != null) {
 				final Conflict c = diff.getConflict();
-				if (c != null
-						&& or(hasConflict(ConflictKind.PSEUDO),
-								and(hasConflict(ConflictKind.REAL), ofKind(DifferenceKind.ADD))).apply(diff)) {
+				if (c != null && or(hasConflict(ConflictKind.PSEUDO),
+						and(hasConflict(ConflictKind.REAL), ofKind(DifferenceKind.ADD))).apply(diff)) {
 					side = ChildrenSide.getValueFrom(diff.getSource());
 				} else {
 					side = ChildrenSide.BOTH;
@@ -604,8 +604,8 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			return matchResourceSubTrees;
 		}
 
-		final Iterable<ResourceAttachmentChange> attachmentChanges = Iterables.filter(comparison
-				.getDifferences(), ResourceAttachmentChange.class);
+		final Iterable<ResourceAttachmentChange> attachmentChanges = Iterables
+				.filter(comparison.getDifferences(), ResourceAttachmentChange.class);
 
 		final Multimap<String, ResourceAttachmentChange> uriToRAC = LinkedHashMultimap.create();
 		for (ResourceAttachmentChange attachmentChange : attachmentChanges) {
@@ -735,8 +735,8 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			for (TreeNode node : nodes) {
 				EObject data = TREE_NODE_DATA.apply(node);
 				if (data instanceof NotLoadedFragmentMatch) {
-					((NotLoadedFragmentMatch)data).setName(ResourceUIUtil
-							.getResourceName((NotLoadedFragmentMatch)data));
+					((NotLoadedFragmentMatch)data)
+							.setName(ResourceUIUtil.getResourceName((NotLoadedFragmentMatch)data));
 				}
 			}
 		}
@@ -780,8 +780,8 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			EObject data = TREE_NODE_DATA.apply(node);
 			if (data instanceof NotLoadedFragmentMatch) {
 				matches.add((Match)data);
-				((NotLoadedFragmentMatch)data).setName(ResourceUIUtil
-						.getResourceName((NotLoadedFragmentMatch)data));
+				((NotLoadedFragmentMatch)data)
+						.setName(ResourceUIUtil.getResourceName((NotLoadedFragmentMatch)data));
 				newNodes.remove(node);
 				fragmentNodes.add(node);
 			}

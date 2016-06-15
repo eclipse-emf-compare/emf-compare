@@ -87,8 +87,8 @@ public class EdgeFigure extends DecoratorFigure {
 	@Override
 	protected void buildFigureForPhantom() {
 		if (getReference() instanceof PolylineConnection) {
-			((PolylineConnection)getMainFigure()).setPoints(((PolylineConnection)getReference()).getPoints()
-					.getCopy());
+			((PolylineConnection)getMainFigure())
+					.setPoints(((PolylineConnection)getReference()).getPoints().getCopy());
 		}
 	}
 

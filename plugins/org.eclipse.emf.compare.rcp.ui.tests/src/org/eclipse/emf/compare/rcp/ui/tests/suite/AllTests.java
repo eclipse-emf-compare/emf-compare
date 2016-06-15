@@ -36,7 +36,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ TestComparisonTreeNodeItemProviderSpec.class, TestMatchTreeNodeItemProviderSpec.class,
+@SuiteClasses({TestComparisonTreeNodeItemProviderSpec.class, TestMatchTreeNodeItemProviderSpec.class,
 		TestReferenceChangeTreeNodeItemProviderSpec.class, MergeViewerItemTest.class,
 		MergeViewerItemPseudoConflictTest.class, MergeViewerItemFeatureMapsTest.class,
 		TestBasicDifferenceGroupImpl.class, BugsTestSuite.class, TestFeatureMapDifferencesFilter.class,

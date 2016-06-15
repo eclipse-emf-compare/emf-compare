@@ -415,7 +415,7 @@ public class ThreeWayTextDiff {
 		 * @param revised
 		 *            The revised version of the plain text.
 		 */
-		public TwoWayTextDiff(String origin, String revised) {
+		TwoWayTextDiff(String origin, String revised) {
 			final String safeOrigin = nullToEmpty(origin);
 			final String safeRevised = nullToEmpty(revised);
 			final LinkedList<Diff> differences = lbDiff.computeLineBasedDiff(safeOrigin, safeRevised);
@@ -487,7 +487,7 @@ public class ThreeWayTextDiff {
 		 * @param rightDifferences
 		 *            The right-hand side differences related to a common origin line.
 		 */
-		public ThreeWayLineDifference(List<Diff> leftDifferences, List<Diff> rightDifferences) {
+		ThreeWayLineDifference(List<Diff> leftDifferences, List<Diff> rightDifferences) {
 			leftDiffs.addAll(leftDifferences);
 			rightDiffs.addAll(rightDifferences);
 		}

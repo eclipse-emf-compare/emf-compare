@@ -142,11 +142,11 @@ public class AddDependencyTest extends AbstractUMLTest {
 		assertEquals(1, count(differences, instanceOf(DirectedRelationshipChange.class)));
 		Diff addUMLDependency = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLDependency = Iterators.find(differences.iterator(), and(
-					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.ADD)));
+			addUMLDependency = Iterators.find(differences.iterator(),
+					and(instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLDependency = Iterators.find(differences.iterator(), and(
-					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
+			addUMLDependency = Iterators.find(differences.iterator(),
+					and(instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLDependency);
 		assertEquals(3, addUMLDependency.getRefinedBy().size());

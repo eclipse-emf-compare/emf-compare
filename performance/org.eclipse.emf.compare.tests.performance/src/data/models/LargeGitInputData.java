@@ -12,11 +12,11 @@ package data.models;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- *
  */
 public class LargeGitInputData extends DataGit {
 
 	public LargeGitInputData() {
-		super("src/data/models/git/model_size_large_repo.zip", "model_size_large_repo", "model_size_large_git", "model.uml");
+		super("src/data/models/git/model_size_large_repo.zip", "model_size_large_repo",
+				"model_size_large_git", "model.uml");
 	}
 }

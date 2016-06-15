@@ -63,8 +63,8 @@ public class DirCacheResourceVariantTreeProvider implements GitResourceVariantTr
 
 		for (int i = 0; i < cache.getEntryCount(); i++) {
 			final DirCacheEntry entry = cache.getEntry(i);
-			final IResource resource = ModelEGitResourceUtil.getResourceHandleForLocation(repository, entry
-					.getPathString(), FileMode.fromBits(entry.getRawMode()) == FileMode.TREE);
+			final IResource resource = ModelEGitResourceUtil.getResourceHandleForLocation(repository,
+					entry.getPathString(), FileMode.fromBits(entry.getRawMode()) == FileMode.TREE);
 			// Resource variants only make sense for IResources. Do not consider
 			// files outside of the workspace or otherwise non accessible.
 			if (resource == null || resource.getProject() == null || !resource.getProject().isAccessible()) {

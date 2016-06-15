@@ -36,6 +36,14 @@ import org.eclipse.uml2.uml.ProfileApplication;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ResourceSetProfileUnloader extends UMLLoadOnDemandPolicy implements IResourceSetHook {
+
+	/**
+	 * Returns true if this hook should be used.
+	 * 
+	 * @param uris
+	 *            list of {@link URI}s about to be loaded in the {@link ResourceSet}.
+	 * @return <code>true</code> if this hook should be used, <code>false</code> otherwise.
+	 */
 	public boolean isHookFor(Collection<? extends URI> uris) {
 		for (URI uri : uris) {
 			if (UML_EXTENSION.equals(uri.fileExtension())) {
@@ -45,14 +53,45 @@ public class ResourceSetProfileUnloader extends UMLLoadOnDemandPolicy implements
 		return false;
 	}
 
+	/**
+	 * This will be called before the final resource set is populated, in unspecified order. Resource set
+	 * hooks can load resource in this resource set and thus an individual hook is not guaranteed to be
+	 * provided an empty resource set here.
+	 * 
+	 * @param resourceSet
+	 *            about to be filled.
+	 * @param uris
+	 *            {@link URI}s that the resource set has been requested to load. The {@link Collection} of
+	 *            {@link URI} is not modifiable.
+	 */
 	public void preLoadingHook(ResourceSet resourceSet, Collection<? extends URI> uris) {
 		// We're not interested in this event
 	}
 
+	/**
+	 * This will be called after the resource set is populated in an unspecified order.
+	 * 
+	 * @param resourceSet
+	 *            that has been filled with {@link org.eclipse.emf.ecore.resource.Resource}s.
+	 * @param uris
+	 *            {@link URI}s that the resource set has been requested to load.The {@link Collection} of
+	 *            {@link URI} is not modifiable.
+	 */
 	public void postLoadingHook(ResourceSet resourceSet, Collection<? extends URI> uris) {
 		// We're not interested in this event
 	}
 
+	/**
+	 * This will be called when the resource set is disposed (if it is).
+	 * <p>
+	 * By default, EMF Compare will not unload any resource. Still some resources might need to be unloaded.
+	 * This method could be a good way to do it. Hooks are called in unspecified order, so resources may
+	 * already have been unloaded by other hooks when yours is called.
+	 * </p>
+	 * 
+	 * @param resources
+	 *            List of {@link Resource}s currently in the resource set.
+	 */
 	public void onDispose(Iterable<Resource> resources) {
 		URIConverter uriConverter = new ExtensibleURIConverterImpl();
 		for (Resource resource : resources) {
@@ -83,8 +122,8 @@ public class ResourceSetProfileUnloader extends UMLLoadOnDemandPolicy implements
 	 */
 	private void disposeProfileApplications(Profile profile) {
 		final Set<Resource> unloadMe = new LinkedHashSet<Resource>();
-		Collection<EStructuralFeature.Setting> settings = CacheAdapter.getInstance().getInverseReferences(
-				profile, false);
+		Collection<EStructuralFeature.Setting> settings = CacheAdapter.getInstance()
+				.getInverseReferences(profile, false);
 		for (EStructuralFeature.Setting setting : settings) {
 			if (setting.getEObject() instanceof ProfileApplication) {
 				unloadMe.add(setting.getEObject().eResource());

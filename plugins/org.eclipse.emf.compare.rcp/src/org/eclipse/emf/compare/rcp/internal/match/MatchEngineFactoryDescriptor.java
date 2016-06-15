@@ -55,8 +55,8 @@ public class MatchEngineFactoryDescriptor extends LazyItemDescriptor<IMatchEngin
 	public Factory getItem() {
 		Factory factory = null;
 		try {
-			factory = (Factory)getConfig().createExecutableExtension(
-					MatchEngineFactoryRegistryListener.ATT_CLASS);
+			factory = (Factory)getConfig()
+					.createExecutableExtension(MatchEngineFactoryRegistryListener.ATT_CLASS);
 			factory.setRanking(getRank());
 			if (factory instanceof IConfigurableItem) {
 				Preferences configuration = ItemUtil.getConfigurationPreferenceNode(

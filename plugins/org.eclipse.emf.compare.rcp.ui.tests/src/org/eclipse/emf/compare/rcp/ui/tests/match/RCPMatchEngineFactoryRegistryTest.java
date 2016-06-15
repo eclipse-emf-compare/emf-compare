@@ -153,8 +153,8 @@ public class RCPMatchEngineFactoryRegistryTest {
 
 		IComparisonScope scope = createComparisonScope();
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(scope), factory3);
-		assertTrue(registryWrapper.getMatchEngineFactories(scope).containsAll(
-				Lists.newArrayList(factory, factory2, factory3)));
+		assertTrue(registryWrapper.getMatchEngineFactories(scope)
+				.containsAll(Lists.newArrayList(factory, factory2, factory3)));
 	}
 
 	/**
@@ -190,8 +190,8 @@ public class RCPMatchEngineFactoryRegistryTest {
 
 		IComparisonScope scope = createComparisonScope();
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(scope), factory3);
-		assertTrue(registryWrapper.getMatchEngineFactories(scope).containsAll(
-				Lists.newArrayList(factory, factory2, factory3)));
+		assertTrue(registryWrapper.getMatchEngineFactories(scope)
+				.containsAll(Lists.newArrayList(factory, factory2, factory3)));
 
 	}
 
@@ -258,13 +258,13 @@ public class RCPMatchEngineFactoryRegistryTest {
 		IComparisonScope scope = createComparisonScope();
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(scope), factory3);
 
-		disableEngine(preferences, EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, Collections
-				.singleton(factory3.getClass().getName()));
+		disableEngine(preferences, EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
+				Collections.singleton(factory3.getClass().getName()));
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(scope), factory2);
 		assertTrue(!registryWrapper.getMatchEngineFactories(scope).contains(factory3));
 
-		disableEngine(preferences, EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, Lists.newArrayList(
-				factory3.getClass().getName(), factory2.getClass().getName()));
+		disableEngine(preferences, EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
+				Lists.newArrayList(factory3.getClass().getName(), factory2.getClass().getName()));
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(scope), factory);
 		assertTrue(!registryWrapper.getMatchEngineFactories(scope).contains(factory2));
 

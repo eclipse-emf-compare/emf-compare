@@ -89,7 +89,8 @@ public class DiffBuilder implements IDiffProcessor {
 	 *      java.lang.String, org.eclipse.emf.compare.DifferenceKind,
 	 *      org.eclipse.emf.compare.DifferenceSource)
 	 */
-	public void resourceAttachmentChange(Match match, String uri, DifferenceKind kind, DifferenceSource source) {
+	public void resourceAttachmentChange(Match match, String uri, DifferenceKind kind,
+			DifferenceSource source) {
 		final ResourceAttachmentChange change = CompareFactory.eINSTANCE.createResourceAttachmentChange();
 		change.setMatch(match);
 		change.setResourceURI(uri);

@@ -64,7 +64,7 @@ public class WikiTextToHTML {
 	private static final Charset UTF_8 = Charset.forName("UTF-8");
 
 	private static final String MEDIA_WIKI = "MediaWiki";
-	
+
 	private MarkupLanguage markupLanguage;
 
 	private boolean navigationImages = false;
@@ -92,9 +92,11 @@ public class WikiTextToHTML {
 	private String htmlDoctype;
 
 	private List<Stylesheet> stylesheets;
+
 	private List<Stylesheet> helpStylesheets = new ArrayList<>();
+
 	private List<Stylesheet> websiteStylesheets = new ArrayList<>();
-	
+
 	private PrimaryTOCWriter primaryTOCWriter = new PrimaryTOCWriter();
 
 	private Path sourceFolder;
@@ -116,17 +118,17 @@ public class WikiTextToHTML {
 	private String projectName;
 
 	private String projectId;
-	
+
 	private String anchorId;
-	
+
 	public static void main(String[] args) throws Exception {
 		WikiTextToHTML wikiTextToHTML = new WikiTextToHTML();
 		wikiTextToHTML.run(args);
 	}
-	
+
 	public void run(String[] args) throws Exception {
 		processCommandLineArgs(args);
-		
+
 		if (targetRootFolder == null) {
 			System.err.println("Error: unable to find -location argument");
 			usage();
@@ -142,117 +144,126 @@ public class WikiTextToHTML {
 			usage();
 			System.exit(1);
 		}
-		
+
 		if (projectName == null || "".equals(projectName)) {
 			System.err.println("Error: unable to find -projectname argument");
 			usage();
 			System.exit(1);
 		}
-		
+
 		if (genEclipseHelp && (projectId == null || "".equals(projectId.trim()))) {
 			System.err.println("Error: -projectid is mandatory when using -eclipsehelp");
 			usage();
 			System.exit(1);
 		}
-		
+
 		if (!genEclipseHelp && anchorId != null && !anchorId.trim().equals("")) {
 			System.err.println("Error: -anchorid can be used only with -eclipsehelp");
 			usage();
 			System.exit(1);
 		}
-		
+
 		markupLanguage = new CustomMediaWikiLanguage();
 		markupLanguage.setInternalLinkPattern("{0}");
 
 		Stylesheet ss1 = new Stylesheet();
-		ss1.setUrl("/help/topic/"+projectId+"/help/resources/bootstrap.css");
+		ss1.setUrl("/help/topic/" + projectId + "/help/resources/bootstrap.css");
 		helpStylesheets.add(ss1);
 		Stylesheet ss2 = new Stylesheet();
-		ss2.setUrl("/help/topic/"+projectId+"/help/resources/custom.css");
+		ss2.setUrl("/help/topic/" + projectId + "/help/resources/custom.css");
 		helpStylesheets.add(ss2);
-		
+
 		ss1 = new Stylesheet();
 		ss1.setUrl("resources/bootstrap.css");
 		websiteStylesheets.add(ss1);
 		ss2 = new Stylesheet();
 		ss2.setUrl("resources/custom.css");
 		websiteStylesheets.add(ss2);
-		
+
 		sourceFolder = DEFAULT_FS.getPath("src");
 		foldersToCopy = new ArrayList<>();
 		foldersToCopy.add(targetRootFolder.resolve(sourceFolder).resolve("images"));
 		foldersToCopy.add(targetRootFolder.resolve(sourceFolder).resolve("resources"));
-		
+
 		final Path resolvedTargetHelpFolder = targetRootFolder.resolve(targetHelpFolder);
 
 		if (genEclipseHelp) {
 			if (Files.exists(resolvedTargetHelpFolder)) {
-				System.out.println("Deleting "+ resolvedTargetHelpFolder + " before regenerating Eclipse help");
+				System.out.println(
+						"Deleting " + resolvedTargetHelpFolder + " before regenerating Eclipse help");
 				removeRecursiveContent(resolvedTargetHelpFolder);
 			}
-			primaryTOCWriter.startPrimaryTOC(targetHelpFolder.resolve("index.html"), projectName+" Documentation", anchorId);
+			primaryTOCWriter.startPrimaryTOC(targetHelpFolder.resolve("index.html"),
+					projectName + " Documentation", anchorId);
 		}
-		
-		final PathMatcher mediawikiPattern = DEFAULT_FS.getPathMatcher("glob:**/*.mediawiki");
-		
-		Files.walkFileTree(targetRootFolder.resolve(sourceFolder), new SimpleFileVisitor<Path>() {
-	        @Override
-	        public FileVisitResult visitFile(Path markupPath, BasicFileAttributes attrs) throws IOException {
-	            if (mediawikiPattern.matches(markupPath)) {
-	            	if ("~javadoc.mediawiki".equals(markupPath.getFileName().toString())) {
-	            		processJavadoc(sourceFolder, targetWebsiteFolder, targetHelpFolder, markupPath);
-	            	} else {
-	            		processFile(sourceFolder, targetWebsiteFolder, targetHelpFolder, markupPath);
-	            	}
-	            }
-	            return FileVisitResult.CONTINUE;
-	        }
 
-	        @Override
-	        public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-	        	System.err.println("Failed to visit " + file);
-	        	exc.printStackTrace();
-	            return FileVisitResult.CONTINUE;
-	        }
-	        
-	        /** 
-	         * {@inheritDoc}
-	         * @see java.nio.file.SimpleFileVisitor#preVisitDirectory(java.lang.Object, java.nio.file.attribute.BasicFileAttributes)
-	         */
-	        @Override
-	        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-	        	if (genEclipseHelp && !dir.equals(targetRootFolder.resolve(sourceFolder)) && !foldersToCopy.contains(dir)) {
+		final PathMatcher mediawikiPattern = DEFAULT_FS.getPathMatcher("glob:**/*.mediawiki");
+
+		Files.walkFileTree(targetRootFolder.resolve(sourceFolder), new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult visitFile(Path markupPath, BasicFileAttributes attrs) throws IOException {
+				if (mediawikiPattern.matches(markupPath)) {
+					if ("~javadoc.mediawiki".equals(markupPath.getFileName().toString())) {
+						processJavadoc(sourceFolder, targetWebsiteFolder, targetHelpFolder, markupPath);
+					} else {
+						processFile(sourceFolder, targetWebsiteFolder, targetHelpFolder, markupPath);
+					}
+				}
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+				System.err.println("Failed to visit " + file);
+				exc.printStackTrace();
+				return FileVisitResult.CONTINUE;
+			}
+
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see java.nio.file.SimpleFileVisitor#preVisitDirectory(java.lang.Object,
+			 *      java.nio.file.attribute.BasicFileAttributes)
+			 */
+			@Override
+			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+				if (genEclipseHelp && !dir.equals(targetRootFolder.resolve(sourceFolder))
+						&& !foldersToCopy.contains(dir)) {
 					if (dir.resolve("index.mediawiki").toFile().exists()) {
-	        			primaryTOCWriter.startTopic(getTitle(dir), dir.resolve("index.html"));
-	        		} else {
-	        			primaryTOCWriter.startTopic(getTitle(dir), null);
-	        		}
-	        	}
-	        	return FileVisitResult.CONTINUE;
-	        }
-	        
-	        /** 
-	         * {@inheritDoc}
-	         * @see java.nio.file.SimpleFileVisitor#postVisitDirectory(java.lang.Object, java.io.IOException)
-	         */
-	        @Override
-	        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-	        	if (genEclipseHelp && !dir.equals(targetRootFolder.resolve(sourceFolder)) && !foldersToCopy.contains(dir)) {
-	        		primaryTOCWriter.endTopic();
-	        	}
-	        	return FileVisitResult.CONTINUE;
-	        }
-	    });
-		
+						primaryTOCWriter.startTopic(getTitle(dir), dir.resolve("index.html"));
+					} else {
+						primaryTOCWriter.startTopic(getTitle(dir), null);
+					}
+				}
+				return FileVisitResult.CONTINUE;
+			}
+
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see java.nio.file.SimpleFileVisitor#postVisitDirectory(java.lang.Object, java.io.IOException)
+			 */
+			@Override
+			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+				if (genEclipseHelp && !dir.equals(targetRootFolder.resolve(sourceFolder))
+						&& !foldersToCopy.contains(dir)) {
+					primaryTOCWriter.endTopic();
+				}
+				return FileVisitResult.CONTINUE;
+			}
+		});
+
 		if (genEclipseHelp) {
 			primaryTOCWriter.endPrimaryTOC();
-			writeStringToFile(primaryTOCWriter.getPrimaryTOCContent(), resolvedTargetHelpFolder.resolve("toc.xml"));
+			writeStringToFile(primaryTOCWriter.getPrimaryTOCContent(),
+					resolvedTargetHelpFolder.resolve("toc.xml"));
 			writeStringToFile(primaryTOCWriter.getPluginContent(), targetRootFolder.resolve("plugin.xml"));
 		}
-		
+
 		for (Path folder : foldersToCopy) {
 			if (genWebsite)
-				copy(folder, targetRootFolder.resolve(targetWebsiteFolder).resolve(folder.getFileName()), "glob:**/*");
+				copy(folder, targetRootFolder.resolve(targetWebsiteFolder).resolve(folder.getFileName()),
+						"glob:**/*");
 			if (genEclipseHelp)
 				copy(folder, resolvedTargetHelpFolder.resolve(folder.getFileName()), "glob:**/*");
 		}
@@ -262,7 +273,8 @@ public class WikiTextToHTML {
 	 * 
 	 */
 	private void usage() {
-		System.out.println("Usage: wikiTextToHTML -projectname \"Name of the Project\" -projectid org.eclipse.emf.compare.doc -location path -version version [-eclipsehelp path] [-website path] [-anchorId path/id]");
+		System.out.println(
+				"Usage: wikiTextToHTML -projectname \"Name of the Project\" -projectid org.eclipse.emf.compare.doc -location path -version version [-eclipsehelp path] [-website path] [-anchorId path/id]");
 	}
 
 	private void processCommandLineArgs(String[] args) throws Exception {
@@ -290,33 +302,33 @@ public class WikiTextToHTML {
 				genWebsite = true;
 				targetWebsiteFolder = DEFAULT_FS.getPath(arg);
 			}
-			
+
 			if (option.equalsIgnoreCase("-version")) { //$NON-NLS-1$
 				version = arg.trim();
 			}
-			
+
 			if (option.equalsIgnoreCase("-projectname")) { //$NON-NLS-1$
 				projectName = arg.trim();
 			}
-			
+
 			if (option.equalsIgnoreCase("-projectid")) { //$NON-NLS-1$
 				projectId = arg.trim();
 			}
-			
+
 			if (option.equalsIgnoreCase("-anchorid")) { //$NON-NLS-1$
 				anchorId = arg.trim();
 			}
 		}
-		
+
 		if (targetHelpFolder.isAbsolute()) {
 			targetHelpFolder = targetRootFolder.relativize(targetHelpFolder);
 		}
-		
+
 		if (targetWebsiteFolder.isAbsolute()) {
 			targetWebsiteFolder = targetRootFolder.relativize(targetWebsiteFolder);
 		}
 	}
-	
+
 	private String getTitle(Path path) {
 		String filename = path.getFileName().toString();
 		int lastIndexOf = filename.lastIndexOf('.');
@@ -324,7 +336,7 @@ public class WikiTextToHTML {
 			filename = filename.substring(0, lastIndexOf);
 		}
 		String[] split = filename.split("-");
-		
+
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < split.length; i++) {
 			String str = split[i].trim();
@@ -341,16 +353,14 @@ public class WikiTextToHTML {
 		}
 		return sb.toString().trim();
 	}
-	
-	private void processJavadoc(final Path sourceFolder,
-			final Path targetWebsiteFolder,
+
+	private void processJavadoc(final Path sourceFolder, final Path targetWebsiteFolder,
 			final Path targetHelpFolder, Path markupPath)
-			throws IOException, FileNotFoundException,
-			UnsupportedEncodingException {
+			throws IOException, FileNotFoundException, UnsupportedEncodingException {
 		System.out.println("Processing " + markupPath);
-		
+
 		Path relativeMarkupPath = targetRootFolder.resolve(sourceFolder).relativize(markupPath);
-		
+
 		Path relativeTOCPath = relativeMarkupPath.getParent().resolve("toc-javadoc.xml");
 		Path targetTOC = targetHelpFolder.resolve(relativeTOCPath);
 		Path targetHelp = targetHelpFolder.resolve(changeFilename(relativeMarkupPath, ".html"));
@@ -370,41 +380,40 @@ public class WikiTextToHTML {
 			}
 		}
 	}
-	
-	private void processFile(final Path sourceFolder,
-			final Path targetWebsiteFolder,
+
+	private void processFile(final Path sourceFolder, final Path targetWebsiteFolder,
 			final Path targetHelpFolder, Path markupPath)
-			throws IOException, FileNotFoundException,
-			UnsupportedEncodingException {
+			throws IOException, FileNotFoundException, UnsupportedEncodingException {
 		System.out.println("Processing " + markupPath);
-		
+
 		Path relativeMarkupPath = targetRootFolder.resolve(sourceFolder).relativize(markupPath);
-		
+
 		Path targetHTML = targetWebsiteFolder.resolve(changeFilename(relativeMarkupPath, ".html"));
-		
+
 		Path relativeTOCPath = changeFilename(relativeMarkupPath, "toc-", ".xml");
 		Path targetTOC = targetHelpFolder.resolve(relativeTOCPath);
 		Path targetHelp = targetHelpFolder.resolve(changeFilename(relativeMarkupPath, ".html"));
 
 		if (genWebsite) {
 			mkdirs(targetRootFolder.resolve(targetHTML));
-		} 
+		}
 		if (genEclipseHelp) {
 			mkdirs(targetRootFolder.resolve(targetTOC));
 			mkdirs(targetRootFolder.resolve(targetHelp));
 		}
-		
+
 		String markupContent = new String(Files.readAllBytes(markupPath), UTF_8);
-		
+
 		final String markupContentWithTOC;
 		if ("index.mediawiki".equals(markupPath.getFileName().toString())) {
-			markupContentWithTOC = markupContent.replaceFirst("=(.*)=", "="+projectName+" — $1=\n\nVersion " + version +"\n\n") + 
-					"\n\nVersion " + version;
+			markupContentWithTOC = markupContent.replaceFirst("=(.*)=",
+					"=" + projectName + " — $1=\n\nVersion " + version + "\n\n") + "\n\nVersion " + version;
 		} else {
-			Path relativeToRoot = targetHTML.getParent().relativize(targetWebsiteFolder.resolve("index.html"));
-			markupContentWithTOC = markupContent.replaceFirst("=(.*)=", "="+projectName+" — $1=\n\nVersion " + version +"\n\n__TOC__\n\n") + 
-					"\n\nPart of ["+relativeToRoot+" "+projectName+" Documentation]" +
-					"\n\nVersion " + version;
+			Path relativeToRoot = targetHTML.getParent()
+					.relativize(targetWebsiteFolder.resolve("index.html"));
+			markupContentWithTOC = markupContent.replaceFirst("=(.*)=",
+					"=" + projectName + " — $1=\n\nVersion " + version + "\n\n__TOC__\n\n") + "\n\nPart of ["
+					+ relativeToRoot + " " + projectName + " Documentation]" + "\n\nVersion " + version;
 		}
 
 		if (performValidation(markupPath, markupContent)) {
@@ -413,16 +422,16 @@ public class WikiTextToHTML {
 				stylesheets = websiteStylesheets;
 				genHTML(getTitle(targetHTML), markupContentWithTOC, targetRootFolder.resolve(targetHTML));
 			}
-			
+
 			// for eclipse help
 			if (genEclipseHelp) {
 				stylesheets = helpStylesheets;
 				genHTML(getTitle(targetHTML), markupContent, targetRootFolder.resolve(targetHelp));
-			
-			
+
 				final PathMatcher indexPattern = DEFAULT_FS.getPathMatcher("glob:**/index.mediawiki");
 				if (!indexPattern.matches(markupPath)) {
-					genTOC(getTitle(targetHelp), markupContent, targetRootFolder.resolve(targetTOC), targetHelp);
+					genTOC(getTitle(targetHelp), markupContent, targetRootFolder.resolve(targetTOC),
+							targetHelp);
 					primaryTOCWriter.startTopic(getTitle(targetHelp), targetHelp);
 					primaryTOCWriter.createLink(relativeTOCPath);
 					primaryTOCWriter.endTopic();
@@ -433,14 +442,13 @@ public class WikiTextToHTML {
 		}
 	}
 
-	
 	private void mkdirs(Path file) {
 		File parentFile = file.getParent().toFile();
 		if (!parentFile.exists()) {
 			file.getParent().toFile().mkdirs();
 		}
 	}
-	
+
 	private static void removeRecursiveContent(final Path path) throws IOException {
 		Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
 			@Override
@@ -450,8 +458,7 @@ public class WikiTextToHTML {
 			}
 
 			@Override
-			public FileVisitResult visitFileFailed(Path file, IOException exc)
-					throws IOException {
+			public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
 				// try to delete the file anyway, even if its attributes
 				// could not be read, since delete-only access is
 				// theoretically possible
@@ -460,8 +467,7 @@ public class WikiTextToHTML {
 			}
 
 			@Override
-			public FileVisitResult postVisitDirectory(Path dir, IOException exc)
-					throws IOException {
+			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 				if (exc == null) {
 					if (!dir.equals(path)) {
 						Files.delete(dir);
@@ -478,7 +484,7 @@ public class WikiTextToHTML {
 	private Path changeFilename(Path source, String newFileExtension) {
 		return changeFilename(source, "", newFileExtension);
 	}
-	
+
 	private Path changeFilename(Path source, String prefix, String newFileExtension) {
 		String filename = source.getFileName().toString();
 		int lastIndexOf = filename.lastIndexOf(".");
@@ -486,7 +492,8 @@ public class WikiTextToHTML {
 		return source.resolveSibling(newFileName);
 	}
 
-	private void genTOC(String name, String markupContent, Path targetToc, Path targetHTML) throws IOException, UnsupportedEncodingException, FileNotFoundException {
+	private void genTOC(String name, String markupContent, Path targetToc, Path targetHTML)
+			throws IOException, UnsupportedEncodingException, FileNotFoundException {
 		MarkupToEclipseToc toEclipseToc = new MarkupToEclipseToc() {
 			public String createToc(OutlineItem root) {
 				StringWriter out = new StringWriter(8096);
@@ -498,10 +505,11 @@ public class WikiTextToHTML {
 				if (copyrightNotice != null) {
 					writer.writeComment(copyrightNotice);
 				}
-				
+
 				Method method = null;
 				try {
-					method = MarkupToEclipseToc.class.getDeclaredMethod("emitToc", XmlStreamWriter.class, List.class);
+					method = MarkupToEclipseToc.class.getDeclaredMethod("emitToc", XmlStreamWriter.class,
+							List.class);
 					method.setAccessible(true);
 				} catch (NoSuchMethodException | SecurityException | IllegalArgumentException e) {
 					throw new RuntimeException(e);
@@ -514,7 +522,8 @@ public class WikiTextToHTML {
 					writer.writeAttribute("label", innerRoot.getLabel()); //$NON-NLS-1$
 					try {
 						method.invoke(this, writer, innerRoot.getChildren());
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					} catch (IllegalAccessException | IllegalArgumentException
+							| InvocationTargetException e) {
 						throw new RuntimeException(e);
 					}
 				} else {
@@ -523,7 +532,8 @@ public class WikiTextToHTML {
 					writer.writeAttribute("label", root.getLabel()); //$NON-NLS-1$
 					try {
 						method.invoke(this, writer, root.getChildren());
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					} catch (IllegalAccessException | IllegalArgumentException
+							| InvocationTargetException e) {
 						throw new RuntimeException(e);
 					}
 				}
@@ -540,18 +550,22 @@ public class WikiTextToHTML {
 		toEclipseToc.setHtmlFile(targetHTML.toString());
 		toEclipseToc.setBookTitle(name);
 		String tocContents = toEclipseToc.parse(markupContent);
-		
+
 		writeStringToFile(tocContents, targetToc);
 	}
-	
-	private void writeStringToFile(String content, Path path) throws UnsupportedEncodingException, FileNotFoundException, IOException {
-		try(Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(path.toFile())), "UTF-8")) {
+
+	private void writeStringToFile(String content, Path path)
+			throws UnsupportedEncodingException, FileNotFoundException, IOException {
+		try (Writer writer = new OutputStreamWriter(
+				new BufferedOutputStream(new FileOutputStream(path.toFile())), "UTF-8")) {
 			writer.write(content);
 		}
 	}
 
-	private void genHTML(String name, String markupContent, Path htmlOutputFile) throws IOException, FileNotFoundException {
-		try (Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile.toFile())), UTF_8)) {
+	private void genHTML(String name, String markupContent, Path htmlOutputFile)
+			throws IOException, FileNotFoundException {
+		try (Writer writer = new OutputStreamWriter(
+				new BufferedOutputStream(new FileOutputStream(htmlOutputFile.toFile())), UTF_8)) {
 			HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, FORMAT_OUTPUT);
 			for (Stylesheet stylesheet : stylesheets) {
 				HtmlDocumentBuilder.Stylesheet builderStylesheet;
@@ -559,9 +573,12 @@ public class WikiTextToHTML {
 				if (stylesheet.url != null) {
 					if (stylesheets == websiteStylesheets) {
 						Path stylesheetPath = DEFAULT_FS.getPath(stylesheet.url);
-						Path targetStylesheetPath = targetRootFolder.resolve(targetWebsiteFolder.resolve(stylesheetPath));
-						Path relativeStylesheetPath = htmlOutputFile.getParent().relativize(targetStylesheetPath);
-						builderStylesheet = new HtmlDocumentBuilder.Stylesheet(relativeStylesheetPath.toString());
+						Path targetStylesheetPath = targetRootFolder
+								.resolve(targetWebsiteFolder.resolve(stylesheetPath));
+						Path relativeStylesheetPath = htmlOutputFile.getParent()
+								.relativize(targetStylesheetPath);
+						builderStylesheet = new HtmlDocumentBuilder.Stylesheet(
+								relativeStylesheetPath.toString());
 					} else {
 						builderStylesheet = new HtmlDocumentBuilder.Stylesheet(stylesheet.url);
 					}
@@ -590,8 +607,7 @@ public class WikiTextToHTML {
 			builder.setXhtmlStrict(xhtmlStrict);
 			builder.setCopyrightNotice(copyrightNotice);
 
-			SplittingStrategy splittingStrategy = multipleOutputFiles
-					? new DefaultSplittingStrategy()
+			SplittingStrategy splittingStrategy = multipleOutputFiles ? new DefaultSplittingStrategy()
 					: new NoSplittingStrategy();
 			SplittingOutlineParser outlineParser = new SplittingOutlineParser();
 			outlineParser.setMarkupLanguage(markupLanguage.clone());
@@ -612,14 +628,14 @@ public class WikiTextToHTML {
 		}
 	}
 
-	private void copy(final Path sourceFolder,
-			final Path targetFolder, String pattern) throws IOException {
+	private void copy(final Path sourceFolder, final Path targetFolder, String pattern) throws IOException {
 		final PathMatcher imageMatcher = DEFAULT_FS.getPathMatcher(pattern);
 		Files.walkFileTree(sourceFolder, new SimpleFileVisitor<Path>() {
 			@Override
 			public FileVisitResult visitFile(Path sourcePath, BasicFileAttributes attrs) throws IOException {
 				if (imageMatcher.matches(sourcePath)) {
-					String targetFile = sourcePath.toString().replace(sourceFolder.toString(), targetFolder.toString());
+					String targetFile = sourcePath.toString().replace(sourceFolder.toString(),
+							targetFolder.toString());
 					Path targetPath = DEFAULT_FS.getPath(targetFile);
 					targetPath.getParent().toFile().mkdirs();
 					Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
@@ -628,9 +644,10 @@ public class WikiTextToHTML {
 			}
 		});
 	}
-	
+
 	/**
 	 * Returns true if valid (may have warning).
+	 * 
 	 * @param source
 	 * @param markupContent
 	 * @return
@@ -646,12 +663,13 @@ public class WikiTextToHTML {
 			if (problem.getSeverity() == Severity.ERROR) {
 				errorCount++;
 			}
-			System.out.println(String.format("%s: %s:%s %s", messageLevel, source.toString(), problem.getOffset(), problem.getMessage())); //$NON-NLS-1$
+			System.out.println(String.format("%s: %s:%s %s", messageLevel, source.toString(), //$NON-NLS-1$
+					problem.getOffset(), problem.getMessage()));
 		}
 
 		return errorCount == 0;
 	}
-	
+
 	public static class Stylesheet {
 		private File file;
 
@@ -679,7 +697,7 @@ public class WikiTextToHTML {
 			attributes.put(attribute.getName(), attribute.getValue());
 		}
 	}
-	
+
 	public static class Attribute {
 		private String name;
 

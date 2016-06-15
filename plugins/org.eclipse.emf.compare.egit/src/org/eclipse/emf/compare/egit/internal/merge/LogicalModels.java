@@ -46,10 +46,10 @@ public final class LogicalModels {
 	 * only provide single-resource traversals. Since we are not interested in these defaults, we'll ignore
 	 * them for all "model" lookup.
 	 */
-	private static final Set<String> ignoredModelDescriptors = new HashSet<String>(Arrays.asList(
-			"org.eclipse.core.resources.modelProvider", //$NON-NLS-1$
-			"org.eclipse.jdt.ui.modelProvider", //$NON-NLS-1$
-			"org.eclipse.egit.ui.changeSetModel")); //$NON-NLS-1$
+	private static final Set<String> ignoredModelDescriptors = new HashSet<String>(
+			Arrays.asList("org.eclipse.core.resources.modelProvider", //$NON-NLS-1$
+					"org.eclipse.jdt.ui.modelProvider", //$NON-NLS-1$
+					"org.eclipse.egit.ui.changeSetModel")); //$NON-NLS-1$
 
 	private Map<IResource, Set<IResource>> models = new HashMap<IResource, Set<IResource>>();
 

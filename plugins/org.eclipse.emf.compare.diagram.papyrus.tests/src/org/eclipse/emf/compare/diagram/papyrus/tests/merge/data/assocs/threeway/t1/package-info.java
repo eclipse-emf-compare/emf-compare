@@ -10,8 +10,8 @@
  *******************************************************************************/
 
 /**
- * This package contains test data for the case of an existing transition whose source
- * or target is changed in a branch.
+ * This package contains test data for the case of an existing transition whose source or target is changed in
+ * a branch.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */

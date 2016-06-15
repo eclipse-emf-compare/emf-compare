@@ -122,9 +122,10 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	 * @param tabFolder
 	 */
 	private void createDefaultEnabledFilterTab(TabFolder tabFolder) {
-		enabledFilterTabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("FiltersPreferencePage.select.tab.label"), EMFCompareRCPUIMessages //$NON-NLS-1$
-				.getString("FiltersPreferencePage.selectIntro.text")); //$NON-NLS-1$
+		enabledFilterTabComposite = createTabSkeleton(tabFolder,
+				EMFCompareRCPUIMessages.getString("FiltersPreferencePage.select.tab.label"), //$NON-NLS-1$
+				EMFCompareRCPUIMessages
+						.getString("FiltersPreferencePage.selectIntro.text")); //$NON-NLS-1$
 		if (filterManager == null) {
 			filterManager = EMFCompareRCPUIPlugin.getDefault().getDifferenceFilterManager();
 		}
@@ -139,9 +140,10 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	 * @param tabFolder
 	 */
 	private void createActivateFilterTab(TabFolder tabFolder) {
-		activateFilterTabComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("FiltersPreferencePage.activate.tab.label"), EMFCompareRCPUIMessages //$NON-NLS-1$
-				.getString("FiltersPreferencePage.activateIntro.text")); //$NON-NLS-1$
+		activateFilterTabComposite = createTabSkeleton(tabFolder,
+				EMFCompareRCPUIMessages.getString("FiltersPreferencePage.activate.tab.label"), //$NON-NLS-1$
+				EMFCompareRCPUIMessages
+						.getString("FiltersPreferencePage.activateIntro.text")); //$NON-NLS-1$
 		if (filterManager == null) {
 			filterManager = EMFCompareRCPUIPlugin.getDefault().getDifferenceFilterManager();
 		}
@@ -283,11 +285,11 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 
 			Label introductionText = new Label(contentComposite, SWT.WRAP);
 			if (isDeactivateTab) {
-				introductionText.setText(EMFCompareRCPUIMessages
-						.getString("FiltersPreferencePage.INTRO_DEACTIVATE_TEXT")); //$NON-NLS-1$
+				introductionText.setText(
+						EMFCompareRCPUIMessages.getString("FiltersPreferencePage.INTRO_DEACTIVATE_TEXT")); //$NON-NLS-1$
 			} else {
-				introductionText.setText(EMFCompareRCPUIMessages
-						.getString("FiltersPreferencePage.INTRO_SELECT_TEXT")); //$NON-NLS-1$
+				introductionText.setText(
+						EMFCompareRCPUIMessages.getString("FiltersPreferencePage.INTRO_SELECT_TEXT")); //$NON-NLS-1$
 			}
 			introductionText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 			// Engine chooser composite
@@ -325,7 +327,8 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 			synchronizationGroup.setText(EMFCompareRCPUIMessages
 					.getString("InteractiveFilterUIContent.sync.behavior.group.label")); //$NON-NLS-1$
 			Label label = new Label(synchronizationGroup, SWT.WRAP);
-			label.setText(EMFCompareRCPUIMessages.getString("InteractiveFilterUIContent.sync.behavior.label")); //$NON-NLS-1$
+			label.setText(
+					EMFCompareRCPUIMessages.getString("InteractiveFilterUIContent.sync.behavior.label")); //$NON-NLS-1$
 			label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 			combo = new Combo(synchronizationGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
 			for (String comboLabel : comboValues) {
@@ -434,13 +437,13 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		 */
 		private Label createDescriptionComposite(Composite composite) {
 			Group descriptionComposite = new Group(composite, SWT.NONE);
-			descriptionComposite.setText(EMFCompareRCPUIMessages
-					.getString("InteractiveUIContent.descriptionComposite.label")); //$NON-NLS-1$
+			descriptionComposite.setText(
+					EMFCompareRCPUIMessages.getString("InteractiveUIContent.descriptionComposite.label")); //$NON-NLS-1$
 			descriptionComposite.setLayout(new GridLayout(1, false));
 			descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 			Label engineDescriptionLabel = new Label(descriptionComposite, SWT.WRAP);
-			engineDescriptionLabel.setBackground(Display.getCurrent().getSystemColor(
-					SWT.COLOR_WIDGET_BACKGROUND));
+			engineDescriptionLabel
+					.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 			GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 			layoutData.widthHint = 400;
 			layoutData.heightHint = 50;

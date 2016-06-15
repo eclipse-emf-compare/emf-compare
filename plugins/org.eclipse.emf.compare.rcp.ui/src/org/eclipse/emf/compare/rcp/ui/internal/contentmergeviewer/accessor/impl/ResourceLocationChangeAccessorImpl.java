@@ -74,8 +74,9 @@ public class ResourceLocationChangeAccessorImpl extends AbstractTypedElementAdap
 	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor#getInitialItem()
 	 */
 	public IMergeViewerItem getInitialItem() {
-		return new MergeViewerItem(fComparison, fDiff, fOwnerMatchResource.getLeft(), fOwnerMatchResource
-				.getRight(), fOwnerMatchResource.getOrigin(), fSide, getRootAdapterFactory());
+		return new MergeViewerItem(fComparison, fDiff, fOwnerMatchResource.getLeft(),
+				fOwnerMatchResource.getRight(), fOwnerMatchResource.getOrigin(), fSide,
+				getRootAdapterFactory());
 	}
 
 	/**

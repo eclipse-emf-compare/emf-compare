@@ -77,8 +77,8 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	protected TableContentMergeViewer(Composite parent, EMFCompareConfiguration config) {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
-		fAdapterFactory = new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault()
-				.createFilteredAdapterFactoryRegistry());
+		fAdapterFactory = new ComposedAdapterFactory(
+				EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry());
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 
@@ -162,8 +162,8 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 				return super.getElements(inputElement);
 			}
 		});
-		ret.setLabelProvider(new AdapterFactoryLabelProvider.FontAndColorProvider(fAdapterFactory, ret
-				.getStructuredViewer()) {
+		ret.setLabelProvider(new AdapterFactoryLabelProvider.FontAndColorProvider(fAdapterFactory,
+				ret.getStructuredViewer()) {
 			/**
 			 * {@inheritDoc}
 			 * 
@@ -297,8 +297,8 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		}
 	}
 
-	private void drawCenterLine(GC g, Rectangle leftClientArea, Rectangle rightClientArea,
-			TableItem leftItem, TableItem rightItem) {
+	private void drawCenterLine(GC g, Rectangle leftClientArea, Rectangle rightClientArea, TableItem leftItem,
+			TableItem rightItem) {
 		Control control = getCenterControl();
 		Point from = new Point(0, 0);
 		Point to = new Point(0, 0);

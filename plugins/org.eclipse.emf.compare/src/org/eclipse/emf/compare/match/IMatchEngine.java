@@ -21,8 +21,8 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
  * no-argument default constructor for instantiation.
  * <p>
  * We generally expect that a call to {@link #match(IComparisonScope)} will return us every single
- * {@link org.eclipse.emf.compare.Match matches} that can be determined from the given
- * {@link IComparisonScope context}. This includes all three of :
+ * {@link org.eclipse.emf.compare.Match matches} that can be determined from the given {@link IComparisonScope
+ * context}. This includes all three of :
  * <ul>
  * <li>Elements that are present on all three sides of the comparison scope,</li>
  * <li>Elements that are present on only two sides,</li>

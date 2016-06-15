@@ -69,8 +69,8 @@ public class ProfileTestUtil {
 	 */
 	public static void assertLoadedResources(ResourceSet resourceSet, Set<String> expectedLoadedResource) {
 		assertEquals(expectedLoadedResource.size(), resourceSet.getResources().size());
-		Set<String> actualURIs = Sets.newHashSet(Collections2
-				.transform(resourceSet.getResources(), TO_STRING));
+		Set<String> actualURIs = Sets
+				.newHashSet(Collections2.transform(resourceSet.getResources(), TO_STRING));
 		assertEquals(expectedLoadedResource, actualURIs);
 
 	}

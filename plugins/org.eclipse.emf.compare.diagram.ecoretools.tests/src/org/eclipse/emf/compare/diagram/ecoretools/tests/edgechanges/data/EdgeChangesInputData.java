@@ -35,7 +35,7 @@ public class EdgeChangesInputData extends DiagramInputData {
 	public Resource getA1Right() throws IOException {
 		return loadFromClassLoader("a1/TC02.ecorediag"); //$NON-NLS-1$
 	}
-	
+
 	public Resource getA2Left() throws IOException {
 		return loadFromClassLoader("a2/TC01.ecorediag"); //$NON-NLS-1$
 	}
@@ -43,7 +43,7 @@ public class EdgeChangesInputData extends DiagramInputData {
 	public Resource getA2Right() throws IOException {
 		return loadFromClassLoader("a2/TC02.ecorediag"); //$NON-NLS-1$
 	}
-	
+
 	public Resource getA3Left() throws IOException {
 		return loadFromClassLoader("a3/TC01.ecorediag"); //$NON-NLS-1$
 	}
@@ -51,7 +51,7 @@ public class EdgeChangesInputData extends DiagramInputData {
 	public Resource getA3Right() throws IOException {
 		return loadFromClassLoader("a3/TC02.ecorediag"); //$NON-NLS-1$
 	}
-	
+
 	public Resource getA4Left() throws IOException {
 		return loadFromClassLoader("a4/TC01.ecorediag"); //$NON-NLS-1$
 	}
@@ -59,7 +59,7 @@ public class EdgeChangesInputData extends DiagramInputData {
 	public Resource getA4Right() throws IOException {
 		return loadFromClassLoader("a4/TC02.ecorediag"); //$NON-NLS-1$
 	}
-	
+
 	@Override
 	protected Resource loadFromClassLoader(String string) throws IOException {
 		final URL fileURL = getClass().getResource(string);
@@ -82,7 +82,7 @@ public class EdgeChangesInputData extends DiagramInputData {
 
 		resource.load(str, Collections.emptyMap());
 		str.close();
-		
+
 		EcoreUtil.resolveAll(resourceSet);
 
 		return resource;

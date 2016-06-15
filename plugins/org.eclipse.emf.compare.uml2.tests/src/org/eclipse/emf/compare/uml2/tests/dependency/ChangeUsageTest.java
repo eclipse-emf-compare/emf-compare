@@ -124,8 +124,8 @@ public class ChangeUsageTest extends AbstractUMLTest {
 		// CHECK EXTENSION
 		// no extension any more
 		assertEquals(0, count(differences, instanceOf(DirectedRelationshipChange.class)));
-		Diff changeUMLDependency = Iterators.find(differences.iterator(), and(
-				instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.CHANGE)), null);
+		Diff changeUMLDependency = Iterators.find(differences.iterator(),
+				and(instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.CHANGE)), null);
 		assertNull(changeUMLDependency);
 		// assertNotNull(changeUMLDependency);
 		// assertEquals(1, changeUMLDependency.getRefinedBy().size());

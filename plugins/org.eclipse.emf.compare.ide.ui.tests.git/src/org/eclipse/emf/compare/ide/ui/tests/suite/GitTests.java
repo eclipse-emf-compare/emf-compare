@@ -40,32 +40,24 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({
-		DirCacheResourceVariantTreeProviderTest.class,
+@SuiteClasses({DirCacheResourceVariantTreeProviderTest.class,
 		// GitLogicalMergeTest.class,
 		// GitLogicalMergeWithCustomDependenciesTest.class,
 		GitLogicalModelTest.class,
 		// GitMergeTest.class,
-		GitResourceVariantTreeSubscriberTest.class,
-		IncomingMultiEReferenceTest.class,
-		IncomingSingleEReferenceOldSerializationTest.class,
-		IncomingSingleEReferenceTest.class,
-		OutgoingSingleEReferenceOldSerializationTest.class,
-		OutgoingSingleEReferenceTest.class,
+		GitResourceVariantTreeSubscriberTest.class, IncomingMultiEReferenceTest.class,
+		IncomingSingleEReferenceOldSerializationTest.class, IncomingSingleEReferenceTest.class,
+		OutgoingSingleEReferenceOldSerializationTest.class, OutgoingSingleEReferenceTest.class,
 		OutgoingMultiEReferenceTest.class,
 		// ModelResolverLocalTest.class,
 		// ModelResolverRemoteTest.class,
 		// MovedImplicitResourceAmongChangedResourcesTest.class,
 		// RenamedControlledResourceTests.class,
 		// RemoteNewProjectTests.class,
-		ResourceVariantTest.class,
-		ResourceUtilPathTest.class,
-		RevisionedURIConverterTest.class,
+		ResourceVariantTest.class, ResourceUtilPathTest.class, RevisionedURIConverterTest.class,
 		// StrategyRecursiveModelTest.class,
 		// StrategyRecursiveModelWithDeepProjectTest.class,
-		ThreadedModelResolverResolutionTest.class,
-		TreeWalkResourceVariantTreeProviderTest.class,
-})
+		ThreadedModelResolverResolutionTest.class, TreeWalkResourceVariantTreeProviderTest.class, })
 public class GitTests {
 	/**
 	 * Launches the test with the given arguments.

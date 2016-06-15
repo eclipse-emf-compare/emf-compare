@@ -71,9 +71,9 @@ public class MergerExtensionRegistryListener extends AbstractRegistryEventListen
 				try {
 					Integer.parseInt(rankingStr);
 				} catch (NumberFormatException nfe) {
-					log(IStatus.ERROR, element, EMFCompareRCPMessages.getString(
-							"malformed.extension.attribute", //$NON-NLS-1$
-							ATT_RANKING));
+					log(IStatus.ERROR, element,
+							EMFCompareRCPMessages.getString("malformed.extension.attribute", //$NON-NLS-1$
+									ATT_RANKING));
 				}
 				logMissingAttribute(element, ATT_RANKING);
 			} else {
@@ -84,8 +84,8 @@ public class MergerExtensionRegistryListener extends AbstractRegistryEventListen
 							merger.setRanking(Integer.parseInt(element.getAttribute(ATT_RANKING)));
 							IMerger previous = mergerRegistry.add(merger);
 							if (previous != null) {
-								log(IStatus.WARNING, element, EMFCompareRCPMessages.getString(
-										"duplicate.merger", merger.getClass().getName())); //$NON-NLS-1$
+								log(IStatus.WARNING, element, EMFCompareRCPMessages
+										.getString("duplicate.merger", merger.getClass().getName())); //$NON-NLS-1$
 							}
 						} catch (CoreException e) {
 							log(IStatus.ERROR, element, e.getMessage());
@@ -120,9 +120,9 @@ public class MergerExtensionRegistryListener extends AbstractRegistryEventListen
 				try {
 					Integer.parseInt(rankingStr);
 				} catch (NumberFormatException nfe) {
-					log(IStatus.ERROR, element, EMFCompareRCPMessages.getString(
-							"malformed.extension.attribute", //$NON-NLS-1$
-							ATT_RANKING));
+					log(IStatus.ERROR, element,
+							EMFCompareRCPMessages.getString("malformed.extension.attribute", //$NON-NLS-1$
+									ATT_RANKING));
 				}
 				logMissingAttribute(element, ATT_RANKING);
 				ret = false;
@@ -147,8 +147,8 @@ public class MergerExtensionRegistryListener extends AbstractRegistryEventListen
 			merger.setRanking(Integer.parseInt(element.getAttribute(ATT_RANKING)));
 			IMerger previous = mergerRegistry.add(merger);
 			if (previous != null) {
-				log(IStatus.WARNING, element, EMFCompareRCPMessages.getString(
-						"duplicate.extension", merger.getClass().getName())); //$NON-NLS-1$
+				log(IStatus.WARNING, element,
+						EMFCompareRCPMessages.getString("duplicate.extension", merger.getClass().getName())); //$NON-NLS-1$
 			}
 		} catch (CoreException e) {
 			log(IStatus.ERROR, element, e.getMessage());

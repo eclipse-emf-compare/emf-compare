@@ -60,8 +60,8 @@ public class ExtensionsItemProviderAdapterFactorySpec extends ExtensionsItemProv
 	@Override
 	public Adapter createEdgeChangeAdapter() {
 		if (fEdgeChangeItemProvider == null) {
-			fEdgeChangeItemProvider = new EdgeChangeItemProviderSpec((ItemProviderAdapter)super
-					.createEdgeChangeAdapter());
+			fEdgeChangeItemProvider = new EdgeChangeItemProviderSpec(
+					(ItemProviderAdapter)super.createEdgeChangeAdapter());
 		}
 		return fEdgeChangeItemProvider;
 	}
@@ -87,8 +87,8 @@ public class ExtensionsItemProviderAdapterFactorySpec extends ExtensionsItemProv
 	@Override
 	public Adapter createNodeChangeAdapter() {
 		if (fNodeChangeItemProvider == null) {
-			fNodeChangeItemProvider = new NodeChangeItemProviderSpec((ItemProviderAdapter)super
-					.createNodeChangeAdapter());
+			fNodeChangeItemProvider = new NodeChangeItemProviderSpec(
+					(ItemProviderAdapter)super.createNodeChangeAdapter());
 		}
 
 		return fNodeChangeItemProvider;
@@ -115,8 +115,8 @@ public class ExtensionsItemProviderAdapterFactorySpec extends ExtensionsItemProv
 	@Override
 	public Adapter createCoordinatesChangeAdapter() {
 		if (fCoordinatesChangeItemProvider == null) {
-			fCoordinatesChangeItemProvider = new CoordinatesChangeItemProviderSpec((ItemProviderAdapter)super
-					.createCoordinatesChangeAdapter());
+			fCoordinatesChangeItemProvider = new CoordinatesChangeItemProviderSpec(
+					(ItemProviderAdapter)super.createCoordinatesChangeAdapter());
 		}
 		return fCoordinatesChangeItemProvider;
 	}
@@ -129,8 +129,8 @@ public class ExtensionsItemProviderAdapterFactorySpec extends ExtensionsItemProv
 	@Override
 	public Adapter createDiagramChangeAdapter() {
 		if (fDiagramChangeItemProvider == null) {
-			fDiagramChangeItemProvider = new DiagramChangeItemProviderSpec((ItemProviderAdapter)super
-					.createDiagramChangeAdapter());
+			fDiagramChangeItemProvider = new DiagramChangeItemProviderSpec(
+					(ItemProviderAdapter)super.createDiagramChangeAdapter());
 		}
 		return fDiagramChangeItemProvider;
 	}

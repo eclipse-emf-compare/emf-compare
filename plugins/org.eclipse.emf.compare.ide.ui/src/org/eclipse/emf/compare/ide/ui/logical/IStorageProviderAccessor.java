@@ -29,8 +29,8 @@ import org.eclipse.emf.compare.ide.ui.internal.logical.RenameDetector;
 @Beta
 public interface IStorageProviderAccessor {
 	/**
-	 * This will be called by the URI Converter to get the content associated with the given local
-	 * resource (which might not exist locally).
+	 * This will be called by the URI Converter to get the content associated with the given local resource
+	 * (which might not exist locally).
 	 * 
 	 * @param resource
 	 *            The resource we need content for.
@@ -55,8 +55,8 @@ public interface IStorageProviderAccessor {
 	boolean isInSync(IResource resource) throws CoreException;
 
 	/**
-	 * Given a source or remote file, this method optionally returns the corresponding {@link IFile}
-	 * before it has been renamed on the respective {@code side}, if it has been renamed at all.
+	 * Given a source or remote file, this method optionally returns the corresponding {@link IFile} before it
+	 * has been renamed on the respective {@code side}, if it has been renamed at all.
 	 * <p>
 	 * Implementers should delegate this to {@link RenameDetector}.
 	 * </p>
@@ -71,8 +71,8 @@ public interface IStorageProviderAccessor {
 	IFile getFileBeforeRename(IFile sourceOrRemoteFile, DiffSide side);
 
 	/**
-	 * Given an origin file, this method optionally returns the corresponding {@link IFile} after it has
-	 * been renamed on the respective {@code side}, if it has been renamed at all.
+	 * Given an origin file, this method optionally returns the corresponding {@link IFile} after it has been
+	 * renamed on the respective {@code side}, if it has been renamed at all.
 	 * <p>
 	 * Implementers should delegate this to {@link RenameDetector}.
 	 * </p>
@@ -88,13 +88,13 @@ public interface IStorageProviderAccessor {
 
 	/** Used by the resolution process to determine the side of the revision to fetch. */
 	public static enum DiffSide {
-	/** Source side. Usually denotes "left" or "local" content. */
-	SOURCE,
+		/** Source side. Usually denotes "left" or "local" content. */
+		SOURCE,
 
-	/** Remote side. Usually denotes the "right" or "reference" content for a comparison. */
-	REMOTE,
+		/** Remote side. Usually denotes the "right" or "reference" content for a comparison. */
+		REMOTE,
 
-	/** Origin side. Corresponds to the common ancestor of the local and remote sides. */
-	ORIGIN;
+		/** Origin side. Corresponds to the common ancestor of the local and remote sides. */
+		ORIGIN;
 	}
 }

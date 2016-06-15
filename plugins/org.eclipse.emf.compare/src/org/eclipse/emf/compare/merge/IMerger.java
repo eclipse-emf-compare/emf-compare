@@ -158,7 +158,7 @@ public interface IMerger {
 	 * A default implementation of an {@link IMerger.Registry}. This is the implementation EMF Compare will
 	 * use through its GUI.
 	 */
-	public class RegistryImpl implements Registry {
+	class RegistryImpl implements Registry {
 		/**
 		 * Map which references the registered mergers per their class name.
 		 */

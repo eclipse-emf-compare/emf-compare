@@ -128,7 +128,8 @@ public class ResourceComputationScheduler<T> {
 	 * @param eventBus
 	 *            The {@link EventBus} used to post events (shutdown events), can be {@code null}
 	 */
-	public ResourceComputationScheduler(int shutdownWaitDuration, TimeUnit shutdownWaitUnit, EventBus eventBus) {
+	public ResourceComputationScheduler(int shutdownWaitDuration, TimeUnit shutdownWaitUnit,
+			EventBus eventBus) {
 		this.lock = new ReentrantLock(true);
 		this.endOfTasks = lock.newCondition();
 		this.currentlyComputing = new HashSet<T>();
@@ -158,16 +159,16 @@ public class ResourceComputationScheduler<T> {
 	 */
 	private void setUpComputation() {
 		final int availableProcessors = Runtime.getRuntime().availableProcessors();
-		ThreadFactory computingThreadFactory = new ThreadFactoryBuilder().setNameFormat(
-				"EMFCompare-ResolvingThread-%d") //$NON-NLS-1$
+		ThreadFactory computingThreadFactory = new ThreadFactoryBuilder()
+				.setNameFormat("EMFCompare-ResolvingThread-%d") //$NON-NLS-1$
 				.build();
-		this.computingPool = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(
-				availableProcessors, computingThreadFactory));
-		ThreadFactory unloadingThreadFactory = new ThreadFactoryBuilder().setNameFormat(
-				"EMFCompare-UnloadingThread-%d") //$NON-NLS-1$
+		this.computingPool = MoreExecutors.listeningDecorator(
+				Executors.newFixedThreadPool(availableProcessors, computingThreadFactory));
+		ThreadFactory unloadingThreadFactory = new ThreadFactoryBuilder()
+				.setNameFormat("EMFCompare-UnloadingThread-%d") //$NON-NLS-1$
 				.build();
-		this.unloadingPool = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(
-				availableProcessors, unloadingThreadFactory));
+		this.unloadingPool = MoreExecutors.listeningDecorator(
+				Executors.newFixedThreadPool(availableProcessors, unloadingThreadFactory));
 		computedKeys = new LinkedHashSet<T>();
 	}
 
@@ -256,9 +257,9 @@ public class ResourceComputationScheduler<T> {
 	 */
 	public synchronized void initialize() {
 		if (!isInitialized()) {
-			this.terminator = MoreExecutors.listeningDecorator(Executors
-					.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat(
-							"EMFCompare-ThreadPoolShutdowner-%d").setPriority(Thread.MAX_PRIORITY).build())); //$NON-NLS-1$
+			this.terminator = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor(
+					new ThreadFactoryBuilder().setNameFormat("EMFCompare-ThreadPoolShutdowner-%d") //$NON-NLS-1$
+							.setPriority(Thread.MAX_PRIORITY).build()));
 		}
 	}
 
@@ -478,10 +479,10 @@ public class ResourceComputationScheduler<T> {
 	}
 
 	/**
-	 * Shuts down an {@link ExecutorService} in two phases, first by calling
-	 * {@link ExecutorService#shutdown() shutdown} to reject incoming tasks, and then calling
-	 * {@link ExecutorService#shutdownNow() shutdownNow}, if necessary, to cancel any lingering tasks. Returns
-	 * true if the pool has been properly shutdown, false otherwise.
+	 * Shuts down an {@link ExecutorService} in two phases, first by calling {@link ExecutorService#shutdown()
+	 * shutdown} to reject incoming tasks, and then calling {@link ExecutorService#shutdownNow() shutdownNow},
+	 * if necessary, to cancel any lingering tasks. Returns true if the pool has been properly shutdown, false
+	 * otherwise.
 	 * <p>
 	 * Copy/pasted from {@link ExecutorService} javadoc.
 	 * 

@@ -48,27 +48,28 @@ public class HideTest extends AbstractTest {
 		final Resource right = input.getA1Right();
 
 		final Comparison comparison = compare(left, right, null);
-		
+
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
 		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		
-		Predicate<? super Diff> attributeChangeDescription = attributeValueMatch(NotationPackage.Literals.VIEW__VISIBLE.getName(), Boolean.FALSE, false);
+
+		Predicate<? super Diff> attributeChangeDescription = attributeValueMatch(
+				NotationPackage.Literals.VIEW__VISIBLE.getName(), Boolean.FALSE, false);
 		Predicate<? super Diff> hideDescription = and(instanceOf(Hide.class), ofKind(DifferenceKind.CHANGE));
-		
+
 		assertSame(Integer.valueOf(1), count(differences, instanceOf(Hide.class)));
 
 		final Diff attributeChange = Iterators.find(differences.iterator(), attributeChangeDescription);
 		final Diff hide = Iterators.find(differences.iterator(), hideDescription);
-		
+
 		assertNotNull(attributeChange);
 		assertNotNull(hide);
-		
+
 		assertSame(Integer.valueOf(1), Integer.valueOf(hide.getRefinedBy().size()));
 		assertTrue(hide.getRefinedBy().contains(attributeChange));
-		
-		testIntersections(comparison);	
+
+		testIntersections(comparison);
 	}
 
 	@Override

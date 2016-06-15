@@ -56,14 +56,14 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 	 *            The match resource.
 	 * @return The predicate.
 	 */
-	private static Predicate<ResourceAttachmentChange> uriEqualToOneAtLeast(final MatchResource matchResource) {
+	private static Predicate<ResourceAttachmentChange> uriEqualToOneAtLeast(
+			final MatchResource matchResource) {
 		return new Predicate<ResourceAttachmentChange>() {
 			public boolean apply(ResourceAttachmentChange difference) {
 				final String diffResourceURI = difference.getResourceURI();
-				return diffResourceURI != null
-						&& (diffResourceURI.equals(matchResource.getLeftURI())
-								|| diffResourceURI.equals(matchResource.getRightURI()) || diffResourceURI
-									.equals(matchResource.getOriginURI()));
+				return diffResourceURI != null && (diffResourceURI.equals(matchResource.getLeftURI())
+						|| diffResourceURI.equals(matchResource.getRightURI())
+						|| diffResourceURI.equals(matchResource.getOriginURI()));
 			}
 		};
 	}

@@ -25,5 +25,6 @@ public interface EMFCompareDeferredTreeContentManagerProvider {
 	 *            The viewer with which the {@link EMFCompareDeferredTreeContentManager} is created.
 	 * @return The created {@link EMFCompareDeferredTreeContentManager}.
 	 */
-	public EMFCompareDeferredTreeContentManager createEMFDeferredTreeContentManager(AbstractTreeViewer viewer);
+	public EMFCompareDeferredTreeContentManager createEMFDeferredTreeContentManager(
+			AbstractTreeViewer viewer);
 }

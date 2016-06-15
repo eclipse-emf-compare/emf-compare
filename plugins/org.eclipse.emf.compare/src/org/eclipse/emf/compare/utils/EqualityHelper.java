@@ -57,8 +57,8 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 */
 	@Deprecated
 	public EqualityHelper() {
-		this(createDefaultCache(CacheBuilder.newBuilder().maximumSize(
-				DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE)));
+		this(createDefaultCache(CacheBuilder.newBuilder()
+				.maximumSize(DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE)));
 	}
 
 	/**
@@ -241,12 +241,12 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	}
 
 	/**
-	 * To some {@link URI}s a human friendly description is attached describing the type the {@link URI}
-	 * is pointing to. The description is marked by a "?" at the beginning and end. This method returns
-	 * the fragment without the attached type description.
+	 * To some {@link URI}s a human friendly description is attached describing the type the {@link URI} is
+	 * pointing to. The description is marked by a "?" at the beginning and end. This method returns the
+	 * fragment without the attached type description.
 	 * 
 	 * @param fragment
-	 *                The {@link URI} fragment to check for a type description attachment
+	 *            The {@link URI} fragment to check for a type description attachment
 	 * @return The fragment of the {@link URI} stripped from type description if it has one, otherwise the
 	 *         original fragment is returned.
 	 */

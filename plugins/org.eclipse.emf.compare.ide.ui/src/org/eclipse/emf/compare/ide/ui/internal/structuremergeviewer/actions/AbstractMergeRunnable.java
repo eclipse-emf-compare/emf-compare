@@ -95,7 +95,8 @@ public abstract class AbstractMergeRunnable {
 	 * @param mergerRegistry
 	 *            Current registry of mergers.
 	 */
-	protected void markAsMerged(Diff diff, MergeMode mode, boolean mergeRightToLeft, Registry mergerRegistry) {
+	protected void markAsMerged(Diff diff, MergeMode mode, boolean mergeRightToLeft,
+			Registry mergerRegistry) {
 		if (diff.getState() == DifferenceState.MERGED) {
 			return;
 		}

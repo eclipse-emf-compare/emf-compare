@@ -61,10 +61,8 @@ public class DefaultRCPMatchEngineFactory implements IMatchEngine.Factory, IConf
 			try {
 				result = UseIdentifiers.valueOf(storedPref);
 			} catch (IllegalArgumentException e) {
-				EMFCompareRCPPlugin.getDefault().log(
-						IStatus.ERROR,
-						EMFCompareMessages
-								.getString("RCPMatchEngineFactory.INCORECT_USE_IDENTIFIER_ATTRIBUTE")); //$NON-NLS-1$
+				EMFCompareRCPPlugin.getDefault().log(IStatus.ERROR, EMFCompareMessages
+						.getString("RCPMatchEngineFactory.INCORECT_USE_IDENTIFIER_ATTRIBUTE")); //$NON-NLS-1$
 				result = DEFAULT_USE_IDENTIFIER_ATRIBUTE;
 			}
 		} else {
@@ -78,8 +76,8 @@ public class DefaultRCPMatchEngineFactory implements IMatchEngine.Factory, IConf
 	 */
 	public IMatchEngine getMatchEngine() {
 		final UseIdentifiers useUdentifier = getUseIdentifierValue(config);
-		return DefaultMatchEngine.create(useUdentifier, EMFCompareRCPPlugin.getDefault()
-				.getWeightProviderRegistry());
+		return DefaultMatchEngine.create(useUdentifier,
+				EMFCompareRCPPlugin.getDefault().getWeightProviderRegistry());
 	}
 
 	/**

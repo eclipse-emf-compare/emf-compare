@@ -73,9 +73,8 @@ public class DiagramChangeFactory extends AbstractDiagramChangeFactory {
 		// changes.
 		if (refiningDiff.getSource() == extension.getSource()) {
 			extension.getRefinedBy().add(refiningDiff);
-			extension.getRefinedBy().addAll(
-					Collections2.filter(getAllContainedDifferences(refiningDiff), EMFComparePredicates
-							.fromSide(extension.getSource())));
+			extension.getRefinedBy().addAll(Collections2.filter(getAllContainedDifferences(refiningDiff),
+					EMFComparePredicates.fromSide(extension.getSource())));
 		}
 	}
 
@@ -100,7 +99,8 @@ public class DiagramChangeFactory extends AbstractDiagramChangeFactory {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff difference) {
 				return difference instanceof ResourceAttachmentChange
-						&& (isRelatedToAnAddDiagram((ResourceAttachmentChange)difference) || isRelatedToADeleteDiagram((ResourceAttachmentChange)difference));
+						&& (isRelatedToAnAddDiagram((ResourceAttachmentChange)difference)
+								|| isRelatedToADeleteDiagram((ResourceAttachmentChange)difference));
 			}
 		};
 	}

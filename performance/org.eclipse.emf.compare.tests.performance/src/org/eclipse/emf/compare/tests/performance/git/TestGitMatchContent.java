@@ -26,13 +26,13 @@ import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestGitMatchContent extends AbstractEMFComparePerformanceTest {
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest#setSUTName()
 	 */
 	@Override
@@ -43,7 +43,7 @@ public class TestGitMatchContent extends AbstractEMFComparePerformanceTest {
 	@Test
 	public void a_matchContentUMLSmall() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLSmall");
-		
+
 		final DataGit data = new SmallGitInputData();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
@@ -52,11 +52,11 @@ public class TestGitMatchContent extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void b_matchContentUMLNominal() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLNominal");
-		
+
 		final DataGit data = new NominalGitInputData();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
@@ -65,11 +65,11 @@ public class TestGitMatchContent extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void c_matchContentUMLSmallSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLSmallSplit");
-		
+
 		final DataGit data = new SmallSplitGitInputData();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {
@@ -78,11 +78,11 @@ public class TestGitMatchContent extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void d_matchContentUMLNominalSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("matchContentUMLNominalSplit");
-		
+
 		final DataGit data = new NominalSplitGitInputData();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
 			public void run() {

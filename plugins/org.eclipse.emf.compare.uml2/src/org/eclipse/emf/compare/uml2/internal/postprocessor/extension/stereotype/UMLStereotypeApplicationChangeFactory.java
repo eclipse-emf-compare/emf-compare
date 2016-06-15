@@ -120,7 +120,8 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFact
 					.getDifferences().iterator();
 			while (changes.hasNext()) {
 				final Diff diff = changes.next();
-				if ((diff instanceof AttributeChange || diff instanceof ReferenceChange || diff instanceof ResourceAttachmentChange)
+				if ((diff instanceof AttributeChange || diff instanceof ReferenceChange
+						|| diff instanceof ResourceAttachmentChange)
 						&& diff.getSource() == extension.getSource()) {
 					extension.getRefinedBy().add(diff);
 				}
@@ -136,7 +137,8 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFact
 	 */
 	@Override
 	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {
-		return UMLCompareUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
+		return UMLCompareUtil
+				.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	/**
@@ -146,7 +148,8 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFact
 	 */
 	@Override
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
-		return UMLCompareUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
+		return UMLCompareUtil
+				.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	/**
@@ -178,9 +181,8 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFact
 	 */
 	@Override
 	protected boolean isRelatedToAnExtensionAdd(ResourceAttachmentChange input) {
-		return input.getKind() == DifferenceKind.ADD
-				&& UMLCompareUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(),
-						input)) != null;
+		return input.getKind() == DifferenceKind.ADD && UMLCompareUtil
+				.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	/**
@@ -190,9 +192,8 @@ public class UMLStereotypeApplicationChangeFactory extends AbstractUMLChangeFact
 	 */
 	@Override
 	protected boolean isRelatedToAnExtensionDelete(ResourceAttachmentChange input) {
-		return input.getKind() == DifferenceKind.DELETE
-				&& UMLCompareUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(),
-						input)) != null;
+		return input.getKind() == DifferenceKind.DELETE && UMLCompareUtil
+				.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	/**

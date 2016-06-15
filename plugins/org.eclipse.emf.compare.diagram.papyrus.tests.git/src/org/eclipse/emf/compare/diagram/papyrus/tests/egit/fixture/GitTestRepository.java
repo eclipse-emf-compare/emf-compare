@@ -111,12 +111,11 @@ public class GitTestRepository {
 	public Repository getRepository() {
 		return this.repository;
 	}
-	
+
 	/**
 	 * Adds all changes and creates a commit.
 	 * <p>
-	 * This is a convenience method for
-	 * {@link #addAllAndCommit(String, boolean)}, whereas deleted or missing
+	 * This is a convenience method for {@link #addAllAndCommit(String, boolean)}, whereas deleted or missing
 	 * files are <em>not</em> added to the index.
 	 * </p>
 	 * 
@@ -136,8 +135,7 @@ public class GitTestRepository {
 	 * @param commitMessage
 	 *            The commit message.
 	 * @param addDeleted
-	 *            Specifies whether missing or deleted files should added to
-	 *            index, too.
+	 *            Specifies whether missing or deleted files should added to index, too.
 	 * @return The reference to the created commit.
 	 * @throws Exception
 	 *             if anything goes wrong.
@@ -307,8 +305,8 @@ public class GitTestRepository {
 	 * @throws GitAPIException
 	 * @throws NoFilepatternException
 	 */
-	public void addToIndex(IResource resource) throws CoreException, IOException, NoFilepatternException,
-			GitAPIException {
+	public void addToIndex(IResource resource)
+			throws CoreException, IOException, NoFilepatternException, GitAPIException {
 		String repoPath = getRepoRelativePath(resource.getLocation().toString());
 		Git git = new Git(repository);
 		try {
@@ -394,8 +392,8 @@ public class GitTestRepository {
 	 * @param resources
 	 *            Resources to add to the index.
 	 */
-	public void addToIndex(IResource... resources) throws CoreException, IOException, NoFilepatternException,
-			GitAPIException {
+	public void addToIndex(IResource... resources)
+			throws CoreException, IOException, NoFilepatternException, GitAPIException {
 		Git git = new Git(repository);
 		try {
 			for (IResource resource : resources) {
@@ -413,8 +411,8 @@ public class GitTestRepository {
 	 * @param resources
 	 *            Resources to add to the index.
 	 */
-	public void removeFromIndex(IResource... resources) throws CoreException, IOException,
-			NoFilepatternException, GitAPIException {
+	public void removeFromIndex(IResource... resources)
+			throws CoreException, IOException, NoFilepatternException, GitAPIException {
 		Git git = new Git(repository);
 		try {
 			for (IResource resource : resources) {
@@ -576,10 +574,9 @@ public class GitTestRepository {
 	public void mergeLogical(String refName) throws CoreException {
 		new MergeOperation(repository, refName).execute(null);
 	}
-	
+
 	/**
-	 * Merge the given ref with the current HEAD, using the default (logical)
-	 * strategy.
+	 * Merge the given ref with the current HEAD, using the default (logical) strategy.
 	 * 
 	 * @param refName
 	 *            Name of a commit to merge with the current HEAD.
@@ -599,24 +596,24 @@ public class GitTestRepository {
 	public void mergeTextual(String refName) throws CoreException {
 		new MergeOperation(repository, refName, MergeStrategy.RECURSIVE.getName()).execute(null);
 	}
-	
+
 	/**
 	 * Rebase the current HEAD on the given ref, using the default (logical) strategy.
 	 * 
 	 * @param refName
 	 *            Name of a commit to rebase the current HEAD on.
 	 */
-	public void rebaseLogical(String refName) throws CoreException, IOException{
+	public void rebaseLogical(String refName) throws CoreException, IOException {
 		new RebaseOperation(repository, repository.getRef(refName)).execute(null);
 	}
-	
+
 	/**
 	 * CherryPick the given ref on the current HEAD , using the default (logical) strategy.
 	 * 
 	 * @param refName
 	 *            Name of a commit to cherry-pick on the current HEAD.
 	 */
-	public void cherryPickLogical(String refName) throws CoreException, IOException{
+	public void cherryPickLogical(String refName) throws CoreException, IOException {
 		RevWalk revWalk = new RevWalk(repository);
 		try {
 			RevCommit commitId = revWalk.parseCommit(repository.getRef(refName).getObjectId());
@@ -709,7 +706,8 @@ public class GitTestRepository {
 	 */
 	public Subscriber createSubscriberForResolution(String sourceRef, String targetRef, boolean includeLocal)
 			throws IOException {
-		final GitSynchronizeData data = new GitSynchronizeData(repository, sourceRef, targetRef, includeLocal);
+		final GitSynchronizeData data = new GitSynchronizeData(repository, sourceRef, targetRef,
+				includeLocal);
 		final GitSynchronizeDataSet dataSet = new GitSynchronizeDataSet(data);
 		final GitResourceVariantTreeSubscriber subscriber = new GitResourceVariantTreeSubscriber(dataSet);
 		subscriber.init(new NullProgressMonitor());
@@ -739,15 +737,16 @@ public class GitTestRepository {
 	 */
 	public Subscriber createSubscriberForComparison(String sourceRef, String targetRef, IFile comparedFile,
 			boolean includeLocal) throws IOException {
-		final GitSynchronizeData data = new GitSynchronizeData(repository, sourceRef, targetRef, includeLocal);
+		final GitSynchronizeData data = new GitSynchronizeData(repository, sourceRef, targetRef,
+				includeLocal);
 		final GitSynchronizeDataSet dataSet = new GitSynchronizeDataSet(data);
 		final GitResourceVariantTreeSubscriber subscriber = new GitResourceVariantTreeSubscriber(dataSet);
 		subscriber.init(new NullProgressMonitor());
 		final ResourceMapping[] mappings = getResourceMappings(comparedFile,
 				ResourceMappingContext.LOCAL_CONTEXT);
 
-		final RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(
-				subscriber, dataSet);
+		final RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(subscriber,
+				dataSet);
 		final SubscriberScopeManager manager = new SubscriberScopeManager(subscriber.getName(), mappings,
 				subscriber, remoteContext, true);
 		final GitSubscriberMergeContext context = new GitSubscriberMergeContext(subscriber, manager, dataSet);
@@ -781,8 +780,8 @@ public class GitTestRepository {
 		final GitResourceVariantTreeSubscriber subscriber = new GitResourceVariantTreeSubscriber(dataSet);
 		subscriber.init(new NullProgressMonitor());
 
-		final RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(
-				subscriber, dataSet);
+		final RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(subscriber,
+				dataSet);
 		final ResourceMapping[] mappings = getResourceMappings(comparedFile, remoteContext);
 		final SubscriberScopeManager manager = new SubscriberScopeManager(subscriber.getName(), mappings,
 				subscriber, remoteContext, true);

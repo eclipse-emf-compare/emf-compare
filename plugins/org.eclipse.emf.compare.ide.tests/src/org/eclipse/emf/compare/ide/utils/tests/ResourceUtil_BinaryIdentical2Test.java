@@ -41,7 +41,7 @@ import org.osgi.framework.Bundle;
 public class ResourceUtil_BinaryIdentical2Test {
 
 	private static final String PATH1 = "src/org/eclipse/emf/compare/ide/utils/tests/data/binaryequalitytestinputdata1";
-	
+
 	private static final String PATH2 = "src/org/eclipse/emf/compare/ide/utils/tests/data/binaryequalitytestinputdata2";
 
 	File file1, file2;

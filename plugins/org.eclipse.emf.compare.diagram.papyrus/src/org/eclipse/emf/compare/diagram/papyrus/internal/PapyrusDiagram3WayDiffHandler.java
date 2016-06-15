@@ -101,8 +101,9 @@ public class PapyrusDiagram3WayDiffHandler extends AbstractPapyrusDiagramDiffHan
 			// because those that participate in relations
 			// materialize in notation files by a target change in
 			// the related Connector
-			indexer.putEquivalentDiff(new SidedEObject(getMatchObjectOnSameSideAs(refChange), refChange
-					.getSource()), refChange);
+			indexer.putEquivalentDiff(
+					new SidedEObject(getMatchObjectOnSameSideAs(refChange), refChange.getSource()),
+					refChange);
 		} else if (isTransitionReferenceChange(refChange)) {
 			indexer.putEquivalentDiff(new SidedFeatureInstance(getMatchObjectOnSameSideAs(refChange),
 					refChange.getReference(), refChange.getSource()), refChange);

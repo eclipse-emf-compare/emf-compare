@@ -71,8 +71,8 @@ public class EMFComparisonSourceActionHandler extends AbstractHandler {
 
 		final IEMFComparisonSource[] sources = adaptSelection(selection.toList());
 
-		final AdapterFactory adapterFactory = new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault()
-				.createFilteredAdapterFactoryRegistry());
+		final AdapterFactory adapterFactory = new ComposedAdapterFactory(
+				EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry());
 
 		final IEMFComparisonSource leftSource;
 		final IEMFComparisonSource rightSource;
@@ -103,8 +103,9 @@ public class EMFComparisonSourceActionHandler extends AbstractHandler {
 
 		if (left.getStorages().size() == 0 && right.getStorages().size() == 0
 				&& origin.getStorages().size() == 0) {
-			MessageDialog.openError(HandlerUtil.getActiveShell(event), EMFCompareIDEUIMessages
-					.getString("EMFComparisonSourceActionHandler_NoResourcesFound_Title"), //$NON-NLS-1$
+			MessageDialog.openError(HandlerUtil.getActiveShell(event),
+					EMFCompareIDEUIMessages
+							.getString("EMFComparisonSourceActionHandler_NoResourcesFound_Title"), //$NON-NLS-1$
 					EMFCompareIDEUIMessages
 							.getString("EMFComparisonSourceActionHandler_NoResourcesFound_Message")); //$NON-NLS-1$
 			return null;
@@ -116,12 +117,15 @@ public class EMFComparisonSourceActionHandler extends AbstractHandler {
 		final IWorkbenchPart activePart = HandlerUtil.getActivePart(event);
 		final CommandStack commandStack = getCommandStack(activePart);
 
-		String inputTitle = MessageFormat
-				.format(EMFCompareIDEUIMessages.getString("EMFComparisonSourceActionHandler_InputTitle_Base"), leftSource.getName(), rightSource //$NON-NLS-1$
-								.getName());
+		String inputTitle = MessageFormat.format(
+				EMFCompareIDEUIMessages.getString("EMFComparisonSourceActionHandler_InputTitle_Base"), //$NON-NLS-1$
+				leftSource.getName(), rightSource
+						.getName());
 		if (originSource != null) {
-			inputTitle += MessageFormat.format(' ' + EMFCompareIDEUIMessages
-					.getString("EMFComparisonSourceActionHandler_InputTitle_Origin"), originSource.getName()); //$NON-NLS-1$
+			inputTitle += MessageFormat.format(
+					' ' + EMFCompareIDEUIMessages
+							.getString("EMFComparisonSourceActionHandler_InputTitle_Origin"), //$NON-NLS-1$
+					originSource.getName());
 		}
 
 		final CompareEditorInput input = createCompareEditorInput(commandStack, adapterFactory, scope,
@@ -173,8 +177,8 @@ public class EMFComparisonSourceActionHandler extends AbstractHandler {
 	 */
 	private CompareEditorInput createCompareEditorInput(final CommandStack commandStack,
 			final AdapterFactory adapterFactory, final IComparisonScope scope, final String inputTitle) {
-		final ICompareEditingDomain editingDomain = createEMFCompareEditingDomain(commandStack, scope
-				.getLeft(), scope.getRight(), scope.getOrigin());
+		final ICompareEditingDomain editingDomain = createEMFCompareEditingDomain(commandStack,
+				scope.getLeft(), scope.getRight(), scope.getOrigin());
 
 		final EMFCompareConfiguration configuration = new EMFCompareConfiguration(new CompareConfiguration());
 
@@ -183,9 +187,9 @@ public class EMFComparisonSourceActionHandler extends AbstractHandler {
 
 		final EMFCompareBuilderConfigurator engineProvider;
 		if (preferences != null) {
-			engineProvider = new EMFCompareBuilderConfigurator(preferences, EMFCompareRCPPlugin.getDefault()
-					.getMatchEngineFactoryRegistry(), EMFCompareRCPPlugin.getDefault()
-					.getPostProcessorRegistry());
+			engineProvider = new EMFCompareBuilderConfigurator(preferences,
+					EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry(),
+					EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
 		} else {
 			engineProvider = EMFCompareBuilderConfigurator.createDefault();
 		}

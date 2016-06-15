@@ -98,8 +98,8 @@ public class ModelResolverLocalTest extends LogicalModelGraphTest {
 	@Override
 	@After
 	public void tearDown() throws Exception {
-		final EMFModelProvider emfModelProvider = (EMFModelProvider)ModelProvider.getModelProviderDescriptor(
-				EMFModelProvider.PROVIDER_ID).getModelProvider();
+		final EMFModelProvider emfModelProvider = (EMFModelProvider)ModelProvider
+				.getModelProviderDescriptor(EMFModelProvider.PROVIDER_ID).getModelProvider();
 		emfModelProvider.clear();
 		setResolutionScope(originalResolutionScope);
 		iFile1 = null;
@@ -200,7 +200,8 @@ public class ModelResolverLocalTest extends LogicalModelGraphTest {
 
 		Set<? extends Set<URI>> expectedGraph = ImmutableSet.of(uriSet(iFile1, iFile2));
 		Set<IStorage> expectedTraversal = storageSet(iFile1, iFile2);
-		ExpectedResult expectedResult = new ExpectedResult(expectedGraph, expectedTraversal, Diagnostic.ERROR);
+		ExpectedResult expectedResult = new ExpectedResult(expectedGraph, expectedTraversal,
+				Diagnostic.ERROR);
 
 		for (CrossReferenceResolutionScope scope : Arrays.asList(WORKSPACE, PROJECT, CONTAINER)) {
 			setResolutionScope(scope);
@@ -468,7 +469,8 @@ public class ModelResolverLocalTest extends LogicalModelGraphTest {
 
 		Set<? extends Set<URI>> expectedGraph = ImmutableSet.of(uriSet(iFile1, iFile2));
 		Set<IStorage> expectedTraversal = storageSet(iFile1, iFile2);
-		ExpectedResult expectedResult = new ExpectedResult(expectedGraph, expectedTraversal, Diagnostic.ERROR);
+		ExpectedResult expectedResult = new ExpectedResult(expectedGraph, expectedTraversal,
+				Diagnostic.ERROR);
 
 		setResolutionScope(WORKSPACE);
 		resolveAndCheckResult(files, expectedResult, expectedResult);
@@ -773,7 +775,8 @@ public class ModelResolverLocalTest extends LogicalModelGraphTest {
 
 		Set<? extends Set<URI>> expectedGraph = ImmutableSet.of(uriSet(iFile1, iFile2, iFile3));
 		Set<IStorage> expectedTraversal = storageSet(iFile1, iFile2, iFile3);
-		ExpectedResult expectedResult = new ExpectedResult(expectedGraph, expectedTraversal, Diagnostic.ERROR);
+		ExpectedResult expectedResult = new ExpectedResult(expectedGraph, expectedTraversal,
+				Diagnostic.ERROR);
 
 		for (CrossReferenceResolutionScope scope : Arrays.asList(WORKSPACE, PROJECT, CONTAINER)) {
 			setResolutionScope(scope);
@@ -1275,7 +1278,8 @@ public class ModelResolverLocalTest extends LogicalModelGraphTest {
 
 		Set<? extends Set<URI>> expectedGraph = ImmutableSet.of(uriSet(iFile1, iFile2, iFile3));
 		Set<IStorage> expectedTraversal = storageSet(iFile1, iFile2, iFile3);
-		ExpectedResult expectedResult = new ExpectedResult(expectedGraph, expectedTraversal, Diagnostic.ERROR);
+		ExpectedResult expectedResult = new ExpectedResult(expectedGraph, expectedTraversal,
+				Diagnostic.ERROR);
 
 		setResolutionScope(WORKSPACE);
 		resolveAndCheckResult(files, expectedResult, expectedResult, expectedResult);
@@ -1519,14 +1523,14 @@ public class ModelResolverLocalTest extends LogicalModelGraphTest {
 		Set<IStorage> expectedFile2Traversal = storageSet(iFile2);
 		Set<IStorage> expectedFile3Traversal = storageSet(iFile3);
 		Set<IStorage> expectedFile4Traversal = storageSet(iFile4);
-		ExpectedResult expectedFile1Result = new ExpectedResult(expectedFile1Or2Graph,
-				expectedFile1Traversal, Diagnostic.OK);
-		ExpectedResult expectedFile2Result = new ExpectedResult(expectedFile1Or2Graph,
-				expectedFile2Traversal, Diagnostic.OK);
-		ExpectedResult expectedFile3Result = new ExpectedResult(expectedFile3Or4Graph,
-				expectedFile3Traversal, Diagnostic.ERROR);
-		ExpectedResult expectedFile4Result = new ExpectedResult(expectedFile3Or4Graph,
-				expectedFile4Traversal, Diagnostic.ERROR);
+		ExpectedResult expectedFile1Result = new ExpectedResult(expectedFile1Or2Graph, expectedFile1Traversal,
+				Diagnostic.OK);
+		ExpectedResult expectedFile2Result = new ExpectedResult(expectedFile1Or2Graph, expectedFile2Traversal,
+				Diagnostic.OK);
+		ExpectedResult expectedFile3Result = new ExpectedResult(expectedFile3Or4Graph, expectedFile3Traversal,
+				Diagnostic.ERROR);
+		ExpectedResult expectedFile4Result = new ExpectedResult(expectedFile3Or4Graph, expectedFile4Traversal,
+				Diagnostic.ERROR);
 
 		for (CrossReferenceResolutionScope scope : Arrays.asList(PROJECT, CONTAINER)) {
 			setResolutionScope(scope);
@@ -1654,14 +1658,14 @@ public class ModelResolverLocalTest extends LogicalModelGraphTest {
 		Set<IStorage> expectedFile2Traversal = storageSet(iFile2);
 		Set<IStorage> expectedFile3Traversal = storageSet(iFile3);
 		Set<IStorage> expectedFile4Traversal = storageSet(iFile4);
-		ExpectedResult expectedFile1Result = new ExpectedResult(expectedFile1Or2Graph,
-				expectedFile1Traversal, Diagnostic.OK);
-		ExpectedResult expectedFile2Result = new ExpectedResult(expectedFile1Or2Graph,
-				expectedFile2Traversal, Diagnostic.OK);
-		ExpectedResult expectedFile3Result = new ExpectedResult(expectedFile3Or4Graph,
-				expectedFile3Traversal, Diagnostic.OK);
-		ExpectedResult expectedFile4Result = new ExpectedResult(expectedFile3Or4Graph,
-				expectedFile4Traversal, Diagnostic.OK);
+		ExpectedResult expectedFile1Result = new ExpectedResult(expectedFile1Or2Graph, expectedFile1Traversal,
+				Diagnostic.OK);
+		ExpectedResult expectedFile2Result = new ExpectedResult(expectedFile1Or2Graph, expectedFile2Traversal,
+				Diagnostic.OK);
+		ExpectedResult expectedFile3Result = new ExpectedResult(expectedFile3Or4Graph, expectedFile3Traversal,
+				Diagnostic.OK);
+		ExpectedResult expectedFile4Result = new ExpectedResult(expectedFile3Or4Graph, expectedFile4Traversal,
+				Diagnostic.OK);
 
 		for (CrossReferenceResolutionScope scope : Arrays.asList(PROJECT, CONTAINER)) {
 			setResolutionScope(scope);

@@ -37,7 +37,8 @@ public class GitLogicalMergeTest extends AbstractGitLogicalModelTest {
 	/**
 	 * Sets up the repository so that there are three commits affecting a single file.
 	 * <ul>
-	 * <li>initial commit : A single file "file1" contains a package P1 which contains the classes C1 and C2.</li>
+	 * <li>initial commit : A single file "file1" contains a package P1 which contains the classes C1 and C2.
+	 * </li>
 	 * <li>master commit : delete C2</li>
 	 * <li>branch commit : make C2 a super-class of C1</li>
 	 * </ul>
@@ -89,7 +90,8 @@ public class GitLogicalMergeTest extends AbstractGitLogicalModelTest {
 	/**
 	 * Sets up the repository so that there are three commits affecting a single file.
 	 * <ul>
-	 * <li>initial commit : A single file "file1" contains a package P1 which contains the classes C1 and C2.</li>
+	 * <li>initial commit : A single file "file1" contains a package P1 which contains the classes C1 and C2.
+	 * </li>
 	 * <li>master commit : rename C1 into C10</li>
 	 * <li>branch commit : make C2 a super-class of C1</li>
 	 * </ul>
@@ -143,7 +145,8 @@ public class GitLogicalMergeTest extends AbstractGitLogicalModelTest {
 	/**
 	 * Sets up the repository so that there are three commits affecting a single file.
 	 * <ul>
-	 * <li>initial commit : A single file "file1" contains a package P1 which contains the classes C1 and C2.</li>
+	 * <li>initial commit : A single file "file1" contains a package P1 which contains the classes C1 and C2.
+	 * </li>
 	 * <li>master commit : delete C2</li>
 	 * <li>branch commit : delete C2</li>
 	 * </ul>

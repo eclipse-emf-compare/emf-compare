@@ -286,8 +286,8 @@ public class GitTestRepository {
 	 * @throws GitAPIException
 	 * @throws NoFilepatternException
 	 */
-	public void addToIndex(IResource resource) throws CoreException, IOException, NoFilepatternException,
-			GitAPIException {
+	public void addToIndex(IResource resource)
+			throws CoreException, IOException, NoFilepatternException, GitAPIException {
 		String repoPath = getRepoRelativePath(resource.getLocation().toString());
 		Git git = new Git(repository);
 		try {
@@ -373,8 +373,8 @@ public class GitTestRepository {
 	 * @param resources
 	 *            Resources to add to the index.
 	 */
-	public void addToIndex(IResource... resources) throws CoreException, IOException, NoFilepatternException,
-			GitAPIException {
+	public void addToIndex(IResource... resources)
+			throws CoreException, IOException, NoFilepatternException, GitAPIException {
 		Git git = new Git(repository);
 		try {
 			for (IResource resource : resources) {
@@ -392,8 +392,8 @@ public class GitTestRepository {
 	 * @param resources
 	 *            Resources to add to the index.
 	 */
-	public void removeFromIndex(IResource... resources) throws CoreException, IOException,
-			NoFilepatternException, GitAPIException {
+	public void removeFromIndex(IResource... resources)
+			throws CoreException, IOException, NoFilepatternException, GitAPIException {
 		Git git = new Git(repository);
 		try {
 			for (IResource resource : resources) {
@@ -646,7 +646,8 @@ public class GitTestRepository {
 	 */
 	public Subscriber createSubscriberForResolution(String sourceRef, String targetRef, boolean includeLocal)
 			throws IOException {
-		final GitSynchronizeData data = new GitSynchronizeData(repository, sourceRef, targetRef, includeLocal);
+		final GitSynchronizeData data = new GitSynchronizeData(repository, sourceRef, targetRef,
+				includeLocal);
 		final GitSynchronizeDataSet dataSet = new GitSynchronizeDataSet(data);
 		final GitResourceVariantTreeSubscriber subscriber = new GitResourceVariantTreeSubscriber(dataSet);
 		subscriber.init(new NullProgressMonitor());
@@ -676,15 +677,16 @@ public class GitTestRepository {
 	 */
 	public Subscriber createSubscriberForComparison(String sourceRef, String targetRef, IFile comparedFile,
 			boolean includeLocal) throws IOException {
-		final GitSynchronizeData data = new GitSynchronizeData(repository, sourceRef, targetRef, includeLocal);
+		final GitSynchronizeData data = new GitSynchronizeData(repository, sourceRef, targetRef,
+				includeLocal);
 		final GitSynchronizeDataSet dataSet = new GitSynchronizeDataSet(data);
 		final GitResourceVariantTreeSubscriber subscriber = new GitResourceVariantTreeSubscriber(dataSet);
 		subscriber.init(new NullProgressMonitor());
 		final ResourceMapping[] mappings = getResourceMappings(comparedFile,
 				ResourceMappingContext.LOCAL_CONTEXT);
 
-		final RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(
-				subscriber, dataSet);
+		final RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(subscriber,
+				dataSet);
 		final SubscriberScopeManager manager = new SubscriberScopeManager(subscriber.getName(), mappings,
 				subscriber, remoteContext, true);
 		final GitSubscriberMergeContext context = new GitSubscriberMergeContext(subscriber, manager, dataSet);
@@ -718,8 +720,8 @@ public class GitTestRepository {
 		final GitResourceVariantTreeSubscriber subscriber = new GitResourceVariantTreeSubscriber(dataSet);
 		subscriber.init(new NullProgressMonitor());
 
-		final RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(
-				subscriber, dataSet);
+		final RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(subscriber,
+				dataSet);
 		final ResourceMapping[] mappings = getResourceMappings(comparedFile, remoteContext);
 		final SubscriberScopeManager manager = new SubscriberScopeManager(subscriber.getName(), mappings,
 				subscriber, remoteContext, true);

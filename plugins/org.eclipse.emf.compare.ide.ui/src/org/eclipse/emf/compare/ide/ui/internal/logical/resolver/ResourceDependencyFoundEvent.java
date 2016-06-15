@@ -57,7 +57,8 @@ public class ResourceDependencyFoundEvent extends DependencyFoundEvent<URI> {
 	 *            The feature through which the parent causes the dependency
 	 * @return the URI of the parent if it is the owner of the dependency, otherwise {@link Optional#absent()}
 	 */
-	private static Optional<URI> getParentUriIfContainmentReference(EObject parent, EStructuralFeature feature) {
+	private static Optional<URI> getParentUriIfContainmentReference(EObject parent,
+			EStructuralFeature feature) {
 		if (feature instanceof EReference && ((EReference)feature).isContainment()) {
 			return Optional.of(getUri(parent));
 		}

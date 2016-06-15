@@ -38,8 +38,8 @@ public class EMFSynchronizationCompareAdapter extends SynchronizationCompareAdap
 	public ICompareInput asCompareInput(ISynchronizationContext context, Object o) {
 		final IComparisonScope scope = ComparisonScopeBuilder.create((SynchronizationModel)o,
 				new NullProgressMonitor());
-		final ComparisonScopeInput input = new ComparisonScopeInput(scope, new ComposedAdapterFactory(
-				ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+		final ComparisonScopeInput input = new ComparisonScopeInput(scope,
+				new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
 		input.setRightEditable(false);
 		return input;
 	}

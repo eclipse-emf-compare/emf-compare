@@ -94,8 +94,8 @@ public class UML2CompareTestProfilePackageImpl extends EPackageImpl implements U
 
 		// Obtain or create and register package
 		UML2CompareTestProfilePackageImpl theUML2CompareTestProfilePackage = (UML2CompareTestProfilePackageImpl)(EPackage.Registry.INSTANCE
-				.get(eNS_URI) instanceof UML2CompareTestProfilePackageImpl ? EPackage.Registry.INSTANCE
-				.get(eNS_URI) : new UML2CompareTestProfilePackageImpl());
+				.get(eNS_URI) instanceof UML2CompareTestProfilePackageImpl
+						? EPackage.Registry.INSTANCE.get(eNS_URI) : new UML2CompareTestProfilePackageImpl());
 
 		isInited = true;
 
@@ -324,65 +324,50 @@ public class UML2CompareTestProfilePackageImpl extends EPackageImpl implements U
 		// Add supertypes to classes
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(aClicheEClass, ACliche.class,
-				"ACliche", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getACliche_SingleValuedAttribute(),
-				theTypesPackage.getString(),
-				"singleValuedAttribute", null, 0, 1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getACliche_ManyValuedAttribute(),
-				theTypesPackage.getString(),
-				"manyValuedAttribute", null, 0, -1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getACliche_SingleValuedReference(),
-				theUMLPackage.getClass_(),
-				null,
-				"singleValuedReference", null, 0, 1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getACliche_ManyValuedReference(),
-				theUMLPackage.getClass_(),
-				null,
-				"manyValuedReference", null, 0, -1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getACliche_Base_Class(),
-				theUMLPackage.getClass_(),
-				null,
-				"base_Class", null, 1, 1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED); //$NON-NLS-1$
+		initEClass(aClicheEClass, ACliche.class, "ACliche", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getACliche_SingleValuedAttribute(), theTypesPackage.getString(),
+				"singleValuedAttribute", null, 0, 1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, //$NON-NLS-1$
+				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEAttribute(getACliche_ManyValuedAttribute(), theTypesPackage.getString(), "manyValuedAttribute", //$NON-NLS-1$
+				null, 0, -1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE,
+				!IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getACliche_SingleValuedReference(), theUMLPackage.getClass_(), null,
+				"singleValuedReference", null, 0, 1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, //$NON-NLS-1$
+				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				!IS_ORDERED);
+		initEReference(getACliche_ManyValuedReference(), theUMLPackage.getClass_(), null,
+				"manyValuedReference", null, 0, -1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, //$NON-NLS-1$
+				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getACliche_Base_Class(), theUMLPackage.getClass_(), null, "base_Class", null, 1, 1, //$NON-NLS-1$
+				ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
-		initEClass(aCliche2EClass, ACliche2.class,
-				"ACliche2", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getACliche2_SingleValuedAttribute(),
-				theTypesPackage.getString(),
-				"singleValuedAttribute", null, 0, 1, ACliche2.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getACliche2_ManyValuedAttribute(),
-				theTypesPackage.getString(),
-				"manyValuedAttribute", null, 0, -1, ACliche2.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getACliche2_SingleValuedReference(),
-				theUMLPackage.getClass_(),
-				null,
-				"singleValuedReference", null, 0, 1, ACliche2.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getACliche2_ManyValuedReference(),
-				theUMLPackage.getClass_(),
-				null,
-				"manyValuedReference", null, 0, -1, ACliche2.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getACliche2_Base_Class(),
-				theUMLPackage.getClass_(),
-				null,
-				"base_Class", null, 1, 1, ACliche2.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED); //$NON-NLS-1$
+		initEClass(aCliche2EClass, ACliche2.class, "ACliche2", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getACliche2_SingleValuedAttribute(), theTypesPackage.getString(),
+				"singleValuedAttribute", null, 0, 1, ACliche2.class, !IS_TRANSIENT, !IS_VOLATILE, //$NON-NLS-1$
+				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEAttribute(getACliche2_ManyValuedAttribute(), theTypesPackage.getString(), "manyValuedAttribute", //$NON-NLS-1$
+				null, 0, -1, ACliche2.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE,
+				!IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getACliche2_SingleValuedReference(), theUMLPackage.getClass_(), null,
+				"singleValuedReference", null, 0, 1, ACliche2.class, !IS_TRANSIENT, !IS_VOLATILE, //$NON-NLS-1$
+				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				!IS_ORDERED);
+		initEReference(getACliche2_ManyValuedReference(), theUMLPackage.getClass_(), null,
+				"manyValuedReference", null, 0, -1, ACliche2.class, !IS_TRANSIENT, !IS_VOLATILE, //$NON-NLS-1$
+				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEReference(getACliche2_Base_Class(), theUMLPackage.getClass_(), null, "base_Class", null, 1, 1, //$NON-NLS-1$
+				ACliche2.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
-		initEClass(aCliche3EClass, ACliche3.class,
-				"ACliche3", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getACliche3_Base_Class(),
-				theUMLPackage.getClass_(),
-				null,
-				"base_Class", null, 1, 1, ACliche3.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED); //$NON-NLS-1$
+		initEClass(aCliche3EClass, ACliche3.class, "ACliche3", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getACliche3_Base_Class(), theUMLPackage.getClass_(), null, "base_Class", null, 1, 1, //$NON-NLS-1$
+				ACliche3.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
@@ -399,7 +384,7 @@ public class UML2CompareTestProfilePackageImpl extends EPackageImpl implements U
 	 * @generated
 	 */
 	protected void createUMLAnnotations() {
-		String source = "http://www.eclipse.org/uml2/2.0.0/UML"; //$NON-NLS-1$	
+		String source = "http://www.eclipse.org/uml2/2.0.0/UML"; //$NON-NLS-1$
 		addAnnotation(this, source, new String[] {"originalName", "UML2CompareTestProfile" //$NON-NLS-1$ //$NON-NLS-2$
 		});
 	}

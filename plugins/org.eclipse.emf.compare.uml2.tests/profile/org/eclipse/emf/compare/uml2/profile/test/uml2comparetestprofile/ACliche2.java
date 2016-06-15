@@ -23,14 +23,12 @@ import org.eclipse.emf.ecore.EObject;
  * <li>
  * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getSingleValuedAttribute
  * <em>Single Valued Attribute</em>}</li>
- * <li>
- * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getManyValuedAttribute
+ * <li>{@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getManyValuedAttribute
  * <em>Many Valued Attribute</em>}</li>
  * <li>
  * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getSingleValuedReference
  * <em>Single Valued Reference</em>}</li>
- * <li>
- * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getManyValuedReference
+ * <li>{@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getManyValuedReference
  * <em>Many Valued Reference</em>}</li>
  * <li>{@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2#getBase_Class <em>Base
  * Class</em>}</li>

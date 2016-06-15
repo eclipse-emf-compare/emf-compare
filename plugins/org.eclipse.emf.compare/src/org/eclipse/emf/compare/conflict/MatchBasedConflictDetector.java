@@ -103,8 +103,8 @@ public class MatchBasedConflictDetector implements IConflictDetector {
 
 		handlePseudoUnderRealAdd(comparison);
 		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info(String.format(
-					"detect conflicts - END - Took %d ms", Long.valueOf(System.currentTimeMillis() - start))); //$NON-NLS-1$
+			LOGGER.info(String.format("detect conflicts - END - Took %d ms", Long.valueOf(System //$NON-NLS-1$
+					.currentTimeMillis() - start)));
 		}
 	}
 
@@ -116,7 +116,8 @@ public class MatchBasedConflictDetector implements IConflictDetector {
 	 *            The originating comparison of those diffs.
 	 */
 	private void handlePseudoUnderRealAdd(Comparison comparison) {
-		for (Conflict realContainmentAdd : filter(comparison.getConflicts(), IS_REAL_CONTAINMENT_ADD_CONFLICT)) {
+		for (Conflict realContainmentAdd : filter(comparison.getConflicts(),
+				IS_REAL_CONTAINMENT_ADD_CONFLICT)) {
 			changeKindOfPseudoConflictsUnder(realContainmentAdd);
 		}
 	}

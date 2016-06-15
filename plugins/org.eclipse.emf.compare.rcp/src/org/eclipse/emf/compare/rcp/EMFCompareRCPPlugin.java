@@ -259,16 +259,17 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 *            {@link IExtensionRegistry} to listen in order to fill the registry
 	 */
 	private void setUpAdapterFactoryRegistry(final IExtensionRegistry registry) {
-		adapterFactoryRegistryBackingMultimap = Multimaps.synchronizedListMultimap(ArrayListMultimap
-				.<Collection<?>, RankedAdapterFactoryDescriptor> create());
+		adapterFactoryRegistryBackingMultimap = Multimaps.synchronizedListMultimap(
+				ArrayListMultimap.<Collection<?>, RankedAdapterFactoryDescriptor> create());
 		adapterFactoryRegistryListener = new AdapterFactoryDescriptorRegistryListener(
-				EMFCompareEditPlugin.PLUGIN_ID, FACTORY_PPID, getLog(), adapterFactoryRegistryBackingMultimap);
-		registry.addListener(adapterFactoryRegistryListener, EMFCompareEditPlugin.PLUGIN_ID + '.'
-				+ FACTORY_PPID);
+				EMFCompareEditPlugin.PLUGIN_ID, FACTORY_PPID, getLog(),
+				adapterFactoryRegistryBackingMultimap);
+		registry.addListener(adapterFactoryRegistryListener,
+				EMFCompareEditPlugin.PLUGIN_ID + '.' + FACTORY_PPID);
 		adapterFactoryRegistryListener.readRegistry(registry);
 		rankedAdapterFactoryRegistry = new RankedAdapterFactoryDescriptorRegistryImpl(
-				ComposedAdapterFactory.Descriptor.Registry.INSTANCE, Multimaps
-						.unmodifiableMultimap(adapterFactoryRegistryBackingMultimap));
+				ComposedAdapterFactory.Descriptor.Registry.INSTANCE,
+				Multimaps.unmodifiableMultimap(adapterFactoryRegistryBackingMultimap));
 	}
 
 	/**
@@ -313,7 +314,8 @@ public class EMFCompareRCPPlugin extends Plugin {
 				POST_PROCESSOR_PPID, getLog(), postProcessorItemDescriptorsRegistry);
 		registry.addListener(postProcessorFactoryRegistryListener, PLUGIN_ID + '.' + POST_PROCESSOR_PPID);
 		postProcessorFactoryRegistryListener.readRegistry(registry);
-		postProcessorDescriptorsRegistry = new PostProcessorRegistryImpl(postProcessorItemDescriptorsRegistry);
+		postProcessorDescriptorsRegistry = new PostProcessorRegistryImpl(
+				postProcessorItemDescriptorsRegistry);
 	}
 
 	/**
@@ -324,8 +326,8 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 */
 	private void setUpLoadOnDemandRegistry(final IExtensionRegistry registry) {
 		loadOnDemandRegistry = new LoadOnDemandPolicyRegistryImpl();
-		loadOnDemandRegistryListener = new LoadOnDemandPolicyRegistryListener(loadOnDemandRegistry,
-				PLUGIN_ID, LOAD_ON_DEMAND_POLICY_PPID, getLog());
+		loadOnDemandRegistryListener = new LoadOnDemandPolicyRegistryListener(loadOnDemandRegistry, PLUGIN_ID,
+				LOAD_ON_DEMAND_POLICY_PPID, getLog());
 		registry.addListener(loadOnDemandRegistryListener, PLUGIN_ID + '.' + LOAD_ON_DEMAND_POLICY_PPID);
 		loadOnDemandRegistryListener.readRegistry(registry);
 	}
@@ -394,8 +396,8 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 */
 	private void setUpWeightProviderRegistry(final IExtensionRegistry registry) {
 		weightProviderRegistry = new WeightProviderDescriptorRegistryImpl();
-		weightProviderListener = new WeightProviderDescriptorRegistryListener(PLUGIN_ID,
-				WEIGHT_PROVIDER_PPID, getLog(), weightProviderRegistry);
+		weightProviderListener = new WeightProviderDescriptorRegistryListener(PLUGIN_ID, WEIGHT_PROVIDER_PPID,
+				getLog(), weightProviderRegistry);
 		registry.addListener(weightProviderListener);
 		weightProviderListener.readRegistry(registry);
 	}
@@ -767,11 +769,10 @@ public class EMFCompareRCPPlugin extends Plugin {
 		appender = new RollingFileAppender(new PatternLayout(LOG_PATTERN), newFileName, true);
 		LOGGER.removeAllAppenders(); // We don't want to log elsewhere
 		LOGGER.addAppender(appender);
-		appender.setMaxBackupIndex(getEMFComparePreferences()
-				.getInt(LOG_BACKUP_COUNT_KEY, LOG_BACKUP_DEFAULT));
-		appender.setMaximumFileSize((getEMFComparePreferences().getInt(LOG_FILE_MAX_SIZE_KEY,
-				LOG_FILE_SIZE_DEFAULT))
-				* MEGABYTE);
+		appender.setMaxBackupIndex(
+				getEMFComparePreferences().getInt(LOG_BACKUP_COUNT_KEY, LOG_BACKUP_DEFAULT));
+		appender.setMaximumFileSize(
+				(getEMFComparePreferences().getInt(LOG_FILE_MAX_SIZE_KEY, LOG_FILE_SIZE_DEFAULT)) * MEGABYTE);
 	}
 
 	/**
@@ -826,7 +827,8 @@ public class EMFCompareRCPPlugin extends Plugin {
 					appender.setMaximumFileSize(Integer.parseInt((String)event.getNewValue()) * MEGABYTE);
 				}
 			}
-			if (loggingLevel != null && !Level.OFF.equals(loggingLevel) && path != null && path.length() > 0) {
+			if (loggingLevel != null && !Level.OFF.equals(loggingLevel) && path != null
+					&& path.length() > 0) {
 				initFile();
 			}
 		}

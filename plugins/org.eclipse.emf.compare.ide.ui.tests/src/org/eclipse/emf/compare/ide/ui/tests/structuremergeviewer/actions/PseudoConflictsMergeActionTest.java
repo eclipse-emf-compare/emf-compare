@@ -77,49 +77,50 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 
 		IndividualDiffInputData scopeProvider = new IndividualDiffInputData();
-		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider
-				.getLeftPseudoConflictFullScope(), scopeProvider.getRightPseudoConflictFullScope(),
+		final IComparisonScope scope = new DefaultComparisonScope(
+				scopeProvider.getLeftPseudoConflictFullScope(),
+				scopeProvider.getRightPseudoConflictFullScope(),
 				scopeProvider.getOriginPseudoConflictFullScope());
 		final Builder comparisonBuilder = EMFCompare.builder();
 		EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
 		final Comparison comparison = comparisonBuilder.build().compare(scope);
 
 		editingDomain = EMFCompareEditingDomain.create(scopeProvider.getLeftPseudoConflictFullScope(),
-				scopeProvider.getRightPseudoConflictFullScope(), scopeProvider
-						.getOriginPseudoConflictFullScope());
+				scopeProvider.getRightPseudoConflictFullScope(),
+				scopeProvider.getOriginPseudoConflictFullScope());
 
 		TreeNode nodeRootMatch = getNodeRootMatch(comparison);
 		TreeNode nodeD = nodeRootMatch.getChildren().get(0).getChildren().get(0);
 		EList<Diff> differences = comparison.getDifferences();
 
 		// Get left add difference
-		Diff leftAddDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.ADD)));
+		Diff leftAddDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD)));
 		leftAdd = getTreeNode(nodeRootMatch, leftAddDiff);
 
 		// Get right add difference
-		Diff rightAddDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.ADD)));
+		Diff rightAddDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD)));
 		rightAdd = getTreeNode(nodeRootMatch, rightAddDiff);
 
 		// Get left delete difference
-		Diff leftDeleteDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE)));
+		Diff leftDeleteDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.DELETE)));
 		leftDelete = getTreeNode(nodeRootMatch, leftDeleteDiff);
 
 		// Get right delete difference
-		Diff rightDeleteDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.DELETE)));
+		Diff rightDeleteDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.DELETE)));
 		rightDelete = getTreeNode(nodeRootMatch, rightDeleteDiff);
 
 		// Get left change difference
-		Diff leftChangeDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.CHANGE)));
+		Diff leftChangeDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.CHANGE)));
 		leftChange = getTreeNode(nodeD, leftChangeDiff);
 
 		// Get right change difference
-		Diff rightChangeDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.CHANGE)));
+		Diff rightChangeDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.CHANGE)));
 		rightChange = getTreeNode(nodeD, rightChangeDiff);
 	}
 
@@ -144,8 +145,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localAddDiff = (Diff)localAdd.getData();
 		Diff remoteAddDiff = (Diff)remoteAdd.getData();
 		assertTrue(accept.isLeftToRight(localAddDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MARK_AS_MERGE, accept.getMergeAction(localAddDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MARK_AS_MERGE,
+				accept.getMergeAction(localAddDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(localAdd));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localAddDiff.getState());
@@ -155,8 +156,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localDeleteDiff = (Diff)localDelete.getData();
 		Diff remoteDeleteDiff = (Diff)remoteDelete.getData();
 		assertTrue(accept.isLeftToRight(localDeleteDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MARK_AS_MERGE, accept.getMergeAction(localDeleteDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MARK_AS_MERGE,
+				accept.getMergeAction(localDeleteDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(localDelete));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localDeleteDiff.getState());
@@ -166,8 +167,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localChangeDiff = (Diff)localChange.getData();
 		Diff remoteChangeDiff = (Diff)remoteChange.getData();
 		assertTrue(accept.isLeftToRight(localChangeDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MARK_AS_MERGE, accept.getMergeAction(localChangeDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MARK_AS_MERGE,
+				accept.getMergeAction(localChangeDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(localChange));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localChangeDiff.getState());
@@ -206,8 +207,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localDeleteDiff = (Diff)localDelete.getData();
 		Diff remoteDeleteDiff = (Diff)remoteDelete.getData();
 		assertFalse(reject.isLeftToRight(localDeleteDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MERGE, reject
-				.getMergeAction(localDeleteDiff, leftEditable, rightEditable));
+		assertEquals(MergeOperation.MERGE,
+				reject.getMergeAction(localDeleteDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(localDelete));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localDeleteDiff.getState());
@@ -217,8 +218,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localChangeDiff = (Diff)localChange.getData();
 		Diff remoteChangeDiff = (Diff)remoteChange.getData();
 		assertFalse(reject.isLeftToRight(localChangeDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MERGE, reject
-				.getMergeAction(localChangeDiff, leftEditable, rightEditable));
+		assertEquals(MergeOperation.MERGE,
+				reject.getMergeAction(localChangeDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(localChange));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localChangeDiff.getState());
@@ -257,8 +258,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localDeleteDiff = (Diff)localDelete.getData();
 		Diff remoteDeleteDiff = (Diff)remoteDelete.getData();
 		assertFalse(accept.isLeftToRight(remoteDeleteDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MERGE, accept.getMergeAction(remoteDeleteDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MERGE,
+				accept.getMergeAction(remoteDeleteDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(remoteDelete));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localDeleteDiff.getState());
@@ -268,8 +269,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localChangeDiff = (Diff)localChange.getData();
 		Diff remoteChangeDiff = (Diff)remoteChange.getData();
 		assertFalse(accept.isLeftToRight(remoteChangeDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MERGE, accept.getMergeAction(remoteChangeDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MERGE,
+				accept.getMergeAction(remoteChangeDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(remoteChange));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localChangeDiff.getState());
@@ -298,8 +299,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localAddDiff = (Diff)localAdd.getData();
 		Diff remoteAddDiff = (Diff)remoteAdd.getData();
 		assertTrue(reject.isLeftToRight(remoteAddDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MARK_AS_MERGE, reject.getMergeAction(remoteAddDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MARK_AS_MERGE,
+				reject.getMergeAction(remoteAddDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(remoteAdd));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localAddDiff.getState());
@@ -309,8 +310,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localDeleteDiff = (Diff)localDelete.getData();
 		Diff remoteDeleteDiff = (Diff)remoteDelete.getData();
 		assertTrue(reject.isLeftToRight(remoteDeleteDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MARK_AS_MERGE, reject.getMergeAction(remoteDeleteDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MARK_AS_MERGE,
+				reject.getMergeAction(remoteDeleteDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(remoteDelete));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localDeleteDiff.getState());
@@ -320,8 +321,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localChangeDiff = (Diff)localChange.getData();
 		Diff remoteChangeDiff = (Diff)remoteChange.getData();
 		assertTrue(reject.isLeftToRight(remoteChangeDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MARK_AS_MERGE, reject.getMergeAction(remoteChangeDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MARK_AS_MERGE,
+				reject.getMergeAction(remoteChangeDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(remoteChange));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localChangeDiff.getState());
@@ -350,8 +351,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localAddDiff = (Diff)localAdd.getData();
 		Diff remoteAddDiff = (Diff)remoteAdd.getData();
 		assertFalse(accept.isLeftToRight(localAddDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MARK_AS_MERGE, accept.getMergeAction(localAddDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MARK_AS_MERGE,
+				accept.getMergeAction(localAddDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(localAdd));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localAddDiff.getState());
@@ -361,8 +362,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localDeleteDiff = (Diff)localDelete.getData();
 		Diff remoteDeleteDiff = (Diff)remoteDelete.getData();
 		assertFalse(accept.isLeftToRight(localDeleteDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MARK_AS_MERGE, accept.getMergeAction(localDeleteDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MARK_AS_MERGE,
+				accept.getMergeAction(localDeleteDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(localDelete));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localDeleteDiff.getState());
@@ -372,8 +373,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localChangeDiff = (Diff)localChange.getData();
 		Diff remoteChangeDiff = (Diff)remoteChange.getData();
 		assertFalse(accept.isLeftToRight(localChangeDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MARK_AS_MERGE, accept.getMergeAction(localChangeDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MARK_AS_MERGE,
+				accept.getMergeAction(localChangeDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(localChange));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localChangeDiff.getState());
@@ -412,8 +413,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localDeleteDiff = (Diff)localDelete.getData();
 		Diff remoteDeleteDiff = (Diff)remoteDelete.getData();
 		assertTrue(reject.isLeftToRight(localDeleteDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MERGE, reject
-				.getMergeAction(localDeleteDiff, leftEditable, rightEditable));
+		assertEquals(MergeOperation.MERGE,
+				reject.getMergeAction(localDeleteDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(localDelete));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localDeleteDiff.getState());
@@ -423,8 +424,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localChangeDiff = (Diff)localChange.getData();
 		Diff remoteChangeDiff = (Diff)remoteChange.getData();
 		assertTrue(reject.isLeftToRight(localChangeDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MERGE, reject
-				.getMergeAction(localChangeDiff, leftEditable, rightEditable));
+		assertEquals(MergeOperation.MERGE,
+				reject.getMergeAction(localChangeDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(localChange));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localChangeDiff.getState());
@@ -463,8 +464,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localDeleteDiff = (Diff)localDelete.getData();
 		Diff remoteDeleteDiff = (Diff)remoteDelete.getData();
 		assertTrue(accept.isLeftToRight(remoteDeleteDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MERGE, accept.getMergeAction(remoteDeleteDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MERGE,
+				accept.getMergeAction(remoteDeleteDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(remoteDelete));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localDeleteDiff.getState());
@@ -474,8 +475,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localChangeDiff = (Diff)localChange.getData();
 		Diff remoteChangeDiff = (Diff)remoteChange.getData();
 		assertTrue(accept.isLeftToRight(remoteChangeDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MERGE, accept.getMergeAction(remoteChangeDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MERGE,
+				accept.getMergeAction(remoteChangeDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(remoteChange));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localChangeDiff.getState());
@@ -504,8 +505,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localAddDiff = (Diff)localAdd.getData();
 		Diff remoteAddDiff = (Diff)remoteAdd.getData();
 		assertFalse(reject.isLeftToRight(remoteAddDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MARK_AS_MERGE, reject.getMergeAction(remoteAddDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MARK_AS_MERGE,
+				reject.getMergeAction(remoteAddDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(remoteAdd));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localAddDiff.getState());
@@ -515,8 +516,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localDeleteDiff = (Diff)localDelete.getData();
 		Diff remoteDeleteDiff = (Diff)remoteDelete.getData();
 		assertFalse(reject.isLeftToRight(remoteDeleteDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MARK_AS_MERGE, reject.getMergeAction(remoteDeleteDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MARK_AS_MERGE,
+				reject.getMergeAction(remoteDeleteDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(remoteDelete));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localDeleteDiff.getState());
@@ -526,8 +527,8 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 		Diff localChangeDiff = (Diff)localChange.getData();
 		Diff remoteChangeDiff = (Diff)remoteChange.getData();
 		assertFalse(reject.isLeftToRight(remoteChangeDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MARK_AS_MERGE, reject.getMergeAction(remoteChangeDiff, leftEditable,
-				rightEditable));
+		assertEquals(MergeOperation.MARK_AS_MERGE,
+				reject.getMergeAction(remoteChangeDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(remoteChange));
 		action.run();
 		assertEquals(DifferenceState.MERGED, localChangeDiff.getState());

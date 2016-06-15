@@ -70,8 +70,7 @@ public class StereotypedElementItemProviderTestUtil {
 					// Checks icon
 					List<String> actualIcons = getIconsLocation(itemLabelProvider.getImage(eObject));
 					assertEquals(1, actualIcons.size());
-					assertEquals(
-							"Wrong icon for stereotypes :" + generateExpectedIconKey(appliedStereotypes), //$NON-NLS-1$
+					assertEquals("Wrong icon for stereotypes :" + generateExpectedIconKey(appliedStereotypes), //$NON-NLS-1$
 							getExpectedIcon(appliedStereotypes, expectedStaticIcons), actualIcons.get(0));
 				} else {
 					assertNotNull(itemLabelProvider);
@@ -82,7 +81,8 @@ public class StereotypedElementItemProviderTestUtil {
 		}
 	}
 
-	private static String getExpectedIcon(List<Stereotype> stereotypes, Map<String, String> expectedIconsMap) {
+	private static String getExpectedIcon(List<Stereotype> stereotypes,
+			Map<String, String> expectedIconsMap) {
 		return expectedIconsMap.get(generateExpectedIconKey(stereotypes));
 	}
 

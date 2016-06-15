@@ -72,11 +72,11 @@ public final class LogicalModelViewHandlerUtil {
 			return null;
 		}
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
-		Collection<EMFResourceMapping> resourceMappings = getResourceMappings(file, subMonitor
-				.newChild(GET_RESOURCES_MAPPING_TICKS));
+		Collection<EMFResourceMapping> resourceMappings = getResourceMappings(file,
+				subMonitor.newChild(GET_RESOURCES_MAPPING_TICKS));
 		subMonitor.worked(GET_RESOURCES_MAPPING_TICKS);
-		SubMonitor subMonitorLoop = subMonitor.newChild(GET_TRAVERSALS_TICKS).setWorkRemaining(
-				resourceMappings.size());
+		SubMonitor subMonitorLoop = subMonitor.newChild(GET_TRAVERSALS_TICKS)
+				.setWorkRemaining(resourceMappings.size());
 		for (ResourceMapping resourceMapping : resourceMappings) {
 			if (resourceMapping instanceof EMFResourceMapping) {
 				try {

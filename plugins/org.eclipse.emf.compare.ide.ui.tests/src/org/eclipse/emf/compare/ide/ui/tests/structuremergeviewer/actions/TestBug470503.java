@@ -124,8 +124,8 @@ public class TestBug470503 extends AbstractTestUITreeNodeItemProviderAdapter {
 		// Merge from right to left TitledItem [eSuperTypes delete] difference difference
 		Diff titledItemESuperTypesDeleteDiff = (Diff)titledItemESuperTypesDelete.getData();
 		assertFalse(rightToLeft.isLeftToRight(titledItemESuperTypesDeleteDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MERGE, rightToLeft.getMergeAction(titledItemESuperTypesDeleteDiff,
-				leftEditable, rightEditable));
+		assertEquals(MergeOperation.MERGE,
+				rightToLeft.getMergeAction(titledItemESuperTypesDeleteDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(titledItemESuperTypesDelete));
 		setCascadingDifferencesFilterEnabled(cascadingFilter);
 		action.run();
@@ -151,8 +151,8 @@ public class TestBug470503 extends AbstractTestUITreeNodeItemProviderAdapter {
 		// Merge from right to left TitledItem [eSuperTypes delete] difference difference
 		Diff titledItemESuperTypesDeleteDiff = (Diff)titledItemESuperTypesDelete.getData();
 		assertFalse(rightToLeft.isLeftToRight(titledItemESuperTypesDeleteDiff, leftEditable, rightEditable));
-		assertEquals(MergeOperation.MERGE, rightToLeft.getMergeAction(titledItemESuperTypesDeleteDiff,
-				leftEditable, rightEditable));
+		assertEquals(MergeOperation.MERGE,
+				rightToLeft.getMergeAction(titledItemESuperTypesDeleteDiff, leftEditable, rightEditable));
 		action.updateSelection(new StructuredSelection(titledItemESuperTypesDelete));
 		setCascadingDifferencesFilterEnabled(cascadingFilter);
 		action.run();

@@ -103,18 +103,21 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 		ret.append(" [", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 		switch (resourceAttachmentChange.getKind()) {
 			case ADD:
-				ret.append(EMFCompareEditMessages
-						.getString("ResourceAttachmentChangeItemProviderSpec.decoration.control") + ' ', //$NON-NLS-1$
+				ret.append(
+						EMFCompareEditMessages.getString(
+								"ResourceAttachmentChangeItemProviderSpec.decoration.control") + ' ', //$NON-NLS-1$
 						Style.DECORATIONS_STYLER);
 				break;
 			case DELETE:
-				ret.append(EMFCompareEditMessages
-						.getString("ResourceAttachmentChangeItemProviderSpec.decoration.uncontrol") + ' ', //$NON-NLS-1$
+				ret.append(
+						EMFCompareEditMessages.getString(
+								"ResourceAttachmentChangeItemProviderSpec.decoration.uncontrol") + ' ', //$NON-NLS-1$
 						Style.DECORATIONS_STYLER);
 				break;
 			case MOVE:
-				ret.append(EMFCompareEditMessages
-						.getString("ResourceAttachmentChangeItemProviderSpec.decoration.move") + ' ', //$NON-NLS-1$
+				ret.append(
+						EMFCompareEditMessages
+								.getString("ResourceAttachmentChangeItemProviderSpec.decoration.move") + ' ', //$NON-NLS-1$
 						Style.DECORATIONS_STYLER);
 				break;
 			default:
@@ -145,7 +148,8 @@ public class ResourceAttachmentChangeItemProviderSpec extends ResourceAttachment
 	 *            The given Object
 	 * @return the label of the given object
 	 */
-	private String doGetSemanticObjectLabel(ResourceAttachmentChange resourceAttachmentChange, Object object) {
+	private String doGetSemanticObjectLabel(ResourceAttachmentChange resourceAttachmentChange,
+			Object object) {
 		final Match match = resourceAttachmentChange.getMatch();
 		String value = itemDelegator.getText(match.getLeft());
 		if (isNullOrEmpty(value)) {

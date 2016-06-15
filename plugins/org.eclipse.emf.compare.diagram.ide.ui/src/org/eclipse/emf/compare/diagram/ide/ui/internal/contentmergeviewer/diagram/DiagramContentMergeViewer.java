@@ -356,7 +356,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 */
 		public void revealDecorators(Diff difference) {
 
-			Collection<? super AbstractDecorator> decorators = (Collection<? super AbstractDecorator>)getDecorators(difference);
+			Collection<? super AbstractDecorator> decorators = (Collection<? super AbstractDecorator>)getDecorators(
+					difference);
 
 			// Create decorators only if they do not already exist and if the selected difference is a good
 			// candidate for that.
@@ -370,8 +371,9 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 					IFigure referenceFigure = getFigure(referenceView);
 
 					if (referenceFigure != null) {
-						MergeViewerSide targetSide = getTargetSide(getCompareConfiguration().getComparison()
-								.getMatch(referenceView), referenceView);
+						MergeViewerSide targetSide = getTargetSide(
+								getCompareConfiguration().getComparison().getMatch(referenceView),
+								referenceView);
 
 						if (decorators == null) {
 							decorators = new ArrayList<AbstractDecorator>();
@@ -723,8 +725,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			 * @param diff
 			 *            {@link Phantom#fDifference}.
 			 */
-			public Phantom(IFigure layer, MergeViewerSide side, View originView, IFigure originFigure,
-					Diff diff) {
+			Phantom(IFigure layer, MergeViewerSide side, View originView, IFigure originFigure, Diff diff) {
 				setLayer(layer);
 				setSide(side);
 				setOriginView(originView);
@@ -771,8 +772,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		private final Map<Diff, Phantom> fPhantomRegistry = new HashMap<Diff, Phantom>();
 
 		/** Predicate witch checks that the given difference is an ADD or DELETE of a graphical object. */
-		private Predicate<Diff> isAddOrDelete = and(instanceOf(DiagramDiff.class), or(
-				ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.DELETE)));
+		private Predicate<Diff> isAddOrDelete = and(instanceOf(DiagramDiff.class),
+				or(ofKind(DifferenceKind.ADD), ofKind(DifferenceKind.DELETE)));
 
 		/** Predicate witch checks that the given difference is a HIDE or REVEAL of a graphical object. */
 		private Predicate<Diff> isHideOrReveal = or(instanceOf(Show.class), instanceOf(Hide.class));
@@ -780,7 +781,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#goodCandidate()<br>
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.
+		 *      DiagramContentMergeViewer.AbstractDecoratorManager#goodCandidate()<br>
 		 *      Only the diagram differences ADD/REVEAL or DELETE/HIDE are concerned by this display.
 		 */
 		@Override
@@ -804,8 +806,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 */
 		private List<Phantom> getOrCreateRelatedPhantoms(EObject referenceView, MergeViewerSide side) {
 			List<Phantom> result = new ArrayList<Phantom>();
-			Collection<Diff> changes = Collections2.filter(getCompareConfiguration().getComparison()
-					.getDifferences(referenceView), goodCandidate());
+			Collection<Diff> changes = Collections2.filter(
+					getCompareConfiguration().getComparison().getDifferences(referenceView), goodCandidate());
 			for (Diff change : changes) {
 				Phantom phantom = fPhantomRegistry.get(change);
 				if (phantom == null) {
@@ -851,8 +853,9 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#getTargetSide(org.eclipse.emf.compare.Match,
-		 *      org.eclipse.gmf.runtime.notation.View)<br>
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.
+		 *      DiagramContentMergeViewer.AbstractDecoratorManager#getTargetSide(org.eclipse.emf.compare.
+		 *      Match, org.eclipse.gmf.runtime.notation.View)<br>
 		 *      If the left object is null, a phantom should be drawn instead. Else, it means that the right
 		 *      object is null and a phantom should be displayed on the right side.
 		 */
@@ -1071,7 +1074,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 
 				// Default case: Nodes
 				if (ghost == null) {
-					ghost = new NodeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure, rect, true);
+					ghost = new NodeFigure(diff, isThreeWay(), getCompareColor(), referenceFigure, rect,
+							true);
 				}
 
 				phantom.setDecoratorFigure(ghost);
@@ -1121,8 +1125,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 						return input instanceof View && !((View)input).isVisible();
 					}
 				});
-				return DiffUtil.findInsertionIndex(getCompareConfiguration().getComparison(),
-						ignoredElements, source, target, newElement);
+				return DiffUtil.findInsertionIndex(getCompareConfiguration().getComparison(), ignoredElements,
+						source, target, newElement);
 			}
 			// Case for deleted objects
 			Diff refiningDiff = Iterators.find(diff.getRefinedBy().iterator(), and(valueIs(referenceView),
@@ -1140,8 +1144,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 * @return The list of views.
 		 */
 		private List<View> getVisibleViews(View parent) {
-			return (List<View>)Lists.newArrayList(Iterators.filter(parent.getChildren().iterator(),
-					new Predicate<Object>() {
+			return (List<View>)Lists
+					.newArrayList(Iterators.filter(parent.getChildren().iterator(), new Predicate<Object>() {
 						public boolean apply(Object input) {
 							return input instanceof View && ((View)input).isVisible();
 						}
@@ -1161,8 +1165,9 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			if (diff instanceof DiagramDiff) {
 				EObject parent = ((DiagramDiff)diff).getView().eContainer();
 				while (parent instanceof View && !isCandidate) {
-					isCandidate = Iterables.any(getCompareConfiguration().getComparison().getDifferences(
-							parent), instanceOf(CoordinatesChange.class));
+					isCandidate = Iterables.any(
+							getCompareConfiguration().getComparison().getDifferences(parent),
+							instanceOf(CoordinatesChange.class));
 					parent = parent.eContainer();
 				}
 			}
@@ -1174,15 +1179,16 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 					IFigure parentFigure = getFigure(parentView);
 					if (parentFigure != null) {
 						Rectangle parentRect = parentFigure.getBounds().getCopy();
-						translateCoordinates(parentFigure,
-								getLayer(parentReferenceView, getSide(parentView)), parentRect);
+						translateCoordinates(parentFigure, getLayer(parentReferenceView, getSide(parentView)),
+								parentRect);
 
 						IFigure parentReferenceFigure = getFigure(parentReferenceView);
 						// CHECKSTYLE:OFF
 						if (parentReferenceFigure != null) {
 							Rectangle parentReferenceRect = parentReferenceFigure.getBounds().getCopy();
-							translateCoordinates(parentReferenceFigure, getLayer(parentReferenceView,
-									getSide(parentReferenceView)), parentReferenceRect);
+							translateCoordinates(parentReferenceFigure,
+									getLayer(parentReferenceView, getSide(parentReferenceView)),
+									parentReferenceRect);
 
 							int deltaX = parentRect.x - parentReferenceRect.x;
 							int deltaY = parentRect.y - parentReferenceRect.y;
@@ -1250,13 +1256,15 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		private boolean hasChange(View referenceView, MergeViewerSide targetSide) {
 			View extremity = (View)getMatchView(referenceView, targetSide);
 			// Look for a related change coordinates on the extremity of the edge reference.
-			Collection<Diff> diffs = Collections2.filter(getCompareConfiguration().getComparison()
-					.getDifferences(referenceView), CoordinatesChangeFactory.isCoordinatesChangeExtension());
+			Collection<Diff> diffs = Collections2.filter(
+					getCompareConfiguration().getComparison().getDifferences(referenceView),
+					CoordinatesChangeFactory.isCoordinatesChangeExtension());
 			if (diffs.isEmpty()) {
 				// Look for a related change coordinates on the matching extremity (other side) of the edge
 				// reference.
-				diffs = Collections2.filter(getCompareConfiguration().getComparison().getDifferences(
-						extremity), CoordinatesChangeFactory.isCoordinatesChangeExtension());
+				diffs = Collections2.filter(
+						getCompareConfiguration().getComparison().getDifferences(extremity),
+						CoordinatesChangeFactory.isCoordinatesChangeExtension());
 			}
 			return !diffs.isEmpty();
 		}
@@ -1462,8 +1470,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			 * @param diff
 			 *            {@link Marker#fDifference}.
 			 */
-			public Marker(IFigure layer, MergeViewerSide side, View originView, IFigure originFigure,
-					Diff diff) {
+			Marker(IFigure layer, MergeViewerSide side, View originView, IFigure originFigure, Diff diff) {
 				setLayer(layer);
 				setSide(side);
 				setOriginView(originView);
@@ -1578,7 +1585,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		/**
 		 * {@inheritDoc}
 		 * 
-		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer.AbstractDecoratorManager#goodCandidate()<br>
+		 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.
+		 *      DiagramContentMergeViewer.AbstractDecoratorManager#goodCandidate()<br>
 		 *      All graphical differences are concerned.
 		 */
 		@Override

@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.examples.extlibrary.impl;
 
-
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
@@ -23,173 +22,166 @@ import org.eclipse.emf.examples.extlibrary.EXTLibraryPackage;
 import org.eclipse.emf.examples.extlibrary.Person;
 import org.eclipse.emf.examples.extlibrary.Writer;
 
-
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Book On Tape</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Book On Tape</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.BookOnTapeImpl#getReader <em>Reader</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.BookOnTapeImpl#getAuthor <em>Author</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.BookOnTapeImpl#getReader <em>Reader</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.BookOnTapeImpl#getAuthor <em>Author</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class BookOnTapeImpl extends AudioVisualItemImpl implements BookOnTape
-{
-  /**
-	 * The cached value of the '{@link #getReader() <em>Reader</em>}' reference.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+public class BookOnTapeImpl extends AudioVisualItemImpl implements BookOnTape {
+	/**
+	 * The cached value of the '{@link #getReader() <em>Reader</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getReader()
 	 * @generated
 	 * @ordered
 	 */
-  protected Person reader;
+	protected Person reader;
 
-  /**
-	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' reference.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getAuthor()
 	 * @generated
 	 * @ordered
 	 */
-  protected Writer author;
+	protected Writer author;
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected BookOnTapeImpl()
-  {
+	protected BookOnTapeImpl() {
 		super();
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  protected EClass eStaticClass()
-  {
+	@Override
+	protected EClass eStaticClass() {
 		return EXTLibraryPackage.Literals.BOOK_ON_TAPE;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public Person getReader()
-  {
+	public Person getReader() {
 		if (reader != null && reader.eIsProxy()) {
 			InternalEObject oldReader = (InternalEObject)reader;
 			reader = (Person)eResolveProxy(oldReader);
 			if (reader != oldReader) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, EXTLibraryPackage.BOOK_ON_TAPE__READER, oldReader, reader));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							EXTLibraryPackage.BOOK_ON_TAPE__READER, oldReader, reader));
 			}
 		}
 		return reader;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public Person basicGetReader()
-  {
+	public Person basicGetReader() {
 		return reader;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public void setReader(Person newReader)
-  {
+	public void setReader(Person newReader) {
 		Person oldReader = reader;
 		reader = newReader;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.BOOK_ON_TAPE__READER, oldReader, reader));
+			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.BOOK_ON_TAPE__READER,
+					oldReader, reader));
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public Writer getAuthor()
-  {
+	public Writer getAuthor() {
 		if (author != null && author.eIsProxy()) {
 			InternalEObject oldAuthor = (InternalEObject)author;
 			author = (Writer)eResolveProxy(oldAuthor);
 			if (author != oldAuthor) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR, oldAuthor, author));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR, oldAuthor, author));
 			}
 		}
 		return author;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public Writer basicGetAuthor()
-  {
+	public Writer basicGetAuthor() {
 		return author;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public void setAuthor(Writer newAuthor)
-  {
+	public void setAuthor(Writer newAuthor) {
 		Writer oldAuthor = author;
 		author = newAuthor;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR, oldAuthor, author));
+			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR,
+					oldAuthor, author));
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public Object eGet(int featureID, boolean resolve, boolean coreType)
-  {
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case EXTLibraryPackage.BOOK_ON_TAPE__READER:
-				if (resolve) return getReader();
+				if (resolve)
+					return getReader();
 				return basicGetReader();
 			case EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR:
-				if (resolve) return getAuthor();
+				if (resolve)
+					return getAuthor();
 				return basicGetAuthor();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public void eSet(int featureID, Object newValue)
-  {
+	@Override
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case EXTLibraryPackage.BOOK_ON_TAPE__READER:
 				setReader((Person)newValue);
@@ -201,14 +193,13 @@ public class BookOnTapeImpl extends AudioVisualItemImpl implements BookOnTape
 		super.eSet(featureID, newValue);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public void eUnset(int featureID)
-  {
+	@Override
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case EXTLibraryPackage.BOOK_ON_TAPE__READER:
 				setReader((Person)null);
@@ -220,14 +211,13 @@ public class BookOnTapeImpl extends AudioVisualItemImpl implements BookOnTape
 		super.eUnset(featureID);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public boolean eIsSet(int featureID)
-  {
+	@Override
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case EXTLibraryPackage.BOOK_ON_TAPE__READER:
 				return reader != null;
@@ -237,4 +227,4 @@ public class BookOnTapeImpl extends AudioVisualItemImpl implements BookOnTape
 		return super.eIsSet(featureID);
 	}
 
-} //BookOnTapeImpl
+} // BookOnTapeImpl

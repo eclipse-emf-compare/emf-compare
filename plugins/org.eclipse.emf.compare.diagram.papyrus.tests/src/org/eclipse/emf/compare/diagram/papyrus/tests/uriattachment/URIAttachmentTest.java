@@ -37,8 +37,8 @@ public class URIAttachmentTest extends AbstractTest {
 	 * <li>left/attribute -> uri=href:attribute</li>
 	 * <li>right/attribute removed</li>
 	 * </ul>
-	 * Since the only difference between origin/attribute and left/attribute is the URI type description,
-	 * they should be considered equal. If this is not the case the comparison will result in conflicts.
+	 * Since the only difference between origin/attribute and left/attribute is the URI type description, they
+	 * should be considered equal. If this is not the case the comparison will result in conflicts.
 	 */
 	@Test
 	public void testA1() throws IOException {

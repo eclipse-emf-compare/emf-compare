@@ -51,10 +51,9 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(1, false));
 		// Link to color tab
-		PreferenceLinkArea fileEditorsArea = new PreferenceLinkArea(
-				container,
-				SWT.NONE,
-				"org.eclipse.ui.preferencePages.ColorsAndFonts", EMFCompareRCPUIMessages.getString("EditorPreferencePage.mainTab.colorHyperLink.label"),//$NON-NLS-1$ //$NON-NLS-2$
+		PreferenceLinkArea fileEditorsArea = new PreferenceLinkArea(container, SWT.NONE,
+				"org.eclipse.ui.preferencePages.ColorsAndFonts", //$NON-NLS-1$
+				EMFCompareRCPUIMessages.getString("EditorPreferencePage.mainTab.colorHyperLink.label"), //$NON-NLS-1$
 				(IWorkbenchPreferenceContainer)getContainer(), "selectColor:" //$NON-NLS-1$
 						+ CompareColorImpl.CONFLICTING_CHANGE_COLOR_THEME_KEY);
 

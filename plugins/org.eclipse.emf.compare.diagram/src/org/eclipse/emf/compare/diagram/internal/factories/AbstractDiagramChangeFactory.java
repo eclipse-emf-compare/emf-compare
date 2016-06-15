@@ -147,8 +147,8 @@ public abstract class AbstractDiagramChangeFactory extends AbstractChangeFactory
 		if (result == null) {
 			result = match.getRight();
 		}
-		if (!(result instanceof View && ReferenceUtil
-				.safeEGet(result, NotationPackage.Literals.VIEW__ELEMENT) != null)
+		if (!(result instanceof View
+				&& ReferenceUtil.safeEGet(result, NotationPackage.Literals.VIEW__ELEMENT) != null)
 				&& match.eContainer() instanceof Match) {
 			result = getViewContainer((Match)match.eContainer());
 		}

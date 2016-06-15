@@ -124,7 +124,8 @@ public class AddUsageTest extends AbstractUMLTest {
 		} else {
 			addDependencyDescription = added("model.Usage0"); //$NON-NLS-1$
 			addRefClass0InDependencyDescription = addedToReference("model.Usage0", "client", "model.Class0");
-			addRefClass1InDependencyDescription = addedToReference("model.Usage0", "supplier", "model.Class1");
+			addRefClass1InDependencyDescription = addedToReference("model.Usage0", "supplier",
+					"model.Class1");
 		}
 
 		final Diff addDependency = Iterators.find(differences.iterator(), addDependencyDescription);
@@ -141,11 +142,11 @@ public class AddUsageTest extends AbstractUMLTest {
 		assertEquals(1, count(differences, instanceOf(DirectedRelationshipChange.class)));
 		Diff addUMLDependency = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLDependency = Iterators.find(differences.iterator(), and(
-					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.ADD)));
+			addUMLDependency = Iterators.find(differences.iterator(),
+					and(instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLDependency = Iterators.find(differences.iterator(), and(
-					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
+			addUMLDependency = Iterators.find(differences.iterator(),
+					and(instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLDependency);
 		assertEquals(3, addUMLDependency.getRefinedBy().size());

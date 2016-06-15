@@ -53,8 +53,8 @@ public class ViewItemProviderSpec extends ViewItemProvider {
 	@Override
 	public Object getImage(Object object) {
 		EObject obj = (View)object;
-		return overlayImage(object, ExtensionsEditPlugin.INSTANCE.getImage("full/obj16/"
-				+ obj.eClass().getName()));
+		return overlayImage(object,
+				ExtensionsEditPlugin.INSTANCE.getImage("full/obj16/" + obj.eClass().getName()));
 	}
 
 	/**

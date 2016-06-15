@@ -262,13 +262,13 @@ public class GitResourceVariantTreeSubscriberTest extends VariantsTestCase {
 		repository.createBranch(MASTER, BASE);
 		repository.createAndCheckoutBranch(MASTER, BRANCH);
 		file2 = repository.createFile(iProject, "file2");
-		repository
-				.appendContentAndCommit(iProject, file2, INITIAL_CONTENT_2, "Creation of file2 in branch2.");
+		repository.appendContentAndCommit(iProject, file2, INITIAL_CONTENT_2,
+				"Creation of file2 in branch2.");
 
 		repository.checkoutBranch(MASTER);
 		file1 = repository.createFile(iProject, "file1");
-		repository
-				.appendContentAndCommit(iProject, file1, INITIAL_CONTENT_1, "Creation of file1 in branch1.");
+		repository.appendContentAndCommit(iProject, file1, INITIAL_CONTENT_1,
+				"Creation of file1 in branch1.");
 
 		iProject.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 
@@ -290,11 +290,11 @@ public class GitResourceVariantTreeSubscriberTest extends VariantsTestCase {
 
 	private GitResourceVariantTreeProvider createTreeProviderWithDeletions() throws Exception {
 		file1 = repository.createFile(iProject, "file1");
-		repository
-				.appendContentAndCommit(iProject, file1, INITIAL_CONTENT_1, "Creation of file1 in branch1.");
+		repository.appendContentAndCommit(iProject, file1, INITIAL_CONTENT_1,
+				"Creation of file1 in branch1.");
 		file2 = repository.createFile(iProject, "file2");
-		repository
-				.appendContentAndCommit(iProject, file2, INITIAL_CONTENT_2, "Creation of file2 in branch2.");
+		repository.appendContentAndCommit(iProject, file2, INITIAL_CONTENT_2,
+				"Creation of file2 in branch2.");
 		repository.createBranch(MASTER, BASE);
 
 		repository.createAndCheckoutBranch(MASTER, BRANCH);

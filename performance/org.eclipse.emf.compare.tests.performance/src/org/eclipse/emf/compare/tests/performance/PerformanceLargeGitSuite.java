@@ -21,18 +21,10 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({
-	TestLargeGitMatchId.class,
-//	TestLargeGitMatchContent.class,
-	TestLargeGitDiff.class,
-	TestLargeGitReq.class,
-	TestLargeGitEqui.class,
-	TestLargeGitConflict.class,
-	TestLargeGitCompare.class,
-	TestLargeGitPostMatchUML.class,
-	TestLargeGitPostComparisonUML.class,
-})
+@SuiteClasses({TestLargeGitMatchId.class,
+		// TestLargeGitMatchContent.class,
+		TestLargeGitDiff.class, TestLargeGitReq.class, TestLargeGitEqui.class, TestLargeGitConflict.class,
+		TestLargeGitCompare.class, TestLargeGitPostMatchUML.class, TestLargeGitPostComparisonUML.class, })
 public class PerformanceLargeGitSuite {
-   
 
 }

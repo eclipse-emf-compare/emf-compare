@@ -69,8 +69,8 @@ public class EGitMatchEngineFactory extends DefaultRCPMatchEngineFactory {
 		final UseIdentifiers useUdentifier = getUseIdentifierValue(getConfiguration());
 		final Collection<IResourceMatchingStrategy> strategies = Sets.newLinkedHashSet();
 		strategies.add(new LocationMatchingStrategy());
-		return DefaultMatchEngine.create(useUdentifier, EMFCompareRCPPlugin.getDefault()
-				.getWeightProviderRegistry(), strategies);
+		return DefaultMatchEngine.create(useUdentifier,
+				EMFCompareRCPPlugin.getDefault().getWeightProviderRegistry(), strategies);
 	}
 
 	/**

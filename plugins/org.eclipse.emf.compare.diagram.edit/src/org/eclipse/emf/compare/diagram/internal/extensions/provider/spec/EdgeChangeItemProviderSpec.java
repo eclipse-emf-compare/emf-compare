@@ -49,8 +49,8 @@ public class EdgeChangeItemProviderSpec extends ForwardingDiagramDiffItemProvide
 		switch (kind) {
 			case ADD:
 			case DELETE:
-				diff = Iterators.find(diagramDiff.getRefinedBy().iterator(), EdgeChangeFactory
-						.isMainDiffForAddOrDeleteEdge(), null);
+				diff = Iterators.find(diagramDiff.getRefinedBy().iterator(),
+						EdgeChangeFactory.isMainDiffForAddOrDeleteEdge(), null);
 				break;
 			case CHANGE:
 				result = "look"; //$NON-NLS-1$

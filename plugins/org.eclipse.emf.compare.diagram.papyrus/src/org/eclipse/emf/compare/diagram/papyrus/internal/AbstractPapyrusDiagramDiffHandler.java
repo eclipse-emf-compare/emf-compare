@@ -54,7 +54,8 @@ public abstract class AbstractPapyrusDiagramDiffHandler implements IDiffHandler 
 	 */
 	protected boolean isTransitionReferenceChange(ReferenceChange diff) {
 		EReference ref = diff.getReference();
-		return (ref == UMLPackage.Literals.TRANSITION__TARGET || ref == UMLPackage.Literals.TRANSITION__SOURCE)
+		return (ref == UMLPackage.Literals.TRANSITION__TARGET
+				|| ref == UMLPackage.Literals.TRANSITION__SOURCE)
 				&& getOriginMatchObject(diff) instanceof Transition;
 	}
 

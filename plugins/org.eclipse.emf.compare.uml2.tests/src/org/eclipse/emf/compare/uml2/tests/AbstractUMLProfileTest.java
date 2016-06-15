@@ -29,8 +29,8 @@ public abstract class AbstractUMLProfileTest extends AbstractUMLTest {
 			final URL UMLJarredFileLocation = ResourcesPlugin.class.getResource("ResourcesPlugin.class");
 			String UMLJarPath = UMLJarredFileLocation.toString();
 			UMLJarPath = UMLJarPath.substring(0, UMLJarPath.indexOf('!'));
-			URIConverter.URI_MAP.put(URI.createURI("pathmap://UML_COMPARE_TESTS_PROFILE/"), URI
-					.createURI(getProfilePath()));
+			URIConverter.URI_MAP.put(URI.createURI("pathmap://UML_COMPARE_TESTS_PROFILE/"),
+					URI.createURI(getProfilePath()));
 		}
 	}
 
@@ -47,9 +47,8 @@ public abstract class AbstractUMLProfileTest extends AbstractUMLTest {
 
 	protected static String getProfilePath() {
 		final String thisNamespace = "org.eclipse.emf.compare.uml2.tests";
-		final URL thisClassLocation = AbstractUMLProfileTest.class.getResource(AbstractUMLProfileTest.class
-				.getSimpleName()
-				+ ".class");
+		final URL thisClassLocation = AbstractUMLProfileTest.class
+				.getResource(AbstractUMLProfileTest.class.getSimpleName() + ".class");
 		String profilePath = thisClassLocation.toString();
 		profilePath = profilePath.substring(0, profilePath.indexOf(thisNamespace) + thisNamespace.length());
 		profilePath += "/model/";

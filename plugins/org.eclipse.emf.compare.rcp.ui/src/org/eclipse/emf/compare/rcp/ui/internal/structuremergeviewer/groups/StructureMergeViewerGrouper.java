@@ -113,7 +113,8 @@ public final class StructureMergeViewerGrouper {
 	 * @param groupProvider
 	 *            the selected IDifferenceGroupProvider.
 	 */
-	protected void registerDifferenceGroupProvider(Notifier notifier, IDifferenceGroupProvider groupProvider) {
+	protected void registerDifferenceGroupProvider(Notifier notifier,
+			IDifferenceGroupProvider groupProvider) {
 		List<Adapter> eAdapters = notifier.eAdapters();
 		Adapter oldGroupProvider = EcoreUtil.getAdapter(eAdapters, IDifferenceGroupProvider.class);
 		if (oldGroupProvider != null) {

@@ -91,9 +91,9 @@ public final class SynchronizationModel implements IDiagnosable {
 	 */
 	public SynchronizationModel(StorageTraversal leftTraversal, StorageTraversal rightTraversal,
 			StorageTraversal originTraversal) {
-		this(leftTraversal, rightTraversal, originTraversal, new BasicDiagnostic(
-				EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null, new Object[] {leftTraversal, rightTraversal,
-						originTraversal, }));
+		this(leftTraversal, rightTraversal, originTraversal,
+				new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, null,
+						new Object[] {leftTraversal, rightTraversal, originTraversal, }));
 	}
 
 	/**
@@ -240,8 +240,8 @@ public final class SynchronizationModel implements IDiagnosable {
 		final Set<IResource> leftResources = collectResources(getLeftTraversal());
 		final Set<IResource> rightResources = collectResources(getRightTraversal());
 		final Set<IResource> originResources = collectResources(getOriginTraversal());
-		return ImmutableSet.<IResource> builder().addAll(leftResources).addAll(rightResources).addAll(
-				originResources).build();
+		return ImmutableSet.<IResource> builder().addAll(leftResources).addAll(rightResources)
+				.addAll(originResources).build();
 	}
 
 	/**
@@ -268,8 +268,8 @@ public final class SynchronizationModel implements IDiagnosable {
 				 * or local content. The traversal itself only tells "all" potential resources linked to the
 				 * current.
 				 */
-				resources.add(ResourcesPlugin.getWorkspace().getRoot().getFile(
-						ResourceUtil.getFixedPath(storage)));
+				resources.add(
+						ResourcesPlugin.getWorkspace().getRoot().getFile(ResourceUtil.getFixedPath(storage)));
 			}
 		}
 		return resources;
@@ -298,19 +298,18 @@ public final class SynchronizationModel implements IDiagnosable {
 		}
 
 		private void buildDiagnostic() {
-			syncModelDiagnostic = new BasicDiagnostic(
-					EMFCompareIDEUIPlugin.PLUGIN_ID,
-					0,
-					EMFCompareIDEUIMessages.getString("SynchronizationModel.diagnosticMesg"), new Object[] {syncModel, }); //$NON-NLS-1$
+			syncModelDiagnostic = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0,
+					EMFCompareIDEUIMessages.getString("SynchronizationModel.diagnosticMesg"), //$NON-NLS-1$
+					new Object[] {syncModel, });
 			// synchronization model child diagnostics
 			syncModelDiagnostic.add(getSynchronizationModelDiagnostic());
 			// resource traversals child diagnostics
 			syncModelDiagnostic
 					.add(getDiagnosticForSide(syncModel.getLeftTraversal().getDiagnostic(), "left")); //$NON-NLS-1$
-			syncModelDiagnostic.add(getDiagnosticForSide(syncModel.getOriginTraversal().getDiagnostic(),
-					"origin")); //$NON-NLS-1$
-			syncModelDiagnostic.add(getDiagnosticForSide(syncModel.getRightTraversal().getDiagnostic(),
-					"right")); //$NON-NLS-1$
+			syncModelDiagnostic
+					.add(getDiagnosticForSide(syncModel.getOriginTraversal().getDiagnostic(), "origin")); //$NON-NLS-1$
+			syncModelDiagnostic
+					.add(getDiagnosticForSide(syncModel.getRightTraversal().getDiagnostic(), "right")); //$NON-NLS-1$
 		}
 
 		/**
@@ -318,8 +317,9 @@ public final class SynchronizationModel implements IDiagnosable {
 		 * are part of the logical model.
 		 */
 		private BasicDiagnostic getSynchronizationModelDiagnostic() {
-			BasicDiagnostic d = new BasicDiagnostic(syncModel.diagnostic.getSource(), syncModel.diagnostic
-					.getCode(), null, EMFCompareIDEUIMessages.getString("SynchronizationModel.root"), null); //$NON-NLS-1$
+			BasicDiagnostic d = new BasicDiagnostic(syncModel.diagnostic.getSource(),
+					syncModel.diagnostic.getCode(), null,
+					EMFCompareIDEUIMessages.getString("SynchronizationModel.root"), null); //$NON-NLS-1$
 
 			for (Diagnostic child : syncModel.diagnostic.getChildren()) {
 				List<?> diagnosticData = child.getData();

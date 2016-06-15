@@ -68,8 +68,8 @@ public class EMFCompareBuilderConfigurator implements IEMFCompareBuilderConfigur
 	 */
 	public static EMFCompareBuilderConfigurator createDefault() {
 		return new EMFCompareBuilderConfigurator(EMFCompareRCPPlugin.getDefault().getEMFComparePreferences(),
-				EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry(), EMFCompareRCPPlugin
-						.getDefault().getPostProcessorRegistry());
+				EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry(),
+				EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
 	}
 
 	/**

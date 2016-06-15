@@ -150,10 +150,11 @@ public class ModelResolverDescriptor {
 				// log anyway.
 				if (!logOnce) {
 					logOnce = true;
-					final String message = EMFCompareIDEUIMessages.getString(
-							"ModelResolverRegistry.invalidResolver", label); //$NON-NLS-1$
-					final IStatus status = new Status(IStatus.ERROR, configurationElement
-							.getDeclaringExtension().getContributor().getName(), message, e);
+					final String message = EMFCompareIDEUIMessages
+							.getString("ModelResolverRegistry.invalidResolver", label); //$NON-NLS-1$
+					final IStatus status = new Status(IStatus.ERROR,
+							configurationElement.getDeclaringExtension().getContributor().getName(), message,
+							e);
 					EMFCompareIDEUIPlugin.getDefault().getLog().log(status);
 				}
 			}

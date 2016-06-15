@@ -198,9 +198,10 @@ public class FeatureMapChangeConflictSearch {
 			Object value = entry.getValue();
 			EAttribute feature = diff.getAttribute();
 			EList<Diff> diffsInSameMatch = diffMatch.getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-					instanceOf(FeatureMapChange.class), valueMatches(comparison.getEqualityHelper(), value),
-					onFeature(feature), ofKind(MOVE)))) {
+			for (Diff candidate : Iterables.filter(diffsInSameMatch,
+					and(possiblyConflictingWith(diff), instanceOf(FeatureMapChange.class),
+							valueMatches(comparison.getEqualityHelper(), value), onFeature(feature),
+							ofKind(MOVE)))) {
 				Object candidateValue = ((FeatureMapChange)candidate).getValue();
 				if (matchingIndices(diff.getMatch(), feature, value, candidateValue)) {
 					conflict(candidate, PSEUDO);

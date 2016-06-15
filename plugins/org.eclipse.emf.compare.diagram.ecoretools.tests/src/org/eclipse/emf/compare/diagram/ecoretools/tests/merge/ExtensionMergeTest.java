@@ -46,7 +46,6 @@ public class ExtensionMergeTest extends AbstractTest {
 		testMergeRightToLeft(left, right, null);
 	}
 
-	
 	protected void testMergeRightToLeft(Notifier left, Notifier right, Notifier origin) {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		final Comparison comparisonBefore = getCompare().compare(scope);
@@ -71,8 +70,8 @@ public class ExtensionMergeTest extends AbstractTest {
 			merger.copyRightToLeft(diff, null);
 		}
 		final Comparison comparisonAfter = getCompare().compare(scope);
-		assertTrue("Comparison#getDifferences() must be empty after copyAllRightToLeft", comparisonAfter
-				.getDifferences().isEmpty());
+		assertTrue("Comparison#getDifferences() must be empty after copyAllRightToLeft",
+				comparisonAfter.getDifferences().isEmpty());
 	}
 
 	@Override

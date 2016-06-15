@@ -184,8 +184,8 @@ public class TestBug459131 extends CompareTestCase {
 
 		final File rightFile4 = project.getOrCreateFile(iProject, "right" + File.separator + "R4.nodes");
 		final File rightFile5 = project.getOrCreateFile(iProject, "right" + File.separator + "R5.nodes");
-		final File newRightFile5 = project
-				.getOrCreateFile(iProject, "right" + File.separator + "R5NEW.nodes");
+		final File newRightFile5 = project.getOrCreateFile(iProject,
+				"right" + File.separator + "R5NEW.nodes");
 		final File rightFile6 = project.getOrCreateFile(iProject, "right" + File.separator + "R6.nodes");
 
 		Bundle bundle = Platform.getBundle("org.eclipse.emf.compare.ide.ui.tests");

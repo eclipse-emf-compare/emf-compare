@@ -178,11 +178,11 @@ public class AddTimeConstraintTest extends AbstractUMLTest {
 		assertEquals(1, count(differences, instanceOf(IntervalConstraintChange.class)));
 		Diff addUMLMessage = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLMessage = Iterators.find(differences.iterator(), and(
-					instanceOf(IntervalConstraintChange.class), ofKind(DifferenceKind.ADD)));
+			addUMLMessage = Iterators.find(differences.iterator(),
+					and(instanceOf(IntervalConstraintChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLMessage = Iterators.find(differences.iterator(), and(
-					instanceOf(IntervalConstraintChange.class), ofKind(DifferenceKind.DELETE)));
+			addUMLMessage = Iterators.find(differences.iterator(),
+					and(instanceOf(IntervalConstraintChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLMessage);
 		assertEquals(9, addUMLMessage.getRefinedBy().size());

@@ -96,8 +96,8 @@ public class ResourceAttachmentChangeConflictSearch {
 
 			// Then let's see if there's a conflict with another ResourceAttachmentChange
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-					instanceOf(ResourceAttachmentChange.class)))) {
+			for (Diff candidate : Iterables.filter(diffsInSameMatch,
+					and(possiblyConflictingWith(diff), instanceOf(ResourceAttachmentChange.class)))) {
 				ConflictKind kind = REAL;
 				if (candidate.getKind() == ADD) {
 					final Resource diffRes;
@@ -174,7 +174,8 @@ public class ResourceAttachmentChangeConflictSearch {
 			// First let's see if ReferenceChanges point to the EObject moved
 			if (value != null) {
 				Collection<ReferenceChange> refChanges = index.getReferenceChangesByValue(value);
-				for (ReferenceChange candidate : Iterables.filter(refChanges, possiblyConflictingWith(diff))) {
+				for (ReferenceChange candidate : Iterables.filter(refChanges,
+						possiblyConflictingWith(diff))) {
 					if (candidate.getReference().isContainment()) {
 						// The element is a new root on one side, but it has been moved to an EObject
 						// container on the other
@@ -195,8 +196,8 @@ public class ResourceAttachmentChangeConflictSearch {
 
 			// Then let's see if there's a conflict with another ResourceAttachmentChange
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-					instanceOf(ResourceAttachmentChange.class)))) {
+			for (Diff candidate : Iterables.filter(diffsInSameMatch,
+					and(possiblyConflictingWith(diff), instanceOf(ResourceAttachmentChange.class)))) {
 				ConflictKind kind = REAL;
 				if (candidate.getKind() == DELETE) {
 					final Resource diffRes;
@@ -282,8 +283,8 @@ public class ResourceAttachmentChangeConflictSearch {
 			}
 
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-					instanceOf(ResourceAttachmentChange.class)))) {
+			for (Diff candidate : Iterables.filter(diffsInSameMatch,
+					and(possiblyConflictingWith(diff), instanceOf(ResourceAttachmentChange.class)))) {
 				ConflictKind kind = REAL;
 				if (candidate.getKind() == MOVE) {
 					String lhsURI = diff.getResourceURI();

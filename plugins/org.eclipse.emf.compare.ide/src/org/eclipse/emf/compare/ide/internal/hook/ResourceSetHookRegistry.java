@@ -49,8 +49,8 @@ public class ResourceSetHookRegistry {
 	 * @return unmodifiable {@link Collection} of {@link IResourceSetHook}.
 	 */
 	public Collection<IResourceSetHook> getResourceSetHooks() {
-		return Collections.unmodifiableCollection(Collections2.filter(Collections2.transform(registry
-				.values(), TO_HOOK), Predicates.notNull()));
+		return Collections.unmodifiableCollection(Collections2
+				.filter(Collections2.transform(registry.values(), TO_HOOK), Predicates.notNull()));
 	}
 
 	/**

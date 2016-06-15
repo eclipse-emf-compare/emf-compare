@@ -149,10 +149,10 @@ public class ResourceAttachmentChangeBug492261 {
 
 		final List<Diff> differences = comparison.getDifferences();
 
-		Collection<Diff> racFilter = Collections2.filter(differences, Predicates
-				.instanceOf(ResourceAttachmentChange.class));
-		Collection<Diff> rcFilter = Collections2.filter(differences, Predicates
-				.instanceOf(ReferenceChange.class));
+		Collection<Diff> racFilter = Collections2.filter(differences,
+				Predicates.instanceOf(ResourceAttachmentChange.class));
+		Collection<Diff> rcFilter = Collections2.filter(differences,
+				Predicates.instanceOf(ReferenceChange.class));
 		assertEquals(1, racFilter.size());
 		assertEquals(2, rcFilter.size());
 		Diff rac = racFilter.iterator().next();
@@ -200,10 +200,10 @@ public class ResourceAttachmentChangeBug492261 {
 
 		final List<Diff> differences = comparison.getDifferences();
 
-		Collection<Diff> racFilter = Collections2.filter(differences, Predicates
-				.instanceOf(ResourceAttachmentChange.class));
-		Collection<Diff> rcFilter = Collections2.filter(differences, Predicates
-				.instanceOf(ReferenceChange.class));
+		Collection<Diff> racFilter = Collections2.filter(differences,
+				Predicates.instanceOf(ResourceAttachmentChange.class));
+		Collection<Diff> rcFilter = Collections2.filter(differences,
+				Predicates.instanceOf(ReferenceChange.class));
 		assertEquals(1, racFilter.size());
 		assertEquals(2, rcFilter.size());
 		Diff rac = racFilter.iterator().next();

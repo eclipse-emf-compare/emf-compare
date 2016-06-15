@@ -33,7 +33,7 @@ class SidedFeatureInstance extends FeatureInstance {
 	 * @param side
 	 *            The side
 	 */
-	public SidedFeatureInstance(EObject eObject, EStructuralFeature feature, DifferenceSource side) {
+	SidedFeatureInstance(EObject eObject, EStructuralFeature feature, DifferenceSource side) {
 		super(eObject, feature);
 		this.side = side;
 	}

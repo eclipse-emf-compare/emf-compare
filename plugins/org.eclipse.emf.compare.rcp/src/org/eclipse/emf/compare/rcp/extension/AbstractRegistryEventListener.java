@@ -39,7 +39,7 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	 * 
 	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
 	 */
-	protected static enum Action {
+	protected enum Action {
 		/**
 		 * The {@link IConfigurationElement} is to be added.
 		 */
@@ -212,8 +212,8 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	 *            the exception to be logged.
 	 */
 	protected void log(IConfigurationElement element, Throwable t) {
-		log.log(new Status(IStatus.ERROR, element.getDeclaringExtension().getContributor().getName(), t
-				.getMessage(), t));
+		log.log(new Status(IStatus.ERROR, element.getDeclaringExtension().getContributor().getName(),
+				t.getMessage(), t));
 	}
 
 	/**

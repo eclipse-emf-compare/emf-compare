@@ -93,14 +93,13 @@ public class EMFModelProvider extends ModelProvider {
 
 	/** Default constructor. */
 	public EMFModelProvider() {
-		contextToResourceMappingCache = CacheBuilder.newBuilder().initialCapacity(10).build(
-				new CacheLoader<ResourceMappingContext, Cache<IResource, SynchronizationModel>>() {
+		contextToResourceMappingCache = CacheBuilder.newBuilder().initialCapacity(10)
+				.build(new CacheLoader<ResourceMappingContext, Cache<IResource, SynchronizationModel>>() {
 					@Override
 					public Cache<IResource, SynchronizationModel> load(ResourceMappingContext key)
 							throws Exception {
-						return CacheBuilder.newBuilder()
-								.expireAfterAccess(CACHE_EXPIRATION, TimeUnit.SECONDS).initialCapacity(10)
-								.build();
+						return CacheBuilder.newBuilder().expireAfterAccess(CACHE_EXPIRATION, TimeUnit.SECONDS)
+								.initialCapacity(10).build();
 					}
 				});
 	}
@@ -169,8 +168,8 @@ public class EMFModelProvider extends ModelProvider {
 		try {
 			final Map<SynchronizationModel, IFile> syncModels = computeLogicalModels(files, context, monitor);
 			for (Map.Entry<SynchronizationModel, IFile> entry : syncModels.entrySet()) {
-				final ResourceMapping mapping = new EMFResourceMapping(entry.getValue(), context, entry
-						.getKey(), PROVIDER_ID);
+				final ResourceMapping mapping = new EMFResourceMapping(entry.getValue(), context,
+						entry.getKey(), PROVIDER_ID);
 				mappings.add(mapping);
 			}
 
@@ -186,10 +185,11 @@ public class EMFModelProvider extends ModelProvider {
 			if (LOGGER.isInfoEnabled()) {
 				final Joiner joiner = Joiner.on(",").skipNulls(); //$NON-NLS-1$
 				final String resourceList = joiner.join(remainingResources);
-				LOGGER.info("getMappings() - not all resources were handled. fallback to super for: " + resourceList); //$NON-NLS-1$
+				LOGGER.info("getMappings() - not all resources were handled. fallback to super for: " //$NON-NLS-1$
+						+ resourceList);
 			}
-			mappings.addAll(Arrays.asList(super.getMappings(remainingResources
-					.toArray(new IResource[remainingResources.size()]), context, monitor)));
+			mappings.addAll(Arrays.asList(super.getMappings(
+					remainingResources.toArray(new IResource[remainingResources.size()]), context, monitor)));
 		} else {
 			if (LOGGER.isInfoEnabled()) {
 				LOGGER.info("getMappings() - FINISH NORMALLY"); //$NON-NLS-1$
@@ -240,7 +240,7 @@ public class EMFModelProvider extends ModelProvider {
 					.getUnchecked(context);
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Retrieved cache with ~ " + resourceMappingCache.size() //$NON-NLS-1$
-						+ " entries  for context " + context); //$NON-NLS-1$ 
+						+ " entries  for context " + context); //$NON-NLS-1$
 			}
 			syncModel = resourceMappingCache.getIfPresent(file);
 			if (syncModel == null) {
@@ -337,8 +337,9 @@ public class EMFModelProvider extends ModelProvider {
 			syncModel = builder.buildSynchronizationModel(left, right, origin, actualMonitor);
 		} else {
 			// TODO wouldn't it be better to use Collections.singleton(file) for the right and origin?
-			syncModel = new SynchronizationModel(localTraversal, new StorageTraversal(Collections
-					.<IStorage> emptySet()), new StorageTraversal(Collections.<IStorage> emptySet()));
+			syncModel = new SynchronizationModel(localTraversal,
+					new StorageTraversal(Collections.<IStorage> emptySet()),
+					new StorageTraversal(Collections.<IStorage> emptySet()));
 		}
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("computeLogicalModel() - FINISH"); //$NON-NLS-1$
@@ -375,8 +376,8 @@ public class EMFModelProvider extends ModelProvider {
 	 *             If the user interrupts the resolving.
 	 */
 	Map<SynchronizationModel, IFile> computeLogicalModels(Collection<IFile> files,
-			ResourceMappingContext context, IProgressMonitor monitor) throws CoreException,
-			InterruptedException {
+			ResourceMappingContext context, IProgressMonitor monitor)
+			throws CoreException, InterruptedException {
 		if (LOGGER.isDebugEnabled()) {
 			final Joiner joiner = Joiner.on(",").skipNulls(); //$NON-NLS-1$
 			final String fileList = joiner.join(files);
@@ -390,7 +391,8 @@ public class EMFModelProvider extends ModelProvider {
 			if (currentSyncModel == null) {
 				// skip file
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("computeLogicalModels() - Could not determine logical model for \"" + file + "\". SKIP file."); //$NON-NLS-1$ //$NON-NLS-2$
+					LOGGER.debug("computeLogicalModels() - Could not determine logical model for \"" + file //$NON-NLS-1$
+							+ "\". SKIP file."); //$NON-NLS-1$
 				}
 				continue;
 			}
@@ -508,11 +510,11 @@ public class EMFModelProvider extends ModelProvider {
 		if (traversal != null && !traversal.getStorages().isEmpty()) {
 			for (IStorage storage : traversal.getStorages()) {
 				if (storage instanceof IFile) {
-					final IStorageProvider storageProvider = storageAccessor.getStorageProvider(
-							(IFile)storage, side);
+					final IStorageProvider storageProvider = storageAccessor
+							.getStorageProvider((IFile)storage, side);
 					if (storageProvider != null) {
-						return new StorageTypedElement(storageProvider.getStorage(monitor), ResourceUtil
-								.getFixedPath(storage).toString());
+						return new StorageTypedElement(storageProvider.getStorage(monitor),
+								ResourceUtil.getFixedPath(storage).toString());
 					}
 				}
 			}

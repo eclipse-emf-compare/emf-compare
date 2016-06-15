@@ -20,13 +20,11 @@ import java.util.Set;
 import org.eclipse.emf.ecore.resource.Resource;
 
 /**
- * Tests that conflicting changes of stereotype attributes are correctly
- * detected.
+ * Tests that conflicting changes of stereotype attributes are correctly detected.
  * <dl>
  * <dt>Origin:</dt>
- * <dd>Contains a Papyrus model with the ModelElements SysML profile applied.
- * The model contains a ModelElements:View package, containing a
- * ModelElements:ViewPoint class.</dd>
+ * <dd>Contains a Papyrus model with the ModelElements SysML profile applied. The model contains a
+ * ModelElements:View package, containing a ModelElements:ViewPoint class.</dd>
  * <dt>Right:</dt>
  * <dd>The value of the Purpose attribute of the ViewPoint element is changed.</dd>
  * <dt>Left:</dt>

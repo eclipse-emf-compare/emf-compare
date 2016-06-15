@@ -51,9 +51,12 @@ import com.google.common.collect.Iterators;
 public class MergeViewerItemPseudoConflictTest {
 
 	private static MergeViewerItemEcorePseudoConflictInputData inputData = new MergeViewerItemEcorePseudoConflictInputData();
-	private final static ComposedAdapterFactory fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+
+	private final static ComposedAdapterFactory fAdapterFactory = new ComposedAdapterFactory(
+			ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+
 	private static Comparison comparison;
-	
+
 	@BeforeClass
 	public static void beforeClass() throws IOException {
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
@@ -66,23 +69,25 @@ public class MergeViewerItemPseudoConflictTest {
 		EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
 		comparison = comparisonBuilder.build().compare(scope);
 	}
-	
+
 	@Test
 	public void test3WayRefContainmentOnPseudoAddConflict() throws IOException {
 		final List<Diff> differences = comparison.getDifferences();
 
-		final Predicate<? super Diff> eClassA = EMFComparePredicates.addedToReference("P.SP", "eClassifiers", "P.SP.A");
+		final Predicate<? super Diff> eClassA = EMFComparePredicates.addedToReference("P.SP", "eClassifiers",
+				"P.SP.A");
 		final Diff eClassADiff = Iterators.find(differences.iterator(), eClassA);
 		final EObject eClassAValue = (EObject)MergeViewerUtil.getDiffValue(eClassADiff);
 		final Match eClassAMatch = comparison.getMatch(eClassAValue);
 
-		MergeViewerItem.Container eClassAMVI = new MergeViewerItem.Container(comparison, eClassADiff, eClassAMatch, MergeViewerSide.LEFT, fAdapterFactory);
-		
+		MergeViewerItem.Container eClassAMVI = new MergeViewerItem.Container(comparison, eClassADiff,
+				eClassAMatch, MergeViewerSide.LEFT, fAdapterFactory);
+
 		assertEquals(eClassAMVI.getLeft(), eClassAValue);
 		assertNull(eClassAMVI.getRight());
 		assertFalse(eClassAMVI.isInsertionPoint());
-		
+
 		assertNotNull(eClassAMVI.getParent());
 	}
-	
+
 }

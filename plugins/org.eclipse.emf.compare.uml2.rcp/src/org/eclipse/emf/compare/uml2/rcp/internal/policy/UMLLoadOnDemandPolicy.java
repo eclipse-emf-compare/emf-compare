@@ -41,14 +41,15 @@ import org.eclipse.uml2.uml.UMLPlugin;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class UMLLoadOnDemandPolicy implements ILoadOnDemandPolicy {
-	/** The {@link URI} of the UML metamodel offered by the UML2 Eclipse plugins */
-	private static final String PLATFORM_UML_METAMODEL_URI = "platform:/plugin/org.eclipse.uml2.uml.resources/metamodels/UML.metamodel.uml"; //$NON-NLS-1$
 
 	/**
 	 * The UML file extension. We'll react to resource sets containing at least one resource with this
 	 * extension.
 	 */
 	protected static final String UML_EXTENSION = "uml"; //$NON-NLS-1$
+
+	/** The {@link URI} of the UML metamodel offered by the UML2 Eclipse plugins. */
+	private static final String PLATFORM_UML_METAMODEL_URI = "platform:/plugin/org.eclipse.uml2.uml.resources/metamodels/UML.metamodel.uml"; //$NON-NLS-1$
 
 	/** Keep track of the normalizations we've already made. */
 	private final BiMap<String, URI> profileNsURIToNormalized = HashBiMap.create();
@@ -73,7 +74,7 @@ public class UMLLoadOnDemandPolicy implements ILoadOnDemandPolicy {
 	 *            normalized URI to compare.
 	 * @param uriConverter
 	 *            {@link URIConverter} to use for the registered profile URIs.
-	 * @return
+	 * @return <code>true</code> if the URI is registered in the UML profile registry
 	 */
 	protected boolean isRegisteredUMLProfile(URI normalizedURI, final URIConverter uriConverter) {
 		for (Map.Entry<String, URI> entry : UMLPlugin.getEPackageNsURIToProfileLocationMap().entrySet()) {

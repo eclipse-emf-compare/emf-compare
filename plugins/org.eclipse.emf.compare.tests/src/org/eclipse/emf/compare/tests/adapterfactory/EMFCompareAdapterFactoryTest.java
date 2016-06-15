@@ -52,16 +52,16 @@ public class EMFCompareAdapterFactoryTest {
 		key.add("http://www.eclipse.org/emf/compare");
 		key.add("org.eclipse.emf.compare.provider.IItemStyledLabelProvider");
 
-		registry.put(key, new TestEMFCompareAdapterFactoryDescriptor(
-				new CompareItemProviderAdapterFactorySpec2(), 10));
-		registry.put(key, new TestEMFCompareAdapterFactoryDescriptor(
-				new CompareItemProviderAdapterFactorySpec3(), 20));
+		registry.put(key,
+				new TestEMFCompareAdapterFactoryDescriptor(new CompareItemProviderAdapterFactorySpec2(), 10));
+		registry.put(key,
+				new TestEMFCompareAdapterFactoryDescriptor(new CompareItemProviderAdapterFactorySpec3(), 20));
 
 		final Collection<String> keyIItemLabelProvider = new ArrayList<String>();
 		keyIItemLabelProvider.add("http://www.eclipse.org/emf/compare");
 		keyIItemLabelProvider.add("org.eclipse.emf.edit.provider.IItemLabelProvider");
-		registry.put(keyIItemLabelProvider, new TestEMFCompareAdapterFactoryDescriptor(
-				new CompareItemProviderAdapterFactorySpec2(), 30));
+		registry.put(keyIItemLabelProvider,
+				new TestEMFCompareAdapterFactoryDescriptor(new CompareItemProviderAdapterFactorySpec2(), 30));
 
 		final AdapterFactory fAdapterFactory = new ComposedAdapterFactory(rankedRegistry);
 

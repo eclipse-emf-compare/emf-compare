@@ -131,8 +131,8 @@ public abstract class AbstractDifferenceOrderTest {
 	 */
 	protected void compareTree(Resource expectedResult, List<? extends TreeNode> actualTrees,
 			boolean testIcons) {
-		List<? extends TreeNode> nonFilteredActualRoot = Lists.newArrayList(Collections2.filter(actualTrees,
-				viewerFilterPredicate));
+		List<? extends TreeNode> nonFilteredActualRoot = Lists
+				.newArrayList(Collections2.filter(actualTrees, viewerFilterPredicate));
 		EList<EObject> expectedContent = expectedResult.getContents();
 		Assert.assertEquals(expectedContent.size(), nonFilteredActualRoot.size());
 
@@ -157,23 +157,23 @@ public abstract class AbstractDifferenceOrderTest {
 			EObject actualElem = realIterator.next();
 
 			// Checks same name.
-			Assert.assertEquals(getErrorMessage(actualElem), expectedElement.getName(), itemDelegator
-					.getText(actualElem));
+			Assert.assertEquals(getErrorMessage(actualElem), expectedElement.getName(),
+					itemDelegator.getText(actualElem));
 			if (testIcons) {
 				// Checks correct icon
 				Assert.assertTrue(expectedElement instanceof NodeSingleValueAttribute);
 				List<String> actualIcons = StereotypedElementItemProviderTestUtil
 						.getIconsLocation(itemDelegator.getImage(actualElem));
 				Assert.assertEquals("Wrong icon on " + expectedElement.getName(), //$NON-NLS-1$
-						((NodeSingleValueAttribute)expectedElement).getSingleValuedAttribute(), Joiner
-								.on(',').join(actualIcons));
+						((NodeSingleValueAttribute)expectedElement).getSingleValuedAttribute(),
+						Joiner.on(',').join(actualIcons));
 			}
 			if (expectedElement.eContainer() != null) {
 				final Collection<Node> expectedChildren = expectedElement.getContainmentRef1();
 				// Checks same number of children.
 				Assert.assertEquals("Incorrect children for " + getFullPath(actualElem), //$NON-NLS-1$
-						expectedChildren.size(), Collections2.filter(((TreeNode)actualElem).getChildren(),
-								viewerFilterPredicate).size());
+						expectedChildren.size(), Collections2
+								.filter(((TreeNode)actualElem).getChildren(), viewerFilterPredicate).size());
 			}
 		}
 	}
@@ -201,8 +201,8 @@ public abstract class AbstractDifferenceOrderTest {
 	 * @throws IOException
 	 */
 	private Comparison getComparison(NotifierScopeProvider scopeProvider) throws IOException {
-		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(), scopeProvider
-				.getRight(), scopeProvider.getOrigin());
+		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(),
+				scopeProvider.getRight(), scopeProvider.getOrigin());
 		final Builder builder = EMFCompare.builder();
 		EMFCompareBuilderConfigurator.createDefault().configure(builder);
 		return builder.build().compare(scope);
@@ -306,7 +306,8 @@ public abstract class AbstractDifferenceOrderTest {
 		 * @param fillIcon
 		 *            Set to true if the generated model should keep track of the element icons.
 		 */
-		public void createExpectedModel(String fileLocation, List<? extends TreeNode> roots, boolean fillIcon) {
+		public void createExpectedModel(String fileLocation, List<? extends TreeNode> roots,
+				boolean fillIcon) {
 			URI fileURI = URI.createFileURI(fileLocation);
 			Resource.Factory resourceFactory = new NodesResourceFactoryImpl();
 			// resourceFactory cannot be null
@@ -349,8 +350,8 @@ public abstract class AbstractDifferenceOrderTest {
 				if (saveIcon) {
 					// Save the icon name to test the picture
 					Object icon = itemDelegator.getImage(n);
-					((NodeSingleValueAttribute)newNode).setSingleValuedAttribute(Joiner.on(',').join(
-							StereotypedElementItemProviderTestUtil.getIconsLocation(icon)));
+					((NodeSingleValueAttribute)newNode).setSingleValuedAttribute(Joiner.on(',')
+							.join(StereotypedElementItemProviderTestUtil.getIconsLocation(icon)));
 				}
 			}
 			return newNode;

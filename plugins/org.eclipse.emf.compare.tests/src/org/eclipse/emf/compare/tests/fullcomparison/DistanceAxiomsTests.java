@@ -80,9 +80,10 @@ public class DistanceAxiomsTests {
 		double xToz = meter.distance(comparison, x, z);
 		double xToy = meter.distance(comparison, x, y);
 		double yToz = meter.distance(comparison, y, z);
-		assertTrue("Triangular inequality (x-z <= x-y + y-z ) failed (" + xToz + "<=" + xToy + " + " + yToz
-				+ ")for \nx:" + x.toString() + "\n|y:" + y.toString() + "\n|z:" + z.toString(), xToz <= xToy
-				+ yToz);
+		assertTrue(
+				"Triangular inequality (x-z <= x-y + y-z ) failed (" + xToz + "<=" + xToy + " + " + yToz
+						+ ")for \nx:" + x.toString() + "\n|y:" + y.toString() + "\n|z:" + z.toString(),
+				xToz <= xToy + yToz);
 	}
 
 }

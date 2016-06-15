@@ -96,11 +96,11 @@ public final class EMFComparePreferences {
 	 * @return List of ids;
 	 */
 	public static List<String> getDisabledAdapterFacotryDescriptorIds(IEclipsePreferences preferenceStore) {
-		String disabledAdapterFactoriesString = preferenceStore.get(
-				EMFComparePreferences.DISABLED_ADAPTER_FACTORY, ""); //$NON-NLS-1$
+		String disabledAdapterFactoriesString = preferenceStore
+				.get(EMFComparePreferences.DISABLED_ADAPTER_FACTORY, ""); //$NON-NLS-1$
 
-		final List<String> disabledAdapterFactories = Lists.newArrayList(Splitter.on(';').omitEmptyStrings()
-				.trimResults().split(disabledAdapterFactoriesString));
+		final List<String> disabledAdapterFactories = Lists.newArrayList(
+				Splitter.on(';').omitEmptyStrings().trimResults().split(disabledAdapterFactoriesString));
 		return disabledAdapterFactories;
 	}
 

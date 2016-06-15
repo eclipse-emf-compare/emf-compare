@@ -130,8 +130,8 @@ public class NotLoadedFragmentNodeTest {
 				+ SEP + "ide" + SEP + "ui" + SEP + "tests" + SEP + "structuremergeviewer" + SEP
 				+ "notloadedfragment" + SEP + "data" + SEP + projectName + SEP + ".project");
 		URL fileURL = FileLocator.toFileURL(entry);
-		IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(
-				new Path(fileURL.getPath()));
+		IProjectDescription description = ResourcesPlugin.getWorkspace()
+				.loadProjectDescription(new Path(fileURL.getPath()));
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
 		if (!project.exists()) {
 			project.create(description, new NullProgressMonitor());
@@ -143,8 +143,8 @@ public class NotLoadedFragmentNodeTest {
 		final IFile originFile = project.getFile(new Path("origin" + SEP + "R1.ecore"));
 		final ITypedElement left = new StorageTypedElement(leftFile, leftFile.getFullPath().toOSString());
 		final ITypedElement right = new StorageTypedElement(rightFile, rightFile.getFullPath().toOSString());
-		final ITypedElement origin = new StorageTypedElement(originFile, originFile.getFullPath()
-				.toOSString());
+		final ITypedElement origin = new StorageTypedElement(originFile,
+				originFile.getFullPath().toOSString());
 
 		IStorage leftStorage = PlatformElementUtil.findFile(left);
 		if (leftStorage == null) {

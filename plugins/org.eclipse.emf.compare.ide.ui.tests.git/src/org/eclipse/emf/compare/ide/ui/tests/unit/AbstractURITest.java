@@ -65,17 +65,15 @@ public class AbstractURITest extends CompareGitTestCase {
 	@Override
 	@After
 	public void tearDown() throws Exception {
-		final EMFModelProvider emfModelProvider = (EMFModelProvider) ModelProvider
-				.getModelProviderDescriptor(EMFModelProvider.PROVIDER_ID)
-				.getModelProvider();
+		final EMFModelProvider emfModelProvider = (EMFModelProvider)ModelProvider
+				.getModelProviderDescriptor(EMFModelProvider.PROVIDER_ID).getModelProvider();
 		emfModelProvider.clear();
 		super.tearDown();
 	}
 
 	/**
-	 * We'll create a repo with a single file and three commits such as there's
-	 * an initial commit, one more commit on master, then one commit on a branch
-	 * starting from the initial one.
+	 * We'll create a repo with a single file and three commits such as there's an initial commit, one more
+	 * commit on master, then one commit on a branch starting from the initial one.
 	 * 
 	 * <pre>
 	 * initial commit -> master
@@ -102,9 +100,9 @@ public class AbstractURITest extends CompareGitTestCase {
 		repository.checkoutBranch(BRANCH);
 		reload(resource1);
 
-		root1 = (EPackage) findObject(resource1, "P1");
-		class1 = (EClass) findObject(resource1, "C1");
-		class2 = (EClass) findObject(resource1, "C2");
+		root1 = (EPackage)findObject(resource1, "P1");
+		class1 = (EClass)findObject(resource1, "C1");
+		class2 = (EClass)findObject(resource1, "C2");
 		class1.getESuperTypes().add(class2);
 		createClass(root1, "C3");
 
@@ -118,9 +116,8 @@ public class AbstractURITest extends CompareGitTestCase {
 	}
 
 	/**
-	 * We'll create a repo with a single file and multiple commits such as there
-	 * are multiple commits in-between the compared one and the expected common
-	 * ancestor.
+	 * We'll create a repo with a single file and multiple commits such as there are multiple commits
+	 * in-between the compared one and the expected common ancestor.
 	 * 
 	 * <pre>
 	 * initial commit -> commit-master-1 -> commit-master-2 -> commit-master-3
@@ -128,8 +125,7 @@ public class AbstractURITest extends CompareGitTestCase {
 	 *                                                        \-> commit-branch2-1
 	 * </pre>
 	 */
-	protected void setupMultipleCommitsRepo(String branch1Name,
-			String branch2Name) throws Exception {
+	protected void setupMultipleCommitsRepo(String branch1Name, String branch2Name) throws Exception {
 		EPackage root1 = createPackage(null, "P1");
 		EClass class1 = createClass(root1, "C1");
 		resource1.getContents().add(root1);
@@ -154,8 +150,8 @@ public class AbstractURITest extends CompareGitTestCase {
 		repository.checkoutBranch(branch1Name);
 		reload(resource1);
 
-		class1 = (EClass) findObject(resource1, "C1");
-		class2 = (EClass) findObject(resource1, "C2");
+		class1 = (EClass)findObject(resource1, "C1");
+		class2 = (EClass)findObject(resource1, "C2");
 		class1.getESuperTypes().add(class2);
 		save(resource1);
 		repository.addAndCommit(project, "commit-branch1-1", file1);
@@ -170,7 +166,7 @@ public class AbstractURITest extends CompareGitTestCase {
 		repository.checkoutBranch(branch2Name);
 		reload(resource1);
 
-		root1 = (EPackage) findObject(resource1, "P1");
+		root1 = (EPackage)findObject(resource1, "P1");
 		createClass(root1, "C3");
 		save(resource1);
 		repository.addAndCommit(project, "commit-branch2-1", file1);
@@ -181,76 +177,70 @@ public class AbstractURITest extends CompareGitTestCase {
 		assertFalse(status.hasUncommittedChanges());
 	}
 
-	protected void assertStateInitial(URI fileURI,
-			IStorageProviderAccessor accessor, DiffSide side) throws Exception {
+	protected void assertStateInitial(URI fileURI, IStorageProviderAccessor accessor, DiffSide side)
+			throws Exception {
 		URIConverter delegate = new ExtensibleURIConverterImpl();
-		RevisionedURIConverter converter = new RevisionedURIConverter(delegate,
-				accessor, side);
-		InputStream stream = converter.createInputStream(fileURI,
-				Collections.emptyMap());
+		RevisionedURIConverter converter = new RevisionedURIConverter(delegate, accessor, side);
+		InputStream stream = converter.createInputStream(fileURI, Collections.emptyMap());
 		ResourceSet tmpSet = new ResourceSetImpl();
 		Resource tmpResource = tmpSet.createResource(fileURI);
 		tmpResource.load(stream, Collections.emptyMap());
 
 		assertEquals(1, tmpResource.getContents().size());
 		assertTrue(tmpResource.getContents().get(0) instanceof EPackage);
-		EPackage tmpPack = (EPackage) tmpResource.getContents().get(0);
+		EPackage tmpPack = (EPackage)tmpResource.getContents().get(0);
 		assertEquals("P1", tmpPack.getName());
 		assertEquals(2, tmpPack.eContents().size());
 		assertTrue(tmpPack.eContents().get(0) instanceof EClass);
 		assertTrue(tmpPack.eContents().get(1) instanceof EClass);
-		EClass tmpClass = (EClass) tmpPack.eContents().get(0);
+		EClass tmpClass = (EClass)tmpPack.eContents().get(0);
 		assertEquals("C1", tmpClass.getName());
 		assertTrue(tmpClass.eContents().isEmpty());
-		tmpClass = (EClass) tmpPack.eContents().get(1);
+		tmpClass = (EClass)tmpPack.eContents().get(1);
 		assertEquals("C2", tmpClass.getName());
 		assertTrue(tmpClass.eContents().isEmpty());
 	}
 
-	protected void assertStateMaster(URI fileURI,
-			IStorageProviderAccessor accessor, DiffSide side) throws Exception {
+	protected void assertStateMaster(URI fileURI, IStorageProviderAccessor accessor, DiffSide side)
+			throws Exception {
 		URIConverter delegate = new ExtensibleURIConverterImpl();
-		RevisionedURIConverter converter = new RevisionedURIConverter(delegate,
-				accessor, side);
-		InputStream stream = converter.createInputStream(fileURI,
-				Collections.emptyMap());
+		RevisionedURIConverter converter = new RevisionedURIConverter(delegate, accessor, side);
+		InputStream stream = converter.createInputStream(fileURI, Collections.emptyMap());
 		ResourceSet tmpSet = new ResourceSetImpl();
 		Resource tmpResource = tmpSet.createResource(fileURI);
 		tmpResource.load(stream, Collections.emptyMap());
 
 		assertEquals(1, tmpResource.getContents().size());
 		assertTrue(tmpResource.getContents().get(0) instanceof EPackage);
-		EPackage tmpPack = (EPackage) tmpResource.getContents().get(0);
+		EPackage tmpPack = (EPackage)tmpResource.getContents().get(0);
 		assertEquals("P1", tmpPack.getName());
 		assertEquals(1, tmpPack.eContents().size());
 		assertTrue(tmpPack.eContents().get(0) instanceof EClass);
-		EClass tmpClass = (EClass) tmpPack.eContents().get(0);
+		EClass tmpClass = (EClass)tmpPack.eContents().get(0);
 		assertEquals("C1_renamed", tmpClass.getName());
 		assertTrue(tmpClass.eContents().isEmpty());
 	}
 
-	protected void assertStateBranch(URI fileURI,
-			IStorageProviderAccessor accessor, DiffSide side) throws Exception {
+	protected void assertStateBranch(URI fileURI, IStorageProviderAccessor accessor, DiffSide side)
+			throws Exception {
 		URIConverter delegate = new ExtensibleURIConverterImpl();
-		RevisionedURIConverter converter = new RevisionedURIConverter(delegate,
-				accessor, side);
-		InputStream stream = converter.createInputStream(fileURI,
-				Collections.emptyMap());
+		RevisionedURIConverter converter = new RevisionedURIConverter(delegate, accessor, side);
+		InputStream stream = converter.createInputStream(fileURI, Collections.emptyMap());
 		ResourceSet tmpSet = new ResourceSetImpl();
 		Resource tmpResource = tmpSet.createResource(fileURI);
 		tmpResource.load(stream, Collections.emptyMap());
 
 		assertEquals(1, tmpResource.getContents().size());
 		assertTrue(tmpResource.getContents().get(0) instanceof EPackage);
-		EPackage tmpPack = (EPackage) tmpResource.getContents().get(0);
+		EPackage tmpPack = (EPackage)tmpResource.getContents().get(0);
 		assertEquals("P1", tmpPack.getName());
 		assertEquals(3, tmpPack.eContents().size());
 		assertTrue(tmpPack.eContents().get(0) instanceof EClass);
 		assertTrue(tmpPack.eContents().get(1) instanceof EClass);
 		assertTrue(tmpPack.eContents().get(2) instanceof EClass);
-		EClass tmpClass1 = (EClass) tmpPack.eContents().get(0);
-		EClass tmpClass2 = (EClass) tmpPack.eContents().get(1);
-		EClass tmpClass3 = (EClass) tmpPack.eContents().get(2);
+		EClass tmpClass1 = (EClass)tmpPack.eContents().get(0);
+		EClass tmpClass2 = (EClass)tmpPack.eContents().get(1);
+		EClass tmpClass3 = (EClass)tmpPack.eContents().get(2);
 		assertEquals("C1", tmpClass1.getName());
 		assertEquals(1, tmpClass1.eContents().size());
 		assertTrue(tmpClass1.eContents().get(0) instanceof EGenericType);

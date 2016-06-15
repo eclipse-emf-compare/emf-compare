@@ -84,8 +84,8 @@ public class DefaultReqEngine implements IReqEngine {
 			checkForRequiredDifferences(comparison, difference);
 		}
 		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info(String
-					.format("detect requirement - END - Took %d ms", Long.valueOf(System.currentTimeMillis() - start))); //$NON-NLS-1$
+			LOGGER.info(String.format("detect requirement - END - Took %d ms", Long.valueOf(System //$NON-NLS-1$
+					.currentTimeMillis() - start)));
 		}
 	}
 
@@ -127,17 +127,17 @@ public class DefaultReqEngine implements IReqEngine {
 			} else if (isAddition && !isFeatureMapContainment(difference)) {
 
 				// -> requires ADD of the value of the reference (target object)
-				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value, difference
-						.getSource(), ADD));
+				requiredDifferences
+						.addAll(getDifferenceOnGivenObject(comparison, value, difference.getSource(), ADD));
 
 				// -> requires ADD of the object containing the reference
 				final EObject container = MatchUtil.getContainer(comparison, difference);
 				if (container != null) {
-					requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, container, difference
-							.getSource(), ADD));
+					requiredDifferences.addAll(
+							getDifferenceOnGivenObject(comparison, container, difference.getSource(), ADD));
 				}
-				requiredDifferences.addAll(Collections2.filter(match.getDifferences(), and(
-						instanceOf(ResourceAttachmentChange.class), ofKind(ADD))));
+				requiredDifferences.addAll(Collections2.filter(match.getDifferences(),
+						and(instanceOf(ResourceAttachmentChange.class), ofKind(ADD))));
 
 			} else if (isDeletion && isDeleteOrAddResourceAttachmentChange(comparison, difference)) {
 				requiredByDifferences
@@ -160,8 +160,8 @@ public class DefaultReqEngine implements IReqEngine {
 			} else if (isDeletion && !isFeatureMapContainment(difference)) {
 
 				// -> is required by DELETE of the target object
-				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison, value, difference
-						.getSource(), DELETE));
+				requiredByDifferences.addAll(
+						getDifferenceOnGivenObject(comparison, value, difference.getSource(), DELETE));
 
 				// MOVE object
 			} else if (kind == MOVE && isReferenceContainment(difference)) {
@@ -169,32 +169,31 @@ public class DefaultReqEngine implements IReqEngine {
 				EObject container = value.eContainer();
 
 				// -> requires ADD on the container of the object
-				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, container, difference
-						.getSource(), ADD));
+				requiredDifferences.addAll(
+						getDifferenceOnGivenObject(comparison, container, difference.getSource(), ADD));
 
 				// -> requires MOVE of the container of the object
-				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, container, difference
-						.getSource(), MOVE));
+				requiredDifferences.addAll(
+						getDifferenceOnGivenObject(comparison, container, difference.getSource(), MOVE));
 
 				// CHANGE reference
 			} else if (kind == CHANGE && !isAddition && !isDeletion
 					&& !(difference instanceof FeatureMapChange)) {
 
 				// -> is required by DELETE of the origin target object
-				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison, MatchUtil.getOriginValue(
-						comparison, (ReferenceChange)difference), difference.getSource(), DELETE));
+				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison,
+						MatchUtil.getOriginValue(comparison, (ReferenceChange)difference),
+						difference.getSource(), DELETE));
 
 				// -> requires ADD of the value of the reference (target object) if required
-				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value, difference
-						.getSource(), ADD));
+				requiredDifferences
+						.addAll(getDifferenceOnGivenObject(comparison, value, difference.getSource(), ADD));
 			}
 
-			difference.getRequires().addAll(
-					Collections2.filter(requiredDifferences, EMFComparePredicates.fromSide(difference
-							.getSource())));
-			difference.getRequiredBy().addAll(
-					Collections2.filter(requiredByDifferences, EMFComparePredicates.fromSide(difference
-							.getSource())));
+			difference.getRequires().addAll(Collections2.filter(requiredDifferences,
+					EMFComparePredicates.fromSide(difference.getSource())));
+			difference.getRequiredBy().addAll(Collections2.filter(requiredByDifferences,
+					EMFComparePredicates.fromSide(difference.getSource())));
 		}
 
 	}
@@ -268,8 +267,8 @@ public class DefaultReqEngine implements IReqEngine {
 			if (originContainer != null) {
 				Object originValue = ReferenceUtil.safeEGet(originContainer, reference);
 				if (originValue instanceof EObject) {
-					result = getDifferenceOnGivenObject(comparison, (EObject)originValue, sourceDifference
-							.getSource(), DELETE);
+					result = getDifferenceOnGivenObject(comparison, (EObject)originValue,
+							sourceDifference.getSource(), DELETE);
 				}
 			}
 		}
@@ -293,8 +292,8 @@ public class DefaultReqEngine implements IReqEngine {
 	private Set<Diff> getDifferenceOnGivenObject(Comparison comparison, EObject object,
 			DifferenceSource source, DifferenceKind kind) {
 		final Set<Diff> result = new LinkedHashSet<Diff>();
-		for (Diff diff : filter(comparison.getDifferences(object), isRequiredContainmentChange(object,
-				source, kind))) {
+		for (Diff diff : filter(comparison.getDifferences(object),
+				isRequiredContainmentChange(object, source, kind))) {
 			result.add(diff);
 		}
 		return result;
@@ -374,8 +373,8 @@ public class DefaultReqEngine implements IReqEngine {
 		if (value != null) {
 			final Match valueMatch = comparison.getMatch(value);
 			if (valueMatch != null) {
-				for (Diff candidate : filter(valueMatch.getDifferences(), or(
-						instanceOf(ReferenceChange.class), instanceOf(FeatureMapChange.class)))) {
+				for (Diff candidate : filter(valueMatch.getDifferences(),
+						or(instanceOf(ReferenceChange.class), instanceOf(FeatureMapChange.class)))) {
 					if (candidate.getSource() == sourceDifference.getSource()
 							&& (candidate.getKind() == DELETE || isDeleteOrUnsetDiff(candidate))) {
 						result.add(candidate);

@@ -110,8 +110,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	public TreeContentMergeViewer(Composite parent, EMFCompareConfiguration config) {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
 
-		fAdapterFactory = new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault()
-				.createFilteredAdapterFactoryRegistry());
+		fAdapterFactory = new ComposedAdapterFactory(
+				EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry());
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 		fSyncExpandedState = new AtomicBoolean();
@@ -205,8 +205,8 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			@Override
 			public Object[] getChildren(Object object) {
 				if (object instanceof IMergeViewerItem.Container) {
-					IMergeViewerItem[] children = ((IMergeViewerItem.Container)object).getChildren(
-							getDifferenceGroupProvider(), getDifferenceFilterPredicate());
+					IMergeViewerItem[] children = ((IMergeViewerItem.Container)object)
+							.getChildren(getDifferenceGroupProvider(), getDifferenceFilterPredicate());
 
 					return children;
 				}
@@ -510,15 +510,16 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 					// position outside the actual match of the diff. We have to do that since move
 					// differencies are registered only under one container (left or right depending on the
 					// situation)
-					for (Diff referenceChange : filter(comparison.getDifferences(), and(
-							instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE)))) {
-						Match matchOfValue = comparison.getMatch(((ReferenceChange)referenceChange)
-								.getValue());
+					for (Diff referenceChange : filter(comparison.getDifferences(),
+							and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE)))) {
+						Match matchOfValue = comparison
+								.getMatch(((ReferenceChange)referenceChange).getValue());
 						if (matchOfValue != null) {
 							Match leftContainerMatch = getContainerMatch(comparison, matchOfValue.getLeft());
-							Match rightContainerMatch = getContainerMatch(comparison, matchOfValue.getRight());
-							Match originContainerMatch = getContainerMatch(comparison, matchOfValue
-									.getOrigin());
+							Match rightContainerMatch = getContainerMatch(comparison,
+									matchOfValue.getRight());
+							Match originContainerMatch = getContainerMatch(comparison,
+									matchOfValue.getOrigin());
 
 							// if one of the container match is equal to the diff match, then the move have is
 							// origin or destination in the eContainer of the diff. We have to expend the

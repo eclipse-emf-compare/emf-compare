@@ -87,8 +87,8 @@ public class TableMergeViewer extends AbstractTableOrTreeMergeViewer {
 		fInfoViewer = new InfoViewer(composite, getSide());
 		fInfoViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
-		fTableViewer = new TableViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.FULL_SELECTION);
+		fTableViewer = new TableViewer(composite,
+				SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		fTableViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		return composite;
@@ -294,8 +294,8 @@ public class TableMergeViewer extends AbstractTableOrTreeMergeViewer {
 				if (getLabelProvider() instanceof ILabelProvider) {
 					ILabelProvider labelProvider = (ILabelProvider)getLabelProvider();
 
-					fFeatureLabel.setText(EMFCompareRCPUIMessages
-							.getString("TableMergeViewer.featureMapEntryKeyLabel")); //$NON-NLS-1$
+					fFeatureLabel.setText(
+							EMFCompareRCPUIMessages.getString("TableMergeViewer.featureMapEntryKeyLabel")); //$NON-NLS-1$
 
 					fEObjectIcon.setImage(labelProvider.getImage(entryValue));
 					fEObjectLabel.setText(labelProvider.getText(entryValue));

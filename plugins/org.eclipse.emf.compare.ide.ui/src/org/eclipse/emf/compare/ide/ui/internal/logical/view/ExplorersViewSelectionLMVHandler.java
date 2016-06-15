@@ -38,8 +38,8 @@ public class ExplorersViewSelectionLMVHandler extends AbstractLogicalModelViewHa
 	 */
 	@Override
 	public boolean canHandle(IWorkbenchPart part, ISelection selection) {
-		if (part != null
-				&& ("Project Explorer".equals(part.getTitle()) || "Package Explorer".equals(part.getTitle()))) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (part != null && ("Project Explorer".equals(part.getTitle()) //$NON-NLS-1$
+				|| "Package Explorer".equals(part.getTitle()))) { //$NON-NLS-1$
 			return super.canHandle(part, selection);
 		}
 		return false;

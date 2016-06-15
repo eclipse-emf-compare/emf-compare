@@ -79,7 +79,7 @@ public final class InteractiveUIContent {
 
 	/** Height hint for description composite. */
 	private static final int DESCRIPTION_COMPOSITE_HEIGHT_HINT = 50;
-	
+
 	/** Width hint for description composite. */
 	private static final int DESCRIPTION_COMPOSITE_WIDTH_HINT = 400;
 
@@ -134,7 +134,8 @@ public final class InteractiveUIContent {
 			defaultComposite.setLayout(new GridLayout(1, true));
 			Label text = new Label(defaultComposite, SWT.WRAP);
 			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
-			text.setText(EMFCompareRCPUIMessages.getString("InteractiveUIContent.defaultConfiguration.label")); //$NON-NLS-1$
+			text.setText(
+					EMFCompareRCPUIMessages.getString("InteractiveUIContent.defaultConfiguration.label")); //$NON-NLS-1$
 		} else {
 			this.configurationComposite = null;
 			this.defaultComposite = null;
@@ -192,8 +193,8 @@ public final class InteractiveUIContent {
 	 */
 	private Group createConfigComposite(Composite composite) {
 		Group confComposite = new Group(composite, SWT.NONE);
-		confComposite.setText(EMFCompareRCPUIMessages
-				.getString("InteractiveUIContent.configurationComposite.label")); //$NON-NLS-1$
+		confComposite.setText(
+				EMFCompareRCPUIMessages.getString("InteractiveUIContent.configurationComposite.label")); //$NON-NLS-1$
 		StackLayout layout = new StackLayout();
 		layout.marginHeight = 10;
 		layout.marginWidth = 10;
@@ -214,8 +215,8 @@ public final class InteractiveUIContent {
 	 */
 	private Label createDescriptionComposite(Composite composite) {
 		Group descriptionComposite = new Group(composite, SWT.NONE);
-		descriptionComposite.setText(EMFCompareRCPUIMessages
-				.getString("InteractiveUIContent.descriptionComposite.label")); //$NON-NLS-1$
+		descriptionComposite.setText(
+				EMFCompareRCPUIMessages.getString("InteractiveUIContent.descriptionComposite.label")); //$NON-NLS-1$
 		descriptionComposite.setLayout(new GridLayout(1, false));
 		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		Label engineDescriptionLabel = new Label(descriptionComposite, SWT.WRAP);
@@ -362,8 +363,9 @@ public final class InteractiveUIContent {
 				// Prevent from nothing checked
 				if (descriptorViewer.getCheckedElements().length == 0) {
 					descriptorViewer.setCheckedElements(new Object[] {element });
-					MessageDialog.openWarning(shell, EMFCompareRCPUIMessages
-							.getString("InteractiveUIContent.incorrectSelection.title"), //$NON-NLS-1$
+					MessageDialog.openWarning(shell,
+							EMFCompareRCPUIMessages
+									.getString("InteractiveUIContent.incorrectSelection.title"), //$NON-NLS-1$
 							EMFCompareRCPUIMessages
 									.getString("InteractiveUIContent.incorrectSelection.message")); //$NON-NLS-1$
 				}
@@ -595,8 +597,8 @@ public final class InteractiveUIContent {
 			if (isSimple) {
 				style = style | SWT.SINGLE;
 			}
-			CheckboxTableViewer descriptorViewer = CheckboxTableViewer.newCheckList(interactiveUI
-					.getViewerComposite(), style);
+			CheckboxTableViewer descriptorViewer = CheckboxTableViewer
+					.newCheckList(interactiveUI.getViewerComposite(), style);
 			interactiveUI.setViewer(descriptorViewer);
 			descriptorViewer.setContentProvider(ArrayContentProvider.getInstance());
 			descriptorViewer.setLabelProvider(new ItemDescriptorLabelProvider());
@@ -682,8 +684,8 @@ public final class InteractiveUIContent {
 			// Bind the button with the corresponding field in data
 			IViewerObservableSet target = ViewersObservables.observeCheckedElements(descriptorViewer,
 					IItemDescriptor.class);
-			IObservableSet model = PojoProperties.set(DataHolder.class, DataHolder.DATA_FIELD_NAME).observe(
-					dataObject);
+			IObservableSet model = PojoProperties.set(DataHolder.class, DataHolder.DATA_FIELD_NAME)
+					.observe(dataObject);
 
 			ctx.bindSet(target, model);
 		}

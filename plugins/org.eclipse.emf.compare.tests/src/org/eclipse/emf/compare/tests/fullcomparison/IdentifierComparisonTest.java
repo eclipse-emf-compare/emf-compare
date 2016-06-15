@@ -172,15 +172,16 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 					"extlibrary.TitledItem", side);
 			assertAddedToReference(differences, "extlibrary.AudioVisualItem", "eSuperTypes",
 					"extlibrary.TitledItem", side);
-			assertAddedToReference(differences, "extlibrary.Magazine", "eSuperTypes",
-					"extlibrary.Periodical", side);
+			assertAddedToReference(differences, "extlibrary.Magazine", "eSuperTypes", "extlibrary.Periodical",
+					side);
 
 			assertChangedReference(differences, "extlibrary.Book.subtitle", "eType", null, "ecore.EString",
 					side);
-			assertChangedReference(differences, "extlibrary.TitledItem.title", "eType", null,
-					"ecore.EString", side);
+			assertChangedReference(differences, "extlibrary.TitledItem.title", "eType", null, "ecore.EString",
+					side);
 
-			assertChangedReference(differences, "extlibrary.Book.title", "eType", "ecore.EString", null, side);
+			assertChangedReference(differences, "extlibrary.Book.title", "eType", "ecore.EString", null,
+					side);
 			assertChangedReference(differences, "extlibrary.AudioVisualItem.title", "eType", "ecore.EString",
 					null, side);
 
@@ -199,10 +200,10 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 					null, DifferenceSource.LEFT);
 			assertChangedReference(differences, "extlibrary.BookOnTape.reader", "eType", "extlibrary.Person",
 					null, DifferenceSource.RIGHT);
-			assertChangedReference(differences, "extlibrary.Periodical.title", "eType", "ecore.EString",
-					null, DifferenceSource.LEFT);
-			assertChangedReference(differences, "extlibrary.Periodical.title", "eType", "ecore.EString",
-					null, DifferenceSource.RIGHT);
+			assertChangedReference(differences, "extlibrary.Periodical.title", "eType", "ecore.EString", null,
+					DifferenceSource.LEFT);
+			assertChangedReference(differences, "extlibrary.Periodical.title", "eType", "ecore.EString", null,
+					DifferenceSource.RIGHT);
 			/*
 			 * These changes can only be detected with an origin : lastName has been removed in the left model
 			 * and thus only the removal can be detected in two-way. Likewise, "minutesLength" has been
@@ -228,8 +229,8 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 			assertAdded(differences, "extlibrary.Book.title", side);
 			assertAdded(differences, "extlibrary.AudioVisualItem.title", side);
 
-			assertRemovedFromReference(differences, "extlibrary.Book", "eSuperTypes",
-					"extlibrary.TitledItem", side);
+			assertRemovedFromReference(differences, "extlibrary.Book", "eSuperTypes", "extlibrary.TitledItem",
+					side);
 			assertRemovedFromReference(differences, "extlibrary.Periodical", "eSuperTypes",
 					"extlibrary.TitledItem", side);
 			assertRemovedFromReference(differences, "extlibrary.AudioVisualItem", "eSuperTypes",
@@ -239,10 +240,11 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 
 			assertChangedReference(differences, "extlibrary.Book.subtitle", "eType", "ecore.EString", null,
 					side);
-			assertChangedReference(differences, "extlibrary.TitledItem.title", "eType", "ecore.EString",
-					null, side);
+			assertChangedReference(differences, "extlibrary.TitledItem.title", "eType", "ecore.EString", null,
+					side);
 
-			assertChangedReference(differences, "extlibrary.Book.title", "eType", null, "ecore.EString", side);
+			assertChangedReference(differences, "extlibrary.Book.title", "eType", null, "ecore.EString",
+					side);
 			assertChangedReference(differences, "extlibrary.AudioVisualItem.title", "eType", null,
 					"ecore.EString", side);
 
@@ -317,8 +319,8 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 		assertRemoved(periodicalDiffs, "extlibrary.Periodical", DifferenceSource.LEFT);
 		assertAddedToReference(periodicalDiffs, "extlibrary.Periodical", "eSuperTypes",
 				"extlibrary.TitledItem", DifferenceSource.RIGHT);
-		assertAddedToReference(periodicalDiffs, "extlibrary.Magazine", "eSuperTypes",
-				"extlibrary.Periodical", DifferenceSource.RIGHT);
+		assertAddedToReference(periodicalDiffs, "extlibrary.Magazine", "eSuperTypes", "extlibrary.Periodical",
+				DifferenceSource.RIGHT);
 		assertTrue(periodicalDiffs.isEmpty());
 
 		final List<Diff> nameDiffs = Lists.newArrayList(lastNameConflict.getDifferences());

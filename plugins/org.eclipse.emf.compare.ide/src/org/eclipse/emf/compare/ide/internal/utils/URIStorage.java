@@ -78,8 +78,8 @@ public class URIStorage implements IStorage {
 		try {
 			return handler.createInputStream(converter.normalize(uri), options);
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, EMFCompareIDEPlugin.PLUGIN_ID, e.getMessage(),
-					e));
+			throw new CoreException(
+					new Status(IStatus.ERROR, EMFCompareIDEPlugin.PLUGIN_ID, e.getMessage(), e));
 		}
 	}
 

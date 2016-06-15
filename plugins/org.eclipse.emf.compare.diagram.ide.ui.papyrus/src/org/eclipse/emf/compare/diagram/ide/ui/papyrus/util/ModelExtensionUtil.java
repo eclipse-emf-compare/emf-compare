@@ -133,8 +133,8 @@ public final class ModelExtensionUtil {
 								// instead of public (like the static default version since version 1.1.0).
 								// Also
 								// protected means it is part of the API and will not change.
-								Method getSaveParametersMethod = model.getClass().getDeclaredMethod(
-										SAVE_PARAMETERS_METHOD, new Class[0]);
+								Method getSaveParametersMethod = model.getClass()
+										.getDeclaredMethod(SAVE_PARAMETERS_METHOD, new Class[0]);
 								getSaveParametersMethod.setAccessible(true);
 								saveOptions = (Map<?, ?>)getSaveParametersMethod.invoke(model, new Object[0]);
 								// CHECKSTYLE:OFF We do want to catch any exception
@@ -145,10 +145,10 @@ public final class ModelExtensionUtil {
 						}
 					} catch (CoreException e) {
 						// Configuration problem
-						CompareDiagramIDEUIPapyrusPlugin.getDefault().getLog().log(
-								new Status(IStatus.ERROR, CompareDiagramIDEUIPapyrusPlugin.PLUGIN_ID,
-										CompareUIPapyrusMessages.getString(
-												"ModelExtensionUtil.InvalidConfig", fileExtension))); //$NON-NLS-1$
+						CompareDiagramIDEUIPapyrusPlugin.getDefault().getLog()
+								.log(new Status(IStatus.ERROR, CompareDiagramIDEUIPapyrusPlugin.PLUGIN_ID,
+										CompareUIPapyrusMessages.getString("ModelExtensionUtil.InvalidConfig", //$NON-NLS-1$
+												fileExtension)));
 					}
 					break; // We have found the extension, no need to continue iterating
 				}

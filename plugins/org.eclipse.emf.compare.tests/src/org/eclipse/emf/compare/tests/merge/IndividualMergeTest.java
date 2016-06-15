@@ -763,12 +763,12 @@ public class IndividualMergeTest {
 		assertEquals(3, differences.size());
 
 		final String featureName = "multiValueEEnumAttribute";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root", featureName, NodeEnum.A)));
-		final Diff diff2 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root", featureName, NodeEnum.B)));
-		final Diff diff3 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root", featureName, NodeEnum.C)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root", featureName, NodeEnum.A)));
+		final Diff diff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root", featureName, NodeEnum.B)));
+		final Diff diff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root", featureName, NodeEnum.C)));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		mergerRegistry.getHighestRankingMerger(diff2).copyLeftToRight(diff2, new BasicMonitor());
@@ -799,12 +799,12 @@ public class IndividualMergeTest {
 		assertEquals(3, differences.size());
 
 		final String featureName = "multiValueEEnumAttribute";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root", featureName, NodeEnum.A)));
-		final Diff diff2 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root", featureName, NodeEnum.B)));
-		final Diff diff3 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root", featureName, NodeEnum.C)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root", featureName, NodeEnum.A)));
+		final Diff diff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root", featureName, NodeEnum.B)));
+		final Diff diff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root", featureName, NodeEnum.C)));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		mergerRegistry.getHighestRankingMerger(diff2).copyRightToLeft(diff2, new BasicMonitor());
@@ -836,12 +836,12 @@ public class IndividualMergeTest {
 		assertEquals(3, differences.size());
 
 		final String featureName = "multiValueEEnumAttribute";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root", featureName, NodeEnum.A)));
-		final Diff diff2 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root", featureName, NodeEnum.B)));
-		final Diff diff3 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root", featureName, NodeEnum.C)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root", featureName, NodeEnum.A)));
+		final Diff diff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root", featureName, NodeEnum.B)));
+		final Diff diff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root", featureName, NodeEnum.C)));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		mergerRegistry.getHighestRankingMerger(diff2).copyLeftToRight(diff2, new BasicMonitor());
@@ -853,8 +853,8 @@ public class IndividualMergeTest {
 
 		final Object featureValue = originNode.eGet(feature);
 		assertTrue(featureValue instanceof Collection<?>);
-		assertTrue(((Collection<?>)featureValue).containsAll(Lists.newArrayList(NodeEnum.A, NodeEnum.B,
-				NodeEnum.C)));
+		assertTrue(((Collection<?>)featureValue)
+				.containsAll(Lists.newArrayList(NodeEnum.A, NodeEnum.B, NodeEnum.C)));
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = new DefaultComparisonScope(left, right, null);
@@ -875,12 +875,12 @@ public class IndividualMergeTest {
 		assertEquals(3, differences.size());
 
 		final String featureName = "multiValueEEnumAttribute";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root", featureName, NodeEnum.A)));
-		final Diff diff2 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root", featureName, NodeEnum.B)));
-		final Diff diff3 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root", featureName, NodeEnum.C)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root", featureName, NodeEnum.A)));
+		final Diff diff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root", featureName, NodeEnum.B)));
+		final Diff diff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root", featureName, NodeEnum.C)));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		mergerRegistry.getHighestRankingMerger(diff2).copyRightToLeft(diff2, new BasicMonitor());
@@ -913,12 +913,12 @@ public class IndividualMergeTest {
 		assertEquals(3, differences.size());
 
 		final String featureName = "multiValueEEnumAttribute";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				addedToAttribute("root", featureName, NodeEnum.A)));
-		final Diff diff2 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				addedToAttribute("root", featureName, NodeEnum.B)));
-		final Diff diff3 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				addedToAttribute("root", featureName, NodeEnum.C)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), addedToAttribute("root", featureName, NodeEnum.A)));
+		final Diff diff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), addedToAttribute("root", featureName, NodeEnum.B)));
+		final Diff diff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), addedToAttribute("root", featureName, NodeEnum.C)));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		mergerRegistry.getHighestRankingMerger(diff2).copyLeftToRight(diff2, new BasicMonitor());
@@ -983,8 +983,8 @@ public class IndividualMergeTest {
 		assertEquals(1, differences.size());
 
 		final String featureName = "multiValuedAttribute";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root.origin", featureName, "value1")));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root.origin", featureName, "value1")));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
@@ -1012,8 +1012,8 @@ public class IndividualMergeTest {
 		assertEquals(1, differences.size());
 
 		final String featureName = "multiValuedAttribute";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root.origin", featureName, "value1")));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root.origin", featureName, "value1")));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
@@ -1042,8 +1042,8 @@ public class IndividualMergeTest {
 		assertEquals(1, differences.size());
 
 		final String featureName = "multiValuedAttribute";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root.origin", featureName, "value1")));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root.origin", featureName, "value1")));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(right, "origin");
@@ -1074,8 +1074,8 @@ public class IndividualMergeTest {
 		assertEquals(1, differences.size());
 
 		final String featureName = "multiValuedAttribute";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				addedToAttribute("root.origin", featureName, "value1")));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), addedToAttribute("root.origin", featureName, "value1")));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject originNode = getNodeNamed(left, "origin");
@@ -1352,8 +1352,8 @@ public class IndividualMergeTest {
 		assertEquals(1, differences.size());
 
 		final String featureName = "multiValuedAttribute";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				movedInAttribute("root.origin", featureName, "value1")));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), movedInAttribute("root.origin", featureName, "value1")));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(right, "origin");
@@ -1386,8 +1386,8 @@ public class IndividualMergeTest {
 		assertEquals(1, differences.size());
 
 		final String featureName = "multiValuedAttribute";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				movedInAttribute("root.origin", featureName, "value1")));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), movedInAttribute("root.origin", featureName, "value1")));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(left, "origin");
@@ -1421,8 +1421,8 @@ public class IndividualMergeTest {
 		assertEquals(1, differences.size());
 
 		final String featureName = "multiValuedAttribute";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				movedInAttribute("root.origin", featureName, "value1")));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), movedInAttribute("root.origin", featureName, "value1")));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(right, "origin");
@@ -1458,8 +1458,8 @@ public class IndividualMergeTest {
 		assertEquals(1, differences.size());
 
 		final String featureName = "multiValuedAttribute";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				movedInAttribute("root.origin", featureName, "value1")));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), movedInAttribute("root.origin", featureName, "value1")));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(left, "origin");
@@ -2717,8 +2717,8 @@ public class IndividualMergeTest {
 		assertEquals(1, differences.size());
 
 		final String featureName = "containmentRef1";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT), moved(
-				"root.value2", featureName)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), moved("root.value2", featureName)));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(right, "value2");
@@ -2751,8 +2751,8 @@ public class IndividualMergeTest {
 		assertEquals(1, differences.size());
 
 		final String featureName = "containmentRef1";
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT), moved(
-				"root.value2", featureName)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), moved("root.value2", featureName)));
 
 		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
 		final EObject targetNode = getNodeNamed(right, "value2");

@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.examples.extlibrary.impl;
 
-
 import java.util.Collection;
 import org.eclipse.emf.common.util.EList;
 
@@ -21,74 +20,68 @@ import org.eclipse.emf.examples.extlibrary.EXTLibraryPackage;
 import org.eclipse.emf.examples.extlibrary.Person;
 import org.eclipse.emf.examples.extlibrary.VideoCassette;
 
-
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Video Cassette</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Video Cassette</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.VideoCassetteImpl#getCast <em>Cast</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.VideoCassetteImpl#getCast <em>Cast</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class VideoCassetteImpl extends AudioVisualItemImpl implements VideoCassette
-{
-  /**
-	 * The cached value of the '{@link #getCast() <em>Cast</em>}' reference list.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+public class VideoCassetteImpl extends AudioVisualItemImpl implements VideoCassette {
+	/**
+	 * The cached value of the '{@link #getCast() <em>Cast</em>}' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getCast()
 	 * @generated
 	 * @ordered
 	 */
-  protected EList<Person> cast;
+	protected EList<Person> cast;
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected VideoCassetteImpl()
-  {
+	protected VideoCassetteImpl() {
 		super();
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  protected EClass eStaticClass()
-  {
+	@Override
+	protected EClass eStaticClass() {
 		return EXTLibraryPackage.Literals.VIDEO_CASSETTE;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public EList<Person> getCast()
-  {
+	public EList<Person> getCast() {
 		if (cast == null) {
-			cast = new EObjectResolvingEList<Person>(Person.class, this, EXTLibraryPackage.VIDEO_CASSETTE__CAST);
+			cast = new EObjectResolvingEList<Person>(Person.class, this,
+					EXTLibraryPackage.VIDEO_CASSETTE__CAST);
 		}
 		return cast;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public Object eGet(int featureID, boolean resolve, boolean coreType)
-  {
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case EXTLibraryPackage.VIDEO_CASSETTE__CAST:
 				return getCast();
@@ -96,15 +89,14 @@ public class VideoCassetteImpl extends AudioVisualItemImpl implements VideoCasse
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @SuppressWarnings("unchecked")
-  @Override
-  public void eSet(int featureID, Object newValue)
-  {
+	@SuppressWarnings("unchecked")
+	@Override
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case EXTLibraryPackage.VIDEO_CASSETTE__CAST:
 				getCast().clear();
@@ -114,14 +106,13 @@ public class VideoCassetteImpl extends AudioVisualItemImpl implements VideoCasse
 		super.eSet(featureID, newValue);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public void eUnset(int featureID)
-  {
+	@Override
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case EXTLibraryPackage.VIDEO_CASSETTE__CAST:
 				getCast().clear();
@@ -130,14 +121,13 @@ public class VideoCassetteImpl extends AudioVisualItemImpl implements VideoCasse
 		super.eUnset(featureID);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public boolean eIsSet(int featureID)
-  {
+	@Override
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case EXTLibraryPackage.VIDEO_CASSETTE__CAST:
 				return cast != null && !cast.isEmpty();
@@ -145,4 +135,4 @@ public class VideoCassetteImpl extends AudioVisualItemImpl implements VideoCasse
 		return super.eIsSet(featureID);
 	}
 
-} //VideoCassetteImpl
+} // VideoCassetteImpl

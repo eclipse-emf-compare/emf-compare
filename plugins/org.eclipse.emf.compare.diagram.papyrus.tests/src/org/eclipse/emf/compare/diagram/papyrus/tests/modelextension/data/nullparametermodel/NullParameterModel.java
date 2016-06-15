@@ -17,8 +17,7 @@ import org.eclipse.papyrus.infra.core.resource.AbstractBaseModel;
 import org.eclipse.papyrus.infra.core.resource.IModel;
 
 /**
- * Test Model Class to test for models which return {@code null} as save
- * parameter.
+ * Test Model Class to test for models which return {@code null} as save parameter.
  * 
  * @author Stefan Dirix <sdirix@eclipsesource.com>
  */

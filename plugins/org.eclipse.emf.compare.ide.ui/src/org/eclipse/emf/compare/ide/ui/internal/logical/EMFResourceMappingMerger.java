@@ -144,8 +144,9 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 			if (!failingMappings.isEmpty()) {
 				final ResourceMapping[] failingArray = failingMappings
 						.toArray(new ResourceMapping[failingMappings.size()]);
-				status = new MergeStatus(EMFCompareIDEUIPlugin.PLUGIN_ID, EMFCompareIDEUIMessages
-						.getString("EMFResourceMappingMerger.mergeFailedConflicts"), failingArray); //$NON-NLS-1$
+				status = new MergeStatus(EMFCompareIDEUIPlugin.PLUGIN_ID,
+						EMFCompareIDEUIMessages.getString("EMFResourceMappingMerger.mergeFailedConflicts"), //$NON-NLS-1$
+						failingArray);
 			} else {
 				log(IStatus.OK, "EMFResourceMappingMerger.successfulModelMerge", emfMappings); //$NON-NLS-1$
 			}
@@ -192,8 +193,8 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	private void log(int statusCode, String message, Collection<IResource> iResources) {
 		final MultiStatus multiStatus = new MultiStatus(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, message, null);
 		for (IResource iResource : iResources) {
-			final Status childStatus = new Status(statusCode, EMFCompareIDEUIPlugin.PLUGIN_ID, iResource
-					.getFullPath().toOSString());
+			final Status childStatus = new Status(statusCode, EMFCompareIDEUIPlugin.PLUGIN_ID,
+					iResource.getFullPath().toOSString());
 			multiStatus.add(childStatus);
 		}
 		log(multiStatus);
@@ -263,8 +264,8 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 
 		if (hasRealConflict(comparison)) {
 			final Set<URI> conflictingURIs = performPreMerge(comparison, subMonitor.newChild(3)); // 80%
-			save(scope.getLeft(), syncModel.getLeftTraversal(), syncModel.getRightTraversal(), syncModel
-					.getOriginTraversal());
+			save(scope.getLeft(), syncModel.getLeftTraversal(), syncModel.getRightTraversal(),
+					syncModel.getOriginTraversal());
 			failingMappings.add(mapping);
 			markResourcesAsMerged(mergeContext, resources, conflictingURIs, subMonitor.newChild(2)); // 100%
 		} else {
@@ -272,10 +273,10 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 			try {
 				scope.getLeft().eAdapters().add(resourceTracker);
 				performBatchMerge(comparison, subMonitor.newChild(3)); // 80%
-				save(scope.getLeft(), syncModel.getLeftTraversal(), syncModel.getRightTraversal(), syncModel
-						.getOriginTraversal());
-				delegateMergeOfUnmergedResourcesAndMarkDiffsAsMerged(syncModel, mergeContext,
-						resourceTracker, subMonitor.newChild(2)); // 100%
+				save(scope.getLeft(), syncModel.getLeftTraversal(), syncModel.getRightTraversal(),
+						syncModel.getOriginTraversal());
+				delegateMergeOfUnmergedResourcesAndMarkDiffsAsMerged(syncModel, mergeContext, resourceTracker,
+						subMonitor.newChild(2)); // 100%
 			} finally {
 				scope.getLeft().eAdapters().remove(resourceTracker);
 			}
@@ -482,13 +483,14 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 		for (IStorage storage : syncModel.getLeftTraversal().getStorages()) {
 			final IPath fullPath = ResourceUtil.getFixedPath(storage);
 			if (fullPath == null) {
-				EMFCompareIDEUIPlugin.getDefault().getLog().log(
-						new Status(IStatus.WARNING, EMFCompareIDEUIPlugin.PLUGIN_ID, EMFCompareIDEUIMessages
-								.getString("EMFResourceMappingMerger.mergeIncomplete"))); //$NON-NLS-1$
+				EMFCompareIDEUIPlugin.getDefault().getLog().log(new Status(IStatus.WARNING,
+						EMFCompareIDEUIPlugin.PLUGIN_ID,
+						EMFCompareIDEUIMessages.getString("EMFResourceMappingMerger.mergeIncomplete"))); //$NON-NLS-1$
 			} else {
 				final IDiff diff = mergeContext.getDiffTree().getDiff(fullPath);
 				if (diff != null) {
-					if (IDiff.REMOVE == diff.getKind() && !resourceTracker.containsRemovedResource(fullPath)) {
+					if (IDiff.REMOVE == diff.getKind()
+							&& !resourceTracker.containsRemovedResource(fullPath)) {
 						merge(diff, mergeContext, subMonitor.newChild(1));
 					} else {
 						markAsMerged(diff, mergeContext, subMonitor.newChild(1));
@@ -514,8 +516,8 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 							// We have to copy the file "manually" from the right side to the left side.
 							try {
 								InputStream inputStream = rightStorage.getContents();
-								FileOutputStream outputStream = new FileOutputStream(ResourceUtil
-										.getAbsolutePath(rightStorage).toFile());
+								FileOutputStream outputStream = new FileOutputStream(
+										ResourceUtil.getAbsolutePath(rightStorage).toFile());
 								ByteStreams.copy(inputStream, outputStream);
 								inputStream.close();
 								outputStream.close();
@@ -614,11 +616,11 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 		if (notifier instanceof ResourceSet) {
 			ResourceUtil.saveAllResources((ResourceSet)notifier,
 					ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
-							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER), leftTraversal,
-					rightTraversal, originTraversal);
+							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER),
+					leftTraversal, rightTraversal, originTraversal);
 		} else if (notifier instanceof Resource) {
-			ResourceUtil
-					.saveResource((Resource)notifier, ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
+			ResourceUtil.saveResource((Resource)notifier,
+					ImmutableMap.of(Resource.OPTION_SAVE_ONLY_IF_CHANGED,
 							Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER));
 		}
 	}

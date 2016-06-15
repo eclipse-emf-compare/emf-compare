@@ -82,9 +82,8 @@ public class NodeChangeFactory extends AbstractDiagramChangeFactory {
 			// Macroscopic change on a node is refined by the unit main change and unit children related
 			// changes.
 			extension.getRefinedBy().add(refiningDiff);
-			extension.getRefinedBy().addAll(
-					Collections2.filter(getAllContainedDifferences(refiningDiff), EMFComparePredicates
-							.fromSide(extension.getSource())));
+			extension.getRefinedBy().addAll(Collections2.filter(getAllContainedDifferences(refiningDiff),
+					EMFComparePredicates.fromSide(extension.getSource())));
 		}
 	}
 
@@ -119,8 +118,8 @@ public class NodeChangeFactory extends AbstractDiagramChangeFactory {
 			EObject target = ((ReferenceChange)diff).getValue();
 			if (target instanceof View) {
 				EObject semanticTarget = ((View)target).getElement();
-				Collection<Diff> requiredDiffs = Collections2.filter(comparison
-						.getDifferences(semanticTarget), moveReference);
+				Collection<Diff> requiredDiffs = Collections2
+						.filter(comparison.getDifferences(semanticTarget), moveReference);
 				requiredExtensions.addAll(requiredDiffs);
 				// The graphical object and the semantic one are linked, they change their container both
 				// (difference case of ADD/DELETE)
@@ -141,7 +140,8 @@ public class NodeChangeFactory extends AbstractDiagramChangeFactory {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff difference) {
 				return difference instanceof ReferenceChange
-						&& (isRelatedToAnAddNode((ReferenceChange)difference) || isRelatedToADeleteNode((ReferenceChange)difference));
+						&& (isRelatedToAnAddNode((ReferenceChange)difference)
+								|| isRelatedToADeleteNode((ReferenceChange)difference));
 			}
 		};
 	}

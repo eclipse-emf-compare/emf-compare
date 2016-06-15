@@ -10,8 +10,10 @@
  *******************************************************************************/
 
 /**
- * <p>This package contains test data for checkging reconnection of a transition.
- * An existing transition's target is changed.</p>
+ * <p>
+ * This package contains test data for checkging reconnection of a transition. An existing transition's target
+ * is changed.
+ * </p>
  * See <a href="http://eclip.se/450096">bug 450096</a>
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>

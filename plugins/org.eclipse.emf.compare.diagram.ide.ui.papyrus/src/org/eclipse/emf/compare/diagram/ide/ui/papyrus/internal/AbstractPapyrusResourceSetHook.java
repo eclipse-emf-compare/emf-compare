@@ -30,8 +30,8 @@ public abstract class AbstractPapyrusResourceSetHook extends AbstractResourceSet
 	/**
 	 * File extensions registered in Papyrus.
 	 */
-	protected final Set<String> fileExtensions = ImmutableSet.copyOf(ModelExtensionUtil
-			.getRegisteredFileExtensions());
+	protected final Set<String> fileExtensions = ImmutableSet
+			.copyOf(ModelExtensionUtil.getRegisteredFileExtensions());
 
 	/**
 	 * Hooks in when any of the file extensions registered in Papyrus are loaded. {@inheritDoc}

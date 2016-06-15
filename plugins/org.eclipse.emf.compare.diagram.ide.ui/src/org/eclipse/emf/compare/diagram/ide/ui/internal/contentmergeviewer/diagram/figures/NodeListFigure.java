@@ -96,8 +96,8 @@ public class NodeListFigure extends NodeFigure {
 	protected void buildFigureForPhantom() {
 		if (getParameters() != null) {
 			int yPos = (Integer)getParameters().get(PARAM_Y_POS);
-			((AbstractPointListShape)getMainFigure()).setEndpoints(new Point(getBounds().x, yPos), new Point(
-					getBounds().x + getBounds().width, yPos));
+			((AbstractPointListShape)getMainFigure()).setEndpoints(new Point(getBounds().x, yPos),
+					new Point(getBounds().x + getBounds().width, yPos));
 		}
 	}
 

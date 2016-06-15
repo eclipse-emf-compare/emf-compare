@@ -20,8 +20,8 @@ import org.eclipse.emf.compare.EMFCompare.Builder;
 public interface IEMFCompareBuilderConfigurator {
 
 	/**
-	 * Configure a {@link org.eclipse.emf.compare.EMFCompare.EMFCompare.Builder} using engines from registry and
-	 * user preferences.
+	 * Configure a {@link org.eclipse.emf.compare.EMFCompare.EMFCompare.Builder} using engines from registry
+	 * and user preferences.
 	 * 
 	 * @param builder
 	 *            {@link org.eclipse.emf.compare.EMFCompare.EMFCompare.Builder}

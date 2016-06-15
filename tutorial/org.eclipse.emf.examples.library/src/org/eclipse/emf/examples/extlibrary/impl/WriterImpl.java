@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.examples.extlibrary.impl;
 
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -27,166 +26,143 @@ import org.eclipse.emf.examples.extlibrary.Book;
 import org.eclipse.emf.examples.extlibrary.EXTLibraryPackage;
 import org.eclipse.emf.examples.extlibrary.Writer;
 
-
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Writer</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Writer</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.WriterImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.WriterImpl#getBooks <em>Books</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.WriterImpl#getName <em>Name</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.WriterImpl#getBooks <em>Books</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class WriterImpl extends PersonImpl implements Writer
-{
-  /**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+public class WriterImpl extends PersonImpl implements Writer {
+	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
 	 */
-  protected static final String NAME_EDEFAULT = null;
+	protected static final String NAME_EDEFAULT = null;
 
-  /**
-	 * The cached value of the '{@link #getBooks() <em>Books</em>}' reference list.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The cached value of the '{@link #getBooks() <em>Books</em>}' reference list. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getBooks()
 	 * @generated
 	 * @ordered
 	 */
-  protected EList<Book> books;
+	protected EList<Book> books;
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected WriterImpl()
-  {
+	protected WriterImpl() {
 		super();
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  protected EClass eStaticClass()
-  {
+	@Override
+	protected EClass eStaticClass() {
 		return EXTLibraryPackage.Literals.WRITER;
 	}
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated NOT
-   */
-  public String getName()
-  {
-    if (getFirstName() == null)
-    {
-      if (getLastName() == null)
-      {
-        return ""; //$NON-NLS-1$
-      }
-      else
-      {
-        return getLastName();
-      }
-    }
-    else if (getLastName() == null)
-    {
-      return getFirstName();
-    }
-    else
-    {
-      StringBuffer result = new StringBuffer();
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public String getName() {
+		if (getFirstName() == null) {
+			if (getLastName() == null) {
+				return ""; //$NON-NLS-1$
+			} else {
+				return getLastName();
+			}
+		} else if (getLastName() == null) {
+			return getFirstName();
+		} else {
+			StringBuffer result = new StringBuffer();
 
-      result.append(getFirstName()).append(' ').append(getLastName());
+			result.append(getFirstName()).append(' ').append(getLastName());
 
-      return result.toString();
-    }
-  }
+			return result.toString();
+		}
+	}
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated NOT
-   */
-  public void setName(String newName)
-  {
-    if (newName == null || newName.length() == 0)
-    {
-      setFirstName(null);
-      setLastName(null);
-    }
-    else
-    {
-      int comma = newName.indexOf(',');
-      if (comma < 0)
-      {
-        comma = newName.indexOf(' ');
-      }
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public void setName(String newName) {
+		if (newName == null || newName.length() == 0) {
+			setFirstName(null);
+			setLastName(null);
+		} else {
+			int comma = newName.indexOf(',');
+			if (comma < 0) {
+				comma = newName.indexOf(' ');
+			}
 
-      if (comma >= 0)
-      {
-        setFirstName(newName.substring(0, comma).trim());
-        setLastName(newName.substring(comma + 1).trim());
-      }
-      else
-      {
-        setFirstName(newName);
-        setLastName(null);
-      }
-    }
-  }
+			if (comma >= 0) {
+				setFirstName(newName.substring(0, comma).trim());
+				setLastName(newName.substring(comma + 1).trim());
+			} else {
+				setFirstName(newName);
+				setLastName(null);
+			}
+		}
+	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public EList<Book> getBooks()
-  {
+	public EList<Book> getBooks() {
 		if (books == null) {
-			books = new EObjectWithInverseResolvingEList<Book>(Book.class, this, EXTLibraryPackage.WRITER__BOOKS, EXTLibraryPackage.BOOK__AUTHOR);
+			books = new EObjectWithInverseResolvingEList<Book>(Book.class, this,
+					EXTLibraryPackage.WRITER__BOOKS, EXTLibraryPackage.BOOK__AUTHOR);
 		}
 		return books;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @SuppressWarnings("unchecked")
-  @Override
-  public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case EXTLibraryPackage.WRITER__BOOKS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getBooks()).basicAdd(otherEnd, msgs);
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getBooks()).basicAdd(otherEnd,
+						msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case EXTLibraryPackage.WRITER__BOOKS:
 				return ((InternalEList<?>)getBooks()).basicRemove(otherEnd, msgs);
@@ -194,14 +170,13 @@ public class WriterImpl extends PersonImpl implements Writer
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public Object eGet(int featureID, boolean resolve, boolean coreType)
-  {
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case EXTLibraryPackage.WRITER__NAME:
 				return getName();
@@ -211,15 +186,14 @@ public class WriterImpl extends PersonImpl implements Writer
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @SuppressWarnings("unchecked")
-  @Override
-  public void eSet(int featureID, Object newValue)
-  {
+	@SuppressWarnings("unchecked")
+	@Override
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case EXTLibraryPackage.WRITER__NAME:
 				setName((String)newValue);
@@ -232,14 +206,13 @@ public class WriterImpl extends PersonImpl implements Writer
 		super.eSet(featureID, newValue);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public void eUnset(int featureID)
-  {
+	@Override
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case EXTLibraryPackage.WRITER__NAME:
 				setName(NAME_EDEFAULT);
@@ -251,14 +224,13 @@ public class WriterImpl extends PersonImpl implements Writer
 		super.eUnset(featureID);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public boolean eIsSet(int featureID)
-  {
+	@Override
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case EXTLibraryPackage.WRITER__NAME:
 				return NAME_EDEFAULT == null ? getName() != null : !NAME_EDEFAULT.equals(getName());
@@ -268,4 +240,4 @@ public class WriterImpl extends PersonImpl implements Writer
 		return super.eIsSet(featureID);
 	}
 
-} //WriterImpl
+} // WriterImpl

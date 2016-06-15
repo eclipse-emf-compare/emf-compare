@@ -115,7 +115,8 @@ public class AddInterfaceRealizationTest extends AbstractUMLTest {
 		Predicate<? super Diff> addContractInInterfaceRealizationDescription = null;
 
 		if (kind.equals(TestKind.DELETE)) {
-			//addInterfaceRealizationDescription = removed("model.Class0.InterfaceRealization0"); //$NON-NLS-1$
+			// addInterfaceRealizationDescription = removed("model.Class0.InterfaceRealization0");
+			// //$NON-NLS-1$
 			addInterfaceRealizationDescription = removedFromReference("model.Class0", "interfaceRealization",
 					"model.Class0.InterfaceRealization0");
 			addClientInInterfaceRealizationDescription = removedFromReference(
@@ -125,9 +126,9 @@ public class AddInterfaceRealizationTest extends AbstractUMLTest {
 			addContractInInterfaceRealizationDescription = changedReference(
 					"model.Class0.InterfaceRealization0", "contract", "model.Interface0", null);
 		} else {
-			//addInterfaceRealizationDescription = added("model.Class0.InterfaceRealization0"); //$NON-NLS-1$
-			addInterfaceRealizationDescription = addedToReference(
-					"model.Class0", "interfaceRealization", "model.Class0.InterfaceRealization0"); //$NON-NLS-1$
+			// addInterfaceRealizationDescription = added("model.Class0.InterfaceRealization0"); //$NON-NLS-1$
+			addInterfaceRealizationDescription = addedToReference("model.Class0", "interfaceRealization", //$NON-NLS-1$
+					"model.Class0.InterfaceRealization0");
 			addClientInInterfaceRealizationDescription = addedToReference(
 					"model.Class0.InterfaceRealization0", "client", "model.Class0");
 			addSupplierInInterfaceRealizationDescription = addedToReference(
@@ -154,11 +155,11 @@ public class AddInterfaceRealizationTest extends AbstractUMLTest {
 		assertEquals(1, count(differences, instanceOf(DirectedRelationshipChange.class)));
 		Diff addUMLDependency = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLDependency = Iterators.find(differences.iterator(), and(
-					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.ADD)));
+			addUMLDependency = Iterators.find(differences.iterator(),
+					and(instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLDependency = Iterators.find(differences.iterator(), and(
-					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
+			addUMLDependency = Iterators.find(differences.iterator(),
+					and(instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLDependency);
 		assertEquals(4, addUMLDependency.getRefinedBy().size());

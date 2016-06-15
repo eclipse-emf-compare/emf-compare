@@ -138,12 +138,12 @@ public abstract class AbstractUMLTest {
 	protected void registerPostProcessors(
 			final IPostProcessor.Descriptor.Registry<String> postProcessorRegistry) {
 		postProcessorRegistry.put(UMLPostProcessor.class.getName(),
-				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
-						.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null,
+				new TestPostProcessor.TestPostProcessorDescriptor(
+						Pattern.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null,
 						new UMLPostProcessor(), 20));
 		postProcessorRegistry.put(OpaqueElementBodyChangePostProcessor.class.getName(),
-				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
-						.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null,
+				new TestPostProcessor.TestPostProcessorDescriptor(
+						Pattern.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null,
 						new OpaqueElementBodyChangePostProcessor(), 25));
 	}
 
@@ -210,13 +210,13 @@ public abstract class AbstractUMLTest {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				if (input instanceof ReferenceChange) {
-					return ReferenceUtil.getAsList(input.getMatch().getLeft(),
-							((ReferenceChange)input).getReference()).contains(
-							((ReferenceChange)input).getValue());
+					return ReferenceUtil
+							.getAsList(input.getMatch().getLeft(), ((ReferenceChange)input).getReference())
+							.contains(((ReferenceChange)input).getValue());
 				} else if (input instanceof AttributeChange) {
-					return ReferenceUtil.getAsList(input.getMatch().getLeft(),
-							((AttributeChange)input).getAttribute()).contains(
-							((AttributeChange)input).getValue());
+					return ReferenceUtil
+							.getAsList(input.getMatch().getLeft(), ((AttributeChange)input).getAttribute())
+							.contains(((AttributeChange)input).getValue());
 				}
 				return false;
 			}
@@ -242,7 +242,8 @@ public abstract class AbstractUMLTest {
 		testMergeRightToLeft(left, right, origin, false);
 	}
 
-	protected void testMergeLeftToRight(Notifier left, Notifier right, Notifier origin, boolean pseudoAllowed) {
+	protected void testMergeLeftToRight(Notifier left, Notifier right, Notifier origin,
+			boolean pseudoAllowed) {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		final Comparison comparisonBefore = getCompare().compare(scope);
 		EList<Diff> differencesBefore = comparisonBefore.getDifferences();
@@ -259,7 +260,8 @@ public abstract class AbstractUMLTest {
 		assertTrue("Comparison#getDifferences() must be empty after copyAllLeftToRight", diffs);
 	}
 
-	protected void testMergeRightToLeft(Notifier left, Notifier right, Notifier origin, boolean pseudoAllowed) {
+	protected void testMergeRightToLeft(Notifier left, Notifier right, Notifier origin,
+			boolean pseudoAllowed) {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		final Comparison comparisonBefore = getCompare().compare(scope);
 		EList<Diff> differencesBefore = comparisonBefore.getDifferences();
@@ -278,12 +280,12 @@ public abstract class AbstractUMLTest {
 
 	protected void testIntersections(Comparison comparison) {
 		for (Diff diff : comparison.getDifferences()) {
-			int realRefinesSize = Iterables.size(Iterables.filter(diff.getRefines(),
-					not(instanceOf(StereotypedElementChange.class))));
+			int realRefinesSize = Iterables.size(
+					Iterables.filter(diff.getRefines(), not(instanceOf(StereotypedElementChange.class))));
 			assertFalse("Wrong number of refines (without StereotypedElementChange) on" + diff,
 					realRefinesSize > 1);
-			int stereotypedElementChangeRefines = Iterables.size(Iterables.filter(diff.getRefines(),
-					instanceOf(StereotypedElementChange.class)));
+			int stereotypedElementChangeRefines = Iterables
+					.size(Iterables.filter(diff.getRefines(), instanceOf(StereotypedElementChange.class)));
 			assertFalse("Wrong number of refines (of type StereotypedElementChange) on " + diff,
 					stereotypedElementChangeRefines > 1);
 

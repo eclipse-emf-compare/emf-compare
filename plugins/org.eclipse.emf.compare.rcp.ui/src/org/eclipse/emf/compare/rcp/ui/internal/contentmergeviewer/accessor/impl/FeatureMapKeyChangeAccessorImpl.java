@@ -61,8 +61,8 @@ public class FeatureMapKeyChangeAccessorImpl extends AbstractStructuralFeatureAc
 		final EStructuralFeature leftKey = getKey(MergeViewerSide.LEFT);
 		final EStructuralFeature rightKey = getKey(MergeViewerSide.RIGHT);
 		final EStructuralFeature ancestorKey = getKey(MergeViewerSide.ANCESTOR);
-		final MergeViewerItem item = new MergeViewerItem(getComparison(), getInitialDiff(), leftKey,
-				rightKey, ancestorKey, getSide(), getRootAdapterFactory());
+		final MergeViewerItem item = new MergeViewerItem(getComparison(), getInitialDiff(), leftKey, rightKey,
+				ancestorKey, getSide(), getRootAdapterFactory());
 
 		return ImmutableList.of(item);
 	}

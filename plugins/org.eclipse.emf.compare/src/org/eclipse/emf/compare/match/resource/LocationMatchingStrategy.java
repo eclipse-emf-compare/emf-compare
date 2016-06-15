@@ -80,8 +80,8 @@ public class LocationMatchingStrategy implements IResourceMatchingStrategy {
 	protected Resource findMatch(Resource reference, Iterable<Resource> candidates) {
 		final URI referenceURI = reference.getURI();
 		for (Resource candidate : candidates) {
-			if (referenceURI == candidate.getURI() || referenceURI != null
-					&& referenceURI.equals(candidate.getURI())) {
+			if (referenceURI == candidate.getURI()
+					|| referenceURI != null && referenceURI.equals(candidate.getURI())) {
 				return candidate;
 			}
 		}

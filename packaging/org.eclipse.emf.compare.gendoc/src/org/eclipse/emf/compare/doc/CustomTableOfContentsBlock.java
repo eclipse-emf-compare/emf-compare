@@ -22,16 +22,15 @@ import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- *
  */
 public class CustomTableOfContentsBlock extends TableOfContentsBlock {
 
 	static final Pattern startPattern = Pattern.compile("\\s*__TOC__\\s*(.*?)"); //$NON-NLS-1$
-	
+
 	private int blockLineNumber = 0;
 
 	private Matcher matcher;
-	
+
 	protected void emitToc(OutlineItem item) {
 		if (item.getChildren().isEmpty()) {
 			return;
@@ -50,7 +49,7 @@ public class CustomTableOfContentsBlock extends TableOfContentsBlock {
 		}
 		builder.endBlock();
 	}
-	
+
 	@Override
 	public int processLineContent(String line, int offset) {
 		if (blockLineNumber++ > 0) {
@@ -66,13 +65,13 @@ public class CustomTableOfContentsBlock extends TableOfContentsBlock {
 			builder.beginHeading(3, new Attributes(null, "toc-title", null, null));
 			builder.characters("Table of Contents");
 			builder.endHeading();
-			
+
 			if (rootItem.getChildren().size() == 1 && rootItem.getChildren().get(0).getLevel() == 1) {
 				emitToc(rootItem.getChildren().get(0));
 			} else {
 				emitToc(rootItem);
 			}
-			
+
 			builder.endBlock();
 		}
 		int start = matcher.start(1);
@@ -81,7 +80,7 @@ public class CustomTableOfContentsBlock extends TableOfContentsBlock {
 		}
 		return start;
 	}
-	
+
 	@Override
 	public boolean canStart(String line, int lineOffset) {
 		if (lineOffset == 0 && !getMarkupLanguage().isFilterGenerativeContents()) {
@@ -93,9 +92,9 @@ public class CustomTableOfContentsBlock extends TableOfContentsBlock {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public CustomTableOfContentsBlock clone() {
-		return (CustomTableOfContentsBlock) super.clone();
+		return (CustomTableOfContentsBlock)super.clone();
 	}
 }

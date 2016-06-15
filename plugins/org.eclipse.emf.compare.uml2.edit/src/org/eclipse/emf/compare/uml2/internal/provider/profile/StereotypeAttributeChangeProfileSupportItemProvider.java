@@ -68,8 +68,8 @@ public class StereotypeAttributeChangeProfileSupportItemProvider extends UMLDiff
 		AttributeChange attributeChange = null;
 		if (diff instanceof StereotypeAttributeChange) {
 			StereotypeAttributeChange stereotypeAttributeChange = (StereotypeAttributeChange)diff;
-			Optional<Diff> element = Iterables.tryFind(stereotypeAttributeChange.getRefinedBy(), Predicates
-					.instanceOf(AttributeChange.class));
+			Optional<Diff> element = Iterables.tryFind(stereotypeAttributeChange.getRefinedBy(),
+					Predicates.instanceOf(AttributeChange.class));
 			if (element.isPresent()) {
 				attributeChange = (AttributeChange)element.get();
 			}

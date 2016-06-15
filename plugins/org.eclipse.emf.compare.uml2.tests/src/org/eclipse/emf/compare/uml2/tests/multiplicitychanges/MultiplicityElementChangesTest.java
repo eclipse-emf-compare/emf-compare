@@ -153,10 +153,10 @@ public class MultiplicityElementChangesTest {
 	@Compare(left = "a2/left.uml", right = "a2/right.uml", ancestor = "a2/origin.uml")
 	public void testAdditionsWithPseudoconflict(Comparison comparison) throws IOException {
 		EList<Diff> diffs = comparison.getDifferences();
-		ArrayList<Diff> leftChanges = Lists.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE,
-				fromSide(LEFT))));
-		ArrayList<Diff> rightChanges = Lists.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE,
-				fromSide(RIGHT))));
+		ArrayList<Diff> leftChanges = Lists
+				.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE, fromSide(LEFT))));
+		ArrayList<Diff> rightChanges = Lists
+				.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE, fromSide(RIGHT))));
 
 		assertEquals(1, size(leftChanges));
 		assertEquals(2, size(rightChanges));
@@ -198,10 +198,10 @@ public class MultiplicityElementChangesTest {
 	@Compare(left = "a3/left.uml", right = "a3/right.uml", ancestor = "a3/origin.uml")
 	public void testAdditionsWithConflict(Comparison comparison) throws IOException {
 		EList<Diff> diffs = comparison.getDifferences();
-		ArrayList<Diff> leftChanges = Lists.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE,
-				fromSide(LEFT))));
-		ArrayList<Diff> rightChanges = Lists.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE,
-				fromSide(RIGHT))));
+		ArrayList<Diff> leftChanges = Lists
+				.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE, fromSide(LEFT))));
+		ArrayList<Diff> rightChanges = Lists
+				.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE, fromSide(RIGHT))));
 
 		assertEquals(1, size(leftChanges));
 		assertEquals(2, size(rightChanges));
@@ -302,10 +302,10 @@ public class MultiplicityElementChangesTest {
 	@Compare(left = "a6/left.uml", right = "a6/right.uml", ancestor = "a6/origin.uml")
 	public void testRemoveConflict(Comparison comparison) throws IOException {
 		EList<Diff> diffs = comparison.getDifferences();
-		ArrayList<Diff> leftChanges = Lists.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE,
-				fromSide(LEFT))));
-		ArrayList<Diff> rightChanges = Lists.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE,
-				fromSide(RIGHT))));
+		ArrayList<Diff> leftChanges = Lists
+				.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE, fromSide(LEFT))));
+		ArrayList<Diff> rightChanges = Lists
+				.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE, fromSide(RIGHT))));
 
 		assertEquals(1, size(leftChanges));
 		MultiplicityElementChange leftChange = (MultiplicityElementChange)leftChanges.iterator().next();
@@ -432,10 +432,10 @@ public class MultiplicityElementChangesTest {
 	@Compare(left = "a10/left.uml", right = "a10/right.uml", ancestor = "a10/origin.uml")
 	public void testRealAndPseudoConflict(Comparison comparison) throws IOException {
 		EList<Diff> diffs = comparison.getDifferences();
-		ArrayList<Diff> leftChanges = Lists.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE,
-				fromSide(LEFT))));
-		ArrayList<Diff> rightChanges = Lists.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE,
-				fromSide(RIGHT))));
+		ArrayList<Diff> leftChanges = Lists
+				.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE, fromSide(LEFT))));
+		ArrayList<Diff> rightChanges = Lists
+				.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE, fromSide(RIGHT))));
 
 		assertEquals(2, size(leftChanges));
 		assertEquals(2, size(rightChanges));
@@ -526,10 +526,10 @@ public class MultiplicityElementChangesTest {
 	@Compare(left = "a11/left.uml", right = "a11/right.uml", ancestor = "a11/origin.uml")
 	public void testRealAndPseudoConflictWithChangeAndDelete(Comparison comparison) throws IOException {
 		EList<Diff> diffs = comparison.getDifferences();
-		ArrayList<Diff> leftChanges = Lists.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE,
-				fromSide(LEFT))));
-		ArrayList<Diff> rightChanges = Lists.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE,
-				fromSide(RIGHT))));
+		ArrayList<Diff> leftChanges = Lists
+				.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE, fromSide(LEFT))));
+		ArrayList<Diff> rightChanges = Lists
+				.newArrayList(filter(diffs, and(IS_MULTIPLICITY_CHANGE, fromSide(RIGHT))));
 
 		assertEquals(2, size(leftChanges));
 		assertEquals(2, size(rightChanges));
@@ -594,7 +594,7 @@ public class MultiplicityElementChangesTest {
 	// super.registerPostProcessors(postProcessorRegistry);
 	// postProcessorRegistry.put(MultiplicityElementChangePostProcessor.class.getName(),
 	// new TestPostProcessor.TestPostProcessorDescriptor(Pattern
-	//						.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null, //$NON-NLS-1$
+	// .compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null, //$NON-NLS-1$
 	// new MultiplicityElementChangePostProcessor(), 25));
 	// }
 }

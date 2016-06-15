@@ -11,8 +11,8 @@
 
 /**
  * Contains data for the following test case: Two classes C1 and C2 exist, and an association C1 -> C2 exists.
- * Both target and source properties of this assoc are owned by the association itself.
- * In the other model, a class C3 is added, and the association is reconnected to the new class C3.
+ * Both target and source properties of this assoc are owned by the association itself. In the other model, a
+ * class C3 is added, and the association is reconnected to the new class C3.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */

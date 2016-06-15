@@ -64,8 +64,7 @@ public abstract class AbstractTest {
 	public void before() {
 		postProcessorRegistry = new PostProcessorDescriptorRegistryImpl<String>();
 		registerPostProcessors();
-		emfCompare = EMFCompare.builder()
-				.setPostProcessorRegistry(postProcessorRegistry).build();
+		emfCompare = EMFCompare.builder().setPostProcessorRegistry(postProcessorRegistry).build();
 		mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
 		final IMerger umlMerger = new UMLMerger();
 		umlMerger.setRanking(11);
@@ -76,16 +75,14 @@ public abstract class AbstractTest {
 	}
 
 	protected void registerPostProcessors() {
-		getPostProcessorRegistry().put(
-				UMLPostProcessor.class.getName(),
-				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
-						.compile("http://www.eclipse.org/uml2/\\d.0.0/UML"),
-						null, new UMLPostProcessor(), 20));
-		getPostProcessorRegistry()
-				.put(CompareDiagramPostProcessor.class.getName(),
-						new TestPostProcessor.TestPostProcessorDescriptor(
-								Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"),
-								null, new CompareDiagramPostProcessor(), 30));
+		getPostProcessorRegistry().put(UMLPostProcessor.class.getName(),
+				new TestPostProcessor.TestPostProcessorDescriptor(
+						Pattern.compile("http://www.eclipse.org/uml2/\\d.0.0/UML"), null,
+						new UMLPostProcessor(), 20));
+		getPostProcessorRegistry().put(CompareDiagramPostProcessor.class.getName(),
+				new TestPostProcessor.TestPostProcessorDescriptor(
+						Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null,
+						new CompareDiagramPostProcessor(), 30));
 	}
 
 	protected EMFCompare getCompare() {
@@ -104,19 +101,22 @@ public abstract class AbstractTest {
 	}
 
 	protected Comparison buildComparison(Resource left, Resource right) {
-		final IComparisonScope2 scope = new DefaultComparisonScope(left.getResourceSet(), right.getResourceSet(), null);
+		final IComparisonScope2 scope = new DefaultComparisonScope(left.getResourceSet(),
+				right.getResourceSet(), null);
 		final Set<ResourceSet> resourceSets = ImmutableSet.of(left.getResourceSet(), right.getResourceSet());
 		scope.getAllInvolvedResourceURIs().addAll(getResourceURIs(resourceSets));
-		return EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
+		return EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
+				.compare(scope);
 	}
 
 	protected Comparison buildComparison(Resource left, Resource right, Resource origin) {
-		final IComparisonScope2 scope = new DefaultComparisonScope(left.getResourceSet(), right.getResourceSet(),
-				origin.getResourceSet());
+		final IComparisonScope2 scope = new DefaultComparisonScope(left.getResourceSet(),
+				right.getResourceSet(), origin.getResourceSet());
 		final Set<ResourceSet> resourceSets = ImmutableSet.of(left.getResourceSet(), right.getResourceSet(),
 				origin.getResourceSet());
 		scope.getAllInvolvedResourceURIs().addAll(getResourceURIs(resourceSets));
-		return EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build().compare(scope);
+		return EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
+				.compare(scope);
 	}
 
 	private Set<URI> getResourceURIs(final Set<ResourceSet> resourceSets) {
@@ -151,8 +151,7 @@ public abstract class AbstractTest {
 
 	protected static int count(List<Diff> differences, Predicate<? super Diff> p) {
 		int count = 0;
-		final Iterator<Diff> result = Iterators.filter(differences.iterator(),
-				p);
+		final Iterator<Diff> result = Iterators.filter(differences.iterator(), p);
 		while (result.hasNext()) {
 			count++;
 			result.next();
@@ -160,8 +159,7 @@ public abstract class AbstractTest {
 		return count;
 	}
 
-	protected void diffsChecking(Comparison comparison, int totalDiffsNb,
-			ExpectedStat... expectedStats) {
+	protected void diffsChecking(Comparison comparison, int totalDiffsNb, ExpectedStat... expectedStats) {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(totalDiffsNb, differences.size());
 		for (ExpectedStat expectedStat : expectedStats) {
@@ -176,8 +174,7 @@ public abstract class AbstractTest {
 		testIntersections(comparison);
 	}
 
-	private String buildAssertMessage(Collection<Diff> differences,
-			Predicate<Diff> p) {
+	private String buildAssertMessage(Collection<Diff> differences, Predicate<Diff> p) {
 		Diff diff = Iterables.find(differences, p, null);
 		String message = "";
 		if (diff != null) {
@@ -191,6 +188,7 @@ public abstract class AbstractTest {
 
 	protected class ExpectedStat {
 		public Predicate<Diff> p;
+
 		public int nb;
 
 		public ExpectedStat(Predicate<Diff> p, int nb) {
@@ -203,9 +201,9 @@ public abstract class AbstractTest {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				if (input instanceof UMLDiff) {
-					EObject element = ((UMLDiff) input).getDiscriminant();
+					EObject element = ((UMLDiff)input).getDiscriminant();
 					if (element instanceof NamedElement) {
-						String eltName = ((NamedElement) element).getName();
+						String eltName = ((NamedElement)element).getName();
 						return name.equals(eltName);
 					}
 				}
@@ -219,12 +217,11 @@ public abstract class AbstractTest {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				if (input instanceof DiagramDiff) {
-					EObject obj = ((DiagramDiff) input).getView();
+					EObject obj = ((DiagramDiff)input).getView();
 					if (obj instanceof View) {
-						EObject element = ((View) ((DiagramDiff) input)
-								.getView()).getElement();
+						EObject element = ((View)((DiagramDiff)input).getView()).getElement();
 						if (element instanceof NamedElement) {
-							String eltName = ((NamedElement) element).getName();
+							String eltName = ((NamedElement)element).getName();
 							return name.equals(eltName);
 						}
 					}
@@ -238,8 +235,7 @@ public abstract class AbstractTest {
 	protected static Predicate<Diff> valueIs(final EClass clazz) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				return getValue(input) != null
-						&& getValue(input).eClass() == clazz;
+				return getValue(input) != null && getValue(input).eClass() == clazz;
 			}
 		};
 	}
@@ -256,8 +252,7 @@ public abstract class AbstractTest {
 	protected static Predicate<Diff> discriminantInstanceOf(final EClass clazz) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				return input instanceof UMLDiff
-						&& clazz.isInstance(((UMLDiff) input).getDiscriminant());
+				return input instanceof UMLDiff && clazz.isInstance(((UMLDiff)input).getDiscriminant());
 			}
 
 		};
@@ -265,11 +260,11 @@ public abstract class AbstractTest {
 
 	protected static EObject getValue(Diff diff) {
 		if (diff instanceof DiagramDiff) {
-			return ((DiagramDiff) diff).getView();
+			return ((DiagramDiff)diff).getView();
 		} else if (diff instanceof UMLDiff) {
-			return ((UMLDiff) diff).getDiscriminant();
+			return ((UMLDiff)diff).getDiscriminant();
 		} else if (diff instanceof ReferenceChange) {
-			return ((ReferenceChange) diff).getValue();
+			return ((ReferenceChange)diff).getValue();
 		}
 		return null;
 	}
@@ -277,7 +272,7 @@ public abstract class AbstractTest {
 	protected static EClass getElementClass(Diff diff) {
 		EObject obj = getValue(diff);
 		if (obj instanceof View) {
-			EObject element = ((View) obj).getElement();
+			EObject element = ((View)obj).getElement();
 			if (element != null) {
 				return element.eClass();
 			}
@@ -291,12 +286,11 @@ public abstract class AbstractTest {
 	protected abstract DiagramInputData getInput();
 
 	protected void testIntersections(Comparison comparison) {
-		assertFalse(Iterables.any(comparison.getDifferences(),
-				new Predicate<Diff>() {
-					public boolean apply(Diff input) {
-						return input.getRefines().size() > 1;
-					}
-				}));
+		assertFalse(Iterables.any(comparison.getDifferences(), new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input.getRefines().size() > 1;
+			}
+		}));
 	}
 
 }

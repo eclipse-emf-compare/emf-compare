@@ -133,8 +133,8 @@ public class DifferenceGroupProviderExtensionRegistryListener extends AbstractRe
 		}
 		String label = element.getAttribute(ATT_LABEL);
 		String description = element.getAttribute(ATT_DESCRIPTION);
-		DifferenceGroupDescriptorWrapper itemDescriptor = new DifferenceGroupDescriptorWrapper(label, description,
-				element, rank, type);
+		DifferenceGroupDescriptorWrapper itemDescriptor = new DifferenceGroupDescriptorWrapper(label,
+				description, element, rank, type);
 
 		IItemDescriptor<Descriptor> previous = groupProviderRegistry.add(itemDescriptor);
 		if (previous != null) {

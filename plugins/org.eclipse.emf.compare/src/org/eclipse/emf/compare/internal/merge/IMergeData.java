@@ -14,8 +14,8 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.DifferenceSource;
 
 /**
- * Interface implemented by {@link org.eclipse.emf.compare.internal.merge.MergeDataImpl}. It helps to
- * know the way of merge and the editable sides of a difference.
+ * Interface implemented by {@link org.eclipse.emf.compare.internal.merge.MergeDataImpl}. It helps to know the
+ * way of merge and the editable sides of a difference.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */

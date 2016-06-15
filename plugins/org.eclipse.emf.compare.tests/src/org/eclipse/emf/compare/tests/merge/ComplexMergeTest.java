@@ -104,17 +104,18 @@ public class ComplexMergeTest {
 	@SuppressWarnings("unchecked")
 	@Parameters
 	public static Iterable<Object[]> data() {
-		Collection<List<Predicate<? super Diff>>> rightConflictPermutations = permutations(Arrays
-				.<Predicate<? super Diff>> asList(added("Root.Node0"), //$NON-NLS-1$
-						moved("Root.Node1", "containmentRef1"), moved("Root.Node6", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-								"containmentRef1"), added("Root.Node9"))); //$NON-NLS-1$ //$NON-NLS-2$
-		Collection<List<Predicate<? super Diff>>> leftConflictPermutations = permutations(Arrays
-				.<Predicate<? super Diff>> asList(added("Root.Node0"), //$NON-NLS-1$
+		Collection<List<Predicate<? super Diff>>> rightConflictPermutations = permutations(
+				Arrays.<Predicate<? super Diff>> asList(added("Root.Node0"), //$NON-NLS-1$
+						moved("Root.Node1", "containmentRef1"), moved("Root.Node6", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								"containmentRef1"), //$NON-NLS-1$
+						added("Root.Node9"))); //$NON-NLS-1$
+		Collection<List<Predicate<? super Diff>>> leftConflictPermutations = permutations(
+				Arrays.<Predicate<? super Diff>> asList(added("Root.Node0"), //$NON-NLS-1$
 						moved("Root.Node1", "containmentRef1"), removed("Root.Node5"), removed("Root.Node6"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						added("Root.Node9"))); //$NON-NLS-1$
-		Collection<List<Predicate<? super Diff>>> otherPermutations = permutations(Arrays
-				.<Predicate<? super Diff>> asList(
-						and(fromSide(LEFT), removed("Root.Node5")), and(fromSide(LEFT), removed("Root.Node7")), and( //$NON-NLS-1$ //$NON-NLS-2$
+		Collection<List<Predicate<? super Diff>>> otherPermutations = permutations(
+				Arrays.<Predicate<? super Diff>> asList(and(fromSide(LEFT), removed("Root.Node5")), //$NON-NLS-1$
+						and(fromSide(LEFT), removed("Root.Node7")), and( //$NON-NLS-1$
 								fromSide(LEFT), added("Root.Node8")))); //$NON-NLS-1$
 
 		List<Object[]> data = new ArrayList<Object[]>();

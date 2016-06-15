@@ -91,8 +91,8 @@ public class SaveComparisonModelAction extends Action {
 				MessageDialog messageDialog = new MessageDialog(parent, "File already exists", null,
 						"File \"" + file.toString()
 								+ "\" already exists. Do you want to replace the existing one?",
-						MessageDialog.WARNING, DIALOG_BUTTON_LABELS.toArray(new String[DIALOG_BUTTON_LABELS
-								.size()]), 1);
+						MessageDialog.WARNING,
+						DIALOG_BUTTON_LABELS.toArray(new String[DIALOG_BUTTON_LABELS.size()]), 1);
 				int open = messageDialog.open();
 				if (open == DIALOG_BUTTON_LABELS.indexOf("Replace")) {
 					saveComparison(file);
@@ -166,8 +166,8 @@ public class SaveComparisonModelAction extends Action {
 	 */
 	private void refreshLocation(String path) {
 		try {
-			IFile fileForLocation = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(
-					new Path(path));
+			IFile fileForLocation = ResourcesPlugin.getWorkspace().getRoot()
+					.getFileForLocation(new Path(path));
 			if (fileForLocation != null) {
 				fileForLocation.getParent().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 			}

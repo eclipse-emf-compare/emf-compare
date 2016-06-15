@@ -179,13 +179,13 @@ public abstract class ForwardingCompareInput extends ForwardingObject implements
 	}
 
 	public static class ForwardingTypedElement extends ForwardingObject implements ITypedElement {
-	
+
 		private final ITypedElement delegate;
-	
+
 		public ForwardingTypedElement(ITypedElement delegate) {
 			this.delegate = delegate;
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -194,7 +194,7 @@ public abstract class ForwardingCompareInput extends ForwardingObject implements
 		public String getName() {
 			return "__" + delegate().getName() + "__"; //$NON-NLS-1$//$NON-NLS-2$
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -203,7 +203,7 @@ public abstract class ForwardingCompareInput extends ForwardingObject implements
 		public Image getImage() {
 			return delegate().getImage();
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -212,7 +212,7 @@ public abstract class ForwardingCompareInput extends ForwardingObject implements
 		public String getType() {
 			return TypeConstants.TYPE_FALLBACK_TEXT;
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -222,7 +222,7 @@ public abstract class ForwardingCompareInput extends ForwardingObject implements
 		protected ITypedElement delegate() {
 			return delegate;
 		}
-	
+
 	}
 
 }

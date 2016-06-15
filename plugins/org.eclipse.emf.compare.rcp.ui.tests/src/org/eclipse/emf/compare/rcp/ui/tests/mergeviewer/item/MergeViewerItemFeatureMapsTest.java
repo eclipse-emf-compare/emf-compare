@@ -41,9 +41,12 @@ import org.junit.Test;
 public class MergeViewerItemFeatureMapsTest {
 
 	private static FeatureFilterFeatureMapsInputData inputData = new FeatureFilterFeatureMapsInputData();
-	private final static ComposedAdapterFactory fAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+
+	private final static ComposedAdapterFactory fAdapterFactory = new ComposedAdapterFactory(
+			ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+
 	private static Comparison comparison;
-	
+
 	@BeforeClass
 	public static void beforeClass() throws IOException {
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
@@ -56,26 +59,28 @@ public class MergeViewerItemFeatureMapsTest {
 		EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
 		comparison = comparisonBuilder.build().compare(scope);
 	}
-	
+
 	@Test
 	public void test2WayFeatureMapContainment() throws IOException {
 		// Test with models containing NodeFeatureMapContainment2 elements. A NodeFeatureMapContainment2 is an
 		// element that contains a map with two types of entries: NodeMultipleContainment and
 		// NodeSingleValueContainment. NodeMultipleContainment has containment references that don't exist in
 		// NodeSingleValueContainment. The MergeViewer needs to properly handle the case.
-		
+
 		final Match mapNodeMatch = comparison.getMatches().get(0).getSubmatches().get(0);
-		
-		//Test Left Side
-		MergeViewerItem.Container mapNode1MVI = new MergeViewerItem.Container(comparison, null, mapNodeMatch, MergeViewerSide.LEFT, fAdapterFactory);
+
+		// Test Left Side
+		MergeViewerItem.Container mapNode1MVI = new MergeViewerItem.Container(comparison, null, mapNodeMatch,
+				MergeViewerSide.LEFT, fAdapterFactory);
 		IMergeViewerItem[] children = mapNode1MVI.getChildren(null, null);
 		assertTrue(children.length == 5);
-		
-		//Test Right Side
-		mapNode1MVI = new MergeViewerItem.Container(comparison, null, mapNodeMatch, MergeViewerSide.RIGHT, fAdapterFactory);
+
+		// Test Right Side
+		mapNode1MVI = new MergeViewerItem.Container(comparison, null, mapNodeMatch, MergeViewerSide.RIGHT,
+				fAdapterFactory);
 		children = mapNode1MVI.getChildren(null, null);
 		assertTrue(children.length == 5);
-		
+
 	}
-	
+
 }

@@ -123,7 +123,8 @@ public enum MergeMode {
 			leftToRight = true;
 		} else if (this == MergeMode.REJECT && diff.getSource() == DifferenceSource.RIGHT && isLeftEditable) {
 			leftToRight = true;
-		} else if (this == MergeMode.ACCEPT && diff.getSource() == DifferenceSource.RIGHT && isRightEditable) {
+		} else if (this == MergeMode.ACCEPT && diff.getSource() == DifferenceSource.RIGHT
+				&& isRightEditable) {
 			leftToRight = false;
 		} else if (this == MergeMode.REJECT && diff.getSource() == DifferenceSource.LEFT && isRightEditable) {
 			leftToRight = false;

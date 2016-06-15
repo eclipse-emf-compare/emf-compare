@@ -57,9 +57,8 @@ public class UndoAction extends Action {
 
 		Command undoCommand = domain.getCommandStack().getUndoCommand();
 		if (undoCommand != null && undoCommand.getLabel() != null) {
-			setText(EMFEditUIPlugin.INSTANCE
-					.getString(
-							"_UI_Undo_menu_item", new Object[] {EMFCompareIDEUIMessages.getString("undo.menu.item.text") })); //$NON-NLS-1$//$NON-NLS-2$
+			setText(EMFEditUIPlugin.INSTANCE.getString("_UI_Undo_menu_item", //$NON-NLS-1$
+					new Object[] {EMFCompareIDEUIMessages.getString("undo.menu.item.text") })); //$NON-NLS-1$
 		} else {
 			setText(EMFEditUIPlugin.INSTANCE.getString("_UI_Undo_menu_item", new Object[] {"" })); //$NON-NLS-1$ //$NON-NLS-2$
 		}

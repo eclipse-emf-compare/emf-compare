@@ -117,7 +117,8 @@ public class UMLStereotypeAttributeChangeFactory extends AbstractUMLChangeFactor
 	 */
 	@Override
 	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {
-		return UMLCompareUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
+		return UMLCompareUtil
+				.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	/**

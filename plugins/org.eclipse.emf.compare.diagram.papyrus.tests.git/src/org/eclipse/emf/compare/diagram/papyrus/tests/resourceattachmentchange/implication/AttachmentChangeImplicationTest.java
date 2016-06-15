@@ -65,8 +65,8 @@ public class AttachmentChangeImplicationTest extends AbstractResourceAttachmentC
 		// 1st commit: a model with 2 packages.
 		// 1 class diagram associated to the model, and 1 class diagram associated to the 2nd package.
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit1/model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject,
-				"case001/commit1/model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit1/model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit1/model.uml", "");
 
 		repository.addAllAndCommit("1st-commit");
@@ -76,13 +76,14 @@ public class AttachmentChangeImplicationTest extends AbstractResourceAttachmentC
 		// 2nd commit: the 2nd package is fragmented.
 		// The class diagram associated is moved in a new resource (notation model).
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject,
-				"case001/commit2/model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/model.uml", "");
 		fragmentDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/fragment.di", "");
 		fragmentNotation = addToProject(TEST_DATA_PATH, testProject1, iProject,
 				"case001/commit2/fragment.notation", "");
-		fragmentUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/fragment.uml", "");
+		fragmentUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case001/commit2/fragment.uml",
+				"");
 		repository.addAllAndCommit("2nd-commit");
 
 		repository.checkoutBranch(MASTER);
@@ -98,8 +99,8 @@ public class AttachmentChangeImplicationTest extends AbstractResourceAttachmentC
 		// 1st commit: a model with 2 packages.
 		// 1 class diagram associated to the model, and 1 class diagram associated to the 2nd package.
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject,
-				"case002/commit1/model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/model.uml", "");
 
 		repository.addAllAndCommit("1st-commit");
@@ -109,13 +110,14 @@ public class AttachmentChangeImplicationTest extends AbstractResourceAttachmentC
 		// 2nd commit: the 2nd package is fragmented.
 		// The class diagram associated is moved in a new resource (notation model).
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject,
-				"case002/commit2/model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/model.uml", "");
 		fragmentDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/fragment.di", "");
 		fragmentNotation = addToProject(TEST_DATA_PATH, testProject1, iProject,
 				"case002/commit2/fragment.notation", "");
-		fragmentUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/fragment.uml", "");
+		fragmentUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/fragment.uml",
+				"");
 		repository.addAllAndCommit("2nd-commit");
 
 		repository.checkoutBranch(MASTER);
@@ -163,7 +165,7 @@ public class AttachmentChangeImplicationTest extends AbstractResourceAttachmentC
 		assertTrue(diChange.getRequiredBy().contains(umlChange));
 		assertTrue(umlChange.getRequires().contains(diChange));
 		assertTrue(umlChange.getRequiredBy().contains(diChange));
-		
+
 	}
 
 	@Test

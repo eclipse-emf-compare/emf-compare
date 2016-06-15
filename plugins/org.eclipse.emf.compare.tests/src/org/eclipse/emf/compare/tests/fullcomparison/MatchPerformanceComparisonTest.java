@@ -65,8 +65,8 @@ public class MatchPerformanceComparisonTest {
 	public void warmup() throws IOException {
 		final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder().build());
 		final IEObjectMatcher matcher = new IdentifierEObjectMatcher(contentMatcher);
-		IMatchEngine matchEngine = new DefaultMatchEngine(matcher, new DefaultComparisonFactory(
-				new DefaultEqualityHelperFactory()));
+		IMatchEngine matchEngine = new DefaultMatchEngine(matcher,
+				new DefaultComparisonFactory(new DefaultEqualityHelperFactory()));
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		matchEngine.match(scope, new BasicMonitor());
 	}
@@ -74,8 +74,8 @@ public class MatchPerformanceComparisonTest {
 	@Test
 	public void matchPerIdAlmostIdenticalModels() throws IOException {
 		final IEObjectMatcher matcher = new IdentifierEObjectMatcher();
-		IMatchEngine matchEngine = new DefaultMatchEngine(matcher, new DefaultComparisonFactory(
-				new DefaultEqualityHelperFactory()));
+		IMatchEngine matchEngine = new DefaultMatchEngine(matcher,
+				new DefaultComparisonFactory(new DefaultEqualityHelperFactory()));
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		for (int i = 0; i < nbIterations; i++) {
 			matchEngine.match(scope, new BasicMonitor());
@@ -85,8 +85,8 @@ public class MatchPerformanceComparisonTest {
 	@Test
 	public void matchPerContentAlmostIdenticalModels() throws IOException {
 		final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder().build());
-		IMatchEngine matchEngine = new DefaultMatchEngine(contentMatcher, new DefaultComparisonFactory(
-				new DefaultEqualityHelperFactory()));
+		IMatchEngine matchEngine = new DefaultMatchEngine(contentMatcher,
+				new DefaultComparisonFactory(new DefaultEqualityHelperFactory()));
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		for (int i = 0; i < nbIterations; i++) {
 			matchEngine.match(scope, new BasicMonitor());

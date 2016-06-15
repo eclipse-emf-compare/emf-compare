@@ -19,25 +19,28 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class SmallSplitInputData extends Data {
 	/**
-	 * @return 
-	 * @throws IOException 
-	 * 
+	 * @return
+	 * @throws IOException
 	 */
 	public ResourceSet loadLeft() {
 		ResourceSet resourceSet = createResourceSet();
-		Resource ret = loadFromClassLoader("model_size_small_split/model_size_small_original_model/model.uml", resourceSet);
+		Resource ret = loadFromClassLoader("model_size_small_split/model_size_small_original_model/model.uml",
+				resourceSet);
 		EcoreUtil.resolveAll(resourceSet);
 		return resourceSet;
 	}
+
 	public ResourceSet loadRight() {
 		ResourceSet resourceSet = createResourceSet();
-		Resource ret = loadFromClassLoader("model_size_small_split/model_size_small_modified_model/model.uml", resourceSet);
-		EcoreUtil.resolveAll(resourceSet);		
+		Resource ret = loadFromClassLoader("model_size_small_split/model_size_small_modified_model/model.uml",
+				resourceSet);
+		EcoreUtil.resolveAll(resourceSet);
 		return resourceSet;
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see data.models.TestMatchUML.Data#loadAncestor()
 	 */
 	@Override

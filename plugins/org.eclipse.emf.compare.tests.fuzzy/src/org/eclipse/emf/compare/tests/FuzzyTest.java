@@ -70,8 +70,8 @@ public class FuzzyTest {
 	public void detectingNoDifferenceOnACopy() {
 		Assert.assertNotNull(root);
 		EObject backup = EcoreUtil.copy(root);
-		Comparison result = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(root, backup, null));
+		Comparison result = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(root, backup, null));
 		Assert.assertEquals(0, result.getDifferences().size());
 	}
 
@@ -88,8 +88,8 @@ public class FuzzyTest {
 		EObject mutated = EcoreUtil.copy(root);
 		removeAllDuplicateCrossReferencesFrom(root);
 
-		Comparison result = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(root, backup, null));
+		Comparison result = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(root, backup, null));
 		int nbDiffs = result.getDifferences().size();
 		final IBatchMerger merger = new BatchMerger(mergerRegistry);
 		merger.copyAllRightToLeft(result.getDifferences(), new BasicMonitor());
@@ -98,8 +98,8 @@ public class FuzzyTest {
 			assertSame(delta.getState(), DifferenceState.MERGED);
 		}
 
-		Comparison valid = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(root, backup, null));
+		Comparison valid = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(root, backup, null));
 		List<Diff> differences = valid.getDifferences();
 
 		Set<String> urisToDebug = Sets.newLinkedHashSet();
@@ -144,14 +144,14 @@ public class FuzzyTest {
 		util.mutate(createConfig());
 		removeAllDuplicateCrossReferencesFrom(root);
 
-		Comparison result = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(root, backup, null));
+		Comparison result = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(root, backup, null));
 		int nbDiffs = result.getDifferences().size();
 		final IBatchMerger merger = new BatchMerger(mergerRegistry);
 		merger.copyAllLeftToRight(result.getDifferences(), new BasicMonitor());
 
-		Comparison valid = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(root, backup, null));
+		Comparison valid = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(root, backup, null));
 		List<Diff> differences = valid.getDifferences();
 		Assert.assertEquals("We still have differences after merging all of them (had " + nbDiffs
 				+ " to merge in the beginning)", 0, differences.size());

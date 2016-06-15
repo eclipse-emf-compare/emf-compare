@@ -291,7 +291,8 @@ public class UMLOpaqueElementBodyChangeFactory extends AbstractUMLChangeFactory 
 	 * @param refiningDiff
 	 *            The difference that is refining {@code bodyChange}.
 	 */
-	private void collectAndAddOtherRefiningDiffs(final OpaqueElementBodyChange bodyChange, Diff refiningDiff) {
+	private void collectAndAddOtherRefiningDiffs(final OpaqueElementBodyChange bodyChange,
+			Diff refiningDiff) {
 		final RefinementCollector collector = new RefinementCollector((AttributeChange)refiningDiff);
 		Iterable<Diff> collectedRefiningDiffs = collector.collect();
 		for (Diff otherRefiningDiff : collectedRefiningDiffs) {
@@ -320,7 +321,7 @@ public class UMLOpaqueElementBodyChangeFactory extends AbstractUMLChangeFactory 
 		 * @param referenceDiff
 		 *            The reference difference that is used to collect the other refining differences.
 		 */
-		public RefinementCollector(AttributeChange referenceDiff) {
+		RefinementCollector(AttributeChange referenceDiff) {
 			this.referenceDiff = referenceDiff;
 			this.language = getLanguage(referenceDiff).get();
 		}

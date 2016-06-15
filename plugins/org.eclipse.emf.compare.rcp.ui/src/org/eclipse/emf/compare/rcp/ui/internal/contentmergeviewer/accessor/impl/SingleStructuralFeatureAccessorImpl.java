@@ -38,7 +38,8 @@ public class SingleStructuralFeatureAccessorImpl extends AbstractStructuralFeatu
 	 * @param side
 	 *            the side of the accessor.
 	 */
-	public SingleStructuralFeatureAccessorImpl(AdapterFactory adapterFactory, Diff diff, MergeViewerSide side) {
+	public SingleStructuralFeatureAccessorImpl(AdapterFactory adapterFactory, Diff diff,
+			MergeViewerSide side) {
 		super(adapterFactory, diff, side);
 	}
 

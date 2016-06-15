@@ -38,7 +38,8 @@ import org.junit.Test;
  * <ol>
  * <li><code>org.eclipse.core.resources.modelProviders</code>: SampleModelProvider provides logical models for
  * <code>*.sample</code> files and the</li>
- * <li><code>org.eclipse.core.runtime.adapters</code>: SampleModelProvider adapts to IResourceMappingMerger</li>
+ * <li><code>org.eclipse.core.runtime.adapters</code>: SampleModelProvider adapts to IResourceMappingMerger
+ * </li>
  * </ol>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
@@ -84,8 +85,8 @@ public class StrategyRecursiveModelTest extends ModelTestCase {
 		}
 
 		// Select strategy recursive as preferred strategy
-		InstanceScope.INSTANCE.getNode(Activator.getPluginId()).put(
-				GitCorePreferences.core_preferredMergeStrategy, "model recursive"); //$NON-NLS-1$
+		InstanceScope.INSTANCE.getNode(Activator.getPluginId())
+				.put(GitCorePreferences.core_preferredMergeStrategy, "model recursive"); //$NON-NLS-1$
 	}
 
 	@After

@@ -41,8 +41,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * <li>
  * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.ACliche2Impl#getManyValuedReference
  * <em>Many Valued Reference</em>}</li>
- * <li>
- * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.ACliche2Impl#getBase_Class
+ * <li>{@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.ACliche2Impl#getBase_Class
  * <em>Base Class</em>}</li>
  * </ul>
  * </p>
@@ -148,8 +147,8 @@ public class ACliche2Impl extends EObjectImpl implements ACliche2 {
 		singleValuedAttribute = newSingleValuedAttribute;
 		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_ATTRIBUTE,
-					oldSingleValuedAttribute, singleValuedAttribute));
+					UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_ATTRIBUTE, oldSingleValuedAttribute,
+					singleValuedAttribute));
 		}
 	}
 
@@ -205,8 +204,8 @@ public class ACliche2Impl extends EObjectImpl implements ACliche2 {
 		singleValuedReference = newSingleValuedReference;
 		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_REFERENCE,
-					oldSingleValuedReference, singleValuedReference));
+					UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_REFERENCE, oldSingleValuedReference,
+					singleValuedReference));
 		}
 	}
 
@@ -243,9 +242,8 @@ public class ACliche2Impl extends EObjectImpl implements ACliche2 {
 			if (eClass != null && !eClass.isInstance(manyValuedReference)) {
 				continue manyValuedReferenceLoop;
 			}
-			if (name != null
-					&& !(ignoreCase ? name.equalsIgnoreCase(manyValuedReference.getName()) : name
-							.equals(manyValuedReference.getName()))) {
+			if (name != null && !(ignoreCase ? name.equalsIgnoreCase(manyValuedReference.getName())
+					: name.equals(manyValuedReference.getName()))) {
 				continue manyValuedReferenceLoop;
 			}
 			return manyValuedReference;

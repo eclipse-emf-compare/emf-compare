@@ -118,8 +118,8 @@ public class ModelsResolution extends AbstractResolution {
 
 				final SynchronizationModel synchronizationModel;
 				if (leftFile != null) {
-					synchronizationModel = resolveModelsWithLocal(leftFile, new ThreadSafeProgressMonitor(
-							monitor));
+					synchronizationModel = resolveModelsWithLocal(leftFile,
+							new ThreadSafeProgressMonitor(monitor));
 				} else {
 					synchronizationModel = resolveRemoteModels(new ThreadSafeProgressMonitor(monitor));
 				}
@@ -232,15 +232,15 @@ public class ModelsResolution extends AbstractResolution {
 		if (logger.isDebugEnabled()) {
 			logger.debug("resolveRemotetraversals() - START"); //$NON-NLS-1$
 		}
-		final Set<IStorage> rightTraversal = resolveRemoteTraversal(right, Iterables.transform(leftTraversal,
-				asURI()), DiffSide.REMOTE, tspm);
+		final Set<IStorage> rightTraversal = resolveRemoteTraversal(right,
+				Iterables.transform(leftTraversal, asURI()), DiffSide.REMOTE, tspm);
 		final Set<IStorage> differenceRightLeft = difference(rightTraversal, asURISet(leftTraversal));
 		loadAdditionalRemoteStorages(leftTraversal, rightTraversal, differenceRightLeft, tspm);
 
 		final Set<IStorage> originTraversal;
 		if (origin != null) {
-			final Set<URI> unionLeftRight = Sets.newLinkedHashSet(Iterables.transform(Sets.union(
-					leftTraversal, rightTraversal), asURI()));
+			final Set<URI> unionLeftRight = Sets.newLinkedHashSet(
+					Iterables.transform(Sets.union(leftTraversal, rightTraversal), asURI()));
 			originTraversal = resolveRemoteTraversal(origin, unionLeftRight, DiffSide.ORIGIN, tspm);
 			Set<IStorage> differenceOriginLeft = difference(originTraversal, asURISet(leftTraversal));
 			Set<IStorage> differenceOriginRight = difference(originTraversal, asURISet(rightTraversal));
@@ -249,9 +249,9 @@ public class ModelsResolution extends AbstractResolution {
 		} else {
 			originTraversal = Collections.emptySet();
 		}
-		final SynchronizationModel synchronizationModel = new SynchronizationModel(new StorageTraversal(
-				leftTraversal), new StorageTraversal(rightTraversal), new StorageTraversal(originTraversal),
-				diagnostic.getDiagnostic());
+		final SynchronizationModel synchronizationModel = new SynchronizationModel(
+				new StorageTraversal(leftTraversal), new StorageTraversal(rightTraversal),
+				new StorageTraversal(originTraversal), diagnostic.getDiagnostic());
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("resolveRemotetraversals() - FINISH"); //$NON-NLS-1$
@@ -326,7 +326,8 @@ public class ModelsResolution extends AbstractResolution {
 			}
 			// have we only loaded the resources that were present in the right but not in the left, or have
 			// we found even more?
-			final Set<IStorage> differenceAdditionalLeftRight = difference(additionalLeft, asURISet(rightSet));
+			final Set<IStorage> differenceAdditionalLeftRight = difference(additionalLeft,
+					asURISet(rightSet));
 			// If so, we once more need to augment the right traversal
 			final Set<IStorage> additionalRight = findAdditionalRemoteTraversal(rightSet,
 					differenceAdditionalLeftRight, DiffSide.REMOTE, tspm);
@@ -426,8 +427,8 @@ public class ModelsResolution extends AbstractResolution {
 		if (additionalStorages.isEmpty()) {
 			return Collections.emptySet();
 		}
-		final SynchronizedResourceSet resourceSet = remoteResolver.getResourceSetForRemoteResolution(
-				diagnostic, tspm);
+		final SynchronizedResourceSet resourceSet = remoteResolver
+				.getResourceSetForRemoteResolution(diagnostic, tspm);
 		final StorageURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
 				storageAccessor, side);
 		resourceSet.setURIConverter(converter);
@@ -570,8 +571,8 @@ public class ModelsResolution extends AbstractResolution {
 		if (logger.isDebugEnabled()) {
 			logger.debug("resolveRemotetraversal() - START for " + start); //$NON-NLS-1$
 		}
-		final SynchronizedResourceSet resourceSet = remoteResolver.getResourceSetForRemoteResolution(
-				diagnostic, tspm);
+		final SynchronizedResourceSet resourceSet = remoteResolver
+				.getResourceSetForRemoteResolution(diagnostic, tspm);
 		final RevisionedURIConverter converter = new RevisionedURIConverter(resourceSet.getURIConverter(),
 				storageAccessor, side);
 		resourceSet.setURIConverter(converter);
@@ -629,8 +630,8 @@ public class ModelsResolution extends AbstractResolution {
 			final IResource iResource = ResourceUtil.getResourceFromURI(resolvedUri);
 			if (iResource instanceof IFile) {
 				final IFile iFile = (IFile)iResource;
-				final Optional<IFile> fileBeforeRename = Optional.fromNullable(storageAccessor
-						.getFileBeforeRename(iFile, DiffSide.SOURCE));
+				final Optional<IFile> fileBeforeRename = Optional
+						.fromNullable(storageAccessor.getFileBeforeRename(iFile, DiffSide.SOURCE));
 				if (DiffSide.ORIGIN.equals(side)) {
 					// file name of the origin side is the file name before the rename that may have
 					// happened on either side, but since we start from the source, we only consider the
@@ -640,8 +641,8 @@ public class ModelsResolution extends AbstractResolution {
 					// file name of the remote side is the file name after the rename that may have
 					// happened on the remote side, or the file name before the renames that may have
 					// happened on the opposite side (i.e., source side)
-					final Optional<IFile> fileAfterRename = Optional.fromNullable(storageAccessor
-							.getFileAfterRename(iFile, DiffSide.REMOTE));
+					final Optional<IFile> fileAfterRename = Optional
+							.fromNullable(storageAccessor.getFileAfterRename(iFile, DiffSide.REMOTE));
 					renamedUris.addAll(resolveRenamedUri(fileAfterRename, converter));
 					renamedUris.addAll(resolveRenamedUri(fileBeforeRename, converter));
 				}

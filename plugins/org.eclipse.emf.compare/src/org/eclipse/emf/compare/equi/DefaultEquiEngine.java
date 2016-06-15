@@ -72,8 +72,8 @@ public class DefaultEquiEngine implements IEquiEngine {
 			checkForEquivalences(comparison, difference);
 		}
 		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info(String
-					.format("detect equivalences - END - Took %d ms", Long.valueOf(System.currentTimeMillis() - start))); //$NON-NLS-1$
+			LOGGER.info(String.format("detect equivalences - END - Took %d ms", Long.valueOf(System //$NON-NLS-1$
+					.currentTimeMillis() - start)));
 		}
 	}
 
@@ -129,8 +129,8 @@ public class DefaultEquiEngine implements IEquiEngine {
 
 			final Object referenceContainer = ComparisonUtil.getExpectedSide(referenceChange.getMatch(),
 					referenceChange.getSource(), false);
-			final Object referenceValue = ComparisonUtil.getExpectedSide(valueMatch, referenceChange
-					.getSource(), false);
+			final Object referenceValue = ComparisonUtil.getExpectedSide(valueMatch,
+					referenceChange.getSource(), false);
 			final boolean valueIsContainer = referenceContainer == referenceValue
 					&& referenceContainer != null;
 
@@ -139,8 +139,8 @@ public class DefaultEquiEngine implements IEquiEngine {
 					public boolean apply(Diff input) {
 						if (input instanceof ReferenceChange
 								&& ((ReferenceChange)input).getReference() == eOpposite) {
-							final Match candidateMatch = comparison.getMatch(((ReferenceChange)input)
-									.getValue());
+							final Match candidateMatch = comparison
+									.getMatch(((ReferenceChange)input).getValue());
 
 							final boolean sameMatch = candidateMatch == referenceChange.getMatch();
 							final boolean oneIsMany = referenceChange.getReference().isMany()
@@ -189,13 +189,13 @@ public class DefaultEquiEngine implements IEquiEngine {
 					}
 					final ReferenceChange candidateRC = (ReferenceChange)candidate;
 
-					final boolean sameReference = diff.getReference().equals(
-							candidateRC.getReference().getEOpposite());
+					final boolean sameReference = diff.getReference()
+							.equals(candidateRC.getReference().getEOpposite());
 
-					final boolean sameContainer = originContainer == ComparisonUtil.getExpectedSide(candidate
-							.getMatch(), candidate.getSource(), false);
-					final boolean containerIsValue = originContainer == ComparisonUtil.getExpectedSide(
-							valueMatch, candidate.getSource(), false);
+					final boolean sameContainer = originContainer == ComparisonUtil
+							.getExpectedSide(candidate.getMatch(), candidate.getSource(), false);
+					final boolean containerIsValue = originContainer == ComparisonUtil
+							.getExpectedSide(valueMatch, candidate.getSource(), false);
 
 					if (sameReference
 							&& (candidateRC.getReference().isMany() || !sameContainer || !containerIsValue)) {
@@ -215,7 +215,8 @@ public class DefaultEquiEngine implements IEquiEngine {
 	 *            The difference that is to be checked
 	 * @since 3.2
 	 */
-	protected void checkForEquivalences(final Comparison comparison, final FeatureMapChange featureMapChange) {
+	protected void checkForEquivalences(final Comparison comparison,
+			final FeatureMapChange featureMapChange) {
 		Equivalence equivalence = featureMapChange.getEquivalence();
 		if (equivalence == null) {
 			final Set<Diff> differences = new LinkedHashSet<Diff>();

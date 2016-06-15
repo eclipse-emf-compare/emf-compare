@@ -49,8 +49,8 @@ public class DiagramChangeItemProviderSpec extends ForwardingDiagramDiffItemProv
 		switch (kind) {
 			case ADD:
 			case DELETE:
-				diff = Iterators.find(diagramDiff.getRefinedBy().iterator(), DiagramChangeFactory
-						.isMainDiffForAddOrDeleteDiagram(), null);
+				diff = Iterators.find(diagramDiff.getRefinedBy().iterator(),
+						DiagramChangeFactory.isMainDiffForAddOrDeleteDiagram(), null);
 				break;
 			default:
 		}

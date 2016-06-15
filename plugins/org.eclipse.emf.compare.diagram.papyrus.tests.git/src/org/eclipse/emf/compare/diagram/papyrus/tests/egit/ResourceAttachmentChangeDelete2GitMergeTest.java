@@ -23,23 +23,21 @@ import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Package;
 
 /**
- * Tests the re-integration of a UML Package from a sub-model with parallel
- * addition of an element to re-integrated UML Package. This scenario
- * <em>does not</em> contain two diagrams (in contrast to
- * {@link ResourceAttachmentChangeDelete1GitMergeTest}), but only one which is
- * located in <em>model.notation</em>.
+ * Tests the re-integration of a UML Package from a sub-model with parallel addition of an element to
+ * re-integrated UML Package. This scenario <em>does not</em> contain two diagrams (in contrast to
+ * {@link ResourceAttachmentChangeDelete1GitMergeTest}), but only one which is located in
+ * <em>model.notation</em>.
  * <dl>
  * <dt>Origin:</dt>
- * <dd>Given is a UML Class Diagram that refers to an extracted UML Package
- * contained in the resource <em>Package1.uml</em>, which in turn contains one
- * class. We have only one diagram, which is contained in
+ * <dd>Given is a UML Class Diagram that refers to an extracted UML Package contained in the resource
+ * <em>Package1.uml</em>, which in turn contains one class. We have only one diagram, which is contained in
  * <em>model.notation</em>.</dd>
  * <dt>Left:</dt>
- * <dd>A second class is added to the extracted package in <em>Package1.uml</em>
- * . Also a shape is added to the diagram in <em>model.notation</em>.</dd>
+ * <dd>A second class is added to the extracted package in <em>Package1.uml</em> . Also a shape is added to
+ * the diagram in <em>model.notation</em>.</dd>
  * <dt>Right:</dt>
- * <dd>The extracted package <em>Package1</em> (di, notation, and uml) is
- * re-integrated into <em>model</em> (di, notation, and uml).</dd>
+ * <dd>The extracted package <em>Package1</em> (di, notation, and uml) is re-integrated into <em>model</em>
+ * (di, notation, and uml).</dd>
  * </dl>
  *
  * @author Philip Langer <planger@eclipsesource.com>
@@ -47,6 +45,7 @@ import org.eclipse.uml2.uml.Package;
 public class ResourceAttachmentChangeDelete2GitMergeTest extends AbstractGitMergeTestCase {
 
 	private static final String TEST_SCENARIO_PATH = "testmodels/resourceattachmentchange/delete2/";
+
 	private static final String MODEL_UML = "model.uml";
 
 	@Override
@@ -81,12 +80,12 @@ public class ResourceAttachmentChangeDelete2GitMergeTest extends AbstractGitMerg
 	private void validateModelResource(Resource resource) {
 		// assert changes of the left-hand side: addition of Class1
 		// which in turn has been added
-		final Model rootElement = (Model) resource.getContents().get(0);
+		final Model rootElement = (Model)resource.getContents().get(0);
 		assertEquals("RootElement", rootElement.getName());
-		final Package package1 = (Package) rootElement.getOwnedElements().get(0);
+		final Package package1 = (Package)rootElement.getOwnedElements().get(0);
 		assertTrue(package1.getOwnedElements().size() == 1);
 		assertTrue(package1.getOwnedElements().get(0) instanceof Class);
-		final Class class1 = (Class) package1.getOwnedElements().get(0);
+		final Class class1 = (Class)package1.getOwnedElements().get(0);
 		assertEquals("Class1", class1.getName());
 
 		// the only change on the right-hand side is the reintegration of

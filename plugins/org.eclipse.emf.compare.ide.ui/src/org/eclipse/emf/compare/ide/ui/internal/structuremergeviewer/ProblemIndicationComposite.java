@@ -37,7 +37,7 @@ public class ProblemIndicationComposite extends Composite {
 			if (rootDiagnostic.getSeverity() == Diagnostic.OK) {
 				return EMFCompareIDEUIMessages.getString("_UI_NoProblems_message"); //$NON-NLS-1$
 			} else if (rootDiagnostic.getSeverity() == Diagnostic.CANCEL) {
-				return EMFCompareIDEUIMessages.getString("_UI_Cancel_message"); //$NON-NLS-1$				
+				return EMFCompareIDEUIMessages.getString("_UI_Cancel_message"); //$NON-NLS-1$
 			} else {
 				return EMFCompareIDEUIMessages.getString("_UI_DefaultProblem_message"); //$NON-NLS-1$
 			}
@@ -114,8 +114,8 @@ public class ProblemIndicationComposite extends Composite {
 			if (image != null) {
 				image.setBackground(imageLabel.getBackground());
 				imageLabel.setImage(image);
-				imageLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER
-						| GridData.VERTICAL_ALIGN_BEGINNING));
+				imageLabel.setLayoutData(
+						new GridData(GridData.HORIZONTAL_ALIGN_CENTER | GridData.VERTICAL_ALIGN_BEGINNING));
 			}
 
 			messageText.setText(getMessage());

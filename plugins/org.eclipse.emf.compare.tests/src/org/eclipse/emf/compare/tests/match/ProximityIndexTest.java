@@ -57,8 +57,7 @@ public class ProximityIndexTest {
 
 		Comparison comp = CompareFactory.eINSTANCE.createComparison();
 		for (EObject leftElement : index.getValuesStillThere(Side.LEFT)) {
-			assertNull(
-					"With a distance which always return Double.MAX_VALUE we should never find a closest.",
+			assertNull("With a distance which always return Double.MAX_VALUE we should never find a closest.",
 					index.findClosests(comp, leftElement, Side.LEFT));
 		}
 

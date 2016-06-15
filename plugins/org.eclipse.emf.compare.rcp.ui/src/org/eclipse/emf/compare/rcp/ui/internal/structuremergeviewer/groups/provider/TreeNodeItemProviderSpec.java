@@ -71,7 +71,7 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 	 * @param adapterFactory
 	 *            the given factory
 	 * @param structureMergeViewerFilter
-	 * 			  the given structure merge viewer filter
+	 *            the given structure merge viewer filter
 	 */
 	public TreeNodeItemProviderSpec(AdapterFactory adapterFactory,
 			StructureMergeViewerFilter structureMergeViewerFilter) {
@@ -112,8 +112,8 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 		TreeNode treeNode = (TreeNode)object;
 		EObject data = treeNode.getData();
 		if (data instanceof Comparison) {
-			IDifferenceGroupProvider groupProvider = (IDifferenceGroupProvider)EcoreUtil.getExistingAdapter(
-					treeNode, IDifferenceGroupProvider.class);
+			IDifferenceGroupProvider groupProvider = (IDifferenceGroupProvider)EcoreUtil
+					.getExistingAdapter(treeNode, IDifferenceGroupProvider.class);
 			Comparison comparison = (Comparison)data;
 			Collection<? extends IDifferenceGroup> groups = groupProvider.getGroups(comparison);
 			if (groups.isEmpty()) {
@@ -153,8 +153,8 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 	protected void initMapping(Collection<? extends IDifferenceGroup> groups,
 			IDifferenceGroupProvider groupProvider, TreeNode treeNode) {
 		for (IDifferenceGroup differenceGroup : groups) {
-			groupItemProviderAdapters.put(groupProvider, new GroupItemProviderAdapter(adapterFactory,
-					treeNode, differenceGroup));
+			groupItemProviderAdapters.put(groupProvider,
+					new GroupItemProviderAdapter(adapterFactory, treeNode, differenceGroup));
 		}
 	}
 
@@ -176,13 +176,13 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 			if (any(allDifferences, hasState(DifferenceState.UNRESOLVED))) {
 				styledString.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 			}
-			treeNodeText = ((ExtendedAdapterFactoryItemDelegator)itemDelegator).getStyledText(treeNode
-					.getData());
+			treeNodeText = ((ExtendedAdapterFactoryItemDelegator)itemDelegator)
+					.getStyledText(treeNode.getData());
 		} else if (data instanceof Conflict) {
 			treeNodeText = getTreeNodeText(treeNode, (Conflict)data);
 		} else {
-			treeNodeText = ((ExtendedAdapterFactoryItemDelegator)itemDelegator).getStyledText(treeNode
-					.getData());
+			treeNodeText = ((ExtendedAdapterFactoryItemDelegator)itemDelegator)
+					.getStyledText(treeNode.getData());
 		}
 		return styledString.append(treeNodeText);
 	}
@@ -272,8 +272,8 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 		final Iterator<EObject> eAllContents = transform(visibleNodes, IDifferenceGroup.TREE_NODE_DATA);
 		final Iterator<Diff> allDifferences = filter(eAllContents, Diff.class);
 		final Collection<Diff> d = Sets.newHashSet(allDifferences);
-		final int unresolvedDiffCount = Iterables.size(Iterables.filter(d,
-				hasState(DifferenceState.UNRESOLVED)));
+		final int unresolvedDiffCount = Iterables
+				.size(Iterables.filter(d, hasState(DifferenceState.UNRESOLVED)));
 
 		if (unresolvedDiffCount > 0) {
 			ret.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
@@ -286,9 +286,12 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 		}
 
 		if (unresolvedDiffCount > 0) {
-			ret.append(" [" //$NON-NLS-1$
-					+ EMFCompareEditMessages.getString("unresolved", Integer.valueOf(unresolvedDiffCount), //$NON-NLS-1$
-							Integer.valueOf(d.size())) + "]", //$NON-NLS-1$
+			ret.append(
+					" [" //$NON-NLS-1$
+							+ EMFCompareEditMessages.getString("unresolved", //$NON-NLS-1$
+									Integer.valueOf(unresolvedDiffCount),
+									Integer.valueOf(d.size()))
+							+ "]", //$NON-NLS-1$
 					Style.DECORATIONS_STYLER);
 		} else {
 			ret.append(" [" + EMFCompareEditMessages.getString("resolved") + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

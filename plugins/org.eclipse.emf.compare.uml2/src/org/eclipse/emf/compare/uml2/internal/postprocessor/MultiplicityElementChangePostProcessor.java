@@ -206,8 +206,8 @@ public class MultiplicityElementChangePostProcessor implements IPostProcessor {
 		if (sameValue && leftChange.getConflict().getKind() != ConflictKind.PSEUDO
 				&& containsOnlyMultiplicityReferenceChanges(leftChange.getConflict())) {
 			leftChange.getConflict().setKind(ConflictKind.PSEUDO);
-		} else if (!sameValue && (leftChange.getConflict().getKind() != ConflictKind.REAL || rightChange
-				.getConflict().getKind() != ConflictKind.REAL)) {
+		} else if (!sameValue && (leftChange.getConflict().getKind() != ConflictKind.REAL
+				|| rightChange.getConflict().getKind() != ConflictKind.REAL)) {
 			Conflict conflict = leftChange.getConflict();
 			conflict.setKind(ConflictKind.REAL);
 			// make sure the multiplicity changes' conflict is the real one

@@ -73,8 +73,8 @@ public class ConfigurationUIRegistryEventListener extends AbstractRegistryEventL
 				logMissingAttribute(element, ITEM_TO_CONFIGURE_ATTR);
 				ret = false;
 			} else if (element.getAttribute(ITEM_TO_CONFIGURE_ATTR) != null) {
-				Object itemToConfigure = registryOfConfiguredItem.getItemDescriptor(element
-						.getAttribute(ITEM_TO_CONFIGURE_ATTR));
+				Object itemToConfigure = registryOfConfiguredItem
+						.getItemDescriptor(element.getAttribute(ITEM_TO_CONFIGURE_ATTR));
 				if (itemToConfigure == null) {
 					log(IStatus.WARNING, element, EMFCompareRCPUIMessages
 							.getString("ConfigurationUIRegistryEventListener.incorrectIdParameter.message")); //$NON-NLS-1$
@@ -108,14 +108,12 @@ public class ConfigurationUIRegistryEventListener extends AbstractRegistryEventL
 				String itemToConfigureID = element.getAttribute(ITEM_TO_CONFIGURE_ATTR);
 				IConfigurationUIFactory previous = registry.put(itemToConfigureID, configurationFactory);
 				if (previous != null) {
-					log(IStatus.WARNING, element, EMFCompareRCPUIMessages.getString(
-							"duplicate.extension", registry.getClass().getName())); //$NON-NLS-1$
+					log(IStatus.WARNING, element, EMFCompareRCPUIMessages.getString("duplicate.extension", //$NON-NLS-1$
+							registry.getClass().getName()));
 				}
 			} else {
-				log(IStatus.WARNING,
-						element,
-						EMFCompareRCPUIMessages
-								.getString("ConfigurationUIRegistryEventListener.incorrectConfiguratorParameter.message")); //$NON-NLS-1$
+				log(IStatus.WARNING, element, EMFCompareRCPUIMessages.getString(
+						"ConfigurationUIRegistryEventListener.incorrectConfiguratorParameter.message")); //$NON-NLS-1$
 			}
 		} catch (CoreException e) {
 			log(element, e);

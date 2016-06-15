@@ -60,8 +60,9 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 						parentData = null;
 					}
 					if (parentData instanceof Diff
-							&& !((parentData instanceof ResourceAttachmentChange) || ofKind(
-									DifferenceKind.MOVE).apply((Diff)parentData)) && data instanceof Diff) {
+							&& !((parentData instanceof ResourceAttachmentChange)
+									|| ofKind(DifferenceKind.MOVE).apply((Diff)parentData))
+							&& data instanceof Diff) {
 						Iterator<EObject> eAllDataContents = transform(treeNode.eAllContents(),
 								IDifferenceGroup.TREE_NODE_DATA);
 						return CASCADING_DIFF.apply(data) && !any(eAllDataContents, not(CASCADING_DIFF));

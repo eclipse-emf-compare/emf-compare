@@ -74,8 +74,8 @@ public class ModelResolverRegistryListener extends AbstractRegistryEventListener
 			try {
 				ranking = Integer.parseInt(rankingStr);
 			} catch (NumberFormatException e) {
-				log(IStatus.ERROR, element, EMFCompareIDEUIMessages.getString(
-						"ModelResolverRegistry.invalidRanking", className, rankingStr)); //$NON-NLS-1$
+				log(IStatus.ERROR, element, EMFCompareIDEUIMessages
+						.getString("ModelResolverRegistry.invalidRanking", className, rankingStr)); //$NON-NLS-1$
 			}
 
 			final String label = element.getAttribute(ATTRIBUTE_LABEL);

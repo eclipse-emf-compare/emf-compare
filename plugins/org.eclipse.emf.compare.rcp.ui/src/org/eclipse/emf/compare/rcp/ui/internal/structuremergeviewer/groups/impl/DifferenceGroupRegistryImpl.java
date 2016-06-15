@@ -124,8 +124,8 @@ public class DifferenceGroupRegistryImpl implements IDifferenceGroupProvider.Des
 		Preconditions.checkNotNull(providerDescriptor);
 		IDifferenceGroupProvider groupProvider = providerDescriptor.createGroupProvider();
 		WrapperItemDescriptor<IDifferenceGroupProvider.Descriptor> descriptor = new WrapperItemDescriptor<IDifferenceGroupProvider.Descriptor>(
-				providerDescriptor.getLabel(), providerDescriptor.getDescription(), providerDescriptor
-						.getRank(), groupProvider.getClass().getName(), providerDescriptor);
+				providerDescriptor.getLabel(), providerDescriptor.getDescription(),
+				providerDescriptor.getRank(), groupProvider.getClass().getName(), providerDescriptor);
 
 		IItemDescriptor<Descriptor> oldValue = registry.add(descriptor);
 		if (oldValue != null) {

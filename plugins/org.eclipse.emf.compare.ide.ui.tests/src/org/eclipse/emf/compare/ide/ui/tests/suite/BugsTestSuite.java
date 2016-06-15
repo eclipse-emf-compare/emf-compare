@@ -31,13 +31,8 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({TestBug434827.class,
-	TestBug434822.class,
-	TestBug434828.class,
-	TestBug434828_2.class,
-	TestBug459131.class,
-	TestBug470503.class,
-	TestBug475586.class})
+@SuiteClasses({TestBug434827.class, TestBug434822.class, TestBug434828.class, TestBug434828_2.class,
+		TestBug459131.class, TestBug470503.class, TestBug475586.class })
 public class BugsTestSuite {
 	/**
 	 * Launches the test with the given arguments.

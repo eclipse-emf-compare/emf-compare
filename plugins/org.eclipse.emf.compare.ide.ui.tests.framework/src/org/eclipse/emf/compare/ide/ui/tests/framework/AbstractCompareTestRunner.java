@@ -43,7 +43,8 @@ public abstract class AbstractCompareTestRunner extends ParentRunner<Runner> {
 	protected final List<Runner> runners;
 
 	/** Default list of resolution strategies used if the @ResolutionStrategies annotation is not used. */
-	private final ResolutionStrategyID[] defaultResolutionStrategies = new ResolutionStrategyID[] {ResolutionStrategyID.WORKSPACE };
+	private final ResolutionStrategyID[] defaultResolutionStrategies = new ResolutionStrategyID[] {
+			ResolutionStrategyID.WORKSPACE };
 
 	/** Default list of match engines disabled if the @MatchEngines annotation is not used. */
 	private final Class<?>[] defaultDisabledMatchEngines = new Class<?>[] {};

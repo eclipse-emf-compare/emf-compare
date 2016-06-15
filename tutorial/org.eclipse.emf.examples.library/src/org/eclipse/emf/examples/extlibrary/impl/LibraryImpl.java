@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.examples.extlibrary.impl;
 
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -38,394 +37,371 @@ import org.eclipse.emf.examples.extlibrary.Writer;
 
 //import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
-
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Library</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Library</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getAddress <em>Address</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getWriters <em>Writers</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getEmployees <em>Employees</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getBorrowers <em>Borrowers</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getStock <em>Stock</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getBooks <em>Books</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getBranches <em>Branches</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getParentBranch <em>Parent Branch</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getPeople <em>People</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getAddress <em>Address</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getName <em>Name</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getWriters <em>Writers</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getEmployees <em>Employees</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getBorrowers <em>Borrowers</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getStock <em>Stock</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getBooks <em>Books</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getBranches <em>Branches</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getParentBranch <em>Parent Branch</em>}
+ * </li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.LibraryImpl#getPeople <em>People</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class LibraryImpl extends MinimalEObjectImpl.Container implements Library
-{
-  /**
-	 * The default value of the '{@link #getAddress() <em>Address</em>}' attribute.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+public class LibraryImpl extends MinimalEObjectImpl.Container implements Library {
+	/**
+	 * The default value of the '{@link #getAddress() <em>Address</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getAddress()
 	 * @generated
 	 * @ordered
 	 */
-  protected static final String ADDRESS_EDEFAULT = null;
+	protected static final String ADDRESS_EDEFAULT = null;
 
-  /**
-	 * The cached value of the '{@link #getAddress() <em>Address</em>}' attribute.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The cached value of the '{@link #getAddress() <em>Address</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getAddress()
 	 * @generated
 	 * @ordered
 	 */
-  protected String address = ADDRESS_EDEFAULT;
+	protected String address = ADDRESS_EDEFAULT;
 
-  /**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
 	 */
-  protected static final String NAME_EDEFAULT = null;
+	protected static final String NAME_EDEFAULT = null;
 
-  /**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
 	 */
-  protected String name = NAME_EDEFAULT;
+	protected String name = NAME_EDEFAULT;
 
-  /**
-	 * The cached value of the '{@link #getStock() <em>Stock</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The cached value of the '{@link #getStock() <em>Stock</em>}' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getStock()
 	 * @generated
 	 * @ordered
 	 */
-  protected EList<Item> stock;
+	protected EList<Item> stock;
 
-  /**
-	 * The cached value of the '{@link #getBooks() <em>Books</em>}' reference list.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The cached value of the '{@link #getBooks() <em>Books</em>}' reference list. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getBooks()
 	 * @generated
 	 * @ordered
 	 */
-  protected EList<Book> books;
+	protected EList<Book> books;
 
-  /**
-	 * The cached value of the '{@link #getBranches() <em>Branches</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The cached value of the '{@link #getBranches() <em>Branches</em>}' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getBranches()
 	 * @generated
 	 * @ordered
 	 */
-  protected EList<Library> branches;
+	protected EList<Library> branches;
 
-  /**
-	 * The cached value of the '{@link #getPeople() <em>People</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The cached value of the '{@link #getPeople() <em>People</em>}' attribute list. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getPeople()
 	 * @generated
 	 * @ordered
 	 */
-  protected FeatureMap people;
+	protected FeatureMap people;
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected LibraryImpl()
-  {
+	protected LibraryImpl() {
 		super();
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  protected EClass eStaticClass()
-  {
+	@Override
+	protected EClass eStaticClass() {
 		return EXTLibraryPackage.Literals.LIBRARY;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public String getAddress()
-  {
+	public String getAddress() {
 		return address;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public void setAddress(String newAddress)
-  {
+	public void setAddress(String newAddress) {
 		String oldAddress = address;
 		address = newAddress;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.LIBRARY__ADDRESS, oldAddress, address));
+			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.LIBRARY__ADDRESS,
+					oldAddress, address));
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public String getName()
-  {
+	public String getName() {
 		return name;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public void setName(String newName)
-  {
+	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.LIBRARY__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.LIBRARY__NAME, oldName,
+					name));
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public EList<Writer> getWriters()
-  {
+	public EList<Writer> getWriters() {
 		return getPeople().list(EXTLibraryPackage.Literals.LIBRARY__WRITERS);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public EList<Employee> getEmployees()
-  {
+	public EList<Employee> getEmployees() {
 		return getPeople().list(EXTLibraryPackage.Literals.LIBRARY__EMPLOYEES);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public EList<Borrower> getBorrowers()
-  {
+	public EList<Borrower> getBorrowers() {
 		return getPeople().list(EXTLibraryPackage.Literals.LIBRARY__BORROWERS);
 	}
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated NOT
-   */
-  public EList<Item> getStock()
-  {
-    if (stock == null)
-    {
-      // create a custom list implementation that synchronizes its book
-      //    content with the "books" subset
-      stock = new EObjectContainmentEList<Item>(Item.class, this, EXTLibraryPackage.LIBRARY__STOCK)
-        {
-          private static final long serialVersionUID = 1L;
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public EList<Item> getStock() {
+		if (stock == null) {
+			// create a custom list implementation that synchronizes its book
+			// content with the "books" subset
+			stock = new EObjectContainmentEList<Item>(Item.class, this, EXTLibraryPackage.LIBRARY__STOCK) {
+				private static final long serialVersionUID = 1L;
 
-          @Override
-          protected void didAdd(int index, Item newObject)
-          {
-            if ((newObject instanceof Book) && !getBooks().contains(newObject))
-            {
-              // these lists are unordered, so index doesn't matter
-              getBooks().add((Book)newObject);
-            }
-          }
+				@Override
+				protected void didAdd(int index, Item newObject) {
+					if ((newObject instanceof Book) && !getBooks().contains(newObject)) {
+						// these lists are unordered, so index doesn't matter
+						getBooks().add((Book)newObject);
+					}
+				}
 
-          @Override
-          protected void didRemove(int index, Item oldObject)
-          {
-            if ((oldObject instanceof Book) && getBooks().contains(oldObject))
-            {
-              // these lists are unordered, so index doesn't matter
-              getBooks().remove(oldObject);
-            }
-          }
+				@Override
+				protected void didRemove(int index, Item oldObject) {
+					if ((oldObject instanceof Book) && getBooks().contains(oldObject)) {
+						// these lists are unordered, so index doesn't matter
+						getBooks().remove(oldObject);
+					}
+				}
 
-          @Override
-          protected void didSet(int index, Item newObject, Item oldObject)
-          {
-            didRemove(index, oldObject);
-            didAdd(index, newObject);
-          }
-        };
-    }
-    return stock;
-  }
+				@Override
+				protected void didSet(int index, Item newObject, Item oldObject) {
+					didRemove(index, oldObject);
+					didAdd(index, newObject);
+				}
+			};
+		}
+		return stock;
+	}
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated NOT
-   */
-  public EList<Book> getBooks()
-  {
-    if (books == null)
-    {
-      // create a custom list implementation that synchronizes its content
-      //    with the "stock" superset
-      books = new EObjectEList<Book>(Book.class, this, EXTLibraryPackage.LIBRARY__BOOKS)
-        {
-          private static final long serialVersionUID = 1L;
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public EList<Book> getBooks() {
+		if (books == null) {
+			// create a custom list implementation that synchronizes its content
+			// with the "stock" superset
+			books = new EObjectEList<Book>(Book.class, this, EXTLibraryPackage.LIBRARY__BOOKS) {
+				private static final long serialVersionUID = 1L;
 
-          @Override
-          protected void didAdd(int index, Book newObject)
-          {
-            if (getStock().indexOf(newObject) == -1)
-            {
-              // these lists are unordered, so index doesn't matter
-              getStock().add(newObject);
-            }
-          }
+				@Override
+				protected void didAdd(int index, Book newObject) {
+					if (getStock().indexOf(newObject) == -1) {
+						// these lists are unordered, so index doesn't matter
+						getStock().add(newObject);
+					}
+				}
 
-          @Override
-          protected void didRemove(int index, Book oldObject)
-          {
-            if (getStock().indexOf(oldObject) != -1)
-            {
-              // these lists are unordered, so index doesn't matter
-              getStock().remove(oldObject);
-            }
-          }
+				@Override
+				protected void didRemove(int index, Book oldObject) {
+					if (getStock().indexOf(oldObject) != -1) {
+						// these lists are unordered, so index doesn't matter
+						getStock().remove(oldObject);
+					}
+				}
 
-          @Override
-          protected void didSet(int index, Book newObject, Book oldObject)
-          {
-            didRemove(index, oldObject);
-            didAdd(index, newObject);
-          }
-        };
-    }
+				@Override
+				protected void didSet(int index, Book newObject, Book oldObject) {
+					didRemove(index, oldObject);
+					didAdd(index, newObject);
+				}
+			};
+		}
 
-    return books;
-  }
+		return books;
+	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public EList<Library> getBranches()
-  {
+	public EList<Library> getBranches() {
 		if (branches == null) {
-			branches = new EObjectContainmentWithInverseEList.Resolving<Library>(Library.class, this, EXTLibraryPackage.LIBRARY__BRANCHES, EXTLibraryPackage.LIBRARY__PARENT_BRANCH);
+			branches = new EObjectContainmentWithInverseEList.Resolving<Library>(Library.class, this,
+					EXTLibraryPackage.LIBRARY__BRANCHES, EXTLibraryPackage.LIBRARY__PARENT_BRANCH);
 		}
 		return branches;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public Library getParentBranch()
-  {
-		if (eContainerFeatureID() != EXTLibraryPackage.LIBRARY__PARENT_BRANCH) return null;
+	public Library getParentBranch() {
+		if (eContainerFeatureID() != EXTLibraryPackage.LIBRARY__PARENT_BRANCH)
+			return null;
 		return (Library)eContainer();
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public Library basicGetParentBranch()
-  {
-		if (eContainerFeatureID() != EXTLibraryPackage.LIBRARY__PARENT_BRANCH) return null;
+	public Library basicGetParentBranch() {
+		if (eContainerFeatureID() != EXTLibraryPackage.LIBRARY__PARENT_BRANCH)
+			return null;
 		return (Library)eInternalContainer();
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public NotificationChain basicSetParentBranch(Library newParentBranch, NotificationChain msgs)
-  {
-		msgs = eBasicSetContainer((InternalEObject)newParentBranch, EXTLibraryPackage.LIBRARY__PARENT_BRANCH, msgs);
+	public NotificationChain basicSetParentBranch(Library newParentBranch, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newParentBranch, EXTLibraryPackage.LIBRARY__PARENT_BRANCH,
+				msgs);
 		return msgs;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public void setParentBranch(Library newParentBranch)
-  {
-		if (newParentBranch != eInternalContainer() || (eContainerFeatureID() != EXTLibraryPackage.LIBRARY__PARENT_BRANCH && newParentBranch != null)) {
+	public void setParentBranch(Library newParentBranch) {
+		if (newParentBranch != eInternalContainer()
+				|| (eContainerFeatureID() != EXTLibraryPackage.LIBRARY__PARENT_BRANCH
+						&& newParentBranch != null)) {
 			if (EcoreUtil.isAncestor(this, newParentBranch))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			NotificationChain msgs = null;
 			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
 			if (newParentBranch != null)
-				msgs = ((InternalEObject)newParentBranch).eInverseAdd(this, EXTLibraryPackage.LIBRARY__BRANCHES, Library.class, msgs);
+				msgs = ((InternalEObject)newParentBranch).eInverseAdd(this,
+						EXTLibraryPackage.LIBRARY__BRANCHES, Library.class, msgs);
 			msgs = basicSetParentBranch(newParentBranch, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.LIBRARY__PARENT_BRANCH, newParentBranch, newParentBranch));
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.LIBRARY__PARENT_BRANCH,
+					newParentBranch, newParentBranch));
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public FeatureMap getPeople()
-  {
+	public FeatureMap getPeople() {
 		if (people == null) {
 			people = new BasicFeatureMap(this, EXTLibraryPackage.LIBRARY__PEOPLE);
 		}
 		return people;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @SuppressWarnings("unchecked")
-  @Override
-  public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case EXTLibraryPackage.LIBRARY__BRANCHES:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getBranches()).basicAdd(otherEnd, msgs);
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getBranches()).basicAdd(otherEnd,
+						msgs);
 			case EXTLibraryPackage.LIBRARY__PARENT_BRANCH:
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
@@ -434,14 +410,13 @@ public class LibraryImpl extends MinimalEObjectImpl.Container implements Library
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case EXTLibraryPackage.LIBRARY__WRITERS:
 				return ((InternalEList<?>)getWriters()).basicRemove(otherEnd, msgs);
@@ -461,29 +436,28 @@ public class LibraryImpl extends MinimalEObjectImpl.Container implements Library
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs)
-  {
+	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
 			case EXTLibraryPackage.LIBRARY__PARENT_BRANCH:
-				return eInternalContainer().eInverseRemove(this, EXTLibraryPackage.LIBRARY__BRANCHES, Library.class, msgs);
+				return eInternalContainer().eInverseRemove(this, EXTLibraryPackage.LIBRARY__BRANCHES,
+						Library.class, msgs);
 		}
 		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public Object eGet(int featureID, boolean resolve, boolean coreType)
-  {
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case EXTLibraryPackage.LIBRARY__ADDRESS:
 				return getAddress();
@@ -502,24 +476,25 @@ public class LibraryImpl extends MinimalEObjectImpl.Container implements Library
 			case EXTLibraryPackage.LIBRARY__BRANCHES:
 				return getBranches();
 			case EXTLibraryPackage.LIBRARY__PARENT_BRANCH:
-				if (resolve) return getParentBranch();
+				if (resolve)
+					return getParentBranch();
 				return basicGetParentBranch();
 			case EXTLibraryPackage.LIBRARY__PEOPLE:
-				if (coreType) return getPeople();
+				if (coreType)
+					return getPeople();
 				return ((FeatureMap.Internal)getPeople()).getWrapper();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @SuppressWarnings("unchecked")
-  @Override
-  public void eSet(int featureID, Object newValue)
-  {
+	@SuppressWarnings("unchecked")
+	@Override
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case EXTLibraryPackage.LIBRARY__ADDRESS:
 				setAddress((String)newValue);
@@ -561,14 +536,13 @@ public class LibraryImpl extends MinimalEObjectImpl.Container implements Library
 		super.eSet(featureID, newValue);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public void eUnset(int featureID)
-  {
+	@Override
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case EXTLibraryPackage.LIBRARY__ADDRESS:
 				setAddress(ADDRESS_EDEFAULT);
@@ -604,14 +578,13 @@ public class LibraryImpl extends MinimalEObjectImpl.Container implements Library
 		super.eUnset(featureID);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public boolean eIsSet(int featureID)
-  {
+	@Override
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case EXTLibraryPackage.LIBRARY__ADDRESS:
 				return ADDRESS_EDEFAULT == null ? address != null : !ADDRESS_EDEFAULT.equals(address);
@@ -637,15 +610,15 @@ public class LibraryImpl extends MinimalEObjectImpl.Container implements Library
 		return super.eIsSet(featureID);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public String toString()
-  {
-		if (eIsProxy()) return super.toString();
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (address: "); //$NON-NLS-1$
@@ -658,4 +631,4 @@ public class LibraryImpl extends MinimalEObjectImpl.Container implements Library
 		return result.toString();
 	}
 
-} //LibraryImpl
+} // LibraryImpl

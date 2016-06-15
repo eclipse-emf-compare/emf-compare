@@ -48,8 +48,8 @@ public class GitTestRunner extends AbstractCompareTestRunner {
 		} else {
 			mergeStrategy = mStrategy.value();
 		}
-		runners.add(new GitTestCaseJUnitBlock(testClass, resolutionStrategy, disabledMatchEngines,
-				diffEngine, eqEngine, reqEngine, conflictDetector, disabledPostProcessors, mergeStrategy));
+		runners.add(new GitTestCaseJUnitBlock(testClass, resolutionStrategy, disabledMatchEngines, diffEngine,
+				eqEngine, reqEngine, conflictDetector, disabledPostProcessors, mergeStrategy));
 
 	}
 

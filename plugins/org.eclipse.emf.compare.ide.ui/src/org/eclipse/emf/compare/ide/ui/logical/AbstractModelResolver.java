@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.logical;
 
-
 /**
  * This can be subclassed instead of {@link IModelResolver} to avoid reimplementing common extension-related
  * code.

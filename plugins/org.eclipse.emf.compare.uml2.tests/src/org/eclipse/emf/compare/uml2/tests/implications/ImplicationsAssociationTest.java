@@ -288,8 +288,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation).copyLeftToRight(
-				diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+				.copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -317,8 +317,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation).copyLeftToRight(
-				diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+				.copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -336,8 +336,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation).copyLeftToRight(
-				diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+				.copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -367,8 +367,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation).copyLeftToRight(
-				diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+				.copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -396,8 +396,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation).copyLeftToRight(
-				diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+				.copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -415,8 +415,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation).copyLeftToRight(
-				diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+				.copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -491,8 +491,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation).copyRightToLeft(
-				diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+				.copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -510,8 +510,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation).copyRightToLeft(
-				diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+				.copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -529,8 +529,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation).copyRightToLeft(
-				diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+				.copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -548,8 +548,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation).copyRightToLeft(
-				diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+				.copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -567,8 +567,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation).copyRightToLeft(
-				diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+				.copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -586,8 +586,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation).copyRightToLeft(
-				diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+				.copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -691,8 +691,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation).copyLeftToRight(
-				diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+				.copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -710,8 +710,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation).copyLeftToRight(
-				diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+				.copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -729,8 +729,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation).copyLeftToRight(
-				diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+				.copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -748,8 +748,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation).copyLeftToRight(
-				diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+				.copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -767,8 +767,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation).copyLeftToRight(
-				diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+				.copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -786,8 +786,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation).copyLeftToRight(
-				diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+				.copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -862,8 +862,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation).copyRightToLeft(
-				diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+				.copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -881,8 +881,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation).copyRightToLeft(
-				diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+				.copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -900,8 +900,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation).copyRightToLeft(
-				diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+				.copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -919,8 +919,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation).copyRightToLeft(
-				diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+				.copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -938,8 +938,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation).copyRightToLeft(
-				diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+				.copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -957,8 +957,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation).copyRightToLeft(
-				diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+				.copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -977,41 +977,41 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		if (kind.equals(TestKind.DELETE)) {
 			assertEquals(0, diffs.addNavigableOwnedEndClass1InAssociation.getImplies().size());
 			assertEquals(1, diffs.addNavigableOwnedEndClass1InAssociation.getImpliedBy().size());
-			assertTrue(diffs.addNavigableOwnedEndClass1InAssociation.getImpliedBy().contains(
-					diffs.addOwnedEndClass1InAssociation));
+			assertTrue(diffs.addNavigableOwnedEndClass1InAssociation.getImpliedBy()
+					.contains(diffs.addOwnedEndClass1InAssociation));
 
 			assertEquals(1, diffs.addOwnedEndClass1InAssociation.getImplies().size());
-			assertTrue(diffs.addOwnedEndClass1InAssociation.getImplies().contains(
-					diffs.addNavigableOwnedEndClass1InAssociation));
+			assertTrue(diffs.addOwnedEndClass1InAssociation.getImplies()
+					.contains(diffs.addNavigableOwnedEndClass1InAssociation));
 			assertEquals(2, diffs.addOwnedEndClass1InAssociation.getImpliedBy().size());
-			assertTrue(diffs.addOwnedEndClass1InAssociation.getImpliedBy().contains(
-					diffs.addMemberEndClass1InAssociation));
-			assertTrue(diffs.addOwnedEndClass1InAssociation.getImpliedBy().contains(
-					diffs.addRefAssociationInPropertyClass1));
+			assertTrue(diffs.addOwnedEndClass1InAssociation.getImpliedBy()
+					.contains(diffs.addMemberEndClass1InAssociation));
+			assertTrue(diffs.addOwnedEndClass1InAssociation.getImpliedBy()
+					.contains(diffs.addRefAssociationInPropertyClass1));
 
 			assertEquals(1, diffs.addMemberEndClass1InAssociation.getImplies().size());
-			assertTrue(diffs.addMemberEndClass1InAssociation.getImplies().contains(
-					diffs.addOwnedEndClass1InAssociation));
+			assertTrue(diffs.addMemberEndClass1InAssociation.getImplies()
+					.contains(diffs.addOwnedEndClass1InAssociation));
 			assertEquals(0, diffs.addMemberEndClass1InAssociation.getImpliedBy().size());
 		} else {
 			assertEquals(1, diffs.addNavigableOwnedEndClass1InAssociation.getImplies().size());
-			assertTrue(diffs.addNavigableOwnedEndClass1InAssociation.getImplies().contains(
-					diffs.addOwnedEndClass1InAssociation));
+			assertTrue(diffs.addNavigableOwnedEndClass1InAssociation.getImplies()
+					.contains(diffs.addOwnedEndClass1InAssociation));
 			assertEquals(0, diffs.addNavigableOwnedEndClass1InAssociation.getImpliedBy().size());
 
 			assertEquals(2, diffs.addOwnedEndClass1InAssociation.getImplies().size());
-			assertTrue(diffs.addOwnedEndClass1InAssociation.getImplies().contains(
-					diffs.addMemberEndClass1InAssociation));
-			assertTrue(diffs.addOwnedEndClass1InAssociation.getImplies().contains(
-					diffs.addRefAssociationInPropertyClass1));
+			assertTrue(diffs.addOwnedEndClass1InAssociation.getImplies()
+					.contains(diffs.addMemberEndClass1InAssociation));
+			assertTrue(diffs.addOwnedEndClass1InAssociation.getImplies()
+					.contains(diffs.addRefAssociationInPropertyClass1));
 			assertEquals(1, diffs.addOwnedEndClass1InAssociation.getImpliedBy().size());
-			assertTrue(diffs.addOwnedEndClass1InAssociation.getImpliedBy().contains(
-					diffs.addNavigableOwnedEndClass1InAssociation));
+			assertTrue(diffs.addOwnedEndClass1InAssociation.getImpliedBy()
+					.contains(diffs.addNavigableOwnedEndClass1InAssociation));
 
 			assertEquals(0, diffs.addMemberEndClass1InAssociation.getImplies().size());
 			assertEquals(1, diffs.addMemberEndClass1InAssociation.getImpliedBy().size());
-			assertTrue(diffs.addMemberEndClass1InAssociation.getImpliedBy().contains(
-					diffs.addOwnedEndClass1InAssociation));
+			assertTrue(diffs.addMemberEndClass1InAssociation.getImpliedBy()
+					.contains(diffs.addOwnedEndClass1InAssociation));
 		}
 
 	}
@@ -1044,8 +1044,8 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 	private static Predicate<? super Diff> refinesMultiplicityElementChange() {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				return Iterators.any(input.getRefines().iterator(), instanceOf(
-						MultiplicityElementChange.class));
+				return Iterators.any(input.getRefines().iterator(),
+						instanceOf(MultiplicityElementChange.class));
 			}
 		};
 	}

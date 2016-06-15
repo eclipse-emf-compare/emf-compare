@@ -96,11 +96,9 @@ public class MatchSpec extends MatchImpl {
 	@Override
 	public String toString() {
 		// @formatter:off
-		return Objects.toStringHelper(this)
-				.add("left", EObjectUtil.getLabel(getLeft()))
+		return Objects.toStringHelper(this).add("left", EObjectUtil.getLabel(getLeft()))
 				.add("right", EObjectUtil.getLabel(getRight()))
-				.add("origin", EObjectUtil.getLabel(getOrigin()))
-				.add("#differences", getDifferences().size())
+				.add("origin", EObjectUtil.getLabel(getOrigin())).add("#differences", getDifferences().size())
 				.add("#submatches", getSubmatches().size()).toString();
 		// @formatter:on
 	}

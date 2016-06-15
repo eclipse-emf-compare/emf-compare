@@ -129,9 +129,8 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see 
-	 *      org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider.getStyledText(java
-	 *      .lang.Object)
+	 * @see org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider.getStyledText(
+	 *      java .lang.Object)
 	 */
 	public StyledString getStyledText(Object element) {
 		final StyledString ret;

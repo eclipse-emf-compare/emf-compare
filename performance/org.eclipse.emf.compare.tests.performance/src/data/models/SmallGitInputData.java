@@ -12,11 +12,11 @@ package data.models;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- *
  */
 public class SmallGitInputData extends DataGit {
 
 	public SmallGitInputData() {
-		super("src/data/models/git/model_size_small_repo.zip", "model_size_small_repo", "model_small_size_git", "model.uml");
+		super("src/data/models/git/model_size_small_repo.zip", "model_size_small_repo",
+				"model_small_size_git", "model.uml");
 	}
 }

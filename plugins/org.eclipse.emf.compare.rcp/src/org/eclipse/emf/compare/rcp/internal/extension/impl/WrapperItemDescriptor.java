@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.internal.extension.impl;
 
-
 /**
  * A {@link org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor} that wrap one instance of an item
  * and return the same item each time.

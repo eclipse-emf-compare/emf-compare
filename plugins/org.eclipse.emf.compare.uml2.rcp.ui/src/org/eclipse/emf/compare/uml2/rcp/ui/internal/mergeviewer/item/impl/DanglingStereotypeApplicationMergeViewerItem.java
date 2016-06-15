@@ -40,10 +40,10 @@ public class DanglingStereotypeApplicationMergeViewerItem extends ResourceAttach
 	/**
 	 * {@inheritDoc}.
 	 * 
-	 * @see 
-	 *      org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.ResourceAttachmentChangeMergeViewerItem
-	 *      .ResourceAttachmentChangeMergeViewerItem(Comparison comparison, Diff diff, Object left, Object
-	 *      right, Object ancestor, MergeViewerSide side, AdapterFactory adapterFactory)
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.
+	 *      ResourceAttachmentChangeMergeViewerItem .ResourceAttachmentChangeMergeViewerItem(Comparison
+	 *      comparison, Diff diff, Object left, Object right, Object ancestor, MergeViewerSide side,
+	 *      AdapterFactory adapterFactory)
 	 */
 	public DanglingStereotypeApplicationMergeViewerItem(Comparison comparison, Diff diff, Resource left,
 			Resource right, Resource ancestor, IMergeViewer.MergeViewerSide side,
@@ -54,9 +54,9 @@ public class DanglingStereotypeApplicationMergeViewerItem extends ResourceAttach
 	/**
 	 * {@inheritDoc}.
 	 * 
-	 * @see 
-	 *      org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.ResourceAttachmentChangeMergeViewerItem
-	 *      .ResourceAttachmentChangeMergeViewerItem(Comparison, Diff, Match, MergeViewerSide, AdapterFactory)
+	 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.
+	 *      ResourceAttachmentChangeMergeViewerItem .ResourceAttachmentChangeMergeViewerItem(Comparison, Diff,
+	 *      Match, MergeViewerSide, AdapterFactory)
 	 */
 	public DanglingStereotypeApplicationMergeViewerItem(Comparison comparison, Diff diff, Match match,
 			IMergeViewer.MergeViewerSide side, AdapterFactory adapterFactory) {
@@ -76,8 +76,8 @@ public class DanglingStereotypeApplicationMergeViewerItem extends ResourceAttach
 		Match match = getComparison().getMatch(eObject);
 
 		if (match != null) {
-			ResourceAttachmentChange rac = getFirst(filter(match.getDifferences(),
-					DanglingStereotypeApplication.class), null);
+			ResourceAttachmentChange rac = getFirst(
+					filter(match.getDifferences(), DanglingStereotypeApplication.class), null);
 			if (rac != null) {
 				Object left = match.getLeft();
 				Object right = match.getRight();

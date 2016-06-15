@@ -69,8 +69,8 @@ public class PseudoConflictMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.ADD)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD)));
 
 		// Merge -> Node A[containmentRef1 add] from left to right : <- Node A[containmentRef1 add] will be
 		// merge from left to right too.
@@ -109,8 +109,8 @@ public class PseudoConflictMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.ADD)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD)));
 
 		// Merge <- Node A[containmentRef1 add] from left to right : -> Node A[containmentRef1 add] will be
 		// merge from left to right too.
@@ -149,8 +149,8 @@ public class PseudoConflictMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.ADD)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD)));
 
 		// Merge -> Node A[containmentRef1 add] from right to left : <- Node A[containmentRef1 add] will be
 		// merge from right to left too.
@@ -189,8 +189,8 @@ public class PseudoConflictMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.ADD)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD)));
 
 		// Merge <- Node A[containmentRef1 add] from right to left : -> Node A[containmentRef1 add] will be
 		// merge from right to left too.
@@ -229,8 +229,8 @@ public class PseudoConflictMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.DELETE)));
 
 		// Merge -> Node B[containmentRef1 delete] from left to right : <- Node B[containmentRef1 delete] will
 		// be merge from left to right too.
@@ -269,8 +269,8 @@ public class PseudoConflictMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.DELETE)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.DELETE)));
 
 		// Merge <- Node B[containmentRef1 delete] from left to right : -> Node B[containmentRef1 delete] will
 		// be merge from left to right too.
@@ -309,8 +309,8 @@ public class PseudoConflictMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.DELETE)));
 
 		// Merge -> Node B[containmentRef1 delete] from right to left : <- Node B[containmentRef1 delete] will
 		// be merge from right to left too.
@@ -349,8 +349,8 @@ public class PseudoConflictMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.DELETE)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.DELETE)));
 
 		// Merge <- Node B[containmentRef1 delete] from right to left : -> Node B[containmentRef1 delete] will
 		// be merge from right to left too.
@@ -389,8 +389,8 @@ public class PseudoConflictMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.CHANGE)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.CHANGE)));
 
 		// Merge -> Hello[singleValuedAttribute changed] from left to right : <- Hello[singleValuedAttribute
 		// changed] will be merge from left to right too.
@@ -431,8 +431,8 @@ public class PseudoConflictMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.CHANGE)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.CHANGE)));
 
 		// Merge <- Hello[singleValuedAttribute changed] from left to right : -> Hello[singleValuedAttribute
 		// changed] will be merge from left to right too.
@@ -473,8 +473,8 @@ public class PseudoConflictMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.CHANGE)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.CHANGE)));
 
 		// Merge -> Hello[singleValuedAttribute changed] from right to left : <- Hello[singleValuedAttribute
 		// changed] will be merge from right to left too.
@@ -515,8 +515,8 @@ public class PseudoConflictMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.CHANGE)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.CHANGE)));
 
 		// Merge -> Hello[singleValuedAttribute changed] from right to left : <- Hello[singleValuedAttribute
 		// changed] will be merge from right to left too.

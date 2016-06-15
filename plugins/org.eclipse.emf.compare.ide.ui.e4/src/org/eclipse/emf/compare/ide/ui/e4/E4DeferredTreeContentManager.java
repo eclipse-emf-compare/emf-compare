@@ -83,7 +83,8 @@ public class E4DeferredTreeContentManager extends DeferredTreeContentManager imp
 			return;
 		}
 		// Clear the placeholder if it is still there
-		UIJob clearJob = new UIJob(Display.getDefault(), ProgressMessages.DeferredTreeContentManager_ClearJob) {
+		UIJob clearJob = new UIJob(Display.getDefault(),
+				ProgressMessages.DeferredTreeContentManager_ClearJob) {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				if (!e4Placeholder.isRemoved()) {

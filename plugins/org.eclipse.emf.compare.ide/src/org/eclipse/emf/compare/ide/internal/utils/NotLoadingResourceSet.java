@@ -217,9 +217,10 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	 *            The raised exception.
 	 */
 	private void logLoadingFromStorageFailed(Resource resource, IStorage storage, Exception e) {
-		Status errorStatus = new Status(IStatus.ERROR, EMFCompareIDEPlugin.PLUGIN_ID, EMFCompareIDEMessages
-				.getString("StorageResourceWrapper.failToLoad", resource.getURI().toString(), storage //$NON-NLS-1$
-						.getName()), e);
+		Status errorStatus = new Status(IStatus.ERROR, EMFCompareIDEPlugin.PLUGIN_ID,
+				EMFCompareIDEMessages.getString("StorageResourceWrapper.failToLoad", //$NON-NLS-1$
+						resource.getURI().toString(), storage.getName()),
+				e);
 		EMFCompareIDEPlugin.getDefault().getLog().log(errorStatus);
 	}
 
@@ -447,8 +448,8 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	 */
 	public void dispose() {
 		ImmutableList<Resource> currentResources = ImmutableList.copyOf(getResources());
-		Collection<URI> resourceSetUris = newArrayList(transform(currentResources,
-				new Function<Resource, URI>() {
+		Collection<URI> resourceSetUris = newArrayList(
+				transform(currentResources, new Function<Resource, URI>() {
 					public URI apply(Resource input) {
 						return input.getURI();
 					}
@@ -578,7 +579,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 		 * @param proxyFeature
 		 *            The {@link #proxyFeature}.
 		 */
-		public ProxyEntry(EObject eObject, EStructuralFeature proxyFeature) {
+		ProxyEntry(EObject eObject, EStructuralFeature proxyFeature) {
 			this.eObject = eObject;
 			this.proxyFeature = proxyFeature;
 		}

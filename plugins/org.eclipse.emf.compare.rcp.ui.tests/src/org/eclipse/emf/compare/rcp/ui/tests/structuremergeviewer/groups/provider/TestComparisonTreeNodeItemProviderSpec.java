@@ -37,13 +37,12 @@ import org.junit.Test;
 public class TestComparisonTreeNodeItemProviderSpec extends AbstractTestTreeNodeItemProviderAdapter {
 
 	private TreeNodeItemProviderSpec itemProvider;
-	
+
 	@Override
 	@Before
 	public void before() throws IOException {
 		super.before();
-		itemProvider = (TreeNodeItemProviderSpec)treeItemProviderAdapterFactory
-				.createTreeNodeAdapter();
+		itemProvider = (TreeNodeItemProviderSpec)treeItemProviderAdapterFactory.createTreeNodeAdapter();
 	}
 
 	@Test
@@ -53,11 +52,11 @@ public class TestComparisonTreeNodeItemProviderSpec extends AbstractTestTreeNode
 		TreeNode treeNode = TreeFactory.eINSTANCE.createTreeNode();
 		treeNode.setData(comparison);
 		treeNode.eAdapters().add(new DefaultGroupProvider());
-		
+
 		Collection<?> children = itemProvider.getChildren(treeNode);
 
 		assertEquals(2, children.size());
-		
+
 		Iterable<EObject> eAllData = transform(children, TREE_NODE_DATA);
 		assertEquals(1, size(filter(eAllData, Match.class)));
 		assertEquals(1, size(filter(eAllData, MatchResource.class)));

@@ -25,13 +25,13 @@ import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestGitDiff extends AbstractEMFComparePerformanceTest {
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest#setSUTName()
 	 */
 	@Override
@@ -42,7 +42,7 @@ public class TestGitDiff extends AbstractEMFComparePerformanceTest {
 	@Test
 	public void a_diffUMLSmall() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLSmall");
-		
+
 		final DataGit data = new SmallGitInputData();
 		data.match();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
@@ -52,11 +52,11 @@ public class TestGitDiff extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void b_diffUMLNominal() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLNominal");
-		
+
 		final DataGit data = new NominalGitInputData();
 		data.match();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
@@ -66,11 +66,11 @@ public class TestGitDiff extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void c_diffUMLSmallSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLSmallSplit");
-		
+
 		final DataGit data = new SmallSplitGitInputData();
 		data.match();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {
@@ -80,11 +80,11 @@ public class TestGitDiff extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void d_diffUMLNominalSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLNominalSplit");
-		
+
 		final DataGit data = new NominalSplitGitInputData();
 		data.match();
 		monitor.measure(warmup(), getStepsNumber(), new Runnable() {

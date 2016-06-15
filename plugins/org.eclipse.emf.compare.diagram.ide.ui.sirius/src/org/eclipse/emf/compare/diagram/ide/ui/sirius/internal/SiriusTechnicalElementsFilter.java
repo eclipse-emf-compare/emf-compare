@@ -47,9 +47,8 @@ public class SiriusTechnicalElementsFilter extends AbstractDifferenceFilter {
 				return Iterables.any(affectedElements, new Predicate<EObject>() {
 					public boolean apply(EObject element) {
 						EClass eClass = element.eClass();
-						return eClass != null
-								&& (eClass.getEPackage() == ViewpointPackage.eINSTANCE || eClass
-										.getEPackage() == DiagramPackage.eINSTANCE);
+						return eClass != null && (eClass.getEPackage() == ViewpointPackage.eINSTANCE
+								|| eClass.getEPackage() == DiagramPackage.eINSTANCE);
 					}
 				});
 			}

@@ -81,9 +81,9 @@ public class AbstractMonitoredProxyCreationListenerTest {
 	}
 
 	private void setResolutionScopeTo(CrossReferenceResolutionScope scope) {
-		EMFCompareIDEUIPlugin.getDefault().getPreferenceStore().setValue(
-				EMFCompareUIPreferences.DISABLE_RESOLVERS_PREFERENCE, false);
-		EMFCompareIDEUIPlugin.getDefault().getPreferenceStore().setValue(
-				EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE, scope.name());
+		EMFCompareIDEUIPlugin.getDefault().getPreferenceStore()
+				.setValue(EMFCompareUIPreferences.DISABLE_RESOLVERS_PREFERENCE, false);
+		EMFCompareIDEUIPlugin.getDefault().getPreferenceStore()
+				.setValue(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE, scope.name());
 	}
 }

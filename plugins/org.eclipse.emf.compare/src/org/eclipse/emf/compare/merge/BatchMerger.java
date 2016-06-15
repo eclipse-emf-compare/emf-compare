@@ -64,7 +64,6 @@ public class BatchMerger implements IBatchMerger {
 	 * IBatchMerger bathMerger = new BatchMerger(registry, {@link com.google.common.base.Predicates#not(Predicate) not}({@link org.eclipse.emf.compare.utils.EMFComparePredicates#hasConflict(org.eclipse.emf.compare.ConflictKind...) hasConflict}(ConflictKind.PSEUDO, ConflictKind.REAL)));
 	 * bathMerger.copyAll...
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @param registry

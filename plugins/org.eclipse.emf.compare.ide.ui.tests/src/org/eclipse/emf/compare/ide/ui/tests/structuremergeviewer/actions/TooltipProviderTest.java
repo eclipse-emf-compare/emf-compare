@@ -138,8 +138,8 @@ public class TooltipProviderTest extends AbstractTestUITreeNodeItemProviderAdapt
 		mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 
 		NodeTooltipsInputData scopeProvider = new NodeTooltipsInputData();
-		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(), scopeProvider
-				.getRight(), scopeProvider.getOrigin());
+		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(),
+				scopeProvider.getRight(), scopeProvider.getOrigin());
 		final Builder comparisonBuilder = EMFCompare.builder();
 		EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
 		final Comparison comparison = comparisonBuilder.build().compare(scope);
@@ -152,23 +152,27 @@ public class TooltipProviderTest extends AbstractTestUITreeNodeItemProviderAdapt
 
 		// Get the compare editor tree nodes linked with each diff
 		TreeNode nodeA = nodeRootMatch.getChildren().get(1).getChildren().get(0);
-		Diff leftSet = find(differences, and(changedAttribute("Root.SetString.A", "singleValuedAttribute",
-				"value1", "value1bis"), ofKind(DifferenceKind.CHANGE)));
+		Diff leftSet = find(differences,
+				and(changedAttribute("Root.SetString.A", "singleValuedAttribute", "value1", "value1bis"),
+						ofKind(DifferenceKind.CHANGE)));
 		leftStringSet = getTreeNode(nodeA, leftSet);
 
 		TreeNode nodeB = nodeRootMatch.getChildren().get(1).getChildren().get(1);
-		Diff rightSet = find(differences, and(changedAttribute("Root.SetString.B", "singleValuedAttribute",
-				"value2", "value2bis"), ofKind(DifferenceKind.CHANGE)));
+		Diff rightSet = find(differences,
+				and(changedAttribute("Root.SetString.B", "singleValuedAttribute", "value2", "value2bis"),
+						ofKind(DifferenceKind.CHANGE)));
 		rightStringSet = getTreeNode(nodeB, rightSet);
 
 		TreeNode nodeC = nodeRootMatch.getChildren().get(2).getChildren().get(0);
-		Diff leftEmptySet = find(differences, and(changedAttribute("Root.SetFromEmptyString.C",
-				"singleValuedAttribute", "", "newValue1"), ofKind(DifferenceKind.CHANGE)));
+		Diff leftEmptySet = find(differences,
+				and(changedAttribute("Root.SetFromEmptyString.C", "singleValuedAttribute", "", "newValue1"),
+						ofKind(DifferenceKind.CHANGE)));
 		leftEmptyStringSet = getTreeNode(nodeC, leftEmptySet);
 
 		TreeNode nodeD = nodeRootMatch.getChildren().get(2).getChildren().get(1);
-		Diff rightEmptySet = find(differences, and(changedAttribute("Root.SetFromEmptyString.D",
-				"singleValuedAttribute", "", "newValue2"), ofKind(DifferenceKind.CHANGE)));
+		Diff rightEmptySet = find(differences,
+				and(changedAttribute("Root.SetFromEmptyString.D", "singleValuedAttribute", "", "newValue2"),
+						ofKind(DifferenceKind.CHANGE)));
 		rightEmptyStringSet = getTreeNode(nodeD, rightEmptySet);
 
 		TreeNode nodeE = nodeRootMatch.getChildren().get(3).getChildren().get(0);
@@ -194,80 +198,86 @@ public class TooltipProviderTest extends AbstractTestUITreeNodeItemProviderAdapt
 		rightEmptyReferenceSet = getTreeNode(nodeH, rightRefSetEmpty);
 
 		TreeNode nodeI = nodeRootMatch.getChildren().get(5).getChildren().get(0);
-		Diff leftUnset = find(differences, and(changedAttribute("Root.UnsetString.I",
-				"singleValuedAttribute", "value3", ""), ofKind(DifferenceKind.CHANGE)));
+		Diff leftUnset = find(differences,
+				and(changedAttribute("Root.UnsetString.I", "singleValuedAttribute", "value3", ""),
+						ofKind(DifferenceKind.CHANGE)));
 		leftStringUnset = getTreeNode(nodeI, leftUnset);
 
 		TreeNode nodeJ = nodeRootMatch.getChildren().get(5).getChildren().get(1);
-		Diff rightUnset = find(differences, and(changedAttribute("Root.UnsetString.J",
-				"singleValuedAttribute", "value4", ""), ofKind(DifferenceKind.CHANGE)));
+		Diff rightUnset = find(differences,
+				and(changedAttribute("Root.UnsetString.J", "singleValuedAttribute", "value4", ""),
+						ofKind(DifferenceKind.CHANGE)));
 		rightStringUnset = getTreeNode(nodeJ, rightUnset);
 
 		TreeNode nodeK = nodeRootMatch.getChildren().get(6).getChildren().get(0);
-		Diff leftRefUnset = find(differences, and(changedReference("Root.UnsetReference.K",
-				"singleValuedReference", "Root.temp.temp3", null), ofKind(DifferenceKind.CHANGE)));
+		Diff leftRefUnset = find(differences, and(
+				changedReference("Root.UnsetReference.K", "singleValuedReference", "Root.temp.temp3", null),
+				ofKind(DifferenceKind.CHANGE)));
 		leftReferenceUnset = getTreeNode(nodeK, leftRefUnset);
 
 		TreeNode nodeL = nodeRootMatch.getChildren().get(6).getChildren().get(1);
-		Diff rightRefUnset = find(differences, and(changedReference("Root.UnsetReference.L",
-				"singleValuedReference", "Root.temp.temp4", null), ofKind(DifferenceKind.CHANGE)));
+		Diff rightRefUnset = find(differences, and(
+				changedReference("Root.UnsetReference.L", "singleValuedReference", "Root.temp.temp4", null),
+				ofKind(DifferenceKind.CHANGE)));
 		rightReferenceUnset = getTreeNode(nodeL, rightRefUnset);
 
 		TreeNode nodeAddAtt1 = nodeRootMatch.getChildren().get(7).getChildren().get(0);
-		Diff leftAddAtribute = find(differences, and(addedToAttribute("Root.AddAttribute.attribute1",
-				"multiValuedAttribute", "value 1"), ofKind(DifferenceKind.ADD)));
+		Diff leftAddAtribute = find(differences,
+				and(addedToAttribute("Root.AddAttribute.attribute1", "multiValuedAttribute", "value 1"),
+						ofKind(DifferenceKind.ADD)));
 		leftAttributeAdd = getTreeNode(nodeAddAtt1, leftAddAtribute);
 
 		TreeNode nodeAddAtt2 = nodeRootMatch.getChildren().get(7).getChildren().get(1);
-		Diff rightAddAtribute = find(differences, and(addedToAttribute("Root.AddAttribute.attribute2",
-				"multiValuedAttribute", "value 2"), ofKind(DifferenceKind.ADD)));
+		Diff rightAddAtribute = find(differences,
+				and(addedToAttribute("Root.AddAttribute.attribute2", "multiValuedAttribute", "value 2"),
+						ofKind(DifferenceKind.ADD)));
 		rightAttributeAdd = getTreeNode(nodeAddAtt2, rightAddAtribute);
 
 		TreeNode nodeAddRef = nodeRootMatch.getChildren().get(8);
-		Diff leftAddRef = find(differences, and(added("Root.AddReference.newNode1"),
-				ofKind(DifferenceKind.ADD)));
+		Diff leftAddRef = find(differences,
+				and(added("Root.AddReference.newNode1"), ofKind(DifferenceKind.ADD)));
 		leftContainmentAdd = getTreeNode(nodeAddRef, leftAddRef);
 
-		Diff rightAddRef = find(differences, and(added("Root.AddReference.newNode2"),
-				ofKind(DifferenceKind.ADD)));
+		Diff rightAddRef = find(differences,
+				and(added("Root.AddReference.newNode2"), ofKind(DifferenceKind.ADD)));
 		rightContainmentAdd = getTreeNode(nodeAddRef, rightAddRef);
 
 		TreeNode nodeAddRefNonCont1 = nodeRootMatch.getChildren().get(9).getChildren().get(0);
-		Diff leftAddNonCont = find(differences, and(addedToReference(
-				"Root.AddReferenceNonContainment.reference1", "multiValuedReference", "Root.temp.temp1"),
-				ofKind(DifferenceKind.ADD)));
+		Diff leftAddNonCont = find(differences,
+				and(addedToReference("Root.AddReferenceNonContainment.reference1", "multiValuedReference",
+						"Root.temp.temp1"), ofKind(DifferenceKind.ADD)));
 		leftNonContainmentAdd = getTreeNode(nodeAddRefNonCont1, leftAddNonCont);
 
 		TreeNode nodeAddRefNonCont2 = nodeRootMatch.getChildren().get(9).getChildren().get(1);
-		Diff rightAddNonCont = find(differences, and(addedToReference(
-				"Root.AddReferenceNonContainment.reference2", "multiValuedReference", "Root.temp.temp2"),
-				ofKind(DifferenceKind.ADD)));
+		Diff rightAddNonCont = find(differences,
+				and(addedToReference("Root.AddReferenceNonContainment.reference2", "multiValuedReference",
+						"Root.temp.temp2"), ofKind(DifferenceKind.ADD)));
 		rightNonContainmentAdd = getTreeNode(nodeAddRefNonCont2, rightAddNonCont);
 
 		TreeNode nodeDel = nodeRootMatch.getChildren().get(10);
-		Diff leftDelete = find(differences, and(removed("Root.DelContainment.M"),
-				ofKind(DifferenceKind.DELETE)));
+		Diff leftDelete = find(differences,
+				and(removed("Root.DelContainment.M"), ofKind(DifferenceKind.DELETE)));
 		leftContainmentDelete = getTreeNode(nodeDel, leftDelete);
 
-		Diff rightDelete = find(differences, and(removed("Root.DelContainment.N"),
-				ofKind(DifferenceKind.DELETE)));
+		Diff rightDelete = find(differences,
+				and(removed("Root.DelContainment.N"), ofKind(DifferenceKind.DELETE)));
 		rightContainmentDelete = getTreeNode(nodeDel, rightDelete);
 
 		TreeNode nodeDelNonCont1 = nodeRootMatch.getChildren().get(11).getChildren().get(0);
-		Diff leftDeleteNonCont = find(differences, and(removedFromReference(
-				"Root.DelNonContainment.reference3", "multiValuedReference", "Root.temp.temp7"),
-				ofKind(DifferenceKind.DELETE)));
+		Diff leftDeleteNonCont = find(differences,
+				and(removedFromReference("Root.DelNonContainment.reference3", "multiValuedReference",
+						"Root.temp.temp7"), ofKind(DifferenceKind.DELETE)));
 		leftNonContainmentDelete = getTreeNode(nodeDelNonCont1, leftDeleteNonCont);
 
 		TreeNode nodeDelNonCont2 = nodeRootMatch.getChildren().get(11).getChildren().get(1);
-		Diff rightDeleteNonCont = find(differences, and(removedFromReference(
-				"Root.DelNonContainment.reference4", "multiValuedReference", "Root.temp.temp8"),
-				ofKind(DifferenceKind.DELETE)));
+		Diff rightDeleteNonCont = find(differences,
+				and(removedFromReference("Root.DelNonContainment.reference4", "multiValuedReference",
+						"Root.temp.temp8"), ofKind(DifferenceKind.DELETE)));
 		rightNonContainmentDelete = getTreeNode(nodeDelNonCont2, rightDeleteNonCont);
 
 		TreeNode nodeMoveCont = nodeRootMatch.getChildren().get(13);
-		Diff leftMoveCont = find(differences, and(
-				moved("Root.MoveContainerDestination.O", "containmentRef1"), ofKind(DifferenceKind.MOVE)));
+		Diff leftMoveCont = find(differences, and(moved("Root.MoveContainerDestination.O", "containmentRef1"),
+				ofKind(DifferenceKind.MOVE)));
 		leftContainerMove = getTreeNode(nodeMoveCont, leftMoveCont);
 
 		Diff rightMoveCont = find(differences, and(
@@ -275,12 +285,12 @@ public class TooltipProviderTest extends AbstractTestUITreeNodeItemProviderAdapt
 		rightContainerMove = getTreeNode(nodeMoveCont, rightMoveCont);
 
 		TreeNode nodeMovePos = nodeRootMatch.getChildren().get(14);
-		Diff leftMovePos = find(differences, and(moved("Root.MovePosition.Q", "containmentRef1"),
-				ofKind(DifferenceKind.MOVE)));
+		Diff leftMovePos = find(differences,
+				and(moved("Root.MovePosition.Q", "containmentRef1"), ofKind(DifferenceKind.MOVE)));
 		leftPositionMove = getTreeNode(nodeMovePos, leftMovePos);
 
-		Diff rightMovePos = find(differences, and(moved("Root.MovePosition.S", "containmentRef1"),
-				ofKind(DifferenceKind.MOVE)));
+		Diff rightMovePos = find(differences,
+				and(moved("Root.MovePosition.S", "containmentRef1"), ofKind(DifferenceKind.MOVE)));
 		rightPositionMove = getTreeNode(nodeMovePos, rightMovePos);
 
 	}

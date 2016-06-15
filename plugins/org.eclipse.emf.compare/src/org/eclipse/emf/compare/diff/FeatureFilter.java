@@ -105,8 +105,8 @@ public class FeatureFilter {
 	 */
 	public boolean checkForOrderingChanges(EStructuralFeature feature) {
 		if (feature.isMany()) {
-			return feature.isOrdered() || feature instanceof EReference
-					&& ((EReference)feature).isContainment();
+			return feature.isOrdered()
+					|| feature instanceof EReference && ((EReference)feature).isContainment();
 		}
 		return false;
 	}
@@ -163,8 +163,7 @@ public class FeatureFilter {
 				boolean isGenericTypeWithoutArguments = false;
 				boolean isGenericType = reference.getEType() == EcorePackage.eINSTANCE.getEGenericType();
 				if (isGenericType) {
-					isGenericTypeWithoutArguments = IS_EGENERIC_TYPE_WITHOUT_PARAMETERS
-							.apply(match.getLeft())
+					isGenericTypeWithoutArguments = IS_EGENERIC_TYPE_WITHOUT_PARAMETERS.apply(match.getLeft())
 							&& IS_EGENERIC_TYPE_WITHOUT_PARAMETERS.apply(match.getRight())
 							&& IS_EGENERIC_TYPE_WITHOUT_PARAMETERS.apply(match.getOrigin());
 				}

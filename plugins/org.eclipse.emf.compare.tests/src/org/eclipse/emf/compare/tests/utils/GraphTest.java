@@ -38,19 +38,11 @@ public class GraphTest {
 	@Test
 	public void testBuildSubGraph() {
 		IGraph<String> graph = new Graph<String>();
-		//@formatter:off
+		// @formatter:off
 		/*
-		 * Add the following graph:
-		 *          e      f
-		 *          |      |
-		 *    b     c      d
-		 *    \     |     /
-		 *     \    |    /
-		 *      ---------
-		 *          |
-		 *          a
+		 * Add the following graph: e f | | b c d \ | / \ | / --------- | a
 		 */
-		//@formatter:on
+		// @formatter:on
 		graph.addChildren("a", ImmutableSet.of("b", "c", "d"));
 		graph.addChildren("c", ImmutableSet.of("e"));
 		graph.addChildren("d", ImmutableSet.of("f"));
@@ -66,16 +58,11 @@ public class GraphTest {
 	@Test
 	public void testPrune() {
 		IGraph<String> graph = new Graph<String>();
-		//@formatter:off
+		// @formatter:off
 		/*
-		 * Add the following graph:
-		 *          c-\
-		 *          |  |
-		 *          b-/
-		 *          |
-		 *          a
+		 * Add the following graph: c-\ | | b-/ | a
 		 */
-		//@formatter:on
+		// @formatter:on
 		graph.addChildren("a", ImmutableSet.of("b"));
 		graph.addChildren("b", ImmutableSet.of("c"));
 		graph.addChildren("c", ImmutableSet.of("b"));
@@ -89,22 +76,13 @@ public class GraphTest {
 	@Test
 	public void testBreadthFirstIteration() {
 		IGraph<String> graph = new Graph<String>();
-		//@formatter:off
+		// @formatter:off
 		/*
-		 * With the following Graph:
-		 *
-		 *     A       I    J
-		 *    / \     /    / \
-		 *   B   C   G    K   L
-		 *  /   / \ / \      / \
-		 * D   E   F   H    M   N
-		 * 
-		 * We expect our iteration to go in the following order:
-		 * three first items, in unspecified order : A, I, J
-		 * next five, in unspecified order :         B, C, G, K, L
-		 * finally, still in unspecified order :     D, E, F, H, M, N
+		 * With the following Graph: A I J / \ / / \ B C G K L / / \ / \ / \ D E F H M N We expect our
+		 * iteration to go in the following order: three first items, in unspecified order : A, I, J next
+		 * five, in unspecified order : B, C, G, K, L finally, still in unspecified order : D, E, F, H, M, N
 		 */
-		//@formatter:on
+		// @formatter:on
 		graph.addChildren("A", ImmutableSet.of("B", "C"));
 		graph.addChildren("B", ImmutableSet.of("D"));
 		graph.addChildren("C", ImmutableSet.of("E", "F"));
@@ -258,7 +236,7 @@ public class GraphTest {
 	 *   B   C   G    K   L
 	 *  /   / \ / \      / \
 	 * D   E   F   H    M   N
-	 * </pre>
+	 *         </pre>
 	 */
 	private IGraph<String> getAcyclicGraph() {
 		IGraph<String> graph = new Graph<String>();
@@ -283,7 +261,7 @@ public class GraphTest {
 	 *   B   C   G    K    L
 	 *  /   / \ / \    \ // \
 	 * D - E   F = H    M    N
-	 * </pre>
+	 *         </pre>
 	 */
 	private IGraph<String> getGraphWithCycles() {
 		IGraph<String> graph = new Graph<String>();

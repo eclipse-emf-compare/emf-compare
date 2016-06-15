@@ -84,8 +84,8 @@ public class ResourceContentsAccessorImpl extends AbstractTypedElementAdapter im
 	 */
 	public IMergeViewerItem getInitialItem() {
 		Diff initialDiff = fDiff;
-		EObject diffValue = (EObject)MergeViewerUtil.getResourceAttachmentChangeValue(
-				(ResourceAttachmentChange)initialDiff, getSide());
+		EObject diffValue = (EObject)MergeViewerUtil
+				.getResourceAttachmentChangeValue((ResourceAttachmentChange)initialDiff, getSide());
 		if (DifferenceState.MERGED == initialDiff.getState()) {
 			Object left = MergeViewerUtil.getValueFromResourceAttachmentChange(
 					(ResourceAttachmentChange)initialDiff, getComparison(), MergeViewerSide.LEFT);
@@ -194,8 +194,8 @@ public class ResourceContentsAccessorImpl extends AbstractTypedElementAdapter im
 	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		return ExtendedImageRegistry.getInstance().getImage(
-				EcoreEditPlugin.getPlugin().getImage("full/obj16/EObject")); //$NON-NLS-1$
+		return ExtendedImageRegistry.getInstance()
+				.getImage(EcoreEditPlugin.getPlugin().getImage("full/obj16/EObject")); //$NON-NLS-1$
 	}
 
 	/**

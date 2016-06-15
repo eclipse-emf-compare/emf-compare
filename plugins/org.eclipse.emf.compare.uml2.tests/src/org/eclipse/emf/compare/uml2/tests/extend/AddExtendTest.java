@@ -146,11 +146,11 @@ public class AddExtendTest extends AbstractUMLTest {
 		assertEquals(1, count(differences, instanceOf(ExtendChange.class)));
 		Diff addUMLExtend = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
-					ofKind(DifferenceKind.ADD)));
+			addUMLExtend = Iterators.find(differences.iterator(),
+					and(instanceOf(ExtendChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLExtend = Iterators.find(differences.iterator(), and(instanceOf(ExtendChange.class),
-					ofKind(DifferenceKind.DELETE)));
+			addUMLExtend = Iterators.find(differences.iterator(),
+					and(instanceOf(ExtendChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLExtend);
 		assertEquals(4, addUMLExtend.getRefinedBy().size());

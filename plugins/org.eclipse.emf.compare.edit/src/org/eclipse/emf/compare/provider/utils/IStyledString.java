@@ -83,7 +83,7 @@ public interface IStyledString {
 	 * 
 	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
 	 */
-	public static final class Style {
+	final class Style {
 
 		/** Instance that represent a default unstyled string. */
 		public static final Style NO_STYLE = new Style(null, null, null, false, null, null, null, null, null);
@@ -207,7 +207,7 @@ public interface IStyledString {
 		 * 
 		 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
 		 */
-		public static enum UnderLineStyle {
+		public enum UnderLineStyle {
 			/** No underline. */
 			NONE,
 			/** Single line. */
@@ -228,7 +228,7 @@ public interface IStyledString {
 		 * 
 		 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
 		 */
-		public static enum BorderStyle {
+		public enum BorderStyle {
 			/** No border. */
 			NONE,
 			/** Solid thin border. */

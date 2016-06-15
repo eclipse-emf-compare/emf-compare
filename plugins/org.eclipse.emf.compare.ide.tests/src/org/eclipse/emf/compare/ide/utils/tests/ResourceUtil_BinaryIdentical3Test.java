@@ -137,8 +137,8 @@ public class ResourceUtil_BinaryIdentical3Test {
 		InputStream input2 = mock(InputStream.class);
 		when(input2.read(any(byte[].class), anyInt(), anyInt())).thenThrow(new IOException());
 
-		assertFalse(ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2),
-				mockStorage(input3)));
+		assertFalse(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	private InputStream buffer(File file, int bufferSize) throws IOException {

@@ -49,8 +49,8 @@ public class GitTestCaseJUnitBlock extends AbstractCompareTestCaseJUnitBlock {
 	 */
 	@Override
 	protected List<FrameworkMethod> computeTestMethods() {
-		final List<FrameworkMethod> allMethods = Lists.newArrayList(getTestClass().getAnnotatedMethods(
-				GitCompare.class));
+		final List<FrameworkMethod> allMethods = Lists
+				.newArrayList(getTestClass().getAnnotatedMethods(GitCompare.class));
 		allMethods.addAll(getTestClass().getAnnotatedMethods(GitMerge.class));
 		allMethods.addAll(getTestClass().getAnnotatedMethods(GitTest.class));
 		return allMethods;
@@ -75,17 +75,17 @@ public class GitTestCaseJUnitBlock extends AbstractCompareTestCaseJUnitBlock {
 		Statement result = null;
 		if (input != null) {
 			if (method.getAnnotation(GitCompare.class) != null) {
-				result = new GitCompareStatement(testObject, method, resolutionStrategy,
-						disabledMatchEngines, diffEngine, eqEngine, reqEngine, conflictDetector,
-						disabledPostProcessors, input.value());
+				result = new GitCompareStatement(testObject, method, resolutionStrategy, disabledMatchEngines,
+						diffEngine, eqEngine, reqEngine, conflictDetector, disabledPostProcessors,
+						input.value());
 			} else if (method.getAnnotation(GitMerge.class) != null) {
 				result = new MergeStatement(testObject, method, resolutionStrategy, disabledMatchEngines,
 						diffEngine, eqEngine, reqEngine, conflictDetector, disabledPostProcessors,
 						mergeStrategy, input.value());
 			} else if (method.getAnnotation(GitTest.class) != null) {
 				result = new GitTestStatement(testObject, method, resolutionStrategy, disabledMatchEngines,
-						diffEngine, eqEngine, reqEngine, conflictDetector, disabledPostProcessors, input
-								.value());
+						diffEngine, eqEngine, reqEngine, conflictDetector, disabledPostProcessors,
+						input.value());
 			}
 		}
 		return result;

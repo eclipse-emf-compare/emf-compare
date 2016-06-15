@@ -27,7 +27,8 @@ public class DefaultMatchEngineConfiguatorUIFactory implements IConfigurationUIF
 	 * {@inheritDoc}
 	 */
 	public AbstractConfigurationUI createUI(Composite parent, int style, Preferences pref) {
-		DefaultMatchEngineConfiguratorUI composite = new DefaultMatchEngineConfiguratorUI(parent, style, pref);
+		DefaultMatchEngineConfiguratorUI composite = new DefaultMatchEngineConfiguratorUI(parent, style,
+				pref);
 		composite.createContent();
 		return composite;
 	}

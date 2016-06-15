@@ -63,13 +63,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 /**
- * Abstract test case to assess the results of merging, rebasing, and
- * cherry-picking of a particular merge scenario.
+ * Abstract test case to assess the results of merging, rebasing, and cherry-picking of a particular merge
+ * scenario.
  * <p>
- * This abstract test case sets up the branches <em>left</em> and <em>right</em>
- * with projects and models of a given directory specified by subclasses of this
- * test case. Then it performs a merge, rebase, and cherry-pick in both
- * directions and, for each case, calls the subclass to validate the result.
+ * This abstract test case sets up the branches <em>left</em> and <em>right</em> with projects and models of a
+ * given directory specified by subclasses of this test case. Then it performs a merge, rebase, and
+ * cherry-pick in both directions and, for each case, calls the subclass to validate the result.
  * </p>
  * 
  * @author Philip Langer <planger@eclipsesource.com>
@@ -127,8 +126,8 @@ public abstract class AbstractGitMergeTestCase {
 		SystemReader.setInstance(mockSystemReader);
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		final String gitRepoPath = workspaceRoot.getRawLocation().toFile() + File.separator + "repo";
-		mockSystemReader.setProperty(Constants.GIT_CEILING_DIRECTORIES_KEY, workspaceRoot.getLocation().toFile()
-				.getParentFile().getAbsoluteFile().toString());
+		mockSystemReader.setProperty(Constants.GIT_CEILING_DIRECTORIES_KEY,
+				workspaceRoot.getLocation().toFile().getParentFile().getAbsoluteFile().toString());
 		gitDir = new File(gitRepoPath, Constants.DOT_GIT);
 		repository = new GitTestRepository(gitDir);
 		repository.ignore(workspaceRoot.getRawLocation().append(".metadata").toFile());
@@ -139,7 +138,7 @@ public abstract class AbstractGitMergeTestCase {
 	public void tearDown() throws Exception {
 		final IModelProviderDescriptor modelProviderDesc = ModelProvider
 				.getModelProviderDescriptor(EMFModelProvider.PROVIDER_ID);
-		final EMFModelProvider emfModelProvider = (EMFModelProvider) modelProviderDesc.getModelProvider();
+		final EMFModelProvider emfModelProvider = (EMFModelProvider)modelProviderDesc.getModelProvider();
 		emfModelProvider.clear();
 		repository.dispose();
 		Activator.getDefault().getRepositoryCache().clear();
@@ -200,7 +199,8 @@ public abstract class AbstractGitMergeTestCase {
 		repository.addAllAndCommit(commitMsg, true);
 	}
 
-	private static void copyDirectoryContents(File rootDirectory, final File workingDirectory) throws IOException {
+	private static void copyDirectoryContents(File rootDirectory, final File workingDirectory)
+			throws IOException {
 		for (String child : rootDirectory.list()) {
 			copyDirectory(new File(rootDirectory, child), new File(workingDirectory, child));
 		}
@@ -246,8 +246,8 @@ public abstract class AbstractGitMergeTestCase {
 	}
 
 	/**
-	 * Tests merging branch <em>left</em> into checked-out branch <em>right</em>
-	 * and validates the result based on {@link #validateResult()}.
+	 * Tests merging branch <em>left</em> into checked-out branch <em>right</em> and validates the result
+	 * based on {@link #validateResult()}.
 	 */
 	@Test
 	public void testMergeLeftIntoRight() throws Exception {
@@ -258,8 +258,8 @@ public abstract class AbstractGitMergeTestCase {
 	}
 
 	/**
-	 * Tests merging branch <em>right</em> into checked-out branch <em>left</em>
-	 * and validates the result based on {@link #validateResult()}.
+	 * Tests merging branch <em>right</em> into checked-out branch <em>left</em> and validates the result
+	 * based on {@link #validateResult()}.
 	 */
 	@Test
 	public void testMergeRightIntoLeft() throws Exception {
@@ -270,9 +270,8 @@ public abstract class AbstractGitMergeTestCase {
 	}
 
 	/**
-	 * Tests rebasing branch <em>left</em> onto checked-out branch
-	 * <em>right</em> and validates the result based on
-	 * {@link #validateResult()}.
+	 * Tests rebasing branch <em>left</em> onto checked-out branch <em>right</em> and validates the result
+	 * based on {@link #validateResult()}.
 	 */
 	@Test
 	public void testRebaseLeftOntoRight() throws Exception {
@@ -283,9 +282,8 @@ public abstract class AbstractGitMergeTestCase {
 	}
 
 	/**
-	 * Tests rebasing branch <em>right</em> onto checked-out branch
-	 * <em>left</em> and then validates the result based on
-	 * {@link #validateResult()} .
+	 * Tests rebasing branch <em>right</em> onto checked-out branch <em>left</em> and then validates the
+	 * result based on {@link #validateResult()} .
 	 */
 	@Test
 	public void testRebaseRightOntoLeft() throws Exception {
@@ -296,9 +294,8 @@ public abstract class AbstractGitMergeTestCase {
 	}
 
 	/**
-	 * Tests cherry-picking branch <em>left</em> onto checked-out branch
-	 * <em>right</em> and validates the result based on
-	 * {@link #validateResult()}.
+	 * Tests cherry-picking branch <em>left</em> onto checked-out branch <em>right</em> and validates the
+	 * result based on {@link #validateResult()}.
 	 */
 	@Test
 	public void testCherryPickLeftOntoRight() throws Exception {
@@ -309,9 +306,8 @@ public abstract class AbstractGitMergeTestCase {
 	}
 
 	/**
-	 * Tests cherry-picking branch <em>right</em> onto checked-out branch
-	 * <em>left</em> and then validates the result based on
-	 * {@link #validateResult()} .
+	 * Tests cherry-picking branch <em>right</em> onto checked-out branch <em>left</em> and then validates the
+	 * result based on {@link #validateResult()} .
 	 */
 	@Test
 	public void testCherryPickRightOntoLeft() throws Exception {
@@ -331,7 +327,8 @@ public abstract class AbstractGitMergeTestCase {
 		final File workingDirectory = repository.getRepository().getWorkTree();
 		final Iterable<File> filesOfInterest = filter(getAllContainedFiles(workingDirectory),
 				and(IS_EXISTING_FILE, getFileOfInterestFilter()));
-		final Iterable<URI> urisOfInterest = transform(filesOfInterest, toUri(workingDirectory.getAbsolutePath()));
+		final Iterable<URI> urisOfInterest = transform(filesOfInterest,
+				toUri(workingDirectory.getAbsolutePath()));
 		for (URI uriOfInterest : urisOfInterest) {
 			final Resource resource = resourceSet.getResource(uriOfInterest, true);
 			validateResult(resource);
@@ -371,9 +368,8 @@ public abstract class AbstractGitMergeTestCase {
 	/**
 	 * Returns the resolution scope to be used for this test case.
 	 * <p>
-	 * The default value is {@link CrossReferenceResolutionScope#WORKSPACE}.
-	 * Subclasses may override this method to provide a different resolution
-	 * scope.
+	 * The default value is {@link CrossReferenceResolutionScope#WORKSPACE}. Subclasses may override this
+	 * method to provide a different resolution scope.
 	 * </p>
 	 * 
 	 * @return the resolution scope to be used for this test case.
@@ -392,47 +388,41 @@ public abstract class AbstractGitMergeTestCase {
 	/**
 	 * Specifies whether a given {@code file} should be validated in this test.
 	 * <p>
-	 * Clients may overwrite to include or exclude certain files from being
-	 * validated with {@link #validateResult(Resource)}. The default is
-	 * <code>true</code> for any file.
+	 * Clients may overwrite to include or exclude certain files from being validated with
+	 * {@link #validateResult(Resource)}. The default is <code>true</code> for any file.
 	 * </p>
 	 * 
 	 * @param file
 	 *            The input in question.
-	 * @return <code>true</code> if the given {@code file} should be validated,
-	 *         <code>false</code> otherwise.
+	 * @return <code>true</code> if the given {@code file} should be validated, <code>false</code> otherwise.
 	 */
 	protected boolean shouldValidate(File file) {
 		return true;
 	}
 
 	/**
-	 * Validates the result after merging, rebasing, or cherry-picking in either
-	 * direction.
+	 * Validates the result after merging, rebasing, or cherry-picking in either direction.
 	 * 
 	 * @throws Exception
-	 *             if something goes wrong during the validation of the
-	 *             assertions.
+	 *             if something goes wrong during the validation of the assertions.
 	 */
 	protected abstract void validateResult() throws Exception;
 
 	/**
-	 * Validates contents of a single resource after merging, rebasing, or
-	 * cherry-picking in either direction.
+	 * Validates contents of a single resource after merging, rebasing, or cherry-picking in either direction.
 	 * 
 	 * @param resource
 	 *            The resource to validate.
 	 * @throws Exception
-	 *             if something goes wrong during the validation of the
-	 *             assertions.
+	 *             if something goes wrong during the validation of the assertions.
 	 */
 	protected abstract void validateResult(Resource resource) throws Exception;
 
 	/**
 	 * Validates the result of merging branch <em>left</em> into <em>right</em>.
 	 * <p>
-	 * This method it intended to be overwritten by sub-classes if the specific
-	 * tests require specific validation.
+	 * This method it intended to be overwritten by sub-classes if the specific tests require specific
+	 * validation.
 	 * </p>
 	 */
 	protected void validateMergeLeftIntoRight() {
@@ -442,8 +432,8 @@ public abstract class AbstractGitMergeTestCase {
 	/**
 	 * Validates the result of merging branch <em>right</em> into <em>left</em>.
 	 * <p>
-	 * This method it intended to be overwritten by sub-classes if the specific
-	 * tests require specific validation.
+	 * This method it intended to be overwritten by sub-classes if the specific tests require specific
+	 * validation.
 	 * </p>
 	 */
 	protected void validateMergeRightIntoLeft() {
@@ -453,8 +443,8 @@ public abstract class AbstractGitMergeTestCase {
 	/**
 	 * Validates the result of rebasing branch <em>left</em> onto <em>right</em>.
 	 * <p>
-	 * This method it intended to be overwritten by sub-classes if the specific
-	 * tests require specific validation.
+	 * This method it intended to be overwritten by sub-classes if the specific tests require specific
+	 * validation.
 	 * </p>
 	 */
 	protected void validateRebaseLeftOntoRight() {
@@ -464,8 +454,8 @@ public abstract class AbstractGitMergeTestCase {
 	/**
 	 * Validates the result of rebasing branch <em>right</em> onto <em>left</em>.
 	 * <p>
-	 * This method it intended to be overwritten by sub-classes if the specific
-	 * tests require specific validation.
+	 * This method it intended to be overwritten by sub-classes if the specific tests require specific
+	 * validation.
 	 * </p>
 	 */
 	protected void validateRebaseRightOntoLeft() {
@@ -475,8 +465,8 @@ public abstract class AbstractGitMergeTestCase {
 	/**
 	 * Validates the result of cherry-picking branch <em>left</em> onto <em>right</em>.
 	 * <p>
-	 * This method it intended to be overwritten by sub-classes if the specific
-	 * tests require specific validation.
+	 * This method it intended to be overwritten by sub-classes if the specific tests require specific
+	 * validation.
 	 * </p>
 	 */
 	protected void validateCherryPickLeftOntoRight() {
@@ -486,8 +476,8 @@ public abstract class AbstractGitMergeTestCase {
 	/**
 	 * Validates the result of cherry-picking branch <em>right</em> onto <em>left</em>.
 	 * <p>
-	 * This method it intended to be overwritten by sub-classes if the specific
-	 * tests require specific validation.
+	 * This method it intended to be overwritten by sub-classes if the specific tests require specific
+	 * validation.
 	 * </p>
 	 */
 	protected void validateCherryPickRightOntoLeft() {

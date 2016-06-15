@@ -172,8 +172,8 @@ public final class ComparisonScopeBuilder {
 		try {
 			final SynchronizationModel syncModel;
 			if (storageAccessor != null) {
-				syncModel = createSynchronizationModel(storageAccessor, left, right, origin, subMonitor
-						.newChild(60));
+				syncModel = createSynchronizationModel(storageAccessor, left, right, origin,
+						subMonitor.newChild(60));
 			} else {
 				syncModel = createSynchronizationModel(left, right, origin, subMonitor.newChild(60));
 			}
@@ -187,29 +187,31 @@ public final class ComparisonScopeBuilder {
 		}
 	}
 
-	/**
-	 * Resolves and minimizes the logical model for the given three typed element as would be done by
-	 * {@link #build(ITypedElement, ITypedElement, ITypedElement, IProgressMonitor)}, but returns directly the
-	 * SynchronizationModel DTO instead of the actual IComparisonScope.
-	 * <p>
-	 * This internal API is only intended for use by the resource mapping mergers.
-	 * </p>
-	 * 
-	 * @param left
-	 *            The element that will be used as the starting point to resolve the left logical model.
-	 * @param right
-	 *            Element that will be used as the starting point to resolve the left logical model.
-	 * @param origin
-	 *            The origin resource, starting point of the logical model we are to resolve as the origin
-	 *            one. Can be <code>null</code>.
-	 * @param monitor
-	 *            The monitor on which to report progress information to the user.
-	 * @return The newly created SynchronizationModel.
-	 * @throws InterruptedException
-	 *             In case of user interruption.
-	 */
-	/* package */SynchronizationModel buildSynchronizationModel(ITypedElement left, ITypedElement right,
-			ITypedElement origin, IProgressMonitor monitor) throws InterruptedException {
+			/**
+			 * Resolves and minimizes the logical model for the given three typed element as would be done by
+			 * {@link #build(ITypedElement, ITypedElement, ITypedElement, IProgressMonitor)}, but returns
+			 * directly the SynchronizationModel DTO instead of the actual IComparisonScope.
+			 * <p>
+			 * This internal API is only intended for use by the resource mapping mergers.
+			 * </p>
+			 * 
+			 * @param left
+			 *            The element that will be used as the starting point to resolve the left logical
+			 *            model.
+			 * @param right
+			 *            Element that will be used as the starting point to resolve the left logical model.
+			 * @param origin
+			 *            The origin resource, starting point of the logical model we are to resolve as the
+			 *            origin one. Can be <code>null</code>.
+			 * @param monitor
+			 *            The monitor on which to report progress information to the user.
+			 * @return The newly created SynchronizationModel.
+			 * @throws InterruptedException
+			 *             In case of user interruption.
+			 */
+			/* package */SynchronizationModel buildSynchronizationModel(ITypedElement left,
+					ITypedElement right, ITypedElement origin, IProgressMonitor monitor)
+					throws InterruptedException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("buildSynchronizationModel - START"); //$NON-NLS-1$
 		}
@@ -221,8 +223,8 @@ public final class ComparisonScopeBuilder {
 			LOGGER.debug("buildSynchronizationModel - Creating sync model"); //$NON-NLS-1$
 		}
 		if (storageAccessor != null) {
-			syncModel = createSynchronizationModel(storageAccessor, left, right, origin, subMonitor
-					.newChild(90));
+			syncModel = createSynchronizationModel(storageAccessor, left, right, origin,
+					subMonitor.newChild(90));
 		} else {
 			syncModel = createSynchronizationModel(left, right, origin, subMonitor.newChild(90));
 		}
@@ -336,7 +338,8 @@ public final class ComparisonScopeBuilder {
 				// "Should" not happen, but ignore it anyway
 			}
 			if (participant instanceof ModelSynchronizeParticipant
-					&& ((ModelSynchronizeParticipant)participant).getContext() instanceof SubscriberMergeContext) {
+					&& ((ModelSynchronizeParticipant)participant)
+							.getContext() instanceof SubscriberMergeContext) {
 				return ((SubscriberMergeContext)((ModelSynchronizeParticipant)participant).getContext())
 						.getSubscriber();
 			}
@@ -445,8 +448,8 @@ public final class ComparisonScopeBuilder {
 	 * @return The resolved synchronization model.
 	 */
 	private SynchronizationModel loadSingleResource(IStorage left, IStorage right, IStorage origin) {
-		final StorageTraversal leftTraversal = new StorageTraversal(new LinkedHashSet<IStorage>(Arrays
-				.asList(left)));
+		final StorageTraversal leftTraversal = new StorageTraversal(
+				new LinkedHashSet<IStorage>(Arrays.asList(left)));
 		final StorageTraversal rightTraversal;
 		if (right != null) {
 			rightTraversal = new StorageTraversal(new LinkedHashSet<IStorage>(Arrays.asList(right)));
@@ -512,8 +515,8 @@ public final class ComparisonScopeBuilder {
 		}
 		final ResourceSet leftResourceSet = NotLoadingResourceSet.create(leftTraversal, progress.newChild(1),
 				resourceSetHookRegistry);
-		final ResourceSet rightResourceSet = NotLoadingResourceSet.create(rightTraversal, progress
-				.newChild(1), resourceSetHookRegistry);
+		final ResourceSet rightResourceSet = NotLoadingResourceSet.create(rightTraversal,
+				progress.newChild(1), resourceSetHookRegistry);
 
 		final URIConverter converter = new ExtensibleURIConverterImpl();
 		final Set<URI> urisInScope = Sets.newLinkedHashSet();
@@ -563,11 +566,9 @@ public final class ComparisonScopeBuilder {
 		BasicDiagnostic rightDiagnostic = getResourceSetDiagnostic(rightResourceSet, DifferenceSource.RIGHT,
 				true);
 
-		BasicDiagnostic diagnostic = new BasicDiagnostic(
-				Diagnostic.OK,
-				EMFCompareIDEUIPlugin.PLUGIN_ID,
-				0,
-				EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.comparisonScopeDiagnostic"), new Object[0]); //$NON-NLS-1$
+		BasicDiagnostic diagnostic = new BasicDiagnostic(Diagnostic.OK, EMFCompareIDEUIPlugin.PLUGIN_ID, 0,
+				EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.comparisonScopeDiagnostic"), //$NON-NLS-1$
+				new Object[0]);
 
 		if (originDiagnostic != null) {
 			diagnostic.add(originDiagnostic);
@@ -598,10 +599,9 @@ public final class ComparisonScopeBuilder {
 		} else {
 			sideStr = EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.ancestor"); //$NON-NLS-1$
 		}
-		BasicDiagnostic diagnostic = new BasicDiagnostic(
-				EMFCompareIDEUIPlugin.PLUGIN_ID,
-				0,
-				EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.resourceSetDiagnostic", sideStr), new Object[0]); //$NON-NLS-1$
+		BasicDiagnostic diagnostic = new BasicDiagnostic(EMFCompareIDEUIPlugin.PLUGIN_ID, 0,
+				EMFCompareIDEUIMessages.getString("ComparisonScopeBuilder.resourceSetDiagnostic", sideStr), //$NON-NLS-1$
+				new Object[0]);
 		for (Resource resource : resourceSet.getResources()) {
 			Diagnostic resourceDiagnostic = EcoreUtil.computeDiagnostic(resource, includeWarning);
 			diagnostic.merge(resourceDiagnostic);

@@ -550,7 +550,8 @@ public class diff_match_patch {
 	 *            Map of strings to indices.
 	 * @return Encoded string.
 	 */
-	private String diff_linesToCharsMunge(String text, List<String> lineArray, Map<String, Integer> lineHash) {
+	private String diff_linesToCharsMunge(String text, List<String> lineArray,
+			Map<String, Integer> lineHash) {
 		int lineStart = 0;
 		int lineEnd = -1;
 		String line;
@@ -959,7 +960,8 @@ public class diff_match_patch {
 				bestEquality2 = equality2;
 				bestScore = diff_cleanupSemanticScore(equality1, edit)
 						+ diff_cleanupSemanticScore(edit, equality2);
-				while (edit.length() != 0 && equality2.length() != 0 && edit.charAt(0) == equality2.charAt(0)) {
+				while (edit.length() != 0 && equality2.length() != 0
+						&& edit.charAt(0) == equality2.charAt(0)) {
 					equality1 += edit.charAt(0);
 					edit = edit.substring(1) + equality2.charAt(0);
 					equality2 = equality2.substring(1);
@@ -1110,9 +1112,8 @@ public class diff_match_patch {
 				 * <ins>A</ins>X<ins>C</ins><del>D</del> <ins>A</ins><del>B</del>X<ins>C</ins>
 				 * <ins>A</del>X<ins>C</ins><del>D</del> <ins>A</ins><del>B</del>X<del>C</del>
 				 */
-				if (lastequality != null
-						&& ((pre_ins && pre_del && post_ins && post_del) || ((lastequality.length() < Diff_EditCost / 2) && ((pre_ins ? 1
-								: 0)
+				if (lastequality != null && ((pre_ins && pre_del && post_ins && post_del)
+						|| ((lastequality.length() < Diff_EditCost / 2) && ((pre_ins ? 1 : 0)
 								+ (pre_del ? 1 : 0) + (post_ins ? 1 : 0) + (post_del ? 1 : 0)) == 3))) {
 					// System.out.println("Splitting: '" + lastequality + "'");
 					// Walk back to offending equality.
@@ -1215,8 +1216,8 @@ public class diff_match_patch {
 									thisDiff.text += text_insert.substring(0, commonlength);
 									pointer.next();
 								} else {
-									pointer.add(new Diff(Operation.EQUAL, text_insert.substring(0,
-											commonlength)));
+									pointer.add(new Diff(Operation.EQUAL,
+											text_insert.substring(0, commonlength)));
 								}
 								text_insert = text_insert.substring(commonlength);
 								text_delete = text_delete.substring(commonlength);
@@ -1359,8 +1360,8 @@ public class diff_match_patch {
 	public String diff_prettyHtml(LinkedList<Diff> diffs) {
 		StringBuilder html = new StringBuilder();
 		for (Diff aDiff : diffs) {
-			String text = aDiff.text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace(
-					"\n", "&para;<br>");
+			String text = aDiff.text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+					.replace("\n", "&para;<br>");
 			switch (aDiff.operation) {
 				case INSERT:
 					html.append("<ins style=\"background:#e6ffe6;\">").append(text).append("</ins>");
@@ -1546,8 +1547,8 @@ public class diff_match_patch {
 					break;
 				default:
 					// Anything else is an error.
-					throw new IllegalArgumentException("Invalid diff operation in diff_fromDelta: "
-							+ token.charAt(0));
+					throw new IllegalArgumentException(
+							"Invalid diff operation in diff_fromDelta: " + token.charAt(0));
 			}
 		}
 		if (pointer != text1.length()) {
@@ -1606,7 +1607,8 @@ public class diff_match_patch {
 	 * @return Best match index or -1.
 	 */
 	protected int match_bitap(String text, String pattern, int loc) {
-		assert (Match_MaxBits == 0 || pattern.length() <= Match_MaxBits) : "Pattern too long for this application.";
+		assert (Match_MaxBits == 0
+				|| pattern.length() <= Match_MaxBits) : "Pattern too long for this application.";
 
 		// Initialise the alphabet.
 		Map<Character, Integer> s = match_alphabet(pattern);
@@ -1762,8 +1764,8 @@ public class diff_match_patch {
 		while (text.indexOf(pattern) != text.lastIndexOf(pattern)
 				&& pattern.length() < Match_MaxBits - Patch_Margin - Patch_Margin) {
 			padding += Patch_Margin;
-			pattern = text.substring(Math.max(0, patch.start2 - padding), Math.min(text.length(),
-					patch.start2 + patch.length1 + padding));
+			pattern = text.substring(Math.max(0, patch.start2 - padding),
+					Math.min(text.length(), patch.start2 + patch.length1 + padding));
 		}
 		// Add one chunk for good luck.
 		padding += Patch_Margin;
@@ -1774,8 +1776,8 @@ public class diff_match_patch {
 			patch.diffs.addFirst(new Diff(Operation.EQUAL, prefix));
 		}
 		// Add the suffix.
-		String suffix = text.substring(patch.start2 + patch.length1, Math.min(text.length(), patch.start2
-				+ patch.length1 + padding));
+		String suffix = text.substring(patch.start2 + patch.length1,
+				Math.min(text.length(), patch.start2 + patch.length1 + padding));
 		if (suffix.length() != 0) {
 			patch.diffs.addLast(new Diff(Operation.EQUAL, suffix));
 		}
@@ -2046,9 +2048,8 @@ public class diff_match_patch {
 											+ text.substring(start_loc + index2);
 								} else if (aDiff.operation == Operation.DELETE) {
 									// Deletion
-									text = text.substring(0, start_loc + index2)
-											+ text.substring(start_loc
-													+ diff_xIndex(diffs, index1 + aDiff.text.length()));
+									text = text.substring(0, start_loc + index2) + text.substring(
+											start_loc + diff_xIndex(diffs, index1 + aDiff.text.length()));
 								}
 							}
 							if (aDiff.operation != Operation.DELETE) {
@@ -2184,8 +2185,8 @@ public class diff_match_patch {
 						bigpatch.diffs.removeFirst();
 					} else {
 						// Deletion or equality. Only take as much as we can stomach.
-						diff_text = diff_text.substring(0, Math.min(diff_text.length(), patch_size
-								- patch.length1 - Patch_Margin));
+						diff_text = diff_text.substring(0,
+								Math.min(diff_text.length(), patch_size - patch.length1 - Patch_Margin));
 						patch.length1 += diff_text.length();
 						start1 += diff_text.length();
 						if (diff_type == Operation.EQUAL) {
@@ -2503,9 +2504,9 @@ public class diff_match_patch {
 	 * @return The escaped string.
 	 */
 	private static String unescapeForEncodeUriCompatability(String str) {
-		return str.replace("%21", "!").replace("%7E", "~").replace("%27", "'").replace("%28", "(").replace(
-				"%29", ")").replace("%3B", ";").replace("%2F", "/").replace("%3F", "?").replace("%3A", ":")
-				.replace("%40", "@").replace("%26", "&").replace("%3D", "=").replace("%2B", "+").replace(
-						"%24", "$").replace("%2C", ",").replace("%23", "#");
+		return str.replace("%21", "!").replace("%7E", "~").replace("%27", "'").replace("%28", "(")
+				.replace("%29", ")").replace("%3B", ";").replace("%2F", "/").replace("%3F", "?")
+				.replace("%3A", ":").replace("%40", "@").replace("%26", "&").replace("%3D", "=")
+				.replace("%2B", "+").replace("%24", "$").replace("%2C", ",").replace("%23", "#");
 	}
 }

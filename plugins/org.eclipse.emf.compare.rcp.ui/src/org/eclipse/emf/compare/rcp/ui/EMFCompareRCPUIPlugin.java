@@ -170,23 +170,23 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 		accessorFactoryRegistry = new AccessorFactoryRegistryImpl();
 		accessorFactoryRegistryListener = new AccessorFactoryExtensionRegistryListener(PLUGIN_ID,
 				ACCESSOR_FACTORY_PPID, getLog(), accessorFactoryRegistry);
-		extensionRegistry.addListener(accessorFactoryRegistryListener, PLUGIN_ID
-				+ "." + ACCESSOR_FACTORY_PPID); //$NON-NLS-1$
+		extensionRegistry.addListener(accessorFactoryRegistryListener,
+				PLUGIN_ID + "." + ACCESSOR_FACTORY_PPID); //$NON-NLS-1$
 		accessorFactoryRegistryListener.readRegistry(extensionRegistry);
 
 		differenceGroupExtenderRegistry = new DifferenceGroupExtenderRegistryImpl();
 		differenceGroupExtenderRegistryListener = new DifferenceGroupExtenderRegistryListener(PLUGIN_ID,
 				DIFFERENCE_GROUP_EXTENDER_PPID, getLog(), differenceGroupExtenderRegistry);
-		extensionRegistry.addListener(differenceGroupExtenderRegistryListener, PLUGIN_ID
-				+ "." + DIFFERENCE_GROUP_EXTENDER_PPID); //$NON-NLS-1$
+		extensionRegistry.addListener(differenceGroupExtenderRegistryListener,
+				PLUGIN_ID + "." + DIFFERENCE_GROUP_EXTENDER_PPID); //$NON-NLS-1$
 		differenceGroupExtenderRegistryListener.readRegistry(extensionRegistry);
 
 		matchEngineConfiguratorRegistry = new ConcurrentHashMap<String, IConfigurationUIFactory>();
 		matchEngineConfiguratorRegistryListener = new ConfigurationUIRegistryEventListener(PLUGIN_ID,
 				MATCH_ENGINE_FACTORY_CONFIGURATION_UI_PPID, getLog(), matchEngineConfiguratorRegistry,
 				EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryDescriptorRegistry());
-		extensionRegistry.addListener(matchEngineConfiguratorRegistryListener, PLUGIN_ID + '.'
-				+ MATCH_ENGINE_FACTORY_CONFIGURATION_UI_PPID);
+		extensionRegistry.addListener(matchEngineConfiguratorRegistryListener,
+				PLUGIN_ID + '.' + MATCH_ENGINE_FACTORY_CONFIGURATION_UI_PPID);
 		matchEngineConfiguratorRegistryListener.readRegistry(extensionRegistry);
 	}
 

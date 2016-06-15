@@ -125,8 +125,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 		match(comparison, scope, left, right, origin, monitor);
 
 		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info(String.format(
-					"detect matches - END - Took %d ms", Long.valueOf(System.currentTimeMillis() - start))); //$NON-NLS-1$
+			LOGGER.info(String.format("detect matches - END - Took %d ms", Long.valueOf(System //$NON-NLS-1$
+					.currentTimeMillis() - start)));
 		}
 		return comparison;
 	}
@@ -344,8 +344,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 
 		final Iterator<? extends EObject> leftEObjects = Iterators.concat(Iterators.singletonIterator(left),
 				scope.getChildren(left));
-		final Iterator<? extends EObject> rightEObjects = Iterators.concat(
-				Iterators.singletonIterator(right), scope.getChildren(right));
+		final Iterator<? extends EObject> rightEObjects = Iterators.concat(Iterators.singletonIterator(right),
+				scope.getChildren(right));
 		final Iterator<? extends EObject> originEObjects;
 		if (origin != null) {
 			originEObjects = Iterators.concat(Iterators.singletonIterator(origin), scope.getChildren(origin));
@@ -472,8 +472,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * @return a new IEObjectMatcher.
 	 */
 	public static IEObjectMatcher createDefaultEObjectMatcher(UseIdentifiers useIDs) {
-		return createDefaultEObjectMatcher(useIDs, WeightProviderDescriptorRegistryImpl
-				.createStandaloneInstance());
+		return createDefaultEObjectMatcher(useIDs,
+				WeightProviderDescriptorRegistryImpl.createStandaloneInstance());
 	}
 
 	/**

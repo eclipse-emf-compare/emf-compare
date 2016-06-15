@@ -79,10 +79,8 @@ public class MergeResolutionManager {
 
 		Predicate<Conflict> unresolvedConflict = new Predicate<Conflict>() {
 			public boolean apply(Conflict conflict) {
-				return conflict != null
-						&& conflict.getKind() != ConflictKind.PSEUDO
-						&& Iterables.any(conflict.getDifferences(), EMFComparePredicates
-								.hasState(DifferenceState.UNRESOLVED));
+				return conflict != null && conflict.getKind() != ConflictKind.PSEUDO && Iterables.any(
+						conflict.getDifferences(), EMFComparePredicates.hasState(DifferenceState.UNRESOLVED));
 			}
 		};
 		if (Iterables.any(comparison.getConflicts(), unresolvedConflict)) {

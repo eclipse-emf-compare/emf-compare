@@ -71,8 +71,8 @@ public class IdentifierEObjectMatcherTest {
 		List<EObject> rightEObjectsNoID = Lists.newArrayList();
 		List<EObject> originEObjectsNoID = Lists.newArrayList();
 
-		Set<Match> matches = matcher.matchPerId(leftEObjects, rightEObjects, originEObjects,
-				leftEObjectsNoID, rightEObjectsNoID, originEObjectsNoID);
+		Set<Match> matches = matcher.matchPerId(leftEObjects, rightEObjects, originEObjects, leftEObjectsNoID,
+				rightEObjectsNoID, originEObjectsNoID);
 
 		assertEquals(1, matches.size());
 		Match rootMatch = matches.iterator().next();

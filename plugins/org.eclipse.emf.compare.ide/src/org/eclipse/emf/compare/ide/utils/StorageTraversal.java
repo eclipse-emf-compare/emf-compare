@@ -49,7 +49,8 @@ public class StorageTraversal implements IAdaptable, IDiagnosable {
 	 *            The set of resources that are part of this traversal.
 	 */
 	public StorageTraversal(Set<? extends IStorage> storages) {
-		this(storages, new BasicDiagnostic(EMFCompareIDEPlugin.PLUGIN_ID, 0, null, new Object[] {storages, }));
+		this(storages,
+				new BasicDiagnostic(EMFCompareIDEPlugin.PLUGIN_ID, 0, null, new Object[] {storages, }));
 	}
 
 	/**
@@ -127,8 +128,8 @@ public class StorageTraversal implements IAdaptable, IDiagnosable {
 					 * remote or local content. The traversal itself only tells "all" potential resources
 					 * linked to the current.
 					 */
-					resources.add(ResourcesPlugin.getWorkspace().getRoot().getFile(
-							ResourceUtil.getFixedPath(storage)));
+					resources.add(ResourcesPlugin.getWorkspace().getRoot()
+							.getFile(ResourceUtil.getFixedPath(storage)));
 				}
 			}
 			final IResource[] resourceArray = resources.toArray(new IResource[resources.size()]);

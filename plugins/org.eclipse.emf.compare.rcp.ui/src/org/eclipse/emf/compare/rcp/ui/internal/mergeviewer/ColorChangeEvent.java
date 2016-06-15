@@ -17,7 +17,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer;
  */
 public class ColorChangeEvent implements IColorChangeEvent {
 
-	/** Id of the color that have changed.*/
+	/** Id of the color that have changed. */
 	private final String colorId;
 
 	/**

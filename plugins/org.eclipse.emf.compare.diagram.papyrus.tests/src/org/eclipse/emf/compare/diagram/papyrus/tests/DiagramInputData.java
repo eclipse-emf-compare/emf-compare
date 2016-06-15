@@ -53,14 +53,12 @@ public class DiagramInputData extends AbstractInputData {
 		getSets().add(resourceSet);
 
 		if (!EMFPlugin.IS_RESOURCES_BUNDLE_AVAILABLE) {
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-					.put("uml", new UMLResourceFactoryImpl());
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-					.put("notation", new GMFResourceFactory());
-			EPackage.Registry.INSTANCE.put(UMLPackage.eNS_URI,
-					UMLPackage.eINSTANCE);
-			EPackage.Registry.INSTANCE.put(NotationPackage.eNS_URI,
-					NotationPackage.eINSTANCE);
+			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("uml",
+					new UMLResourceFactoryImpl());
+			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("notation",
+					new GMFResourceFactory());
+			EPackage.Registry.INSTANCE.put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
+			EPackage.Registry.INSTANCE.put(NotationPackage.eNS_URI, NotationPackage.eINSTANCE);
 			// EPackage.Registry.INSTANCE.put(StylePackage.eNS_URI,
 			// NotationPackage.eINSTANCE);
 		}

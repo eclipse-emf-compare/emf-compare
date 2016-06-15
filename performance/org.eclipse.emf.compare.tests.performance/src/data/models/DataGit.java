@@ -78,7 +78,6 @@ import com.google.common.base.Throwables;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- *
  */
 @SuppressWarnings("restriction")
 public class DataGit {
@@ -86,11 +85,11 @@ public class DataGit {
 	private static final String MASTER = Constants.R_HEADS + Constants.MASTER;
 
 	private static final String MODIFIED = Constants.R_HEADS + "modified";
-	
+
 	private List<Runnable> disposers;
-	
+
 	private List<ResourceSet> resourceSets = newArrayList();
-	
+
 	private IComparisonScope scope;
 
 	private Comparison comparison;
@@ -106,13 +105,13 @@ public class DataGit {
 			Bundle bundle = Platform.getBundle("org.eclipse.emf.compare.tests.performance");
 			URL entry = bundle.getEntry(zippedRepoLocation);
 			repoFile = new File(systemTmpDir + File.separator + repoName);
-			
+
 			// Delete repo if it already exists
 			GitUtil.deleteRepo(repoFile);
-			
+
 			// Unzip repository to temp directory
 			GitUtil.unzipRepo(entry, systemTmpDir, new NullProgressMonitor());
-			
+
 			Job importJob = new Job("ImportProjects") {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
@@ -122,7 +121,7 @@ public class DataGit {
 			};
 			importJob.schedule();
 			importJob.join();
-			
+
 			Job connectJob = new Job("ConnectProjects") {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
@@ -140,12 +139,13 @@ public class DataGit {
 			};
 			connectJob.schedule();
 			connectJob.join();
-			
+
 			IProject rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(rootProjectName);
-			
+
 			final IFile model = rootProject.getFile(new Path(modelName));
 			final String fullPath = model.getFullPath().toString();
-			final Subscriber subscriber = GitUtil.createSubscriberForComparison(repository, MASTER, MODIFIED, model, disposers);
+			final Subscriber subscriber = GitUtil.createSubscriberForComparison(repository, MASTER, MODIFIED,
+					model, disposers);
 			final IStorageProviderAccessor accessor = new SubscriberStorageAccessor(subscriber);
 			final IStorageProvider sourceProvider = accessor.getStorageProvider(model,
 					IStorageProviderAccessor.DiffSide.SOURCE);
@@ -171,7 +171,7 @@ public class DataGit {
 			resourceSets.add((ResourceSet)scope.getLeft());
 			resourceSets.add((ResourceSet)scope.getRight());
 			resourceSets.add((ResourceSet)scope.getOrigin());
-			
+
 		} catch (IOException e) {
 			Throwables.propagate(e);
 		} catch (CoreException e) {
@@ -180,58 +180,58 @@ public class DataGit {
 			Throwables.propagate(e);
 		}
 	}
-	
+
 	public Comparison match() {
 		return match(UseIdentifiers.ONLY);
 	}
-	
+
 	public Comparison match(UseIdentifiers useIDs) {
 		final IMatchEngine matchEngine = DefaultMatchEngine.create(useIDs);
 		comparison = matchEngine.match(scope, new BasicMonitor());
 		return comparison;
 	}
-	
+
 	public Comparison diff() {
 		final IDiffProcessor diffBuilder = new DiffBuilder();
 		final IDiffEngine diffEngine = new DefaultDiffEngine(diffBuilder);
-		diffEngine.diff(comparison,  new BasicMonitor());
+		diffEngine.diff(comparison, new BasicMonitor());
 		return comparison;
 	}
-	
+
 	public void req() {
 		final IReqEngine reqEngine = new DefaultReqEngine();
 		reqEngine.computeRequirements(comparison, new BasicMonitor());
 	}
-	
+
 	public void equi() {
 		final IEquiEngine equiEngine = new DefaultEquiEngine();
 		equiEngine.computeEquivalences(comparison, new BasicMonitor());
 	}
-	
+
 	public void conflict() {
 		final IConflictDetector conflictDetector = new MatchBasedConflictDetector();
 		conflictDetector.detect(comparison, new BasicMonitor());
 	}
-	
+
 	public void compare() {
 		EMFCompare.builder().build().compare(scope);
 	}
-	
+
 	public void postComparisonGMF() {
 		final IPostProcessor postProcessor = new CompareDiagramPostProcessor();
 		postProcessor.postComparison(comparison, new BasicMonitor());
 	}
-	
+
 	public void postMatchUML() {
 		final IPostProcessor postProcessor = new UMLPostProcessor();
 		postProcessor.postMatch(comparison, new BasicMonitor());
 	}
-	
+
 	public void postComparisonUML() {
 		final IPostProcessor postProcessor = new UMLPostProcessor();
 		postProcessor.postComparison(comparison, new BasicMonitor());
 	}
-	
+
 	public void dispose() {
 		comparison = null;
 		for (ResourceSet rs : resourceSets) {
@@ -244,14 +244,13 @@ public class DataGit {
 				}
 				resource.eAdapters().clear();
 			}
-			
+
 			rs.getResources().clear();
 			rs.eAdapters().clear();
 		}
-		
-		
+
 		resourceSets = null;
-		
+
 		Job cleanJob = new Job("ClearWorkspace") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -274,7 +273,6 @@ public class DataGit {
 		} catch (InterruptedException e) {
 			Throwables.propagate(e);
 		}
-		
 
 		if (repository != null) {
 			repository.close();
@@ -284,7 +282,7 @@ public class DataGit {
 			disposer.run();
 		}
 		disposers.clear();
-		
+
 		// Delete repository from temp directory
 		GitUtil.deleteRepo(repoFile);
 	}

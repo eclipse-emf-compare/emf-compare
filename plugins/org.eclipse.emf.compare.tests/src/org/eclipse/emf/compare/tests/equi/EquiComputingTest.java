@@ -65,18 +65,22 @@ public class EquiComputingTest {
 		if (kind.equals(TestKind.LEFT)) {
 			changeRefA2BDiffDescription = changedReference("Requirements.A", "destination", null,
 					"Requirements.B");
-			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", null, "Requirements.A");
+			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", null,
+					"Requirements.A");
 			changeRefC2DDiffDescription = addedToReference("Requirements.C", "destination", "Requirements.D");
-			changeRefD2CDiffDescription = changedReference("Requirements.D", "source", null, "Requirements.C");
+			changeRefD2CDiffDescription = changedReference("Requirements.D", "source", null,
+					"Requirements.C");
 			changeRefE2FDiffDescription = addedToReference("Requirements.E", "destination", "Requirements.F");
 			changeRefF2EDiffDescription = addedToReference("Requirements.F", "source", "Requirements.E");
 		} else {
 			changeRefA2BDiffDescription = changedReference("Requirements.A", "destination", "Requirements.B",
 					null);
-			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", "Requirements.A", null);
+			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", "Requirements.A",
+					null);
 			changeRefC2DDiffDescription = removedFromReference("Requirements.C", "destination",
 					"Requirements.D");
-			changeRefD2CDiffDescription = changedReference("Requirements.D", "source", "Requirements.C", null);
+			changeRefD2CDiffDescription = changedReference("Requirements.D", "source", "Requirements.C",
+					null);
 			changeRefE2FDiffDescription = removedFromReference("Requirements.E", "destination",
 					"Requirements.F");
 			changeRefF2EDiffDescription = removedFromReference("Requirements.F", "source", "Requirements.E");
@@ -169,8 +173,10 @@ public class EquiComputingTest {
 					"Requirements.F1");
 			changeRefE2F2DiffDescription = removedFromReference("Requirements.E", "destination",
 					"Requirements.F2");
-			changeRefF12EDiffDescription = removedFromReference("Requirements.F1", "source", "Requirements.E");
-			changeRefF22EDiffDescription = removedFromReference("Requirements.F2", "source", "Requirements.E");
+			changeRefF12EDiffDescription = removedFromReference("Requirements.F1", "source",
+					"Requirements.E");
+			changeRefF22EDiffDescription = removedFromReference("Requirements.F2", "source",
+					"Requirements.E");
 		}
 
 		final Diff changeRefC2D1Diff = Iterators.find(differences.iterator(), changeRefC2D1DiffDescription);
@@ -392,9 +398,11 @@ public class EquiComputingTest {
 		if (kind.equals(TestKind.LEFT)) {
 			changeRefA2BDiffDescription = changedReference("Requirements.A", "destination", null,
 					"Requirements.B");
-			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", null, "Requirements.A");
+			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", null,
+					"Requirements.A");
 			changeRefC2DDiffDescription = addedToReference("Requirements.C", "destination", "Requirements.D");
-			changeRefD2CDiffDescription = changedReference("Requirements.D", "source", null, "Requirements.C");
+			changeRefD2CDiffDescription = changedReference("Requirements.D", "source", null,
+					"Requirements.C");
 			changeRefE2FDiffDescription = addedToReference("Requirements.E", "destination", "Requirements.F");
 			changeRefF2EDiffDescription = addedToReference("Requirements.F", "source", "Requirements.E");
 
@@ -407,10 +415,12 @@ public class EquiComputingTest {
 		} else {
 			changeRefA2BDiffDescription = changedReference("Requirements.A", "destination", "Requirements.B",
 					null);
-			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", "Requirements.A", null);
+			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", "Requirements.A",
+					null);
 			changeRefC2DDiffDescription = removedFromReference("Requirements.C", "destination",
 					"Requirements.D");
-			changeRefD2CDiffDescription = changedReference("Requirements.D", "source", "Requirements.C", null);
+			changeRefD2CDiffDescription = changedReference("Requirements.D", "source", "Requirements.C",
+					null);
 			changeRefE2FDiffDescription = removedFromReference("Requirements.E", "destination",
 					"Requirements.F");
 			changeRefF2EDiffDescription = removedFromReference("Requirements.F", "source", "Requirements.E");
@@ -542,13 +552,17 @@ public class EquiComputingTest {
 		if (kind.equals(TestKind.LEFT)) {
 			changeRefA2BDiffDescription = changedReference("Requirements.A", "destination", "Requirements.B",
 					"Requirements.C");
-			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", "Requirements.A", null);
-			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", null, "Requirements.A");
+			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", "Requirements.A",
+					null);
+			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", null,
+					"Requirements.A");
 		} else {
 			changeRefA2BDiffDescription = changedReference("Requirements.A", "destination", "Requirements.C",
 					"Requirements.B");
-			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", null, "Requirements.A");
-			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", "Requirements.A", null);
+			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", null,
+					"Requirements.A");
+			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", "Requirements.A",
+					null);
 		}
 
 		final Diff changeRefA2BDiff = Iterators.find(differences.iterator(), changeRefA2BDiffDescription);
@@ -593,14 +607,18 @@ public class EquiComputingTest {
 		if (kind.equals(TestKind.LEFT)) {
 			changeRefA2BDiffDescription = changedReference("Requirements.A", "destination", "Requirements.B",
 					"Requirements.C");
-			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", "Requirements.A", null);
-			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", null, "Requirements.A");
+			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", "Requirements.A",
+					null);
+			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", null,
+					"Requirements.A");
 			addCDiffDescription = addedToReference("Requirements", "containmentRef1", "Requirements.C");
 		} else {
 			changeRefA2BDiffDescription = changedReference("Requirements.A", "destination", "Requirements.C",
 					"Requirements.B");
-			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", null, "Requirements.A");
-			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", "Requirements.A", null);
+			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", null,
+					"Requirements.A");
+			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", "Requirements.A",
+					null);
 			addCDiffDescription = removedFromReference("Requirements", "containmentRef1", "Requirements.C");
 		}
 
@@ -648,15 +666,20 @@ public class EquiComputingTest {
 		if (kind.equals(TestKind.LEFT)) {
 			changeRefA2CDiffDescription = changedReference("Requirements.A", "destination", "Requirements.B",
 					"Requirements.C");
-			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", null, "Requirements.A");
-			deleteBDiffDescription = removedFromReference("Requirements", "containmentRef1", "Requirements.B");
-			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", "Requirements.A", null);
+			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", null,
+					"Requirements.A");
+			deleteBDiffDescription = removedFromReference("Requirements", "containmentRef1",
+					"Requirements.B");
+			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", "Requirements.A",
+					null);
 		} else {
 			changeRefA2CDiffDescription = changedReference("Requirements.A", "destination", "Requirements.C",
 					"Requirements.B");
-			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", "Requirements.A", null);
+			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", "Requirements.A",
+					null);
 			deleteBDiffDescription = addedToReference("Requirements", "containmentRef1", "Requirements.B");
-			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", null, "Requirements.A");
+			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", null,
+					"Requirements.A");
 		}
 
 		final Diff changeRefA2CDiff = Iterators.find(differences.iterator(), changeRefA2CDiffDescription);
@@ -704,16 +727,21 @@ public class EquiComputingTest {
 		if (kind.equals(TestKind.LEFT)) {
 			changeRefA2CDiffDescription = changedReference("Requirements.A", "destination", "Requirements.B",
 					"Requirements.C");
-			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", null, "Requirements.A");
-			deleteBDiffDescription = removedFromReference("Requirements", "containmentRef1", "Requirements.B");
-			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", "Requirements.A", null);
+			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", null,
+					"Requirements.A");
+			deleteBDiffDescription = removedFromReference("Requirements", "containmentRef1",
+					"Requirements.B");
+			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", "Requirements.A",
+					null);
 			addCDiffDescription = addedToReference("Requirements", "containmentRef1", "Requirements.C");
 		} else {
 			changeRefA2CDiffDescription = changedReference("Requirements.A", "destination", "Requirements.C",
 					"Requirements.B");
-			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", "Requirements.A", null);
+			changeRefC2ADiffDescription = changedReference("Requirements.C", "source", "Requirements.A",
+					null);
 			deleteBDiffDescription = addedToReference("Requirements", "containmentRef1", "Requirements.B");
-			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", null, "Requirements.A");
+			changeRefB2ADiffDescription = changedReference("Requirements.B", "source", null,
+					"Requirements.A");
 			addCDiffDescription = removedFromReference("Requirements", "containmentRef1", "Requirements.C");
 		}
 

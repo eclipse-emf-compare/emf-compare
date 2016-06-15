@@ -33,8 +33,8 @@ public class EMFCompareConfigurationTest {
 		assertNotNull(preview_mode);
 		Object smv_filters = emfCC.getProperty(EMFCompareIDEUIPlugin.PLUGIN_ID + ".SMV_FILTERS");
 		assertNotNull(smv_filters);
-		Object smv_group_providers = emfCC.getProperty(EMFCompareIDEUIPlugin.PLUGIN_ID
-				+ ".SMV_GROUP_PROVIDERS");
+		Object smv_group_providers = emfCC
+				.getProperty(EMFCompareIDEUIPlugin.PLUGIN_ID + ".SMV_GROUP_PROVIDERS");
 		assertNotNull(smv_group_providers);
 		Object event_bus = emfCC.getProperty(EMFCompareIDEUIPlugin.PLUGIN_ID + ".EVENT_BUS");
 		assertNotNull(event_bus);
@@ -44,8 +44,8 @@ public class EMFCompareConfigurationTest {
 		assertEquals(preview_mode, preview_mode2);
 		Object smv_filters2 = emfCC2.getProperty(EMFCompareIDEUIPlugin.PLUGIN_ID + ".SMV_FILTERS");
 		assertEquals(smv_filters, smv_filters2);
-		Object smv_group_providers2 = emfCC2.getProperty(EMFCompareIDEUIPlugin.PLUGIN_ID
-				+ ".SMV_GROUP_PROVIDERS");
+		Object smv_group_providers2 = emfCC2
+				.getProperty(EMFCompareIDEUIPlugin.PLUGIN_ID + ".SMV_GROUP_PROVIDERS");
 		assertEquals(smv_group_providers, smv_group_providers2);
 		Object event_bus2 = emfCC2.getProperty(EMFCompareIDEUIPlugin.PLUGIN_ID + ".EVENT_BUS");
 		assertEquals(event_bus, event_bus2);

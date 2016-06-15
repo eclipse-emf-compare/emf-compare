@@ -83,8 +83,8 @@ public class MergeContainedNonConflictingAction extends MergeAction {
 	 *            The predicate to use for determining whether a {@link TreeNode} is filtered.
 	 */
 	public MergeContainedNonConflictingAction(IEMFCompareConfiguration compareConfiguration,
-			Registry mergerRegistry, MergeMode mode, INavigatable navigatable,
-			IStructuredSelection selection, Predicate<TreeNode> isFiltered) {
+			Registry mergerRegistry, MergeMode mode, INavigatable navigatable, IStructuredSelection selection,
+			Predicate<TreeNode> isFiltered) {
 		super(compareConfiguration, mergerRegistry, mode, navigatable);
 		this.isFiltered = isFiltered;
 		updateSelection(selection);
@@ -96,26 +96,26 @@ public class MergeContainedNonConflictingAction extends MergeAction {
 			case LEFT_TO_RIGHT:
 				setText(EMFCompareIDEUIMessages.getString("merged.contained.to.right.tooltip")); //$NON-NLS-1$
 				setToolTipText(EMFCompareIDEUIMessages.getString("merged.contained.to.right.tooltip")); //$NON-NLS-1$
-				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/merge_all_to_right.gif")); //$NON-NLS-1$
+				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
+						"icons/full/toolb16/merge_all_to_right.gif")); //$NON-NLS-1$
 				break;
 			case RIGHT_TO_LEFT:
 				setText(EMFCompareIDEUIMessages.getString("merged.contained.to.left.tooltip")); //$NON-NLS-1$
 				setToolTipText(EMFCompareIDEUIMessages.getString("merged.contained.to.left.tooltip")); //$NON-NLS-1$
-				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/merge_all_to_left.gif")); //$NON-NLS-1$
+				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
+						"icons/full/toolb16/merge_all_to_left.gif")); //$NON-NLS-1$
 				break;
 			case ACCEPT:
 				setText(EMFCompareIDEUIMessages.getString("accept.contained.changes.tooltip")); //$NON-NLS-1$
 				setToolTipText(EMFCompareIDEUIMessages.getString("accept.contained.changes.tooltip")); //$NON-NLS-1$
-				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/accept_all_changes.gif")); //$NON-NLS-1$
+				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
+						"icons/full/toolb16/accept_all_changes.gif")); //$NON-NLS-1$
 				break;
 			case REJECT:
 				setText(EMFCompareIDEUIMessages.getString("reject.contained.changes.tooltip")); //$NON-NLS-1$
 				setToolTipText(EMFCompareIDEUIMessages.getString("reject.contained.changes.tooltip")); //$NON-NLS-1$
-				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/reject_all_changes.gif")); //$NON-NLS-1$
+				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
+						"icons/full/toolb16/reject_all_changes.gif")); //$NON-NLS-1$
 				break;
 			default:
 				throw new IllegalStateException();

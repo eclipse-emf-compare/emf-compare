@@ -167,11 +167,11 @@ public class AddGeneralizationSetTest extends AbstractUMLTest {
 		assertEquals(1, count(differences, instanceOf(GeneralizationSetChange.class)));
 		Diff addUMLGeneralizationSet = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLGeneralizationSet = Iterators.find(differences.iterator(), and(
-					instanceOf(GeneralizationSetChange.class), ofKind(DifferenceKind.ADD)));
+			addUMLGeneralizationSet = Iterators.find(differences.iterator(),
+					and(instanceOf(GeneralizationSetChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLGeneralizationSet = Iterators.find(differences.iterator(), and(
-					instanceOf(GeneralizationSetChange.class), ofKind(DifferenceKind.DELETE)));
+			addUMLGeneralizationSet = Iterators.find(differences.iterator(),
+					and(instanceOf(GeneralizationSetChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLGeneralizationSet);
 		assertEquals(5, addUMLGeneralizationSet.getRefinedBy().size());
@@ -220,13 +220,13 @@ public class AddGeneralizationSetTest extends AbstractUMLTest {
 
 		assertNotNull(addRefGeneralizationInGeneralizationSet1.getEquivalence());
 		assertEquals(2, addRefGeneralizationInGeneralizationSet1.getEquivalence().getDifferences().size());
-		assertTrue(addRefGeneralizationInGeneralizationSet1.getEquivalence().getDifferences().contains(
-				addRefGeneralizationSetInClass0));
+		assertTrue(addRefGeneralizationInGeneralizationSet1.getEquivalence().getDifferences()
+				.contains(addRefGeneralizationSetInClass0));
 
 		assertNotNull(addRefGeneralizationInGeneralizationSet2.getEquivalence());
 		assertEquals(2, addRefGeneralizationInGeneralizationSet2.getEquivalence().getDifferences().size());
-		assertTrue(addRefGeneralizationInGeneralizationSet2.getEquivalence().getDifferences().contains(
-				addRefGeneralizationSetInClass2));
+		assertTrue(addRefGeneralizationInGeneralizationSet2.getEquivalence().getDifferences()
+				.contains(addRefGeneralizationSetInClass2));
 
 		testIntersections(comparison);
 
@@ -244,8 +244,8 @@ public class AddGeneralizationSetTest extends AbstractUMLTest {
 			final String referenceName, final String removedQualifiedName,
 			final EStructuralFeature featureDelegate) {
 		// This is only meant for multi-valued references
-		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), referenceValueMatch(
-				referenceName, removedQualifiedName, true, featureDelegate));
+		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName),
+				referenceValueMatch(referenceName, removedQualifiedName, true, featureDelegate));
 	}
 
 	public static Predicate<? super Diff> addedToReference1(final String qualifiedName,
@@ -260,8 +260,8 @@ public class AddGeneralizationSetTest extends AbstractUMLTest {
 			final String referenceName, final String removedQualifiedName,
 			final EStructuralFeature featureDelegate) {
 		// This is only meant for multi-valued references
-		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), referenceValueMatch(referenceName,
-				removedQualifiedName, true, featureDelegate));
+		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName),
+				referenceValueMatch(referenceName, removedQualifiedName, true, featureDelegate));
 	}
 
 	@Override

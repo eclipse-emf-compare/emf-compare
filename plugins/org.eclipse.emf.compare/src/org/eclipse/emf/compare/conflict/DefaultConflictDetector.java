@@ -127,8 +127,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 
 		handlePseudoUnderRealAdd(comparison);
 		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info(String.format(
-					"detect conflicts - END - Took %d ms", Long.valueOf(System.currentTimeMillis() - start))); //$NON-NLS-1$
+			LOGGER.info(String.format("detect conflicts - END - Took %d ms", Long.valueOf(System //$NON-NLS-1$
+					.currentTimeMillis() - start)));
 		}
 	}
 
@@ -140,7 +140,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 *            The originating comparison of those diffs.
 	 */
 	private void handlePseudoUnderRealAdd(Comparison comparison) {
-		for (Conflict realContainmentAdd : filter(comparison.getConflicts(), IS_REAL_CONTAINMENT_ADD_CONFLICT)) {
+		for (Conflict realContainmentAdd : filter(comparison.getConflicts(),
+				IS_REAL_CONTAINMENT_ADD_CONFLICT)) {
 			changeKindOfPseudoConflictsUnder(realContainmentAdd);
 		}
 	}
@@ -184,15 +185,15 @@ public class DefaultConflictDetector implements IConflictDetector {
 		// CHANGE diffs can only conflict with other CHANGE or DELETE ... here again detected on the DELETE
 		// MOVE diffs can conflict with DELETE ones, detected on the delete, or with other MOVE diffs.
 		if (diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment()) {
-			checkContainmentConflict(comparison, (ReferenceChange)diff, Iterables.filter(candidates,
-					ReferenceChange.class));
+			checkContainmentConflict(comparison, (ReferenceChange)diff,
+					Iterables.filter(candidates, ReferenceChange.class));
 		} else if (diff instanceof ResourceAttachmentChange) {
 			// These will be handled about the same way as containment deletions,
 			// Though they can also conflict with themselves
 			checkResourceAttachmentConflict(comparison, (ResourceAttachmentChange)diff, candidates);
 		} else if (isFeatureMapContainment(diff)) {
-			checkContainmentFeatureMapConflict(comparison, (FeatureMapChange)diff, Iterables.filter(
-					candidates, FeatureMapChange.class));
+			checkContainmentFeatureMapConflict(comparison, (FeatureMapChange)diff,
+					Iterables.filter(candidates, FeatureMapChange.class));
 		} else {
 			switch (diff.getKind()) {
 				case DELETE:
@@ -336,10 +337,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 			} else if (diff.getMatch() == candidate.getMatch()
 					&& diff.getReference() == candidate.getReference()) {
 				// Same value added in the same container/reference couple
-				if (!diffIsDelete
-						&& !candidateIsDelete
-						&& matchingIndices(comparison, diff.getMatch(), diff.getReference(), diff.getValue(),
-								candidate.getValue())) {
+				if (!diffIsDelete && !candidateIsDelete && matchingIndices(comparison, diff.getMatch(),
+						diff.getReference(), diff.getValue(), candidate.getValue())) {
 					kind = ConflictKind.PSEUDO;
 				}
 			}
@@ -437,9 +436,9 @@ public class DefaultConflictDetector implements IConflictDetector {
 					&& diff.getAttribute() == candidate.getAttribute()) {
 				// Same value added in the same container/reference couple with the same key
 				if (!diffIsDelete
-						&& !candidateIsDelete
-						&& matchingIndices(comparison, diff.getMatch(), diff.getAttribute(), diff.getValue(),
-								candidate.getValue()) && haveSameKey(diff, candidate)) {
+						&& !candidateIsDelete && matchingIndices(comparison, diff.getMatch(),
+								diff.getAttribute(), diff.getValue(), candidate.getValue())
+						&& haveSameKey(diff, candidate)) {
 					kind = ConflictKind.PSEUDO;
 				}
 			}
@@ -572,9 +571,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 	}
 
 	/**
-	 * Specifies whether the two given diffs, {@code diff1} and {@code diff2}, are both
-	 * {@link AttributeChange attribute changes} of String attributes and can be merged with a line-based
-	 * three-way merge.
+	 * Specifies whether the two given diffs, {@code diff1} and {@code diff2}, are both {@link AttributeChange
+	 * attribute changes} of String attributes and can be merged with a line-based three-way merge.
 	 * 
 	 * @see org.eclipse.emf.compare.internal.ThreeWayTextDiff
 	 * @param diff1
@@ -605,8 +603,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 *         otherwise.
 	 */
 	private boolean isStringAttributeChange(Diff diff) {
-		return diff instanceof AttributeChange
-				&& ((AttributeChange)diff).getAttribute().getEAttributeType().getInstanceClass() == String.class;
+		return diff instanceof AttributeChange && ((AttributeChange)diff).getAttribute().getEAttributeType()
+				.getInstanceClass() == String.class;
 	}
 
 	/**
@@ -777,8 +775,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
 			public boolean apply(Diff input) {
 				boolean apply = false;
-				if (input != null
-						&& (input.getKind() == DifferenceKind.MOVE || input.getKind() == DifferenceKind.DELETE)) {
+				if (input != null && (input.getKind() == DifferenceKind.MOVE
+						|| input.getKind() == DifferenceKind.DELETE)) {
 					if (input instanceof ReferenceChange) {
 						apply = ((ReferenceChange)input).getReference() == feature;
 					} else if (input instanceof AttributeChange) {
@@ -895,7 +893,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 																// same value can appear twice.
 						conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 					}
-				} else if (matchingIndices(comparison, diff.getMatch(), feature, addedValue, candidateValue)) {
+				} else if (matchingIndices(comparison, diff.getMatch(), feature, addedValue,
+						candidateValue)) {
 					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
 				} else {
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
@@ -966,7 +965,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 				ConflictKind kind = ConflictKind.REAL;
 				if (candidate.getKind() == DifferenceKind.DELETE && diff.getKind() == DifferenceKind.DELETE) {
 					kind = ConflictKind.PSEUDO;
-				} else if (candidate.getKind() == DifferenceKind.ADD && diff.getKind() == DifferenceKind.ADD) {
+				} else if (candidate.getKind() == DifferenceKind.ADD
+						&& diff.getKind() == DifferenceKind.ADD) {
 					final Resource diffRes;
 					final Resource candidateRes;
 					if (diff.getSource() == DifferenceSource.LEFT) {
@@ -1054,8 +1054,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 
 		if (soughtMatch == null) {
 			// This should never happen
-			throw new RuntimeException(EMFCompareMessages.getString(
-					"ResourceAttachmentChangeSpec.MissingMatch", resource.getURI().lastSegment())); //$NON-NLS-1$
+			throw new RuntimeException(EMFCompareMessages
+					.getString("ResourceAttachmentChangeSpec.MissingMatch", resource.getURI().lastSegment())); //$NON-NLS-1$
 		}
 
 		return soughtMatch;
@@ -1198,8 +1198,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 		} else {
 			expectedValue = value;
 		}
-		return Iterables.any(match.getDifferences(), and(onFeature(feature.getName()),
-				valueIs(expectedValue), ofKind(DifferenceKind.DELETE)));
+		return Iterables.any(match.getDifferences(),
+				and(onFeature(feature.getName()), valueIs(expectedValue), ofKind(DifferenceKind.DELETE)));
 	}
 
 	/**

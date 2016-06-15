@@ -126,16 +126,16 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 				}
 			} else if (getSide() != MergeViewerSide.ANCESTOR
 					|| (getSide() == MergeViewerSide.ANCESTOR && match.getOrigin() != null)) {
-				ResourceAttachmentChange diff = getFirst(filter(match.getDifferences(),
-						ResourceAttachmentChange.class), null);
-				container = new MergeViewerItem.Container(getComparison(), diff, match.getLeft(), match
-						.getRight(), match.getOrigin(), getSide(), getRootAdapterFactory());
+				ResourceAttachmentChange diff = getFirst(
+						filter(match.getDifferences(), ResourceAttachmentChange.class), null);
+				container = new MergeViewerItem.Container(getComparison(), diff, match.getLeft(),
+						match.getRight(), match.getOrigin(), getSide(), getRootAdapterFactory());
 				items.add(container);
 			}
 		}
 
-		final IMergeViewerItem newContainer = ResourceUIUtil.addNewContainerForNotLoadedFragmentMatches(
-				items, getSide(), getComparison(), getRootAdapterFactory());
+		final IMergeViewerItem newContainer = ResourceUIUtil.addNewContainerForNotLoadedFragmentMatches(items,
+				getSide(), getComparison(), getRootAdapterFactory());
 		if (newContainer != null) {
 			ret.add(newContainer);
 		} else {

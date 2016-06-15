@@ -34,8 +34,8 @@ public class ConflictSpec extends ConflictImpl {
 	@Override
 	public EList<Diff> getLeftDifferences() {
 		final EList<Diff> leftDiffs = new BasicEList<Diff>();
-		for (Diff diff : Iterables.filter(getDifferences(), EMFComparePredicates
-				.fromSide(DifferenceSource.LEFT))) {
+		for (Diff diff : Iterables.filter(getDifferences(),
+				EMFComparePredicates.fromSide(DifferenceSource.LEFT))) {
 			leftDiffs.add(diff);
 		}
 		return leftDiffs;
@@ -49,8 +49,8 @@ public class ConflictSpec extends ConflictImpl {
 	@Override
 	public EList<Diff> getRightDifferences() {
 		final EList<Diff> rightDiffs = new BasicEList<Diff>();
-		for (Diff diff : Iterables.filter(getDifferences(), EMFComparePredicates
-				.fromSide(DifferenceSource.RIGHT))) {
+		for (Diff diff : Iterables.filter(getDifferences(),
+				EMFComparePredicates.fromSide(DifferenceSource.RIGHT))) {
 			rightDiffs.add(diff);
 		}
 		return rightDiffs;

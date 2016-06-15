@@ -81,9 +81,9 @@ public class WeightProviderDescriptorRegistryListener extends AbstractRegistryEv
 				try {
 					Integer.parseInt(rankingStr);
 				} catch (NumberFormatException nfe) {
-					log(IStatus.ERROR, element, EMFCompareRCPMessages.getString(
-							"malformed.extension.attribute", //$NON-NLS-1$
-							ATT_RANKING));
+					log(IStatus.ERROR, element,
+							EMFCompareRCPMessages.getString("malformed.extension.attribute", //$NON-NLS-1$
+									ATT_RANKING));
 					return false;
 				}
 				ret = true;
@@ -104,12 +104,12 @@ public class WeightProviderDescriptorRegistryListener extends AbstractRegistryEv
 		String className = element.getAttribute(ATT_CLASS);
 		String nsURI = element.getAttribute(ATT_NS_URI);
 		int rank = Integer.parseInt(element.getAttribute(ATT_RANKING));
-		WeightProvider.Descriptor descriptor = new WeightProviderDescriptorRCPImpl(element, rank, Pattern
-				.compile(nsURI));
+		WeightProvider.Descriptor descriptor = new WeightProviderDescriptorRCPImpl(element, rank,
+				Pattern.compile(nsURI));
 		WeightProvider.Descriptor previous = weightProviderRegistry.put(className, descriptor);
 		if (previous != null) {
-			log(IStatus.WARNING, element, EMFCompareRCPMessages.getString(
-					"duplicate.extension", weightProviderRegistry.getClass().getName())); //$NON-NLS-1$
+			log(IStatus.WARNING, element, EMFCompareRCPMessages.getString("duplicate.extension", //$NON-NLS-1$
+					weightProviderRegistry.getClass().getName()));
 		}
 		return true;
 	}

@@ -83,9 +83,8 @@ public class EdgeChangeFactory extends NodeChangeFactory {
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
 		super.setRefiningChanges(extension, extensionKind, refiningDiff);
 		if (extensionKind == DifferenceKind.CHANGE) {
-			extension.getRefinedBy().addAll(
-					Collections2.filter(getAllDifferencesForChange(refiningDiff), EMFComparePredicates
-							.fromSide(extension.getSource())));
+			extension.getRefinedBy().addAll(Collections2.filter(getAllDifferencesForChange(refiningDiff),
+					EMFComparePredicates.fromSide(extension.getSource())));
 		}
 	}
 
@@ -99,7 +98,8 @@ public class EdgeChangeFactory extends NodeChangeFactory {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff difference) {
 				return difference instanceof ReferenceChange
-						&& (isRelatedToAnAddEdge((ReferenceChange)difference) || isRelatedToADeleteEdge((ReferenceChange)difference));
+						&& (isRelatedToAnAddEdge((ReferenceChange)difference)
+								|| isRelatedToADeleteEdge((ReferenceChange)difference));
 			}
 		};
 	}
@@ -187,10 +187,9 @@ public class EdgeChangeFactory extends NodeChangeFactory {
 	 */
 	@Override
 	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {
-		return (input.getAttribute().eContainer().equals(NotationPackage.eINSTANCE.getRelativeBendpoints()) || input
-				.getAttribute().equals(NotationPackage.eINSTANCE.getIdentityAnchor_Id()))
-				&&
-				/* isContainerBasedOnSemanticEdge(input) && */input.getRefines().isEmpty();
+		return (input.getAttribute().eContainer().equals(NotationPackage.eINSTANCE.getRelativeBendpoints())
+				|| input.getAttribute().equals(NotationPackage.eINSTANCE.getIdentityAnchor_Id())) &&
+		/* isContainerBasedOnSemanticEdge(input) && */input.getRefines().isEmpty();
 	}
 
 	/**

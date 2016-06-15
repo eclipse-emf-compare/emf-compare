@@ -48,8 +48,8 @@ public class ComparisonScopeBuilderTest {
 		SynchronizationModel syncModel = new SynchronizationModel(leftTraversal, rightTraversal, null);
 		IComparisonScope scope = ComparisonScopeBuilder.create(syncModel, new NullProgressMonitor());
 		assertTrue(scope.getLeft() instanceof ResourceSet);
-		Iterator<? extends Resource> coveredLeftResourcesIte = scope.getCoveredResources((ResourceSet)scope
-				.getLeft());
+		Iterator<? extends Resource> coveredLeftResourcesIte = scope
+				.getCoveredResources((ResourceSet)scope.getLeft());
 		List<Resource> coveredLeftResources = Lists.newArrayList(coveredLeftResourcesIte);
 		assertEquals(2, coveredLeftResources.size());
 	}

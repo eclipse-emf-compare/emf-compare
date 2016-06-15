@@ -100,7 +100,8 @@ public class UMLPostProcessor implements IPostProcessor {
 	}
 
 	/**
-	 * It checks the profile applications, matched by the given match, are based on the same profile version.<br>
+	 * It checks the profile applications, matched by the given match, are based on the same profile version.
+	 * <br>
 	 * It adds a diagnostic (error) to the comparison as soon as a difference is met.
 	 * 
 	 * @param match
@@ -143,10 +144,10 @@ public class UMLPostProcessor implements IPostProcessor {
 	 */
 	private boolean checkProfileVersion(Comparison comparison, ProfileApplication profileApplication,
 			EAnnotation leftAnnot, EAnnotation rightAnnot) {
-		Collection<URI> leftUris = getNormalizedURIs(ReferenceUtil.getAsList(leftAnnot,
-				EcorePackage.Literals.EANNOTATION__REFERENCES));
-		Collection<URI> rightUris = getNormalizedURIs(ReferenceUtil.getAsList(rightAnnot,
-				EcorePackage.Literals.EANNOTATION__REFERENCES));
+		Collection<URI> leftUris = getNormalizedURIs(
+				ReferenceUtil.getAsList(leftAnnot, EcorePackage.Literals.EANNOTATION__REFERENCES));
+		Collection<URI> rightUris = getNormalizedURIs(
+				ReferenceUtil.getAsList(rightAnnot, EcorePackage.Literals.EANNOTATION__REFERENCES));
 		if (leftUris.size() != rightUris.size() || !leftUris.containsAll(rightUris)) {
 			org.eclipse.uml2.uml.Package impactedPackage = profileApplication.getApplyingPackage();
 			String message;
@@ -350,7 +351,8 @@ public class UMLPostProcessor implements IPostProcessor {
 		// "InterfaceRealization#client". Adding the InterfaceRealization into a Class#interfaceRealizations
 		// reference implies the setting of this particular realization's "client" reference.
 		if (reference.isContainment() && reference.getEOpposite() != null) {
-			for (EReference superSet : UMLCompareUtil.getNonUnionSupersetReferences(reference.getEOpposite())) {
+			for (EReference superSet : UMLCompareUtil
+					.getNonUnionSupersetReferences(reference.getEOpposite())) {
 				Comparison comparison = diff.getMatch().getComparison();
 				for (Diff superSetDiff : comparison.getDifferences(superSet)) {
 					if (superSetDiff instanceof ReferenceChange

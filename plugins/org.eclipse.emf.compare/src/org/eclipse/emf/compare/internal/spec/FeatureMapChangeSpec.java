@@ -52,15 +52,10 @@ public class FeatureMapChangeSpec extends FeatureMapChangeImpl {
 	@Override
 	public String toString() {
 		// @formatter:off
-		return Objects.toStringHelper(this)
-					.add("map", getQNameOfFeature(getAttribute()))
-					.add("changedKey", getQNameOfFeature(getChangedKey()))
-					.add("value", getValueAsString())
-					.add("parentMatch", getMatch().toString())
-					.add("match of value", getValueMatch())
-					.add("kind", getKind())
-					.add("source", getSource())
-					.add("state", getState()).toString();
+		return Objects.toStringHelper(this).add("map", getQNameOfFeature(getAttribute()))
+				.add("changedKey", getQNameOfFeature(getChangedKey())).add("value", getValueAsString())
+				.add("parentMatch", getMatch().toString()).add("match of value", getValueMatch())
+				.add("kind", getKind()).add("source", getSource()).add("state", getState()).toString();
 		// @formatter:on
 	}
 

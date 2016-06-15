@@ -94,8 +94,7 @@ public class DiagramTooltipProviderTest extends AbstractTest {
 		factories.add(new TooltipLabelAdapterFactory());
 		composedAdapterFactory = new ComposedAdapterFactory(factories);
 
-		itemProvider = (TreeNodeItemProviderSpec) treeItemProviderAdapterFactorySpec
-				.createTreeNodeAdapter();
+		itemProvider = (TreeNodeItemProviderSpec)treeItemProviderAdapterFactorySpec.createTreeNodeAdapter();
 		mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 
 		final Resource origin = input.getOrigin();
@@ -106,8 +105,7 @@ public class DiagramTooltipProviderTest extends AbstractTest {
 
 		Comparison comparison = buildComparison(left, right, origin);
 		EList<Diff> differences = comparison.getDifferences();
-		Iterator<EdgeChange> iterator = Iterables.filter(differences,
-				EdgeChange.class).iterator();
+		Iterator<EdgeChange> iterator = Iterables.filter(differences, EdgeChange.class).iterator();
 		assertTrue(iterator.hasNext());
 		final EdgeChange diff = iterator.next();
 		assertFalse(iterator.hasNext());
@@ -117,7 +115,7 @@ public class DiagramTooltipProviderTest extends AbstractTest {
 		Predicate<EObject> predicate = new Predicate<EObject>() {
 			public boolean apply(EObject input) {
 				if (input instanceof TreeNode) {
-					TreeNode node = (TreeNode) input;
+					TreeNode node = (TreeNode)input;
 					if (node.getData() == diff) {
 						return true;
 					}
@@ -126,10 +124,10 @@ public class DiagramTooltipProviderTest extends AbstractTest {
 			}
 		};
 		for (TreeNode nodeRootMatch : nodeRootMatchs) {
-			UnmodifiableIterator<EObject> treeNode = Iterators.filter(
-					nodeRootMatch.eAllContents(), predicate);
+			UnmodifiableIterator<EObject> treeNode = Iterators.filter(nodeRootMatch.eAllContents(),
+					predicate);
 			if (treeNode != null && treeNode.hasNext()) {
-				moveEdge = (TreeNode) treeNode.next();
+				moveEdge = (TreeNode)treeNode.next();
 				break;
 			}
 		}
@@ -141,16 +139,13 @@ public class DiagramTooltipProviderTest extends AbstractTest {
 		final boolean leftEditable = true;
 		final boolean rightEditable = false;
 
-		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable,
-				rightEditable);
-		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry,
-				accept, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// Get tooltip for a diff on a move of an edge.
 		action.updateSelection(new StructuredSelection(moveEdge));
 		String tooltipText = action.getToolTipText();
-		String expectedtTooltip = EMFCompareDiagramEditMessages
-				.getString("reject.change.tooltip");
+		String expectedtTooltip = EMFCompareDiagramEditMessages.getString("reject.change.tooltip");
 		assertEquals(expectedtTooltip, tooltipText);
 	}
 
@@ -160,16 +155,13 @@ public class DiagramTooltipProviderTest extends AbstractTest {
 		final boolean leftEditable = true;
 		final boolean rightEditable = false;
 
-		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable,
-				rightEditable);
-		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry,
-				accept, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// Get tooltip for a diff on a move of an edge.
 		action.updateSelection(new StructuredSelection(moveEdge));
 		String tooltipText = action.getToolTipText();
-		String expectedtTooltip = EMFCompareDiagramEditMessages
-				.getString("accept.change.tooltip");
+		String expectedtTooltip = EMFCompareDiagramEditMessages.getString("accept.change.tooltip");
 		assertEquals(expectedtTooltip, tooltipText);
 	}
 
@@ -179,16 +171,13 @@ public class DiagramTooltipProviderTest extends AbstractTest {
 		final boolean leftEditable = true;
 		final boolean rightEditable = true;
 
-		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable,
-				rightEditable);
-		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry,
-				accept, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// Get tooltip for a diff on a move of an edge.
 		action.updateSelection(new StructuredSelection(moveEdge));
 		String tooltipText = action.getToolTipText();
-		String expectedtTooltip = EMFCompareDiagramEditMessages
-				.getString("merged.to.right.tooltip");
+		String expectedtTooltip = EMFCompareDiagramEditMessages.getString("merged.to.right.tooltip");
 		assertEquals(expectedtTooltip, tooltipText);
 	}
 
@@ -198,16 +187,13 @@ public class DiagramTooltipProviderTest extends AbstractTest {
 		final boolean leftEditable = true;
 		final boolean rightEditable = true;
 
-		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable,
-				rightEditable);
-		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry,
-				accept, null);
+		IEMFCompareConfiguration emfCC = createConfiguration(leftEditable, rightEditable);
+		MockMergeAction action = new MockMergeAction(emfCC, mergerRegistry, accept, null);
 
 		// Get tooltip for a diff on a move of an edge.
 		action.updateSelection(new StructuredSelection(moveEdge));
 		String tooltipText = action.getToolTipText();
-		String expectedtTooltip = EMFCompareDiagramEditMessages
-				.getString("merged.to.left.tooltip");
+		String expectedtTooltip = EMFCompareDiagramEditMessages.getString("merged.to.left.tooltip");
 		assertEquals(expectedtTooltip, tooltipText);
 	}
 
@@ -216,23 +202,21 @@ public class DiagramTooltipProviderTest extends AbstractTest {
 		return input;
 	}
 
-	private static Iterable<TreeNode> getNodeRootMatch(Comparison comparison)
-			throws IOException {
+	private static Iterable<TreeNode> getNodeRootMatch(Comparison comparison) throws IOException {
 		TreeNode treeNode = TreeFactory.eINSTANCE.createTreeNode();
 		treeNode.setData(comparison);
 		treeNode.eAdapters().add(new DefaultGroupProvider());
 
 		Collection<?> children = itemProvider.getChildren(treeNode);
 
-		Iterable<TreeNode> matches = (Iterable<TreeNode>) filter(children,
-				matchTreeNode);
+		Iterable<TreeNode> matches = (Iterable<TreeNode>)filter(children, matchTreeNode);
 		return matches;
 	}
 
 	public static Predicate<Object> matchTreeNode = new Predicate<Object>() {
 		public boolean apply(Object object) {
 			if (object instanceof TreeNode) {
-				EObject data = ((TreeNode) object).getData();
+				EObject data = ((TreeNode)object).getData();
 				if (data instanceof Match) {
 					return true;
 				}
@@ -241,8 +225,7 @@ public class DiagramTooltipProviderTest extends AbstractTest {
 		}
 	};
 
-	private IEMFCompareConfiguration createConfiguration(boolean leftEditable,
-			boolean rightEditable) {
+	private IEMFCompareConfiguration createConfiguration(boolean leftEditable, boolean rightEditable) {
 		CompareConfiguration cc = new CompareConfiguration();
 		cc.setLeftEditable(leftEditable);
 		cc.setRightEditable(rightEditable);

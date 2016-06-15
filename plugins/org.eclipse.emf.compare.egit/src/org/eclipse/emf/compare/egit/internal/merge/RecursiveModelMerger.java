@@ -179,8 +179,8 @@ public class RecursiveModelMerger extends RecursiveMerger {
 			}
 
 			final int nonZeroMode = modeBase != 0 ? modeBase : modeOurs != 0 ? modeOurs : modeTheirs;
-			final IResource resource = variantTreeProvider.getResourceHandleForLocation(getRepository(),
-					path, FileMode.fromBits(nonZeroMode) == FileMode.TREE);
+			final IResource resource = variantTreeProvider.getResourceHandleForLocation(getRepository(), path,
+					FileMode.fromBits(nonZeroMode) == FileMode.TREE);
 			Set<IResource> logicalModel = logicalModels.getModel(resource);
 
 			IResourceMappingMerger modelMerger = null;
@@ -195,7 +195,8 @@ public class RecursiveModelMerger extends RecursiveMerger {
 					if (!fallBackToDefaultMerge(treeWalk, ignoreConflicts)) {
 						cleanUp();
 						if (LOGGER.isInfoEnabled()) {
-							LOGGER.info("FAILED - Recursive model merge, could not find appropriate merger and default merge failed."); //$NON-NLS-1$
+							LOGGER.info(
+									"FAILED - Recursive model merge, could not find appropriate merger and default merge failed."); //$NON-NLS-1$
 						}
 						return false;
 					}
@@ -243,10 +244,12 @@ public class RecursiveModelMerger extends RecursiveMerger {
 	private boolean fallBackToDefaultMerge(TreeWalk treeWalk, boolean ignoreConflicts)
 			throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException {
 		boolean hasWorkingTreeIterator = tw.getTreeCount() > T_FILE;
-		return processEntry(treeWalk.getTree(T_BASE, CanonicalTreeParser.class), treeWalk.getTree(T_OURS,
-				CanonicalTreeParser.class), treeWalk.getTree(T_THEIRS, CanonicalTreeParser.class), treeWalk
-				.getTree(T_INDEX, DirCacheBuildIterator.class), hasWorkingTreeIterator ? treeWalk.getTree(
-				T_FILE, WorkingTreeIterator.class) : null, ignoreConflicts);
+		return processEntry(treeWalk.getTree(T_BASE, CanonicalTreeParser.class),
+				treeWalk.getTree(T_OURS, CanonicalTreeParser.class),
+				treeWalk.getTree(T_THEIRS, CanonicalTreeParser.class),
+				treeWalk.getTree(T_INDEX, DirCacheBuildIterator.class),
+				hasWorkingTreeIterator ? treeWalk.getTree(T_FILE, WorkingTreeIterator.class) : null,
+				ignoreConflicts);
 	}
 
 	/**
@@ -257,8 +260,8 @@ public class RecursiveModelMerger extends RecursiveMerger {
 	 * @throws IncorrectObjectTypeException
 	 * @throws IOException
 	 */
-	private void indexModelMergedFiles() throws CorruptObjectException, MissingObjectException,
-			IncorrectObjectTypeException, IOException {
+	private void indexModelMergedFiles()
+			throws CorruptObjectException, MissingObjectException, IncorrectObjectTypeException, IOException {
 		TreeWalk syncingTreeWalk = new TreeWalk(getRepository());
 		try {
 			syncingTreeWalk.addTree(new DirCacheIterator(dircache));
@@ -346,7 +349,8 @@ public class RecursiveModelMerger extends RecursiveMerger {
 		add(filePath, cacheBuilder, theirVariant, DirCacheEntry.STAGE_3);
 	}
 
-	private void add(String path, DirCacheBuilder cacheBuilder, TreeParserResourceVariant variant, int stage) {
+	private void add(String path, DirCacheBuilder cacheBuilder, TreeParserResourceVariant variant,
+			int stage) {
 		if (variant != null && !FileMode.TREE.equals(variant.getRawMode())) {
 			DirCacheEntry e = new DirCacheEntry(path, stage);
 			e.setFileMode(FileMode.fromBits(variant.getRawMode()));
@@ -392,8 +396,8 @@ public class RecursiveModelMerger extends RecursiveMerger {
 				merger.cleanUp();
 				return false;
 			} catch (OperationCanceledException e) {
-				final String message = NLS.bind(
-						MergeText.RecursiveModelMerger_ScopeInitializationInterrupted, path);
+				final String message = NLS.bind(MergeText.RecursiveModelMerger_ScopeInitializationInterrupted,
+						path);
 				Activator.logError(message, e);
 				merger.cleanUp();
 				return false;
@@ -406,10 +410,10 @@ public class RecursiveModelMerger extends RecursiveMerger {
 			for (IResource handledFile : logicalModel) {
 				String filePath = getRepoRelativePath(handledFile);
 				if (filePath == null) {
-					IResourceVariant sourceVariant = subscriber.getSourceTree().getResourceVariant(
-							handledFile);
-					IResourceVariant remoteVariant = subscriber.getRemoteTree().getResourceVariant(
-							handledFile);
+					IResourceVariant sourceVariant = subscriber.getSourceTree()
+							.getResourceVariant(handledFile);
+					IResourceVariant remoteVariant = subscriber.getRemoteTree()
+							.getResourceVariant(handledFile);
 					IResourceVariant baseVariant = subscriber.getBaseTree().getResourceVariant(handledFile);
 					if (sourceVariant instanceof AbstractGitResourceVariant) {
 						// In the case of a conflict, the file may not exist
@@ -454,8 +458,8 @@ public class RecursiveModelMerger extends RecursiveMerger {
 				} else if (filePath != null && status.getSeverity() != IStatus.OK
 						&& !merger.makeInSync.contains(filePath)) {
 					merger.unmergedPaths.add(filePath);
-					merger.mergeResults.put(filePath, new MergeResult<RawText>(Collections
-							.<RawText> emptyList()));
+					merger.mergeResults.put(filePath,
+							new MergeResult<RawText>(Collections.<RawText> emptyList()));
 					final TreeParserResourceVariant baseVariant = (TreeParserResourceVariant)subscriber
 							.getBaseTree().getResourceVariant(handledFile);
 					final TreeParserResourceVariant ourVariant = (TreeParserResourceVariant)subscriber

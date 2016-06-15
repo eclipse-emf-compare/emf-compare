@@ -80,8 +80,8 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 	 * file is not part of our comparison scope.
 	 */
 	@Test
-	public void testRealExampleSyncModelDiagnosticWithXMIExceptionOutsideLogicalModel() throws IOException,
-			URISyntaxException, CoreException, InterruptedException {
+	public void testRealExampleSyncModelDiagnosticWithXMIExceptionOutsideLogicalModel()
+			throws IOException, URISyntaxException, CoreException, InterruptedException {
 		TestProject testProject = new TestProject("TEST_PROJECT");
 		/* setup */
 		IFile left = addModelFile(testProject, "model1.ecore");
@@ -125,8 +125,8 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 	 * the file is part of our comparison scope.
 	 */
 	@Test
-	public void testRealExampleSyncModelDiagnosticWithXMIExceptionInLogicalModel() throws IOException,
-			URISyntaxException, CoreException, InterruptedException {
+	public void testRealExampleSyncModelDiagnosticWithXMIExceptionInLogicalModel()
+			throws IOException, URISyntaxException, CoreException, InterruptedException {
 		TestProject testProject = new TestProject("TEST_PROJECT");
 		/* setup */
 		IFile left = addModelFile(testProject, "model1.ecore");
@@ -168,8 +168,8 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 	 * as the logical model of model1 is incomplete.
 	 */
 	@Test
-	public void testRealExampleSyncModelDiagnosticWithDanglingReferenceInLogicalModel() throws IOException,
-			URISyntaxException, CoreException, InterruptedException {
+	public void testRealExampleSyncModelDiagnosticWithDanglingReferenceInLogicalModel()
+			throws IOException, URISyntaxException, CoreException, InterruptedException {
 		TestProject testProject = new TestProject("TEST_PROJECT");
 
 		/* setup */
@@ -184,8 +184,8 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 
 		/* sanity checks */
 		assertEquals(2, synchronizationModel.getLeftTraversal().getStorages().size());
-		IStorage[] storages = Iterators.toArray(synchronizationModel.getLeftTraversal().getStorages()
-				.iterator(), IStorage.class);
+		IStorage[] storages = Iterators
+				.toArray(synchronizationModel.getLeftTraversal().getStorages().iterator(), IStorage.class);
 		if (storages[0].equals(m1)) {
 			assertTrue(storages[1].getFullPath().toString().contains("model2.ecore"));
 		} else {
@@ -222,8 +222,8 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 	 * as the logical model of model1 is incomplete.
 	 */
 	@Test
-	public void testSyncModelDiagnosticWithDanglingReferenceOutsideLogicalModel() throws IOException,
-			URISyntaxException, CoreException, InterruptedException {
+	public void testSyncModelDiagnosticWithDanglingReferenceOutsideLogicalModel()
+			throws IOException, URISyntaxException, CoreException, InterruptedException {
 		TestProject testProject = new TestProject("TEST_PROJECT");
 
 		/* setup */
@@ -263,8 +263,8 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 	 * contained in the diagnostic of the synchronization model.
 	 */
 	@Test
-	public void testSynchronizationModelDiagnosticsWithBasicDiagnosticOutsideTraversal() throws IOException,
-			CoreException, URISyntaxException {
+	public void testSynchronizationModelDiagnosticsWithBasicDiagnosticOutsideTraversal()
+			throws IOException, CoreException, URISyntaxException {
 		TestProject testProject = new TestProject("TEST_PROJECT");
 
 		IFile m1 = addModelFile(testProject, "model1.ecore");
@@ -290,8 +290,8 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 	 * contained in the diagnostic of the synchronization model.
 	 */
 	@Test
-	public void testSynchronizationModelDiagnosticsWithResourceStatusOutsideTraversal() throws IOException,
-			CoreException, URISyntaxException {
+	public void testSynchronizationModelDiagnosticsWithResourceStatusOutsideTraversal()
+			throws IOException, CoreException, URISyntaxException {
 		TestProject testProject = new TestProject("TEST_PROJECT");
 
 		IFile m1 = addModelFile(testProject, "model1.ecore");
@@ -330,8 +330,8 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 		StorageTraversal rightTraversal = getStorageTraversal(m1);
 
 		BasicDiagnostic diagnostic = new BasicDiagnostic();
-		diagnostic.add(new BasicDiagnostic(Diagnostic.WARNING, BUNDLE, 0, "", new Object[] {new XMIException(
-				"", "virtualLocation", 0, 0) }));
+		diagnostic.add(new BasicDiagnostic(Diagnostic.WARNING, BUNDLE, 0, "",
+				new Object[] {new XMIException("", "virtualLocation", 0, 0) }));
 
 		SynchronizationModel synchronizationModel = new SynchronizationModel(leftTraversal, rightTraversal,
 				null, diagnostic);
@@ -345,8 +345,8 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 	 * the diagnostic of the synchronization model.
 	 */
 	@Test
-	public void testSynchronizationModelDiagnosticsWithBasicDiagnosticInTraversal() throws IOException,
-			CoreException, URISyntaxException {
+	public void testSynchronizationModelDiagnosticsWithBasicDiagnosticInTraversal()
+			throws IOException, CoreException, URISyntaxException {
 		TestProject testProject = new TestProject("TEST_PROJECT");
 
 		IFile m1 = addModelFile(testProject, "model1.ecore");
@@ -371,8 +371,8 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 	 * the diagnostic of the synchronization model.
 	 */
 	@Test
-	public void testSynchronizationModelDiagnosticsWithResourceStatusInTraversal() throws IOException,
-			CoreException, URISyntaxException {
+	public void testSynchronizationModelDiagnosticsWithResourceStatusInTraversal()
+			throws IOException, CoreException, URISyntaxException {
 		TestProject testProject = new TestProject("TEST_PROJECT");
 
 		IFile m1 = addModelFile(testProject, "model1.ecore");
@@ -397,8 +397,8 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 	 * the diagnostic of the synchronization model.
 	 */
 	@Test
-	public void testSynchronizationModelDiagnosticsWithResourceDiagnosticInTraversal() throws IOException,
-			CoreException, URISyntaxException {
+	public void testSynchronizationModelDiagnosticsWithResourceDiagnosticInTraversal()
+			throws IOException, CoreException, URISyntaxException {
 		TestProject testProject = new TestProject("TEST_PROJECT");
 
 		IFile m1 = addModelFile(testProject, "model1.ecore");
@@ -409,8 +409,8 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 		StorageTraversal rightTraversal = getStorageTraversal(m1, m3);
 
 		BasicDiagnostic diagnostic = new BasicDiagnostic();
-		diagnostic.add(new BasicDiagnostic(Diagnostic.ERROR, BUNDLE, 0, "", new Object[] {new XMIException(
-				"", m3.getFullPath().toString(), 0, 0) }));
+		diagnostic.add(new BasicDiagnostic(Diagnostic.ERROR, BUNDLE, 0, "",
+				new Object[] {new XMIException("", m3.getFullPath().toString(), 0, 0) }));
 
 		SynchronizationModel synchronizationModel = new SynchronizationModel(leftTraversal, rightTraversal,
 				null, diagnostic);
@@ -446,8 +446,8 @@ public class SynchronizationModelDiagnosticTest extends CompareTestCase {
 		return new StorageTraversal(set);
 	}
 
-	private IFile addModelFile(TestProject testProject, String filePath) throws IOException,
-			URISyntaxException, CoreException {
+	private IFile addModelFile(TestProject testProject, String filePath)
+			throws IOException, URISyntaxException, CoreException {
 		// source
 		final Bundle bundle = Platform.getBundle(BUNDLE);
 		URL fileURL = FileLocator.toFileURL(bundle.getEntry(DATA_PATH + filePath));

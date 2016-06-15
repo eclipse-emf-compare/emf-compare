@@ -174,7 +174,8 @@ public class LocalModelsResolution extends AbstractResolution {
 					logger.debug("Updating dependencies"); //$NON-NLS-1$
 				}
 				if (origin instanceof IFile) {
-					resolver.updateDependencies(monitor, diagnostic, (IFile)left, (IFile)right, (IFile)origin);
+					resolver.updateDependencies(monitor, diagnostic, (IFile)left, (IFile)right,
+							(IFile)origin);
 				} else {
 					resolver.updateDependencies(monitor, diagnostic, (IFile)left, (IFile)right);
 				}
@@ -221,15 +222,15 @@ public class LocalModelsResolution extends AbstractResolution {
 				if (!originTraversal.isEmpty()) {
 					intersection = intersection(intersection, originTraversal);
 				}
-				logCoherenceThreats(Iterables.transform(startingPoints, asURI()), Iterables.transform(
-						intersection, asURI()));
+				logCoherenceThreats(Iterables.transform(startingPoints, asURI()),
+						Iterables.transform(intersection, asURI()));
 
-				final Set<IStorage> actualLeft = new LinkedHashSet<IStorage>(Sets.difference(leftTraversal,
-						intersection));
-				final Set<IStorage> actualRight = new LinkedHashSet<IStorage>(Sets.difference(rightTraversal,
-						intersection));
-				final Set<IStorage> actualOrigin = new LinkedHashSet<IStorage>(Sets.difference(
-						originTraversal, intersection));
+				final Set<IStorage> actualLeft = new LinkedHashSet<IStorage>(
+						Sets.difference(leftTraversal, intersection));
+				final Set<IStorage> actualRight = new LinkedHashSet<IStorage>(
+						Sets.difference(rightTraversal, intersection));
+				final Set<IStorage> actualOrigin = new LinkedHashSet<IStorage>(
+						Sets.difference(originTraversal, intersection));
 				final SynchronizationModel synchronizationModel = new SynchronizationModel(
 						new StorageTraversal(actualLeft), new StorageTraversal(actualRight),
 						new StorageTraversal(actualOrigin), diagnostic.getDiagnostic());

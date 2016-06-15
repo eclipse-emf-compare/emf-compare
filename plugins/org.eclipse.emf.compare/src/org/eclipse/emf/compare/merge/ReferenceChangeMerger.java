@@ -312,7 +312,8 @@ public class ReferenceChangeMerger extends AbstractMerger {
 	 *            whether we should move the value in the left or right side.
 	 * @return the reference of the target container in case of a MOVE Diff.
 	 */
-	private EReference getMoveTargetReference(Comparison comparison, ReferenceChange diff, boolean rightToLeft) {
+	private EReference getMoveTargetReference(Comparison comparison, ReferenceChange diff,
+			boolean rightToLeft) {
 		final EReference reference;
 		final DifferenceSource source = diff.getSource();
 		final Match valueMatch = comparison.getMatch(diff.getValue());
@@ -360,7 +361,8 @@ public class ReferenceChangeMerger extends AbstractMerger {
 	 * <ul>
 	 * <li>We are copying from right to left and
 	 * <ul>
-	 * <li>we are copying an addition to the right side (we need to create the same object in the left), or</li>
+	 * <li>we are copying an addition to the right side (we need to create the same object in the left), or
+	 * </li>
 	 * <li>we are copying a deletion from the left side (we need to revert the deletion).</li>
 	 * </ul>
 	 * </li>
@@ -438,8 +440,8 @@ public class ReferenceChangeMerger extends AbstractMerger {
 			final Resource initialResource = diff.getValue().eResource();
 			final Resource targetResource = expectedValue.eResource();
 			if (initialResource instanceof XMIResource && targetResource instanceof XMIResource) {
-				((XMIResource)targetResource).setID(expectedValue, ((XMIResource)initialResource).getID(diff
-						.getValue()));
+				((XMIResource)targetResource).setID(expectedValue,
+						((XMIResource)initialResource).getID(diff.getValue()));
 			}
 		}
 
@@ -483,7 +485,8 @@ public class ReferenceChangeMerger extends AbstractMerger {
 	 * <ul>
 	 * <li>Copying from right to left and either
 	 * <ul>
-	 * <li>we are copying a deletion from the right side (we need to remove the same object in the left) or,</li>
+	 * <li>we are copying a deletion from the right side (we need to remove the same object in the left) or,
+	 * </li>
 	 * <li>we are copying an addition to the left side (we need to revert the addition).</li>
 	 * </ul>
 	 * </li>

@@ -98,8 +98,9 @@ public class ResourceLocationChangeItemProviderSpec extends ResourceLocationChan
 		ret.append(" [", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 		switch (resourceLocationChange.getKind()) {
 			case CHANGE:
-				ret.append(EMFCompareEditMessages.getString(
-						"ResourceNameChangeItemProviderSpec.text.locationChanged", changedLocation), //$NON-NLS-1$
+				ret.append(
+						EMFCompareEditMessages.getString(
+								"ResourceNameChangeItemProviderSpec.text.locationChanged", changedLocation), //$NON-NLS-1$
 						Style.DECORATIONS_STYLER);
 				break;
 			default:

@@ -256,21 +256,24 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 
 		switch (refChange.getKind()) {
 			case ADD:
-				ret.append(' ' + EMFCompareEditMessages
-						.getString("ReferenceChangeItemProviderSpec.decoration.add"), //$NON-NLS-1$
+				ret.append(
+						' ' + EMFCompareEditMessages
+								.getString("ReferenceChangeItemProviderSpec.decoration.add"), //$NON-NLS-1$
 						Style.DECORATIONS_STYLER);
 				break;
 			case DELETE:
-				ret.append(' ' + EMFCompareEditMessages
-						.getString("ReferenceChangeItemProviderSpec.decoration.delete"), //$NON-NLS-1$
+				ret.append(
+						' ' + EMFCompareEditMessages
+								.getString("ReferenceChangeItemProviderSpec.decoration.delete"), //$NON-NLS-1$
 						Style.DECORATIONS_STYLER);
 				break;
 			case CHANGE:
 				ret.append(' ' + changeText(refChange, refChange.getReference()), Style.DECORATIONS_STYLER);
 				break;
 			case MOVE:
-				ret.append(' ' + EMFCompareEditMessages
-						.getString("ReferenceChangeItemProviderSpec.decoration.move"), //$NON-NLS-1$
+				ret.append(
+						' ' + EMFCompareEditMessages
+								.getString("ReferenceChangeItemProviderSpec.decoration.move"), //$NON-NLS-1$
 						Style.DECORATIONS_STYLER);
 				break;
 			default:
@@ -330,17 +333,17 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 
 		switch (refChange.getKind()) {
 			case ADD:
-				ret = valueText + hasBeen + remotely + "added to " + referenceText; //$NON-NLS-1$ 
+				ret = valueText + hasBeen + remotely + "added to " + referenceText; //$NON-NLS-1$
 				break;
 			case DELETE:
-				ret = valueText + hasBeen + remotely + "deleted from " + referenceText; //$NON-NLS-1$ 
+				ret = valueText + hasBeen + remotely + "deleted from " + referenceText; //$NON-NLS-1$
 				break;
 			case CHANGE:
 				String changeText = changeText(refChange, refChange.getReference());
-				ret = referenceText + " " + valueText + hasBeen + remotely + changeText; //$NON-NLS-1$ 
+				ret = referenceText + " " + valueText + hasBeen + remotely + changeText; //$NON-NLS-1$
 				break;
 			case MOVE:
-				ret = valueText + hasBeen + remotely + "moved in " + referenceText; //$NON-NLS-1$ 
+				ret = valueText + hasBeen + remotely + "moved in " + referenceText; //$NON-NLS-1$
 				break;
 			default:
 				throw new IllegalStateException("Unsupported " + DifferenceKind.class.getSimpleName() //$NON-NLS-1$

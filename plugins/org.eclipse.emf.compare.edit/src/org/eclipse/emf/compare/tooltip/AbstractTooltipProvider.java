@@ -377,8 +377,8 @@ public abstract class AbstractTooltipProvider<T extends Diff> extends AdapterImp
 				} else {
 					if (diff instanceof ReferenceChange
 							&& ((ReferenceChange)diff).getReference().isContainment()) {
-						body = getString(
-								"ContextualTooltip.move.position.right.container.accept", value, containerValue); //$NON-NLS-1$
+						body = getString("ContextualTooltip.move.position.right.container.accept", value, //$NON-NLS-1$
+								containerValue);
 					} else {
 						body = getString("ContextualTooltip.move.position.right.accept", value); //$NON-NLS-1$
 					}
@@ -393,8 +393,8 @@ public abstract class AbstractTooltipProvider<T extends Diff> extends AdapterImp
 					// display container label only if the element is inside a container
 					if (diff instanceof ReferenceChange
 							&& ((ReferenceChange)diff).getReference().isContainment()) {
-						body = getString(
-								"ContextualTooltip.move.position.right.container.reject", value, containerValue); //$NON-NLS-1$
+						body = getString("ContextualTooltip.move.position.right.container.reject", value, //$NON-NLS-1$
+								containerValue);
 					} else {
 						body = getString("ContextualTooltip.move.position.right.reject", value); //$NON-NLS-1$
 					}
@@ -473,8 +473,8 @@ public abstract class AbstractTooltipProvider<T extends Diff> extends AdapterImp
 			case LEFT_TO_RIGHT:
 				if (isFromLeft) {
 					if ("".equals(rightValue)) { //$NON-NLS-1$
-						body = getString(
-								"ContextualTooltip.set.left.leftToRight.empty", structuralFeatureName, //$NON-NLS-1$
+						body = getString("ContextualTooltip.set.left.leftToRight.empty", //$NON-NLS-1$
+								structuralFeatureName,
 								containerName, leftValue);
 
 					} else {
@@ -505,8 +505,8 @@ public abstract class AbstractTooltipProvider<T extends Diff> extends AdapterImp
 					}
 				} else {
 					if ("".equals(leftValue)) { //$NON-NLS-1$
-						body = getString(
-								"ContextualTooltip.set.right.rightToLeft.empty", structuralFeatureName, //$NON-NLS-1$
+						body = getString("ContextualTooltip.set.right.rightToLeft.empty", //$NON-NLS-1$
+								structuralFeatureName,
 								containerName, rightValue);
 					} else {
 						body = getString("ContextualTooltip.set.right.rightToLeft", structuralFeatureName, //$NON-NLS-1$
@@ -562,8 +562,8 @@ public abstract class AbstractTooltipProvider<T extends Diff> extends AdapterImp
 						body = getString("ContextualTooltip.set.right.reject.empty", structuralFeatureName, //$NON-NLS-1$
 								containerName);
 					} else {
-						body = getString(
-								"ContextualTooltip.set.right.reject", previousValue, structuralFeatureName, //$NON-NLS-1$
+						body = getString("ContextualTooltip.set.right.reject", previousValue, //$NON-NLS-1$
+								structuralFeatureName,
 								containerName);
 					}
 					tooltip = rejectAndUnchanged(body);

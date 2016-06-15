@@ -63,8 +63,7 @@ public final class PapyrusSaveParameterUtil {
 	}
 
 	/**
-	 * Returns the default parameter for abstract model files offered by
-	 * Papyrus.
+	 * Returns the default parameter for abstract model files offered by Papyrus.
 	 * 
 	 * @return A collection of save parameters.
 	 */
@@ -101,8 +100,7 @@ public final class PapyrusSaveParameterUtil {
 	}
 
 	/**
-	 * Helper class to retrieve the save parameters of Papyrus abstract base
-	 * models.
+	 * Helper class to retrieve the save parameters of Papyrus abstract base models.
 	 */
 	private static class DefaultSaveParametersHelper extends AbstractBaseModel {
 		@Override
@@ -135,26 +133,21 @@ public final class PapyrusSaveParameterUtil {
 	}
 
 	/**
-	 * Tests if two save parameter maps are equal. Since some options use
-	 * objects as values an ordinary {@link Map#equals(Object)} will always
-	 * return {@code false}. These options are checked manually, the "normal"
-	 * options are checked via {@link Map#equals(Object)}
+	 * Tests if two save parameter maps are equal. Since some options use objects as values an ordinary
+	 * {@link Map#equals(Object)} will always return {@code false}. These options are checked manually, the
+	 * "normal" options are checked via {@link Map#equals(Object)}
 	 * 
 	 * @param saveParameters1
 	 *            Save parameter map to compare.
 	 * @param saveParameters2
 	 *            Save parameter map to compare.
-	 * @return {@code true} if the given parameter are equal, {@code false}
-	 *         otherwise.
+	 * @return {@code true} if the given parameter are equal, {@code false} otherwise.
 	 */
-	public static boolean isEqual(final Map<?, ?> saveParameters1,
-			final Map<?, ?> saveParameters2) {
+	public static boolean isEqual(final Map<?, ?> saveParameters1, final Map<?, ?> saveParameters2) {
 		// Check URI Handler manually since the value is a dynamic object
 		if (saveParameters1.containsKey(XMLResource.OPTION_URI_HANDLER)) {
-			final Object uriHandler1 = saveParameters1
-					.get(XMLResource.OPTION_URI_HANDLER);
-			final Object uriHandler2 = saveParameters2
-					.get(XMLResource.OPTION_URI_HANDLER);
+			final Object uriHandler1 = saveParameters1.get(XMLResource.OPTION_URI_HANDLER);
+			final Object uriHandler2 = saveParameters2.get(XMLResource.OPTION_URI_HANDLER);
 
 			if (uriHandler1 != null && uriHandler2 != null) {
 				if (!uriHandler1.getClass().equals(uriHandler2.getClass())) {

@@ -76,8 +76,8 @@ public class LocalModelResolution extends AbstractResolution {
 					throw new OperationCanceledException();
 				}
 
-				final Set<IStorage> traversalSet = resolveTraversal((IFile)start, Collections
-						.<URI> emptySet());
+				final Set<IStorage> traversalSet = resolveTraversal((IFile)start,
+						Collections.<URI> emptySet());
 				StorageTraversal traversal = new StorageTraversal(traversalSet, diagnostic.getDiagnostic());
 				if (logger.isDebugEnabled()) {
 					logger.debug("run() - FINISH"); //$NON-NLS-1$

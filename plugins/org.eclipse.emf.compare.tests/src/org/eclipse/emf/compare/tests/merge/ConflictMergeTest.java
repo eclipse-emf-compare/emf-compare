@@ -79,24 +79,21 @@ public class ConflictMergeTest {
 
 		final String featureName = "containmentRef1";
 
-		final Diff diffNodeCLeft = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), referenceValueMatch(featureName,
-						"root.A.C", true)));
-		final Diff diffNodeCRight = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), referenceValueMatch(
-						featureName, "root.B.C", true)));
-		final Diff diffNodeDLeft = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), referenceValueMatch(featureName,
-						"root.A.C.D", true)));
-		final Diff diffNodeDRight = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), referenceValueMatch(
-						featureName, "root.B.C.D", true)));
-		final Diff diffNodeELeft = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), referenceValueMatch(featureName,
-						"root.A.C.E", true)));
-		final Diff diffNodeFRight = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), referenceValueMatch(
-						featureName, "root.B.C.F", true)));
+		final Diff diffNodeCLeft = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				ofKind(DifferenceKind.ADD), referenceValueMatch(featureName, "root.A.C", true)));
+		final Diff diffNodeCRight = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
+						referenceValueMatch(featureName, "root.B.C", true)));
+		final Diff diffNodeDLeft = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				ofKind(DifferenceKind.ADD), referenceValueMatch(featureName, "root.A.C.D", true)));
+		final Diff diffNodeDRight = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
+						referenceValueMatch(featureName, "root.B.C.D", true)));
+		final Diff diffNodeELeft = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				ofKind(DifferenceKind.ADD), referenceValueMatch(featureName, "root.A.C.E", true)));
+		final Diff diffNodeFRight = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
+						referenceValueMatch(featureName, "root.B.C.F", true)));
 
 		// Merge C[containmentRef1 add] from left side from left to right : C[containmentRef1 add] from right
 		// side will be merge from left to right too.
@@ -145,24 +142,21 @@ public class ConflictMergeTest {
 
 		final String featureName = "containmentRef1";
 
-		final Diff diffNodeCLeft = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), referenceValueMatch(featureName,
-						"root.A.C", true)));
-		final Diff diffNodeCRight = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), referenceValueMatch(
-						featureName, "root.B.C", true)));
-		final Diff diffNodeDLeft = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), referenceValueMatch(featureName,
-						"root.A.C.D", true)));
-		final Diff diffNodeDRight = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), referenceValueMatch(
-						featureName, "root.B.C.D", true)));
-		final Diff diffNodeELeft = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), referenceValueMatch(featureName,
-						"root.A.C.E", true)));
-		final Diff diffNodeFRight = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), referenceValueMatch(
-						featureName, "root.B.C.F", true)));
+		final Diff diffNodeCLeft = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				ofKind(DifferenceKind.ADD), referenceValueMatch(featureName, "root.A.C", true)));
+		final Diff diffNodeCRight = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
+						referenceValueMatch(featureName, "root.B.C", true)));
+		final Diff diffNodeDLeft = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				ofKind(DifferenceKind.ADD), referenceValueMatch(featureName, "root.A.C.D", true)));
+		final Diff diffNodeDRight = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
+						referenceValueMatch(featureName, "root.B.C.D", true)));
+		final Diff diffNodeELeft = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				ofKind(DifferenceKind.ADD), referenceValueMatch(featureName, "root.A.C.E", true)));
+		final Diff diffNodeFRight = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
+						referenceValueMatch(featureName, "root.B.C.F", true)));
 
 		// Merge C[containmentRef1 add] from right side from left to right : C[containmentRef1 add] from left
 		// side will not be merge
@@ -211,24 +205,21 @@ public class ConflictMergeTest {
 
 		final String featureName = "containmentRef1";
 
-		final Diff diffNodeCLeft = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), referenceValueMatch(featureName,
-						"root.A.C", true)));
-		final Diff diffNodeCRight = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), referenceValueMatch(
-						featureName, "root.B.C", true)));
-		final Diff diffNodeDLeft = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), referenceValueMatch(featureName,
-						"root.A.C.D", true)));
-		final Diff diffNodeDRight = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), referenceValueMatch(
-						featureName, "root.B.C.D", true)));
-		final Diff diffNodeELeft = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), referenceValueMatch(featureName,
-						"root.A.C.E", true)));
-		final Diff diffNodeFRight = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), referenceValueMatch(
-						featureName, "root.B.C.F", true)));
+		final Diff diffNodeCLeft = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				ofKind(DifferenceKind.ADD), referenceValueMatch(featureName, "root.A.C", true)));
+		final Diff diffNodeCRight = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
+						referenceValueMatch(featureName, "root.B.C", true)));
+		final Diff diffNodeDLeft = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				ofKind(DifferenceKind.ADD), referenceValueMatch(featureName, "root.A.C.D", true)));
+		final Diff diffNodeDRight = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
+						referenceValueMatch(featureName, "root.B.C.D", true)));
+		final Diff diffNodeELeft = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				ofKind(DifferenceKind.ADD), referenceValueMatch(featureName, "root.A.C.E", true)));
+		final Diff diffNodeFRight = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
+						referenceValueMatch(featureName, "root.B.C.F", true)));
 
 		// Merge C[containmentRef1 add] from left side from right to left : C[containmentRef1 add] from right
 		// side will not be merge.
@@ -277,24 +268,21 @@ public class ConflictMergeTest {
 
 		final String featureName = "containmentRef1";
 
-		final Diff diffNodeCLeft = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), referenceValueMatch(featureName,
-						"root.A.C", true)));
-		final Diff diffNodeCRight = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), referenceValueMatch(
-						featureName, "root.B.C", true)));
-		final Diff diffNodeDLeft = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), referenceValueMatch(featureName,
-						"root.A.C.D", true)));
-		final Diff diffNodeDRight = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), referenceValueMatch(
-						featureName, "root.B.C.D", true)));
-		final Diff diffNodeELeft = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), referenceValueMatch(featureName,
-						"root.A.C.E", true)));
-		final Diff diffNodeFRight = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), referenceValueMatch(
-						featureName, "root.B.C.F", true)));
+		final Diff diffNodeCLeft = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				ofKind(DifferenceKind.ADD), referenceValueMatch(featureName, "root.A.C", true)));
+		final Diff diffNodeCRight = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
+						referenceValueMatch(featureName, "root.B.C", true)));
+		final Diff diffNodeDLeft = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				ofKind(DifferenceKind.ADD), referenceValueMatch(featureName, "root.A.C.D", true)));
+		final Diff diffNodeDRight = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
+						referenceValueMatch(featureName, "root.B.C.D", true)));
+		final Diff diffNodeELeft = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
+				ofKind(DifferenceKind.ADD), referenceValueMatch(featureName, "root.A.C.E", true)));
+		final Diff diffNodeFRight = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
+						referenceValueMatch(featureName, "root.B.C.F", true)));
 
 		// Merge C[containmentRef1 add] from right side from right to left : C[containmentRef1 add] from left
 		// side will be merge from right to left too.

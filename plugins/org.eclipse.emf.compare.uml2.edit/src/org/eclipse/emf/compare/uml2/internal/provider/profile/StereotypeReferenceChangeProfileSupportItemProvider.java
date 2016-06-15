@@ -68,8 +68,8 @@ public class StereotypeReferenceChangeProfileSupportItemProvider extends UMLDiff
 		ReferenceChange referenceChange = null;
 		if (diff instanceof StereotypeReferenceChange) {
 			StereotypeReferenceChange stereotypeReferenceChange = (StereotypeReferenceChange)diff;
-			Optional<Diff> element = Iterables.tryFind(stereotypeReferenceChange.getRefinedBy(), Predicates
-					.instanceOf(ReferenceChange.class));
+			Optional<Diff> element = Iterables.tryFind(stereotypeReferenceChange.getRefinedBy(),
+					Predicates.instanceOf(ReferenceChange.class));
 			if (element.isPresent()) {
 				referenceChange = (ReferenceChange)element.get();
 			}

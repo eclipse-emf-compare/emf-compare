@@ -49,12 +49,12 @@ public class NodeChangeItemProviderSpec extends ForwardingDiagramDiffItemProvide
 		switch (kind) {
 			case ADD:
 			case DELETE:
-				diff = Iterators.find(diagramDiff.getRefinedBy().iterator(), NodeChangeFactory
-						.isMainDiffForAddOrDeleteNode(), null);
+				diff = Iterators.find(diagramDiff.getRefinedBy().iterator(),
+						NodeChangeFactory.isMainDiffForAddOrDeleteNode(), null);
 				break;
 			case MOVE:
-				diff = Iterators.find(diagramDiff.getRefinedBy().iterator(), NodeChangeFactory
-						.isMainDiffForMoveNode(), null);
+				diff = Iterators.find(diagramDiff.getRefinedBy().iterator(),
+						NodeChangeFactory.isMainDiffForMoveNode(), null);
 				break;
 			default:
 		}

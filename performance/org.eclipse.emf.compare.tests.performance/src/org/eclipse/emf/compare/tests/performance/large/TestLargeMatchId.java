@@ -24,20 +24,20 @@ import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestLargeMatchId extends AbstractEMFComparePerformanceTest {
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest#setSUTName()
 	 */
 	@Override
 	protected void setSUTName() {
 		getPerformance().getSystemUnderTest().setName(TestMatchId.class.getSimpleName());
 	}
-	
+
 	@Test
 	public void a_matchIdUMLLarge() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("matchIdUMLLarge");
@@ -49,7 +49,7 @@ public class TestLargeMatchId extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void b_matchIdUMLLargeSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("matchIdUMLLargeSplit");

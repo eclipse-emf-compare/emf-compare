@@ -106,8 +106,8 @@ public final class UMLCompareUtil {
 	 * @return The list of EReference superset.
 	 */
 	private static Iterable<EReference> getSupersetReferences(EReference reference) {
-		EAnnotation subsetsAnnotation = Iterables.find(reference.getEAnnotations(), UMLUtilForCompare
-				.isSubsetsAnnotation(), null);
+		EAnnotation subsetsAnnotation = Iterables.find(reference.getEAnnotations(),
+				UMLUtilForCompare.isSubsetsAnnotation(), null);
 		if (subsetsAnnotation != null) {
 			return Iterables.filter(subsetsAnnotation.getReferences(), EReference.class);
 		}

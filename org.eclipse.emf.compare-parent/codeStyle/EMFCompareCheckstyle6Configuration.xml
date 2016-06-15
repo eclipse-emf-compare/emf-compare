@@ -14,7 +14,6 @@
     <module name="FileContentsHolder"/>
     <module name="JavadocMethod">
       <property name="severity" value="error"/>
-      <property name="allowUndeclaredRTE" value="true"/>
       <property name="allowMissingPropertyJavadoc" value="true"/>
       <property name="suppressLoadErrors" value="true"/>
     </module>
@@ -22,6 +21,9 @@
       <property name="severity" value="error"/>
       <property name="checkEmptyJavadoc" value="true"/>
       <property name="checkHtml" value="false"/>
+      <message key="javadoc.extrahtml" value="Balise HTML en trop : {0}"/>
+      <message key="javadoc.noperiod" value="La première ligne doit se terminer avec un point."/>
+      <message key="javadoc.unclosedhtml" value="Balise HTML trouvée dans la javadoc : {0}"/>
     </module>
     <module name="JavadocType">
       <property name="severity" value="error"/>
@@ -54,11 +56,13 @@
     </module>
     <module name="ParameterName">
       <property name="severity" value="error"/>
+      <property name="ignoreOverridden" value="true"/>
     </module>
     <module name="StaticVariableName">
       <property name="severity" value="error"/>
     </module>
-    <module name="TypeName">
+    <module name="TypeName"/>
+    <module name="AbstractClassName">
       <property name="severity" value="error"/>
     </module>
     <module name="AvoidStarImport">
@@ -70,13 +74,13 @@
     <module name="ImportOrder">
       <property name="severity" value="error"/>
       <property name="option" value="top"/>
+      <property name="sortStaticImportsAlphabetically" value="true"/>
     </module>
     <module name="RedundantImport">
       <property name="severity" value="error"/>
     </module>
     <module name="UnusedImports">
       <property name="severity" value="error"/>
-      <property name="processJavadoc" value="true"/>
     </module>
     <module name="AnonInnerLength">
       <property name="severity" value="error"/>
@@ -93,6 +97,7 @@
     </module>
     <module name="ParameterNumber">
       <property name="severity" value="error"/>
+      <property name="ignoreOverriddenMethods" value="true"/>
     </module>
     <module name="OuterTypeNumber">
       <property name="severity" value="error"/>
@@ -109,13 +114,14 @@
     <module name="NoWhitespaceBefore">
       <property name="severity" value="error"/>
       <property name="allowLineBreaks" value="true"/>
-      <property name="tokens" value="SEMI,DOT,POST_DEC,POST_INC"/>
+      <property name="tokens" value="COMMA,SEMI,POST_DEC,POST_INC,GENERIC_END"/>
     </module>
     <module name="MethodParamPad">
       <property name="severity" value="error"/>
     </module>
     <module name="ParenPad">
       <property name="severity" value="error"/>
+      <property name="tokens" value="ANNOTATION,ANNOTATION_FIELD_DEF,CTOR_DEF,CTOR_CALL,ENUM_CONSTANT_DEF,EXPR,LITERAL_CATCH,LITERAL_DO,LITERAL_FOR,LITERAL_IF,LITERAL_NEW,LITERAL_SWITCH,LITERAL_SYNCHRONIZED,LITERAL_WHILE,METHOD_CALL,METHOD_DEF,RESOURCE_SPECIFICATION,SUPER_CTOR_CALL"/>
     </module>
     <module name="TypecastParenPad">
       <property name="severity" value="error"/>
@@ -127,7 +133,8 @@
     </module>
     <module name="WhitespaceAround">
       <property name="severity" value="error"/>
-      <property name="tokens" value="ASSIGN,BAND,BAND_ASSIGN,BOR,BOR_ASSIGN,BSR,BSR_ASSIGN,BXOR,BXOR_ASSIGN,COLON,DIV,DIV_ASSIGN,EQUAL,GE,GT,LAND,LCURLY,LE,LITERAL_ASSERT,LITERAL_CATCH,LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_FOR,LITERAL_IF,LITERAL_RETURN,LITERAL_TRY,LITERAL_WHILE,LOR,LT,MINUS,MINUS_ASSIGN,MOD,MOD_ASSIGN,NOT_EQUAL,PLUS,PLUS_ASSIGN,QUESTION,RCURLY,SL,SLIST,SL_ASSIGN,SR,SR_ASSIGN,STAR,STAR_ASSIGN,LITERAL_ASSERT,TYPE_EXTENSION_AND,WILDCARD_TYPE"/>
+      <property name="tokens" value="ASSIGN,BAND,BAND_ASSIGN,BOR,BOR_ASSIGN,BSR,BSR_ASSIGN,BXOR,BXOR_ASSIGN,COLON,DIV,DIV_ASSIGN,DO_WHILE,EQUAL,GE,GT,LAMBDA,LAND,LCURLY,LE,LITERAL_ASSERT,LITERAL_CATCH,LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_FOR,LITERAL_IF,LITERAL_RETURN,LITERAL_TRY,LITERAL_WHILE,LOR,LT,MINUS,MINUS_ASSIGN,MOD,MOD_ASSIGN,NOT_EQUAL,PLUS,PLUS_ASSIGN,QUESTION,RCURLY,SL,SLIST,SL_ASSIGN,SR,SR_ASSIGN,STAR,STAR_ASSIGN,TYPE_EXTENSION_AND"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="error"/>
     </module>
     <module name="ModifierOrder">
       <property name="severity" value="error"/>
@@ -147,13 +154,17 @@
     </module>
     <module name="NeedBraces">
       <property name="severity" value="error"/>
+      <property name="allowSingleLineStatement" value="true"/>
     </module>
     <module name="RightCurly">
       <property name="severity" value="error"/>
     </module>
-    <module name="RightCurly"/>
-    <module name="LeftCurly">
+    <module name="EmptyCatchBlock">
       <property name="severity" value="error"/>
+    </module>
+    <module name="FinalLocalVariable">
+      <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
     <module name="AvoidInlineConditionals">
       <property name="severity" value="error"/>
@@ -166,10 +177,6 @@
     </module>
     <module name="DeclarationOrder">
       <property name="severity" value="error"/>
-    </module>
-    <module name="FinalLocalVariable">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
     <module name="EmptyStatement">
       <property name="severity" value="error"/>
@@ -190,6 +197,7 @@
       <property name="severity" value="error"/>
       <property name="ignoreConstructorParameter" value="true"/>
       <property name="ignoreSetter" value="true"/>
+      <property name="setterCanReturnItsClass" value="true"/>
     </module>
     <module name="IllegalInstantiation">
       <property name="severity" value="error"/>
@@ -203,13 +211,6 @@
     </module>
     <module name="InnerAssignment">
       <property name="severity" value="error"/>
-    </module>
-    <module name="JUnitTestCase">
-      <property name="severity" value="error"/>
-    </module>
-    <module name="MagicNumber">
-      <property name="severity" value="error"/>
-      <property name="ignoreNumbers" value="-100, -10, -1, -0.75, -0.5, -0.1, 0, 0.1, 0.5, 0.75, 1, 2, 3, 4, 5, 6, 10, 11, 13, 100, 1000, 10000"/>
     </module>
     <module name="MissingSwitchDefault">
       <property name="severity" value="error"/>
@@ -248,15 +249,10 @@
     <module name="ParameterAssignment">
       <property name="severity" value="error"/>
     </module>
-    <module name="RedundantThrows">
-      <property name="severity" value="error"/>
-      <property name="allowUnchecked" value="true"/>
-      <property name="allowSubclasses" value="true"/>
-      <property name="suppressLoadErrors" value="true"/>
-    </module>
     <module name="ReturnCount">
       <property name="severity" value="error"/>
       <property name="max" value="4"/>
+      <property name="maxForVoid" value="3"/>
       <property name="format" value="^$"/>
     </module>
     <module name="SimplifyBooleanExpression">
@@ -330,9 +326,10 @@
     <module name="OuterTypeFilename">
       <property name="severity" value="error"/>
     </module>
-    <module name="AbstractClassName">
+    <module name="MagicNumber">
       <property name="severity" value="error"/>
-      <property name="format" value="^Abstract.*$"/>
+      <property name="ignoreNumbers" value="-100, -10, -1, -0.75, -0.5, -0.1, 0, 0.1, 0.5, 0.75, 1, 2, 3, 4, 5, 6, 10, 11, 13, 100, 1000, 10000"/>
+      <property name="constantWaiverParentToken" value="TYPECAST,METHOD_CALL,EXPR,ARRAY_INIT,UNARY_MINUS,UNARY_PLUS,ELIST,STAR,ASSIGN,PLUS,MINUS,DIV,LITERAL_NEW"/>
     </module>
   </module>
   <module name="FileLength">

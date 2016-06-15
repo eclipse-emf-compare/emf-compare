@@ -55,8 +55,8 @@ public class CompareHandlerService {
 		}
 		if (container.getWorkbenchPart() == null && shell != null) {
 			// We're in a dialog so we can use an active shell expression
-			IHandlerService service = (IHandlerService)PlatformUI.getWorkbench().getService(
-					IHandlerService.class);
+			IHandlerService service = (IHandlerService)PlatformUI.getWorkbench()
+					.getService(IHandlerService.class);
 			if (service != null) {
 				Expression e = new ActiveShellExpression(shell);
 				return new CompareHandlerService(container, e);
@@ -107,8 +107,8 @@ public class CompareHandlerService {
 			if (PlatformUI.isWorkbenchRunning() && fHandlerService == null
 					&& fContainer.getWorkbenchPart() == null && fExpression != null) {
 				// We're in a dialog so we can use an active shell expression
-				IHandlerService service = (IHandlerService)PlatformUI.getWorkbench().getService(
-						IHandlerService.class);
+				IHandlerService service = (IHandlerService)PlatformUI.getWorkbench()
+						.getService(IHandlerService.class);
 				if (service != null) {
 					fHandlerService = service;
 				}
@@ -125,8 +125,8 @@ public class CompareHandlerService {
 				&& actionHandler.getActionDefinitionId() != null) {
 			IHandlerService service = getHandlerService();
 			if (service != null) {
-				IHandlerActivation activation = service.activateHandler(
-						actionHandler.getActionDefinitionId(), new ActionHandler(actionHandler), fExpression);
+				IHandlerActivation activation = service.activateHandler(actionHandler.getActionDefinitionId(),
+						new ActionHandler(actionHandler), fExpression);
 				fPaneActivations.add(activation);
 				return;
 			}

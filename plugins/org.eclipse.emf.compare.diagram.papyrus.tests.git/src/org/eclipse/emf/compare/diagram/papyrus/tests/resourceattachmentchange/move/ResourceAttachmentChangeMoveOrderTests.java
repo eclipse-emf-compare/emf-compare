@@ -67,23 +67,33 @@ public class ResourceAttachmentChangeMoveOrderTests extends AbstractResourceAtta
 	private static final String COMPONENT_DIAGRAM_MODEL3 = "ComponentDiagramModel3";
 
 	private ResourceSetImpl resourceSet;
+
 	private IProject iProject;
+
 	private TestProject testProject;
+
 	private IFile modelDi;
+
 	private IFile modelNotation;
+
 	private IFile modelUml;
+
 	private IFile model2Di;
+
 	private IFile model2Notation;
+
 	private IFile model2Uml;
+
 	private IFile model3Di;
+
 	private IFile model3Notation;
+
 	private IFile model3Uml;
 
 	/**
-	 * Checkout BRANCH_2 and compare with BRANCH_1 (contain the move). 2
-	 * {@link ResourceAttachmentChange resource attachment changes} of kind
-	 * MOVE. Merge ComponentDiagramModel3 diff then ComponentDiagramModel2 diff.
-	 * In the resulting model, the order should be preserved
+	 * Checkout BRANCH_2 and compare with BRANCH_1 (contain the move). 2 {@link ResourceAttachmentChange
+	 * resource attachment changes} of kind MOVE. Merge ComponentDiagramModel3 diff then
+	 * ComponentDiagramModel2 diff. In the resulting model, the order should be preserved
 	 * (ComponentDiagramModel2 before ComponentDiagramModel3).
 	 */
 	@Test
@@ -105,10 +115,10 @@ public class ResourceAttachmentChangeMoveOrderTests extends AbstractResourceAtta
 		mergerRegistry.add(umlMerger);
 		mergerRegistry.add(diagramMerger);
 
-		mergerRegistry.getHighestRankingMerger(diffComponentDiagramModel3).copyRightToLeft(diffComponentDiagramModel3,
-				new BasicMonitor());
-		mergerRegistry.getHighestRankingMerger(diffComponentDiagramModel2).copyRightToLeft(diffComponentDiagramModel2,
-				new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(diffComponentDiagramModel3)
+				.copyRightToLeft(diffComponentDiagramModel3, new BasicMonitor());
+		mergerRegistry.getHighestRankingMerger(diffComponentDiagramModel2)
+				.copyRightToLeft(diffComponentDiagramModel2, new BasicMonitor());
 
 		checkOrderInLeftResource(comparison.getMatchedResources());
 		testProject.dispose();
@@ -122,15 +132,18 @@ public class ResourceAttachmentChangeMoveOrderTests extends AbstractResourceAtta
 		repository.connect(iProject);
 
 		modelDi = addToProject(TEST_DATA_PATH, testProject, iProject, ANCESTOR_PATH + "model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject, iProject, ANCESTOR_PATH + "model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject, iProject, ANCESTOR_PATH + "model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject, iProject, ANCESTOR_PATH + "model.uml", "");
 
 		model2Di = addToProject(TEST_DATA_PATH, testProject, iProject, ANCESTOR_PATH + "model2.di", "");
-		model2Notation = addToProject(TEST_DATA_PATH, testProject, iProject, ANCESTOR_PATH + "model2.notation", "");
+		model2Notation = addToProject(TEST_DATA_PATH, testProject, iProject,
+				ANCESTOR_PATH + "model2.notation", "");
 		model2Uml = addToProject(TEST_DATA_PATH, testProject, iProject, ANCESTOR_PATH + "model2.uml", "");
 
 		model3Di = addToProject(TEST_DATA_PATH, testProject, iProject, ANCESTOR_PATH + "model3.di", "");
-		model3Notation = addToProject(TEST_DATA_PATH, testProject, iProject, ANCESTOR_PATH + "model3.notation", "");
+		model3Notation = addToProject(TEST_DATA_PATH, testProject, iProject,
+				ANCESTOR_PATH + "model3.notation", "");
 		model3Uml = addToProject(TEST_DATA_PATH, testProject, iProject, ANCESTOR_PATH + "model3.uml", "");
 
 		repository.addAllAndCommit("1st-commit", true);
@@ -145,11 +158,13 @@ public class ResourceAttachmentChangeMoveOrderTests extends AbstractResourceAtta
 		modelUml = addToProject(TEST_DATA_PATH, testProject, iProject, LEFT_PATH + "model.uml", "");
 
 		model2Di = addToProject(TEST_DATA_PATH, testProject, iProject, LEFT_PATH + "model2.di", "");
-		model2Notation = addToProject(TEST_DATA_PATH, testProject, iProject, LEFT_PATH + "model2.notation", "");
+		model2Notation = addToProject(TEST_DATA_PATH, testProject, iProject, LEFT_PATH + "model2.notation",
+				"");
 		model2Uml = addToProject(TEST_DATA_PATH, testProject, iProject, LEFT_PATH + "model2.uml", "");
 
 		model3Di = addToProject(TEST_DATA_PATH, testProject, iProject, LEFT_PATH + "model3.di", "");
-		model3Notation = addToProject(TEST_DATA_PATH, testProject, iProject, LEFT_PATH + "model3.notation", "");
+		model3Notation = addToProject(TEST_DATA_PATH, testProject, iProject, LEFT_PATH + "model3.notation",
+				"");
 		model3Uml = addToProject(TEST_DATA_PATH, testProject, iProject, LEFT_PATH + "model3.uml", "");
 
 		repository.addAllAndCommit("2nd-commit-branch2", true);
@@ -157,7 +172,8 @@ public class ResourceAttachmentChangeMoveOrderTests extends AbstractResourceAtta
 		repository.checkoutBranch(BRANCH_1);
 
 		modelDi = addToProject(TEST_DATA_PATH, testProject, iProject, RIGHT_PATH + "model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject, iProject, RIGHT_PATH + "model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject, iProject, RIGHT_PATH + "model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject, iProject, RIGHT_PATH + "model.uml", "");
 
 		removeFromProject(iProject, model2Di.getName());
@@ -173,11 +189,12 @@ public class ResourceAttachmentChangeMoveOrderTests extends AbstractResourceAtta
 	private Predicate<Diff> resourceAttachmentMoveDiff(final String name) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				if (input instanceof ResourceAttachmentChange && DifferenceKind.MOVE.equals(input.getKind())) {
-					final ResourceAttachmentChange change = (ResourceAttachmentChange) input;
+				if (input instanceof ResourceAttachmentChange
+						&& DifferenceKind.MOVE.equals(input.getKind())) {
+					final ResourceAttachmentChange change = (ResourceAttachmentChange)input;
 					final EObject left = change.getMatch().getLeft();
 					if (left instanceof Diagram) {
-						return name.equals(((Diagram) left).getName());
+						return name.equals(((Diagram)left).getName());
 					}
 				}
 				return false;
@@ -195,16 +212,16 @@ public class ResourceAttachmentChangeMoveOrderTests extends AbstractResourceAtta
 		}
 
 		assertNotNull(leftResource);
-		Diagram diagramModel2 = (Diagram) leftResource.getContents().get(1);
-		Diagram diagramModel3 = (Diagram) leftResource.getContents().get(2);
+		Diagram diagramModel2 = (Diagram)leftResource.getContents().get(1);
+		Diagram diagramModel3 = (Diagram)leftResource.getContents().get(2);
 		assertEquals(COMPONENT_DIAGRAM_MODEL2, diagramModel2.getName());
 		assertEquals(COMPONENT_DIAGRAM_MODEL3, diagramModel3.getName());
 	}
 
 	/**
-	 * Checkout BRANCH_2 and merge with BRANCH_1 (contain the move). In the
-	 * resulting file, the order of the elements (diagrams) should be the same
-	 * as BRANCH_1 (componentDiagramModel2 before componentDiagramModel3).
+	 * Checkout BRANCH_2 and merge with BRANCH_1 (contain the move). In the resulting file, the order of the
+	 * elements (diagrams) should be the same as BRANCH_1 (componentDiagramModel2 before
+	 * componentDiagramModel3).
 	 */
 	@Test
 	public void testOrderAfterLogicalMerge() throws Exception {
@@ -227,8 +244,8 @@ public class ResourceAttachmentChangeMoveOrderTests extends AbstractResourceAtta
 		Resource resourceModelNotation = resourceSet.getResource(modelNotationUri, true);
 
 		assertEquals(3, resourceModelNotation.getContents().size());
-		Diagram diagramModel2 = (Diagram) resourceModelNotation.getContents().get(1);
-		Diagram diagramModel3 = (Diagram) resourceModelNotation.getContents().get(2);
+		Diagram diagramModel2 = (Diagram)resourceModelNotation.getContents().get(1);
+		Diagram diagramModel3 = (Diagram)resourceModelNotation.getContents().get(2);
 
 		assertEquals(COMPONENT_DIAGRAM_MODEL2, diagramModel2.getName());
 		assertEquals(COMPONENT_DIAGRAM_MODEL3, diagramModel3.getName());

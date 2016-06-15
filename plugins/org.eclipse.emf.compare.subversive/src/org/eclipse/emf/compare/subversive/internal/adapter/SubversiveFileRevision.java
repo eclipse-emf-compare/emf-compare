@@ -32,12 +32,31 @@ import org.eclipse.team.svn.ui.compare.ResourceCompareInput.ResourceElement;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
+/**
+ * The SVN related {@link FileRevision}.
+ * 
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ */
 public class SubversiveFileRevision extends FileRevision {
 
+	/**
+	 * The Subversive repository.
+	 */
 	private IRepositoryResource repositoryResource;
 
+	/**
+	 * The SVN resourceElement.
+	 */
 	private ResourceElement resourceElement;
 
+	/**
+	 * The constructor.
+	 * 
+	 * @param repositoryResource
+	 *            The given repositoryResource
+	 * @param resourceElement
+	 *            The given resourceElement
+	 */
 	public SubversiveFileRevision(IRepositoryResource repositoryResource, ResourceElement resourceElement) {
 		this.repositoryResource = Preconditions.checkNotNull(repositoryResource);
 		this.resourceElement = Preconditions.checkNotNull(resourceElement);
@@ -58,6 +77,15 @@ public class SubversiveFileRevision extends FileRevision {
 		return null;
 	}
 
+	/**
+	 * Return an {@link IFileRevision} with all supported properties present.
+	 * 
+	 * @param monitor
+	 *            A monitor
+	 * @return a complete version of this file revision or null
+	 * @throws CoreException
+	 *             if an error occurs
+	 */
 	public IFileRevision withAllProperties(IProgressMonitor monitor) throws CoreException {
 		return this;
 	}
@@ -70,6 +98,15 @@ public class SubversiveFileRevision extends FileRevision {
 		return resourceElement.getName();
 	}
 
+	/**
+	 * Returns the storage for this file revision.
+	 * 
+	 * @param monitor
+	 *            a progress monitor
+	 * @return IStorage containing file storage
+	 * @throws CoreException
+	 *             if an error occurs
+	 */
 	public IStorage getStorage(IProgressMonitor monitor) throws CoreException {
 		return new IStorage() {
 

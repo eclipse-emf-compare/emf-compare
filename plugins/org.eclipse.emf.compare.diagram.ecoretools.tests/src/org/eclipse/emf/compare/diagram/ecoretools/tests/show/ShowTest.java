@@ -48,26 +48,27 @@ public class ShowTest extends AbstractTest {
 		final Resource right = input.getA1Right();
 
 		final Comparison comparison = compare(left, right);
-		
+
 		final List<Diff> differences = comparison.getDifferences();
 
 		// We should have no less and no more than 2 differences
 		assertSame(Integer.valueOf(2), Integer.valueOf(differences.size()));
-		
-		Predicate<? super Diff> attributeChangeDescription = attributeValueMatch(NotationPackage.Literals.VIEW__VISIBLE.getName(), Boolean.TRUE, false);
+
+		Predicate<? super Diff> attributeChangeDescription = attributeValueMatch(
+				NotationPackage.Literals.VIEW__VISIBLE.getName(), Boolean.TRUE, false);
 		Predicate<? super Diff> showDescription = and(instanceOf(Show.class), ofKind(DifferenceKind.CHANGE));
-		
+
 		assertSame(Integer.valueOf(1), count(differences, instanceOf(Show.class)));
 
 		final Diff attributeChange = Iterators.find(differences.iterator(), attributeChangeDescription);
 		final Diff show = Iterators.find(differences.iterator(), showDescription);
-		
+
 		assertNotNull(attributeChange);
 		assertNotNull(show);
-		
+
 		assertSame(Integer.valueOf(1), Integer.valueOf(show.getRefinedBy().size()));
 		assertTrue(show.getRefinedBy().contains(attributeChange));
-		
+
 		testIntersections(comparison);
 	}
 

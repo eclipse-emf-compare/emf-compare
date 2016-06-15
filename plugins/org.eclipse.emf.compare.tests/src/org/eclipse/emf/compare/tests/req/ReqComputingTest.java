@@ -719,8 +719,8 @@ public class ReqComputingTest {
 	private void testH(TestKind testKind, Comparison comparison) {
 
 		EList<Diff> differences = comparison.getDifferences();
-		Collection<Diff> racs = Collections2.filter(differences, Predicates
-				.instanceOf(ResourceAttachmentChange.class));
+		Collection<Diff> racs = Collections2.filter(differences,
+				Predicates.instanceOf(ResourceAttachmentChange.class));
 		assertEquals(1, racs.size());
 		Diff rac = racs.iterator().next();
 
@@ -728,10 +728,10 @@ public class ReqComputingTest {
 		Predicate<? super Diff> deleteInnerNodeDiffDescription = null;
 
 		if (testKind == TestKind.DELETE) {
-			deleteFragmentedDiffDescription = removed("root.fragmented"); //$NON-NLS-1$			
+			deleteFragmentedDiffDescription = removed("root.fragmented"); //$NON-NLS-1$
 			deleteInnerNodeDiffDescription = removed("root.fragmented.innerNode"); //$NON-NLS-1$
 		} else {
-			deleteFragmentedDiffDescription = added("root.fragmented"); //$NON-NLS-1$			
+			deleteFragmentedDiffDescription = added("root.fragmented"); //$NON-NLS-1$
 			deleteInnerNodeDiffDescription = added("root.fragmented.innerNode"); //$NON-NLS-1$
 		}
 
@@ -922,8 +922,8 @@ public class ReqComputingTest {
 		Predicate<? super Diff> addedMultiValuedRefDiffDescription = null;
 		if (kind.equals(TestKind.DELETE)) {
 			deleteDestinationDiffDescription = removed("Requirements.containerDestination.destination2"); //$NON-NLS-1$
-			deletedMultiValuedRefDiffDescription = removedFromReference(
-					"Requirements.containerSource.source", "multiValuedReference", //$NON-NLS-1$ //$NON-NLS-2$
+			deletedMultiValuedRefDiffDescription = removedFromReference("Requirements.containerSource.source", //$NON-NLS-1$
+					"multiValuedReference", //$NON-NLS-1$
 					"Requirements.containerDestination.destination2"); //$NON-NLS-1$
 			addedMultiValuedRefDiffDescription = addedToReference("Requirements.containerSource.source", //$NON-NLS-1$
 					"multiValuedReference", "Requirements.destination1"); //$NON-NLS-1$//$NON-NLS-2$
@@ -1251,23 +1251,23 @@ public class ReqComputingTest {
 		if (kind.equals(TestKind.ADD)) {
 			addBDescription = added("Requirements.B"); //$NON-NLS-1$
 			delCDescription = removed("Requirements.C"); //$NON-NLS-1$
-			changeRefBDescription = changedReference(
-					"Requirements.A", "singleValuedReference", "Requirements.C", "Requirements.B"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			changeRefBDescription = changedReference("Requirements.A", "singleValuedReference", //$NON-NLS-1$//$NON-NLS-2$
+					"Requirements.C", "Requirements.B"); //$NON-NLS-1$ //$NON-NLS-2$
 			addEDescription = added("Requirements.E"); //$NON-NLS-1$
 			delFDescription = removed("Requirements.F"); //$NON-NLS-1$
-			addRefEDescription = addedToReference("Requirements.D", "multiValuedReference", "Requirements.E"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ 
-			delRefFDescription = removedFromReference(
-					"Requirements.D", "multiValuedReference", "Requirements.F"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ 
+			addRefEDescription = addedToReference("Requirements.D", "multiValuedReference", "Requirements.E"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+			delRefFDescription = removedFromReference("Requirements.D", "multiValuedReference", //$NON-NLS-1$//$NON-NLS-2$
+					"Requirements.F"); //$NON-NLS-1$
 		} else {
 			addBDescription = removed("Requirements.B"); //$NON-NLS-1$
 			delCDescription = added("Requirements.C"); //$NON-NLS-1$
-			changeRefBDescription = changedReference(
-					"Requirements.A", "singleValuedReference", "Requirements.B", "Requirements.C"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			changeRefBDescription = changedReference("Requirements.A", "singleValuedReference", //$NON-NLS-1$ //$NON-NLS-2$
+					"Requirements.B", "Requirements.C"); //$NON-NLS-1$ //$NON-NLS-2$
 			addEDescription = removed("Requirements.E"); //$NON-NLS-1$
 			delFDescription = added("Requirements.F"); //$NON-NLS-1$
-			addRefEDescription = removedFromReference(
-					"Requirements.D", "multiValuedReference", "Requirements.E"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ 
-			delRefFDescription = addedToReference("Requirements.D", "multiValuedReference", "Requirements.F"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ 
+			addRefEDescription = removedFromReference("Requirements.D", "multiValuedReference", //$NON-NLS-1$//$NON-NLS-2$
+					"Requirements.E"); //$NON-NLS-1$
+			delRefFDescription = addedToReference("Requirements.D", "multiValuedReference", "Requirements.F"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		final Diff addB = Iterators.find(differences.iterator(), addBDescription);

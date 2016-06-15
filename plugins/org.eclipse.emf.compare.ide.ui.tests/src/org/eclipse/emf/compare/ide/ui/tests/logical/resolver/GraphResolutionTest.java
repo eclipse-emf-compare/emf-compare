@@ -60,32 +60,32 @@ public class GraphResolutionTest extends CompareTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 
-		leftR1 = project.createFile("left/R1.ecore", getClass().getResource("data/left/R1.ecore")
-				.openStream());
-		leftR2 = project.createFile("left/R2.ecore", getClass().getResource("data/left/R2.ecore")
-				.openStream());
-		leftR3 = project.createFile("left/R3.ecore", getClass().getResource("data/left/R3.ecore")
-				.openStream());
-		leftR4 = project.createFile("left/R4.ecore", getClass().getResource("data/left/R4.ecore")
-				.openStream());
+		leftR1 = project.createFile("left/R1.ecore",
+				getClass().getResource("data/left/R1.ecore").openStream());
+		leftR2 = project.createFile("left/R2.ecore",
+				getClass().getResource("data/left/R2.ecore").openStream());
+		leftR3 = project.createFile("left/R3.ecore",
+				getClass().getResource("data/left/R3.ecore").openStream());
+		leftR4 = project.createFile("left/R4.ecore",
+				getClass().getResource("data/left/R4.ecore").openStream());
 
-		rightR1 = project.createFile("right/R1.ecore", getClass().getResource("data/right/R1.ecore")
-				.openStream());
-		rightR2 = project.createFile("right/R2.ecore", getClass().getResource("data/right/R2.ecore")
-				.openStream());
-		rightR3 = project.createFile("right/R3.ecore", getClass().getResource("data/right/R3.ecore")
-				.openStream());
-		rightR4 = project.createFile("right/R4.ecore", getClass().getResource("data/right/R4.ecore")
-				.openStream());
+		rightR1 = project.createFile("right/R1.ecore",
+				getClass().getResource("data/right/R1.ecore").openStream());
+		rightR2 = project.createFile("right/R2.ecore",
+				getClass().getResource("data/right/R2.ecore").openStream());
+		rightR3 = project.createFile("right/R3.ecore",
+				getClass().getResource("data/right/R3.ecore").openStream());
+		rightR4 = project.createFile("right/R4.ecore",
+				getClass().getResource("data/right/R4.ecore").openStream());
 
-		originR1 = project.createFile("origin/R1.ecore", getClass().getResource("data/origin/R1.ecore")
-				.openStream());
-		originR2 = project.createFile("origin/R2.ecore", getClass().getResource("data/origin/R2.ecore")
-				.openStream());
-		originR3 = project.createFile("origin/R3.ecore", getClass().getResource("data/origin/R3.ecore")
-				.openStream());
-		originR4 = project.createFile("origin/R4.ecore", getClass().getResource("data/origin/R4.ecore")
-				.openStream());
+		originR1 = project.createFile("origin/R1.ecore",
+				getClass().getResource("data/origin/R1.ecore").openStream());
+		originR2 = project.createFile("origin/R2.ecore",
+				getClass().getResource("data/origin/R2.ecore").openStream());
+		originR3 = project.createFile("origin/R3.ecore",
+				getClass().getResource("data/origin/R3.ecore").openStream());
+		originR4 = project.createFile("origin/R4.ecore",
+				getClass().getResource("data/origin/R4.ecore").openStream());
 	}
 
 	@Test

@@ -56,8 +56,8 @@ public class MatchEngineFactoryRegistryImpl implements IMatchEngine.Factory.Regi
 		final MatchEngineFactoryImpl matchEngineFactory = new MatchEngineFactoryImpl(
 				UseIdentifiers.WHEN_AVAILABLE);
 		matchEngineFactory.setRanking(10);
-		matchEngineFactory.setWeightProviderRegistry(WeightProviderDescriptorRegistryImpl
-				.createStandaloneInstance());
+		matchEngineFactory
+				.setWeightProviderRegistry(WeightProviderDescriptorRegistryImpl.createStandaloneInstance());
 		registry.add(matchEngineFactory);
 
 		return registry;
@@ -109,7 +109,8 @@ public class MatchEngineFactoryRegistryImpl implements IMatchEngine.Factory.Regi
 	 *            The scope on which the group provider will be applied.
 	 * @return A predicate that represents the activation condition based on the scope.
 	 */
-	private static Predicate<IMatchEngine.Factory> isMatchEngineFactoryActivable(final IComparisonScope scope) {
+	private static Predicate<IMatchEngine.Factory> isMatchEngineFactoryActivable(
+			final IComparisonScope scope) {
 		return new Predicate<IMatchEngine.Factory>() {
 			/**
 			 * {@inheritDoc}

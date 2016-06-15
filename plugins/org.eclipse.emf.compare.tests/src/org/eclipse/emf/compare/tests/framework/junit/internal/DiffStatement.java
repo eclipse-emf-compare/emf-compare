@@ -111,11 +111,11 @@ public class DiffStatement extends Statement {
 			// Swallow : we'll create a default engine instead.
 		}
 		if (engine == null) {
-			final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(EditionDistance.builder()
-					.weightProvider(new EcoreWeightProvider()).build());
+			final IEObjectMatcher contentMatcher = new ProximityEObjectMatcher(
+					EditionDistance.builder().weightProvider(new EcoreWeightProvider()).build());
 			final IEObjectMatcher matcher = new IdentifierEObjectMatcher(contentMatcher);
-			engine = new DefaultMatchEngine(matcher, new DefaultComparisonFactory(
-					new DefaultEqualityHelperFactory()));
+			engine = new DefaultMatchEngine(matcher,
+					new DefaultComparisonFactory(new DefaultEqualityHelperFactory()));
 		}
 		return engine;
 	}
@@ -163,8 +163,8 @@ public class DiffStatement extends Statement {
 
 		IComparisonScope scope = null;
 		try {
-			final Constructor<? extends IComparisonScope> constructor = scopeClass.getConstructor(
-					Notifier.class, Notifier.class, Notifier.class);
+			final Constructor<? extends IComparisonScope> constructor = scopeClass
+					.getConstructor(Notifier.class, Notifier.class, Notifier.class);
 			scope = constructor.newInstance(tuple.getLeft(), tuple.getRight(), tuple.getOrigin());
 			// CHECKSTYLE:OFF invoking a constructor requires 7 catches. Since
 			// we're swallowing all exceptions, we simply catch everything.

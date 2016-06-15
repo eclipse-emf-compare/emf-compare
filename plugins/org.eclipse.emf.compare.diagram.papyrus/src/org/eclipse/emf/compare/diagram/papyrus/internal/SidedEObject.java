@@ -33,7 +33,7 @@ class SidedEObject {
 	 * @param side
 	 *            The side
 	 */
-	public SidedEObject(EObject eObject, DifferenceSource side) {
+	SidedEObject(EObject eObject, DifferenceSource side) {
 		super();
 		this.eObject = eObject;
 		this.side = side;

@@ -78,8 +78,8 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 			org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry<String> postProcessorRegistry) {
 		super.registerPostProcessors(postProcessorRegistry);
 		postProcessorRegistry.put(StereotypedElementChangePostProcessor.class.getName(),
-				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
-						.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null, //$NON-NLS-1$
+				new TestPostProcessor.TestPostProcessorDescriptor(
+						Pattern.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null, //$NON-NLS-1$
 						new StereotypedElementChangePostProcessor(), 25));
 	}
 
@@ -189,7 +189,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * 		`-- UML
 	 * ACliche [base &lt;&lt;ACliche&gt;&gt; &lt;Class&gt; Class0]
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @throws IOException
@@ -254,7 +253,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * 	`-- &lt;Profile Application&gt; UML2CompareTestProfile
 	 * 		`-- UML
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @throws IOException
@@ -318,7 +316,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * 	`-- &lt;Profile Application&gt; UML2CompareTestProfile
 	 * 		`-- UML
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @throws IOException
@@ -383,7 +380,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * 		`-- UML
 	 * ACliche [base &lt;&lt;ACliche&gt;&gt; &lt;Class&gt; Class0]
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @throws IOException
@@ -448,7 +444,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * 			`-- UML
 	 * ACliche [base &lt;&lt;ACliche&gt;&gt; &lt;Class&gt; Class1]
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @throws IOException
@@ -514,7 +509,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * 		`-- &lt;Profile Application&gt; UML2CompareTestProfile
 	 * 			`-- UML
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @throws IOException
@@ -549,11 +543,11 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		// @formatter:off
 		EList<EObject> contents = right.getContents();
 		assertEquals(1, contents.size());
-			Model model = (Model)contents.get(0);
-				assertEquals(1, model.getPackagedElements().size());
-				Model subModel = (Model)model.getPackagedElements().get(0);
-					assertEquals(0, subModel.getPackagedElements().size());
-					assertEquals(1,subModel.getAppliedProfiles().size());
+		Model model = (Model)contents.get(0);
+		assertEquals(1, model.getPackagedElements().size());
+		Model subModel = (Model)model.getPackagedElements().get(0);
+		assertEquals(0, subModel.getPackagedElements().size());
+		assertEquals(1, subModel.getAppliedProfiles().size());
 		// @formatter:on
 
 		// Checks the content of the left model after merging
@@ -595,7 +589,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * 		`-- &lt;Profile Application&gt; UML2CompareTestProfile
 	 * 			`-- UML
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @throws IOException
@@ -630,11 +623,11 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		// @formatter:off
 		EList<EObject> contents = left.getContents();
 		assertEquals(1, contents.size());
-			Model model = (Model)contents.get(0);
-				assertEquals(1, model.getPackagedElements().size());
-				Model subModel = (Model)model.getPackagedElements().get(0);
-					assertEquals(0, subModel.getPackagedElements().size());
-					assertEquals(1,subModel.getAppliedProfiles().size());
+		Model model = (Model)contents.get(0);
+		assertEquals(1, model.getPackagedElements().size());
+		Model subModel = (Model)model.getPackagedElements().get(0);
+		assertEquals(0, subModel.getPackagedElements().size());
+		assertEquals(1, subModel.getAppliedProfiles().size());
 		// @formatter:on
 
 		// Checks right model content after merging
@@ -644,7 +637,8 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	/**
 	 * Tests advanced use case:
 	 * <ol>
-	 * <li>Creates a {@link StereotypedElementChange} of kind {@link DifferenceKind#DELL} with dependencies</li>
+	 * <li>Creates a {@link StereotypedElementChange} of kind {@link DifferenceKind#DELL} with dependencies
+	 * </li>
 	 * <li>Merges it from right to left</li>
 	 * </ol>
 	 * <p>
@@ -676,7 +670,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * 			`-- UML
 	 * ACliche [base &lt;&lt;ACliche&gt;&gt; &lt;Class&gt; Class1]
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @throws IOException
@@ -742,7 +735,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * ACliche [base &lt;&lt;ACliche, ACliche3&gt;&gt; &lt;Class&gt; Class0]
 	 * ACliche3 [base &lt;&lt;ACliche, ACliche3&gt;&gt; &lt;Class&gt; Class0]
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @param left
@@ -877,7 +869,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * 	`-- &lt;Profile Application&gt; UML2CompareTestProfile
 	 * 		`-- UML
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @param left
@@ -892,8 +883,8 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		final StereotypedElementChange stereotypedElementChange = getStereotypedElementChange(differences,
 				DifferenceKind.DELETE, 3);
 
-		final ReferenceChange baseDiff = assertDeletedBaseElementDiff(differences,
-				"model.Class0", stereotypedElementChange); //$NON-NLS-1$
+		final ReferenceChange baseDiff = assertDeletedBaseElementDiff(differences, "model.Class0", //$NON-NLS-1$
+				stereotypedElementChange);
 
 		final Conflict conflict = stereotypedElementChange.getConflict();
 		assertNotNull(conflict);
@@ -966,7 +957,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * ACliche [base &lt;&lt;ACliche, ACliche3&gt;&gt; &lt;Class&gt; Class0_newName]
 	 * ACliche3 [base &lt;&lt;ACliche, ACliche3&gt;&gt; &lt;Class&gt; Class0_newName]
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @param left
@@ -981,8 +971,8 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		final StereotypedElementChange stereotypedElementChange = getStereotypedElementChange(differences,
 				DifferenceKind.DELETE, 3);
 
-		final ReferenceChange baseDiff = assertDeletedBaseElementDiff(differences,
-				"model.Class0", stereotypedElementChange); //$NON-NLS-1$
+		final ReferenceChange baseDiff = assertDeletedBaseElementDiff(differences, "model.Class0", //$NON-NLS-1$
+				stereotypedElementChange);
 
 		final Conflict conflict = stereotypedElementChange.getConflict();
 		assertNotNull(conflict);
@@ -1027,7 +1017,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * 		`-- UML
 	 * ACliche [base &lt;&lt;ACliche&gt;&gt; &lt;Class&gt; Class0]
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @param input
@@ -1037,10 +1026,10 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		EList<EObject> contents = input.getContents();
 		assertEquals(2, contents.size());
 		Model model = (Model)contents.get(0);
-			assertEquals(1, model.getPackagedElements().size());
-			Class clazz = (Class)model.getPackagedElements().get(0);
-			assertEquals(1, clazz.getAppliedStereotypes().size());
-			assertEquals(1,model.getAppliedProfiles().size());
+		assertEquals(1, model.getPackagedElements().size());
+		Class clazz = (Class)model.getPackagedElements().get(0);
+		assertEquals(1, clazz.getAppliedStereotypes().size());
+		assertEquals(1, model.getAppliedProfiles().size());
 		EObject stereotypeApplication = contents.get(1);
 		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication));
 		// @formatter:on
@@ -1056,7 +1045,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * 	`-- &lt;Profile Application&gt; UML2CompareTestProfile
 	 * 		`-- UML
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @param input
@@ -1066,8 +1054,8 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		EList<EObject> contents = input.getContents();
 		assertEquals(1, contents.size());
 		Model model = (Model)contents.get(0);
-			assertEquals(0, model.getPackagedElements().size());
-			assertEquals(1,model.getAppliedProfiles().size());
+		assertEquals(0, model.getPackagedElements().size());
+		assertEquals(1, model.getAppliedProfiles().size());
 		// @formatter:on
 	}
 
@@ -1084,7 +1072,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * 			`-- UML
 	 * ACliche [base &lt;&lt;ACliche&gt;&gt; &lt;Class&gt; Class1]
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @param input
@@ -1093,15 +1080,15 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		// @formatter:off
 		EList<EObject> contents = input.getContents();
 		assertEquals(2, contents.size());
-			Model model = (Model)contents.get(0);
-				assertEquals(1, model.getPackagedElements().size());
-				Model subModel = (Model)model.getPackagedElements().get(0);
-					assertEquals(1, subModel.getPackagedElements().size());
-					Class clazz = (Class)subModel.getPackagedElements().get(0);
-					assertEquals(1, clazz.getAppliedStereotypes().size());
-					assertEquals(1,subModel.getAppliedProfiles().size());
+		Model model = (Model)contents.get(0);
+		assertEquals(1, model.getPackagedElements().size());
+		Model subModel = (Model)model.getPackagedElements().get(0);
+		assertEquals(1, subModel.getPackagedElements().size());
+		Class clazz = (Class)subModel.getPackagedElements().get(0);
+		assertEquals(1, clazz.getAppliedStereotypes().size());
+		assertEquals(1, subModel.getAppliedProfiles().size());
 		EObject stereotypeApplication = contents.get(1);
-		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication)); 
+		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication));
 		// @formatter:on
 	}
 
@@ -1118,26 +1105,25 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * ACliche [base &lt;&lt;ACliche, ACliche3&gt;&gt; &lt;Class&gt; Class0_newName]
 	 * ACliche3 [base &lt;&lt;ACliche, ACliche3&gt;&gt; &lt;Class&gt; Class0_newName]
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @param input
 	 */
 	private void assertEqualsM4(Resource right) {
-		//@formatter:off
+		// @formatter:off
 		EList<EObject> contents = right.getContents();
 		assertEquals(3, contents.size());
-			Model model = (Model)contents.get(0);
-				assertEquals(1, model.getPackagedElements().size());
-				Class clazz = (Class)model.getPackagedElements().get(0);
-				assertEquals(2, clazz.getAppliedStereotypes().size());
-				assertEquals("Class0", clazz.getName()); //$NON-NLS-1$
-				assertEquals(1,model.getAppliedProfiles().size());
+		Model model = (Model)contents.get(0);
+		assertEquals(1, model.getPackagedElements().size());
+		Class clazz = (Class)model.getPackagedElements().get(0);
+		assertEquals(2, clazz.getAppliedStereotypes().size());
+		assertEquals("Class0", clazz.getName()); //$NON-NLS-1$
+		assertEquals(1, model.getAppliedProfiles().size());
 		EObject stereotypeApplication = contents.get(1);
-		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication)); 
+		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication));
 		EObject stereotypeApplication2 = contents.get(2);
-		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication2)); 
-		//@formatter:on
+		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication2));
+		// @formatter:on
 	}
 
 	/**
@@ -1153,26 +1139,25 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * ACliche [base &lt;&lt;ACliche, ACliche3&gt;&gt; &lt;Class&gt; Class0_newName]
 	 * ACliche3 [base &lt;&lt;ACliche, ACliche3&gt;&gt; &lt;Class&gt; Class0_newName]
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @param input
 	 */
 	private void assertEqualsM5(Resource right) {
-		//@formatter:off
+		// @formatter:off
 		EList<EObject> contents = right.getContents();
 		assertEquals(3, contents.size());
-			Model model = (Model)contents.get(0);
-				assertEquals(1, model.getPackagedElements().size());
-				Class clazz = (Class)model.getPackagedElements().get(0);
-				assertEquals(2, clazz.getAppliedStereotypes().size());
-				assertEquals("Class0_newName", clazz.getName()); //$NON-NLS-1$
-				assertEquals(1,model.getAppliedProfiles().size());
+		Model model = (Model)contents.get(0);
+		assertEquals(1, model.getPackagedElements().size());
+		Class clazz = (Class)model.getPackagedElements().get(0);
+		assertEquals(2, clazz.getAppliedStereotypes().size());
+		assertEquals("Class0_newName", clazz.getName()); //$NON-NLS-1$
+		assertEquals(1, model.getAppliedProfiles().size());
 		EObject stereotypeApplication = contents.get(1);
-		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication)); 
+		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication));
 		EObject stereotypeApplication2 = contents.get(2);
-		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication2)); 
-		//@formatter:on
+		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication2));
+		// @formatter:on
 	}
 
 	/**
@@ -1183,7 +1168,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * <pre>
 	 * &lt;Model&gt; model
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @param input
@@ -1192,9 +1176,9 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		// @formatter:off
 		EList<EObject> leftContent = input.getContents();
 		assertEquals(1, leftContent.size());
-			Model leftModel = (Model)leftContent.get(0);
-				assertEquals(0, leftModel.getPackagedElements().size());
-				assertEquals(0,leftModel.getAppliedProfiles().size());
+		Model leftModel = (Model)leftContent.get(0);
+		assertEquals(0, leftModel.getPackagedElements().size());
+		assertEquals(0, leftModel.getAppliedProfiles().size());
 		// @formatter:on
 	}
 
@@ -1211,7 +1195,6 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 	 * ACliche [base &lt;&lt;ACliche, ACliche3&gt;&gt; &lt;Class&gt; Class0]
 	 * ACliche3 [base &lt;&lt;ACliche, ACliche3&gt;&gt; &lt;Class&gt; Class0]
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @param input
@@ -1220,15 +1203,15 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		// @formatter:off
 		EList<EObject> contents = inputs.getContents();
 		assertEquals(3, contents.size());
-			Model model = (Model)contents.get(0);
-				assertEquals(1, model.getPackagedElements().size());
-				Class clazz = (Class)model.getPackagedElements().get(0);
-				assertEquals(2, clazz.getAppliedStereotypes().size());
-				assertEquals(1,model.getAppliedProfiles().size());
+		Model model = (Model)contents.get(0);
+		assertEquals(1, model.getPackagedElements().size());
+		Class clazz = (Class)model.getPackagedElements().get(0);
+		assertEquals(2, clazz.getAppliedStereotypes().size());
+		assertEquals(1, model.getAppliedProfiles().size());
 		EObject stereotypeApplication = contents.get(1);
-		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication)); 
+		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication));
 		EObject stereotypeApplication2 = contents.get(2);
-		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication2)); 
+		assertSame(clazz, UMLUtil.getBaseElement(stereotypeApplication2));
 		// @formatter:on
 	}
 
@@ -1288,8 +1271,8 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 
 	private ReferenceChange assertDeletedBaseElementDiff(Iterable<Diff> differences, String qualifiedName,
 			StereotypedElementChange stereotypedElementChange) {
-		ReferenceChange referenceChange = (ReferenceChange)Iterables
-				.find(differences, removed(qualifiedName));
+		ReferenceChange referenceChange = (ReferenceChange)Iterables.find(differences,
+				removed(qualifiedName));
 		assertTrue(stereotypedElementChange.getRefinedBy().contains(referenceChange));
 		assertSame(referenceChange.getValue(), stereotypedElementChange.getDiscriminant());
 		return referenceChange;

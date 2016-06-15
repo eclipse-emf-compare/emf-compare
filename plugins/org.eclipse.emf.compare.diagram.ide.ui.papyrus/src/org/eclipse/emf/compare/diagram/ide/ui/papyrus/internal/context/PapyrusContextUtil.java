@@ -75,8 +75,8 @@ public final class PapyrusContextUtil {
 	 * @return {@code true} if the comparison concerns Papyrus models, {@code false} otherwise.
 	 */
 	public static boolean isPapyrusContext(Comparison comparison) {
-		final IComparisonScope2 comparisonScope = (IComparisonScope2)EcoreUtil.getAdapter(comparison
-				.eAdapters(), IComparisonScope2.class);
+		final IComparisonScope2 comparisonScope = (IComparisonScope2)EcoreUtil
+				.getAdapter(comparison.eAdapters(), IComparisonScope2.class);
 		if (comparisonScope != null) {
 			return containsPapyrusURI(transform(comparisonScope.getAllInvolvedResourceURIs(), URI_TO_STRING));
 		}

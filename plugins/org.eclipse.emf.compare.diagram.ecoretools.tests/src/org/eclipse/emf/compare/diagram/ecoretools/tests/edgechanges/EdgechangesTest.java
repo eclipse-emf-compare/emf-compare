@@ -51,8 +51,7 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final Comparison comparison = compare(left.getResourceSet(),
-				right.getResourceSet());
+		final Comparison comparison = compare(left.getResourceSet(), right.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -69,7 +68,7 @@ public class EdgechangesTest extends AbstractTest {
 
 		assertSame(Integer.valueOf(1), edgeChange.getRefinedBy().size());
 		assertTrue(edgeChange.getRefinedBy().contains(attributeChange));
-		
+
 		testIntersections(comparison);
 	}
 
@@ -78,8 +77,7 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final Comparison comparison = compare(right.getResourceSet(),
-				left.getResourceSet());
+		final Comparison comparison = compare(right.getResourceSet(), left.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -96,7 +94,7 @@ public class EdgechangesTest extends AbstractTest {
 
 		assertSame(Integer.valueOf(1), edgeChange.getRefinedBy().size());
 		assertTrue(edgeChange.getRefinedBy().contains(attributeChange));
-		
+
 		testIntersections(comparison);
 	}
 
@@ -105,8 +103,7 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final Comparison comparison = compare(left.getResourceSet(),
-						right.getResourceSet());
+		final Comparison comparison = compare(left.getResourceSet(), right.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -124,7 +121,7 @@ public class EdgechangesTest extends AbstractTest {
 
 		assertSame(Integer.valueOf(3), edgeChange.getRefinedBy().size());
 		assertTrue(edgeChange.getRefinedBy().containsAll(diffs));
-		
+
 		testIntersections(comparison);
 
 	}
@@ -134,8 +131,7 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA2Left();
 		final Resource right = input.getA2Right();
 
-		final Comparison comparison = compare(right.getResourceSet(),
-						left.getResourceSet());
+		final Comparison comparison = compare(right.getResourceSet(), left.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -153,7 +149,7 @@ public class EdgechangesTest extends AbstractTest {
 
 		assertSame(Integer.valueOf(3), edgeChange.getRefinedBy().size());
 		assertTrue(edgeChange.getRefinedBy().containsAll(diffs));
-		
+
 		testIntersections(comparison);
 	}
 
@@ -162,8 +158,7 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final Comparison comparison = compare(left.getResourceSet(),
-						right.getResourceSet());
+		final Comparison comparison = compare(left.getResourceSet(), right.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -189,8 +184,7 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final Comparison comparison = compare(right.getResourceSet(),
-						left.getResourceSet());
+		final Comparison comparison = compare(right.getResourceSet(), left.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -207,7 +201,7 @@ public class EdgechangesTest extends AbstractTest {
 
 		assertSame(Integer.valueOf(1), edgeChange.getRefinedBy().size());
 		assertTrue(edgeChange.getRefinedBy().contains(attributeChange));
-		
+
 		testIntersections(comparison);
 	}
 
@@ -216,8 +210,7 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
 
-		final Comparison comparison = compare(left.getResourceSet(),
-						right.getResourceSet());
+		final Comparison comparison = compare(left.getResourceSet(), right.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -234,9 +227,10 @@ public class EdgechangesTest extends AbstractTest {
 		assertSame(Integer.valueOf(12), diffs.size());
 		assertNotNull(edgeChange);
 
-		assertSame(Integer.valueOf(12), edgeChange.getRefinedBy().size());// 11 + the add of edge for convenience...
+		assertSame(Integer.valueOf(12), edgeChange.getRefinedBy().size());// 11 + the add of edge for
+																			// convenience...
 		assertTrue(edgeChange.getRefinedBy().contains(addEdge)); // for convenience...
-		
+
 		testIntersections(comparison);
 
 	}
@@ -246,8 +240,7 @@ public class EdgechangesTest extends AbstractTest {
 		final Resource left = input.getA4Left();
 		final Resource right = input.getA4Right();
 
-		final Comparison comparison = compare(right.getResourceSet(),
-						left.getResourceSet());
+		final Comparison comparison = compare(right.getResourceSet(), left.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -266,7 +259,7 @@ public class EdgechangesTest extends AbstractTest {
 		Diff deleteEdge = Iterators.find(differences.iterator(),
 				and(valueIsEdge, ofKind(DifferenceKind.DELETE)));
 		assertTrue(edgeChange.getRefinedBy().contains(deleteEdge));
-		
+
 		testIntersections(comparison);
 	}
 

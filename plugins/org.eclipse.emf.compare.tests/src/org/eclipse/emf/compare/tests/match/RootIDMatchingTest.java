@@ -328,8 +328,7 @@ public class RootIDMatchingTest {
 			String origin) {
 		boolean foundMatching = false;
 		for (MatchResource matchResource : matchResources) {
-			if (nameEquals(matchResource.getLeftURI(), left)
-					&& nameEquals(matchResource.getRightURI(), right)
+			if (nameEquals(matchResource.getLeftURI(), left) && nameEquals(matchResource.getRightURI(), right)
 					&& nameEquals(matchResource.getOriginURI(), origin)) {
 				foundMatching = true;
 				break;

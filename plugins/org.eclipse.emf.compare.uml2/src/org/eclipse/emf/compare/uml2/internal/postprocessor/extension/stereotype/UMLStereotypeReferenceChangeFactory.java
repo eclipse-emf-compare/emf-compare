@@ -117,7 +117,8 @@ public class UMLStereotypeReferenceChangeFactory extends AbstractUMLChangeFactor
 	 */
 	@Override
 	protected boolean isRelatedToAnExtensionChange(ReferenceChange input) {
-		return UMLCompareUtil.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
+		return UMLCompareUtil
+				.getBaseElement(MatchUtil.getContainer(input.getMatch().getComparison(), input)) != null;
 	}
 
 	/**

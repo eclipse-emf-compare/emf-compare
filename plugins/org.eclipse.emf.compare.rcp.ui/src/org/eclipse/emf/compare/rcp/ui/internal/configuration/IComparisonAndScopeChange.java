@@ -15,7 +15,6 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- *
  */
 public interface IComparisonAndScopeChange {
 

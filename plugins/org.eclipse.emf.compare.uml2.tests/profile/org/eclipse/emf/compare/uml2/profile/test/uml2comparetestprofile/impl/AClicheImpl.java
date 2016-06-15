@@ -238,9 +238,8 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 		manyValuedReferenceLoop: for (org.eclipse.uml2.uml.Class manyValuedReference : getManyValuedReference()) {
 			if (eClass != null && !eClass.isInstance(manyValuedReference))
 				continue manyValuedReferenceLoop;
-			if (name != null
-					&& !(ignoreCase ? name.equalsIgnoreCase(manyValuedReference.getName()) : name
-							.equals(manyValuedReference.getName())))
+			if (name != null && !(ignoreCase ? name.equalsIgnoreCase(manyValuedReference.getName())
+					: name.equals(manyValuedReference.getName())))
 				continue manyValuedReferenceLoop;
 			return manyValuedReference;
 		}

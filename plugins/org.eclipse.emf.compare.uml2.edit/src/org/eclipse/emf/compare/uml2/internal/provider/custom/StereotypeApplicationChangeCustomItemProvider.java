@@ -75,7 +75,7 @@ public class StereotypeApplicationChangeCustomItemProvider extends UMLDiffCustom
 						+ " value: " + umlDiff.getKind()); //$NON-NLS-1$
 		}
 
-		return stereotypeText.append(" [stereotype " + action + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$ 
+		return stereotypeText.append(" [stereotype " + action + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

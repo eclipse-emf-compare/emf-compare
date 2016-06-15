@@ -66,7 +66,7 @@ public class AbstractResourceAttachmentChangeMoveTests extends CompareTestCase {
 	 * The bundle containing this test.
 	 */
 	protected static final String TEST_BUNDLE = "org.eclipse.emf.compare.diagram.papyrus.tests.git";
-	
+
 	protected static final String MASTER = Constants.R_HEADS + Constants.MASTER;
 
 	protected static final String BRANCH_1 = Constants.R_HEADS + "branch1";
@@ -113,8 +113,8 @@ public class AbstractResourceAttachmentChangeMoveTests extends CompareTestCase {
 		SystemReader.setInstance(mockSystemReader);
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		String gitRepoPath = workspaceRoot.getRawLocation().toFile() + File.separator + "repo";
-		mockSystemReader.setProperty(Constants.GIT_CEILING_DIRECTORIES_KEY, workspaceRoot.getLocation()
-				.toFile().getParentFile().getAbsoluteFile().toString());
+		mockSystemReader.setProperty(Constants.GIT_CEILING_DIRECTORIES_KEY,
+				workspaceRoot.getLocation().toFile().getParentFile().getAbsoluteFile().toString());
 		gitDir = new File(gitRepoPath, Constants.DOT_GIT);
 		repository = new GitTestRepository(gitDir);
 		repository.ignore(workspaceRoot.getRawLocation().append(".metadata").toFile());
@@ -123,8 +123,8 @@ public class AbstractResourceAttachmentChangeMoveTests extends CompareTestCase {
 	@Override
 	@After
 	public void tearDown() throws Exception {
-		final EMFModelProvider emfModelProvider = (EMFModelProvider)ModelProvider.getModelProviderDescriptor(
-				EMFModelProvider.PROVIDER_ID).getModelProvider();
+		final EMFModelProvider emfModelProvider = (EMFModelProvider)ModelProvider
+				.getModelProviderDescriptor(EMFModelProvider.PROVIDER_ID).getModelProvider();
 		emfModelProvider.clear();
 		repository.dispose();
 		Activator.getDefault().getRepositoryCache().clear();
@@ -135,7 +135,7 @@ public class AbstractResourceAttachmentChangeMoveTests extends CompareTestCase {
 			}
 		}
 	}
-	
+
 	/**
 	 * Copies the file located in {@link #testDataPath} + {@code filePath} to the given
 	 * {@code destinationPath} in {@code iProject}.
@@ -148,8 +148,8 @@ public class AbstractResourceAttachmentChangeMoveTests extends CompareTestCase {
 	 *            The path in the {@code iProject} to which the file will be copied.
 	 * @return The newly created {@link IFile}.
 	 */
-	protected IFile addToProject(String testDataPath, TestProject project, IProject iProject, String filePath, String destinationPath)
-			throws IOException, URISyntaxException, CoreException {
+	protected IFile addToProject(String testDataPath, TestProject project, IProject iProject, String filePath,
+			String destinationPath) throws IOException, URISyntaxException, CoreException {
 		final Bundle bundle = Platform.getBundle(TEST_BUNDLE);
 		final URI fileUri = getFileUri(bundle.getEntry(testDataPath + filePath));
 

@@ -111,18 +111,26 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 	private static String TEST_DATA_PATH = "src/org/eclipse/emf/compare/diagram/papyrus/tests/resourceattachmentchange/move/data/";
 
 	private ResourceSetImpl resourceSet;
+
 	private IProject iProject;
+
 	private TestProject testProject1;
+
 	private IFile modelDi;
+
 	private IFile modelNotation;
+
 	private IFile modelUml;
+
 	private IFile fragmentDi;
+
 	private IFile fragmentNotation;
+
 	private IFile fragmentUml;
-	
+
 	/**
-	 * BRANCH_3 checkouted (the deletion). Comparison with BRANCH_2 (the move).
-	 * Comparison: Conflicts, with 1 concerning a {@link ResourceAttachmentChange} DELETE with 1 {@link ResourceAttachmentChange} MOVE.
+	 * BRANCH_3 checkouted (the deletion). Comparison with BRANCH_2 (the move). Comparison: Conflicts, with 1
+	 * concerning a {@link ResourceAttachmentChange} DELETE with 1 {@link ResourceAttachmentChange} MOVE.
 	 */
 	@Test
 	public void testComparisonMoveRemoteDeleteLocal() throws Exception {
@@ -132,21 +140,25 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 		repository.checkoutBranch(BRANCH_3);
 		Comparison comparison = compare(BRANCH_3, BRANCH_2, modelNotation);
 		assertEquals(2, comparison.getConflicts().size());
-		assertEquals(1, size(filter(comparison.getDifferences(), and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
+		assertEquals(1, size(filter(comparison.getDifferences(),
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 		// There is a conflict between the move in 2nd commit & the deletion in 3rd commit
 		Conflict conflict = comparison.getConflicts().get(1);
 		EList<Diff> differences = conflict.getDifferences();
 		assertEquals(3, differences.size());
-		assertEquals(1, size(filter(differences, and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.DELETE)))));
-		assertEquals(1, size(filter(differences, and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
-		assertEquals(1, size(filter(differences, and(instanceOf(DiagramChange.class), ofKind(DifferenceKind.DELETE)))));
-		
+		assertEquals(1, size(filter(differences,
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.DELETE)))));
+		assertEquals(1, size(filter(differences,
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
+		assertEquals(1, size(
+				filter(differences, and(instanceOf(DiagramChange.class), ofKind(DifferenceKind.DELETE)))));
+
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_2 checkouted (the move). Comparison with BRANCH_3 (the deletion).
-	 * Comparison: Conflicts, with 1 concerning a {@link ResourceAttachmentChange} DELETE with 1 {@link ResourceAttachmentChange} MOVE.
+	 * BRANCH_2 checkouted (the move). Comparison with BRANCH_3 (the deletion). Comparison: Conflicts, with 1
+	 * concerning a {@link ResourceAttachmentChange} DELETE with 1 {@link ResourceAttachmentChange} MOVE.
 	 */
 	@Test
 	public void testComparisonMoveLocalDeleteRemote() throws Exception {
@@ -156,26 +168,29 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 		repository.checkoutBranch(BRANCH_2);
 		Comparison comparison = compare(BRANCH_2, BRANCH_3, modelNotation);
 		assertEquals(2, comparison.getConflicts().size());
-		assertEquals(1, size(filter(comparison.getDifferences(), and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
+		assertEquals(1, size(filter(comparison.getDifferences(),
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 		// There is a conflict between the move in 2nd commit & the deletion in 3rd commit
 		Conflict conflict = comparison.getConflicts().get(1);
 		EList<Diff> differences = conflict.getDifferences();
 		assertEquals(3, differences.size());
-		assertEquals(1, size(filter(differences, and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.DELETE)))));
-		assertEquals(1, size(filter(differences, and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
-		assertEquals(1, size(filter(differences, and(instanceOf(DiagramChange.class), ofKind(DifferenceKind.DELETE)))));
-		
+		assertEquals(1, size(filter(differences,
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.DELETE)))));
+		assertEquals(1, size(filter(differences,
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
+		assertEquals(1, size(
+				filter(differences, and(instanceOf(DiagramChange.class), ofKind(DifferenceKind.DELETE)))));
+
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_3 checkouted (the deletion). Comparison with BRANCH_2 (the move).
-	 * Merge: Conflicts.
+	 * BRANCH_3 checkouted (the deletion). Comparison with BRANCH_2 (the move). Merge: Conflicts.
 	 */
 	@Test
 	public void testMergeMoveRemoteDeleteLocal() throws Exception {
 		setUpRepositoryCase002();
-		
+
 		repository.checkoutBranch(MASTER);
 		repository.reset(BRANCH_3, ResetType.HARD);
 		repository.mergeLogicalWithNewCommit(BRANCH_2);
@@ -185,15 +200,14 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_2 checkouted (the move). Comparison with BRANCH_3 (the deletion).
-	 * Merge: Conflicts.
+	 * BRANCH_2 checkouted (the move). Comparison with BRANCH_3 (the deletion). Merge: Conflicts.
 	 */
 	@Test
 	public void testMergeMoveLocalDeleteRemote() throws Exception {
 		setUpRepositoryCase002();
-		
+
 		repository.checkoutBranch(MASTER);
 		repository.reset(BRANCH_2, ResetType.HARD);
 		repository.mergeLogicalWithNewCommit(BRANCH_3);
@@ -203,15 +217,14 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_3 checkouted (the deletion). Comparison with BRANCH_2 (the move).
-	 * Rebase: Conflicts.
+	 * BRANCH_3 checkouted (the deletion). Comparison with BRANCH_2 (the move). Rebase: Conflicts.
 	 */
 	@Test
 	public void testRebaseMoveRemoteDeleteLocal() throws Exception {
 		setUpRepositoryCase002();
-		
+
 		repository.checkoutBranch(MASTER);
 		repository.reset(BRANCH_3, ResetType.HARD);
 		repository.rebaseLogical(BRANCH_2);
@@ -221,15 +234,14 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_2 checkouted (the move). Comparison with BRANCH_3 (the deletion).
-	 * Rebase: Conflicts.
+	 * BRANCH_2 checkouted (the move). Comparison with BRANCH_3 (the deletion). Rebase: Conflicts.
 	 */
 	@Test
 	public void testRebaseMoveLocalDeleteRemote() throws Exception {
 		setUpRepositoryCase002();
-		
+
 		repository.checkoutBranch(MASTER);
 		repository.reset(BRANCH_2, ResetType.HARD);
 		repository.rebaseLogical(BRANCH_3);
@@ -239,15 +251,14 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_3 checkouted (the deletion). Comparison with BRANCH_2 (the move).
-	 * Merge: Conflicts.
+	 * BRANCH_3 checkouted (the deletion). Comparison with BRANCH_2 (the move). Merge: Conflicts.
 	 */
 	@Test
 	public void testCherryPickMoveRemoteDeleteLocal() throws Exception {
 		setUpRepositoryCase002();
-		
+
 		repository.checkoutBranch(MASTER);
 		repository.reset(BRANCH_3, ResetType.HARD);
 		repository.cherryPickLogical(BRANCH_2);
@@ -257,15 +268,14 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_2 checkouted (the move). Comparison with BRANCH_3 (the deletion).
-	 * Merge: Conflicts.
+	 * BRANCH_2 checkouted (the move). Comparison with BRANCH_3 (the deletion). Merge: Conflicts.
 	 */
 	@Test
 	public void testCherryPickMoveLocalDeleteRemote() throws Exception {
 		setUpRepositoryCase002();
-		
+
 		repository.checkoutBranch(MASTER);
 		repository.reset(BRANCH_2, ResetType.HARD);
 		repository.cherryPickLogical(BRANCH_3);
@@ -275,11 +285,10 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 
 		testProject1.dispose();
 	}
-	
-	
+
 	/**
-	 * BRANCH_3 checkouted (the second move). Comparison with BRANCH_2 (the first move).
-	 * Comparison: Conflicts, with 2 {@link ResourceAttachmentChange} MOVE.
+	 * BRANCH_3 checkouted (the second move). Comparison with BRANCH_2 (the first move). Comparison:
+	 * Conflicts, with 2 {@link ResourceAttachmentChange} MOVE.
 	 */
 	@Test
 	public void testComparisonMoveRemoteMoveLocal() throws Exception {
@@ -289,19 +298,21 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 		repository.checkoutBranch(BRANCH_3);
 		Comparison comparison = compare(BRANCH_3, BRANCH_2, modelNotation);
 		assertEquals(2, comparison.getConflicts().size());
-		assertEquals(2, size(filter(comparison.getDifferences(), and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
+		assertEquals(2, size(filter(comparison.getDifferences(),
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 		// There is a conflict between the move in 2nd commit & the move in 3rd commit
 		Conflict conflict = comparison.getConflicts().get(1);
 		EList<Diff> differences = conflict.getDifferences();
 		assertEquals(2, differences.size());
-		assertEquals(2, size(filter(differences, and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
-				
+		assertEquals(2, size(filter(differences,
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
+
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_2 checkouted (the first move). Comparison with BRANCH_3 (the second move).
-	 * Comparison: Conflicts, with 2 {@link ResourceAttachmentChange} MOVE.
+	 * BRANCH_2 checkouted (the first move). Comparison with BRANCH_3 (the second move). Comparison:
+	 * Conflicts, with 2 {@link ResourceAttachmentChange} MOVE.
 	 */
 	@Test
 	public void testComparisonMoveLocalMoveRemote() throws Exception {
@@ -311,19 +322,20 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 		repository.checkoutBranch(BRANCH_2);
 		Comparison comparison = compare(BRANCH_2, BRANCH_3, modelNotation);
 		assertEquals(2, comparison.getConflicts().size());
-		assertEquals(2, size(filter(comparison.getDifferences(), and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
+		assertEquals(2, size(filter(comparison.getDifferences(),
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
 		// There is a conflict between the move in 2nd commit & the move in 3rd commit
 		Conflict conflict = comparison.getConflicts().get(1);
 		EList<Diff> differences = conflict.getDifferences();
 		assertEquals(2, differences.size());
-		assertEquals(2, size(filter(differences, and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
-				
+		assertEquals(2, size(filter(differences,
+				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
+
 		testProject1.dispose();
 	}
 
 	/**
-	 * BRANCH_3 checkouted (the second move). Comparison with BRANCH_2 (the first move).
-	 * Merge: Conflicts.
+	 * BRANCH_3 checkouted (the second move). Comparison with BRANCH_2 (the first move). Merge: Conflicts.
 	 */
 	@Test
 	public void testMergeMoveRemoteMoveLocal() throws Exception {
@@ -338,10 +350,9 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_2 checkouted (the first move). Comparison with BRANCH_3 (the second move).
-	 * Merge: Conflicts.
+	 * BRANCH_2 checkouted (the first move). Comparison with BRANCH_3 (the second move). Merge: Conflicts.
 	 */
 	@Test
 	public void testMergeMoveLocalMoveRemote() throws Exception {
@@ -356,10 +367,9 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_3 checkouted (the second move). Comparison with BRANCH_2 (the first move).
-	 * Rebase: Conflicts.
+	 * BRANCH_3 checkouted (the second move). Comparison with BRANCH_2 (the first move). Rebase: Conflicts.
 	 */
 	@Test
 	public void testRebaseMoveRemoteMoveLocal() throws Exception {
@@ -374,10 +384,9 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_2 checkouted (the first move). Comparison with BRANCH_3 (the second move).
-	 * Rebase: Conflicts.
+	 * BRANCH_2 checkouted (the first move). Comparison with BRANCH_3 (the second move). Rebase: Conflicts.
 	 */
 	@Test
 	public void testRebaseMoveLocalMoveRemote() throws Exception {
@@ -392,10 +401,10 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_3 checkouted (the second move). Comparison with BRANCH_2 (the first move).
-	 * CherryPick: Conflicts.
+	 * BRANCH_3 checkouted (the second move). Comparison with BRANCH_2 (the first move). CherryPick:
+	 * Conflicts.
 	 */
 	@Test
 	public void testCherryPickMoveRemoteMoveLocal() throws Exception {
@@ -410,10 +419,10 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * BRANCH_2 checkouted (the first move). Comparison with BRANCH_3 (the second move).
-	 * CherryPick: Conflicts.
+	 * BRANCH_2 checkouted (the first move). Comparison with BRANCH_3 (the second move). CherryPick:
+	 * Conflicts.
 	 */
 	@Test
 	public void testCherryPickMoveLocalMoveRemote() throws Exception {
@@ -428,13 +437,12 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 
 		testProject1.dispose();
 	}
-	
+
 	/**
-	 * Case 002.
-	 * 3 commits. 
-	 * 1st commit: a model with 2 packages. 1 class diagram associated to the model, and 1 class diagram associated to the 2nd package.
-	 * 2nd commit: the 2nd package is fragmented. The class diagram associated is moved in a new resource (notation model).
-	 * 3rd commit: reset to the 1st commit. Remove the 2nd package. Also remove it from the diagram.
+	 * Case 002. 3 commits. 1st commit: a model with 2 packages. 1 class diagram associated to the model, and
+	 * 1 class diagram associated to the 2nd package. 2nd commit: the 2nd package is fragmented. The class
+	 * diagram associated is moved in a new resource (notation model). 3rd commit: reset to the 1st commit.
+	 * Remove the 2nd package. Also remove it from the diagram.
 	 */
 	private void setUpRepositoryCase002() throws Exception {
 		resourceSet = new ResourceSetImpl();
@@ -442,47 +450,52 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 		testProject1 = new TestProject("Project1", workingDirectory.getAbsolutePath());
 		iProject = testProject1.getProject();
 		repository.connect(iProject);
-		
-		// 1st commit: a model with 2 packages. 
+
+		// 1st commit: a model with 2 packages.
 		// 1 class diagram associated to the model, and 1 class diagram associated to the 2nd package.
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit1/model.uml", "");
 
 		repository.addAllAndCommit("1st-commit");
 		repository.createBranch(MASTER, BRANCH_1);
 
-		// 2nd commit: the 2nd package is fragmented. 
+		// 2nd commit: the 2nd package is fragmented.
 		// The class diagram associated is moved in a new resource (notation model).
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/model.uml", "");
 		fragmentDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/fragment.di", "");
-		fragmentNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/fragment.notation", "");
-		fragmentUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/fragment.uml", "");
+		fragmentNotation = addToProject(TEST_DATA_PATH, testProject1, iProject,
+				"case002/commit2/fragment.notation", "");
+		fragmentUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit2/fragment.uml",
+				"");
 		repository.addAllAndCommit("2nd-commit");
 		repository.createBranch(MASTER, BRANCH_2);
 
 		// Back to 1st commit
 		repository.reset(BRANCH_1, ResetType.HARD);
 
-		// 3rd commit: reset to the 1st commit. 
+		// 3rd commit: reset to the 1st commit.
 		// Remove the 2nd package. Also remove it from the diagram.
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit3/model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit3/model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit3/model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case002/commit3/model.uml", "");
 		repository.addAllAndCommit("3rd-commit");
 		repository.createBranch(MASTER, BRANCH_3);
-		
+
 		repository.checkoutBranch(MASTER);
 	}
-	
+
 	/**
-	 * Case 003.
-	 * 3 commits. 
-	 * 1st commit: a model with 2 packages. 1 class diagram associated to the model, and 1 class diagram associated to the 2nd package.
-	 * 2nd commit: the 2nd package is fragmented. The class diagram associated is moved in a new resource X (notation model).
-	 * 3rd commit: reset to the 1st commit. The 2nd package is fragmented. The class diagram associated is moved in a new resource Y (notation model).
+	 * Case 003. 3 commits. 1st commit: a model with 2 packages. 1 class diagram associated to the model, and
+	 * 1 class diagram associated to the 2nd package. 2nd commit: the 2nd package is fragmented. The class
+	 * diagram associated is moved in a new resource X (notation model). 3rd commit: reset to the 1st commit.
+	 * The 2nd package is fragmented. The class diagram associated is moved in a new resource Y (notation
+	 * model).
 	 */
 	private void setUpRepositoryCase003() throws Exception {
 		resourceSet = new ResourceSetImpl();
@@ -490,42 +503,50 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractResourceA
 		testProject1 = new TestProject("Project1", workingDirectory.getAbsolutePath());
 		iProject = testProject1.getProject();
 		repository.connect(iProject);
-		
-		// 1st commit: a model with 2 packages. 
+
+		// 1st commit: a model with 2 packages.
 		// 1 class diagram associated to the model, and 1 class diagram associated to the 2nd package.
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit1/model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit1/model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit1/model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit1/model.uml", "");
 
 		repository.addAllAndCommit("1st-commit");
 		repository.createBranch(MASTER, BRANCH_1);
 
-		// 2nd commit: the 2nd package is fragmented. 
+		// 2nd commit: the 2nd package is fragmented.
 		// The class diagram associated is moved in a new resource X (notation model).
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit2/model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit2/model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit2/model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit2/model.uml", "");
 		fragmentDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit2/fragment.di", "");
-		fragmentNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit2/fragment.notation", "");
-		fragmentUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit2/fragment.uml", "");
+		fragmentNotation = addToProject(TEST_DATA_PATH, testProject1, iProject,
+				"case003/commit2/fragment.notation", "");
+		fragmentUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit2/fragment.uml",
+				"");
 		repository.addAllAndCommit("2nd-commit");
 		repository.createBranch(MASTER, BRANCH_2);
 
 		// Back to 1st commit
 		repository.reset(BRANCH_1, ResetType.HARD);
 
-		// 3rd commit: the 2nd package is fragmented. 
+		// 3rd commit: the 2nd package is fragmented.
 		// The class diagram associated is moved in a new resource Y (notation model).
 		modelDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/model.di", "");
-		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/model.notation", "");
+		modelNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/model.notation",
+				"");
 		modelUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/model.uml", "");
-		IFile controlDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/control.di", "");
-		IFile controlNotation = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/control.notation", "");
-		IFile controlUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/control.uml", "");
+		IFile controlDi = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/control.di",
+				"");
+		IFile controlNotation = addToProject(TEST_DATA_PATH, testProject1, iProject,
+				"case003/commit3/control.notation", "");
+		IFile controlUml = addToProject(TEST_DATA_PATH, testProject1, iProject, "case003/commit3/control.uml",
+				"");
 		repository.addAllAndCommit("3rd-commit");
 		repository.createBranch(MASTER, BRANCH_3);
-		
+
 		repository.checkoutBranch(MASTER);
 	}
-	
+
 }

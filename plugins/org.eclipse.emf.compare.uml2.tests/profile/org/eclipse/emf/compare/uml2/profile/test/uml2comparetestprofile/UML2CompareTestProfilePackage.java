@@ -27,8 +27,8 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * 
  * @see org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfileFactory
- * @model kind="package"
- *        annotation="http://www.eclipse.org/uml2/2.0.0/UML originalName='UML2CompareTestProfile'"
+ * @model kind="package" annotation=
+ *        "http://www.eclipse.org/uml2/2.0.0/UML originalName='UML2CompareTestProfile'"
  * @generated
  */
 public interface UML2CompareTestProfilePackage extends EPackage {

@@ -36,9 +36,9 @@ public class GitMergeTest extends AbstractGitLogicalModelTest {
 	 * <li>BRANCH commit: deletes C1 and adds a new class C3.</li>
 	 * </ul>
 	 * <p>
-	 * Checked out is MASTER and the branch BRANCH is to be merged in MASTER. The merge should not finish
-	 * due to conflicts, but the non-conflicting differences should be successfully merged (classes C2 and
-	 * C3 should both be present in the model after the merge).
+	 * Checked out is MASTER and the branch BRANCH is to be merged in MASTER. The merge should not finish due
+	 * to conflicts, but the non-conflicting differences should be successfully merged (classes C2 and C3
+	 * should both be present in the model after the merge).
 	 * </p>
 	 * 
 	 * @throws Exception
@@ -46,50 +46,50 @@ public class GitMergeTest extends AbstractGitLogicalModelTest {
 	 */
 	private void setup001() throws Exception {
 
-	// initial commit
-	EPackage ePackage = createPackage(null, "P1");
-	EClass class1 = createClass(ePackage, "C1");
-	resource1.getContents().add(ePackage);
-	save(resource1);
-	repository.addAllAndCommit("initial-commit");
+		// initial commit
+		EPackage ePackage = createPackage(null, "P1");
+		EClass class1 = createClass(ePackage, "C1");
+		resource1.getContents().add(ePackage);
+		save(resource1);
+		repository.addAllAndCommit("initial-commit");
 
-	// create new branch, but stay on MASTER
-	repository.createBranch(MASTER, BRANCH);
+		// create new branch, but stay on MASTER
+		repository.createBranch(MASTER, BRANCH);
 
-	// master commit
-	createClass(ePackage, "C2");
-	class1.setName("C1new");
-	save(resource1);
-	repository.addAllAndCommit("update-C1-add-C2");
+		// master commit
+		createClass(ePackage, "C2");
+		class1.setName("C1new");
+		save(resource1);
+		repository.addAllAndCommit("update-C1-add-C2");
 
-	// branch commit
-	repository.checkoutBranch(BRANCH);
-	reload(resource1);
-	ePackage = (EPackage)findObject(resource1, "P1");
-	class1 = (EClass)findObject(resource1, "C1");
-	ePackage.getEClassifiers().remove(class1);
-	createClass(ePackage, "C3");
-	save(resource1);
-	repository.addAllAndCommit("remove-C1-add-C3");
+		// branch commit
+		repository.checkoutBranch(BRANCH);
+		reload(resource1);
+		ePackage = (EPackage)findObject(resource1, "P1");
+		class1 = (EClass)findObject(resource1, "C1");
+		ePackage.getEClassifiers().remove(class1);
+		createClass(ePackage, "C3");
+		save(resource1);
+		repository.addAllAndCommit("remove-C1-add-C3");
 
-	// back on master
-	repository.checkoutBranch(MASTER);
-	reload(resource1);
+		// back on master
+		repository.checkoutBranch(MASTER);
+		reload(resource1);
 	}
 
 	@Test
 	public void merge001() throws Exception {
-	setup001();
+		setup001();
 
-	repository.mergeLogical(BRANCH);
-	reload(resource1);
+		repository.mergeLogical(BRANCH);
+		reload(resource1);
 
-	Status status = repository.status();
-	Set<String> conflicting = status.getConflicting();
-	assertEquals(1, conflicting.size());
-	assertNotNull(findObject(resource1, "C1new"));
-	assertNotNull(findObject(resource1, "C2"));
-	assertNotNull(findObject(resource1, "C3"));
+		Status status = repository.status();
+		Set<String> conflicting = status.getConflicting();
+		assertEquals(1, conflicting.size());
+		assertNotNull(findObject(resource1, "C1new"));
+		assertNotNull(findObject(resource1, "C2"));
+		assertNotNull(findObject(resource1, "C3"));
 
 	}
 }

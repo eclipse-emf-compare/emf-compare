@@ -122,8 +122,8 @@ public class EMFResourceMapping extends ResourceMapping {
 	private ResourceTraversal[] convertToTraversal(SynchronizationModel syncModel) {
 		final Set<IResource> resources = syncModel.getResources();
 		final IResource[] resourcesArray = resources.toArray(new IResource[resources.size()]);
-		return new ResourceTraversal[] {new ResourceTraversal(resourcesArray, IResource.DEPTH_ZERO,
-				IResource.NONE), };
+		return new ResourceTraversal[] {
+				new ResourceTraversal(resourcesArray, IResource.DEPTH_ZERO, IResource.NONE), };
 	}
 
 	private static ResourceTraversal[] createSingletonTraversal(IResource aResource) {

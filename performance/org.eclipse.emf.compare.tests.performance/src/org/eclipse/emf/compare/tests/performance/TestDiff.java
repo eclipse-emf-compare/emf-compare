@@ -25,14 +25,13 @@ import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDiff extends AbstractEMFComparePerformanceTest {
 
-	
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest#setSUTName()
 	 */
 	@Override
@@ -52,7 +51,7 @@ public class TestDiff extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void b_diffUMLNominal() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLNominal");
@@ -65,7 +64,7 @@ public class TestDiff extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void c_diffUMLSmallSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLSmallSplit");
@@ -78,7 +77,7 @@ public class TestDiff extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void d_diffUMLNominalSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("diffUMLNominalSplit");

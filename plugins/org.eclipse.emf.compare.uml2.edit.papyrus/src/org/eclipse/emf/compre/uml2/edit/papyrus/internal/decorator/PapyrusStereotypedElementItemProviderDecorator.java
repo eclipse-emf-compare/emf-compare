@@ -71,8 +71,8 @@ public class PapyrusStereotypedElementItemProviderDecorator extends StereotypedE
 		List<Object> images = new ArrayList<Object>();
 
 		// Filter out images representing a shape. Shapes are usually to big to be used as icons.
-		for (org.eclipse.uml2.uml.Image icon : filter(appliedStereotype.getIcons(), not(in(StereotypeUtil
-				.getShapes(appliedStereotype))))) {
+		for (org.eclipse.uml2.uml.Image icon : filter(appliedStereotype.getIcons(),
+				not(in(StereotypeUtil.getShapes(appliedStereotype))))) {
 
 			String location = icon.getLocation();
 

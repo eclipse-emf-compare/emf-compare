@@ -244,8 +244,8 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 						valueText, hasBeenAndSide, attributeText);
 				break;
 			case CHANGE:
-				String changeText = ReferenceChangeItemProviderSpec.changeText(attChange, attChange
-						.getAttribute());
+				String changeText = ReferenceChangeItemProviderSpec.changeText(attChange,
+						attChange.getAttribute());
 				ret = EMFCompareEditMessages.getString("AttributeChangeItemProviderSpec.valueChanged", //$NON-NLS-1$
 						attributeText, valueText, hasBeenAndSide, changeText);
 				break;

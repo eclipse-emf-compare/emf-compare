@@ -295,8 +295,8 @@ public final class ComparisonUtil {
 	 *            Whether we should move the value in the left or right side.
 	 * @return The expected target container if found, <code>null</code> otherwise.
 	 */
-	private static EObject getContainerInEquivalence(final Comparison comparison,
-			final FeatureMapChange diff, final boolean rightToLeft) {
+	private static EObject getContainerInEquivalence(final Comparison comparison, final FeatureMapChange diff,
+			final boolean rightToLeft) {
 		EObject expectedContainer = null;
 		Equivalence equ = diff.getEquivalence();
 		if (equ != null) {
@@ -363,8 +363,8 @@ public final class ComparisonUtil {
 		return new Function<Diff, Iterable<Diff>>() {
 			public Iterable<Diff> apply(Diff diff) {
 				if (diff instanceof ReferenceChange) {
-					Match matchOfValue = diff.getMatch().getComparison().getMatch(
-							((ReferenceChange)diff).getValue());
+					Match matchOfValue = diff.getMatch().getComparison()
+							.getMatch(((ReferenceChange)diff).getValue());
 					if (((ReferenceChange)diff).getReference().isContainment()) {
 						final Iterable<Diff> subDiffs;
 						// if the diff is a Move diff, we don't want its children.
@@ -449,8 +449,8 @@ public final class ComparisonUtil {
 			for (Diff req : reqs) {
 				if (!Iterables.contains(subDiffs, req) && !processedDiffs.contains(req)) {
 					processedDiffs.add(req);
-					addAll(associatedDiffs, getSubDiffs(leftToRight, firstLevelOnly, processedDiffs).apply(
-							req));
+					addAll(associatedDiffs,
+							getSubDiffs(leftToRight, firstLevelOnly, processedDiffs).apply(req));
 				}
 			}
 		}
@@ -567,8 +567,8 @@ public final class ComparisonUtil {
 	 * @return {@true} if the {@code object} is directly contained within a FeatureMap.
 	 */
 	public static boolean isContainedInFeatureMap(EObject object) {
-		final EAnnotation annotation = object.eContainingFeature().getEAnnotation(
-				ExtendedMetaData.ANNOTATION_URI);
+		final EAnnotation annotation = object.eContainingFeature()
+				.getEAnnotation(ExtendedMetaData.ANNOTATION_URI);
 		if (annotation != null) {
 			final String groupKind = ExtendedMetaData.FEATURE_KINDS[ExtendedMetaData.GROUP_FEATURE];
 			return annotation.getDetails().containsKey(groupKind);

@@ -72,8 +72,8 @@ public class ContainmentRefChangeConflictSearch {
 
 			// First let's see if non-containment diffs point to the EObject added
 			Collection<ReferenceChange> refChanges = index.getReferenceChangesByValue(value);
-			for (ReferenceChange candidate : Iterables.filter(refChanges, and(possiblyConflictingWith(diff),
-					ofKind(ADD, CHANGE)))) {
+			for (ReferenceChange candidate : Iterables.filter(refChanges,
+					and(possiblyConflictingWith(diff), ofKind(ADD, CHANGE)))) {
 				if (candidate.getReference().isContainment()) {
 					if (candidate.getReference() == feature && candidate.getMatch() == diff.getMatch()
 							&& matchingIndices(diff.getMatch(), feature, value, candidate.getValue())) {
@@ -89,8 +89,8 @@ public class ContainmentRefChangeConflictSearch {
 			if (!feature.isMany()) {
 				for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
 						instanceOf(ReferenceChange.class), onFeature(feature), ofKind(ADD, CHANGE)))) {
-					if (comparison.getEqualityHelper().matchingValues(
-							((ReferenceChange)candidate).getValue(), diff.getValue())) {
+					if (comparison.getEqualityHelper().matchingValues(((ReferenceChange)candidate).getValue(),
+							diff.getValue())) {
 						conflict(candidate, PSEUDO);
 					} else {
 						conflict(candidate, REAL);
@@ -129,8 +129,8 @@ public class ContainmentRefChangeConflictSearch {
 
 			// First let's see if non-containment diffs point to the EObject added
 			Collection<ReferenceChange> refChanges = index.getReferenceChangesByValue(value);
-			for (ReferenceChange candidate : Iterables.filter(refChanges, and(possiblyConflictingWith(diff),
-					ofKind(ADD, CHANGE)))) {
+			for (ReferenceChange candidate : Iterables.filter(refChanges,
+					and(possiblyConflictingWith(diff), ofKind(ADD, CHANGE)))) {
 				if (candidate.getReference().isContainment()) {
 					if (candidate.getReference() == feature && candidate.getMatch() == diff.getMatch()) {
 						conflict(candidate, PSEUDO);
@@ -145,8 +145,8 @@ public class ContainmentRefChangeConflictSearch {
 			if (!feature.isMany() && isAddOrSetDiff(diff)) {
 				for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
 						instanceOf(ReferenceChange.class), onFeature(feature)))) {
-					if (comparison.getEqualityHelper().matchingValues(
-							((ReferenceChange)candidate).getValue(), diff.getValue())) {
+					if (comparison.getEqualityHelper().matchingValues(((ReferenceChange)candidate).getValue(),
+							diff.getValue())) {
 						conflict(candidate, PSEUDO);
 					} else {
 						conflict(candidate, REAL);
@@ -206,8 +206,9 @@ public class ContainmentRefChangeConflictSearch {
 
 			// Now let's look for conflits with containment ReferenceChanges
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-					instanceOf(ReferenceChange.class), valueMatches(comparison.getEqualityHelper(), value)))) {
+			for (Diff candidate : Iterables.filter(diffsInSameMatch,
+					and(possiblyConflictingWith(diff), instanceOf(ReferenceChange.class),
+							valueMatches(comparison.getEqualityHelper(), value)))) {
 
 				if (isDeleteOrUnsetDiff(candidate)) {
 					conflict(candidate, PSEUDO);
@@ -262,8 +263,8 @@ public class ContainmentRefChangeConflictSearch {
 
 			// First let's see if non-containment diffs point to the EObject added
 			Collection<ReferenceChange> refChanges = index.getReferenceChangesByValue(value);
-			for (ReferenceChange candidate : Iterables.filter(refChanges, and(possiblyConflictingWith(diff),
-					ofKind(MOVE)))) {
+			for (ReferenceChange candidate : Iterables.filter(refChanges,
+					and(possiblyConflictingWith(diff), ofKind(MOVE)))) {
 				if (candidate.getReference().isContainment()) {
 					if (candidate.getReference() == feature && candidate.getMatch() == diff.getMatch()
 							&& matchingIndices(diff.getMatch(), feature, value, candidate.getValue())) {
@@ -275,11 +276,11 @@ public class ContainmentRefChangeConflictSearch {
 			}
 
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-					valueMatches(comparison.getEqualityHelper(), value), instanceOf(ReferenceChange.class),
-					onFeature(feature)))) {
-				if (matchingIndices(diff.getMatch(), diff.getReference(), value, ((ReferenceChange)candidate)
-						.getValue())) {
+			for (Diff candidate : Iterables.filter(diffsInSameMatch,
+					and(possiblyConflictingWith(diff), valueMatches(comparison.getEqualityHelper(), value),
+							instanceOf(ReferenceChange.class), onFeature(feature)))) {
+				if (matchingIndices(diff.getMatch(), diff.getReference(), value,
+						((ReferenceChange)candidate).getValue())) {
 					conflict(candidate, PSEUDO);
 				} else {
 					conflict(candidate, REAL);

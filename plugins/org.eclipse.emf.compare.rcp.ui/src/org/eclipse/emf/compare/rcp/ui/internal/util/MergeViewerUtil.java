@@ -283,16 +283,16 @@ public final class MergeViewerUtil {
 				if (diffResourceURI.equals(resourceURI.toString())) {
 					return resource;
 				} else if (side == MergeViewerSide.RIGHT
-						&& (diffResourceURI.equals(matchResource.getLeftURI()) || diffResourceURI
-								.equals(matchResource.getOriginURI()))) {
+						&& (diffResourceURI.equals(matchResource.getLeftURI())
+								|| diffResourceURI.equals(matchResource.getOriginURI()))) {
 					return resource;
 				} else if (side == MergeViewerSide.LEFT
-						&& (diffResourceURI.equals(matchResource.getRightURI()) || diffResourceURI
-								.equals(matchResource.getOriginURI()))) {
+						&& (diffResourceURI.equals(matchResource.getRightURI())
+								|| diffResourceURI.equals(matchResource.getOriginURI()))) {
 					return resource;
 				} else if (side == MergeViewerSide.ANCESTOR
-						&& (diffResourceURI.equals(matchResource.getLeftURI()) || diffResourceURI
-								.equals(matchResource.getRightURI()))) {
+						&& (diffResourceURI.equals(matchResource.getLeftURI())
+								|| diffResourceURI.equals(matchResource.getRightURI()))) {
 					return resource;
 				}
 			}
@@ -323,7 +323,8 @@ public final class MergeViewerUtil {
 	 * @param side
 	 * @return
 	 */
-	public static Object getResourceAttachmentChangeValue(ResourceAttachmentChange diff, MergeViewerSide side) {
+	public static Object getResourceAttachmentChangeValue(ResourceAttachmentChange diff,
+			MergeViewerSide side) {
 		final Object ret;
 		Match match = diff.getMatch();
 		switch (side) {
@@ -368,8 +369,8 @@ public final class MergeViewerUtil {
 						throw new IllegalStateException();
 				}
 			} else {
-				ret = matchingValue(object, comparison, getResourceContents(comparison, side,
-						(ResourceAttachmentChange)object));
+				ret = matchingValue(object, comparison,
+						getResourceContents(comparison, side, (ResourceAttachmentChange)object));
 			}
 		} else {
 			ret = matchingValue(object, comparison, getResourceContents(comparison, side, null));
@@ -404,8 +405,8 @@ public final class MergeViewerUtil {
 		Iterable<TreeNode> nodes = groupProvider.getTreeNodes(diff);
 
 		boolean isDisplayedInSMV = any(nodes, predicate);
-		boolean isPrimeRefining = !isEmpty(filter(transform(nodes, IDifferenceGroup.TREE_NODE_DATA),
-				IS_PRIME_REFINING));
+		boolean isPrimeRefining = !isEmpty(
+				filter(transform(nodes, IDifferenceGroup.TREE_NODE_DATA), IS_PRIME_REFINING));
 		return (isDisplayedInSMV || isPrimeRefining);
 	}
 

@@ -32,32 +32,36 @@ public class ComparisonAndScopeChange implements ICompareEvent, IComparisonAndSc
 		this.newScope = newScope;
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IComparisonAndScopeChange#getOldComparison()
 	 */
 	public Comparison getOldComparison() {
 		return oldComparison;
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IComparisonAndScopeChange#getNewComparison()
 	 */
 	public Comparison getNewComparison() {
 		return newComparison;
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IComparisonAndScopeChange#getOldScope()
 	 */
 	public IComparisonScope getOldScope() {
 		return oldScope;
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IComparisonAndScopeChange#getNewScope()
 	 */
 	public IComparisonScope getNewScope() {

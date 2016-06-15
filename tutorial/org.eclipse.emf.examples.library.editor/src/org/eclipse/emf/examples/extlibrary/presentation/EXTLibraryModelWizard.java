@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.examples.extlibrary.presentation;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -82,7 +81,6 @@ import org.eclipse.emf.examples.extlibrary.provider.EXTLibraryEditPlugin;
 
 import org.eclipse.core.runtime.Path;
 
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -92,113 +90,102 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
-
 /**
- * This is a simple wizard for creating a new model file.
- * <!-- begin-user-doc -->
- * <!-- end-user-doc -->
+ * This is a simple wizard for creating a new model file. <!-- begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
-public class EXTLibraryModelWizard extends Wizard implements INewWizard
-{
-  /**
-	 * The supported extensions for created files.
-	 * <!-- begin-user-doc -->
-   * @since 2.4
-   * <!-- end-user-doc -->
+public class EXTLibraryModelWizard extends Wizard implements INewWizard {
+	/**
+	 * The supported extensions for created files. <!-- begin-user-doc -->
+	 * 
+	 * @since 2.4 <!-- end-user-doc -->
 	 * @generated
 	 */
-  public static final List<String> FILE_EXTENSIONS =
-    Collections.unmodifiableList(Arrays.asList(EXTLibraryEditorPlugin.INSTANCE.getString("_UI_EXTLibraryEditorFilenameExtensions").split("\\s*,\\s*"))); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final List<String> FILE_EXTENSIONS = Collections
+			.unmodifiableList(Arrays.asList(EXTLibraryEditorPlugin.INSTANCE
+					.getString("_UI_EXTLibraryEditorFilenameExtensions").split("\\s*,\\s*"))); //$NON-NLS-1$ //$NON-NLS-2$
 
-  /**
-	 * A formatted list of supported file extensions, suitable for display.
-	 * <!-- begin-user-doc -->
-   * @since 2.4
-   * <!-- end-user-doc -->
+	/**
+	 * A formatted list of supported file extensions, suitable for display. <!-- begin-user-doc -->
+	 * 
+	 * @since 2.4 <!-- end-user-doc -->
 	 * @generated
 	 */
-  public static final String FORMATTED_FILE_EXTENSIONS =
-    EXTLibraryEditorPlugin.INSTANCE.getString("_UI_EXTLibraryEditorFilenameExtensions").replaceAll("\\s*,\\s*", ", ");
+	public static final String FORMATTED_FILE_EXTENSIONS = EXTLibraryEditorPlugin.INSTANCE
+			.getString("_UI_EXTLibraryEditorFilenameExtensions").replaceAll("\\s*,\\s*", ", ");
 
-  /**
-	 * This caches an instance of the model package.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * This caches an instance of the model package. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected EXTLibraryPackage extLibraryPackage = EXTLibraryPackage.eINSTANCE;
+	protected EXTLibraryPackage extLibraryPackage = EXTLibraryPackage.eINSTANCE;
 
-  /**
-	 * This caches an instance of the model factory.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * This caches an instance of the model factory. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected EXTLibraryFactory extLibraryFactory = extLibraryPackage.getEXTLibraryFactory();
+	protected EXTLibraryFactory extLibraryFactory = extLibraryPackage.getEXTLibraryFactory();
 
-  /**
-	 * This is the file creation page.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * This is the file creation page. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected EXTLibraryModelWizardNewFileCreationPage newFileCreationPage;
+	protected EXTLibraryModelWizardNewFileCreationPage newFileCreationPage;
 
-  /**
-	 * This is the initial object creation page.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * This is the initial object creation page. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected EXTLibraryModelWizardInitialObjectCreationPage initialObjectCreationPage;
+	protected EXTLibraryModelWizardInitialObjectCreationPage initialObjectCreationPage;
 
-  /**
-	 * Remember the selection during initialization for populating the default container.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * Remember the selection during initialization for populating the default container. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected IStructuredSelection selection;
+	protected IStructuredSelection selection;
 
-  /**
-	 * Remember the workbench during initialization.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * Remember the workbench during initialization. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected IWorkbench workbench;
+	protected IWorkbench workbench;
 
-  /**
-	 * Caches the names of the types that can be created as the root object.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * Caches the names of the types that can be created as the root object. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected List<String> initialObjectNames;
+	protected List<String> initialObjectNames;
 
-  /**
-	 * This just records the information.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * This just records the information. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public void init(IWorkbench workbench, IStructuredSelection selection)
-  {
+	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.workbench = workbench;
 		this.selection = selection;
 		setWindowTitle(EXTLibraryEditorPlugin.INSTANCE.getString("_UI_Wizard_label")); //$NON-NLS-1$
-		setDefaultPageImageDescriptor(ExtendedImageRegistry.INSTANCE.getImageDescriptor(EXTLibraryEditorPlugin.INSTANCE.getImage("full/wizban/NewEXTLibrary"))); //$NON-NLS-1$
+		setDefaultPageImageDescriptor(ExtendedImageRegistry.INSTANCE
+				.getImageDescriptor(EXTLibraryEditorPlugin.INSTANCE.getImage("full/wizban/NewEXTLibrary"))); //$NON-NLS-1$
 	}
 
-  /**
-	 * Returns the names of the types that can be created as the root object.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * Returns the names of the types that can be created as the root object. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected Collection<String> getInitialObjectNames()
-  {
+	protected Collection<String> getInitialObjectNames() {
 		if (initialObjectNames == null) {
 			initialObjectNames = new ArrayList<String>();
 			for (EClassifier eClassifier : extLibraryPackage.getEClassifiers()) {
@@ -214,28 +201,25 @@ public class EXTLibraryModelWizard extends Wizard implements INewWizard
 		return initialObjectNames;
 	}
 
-  /**
-	 * Create a new model.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * Create a new model. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected EObject createInitialModel()
-  {
-		EClass eClass = (EClass)extLibraryPackage.getEClassifier(initialObjectCreationPage.getInitialObjectName());
+	protected EObject createInitialModel() {
+		EClass eClass = (EClass)extLibraryPackage
+				.getEClassifier(initialObjectCreationPage.getInitialObjectName());
 		EObject rootObject = extLibraryFactory.create(eClass);
 		return rootObject;
 	}
 
-  /**
-	 * Do the work after everything is specified.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * Do the work after everything is specified. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public boolean performFinish()
-  {
+	@Override
+	public boolean performFinish() {
 		try {
 			// Remember the file.
 			//
@@ -243,44 +227,42 @@ public class EXTLibraryModelWizard extends Wizard implements INewWizard
 
 			// Do the work within an operation.
 			//
-			WorkspaceModifyOperation operation =
-				new WorkspaceModifyOperation() {
-					@Override
-					protected void execute(IProgressMonitor progressMonitor) {
-						try {
-							// Create a resource set
-							//
-							ResourceSet resourceSet = new ResourceSetImpl();
+			WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
+				@Override
+				protected void execute(IProgressMonitor progressMonitor) {
+					try {
+						// Create a resource set
+						//
+						ResourceSet resourceSet = new ResourceSetImpl();
 
-							// Get the URI of the model file.
-							//
-							URI fileURI = URI.createPlatformResourceURI(modelFile.getFullPath().toString(), true);
+						// Get the URI of the model file.
+						//
+						URI fileURI = URI.createPlatformResourceURI(modelFile.getFullPath().toString(), true);
 
-							// Create a resource for this file.
-							//
-							Resource resource = resourceSet.createResource(fileURI, EXTLibraryPackage.eCONTENT_TYPE);
+						// Create a resource for this file.
+						//
+						Resource resource = resourceSet.createResource(fileURI,
+								EXTLibraryPackage.eCONTENT_TYPE);
 
-							// Add the initial model object to the contents.
-							//
-							EObject rootObject = createInitialModel();
-							if (rootObject != null) {
-								resource.getContents().add(rootObject);
-							}
-
-							// Save the contents of the resource to the file system.
-							//
-							Map<Object, Object> options = new HashMap<Object, Object>();
-							options.put(XMLResource.OPTION_ENCODING, initialObjectCreationPage.getEncoding());
-							resource.save(options);
+						// Add the initial model object to the contents.
+						//
+						EObject rootObject = createInitialModel();
+						if (rootObject != null) {
+							resource.getContents().add(rootObject);
 						}
-						catch (Exception exception) {
-							EXTLibraryEditorPlugin.INSTANCE.log(exception);
-						}
-						finally {
-							progressMonitor.done();
-						}
+
+						// Save the contents of the resource to the file system.
+						//
+						Map<Object, Object> options = new HashMap<Object, Object>();
+						options.put(XMLResource.OPTION_ENCODING, initialObjectCreationPage.getEncoding());
+						resource.save(options);
+					} catch (Exception exception) {
+						EXTLibraryEditorPlugin.INSTANCE.log(exception);
+					} finally {
+						progressMonitor.done();
 					}
-				};
+				}
+			};
 
 			getContainer().run(false, false, operation);
 
@@ -291,67 +273,62 @@ public class EXTLibraryModelWizard extends Wizard implements INewWizard
 			final IWorkbenchPart activePart = page.getActivePart();
 			if (activePart instanceof ISetSelectionTarget) {
 				final ISelection targetSelection = new StructuredSelection(modelFile);
-				getShell().getDisplay().asyncExec
-					(new Runnable() {
-						 public void run() {
-							 ((ISetSelectionTarget)activePart).selectReveal(targetSelection);
-						 }
-					 });
+				getShell().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						((ISetSelectionTarget)activePart).selectReveal(targetSelection);
+					}
+				});
 			}
 
 			// Open an editor on the new file.
 			//
 			try {
-				page.openEditor
-				(new FileEditorInput(modelFile),
-				 workbench.getEditorRegistry().getDefaultEditor(modelFile.getFullPath().toString()).getId());				 	 
-			}
-			catch (PartInitException exception) {
-				MessageDialog.openError(workbenchWindow.getShell(), EXTLibraryEditorPlugin.INSTANCE.getString("_UI_OpenEditorError_label"), exception.getMessage()); //$NON-NLS-1$
+				page.openEditor(new FileEditorInput(modelFile), workbench.getEditorRegistry()
+						.getDefaultEditor(modelFile.getFullPath().toString()).getId());
+			} catch (PartInitException exception) {
+				MessageDialog.openError(workbenchWindow.getShell(),
+						EXTLibraryEditorPlugin.INSTANCE.getString("_UI_OpenEditorError_label"), //$NON-NLS-1$
+						exception.getMessage());
 				return false;
 			}
 
 			return true;
-		}
-		catch (Exception exception) {
+		} catch (Exception exception) {
 			EXTLibraryEditorPlugin.INSTANCE.log(exception);
 			return false;
 		}
 	}
 
-  /**
-	 * This is the one page of the wizard.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * This is the one page of the wizard. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public class EXTLibraryModelWizardNewFileCreationPage extends WizardNewFileCreationPage
-  {
-    /**
-		 * Pass in the selection.
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	public class EXTLibraryModelWizardNewFileCreationPage extends WizardNewFileCreationPage {
+		/**
+		 * Pass in the selection. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
 		 * @generated
 		 */
-    public EXTLibraryModelWizardNewFileCreationPage(String pageId, IStructuredSelection selection)
-    {
+		public EXTLibraryModelWizardNewFileCreationPage(String pageId, IStructuredSelection selection) {
 			super(pageId, selection);
 		}
 
-    /**
-		 * The framework calls this to see if the file is correct.
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+		/**
+		 * The framework calls this to see if the file is correct. <!-- begin-user-doc --> <!-- end-user-doc
+		 * -->
+		 * 
 		 * @generated
 		 */
-    @Override
-    protected boolean validatePage()
-    {
+		@Override
+		protected boolean validatePage() {
 			if (super.validatePage()) {
 				String extension = new Path(getFileName()).getFileExtension();
 				if (extension == null || !FILE_EXTENSIONS.contains(extension)) {
-					String key = FILE_EXTENSIONS.size() > 1 ? "_WARN_FilenameExtensions" : "_WARN_FilenameExtension"; //$NON-NLS-1$ //$NON-NLS-2$
-					setErrorMessage(EXTLibraryEditorPlugin.INSTANCE.getString(key, new Object [] { FORMATTED_FILE_EXTENSIONS }));
+					String key = FILE_EXTENSIONS.size() > 1 ? "_WARN_FilenameExtensions" //$NON-NLS-1$
+							: "_WARN_FilenameExtension"; //$NON-NLS-1$
+					setErrorMessage(EXTLibraryEditorPlugin.INSTANCE.getString(key,
+							new Object[] {FORMATTED_FILE_EXTENSIONS }));
 					return false;
 				}
 				return true;
@@ -359,65 +336,60 @@ public class EXTLibraryModelWizard extends Wizard implements INewWizard
 			return false;
 		}
 
-    /**
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+		/**
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
 		 * @generated
 		 */
-    public IFile getModelFile()
-    {
-			return ResourcesPlugin.getWorkspace().getRoot().getFile(getContainerFullPath().append(getFileName()));
+		public IFile getModelFile() {
+			return ResourcesPlugin.getWorkspace().getRoot()
+					.getFile(getContainerFullPath().append(getFileName()));
 		}
-  }
+	}
 
-  /**
-	 * This is the page where the type of object to create is selected.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * This is the page where the type of object to create is selected. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public class EXTLibraryModelWizardInitialObjectCreationPage extends WizardPage
-  {
-    /**
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	public class EXTLibraryModelWizardInitialObjectCreationPage extends WizardPage {
+		/**
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
 		 * @generated
 		 */
-    protected Combo initialObjectField;
+		protected Combo initialObjectField;
 
-    /**
-		 * @generated
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+		/**
+		 * @generated <!-- begin-user-doc --> <!-- end-user-doc -->
 		 */
-    protected List<String> encodings;
+		protected List<String> encodings;
 
-    /**
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+		/**
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
 		 * @generated
 		 */
-    protected Combo encodingField;
+		protected Combo encodingField;
 
-    /**
-		 * Pass in the selection.
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+		/**
+		 * Pass in the selection. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
 		 * @generated
 		 */
-    public EXTLibraryModelWizardInitialObjectCreationPage(String pageId)
-    {
+		public EXTLibraryModelWizardInitialObjectCreationPage(String pageId) {
 			super(pageId);
 		}
 
-    /**
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+		/**
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
 		 * @generated
 		 */
-    public void createControl(Composite parent)
-    {
-			Composite composite = new Composite(parent, SWT.NONE); {
+		public void createControl(Composite parent) {
+			Composite composite = new Composite(parent, SWT.NONE);
+			{
 				GridLayout layout = new GridLayout();
 				layout.numColumns = 1;
 				layout.verticalSpacing = 12;
@@ -483,56 +455,51 @@ public class EXTLibraryModelWizard extends Wizard implements INewWizard
 			setControl(composite);
 		}
 
-    /**
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+		/**
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
 		 * @generated
 		 */
-    protected ModifyListener validator =
-      new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					setPageComplete(validatePage());
-				}
-			};
+		protected ModifyListener validator = new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				setPageComplete(validatePage());
+			}
+		};
 
-    /**
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+		/**
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
 		 * @generated
 		 */
-    protected boolean validatePage()
-    {
+		protected boolean validatePage() {
 			return getInitialObjectName() != null && getEncodings().contains(encodingField.getText());
 		}
 
-    /**
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+		/**
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
 		 * @generated
 		 */
-    @Override
-    public void setVisible(boolean visible)
-    {
+		@Override
+		public void setVisible(boolean visible) {
 			super.setVisible(visible);
 			if (visible) {
 				if (initialObjectField.getItemCount() == 1) {
 					initialObjectField.clearSelection();
 					encodingField.setFocus();
-				}
-				else {
+				} else {
 					encodingField.clearSelection();
 					initialObjectField.setFocus();
 				}
 			}
 		}
 
-    /**
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+		/**
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
 		 * @generated
 		 */
-    public String getInitialObjectName()
-    {
+		public String getInitialObjectName() {
 			String label = initialObjectField.getText();
 
 			for (String name : getInitialObjectNames()) {
@@ -543,66 +510,65 @@ public class EXTLibraryModelWizard extends Wizard implements INewWizard
 			return null;
 		}
 
-    /**
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+		/**
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
 		 * @generated
 		 */
-    public String getEncoding()
-    {
+		public String getEncoding() {
 			return encodingField.getText();
 		}
 
-    /**
-		 * Returns the label for the specified type name.
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+		/**
+		 * Returns the label for the specified type name. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
 		 * @generated
 		 */
-    protected String getLabel(String typeName)
-    {
+		protected String getLabel(String typeName) {
 			try {
 				return EXTLibraryEditPlugin.INSTANCE.getString("_UI_" + typeName + "_type"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			catch(MissingResourceException mre) {
+			} catch (MissingResourceException mre) {
 				EXTLibraryEditorPlugin.INSTANCE.log(mre);
 			}
 			return typeName;
 		}
 
-    /**
-		 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+		/**
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
 		 * @generated
 		 */
-    protected Collection<String> getEncodings()
-    {
+		protected Collection<String> getEncodings() {
 			if (encodings == null) {
 				encodings = new ArrayList<String>();
-				for (StringTokenizer stringTokenizer = new StringTokenizer(EXTLibraryEditorPlugin.INSTANCE.getString("_UI_XMLEncodingChoices")); stringTokenizer.hasMoreTokens(); ) //$NON-NLS-1$
-				{
+				for (StringTokenizer stringTokenizer = new StringTokenizer(
+						EXTLibraryEditorPlugin.INSTANCE.getString("_UI_XMLEncodingChoices")); stringTokenizer //$NON-NLS-1$
+								.hasMoreTokens();) {
 					encodings.add(stringTokenizer.nextToken());
 				}
 			}
 			return encodings;
 		}
-  }
+	}
 
-  /**
-	 * The framework calls this to create the contents of the wizard.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The framework calls this to create the contents of the wizard. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public void addPages()
-  {
+	@Override
+	public void addPages() {
 		// Create a page, set the title, and the initial model file name.
 		//
 		newFileCreationPage = new EXTLibraryModelWizardNewFileCreationPage("Whatever", selection); //$NON-NLS-1$
-		newFileCreationPage.setTitle(EXTLibraryEditorPlugin.INSTANCE.getString("_UI_EXTLibraryModelWizard_label")); //$NON-NLS-1$
-		newFileCreationPage.setDescription(EXTLibraryEditorPlugin.INSTANCE.getString("_UI_EXTLibraryModelWizard_description")); //$NON-NLS-1$
-		newFileCreationPage.setFileName(EXTLibraryEditorPlugin.INSTANCE.getString("_UI_EXTLibraryEditorFilenameDefaultBase") + "." + FILE_EXTENSIONS.get(0)); //$NON-NLS-1$ //$NON-NLS-2$
+		newFileCreationPage
+				.setTitle(EXTLibraryEditorPlugin.INSTANCE.getString("_UI_EXTLibraryModelWizard_label")); //$NON-NLS-1$
+		newFileCreationPage.setDescription(
+				EXTLibraryEditorPlugin.INSTANCE.getString("_UI_EXTLibraryModelWizard_description")); //$NON-NLS-1$
+		newFileCreationPage.setFileName(
+				EXTLibraryEditorPlugin.INSTANCE.getString("_UI_EXTLibraryEditorFilenameDefaultBase") + "." //$NON-NLS-1$ //$NON-NLS-2$
+						+ FILE_EXTENSIONS.get(0));
 		addPage(newFileCreationPage);
 
 		// Try and get the resource selection to determine a current directory for the file dialog.
@@ -628,7 +594,8 @@ public class EXTLibraryModelWizard extends Wizard implements INewWizard
 
 					// Make up a unique new name here.
 					//
-					String defaultModelBaseFilename = EXTLibraryEditorPlugin.INSTANCE.getString("_UI_EXTLibraryEditorFilenameDefaultBase"); //$NON-NLS-1$
+					String defaultModelBaseFilename = EXTLibraryEditorPlugin.INSTANCE
+							.getString("_UI_EXTLibraryEditorFilenameDefaultBase"); //$NON-NLS-1$
 					String defaultModelFilenameExtension = FILE_EXTENSIONS.get(0);
 					String modelFilename = defaultModelBaseFilename + "." + defaultModelFilenameExtension; //$NON-NLS-1$
 					for (int i = 1; ((IContainer)selectedResource).findMember(modelFilename) != null; ++i) {
@@ -639,19 +606,19 @@ public class EXTLibraryModelWizard extends Wizard implements INewWizard
 			}
 		}
 		initialObjectCreationPage = new EXTLibraryModelWizardInitialObjectCreationPage("Whatever2"); //$NON-NLS-1$
-		initialObjectCreationPage.setTitle(EXTLibraryEditorPlugin.INSTANCE.getString("_UI_EXTLibraryModelWizard_label")); //$NON-NLS-1$
-		initialObjectCreationPage.setDescription(EXTLibraryEditorPlugin.INSTANCE.getString("_UI_Wizard_initial_object_description")); //$NON-NLS-1$
+		initialObjectCreationPage
+				.setTitle(EXTLibraryEditorPlugin.INSTANCE.getString("_UI_EXTLibraryModelWizard_label")); //$NON-NLS-1$
+		initialObjectCreationPage.setDescription(
+				EXTLibraryEditorPlugin.INSTANCE.getString("_UI_Wizard_initial_object_description")); //$NON-NLS-1$
 		addPage(initialObjectCreationPage);
 	}
 
-  /**
-	 * Get the file from the page.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * Get the file from the page. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public IFile getModelFile()
-  {
+	public IFile getModelFile() {
 		return newFileCreationPage.getModelFile();
 	}
 

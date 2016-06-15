@@ -39,21 +39,23 @@ import com.google.common.collect.Iterators;
 public abstract class AbstractTest {
 
 	private EMFCompare emfCompare;
-	
+
 	private PostProcessorDescriptorRegistryImpl<String> postProcessorRegistry;
 
 	@Before
 	public void before() {
 		postProcessorRegistry = new PostProcessorDescriptorRegistryImpl<String>();
-		postProcessorRegistry.put(CompareDiagramPostProcessor.class.getName(), new TestPostProcessor.TestPostProcessorDescriptor(
-				Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null, new CompareDiagramPostProcessor(), 30));
+		postProcessorRegistry.put(CompareDiagramPostProcessor.class.getName(),
+				new TestPostProcessor.TestPostProcessorDescriptor(
+						Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d.\\d.\\d/notation"), null,
+						new CompareDiagramPostProcessor(), 30));
 		emfCompare = EMFCompare.builder().setPostProcessorRegistry(postProcessorRegistry).build();
 	}
 
 	protected EMFCompare getCompare() {
 		return emfCompare;
 	}
-	
+
 	protected Comparison compare(Notifier left, Notifier right) {
 		return compare(left, right, null);
 	}
@@ -62,7 +64,7 @@ public abstract class AbstractTest {
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		return getCompare().compare(scope);
 	}
-	
+
 	@After
 	public void after() {
 		if (getInput() != null && getInput().getSets() != null) {
@@ -92,9 +94,9 @@ public abstract class AbstractTest {
 		}
 		return Integer.valueOf(count);
 	}
-	
+
 	protected abstract DiagramInputData getInput();
-	
+
 	protected void testIntersections(Comparison comparison) {
 		assertFalse(Iterables.any(comparison.getDifferences(), new Predicate<Diff>() {
 			public boolean apply(Diff input) {

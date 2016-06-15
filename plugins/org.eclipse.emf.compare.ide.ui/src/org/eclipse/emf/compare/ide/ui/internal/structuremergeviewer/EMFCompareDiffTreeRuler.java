@@ -256,8 +256,8 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	}
 
 	private CompareInputAdapter getCompareInputAdapter(TreeNode node) {
-		return (CompareInputAdapter)Iterators.tryFind(node.eAdapters().iterator(),
-				instanceOf(CompareInputAdapter.class)).orNull();
+		return (CompareInputAdapter)Iterators
+				.tryFind(node.eAdapters().iterator(), instanceOf(CompareInputAdapter.class)).orNull();
 	}
 
 	/**
@@ -269,8 +269,8 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	private void handleMouseClickEvent(MouseEvent e) {
 		for (Map.Entry<Rectangle, TreeNodeToVisibleTreeItem> entry : annotationsData.entrySet()) {
 			if (e.y >= entry.getKey().y && e.y <= entry.getKey().y + ANNOTATION_HEIGHT) {
-				TreeItem targetItem = createChildrenDownTo(entry.getValue().getTreeItem(), entry.getValue()
-						.getTreeNode());
+				TreeItem targetItem = createChildrenDownTo(entry.getValue().getTreeItem(),
+						entry.getValue().getTreeNode());
 				TreePath treePath = getTreePathFromItem(targetItem);
 				fTreeViewer.expandToLevel(treePath, 0);
 				fTreeViewer.reveal(treePath);
@@ -491,7 +491,8 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 *            the deepest visible tree item (a parent or the item itself) of the given item.
 	 * @return the deepest visible tree item (a parent or the item itself).
 	 */
-	private TreeItem getDeepestVisibleTreeItem(final TreeItem currentItem, final TreeItem deepestVisibleItem) {
+	private TreeItem getDeepestVisibleTreeItem(final TreeItem currentItem,
+			final TreeItem deepestVisibleItem) {
 		TreeItem item = null;
 		if (!currentItem.isDisposed()) {
 			TreeItem parent = currentItem.getParentItem();

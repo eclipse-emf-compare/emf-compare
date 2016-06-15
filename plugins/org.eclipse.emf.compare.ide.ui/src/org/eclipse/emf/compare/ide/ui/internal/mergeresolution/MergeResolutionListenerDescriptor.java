@@ -46,7 +46,8 @@ public class MergeResolutionListenerDescriptor {
 	 * @param configurationElement
 	 *            The {@link IConfigurationElement} containing all relevant extension information.
 	 */
-	public MergeResolutionListenerDescriptor(String attributeName, IConfigurationElement configurationElement) {
+	public MergeResolutionListenerDescriptor(String attributeName,
+			IConfigurationElement configurationElement) {
 		this.attributeClassName = attributeName;
 		this.configurationElement = configurationElement;
 	}
@@ -65,10 +66,10 @@ public class MergeResolutionListenerDescriptor {
 			if (!logOnce) {
 				logOnce = true;
 				final String className = configurationElement.getAttribute(attributeClassName);
-				final String message = EMFCompareIDEUIMessages.getString(
-						"ModelDependencyProviderRegistry.invalidModelDependency", className); //$NON-NLS-1$
-				final IStatus status = new Status(IStatus.ERROR, configurationElement.getDeclaringExtension()
-						.getContributor().getName(), message, e);
+				final String message = EMFCompareIDEUIMessages
+						.getString("ModelDependencyProviderRegistry.invalidModelDependency", className); //$NON-NLS-1$
+				final IStatus status = new Status(IStatus.ERROR,
+						configurationElement.getDeclaringExtension().getContributor().getName(), message, e);
 				EMFCompareIDEUIPlugin.getDefault().getLog().log(status);
 			}
 		}

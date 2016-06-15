@@ -103,7 +103,8 @@ public class RenameDetector {
 	public Optional<IFile> getFileBeforeRename(IFile sourceOrRemoteFile, DiffSide side) {
 		Preconditions.checkArgument(isSourceOrRemoteSide(side));
 		if (!isFileBeforeRenameCached(sourceOrRemoteFile, side)) {
-			cacheFileBeforeRename(computeFileBeforeRename(sourceOrRemoteFile, side), sourceOrRemoteFile, side);
+			cacheFileBeforeRename(computeFileBeforeRename(sourceOrRemoteFile, side), sourceOrRemoteFile,
+					side);
 		}
 		return getCachedFileBeforeRename(sourceOrRemoteFile, side).get();
 	}

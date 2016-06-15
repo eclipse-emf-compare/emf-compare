@@ -148,8 +148,8 @@ public abstract class AbstractResolution {
 				for (URI uri : newURIs) {
 					if (knownURIs.add(uri)) {
 						IFile toResolve = ResolutionUtil.getFileAt(uri);
-						Iterable<URI> dependencies = context.getDependencyProvider().getDependenciesOf(
-								toResolve, bounds);
+						Iterable<URI> dependencies = context.getDependencyProvider()
+								.getDependenciesOf(toResolve, bounds);
 						for (URI dep : dependencies) {
 							IFile dependentFile = ResolutionUtil.getFileAt(dep);
 							if (dependentFile != null && traversalSet.add(dependentFile)

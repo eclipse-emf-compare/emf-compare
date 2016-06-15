@@ -91,12 +91,15 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 	public String toString() {
 		// @formatter:off
 		StringBuilder b = new StringBuilder();
-		return b.append(getState()).append(' ').append(getSource()).append(' ').append(getKind()).append(' ').append(
-				Objects.toStringHelper(this)
-					.add("reference", getReference().getEContainingClass().getName() + "." + getReference().getName())
-					.add("value", EObjectUtil.getLabel(getValue()))
-					.add("parentMatch", getMatch().toString())
-					.add("match of value", getMatch().getComparison().getMatch(getValue()))).toString();
+		return b.append(getState()).append(' ').append(getSource()).append(' ').append(getKind()).append(' ')
+				.append(Objects.toStringHelper(this)
+						.add("reference",
+								getReference().getEContainingClass().getName() + "."
+										+ getReference().getName())
+						.add("value", EObjectUtil.getLabel(getValue()))
+						.add("parentMatch", getMatch().toString())
+						.add("match of value", getMatch().getComparison().getMatch(getValue())))
+				.toString();
 		// @formatter:on
 	}
 

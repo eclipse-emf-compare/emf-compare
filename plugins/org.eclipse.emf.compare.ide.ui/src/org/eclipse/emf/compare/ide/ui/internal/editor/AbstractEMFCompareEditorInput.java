@@ -95,8 +95,8 @@ public abstract class AbstractEMFCompareEditorInput extends CompareEditorInput {
 	 * @see org.eclipse.compare.CompareEditorInput#prepareInput(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	protected final Object prepareInput(IProgressMonitor monitor) throws InvocationTargetException,
-			InterruptedException {
+	protected final Object prepareInput(IProgressMonitor monitor)
+			throws InvocationTargetException, InterruptedException {
 		getCompareConfiguration().setEditingDomain(editingDomain);
 		return doPrepareInput(monitor);
 	}
@@ -133,7 +133,7 @@ public abstract class AbstractEMFCompareEditorInput extends CompareEditorInput {
 	 *                <code>IProgressMonitor.isCanceled()</code>, it should exit by throwing
 	 *                <code>InterruptedException</code>
 	 */
-	protected abstract Object doPrepareInput(IProgressMonitor monitor) throws InvocationTargetException,
-			InterruptedException;
+	protected abstract Object doPrepareInput(IProgressMonitor monitor)
+			throws InvocationTargetException, InterruptedException;
 
 }

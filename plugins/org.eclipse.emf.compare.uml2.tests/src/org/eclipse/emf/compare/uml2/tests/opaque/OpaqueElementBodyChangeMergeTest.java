@@ -668,8 +668,8 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 
 	private void applyRightOpaqueElementBodyChangesToLeft(Comparison comparison) {
 		final EList<Diff> allDifferences = comparison.getDifferences();
-		final Iterable<Diff> rightOpaqueElementBodyChanges = filter(allDifferences, and(
-				IS_OPAQUE_ELEMENT_CHANGE, fromSide(RIGHT)));
+		final Iterable<Diff> rightOpaqueElementBodyChanges = filter(allDifferences,
+				and(IS_OPAQUE_ELEMENT_CHANGE, fromSide(RIGHT)));
 		for (Diff diff : rightOpaqueElementBodyChanges) {
 			IMerger merger = getMergerRegistry().getHighestRankingMerger(diff);
 			merger.copyRightToLeft(diff, new BasicMonitor());
@@ -678,8 +678,8 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 
 	private void revertLeftOpaqueElementBodyChanges(Comparison comparison) {
 		final EList<Diff> allDifferences = comparison.getDifferences();
-		final Iterable<Diff> leftOpaqueElementBodyChanges = filter(allDifferences, and(
-				IS_OPAQUE_ELEMENT_CHANGE, fromSide(LEFT)));
+		final Iterable<Diff> leftOpaqueElementBodyChanges = filter(allDifferences,
+				and(IS_OPAQUE_ELEMENT_CHANGE, fromSide(LEFT)));
 		for (Diff diff : leftOpaqueElementBodyChanges) {
 			IMerger merger = getMergerRegistry().getHighestRankingMerger(diff);
 			merger.copyRightToLeft(diff, new BasicMonitor());
@@ -688,8 +688,8 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 
 	private void revertRightOpaqueElementBodyChanges(Comparison comparison) {
 		final EList<Diff> allDifferences = comparison.getDifferences();
-		final Iterable<Diff> rightOpaqueElementBodyChanges = filter(allDifferences, and(
-				IS_OPAQUE_ELEMENT_CHANGE, fromSide(RIGHT)));
+		final Iterable<Diff> rightOpaqueElementBodyChanges = filter(allDifferences,
+				and(IS_OPAQUE_ELEMENT_CHANGE, fromSide(RIGHT)));
 		for (Diff diff : rightOpaqueElementBodyChanges) {
 			IMerger merger = getMergerRegistry().getHighestRankingMerger(diff);
 			merger.copyLeftToRight(diff, new BasicMonitor());
@@ -698,8 +698,8 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 
 	private void applyLeftOpaqueElementBodyChangesToRight(Comparison comparison) {
 		final EList<Diff> allDifferences = comparison.getDifferences();
-		final Iterable<Diff> leftOpaqueElementBodyChanges = filter(allDifferences, and(
-				IS_OPAQUE_ELEMENT_CHANGE, fromSide(LEFT)));
+		final Iterable<Diff> leftOpaqueElementBodyChanges = filter(allDifferences,
+				and(IS_OPAQUE_ELEMENT_CHANGE, fromSide(LEFT)));
 		for (Diff diff : leftOpaqueElementBodyChanges) {
 			IMerger merger = getMergerRegistry().getHighestRankingMerger(diff);
 			merger.copyLeftToRight(diff, new BasicMonitor());
@@ -713,8 +713,8 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 
 	private void assertOneRealConflictOnOpaqueElementBodyChange(Comparison comparison) {
 		assertEquals(1, size(filter(comparison.getConflicts(), IS_REAL_CONFLICT)));
-		assertEquals(1, size(filter(comparison.getConflicts(), and(IS_REAL_CONFLICT,
-				CONCERNS_OPAQUE_ELEMENT_BODY_CHANGE))));
+		assertEquals(1, size(filter(comparison.getConflicts(),
+				and(IS_REAL_CONFLICT, CONCERNS_OPAQUE_ELEMENT_BODY_CHANGE))));
 	}
 
 	@Override

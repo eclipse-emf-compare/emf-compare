@@ -511,7 +511,7 @@ public class Graph<E> implements IGraph<E> {
 		 * @param element
 		 *            The element for which we need a graph Node. This element must not be null.
 		 */
-		public Node(K element) {
+		Node(K element) {
 			Preconditions.checkNotNull(element);
 			this.element = element;
 			this.parentData = null;
@@ -628,7 +628,7 @@ public class Graph<E> implements IGraph<E> {
 		 *            Excluded boundaries of the target subgraph. Iteration will be pruned on these, along
 		 *            with their own subgraphs.
 		 */
-		public SubgraphBuilder(Node<L> start, Set<L> endPoints) {
+		SubgraphBuilder(Node<L> start, Set<L> endPoints) {
 			this.start = start;
 			this.set = new LinkedHashSet<L>();
 			this.set.add(start.getElement());
@@ -692,7 +692,7 @@ public class Graph<E> implements IGraph<E> {
 			 * @param node
 			 *            The node for which we need an iterator.
 			 */
-			public NodeIterator(Node<L> node) {
+			NodeIterator(Node<L> node) {
 				this.next = node.getElement();
 				this.nodesIterator = createConnectedNodesIterator(node);
 				prepareNextIterator();
@@ -784,6 +784,8 @@ public class Graph<E> implements IGraph<E> {
 	/**
 	 * A custom Iterable that will iterate over the Node->parent Node tree of a given Node.
 	 * 
+	 * @param <O>
+	 *            The generic type of the class
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private static class ParentsIterable<O> implements Iterable<Node<O>> {
@@ -796,7 +798,7 @@ public class Graph<E> implements IGraph<E> {
 		 * @param start
 		 *            Leaf node of the tree we'll iterate over.
 		 */
-		public ParentsIterable(Node<O> start) {
+		ParentsIterable(Node<O> start) {
 			this.start = start;
 		}
 
@@ -813,6 +815,8 @@ public class Graph<E> implements IGraph<E> {
 	/**
 	 * A custom TreeIterator that will iterate over the Node->parent Node tree.
 	 * 
+	 * @param <P>
+	 *            The generic type of the class
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private static class ParentsIterator<P> extends AbstractTreeIterator<Node<P>> {
@@ -825,7 +829,7 @@ public class Graph<E> implements IGraph<E> {
 		 * @param start
 		 *            Start node of the tree we'll iterate over.
 		 */
-		public ParentsIterator(Node<P> start) {
+		ParentsIterator(Node<P> start) {
 			super(start, false);
 		}
 
@@ -878,7 +882,7 @@ public class Graph<E> implements IGraph<E> {
 		 * @param root
 		 *            Root of the tree we are to iterate over.
 		 */
-		public ChildrenIterator(E root) {
+		ChildrenIterator(E root) {
 			this.expectedModCount = Graph.this.modcount;
 			this.iteratorStack = new LinkedList<Iterator<Node<E>>>();
 			iteratorStack.add(Iterators.singletonIterator(Graph.this.nodes.get(root)));
@@ -905,8 +909,8 @@ public class Graph<E> implements IGraph<E> {
 			}
 
 			// remove the iterators we've consumed entirely from the stack.
-			ListIterator<Iterator<Node<E>>> reverseStackIterator = iteratorStack.listIterator(iteratorStack
-					.size());
+			ListIterator<Iterator<Node<E>>> reverseStackIterator = iteratorStack
+					.listIterator(iteratorStack.size());
 			while (reverseStackIterator.hasPrevious() && !reverseStackIterator.previous().hasNext()) {
 				reverseStackIterator.remove();
 			}
@@ -991,7 +995,7 @@ public class Graph<E> implements IGraph<E> {
 		private final int expectedModCount;
 
 		/** Default constructor. */
-		public BreadthFirstIterator() {
+		BreadthFirstIterator() {
 			this.currentIterator = Graph.this.roots.iterator();
 			this.nextIterable = new LinkedHashSet<Node<E>>();
 			this.consumedNodes = new LinkedHashSet<Node<E>>();

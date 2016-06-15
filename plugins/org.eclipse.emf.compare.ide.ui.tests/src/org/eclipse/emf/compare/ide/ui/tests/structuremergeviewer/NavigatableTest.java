@@ -83,7 +83,6 @@ public class NavigatableTest {
 	 * 
 	 *  \__5
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @throws Exception
@@ -202,14 +201,15 @@ public class NavigatableTest {
 
 	private void assertNextIterations(TestNavigatable navigatable, TestContext context, int startingElement) {
 		TreeItem previousSelection = context.getItem(startingElement);
-		for (int expectedElement = startingElement + 1; expectedElement <= context.getNumberOfNodes(); expectedElement++) {
+		for (int expectedElement = startingElement + 1; expectedElement <= context
+				.getNumberOfNodes(); expectedElement++) {
 			TreeItem nextItem = navigatable.getNextItem(previousSelection);
 			StringBuilder messageBuilder = new StringBuilder();
 			messageBuilder.append("Error with configuration: Starting iteration point=").append( //$NON-NLS-1$
 					startingElement).append(", previsous item=").append(previousSelection.getText()); //$NON-NLS-1$
 			assertNotNull(messageBuilder.toString(), nextItem);
-			assertEquals(messageBuilder.toString(), expectedElement, Integer.valueOf(nextItem.getText())
-					.intValue());
+			assertEquals(messageBuilder.toString(), expectedElement,
+					Integer.valueOf(nextItem.getText()).intValue());
 			previousSelection = nextItem;
 		}
 		assertNull(navigatable.getNextItem(previousSelection));
@@ -237,8 +237,8 @@ public class NavigatableTest {
 			messageBuilder.append("Error with configuration: Starting iteration point=").append( //$NON-NLS-1$
 					startingElement).append(", previsous item=").append(previousSelection.getText()); //$NON-NLS-1$
 			assertNotNull(messageBuilder.toString(), previousItem);
-			assertEquals(messageBuilder.toString(), expectedElement, Integer.valueOf(previousItem.getText())
-					.intValue());
+			assertEquals(messageBuilder.toString(), expectedElement,
+					Integer.valueOf(previousItem.getText()).intValue());
 			previousSelection = previousItem;
 		}
 		assertNull(navigatable.getPreviousItem(previousSelection));

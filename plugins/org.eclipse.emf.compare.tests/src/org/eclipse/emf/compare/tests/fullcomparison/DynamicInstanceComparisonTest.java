@@ -58,44 +58,44 @@ public class DynamicInstanceComparisonTest {
 	public void compare2Ways() throws IOException {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison result = EMFCompare.builder().build().compare(scope);
-		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1, result
-				.getDifferences().size());
+		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1,
+				result.getDifferences().size());
 	}
 
 	@Test
 	public void compare3Ways() throws IOException {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison result = EMFCompare.builder().build().compare(scope);
-		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1, result
-				.getDifferences().size());
+		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1,
+				result.getDifferences().size());
 	}
 
 	@Test
 	public void copyLeftToRight() throws IOException {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison result = EMFCompare.builder().build().compare(scope);
-		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1, result
-				.getDifferences().size());
+		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1,
+				result.getDifferences().size());
 
 		final IBatchMerger merger = new BatchMerger(mergerRegistry);
 		merger.copyAllLeftToRight(result.getDifferences(), new BasicMonitor());
 
-		assertEquals("We are supposed to have no difference as we merged everything", 0, EMFCompare.builder()
-				.build().compare(scope).getDifferences().size());
+		assertEquals("We are supposed to have no difference as we merged everything", 0,
+				EMFCompare.builder().build().compare(scope).getDifferences().size());
 	}
 
 	@Test
 	public void copyRightToLeft() throws IOException {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		Comparison result = EMFCompare.builder().build().compare(scope);
-		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1, result
-				.getDifferences().size());
+		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1,
+				result.getDifferences().size());
 
 		final IBatchMerger merger = new BatchMerger(mergerRegistry);
 		merger.copyAllRightToLeft(result.getDifferences(), new BasicMonitor());
 
-		assertEquals("We are supposed to have no difference as we merged everything", 0, EMFCompare.builder()
-				.build().compare(scope).getDifferences().size());
+		assertEquals("We are supposed to have no difference as we merged everything", 0,
+				EMFCompare.builder().build().compare(scope).getDifferences().size());
 	}
 
 }

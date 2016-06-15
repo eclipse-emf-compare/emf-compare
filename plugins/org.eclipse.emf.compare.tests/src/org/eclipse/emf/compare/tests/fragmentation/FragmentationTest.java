@@ -132,8 +132,8 @@ public class FragmentationTest {
 		assertTrue(rightFragmentedNode.eContainer().eResource() == rightFragmentedNode.eResource());
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(leftSet, rightSet, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(leftSet, rightSet, null));
 		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be two diffs (a pseudo conflict resource change) when compared with origin
@@ -180,8 +180,8 @@ public class FragmentationTest {
 		assertTrue(rightFragmentedNode.eContainer().eResource() != rightFragmentedNode.eResource());
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(leftSet, rightSet, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(leftSet, rightSet, null));
 		assertTrue(lrCompare.getDifferences().isEmpty());
 
 		// And since we've undone the resource change, there are no diffs with origin either
@@ -268,8 +268,8 @@ public class FragmentationTest {
 		assertTrue(rightRootContent.get(0) == rightFragmentedNode);
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(left, right, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(left, right, null));
 		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be four diffs (conflicting 2-by-2) when compared with origin :
@@ -320,8 +320,8 @@ public class FragmentationTest {
 		assertTrue(rightRootContent.get(0).eIsProxy());
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(left, right, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(left, right, null));
 		assertEquals(0, lrCompare.getDifferences().size());
 
 		// And since we've undone the changes, there are no diffs with origin either
@@ -403,8 +403,8 @@ public class FragmentationTest {
 		assertTrue(rightFragmentedNode.eContainer().eResource() != rightFragmentedNode.eResource());
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(leftSet, rightSet, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(leftSet, rightSet, null));
 		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be two diffs (a pseudo conflict resource change) when compared with origin
@@ -456,8 +456,8 @@ public class FragmentationTest {
 		assertTrue(rightFragmentedNode.eContainer().eResource() == rightFragmentedNode.eResource());
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(leftSet, rightSet, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(leftSet, rightSet, null));
 		assertTrue(lrCompare.getDifferences().isEmpty());
 
 		// And since we've undone the resource change, there are no diffs with origin either
@@ -544,8 +544,8 @@ public class FragmentationTest {
 		assertTrue(rightRootContent.get(0).eIsProxy());
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(left, right, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(left, right, null));
 		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be four diffs (conflicting 2-by-2) when compared with origin :
@@ -596,8 +596,8 @@ public class FragmentationTest {
 		assertTrue(rightRootContent.get(0) == rightFragmentedNode);
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(left, right, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(left, right, null));
 		assertEquals(0, lrCompare.getDifferences().size());
 
 		// And since we've undone the changes, there are no diffs with origin either
@@ -677,8 +677,8 @@ public class FragmentationTest {
 		assertTrue(rightFragmentedNode.eContainer().eResource() != rightFragmentedNode.eResource());
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(leftSet, rightSet, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(leftSet, rightSet, null));
 		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be two diffs (a pseudo conflict resource change) when compared with origin
@@ -730,8 +730,8 @@ public class FragmentationTest {
 		assertTrue(rightFragmentedNode.eContainer().eResource() == rightFragmentedNode.eResource());
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(leftSet, rightSet, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(leftSet, rightSet, null));
 		assertTrue(lrCompare.getDifferences().isEmpty());
 
 		// And since we've undone the resource change, there are no diffs with origin either
@@ -818,8 +818,8 @@ public class FragmentationTest {
 		assertTrue(rightRootContent.get(0).eIsProxy());
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(left, right, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(left, right, null));
 		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be four diffs (conflicting 2-by-2) when compared with origin :
@@ -870,8 +870,8 @@ public class FragmentationTest {
 		assertTrue(rightRootContent.get(0) == rightFragmentedNode);
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(left, right, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(left, right, null));
 		assertEquals(0, lrCompare.getDifferences().size());
 
 		// And since we've undone the changes, there are no diffs with origin either
@@ -943,8 +943,8 @@ public class FragmentationTest {
 		assertEquals(1, right.getContents().size());
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(leftSet, rightSet, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(leftSet, rightSet, null));
 		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be two diffs (a pseudo conflict deletion) when compared with origin
@@ -1024,8 +1024,8 @@ public class FragmentationTest {
 		assertEquals(1, right.getContents().size());
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(left, right, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(left, right, null));
 		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be two diffs (a pseudo conflict deletion) when compared with origin
@@ -1125,8 +1125,8 @@ public class FragmentationTest {
 		assertEquals(2, right.getContents().size());
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(leftSet, rightSet, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(leftSet, rightSet, null));
 		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be two diffs (a pseudo conflict addition) when compared with origin
@@ -1210,8 +1210,8 @@ public class FragmentationTest {
 		assertEquals(2, right.getContents().size());
 
 		// there should be no diff between left and right
-		final Comparison lrCompare = EMFCompare.builder().build().compare(
-				new DefaultComparisonScope(left, right, null));
+		final Comparison lrCompare = EMFCompare.builder().build()
+				.compare(new DefaultComparisonScope(left, right, null));
 		assertEquals(0, lrCompare.getDifferences().size());
 
 		// but there should be two diffs (a pseudo conflict addition) when compared with origin

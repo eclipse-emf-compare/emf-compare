@@ -66,9 +66,10 @@ public class TestBug435365 extends AbstractTestTreeNodeItemProviderAdapter {
 				return eReference == TreePackage.Literals.TREE_NODE__DATA;
 			}
 		};
-		IDifferenceGroup group = new BasicDifferenceGroupImpl(comparison, alwaysTrue(), crossReferenceAdapter);
+		IDifferenceGroup group = new BasicDifferenceGroupImpl(comparison, alwaysTrue(),
+				crossReferenceAdapter);
 		List<? extends TreeNode> roots = group.getChildren();
-		//Gets the node matching the move diff.
+		// Gets the node matching the move diff.
 		TreeNode moveNode = getMoveNode(roots);
 		Predicate<? super EObject> whenSelectedCascadingFilterPredicate = new CascadingDifferencesFilter()
 				.getPredicateWhenSelected();
@@ -76,7 +77,7 @@ public class TestBug435365 extends AbstractTestTreeNodeItemProviderAdapter {
 		EList<TreeNode> children = moveNode.getChildren();
 		Assert.assertEquals(1, children.size());
 		TreeNode newAdditionNode = children.get(0);
-		//Checks that its child is not hidden by the filter.
+		// Checks that its child is not hidden by the filter.
 		Assert.assertEquals(false, whenSelectedCascadingFilterPredicate.apply(newAdditionNode));
 	}
 

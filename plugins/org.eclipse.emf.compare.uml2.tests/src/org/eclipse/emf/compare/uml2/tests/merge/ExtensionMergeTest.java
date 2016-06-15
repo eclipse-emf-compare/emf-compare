@@ -89,8 +89,8 @@ public class ExtensionMergeTest extends AbstractUMLTest {
 			merger.copyRightToLeft(diff, null);
 		}
 		final Comparison comparisonAfter = getCompare().compare(scope);
-		assertTrue("Comparison#getDifferences() must be empty after copyAllRightToLeft", comparisonAfter
-				.getDifferences().isEmpty());
+		assertTrue("Comparison#getDifferences() must be empty after copyAllRightToLeft",
+				comparisonAfter.getDifferences().isEmpty());
 	}
 
 	@Override

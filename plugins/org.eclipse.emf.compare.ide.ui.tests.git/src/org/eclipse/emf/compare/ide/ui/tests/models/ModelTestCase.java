@@ -42,8 +42,8 @@ public abstract class ModelTestCase extends CompareGitTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 
-		IContentType textType = Platform.getContentTypeManager().getContentType(
-				"org.eclipse.core.runtime.text"); //$NON-NLS-1$
+		IContentType textType = Platform.getContentTypeManager()
+				.getContentType("org.eclipse.core.runtime.text"); //$NON-NLS-1$
 		textType.addFileSpec(SAMPLE_FILE_EXTENSION, IContentType.FILE_EXTENSION_SPEC);
 	}
 

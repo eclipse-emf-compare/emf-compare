@@ -30,16 +30,17 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2} object.
- * <!-- begin-user-doc -->
- * <!-- end-user-doc -->
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.ACliche2} object. <!--
+ * begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class ACliche2ItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	public ACliche2ItemProvider(AdapterFactory adapterFactory) {
@@ -47,9 +48,9 @@ public class ACliche2ItemProvider extends ItemProviderAdapter implements IEditin
 	}
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -67,111 +68,99 @@ public class ACliche2ItemProvider extends ItemProviderAdapter implements IEditin
 	}
 
 	/**
-	 * This adds a property descriptor for the Single Valued Attribute feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Single Valued Attribute feature. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected void addSingleValuedAttributePropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_ACliche2_singleValuedAttribute_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_ACliche2_singleValuedAttribute_feature", "_UI_ACliche2_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						UML2CompareTestProfilePackage.Literals.ACLICHE2__SINGLE_VALUED_ATTRIBUTE, true,
-						false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ACliche2_singleValuedAttribute_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_ACliche2_singleValuedAttribute_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_ACliche2_type"), //$NON-NLS-1$
+				UML2CompareTestProfilePackage.Literals.ACLICHE2__SINGLE_VALUED_ATTRIBUTE, true, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Many Valued Attribute feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Many Valued Attribute feature. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected void addManyValuedAttributePropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_ACliche2_manyValuedAttribute_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_ACliche2_manyValuedAttribute_feature", "_UI_ACliche2_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						UML2CompareTestProfilePackage.Literals.ACLICHE2__MANY_VALUED_ATTRIBUTE, true, false,
-						false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ACliche2_manyValuedAttribute_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_ACliche2_manyValuedAttribute_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_ACliche2_type"), //$NON-NLS-1$
+				UML2CompareTestProfilePackage.Literals.ACLICHE2__MANY_VALUED_ATTRIBUTE, true, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Single Valued Reference feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Single Valued Reference feature. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected void addSingleValuedReferencePropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_ACliche2_singleValuedReference_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_ACliche2_singleValuedReference_feature", "_UI_ACliche2_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						UML2CompareTestProfilePackage.Literals.ACLICHE2__SINGLE_VALUED_REFERENCE, true,
-						false, true, null, null, null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ACliche2_singleValuedReference_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_ACliche2_singleValuedReference_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_ACliche2_type"), //$NON-NLS-1$
+				UML2CompareTestProfilePackage.Literals.ACLICHE2__SINGLE_VALUED_REFERENCE, true, false, true,
+				null, null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Many Valued Reference feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Many Valued Reference feature. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected void addManyValuedReferencePropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_ACliche2_manyValuedReference_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_ACliche2_manyValuedReference_feature", "_UI_ACliche2_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						UML2CompareTestProfilePackage.Literals.ACLICHE2__MANY_VALUED_REFERENCE, true, false,
-						true, null, null, null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ACliche2_manyValuedReference_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_ACliche2_manyValuedReference_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_ACliche2_type"), //$NON-NLS-1$
+				UML2CompareTestProfilePackage.Literals.ACLICHE2__MANY_VALUED_REFERENCE, true, false, true,
+				null, null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Base Class feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Base Class feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	protected void addBase_ClassPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_ACliche2_base_Class_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_ACliche2_base_Class_feature", "_UI_ACliche2_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						UML2CompareTestProfilePackage.Literals.ACLICHE2__BASE_CLASS, true, false, true, null,
-						null, null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ACliche2_base_Class_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_ACliche2_base_Class_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_ACliche2_type"), //$NON-NLS-1$
+				UML2CompareTestProfilePackage.Literals.ACLICHE2__BASE_CLASS, true, false, true, null, null,
+				null));
 	}
 
 	/**
-	 * This returns ACliche2.gif.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns ACliche2.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated not
 	 */
 	@Override
 	public Object getImage(Object object) {
-		//Custom icon for test on item providers
+		// Custom icon for test on item providers
 		return overlayImage(object, getResourceLocator().getImage("full/obj16/eclipse_kepler")); //$NON-NLS-1$
 	}
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -182,10 +171,10 @@ public class ACliche2ItemProvider extends ItemProviderAdapter implements IEditin
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -195,18 +184,17 @@ public class ACliche2ItemProvider extends ItemProviderAdapter implements IEditin
 		switch (notification.getFeatureID(ACliche2.class)) {
 			case UML2CompareTestProfilePackage.ACLICHE2__SINGLE_VALUED_ATTRIBUTE:
 			case UML2CompareTestProfilePackage.ACLICHE2__MANY_VALUED_ATTRIBUTE:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
-						true));
+				fireNotifyChanged(
+						new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}
 		super.notifyChanged(notification);
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -215,9 +203,9 @@ public class ACliche2ItemProvider extends ItemProviderAdapter implements IEditin
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

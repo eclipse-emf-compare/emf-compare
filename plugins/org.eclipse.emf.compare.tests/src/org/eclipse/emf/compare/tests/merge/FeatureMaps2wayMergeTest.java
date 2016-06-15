@@ -73,8 +73,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.ADD), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node1[firstKey add] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map add] will be merge from left to right too.
@@ -118,8 +118,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.ADD), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map add] from left to right : the ReferenceChange
 		// Node node1[firstKey add] will be merge from left to right too.
@@ -163,8 +163,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.ADD), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node1[firstKey add] from right to left : the FeatureMapChange
 		// <firstKey> Node node1 [map add] will be merge from right to left too.
@@ -208,8 +208,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.ADD), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map add] from right to left : the
 		// ReferenceChange Node node1[firstKey add] will be merge from right to left too.
@@ -253,8 +253,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.DELETE), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node2[firstKey delete] from left to right : the FeatureMapChange
 		// <firstKey> Node node2 [map delete] will be merge from left to right too.
@@ -298,8 +298,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.DELETE), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node2 [map delete] from left to right : the
 		// ReferenceChange Node node2[firstKey delete] will be merge from left to right too.
@@ -343,8 +343,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.DELETE), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node2[firstKey delete] from right to left: the FeatureMapChange
 		// <firstKey> Node node2 [map delete] will be merge from right to left too.
@@ -388,8 +388,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.DELETE), instanceOf(FeatureMapChange.class)));
 
 		// Merge the ReferenceChange Node node2[firstKey delete] from right to left: the FeatureMapChange
 		// <firstKey> Node node2 [map delete] will be merge from right to left too.
@@ -434,8 +434,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node1[firstKey move] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map entry key change] will be merge from left to right too.
@@ -480,8 +480,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.CHANGE),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.CHANGE), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map entry key change] from left to right : the
 		// ReferenceChange Node node1[firstKey move] will be merge from left to right too.
@@ -526,8 +526,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node1[firstKey move] from right to left : the FeatureMapChange
 		// <firstKey> Node node1 [map entry key change] will be merge from right to left too.
@@ -572,8 +572,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.CHANGE),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.CHANGE), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map entry key change] from left to right : the
 		// ReferenceChange Node node1[firstKey move] will be merge from left to right too.
@@ -618,8 +618,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node1[firstKey move] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from left to right too.
@@ -664,8 +664,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from left to right : the
 		// ReferenceChange Node node1[firstKey move] will be merge from left to right too.
@@ -710,8 +710,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node1[firstKey move] from right to left : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from right to left too.
@@ -756,8 +756,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from right to left : the
 		// ReferenceChange Node node1[firstKey move] will be merge from right to left too.
@@ -802,8 +802,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node1[firstKey move] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from left to right too.
@@ -850,8 +850,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from left to right : the
 		// ReferenceChange Node node1[firstKey move] will be merge from left to right too.
@@ -898,8 +898,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node1[firstKey move] from right to left : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from right to left too.
@@ -946,8 +946,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from right to left : the
 		// ReferenceChange Node node1[firstKey move] will be merge from right to left too.
@@ -994,8 +994,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node1[firstKey move] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from left to right too.
@@ -1040,8 +1040,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from left to right : the
 		// ReferenceChange Node node1[firstKey move] will be merge from left to right too.
@@ -1086,8 +1086,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node1[firstKey move] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from left to right too.
@@ -1132,8 +1132,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from left to right : the
 		// ReferenceChange Node node1[firstKey move] will be merge from left to right too.
@@ -1226,12 +1226,12 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(4, differences.size());
 
 		// check if each featuremapchange / referencechange pair is equivalent
-		final Diff featureMapChangeDiff = Iterators.find(differences.iterator(), and(
-				instanceOf(FeatureMapChange.class), ofKind(DifferenceKind.MOVE)));
+		final Diff featureMapChangeDiff = Iterators.find(differences.iterator(),
+				and(instanceOf(FeatureMapChange.class), ofKind(DifferenceKind.MOVE)));
 
-		final Diff referenceChangeDiff = Iterators.find(differences.iterator(), and(
-				instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
-				not(isEquivalentTo(featureMapChangeDiff))));
+		final Diff referenceChangeDiff = Iterators.find(differences.iterator(),
+				and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
+						not(isEquivalentTo(featureMapChangeDiff))));
 
 		assertEquals(2, featureMapChangeDiff.getEquivalence().getDifferences().size());
 		assertEquals(2, referenceChangeDiff.getEquivalence().getDifferences().size());
@@ -1261,12 +1261,12 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(4, differences.size());
 
 		// check if each featuremapchange / referencechange pair is equivalent
-		final Diff featureMapChangeDiff = Iterators.find(differences.iterator(), and(
-				instanceOf(FeatureMapChange.class), ofKind(DifferenceKind.MOVE)));
+		final Diff featureMapChangeDiff = Iterators.find(differences.iterator(),
+				and(instanceOf(FeatureMapChange.class), ofKind(DifferenceKind.MOVE)));
 
-		final Diff referenceChangeDiff = Iterators.find(differences.iterator(), and(
-				instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
-				not(isEquivalentTo(featureMapChangeDiff))));
+		final Diff referenceChangeDiff = Iterators.find(differences.iterator(),
+				and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
+						not(isEquivalentTo(featureMapChangeDiff))));
 
 		assertEquals(2, featureMapChangeDiff.getEquivalence().getDifferences().size());
 		assertEquals(2, referenceChangeDiff.getEquivalence().getDifferences().size());
@@ -1296,8 +1296,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.ADD), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node1[firstKey add] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map add] will be merge from left to right too.
@@ -1354,8 +1354,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.ADD), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map add] from left to right : the ReferenceChange
 		// Node node1[firstKey add] will be merge from left to right too.
@@ -1412,8 +1412,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.ADD), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node1[firstKey add] from right to left : the FeatureMapChange
 		// <firstKey> Node node1 [map add] will be merge from right to left too.
@@ -1466,8 +1466,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.ADD),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.ADD), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map add] from right to left : the ReferenceChange
 		// Node node1[firstKey add] will be merge from right to left too.
@@ -1520,8 +1520,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.DELETE), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node2[firstKey delete] from left to right : the FeatureMapChange
 		// <firstKey> Node node2 [map delete] will be merge from left to right too.
@@ -1574,8 +1574,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.DELETE), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node2 [map delete] from left to right : the
 		// ReferenceChange Node node2[firstKey delete] will be merge from left to right too.
@@ -1628,8 +1628,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.DELETE), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node2[firstKey delete] from right to left : the FeatureMapChange
 		// <firstKey> Node node2 [map delete] will be merge from right to left too.
@@ -1686,8 +1686,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.DELETE),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.DELETE), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node2 [map delete] from right to left : the
 		// ReferenceChange Node node2[firstKey delete] will be merge from right to left too.
@@ -1745,8 +1745,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node1[firstKey move] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from left to right too.
@@ -1804,8 +1804,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from left to right : the
 		// ReferenceChange Node node1[firstKey move] will be merge from left to right too.
@@ -1863,8 +1863,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(ReferenceChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(ReferenceChange.class)));
 
 		// Merge the ReferenceChange Node node1[firstKey move] from right to left : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from right to left too.
@@ -1922,8 +1922,8 @@ public class FeatureMaps2wayMergeTest {
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
 
-		final Diff diff = Iterators.find(differences.iterator(), and(ofKind(DifferenceKind.MOVE),
-				instanceOf(FeatureMapChange.class)));
+		final Diff diff = Iterators.find(differences.iterator(),
+				and(ofKind(DifferenceKind.MOVE), instanceOf(FeatureMapChange.class)));
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from right to left : the
 		// ReferenceChange Node node1[firstKey move] will be merge from right to left too.

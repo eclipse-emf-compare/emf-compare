@@ -139,14 +139,15 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> nodeProp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("prop1"));
 		Predicate<Diff> nodeOp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("op1"));
 
-		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1), new ExpectedStat(
-				assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1),
-				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 1),
-				new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1),
-				new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1), new ExpectedStat(edgeToNodeB, 1),
-				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1),
-				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
-				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
+		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1),
+				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
+				new ExpectedStat(classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
+				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
+				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
+				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
+				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1),
+				new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1),
+				new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), nodeA);
@@ -154,21 +155,15 @@ public class NodeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsChecking(
-				comparison,
+		diffsChecking(comparison,
 				A1_DIFFS_NB - A1_CLASSNODECHANGE1_NB - A1_PKGNODECHANGES_NB - A1_ELTCHANGE1_NB * 3,
-				new ExpectedStat(assoToClassA, 1),
-				new ExpectedStat(assoToClassB, 1),
-				new ExpectedStat(assoToClassC, 1),
-				new ExpectedStat(classA, 0), // ** -1
-				new ExpectedStat(classB, 1),
-				new ExpectedStat(classC, 1),
-				new ExpectedStat(subA, 1),
+				new ExpectedStat(assoToClassA, 1), new ExpectedStat(assoToClassB, 1),
+				new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 0), // ** -1
+				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 1),
 				new ExpectedStat(pkgA, 0), // ** -1
 				new ExpectedStat(pkgB, 0), // ** -1
 				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
-				new ExpectedStat(edgeToNodeB, 1),
-				new ExpectedStat(edgeToNodeC, 1),
+				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
 				new ExpectedStat(nodeA, 0), // ** -1
 				new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1),
 				new ExpectedStat(nodePkgA, 0), // ** -1
@@ -221,14 +216,15 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> nodeProp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("prop1"));
 		Predicate<Diff> nodeOp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("op1"));
 
-		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1), new ExpectedStat(
-				assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1),
-				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 1),
-				new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1),
-				new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1), new ExpectedStat(edgeToNodeB, 1),
-				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1),
-				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
-				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
+		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1),
+				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
+				new ExpectedStat(classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
+				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
+				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
+				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
+				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1),
+				new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1),
+				new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), nodeA);
@@ -236,13 +232,14 @@ public class NodeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsChecking(comparison, A1_DIFFS_NB - A1_CLASSNODECHANGE1_NB - A1_LISTNODECHANGES_NB
-				- A1_EDGECHANGE1_NB * 2, new ExpectedStat(assoToClassA, 1),
-				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(
-						classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
-				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
-				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 0), // **
-																										// -1
+		diffsChecking(comparison,
+				A1_DIFFS_NB - A1_CLASSNODECHANGE1_NB - A1_LISTNODECHANGES_NB - A1_EDGECHANGE1_NB * 2,
+				new ExpectedStat(assoToClassA, 1), new ExpectedStat(assoToClassB, 1),
+				new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1), new ExpectedStat(classB, 1),
+				new ExpectedStat(classC, 1), new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1),
+				new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1),
+				new ExpectedStat(edgeToNodeA, 0), // **
+													// -1
 				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 0), // ** -1
 				new ExpectedStat(nodeA, 0), // ** -1
 				new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 0), // **
@@ -297,14 +294,15 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> nodeProp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("prop1"));
 		Predicate<Diff> nodeOp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("op1"));
 
-		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1), new ExpectedStat(
-				assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1),
-				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 1),
-				new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1),
-				new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1), new ExpectedStat(edgeToNodeB, 1),
-				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1),
-				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
-				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
+		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1),
+				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
+				new ExpectedStat(classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
+				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
+				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
+				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
+				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1),
+				new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1),
+				new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), nodeA);
@@ -312,21 +310,15 @@ public class NodeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsChecking(
-				comparison,
+		diffsChecking(comparison,
 				A1_DIFFS_NB - A1_CLASSNODECHANGE1_NB - A1_PKGNODECHANGES_NB - A1_ELTCHANGE1_NB * 3,
-				new ExpectedStat(assoToClassA, 1),
-				new ExpectedStat(assoToClassB, 1),
-				new ExpectedStat(assoToClassC, 1),
-				new ExpectedStat(classA, 0), // ** -1
-				new ExpectedStat(classB, 1),
-				new ExpectedStat(classC, 1),
-				new ExpectedStat(subA, 1),
+				new ExpectedStat(assoToClassA, 1), new ExpectedStat(assoToClassB, 1),
+				new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 0), // ** -1
+				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 1),
 				new ExpectedStat(pkgA, 0), // ** -1
 				new ExpectedStat(pkgB, 0), // ** -1
 				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
-				new ExpectedStat(edgeToNodeB, 1),
-				new ExpectedStat(edgeToNodeC, 1),
+				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
 				new ExpectedStat(nodeA, 0), // ** -1
 				new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1),
 				new ExpectedStat(nodePkgA, 0), // ** -1
@@ -379,14 +371,15 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> nodeProp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("prop1"));
 		Predicate<Diff> nodeOp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("op1"));
 
-		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1), new ExpectedStat(
-				assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1),
-				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 1),
-				new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1),
-				new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1), new ExpectedStat(edgeToNodeB, 1),
-				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1),
-				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
-				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
+		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1),
+				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
+				new ExpectedStat(classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
+				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
+				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
+				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
+				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1),
+				new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1),
+				new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), nodeA);
@@ -394,13 +387,14 @@ public class NodeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsChecking(comparison, A1_DIFFS_NB - A1_CLASSNODECHANGE1_NB - A1_LISTNODECHANGES_NB
-				- A1_EDGECHANGE1_NB * 2, new ExpectedStat(assoToClassA, 1),
-				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(
-						classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
-				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
-				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 0), // **
-																										// -1
+		diffsChecking(comparison,
+				A1_DIFFS_NB - A1_CLASSNODECHANGE1_NB - A1_LISTNODECHANGES_NB - A1_EDGECHANGE1_NB * 2,
+				new ExpectedStat(assoToClassA, 1), new ExpectedStat(assoToClassB, 1),
+				new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1), new ExpectedStat(classB, 1),
+				new ExpectedStat(classC, 1), new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1),
+				new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1),
+				new ExpectedStat(edgeToNodeA, 0), // **
+													// -1
 				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 0), // ** -1
 				new ExpectedStat(nodeA, 0), // ** -1
 				new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 0), // **
@@ -454,14 +448,15 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> nodeProp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("prop1"));
 		Predicate<Diff> nodeOp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("op1"));
 
-		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1), new ExpectedStat(
-				assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1),
-				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 1),
-				new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1),
-				new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1), new ExpectedStat(edgeToNodeB, 1),
-				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1),
-				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
-				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
+		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1),
+				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
+				new ExpectedStat(classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
+				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
+				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
+				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
+				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1),
+				new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1),
+				new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), nodeB);
@@ -469,15 +464,15 @@ public class NodeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsChecking(comparison, A1_DIFFS_NB - A1_CLASSNODECHANGE1_NB - A1_ELTCHANGE1_NB, new ExpectedStat(
-				assoToClassA, 1), new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
-				new ExpectedStat(classA, 1), new ExpectedStat(classB, 0), new ExpectedStat(classC, 1),
-				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
-				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
-				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
-				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 0), new ExpectedStat(nodeC, 1),
-				new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1),
-				new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
+		diffsChecking(comparison, A1_DIFFS_NB - A1_CLASSNODECHANGE1_NB - A1_ELTCHANGE1_NB,
+				new ExpectedStat(assoToClassA, 1), new ExpectedStat(assoToClassB, 1),
+				new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1), new ExpectedStat(classB, 0),
+				new ExpectedStat(classC, 1), new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1),
+				new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1),
+				new ExpectedStat(edgeToNodeA, 1), new ExpectedStat(edgeToNodeB, 1),
+				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 0),
+				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
+				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 	}
 
 	@Test
@@ -524,14 +519,15 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> nodeProp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("prop1"));
 		Predicate<Diff> nodeOp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("op1"));
 
-		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1), new ExpectedStat(
-				assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1),
-				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 1),
-				new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1),
-				new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1), new ExpectedStat(edgeToNodeB, 1),
-				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1),
-				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
-				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
+		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1),
+				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
+				new ExpectedStat(classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
+				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
+				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
+				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
+				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1),
+				new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1),
+				new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), nodeB);
@@ -540,15 +536,14 @@ public class NodeMergeTest extends AbstractTest {
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
 		diffsChecking(comparison, A1_DIFFS_NB - A1_CLASSNODECHANGE1_NB - A1_EDGECHANGE1_NB * 2,
-				new ExpectedStat(assoToClassA, 1), new ExpectedStat(assoToClassB, 1), new ExpectedStat(
-						assoToClassC, 1), new ExpectedStat(classA, 1), new ExpectedStat(classB, 1),
+				new ExpectedStat(assoToClassA, 1), new ExpectedStat(assoToClassB, 1),
+				new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1), new ExpectedStat(classB, 1),
 				new ExpectedStat(classC, 1), new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1),
-				new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1),
-				new ExpectedStat(op1, 1),
+				new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1),
 				new ExpectedStat(edgeToNodeA, 0), // ** -1
 				new ExpectedStat(edgeToNodeB, 0), // ** -1
-				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1),
-				new ExpectedStat(nodeB, 0), // ** -1
+				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 0), // **
+																											// -1
 				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
 				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 	}
@@ -597,14 +592,15 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> nodeProp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("prop1"));
 		Predicate<Diff> nodeOp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("op1"));
 
-		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1), new ExpectedStat(
-				assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1),
-				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 1),
-				new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1),
-				new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1), new ExpectedStat(edgeToNodeB, 1),
-				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1),
-				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
-				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
+		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1),
+				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
+				new ExpectedStat(classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
+				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
+				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
+				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
+				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1),
+				new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1),
+				new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), nodeB);
@@ -612,15 +608,15 @@ public class NodeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsChecking(comparison, A1_DIFFS_NB - A1_CLASSNODECHANGE1_NB - A1_ELTCHANGE1_NB, new ExpectedStat(
-				assoToClassA, 1), new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
-				new ExpectedStat(classA, 1), new ExpectedStat(classB, 0), new ExpectedStat(classC, 1),
-				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
-				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
-				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
-				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 0), new ExpectedStat(nodeC, 1),
-				new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1),
-				new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
+		diffsChecking(comparison, A1_DIFFS_NB - A1_CLASSNODECHANGE1_NB - A1_ELTCHANGE1_NB,
+				new ExpectedStat(assoToClassA, 1), new ExpectedStat(assoToClassB, 1),
+				new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1), new ExpectedStat(classB, 0),
+				new ExpectedStat(classC, 1), new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1),
+				new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1),
+				new ExpectedStat(edgeToNodeA, 1), new ExpectedStat(edgeToNodeB, 1),
+				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 0),
+				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
+				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 	}
 
 	@Test
@@ -667,14 +663,15 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> nodeProp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("prop1"));
 		Predicate<Diff> nodeOp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("op1"));
 
-		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1), new ExpectedStat(
-				assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1),
-				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 1),
-				new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1),
-				new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1), new ExpectedStat(edgeToNodeB, 1),
-				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1),
-				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
-				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
+		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1),
+				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
+				new ExpectedStat(classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
+				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
+				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
+				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
+				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1),
+				new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1),
+				new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), nodeB);
@@ -683,15 +680,14 @@ public class NodeMergeTest extends AbstractTest {
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
 		diffsChecking(comparison, A1_DIFFS_NB - A1_CLASSNODECHANGE1_NB - 2 * A1_EDGECHANGE1_NB,
-				new ExpectedStat(assoToClassA, 1), new ExpectedStat(assoToClassB, 1), new ExpectedStat(
-						assoToClassC, 1), new ExpectedStat(classA, 1), new ExpectedStat(classB, 1),
+				new ExpectedStat(assoToClassA, 1), new ExpectedStat(assoToClassB, 1),
+				new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1), new ExpectedStat(classB, 1),
 				new ExpectedStat(classC, 1), new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1),
-				new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1),
-				new ExpectedStat(op1, 1),
+				new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1),
 				new ExpectedStat(edgeToNodeA, 0), // ** -1
 				new ExpectedStat(edgeToNodeB, 0), // ** -1
-				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1),
-				new ExpectedStat(nodeB, 0), // ** -1
+				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 0), // **
+																											// -1
 				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
 				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 	}
@@ -741,14 +737,15 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> nodeProp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("prop1"));
 		Predicate<Diff> nodeOp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("op1"));
 
-		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1), new ExpectedStat(
-				assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1),
-				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 1),
-				new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1),
-				new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1), new ExpectedStat(edgeToNodeB, 1),
-				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1),
-				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
-				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
+		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1),
+				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
+				new ExpectedStat(classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
+				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
+				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
+				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
+				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1),
+				new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1),
+				new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), nodeSubA);
@@ -756,15 +753,12 @@ public class NodeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsChecking(comparison, A1_DIFFS_NB - A1_LISTNODECHANGE1_NB - A1_CLASSNODECHANGE1_NB
-				- A1_PKGNODECHANGES_NB - A1_ELTCHANGE1_NB * 4,
-				new ExpectedStat(assoToClassA, 1),
-				new ExpectedStat(assoToClassB, 1),
-				new ExpectedStat(assoToClassC, 1),
-				new ExpectedStat(classA, 0), // ** -1
-				new ExpectedStat(classB, 1),
-				new ExpectedStat(classC, 1),
-				new ExpectedStat(subA, 0), // ** -1
+		diffsChecking(comparison,
+				A1_DIFFS_NB - A1_LISTNODECHANGE1_NB - A1_CLASSNODECHANGE1_NB - A1_PKGNODECHANGES_NB
+						- A1_ELTCHANGE1_NB * 4,
+				new ExpectedStat(assoToClassA, 1), new ExpectedStat(assoToClassB, 1),
+				new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 0), // ** -1
+				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 0), // ** -1
 				new ExpectedStat(pkgA, 0), // ** -1
 				new ExpectedStat(pkgB, 0), // ** -1
 				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
@@ -821,14 +815,15 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> nodeProp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("prop1"));
 		Predicate<Diff> nodeOp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("op1"));
 
-		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1), new ExpectedStat(
-				assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1),
-				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 1),
-				new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1),
-				new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1), new ExpectedStat(edgeToNodeB, 1),
-				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1),
-				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
-				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
+		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1),
+				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
+				new ExpectedStat(classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
+				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
+				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
+				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
+				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1),
+				new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1),
+				new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), nodeSubA);
@@ -837,13 +832,12 @@ public class NodeMergeTest extends AbstractTest {
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
 		diffsChecking(comparison, A1_DIFFS_NB - A1_LISTNODECHANGE1_NB, new ExpectedStat(assoToClassA, 1),
-				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(
-						classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
+				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
+				new ExpectedStat(classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
 				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
 				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
 				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
-				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1),
-				new ExpectedStat(nodeC, 1),
+				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1),
 				new ExpectedStat(nodeSubA, 0), // ** -1
 				new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1),
 				new ExpectedStat(nodeOp1, 1));
@@ -895,14 +889,15 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> nodeProp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("prop1"));
 		Predicate<Diff> nodeOp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("op1"));
 
-		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1), new ExpectedStat(
-				assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1),
-				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 1),
-				new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1),
-				new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1), new ExpectedStat(edgeToNodeB, 1),
-				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1),
-				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
-				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
+		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1),
+				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
+				new ExpectedStat(classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
+				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
+				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
+				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
+				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1),
+				new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1),
+				new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), nodeSubA);
@@ -910,15 +905,12 @@ public class NodeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsChecking(comparison, A1_DIFFS_NB - A1_LISTNODECHANGE1_NB - A1_CLASSNODECHANGE1_NB
-				- A1_PKGNODECHANGES_NB - A1_ELTCHANGE1_NB * 4,
-				new ExpectedStat(assoToClassA, 1),
-				new ExpectedStat(assoToClassB, 1),
-				new ExpectedStat(assoToClassC, 1),
-				new ExpectedStat(classA, 0), // ** -1
-				new ExpectedStat(classB, 1),
-				new ExpectedStat(classC, 1),
-				new ExpectedStat(subA, 0), // ** -1
+		diffsChecking(comparison,
+				A1_DIFFS_NB - A1_LISTNODECHANGE1_NB - A1_CLASSNODECHANGE1_NB - A1_PKGNODECHANGES_NB
+						- A1_ELTCHANGE1_NB * 4,
+				new ExpectedStat(assoToClassA, 1), new ExpectedStat(assoToClassB, 1),
+				new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 0), // ** -1
+				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 0), // ** -1
 				new ExpectedStat(pkgA, 0), // ** -1
 				new ExpectedStat(pkgB, 0), // ** -1
 				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
@@ -975,14 +967,15 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> nodeProp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("prop1"));
 		Predicate<Diff> nodeOp1 = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("op1"));
 
-		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1), new ExpectedStat(
-				assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(classA, 1),
-				new ExpectedStat(classB, 1), new ExpectedStat(classC, 1), new ExpectedStat(subA, 1),
-				new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1), new ExpectedStat(prop1, 1),
-				new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1), new ExpectedStat(edgeToNodeB, 1),
-				new ExpectedStat(edgeToNodeC, 1), new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1),
-				new ExpectedStat(nodeC, 1), new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1),
-				new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
+		diffsChecking(comparison, A1_DIFFS_NB, new ExpectedStat(assoToClassA, 1),
+				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
+				new ExpectedStat(classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
+				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
+				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
+				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
+				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1),
+				new ExpectedStat(nodeSubA, 1), new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1),
+				new ExpectedStat(nodeProp1, 1), new ExpectedStat(nodeOp1, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), nodeSubA);
@@ -991,20 +984,20 @@ public class NodeMergeTest extends AbstractTest {
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
 		diffsChecking(comparison, A1_DIFFS_NB - A1_LISTNODECHANGE1_NB, new ExpectedStat(assoToClassA, 1),
-				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1), new ExpectedStat(
-						classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
+				new ExpectedStat(assoToClassB, 1), new ExpectedStat(assoToClassC, 1),
+				new ExpectedStat(classA, 1), new ExpectedStat(classB, 1), new ExpectedStat(classC, 1),
 				new ExpectedStat(subA, 1), new ExpectedStat(pkgA, 1), new ExpectedStat(pkgB, 1),
 				new ExpectedStat(prop1, 1), new ExpectedStat(op1, 1), new ExpectedStat(edgeToNodeA, 1),
 				new ExpectedStat(edgeToNodeB, 1), new ExpectedStat(edgeToNodeC, 1),
-				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1),
-				new ExpectedStat(nodeC, 1),
+				new ExpectedStat(nodeA, 1), new ExpectedStat(nodeB, 1), new ExpectedStat(nodeC, 1),
 				new ExpectedStat(nodeSubA, 0), // ** -1
 				new ExpectedStat(nodePkgA, 1), new ExpectedStat(nodePkgB, 1), new ExpectedStat(nodeProp1, 1),
 				new ExpectedStat(nodeOp1, 1));
 	}
 
 	@Test
-	// Merge right to left <ADD ClassC> -> merge <ADD classA_classC_1>, merge <ADD classC_classB_1>, merge <ADD nodeC>, merge <ADD edgeToNodeC>, merge <ADD edgeFromNodeC>
+	// Merge right to left <ADD ClassC> -> merge <ADD classA_classC_1>, merge <ADD classC_classB_1>, merge
+	// <ADD nodeC>, merge <ADD edgeToNodeC>, merge <ADD edgeFromNodeC>
 	public void testA1m() throws IOException {
 		final Resource left = input.getA1NodeChangeLeft();
 		final Resource right = input.getA1NodeChangeRight();
@@ -1020,26 +1013,27 @@ public class NodeMergeTest extends AbstractTest {
 				nameIs("classC_classB_1"));
 		Predicate<Diff> classC = and(instanceOf(ReferenceChange.class), ofKind(kind),
 				valueNameMatches("ClassC"));
-		
+
 		Predicate<Diff> edgeToNodeC = and(instanceOf(EdgeChange.class), ofKind(kind),
 				elementNameIs("classA_classC_1"));
 		Predicate<Diff> edgeFromNodeC = and(instanceOf(EdgeChange.class), ofKind(kind),
-				elementNameIs("classC_classB_1"));	
+				elementNameIs("classC_classB_1"));
 		Predicate<Diff> nodeC = and(instanceOf(NodeChange.class), ofKind(kind), elementNameIs("ClassC"));
 
 		// ** MERGE **
 		Diff classCDiff = Iterables.find(comparison.getDifferences(), classC);
-		getMergerRegistry().getHighestRankingMerger(classCDiff).copyRightToLeft(classCDiff, new BasicMonitor());
+		getMergerRegistry().getHighestRankingMerger(classCDiff).copyRightToLeft(classCDiff,
+				new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsChecking(comparison, A1_DIFFS_NB - A1_ELTCHANGE1_NB - 2 * A1_ASSOCHANGE1_NB - A1_CLASSNODECHANGE1_NB - 2 * A1_EDGECHANGE1_NB,
-				new ExpectedStat(assoToClassC, 0),
-				new ExpectedStat(classC, 0),
-				new ExpectedStat(edgeToNodeC, 0),
-				new ExpectedStat(nodeC, 0));
+		diffsChecking(comparison,
+				A1_DIFFS_NB - A1_ELTCHANGE1_NB - 2 * A1_ASSOCHANGE1_NB - A1_CLASSNODECHANGE1_NB
+						- 2 * A1_EDGECHANGE1_NB,
+				new ExpectedStat(assoToClassC, 0), new ExpectedStat(classC, 0),
+				new ExpectedStat(edgeToNodeC, 0), new ExpectedStat(nodeC, 0));
 	}
-	
+
 	@Test
 	// Merge left to right <MOVE NodeA> -> merge <ADD NodePackage> (and merge <MOVE A>, merge <ADD Package>)
 	public void testA2a() throws IOException {
@@ -1061,9 +1055,10 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> moveA = and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
 				valueIs(UMLPackage.Literals.CLASS));
 
-		diffsChecking(comparison, A2_DIFFS_NB, new ExpectedStat(addNodePackage, 1), new ExpectedStat(
-				moveNodeA, 1), new ExpectedStat(unitMoveNodeA, 1), new ExpectedStat(unitCoordinatesA, 2),
-				new ExpectedStat(addPackage, 1), new ExpectedStat(moveA, 1));
+		diffsChecking(comparison, A2_DIFFS_NB, new ExpectedStat(addNodePackage, 1),
+				new ExpectedStat(moveNodeA, 1), new ExpectedStat(unitMoveNodeA, 1),
+				new ExpectedStat(unitCoordinatesA, 2), new ExpectedStat(addPackage, 1),
+				new ExpectedStat(moveA, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), moveNodeA);
@@ -1071,10 +1066,11 @@ public class NodeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsChecking(comparison, A2_DIFFS_NB - A2_MOVE_NODEA_NB - A2_ADD_PKGNODE1_NB - A2_MOVE_A_NB
-				- A2_ADD_PKG1_NB, new ExpectedStat(addNodePackage, 0), new ExpectedStat(moveNodeA, 0),
-				new ExpectedStat(unitMoveNodeA, 0), new ExpectedStat(unitCoordinatesA, 0), new ExpectedStat(
-						addPackage, 0), new ExpectedStat(moveA, 0));
+		diffsChecking(comparison,
+				A2_DIFFS_NB - A2_MOVE_NODEA_NB - A2_ADD_PKGNODE1_NB - A2_MOVE_A_NB - A2_ADD_PKG1_NB,
+				new ExpectedStat(addNodePackage, 0), new ExpectedStat(moveNodeA, 0),
+				new ExpectedStat(unitMoveNodeA, 0), new ExpectedStat(unitCoordinatesA, 0),
+				new ExpectedStat(addPackage, 0), new ExpectedStat(moveA, 0));
 
 	}
 
@@ -1099,9 +1095,10 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> moveA = and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
 				valueIs(UMLPackage.Literals.CLASS));
 
-		diffsChecking(comparison, A2_DIFFS_NB, new ExpectedStat(addNodePackage, 1), new ExpectedStat(
-				moveNodeA, 1), new ExpectedStat(unitMoveNodeA, 1), new ExpectedStat(unitCoordinatesA, 2),
-				new ExpectedStat(addPackage, 1), new ExpectedStat(moveA, 1));
+		diffsChecking(comparison, A2_DIFFS_NB, new ExpectedStat(addNodePackage, 1),
+				new ExpectedStat(moveNodeA, 1), new ExpectedStat(unitMoveNodeA, 1),
+				new ExpectedStat(unitCoordinatesA, 2), new ExpectedStat(addPackage, 1),
+				new ExpectedStat(moveA, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), moveNodeA);
@@ -1109,10 +1106,10 @@ public class NodeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsChecking(comparison, A2_DIFFS_NB - A2_MOVE_NODEA_NB - A2_MOVE_A_NB, new ExpectedStat(
-				addNodePackage, 1), new ExpectedStat(moveNodeA, 0), new ExpectedStat(unitMoveNodeA, 0),
-				new ExpectedStat(unitCoordinatesA, 0), new ExpectedStat(addPackage, 1), new ExpectedStat(
-						moveA, 0));
+		diffsChecking(comparison, A2_DIFFS_NB - A2_MOVE_NODEA_NB - A2_MOVE_A_NB,
+				new ExpectedStat(addNodePackage, 1), new ExpectedStat(moveNodeA, 0),
+				new ExpectedStat(unitMoveNodeA, 0), new ExpectedStat(unitCoordinatesA, 0),
+				new ExpectedStat(addPackage, 1), new ExpectedStat(moveA, 0));
 
 	}
 
@@ -1137,9 +1134,10 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> moveA = and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
 				valueIs(UMLPackage.Literals.CLASS));
 
-		diffsChecking(comparison, A2_DIFFS_NB, new ExpectedStat(addNodePackage, 1), new ExpectedStat(
-				moveNodeA, 1), new ExpectedStat(unitMoveNodeA, 1), new ExpectedStat(unitCoordinatesA, 2),
-				new ExpectedStat(addPackage, 1), new ExpectedStat(moveA, 1));
+		diffsChecking(comparison, A2_DIFFS_NB, new ExpectedStat(addNodePackage, 1),
+				new ExpectedStat(moveNodeA, 1), new ExpectedStat(unitMoveNodeA, 1),
+				new ExpectedStat(unitCoordinatesA, 2), new ExpectedStat(addPackage, 1),
+				new ExpectedStat(moveA, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), moveNodeA);
@@ -1147,10 +1145,10 @@ public class NodeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsChecking(comparison, A2_DIFFS_NB - A2_MOVE_NODEA_NB - A2_MOVE_A_NB, new ExpectedStat(
-				addNodePackage, 1), new ExpectedStat(moveNodeA, 0), new ExpectedStat(unitMoveNodeA, 0),
-				new ExpectedStat(unitCoordinatesA, 0), new ExpectedStat(addPackage, 1), new ExpectedStat(
-						moveA, 0));
+		diffsChecking(comparison, A2_DIFFS_NB - A2_MOVE_NODEA_NB - A2_MOVE_A_NB,
+				new ExpectedStat(addNodePackage, 1), new ExpectedStat(moveNodeA, 0),
+				new ExpectedStat(unitMoveNodeA, 0), new ExpectedStat(unitCoordinatesA, 0),
+				new ExpectedStat(addPackage, 1), new ExpectedStat(moveA, 0));
 
 	}
 
@@ -1175,9 +1173,10 @@ public class NodeMergeTest extends AbstractTest {
 		Predicate<Diff> moveA = and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE),
 				valueIs(UMLPackage.Literals.CLASS));
 
-		diffsChecking(comparison, A2_DIFFS_NB, new ExpectedStat(addNodePackage, 1), new ExpectedStat(
-				moveNodeA, 1), new ExpectedStat(unitMoveNodeA, 1), new ExpectedStat(unitCoordinatesA, 2),
-				new ExpectedStat(addPackage, 1), new ExpectedStat(moveA, 1));
+		diffsChecking(comparison, A2_DIFFS_NB, new ExpectedStat(addNodePackage, 1),
+				new ExpectedStat(moveNodeA, 1), new ExpectedStat(unitMoveNodeA, 1),
+				new ExpectedStat(unitCoordinatesA, 2), new ExpectedStat(addPackage, 1),
+				new ExpectedStat(moveA, 1));
 
 		// ** MERGE **
 		Diff node = Iterables.find(comparison.getDifferences(), moveNodeA);
@@ -1185,10 +1184,11 @@ public class NodeMergeTest extends AbstractTest {
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
-		diffsChecking(comparison, A2_DIFFS_NB - A2_MOVE_NODEA_NB - A2_ADD_PKGNODE1_NB - A2_MOVE_A_NB
-				- A2_ADD_PKG1_NB, new ExpectedStat(addNodePackage, 0), new ExpectedStat(moveNodeA, 0),
-				new ExpectedStat(unitMoveNodeA, 0), new ExpectedStat(unitCoordinatesA, 0), new ExpectedStat(
-						addPackage, 0), new ExpectedStat(moveA, 0));
+		diffsChecking(comparison,
+				A2_DIFFS_NB - A2_MOVE_NODEA_NB - A2_ADD_PKGNODE1_NB - A2_MOVE_A_NB - A2_ADD_PKG1_NB,
+				new ExpectedStat(addNodePackage, 0), new ExpectedStat(moveNodeA, 0),
+				new ExpectedStat(unitMoveNodeA, 0), new ExpectedStat(unitCoordinatesA, 0),
+				new ExpectedStat(addPackage, 0), new ExpectedStat(moveA, 0));
 
 	}
 
@@ -1243,7 +1243,6 @@ public class NodeMergeTest extends AbstractTest {
 
 		diffsChecking(comparison, A4_DIFFS_NB);
 
-		
 		// ** MERGE feature4 <- **
 		Diff feature = Iterables.find(comparison.getDifferences(), feature4, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1254,7 +1253,6 @@ public class NodeMergeTest extends AbstractTest {
 		feature = Iterables.find(comparison.getDifferences(), feature4, null);
 		assertTrue(isMergedFor3way(comparison, feature));
 
-		
 		// ** MERGE feature2 -> **
 		feature = Iterables.find(comparison.getDifferences(), feature2, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1265,7 +1263,6 @@ public class NodeMergeTest extends AbstractTest {
 		feature = Iterables.find(comparison.getDifferences(), feature2, null);
 		assertTrue(isMergedFor3way(comparison, feature));
 
-		
 		// ** MERGE feature5 <- **
 		feature = Iterables.find(comparison.getDifferences(), feature5, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1276,7 +1273,6 @@ public class NodeMergeTest extends AbstractTest {
 		feature = Iterables.find(comparison.getDifferences(), feature5, null);
 		assertTrue(isMergedFor3way(comparison, feature));
 
-		
 		// ** MERGE feature6 -> **
 		feature = Iterables.find(comparison.getDifferences(), feature6, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1287,7 +1283,6 @@ public class NodeMergeTest extends AbstractTest {
 		feature = Iterables.find(comparison.getDifferences(), feature6, null);
 		assertTrue(isMergedFor3way(comparison, feature));
 
-		
 		// ** MERGE feature7 <- **
 		feature = Iterables.find(comparison.getDifferences(), feature7, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1299,7 +1294,7 @@ public class NodeMergeTest extends AbstractTest {
 		assertTrue(isMergedFor3way(comparison, feature));
 
 	}
-	
+
 	@Test
 	// Successive merges right to left of NodeLists
 	public void testA4b() throws IOException {
@@ -1328,7 +1323,6 @@ public class NodeMergeTest extends AbstractTest {
 
 		diffsChecking(comparison, A4_DIFFS_NB);
 
-		
 		// ** MERGE feature4 <- **
 		Diff feature = Iterables.find(comparison.getDifferences(), feature4, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1339,7 +1333,6 @@ public class NodeMergeTest extends AbstractTest {
 		feature = Iterables.find(comparison.getDifferences(), feature4, null);
 		assertTrue(isMergedFor3way(comparison, feature));
 
-		
 		// ** MERGE feature2 -> **
 		feature = Iterables.find(comparison.getDifferences(), feature2, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1350,7 +1343,6 @@ public class NodeMergeTest extends AbstractTest {
 		feature = Iterables.find(comparison.getDifferences(), feature2, null);
 		assertTrue(isMergedFor3way(comparison, feature));
 
-		
 		// ** MERGE feature5 <- **
 		feature = Iterables.find(comparison.getDifferences(), feature5, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1361,7 +1353,6 @@ public class NodeMergeTest extends AbstractTest {
 		feature = Iterables.find(comparison.getDifferences(), feature5, null);
 		assertTrue(isMergedFor3way(comparison, feature));
 
-		
 		// ** MERGE feature6 -> **
 		feature = Iterables.find(comparison.getDifferences(), feature6, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1372,7 +1363,6 @@ public class NodeMergeTest extends AbstractTest {
 		feature = Iterables.find(comparison.getDifferences(), feature6, null);
 		assertTrue(isMergedFor3way(comparison, feature));
 
-		
 		// ** MERGE feature7 <- **
 		feature = Iterables.find(comparison.getDifferences(), feature7, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1384,7 +1374,7 @@ public class NodeMergeTest extends AbstractTest {
 		assertTrue(isMergedFor3way(comparison, feature));
 
 	}
-	
+
 	@Test
 	// Successive merges left to right of NodeLists
 	public void testA4c() throws IOException {
@@ -1413,7 +1403,6 @@ public class NodeMergeTest extends AbstractTest {
 
 		diffsChecking(comparison, A4_DIFFS_NB);
 
-		
 		// ** MERGE feature4 <- **
 		Diff feature = Iterables.find(comparison.getDifferences(), feature4, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1424,7 +1413,6 @@ public class NodeMergeTest extends AbstractTest {
 		feature = Iterables.find(comparison.getDifferences(), feature4, null);
 		assertTrue(isMergedFor3way(comparison, feature));
 
-		
 		// ** MERGE feature2 -> **
 		feature = Iterables.find(comparison.getDifferences(), feature2, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1435,7 +1423,6 @@ public class NodeMergeTest extends AbstractTest {
 		feature = Iterables.find(comparison.getDifferences(), feature2, null);
 		assertTrue(isMergedFor3way(comparison, feature));
 
-		
 		// ** MERGE feature5 <- **
 		feature = Iterables.find(comparison.getDifferences(), feature5, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1446,7 +1433,6 @@ public class NodeMergeTest extends AbstractTest {
 		feature = Iterables.find(comparison.getDifferences(), feature5, null);
 		assertTrue(isMergedFor3way(comparison, feature));
 
-		
 		// ** MERGE feature6 -> **
 		feature = Iterables.find(comparison.getDifferences(), feature6, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1457,7 +1443,6 @@ public class NodeMergeTest extends AbstractTest {
 		feature = Iterables.find(comparison.getDifferences(), feature6, null);
 		assertTrue(isMergedFor3way(comparison, feature));
 
-		
 		// ** MERGE feature7 <- **
 		feature = Iterables.find(comparison.getDifferences(), feature7, null);
 		assertFalse(isMergedFor3way(comparison, feature));
@@ -1503,7 +1488,7 @@ public class NodeMergeTest extends AbstractTest {
 	private static boolean isMergedFor3way(Comparison comparison, final Diff diff) {
 		return Iterables.any(comparison.getDifferences(), isMergedFor3way(diff)) || diff == null;
 	}
-	
+
 	private static Predicate<Diff> isMergedFor3way(final Diff diff) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
@@ -1516,13 +1501,10 @@ public class NodeMergeTest extends AbstractTest {
 	@Override
 	protected void registerPostProcessors() {
 		super.registerPostProcessors();
-		getPostProcessorRegistry()
-				.put(MultiplicityElementChangePostProcessor.class.getName(),
-						new TestPostProcessor.TestPostProcessorDescriptor(
-								Pattern.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"),
-								null,
-								new MultiplicityElementChangePostProcessor(),
-								25));
+		getPostProcessorRegistry().put(MultiplicityElementChangePostProcessor.class.getName(),
+				new TestPostProcessor.TestPostProcessorDescriptor(
+						Pattern.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null,
+						new MultiplicityElementChangePostProcessor(), 25));
 	}
 
 }

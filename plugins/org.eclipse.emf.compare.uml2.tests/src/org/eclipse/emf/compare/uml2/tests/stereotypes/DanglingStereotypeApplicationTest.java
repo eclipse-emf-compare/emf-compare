@@ -52,9 +52,8 @@ public class DanglingStereotypeApplicationTest extends AbstractUMLProfileTest {
 			// It is required to link the EPackage to the UML package of the UML Profile
 			Map<String, URI> ePackageNsURIToProfileLocationMap = UMLPlugin
 					.getEPackageNsURIToProfileLocationMap();
-			ePackageNsURIToProfileLocationMap
-					.put(UML2CompareTestProfilePackage.eNS_URI,
-							URI.createURI("pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml#_hZFTgIwkEeC_FYHMbTTxXw")); //$NON-NLS-1$
+			ePackageNsURIToProfileLocationMap.put(UML2CompareTestProfilePackage.eNS_URI, URI.createURI(
+					"pathmap://UML_COMPARE_TESTS_PROFILE/uml2.compare.testprofile.profile.uml#_hZFTgIwkEeC_FYHMbTTxXw")); //$NON-NLS-1$
 		}
 	}
 

@@ -81,8 +81,10 @@ public class URIDistanceTest {
 	@Test
 	public void limitCases() throws Exception {
 		assertEquals(0, proximity("", ""));
-		assertEquals(10, proximity("/", "/a/very/long/path/just/to/check/we/wont/ends/up/with/a/weird/thing"));
-		assertEquals(10, proximity("/a/very/long/path/just/to/check/we/wont/ends/up/with/a/weird/thing", "/"));
+		assertEquals(10,
+				proximity("/", "/a/very/long/path/just/to/check/we/wont/ends/up/with/a/weird/thing"));
+		assertEquals(10,
+				proximity("/a/very/long/path/just/to/check/we/wont/ends/up/with/a/weird/thing", "/"));
 	}
 
 	@Test

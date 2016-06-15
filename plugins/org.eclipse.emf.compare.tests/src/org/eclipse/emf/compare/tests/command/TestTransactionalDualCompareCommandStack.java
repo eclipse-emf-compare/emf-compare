@@ -52,19 +52,20 @@ public class TestTransactionalDualCompareCommandStack extends AbstractTestCompar
 		TransactionalCommandStack leftCommandStack = new TransactionalCommandStackNoValidation();
 		TransactionalEditingDomain leftEditingDomain = new TransactionalEditingDomainImpl(leftAdapterFactory,
 				leftCommandStack, leftResourceSet);
-		leftResourceSet.eAdapters().add(
-				new AdapterFactoryEditingDomain.EditingDomainProvider(leftEditingDomain));
+		leftResourceSet.eAdapters()
+				.add(new AdapterFactoryEditingDomain.EditingDomainProvider(leftEditingDomain));
 
 		ComposedAdapterFactory rightAdapterFactory = new ComposedAdapterFactory(
 				ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		TransactionalCommandStack rightCommandStack = new TransactionalCommandStackNoValidation();
 		TransactionalEditingDomain rightEditingDomain = new TransactionalEditingDomainImpl(
 				rightAdapterFactory, rightCommandStack, rightResourceSet);
-		rightResourceSet.eAdapters().add(
-				new AdapterFactoryEditingDomain.EditingDomainProvider(rightEditingDomain));
+		rightResourceSet.eAdapters()
+				.add(new AdapterFactoryEditingDomain.EditingDomainProvider(rightEditingDomain));
 
-		return new TransactionalDualCompareCommandStack((AbstractTransactionalCommandStack)leftEditingDomain
-				.getCommandStack(), (AbstractTransactionalCommandStack)rightEditingDomain.getCommandStack());
+		return new TransactionalDualCompareCommandStack(
+				(AbstractTransactionalCommandStack)leftEditingDomain.getCommandStack(),
+				(AbstractTransactionalCommandStack)rightEditingDomain.getCommandStack());
 	}
 
 	@Test

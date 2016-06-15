@@ -90,8 +90,8 @@ public class StereotypedElementItemProviderDecorator extends ExtendedItemProvide
 	 */
 	private String getStereotypedElementLabel(Element element, EList<Stereotype> appliedStereotypes) {
 		StringBuilder labelBuilder = new StringBuilder();
-		String stereotypes = Joiner.on(',').join(
-				Iterables.transform(appliedStereotypes, new Function<Stereotype, String>() {
+		String stereotypes = Joiner.on(',')
+				.join(Iterables.transform(appliedStereotypes, new Function<Stereotype, String>() {
 
 					public String apply(Stereotype input) {
 						return input.getName();
@@ -123,7 +123,8 @@ public class StereotypedElementItemProviderDecorator extends ExtendedItemProvide
 	 * <li>IF:There is {@link org.eclipse.uml2.uml.Image} in the profile model then computes the icon from its
 	 * location. (warning: currently the feature "content" of a {@link org.eclipse.uml2.uml.Image} is not used
 	 * to get a icon)</li>
-	 * <li>ELSEIF: There is ItemProvider registered into the platform for the stereotype application use it.</li>
+	 * <li>ELSEIF: There is ItemProvider registered into the platform for the stereotype application use it.
+	 * </li>
 	 * <li>ELSE: Uses the base element icon.</li>
 	 * </ol>
 	 * <p>
@@ -228,17 +229,19 @@ public class StereotypedElementItemProviderDecorator extends ExtendedItemProvide
 					url.openStream().close();
 					img = url;
 				} catch (MalformedURLException e) {
-					UMLCompareEditPlugin.getPlugin().getLog().log(
-							new Status(IStatus.WARNING, "org.eclipse.emf.compare.uml2.edit", //$NON-NLS-1$
+					UMLCompareEditPlugin.getPlugin().getLog()
+							.log(new Status(IStatus.WARNING, "org.eclipse.emf.compare.uml2.edit", //$NON-NLS-1$
 									UMLCompareEditPlugin.INSTANCE.getString(
 											"Unable_To_Retreive_Icon_Error_Message", //$NON-NLS-1$
-											new Object[] {location }), e));
+											new Object[] {location }),
+									e));
 				} catch (IOException e) {
-					UMLCompareEditPlugin.getPlugin().getLog().log(
-							new Status(IStatus.WARNING, "org.eclipse.emf.compare.uml2.edit", //$NON-NLS-1$
+					UMLCompareEditPlugin.getPlugin().getLog()
+							.log(new Status(IStatus.WARNING, "org.eclipse.emf.compare.uml2.edit", //$NON-NLS-1$
 									UMLCompareEditPlugin.INSTANCE.getString(
 											"Unable_To_Retreive_Icon_Error_Message", //$NON-NLS-1$
-											new Object[] {location }), e));
+											new Object[] {location }),
+									e));
 				}
 			}
 		}

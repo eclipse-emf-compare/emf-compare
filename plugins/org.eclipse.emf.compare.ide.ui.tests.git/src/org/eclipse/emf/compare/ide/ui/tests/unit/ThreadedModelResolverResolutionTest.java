@@ -66,8 +66,8 @@ public class ThreadedModelResolverResolutionTest extends AbstractGitLogicalModel
 
 		IStorageProviderAccessor storageAccessor = createRemoteAccessorForComparison(MASTER, BRANCH, iFile3);
 
-		StreamAccessorStorage file3Storage = StreamAccessorStorage.fromTypedElement(new StorageTypedElement(
-				iFile3, iFile3.getFullPath().toOSString()));
+		StreamAccessorStorage file3Storage = StreamAccessorStorage
+				.fromTypedElement(new StorageTypedElement(iFile3, iFile3.getFullPath().toOSString()));
 
 		SynchronizationModel synchronizationModel = resolver.resolveModels(storageAccessor, iFile3,
 				file3Storage, null, monitor);

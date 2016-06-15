@@ -71,10 +71,10 @@ public class DiagramMatchAccessorImpl implements IDiagramNodeAccessor, ITypedEle
 	public Image getImage() {
 		// if (getStructuralFeature() instanceof EAttribute) {
 		// return ExtendedImageRegistry.getInstance().getImage(
-		//					EcoreEditPlugin.getPlugin().getImage("full/obj16/EAttribute")); //$NON-NLS-1$
+		// EcoreEditPlugin.getPlugin().getImage("full/obj16/EAttribute")); //$NON-NLS-1$
 		// } else {
 		// return ExtendedImageRegistry.getInstance().getImage(
-		//					EcoreEditPlugin.getPlugin().getImage("full/obj16/EReference")); //$NON-NLS-1$
+		// EcoreEditPlugin.getPlugin().getImage("full/obj16/EReference")); //$NON-NLS-1$
 		// }
 		return null;
 	}

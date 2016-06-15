@@ -85,8 +85,8 @@ public class ConflictDetectionTest {
 	private static Predicate<? super Diff> setOfReference(final String qualifiedName,
 			final String referenceName, final String addedQualifiedName) {
 		// This is only meant for multi-valued references
-		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), referenceValueMatch(referenceName,
-				addedQualifiedName, false));
+		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName),
+				referenceValueMatch(referenceName, addedQualifiedName, false));
 	}
 
 	private ConflictInputData input = new ConflictInputData();
@@ -111,10 +111,10 @@ public class ConflictDetectionTest {
 				"singleValuedAttribute", "origin", "left");
 		final Predicate<? super Diff> rightDiffDescription = removed("root.conflictHolder");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -155,12 +155,12 @@ public class ConflictDetectionTest {
 				"singleValuedReference", "root.origin", null);
 		final Predicate<? super Diff> rightDeleteDiffDescription = removed("root.conflictHolder");
 
-		final Diff leftReferenceDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), leftReferenceDiffDescription));
-		final Diff rightReferenceDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightReferenceDiffDescription));
-		final Diff rightDeleteDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
+		final Diff leftReferenceDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftReferenceDiffDescription));
+		final Diff rightReferenceDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightReferenceDiffDescription));
+		final Diff rightDeleteDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
 
 		assertNotNull(leftReferenceDiff);
 		assertNotNull(rightReferenceDiff);
@@ -196,10 +196,10 @@ public class ConflictDetectionTest {
 				"singleValuedAttribute", null, "left");
 		final Predicate<? super Diff> rightDiffDescription = removed("root.conflictHolder");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -234,10 +234,10 @@ public class ConflictDetectionTest {
 				"singleValuedReference", null, "root.left");
 		final Predicate<? super Diff> rightDiffDescription = removed("root.conflictHolder");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -272,10 +272,10 @@ public class ConflictDetectionTest {
 				"singleValuedAttribute", "origin", null);
 		final Predicate<? super Diff> rightDiffDescription = removed("root.conflictHolder");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -316,12 +316,12 @@ public class ConflictDetectionTest {
 				"singleValuedReference", "root.origin", null);
 		final Predicate<? super Diff> rightDeleteDiffDescription = removed("root.conflictHolder");
 
-		final Diff leftReferenceDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), leftReferenceDiffDescription));
-		final Diff rightReferenceDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightReferenceDiffDescription));
-		final Diff rightDeleteDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
+		final Diff leftReferenceDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftReferenceDiffDescription));
+		final Diff rightReferenceDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightReferenceDiffDescription));
+		final Diff rightDeleteDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
 
 		assertNotNull(leftReferenceDiff);
 		assertNotNull(rightReferenceDiff);
@@ -359,10 +359,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", "origin", "right");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -398,10 +398,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", "root.origin", "root.right");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -437,10 +437,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", "origin", null);
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -476,10 +476,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", "root.origin", null);
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -515,10 +515,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", null, "right");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -554,10 +554,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", null, "root.right");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -593,10 +593,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = setOfReference("root.conflictHolder",
 				"singleValueContainment", "root.conflictHolder.newright");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -632,10 +632,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", "origin", "right");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -671,10 +671,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", "root.origin", "root.right");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -710,10 +710,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", null, "leftAndRight");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -749,10 +749,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", null, "root.leftAndRight");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -788,10 +788,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", "origin", null);
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -827,10 +827,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = changedReference("root.conflictHolder",
 				"singleValuedReference", "root.origin", null);
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -865,10 +865,10 @@ public class ConflictDetectionTest {
 				"multiValuedAttribute", "left1");
 		final Predicate<? super Diff> rightDiffDescription = removed("root.conflictHolder");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -914,16 +914,16 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightReferenceDiff3Description = removedFromReference(
 				"root.conflictHolder", "multiValuedReference", "root.origin3");
 
-		final Diff leftReferenceDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), leftReferenceDiffDescription));
-		final Diff rightDeleteDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
-		final Diff rightReferenceDiff1 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightReferenceDiff1Description));
-		final Diff rightReferenceDiff2 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightReferenceDiff2Description));
-		final Diff rightReferenceDiff3 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightReferenceDiff3Description));
+		final Diff leftReferenceDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftReferenceDiffDescription));
+		final Diff rightDeleteDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
+		final Diff rightReferenceDiff1 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightReferenceDiff1Description));
+		final Diff rightReferenceDiff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightReferenceDiff2Description));
+		final Diff rightReferenceDiff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightReferenceDiff3Description));
 
 		assertNotNull(leftReferenceDiff);
 		assertNotNull(rightDeleteDiff);
@@ -961,10 +961,10 @@ public class ConflictDetectionTest {
 				"multiValuedAttribute", "origin1");
 		final Predicate<? super Diff> rightDiffDescription = removed("root.conflictHolder");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1011,16 +1011,16 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightReferenceDiff3Description = removedFromReference(
 				"root.conflictHolder", "multiValuedReference", "root.origin3");
 
-		final Diff leftReferenceDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), leftReferenceDiffDescription));
-		final Diff rightDeleteDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
-		final Diff rightReferenceDiff1 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightReferenceDiff1Description));
-		final Diff rightReferenceDiff2 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightReferenceDiff2Description));
-		final Diff rightReferenceDiff3 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightReferenceDiff3Description));
+		final Diff leftReferenceDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftReferenceDiffDescription));
+		final Diff rightDeleteDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
+		final Diff rightReferenceDiff1 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightReferenceDiff1Description));
+		final Diff rightReferenceDiff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightReferenceDiff2Description));
+		final Diff rightReferenceDiff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightReferenceDiff3Description));
 
 		assertNotNull(leftReferenceDiff);
 		assertNotNull(rightDeleteDiff);
@@ -1059,10 +1059,10 @@ public class ConflictDetectionTest {
 				"multiValuedAttribute", "left1");
 		final Predicate<? super Diff> rightDiffDescription = removed("root.conflictHolder");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1097,10 +1097,10 @@ public class ConflictDetectionTest {
 				"multiValuedReference", "root.left1");
 		final Predicate<? super Diff> rightDeleteDiffDescription = removed("root.conflictHolder");
 
-		final Diff leftReferenceDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), leftReferenceDiffDescription));
-		final Diff rightDeleteDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
+		final Diff leftReferenceDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftReferenceDiffDescription));
+		final Diff rightDeleteDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
 
 		assertNotNull(leftReferenceDiff);
 		assertNotNull(rightDeleteDiff);
@@ -1143,14 +1143,14 @@ public class ConflictDetectionTest {
 				"root.conflictHolder", "multiValuedAttribute", "origin3");
 		final Predicate<? super Diff> rightDiffDescription = removed("root.conflictHolder");
 
-		final Diff leftAttributeDiff1 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), leftAttributeDiff1Description));
-		final Diff leftAttributeDiff2 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), leftAttributeDiff2Description));
-		final Diff leftAttributeDiff3 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), leftAttributeDiff3Description));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftAttributeDiff1 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftAttributeDiff1Description));
+		final Diff leftAttributeDiff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftAttributeDiff2Description));
+		final Diff leftAttributeDiff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftAttributeDiff3Description));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftAttributeDiff1);
 		assertNotNull(leftAttributeDiff2);
@@ -1197,20 +1197,20 @@ public class ConflictDetectionTest {
 				"multiValuedReference", "root.origin3");
 		final Predicate<? super Diff> rightDeleteDiffDescription = removed("root.conflictHolder");
 
-		final Diff leftReferenceDiff1 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), referenceDiff1Description));
-		final Diff leftReferenceDiff2 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), referenceDiff2Description));
-		final Diff leftReferenceDiff3 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), referenceDiff3Description));
-		final Diff rightDeleteDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
-		final Diff rightReferenceDiff1 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), referenceDiff1Description));
-		final Diff rightReferenceDiff2 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), referenceDiff2Description));
-		final Diff rightReferenceDiff3 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), referenceDiff3Description));
+		final Diff leftReferenceDiff1 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), referenceDiff1Description));
+		final Diff leftReferenceDiff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), referenceDiff2Description));
+		final Diff leftReferenceDiff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), referenceDiff3Description));
+		final Diff rightDeleteDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
+		final Diff rightReferenceDiff1 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), referenceDiff1Description));
+		final Diff rightReferenceDiff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), referenceDiff2Description));
+		final Diff rightReferenceDiff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), referenceDiff3Description));
 
 		assertNotNull(leftReferenceDiff1);
 		assertNotNull(leftReferenceDiff2);
@@ -1255,10 +1255,10 @@ public class ConflictDetectionTest {
 				"multiValuedAttribute", "origin1");
 		final Predicate<? super Diff> rightDiffDescription = removed("root.conflictHolder");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1303,16 +1303,16 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightReferenceDiff3Description = removedFromReference(
 				"root.conflictHolder", "multiValuedReference", "root.origin2");
 
-		final Diff leftReferenceDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), leftReferenceDiffDescription));
-		final Diff rightDeleteDiff = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
-		final Diff rightReferenceDiff1 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightReferenceDiff1Description));
-		final Diff rightReferenceDiff2 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightReferenceDiff2Description));
-		final Diff rightReferenceDiff3 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), rightReferenceDiff3Description));
+		final Diff leftReferenceDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftReferenceDiffDescription));
+		final Diff rightDeleteDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDeleteDiffDescription));
+		final Diff rightReferenceDiff1 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightReferenceDiff1Description));
+		final Diff rightReferenceDiff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightReferenceDiff2Description));
+		final Diff rightReferenceDiff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightReferenceDiff3Description));
 
 		assertNotNull(leftReferenceDiff);
 		assertNotNull(rightDeleteDiff);
@@ -1352,10 +1352,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = movedInAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin1");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1391,10 +1391,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = movedInReference("root.conflictHolder",
 				"multiValuedReference", "root.origin1");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1430,10 +1430,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = removedFromAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin1");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1469,10 +1469,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = removedFromReference("root.conflictHolder",
 				"multiValuedReference", "root.origin1");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1508,10 +1508,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = movedInAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin1");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1547,10 +1547,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = movedInReference("root.conflictHolder",
 				"multiValuedReference", "root.origin1");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1591,19 +1591,19 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> AttributeDiff3Description = removedFromAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin3");
 
-		final Diff leftAttributeDiff1 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), AttributeDiff1Description));
-		final Diff leftAttributeDiff2 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), AttributeDiff2Description));
-		final Diff leftAttributeDiff3 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), AttributeDiff3Description));
+		final Diff leftAttributeDiff1 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), AttributeDiff1Description));
+		final Diff leftAttributeDiff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), AttributeDiff2Description));
+		final Diff leftAttributeDiff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), AttributeDiff3Description));
 
-		final Diff rightAttributeDiff1 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), AttributeDiff1Description));
-		final Diff rightAttributeDiff2 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), AttributeDiff2Description));
-		final Diff rightAttributeDiff3 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), AttributeDiff3Description));
+		final Diff rightAttributeDiff1 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), AttributeDiff1Description));
+		final Diff rightAttributeDiff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), AttributeDiff2Description));
+		final Diff rightAttributeDiff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), AttributeDiff3Description));
 
 		assertNotNull(leftAttributeDiff1);
 		assertNotNull(leftAttributeDiff2);
@@ -1664,19 +1664,19 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> referenceDiff3Description = removedFromReference("root.conflictHolder",
 				"multiValuedReference", "root.origin3");
 
-		final Diff leftReferenceDiff1 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), referenceDiff1Description));
-		final Diff leftReferenceDiff2 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), referenceDiff2Description));
-		final Diff leftReferenceDiff3 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.LEFT), referenceDiff3Description));
+		final Diff leftReferenceDiff1 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), referenceDiff1Description));
+		final Diff leftReferenceDiff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), referenceDiff2Description));
+		final Diff leftReferenceDiff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), referenceDiff3Description));
 
-		final Diff rightReferenceDiff1 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), referenceDiff1Description));
-		final Diff rightReferenceDiff2 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), referenceDiff2Description));
-		final Diff rightReferenceDiff3 = Iterators.find(differences.iterator(), and(
-				fromSide(DifferenceSource.RIGHT), referenceDiff3Description));
+		final Diff rightReferenceDiff1 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), referenceDiff1Description));
+		final Diff rightReferenceDiff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), referenceDiff2Description));
+		final Diff rightReferenceDiff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), referenceDiff3Description));
 
 		assertNotNull(leftReferenceDiff1);
 		assertNotNull(leftReferenceDiff2);
@@ -1730,10 +1730,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> diffDescription = removedFromAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin1");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				diffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				diffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), diffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), diffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1767,10 +1767,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> diffDescription = removedFromReference("root.conflictHolder",
 				"multiValuedReference", "root.origin1");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				diffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				diffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), diffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), diffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1804,10 +1804,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> diffDescription = movedInAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin1");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				diffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				diffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), diffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), diffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1841,10 +1841,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> diffDescription = movedInReference("root.conflictHolder",
 				"multiValuedReference", "root.origin1");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				diffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				diffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), diffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), diffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1879,10 +1879,10 @@ public class ConflictDetectionTest {
 				"singleValuedReference", null, "root.origin");
 		final Predicate<? super Diff> rightDiffDescription = removed("root.origin");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1917,10 +1917,10 @@ public class ConflictDetectionTest {
 				"multiValuedReference", "root.origin");
 		final Predicate<? super Diff> rightDiffDescription = removed("root.origin");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1956,10 +1956,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = moved("root.conflictHolder.origin",
 				"containmentRef3");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -1995,10 +1995,10 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiffDescription = moved("root.rightContainer.conflictNode",
 				"containmentRef1");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -2033,10 +2033,10 @@ public class ConflictDetectionTest {
 				"singleValueContainment");
 		final Predicate<? super Diff> rightDiffDescription = removed("root.left");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -2071,10 +2071,10 @@ public class ConflictDetectionTest {
 				"containmentRef1");
 		final Predicate<? super Diff> rightDiffDescription = removed("root.leftContainer");
 
-		final Diff leftDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiffDescription));
-		final Diff rightDiff = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiffDescription));
+		final Diff leftDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiffDescription));
+		final Diff rightDiff = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiffDescription));
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
@@ -2261,31 +2261,31 @@ public class ConflictDetectionTest {
 		final Predicate<? super Diff> rightDiff11Description = moved("Root.Node1", "containmentRef1");
 		final Predicate<? super Diff> rightDiff12Description = removed("Root.Node5");
 
-		final Diff leftDiff1 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiff1Description));
-		final Diff leftDiff2 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiff2Description));
-		final Diff leftDiff3 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiff3Description));
-		final Diff leftDiff4 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiff4Description));
-		final Diff leftDiff5 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiff5Description));
-		final Diff leftDiff6 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiff6Description));
-		final Diff leftDiff7 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.LEFT),
-				leftDiff7Description));
+		final Diff leftDiff1 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiff1Description));
+		final Diff leftDiff2 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiff2Description));
+		final Diff leftDiff3 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiff3Description));
+		final Diff leftDiff4 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiff4Description));
+		final Diff leftDiff5 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiff5Description));
+		final Diff leftDiff6 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiff6Description));
+		final Diff leftDiff7 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.LEFT), leftDiff7Description));
 
-		final Diff rightDiff8 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiff8Description));
-		final Diff rightDiff9 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiff9Description));
-		final Diff rightDiff10 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiff10Description));
-		final Diff rightDiff11 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiff11Description));
-		final Diff rightDiff12 = Iterators.find(differences.iterator(), and(fromSide(DifferenceSource.RIGHT),
-				rightDiff12Description));
+		final Diff rightDiff8 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiff8Description));
+		final Diff rightDiff9 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiff9Description));
+		final Diff rightDiff10 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiff10Description));
+		final Diff rightDiff11 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiff11Description));
+		final Diff rightDiff12 = Iterators.find(differences.iterator(),
+				and(fromSide(DifferenceSource.RIGHT), rightDiff12Description));
 
 		assertNotNull(leftDiff1);
 		assertNotNull(leftDiff2);
@@ -2351,6 +2351,7 @@ public class ConflictDetectionTest {
 		Diff nonConflictingDiff = nonConflictingDiffs.iterator().next();
 		assertTrue(nonConflictingDiff instanceof ResourceAttachmentChange);
 		assertEquals(DifferenceSource.RIGHT, nonConflictingDiff.getSource());
-		assertTrue(((ResourceAttachmentChange)nonConflictingDiff).getResourceURI().endsWith("fragment.nodes"));
+		assertTrue(
+				((ResourceAttachmentChange)nonConflictingDiff).getResourceURI().endsWith("fragment.nodes"));
 	}
 }

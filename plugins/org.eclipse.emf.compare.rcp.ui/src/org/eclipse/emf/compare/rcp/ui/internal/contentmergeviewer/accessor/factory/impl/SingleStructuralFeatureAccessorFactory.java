@@ -80,7 +80,8 @@ public class SingleStructuralFeatureAccessorFactory extends AbstractAccessorFact
 	 *      java.lang.Object)
 	 */
 	public ITypedElement createAncestor(AdapterFactory adapterFactory, Object target) {
-		return new SingleStructuralFeatureAccessorImpl(adapterFactory, (Diff)target, MergeViewerSide.ANCESTOR);
+		return new SingleStructuralFeatureAccessorImpl(adapterFactory, (Diff)target,
+				MergeViewerSide.ANCESTOR);
 	}
 
 }

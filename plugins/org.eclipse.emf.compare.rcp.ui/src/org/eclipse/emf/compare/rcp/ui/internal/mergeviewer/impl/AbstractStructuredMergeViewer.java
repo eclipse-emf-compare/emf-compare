@@ -142,8 +142,8 @@ public abstract class AbstractStructuredMergeViewer extends AbstractMergeViewer 
 		 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
 		 */
 		public void selectionChanged(SelectionChangedEvent event) {
-			fireSelectionChanged(new SelectionChangedEvent(AbstractStructuredMergeViewer.this, event
-					.getSelection()));
+			fireSelectionChanged(
+					new SelectionChangedEvent(AbstractStructuredMergeViewer.this, event.getSelection()));
 		}
 
 	}

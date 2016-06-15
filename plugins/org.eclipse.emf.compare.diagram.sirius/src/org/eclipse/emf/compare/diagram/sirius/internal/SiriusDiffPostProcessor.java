@@ -93,8 +93,9 @@ public class SiriusDiffPostProcessor implements IPostProcessor {
 		/*
 		 * Any added/deleted DSemanticDecorator must require the corresponding getTarget() addition/removal
 		 */
-		Iterable<ReferenceChange> allContainmentRefChanges = Iterables.filter(Iterables.filter(comparison
-				.getDifferences(), ReferenceChange.class), CONTAINMENT_REFERENCE_CHANGE);
+		Iterable<ReferenceChange> allContainmentRefChanges = Iterables.filter(
+				Iterables.filter(comparison.getDifferences(), ReferenceChange.class),
+				CONTAINMENT_REFERENCE_CHANGE);
 
 		Iterable<ReferenceChange> addedOrRemovedSemanticDecorators = Iterables.filter(
 				allContainmentRefChanges, valueIsKindOf(ViewpointPackage.eINSTANCE.getDSemanticDecorator()));
@@ -118,8 +119,8 @@ public class SiriusDiffPostProcessor implements IPostProcessor {
 			if (value instanceof DNode) {
 				NodeMapping map = ((DNode)value).getActualMapping();
 				if (map != null) {
-					for (ReferenceChange actualMappingChange : Iterables.filter(comparison
-							.getDifferences(map), ReferenceChange.class)) {
+					for (ReferenceChange actualMappingChange : Iterables
+							.filter(comparison.getDifferences(map), ReferenceChange.class)) {
 						if (actualMappingChange.getReference() == DiagramPackage.eINSTANCE
 								.getDNode_ActualMapping()
 								&& fromSide(referenceChange.getSource()).apply(actualMappingChange)) {

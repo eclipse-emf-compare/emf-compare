@@ -95,7 +95,8 @@ public class TestBug434827 {
 					subDiff = diff;
 				} else if (NodesPackage.Literals.NODE__CONTAINMENT_REF1.equals((eReference))) {
 					deletionDiff = diff;
-				} else if (NodesPackage.Literals.NODE_OPPOSITE_REF_ONE_TO_ONE__DESTINATION.equals(eReference)) {
+				} else if (NodesPackage.Literals.NODE_OPPOSITE_REF_ONE_TO_ONE__DESTINATION
+						.equals(eReference)) {
 					oppositeDiff = diff;
 				}
 			}
@@ -163,8 +164,8 @@ public class TestBug434827 {
 		Assert.assertEquals(1, rootNode.getContainmentRef1().get(0).getContainmentRef1().size());
 		NodeOppositeRefOneToOne holdingRefNode = (NodeOppositeRefOneToOne)rootNode.getContainmentRef1()
 				.get(1);
-		NodeOppositeRefOneToOne referencedNode = (NodeOppositeRefOneToOne)rootNode.getContainmentRef1()
-				.get(0).getContainmentRef1().get(0);
+		NodeOppositeRefOneToOne referencedNode = (NodeOppositeRefOneToOne)rootNode.getContainmentRef1().get(0)
+				.getContainmentRef1().get(0);
 		// Checks that the opposite reference has been set.
 		Assert.assertEquals(holdingRefNode, referencedNode.getSource());
 		Assert.assertEquals(referencedNode, holdingRefNode.getDestination());

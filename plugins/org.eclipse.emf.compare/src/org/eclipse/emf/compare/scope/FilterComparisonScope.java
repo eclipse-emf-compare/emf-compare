@@ -225,7 +225,7 @@ public class FilterComparisonScope extends AbstractComparisonScope {
 		 * @param delegate
 		 *            The origin iterator.
 		 */
-		public URIInitializingIterator(Iterator<T> delegate) {
+		URIInitializingIterator(Iterator<T> delegate) {
 			this.delegate = delegate;
 		}
 
@@ -237,7 +237,7 @@ public class FilterComparisonScope extends AbstractComparisonScope {
 		 * @param delegate
 		 *            The origin iterator.
 		 */
-		public URIInitializingIterator(Resource resource, Iterator<T> delegate) {
+		URIInitializingIterator(Resource resource, Iterator<T> delegate) {
 			this.delegate = delegate;
 			addUri(resource);
 		}
@@ -250,7 +250,7 @@ public class FilterComparisonScope extends AbstractComparisonScope {
 		 * @param delegate
 		 *            The origin iterator.
 		 */
-		public URIInitializingIterator(EObject eObject, Iterator<T> delegate) {
+		URIInitializingIterator(EObject eObject, Iterator<T> delegate) {
 			this.delegate = delegate;
 			addUri(eObject);
 		}

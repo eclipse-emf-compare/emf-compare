@@ -52,8 +52,8 @@ public class ComparisonUtilTest {
 
 		// Right to left on a deleted element
 		final Predicate<? super Diff> leftPeriodical = and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE), referenceValueMatch("eClassifiers", "extlibrary.Periodical",
-						true));
+				ofKind(DifferenceKind.DELETE),
+				referenceValueMatch("eClassifiers", "extlibrary.Periodical", true));
 		final Diff leftPeriodicalDiff = Iterators.find(differences.iterator(), leftPeriodical);
 		boolean leftToRight = false;
 		Iterable<Diff> subDiffs = ComparisonUtil.getSubDiffs(leftToRight).apply(leftPeriodicalDiff);
@@ -88,8 +88,8 @@ public class ComparisonUtilTest {
 
 		// Right to left on a deleted element
 		final Predicate<? super Diff> leftPeriodical3Way = and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE), referenceValueMatch("eClassifiers", "extlibrary.Periodical",
-						true));
+				ofKind(DifferenceKind.DELETE),
+				referenceValueMatch("eClassifiers", "extlibrary.Periodical", true));
 		final Diff leftPeriodicalDiff3Way = Iterators.find(differences.iterator(), leftPeriodical3Way);
 		leftToRight = false;
 		subDiffs = ComparisonUtil.getSubDiffs(leftToRight).apply(leftPeriodicalDiff3Way);

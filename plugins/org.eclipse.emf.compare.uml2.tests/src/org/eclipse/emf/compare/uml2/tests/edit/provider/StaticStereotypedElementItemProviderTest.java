@@ -60,8 +60,8 @@ public class StaticStereotypedElementItemProviderTest extends AbstractStaticProf
 			org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry<String> postProcessorRegistry) {
 		super.registerPostProcessors(postProcessorRegistry);
 		postProcessorRegistry.put(StereotypedElementChangePostProcessor.class.getName(),
-				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
-						.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null, //$NON-NLS-1$
+				new TestPostProcessor.TestPostProcessorDescriptor(
+						Pattern.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null, //$NON-NLS-1$
 						new StereotypedElementChangePostProcessor(), 25));
 	}
 
@@ -73,8 +73,8 @@ public class StaticStereotypedElementItemProviderTest extends AbstractStaticProf
 
 	@Test
 	public void testIconsAndLabelsStaticProfile() throws IOException {
-		AdapterFactory stereotypedElementItemProviderDecorator = new ComposedAdapterFactory(Lists
-				.<AdapterFactory> newArrayList(new UMLProfileItemProviderAdapterFactoryDecorator(),
+		AdapterFactory stereotypedElementItemProviderDecorator = new ComposedAdapterFactory(
+				Lists.<AdapterFactory> newArrayList(new UMLProfileItemProviderAdapterFactoryDecorator(),
 						new UML2CompareTestProfileItemProviderAdapterFactory()));
 
 		// Map<Ordered list of applied stereotyped, Expected icon>

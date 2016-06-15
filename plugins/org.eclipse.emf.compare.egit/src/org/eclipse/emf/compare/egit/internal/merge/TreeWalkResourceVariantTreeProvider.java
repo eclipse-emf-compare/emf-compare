@@ -117,16 +117,16 @@ public class TreeWalkResourceVariantTreeProvider implements GitResourceVariantTr
 			if (resource != null) {
 				IPath workspacePath = resource.getFullPath();
 				if (modeBase != 0) {
-					baseCache.setVariant(resource, TreeParserResourceVariant.create(repository, base,
-							workspacePath));
+					baseCache.setVariant(resource,
+							TreeParserResourceVariant.create(repository, base, workspacePath));
 				}
 				if (modeOurs != 0) {
-					oursCache.setVariant(resource, TreeParserResourceVariant.create(repository, ours,
-							workspacePath));
+					oursCache.setVariant(resource,
+							TreeParserResourceVariant.create(repository, ours, workspacePath));
 				}
 				if (modeTheirs != 0) {
-					theirsCache.setVariant(resource, TreeParserResourceVariant.create(repository, theirs,
-							workspacePath));
+					theirsCache.setVariant(resource,
+							TreeParserResourceVariant.create(repository, theirs, workspacePath));
 				}
 			}
 
@@ -162,8 +162,10 @@ public class TreeWalkResourceVariantTreeProvider implements GitResourceVariantTr
 			if (FileMode.fromBits(modeOurs | modeTheirs) != FileMode.MISSING) {
 				return true;
 			} else {
-				return (FileMode.fromBits(modeOurs) == FileMode.TREE && FileMode.fromBits(modeTheirs) != FileMode.TREE)
-						|| (FileMode.fromBits(modeOurs) != FileMode.TREE && FileMode.fromBits(modeTheirs) == FileMode.TREE);
+				return (FileMode.fromBits(modeOurs) == FileMode.TREE
+						&& FileMode.fromBits(modeTheirs) != FileMode.TREE)
+						|| (FileMode.fromBits(modeOurs) != FileMode.TREE
+								&& FileMode.fromBits(modeTheirs) == FileMode.TREE);
 			}
 		}
 		return FileMode.fromBits(modeBase & modeOurs) != FileMode.MISSING
@@ -219,8 +221,8 @@ public class TreeWalkResourceVariantTreeProvider implements GitResourceVariantTr
 
 		if (repoRelativePath.endsWith(".project")) { //$NON-NLS-1$
 			IPath parentPath = path.removeLastSegments(1);
-			IProject p = ResourcesPlugin.getWorkspace().getRoot().getProject(
-					parentPath.lastSegment().toString());
+			IProject p = ResourcesPlugin.getWorkspace().getRoot()
+					.getProject(parentPath.lastSegment().toString());
 			if (map.get(parentPath) == null) {
 				map.put(parentPath, p);
 			}

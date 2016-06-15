@@ -24,8 +24,8 @@ public class GitTestStatement extends AbstractGitStatement {
 	private final String path;
 
 	public GitTestStatement(Object testObject, FrameworkMethod test, ResolutionStrategyID resolutionStrategy,
-			Class<?>[] disabledMatchEngineFactory, Class<?> diffEngine, Class<?> eqEngine,
-			Class<?> reqEngine, Class<?> conflictDetector, Class<?>[] disabledPostProcessors, String path) {
+			Class<?>[] disabledMatchEngineFactory, Class<?> diffEngine, Class<?> eqEngine, Class<?> reqEngine,
+			Class<?> conflictDetector, Class<?>[] disabledPostProcessors, String path) {
 		super(testObject, test, resolutionStrategy, disabledMatchEngineFactory, diffEngine, eqEngine,
 				reqEngine, conflictDetector, disabledPostProcessors);
 		this.path = normalizePath(path);

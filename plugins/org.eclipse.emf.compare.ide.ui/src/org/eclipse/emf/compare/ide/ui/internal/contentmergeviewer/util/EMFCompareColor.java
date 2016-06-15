@@ -40,8 +40,8 @@ public class EMFCompareColor extends CompareColorImpl {
 			CONFLICTING_CHANGE_COLOR_THEME_KEY, OUTGOING_CHANGE_COLOR_THEME_KEY);
 
 	public EMFCompareColor(Display display, boolean leftIsLocal, ITheme theme, EventBus eventBus) {
-		super(display, leftIsLocal, theme != null ? theme.getColorRegistry() : JFaceResources
-				.getColorRegistry());
+		super(display, leftIsLocal,
+				theme != null ? theme.getColorRegistry() : JFaceResources.getColorRegistry());
 		this.eventBus = eventBus;
 		this.theme = theme;
 		this.fThemeChangeListener = new IPropertyChangeListener() {

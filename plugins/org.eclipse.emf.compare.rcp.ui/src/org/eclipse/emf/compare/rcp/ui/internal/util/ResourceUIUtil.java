@@ -641,8 +641,8 @@ public class ResourceUIUtil {
 			Match matchParent = comparison.getMatch(firstLoadedParent);
 			if (matchParent != null) {
 				if (!comparison.getMatches().contains(matchParent)) {
-					container = new MergeViewerItem.Container(comparison, null, match.getLeft(), match
-							.getRight(), match.getOrigin(), side, adapterFactory);
+					container = new MergeViewerItem.Container(comparison, null, match.getLeft(),
+							match.getRight(), match.getOrigin(), side, adapterFactory);
 				} else {
 					container = null;
 				}
@@ -680,7 +680,8 @@ public class ResourceUIUtil {
 			// Need to replace by top-container NotLoadedFragment item
 			NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(
 					notLoadedFragmentMatches);
-			for (NotLoadedFragmentMatch match : filter(notLoadedFragmentMatches, NotLoadedFragmentMatch.class)) {
+			for (NotLoadedFragmentMatch match : filter(notLoadedFragmentMatches,
+					NotLoadedFragmentMatch.class)) {
 				match.setName(getResourceName(match));
 			}
 			newContainer = new MergeViewerItem.Container(comparison, null, notLoadedFragmentMatch,

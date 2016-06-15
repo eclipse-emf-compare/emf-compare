@@ -127,8 +127,8 @@ public final class DiffUtil {
 	 */
 	public static <E> List<E> longestCommonSubsequence(Comparison comparison, List<E> sequence1,
 			List<E> sequence2) {
-		return org.eclipse.emf.compare.internal.utils.DiffUtil.longestCommonSubsequence(comparison,
-				sequence1, sequence2);
+		return org.eclipse.emf.compare.internal.utils.DiffUtil.longestCommonSubsequence(comparison, sequence1,
+				sequence2);
 	}
 
 	/**
@@ -169,8 +169,8 @@ public final class DiffUtil {
 	 */
 	public static <E> int findInsertionIndex(Comparison comparison, Iterable<E> ignoredElements,
 			List<E> source, List<E> target, E newElement) {
-		return org.eclipse.emf.compare.internal.utils.DiffUtil.findInsertionIndex(comparison,
-				ignoredElements, source, target, newElement);
+		return org.eclipse.emf.compare.internal.utils.DiffUtil.findInsertionIndex(comparison, ignoredElements,
+				source, target, newElement);
 	}
 
 	/**

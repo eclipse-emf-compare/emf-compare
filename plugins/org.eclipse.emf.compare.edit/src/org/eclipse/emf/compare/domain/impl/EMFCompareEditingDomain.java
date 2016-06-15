@@ -163,17 +163,12 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 				commandStack = new DualCompareCommandStack((BasicCommandStack)leftCommandStack,
 						(BasicCommandStack)rightCommandStack);
 			} else {
-				EMFCompareEditPlugin
-						.getPlugin()
-						.getLog()
-						.log(new Status(
-								IStatus.WARNING,
-								EMFCompareEditPlugin.PLUGIN_ID,
-								"Command stacks of the editing domain of " //$NON-NLS-1$
-										+ left
-										+ " and " //$NON-NLS-1$
-										+ right
-										+ " are not instances of BasicCommandStack, nor AbstractTransactionalCommandStack, therefore, they will not be used as backing command stacks for the current merge session.")); //$NON-NLS-1$
+				EMFCompareEditPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING,
+						EMFCompareEditPlugin.PLUGIN_ID,
+						"Command stacks of the editing domain of " //$NON-NLS-1$
+								+ left + " and " //$NON-NLS-1$
+								+ right
+								+ " are not instances of BasicCommandStack, nor AbstractTransactionalCommandStack, therefore, they will not be used as backing command stacks for the current merge session.")); //$NON-NLS-1$
 				commandStack = new CompareCommandStack(new BasicCommandStack());
 			}
 			domain = new EMFCompareEditingDomain(left, right, ancestor, commandStack);

@@ -536,7 +536,8 @@ public class IndividualDiffInputData extends AbstractInputData {
 		return loadFromClassLoader("featuremapscope/noncontainment/delete/ancestor.nodes", resourceSet);
 	}
 
-	public Resource getFeatureMapNonContainmentLeftMoveOrderScope(ResourceSet resourceSet) throws IOException {
+	public Resource getFeatureMapNonContainmentLeftMoveOrderScope(ResourceSet resourceSet)
+			throws IOException {
 		return loadFromClassLoader("featuremapscope/noncontainment/moveorder/left.nodes", resourceSet);
 	}
 
@@ -554,7 +555,8 @@ public class IndividualDiffInputData extends AbstractInputData {
 		return loadFromClassLoader("featuremapscope/containment/conflicts/leftadd_rightadd/left.nodes");
 	}
 
-	public Resource getFeatureMapContainmentRightConflictLeftAddRightAddWithSameKeyScope() throws IOException {
+	public Resource getFeatureMapContainmentRightConflictLeftAddRightAddWithSameKeyScope()
+			throws IOException {
 		return loadFromClassLoader("featuremapscope/containment/conflicts/leftadd_rightadd/right.nodes");
 	}
 
@@ -579,15 +581,18 @@ public class IndividualDiffInputData extends AbstractInputData {
 	}
 
 	public Resource getFeatureMapContainmentLeftConflictLeftKeyChangeRightDeleteScope() throws IOException {
-		return loadFromClassLoader("featuremapscope/containment/conflicts/leftkeychange_rightdelete/left.nodes");
+		return loadFromClassLoader(
+				"featuremapscope/containment/conflicts/leftkeychange_rightdelete/left.nodes");
 	}
 
 	public Resource getFeatureMapContainmentRightConflictLeftKeyChangeRightDeleteScope() throws IOException {
-		return loadFromClassLoader("featuremapscope/containment/conflicts/leftkeychange_rightdelete/right.nodes");
+		return loadFromClassLoader(
+				"featuremapscope/containment/conflicts/leftkeychange_rightdelete/right.nodes");
 	}
 
 	public Resource getFeatureMapContainmentOriginConflictLeftKeyChangeRightDeleteScope() throws IOException {
-		return loadFromClassLoader("featuremapscope/containment/conflicts/leftkeychange_rightdelete/ancestor.nodes");
+		return loadFromClassLoader(
+				"featuremapscope/containment/conflicts/leftkeychange_rightdelete/ancestor.nodes");
 	}
 
 	public Resource getFeatureMapContainmentLeftConflictLeftMoveRightMoveScope() throws IOException {
@@ -602,18 +607,22 @@ public class IndividualDiffInputData extends AbstractInputData {
 		return loadFromClassLoader("featuremapscope/containment/conflicts/leftmove_rightmove/ancestor.nodes");
 	}
 
-	public Resource getFeatureMapContainmentLeftConflictLeftMoveOrderRightMoveOrderScope() throws IOException {
-		return loadFromClassLoader("featuremapscope/containment/conflicts/leftmoveorder_rightmoveorder/left.nodes");
+	public Resource getFeatureMapContainmentLeftConflictLeftMoveOrderRightMoveOrderScope()
+			throws IOException {
+		return loadFromClassLoader(
+				"featuremapscope/containment/conflicts/leftmoveorder_rightmoveorder/left.nodes");
 	}
 
 	public Resource getFeatureMapContainmentRightConflictLeftMoveOrderRightMoveOrderScope()
 			throws IOException {
-		return loadFromClassLoader("featuremapscope/containment/conflicts/leftmoveorder_rightmoveorder/right.nodes");
+		return loadFromClassLoader(
+				"featuremapscope/containment/conflicts/leftmoveorder_rightmoveorder/right.nodes");
 	}
 
 	public Resource getFeatureMapContainmentOriginConflictLeftMoveOrderRightMoveOrderScope()
 			throws IOException {
-		return loadFromClassLoader("featuremapscope/containment/conflicts/leftmoveorder_rightmoveorder/ancestor.nodes");
+		return loadFromClassLoader(
+				"featuremapscope/containment/conflicts/leftmoveorder_rightmoveorder/ancestor.nodes");
 	}
 
 	public Resource getFeatureMapNonContainmentLeftConflictLeftMoveOrderRightMoveOrderScope(

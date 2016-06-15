@@ -42,7 +42,8 @@ import com.google.common.base.Predicate;
 public class TestFeatureMapDifferencesFilter extends AbstractTestTreeNodeItemProviderAdapter {
 
 	/**
-	 * Tests that the feature map differences filter does not hide feature map differences that have no equivalences.
+	 * Tests that the feature map differences filter does not hide feature map differences that have no
+	 * equivalences.
 	 * 
 	 * @throws IOException
 	 */
@@ -61,11 +62,12 @@ public class TestFeatureMapDifferencesFilter extends AbstractTestTreeNodeItemPro
 				return eReference == TreePackage.Literals.TREE_NODE__DATA;
 			}
 		};
-		IDifferenceGroup group = new BasicDifferenceGroupImpl(comparison, alwaysTrue(), crossReferenceAdapter);
+		IDifferenceGroup group = new BasicDifferenceGroupImpl(comparison, alwaysTrue(),
+				crossReferenceAdapter);
 		List<? extends TreeNode> roots = group.getChildren();
 		Predicate<? super EObject> featureMapDifferencesFilter = new FeatureMapDifferencesFilter()
-		.getPredicateWhenSelected();
-		
+				.getPredicateWhenSelected();
+
 		for (TreeNode root : roots) {
 			TreeIterator<EObject> nodeIte = root.eAllContents();
 			while (nodeIte.hasNext()) {
@@ -73,7 +75,8 @@ public class TestFeatureMapDifferencesFilter extends AbstractTestTreeNodeItemPro
 				if (n instanceof TreeNode) {
 					TreeNode treeNode = (TreeNode)n;
 					EObject data = treeNode.getData();
-					if (data instanceof FeatureMapChange && ((FeatureMapChange) data).getEquivalence() != null) {
+					if (data instanceof FeatureMapChange
+							&& ((FeatureMapChange)data).getEquivalence() != null) {
 						Assert.assertTrue(featureMapDifferencesFilter.apply(treeNode));
 					} else {
 						Assert.assertFalse(featureMapDifferencesFilter.apply(treeNode));

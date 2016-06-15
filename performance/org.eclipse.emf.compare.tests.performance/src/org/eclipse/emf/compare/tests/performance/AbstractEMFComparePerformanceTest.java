@@ -63,7 +63,6 @@ import fr.obeo.performance.api.Performance;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- * 
  */
 public abstract class AbstractEMFComparePerformanceTest {
 
@@ -73,8 +72,7 @@ public abstract class AbstractEMFComparePerformanceTest {
 
 	private static final Function<Measure, Scenario> MEASURE__SCENARIO = new Function<Measure, Scenario>() {
 		public Scenario apply(Measure measure) {
-			return ((TestResult) ((DataPoint) measure.eContainer())
-					.eContainer()).getScenario();
+			return ((TestResult)((DataPoint)measure.eContainer()).eContainer()).getScenario();
 		}
 	};
 
@@ -83,6 +81,7 @@ public abstract class AbstractEMFComparePerformanceTest {
 			return measure.getValue();
 		}
 	};
+
 	private static final Function<Measure, String> MEASURE__NAME = new Function<Measure, String>() {
 		public String apply(Measure measure) {
 			return measure.getName();
@@ -94,49 +93,50 @@ public abstract class AbstractEMFComparePerformanceTest {
 			return point.getMeasures();
 		}
 	};
-	
+
 	private static final Function<TestResult, List<DataPoint>> TEST_RESULT__DATA_POINTS = new Function<TestResult, List<DataPoint>>() {
 		public List<DataPoint> apply(TestResult testResult) {
 			return testResult.getDataPoints();
 		}
 	};
-	
+
 	private static final Function<Iterable<Double>, Double> AVERAGE = new Function<Iterable<Double>, Double>() {
 		public Double apply(Iterable<Double> it) {
 			Double sum = 0.0;
-			  if(!Iterables.isEmpty(it)) {
-			    for (Double d : it) {
-			        sum += d;
-			    }
-			    return sum.doubleValue() / Iterables.size(it);
-			  }
-			  return sum;
+			if (!Iterables.isEmpty(it)) {
+				for (Double d : it) {
+					sum += d;
+				}
+				return sum.doubleValue() / Iterables.size(it);
+			}
+			return sum;
 		}
 	};
 
 	private static final int DEFAULT_STEPS_NUMBER = 3;
 
 	private static final boolean DEFAULT_WARMUP = true;
-	
+
 	@BeforeClass
 	public static void setUp() throws Exception {
 		if (!EMFPlugin.IS_ECLIPSE_RUNNING) {
 			EPackage perf = PerformancePackage.eINSTANCE;
 			EPackage.Registry.INSTANCE.put(perf.getNsURI(), perf);
-			Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("performance", new XMIResourceFactoryImpl());
+			Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("performance",
+					new XMIResourceFactoryImpl());
 		}
-		
-		//Deactivate auto-building
-		IWorkspace workspace= ResourcesPlugin.getWorkspace();
-		if (workspace != null) {			
-			IWorkspaceDescription desc= workspace.getDescription();
-			boolean isAutoBuilding= desc.isAutoBuilding();
+
+		// Deactivate auto-building
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		if (workspace != null) {
+			IWorkspaceDescription desc = workspace.getDescription();
+			boolean isAutoBuilding = desc.isAutoBuilding();
 			if (isAutoBuilding == true) {
 				desc.setAutoBuilding(false);
 				workspace.setDescription(desc);
 			}
 		}
-		
+
 		timestamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
 		performance = new Performance("emf.compare.performance");
 	}
@@ -145,24 +145,24 @@ public abstract class AbstractEMFComparePerformanceTest {
 	public final void configureSUTName() {
 		setSUTName();
 	}
-	
+
 	protected static final Performance getPerformance() {
 		return performance;
 	}
-	
+
 	/**
-	 * Should be static but want to force impl. 
+	 * Should be static but want to force impl.
 	 */
 	protected abstract void setSUTName();
-	
+
 	protected int getStepsNumber() {
 		return DEFAULT_STEPS_NUMBER;
 	}
-	
+
 	protected boolean warmup() {
 		return DEFAULT_WARMUP;
 	}
-	
+
 	@AfterClass
 	public static void tearDown() {
 		final NumberFormat nf = NumberFormat.getInstance(Locale.US);
@@ -176,8 +176,8 @@ public abstract class AbstractEMFComparePerformanceTest {
 		for (Entry<String, Collection<Measure>> entry : measuresByName.asMap().entrySet()) {
 			String measureName = entry.getKey();
 
-			File output = new File(MessageFormat.format("{0}-{1}.csv", performance
-					.getSystemUnderTest().getName().replaceAll(" ", "_"),
+			File output = new File(MessageFormat.format("{0}-{1}.csv",
+					performance.getSystemUnderTest().getName().replaceAll(" ", "_"),
 					measureName.replaceAll(" ", "_")));
 
 			PrintWriter writer = null;
@@ -191,45 +191,45 @@ public abstract class AbstractEMFComparePerformanceTest {
 					writer.println("Date, Small UML, Nominal UML, Small Split UML, Nominal Split UML");
 					columns = 4;
 				} else {
-					//Get number of columns that contains measures
+					// Get number of columns that contains measures
 					columns = readLine.split(",").length - 1;
 				}
 				writer.print(timestamp + ",");
 				Collection<Measure> measures = entry.getValue();
-				ImmutableListMultimap<Scenario, Measure> measuresByScenario = Multimaps.index(measures, MEASURE__SCENARIO);
-				String joinedMeasure = Joiner.on(',').join(
-						transform(measuresByScenario.asMap().entrySet(),
-							new Function<Entry<Scenario, Collection<Measure>>, String>() {
-								public String apply(Entry<Scenario, Collection<Measure>> entry) {
-									final Dimension dimension = getFirst(entry.getValue(), null).getDimension();
-									Iterable<Double> transform = transform(entry.getValue(), MEASURE__VALUE);
-									
-									List<Double> minAvMax = Lists.newArrayList();
-									minAvMax.add(Ordering.natural().min(transform));
-									minAvMax.add(AVERAGE.apply(transform));
-									minAvMax.add(Ordering.natural().max(transform));
-									
-									Iterable<String> transform2 = transform(minAvMax,
+				ImmutableListMultimap<Scenario, Measure> measuresByScenario = Multimaps.index(measures,
+						MEASURE__SCENARIO);
+				String joinedMeasure = Joiner.on(',').join(transform(measuresByScenario.asMap().entrySet(),
+						new Function<Entry<Scenario, Collection<Measure>>, String>() {
+							public String apply(Entry<Scenario, Collection<Measure>> entry) {
+								final Dimension dimension = getFirst(entry.getValue(), null).getDimension();
+								Iterable<Double> transform = transform(entry.getValue(), MEASURE__VALUE);
+
+								List<Double> minAvMax = Lists.newArrayList();
+								minAvMax.add(Ordering.natural().min(transform));
+								minAvMax.add(AVERAGE.apply(transform));
+								minAvMax.add(Ordering.natural().max(transform));
+
+								Iterable<String> transform2 = transform(minAvMax,
 										new Function<Double, String>() {
 											public String apply(Double d) {
 												switch (dimension) {
-												case MEMORY:
-													return nf.format(SizeUnit.MEBI.convert(d)).replaceAll(",", "");
-												case TIME:
-													return nf.format(d).replaceAll(",", "");
+													case MEMORY:
+														return nf.format(SizeUnit.MEBI.convert(d))
+																.replaceAll(",", "");
+													case TIME:
+														return nf.format(d).replaceAll(",", "");
 												}
 												return "";
 											}
 										});
-									
-									String ret = Joiner.on(';').join(transform2);
-									return ret;
-								}
-							})
-						);
+
+								String ret = Joiner.on(';').join(transform2);
+								return ret;
+							}
+						}));
 				joinedMeasure = fillEmptyColumns(joinedMeasure, columns);
 				writer.println(joinedMeasure);
-				
+
 			} catch (IOException e) {
 				Throwables.propagate(e);
 			} finally {
@@ -242,7 +242,7 @@ public abstract class AbstractEMFComparePerformanceTest {
 		}
 		performance = null;
 	}
-	
+
 	private static String fillEmptyColumns(String joinedMeasure, int columns) {
 		final int filled = joinedMeasure.split(",").length;
 		for (int i = 0; i < columns - filled; i++) {

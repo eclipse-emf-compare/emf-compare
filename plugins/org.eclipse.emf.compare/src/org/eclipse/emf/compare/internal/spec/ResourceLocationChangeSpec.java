@@ -43,13 +43,9 @@ public class ResourceLocationChangeSpec extends ResourceLocationChangeImpl {
 	@Override
 	public String toString() {
 		// @formatter:off
-		return Objects.toStringHelper(this)
-					.add("baseLocation", baseLocation)
-					.add("changedLocation", changedLocation)
-					.add("parentMatchResource", eContainer().toString())
-					.add("kind", getKind())
-					.add("source", getSource())
-					.add("state", getState()).toString();
+		return Objects.toStringHelper(this).add("baseLocation", baseLocation)
+				.add("changedLocation", changedLocation).add("parentMatchResource", eContainer().toString())
+				.add("kind", getKind()).add("source", getSource()).add("state", getState()).toString();
 		// @formatter:on
 	}
 

@@ -15,8 +15,22 @@ import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.svn.core.resource.IRepositoryResource;
 import org.eclipse.team.svn.ui.compare.ResourceCompareInput.ResourceElement;
 
+/**
+ * The adapter factory for {@link IFileRevision}s.
+ * 
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ */
 public class ResourceElementIFileRevisionAdapterFactory implements IAdapterFactory {
 
+	/**
+	 * Return the adapter for the given Object.
+	 * 
+	 * @param adaptableObject
+	 *            The object to adapt
+	 * @param adapterType
+	 *            The type to adapt the given object in
+	 * @return The adapted object
+	 */
 	public Object getAdapter(Object adaptableObject, @SuppressWarnings("rawtypes") Class adapterType) {
 		if (IFileRevision.class.equals(adapterType) && adaptableObject instanceof ResourceElement) {
 			ResourceElement resourceElement = (ResourceElement)adaptableObject;

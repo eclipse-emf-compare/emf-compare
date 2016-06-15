@@ -107,8 +107,8 @@ public class StringAttributeChangeAccessor implements ITypedElement, IStreamCont
 	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement#getImage()
 	 */
 	public Image getImage() {
-		return ExtendedImageRegistry.getInstance().getImage(
-				EcoreEditPlugin.getPlugin().getImage("full/obj16/EAttribute")); //$NON-NLS-1$
+		return ExtendedImageRegistry.getInstance()
+				.getImage(EcoreEditPlugin.getPlugin().getImage("full/obj16/EAttribute")); //$NON-NLS-1$
 	}
 
 	/**

@@ -99,10 +99,11 @@ public class AttributeChangeSpec extends AttributeChangeImpl {
 			valueString = getValue().toString();
 		}
 
-		return Objects.toStringHelper(this).add("attribute",
-				getAttribute().getEContainingClass().getName() + "." + getAttribute().getName()).add("value",
-				valueString).add("kind", getKind()).add("source", getSource()).add("state", getState())
-				.toString();
+		return Objects.toStringHelper(this)
+				.add("attribute",
+						getAttribute().getEContainingClass().getName() + "." + getAttribute().getName())
+				.add("value", valueString).add("kind", getKind()).add("source", getSource())
+				.add("state", getState()).toString();
 	}
 
 	/**

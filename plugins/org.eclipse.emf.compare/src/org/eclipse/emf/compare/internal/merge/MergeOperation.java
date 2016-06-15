@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.merge;
 
-
 /**
  * Enumeration of all possible merge operations on differences.
  * 

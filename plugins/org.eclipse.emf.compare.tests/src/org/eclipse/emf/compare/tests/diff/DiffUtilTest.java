@@ -471,20 +471,21 @@ public class DiffUtilTest {
 	 */
 	@Test
 	public void diceCoefficient() {
-		final String[] data = new String[] {"ceString", "ceString", "classe", "Classe", "Classe",
-				"UneClasse", "package", "packagedeux", "", "MaClasse", "package", "packageASupprimer",
-				"attribut", "reference", "aa", "aaaa", "aaa", "aaaa", "v1", "v2", "v", "v1", "a", "a", "a",
-				"b", "a", "A", "GGG", "GGGGGG", "night", "nacht", };
+		final String[] data = new String[] {"ceString", "ceString", "classe", "Classe", "Classe", "UneClasse",
+				"package", "packagedeux", "", "MaClasse", "package", "packageASupprimer", "attribut",
+				"reference", "aa", "aaaa", "aaa", "aaaa", "v1", "v2", "v", "v1", "a", "a", "a", "b", "a", "A",
+				"GGG", "GGGGGG", "night", "nacht", };
 		final double[] similarities = new double[] {1d, 0.8d, 10d / 13d, 12d / 16d, 0d, 12d / 22d, 0d,
 				2d / 4d, 4d / 5d, 1d / 2d, 1d / 3d, 1d, 0d, 0d, 4d / 7d, 2d / 8d };
 		for (int i = 0; i < data.length; i += 2) {
-			assertEquals("Unexpected result of the dice coefficient for str1 = " + data[i] + " and str2 = "
-					+ data[i + 1], similarities[i / 2], DiffUtil.diceCoefficient(data[i], data[i + 1]),
-					Double.MIN_VALUE);
+			assertEquals(
+					"Unexpected result of the dice coefficient for str1 = " + data[i] + " and str2 = "
+							+ data[i + 1],
+					similarities[i / 2], DiffUtil.diceCoefficient(data[i], data[i + 1]), Double.MIN_VALUE);
 			// Make sure that the result is symmetric
-			assertEquals("Dice coefficient was not symmetric for str1 = " + data[i] + " and str2 = "
-					+ data[i + 1], similarities[i / 2], DiffUtil.diceCoefficient(data[i + 1], data[i]),
-					Double.MIN_VALUE);
+			assertEquals(
+					"Dice coefficient was not symmetric for str1 = " + data[i] + " and str2 = " + data[i + 1],
+					similarities[i / 2], DiffUtil.diceCoefficient(data[i + 1], data[i]), Double.MIN_VALUE);
 		}
 	}
 
@@ -525,22 +526,23 @@ public class DiffUtilTest {
 
 	@Test
 	public void diceCoefficientFullWidth() {
-		final String[] data = new String[] {"ｃｅＳｔｒｉｎｇ", "ｃｅＳｔｒｉｎｇ", "ｃｌａｓｓｅ", "Ｃｌａｓｓｅ", "Ｃｌａｓｓｅ",
-				"ＵｎｅＣｌａｓｓｅ", "ｐａｃｋａｇｅ", "ｐａｃｋａｇｅｄｅｕｘ", "", "ＭａＣｌａｓｓｅ", "ｐａｃｋａｇｅ", "ｐａｃｋａｇｅＡＳｕｐｐｒｉｍｅｒ",
-				"ａｔｔｒｉｂｕｔ", "ｒｅｆｅｒｅｎｃｅ", "ａａ", "ａａａａ", "ａａａ", "ａａａａ", "ｖ１", "ｖ２", "ｖ", "ｖ１", "ａ", "ａ", "ａ",
-				"ｂ", "ａ", "Ａ", "ＧＧＧ", "ＧＧＧＧＧＧ", "ｎｉｇｈｔ", "ｎａｃｈｔ", "ｆｕｌｌｗｉｄｔｈ  ｓｔｒｉｎｇ", "ｆｕｌｌｗｉｄｔｈ  ｓｔｒｉｎｇ",
+		final String[] data = new String[] {"ｃｅＳｔｒｉｎｇ", "ｃｅＳｔｒｉｎｇ", "ｃｌａｓｓｅ", "Ｃｌａｓｓｅ", "Ｃｌａｓｓｅ", "ＵｎｅＣｌａｓｓｅ",
+				"ｐａｃｋａｇｅ", "ｐａｃｋａｇｅｄｅｕｘ", "", "ＭａＣｌａｓｓｅ", "ｐａｃｋａｇｅ", "ｐａｃｋａｇｅＡＳｕｐｐｒｉｍｅｒ", "ａｔｔｒｉｂｕｔ",
+				"ｒｅｆｅｒｅｎｃｅ", "ａａ", "ａａａａ", "ａａａ", "ａａａａ", "ｖ１", "ｖ２", "ｖ", "ｖ１", "ａ", "ａ", "ａ", "ｂ", "ａ", "Ａ",
+				"ＧＧＧ", "ＧＧＧＧＧＧ", "ｎｉｇｈｔ", "ｎａｃｈｔ", "ｆｕｌｌｗｉｄｔｈ  ｓｔｒｉｎｇ", "ｆｕｌｌｗｉｄｔｈ  ｓｔｒｉｎｇ",
 				"ｆｕｌｌｗｉｄｔｈ  ｓｔｒｉｎｇ", "fｕｌｌｗｉｄｔｈ  ＣｈａｒＳｅｑｕｅｎｃｅ" };
 		final double[] similarities = new double[] {1d, 0.8d, 10d / 13d, 12d / 16d, 0d, 12d / 22d, 0d,
 				2d / 4d, 4d / 5d, 1d / 2d, 1d / 3d, 1d, 0d, 0d, 4d / 7d, 2d / 8d, 1d, 18d / 38d, };
 
 		for (int i = 0; i < data.length; i += 2) {
-			assertEquals("Unexpected result of the dice coefficient for str1 = " + data[i] + " and str2 = "
-					+ data[i + 1], similarities[i / 2], DiffUtil.diceCoefficient(data[i], data[i + 1]),
-					Double.MIN_VALUE);
+			assertEquals(
+					"Unexpected result of the dice coefficient for str1 = " + data[i] + " and str2 = "
+							+ data[i + 1],
+					similarities[i / 2], DiffUtil.diceCoefficient(data[i], data[i + 1]), Double.MIN_VALUE);
 			// Make sure that the result is symmetric
-			assertEquals("Dice coefficient was not symmetric for str1 = " + data[i] + " and str2 = "
-					+ data[i + 1], similarities[i / 2], DiffUtil.diceCoefficient(data[i + 1], data[i]),
-					Double.MIN_VALUE);
+			assertEquals(
+					"Dice coefficient was not symmetric for str1 = " + data[i] + " and str2 = " + data[i + 1],
+					similarities[i / 2], DiffUtil.diceCoefficient(data[i + 1], data[i]), Double.MIN_VALUE);
 		}
 	}
 

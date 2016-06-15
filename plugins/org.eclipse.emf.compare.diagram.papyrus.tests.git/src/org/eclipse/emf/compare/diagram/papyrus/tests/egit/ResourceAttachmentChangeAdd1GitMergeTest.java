@@ -22,23 +22,19 @@ import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Property;
 
 /**
- * Tests the extraction of a UML Package into a new sub-model with parallel
- * changes to extracted UML Package. This scenario contains two diagrams, one
- * for the root of the model and another for the extracted package.
+ * Tests the extraction of a UML Package into a new sub-model with parallel changes to extracted UML Package.
+ * This scenario contains two diagrams, one for the root of the model and another for the extracted package.
  * <dl>
  * <dt>Origin:</dt>
- * <dd>Given is a UML Class Diagram with two classes in the root model, as well
- * as a package with two further classes. We have two diagrams, one showing the
- * root model, the other the contained package.</dd>
+ * <dd>Given is a UML Class Diagram with two classes in the root model, as well as a package with two further
+ * classes. We have two diagrams, one showing the root model, the other the contained package.</dd>
  * <dt>Left:</dt>
- * <dd>The contained package is extracted into a new resource named
- * <em>SomePackage</em> (di, uml, and notation). Note that also the diagram
- * showing the extracted package is moved into the resource
+ * <dd>The contained package is extracted into a new resource named <em>SomePackage</em> (di, uml, and
+ * notation). Note that also the diagram showing the extracted package is moved into the resource
  * <em>SomePackage.notation</em>.</dd>
  * <dt>Right:</dt>
- * <dd>The root model undergoes a series of changes, such as a new class
- * <em>Ax</em> is added to the root model, the type of property
- * <em>RootElement/B/a</em> is changed to the new class <em>Ax</em>.</dd>
+ * <dd>The root model undergoes a series of changes, such as a new class <em>Ax</em> is added to the root
+ * model, the type of property <em>RootElement/B/a</em> is changed to the new class <em>Ax</em>.</dd>
  * </dl>
  *
  * @author Philip Langer <planger@eclipsesource.com>
@@ -46,7 +42,9 @@ import org.eclipse.uml2.uml.Property;
 public class ResourceAttachmentChangeAdd1GitMergeTest extends AbstractGitMergeTestCase {
 
 	private static final String TEST_SCENARIO_PATH = "testmodels/resourceattachmentchange/add1/";
+
 	private static final String SOME_PACKAGE_UML = "SomePackage.uml";
+
 	private static final String MODEL_UML = "model.uml";
 
 	@Override
@@ -84,8 +82,8 @@ public class ResourceAttachmentChangeAdd1GitMergeTest extends AbstractGitMergeTe
 		// assert changes of the right-hand side:
 		// Type of RootElement/B/a is Ax,
 		// which in turn has been added
-		final Model rootElement = (Model) resource.getContents().get(0);
-		final Property a = (Property) rootElement.getOwnedMember("B").getOwnedElements().get(0);
+		final Model rootElement = (Model)resource.getContents().get(0);
+		final Property a = (Property)rootElement.getOwnedMember("B").getOwnedElements().get(0);
 		assertNotNull(rootElement.getOwnedMember("Ax"));
 		assertEquals(rootElement.getOwnedMember("Ax"), a.getType());
 	}
@@ -94,6 +92,6 @@ public class ResourceAttachmentChangeAdd1GitMergeTest extends AbstractGitMergeTe
 		// assert changes of the left: package was extracted to SomePackage.uml
 		assertTrue(resource.getContents().size() == 1);
 		assertTrue(resource.getContents().get(0) instanceof org.eclipse.uml2.uml.Package);
-		assertEquals("SomePackage", ((org.eclipse.uml2.uml.Package) resource.getContents().get(0)).getName());
+		assertEquals("SomePackage", ((org.eclipse.uml2.uml.Package)resource.getContents().get(0)).getName());
 	}
 }

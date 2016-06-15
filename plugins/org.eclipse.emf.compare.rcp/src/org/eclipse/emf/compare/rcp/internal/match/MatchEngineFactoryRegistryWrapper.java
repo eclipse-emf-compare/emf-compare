@@ -59,7 +59,8 @@ public class MatchEngineFactoryRegistryWrapper implements IMatchEngine.Factory.R
 	 * @param preferences
 	 *            Preferences holding disabled match engines.
 	 */
-	public MatchEngineFactoryRegistryWrapper(IItemRegistry<Factory> registy, IEclipsePreferences preferences) {
+	public MatchEngineFactoryRegistryWrapper(IItemRegistry<Factory> registy,
+			IEclipsePreferences preferences) {
 		super();
 		this.registry = registy;
 		this.preferences = preferences;
@@ -74,8 +75,8 @@ public class MatchEngineFactoryRegistryWrapper implements IMatchEngine.Factory.R
 		Function<IItemDescriptor<Factory>, Factory> toFactoryFunction = AbstractItemDescriptor
 				.getItemFunction();
 
-		Collection<IItemDescriptor<Factory>> enableFactories = Collections2.filter(registry
-				.getItemDescriptors(), Predicates.not(Predicates.in(getDisabledEngines())));
+		Collection<IItemDescriptor<Factory>> enableFactories = Collections2
+				.filter(registry.getItemDescriptors(), Predicates.not(Predicates.in(getDisabledEngines())));
 		return Collections2.transform(enableFactories, toFactoryFunction);
 	}
 
@@ -115,7 +116,8 @@ public class MatchEngineFactoryRegistryWrapper implements IMatchEngine.Factory.R
 	 *            The scope on which the group provider will be applied.
 	 * @return A predicate that represents the activation condition based on the scope.
 	 */
-	private static Predicate<IMatchEngine.Factory> isMatchEngineFactoryActivable(final IComparisonScope scope) {
+	private static Predicate<IMatchEngine.Factory> isMatchEngineFactoryActivable(
+			final IComparisonScope scope) {
 		return new Predicate<IMatchEngine.Factory>() {
 			/**
 			 * {@inheritDoc}
@@ -136,8 +138,8 @@ public class MatchEngineFactoryRegistryWrapper implements IMatchEngine.Factory.R
 	public IMatchEngine.Factory add(IMatchEngine.Factory factory) {
 		Preconditions.checkNotNull(factory);
 		IItemDescriptor<Factory> oldFactoryDescriptor = registry
-				.add(new WrapperItemDescriptor<IMatchEngine.Factory>(EMPTY_STRING, EMPTY_STRING, factory
-						.getRanking(), factory.getClass().getName(), factory));
+				.add(new WrapperItemDescriptor<IMatchEngine.Factory>(EMPTY_STRING, EMPTY_STRING,
+						factory.getRanking(), factory.getClass().getName(), factory));
 		if (oldFactoryDescriptor != null) {
 			return oldFactoryDescriptor.getItem();
 		}

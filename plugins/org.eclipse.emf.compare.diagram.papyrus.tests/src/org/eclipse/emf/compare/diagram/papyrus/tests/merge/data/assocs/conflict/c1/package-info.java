@@ -10,8 +10,9 @@
  *******************************************************************************/
 
 /**
- * This package contains test data about conflicts in association changes,
- * where an existing association is reconnected in 2 branches.
+ * This package contains test data about conflicts in association changes, where an existing association is
+ * reconnected in 2 branches.
+ * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 package org.eclipse.emf.compare.diagram.papyrus.tests.merge.data.assocs.conflict.c1;

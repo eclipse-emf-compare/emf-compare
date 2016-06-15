@@ -85,8 +85,8 @@ public class ResourceLocationChangeMerger extends AbstractMerger {
 		}
 		final MatchResource matchResource = (MatchResource)container;
 		final Resource baseResource = getResource(matchResource, resourceLocationChange.getBaseLocation());
-		final Resource changedResource = getResource(matchResource, resourceLocationChange
-				.getChangedLocation());
+		final Resource changedResource = getResource(matchResource,
+				resourceLocationChange.getChangedLocation());
 
 		if (rightToLeft && DifferenceSource.LEFT == resourceLocationChange.getSource()) {
 			// Move content of changed resource in a new resource that has base resource name.

@@ -31,8 +31,8 @@ public class MultiplicityElementAttributeChangeAccessorFactory extends AbstractA
 	 * {@inheritDoc}
 	 */
 	public boolean isFactoryFor(Object target) {
-		return target instanceof MultiplicityElementChange && ((MultiplicityElementChange)target)
-				.getPrimeRefining() instanceof AttributeChange;
+		return target instanceof MultiplicityElementChange
+				&& ((MultiplicityElementChange)target).getPrimeRefining() instanceof AttributeChange;
 	}
 
 	/**

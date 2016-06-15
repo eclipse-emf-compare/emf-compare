@@ -33,7 +33,7 @@ class FeatureInstance {
 	 * @param feature
 	 *            The feature
 	 */
-	public FeatureInstance(EObject eObject, EStructuralFeature feature) {
+	FeatureInstance(EObject eObject, EStructuralFeature feature) {
 		super();
 		this.eObject = eObject;
 		this.feature = feature;

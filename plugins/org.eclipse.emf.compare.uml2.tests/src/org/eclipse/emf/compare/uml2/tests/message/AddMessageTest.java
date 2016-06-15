@@ -305,10 +305,10 @@ public class AddMessageTest extends AbstractUMLTest {
 					"receiveEvent", null, "model.interaction0.Message0Recv0");
 			addSendEventInMessageDescription = changedReference("model.interaction0.Message0", "sendEvent",
 					null, "model.interaction0.Message0Send0");
-			addCoveredByInLifeline0Description = addedToReference("model.interaction0.Lifeline0",
-					"coveredBy", "model.interaction0.Message0Send0");
-			addCoveredByInLifeline1Description = addedToReference("model.interaction0.Lifeline1",
-					"coveredBy", "model.interaction0.Message0Recv0");
+			addCoveredByInLifeline0Description = addedToReference("model.interaction0.Lifeline0", "coveredBy",
+					"model.interaction0.Message0Send0");
+			addCoveredByInLifeline1Description = addedToReference("model.interaction0.Lifeline1", "coveredBy",
+					"model.interaction0.Message0Recv0");
 		}
 
 		final Diff addMessage = Iterators.find(differences.iterator(), addMessageDescription);
@@ -347,11 +347,11 @@ public class AddMessageTest extends AbstractUMLTest {
 		assertEquals(1, count(differences, instanceOf(MessageChange.class)));
 		Diff addUMLMessage = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLMessage = Iterators.find(differences.iterator(), and(instanceOf(MessageChange.class),
-					ofKind(DifferenceKind.ADD)));
+			addUMLMessage = Iterators.find(differences.iterator(),
+					and(instanceOf(MessageChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLMessage = Iterators.find(differences.iterator(), and(instanceOf(MessageChange.class),
-					ofKind(DifferenceKind.DELETE)));
+			addUMLMessage = Iterators.find(differences.iterator(),
+					and(instanceOf(MessageChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLMessage);
 		assertEquals(11, addUMLMessage.getRefinedBy().size());
@@ -447,17 +447,17 @@ public class AddMessageTest extends AbstractUMLTest {
 
 		assertNotNull(addCoveredInMessage0Send0.getEquivalence());
 		assertEquals(2, addCoveredInMessage0Send0.getEquivalence().getDifferences().size());
-		assertTrue(addCoveredInMessage0Send0.getEquivalence().getDifferences().contains(
-				addCoveredInMessage0Send0));
-		assertTrue(addCoveredInMessage0Send0.getEquivalence().getDifferences().contains(
-				addCoveredByInLifeline0));
+		assertTrue(addCoveredInMessage0Send0.getEquivalence().getDifferences()
+				.contains(addCoveredInMessage0Send0));
+		assertTrue(addCoveredInMessage0Send0.getEquivalence().getDifferences()
+				.contains(addCoveredByInLifeline0));
 
 		assertNotNull(addCoveredInMessage0Recv0.getEquivalence());
 		assertEquals(2, addCoveredInMessage0Recv0.getEquivalence().getDifferences().size());
-		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
-				addCoveredInMessage0Recv0));
-		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
-				addCoveredByInLifeline1));
+		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences()
+				.contains(addCoveredInMessage0Recv0));
+		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences()
+				.contains(addCoveredByInLifeline1));
 
 		testIntersections(comparison);
 
@@ -504,8 +504,8 @@ public class AddMessageTest extends AbstractUMLTest {
 					"message", null, "model.interaction0.Message0");
 			addReceiveEventInMessageDescription = changedReference("model.interaction0.Message0",
 					"receiveEvent", null, "model.interaction0.Message0Recv0");
-			addCoveredByInLifeline0Description = addedToReference("model.interaction0.Lifeline0",
-					"coveredBy", "model.interaction0.Message0Recv0");
+			addCoveredByInLifeline0Description = addedToReference("model.interaction0.Lifeline0", "coveredBy",
+					"model.interaction0.Message0Recv0");
 		}
 
 		final Diff addMessage = Iterators.find(useFullDiffs.iterator(), addMessageDescription);
@@ -530,11 +530,11 @@ public class AddMessageTest extends AbstractUMLTest {
 		assertEquals(1, count(useFullDiffs, instanceOf(MessageChange.class)));
 		Diff addUMLMessage = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
-					ofKind(DifferenceKind.ADD)));
+			addUMLMessage = Iterators.find(useFullDiffs.iterator(),
+					and(instanceOf(MessageChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
-					ofKind(DifferenceKind.DELETE)));
+			addUMLMessage = Iterators.find(useFullDiffs.iterator(),
+					and(instanceOf(MessageChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLMessage);
 		assertEquals(6, addUMLMessage.getRefinedBy().size());
@@ -591,13 +591,13 @@ public class AddMessageTest extends AbstractUMLTest {
 
 		assertNotNull(addCoveredInMessage0Recv0.getEquivalence());
 		assertEquals(2, addCoveredInMessage0Recv0.getEquivalence().getDifferences().size());
-		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
-				addCoveredInMessage0Recv0));
-		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
-				addCoveredByInLifeline0));
+		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences()
+				.contains(addCoveredInMessage0Recv0));
+		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences()
+				.contains(addCoveredByInLifeline0));
 
-		assertFalse("No move expected", Iterators.filter(differences.iterator(), ofKind(DifferenceKind.MOVE))
-				.hasNext());
+		assertFalse("No move expected",
+				Iterators.filter(differences.iterator(), ofKind(DifferenceKind.MOVE)).hasNext());
 
 		testIntersections(comparison);
 	}
@@ -630,8 +630,8 @@ public class AddMessageTest extends AbstractUMLTest {
 					"covered", "model.interaction0.Lifeline1");
 			addMessageInMessage0Recv0Description = changedReference("model.interaction0.Message0Send0",
 					"message", "model.interaction0.Message0", null);
-			addReceiveEventInMessageDescription = changedReference("model.interaction0.Message0",
-					"sendEvent", "model.interaction0.Message0Send0", null);
+			addReceiveEventInMessageDescription = changedReference("model.interaction0.Message0", "sendEvent",
+					"model.interaction0.Message0Send0", null);
 			addCoveredByInLifeline0Description = removedFromReference("model.interaction0.Lifeline1",
 					"coveredBy", "model.interaction0.Message0Send0");
 		} else {
@@ -641,10 +641,10 @@ public class AddMessageTest extends AbstractUMLTest {
 					"covered", "model.interaction0.Lifeline1");
 			addMessageInMessage0Recv0Description = changedReference("model.interaction0.Message0Send0",
 					"message", null, "model.interaction0.Message0");
-			addReceiveEventInMessageDescription = changedReference("model.interaction0.Message0",
-					"sendEvent", null, "model.interaction0.Message0Send0");
-			addCoveredByInLifeline0Description = addedToReference("model.interaction0.Lifeline1",
-					"coveredBy", "model.interaction0.Message0Send0");
+			addReceiveEventInMessageDescription = changedReference("model.interaction0.Message0", "sendEvent",
+					null, "model.interaction0.Message0Send0");
+			addCoveredByInLifeline0Description = addedToReference("model.interaction0.Lifeline1", "coveredBy",
+					"model.interaction0.Message0Send0");
 		}
 
 		final Diff addMessage = Iterators.find(useFullDiffs.iterator(), addMessageDescription);
@@ -669,11 +669,11 @@ public class AddMessageTest extends AbstractUMLTest {
 		assertEquals(1, count(useFullDiffs, instanceOf(MessageChange.class)));
 		Diff addUMLMessage = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
-					ofKind(DifferenceKind.ADD)));
+			addUMLMessage = Iterators.find(useFullDiffs.iterator(),
+					and(instanceOf(MessageChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLMessage = Iterators.find(useFullDiffs.iterator(), and(instanceOf(MessageChange.class),
-					ofKind(DifferenceKind.DELETE)));
+			addUMLMessage = Iterators.find(useFullDiffs.iterator(),
+					and(instanceOf(MessageChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLMessage);
 		assertEquals(6, addUMLMessage.getRefinedBy().size());
@@ -730,13 +730,13 @@ public class AddMessageTest extends AbstractUMLTest {
 
 		assertNotNull(addCoveredInMessage0Recv0.getEquivalence());
 		assertEquals(2, addCoveredInMessage0Recv0.getEquivalence().getDifferences().size());
-		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
-				addCoveredInMessage0Recv0));
-		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences().contains(
-				addCoveredByInLifeline0));
+		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences()
+				.contains(addCoveredInMessage0Recv0));
+		assertTrue(addCoveredInMessage0Recv0.getEquivalence().getDifferences()
+				.contains(addCoveredByInLifeline0));
 
-		assertFalse("No move expected", Iterators.filter(differences.iterator(), ofKind(DifferenceKind.MOVE))
-				.hasNext());
+		assertFalse("No move expected",
+				Iterators.filter(differences.iterator(), ofKind(DifferenceKind.MOVE)).hasNext());
 
 		testIntersections(comparison);
 	}

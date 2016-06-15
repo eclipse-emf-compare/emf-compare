@@ -96,8 +96,8 @@ public class ElementTypeSetConfigurationRegistryInitializingHook extends Abstrac
 	 *            The exception to be logged.
 	 */
 	private void logException(Exception e) {
-		CompareDiagramIDEUIPapyrusPlugin.getDefault().getLog().log(
-				new Status(IStatus.WARNING, CompareDiagramIDEUIPapyrusPlugin.PLUGIN_ID,
+		CompareDiagramIDEUIPapyrusPlugin.getDefault().getLog()
+				.log(new Status(IStatus.WARNING, CompareDiagramIDEUIPapyrusPlugin.PLUGIN_ID,
 						"Could not initialize ElementTypeSetConfigurationRegistry before comparison", e)); //$NON-NLS-1$
 	}
 }

@@ -65,10 +65,10 @@ public class DependencyProviderDescriptor {
 			if (!logOnce) {
 				logOnce = true;
 				final String className = configurationElement.getAttribute(attributeClassName);
-				final String message = EMFCompareIDEUIMessages.getString(
-						"ModelDependencyProviderRegistry.invalidModelDependency", className); //$NON-NLS-1$
-				final IStatus status = new Status(IStatus.ERROR, configurationElement.getDeclaringExtension()
-						.getContributor().getName(), message, e);
+				final String message = EMFCompareIDEUIMessages
+						.getString("ModelDependencyProviderRegistry.invalidModelDependency", className); //$NON-NLS-1$
+				final IStatus status = new Status(IStatus.ERROR,
+						configurationElement.getDeclaringExtension().getContributor().getName(), message, e);
 				EMFCompareIDEUIPlugin.getDefault().getLog().log(status);
 			}
 		}

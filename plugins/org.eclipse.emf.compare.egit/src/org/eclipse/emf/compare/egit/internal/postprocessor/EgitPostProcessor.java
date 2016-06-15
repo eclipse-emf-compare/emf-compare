@@ -276,10 +276,8 @@ public class EgitPostProcessor implements IPostProcessor {
 	 * @return <code>true</code> if rightURI is a file URI that ends with leftURI.
 	 */
 	private boolean isMatchingResourceAndFileURI(URI leftURI, URI rightURI) {
-		return leftURI.isPlatformResource()
-				&& rightURI.isFile()
-				&& rightURI.toFileString().replace(File.separatorChar, '/').endsWith(
-						leftURI.toPlatformString(true));
+		return leftURI.isPlatformResource() && rightURI.isFile() && rightURI.toFileString()
+				.replace(File.separatorChar, '/').endsWith(leftURI.toPlatformString(true));
 	}
 
 	/**

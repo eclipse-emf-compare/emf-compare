@@ -112,8 +112,8 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 			Iterator<EObject> eAllData = transform(eAllContents, TREE_NODE_DATA);
 			UnmodifiableIterator<Diff> eAllDiffData = filter(eAllData, Diff.class);
 			Collection<Diff> diffs = Sets.newHashSet(eAllDiffData);
-			boolean unresolvedDiffs = any(diffs, and(hasState(DifferenceState.UNRESOLVED), hasConflict(
-					ConflictKind.REAL, ConflictKind.PSEUDO)));
+			boolean unresolvedDiffs = any(diffs, and(hasState(DifferenceState.UNRESOLVED),
+					hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO)));
 			if (unresolvedDiffs) {
 				ret.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 			}
@@ -171,8 +171,8 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		 */
 		protected void buildSubTree(TreeNode parentNode, Conflict conflict, Match match,
 				Collection<Match> alreadyProcessedContainedMatches) {
-			buildSubTree(parentNode, conflict, match, alreadyProcessedContainedMatches, Sets
-					.<Match> newHashSet());
+			buildSubTree(parentNode, conflict, match, alreadyProcessedContainedMatches,
+					Sets.<Match> newHashSet());
 		}
 
 		/**
@@ -190,18 +190,19 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		 *            already processed matches.
 		 */
 		private void buildSubTree(TreeNode parentNode, Conflict conflict, Match match,
-				Collection<Match> alreadyProcessedContainedMatches, Collection<Match> alreadyProcessedMatches) {
+				Collection<Match> alreadyProcessedContainedMatches,
+				Collection<Match> alreadyProcessedMatches) {
 			// Use a LinkedHashSet for the first argument of Sets.intersection, in order to keep the order of
 			// differences.
-			SetView<Diff> setView = Sets.intersection(Sets.newLinkedHashSet(match.getDifferences()), Sets
-					.newHashSet(conflict.getDifferences()));
+			SetView<Diff> setView = Sets.intersection(Sets.newLinkedHashSet(match.getDifferences()),
+					Sets.newHashSet(conflict.getDifferences()));
 			for (Diff diff : setView) {
 				if (!isParentPseudoConflictFromOtherSide(diff, parentNode.getData())) {
 					TreeNode diffNode = wrap(diff);
 					parentNode.getChildren().add(diffNode);
 					if (isContainment(diff)) {
-						final Match diffMatch = ComparisonUtil.getComparison(diff).getMatch(
-								((ReferenceChange)diff).getValue());
+						final Match diffMatch = ComparisonUtil.getComparison(diff)
+								.getMatch(((ReferenceChange)diff).getValue());
 						if (diffMatch != null && !alreadyProcessedContainedMatches.contains(diffMatch)) {
 							// we don't want callers deeper in the tree to modify the sets of already
 							// processed contained matches
@@ -269,8 +270,8 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 			if (subMatch != null) {
 				for (Diff diff : conflict.getDifferences()) {
 					if (isContainment(diff)) {
-						final Match realMatch = diff.getMatch().getComparison().getMatch(
-								((ReferenceChange)diff).getValue());
+						final Match realMatch = diff.getMatch().getComparison()
+								.getMatch(((ReferenceChange)diff).getValue());
 						if (subMatch.equals(realMatch)) {
 							return true;
 						}
@@ -313,19 +314,22 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 			rightLabel = EMFCompareRCPUIMessages.getString("ThreeWayComparisonGroupProvider.right.label"); //$NON-NLS-1$
 		}
 
-		final BasicDifferenceGroupImpl conflicts = new ConflictsGroupImpl(getComparison(), hasConflict(
-				ConflictKind.REAL, ConflictKind.PSEUDO), EMFCompareRCPUIMessages
-				.getString("ThreeWayComparisonGroupProvider.conflicts.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+		final BasicDifferenceGroupImpl conflicts = new ConflictsGroupImpl(getComparison(),
+				hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO),
+				EMFCompareRCPUIMessages.getString("ThreeWayComparisonGroupProvider.conflicts.label"), //$NON-NLS-1$
+				getCrossReferenceAdapter());
 		conflicts.buildSubTree();
 
-		final BasicDifferenceGroupImpl leftSide = new BasicDifferenceGroupImpl(getComparison(), Predicates
-				.and(fromSide(DifferenceSource.LEFT), Predicates.not(hasConflict(ConflictKind.REAL,
-						ConflictKind.PSEUDO))), leftLabel, getCrossReferenceAdapter());
+		final BasicDifferenceGroupImpl leftSide = new BasicDifferenceGroupImpl(getComparison(),
+				Predicates.and(fromSide(DifferenceSource.LEFT),
+						Predicates.not(hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO))),
+				leftLabel, getCrossReferenceAdapter());
 		leftSide.buildSubTree();
 
-		final BasicDifferenceGroupImpl rightSide = new BasicDifferenceGroupImpl(getComparison(), Predicates
-				.and(fromSide(DifferenceSource.RIGHT), Predicates.not(hasConflict(ConflictKind.REAL,
-						ConflictKind.PSEUDO))), rightLabel, getCrossReferenceAdapter());
+		final BasicDifferenceGroupImpl rightSide = new BasicDifferenceGroupImpl(getComparison(),
+				Predicates.and(fromSide(DifferenceSource.RIGHT),
+						Predicates.not(hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO))),
+				rightLabel, getCrossReferenceAdapter());
 		rightSide.buildSubTree();
 
 		return ImmutableList.of(conflicts, leftSide, rightSide);

@@ -126,8 +126,8 @@ public class AddSubstitutionTest extends AbstractUMLTest {
 			addContractInInterfaceRealizationDescription = changedReference("model.Class0.Substitution0",
 					"contract", "model.Class1", null);
 		} else {
-			addInterfaceRealizationDescription = addedToReference(
-					"model.Class0", "substitution", "model.Class0.Substitution0"); //$NON-NLS-1$
+			addInterfaceRealizationDescription = addedToReference("model.Class0", "substitution", //$NON-NLS-1$
+					"model.Class0.Substitution0");
 			addClientInInterfaceRealizationDescription = addedToReference("model.Class0.Substitution0",
 					"client", "model.Class0");
 			addSupplierInInterfaceRealizationDescription = addedToReference("model.Class0.Substitution0",
@@ -154,11 +154,11 @@ public class AddSubstitutionTest extends AbstractUMLTest {
 		assertEquals(1, count(differences, instanceOf(DirectedRelationshipChange.class)));
 		Diff addUMLDependency = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLDependency = Iterators.find(differences.iterator(), and(
-					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.ADD)));
+			addUMLDependency = Iterators.find(differences.iterator(),
+					and(instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLDependency = Iterators.find(differences.iterator(), and(
-					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
+			addUMLDependency = Iterators.find(differences.iterator(),
+					and(instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLDependency);
 		assertEquals(4, addUMLDependency.getRefinedBy().size());

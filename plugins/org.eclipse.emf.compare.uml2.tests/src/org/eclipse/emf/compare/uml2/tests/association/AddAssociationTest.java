@@ -288,11 +288,11 @@ public class AddAssociationTest extends AbstractUMLTest {
 		assertEquals(1, count(differences, instanceOf(AssociationChange.class)));
 		Diff addUMLAssociation = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLAssociation = Iterators.find(differences.iterator(), and(
-					instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD)));
+			addUMLAssociation = Iterators.find(differences.iterator(),
+					and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLAssociation = Iterators.find(differences.iterator(), and(
-					instanceOf(AssociationChange.class), ofKind(DifferenceKind.DELETE)));
+			addUMLAssociation = Iterators.find(differences.iterator(),
+					and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLAssociation);
 		assertEquals(15, addUMLAssociation.getRefinedBy().size());
@@ -308,32 +308,32 @@ public class AddAssociationTest extends AbstractUMLTest {
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addOwnedEndClass1InAssociation));
 		assertTrue(addUMLAssociation.getRefinedBy().contains(addOwnedEndClass2InAssociation));
 		// MultiplicityElementChanges
-		assertTrue(addUMLAssociation.getRefinedBy().contains(
-				Iterators.find(addLiteralIntegerInClass1.getRefines().iterator(),
+		assertTrue(addUMLAssociation.getRefinedBy()
+				.contains(Iterators.find(addLiteralIntegerInClass1.getRefines().iterator(),
 						instanceOf(MultiplicityElementChange.class))));
-		assertTrue(addUMLAssociation.getRefinedBy().contains(
-				Iterators.find(addUnlimitedNaturalInClass1.getRefines().iterator(),
+		assertTrue(addUMLAssociation.getRefinedBy()
+				.contains(Iterators.find(addUnlimitedNaturalInClass1.getRefines().iterator(),
 						instanceOf(MultiplicityElementChange.class))));
-		assertTrue(addUMLAssociation.getRefinedBy().contains(
-				Iterators.find(addLiteralIntegerInClass2.getRefines().iterator(),
+		assertTrue(addUMLAssociation.getRefinedBy()
+				.contains(Iterators.find(addLiteralIntegerInClass2.getRefines().iterator(),
 						instanceOf(MultiplicityElementChange.class))));
-		assertTrue(addUMLAssociation.getRefinedBy().contains(
-				Iterators.find(addUnlimitedNaturalInClass2.getRefines().iterator(),
+		assertTrue(addUMLAssociation.getRefinedBy()
+				.contains(Iterators.find(addUnlimitedNaturalInClass2.getRefines().iterator(),
 						instanceOf(MultiplicityElementChange.class))));
 
 		// CHECK REQUIREMENT
 		if (kind.equals(TestKind.ADD)) {
 			assertEquals(2, addRefAssociationInPropertyClass1.getRequires().size());
-			assertTrue(addRefAssociationInPropertyClass1.getRequires().contains(
-					addOwnedEndClass1InAssociation));
+			assertTrue(
+					addRefAssociationInPropertyClass1.getRequires().contains(addOwnedEndClass1InAssociation));
 			assertTrue(addRefAssociationInPropertyClass1.getRequires().contains(addAssociation));
 
 			assertEquals(1, addRefTypeInPropertyClass1.getRequires().size());
 			assertTrue(addRefTypeInPropertyClass1.getRequires().contains(addOwnedEndClass1InAssociation));
 
 			assertEquals(2, addRefAssociationInPropertyClass2.getRequires().size());
-			assertTrue(addRefAssociationInPropertyClass2.getRequires().contains(
-					addOwnedEndClass2InAssociation));
+			assertTrue(
+					addRefAssociationInPropertyClass2.getRequires().contains(addOwnedEndClass2InAssociation));
 			assertTrue(addRefAssociationInPropertyClass2.getRequires().contains(addAssociation));
 
 			assertEquals(1, addRefTypeInPropertyClass2.getRequires().size());
@@ -344,13 +344,13 @@ public class AddAssociationTest extends AbstractUMLTest {
 
 			assertEquals(2, addNavigableOwnedEndClass1InAssociation.getRequires().size());
 			assertTrue(addNavigableOwnedEndClass1InAssociation.getRequires().contains(addAssociation));
-			assertTrue(addNavigableOwnedEndClass1InAssociation.getRequires().contains(
-					addOwnedEndClass1InAssociation));
+			assertTrue(addNavigableOwnedEndClass1InAssociation.getRequires()
+					.contains(addOwnedEndClass1InAssociation));
 
 			assertEquals(2, addNavigableOwnedEndClass2InAssociation.getRequires().size());
 			assertTrue(addNavigableOwnedEndClass2InAssociation.getRequires().contains(addAssociation));
-			assertTrue(addNavigableOwnedEndClass2InAssociation.getRequires().contains(
-					addOwnedEndClass2InAssociation));
+			assertTrue(addNavigableOwnedEndClass2InAssociation.getRequires()
+					.contains(addOwnedEndClass2InAssociation));
 
 			assertEquals(1, addLiteralIntegerInClass1.getRequires().size());
 			assertTrue(addLiteralIntegerInClass1.getRequires().contains(addOwnedEndClass1InAssociation));
@@ -418,8 +418,8 @@ public class AddAssociationTest extends AbstractUMLTest {
 	protected void registerPostProcessors(Registry<String> postProcessorRegistry) {
 		super.registerPostProcessors(postProcessorRegistry);
 		postProcessorRegistry.put(MultiplicityElementChangePostProcessor.class.getName(),
-				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
-						.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null,
+				new TestPostProcessor.TestPostProcessorDescriptor(
+						Pattern.compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null,
 						new MultiplicityElementChangePostProcessor(), 25));
 	}
 }

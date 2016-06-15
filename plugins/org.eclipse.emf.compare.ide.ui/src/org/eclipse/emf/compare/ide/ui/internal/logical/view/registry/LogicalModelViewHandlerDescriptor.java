@@ -112,8 +112,9 @@ public class LogicalModelViewHandlerDescriptor {
 					logOnce = true;
 					final String message = EMFCompareIDEUIMessages.getString(
 							"LogicalModelViewHandlerRegistry.invalidHandler", handlerClassPropertyName); //$NON-NLS-1$
-					final IStatus status = new Status(IStatus.ERROR, configurationElement
-							.getDeclaringExtension().getContributor().getName(), message, e);
+					final IStatus status = new Status(IStatus.ERROR,
+							configurationElement.getDeclaringExtension().getContributor().getName(), message,
+							e);
 					EMFCompareIDEUIPlugin.getDefault().getLog().log(status);
 				}
 			}

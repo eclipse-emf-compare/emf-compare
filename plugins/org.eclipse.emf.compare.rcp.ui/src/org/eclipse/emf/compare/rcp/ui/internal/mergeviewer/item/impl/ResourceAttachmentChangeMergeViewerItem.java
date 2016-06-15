@@ -84,7 +84,8 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public IMergeViewerItem[] getChildren(IDifferenceGroupProvider group, Predicate<? super EObject> filters) {
+	public IMergeViewerItem[] getChildren(IDifferenceGroupProvider group,
+			Predicate<? super EObject> filters) {
 		Object sideValue = getSideValue(getSide());
 		Object bestSideValue = getBestSideValue();
 
@@ -128,9 +129,8 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 
 	private boolean isUnrelated(ResourceAttachmentChange change, Object resource) {
 		final String resourceURI = change.getResourceURI();
-		return resource == null
-				|| (resource instanceof Resource && resourceURI != null && !resourceURI
-						.equals(((Resource)resource).getURI().toString()));
+		return resource == null || (resource instanceof Resource && resourceURI != null
+				&& !resourceURI.equals(((Resource)resource).getURI().toString()));
 	}
 
 	/**
@@ -146,8 +146,8 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 		Match match = getComparison().getMatch(eObject);
 
 		if (match != null) {
-			ResourceAttachmentChange rac = getFirst(filter(match.getDifferences(),
-					ResourceAttachmentChange.class), null);
+			ResourceAttachmentChange rac = getFirst(
+					filter(match.getDifferences(), ResourceAttachmentChange.class), null);
 			if (rac != null) {
 				Object left = match.getLeft();
 				Object right = match.getRight();
@@ -221,17 +221,16 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 			if ((b1 || b2 || b3 || b4 || b5 || b6 || b7 || b8) && b9) {
 				Object ancestor = MergeViewerUtil.getValueFromResourceAttachmentChange(diff, comparison,
 						IMergeViewer.MergeViewerSide.ANCESTOR);
-				if (left != null
-						&& MergeViewerUtil.getResource(comparison, IMergeViewer.MergeViewerSide.LEFT, diff) == null) {
+				if (left != null && MergeViewerUtil.getResource(comparison, IMergeViewer.MergeViewerSide.LEFT,
+						diff) == null) {
 					left = null;
 				}
-				if (right != null
-						&& MergeViewerUtil.getResource(comparison, IMergeViewer.MergeViewerSide.RIGHT, diff) == null) {
+				if (right != null && MergeViewerUtil.getResource(comparison,
+						IMergeViewer.MergeViewerSide.RIGHT, diff) == null) {
 					right = null;
 				}
-				if (ancestor != null
-						&& MergeViewerUtil.getResource(comparison, IMergeViewer.MergeViewerSide.ANCESTOR,
-								diff) == null) {
+				if (ancestor != null && MergeViewerUtil.getResource(comparison,
+						IMergeViewer.MergeViewerSide.ANCESTOR, diff) == null) {
 					ancestor = null;
 				}
 				if (b5 || b8) {
@@ -240,8 +239,8 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 				if (b6 || b7) {
 					right = null;
 				}
-				IMergeViewerItem insertionPoint = new MergeViewerItem.Container(comparison, diff, left,
-						right, ancestor, getSide(), getAdapterFactory());
+				IMergeViewerItem insertionPoint = new MergeViewerItem.Container(comparison, diff, left, right,
+						ancestor, getSide(), getAdapterFactory());
 
 				final int insertionIndex;
 				if (left == null && right == null && ancestor != null) {
@@ -296,8 +295,8 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 			expectedResource = MergeViewerUtil.getResource(comparison, IMergeViewer.MergeViewerSide.LEFT,
 					diff);
 		} else {
-			initialResource = MergeViewerUtil
-					.getResource(comparison, IMergeViewer.MergeViewerSide.LEFT, diff);
+			initialResource = MergeViewerUtil.getResource(comparison, IMergeViewer.MergeViewerSide.LEFT,
+					diff);
 			expectedResource = MergeViewerUtil.getResource(comparison, IMergeViewer.MergeViewerSide.RIGHT,
 					diff);
 		}

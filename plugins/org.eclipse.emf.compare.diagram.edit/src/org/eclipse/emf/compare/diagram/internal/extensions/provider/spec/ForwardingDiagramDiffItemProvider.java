@@ -63,8 +63,8 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider im
 	public ForwardingDiagramDiffItemProvider(ItemProviderAdapter delegate) {
 		super(delegate);
 		if (delegate instanceof DiagramDiffItemProvider) {
-			overlayProvider = new OverlayImageProvider(((DiagramDiffItemProvider)delegate())
-					.getResourceLocator());
+			overlayProvider = new OverlayImageProvider(
+					((DiagramDiffItemProvider)delegate()).getResourceLocator());
 		}
 	}
 
@@ -217,20 +217,20 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider im
 
 		switch (diagramDiff.getKind()) {
 			case ADD:
-				ret = valueText + hasBeen + remotely + "added to " + referenceText; //$NON-NLS-1$ 
+				ret = valueText + hasBeen + remotely + "added to " + referenceText; //$NON-NLS-1$
 				break;
 			case DELETE:
-				ret = valueText + hasBeen + remotely + "deleted from " + referenceText; //$NON-NLS-1$ 
+				ret = valueText + hasBeen + remotely + "deleted from " + referenceText; //$NON-NLS-1$
 				break;
 			case CHANGE:
-				ret = referenceText + " " + valueText + hasBeen + remotely + "change"; //$NON-NLS-1$ //$NON-NLS-2$ 
+				ret = referenceText + " " + valueText + hasBeen + remotely + "change"; //$NON-NLS-1$ //$NON-NLS-2$
 				break;
 			case MOVE:
-				ret = valueText + hasBeen + remotely + "moved in " + referenceText; //$NON-NLS-1$ 
+				ret = valueText + hasBeen + remotely + "moved in " + referenceText; //$NON-NLS-1$
 				break;
 			default:
-				throw new IllegalStateException(UNSUPPORTED + DifferenceKind.class.getSimpleName() + VALUE
-						+ diagramDiff.getKind());
+				throw new IllegalStateException(
+						UNSUPPORTED + DifferenceKind.class.getSimpleName() + VALUE + diagramDiff.getKind());
 		}
 
 		return ret;
@@ -280,8 +280,8 @@ public class ForwardingDiagramDiffItemProvider extends ForwardingItemProvider im
 				ret.append(" move", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 				break;
 			default:
-				throw new IllegalStateException(UNSUPPORTED + DifferenceKind.class.getSimpleName() + VALUE
-						+ kind);
+				throw new IllegalStateException(
+						UNSUPPORTED + DifferenceKind.class.getSimpleName() + VALUE + kind);
 		}
 	}
 

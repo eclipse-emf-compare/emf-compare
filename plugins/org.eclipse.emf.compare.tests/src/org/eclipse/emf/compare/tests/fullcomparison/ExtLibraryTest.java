@@ -104,8 +104,8 @@ public class ExtLibraryTest {
 		final Predicate<? super Diff> leftRemovedLastname = and(fromSide(DifferenceSource.LEFT),
 				removed("extlibrary.Person.lastName"));
 
-		final Diff rightRenamedFamilyNameDiff = Iterators
-				.find(differences.iterator(), rightRenamedFamilyname);
+		final Diff rightRenamedFamilyNameDiff = Iterators.find(differences.iterator(),
+				rightRenamedFamilyname);
 		final Diff leftRemovedLastNameDiff = Iterators.find(differences.iterator(), leftRemovedLastname);
 
 		final Conflict familyNameConflict = leftRemovedLastNameDiff.getConflict();

@@ -102,8 +102,8 @@ public abstract class LocalResolutionTest extends LogicalModelGraphTest {
 	@Override
 	@After
 	public void tearDown() throws Exception {
-		final EMFModelProvider emfModelProvider = (EMFModelProvider)ModelProvider.getModelProviderDescriptor(
-				EMFModelProvider.PROVIDER_ID).getModelProvider();
+		final EMFModelProvider emfModelProvider = (EMFModelProvider)ModelProvider
+				.getModelProviderDescriptor(EMFModelProvider.PROVIDER_ID).getModelProvider();
 		emfModelProvider.clear();
 		setResolutionScope(originalResolutionScope);
 		iFile1 = null;

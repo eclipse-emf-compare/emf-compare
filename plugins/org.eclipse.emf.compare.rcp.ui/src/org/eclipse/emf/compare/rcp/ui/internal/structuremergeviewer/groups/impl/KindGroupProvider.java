@@ -41,20 +41,24 @@ public class KindGroupProvider extends AbstractDifferenceGroupProvider {
 	@Override
 	protected Collection<? extends IDifferenceGroup> buildGroups(Comparison comparison2) {
 		final IDifferenceGroup additions = new BasicDifferenceGroupImpl(getComparison(),
-				ofKind(DifferenceKind.ADD), EMFCompareRCPUIMessages
-						.getString("KindGroupProvider.addition.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+				ofKind(DifferenceKind.ADD),
+				EMFCompareRCPUIMessages.getString("KindGroupProvider.addition.label"), //$NON-NLS-1$
+				getCrossReferenceAdapter());
 		((BasicDifferenceGroupImpl)additions).buildSubTree();
 		final IDifferenceGroup deletions = new BasicDifferenceGroupImpl(getComparison(),
-				ofKind(DifferenceKind.DELETE), EMFCompareRCPUIMessages
-						.getString("KindGroupProvider.deletion.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+				ofKind(DifferenceKind.DELETE),
+				EMFCompareRCPUIMessages.getString("KindGroupProvider.deletion.label"), //$NON-NLS-1$
+				getCrossReferenceAdapter());
 		((BasicDifferenceGroupImpl)deletions).buildSubTree();
 		final IDifferenceGroup changes = new BasicDifferenceGroupImpl(getComparison(),
-				ofKind(DifferenceKind.CHANGE), EMFCompareRCPUIMessages
-						.getString("KindGroupProvider.change.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+				ofKind(DifferenceKind.CHANGE),
+				EMFCompareRCPUIMessages.getString("KindGroupProvider.change.label"), //$NON-NLS-1$
+				getCrossReferenceAdapter());
 		((BasicDifferenceGroupImpl)changes).buildSubTree();
 		final IDifferenceGroup moves = new BasicDifferenceGroupImpl(getComparison(),
-				ofKind(DifferenceKind.MOVE), EMFCompareRCPUIMessages
-						.getString("KindGroupProvider.move.label"), getCrossReferenceAdapter()); //$NON-NLS-1$
+				ofKind(DifferenceKind.MOVE),
+				EMFCompareRCPUIMessages.getString("KindGroupProvider.move.label"), //$NON-NLS-1$
+				getCrossReferenceAdapter());
 		((BasicDifferenceGroupImpl)moves).buildSubTree();
 
 		Collection<IDifferenceGroup> groups = Lists.newArrayList();

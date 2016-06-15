@@ -72,9 +72,9 @@ public class GroupsPreferencePage extends PreferencePage implements IWorkbenchPr
 	private GroupsInteractiveContent threeWayComparisonContent;
 
 	/** {@link DifferenceGroupManager}. */
-	private DifferenceGroupManager groupManager = new DifferenceGroupManager(EMFCompareRCPUIPlugin
-			.getDefault().getEMFCompareUIPreferences(), EMFCompareRCPUIPlugin.getDefault()
-			.getItemDifferenceGroupProviderRegistry());
+	private DifferenceGroupManager groupManager = new DifferenceGroupManager(
+			EMFCompareRCPUIPlugin.getDefault().getEMFCompareUIPreferences(),
+			EMFCompareRCPUIPlugin.getDefault().getItemDifferenceGroupProviderRegistry());
 
 	/**
 	 * Gets the preference key for synchronization behavior.
@@ -125,8 +125,8 @@ public class GroupsPreferencePage extends PreferencePage implements IWorkbenchPr
 	 *            Holding tab folder.
 	 */
 	private void fillTwoWayComparisonTab(TabFolder tabFolder) {
-		Composite tabSkeletonComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("GroupsPreferencePage.twoWayComparisonTab.label"), //$NON-NLS-1$
+		Composite tabSkeletonComposite = createTabSkeleton(tabFolder,
+				EMFCompareRCPUIMessages.getString("GroupsPreferencePage.twoWayComparisonTab.label"), //$NON-NLS-1$
 				EMFCompareRCPUIMessages.getString("GroupsPreferencePage.viewerDescription.label")); //$NON-NLS-1$
 
 		List<IItemDescriptor<Descriptor>> currentGroupRanking = groupManager.getCurrentGroupRanking(false);
@@ -143,8 +143,8 @@ public class GroupsPreferencePage extends PreferencePage implements IWorkbenchPr
 	 *            Holding tab folder.
 	 */
 	private void fillThreeWayComparisonTab(TabFolder tabFolder) {
-		Composite tabSkeletonComposite = createTabSkeleton(tabFolder, EMFCompareRCPUIMessages
-				.getString("GroupsPreferencePage.threeWayComparisonTab.label"), //$NON-NLS-1$
+		Composite tabSkeletonComposite = createTabSkeleton(tabFolder,
+				EMFCompareRCPUIMessages.getString("GroupsPreferencePage.threeWayComparisonTab.label"), //$NON-NLS-1$
 				EMFCompareRCPUIMessages.getString("GroupsPreferencePage.viewerDescription.label")); //$NON-NLS-1$
 
 		List<IItemDescriptor<Descriptor>> currentGroupRanking = groupManager.getCurrentGroupRanking(true);
@@ -282,9 +282,10 @@ public class GroupsPreferencePage extends PreferencePage implements IWorkbenchPr
 		if (TracingConstant.CONFIGURATION_TRACING_ACTIVATED) {
 			StringBuilder builder = new StringBuilder();
 			// Print each preferences
-			builder.append("Preference ").append(getGroupSynchronizationPreferenceKey(isThreeWay)).append(":\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			String preferenceValue = getPreferenceStore().getString(
-					getGroupSynchronizationPreferenceKey(isThreeWay));
+			builder.append("Preference ").append(getGroupSynchronizationPreferenceKey(isThreeWay)) //$NON-NLS-1$
+					.append(":\n"); //$NON-NLS-1$
+			String preferenceValue = getPreferenceStore()
+					.getString(getGroupSynchronizationPreferenceKey(isThreeWay));
 			builder.append(preferenceValue);
 			EMFCompareRCPUIPlugin.getDefault().log(IStatus.INFO, builder.toString());
 		}

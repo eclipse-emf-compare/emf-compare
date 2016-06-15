@@ -13,19 +13,9 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({
-	TestMatchId.class,
-	TestMatchContent.class,
-	TestDiff.class,
-	TestReq.class,
-	TestEqui.class,
-	TestConflict.class,
-	TestCompare.class,
-	TestPostMatchUML.class,
-	TestPostComparisonUML.class,
-	TestLogicalModel.class,
-})
+@SuiteClasses({TestMatchId.class, TestMatchContent.class, TestDiff.class, TestReq.class, TestEqui.class,
+		TestConflict.class, TestCompare.class, TestPostMatchUML.class, TestPostComparisonUML.class,
+		TestLogicalModel.class, })
 public class PerformanceSuite {
-   
 
 }

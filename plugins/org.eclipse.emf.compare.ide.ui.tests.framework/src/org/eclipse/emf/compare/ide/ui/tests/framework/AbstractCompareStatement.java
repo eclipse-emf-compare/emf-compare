@@ -121,14 +121,14 @@ public abstract class AbstractCompareStatement extends Statement {
 	protected void restoreEMFComparePreferences() {
 		uiPreferenceStore.setValue(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE,
 				defaultResolutionStrategy);
-		emfComparePreferences.put(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, join(
-				defaultDisabledMatchEngines, PREFERENCES_SEPARATOR));
+		emfComparePreferences.put(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
+				join(defaultDisabledMatchEngines, PREFERENCES_SEPARATOR));
 		emfComparePreferences.put(EMFComparePreferences.DIFF_ENGINES, defaultDiffEngine);
 		emfComparePreferences.put(EMFComparePreferences.EQUI_ENGINES, defaultEqEngine);
 		emfComparePreferences.put(EMFComparePreferences.REQ_ENGINES, defaultReqEngine);
 		emfComparePreferences.put(EMFComparePreferences.CONFLICTS_DETECTOR, defaultConflictDetector);
-		emfComparePreferences.put(EMFComparePreferences.DISABLED_POST_PROCESSOR, join(
-				defaultDisabledPostProcessors, PREFERENCES_SEPARATOR));
+		emfComparePreferences.put(EMFComparePreferences.DISABLED_POST_PROCESSOR,
+				join(defaultDisabledPostProcessors, PREFERENCES_SEPARATOR));
 	}
 
 	protected void setEMFComparePreferences() {
@@ -144,14 +144,14 @@ public abstract class AbstractCompareStatement extends Statement {
 	private void setResolutionStrategyPreference() {
 		defaultResolutionStrategy = uiPreferenceStore
 				.getString(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE);
-		uiPreferenceStore.setValue(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE, resolutionStrategy
-				.name());
+		uiPreferenceStore.setValue(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE,
+				resolutionStrategy.name());
 	}
 
 	private void setMatchPreference() {
 		String disabMatchEngine = emfComparePreferences.get(
-				EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, join(defaultDisabledMatchEngines,
-						PREFERENCES_SEPARATOR));
+				EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
+				join(defaultDisabledMatchEngines, PREFERENCES_SEPARATOR));
 		defaultDisabledMatchEngines.clear();
 		for (String matchEngine : disabMatchEngine.split(PREFERENCES_SEPARATOR)) {
 			defaultDisabledMatchEngines.add(matchEngine);
@@ -161,8 +161,8 @@ public abstract class AbstractCompareStatement extends Statement {
 		for (Class<?> matchEngine : disabledMatchEngines) {
 			matchEngineNames.add(matchEngine.getCanonicalName());
 		}
-		emfComparePreferences.put(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, join(matchEngineNames,
-				PREFERENCES_SEPARATOR));
+		emfComparePreferences.put(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
+				join(matchEngineNames, PREFERENCES_SEPARATOR));
 	}
 
 	private void setDiffPreference() {
@@ -191,7 +191,8 @@ public abstract class AbstractCompareStatement extends Statement {
 		String eqEngineId = defaultEqEngine;
 		for (IExtension iExtension : extensions) {
 			for (IConfigurationElement iConfig : iExtension.getConfigurationElements()) {
-				if (iConfig.getAttribute(EXTENSION_POINT_CLASS_SELECTOR).equals(eqEngine.getCanonicalName())) {
+				if (iConfig.getAttribute(EXTENSION_POINT_CLASS_SELECTOR)
+						.equals(eqEngine.getCanonicalName())) {
 					eqEngineId = iConfig.getAttribute(EXTENSION_POINT_ID_SELECTOR);
 					break;
 				}
@@ -209,7 +210,8 @@ public abstract class AbstractCompareStatement extends Statement {
 		String reqEngineId = defaultReqEngine;
 		for (IExtension iExtension : extensions) {
 			for (IConfigurationElement iConfig : iExtension.getConfigurationElements()) {
-				if (iConfig.getAttribute(EXTENSION_POINT_CLASS_SELECTOR).equals(reqEngine.getCanonicalName())) {
+				if (iConfig.getAttribute(EXTENSION_POINT_CLASS_SELECTOR)
+						.equals(reqEngine.getCanonicalName())) {
 					reqEngineId = iConfig.getAttribute(EXTENSION_POINT_ID_SELECTOR);
 					break;
 				}
@@ -227,8 +229,8 @@ public abstract class AbstractCompareStatement extends Statement {
 		String conflictDetectorId = defaultConflictDetector;
 		for (IExtension iExtension : extensions) {
 			for (IConfigurationElement iConfig : iExtension.getConfigurationElements()) {
-				if (iConfig.getAttribute(EXTENSION_POINT_CLASS_SELECTOR).equals(
-						conflictDetector.getCanonicalName())) {
+				if (iConfig.getAttribute(EXTENSION_POINT_CLASS_SELECTOR)
+						.equals(conflictDetector.getCanonicalName())) {
 					conflictDetectorId = iConfig.getAttribute(EXTENSION_POINT_ID_SELECTOR);
 					break;
 				}
@@ -252,8 +254,8 @@ public abstract class AbstractCompareStatement extends Statement {
 		for (Class<?> postProcessor : disabledPostProcessors) {
 			postProcessorNames.add(postProcessor.getCanonicalName());
 		}
-		emfComparePreferences.put(EMFComparePreferences.DISABLED_POST_PROCESSOR, join(postProcessorNames,
-				PREFERENCES_SEPARATOR));
+		emfComparePreferences.put(EMFComparePreferences.DISABLED_POST_PROCESSOR,
+				join(postProcessorNames, PREFERENCES_SEPARATOR));
 	}
 
 	private String join(Collection<String> parts, String separator) {

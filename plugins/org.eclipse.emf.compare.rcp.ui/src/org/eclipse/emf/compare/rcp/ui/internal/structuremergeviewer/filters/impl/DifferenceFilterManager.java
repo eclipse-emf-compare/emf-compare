@@ -60,7 +60,9 @@ public class DifferenceFilterManager {
 	/** The {@link Preferences} holding the value for filter preferences. */
 	private final Preferences preferenceStore;
 
-	/** Predicate use to transform {@link DifferenceFilterDefaultConfiguration} to {@link IDifferenceFilter}. */
+	/**
+	 * Predicate use to transform {@link DifferenceFilterDefaultConfiguration} to {@link IDifferenceFilter}.
+	 */
 	private final static Function<DifferenceFilterDefaultConfiguration, IDifferenceFilter> TO_FILTER = new Function<DifferenceFilterManager.DifferenceFilterDefaultConfiguration, IDifferenceFilter>() {
 
 		public IDifferenceFilter apply(DifferenceFilterDefaultConfiguration arg0) {
@@ -199,8 +201,8 @@ public class DifferenceFilterManager {
 	 */
 	public void setCurrentActiveFilters(Set<IDifferenceFilter> activeFilters) {
 		final Set<IDeactivableDiffFilter> inactiveFilters;
-		Set<IDeactivableDiffFilter> deactivableFilters = Sets.newLinkedHashSet(Iterables.filter(
-				getAllFilters(), IDeactivableDiffFilter.class));
+		Set<IDeactivableDiffFilter> deactivableFilters = Sets
+				.newLinkedHashSet(Iterables.filter(getAllFilters(), IDeactivableDiffFilter.class));
 		if (activeFilters == null) {
 			inactiveFilters = deactivableFilters;
 		} else {

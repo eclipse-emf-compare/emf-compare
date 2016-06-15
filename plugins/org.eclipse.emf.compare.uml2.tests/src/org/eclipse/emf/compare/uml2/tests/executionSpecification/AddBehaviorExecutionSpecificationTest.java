@@ -213,11 +213,11 @@ public class AddBehaviorExecutionSpecificationTest extends AbstractUMLTest {
 		assertEquals(1, count(differences, instanceOf(ExecutionSpecificationChange.class)));
 		Diff addUMLMessage = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLMessage = Iterators.find(differences.iterator(), and(
-					instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.ADD)));
+			addUMLMessage = Iterators.find(differences.iterator(),
+					and(instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLMessage = Iterators.find(differences.iterator(), and(
-					instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.DELETE)));
+			addUMLMessage = Iterators.find(differences.iterator(),
+					and(instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLMessage);
 		assertEquals(13, addUMLMessage.getRefinedBy().size());
@@ -335,10 +335,10 @@ public class AddBehaviorExecutionSpecificationTest extends AbstractUMLTest {
 
 		assertNotNull(addCoveredInActionExecSpec.getEquivalence());
 		assertEquals(2, addCoveredInActionExecSpec.getEquivalence().getDifferences().size());
-		assertTrue(addCoveredInActionExecSpec.getEquivalence().getDifferences().contains(
-				addCoveredInActionExecSpec));
-		assertTrue(addCoveredInActionExecSpec.getEquivalence().getDifferences().contains(
-				addCoveredByInLifeline1_3));
+		assertTrue(addCoveredInActionExecSpec.getEquivalence().getDifferences()
+				.contains(addCoveredInActionExecSpec));
+		assertTrue(addCoveredInActionExecSpec.getEquivalence().getDifferences()
+				.contains(addCoveredByInLifeline1_3));
 
 		testIntersections(comparison);
 

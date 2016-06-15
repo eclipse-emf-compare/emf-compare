@@ -55,23 +55,23 @@ public class MergeAllNonConflictingAction extends MergeAction {
 		switch (mode) {
 			case LEFT_TO_RIGHT:
 				setToolTipText(EMFCompareIDEUIMessages.getString("merged.all.to.right.tooltip")); //$NON-NLS-1$
-				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/merge_all_to_right.gif")); //$NON-NLS-1$
+				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
+						"icons/full/toolb16/merge_all_to_right.gif")); //$NON-NLS-1$
 				break;
 			case RIGHT_TO_LEFT:
 				setToolTipText(EMFCompareIDEUIMessages.getString("merged.all.to.left.tooltip")); //$NON-NLS-1$
-				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/merge_all_to_left.gif")); //$NON-NLS-1$
+				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
+						"icons/full/toolb16/merge_all_to_left.gif")); //$NON-NLS-1$
 				break;
 			case ACCEPT:
 				setToolTipText(EMFCompareIDEUIMessages.getString("accept.all.changes.tooltip")); //$NON-NLS-1$
-				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/accept_all_changes.gif")); //$NON-NLS-1$
+				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
+						"icons/full/toolb16/accept_all_changes.gif")); //$NON-NLS-1$
 				break;
 			case REJECT:
 				setToolTipText(EMFCompareIDEUIMessages.getString("reject.all.changes.tooltip")); //$NON-NLS-1$
-				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/reject_all_changes.gif")); //$NON-NLS-1$
+				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
+						"icons/full/toolb16/reject_all_changes.gif")); //$NON-NLS-1$
 				break;
 			default:
 				throw new IllegalStateException();
@@ -89,13 +89,13 @@ public class MergeAllNonConflictingAction extends MergeAction {
 	public void run() {
 		if (editingDomain instanceof EMFCompareEditingDomain) {
 			ICompareCopyCommand mergeCommand = ((EMFCompareEditingDomain)editingDomain)
-					.createCopyAllNonConflictingCommand(comparison, isLeftToRight(), mergerRegistry, runnable);
+					.createCopyAllNonConflictingCommand(comparison, isLeftToRight(), mergerRegistry,
+							runnable);
 			editingDomain.getCommandStack().execute(mergeCommand);
 		} else {
 			// FIXME remove this once we have pulled "createCopyAllNonConflictingCommand" up as API.
-			EMFCompareIDEUIPlugin.getDefault().getLog().log(
-					new Status(IStatus.ERROR, EMFCompareIDEUIPlugin.PLUGIN_ID,
-							"Couldn't create the copy all command.")); //$NON-NLS-1$
+			EMFCompareIDEUIPlugin.getDefault().getLog().log(new Status(IStatus.ERROR,
+					EMFCompareIDEUIPlugin.PLUGIN_ID, "Couldn't create the copy all command.")); //$NON-NLS-1$
 		}
 	}
 

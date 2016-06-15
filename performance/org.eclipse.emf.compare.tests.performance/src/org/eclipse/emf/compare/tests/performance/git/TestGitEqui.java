@@ -25,13 +25,13 @@ import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestGitEqui extends AbstractEMFComparePerformanceTest {
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest#setSUTName()
 	 */
 	@Override
@@ -42,7 +42,7 @@ public class TestGitEqui extends AbstractEMFComparePerformanceTest {
 	@Test
 	public void a_equiUMLSmall() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLSmall");
-		
+
 		final DataGit data = new SmallGitInputData();
 		data.match();
 		data.diff();
@@ -53,11 +53,11 @@ public class TestGitEqui extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void b_equiUMLNominal() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLNominal");
-		
+
 		final DataGit data = new NominalGitInputData();
 		data.match();
 		data.diff();
@@ -68,11 +68,11 @@ public class TestGitEqui extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void c_equiUMLSmallSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLSmallSplit");
-		
+
 		final DataGit data = new SmallSplitGitInputData();
 		data.match();
 		data.diff();
@@ -83,11 +83,11 @@ public class TestGitEqui extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void d_equiUMLNominalSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("equiUMLNominalSplit");
-		
+
 		final DataGit data = new NominalSplitGitInputData();
 		data.match();
 		data.diff();

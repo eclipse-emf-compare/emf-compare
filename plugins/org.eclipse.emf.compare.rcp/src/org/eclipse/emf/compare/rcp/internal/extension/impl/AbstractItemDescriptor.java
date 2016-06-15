@@ -130,7 +130,7 @@ public abstract class AbstractItemDescriptor<T> implements IItemDescriptor<T> {
 
 	@Override
 	public String toString() {
-		return "StaticItemDescriptor [Label=" + getLabel() + ", Description=" + getDescription() + ", rank=" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ 	
-				+ getRank() + ", id=" + getID() + "]"; //$NON-NLS-1$ //$NON-NLS-2$ 
+		return "StaticItemDescriptor [Label=" + getLabel() + ", Description=" + getDescription() + ", rank=" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				+ getRank() + ", id=" + getID() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

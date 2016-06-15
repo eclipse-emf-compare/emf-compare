@@ -70,9 +70,8 @@ public class MergeDiffInvolvingRefineDiffTest extends AbstractUMLTest {
 
 		assertEquals(6, differences.size());
 
-		Predicate<? super Diff> removedFromReference = removedFromReference(
-				"SysMLmodel.InternalBlock.Block1", "ownedConnector",
-				"SysMLmodel.InternalBlock.Block1.Connector2");
+		Predicate<? super Diff> removedFromReference = removedFromReference("SysMLmodel.InternalBlock.Block1",
+				"ownedConnector", "SysMLmodel.InternalBlock.Block1.Connector2");
 		final Diff diff = Iterators.find(differences.iterator(), removedFromReference);
 
 		IMerger merger = registry.getHighestRankingMerger(diff);
@@ -84,8 +83,8 @@ public class MergeDiffInvolvingRefineDiffTest extends AbstractUMLTest {
 
 		final Comparison comparisonAfter = getCompare().compare(scope);
 		// The subdiffs are merged with the selected diff (and the dependencies of these subdiffs)
-		assertTrue("Comparison#getDifferences() must be empty after copyRightToLeft", comparisonAfter
-				.getDifferences().isEmpty());
+		assertTrue("Comparison#getDifferences() must be empty after copyRightToLeft",
+				comparisonAfter.getDifferences().isEmpty());
 	}
 
 	@Test
@@ -102,9 +101,8 @@ public class MergeDiffInvolvingRefineDiffTest extends AbstractUMLTest {
 
 		assertEquals(6, differences.size());
 
-		Predicate<? super Diff> removedFromReference = removedFromReference(
-				"SysMLmodel.InternalBlock.Block1", "ownedConnector",
-				"SysMLmodel.InternalBlock.Block1.Connector2");
+		Predicate<? super Diff> removedFromReference = removedFromReference("SysMLmodel.InternalBlock.Block1",
+				"ownedConnector", "SysMLmodel.InternalBlock.Block1.Connector2");
 		final Diff diff = Iterators.find(differences.iterator(), removedFromReference);
 
 		IMerger merger = registry.getHighestRankingMerger(diff);

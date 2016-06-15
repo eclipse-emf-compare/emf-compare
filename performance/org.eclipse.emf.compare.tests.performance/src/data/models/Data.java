@@ -59,15 +59,21 @@ import com.google.common.io.Closeables;
 
 public abstract class Data {
 	private List<ResourceSet> resourceSets = newArrayList();
+
 	private Comparison comparison;
+
 	private final Notifier left;
+
 	private final Notifier right;
+
 	private final Notifier ancestor;
-	
+
 	public abstract Notifier loadLeft();
+
 	public abstract Notifier loadRight();
+
 	public abstract Notifier loadAncestor();
-	
+
 	/**
 	 * 
 	 */
@@ -76,73 +82,75 @@ public abstract class Data {
 		right = loadRight();
 		ancestor = loadAncestor();
 	}
-	
+
 	/**
 	 * @return the left
 	 */
 	public Notifier getLeft() {
 		return left;
 	}
-	
+
 	/**
 	 * @return the right
 	 */
 	public Notifier getRight() {
 		return right;
 	}
-	
+
 	/**
 	 * @return the ancestor
 	 */
 	public Notifier getAncestor() {
 		return ancestor;
 	}
-	
+
 	protected ResourceSet createResourceSet() {
 		ResourceSet resourceSet = new ResourceSetImpl();
 		resourceSet.getPackageRegistry().put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
-		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(UMLResource.FILE_EXTENSION, UMLResource.Factory.INSTANCE);
+		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(UMLResource.FILE_EXTENSION,
+				UMLResource.Factory.INSTANCE);
 		resourceSets.add(resourceSet);
 		return resourceSet;
 	}
-	
+
 	public void logicalModel(ITypedElement leftTypedElement, ITypedElement rightTypedElement) {
-		ComparisonScopeBuilder.create(null, leftTypedElement, rightTypedElement, null, new NullProgressMonitor());
+		ComparisonScopeBuilder.create(null, leftTypedElement, rightTypedElement, null,
+				new NullProgressMonitor());
 	}
-	
+
 	public Comparison match() {
 		return match(UseIdentifiers.ONLY);
 	}
-	
+
 	public Comparison match(UseIdentifiers useIDs) {
 		final IComparisonScope scope = new DefaultComparisonScope(getLeft(), getRight(), getAncestor());
 		final IMatchEngine matchEngine = DefaultMatchEngine.create(useIDs);
 		comparison = matchEngine.match(scope, new BasicMonitor());
 		return comparison;
 	}
-	
+
 	public Comparison diff() {
 		final IDiffProcessor diffBuilder = new DiffBuilder();
 		final IDiffEngine diffEngine = new DefaultDiffEngine(diffBuilder);
-		diffEngine.diff(comparison,  new BasicMonitor());
+		diffEngine.diff(comparison, new BasicMonitor());
 		return comparison;
 	}
-	
+
 	public void req() {
 		final IReqEngine reqEngine = new DefaultReqEngine();
 		reqEngine.computeRequirements(comparison, new BasicMonitor());
 	}
-	
+
 	public void equi() {
 		final IEquiEngine equiEngine = new DefaultEquiEngine();
 		equiEngine.computeEquivalences(comparison, new BasicMonitor());
 	}
-	
+
 	public void conflict() {
 		final IConflictDetector conflictDetector = new MatchBasedConflictDetector();
 		conflictDetector.detect(comparison, new BasicMonitor());
 	}
-	
+
 	public void compare() {
 		final IComparisonScope scope = new DefaultComparisonScope(getLeft(), getRight(), getAncestor());
 		EMFCompare.builder().build().compare(scope);
@@ -152,18 +160,17 @@ public abstract class Data {
 		final IPostProcessor postProcessor = new CompareDiagramPostProcessor();
 		postProcessor.postComparison(comparison, new BasicMonitor());
 	}
-	
+
 	public void postMatchUML() {
 		final IPostProcessor postProcessor = new UMLPostProcessor();
 		postProcessor.postMatch(comparison, new BasicMonitor());
 	}
-	
+
 	public void postComparisonUML() {
 		final IPostProcessor postProcessor = new UMLPostProcessor();
 		postProcessor.postComparison(comparison, new BasicMonitor());
 	}
-	
-	
+
 	public void dispose() {
 		comparison = null;
 		for (ResourceSet rs : resourceSets) {
@@ -176,12 +183,11 @@ public abstract class Data {
 				}
 				resource.eAdapters().clear();
 			}
-			
+
 			rs.getResources().clear();
 			rs.eAdapters().clear();
 		}
-		
-		
+
 		resourceSets = null;
 	}
 

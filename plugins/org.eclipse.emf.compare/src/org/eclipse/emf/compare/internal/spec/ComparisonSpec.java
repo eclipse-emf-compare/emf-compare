@@ -147,8 +147,8 @@ public class ComparisonSpec extends ComparisonImpl {
 				match.getOrigin(), diffCrossReferencer);
 
 		// creates a list eagerly as we have to know the size beforehand and we will iterate on it later.
-		List<ResourceAttachmentChange> resourceAttachmentChanges = newArrayList(filter(
-				match.getDifferences(), ResourceAttachmentChange.class));
+		List<ResourceAttachmentChange> resourceAttachmentChanges = newArrayList(
+				filter(match.getDifferences(), ResourceAttachmentChange.class));
 
 		final int maxExpectedSize = leftInverseReference.size() + rightInverseReference.size()
 				+ originInverseReference.size() + resourceAttachmentChanges.size();
@@ -216,8 +216,8 @@ public class ComparisonSpec extends ComparisonImpl {
 	public IEqualityHelper getEqualityHelper() {
 		IEqualityHelper ret = (IEqualityHelper)EcoreUtil.getExistingAdapter(this, IEqualityHelper.class);
 		if (ret == null) {
-			ret = new EqualityHelper(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder().maximumSize(
-					DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE)));
+			ret = new EqualityHelper(EqualityHelper.createDefaultCache(CacheBuilder.newBuilder()
+					.maximumSize(DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE)));
 			this.eAdapters().add(ret);
 			ret.setTarget(this);
 		}

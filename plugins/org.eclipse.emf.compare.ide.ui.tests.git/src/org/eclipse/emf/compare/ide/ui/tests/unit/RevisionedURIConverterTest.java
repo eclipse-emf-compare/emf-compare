@@ -52,17 +52,14 @@ import org.mockito.stubbing.Answer;
 @SuppressWarnings("unchecked")
 public class RevisionedURIConverterTest extends AbstractURITest {
 	/**
-	 * using the "straight" repo from {@link #setupStraightRepo()}, we expect
-	 * that the base will be that initial commit, the remote side will be the
-	 * branch, and the source side will be master.
-	 * 
+	 * using the "straight" repo from {@link #setupStraightRepo()}, we expect that the base will be that
+	 * initial commit, the remote side will be the branch, and the source side will be master.
 	 */
 	@Test
 	public void testStorageAccessorContents_straight() throws Exception {
 		setupStraightRepo();
 
-		IStorageProviderAccessor accessor = createAccessorForComparison(MASTER,
-				BRANCH, false);
+		IStorageProviderAccessor accessor = createAccessorForComparison(MASTER, BRANCH, false);
 		URI file1URI = ResourceUtil.createURIFor(iFile1);
 
 		// origin is the "initial-commit" state
@@ -76,8 +73,7 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 	}
 
 	/**
-	 * If we compare "master" with "branch2", we expect the common ancestor to
-	 * be "commit-master-1".
+	 * If we compare "master" with "branch2", we expect the common ancestor to be "commit-master-1".
 	 */
 	@Test
 	public void testStorageAccessorContents_multipleCommits() throws Exception {
@@ -85,8 +81,7 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 		String branch2Name = BRANCH + "2";
 		setupMultipleCommitsRepo(branch1Name, branch2Name);
 
-		IStorageProviderAccessor accessor = createAccessorForComparison(MASTER,
-				branch2Name, false);
+		IStorageProviderAccessor accessor = createAccessorForComparison(MASTER, branch2Name, false);
 		URI file1URI = ResourceUtil.createURIFor(iFile1);
 
 		// origin is the "commit-master-1" state, which we initialized to be the
@@ -101,26 +96,21 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 	}
 
 	/**
-	 * This will create three files with the expected initial, master and branch
-	 * content, then use a custom content accessor that will redirect
-	 * {@link #file1}'s URI to these.
+	 * This will create three files with the expected initial, master and branch content, then use a custom
+	 * content accessor that will redirect {@link #file1}'s URI to these.
 	 */
 	@Test
 	public void testRedirectingAccessor() throws Exception {
 		/*
-		 * setup has created a dummy file file1. we're gonna create the three
-		 * sides in separate folders, and expect the storage accessor to do the
-		 * redirection.
+		 * setup has created a dummy file file1. we're gonna create the three sides in separate folders, and
+		 * expect the storage accessor to do the redirection.
 		 */
 		final IProject iProject = project.getProject();
 		final ResourceSet resourceSet = new ResourceSetImpl();
 
-		File originFile = project.getOrCreateFile(iProject,
-				DiffSide.ORIGIN.toString() + "/file1.ecore");
-		File sourceFile = project.getOrCreateFile(iProject,
-				DiffSide.SOURCE.toString() + "/file1.ecore");
-		File remoteFile = project.getOrCreateFile(iProject,
-				DiffSide.REMOTE.toString() + "/file1.ecore");
+		File originFile = project.getOrCreateFile(iProject, DiffSide.ORIGIN.toString() + "/file1.ecore");
+		File sourceFile = project.getOrCreateFile(iProject, DiffSide.SOURCE.toString() + "/file1.ecore");
+		File remoteFile = project.getOrCreateFile(iProject, DiffSide.REMOTE.toString() + "/file1.ecore");
 		IFile originIFile = project.getIFile(iProject, originFile);
 		IFile sourceIFile = project.getIFile(iProject, sourceFile);
 		IFile remoteIFile = project.getIFile(iProject, remoteFile);
@@ -152,10 +142,8 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 		assertFalse(status.hasUncommittedChanges());
 
 		IStorageProviderAccessor accessor = mock(IStorageProviderAccessor.class);
-		when(
-				accessor.getStorageProvider(any(IResource.class),
-						any(DiffSide.class))).then(
-				getPathRedirectingStorageProvider());
+		when(accessor.getStorageProvider(any(IResource.class), any(DiffSide.class)))
+				.then(getPathRedirectingStorageProvider());
 		URI file1URI = ResourceUtil.createURIFor(iFile1);
 
 		// origin is the "initial-commit" state
@@ -169,9 +157,9 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 	}
 
 	/**
-	 * We'll be using a storage provider accessor that returns <code>null</code>
-	 * IStorageProviders. We expect the uri converter not to throw exceptions,
-	 * and not to fall back to the existing file pointed by the URI.
+	 * We'll be using a storage provider accessor that returns <code>null</code> IStorageProviders. We expect
+	 * the uri converter not to throw exceptions, and not to fall back to the existing file pointed by the
+	 * URI.
 	 */
 	@Test
 	public void testNullAccessor() throws Exception {
@@ -179,39 +167,32 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 		URIConverter delegate = new ExtensibleURIConverterImpl();
 		URI fileURI = ResourceUtil.createURIFor(iFile1);
 
-		RevisionedURIConverter converter = new RevisionedURIConverter(delegate,
-				accessor, DiffSide.ORIGIN);
-		InputStream stream = converter.createInputStream(fileURI,
-				Collections.emptyMap());
+		RevisionedURIConverter converter = new RevisionedURIConverter(delegate, accessor, DiffSide.ORIGIN);
+		InputStream stream = converter.createInputStream(fileURI, Collections.emptyMap());
 		assertNull(stream);
 
-		converter = new RevisionedURIConverter(delegate, accessor,
-				DiffSide.REMOTE);
+		converter = new RevisionedURIConverter(delegate, accessor, DiffSide.REMOTE);
 		stream = converter.createInputStream(fileURI, Collections.emptyMap());
 		assertNull(stream);
 
-		converter = new RevisionedURIConverter(delegate, accessor,
-				DiffSide.SOURCE);
+		converter = new RevisionedURIConverter(delegate, accessor, DiffSide.SOURCE);
 		stream = converter.createInputStream(fileURI, Collections.emptyMap());
 		assertNull(stream);
 	}
 
 	/**
-	 * We'll be using a storage provide accessor that throws exception. We
-	 * expect that exception to slip through and fail the test.
+	 * We'll be using a storage provide accessor that throws exception. We expect that exception to slip
+	 * through and fail the test.
 	 */
 	@Test
 	public void testExceptionAccessor() throws Exception {
 		IStorageProviderAccessor accessor = mock(IStorageProviderAccessor.class);
-		when(
-				accessor.getStorageProvider(any(IResource.class),
-						any(DiffSide.class))).thenThrow(
-				UnsupportedOperationException.class);
+		when(accessor.getStorageProvider(any(IResource.class), any(DiffSide.class)))
+				.thenThrow(UnsupportedOperationException.class);
 		URIConverter delegate = new ExtensibleURIConverterImpl();
 		URI fileURI = ResourceUtil.createURIFor(iFile1);
 
-		RevisionedURIConverter converter = new RevisionedURIConverter(delegate,
-				accessor, DiffSide.ORIGIN);
+		RevisionedURIConverter converter = new RevisionedURIConverter(delegate, accessor, DiffSide.ORIGIN);
 		try {
 			converter.createInputStream(fileURI, Collections.emptyMap());
 			fail();
@@ -219,8 +200,7 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 			// expected this one to slip through
 		}
 		try {
-			converter = new RevisionedURIConverter(delegate, accessor,
-					DiffSide.REMOTE);
+			converter = new RevisionedURIConverter(delegate, accessor, DiffSide.REMOTE);
 			converter.createInputStream(fileURI, Collections.emptyMap());
 			fail();
 		} catch (UnsupportedOperationException e) {
@@ -228,8 +208,7 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 		}
 
 		try {
-			converter = new RevisionedURIConverter(delegate, accessor,
-					DiffSide.SOURCE);
+			converter = new RevisionedURIConverter(delegate, accessor, DiffSide.SOURCE);
 			converter.createInputStream(fileURI, Collections.emptyMap());
 			fail();
 		} catch (UnsupportedOperationException e) {
@@ -239,21 +218,18 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 
 	private Answer<IStorageProvider> getPathRedirectingStorageProvider() {
 		return new Answer<IStorageProvider>() {
-			public IStorageProvider answer(InvocationOnMock invocation)
-					throws Throwable {
-				IResource resource = (IResource) invocation.getArguments()[0];
-				DiffSide side = (DiffSide) invocation.getArguments()[1];
+			public IStorageProvider answer(InvocationOnMock invocation) throws Throwable {
+				IResource resource = (IResource)invocation.getArguments()[0];
+				DiffSide side = (DiffSide)invocation.getArguments()[1];
 
 				assertTrue(resource instanceof IFile && resource.exists());
 				IPath originalPath = resource.getFullPath();
 				String fileName = originalPath.lastSegment();
-				final IPath redirectedPath = originalPath.removeLastSegments(1)
-						.append(side.toString()).append(fileName);
+				final IPath redirectedPath = originalPath.removeLastSegments(1).append(side.toString())
+						.append(fileName);
 				return new IStorageProvider() {
-					public IStorage getStorage(IProgressMonitor monitor)
-							throws CoreException {
-						return ResourcesPlugin.getWorkspace().getRoot()
-								.getFile(redirectedPath);
+					public IStorage getStorage(IProgressMonitor monitor) throws CoreException {
+						return ResourcesPlugin.getWorkspace().getRoot().getFile(redirectedPath);
 					}
 				};
 			}

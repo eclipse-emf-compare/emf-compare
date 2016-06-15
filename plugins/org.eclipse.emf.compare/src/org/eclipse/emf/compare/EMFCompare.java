@@ -332,8 +332,8 @@ public class EMFCompare {
 			matchQuantity++;
 			matchQuantity += Iterators.size(match.getAllSubmatches().iterator());
 		}
-		LOGGER.info("compare() - FINISH - " + matchQuantity + " matches, " + diffQuantity + " diffs and " + conflictQuantity //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				+ " conflicts found in " + duration + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+		LOGGER.info("compare() - FINISH - " + matchQuantity + " matches, " + diffQuantity + " diffs and " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ conflictQuantity + " conflicts found in " + duration + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -526,8 +526,8 @@ public class EMFCompare {
 	 * @return True if the comparison has to be stopped. False otherwise.
 	 */
 	private static boolean hasToStop(Comparison comparison, Monitor monitor) {
-		return monitor.isCanceled()
-				|| (comparison.getDiagnostic() != null && comparison.getDiagnostic().getSeverity() >= Diagnostic.ERROR);
+		return monitor.isCanceled() || (comparison.getDiagnostic() != null
+				&& comparison.getDiagnostic().getSeverity() >= Diagnostic.ERROR);
 	}
 
 	/**

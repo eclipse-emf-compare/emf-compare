@@ -19,9 +19,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class SmallInputData extends Data {
 	/**
-	 * @return 
-	 * @throws IOException 
-	 * 
+	 * @return
+	 * @throws IOException
 	 */
 	public ResourceSet loadLeft() {
 		ResourceSet resourceSet = createResourceSet();
@@ -29,15 +28,17 @@ public class SmallInputData extends Data {
 		EcoreUtil.resolveAll(resourceSet);
 		return resourceSet;
 	}
+
 	public ResourceSet loadRight() {
 		ResourceSet resourceSet = createResourceSet();
 		Resource ret = loadFromClassLoader("model_size_small/modified/model.uml", resourceSet);
-		EcoreUtil.resolveAll(resourceSet);		
+		EcoreUtil.resolveAll(resourceSet);
 		return resourceSet;
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see data.models.TestMatchUML.Data#loadAncestor()
 	 */
 	@Override

@@ -404,8 +404,8 @@ public class ResourceComputationSchedulerTest {
 				}
 
 				public void onSuccess(Object r) {
-					cs.success("onSuccess() called on computation " + name
-							+ ", should have been onFailure().");
+					cs.success(
+							"onSuccess() called on computation " + name + ", should have been onFailure().");
 				}
 			};
 		}

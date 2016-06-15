@@ -99,8 +99,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 		configuration.getEventBus().register(this);
 
-		mergeResolutionManager = new MergeResolutionManager(EMFCompareIDEUIPlugin.getDefault()
-				.getMergeResolutionListenerRegistry());
+		mergeResolutionManager = new MergeResolutionManager(
+				EMFCompareIDEUIPlugin.getDefault().getMergeResolutionListenerRegistry());
 	}
 
 	/**
@@ -151,10 +151,10 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 		IMergeViewerContentProvider contentProvider = (IMergeViewerContentProvider)getContentProvider();
 
-		final String leftValueFromModel = getString((IStreamContentAccessor)contentProvider
-				.getLeftContent(getInput()));
-		final String rightValueFromModel = getString((IStreamContentAccessor)contentProvider
-				.getRightContent(getInput()));
+		final String leftValueFromModel = getString(
+				(IStreamContentAccessor)contentProvider.getLeftContent(getInput()));
+		final String rightValueFromModel = getString(
+				(IStreamContentAccessor)contentProvider.getRightContent(getInput()));
 
 		SWTUtil.safeAsyncExec(new Runnable() {
 			public void run() {
@@ -163,7 +163,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 				IEqualityHelper equalityHelper = getCompareConfiguration().getComparison()
 						.getEqualityHelper();
 				if (!equalityHelper.matchingAttributeValues(leftValueFromModel, leftValueFromWidget)
-						|| !equalityHelper.matchingAttributeValues(rightValueFromModel, rightValueFromWidget)) {
+						|| !equalityHelper.matchingAttributeValues(rightValueFromModel,
+								rightValueFromWidget)) {
 					// only refresh if values are different to avoid select-all of the text.
 					refresh();
 				}

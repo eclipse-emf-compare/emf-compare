@@ -63,8 +63,8 @@ public class CompareDiagramIDEUIPlugin extends AbstractUIPlugin {
 				}
 			}
 		});
-		configuration.setMoveThreshold(getPreferenceStore().getInt(
-				CompareDiagramConstants.PREFERENCES_KEY_MOVE_THRESHOLD));
+		configuration.setMoveThreshold(
+				getPreferenceStore().getInt(CompareDiagramConstants.PREFERENCES_KEY_MOVE_THRESHOLD));
 
 		IPostProcessor.Descriptor.Registry<?> registry = EMFCompareRCPPlugin.getDefault()
 				.getPostProcessorRegistry();

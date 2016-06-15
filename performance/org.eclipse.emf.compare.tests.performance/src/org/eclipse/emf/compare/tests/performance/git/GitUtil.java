@@ -51,7 +51,6 @@ import com.google.common.base.Throwables;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- *
  */
 @SuppressWarnings("restriction")
 public final class GitUtil {
@@ -116,18 +115,18 @@ public final class GitUtil {
 			Throwables.propagate(e);
 		}
 	}
-	
+
 	/**
 	 * Delete the repository (and all files contained in).
 	 * 
 	 * @param repository
-	 *             the File representing the repository.
+	 *            the File representing the repository.
 	 */
 	public static void deleteRepo(File repository) {
 		if (repository.exists()) {
 			File[] files = repository.listFiles();
 			if (null != files) {
-				for (int i=0; i < files.length; i++) {
+				for (int i = 0; i < files.length; i++) {
 					if (files[i].isDirectory()) {
 						deleteRepo(files[i]);
 					} else {
@@ -138,7 +137,7 @@ public final class GitUtil {
 			repository.delete();
 		}
 	}
-	
+
 	/**
 	 * Import the project from the given repository.
 	 * 
@@ -150,18 +149,19 @@ public final class GitUtil {
 	 */
 	public static IProject importProjectFromRepo(File repository, String projectFilePath) {
 		try {
-			IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(repository.getPath() + File.separator + projectFilePath));
+			IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(
+					new Path(repository.getPath() + File.separator + projectFilePath));
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
 			project.create(description, new NullProgressMonitor());
 			project.open(new NullProgressMonitor());
-			
+
 			return project;
 		} catch (CoreException e) {
 			Throwables.propagate(e);
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Import all projects contain in the given repository.
 	 * 
@@ -172,8 +172,9 @@ public final class GitUtil {
 		Collection<IProject> projects = new ArrayList<IProject>();
 		try {
 			Collection<File> projectsFromRepo = getProjectsFromRepo(repository);
-			for (File file : projectsFromRepo) {				
-				IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(file.getPath()));
+			for (File file : projectsFromRepo) {
+				IProjectDescription description = ResourcesPlugin.getWorkspace()
+						.loadProjectDescription(new Path(file.getPath()));
 				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
 				project.create(description, new NullProgressMonitor());
 				project.open(new NullProgressMonitor());
@@ -184,9 +185,10 @@ public final class GitUtil {
 		}
 		return projects;
 	}
-	
+
 	/**
 	 * Get the ".projects" files from the given repository.
+	 * 
 	 * @param repository
 	 *            the given repository.
 	 * @return the ".projects" files from the given repository.
@@ -196,7 +198,7 @@ public final class GitUtil {
 		if (repository.exists()) {
 			File[] files = repository.listFiles();
 			if (null != files) {
-				for (int i=0; i < files.length; i++) {
+				for (int i = 0; i < files.length; i++) {
 					if (files[i].isDirectory()) {
 						projects.addAll(getProjectsFromRepo(files[i]));
 					} else if (files[i].getName().endsWith(IProjectDescription.DESCRIPTION_FILE_NAME)) {
@@ -207,9 +209,10 @@ public final class GitUtil {
 		}
 		return projects;
 	}
-	
+
 	/**
 	 * Connect given projects to the given repository.
+	 * 
 	 * @param repository
 	 *            the given repository.
 	 * @param projects
@@ -218,14 +221,15 @@ public final class GitUtil {
 	public static void connectProjectsToRepo(Repository repository, Collection<IProject> projects) {
 		for (IProject project : projects) {
 			try {
-				ConnectProviderOperation op = new ConnectProviderOperation(project, repository.getDirectory());
+				ConnectProviderOperation op = new ConnectProviderOperation(project,
+						repository.getDirectory());
 				op.execute(new NullProgressMonitor());
 			} catch (CoreException e) {
 				Throwables.propagate(e);
 			}
 		}
 	}
-	
+
 	/**
 	 * Simulate a comparison between the two given references and returns back the subscriber that can provide
 	 * all computed synchronization information.
@@ -238,16 +242,16 @@ public final class GitUtil {
 	 *            The file we are comparing (that would be the file right-clicked into the workspace).
 	 * @return The created subscriber.
 	 */
-	public static Subscriber createSubscriberForComparison(Repository repository, String sourceRef, String targetRef, IFile comparedFile, List<Runnable> disposers)
-			throws IOException {
+	public static Subscriber createSubscriberForComparison(Repository repository, String sourceRef,
+			String targetRef, IFile comparedFile, List<Runnable> disposers) throws IOException {
 		final GitSynchronizeData data = new GitSynchronizeData(repository, sourceRef, targetRef, false);
 		final GitSynchronizeDataSet dataSet = new GitSynchronizeDataSet(data);
 		final ResourceMapping[] mappings = getResourceMappings(comparedFile);
 		final GitResourceVariantTreeSubscriber subscriber = new GitResourceVariantTreeSubscriber(dataSet);
 		subscriber.init(new NullProgressMonitor());
 
-		final RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(
-				subscriber, dataSet);
+		final RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(subscriber,
+				dataSet);
 		final SubscriberScopeManager manager = new SubscriberScopeManager(subscriber.getName(), mappings,
 				subscriber, remoteContext, true);
 		final GitSubscriberMergeContext context = new GitSubscriberMergeContext(subscriber, manager, dataSet);
@@ -260,7 +264,7 @@ public final class GitUtil {
 		});
 		return context.getSubscriber();
 	}
-	
+
 	/**
 	 * This will query all model providers for those that are enabled on the given file and list all mappings
 	 * available for that file.

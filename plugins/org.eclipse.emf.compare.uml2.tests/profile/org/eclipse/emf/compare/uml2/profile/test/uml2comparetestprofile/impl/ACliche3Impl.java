@@ -24,8 +24,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>
- * {@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.ACliche3Impl#getBase_Class
+ * <li>{@link org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl.ACliche3Impl#getBase_Class
  * <em>Base Class</em>}</li>
  * </ul>
  * </p>

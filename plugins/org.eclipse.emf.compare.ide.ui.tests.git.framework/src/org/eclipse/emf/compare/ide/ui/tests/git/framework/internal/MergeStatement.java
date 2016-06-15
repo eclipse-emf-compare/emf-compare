@@ -37,9 +37,9 @@ public class MergeStatement extends AbstractGitStatement {
 	private String defaultMergeStrategy = MergeStrategyID.MODEL_RECURSIVE.getValue();
 
 	public MergeStatement(Object testObject, FrameworkMethod test, ResolutionStrategyID resolutionStrategy,
-			Class<?>[] disabledMatchEngineFactory, Class<?> diffEngine, Class<?> eqEngine,
-			Class<?> reqEngine, Class<?> conflictDetector, Class<?>[] disabledPostProcessors,
-			MergeStrategyID mergeStrategy, String path) {
+			Class<?>[] disabledMatchEngineFactory, Class<?> diffEngine, Class<?> eqEngine, Class<?> reqEngine,
+			Class<?> conflictDetector, Class<?>[] disabledPostProcessors, MergeStrategyID mergeStrategy,
+			String path) {
 		super(testObject, test, resolutionStrategy, disabledMatchEngineFactory, diffEngine, eqEngine,
 				reqEngine, conflictDetector, disabledPostProcessors);
 		this.mergeStrategy = mergeStrategy;

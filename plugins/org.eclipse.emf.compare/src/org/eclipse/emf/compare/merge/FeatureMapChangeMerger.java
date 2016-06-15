@@ -119,7 +119,8 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 	 * <ul>
 	 * <li>We are copying from right to left and
 	 * <ul>
-	 * <li>we are copying an addition to the right side (we need to create the same object in the left), or</li>
+	 * <li>we are copying an addition to the right side (we need to create the same object in the left), or
+	 * </li>
 	 * <li>we are copying a deletion from the left side (we need to revert the deletion).</li>
 	 * </ul>
 	 * </li>
@@ -207,8 +208,8 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 				final Resource initialResource = ((EObject)value).eResource();
 				final Resource targetResource = copy.eResource();
 				if (initialResource instanceof XMIResource && targetResource instanceof XMIResource) {
-					((XMIResource)targetResource).setID(copy, ((XMIResource)initialResource)
-							.getID((EObject)value));
+					((XMIResource)targetResource).setID(copy,
+							((XMIResource)initialResource).getID((EObject)value));
 				}
 			}
 		} else {
@@ -224,7 +225,8 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 	 * <ul>
 	 * <li>Copying from right to left and either
 	 * <ul>
-	 * <li>we are copying a deletion from the right side (we need to remove the same object in the left) or,</li>
+	 * <li>we are copying a deletion from the right side (we need to remove the same object in the left) or,
+	 * </li>
 	 * <li>we are copying an addition to the left side (we need to revert the addition).</li>
 	 * </ul>
 	 * </li>
@@ -381,7 +383,8 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 		if (isFeatureMapContainment(diff) && equ != null) {
 			// There is a ReferenceChange associated with the FeatureMapChange. This ReferenceChange
 			// contains the expected value to move.
-			for (ReferenceChange equivalence : Iterables.filter(equ.getDifferences(), ReferenceChange.class)) {
+			for (ReferenceChange equivalence : Iterables.filter(equ.getDifferences(),
+					ReferenceChange.class)) {
 				final Match equivalenceMatchValue = comparison.getMatch(equivalence.getValue());
 				final Object expectedEntryValue;
 				if (rightToLeft) {
@@ -430,8 +433,8 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 		if (comparison.isThreeWay() && isFeatureMapContainment(diff)) {
 			// search the origin key associated to the value
 			EStructuralFeature originKey = null;
-			final List<Object> originList = (List<Object>)safeEGet(matchValue.getOrigin().eContainer(), diff
-					.getAttribute());
+			final List<Object> originList = (List<Object>)safeEGet(matchValue.getOrigin().eContainer(),
+					diff.getAttribute());
 			for (Object object : originList) {
 				if (object instanceof FeatureMap.Entry
 						&& equalityHelper.matchingValues(value, ((FeatureMap.Entry)object).getValue())) {
@@ -482,8 +485,8 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 	 */
 	private boolean isDiffSourceIsMergeTarget(final Diff diff, final boolean rightToLeft) {
 		DifferenceSource source = diff.getSource();
-		return source == DifferenceSource.LEFT && rightToLeft || source == DifferenceSource.RIGHT
-				&& !rightToLeft;
+		return source == DifferenceSource.LEFT && rightToLeft
+				|| source == DifferenceSource.RIGHT && !rightToLeft;
 	}
 
 	/**
@@ -612,8 +615,8 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 				if (equalityHelper.matchingValues(entryValue, targetValue)) {
 					// forced to use setUnique(int, Entry) because if the originKey is not present in the
 					// target map, the setUnique(EStructuralFeature, int, Object) will not validate the key
-					((BasicFeatureMap)(Object)targetList).setUnique(index, FeatureMapUtil.createEntry(
-							originKey, targetValue));
+					((BasicFeatureMap)(Object)targetList).setUnique(index,
+							FeatureMapUtil.createEntry(originKey, targetValue));
 
 					// setUnique(int, Entry) doesn't keep ID, so copy XMI ID when applicable.
 					final Resource targetResource;

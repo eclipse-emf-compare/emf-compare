@@ -32,22 +32,19 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ModelResolutionPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
-	private static final String[][] scopeNamesAndValues = new String[][] {
-			{
-					EMFCompareIDEUIMessages
-							.getString("ModelResolutionPreferencesPage.resolutionScope.workspace.label"), //$NON-NLS-1$
-					CrossReferenceResolutionScope.WORKSPACE.name(), },
+	private static final String[][] scopeNamesAndValues = new String[][] {{
+			EMFCompareIDEUIMessages
+					.getString("ModelResolutionPreferencesPage.resolutionScope.workspace.label"), //$NON-NLS-1$
+			CrossReferenceResolutionScope.WORKSPACE.name(), },
 			{
 					EMFCompareIDEUIMessages
 							.getString("ModelResolutionPreferencesPage.resolutionScope.project.label"), //$NON-NLS-1$
 					CrossReferenceResolutionScope.PROJECT.name(), },
-			{
-					EMFCompareIDEUIMessages
-							.getString("ModelResolutionPreferencesPage.resolutionScope.container.label"), //$NON-NLS-1$
+			{EMFCompareIDEUIMessages
+					.getString("ModelResolutionPreferencesPage.resolutionScope.container.label"), //$NON-NLS-1$
 					CrossReferenceResolutionScope.CONTAINER.name(), },
-			{
-					EMFCompareIDEUIMessages
-							.getString("ModelResolutionPreferencesPage.resolutionScope.outgoing.label"), //$NON-NLS-1$
+			{EMFCompareIDEUIMessages
+					.getString("ModelResolutionPreferencesPage.resolutionScope.outgoing.label"), //$NON-NLS-1$
 					CrossReferenceResolutionScope.OUTGOING.name(), }, };
 
 	private BooleanFieldEditor disableResolvers;
@@ -107,10 +104,10 @@ public class ModelResolutionPreferencePage extends FieldEditorPreferencePage imp
 		descriptionData.widthHint = 200;
 		resolutionScopeDescription.setLayoutData(descriptionData);
 
-		updateFieldEnablement(getPreferenceStore().getBoolean(
-				EMFCompareUIPreferences.DISABLE_RESOLVERS_PREFERENCE));
-		updateScopeDescription(getPreferenceStore().getString(
-				EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE));
+		updateFieldEnablement(
+				getPreferenceStore().getBoolean(EMFCompareUIPreferences.DISABLE_RESOLVERS_PREFERENCE));
+		updateScopeDescription(
+				getPreferenceStore().getString(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE));
 	}
 
 	@Override
@@ -166,10 +163,10 @@ public class ModelResolutionPreferencePage extends FieldEditorPreferencePage imp
 	@Override
 	protected void performDefaults() {
 		super.performDefaults();
-		updateFieldEnablement(getPreferenceStore().getBoolean(
-				EMFCompareUIPreferences.DISABLE_RESOLVERS_PREFERENCE));
-		updateScopeDescription(getPreferenceStore().getString(
-				EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE));
+		updateFieldEnablement(
+				getPreferenceStore().getBoolean(EMFCompareUIPreferences.DISABLE_RESOLVERS_PREFERENCE));
+		updateScopeDescription(
+				getPreferenceStore().getString(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE));
 	}
 
 	public void init(IWorkbench workbench) {

@@ -175,7 +175,7 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 		 * @param delegate
 		 *            The delegate handler.
 		 */
-		public NamespaceDeclarationNotifyingXMLDefaultHandler(XMLDefaultHandler delegate) {
+		NamespaceDeclarationNotifyingXMLDefaultHandler(XMLDefaultHandler delegate) {
 			super(delegate);
 			this.namespaceDeclarationListeners = new ListenerList();
 		}
@@ -278,7 +278,7 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 		 * @param containmentOnly
 		 *            Only set containment reference values.
 		 */
-		public NotifyingXMLHelper(XMLHelper delegate, boolean containmentOnly) {
+		NotifyingXMLHelper(XMLHelper delegate, boolean containmentOnly) {
 			super(delegate);
 			this.proxyListeners = new ListenerList();
 			this.containmentOnly = containmentOnly;
@@ -293,7 +293,8 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 				super.setValue(eObject, eStructuralFeature, value, position);
 			}
 			if (value instanceof EObject) {
-				final ProxyEntry entry = new ProxyEntry(eObject, eStructuralFeature, (EObject)value, position);
+				final ProxyEntry entry = new ProxyEntry(eObject, eStructuralFeature, (EObject)value,
+						position);
 				if (((EObject)value).eIsProxy()) {
 					notifyProxy(entry);
 				} else if (!isContainment) {
@@ -351,8 +352,8 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 		 */
 		private void notifyProxy(ProxyEntry proxy) {
 			for (Object listener : proxyListeners.getListeners()) {
-				((IProxyCreationListener)listener).proxyCreated(getResource(), proxy.getEObject(), proxy
-						.getFeature(), proxy.getValue(), proxy.getPosition());
+				((IProxyCreationListener)listener).proxyCreated(getResource(), proxy.getEObject(),
+						proxy.getFeature(), proxy.getValue(), proxy.getPosition());
 			}
 		}
 
@@ -393,7 +394,7 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 		 * @param position
 		 *            see {@link #position}.
 		 */
-		public ProxyEntry(EObject eObject, EStructuralFeature feature, EObject value, int position) {
+		ProxyEntry(EObject eObject, EStructuralFeature feature, EObject value, int position) {
 			this.eObject = eObject;
 			this.feature = feature;
 			this.value = value;

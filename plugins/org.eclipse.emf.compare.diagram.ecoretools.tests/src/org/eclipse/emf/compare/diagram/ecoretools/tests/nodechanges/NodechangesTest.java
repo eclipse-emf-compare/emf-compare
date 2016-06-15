@@ -66,8 +66,7 @@ public class NodechangesTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final Comparison comparison = compare(left.getResourceSet(),
-				right.getResourceSet());
+		final Comparison comparison = compare(left.getResourceSet(), right.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -76,8 +75,7 @@ public class NodechangesTest extends AbstractTest {
 
 		final Diff addEPackage = Iterators.find(differences.iterator(), added("tc1.EPackage0"));
 
-		final Diff addEPackageView = Iterators.find(
-				differences.iterator(),
+		final Diff addEPackageView = Iterators.find(differences.iterator(),
 				and(valueIsView, valueNameMatches("1002", NotationPackage.Literals.VIEW__TYPE),
 						elementIs(((ReferenceChange)addEPackage).getValue())));
 		final Diff addNodeInEPackageView1 = Iterators.find(differences.iterator(),
@@ -101,8 +99,7 @@ public class NodechangesTest extends AbstractTest {
 
 		final Diff addEClass = Iterators.find(differences.iterator(), added("tc1.EClass0"));
 
-		final Diff addEClassView = Iterators.find(
-				differences.iterator(),
+		final Diff addEClassView = Iterators.find(differences.iterator(),
 				and(valueIsView, valueNameMatches("1001", NotationPackage.Literals.VIEW__TYPE),
 						elementIs(((ReferenceChange)addEClass).getValue())));
 		final Diff addNodeInEClassView1 = Iterators.find(differences.iterator(),
@@ -132,8 +129,7 @@ public class NodechangesTest extends AbstractTest {
 
 		final Diff addEDataType = Iterators.find(differences.iterator(), added("tc1.EDataType0"));
 
-		final Diff addEDataTypeView = Iterators.find(
-				differences.iterator(),
+		final Diff addEDataTypeView = Iterators.find(differences.iterator(),
 				and(valueIsView, valueNameMatches("1004", NotationPackage.Literals.VIEW__TYPE),
 						elementIs(((ReferenceChange)addEDataType).getValue())));
 		final Diff addNodeInEDataTypeView1 = Iterators.find(differences.iterator(),
@@ -149,8 +145,7 @@ public class NodechangesTest extends AbstractTest {
 
 		final Diff addEEnum = Iterators.find(differences.iterator(), added("tc1.EEnum0"));
 
-		final Diff addEEnumView = Iterators.find(
-				differences.iterator(),
+		final Diff addEEnumView = Iterators.find(differences.iterator(),
 				and(valueIsView, valueNameMatches("1005", NotationPackage.Literals.VIEW__TYPE),
 						elementIs(((ReferenceChange)addEEnum).getValue())));
 		final Diff addNodeInEEnumView1 = Iterators.find(differences.iterator(),
@@ -170,13 +165,10 @@ public class NodechangesTest extends AbstractTest {
 		final Diff addBoundsInEEnumView = Iterators.find(differences.iterator(),
 				and(valueUnder(addEEnumView), valueIsInstanceof(Bounds.class)));
 
-		final Diff addEAnnotation = Iterators.find(
-				differences.iterator(),
-				addedToReference("tc1", "eAnnotations", "tc1.EAnnotation0",
-						EcorePackage.Literals.EANNOTATION__SOURCE));
+		final Diff addEAnnotation = Iterators.find(differences.iterator(), addedToReference("tc1",
+				"eAnnotations", "tc1.EAnnotation0", EcorePackage.Literals.EANNOTATION__SOURCE));
 
-		final Diff addEAnnotationView = Iterators.find(
-				differences.iterator(),
+		final Diff addEAnnotationView = Iterators.find(differences.iterator(),
 				and(valueIsView, valueNameMatches("1003", NotationPackage.Literals.VIEW__TYPE),
 						elementIs(((ReferenceChange)addEAnnotation).getValue())));
 		final Diff addNodeInEAnnotationView1 = Iterators.find(differences.iterator(),
@@ -199,29 +191,24 @@ public class NodechangesTest extends AbstractTest {
 		assertSame(Integer.valueOf(5),
 				count(differences, and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD))));
 
-		final Diff addNodeEPackageExtension = Iterators.find(
-				differences.iterator(),
+		final Diff addNodeEPackageExtension = Iterators.find(differences.iterator(),
 				and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD),
 						refinedBy(addRefElementInEPackageView)));
-		final Diff addNodeEClassExtension = Iterators.find(
-				differences.iterator(),
+		final Diff addNodeEClassExtension = Iterators.find(differences.iterator(),
 				and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD),
 						refinedBy(addRefElementInEClassView)));
-		final Diff addNodeEDataTypeExtension = Iterators.find(
-				differences.iterator(),
+		final Diff addNodeEDataTypeExtension = Iterators.find(differences.iterator(),
 				and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD),
 						refinedBy(addRefElementInEDataTypeView)));
-		final Diff addNodeEENumExtension = Iterators.find(
-				differences.iterator(),
+		final Diff addNodeEENumExtension = Iterators.find(differences.iterator(),
 				and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD),
 						refinedBy(addRefElementInEEnumView)));
-		final Diff addNodeEAnnotationExtension = Iterators.find(
-				differences.iterator(),
+		final Diff addNodeEAnnotationExtension = Iterators.find(differences.iterator(),
 				and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD),
 						refinedBy(addRefElementInEAnnotationView)));
 
 		assertSame(Integer.valueOf(10), addNodeEPackageExtension.getRefinedBy().size());
-		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addEPackageView));//for convenience...
+		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addEPackageView));// for convenience...
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addNodeInEPackageView1));
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addNodeInEPackageView2));
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addDrawerStyleInNodeInEPackageView2));
@@ -233,7 +220,7 @@ public class NodechangesTest extends AbstractTest {
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addRefElementInEPackageView));
 
 		assertSame(Integer.valueOf(13), addNodeEClassExtension.getRefinedBy().size());
-		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addEClassView));//for convenience...
+		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addEClassView));// for convenience...
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addNodeInEClassView1));
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addNodeInEClassView2));
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addDrawerStyleInNodeInEClassView2));
@@ -267,15 +254,16 @@ public class NodechangesTest extends AbstractTest {
 		assertTrue(addNodeEENumExtension.getRefinedBy().contains(addBoundsInEEnumView));
 
 		assertSame(Integer.valueOf(9), addNodeEAnnotationExtension.getRefinedBy().size());
-		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addEAnnotationView));// for convenience...
+		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addEAnnotationView));// for
+																							// convenience...
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addNodeInEAnnotationView1));
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addNodeInEAnnotationView2));
+		assertTrue(
+				addNodeEAnnotationExtension.getRefinedBy().contains(addDrawerStyleInNodeInEAnnotationView2));
+		assertTrue(
+				addNodeEAnnotationExtension.getRefinedBy().contains(addSortingStyleInNodeInEAnnotationView2));
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy()
-				.contains(addDrawerStyleInNodeInEAnnotationView2));
-		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(
-				addSortingStyleInNodeInEAnnotationView2));
-		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(
-				addFilteringStyleInNodeInEAnnotationView2));
+				.contains(addFilteringStyleInNodeInEAnnotationView2));
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addShapeStyleInEAnnotationView));
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addRefElementInEAnnotationView));
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addBoundsInEAnnotationView));
@@ -311,10 +299,9 @@ public class NodechangesTest extends AbstractTest {
 		assertTrue(addRefElementInEPackageView.getRequires().contains(addEPackage));
 		assertTrue(addRefElementInEPackageView.getRequires().contains(addEPackageView));
 
-		assertFalse("No resource attachment changes expected",
-				Iterators.filter(differences.iterator(), instanceOf(ResourceAttachmentChange.class))
-						.hasNext());
-		
+		assertFalse("No resource attachment changes expected", Iterators
+				.filter(differences.iterator(), instanceOf(ResourceAttachmentChange.class)).hasNext());
+
 		testIntersections(comparison);
 	}
 
@@ -323,8 +310,7 @@ public class NodechangesTest extends AbstractTest {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
-		final Comparison comparison = compare(right.getResourceSet(),
-				left.getResourceSet());
+		final Comparison comparison = compare(right.getResourceSet(), left.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -333,8 +319,7 @@ public class NodechangesTest extends AbstractTest {
 
 		final Diff addEPackage = Iterators.find(differences.iterator(), removed("tc1.EPackage0"));
 
-		final Diff addEPackageView = Iterators.find(
-				differences.iterator(),
+		final Diff addEPackageView = Iterators.find(differences.iterator(),
 				and(valueIsView, valueNameMatches("1002", NotationPackage.Literals.VIEW__TYPE),
 						elementIs(((ReferenceChange)addEPackage).getValue())));
 		final Diff addNodeInEPackageView1 = Iterators.find(differences.iterator(),
@@ -358,8 +343,7 @@ public class NodechangesTest extends AbstractTest {
 
 		final Diff addEClass = Iterators.find(differences.iterator(), removed("tc1.EClass0"));
 
-		final Diff addEClassView = Iterators.find(
-				differences.iterator(),
+		final Diff addEClassView = Iterators.find(differences.iterator(),
 				and(valueIsView, valueNameMatches("1001", NotationPackage.Literals.VIEW__TYPE),
 						elementIs(((ReferenceChange)addEClass).getValue())));
 		final Diff addNodeInEClassView1 = Iterators.find(differences.iterator(),
@@ -389,8 +373,7 @@ public class NodechangesTest extends AbstractTest {
 
 		final Diff addEDataType = Iterators.find(differences.iterator(), removed("tc1.EDataType0"));
 
-		final Diff addEDataTypeView = Iterators.find(
-				differences.iterator(),
+		final Diff addEDataTypeView = Iterators.find(differences.iterator(),
 				and(valueIsView, valueNameMatches("1004", NotationPackage.Literals.VIEW__TYPE),
 						elementIs(((ReferenceChange)addEDataType).getValue())));
 		final Diff addNodeInEDataTypeView1 = Iterators.find(differences.iterator(),
@@ -406,8 +389,7 @@ public class NodechangesTest extends AbstractTest {
 
 		final Diff addEEnum = Iterators.find(differences.iterator(), removed("tc1.EEnum0"));
 
-		final Diff addEEnumView = Iterators.find(
-				differences.iterator(),
+		final Diff addEEnumView = Iterators.find(differences.iterator(),
 				and(valueIsView, valueNameMatches("1005", NotationPackage.Literals.VIEW__TYPE),
 						elementIs(((ReferenceChange)addEEnum).getValue())));
 		final Diff addNodeInEEnumView1 = Iterators.find(differences.iterator(),
@@ -427,13 +409,10 @@ public class NodechangesTest extends AbstractTest {
 		final Diff addBoundsInEEnumView = Iterators.find(differences.iterator(),
 				and(valueUnder(addEEnumView), valueIsInstanceof(Bounds.class)));
 
-		final Diff addEAnnotation = Iterators.find(
-				differences.iterator(),
-				removedFromReference("tc1", "eAnnotations", "tc1.EAnnotation0",
-						EcorePackage.Literals.EANNOTATION__SOURCE));
+		final Diff addEAnnotation = Iterators.find(differences.iterator(), removedFromReference("tc1",
+				"eAnnotations", "tc1.EAnnotation0", EcorePackage.Literals.EANNOTATION__SOURCE));
 
-		final Diff addEAnnotationView = Iterators.find(
-				differences.iterator(),
+		final Diff addEAnnotationView = Iterators.find(differences.iterator(),
 				and(valueIsView, valueNameMatches("1003", NotationPackage.Literals.VIEW__TYPE),
 						elementIs(((ReferenceChange)addEAnnotation).getValue())));
 		final Diff addNodeInEAnnotationView1 = Iterators.find(differences.iterator(),
@@ -460,20 +439,16 @@ public class NodechangesTest extends AbstractTest {
 				and(instanceOf(NodeChange.class), ofKind(DifferenceKind.DELETE), refinedBy(addEPackageView)));
 		final Diff addNodeEClassExtension = Iterators.find(differences.iterator(),
 				and(instanceOf(NodeChange.class), ofKind(DifferenceKind.DELETE), refinedBy(addEClassView)));
-		final Diff addNodeEDataTypeExtension = Iterators
-				.find(differences.iterator(),
-						and(instanceOf(NodeChange.class), ofKind(DifferenceKind.DELETE),
-								refinedBy(addEDataTypeView)));
+		final Diff addNodeEDataTypeExtension = Iterators.find(differences.iterator(), and(
+				instanceOf(NodeChange.class), ofKind(DifferenceKind.DELETE), refinedBy(addEDataTypeView)));
 		final Diff addNodeEENumExtension = Iterators.find(differences.iterator(),
 				and(instanceOf(NodeChange.class), ofKind(DifferenceKind.DELETE), refinedBy(addEEnumView)));
-		final Diff addNodeEAnnotationExtension = Iterators.find(
-				differences.iterator(),
-				and(instanceOf(NodeChange.class), ofKind(DifferenceKind.DELETE),
-						refinedBy(addEAnnotationView)));
-		
+		final Diff addNodeEAnnotationExtension = Iterators.find(differences.iterator(), and(
+				instanceOf(NodeChange.class), ofKind(DifferenceKind.DELETE), refinedBy(addEAnnotationView)));
+
 		assertSame(Integer.valueOf(10), addNodeEPackageExtension.getRefinedBy().size());
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addEPackageView));
-		//for convenience:
+		// for convenience:
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addNodeInEPackageView1));
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addNodeInEPackageView2));
 		assertTrue(addNodeEPackageExtension.getRefinedBy().contains(addDrawerStyleInNodeInEPackageView2));
@@ -486,7 +461,7 @@ public class NodechangesTest extends AbstractTest {
 
 		assertSame(Integer.valueOf(13), addNodeEClassExtension.getRefinedBy().size());
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addEClassView));
-		//for convenience:
+		// for convenience:
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addNodeInEClassView1));
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addNodeInEClassView2));
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addDrawerStyleInNodeInEClassView2));
@@ -526,12 +501,12 @@ public class NodechangesTest extends AbstractTest {
 		// for convenience:
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addNodeInEAnnotationView1));
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addNodeInEAnnotationView2));
+		assertTrue(
+				addNodeEAnnotationExtension.getRefinedBy().contains(addDrawerStyleInNodeInEAnnotationView2));
+		assertTrue(
+				addNodeEAnnotationExtension.getRefinedBy().contains(addSortingStyleInNodeInEAnnotationView2));
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy()
-				.contains(addDrawerStyleInNodeInEAnnotationView2));
-		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(
-				addSortingStyleInNodeInEAnnotationView2));
-		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(
-				addFilteringStyleInNodeInEAnnotationView2));
+				.contains(addFilteringStyleInNodeInEAnnotationView2));
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addShapeStyleInEAnnotationView));
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addRefElementInEAnnotationView));
 		assertTrue(addNodeEAnnotationExtension.getRefinedBy().contains(addBoundsInEAnnotationView));
@@ -544,8 +519,7 @@ public class NodechangesTest extends AbstractTest {
 		final Resource left = input.getA3Left();
 		final Resource right = input.getA3Right();
 
-		final Comparison comparison = compare(left.getResourceSet(),
-						right.getResourceSet());
+		final Comparison comparison = compare(left.getResourceSet(), right.getResourceSet());
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -554,8 +528,7 @@ public class NodechangesTest extends AbstractTest {
 
 		final Diff addEPackage = Iterators.find(differences.iterator(), added("tc1.EPackage0"));
 
-		final Diff addEPackageView = Iterators.find(
-				differences.iterator(),
+		final Diff addEPackageView = Iterators.find(differences.iterator(),
 				and(valueIsView, valueNameMatches("1002", NotationPackage.Literals.VIEW__TYPE),
 						elementIs(((ReferenceChange)addEPackage).getValue())));
 		final Diff addNodeInEPackageView1 = Iterators.find(differences.iterator(),
@@ -579,8 +552,7 @@ public class NodechangesTest extends AbstractTest {
 
 		final Diff addEClass = Iterators.find(differences.iterator(), added("tc1.EPackage0.EClass0"));
 
-		final Diff addEClassView = Iterators.find(
-				differences.iterator(),
+		final Diff addEClassView = Iterators.find(differences.iterator(),
 				and(valueIsView, valueNameMatches("2003", NotationPackage.Literals.VIEW__TYPE),
 						elementIs(((ReferenceChange)addEClass).getValue())));
 		final Diff addNodeInEClassView1 = Iterators.find(differences.iterator(),
@@ -611,12 +583,10 @@ public class NodechangesTest extends AbstractTest {
 		assertSame(Integer.valueOf(2),
 				count(differences, and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD))));
 
-		final Diff addNodeEPackageExtension = Iterators.find(
-				differences.iterator(),
+		final Diff addNodeEPackageExtension = Iterators.find(differences.iterator(),
 				and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD),
 						refinedBy(addRefElementInEPackageView)));
-		final Diff addNodeEClassExtension = Iterators.find(
-				differences.iterator(),
+		final Diff addNodeEClassExtension = Iterators.find(differences.iterator(),
 				and(instanceOf(NodeChange.class), ofKind(DifferenceKind.ADD),
 						refinedBy(addRefElementInEClassView)));
 
@@ -647,10 +617,9 @@ public class NodechangesTest extends AbstractTest {
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addRefElementInEClassView));
 		assertTrue(addNodeEClassExtension.getRefinedBy().contains(addBoundsInEClassView));
 
-		assertFalse("No resource attachment changes expected",
-				Iterators.filter(differences.iterator(), instanceOf(ResourceAttachmentChange.class))
-						.hasNext());
-		
+		assertFalse("No resource attachment changes expected", Iterators
+				.filter(differences.iterator(), instanceOf(ResourceAttachmentChange.class)).hasNext());
+
 		testIntersections(comparison);
 	}
 

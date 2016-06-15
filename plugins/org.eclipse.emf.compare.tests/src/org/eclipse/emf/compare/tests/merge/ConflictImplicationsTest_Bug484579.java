@@ -150,10 +150,10 @@ public class ConflictImplicationsTest_Bug484579 {
 		assertEquals(9, comparison.getDifferences().size());
 		assertEquals(3, conflicts.size());
 
-		Collection<Conflict> pseudoConflicts = Collections2.filter(conflicts, EMFComparePredicates
-				.containsConflictOfTypes(PSEUDO));
-		Collection<Conflict> realConflicts = Collections2.filter(conflicts, EMFComparePredicates
-				.containsConflictOfTypes(REAL));
+		Collection<Conflict> pseudoConflicts = Collections2.filter(conflicts,
+				EMFComparePredicates.containsConflictOfTypes(PSEUDO));
+		Collection<Conflict> realConflicts = Collections2.filter(conflicts,
+				EMFComparePredicates.containsConflictOfTypes(REAL));
 
 		assertEquals(1, pseudoConflicts.size());
 		assertEquals(2, realConflicts.size());
@@ -256,10 +256,10 @@ public class ConflictImplicationsTest_Bug484579 {
 		assertEquals(17, comparison.getDifferences().size());
 		assertEquals(3, conflicts.size());
 
-		Collection<Conflict> pseudoConflicts = Collections2.filter(conflicts, EMFComparePredicates
-				.containsConflictOfTypes(PSEUDO));
-		Collection<Conflict> realConflicts = Collections2.filter(conflicts, EMFComparePredicates
-				.containsConflictOfTypes(REAL));
+		Collection<Conflict> pseudoConflicts = Collections2.filter(conflicts,
+				EMFComparePredicates.containsConflictOfTypes(PSEUDO));
+		Collection<Conflict> realConflicts = Collections2.filter(conflicts,
+				EMFComparePredicates.containsConflictOfTypes(REAL));
 
 		assertEquals(2, pseudoConflicts.size());
 		assertEquals(1, realConflicts.size());

@@ -71,8 +71,8 @@ public class StaticProfileIntegrationDisplayTest extends AbstractDifferenceOrder
 				new UMLPostProcessor(), Pattern.compile("http://www.eclipse.org/uml2/\\d.0.0/UML"), null); //$NON-NLS-1$
 		postProcessorRegistry.put(UMLPostProcessor.class.getName(), umlPostProcessor);
 		BasicPostProcessorDescriptorImpl stereotypeElementPostProcessor = new BasicPostProcessorDescriptorImpl(
-				new StereotypedElementChangePostProcessor(), Pattern
-						.compile("http://www.eclipse.org/uml2/\\d.0.0/UML"), null); //$NON-NLS-1$
+				new StereotypedElementChangePostProcessor(),
+				Pattern.compile("http://www.eclipse.org/uml2/\\d.0.0/UML"), null); //$NON-NLS-1$
 		postProcessorRegistry.put(StereotypedElementChangePostProcessor.class.getName(),
 				stereotypeElementPostProcessor);
 		return postProcessorRegistry;
@@ -85,8 +85,8 @@ public class StaticProfileIntegrationDisplayTest extends AbstractDifferenceOrder
 		eventBus = new EventBus();
 		return Lists.<AdapterFactory> newArrayList(new ProfiledUMLCompareItemProviderAdapterFactory(),
 				new UMLProfileItemProviderAdapterFactoryDecorator(),
-				new CompareItemProviderAdapterFactorySpec(), new TreeItemProviderAdapterFactorySpec(
-						new StructureMergeViewerFilter(eventBus)),
+				new CompareItemProviderAdapterFactorySpec(),
+				new TreeItemProviderAdapterFactorySpec(new StructureMergeViewerFilter(eventBus)),
 				new UMLCompareCustomItemProviderAdapterFactory(),
 				new UML2CompareTestProfileItemProviderAdapterFactory(), new UMLItemProviderAdapterFactory(),
 				new UMLCompareItemProviderDecoratorAdapterFactory(),

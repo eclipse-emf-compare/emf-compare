@@ -126,8 +126,8 @@ public class GroupsInteractiveContent {
 		GridLayout layout = new GridLayout(2, false);
 		synchronizationGroup.setLayout(layout);
 		synchronizationGroup.setLayoutData(layoutData);
-		synchronizationGroup.setText(EMFCompareRCPUIMessages
-				.getString("GroupsInteractiveContent.SYNC_BEHAVIOR_GROUP_LABEL")); //$NON-NLS-1$
+		synchronizationGroup.setText(
+				EMFCompareRCPUIMessages.getString("GroupsInteractiveContent.SYNC_BEHAVIOR_GROUP_LABEL")); //$NON-NLS-1$
 		Label label = new Label(synchronizationGroup, SWT.WRAP);
 		label.setText(EMFCompareRCPUIMessages.getString("GroupsInteractiveContent.SYNC_BEHAVIOR_LABEL")); //$NON-NLS-1$
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
@@ -211,8 +211,8 @@ public class GroupsInteractiveContent {
 	 */
 	private Label createDescriptionComposite(Composite composite) {
 		Group descriptionComposite = new Group(composite, SWT.NONE);
-		descriptionComposite.setText(EMFCompareRCPUIMessages
-				.getString("InteractiveUIContent.descriptionComposite.label")); //$NON-NLS-1$
+		descriptionComposite.setText(
+				EMFCompareRCPUIMessages.getString("InteractiveUIContent.descriptionComposite.label")); //$NON-NLS-1$
 		descriptionComposite.setLayout(new GridLayout(1, false));
 		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		Label engineDescriptionLabel = new Label(descriptionComposite, SWT.WRAP);

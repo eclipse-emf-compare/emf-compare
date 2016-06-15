@@ -47,7 +47,7 @@ public class AbstractGitLogicalModelTest extends CompareGitTestCase {
 	private ResourceSet resourceSet;
 
 	protected IProject iProject;
-	
+
 	public AbstractGitLogicalModelTest() {
 		super();
 	}
@@ -70,19 +70,19 @@ public class AbstractGitLogicalModelTest extends CompareGitTestCase {
 	@Override
 	@After
 	public void tearDown() throws Exception {
-		final EMFModelProvider emfModelProvider = (EMFModelProvider)ModelProvider.getModelProviderDescriptor(
-				EMFModelProvider.PROVIDER_ID).getModelProvider();
+		final EMFModelProvider emfModelProvider = (EMFModelProvider)ModelProvider
+				.getModelProviderDescriptor(EMFModelProvider.PROVIDER_ID).getModelProvider();
 		emfModelProvider.clear();
 		super.tearDown();
 	}
-	
+
 	protected Resource createAndConnectResource(String fileName) throws Exception {
 		final File file = project.getOrCreateFile(iProject, fileName);
 		final IFile iFile = project.getIFile(iProject, file);
 		return connectResource(iFile, resourceSet);
 	}
-	
-	protected File getFile(String fileName) throws Exception{
+
+	protected File getFile(String fileName) throws Exception {
 		return project.getOrCreateFile(iProject, fileName);
 	}
 

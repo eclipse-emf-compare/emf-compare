@@ -87,8 +87,8 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 	private IProgressMonitor monitor = new NullProgressMonitor();
 
 	@Test
-	public void testResolveLocalModelFromFile1WithoutDependencyProvider() throws IOException, CoreException,
-			URISyntaxException, InterruptedException {
+	public void testResolveLocalModelFromFile1WithoutDependencyProvider()
+			throws IOException, CoreException, URISyntaxException, InterruptedException {
 		final ModelSet modelSet = createProjectWithModelSet();
 		final ThreadedModelResolver resolver = createModelResolver();
 
@@ -99,8 +99,8 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 	}
 
 	@Test
-	public void testResolveLocalModelFromFile2WithoutDependencyProvider() throws IOException, CoreException,
-			URISyntaxException, InterruptedException {
+	public void testResolveLocalModelFromFile2WithoutDependencyProvider()
+			throws IOException, CoreException, URISyntaxException, InterruptedException {
 		final ModelSet modelSet = createProjectWithModelSet();
 		final ThreadedModelResolver resolver = createModelResolver();
 
@@ -112,8 +112,8 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 	}
 
 	@Test
-	public void testResolveLocalModelFromFile1WithDependencyProvider() throws IOException, CoreException,
-			URISyntaxException, InterruptedException {
+	public void testResolveLocalModelFromFile1WithDependencyProvider()
+			throws IOException, CoreException, URISyntaxException, InterruptedException {
 		final ModelSet modelSet = createProjectWithModelSet();
 		final ThreadedModelResolver resolver = createModelResolverWithCustomImplicitDependencies();
 
@@ -123,8 +123,8 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 	}
 
 	@Test
-	public void testResolveLocalModelFromFile2WithDependencyProvider() throws IOException, CoreException,
-			URISyntaxException, InterruptedException {
+	public void testResolveLocalModelFromFile2WithDependencyProvider()
+			throws IOException, CoreException, URISyntaxException, InterruptedException {
 		final ModelSet modelSet = createProjectWithModelSet();
 		final ThreadedModelResolver resolver = createModelResolverWithCustomImplicitDependencies();
 
@@ -134,8 +134,8 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 	}
 
 	@Test
-	public void testResolveLocalModelsTwoWayFromFile1WithoutDependencyProvider() throws IOException,
-			CoreException, URISyntaxException, InterruptedException {
+	public void testResolveLocalModelsTwoWayFromFile1WithoutDependencyProvider()
+			throws IOException, CoreException, URISyntaxException, InterruptedException {
 		final ModelSet leftModelSet = createProjectWithModelSet("Left");
 		final ModelSet rightModelSet = createProjectWithModelSet("Right");
 		final ThreadedModelResolver resolver = createModelResolver();
@@ -151,8 +151,8 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 	}
 
 	@Test
-	public void testResolveLocalModelsThreeWayFromFile1WithoutDependencyProvider() throws IOException,
-			CoreException, URISyntaxException, InterruptedException {
+	public void testResolveLocalModelsThreeWayFromFile1WithoutDependencyProvider()
+			throws IOException, CoreException, URISyntaxException, InterruptedException {
 		final ModelSet leftModelSet = createProjectWithModelSet("Left");
 		final ModelSet rightModelSet = createProjectWithModelSet("Right");
 		final ModelSet originModelSet = createProjectWithModelSet("Origin");
@@ -170,8 +170,8 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 	}
 
 	@Test
-	public void testResolveLocalModelsTwoWayFromFile1WithDependencyProvider() throws IOException,
-			CoreException, URISyntaxException, InterruptedException {
+	public void testResolveLocalModelsTwoWayFromFile1WithDependencyProvider()
+			throws IOException, CoreException, URISyntaxException, InterruptedException {
 		final ModelSet leftModelSet = createProjectWithModelSet("Left");
 		final ModelSet rightModelSet = createProjectWithModelSet("Right");
 		final ThreadedModelResolver resolver = createModelResolverWithCustomImplicitDependencies();
@@ -185,8 +185,8 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 	}
 
 	@Test
-	public void testResolveLocalModelsThreeWayFromFile1WithDependencyProvider() throws IOException,
-			CoreException, URISyntaxException, InterruptedException {
+	public void testResolveLocalModelsThreeWayFromFile1WithDependencyProvider()
+			throws IOException, CoreException, URISyntaxException, InterruptedException {
 		final ModelSet leftModelSet = createProjectWithModelSet("Left");
 		final ModelSet rightModelSet = createProjectWithModelSet("Right");
 		final ModelSet originModelSet = createProjectWithModelSet("Origin");
@@ -230,15 +230,16 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 		ThreadedModelResolver resolver = new ThreadedModelResolver() {
 			@Override
 			protected DefaultResolutionContext createContext(EventBus eventBus, IGraph<URI> graph) {
-				return new DefaultResolutionContext(eventBus, graph, new DependencyGraphUpdater<URI>(graph,
-						eventBus), new ResourceComputationScheduler<URI>(), new ModelResourceListener()) {
+				return new DefaultResolutionContext(eventBus, graph,
+						new DependencyGraphUpdater<URI>(graph, eventBus),
+						new ResourceComputationScheduler<URI>(), new ModelResourceListener()) {
 					@Override
 					public synchronized IImplicitDependencies getImplicitDependencies() {
 						return new IImplicitDependencies() {
 							public Set<URI> of(URI uri, URIConverter uriConverter) {
 								final String uriString = uri.toPlatformString(false);
-								final String baseUriString = uriString.substring(0, uriString
-										.lastIndexOf("/"));
+								final String baseUriString = uriString.substring(0,
+										uriString.lastIndexOf("/"));
 								final String file1UriString = baseUriString + "/" + MODEL_FILE1;
 								final String file2UriString = baseUriString + "/" + MODEL_FILE2;
 								final URI file1Uri = URI.createPlatformResourceURI(file1UriString, false);
@@ -263,8 +264,8 @@ public class ThreadedModelResolverWithCustomDependencyProviderTest extends Compa
 		return createProjectWithModelSet("Project");
 	}
 
-	private ModelSet createProjectWithModelSet(String name) throws CoreException, IOException,
-			URISyntaxException {
+	private ModelSet createProjectWithModelSet(String name)
+			throws CoreException, IOException, URISyntaxException {
 		final IProject iProject = new TestProject(name).getProject();
 		final File file1 = project.getOrCreateFile(iProject, MODEL_FILE1);
 		final File file2 = project.getOrCreateFile(iProject, MODEL_FILE2);

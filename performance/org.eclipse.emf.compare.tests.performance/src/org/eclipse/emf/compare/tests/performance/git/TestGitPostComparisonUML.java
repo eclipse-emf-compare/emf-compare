@@ -25,13 +25,13 @@ import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestGitPostComparisonUML extends AbstractEMFComparePerformanceTest {
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest#setSUTName()
 	 */
 	@Override
@@ -42,7 +42,7 @@ public class TestGitPostComparisonUML extends AbstractEMFComparePerformanceTest 
 	@Test
 	public void a_pcUMLUMLSmall() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLSmall");
-		
+
 		final DataGit data = new SmallGitInputData();
 		data.match();
 		data.postMatchUML();
@@ -57,11 +57,11 @@ public class TestGitPostComparisonUML extends AbstractEMFComparePerformanceTest 
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void b_pcUMLUMLNominal() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLNominal");
-		
+
 		final DataGit data = new NominalGitInputData();
 		data.match();
 		data.postMatchUML();
@@ -76,11 +76,11 @@ public class TestGitPostComparisonUML extends AbstractEMFComparePerformanceTest 
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void c_pcUMLUMLSmallSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLSmallSplit");
-		
+
 		final DataGit data = new SmallSplitGitInputData();
 		data.match();
 		data.postMatchUML();
@@ -95,11 +95,11 @@ public class TestGitPostComparisonUML extends AbstractEMFComparePerformanceTest 
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void d_pcUMLUMLNominalSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLNominalSplit");
-		
+
 		final DataGit data = new NominalSplitGitInputData();
 		data.match();
 		data.postMatchUML();

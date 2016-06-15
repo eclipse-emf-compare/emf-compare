@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Widget;
  * <i>This class is not intended to be used outside of its package. It has been set to public for testing
  * purpose only.</i>
  * </p>
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class WrappableTreeViewer extends TreeViewer implements IWrappableStructuredViewer {

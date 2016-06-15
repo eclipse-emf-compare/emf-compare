@@ -107,8 +107,8 @@ public class WeightProviderDescriptorRegistryImpl implements WeightProvider.Desc
 	public WeightProvider getHighestRankingWeightProvider(EPackage ePackage) {
 		WeightProvider weightProvider = cache.get(ePackage.getNsURI());
 		if (weightProvider == null) {
-			WeightProvider.Descriptor highestRankingWeightProviderDescriptor = getHighestRankingWeightProviderDescriptor(ePackage
-					.getNsURI());
+			WeightProvider.Descriptor highestRankingWeightProviderDescriptor = getHighestRankingWeightProviderDescriptor(
+					ePackage.getNsURI());
 			if (highestRankingWeightProviderDescriptor != null) {
 				weightProvider = highestRankingWeightProviderDescriptor.getWeightProvider();
 				cache.put(ePackage.getNsURI(), weightProvider);

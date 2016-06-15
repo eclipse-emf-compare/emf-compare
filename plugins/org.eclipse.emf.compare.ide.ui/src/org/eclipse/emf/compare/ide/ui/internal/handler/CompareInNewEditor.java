@@ -74,10 +74,9 @@ public class CompareInNewEditor extends AbstractCompareHandler {
 				}
 			}
 
-			if (left instanceof EObject
-					&& right instanceof EObject
-					&& (EcoreUtil.isAncestor((EObject)left, (EObject)right) || EcoreUtil.isAncestor(
-							(EObject)right, (EObject)left))) {
+			if (left instanceof EObject && right instanceof EObject
+					&& (EcoreUtil.isAncestor((EObject)left, (EObject)right)
+							|| EcoreUtil.isAncestor((EObject)right, (EObject)left))) {
 				MessageDialog.openInformation(activePart.getSite().getShell(), "EMF Compare", //$NON-NLS-1$
 						EMFCompareIDEUIMessages.getString("CompareSelfWithAncestor")); //$NON-NLS-1$
 			} else {

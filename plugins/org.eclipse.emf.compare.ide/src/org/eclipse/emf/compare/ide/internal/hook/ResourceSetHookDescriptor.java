@@ -44,7 +44,7 @@ class ResourceSetHookDescriptor {
 	 * @param element
 	 *            {@link #element}
 	 */
-	public ResourceSetHookDescriptor(IConfigurationElement element) {
+	ResourceSetHookDescriptor(IConfigurationElement element) {
 		super();
 		this.element = element;
 	}
@@ -64,10 +64,10 @@ class ResourceSetHookDescriptor {
 			} catch (CoreException e) {
 				error = true;
 				String contributorName = element.getDeclaringExtension().getContributor().getName();
-				String message = EMFCompareIDEMessages.getString(
-						"ResourceSetHookRegistry.hookInstanceError", contributorName); //$NON-NLS-1$
-				final IStatus status = new Status(IStatus.ERROR, contributorName, message
-						+ element.getDeclaringExtension().getContributor().getName(), e);
+				String message = EMFCompareIDEMessages.getString("ResourceSetHookRegistry.hookInstanceError", //$NON-NLS-1$
+						contributorName);
+				final IStatus status = new Status(IStatus.ERROR, contributorName,
+						message + element.getDeclaringExtension().getContributor().getName(), e);
 				EMFCompareRCPPlugin.getDefault().getLog().log(status);
 			}
 		}

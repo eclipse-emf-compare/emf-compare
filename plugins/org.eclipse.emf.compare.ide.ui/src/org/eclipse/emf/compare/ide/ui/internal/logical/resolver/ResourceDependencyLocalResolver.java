@@ -122,10 +122,10 @@ public class ResourceDependencyLocalResolver implements IResourceDependencyLocal
 	protected void updateChangedResources(SynchronizedResourceSet resourceSet, DiagnosticSupport diagnostic,
 			ThreadSafeProgressMonitor tspm) {
 		// this.diagnostic = createDiagnostic();
-		final Set<URI> removedURIs = Sets.difference(resourceListener.popRemovedURIs(), scheduler
-				.getComputedElements());
-		final Set<URI> changedURIs = Sets.difference(resourceListener.popChangedURIs(), scheduler
-				.getComputedElements());
+		final Set<URI> removedURIs = Sets.difference(resourceListener.popRemovedURIs(),
+				scheduler.getComputedElements());
+		final Set<URI> changedURIs = Sets.difference(resourceListener.popChangedURIs(),
+				scheduler.getComputedElements());
 
 		eventBus.post(new ResourceRemovedEvent<URI>(removedURIs));
 

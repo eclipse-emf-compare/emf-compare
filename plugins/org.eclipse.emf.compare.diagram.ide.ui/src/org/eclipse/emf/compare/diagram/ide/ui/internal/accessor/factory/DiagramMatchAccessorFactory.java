@@ -37,12 +37,10 @@ public class DiagramMatchAccessorFactory extends AbstractAccessorFactory {
 	 */
 	public boolean isFactoryFor(Object target) {
 		// CHECKSTYLE:OFF
-		return target instanceof Match
-				&& (((Match)target).getLeft() != null
-						&& ((Match)target).getLeft().eClass().getEPackage().getNsURI()
-								.matches(NS_URI_PATTERN) || ((Match)target).getRight() != null
-						&& ((Match)target).getRight().eClass().getEPackage().getNsURI().matches(
-								NS_URI_PATTERN));
+		return target instanceof Match && (((Match)target).getLeft() != null
+				&& ((Match)target).getLeft().eClass().getEPackage().getNsURI().matches(NS_URI_PATTERN)
+				|| ((Match)target).getRight() != null && ((Match)target).getRight().eClass().getEPackage()
+						.getNsURI().matches(NS_URI_PATTERN));
 		// CHECKSTYLE:ON
 	}
 

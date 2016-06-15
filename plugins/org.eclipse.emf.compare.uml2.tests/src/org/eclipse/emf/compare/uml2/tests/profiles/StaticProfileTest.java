@@ -218,11 +218,11 @@ public class StaticProfileTest extends AbstractStaticProfileTest {
 		assertEquals(1, count(differences, instanceOf(ProfileApplicationChange.class)));
 		Diff addUMLProfileApplication = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLProfileApplication = Iterators.find(differences.iterator(), and(
-					instanceOf(ProfileApplicationChange.class), ofKind(DifferenceKind.ADD)));
+			addUMLProfileApplication = Iterators.find(differences.iterator(),
+					and(instanceOf(ProfileApplicationChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLProfileApplication = Iterators.find(differences.iterator(), and(
-					instanceOf(ProfileApplicationChange.class), ofKind(DifferenceKind.DELETE)));
+			addUMLProfileApplication = Iterators.find(differences.iterator(),
+					and(instanceOf(ProfileApplicationChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLProfileApplication);
 		assertEquals(4, addUMLProfileApplication.getRefinedBy().size());

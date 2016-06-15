@@ -51,8 +51,8 @@ public class ResourceDependencyRemoteResolver implements IResourceDependencyRemo
 			return;
 		}
 		for (URI currentUri : implicitDependencies.of(uri, resourceSet.getURIConverter())) {
-			scheduler.scheduleComputation(getRemoteResolveComputation(resourceSet, currentUri, diagnostic,
-					tspm));
+			scheduler.scheduleComputation(
+					getRemoteResolveComputation(resourceSet, currentUri, diagnostic, tspm));
 		}
 	}
 

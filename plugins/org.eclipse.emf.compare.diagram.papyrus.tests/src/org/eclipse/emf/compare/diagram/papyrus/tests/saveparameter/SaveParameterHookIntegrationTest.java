@@ -134,8 +134,8 @@ public class SaveParameterHookIntegrationTest {
 		}
 
 		// build comparison scope which uses the internal resource sets of EMF Compare
-		final StorageTraversal traversal = ProfileTestUtil.createStorageTraversal(platformURIStrings
-				.toArray(new String[0]));
+		final StorageTraversal traversal = ProfileTestUtil
+				.createStorageTraversal(platformURIStrings.toArray(new String[0]));
 		final SynchronizationModel syncModel = new SynchronizationModel(traversal, traversal, null);
 		final IComparisonScope scope = ComparisonScopeBuilder.create(syncModel, new NullProgressMonitor());
 

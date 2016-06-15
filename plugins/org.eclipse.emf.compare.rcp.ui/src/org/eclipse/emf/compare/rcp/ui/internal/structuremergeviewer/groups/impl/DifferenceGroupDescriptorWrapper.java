@@ -47,8 +47,8 @@ public class DifferenceGroupDescriptorWrapper extends AbstractItemDescriptor<IDi
 	 */
 	public DifferenceGroupDescriptorWrapper(String label, String description, IConfigurationElement elem,
 			int rank, ComparisonType comparisonType) {
-		super(label, description, rank, elem
-				.getAttribute(DifferenceGroupProviderExtensionRegistryListener.ATT_CLASS));
+		super(label, description, rank,
+				elem.getAttribute(DifferenceGroupProviderExtensionRegistryListener.ATT_CLASS));
 		this.element = elem;
 		this.type = comparisonType;
 	}

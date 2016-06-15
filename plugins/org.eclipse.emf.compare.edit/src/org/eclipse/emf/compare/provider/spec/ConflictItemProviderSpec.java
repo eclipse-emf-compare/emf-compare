@@ -70,8 +70,8 @@ public class ConflictItemProviderSpec extends ConflictItemProvider implements II
 			if (any(conflict.getDifferences(), EMFComparePredicates.hasState(DifferenceState.UNRESOLVED))) {
 				image = overlayImage(object, getResourceLocator().getImage("full/obj16/PseudoConflict")); //$NON-NLS-1$
 			} else {
-				image = overlayImage(object, getResourceLocator().getImage(
-						"full/obj16/PseudoConflictResolved")); //$NON-NLS-1$
+				image = overlayImage(object,
+						getResourceLocator().getImage("full/obj16/PseudoConflictResolved")); //$NON-NLS-1$
 			}
 		} else {
 			if (any(conflict.getDifferences(), EMFComparePredicates.hasState(DifferenceState.UNRESOLVED))) {
@@ -93,8 +93,8 @@ public class ConflictItemProviderSpec extends ConflictItemProvider implements II
 		Conflict conflict = (Conflict)object;
 		ComposedStyledString ret = new ComposedStyledString();
 
-		int unresolvedDiffCount = size(Iterables.filter(conflict.getDifferences(),
-				hasState(DifferenceState.UNRESOLVED)));
+		int unresolvedDiffCount = size(
+				Iterables.filter(conflict.getDifferences(), hasState(DifferenceState.UNRESOLVED)));
 		if (unresolvedDiffCount > 0) {
 			ret.append("> ", Style.DECORATIONS_STYLER); //$NON-NLS-1$
 		}
@@ -106,9 +106,12 @@ public class ConflictItemProviderSpec extends ConflictItemProvider implements II
 		}
 
 		if (unresolvedDiffCount > 0) {
-			ret.append(" [" //$NON-NLS-1$
-					+ EMFCompareEditMessages.getString("unresolved", Integer.valueOf(unresolvedDiffCount), //$NON-NLS-1$
-							Integer.valueOf(conflict.getDifferences().size())) + "]", //$NON-NLS-1$
+			ret.append(
+					" [" //$NON-NLS-1$
+							+ EMFCompareEditMessages.getString("unresolved", //$NON-NLS-1$
+									Integer.valueOf(unresolvedDiffCount),
+									Integer.valueOf(conflict.getDifferences().size()))
+							+ "]", //$NON-NLS-1$
 					Style.DECORATIONS_STYLER);
 		} else {
 			ret.append(" [" + EMFCompareEditMessages.getString("resolved") + "]", Style.DECORATIONS_STYLER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

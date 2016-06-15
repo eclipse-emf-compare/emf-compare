@@ -89,9 +89,8 @@ public class CoordinatesChangeFactory extends NodeChangeFactory {
 	@Override
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
 		if (extensionKind == DifferenceKind.CHANGE) {
-			extension.getRefinedBy().addAll(
-					Collections2.filter(getAllDifferencesForChange(refiningDiff), fromSide(extension
-							.getSource())));
+			extension.getRefinedBy().addAll(Collections2.filter(getAllDifferencesForChange(refiningDiff),
+					fromSide(extension.getSource())));
 		}
 	}
 
@@ -146,8 +145,8 @@ public class CoordinatesChangeFactory extends NodeChangeFactory {
 				if (!scannedMatches.isEmpty()) {
 					return difference instanceof ReferenceChange
 							&& isRelatedToAMoveNode((ReferenceChange)difference)
-							&& scannedMatches.contains(scannedMatches.get(0).getComparison().getMatch(
-									((ReferenceChange)difference).getValue()));
+							&& scannedMatches.contains(scannedMatches.get(0).getComparison()
+									.getMatch(((ReferenceChange)difference).getValue()));
 				} else {
 					return false;
 				}
@@ -238,7 +237,7 @@ public class CoordinatesChangeFactory extends NodeChangeFactory {
 		 * @param element
 		 *            The element this provider should return the coordinates of.
 		 */
-		public CoordinateProvider(EObject element) {
+		CoordinateProvider(EObject element) {
 			this.element = element;
 		}
 

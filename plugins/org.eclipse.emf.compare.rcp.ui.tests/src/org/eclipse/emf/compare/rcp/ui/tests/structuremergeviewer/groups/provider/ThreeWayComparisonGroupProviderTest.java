@@ -30,7 +30,7 @@ public class ThreeWayComparisonGroupProviderTest extends AbstractTestTreeNodeIte
 	@Before
 	public void before() throws IOException {
 		super.before();
-		itemProvider = (TreeNodeItemProviderSpec) treeItemProviderAdapterFactory.createTreeNodeAdapter();
+		itemProvider = (TreeNodeItemProviderSpec)treeItemProviderAdapterFactory.createTreeNodeAdapter();
 	}
 
 	@Test

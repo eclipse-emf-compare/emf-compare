@@ -89,8 +89,8 @@ public class AdapterFactoriesPreferencePage extends PreferencePage implements IW
 	}
 
 	private void fillViewer() {
-		List<RankedAdapterFactoryDescriptor> descriptors = Lists.newArrayList(EMFCompareRCPPlugin
-				.getDefault().getAdapterFactoryRegistry().getDescriptors());
+		List<RankedAdapterFactoryDescriptor> descriptors = Lists
+				.newArrayList(EMFCompareRCPPlugin.getDefault().getAdapterFactoryRegistry().getDescriptors());
 		Collections.sort(descriptors, new Comparator<RankedAdapterFactoryDescriptor>() {
 
 			public int compare(RankedAdapterFactoryDescriptor o1, RankedAdapterFactoryDescriptor o2) {
@@ -100,17 +100,16 @@ public class AdapterFactoriesPreferencePage extends PreferencePage implements IW
 
 		adapterFactoryDescriptorViewer.setInput(descriptors);
 
-		List<String> disabledDescriptors = EMFComparePreferences
-				.getDisabledAdapterFacotryDescriptorIds(EMFCompareRCPPlugin.getDefault()
-						.getEMFComparePreferences());
+		List<String> disabledDescriptors = EMFComparePreferences.getDisabledAdapterFacotryDescriptorIds(
+				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences());
 
 		initViewer(disabledDescriptors);
 	}
 
 	private void createDescriptionText(Composite parent) {
 		Group descriptionComposite = new Group(parent, SWT.NONE);
-		descriptionComposite.setText(EMFCompareRCPUIMessages
-				.getString("AdapterFactoryPreferencePage.descriptionGroup.text")); //$NON-NLS-1$
+		descriptionComposite.setText(
+				EMFCompareRCPUIMessages.getString("AdapterFactoryPreferencePage.descriptionGroup.text")); //$NON-NLS-1$
 		descriptionComposite.setLayout(new GridLayout(1, false));
 		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 
@@ -148,13 +147,13 @@ public class AdapterFactoriesPreferencePage extends PreferencePage implements IW
 
 	private void createViewer(Composite containerComposite) {
 		Group interactiveGroup = new Group(containerComposite, SWT.BORDER);
-		interactiveGroup.setText(EMFCompareRCPUIMessages
-				.getString("AdapterFactoryPreferencePage.itemProviderGroup.text")); //$NON-NLS-1$
+		interactiveGroup.setText(
+				EMFCompareRCPUIMessages.getString("AdapterFactoryPreferencePage.itemProviderGroup.text")); //$NON-NLS-1$
 		interactiveGroup.setLayout(new GridLayout(1, false));
 		interactiveGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		adapterFactoryDescriptorViewer = CheckboxTableViewer.newCheckList(interactiveGroup, SWT.BORDER
-				| SWT.V_SCROLL | SWT.FULL_SELECTION);
+		adapterFactoryDescriptorViewer = CheckboxTableViewer.newCheckList(interactiveGroup,
+				SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION);
 
 		adapterFactoryDescriptorViewer.setContentProvider(ArrayContentProvider.getInstance());
 		adapterFactoryDescriptorViewer.setLabelProvider(new LabelProvider() {
@@ -209,17 +208,19 @@ public class AdapterFactoriesPreferencePage extends PreferencePage implements IW
 	public boolean performOk() {
 		Object[] checkedDescriptors = adapterFactoryDescriptorViewer.getCheckedElements();
 
-		SetView<RankedAdapterFactoryDescriptor> descriptorsToDisable = Sets.difference(Sets
-				.newHashSet(EMFCompareRCPPlugin.getDefault().getAdapterFactoryRegistry().getDescriptors()),
+		SetView<RankedAdapterFactoryDescriptor> descriptorsToDisable = Sets.difference(
+				Sets.newHashSet(
+						EMFCompareRCPPlugin.getDefault().getAdapterFactoryRegistry().getDescriptors()),
 				Sets.newHashSet(checkedDescriptors));
 
-		Iterable<String> descriptorsToDisableIds = Iterables.transform(Iterables.filter(descriptorsToDisable,
-				RankedAdapterFactoryDescriptor.class), new Function<Object, String>() {
+		Iterable<String> descriptorsToDisableIds = Iterables.transform(
+				Iterables.filter(descriptorsToDisable, RankedAdapterFactoryDescriptor.class),
+				new Function<Object, String>() {
 
-			public String apply(Object input) {
-				return ((RankedAdapterFactoryDescriptor)input).getId();
-			}
-		});
+					public String apply(Object input) {
+						return ((RankedAdapterFactoryDescriptor)input).getId();
+					}
+				});
 
 		getPreferenceStore().putValue(EMFComparePreferences.DISABLED_ADAPTER_FACTORY,
 				Joiner.on(';').join(descriptorsToDisableIds));

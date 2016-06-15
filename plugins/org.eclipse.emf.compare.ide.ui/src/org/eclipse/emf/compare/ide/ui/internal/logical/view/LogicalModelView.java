@@ -146,12 +146,12 @@ public class LogicalModelView extends CommonNavigator {
 	@Override
 	protected CommonViewer createCommonViewerObject(Composite aParent) {
 
-		selectionChangedTask = new SelectionChangedJob(EMFCompareIDEUIMessages
-				.getString("LogicalModelView.computingLogicalModel")); //$NON-NLS-1$
+		selectionChangedTask = new SelectionChangedJob(
+				EMFCompareIDEUIMessages.getString("LogicalModelView.computingLogicalModel")); //$NON-NLS-1$
 		selectionChangedTask.setPriority(Job.LONG);
 
-		progressInfoItem = new JobProgressInfoComposite(selectionChangedTask, aParent, SWT.SMOOTH
-				| SWT.HORIZONTAL, SWT.NONE);
+		progressInfoItem = new JobProgressInfoComposite(selectionChangedTask, aParent,
+				SWT.SMOOTH | SWT.HORIZONTAL, SWT.NONE);
 		progressInfoItem.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		progressInfoItem.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 
@@ -242,11 +242,12 @@ public class LogicalModelView extends CommonNavigator {
 			}
 		};
 		synchronizeAction.setToolTipText(synchronizationLabel);
-		synchronizeAction.setImageDescriptor(EMFCompareIDEUIPlugin.getDefault().getImageDescriptor(
-				"icons/full/eobj16/synced.gif")); //$NON-NLS-1$
+		synchronizeAction.setImageDescriptor(
+				EMFCompareIDEUIPlugin.getDefault().getImageDescriptor("icons/full/eobj16/synced.gif")); //$NON-NLS-1$
 
-		listPresentationAction = new Action(EMFCompareIDEUIMessages
-				.getString("LogicalModelView.listPresentation.title"), IAction.AS_RADIO_BUTTON) { //$NON-NLS-1$
+		listPresentationAction = new Action(
+				EMFCompareIDEUIMessages.getString("LogicalModelView.listPresentation.title"), //$NON-NLS-1$
+				IAction.AS_RADIO_BUTTON) {
 			@Override
 			public void run() {
 				if (!isChecked()) {
@@ -261,11 +262,12 @@ public class LogicalModelView extends CommonNavigator {
 				});
 			}
 		};
-		listPresentationAction.setImageDescriptor(EMFCompareIDEUIPlugin.getDefault().getImageDescriptor(
-				"icons/full/eobj16/flatLayout.gif")); //$NON-NLS-1$
+		listPresentationAction.setImageDescriptor(
+				EMFCompareIDEUIPlugin.getDefault().getImageDescriptor("icons/full/eobj16/flatLayout.gif")); //$NON-NLS-1$
 
-		treePresentationAction = new Action(EMFCompareIDEUIMessages
-				.getString("LogicalModelView.treePresentation.title"), IAction.AS_RADIO_BUTTON) { //$NON-NLS-1$
+		treePresentationAction = new Action(
+				EMFCompareIDEUIMessages.getString("LogicalModelView.treePresentation.title"), //$NON-NLS-1$
+				IAction.AS_RADIO_BUTTON) {
 			@Override
 			public void run() {
 				if (!isChecked()) {
@@ -280,8 +282,8 @@ public class LogicalModelView extends CommonNavigator {
 				});
 			}
 		};
-		treePresentationAction.setImageDescriptor(EMFCompareIDEUIPlugin.getDefault().getImageDescriptor(
-				"icons/full/eobj16/hierarchicalLayout.gif")); //$NON-NLS-1$
+		treePresentationAction.setImageDescriptor(EMFCompareIDEUIPlugin.getDefault()
+				.getImageDescriptor("icons/full/eobj16/hierarchicalLayout.gif")); //$NON-NLS-1$
 	}
 
 	/**
@@ -439,12 +441,11 @@ public class LogicalModelView extends CommonNavigator {
 						if (status != Status.CANCEL_STATUS) {
 							SWTUtil.safeSyncExec(new Runnable() {
 								public void run() {
-									MessageDialog
-											.openError(
-													LogicalModelView.this.getSite().getShell(),
-													EMFCompareIDEUIMessages
-															.getString("LogicalModelView.errorDialog.title"), EMFCompareIDEUIMessages //$NON-NLS-1$
-															.getString("LogicalModelView.errorDialog.message")); //$NON-NLS-1$
+									MessageDialog.openError(LogicalModelView.this.getSite().getShell(),
+											EMFCompareIDEUIMessages
+													.getString("LogicalModelView.errorDialog.title"), //$NON-NLS-1$
+											EMFCompareIDEUIMessages
+													.getString("LogicalModelView.errorDialog.message")); //$NON-NLS-1$
 								}
 							});
 							status = Status.CANCEL_STATUS;

@@ -74,7 +74,8 @@ public final class MergeRunnableImpl extends AbstractMergeRunnable implements IM
 		}
 	}
 
-	private void mergeAll(Collection<? extends Diff> differences, boolean leftToRight, Registry mergerRegistry) {
+	private void mergeAll(Collection<? extends Diff> differences, boolean leftToRight,
+			Registry mergerRegistry) {
 		final IBatchMerger merger = new BatchMerger(mergerRegistry);
 		if (leftToRight) {
 			merger.copyAllLeftToRight(differences, new BasicMonitor());
@@ -89,8 +90,8 @@ public final class MergeRunnableImpl extends AbstractMergeRunnable implements IM
 						mergerRegistry, !leftToRight);
 				addOrUpdateMergeData(resultingMerges, getMergeMode());
 
-				final Set<Diff> resultingRejections = MergeDependenciesUtil.getAllResultingRejections(
-						difference, mergerRegistry, !leftToRight);
+				final Set<Diff> resultingRejections = MergeDependenciesUtil
+						.getAllResultingRejections(difference, mergerRegistry, !leftToRight);
 				if (getMergeMode() == MergeMode.LEFT_TO_RIGHT || getMergeMode() == MergeMode.RIGHT_TO_LEFT) {
 					addOrUpdateMergeData(resultingRejections, getMergeMode());
 				} else {

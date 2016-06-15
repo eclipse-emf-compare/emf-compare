@@ -37,19 +37,23 @@ public class TwoWayMergeInputData extends AbstractInputData {
 	}
 
 	public Resource getOppositeReferenceChangeWithoutMatchingOrignalContainerL2RLeft() throws IOException {
-		return loadFromClassLoader("twoway/oppositereferencechangewithoutmatchingorignalcontainer/ltr/left.nodes");
+		return loadFromClassLoader(
+				"twoway/oppositereferencechangewithoutmatchingorignalcontainer/ltr/left.nodes");
 	}
 
 	public Resource getOppositeReferenceChangeWithoutMatchingOrignalContainerL2RRight() throws IOException {
-		return loadFromClassLoader("twoway/oppositereferencechangewithoutmatchingorignalcontainer/ltr/right.nodes");
+		return loadFromClassLoader(
+				"twoway/oppositereferencechangewithoutmatchingorignalcontainer/ltr/right.nodes");
 	}
 
 	public Resource getOppositeReferenceChangeWithAddAndDeleteOnMultivaluedSideLeft() throws IOException {
-		return loadFromClassLoader("twoway/oppositereferencechangewithaddanddeleteonmultivaluedside/rtl/left.nodes");
+		return loadFromClassLoader(
+				"twoway/oppositereferencechangewithaddanddeleteonmultivaluedside/rtl/left.nodes");
 	}
 
 	public Resource getOppositeReferenceChangeWithAddAndDeleteOnMultivaluedSideRight() throws IOException {
-		return loadFromClassLoader("twoway/oppositereferencechangewithaddanddeleteonmultivaluedside/rtl/right.nodes");
+		return loadFromClassLoader(
+				"twoway/oppositereferencechangewithaddanddeleteonmultivaluedside/rtl/right.nodes");
 	}
 
 	public Resource getMoveFromSingleValueReferenceToMultiValueReferenceR2LLeft() throws IOException {
@@ -57,7 +61,8 @@ public class TwoWayMergeInputData extends AbstractInputData {
 	}
 
 	public Resource getMoveFromSingleValueReferenceToMultiValueReferenceR2LRight() throws IOException {
-		return loadFromClassLoader("twoway/movefromsinglevaluereferencetomultivaluereference/rtl/right.nodes");
+		return loadFromClassLoader(
+				"twoway/movefromsinglevaluereferencetomultivaluereference/rtl/right.nodes");
 	}
 
 	public Resource getMoveToNewContainerInADifferentOrderR2LLeft() throws IOException {

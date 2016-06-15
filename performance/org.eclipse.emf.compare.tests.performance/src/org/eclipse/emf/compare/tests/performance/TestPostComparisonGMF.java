@@ -25,13 +25,13 @@ import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestPostComparisonGMF extends AbstractEMFComparePerformanceTest {
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest#setSUTName()
 	 */
 	@Override
@@ -55,7 +55,7 @@ public class TestPostComparisonGMF extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void b_pcGMFUMLNominal() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcGMFUMLNominal");
@@ -72,7 +72,7 @@ public class TestPostComparisonGMF extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void c_pcGMFUMLSmallSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcGMFUMLSmallSplit");
@@ -89,7 +89,7 @@ public class TestPostComparisonGMF extends AbstractEMFComparePerformanceTest {
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void d_pcGMFUMLNominalSplit() {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcGMFUMLNominalSplit");

@@ -22,19 +22,11 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({
-	TestLargeMatchId.class,
-//	TestLargeMatchContent.class,
-	TestLargeDiff.class,
-	TestLargeReq.class,
-	TestLargeEqui.class,
-	TestLargeConflict.class,
-	TestLargeCompare.class,
-	TestLargePostMatchUML.class,
-	TestLargePostComparisonUML.class,
-	TestLargeLogicalModel.class,
-})
+@SuiteClasses({TestLargeMatchId.class,
+		// TestLargeMatchContent.class,
+		TestLargeDiff.class, TestLargeReq.class, TestLargeEqui.class, TestLargeConflict.class,
+		TestLargeCompare.class, TestLargePostMatchUML.class, TestLargePostComparisonUML.class,
+		TestLargeLogicalModel.class, })
 public class PerformanceLargeSuite {
-   
 
 }

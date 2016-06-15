@@ -149,8 +149,8 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 			merger.copyAllLeftToRight(affectedDiffs, new BasicMonitor());
 			addOrUpdateMergeData(affectedDiffs, getMergeMode());
 		} else if (getMergeMode() == MergeMode.RIGHT_TO_LEFT) {
-			affectedDiffs = Lists.newArrayList(Iterables
-					.filter(differences, fromSide(DifferenceSource.RIGHT)));
+			affectedDiffs = Lists
+					.newArrayList(Iterables.filter(differences, fromSide(DifferenceSource.RIGHT)));
 			merger.copyAllRightToLeft(affectedDiffs, new BasicMonitor());
 			addOrUpdateMergeData(affectedDiffs, getMergeMode());
 		} else if (getMergeMode() == MergeMode.ACCEPT || getMergeMode() == MergeMode.REJECT) {
@@ -242,8 +242,9 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 					final IMerger merger = mergerRegistry.getHighestRankingMerger(next);
 
 					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("mergeWithConflicts(Collection<Diff>, boolean, Registry) - Selected merger for diff " //$NON-NLS-1$
-								+ next.hashCode() + ": " + merger.getClass().getSimpleName()); //$NON-NLS-1$
+						LOGGER.debug(
+								"mergeWithConflicts(Collection<Diff>, boolean, Registry) - Selected merger for diff " //$NON-NLS-1$
+										+ next.hashCode() + ": " + merger.getClass().getSimpleName()); //$NON-NLS-1$
 					}
 
 					if (getMergeMode() == MergeMode.LEFT_TO_RIGHT) {
@@ -361,8 +362,8 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 						mergerRegistry, !leftToRight);
 				addOrUpdateMergeData(resultingMerges, getMergeMode());
 
-				final Set<Diff> resultingRejections = MergeDependenciesUtil.getAllResultingRejections(
-						difference, mergerRegistry, !leftToRight);
+				final Set<Diff> resultingRejections = MergeDependenciesUtil
+						.getAllResultingRejections(difference, mergerRegistry, !leftToRight);
 				addOrUpdateMergeData(resultingRejections, getMergeMode().inverse());
 			} else {
 				addOrUpdateMergeData(Collections.singleton(difference), getMergeMode());

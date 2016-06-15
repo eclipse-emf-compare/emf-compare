@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.examples.extlibrary.impl;
 
-
 import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -30,134 +29,128 @@ import org.eclipse.emf.examples.extlibrary.CirculatingItem;
 import org.eclipse.emf.examples.extlibrary.EXTLibraryPackage;
 import org.eclipse.emf.examples.extlibrary.Lendable;
 
-
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Circulating Item</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Circulating Item</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.CirculatingItemImpl#getCopies <em>Copies</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.CirculatingItemImpl#getBorrowers <em>Borrowers</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.CirculatingItemImpl#getCopies <em>Copies</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.CirculatingItemImpl#getBorrowers <em>Borrowers</em>}
+ * </li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public abstract class CirculatingItemImpl extends ItemImpl implements CirculatingItem
-{
-  /**
-	 * The default value of the '{@link #getCopies() <em>Copies</em>}' attribute.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+public abstract class CirculatingItemImpl extends ItemImpl implements CirculatingItem {
+	/**
+	 * The default value of the '{@link #getCopies() <em>Copies</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getCopies()
 	 * @generated
 	 * @ordered
 	 */
-  protected static final int COPIES_EDEFAULT = 0;
+	protected static final int COPIES_EDEFAULT = 0;
 
-  /**
-	 * The cached value of the '{@link #getCopies() <em>Copies</em>}' attribute.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The cached value of the '{@link #getCopies() <em>Copies</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getCopies()
 	 * @generated
 	 * @ordered
 	 */
-  protected int copies = COPIES_EDEFAULT;
+	protected int copies = COPIES_EDEFAULT;
 
-  /**
-	 * The cached value of the '{@link #getBorrowers() <em>Borrowers</em>}' reference list.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The cached value of the '{@link #getBorrowers() <em>Borrowers</em>}' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getBorrowers()
 	 * @generated
 	 * @ordered
 	 */
-  protected EList<Borrower> borrowers;
+	protected EList<Borrower> borrowers;
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected CirculatingItemImpl()
-  {
+	protected CirculatingItemImpl() {
 		super();
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  protected EClass eStaticClass()
-  {
+	@Override
+	protected EClass eStaticClass() {
 		return EXTLibraryPackage.Literals.CIRCULATING_ITEM;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public int getCopies()
-  {
+	public int getCopies() {
 		return copies;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public void setCopies(int newCopies)
-  {
+	public void setCopies(int newCopies) {
 		int oldCopies = copies;
 		copies = newCopies;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.CIRCULATING_ITEM__COPIES, oldCopies, copies));
+			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.CIRCULATING_ITEM__COPIES,
+					oldCopies, copies));
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public EList<Borrower> getBorrowers()
-  {
+	public EList<Borrower> getBorrowers() {
 		if (borrowers == null) {
-			borrowers = new EObjectWithInverseResolvingEList.ManyInverse<Borrower>(Borrower.class, this, EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS, EXTLibraryPackage.BORROWER__BORROWED);
+			borrowers = new EObjectWithInverseResolvingEList.ManyInverse<Borrower>(Borrower.class, this,
+					EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS, EXTLibraryPackage.BORROWER__BORROWED);
 		}
 		return borrowers;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @SuppressWarnings("unchecked")
-  @Override
-  public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getBorrowers()).basicAdd(otherEnd, msgs);
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getBorrowers()).basicAdd(otherEnd,
+						msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
 				return ((InternalEList<?>)getBorrowers()).basicRemove(otherEnd, msgs);
@@ -165,14 +158,13 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public Object eGet(int featureID, boolean resolve, boolean coreType)
-  {
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case EXTLibraryPackage.CIRCULATING_ITEM__COPIES:
 				return getCopies();
@@ -182,15 +174,14 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @SuppressWarnings("unchecked")
-  @Override
-  public void eSet(int featureID, Object newValue)
-  {
+	@SuppressWarnings("unchecked")
+	@Override
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case EXTLibraryPackage.CIRCULATING_ITEM__COPIES:
 				setCopies((Integer)newValue);
@@ -203,14 +194,13 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
 		super.eSet(featureID, newValue);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public void eUnset(int featureID)
-  {
+	@Override
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case EXTLibraryPackage.CIRCULATING_ITEM__COPIES:
 				setCopies(COPIES_EDEFAULT);
@@ -222,14 +212,13 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
 		super.eUnset(featureID);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public boolean eIsSet(int featureID)
-  {
+	@Override
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case EXTLibraryPackage.CIRCULATING_ITEM__COPIES:
 				return copies != COPIES_EDEFAULT;
@@ -239,51 +228,55 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
 		return super.eIsSet(featureID);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass)
-  {
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
 		if (baseClass == Lendable.class) {
 			switch (derivedFeatureID) {
-				case EXTLibraryPackage.CIRCULATING_ITEM__COPIES: return EXTLibraryPackage.LENDABLE__COPIES;
-				case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS: return EXTLibraryPackage.LENDABLE__BORROWERS;
-				default: return -1;
+				case EXTLibraryPackage.CIRCULATING_ITEM__COPIES:
+					return EXTLibraryPackage.LENDABLE__COPIES;
+				case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
+					return EXTLibraryPackage.LENDABLE__BORROWERS;
+				default:
+					return -1;
 			}
 		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass)
-  {
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
 		if (baseClass == Lendable.class) {
 			switch (baseFeatureID) {
-				case EXTLibraryPackage.LENDABLE__COPIES: return EXTLibraryPackage.CIRCULATING_ITEM__COPIES;
-				case EXTLibraryPackage.LENDABLE__BORROWERS: return EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS;
-				default: return -1;
+				case EXTLibraryPackage.LENDABLE__COPIES:
+					return EXTLibraryPackage.CIRCULATING_ITEM__COPIES;
+				case EXTLibraryPackage.LENDABLE__BORROWERS:
+					return EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS;
+				default:
+					return -1;
 			}
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public String toString()
-  {
-		if (eIsProxy()) return super.toString();
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (copies: "); //$NON-NLS-1$
@@ -292,4 +285,4 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
 		return result.toString();
 	}
 
-} //CirculatingItemImpl
+} // CirculatingItemImpl

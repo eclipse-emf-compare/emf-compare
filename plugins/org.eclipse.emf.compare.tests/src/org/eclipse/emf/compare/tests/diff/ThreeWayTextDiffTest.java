@@ -461,10 +461,8 @@ public class ThreeWayTextDiffTest {
 		final String origin = "They don't call it a Quarter Pounder with Cheese?" + NL //
 				+ "They call it a Royale with Cheese.";
 
-		final String left = "Whose chopper is this?"
-				+ NL // added same as right
-				+ "It's Zed's!"
-				+ NL // added same as right
+		final String left = "Whose chopper is this?" + NL // added same as right
+				+ "It's Zed's!" + NL // added same as right
 				+ "They don't call it a Quarter Pounder with Cheese?" + NL
 				+ "They call it a Royale with Cheese.";
 

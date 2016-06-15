@@ -19,25 +19,28 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class LargeSplitInputData extends Data {
 	/**
-	 * @return 
-	 * @throws IOException 
-	 * 
+	 * @return
+	 * @throws IOException
 	 */
 	public ResourceSet loadLeft() {
 		ResourceSet resourceSet = createResourceSet();
-		Resource ret = loadFromClassLoader("model_size_large_split/model_size_large_original_model/model.uml", resourceSet);
+		Resource ret = loadFromClassLoader("model_size_large_split/model_size_large_original_model/model.uml",
+				resourceSet);
 		EcoreUtil.resolveAll(resourceSet);
 		return resourceSet;
 	}
+
 	public ResourceSet loadRight() {
 		ResourceSet resourceSet = createResourceSet();
-		Resource ret = loadFromClassLoader("model_size_large_split/model_size_large_modified_model/model.uml", resourceSet);
-		EcoreUtil.resolveAll(resourceSet);		
+		Resource ret = loadFromClassLoader("model_size_large_split/model_size_large_modified_model/model.uml",
+				resourceSet);
+		EcoreUtil.resolveAll(resourceSet);
 		return resourceSet;
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see data.models.TestMatchUML.Data#loadAncestor()
 	 */
 	@Override

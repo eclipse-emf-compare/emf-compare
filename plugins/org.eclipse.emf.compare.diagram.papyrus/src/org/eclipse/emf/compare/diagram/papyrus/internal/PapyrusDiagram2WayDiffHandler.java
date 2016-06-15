@@ -87,11 +87,13 @@ public class PapyrusDiagram2WayDiffHandler extends AbstractPapyrusDiagramDiffHan
 				}
 			} else if (leftElement instanceof Transition) {
 				if (refChange.getReference() == NotationPackage.Literals.EDGE__SOURCE) {
-					indexer.putEquivalentDiff(new FeatureInstance(leftElement,
-							UMLPackage.Literals.TRANSITION__SOURCE), refChange);
+					indexer.putEquivalentDiff(
+							new FeatureInstance(leftElement, UMLPackage.Literals.TRANSITION__SOURCE),
+							refChange);
 				} else if (refChange.getReference() == NotationPackage.Literals.EDGE__TARGET) {
-					indexer.putEquivalentDiff(new FeatureInstance(leftElement,
-							UMLPackage.Literals.TRANSITION__TARGET), refChange);
+					indexer.putEquivalentDiff(
+							new FeatureInstance(leftElement, UMLPackage.Literals.TRANSITION__TARGET),
+							refChange);
 				}
 			}
 		} else if (isPropertyTypeChange(refChange)) {
@@ -101,8 +103,8 @@ public class PapyrusDiagram2WayDiffHandler extends AbstractPapyrusDiagramDiffHan
 			// the related Connector
 			indexer.putEquivalentDiff(refChange.getMatch().getLeft(), refChange);
 		} else if (isTransitionReferenceChange(refChange)) {
-			indexer.putEquivalentDiff(new FeatureInstance(refChange.getMatch().getLeft(), refChange
-					.getReference()), refChange);
+			indexer.putEquivalentDiff(
+					new FeatureInstance(refChange.getMatch().getLeft(), refChange.getReference()), refChange);
 		}
 		// TODO Manage other kinds of relations (Dependency, what
 		// else in UML?)

@@ -25,13 +25,13 @@ import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestLargePostComparisonGMF extends AbstractEMFComparePerformanceTest {
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest#setSUTName()
 	 */
 	@Override
@@ -55,7 +55,7 @@ public class TestLargePostComparisonGMF extends AbstractEMFComparePerformanceTes
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void b_pcGMFUMLLargeSplit() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcGMFUMLLargeSplit");

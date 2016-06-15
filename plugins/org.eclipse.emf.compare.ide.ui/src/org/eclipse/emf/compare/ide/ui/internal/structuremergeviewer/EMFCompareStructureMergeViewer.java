@@ -295,13 +295,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			}
 		};
 
-		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(getCompareConfiguration()
-				.getAdapterFactory(), getViewer()));
+		setContentProvider(new EMFCompareStructureMergeViewerContentProvider(
+				getCompareConfiguration().getAdapterFactory(), getViewer()));
 
 		navigatable = new Navigatable(getViewer(), getContentProvider());
 
-		toolBar = new CompareToolBar(CompareViewerPane.getToolBarManager(parent),
-				structureMergeViewerGrouper, structureMergeViewerFilter, getCompareConfiguration());
+		toolBar = new CompareToolBar(CompareViewerPane.getToolBarManager(parent), structureMergeViewerGrouper,
+				structureMergeViewerFilter, getCompareConfiguration());
 		getViewer().addSelectionChangedListener(toolBar);
 
 		createContextMenu();
@@ -349,8 +349,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		getContentProvider().addFetchingListener(toolbarUpdaterContentProviderListener);
 
-		setLabelProvider(new DelegatingStyledCellLabelProvider(
-				new EMFCompareStructureMergeViewerLabelProvider(
+		setLabelProvider(
+				new DelegatingStyledCellLabelProvider(new EMFCompareStructureMergeViewerLabelProvider(
 						getCompareConfiguration().getAdapterFactory(), this)));
 
 		undoAction = new UndoAction(getCompareConfiguration().getEditingDomain());
@@ -430,8 +430,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			for (MergeMode mode : modes) {
 				IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 				if (isOneDiffSelected()) {
-					MergeAction mergeAction = new MergeAction(getCompareConfiguration(), mergerRegistry,
-							mode, navigatable, (IStructuredSelection)getSelection());
+					MergeAction mergeAction = new MergeAction(getCompareConfiguration(), mergerRegistry, mode,
+							navigatable, (IStructuredSelection)getSelection());
 					manager.add(mergeAction);
 				} else if (isOneMatchOrResourceMatchSelected()) {
 					final Predicate<TreeNode> filterPredicate = new Predicate<TreeNode>() {
@@ -512,10 +512,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 */
 	@Override
 	protected void preHookCreateControlAndViewer() {
-		fAdapterFactory = new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault()
-				.createFilteredAdapterFactoryRegistry());
-		fAdapterFactory.addAdapterFactory(new TreeItemProviderAdapterFactorySpec(getCompareConfiguration()
-				.getStructureMergeViewerFilter()));
+		fAdapterFactory = new ComposedAdapterFactory(
+				EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry());
+		fAdapterFactory.addAdapterFactory(new TreeItemProviderAdapterFactorySpec(
+				getCompareConfiguration().getStructureMergeViewerFilter()));
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 
@@ -527,16 +527,15 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	@Subscribe
 	public void colorChanged(
-			@SuppressWarnings("unused")/* necessary for @Subscribe */IColorChangeEvent changeColorEvent) {
+			@SuppressWarnings("unused") /* necessary for @Subscribe */IColorChangeEvent changeColorEvent) {
 		internalRedraw();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see 
-	 *      org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.ViewerWrapper.createControl(Composite,
-	 *      CompareConfiguration)
+	 * @see org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.ViewerWrapper.createControl(
+	 *      Composite, CompareConfiguration)
 	 */
 	@Override
 	protected ControlAndViewer<CTabFolder, WrappableTreeViewer> createControlAndViewer(Composite parent) {
@@ -576,13 +575,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		layout.verticalSpacing = 0;
 		control.setLayout(layout);
 
-		progressInfoItem = new JobProgressInfoComposite(inputChangedTask, control, SWT.SMOOTH
-				| SWT.HORIZONTAL, SWT.NONE);
+		progressInfoItem = new JobProgressInfoComposite(inputChangedTask, control,
+				SWT.SMOOTH | SWT.HORIZONTAL, SWT.NONE);
 		progressInfoItem.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		progressInfoItem.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 
-		final WrappableTreeViewer treeViewer = new WrappableTreeViewer(control, SWT.MULTI | SWT.H_SCROLL
-				| SWT.V_SCROLL) {
+		final WrappableTreeViewer treeViewer = new WrappableTreeViewer(control,
+				SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL) {
 			/**
 			 * {@inheritDoc}
 			 * 
@@ -606,8 +605,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		dependencyData = new DependencyData(getCompareConfiguration());
 
-		tabFolder.setData(CompareUI.COMPARE_VIEWER_TITLE, EMFCompareIDEUIMessages
-				.getString("EMFCompareStructureMergeViewer.title")); //$NON-NLS-1$
+		tabFolder.setData(CompareUI.COMPARE_VIEWER_TITLE,
+				EMFCompareIDEUIMessages.getString("EMFCompareStructureMergeViewer.title")); //$NON-NLS-1$
 
 		final ITheme currentTheme = getCurrentTheme();
 
@@ -692,8 +691,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		int visibleDiffCount = visibleDiffs.size();
 		int filteredDiffCount = Sets.difference(allDiffs, visibleDiffs).size();
-		int diffsToMergeCount = Iterables.size(Iterables.filter(visibleDiffs, hasState(
-				DifferenceState.UNRESOLVED)));
+		int diffsToMergeCount = Iterables
+				.size(Iterables.filter(visibleDiffs, hasState(DifferenceState.UNRESOLVED)));
 		String titleArgument = EMFCompareIDEUIMessages.getString("EMFCompareStructureMergeViewer.titleDesc", //$NON-NLS-1$
 				diffsToMergeCount, visibleDiffCount, filteredDiffCount);
 
@@ -720,8 +719,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 						visibleDiffs.add((Diff)node.getData());
 					}
 
-					Iterator<TreeNode> nodes = Iterators.filter(new FilteredIterator<EObject>(node
-							.eAllContents(), filterPredicate), TreeNode.class);
+					Iterator<TreeNode> nodes = Iterators.filter(
+							new FilteredIterator<EObject>(node.eAllContents(), filterPredicate),
+							TreeNode.class);
 					Iterator<Diff> diffs = Iterators.filter(Iterators.transform(nodes, TREE_NODE_AS_DIFF),
 							Predicates.notNull());
 					Iterators.addAll(visibleDiffs, diffs);
@@ -762,9 +762,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		SWTUtil.safeRefresh(this, false, true);
 		getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
 			public void run() {
-				if (navigatable != null
-						&& (navigatable.getViewer().getSelection() == null || navigatable.getViewer()
-								.getSelection().isEmpty())) {
+				if (navigatable != null && (navigatable.getViewer().getSelection() == null
+						|| navigatable.getViewer().getSelection().isEmpty())) {
 					selectFirstDiffOrDisplayLabelViewer(getCompareConfiguration().getComparison());
 				}
 			}
@@ -982,8 +981,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 10);
-		final Comparison comparison = comparator.compare(comparisonScope, BasicMonitor.toMonitor(subMonitor
-				.newChild(10)));
+		final Comparison comparison = comparator.compare(comparisonScope,
+				BasicMonitor.toMonitor(subMonitor.newChild(10)));
 
 		// Bug 458802: NPE when synchronizing SMV & CMV if comparison is empty
 		hookAdapters(input, comparison);
@@ -1129,8 +1128,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 									new Object[] {e, }));
 				} catch (Exception e) {
 					scope = new EmptyComparisonScope();
-					((BasicDiagnostic)((EmptyComparisonScope)scope).getDiagnostic()).merge(BasicDiagnostic
-							.toDiagnostic(e));
+					((BasicDiagnostic)((EmptyComparisonScope)scope).getDiagnostic())
+							.merge(BasicDiagnostic.toDiagnostic(e));
 					EMFCompareIDEUIPlugin.getDefault().log(e);
 				}
 
@@ -1202,10 +1201,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		// we can't allow to add side label provider in case of an input of type ResourceDiffCompareInput.
 		if (!(input instanceof ResourceDiffCompareInput)) {
 			ICompareInputLabelProvider labelProvider = getCompareConfiguration().getLabelProvider();
-			SideLabelProvider sideLabelProvider = new SideLabelProvider(
-					labelProvider.getAncestorLabel(input), labelProvider.getLeftLabel(input), labelProvider
-							.getRightLabel(input), labelProvider.getAncestorImage(input), labelProvider
-							.getLeftImage(input), labelProvider.getRightImage(input));
+			SideLabelProvider sideLabelProvider = new SideLabelProvider(labelProvider.getAncestorLabel(input),
+					labelProvider.getLeftLabel(input), labelProvider.getRightLabel(input),
+					labelProvider.getAncestorImage(input), labelProvider.getLeftImage(input),
+					labelProvider.getRightImage(input));
 			compareResult.eAdapters().add(sideLabelProvider);
 		}
 	}
@@ -1276,8 +1275,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		if (comparison != null) {
 			Iterator<Match> matchIt = comparison.getMatches().iterator();
 			if (comparison.isThreeWay()) {
-				while (matchIt.hasNext()
-						&& (leftResourceSet == null || rightResourceSet == null || originResourceSet == null)) {
+				while (matchIt.hasNext() && (leftResourceSet == null || rightResourceSet == null
+						|| originResourceSet == null)) {
 					Match match = matchIt.next();
 					if (leftResourceSet == null) {
 						leftResourceSet = getResourceSet(match.getLeft());
@@ -1386,8 +1385,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					getControl(), SWT.NONE);
 			problemIndicationComposite.setDiagnostic(diagnostic);
 			createItem(++lastEditorPage, problemIndicationComposite);
-			getControl().getItem(lastEditorPage).setText(
-					CommonUIPlugin.getPlugin().getString("_UI_Problems_label")); //$NON-NLS-1$
+			getControl().getItem(lastEditorPage)
+					.setText(CommonUIPlugin.getPlugin().getString("_UI_Problems_label")); //$NON-NLS-1$
 			setActivePage(lastEditorPage);
 			updateLayout(false, true);
 			showTabs();
@@ -1470,8 +1469,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		// Updates dependency data when the viewer has been refreshed and the content provider is ready.
 		getContentProvider().runWhenReady(IN_UI_SYNC, new Runnable() {
 			public void run() {
-				dependencyData.updateDependencies(getSelection(), EMFCompareRCPPlugin.getDefault()
-						.getMergerRegistry());
+				dependencyData.updateDependencies(getSelection(),
+						EMFCompareRCPPlugin.getDefault().getMergerRegistry());
 
 				internalRedraw();
 
@@ -1488,8 +1487,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	private void handleSelectionChangedEvent(SelectionChangedEvent event) {
-		dependencyData.updateDependencies(event.getSelection(), EMFCompareRCPPlugin.getDefault()
-				.getMergerRegistry());
+		dependencyData.updateDependencies(event.getSelection(),
+				EMFCompareRCPPlugin.getDefault().getMergerRegistry());
 		internalRedraw();
 	}
 

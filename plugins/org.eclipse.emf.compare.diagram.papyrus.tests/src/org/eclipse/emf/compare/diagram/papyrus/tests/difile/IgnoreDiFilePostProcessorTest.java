@@ -27,13 +27,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests whether the {@link IgnoreDiFilePostProcessor} correctly removes the
- * matches of model elements in the di-files.
+ * Tests whether the {@link IgnoreDiFilePostProcessor} correctly removes the matches of model elements in the
+ * di-files.
  * <p>
- * By removing the matches of di-file model elements, all changes to these model
- * elements will be ignored subsequently. Without ignoring those changes, this
- * scenario would lead to a conflict. The requirement, however, dictates that
- * di-file changes should never lead to a conflict (cf. bug 485494).
+ * By removing the matches of di-file model elements, all changes to these model elements will be ignored
+ * subsequently. Without ignoring those changes, this scenario would lead to a conflict. The requirement,
+ * however, dictates that di-file changes should never lead to a conflict (cf. bug 485494).
  * </p>
  *
  * @author Philip Langer <planger@eclipsesource.com>
@@ -72,16 +71,14 @@ public class IgnoreDiFilePostProcessorTest extends AbstractTest {
 	 */
 	@Before
 	public void registerIgnoreDiFilePostProcessor() {
-		getPostProcessorRegistry().put(
-				IgnoreDiFilePostProcessor.class.getName(),
-				new TestPostProcessor.TestPostProcessorDescriptor(Pattern
-						.compile("http://www.eclipse.org/papyrus/\\d.\\d.\\d/sashdi"), null,
+		getPostProcessorRegistry().put(IgnoreDiFilePostProcessor.class.getName(),
+				new TestPostProcessor.TestPostProcessorDescriptor(
+						Pattern.compile("http://www.eclipse.org/papyrus/\\d.\\d.\\d/sashdi"), null,
 						new IgnoreDiFilePostProcessor(), 35));
 	}
 
 	/**
-	 * Tests whether the matches of a comparison remain empty even though the
-	 * di-files contain model elements.
+	 * Tests whether the matches of a comparison remain empty even though the di-files contain model elements.
 	 */
 	@Test
 	public void testA1() throws IOException {

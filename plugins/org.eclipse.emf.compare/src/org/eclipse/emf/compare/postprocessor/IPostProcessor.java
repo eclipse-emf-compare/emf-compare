@@ -149,6 +149,8 @@ public interface IPostProcessor {
 		/**
 		 * Registry of post processor.
 		 * 
+		 * @param <K>
+		 *            The generic type of the class
 		 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
 		 */
 		public interface Registry<K> {

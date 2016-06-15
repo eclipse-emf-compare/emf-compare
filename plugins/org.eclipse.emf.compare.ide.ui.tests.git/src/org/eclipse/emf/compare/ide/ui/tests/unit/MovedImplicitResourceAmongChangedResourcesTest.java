@@ -119,8 +119,8 @@ public class MovedImplicitResourceAmongChangedResourcesTest extends CompareGitTe
 	public void testRebaseNoConflictMovedSubmodel() throws Exception {
 		setUpMovedIdenticalResourceAndChangedResourceBranches();
 
-		installMockModelDependencyProvider(ImmutableMap.of(submodelFile.getName(), ImmutableSet
-				.of(identicalFile.getName())));
+		installMockModelDependencyProvider(
+				ImmutableMap.of(submodelFile.getName(), ImmutableSet.of(identicalFile.getName())));
 
 		repository.checkoutBranch(MOVED_MODEL_BRANCH);
 		iProject.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -190,10 +190,10 @@ public class MovedImplicitResourceAmongChangedResourcesTest extends CompareGitTe
 		reload(rootResource, submodelResource, identicalResource);
 
 		// create new files with "moved" path
-		IFile movedSubmodelFile = project.getIFile(iProject, project.getOrCreateFile(iProject,
-				SUBMODEL_FILE_MOVED_PATH));
-		IFile movedIdenticalFile = project.getIFile(iProject, project.getOrCreateFile(iProject,
-				IMPLICIT_FILE_MOVED_PATH));
+		IFile movedSubmodelFile = project.getIFile(iProject,
+				project.getOrCreateFile(iProject, SUBMODEL_FILE_MOVED_PATH));
+		IFile movedIdenticalFile = project.getIFile(iProject,
+				project.getOrCreateFile(iProject, IMPLICIT_FILE_MOVED_PATH));
 		Resource movedSubRes = connectResource(movedSubmodelFile, resourceSet);
 		Resource movedIdenticalRes = connectResource(movedIdenticalFile, resourceSet);
 

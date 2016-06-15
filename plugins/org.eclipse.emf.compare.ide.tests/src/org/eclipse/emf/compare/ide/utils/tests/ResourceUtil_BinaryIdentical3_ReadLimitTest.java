@@ -42,8 +42,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 8);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 8);
 
-		assertTrue(ResourceUtil
-				.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
+		assertTrue(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@Test
@@ -56,8 +56,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 8);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 8);
 
-		assertFalse(ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2),
-				mockStorage(input3)));
+		assertFalse(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@Test
@@ -70,8 +70,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 8);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 8);
 
-		assertFalse(ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2),
-				mockStorage(input3)));
+		assertFalse(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@Test
@@ -84,8 +84,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 8);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 8);
 
-		assertFalse(ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2),
-				mockStorage(input3)));
+		assertFalse(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@Test
@@ -98,8 +98,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 8);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 8);
 
-		assertFalse(ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2),
-				mockStorage(input3)));
+		assertFalse(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@Test
@@ -112,8 +112,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 7);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 6);
 
-		assertTrue(ResourceUtil
-				.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
+		assertTrue(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@Test
@@ -126,8 +126,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 6);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 7);
 
-		assertTrue(ResourceUtil
-				.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
+		assertTrue(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@Test
@@ -140,8 +140,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 8);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 7);
 
-		assertTrue(ResourceUtil
-				.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
+		assertTrue(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@Test
@@ -154,8 +154,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 7);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 8);
 
-		assertTrue(ResourceUtil
-				.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
+		assertTrue(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@Test
@@ -168,8 +168,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 6);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 8);
 
-		assertTrue(ResourceUtil
-				.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
+		assertTrue(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@Test
@@ -182,8 +182,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 8);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 6);
 
-		assertTrue(ResourceUtil
-				.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
+		assertTrue(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@Test
@@ -196,8 +196,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 7);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 6);
 
-		assertFalse(ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2),
-				mockStorage(input3)));
+		assertFalse(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@Test
@@ -210,8 +210,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 7);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 6);
 
-		assertFalse(ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2),
-				mockStorage(input3)));
+		assertFalse(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@Test
@@ -224,8 +224,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 8);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 8);
 
-		assertTrue(ResourceUtil
-				.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
+		assertTrue(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@Test
@@ -238,8 +238,8 @@ public class ResourceUtil_BinaryIdentical3_ReadLimitTest {
 		InputStream input2 = new LimitedReadingInputStream(rawInput2, 7);
 		InputStream input3 = new LimitedReadingInputStream(rawInput3, 6);
 
-		assertTrue(ResourceUtil
-				.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
+		assertTrue(
+				ResourceUtil.binaryIdentical(mockStorage(input1), mockStorage(input2), mockStorage(input3)));
 	}
 
 	@SuppressWarnings("boxing")

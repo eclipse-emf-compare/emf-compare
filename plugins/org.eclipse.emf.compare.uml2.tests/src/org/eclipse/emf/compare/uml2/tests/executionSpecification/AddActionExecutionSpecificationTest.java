@@ -145,8 +145,8 @@ public class AddActionExecutionSpecificationTest extends AbstractUMLTest {
 					"coveredBy", "model.interaction0.ActionExecSpec0Finish0");
 			addCoveredByInLifeline1Description3 = removedFromReference("model.interaction0.Lifeline1",
 					"coveredBy", "model.interaction0.ActionExecSpec0");
-			addCoveredInActionExecSpecDescription = removedFromReference(
-					"model.interaction0.ActionExecSpec0", "covered", "model.interaction0.Lifeline1");
+			addCoveredInActionExecSpecDescription = removedFromReference("model.interaction0.ActionExecSpec0",
+					"covered", "model.interaction0.Lifeline1");
 		} else {
 			addActionExecSpecDescription = added("model.interaction0.ActionExecSpec0"); //$NON-NLS-1$
 			addStartDescription = added("model.interaction0.ActionExecSpec0Start0"); //$NON-NLS-1$
@@ -213,11 +213,11 @@ public class AddActionExecutionSpecificationTest extends AbstractUMLTest {
 		assertEquals(1, count(differences, instanceOf(ExecutionSpecificationChange.class)));
 		Diff addUMLMessage = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLMessage = Iterators.find(differences.iterator(), and(
-					instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.ADD)));
+			addUMLMessage = Iterators.find(differences.iterator(),
+					and(instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLMessage = Iterators.find(differences.iterator(), and(
-					instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.DELETE)));
+			addUMLMessage = Iterators.find(differences.iterator(),
+					and(instanceOf(ExecutionSpecificationChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLMessage);
 		assertEquals(13, addUMLMessage.getRefinedBy().size());
@@ -335,10 +335,10 @@ public class AddActionExecutionSpecificationTest extends AbstractUMLTest {
 
 		assertNotNull(addCoveredInActionExecSpec.getEquivalence());
 		assertEquals(2, addCoveredInActionExecSpec.getEquivalence().getDifferences().size());
-		assertTrue(addCoveredInActionExecSpec.getEquivalence().getDifferences().contains(
-				addCoveredInActionExecSpec));
-		assertTrue(addCoveredInActionExecSpec.getEquivalence().getDifferences().contains(
-				addCoveredByInLifeline1_3));
+		assertTrue(addCoveredInActionExecSpec.getEquivalence().getDifferences()
+				.contains(addCoveredInActionExecSpec));
+		assertTrue(addCoveredInActionExecSpec.getEquivalence().getDifferences()
+				.contains(addCoveredByInLifeline1_3));
 
 		testIntersections(comparison);
 

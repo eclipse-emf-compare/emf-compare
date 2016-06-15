@@ -10,8 +10,8 @@
  *******************************************************************************/
 
 /**
- * This package contains test data for the case of a conflict
- * on an existing transition whose target is change din 2 branches.
+ * This package contains test data for the case of a conflict on an existing transition whose target is change
+ * din 2 branches.
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */

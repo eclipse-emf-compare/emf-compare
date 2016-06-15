@@ -90,8 +90,8 @@ public class ExtendedAdapterFactoryItemDelegator extends AdapterFactoryItemDeleg
 	 * @since 4.2
 	 */
 	public String getSemanticObjectLabel(Object object) {
-		ISemanticObjectLabelProvider itemLabelProvider = (ISemanticObjectLabelProvider)adapterFactory.adapt(
-				object, ISemanticObjectLabelProvider.class);
+		ISemanticObjectLabelProvider itemLabelProvider = (ISemanticObjectLabelProvider)adapterFactory
+				.adapt(object, ISemanticObjectLabelProvider.class);
 		String result;
 		if (itemLabelProvider != null) {
 			result = itemLabelProvider.getSemanticObjectLabel(object);

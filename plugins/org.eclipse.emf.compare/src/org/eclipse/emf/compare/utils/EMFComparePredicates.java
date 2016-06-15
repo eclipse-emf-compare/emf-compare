@@ -85,8 +85,8 @@ public final class EMFComparePredicates {
 				if (input.eContainer() instanceof EGenericType) {
 					EGenericType eGenericTypeContainer = (EGenericType)(input.eContainer());
 					isEGenericWithoutParams = !(eGenericTypeContainer.getETypeArguments().contains(input)
-							|| input.equals(eGenericTypeContainer.getELowerBound()) || input
-							.equals(eGenericTypeContainer.getEUpperBound()));
+							|| input.equals(eGenericTypeContainer.getELowerBound())
+							|| input.equals(eGenericTypeContainer.getEUpperBound()));
 				} else {
 					isEGenericWithoutParams = true;
 				}
@@ -129,8 +129,8 @@ public final class EMFComparePredicates {
 	@SuppressWarnings("unchecked")
 	public static Predicate<? super Diff> changedReference(final String qualifiedName,
 			final String referenceName, final String fromQualifiedName, final String toQualifiedName) {
-		final Predicate<? super Diff> valuesMatch = new ReferenceValuesMatch(referenceName,
-				fromQualifiedName, toQualifiedName);
+		final Predicate<? super Diff> valuesMatch = new ReferenceValuesMatch(referenceName, fromQualifiedName,
+				toQualifiedName);
 		return and(ofKind(DifferenceKind.CHANGE), onEObject(qualifiedName), valuesMatch);
 	}
 
@@ -155,8 +155,8 @@ public final class EMFComparePredicates {
 	public static Predicate<? super Diff> addedToAttribute(final String qualifiedName,
 			final String attributeName, final Object addedValue) {
 		// This is only meant for multi-valued attributes
-		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), attributeValueMatch(attributeName,
-				addedValue, true));
+		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName),
+				attributeValueMatch(attributeName, addedValue, true));
 	}
 
 	/**
@@ -180,8 +180,8 @@ public final class EMFComparePredicates {
 	public static Predicate<? super Diff> addedToReference(final String qualifiedName,
 			final String referenceName, final String addedQualifiedName) {
 		// This is only meant for multi-valued references
-		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), referenceValueMatch(referenceName,
-				addedQualifiedName, true));
+		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName),
+				referenceValueMatch(referenceName, addedQualifiedName, true));
 	}
 
 	/**
@@ -209,8 +209,8 @@ public final class EMFComparePredicates {
 			final String referenceName, final String addedQualifiedName,
 			final EStructuralFeature featureDelegateForAddedName) {
 		// This is only meant for multi-valued references
-		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), referenceValueMatch(referenceName,
-				addedQualifiedName, true, featureDelegateForAddedName));
+		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName),
+				referenceValueMatch(referenceName, addedQualifiedName, true, featureDelegateForAddedName));
 	}
 
 	/**
@@ -234,8 +234,8 @@ public final class EMFComparePredicates {
 	public static Predicate<? super Diff> movedInAttribute(final String qualifiedName,
 			final String attributeName, final Object removedValue) {
 		// This is only meant for multi-valued attributes
-		return and(ofKind(DifferenceKind.MOVE), onEObject(qualifiedName), attributeValueMatch(attributeName,
-				removedValue, true));
+		return and(ofKind(DifferenceKind.MOVE), onEObject(qualifiedName),
+				attributeValueMatch(attributeName, removedValue, true));
 	}
 
 	/**
@@ -259,8 +259,8 @@ public final class EMFComparePredicates {
 	public static Predicate<? super Diff> movedInReference(final String qualifiedName,
 			final String referenceName, final String removedQualifiedName) {
 		// This is only meant for multi-valued references
-		return and(ofKind(DifferenceKind.MOVE), onEObject(qualifiedName), referenceValueMatch(referenceName,
-				removedQualifiedName, true));
+		return and(ofKind(DifferenceKind.MOVE), onEObject(qualifiedName),
+				referenceValueMatch(referenceName, removedQualifiedName, true));
 	}
 
 	/**
@@ -337,8 +337,8 @@ public final class EMFComparePredicates {
 	public static Predicate<? super Diff> removedFromAttribute(final String qualifiedName,
 			final String attributeName, final Object removedValue) {
 		// This is only meant for multi-valued attributes
-		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), attributeValueMatch(
-				attributeName, removedValue, true));
+		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName),
+				attributeValueMatch(attributeName, removedValue, true));
 	}
 
 	/**
@@ -362,8 +362,8 @@ public final class EMFComparePredicates {
 	public static Predicate<? super Diff> removedFromReference(final String qualifiedName,
 			final String referenceName, final String removedQualifiedName) {
 		// This is only meant for multi-valued references
-		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), referenceValueMatch(
-				referenceName, removedQualifiedName, true));
+		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName),
+				referenceValueMatch(referenceName, removedQualifiedName, true));
 	}
 
 	/**
@@ -391,8 +391,8 @@ public final class EMFComparePredicates {
 			final String referenceName, final String removedQualifiedName,
 			final EStructuralFeature featureDelegateForRemovedName) {
 		// This is only meant for multi-valued references
-		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), referenceValueMatch(
-				referenceName, removedQualifiedName, true, featureDelegateForRemovedName));
+		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), referenceValueMatch(referenceName,
+				removedQualifiedName, true, featureDelegateForRemovedName));
 	}
 
 	/**
@@ -716,8 +716,8 @@ public final class EMFComparePredicates {
 				} else if (input instanceof AttributeChange) {
 					return helper.matchingValues(value, ((AttributeChange)input).getValue());
 				} else if (input instanceof FeatureMapChange) {
-					return helper.matchingValues(value, ((FeatureMap.Entry)((FeatureMapChange)input)
-							.getValue()).getValue());
+					return helper.matchingValues(value,
+							((FeatureMap.Entry)((FeatureMapChange)input).getValue()).getValue());
 				}
 				return false;
 			}
@@ -777,8 +777,8 @@ public final class EMFComparePredicates {
 						&& ((AttributeChange)input).getAttribute().getName().equals(attributeName)
 						&& ((AttributeChange)input).getAttribute().isMany() == multiValued) {
 					final Object value = ((AttributeChange)input).getValue();
-					return input.getMatch().getComparison().getEqualityHelper().matchingAttributeValues(
-							value, expectedValue);
+					return input.getMatch().getComparison().getEqualityHelper().matchingAttributeValues(value,
+							expectedValue);
 				}
 				return false;
 			}
@@ -1133,7 +1133,7 @@ public final class EMFComparePredicates {
 		 * @param toQualifiedName
 		 *            The value to which this reference has been changed.
 		 */
-		public ReferenceValuesMatch(String referenceName, String fromQualifiedName, String toQualifiedName) {
+		ReferenceValuesMatch(String referenceName, String fromQualifiedName, String toQualifiedName) {
 			this.referenceName = referenceName;
 			this.fromQualifiedName = fromQualifiedName;
 			this.toQualifiedName = toQualifiedName;
@@ -1212,7 +1212,7 @@ public final class EMFComparePredicates {
 		 * @param toValue
 		 *            The value to which this attribute has been changed.
 		 */
-		public AttributeValuesMatch(String attributeName, Object fromValue, Object toValue) {
+		AttributeValuesMatch(String attributeName, Object fromValue, Object toValue) {
 			this.attributeName = attributeName;
 			this.fromValue = fromValue;
 			this.toValue = toValue;
@@ -1235,8 +1235,8 @@ public final class EMFComparePredicates {
 		 */
 		private static boolean equalAttributeValues(Object attributeValue, Object expectedValue) {
 			// Using == to handle the "null" case
-			boolean equal = expectedValue == attributeValue || expectedValue != null
-					&& expectedValue.equals(attributeValue);
+			boolean equal = expectedValue == attributeValue
+					|| expectedValue != null && expectedValue.equals(attributeValue);
 			// Consider that null is equal to the empty string (unset attributes)
 			if (!equal) {
 				equal = "".equals(attributeValue) && expectedValue == null || "".equals(expectedValue) //$NON-NLS-1$ //$NON-NLS-2$
@@ -1323,7 +1323,7 @@ public final class EMFComparePredicates {
 		 * @param feature
 		 *            the feature
 		 */
-		public OnFeature(EStructuralFeature feature) {
+		OnFeature(EStructuralFeature feature) {
 			this.feature = checkNotNull(feature);
 		}
 
@@ -1366,7 +1366,7 @@ public final class EMFComparePredicates {
 		 * @param diff
 		 *            The Diff for which we seek conflict candidates, must not be null.
 		 */
-		public ConflictCandidateFilter(Diff diff) {
+		ConflictCandidateFilter(Diff diff) {
 			this.diff = checkNotNull(diff);
 		}
 

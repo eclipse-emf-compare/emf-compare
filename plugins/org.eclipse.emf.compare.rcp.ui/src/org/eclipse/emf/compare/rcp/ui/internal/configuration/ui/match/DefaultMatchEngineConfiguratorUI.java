@@ -62,14 +62,14 @@ public class DefaultMatchEngineConfiguratorUI extends AbstractConfigurationUI {
 		this.setLayout(gridLayout);
 
 		Label text = new Label(this, SWT.WRAP);
-		text.setText(EMFCompareRCPUIMessages
-				.getString("DefaultMatchEngineConfiguratorUI.useIdentifier.label")); //$NON-NLS-1$
+		text.setText(
+				EMFCompareRCPUIMessages.getString("DefaultMatchEngineConfiguratorUI.useIdentifier.label")); //$NON-NLS-1$
 		text.setLayoutData(new GridData(SWT.BEGINNING, SWT.TOP, true, false));
 
 		whenAvailableButton = new Button(this, SWT.RADIO | SWT.WRAP);
 		whenAvailableButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.TOP, true, false));
-		whenAvailableButton.setText(EMFCompareRCPUIMessages
-				.getString("DefaultMatchEngineConfiguratorUI.whenAvailable.label")); //$NON-NLS-1$
+		whenAvailableButton.setText(
+				EMFCompareRCPUIMessages.getString("DefaultMatchEngineConfiguratorUI.whenAvailable.label")); //$NON-NLS-1$
 
 		onlyButton = new Button(this, SWT.RADIO | SWT.WRAP);
 		onlyButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.TOP, true, false));
@@ -122,16 +122,16 @@ public class DefaultMatchEngineConfiguratorUI extends AbstractConfigurationUI {
 	public void resetDefault() {
 		// Set default
 		if (whenAvailableButton != null && !whenAvailableButton.isDisposed()) {
-			whenAvailableButton
-					.setSelection(DefaultRCPMatchEngineFactory.DEFAULT_USE_IDENTIFIER_ATRIBUTE == UseIdentifiers.WHEN_AVAILABLE);
+			whenAvailableButton.setSelection(
+					DefaultRCPMatchEngineFactory.DEFAULT_USE_IDENTIFIER_ATRIBUTE == UseIdentifiers.WHEN_AVAILABLE);
 		}
 		if (onlyButton != null && !onlyButton.isDisposed()) {
-			onlyButton
-					.setSelection(DefaultRCPMatchEngineFactory.DEFAULT_USE_IDENTIFIER_ATRIBUTE == UseIdentifiers.ONLY);
+			onlyButton.setSelection(
+					DefaultRCPMatchEngineFactory.DEFAULT_USE_IDENTIFIER_ATRIBUTE == UseIdentifiers.ONLY);
 		}
 		if (neverButton != null && !neverButton.isDisposed()) {
-			neverButton
-					.setSelection(DefaultRCPMatchEngineFactory.DEFAULT_USE_IDENTIFIER_ATRIBUTE == UseIdentifiers.NEVER);
+			neverButton.setSelection(
+					DefaultRCPMatchEngineFactory.DEFAULT_USE_IDENTIFIER_ATRIBUTE == UseIdentifiers.NEVER);
 		}
 		dataHolder.setValue(DefaultRCPMatchEngineFactory.DEFAULT_USE_IDENTIFIER_ATRIBUTE);
 		try {

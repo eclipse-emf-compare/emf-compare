@@ -19,8 +19,8 @@ import org.junit.runners.model.FrameworkMethod;
 public class CompareStatement extends AbstractCompareStatement {
 
 	public CompareStatement(Object testObject, FrameworkMethod test, ResolutionStrategyID resolutionStrategy,
-			Class<?>[] disabledMatchEngineFactory, Class<?> diffEngine, Class<?> eqEngine,
-			Class<?> reqEngine, Class<?> conflictDetector, Class<?>[] disabledPostProcessors) {
+			Class<?>[] disabledMatchEngineFactory, Class<?> diffEngine, Class<?> eqEngine, Class<?> reqEngine,
+			Class<?> conflictDetector, Class<?>[] disabledPostProcessors) {
 		super(testObject, test, resolutionStrategy, disabledMatchEngineFactory, diffEngine, eqEngine,
 				reqEngine, conflictDetector, disabledPostProcessors);
 	}

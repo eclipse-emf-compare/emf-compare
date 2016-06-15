@@ -19,15 +19,15 @@ import org.eclipse.emf.ecore.resource.Resource;
 public class NodeTooltipsInputData extends AbstractInputData implements ResourceScopeProvider {
 
 	public Resource getLeft() throws IOException {
-	return loadFromClassLoader("left.nodes"); //$NON-NLS-1$
+		return loadFromClassLoader("left.nodes"); //$NON-NLS-1$
 	}
 
 	public Resource getRight() throws IOException {
-	return loadFromClassLoader("right.nodes"); //$NON-NLS-1$
+		return loadFromClassLoader("right.nodes"); //$NON-NLS-1$
 	}
 
 	public Resource getOrigin() throws IOException {
-	return loadFromClassLoader("origin.nodes"); //$NON-NLS-1$
+		return loadFromClassLoader("origin.nodes"); //$NON-NLS-1$
 	}
 
 }

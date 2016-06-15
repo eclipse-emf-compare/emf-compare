@@ -122,8 +122,8 @@ public class DefaultComparisonScopeTest {
 			final EObject root = allEObjects.next();
 
 			final Iterator<? extends EObject> scopeChildren = resourceScope.getChildren(root);
-			final List<EObject> children = Lists.newArrayList(Iterators.filter(EcoreUtil
-					.getAllProperContents(root, false), EObject.class));
+			final List<EObject> children = Lists.newArrayList(
+					Iterators.filter(EcoreUtil.getAllProperContents(root, false), EObject.class));
 
 			while (scopeChildren.hasNext()) {
 				assertTrue(children.remove(scopeChildren.next()));
@@ -149,8 +149,8 @@ public class DefaultComparisonScopeTest {
 		final Resource originResource = (Resource)resourceScope.getOrigin();
 
 		final Iterator<? extends EObject> scopeLeftChildren = resourceScope.getCoveredEObjects(leftResource);
-		final List<EObject> leftChildren = Lists.newArrayList(Iterators.filter(EcoreUtil
-				.getAllProperContents(leftResource, false), EObject.class));
+		final List<EObject> leftChildren = Lists.newArrayList(
+				Iterators.filter(EcoreUtil.getAllProperContents(leftResource, false), EObject.class));
 		while (scopeLeftChildren.hasNext()) {
 			assertTrue(leftChildren.remove(scopeLeftChildren.next()));
 		}
@@ -161,8 +161,8 @@ public class DefaultComparisonScopeTest {
 
 		final Iterator<? extends EObject> scopeRightChildren = resourceScope
 				.getCoveredEObjects(rightResource);
-		final List<EObject> rightChildren = Lists.newArrayList(Iterators.filter(EcoreUtil
-				.getAllProperContents(rightResource, false), EObject.class));
+		final List<EObject> rightChildren = Lists.newArrayList(
+				Iterators.filter(EcoreUtil.getAllProperContents(rightResource, false), EObject.class));
 		while (scopeRightChildren.hasNext()) {
 			assertTrue(rightChildren.remove(scopeRightChildren.next()));
 		}
@@ -173,8 +173,8 @@ public class DefaultComparisonScopeTest {
 
 		final Iterator<? extends EObject> scopeOriginChildren = resourceScope
 				.getCoveredEObjects(originResource);
-		final List<EObject> originChildren = Lists.newArrayList(Iterators.filter(EcoreUtil
-				.getAllProperContents(originResource, false), EObject.class));
+		final List<EObject> originChildren = Lists.newArrayList(
+				Iterators.filter(EcoreUtil.getAllProperContents(originResource, false), EObject.class));
 		while (scopeOriginChildren.hasNext()) {
 			assertTrue(originChildren.remove(scopeOriginChildren.next()));
 		}
@@ -283,8 +283,8 @@ public class DefaultComparisonScopeTest {
 			final EObject root = allEObjects.next();
 
 			final Iterator<? extends EObject> scopeChildren = resourceScope.getChildren(root);
-			final List<EObject> children = Lists.newArrayList(Iterators.filter(EcoreUtil
-					.getAllProperContents(root, false), EObject.class));
+			final List<EObject> children = Lists.newArrayList(
+					Iterators.filter(EcoreUtil.getAllProperContents(root, false), EObject.class));
 
 			while (scopeChildren.hasNext()) {
 				assertTrue(children.remove(scopeChildren.next()));

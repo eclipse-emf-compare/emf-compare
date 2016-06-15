@@ -105,8 +105,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		SystemReader.setInstance(mockSystemReader);
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		String gitRepoPath = workspaceRoot.getRawLocation().toFile() + File.separator + "repo";
-		mockSystemReader.setProperty(Constants.GIT_CEILING_DIRECTORIES_KEY, workspaceRoot.getLocation()
-				.toFile().getParentFile().getAbsoluteFile().toString());
+		mockSystemReader.setProperty(Constants.GIT_CEILING_DIRECTORIES_KEY,
+				workspaceRoot.getLocation().toFile().getParentFile().getAbsoluteFile().toString());
 		gitDir = new File(gitRepoPath, Constants.DOT_GIT);
 		repository = new GitTestRepository(gitDir);
 		repository.ignore(workspaceRoot.getRawLocation().append(".metadata").toFile());
@@ -115,8 +115,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 	@Override
 	@After
 	public void tearDown() throws Exception {
-		final EMFModelProvider emfModelProvider = (EMFModelProvider)ModelProvider.getModelProviderDescriptor(
-				EMFModelProvider.PROVIDER_ID).getModelProvider();
+		final EMFModelProvider emfModelProvider = (EMFModelProvider)ModelProvider
+				.getModelProviderDescriptor(EMFModelProvider.PROVIDER_ID).getModelProvider();
 		emfModelProvider.clear();
 		repository.dispose();
 		Activator.getDefault().getRepositoryCache().clear();
@@ -184,8 +184,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		// 3rd commit:
 		// Add a new Package child2 under Package root.
 		resourceSet.getResources().clear();
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
 		root = (EPackage)resource1.getContents().get(0);
 		EPackage child2 = createPackage(root, "child2");
 		save(resource1);
@@ -209,8 +209,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		assertTrue(file22.exists());
 		// Check the contents
 		resourceSet.getResources().clear();
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
 		resource2 = resourceSet.getResource(URI.createFileURI(file2.getAbsolutePath()), true);
 		// The proxy of child element has the following form : "platform:/resource/..."
 		// So we have to update the uri of the resource2
@@ -289,8 +289,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		// 3rd commit:
 		// Change the name of the sub-package.
 		resourceSet.getResources().clear();
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
 		root = (EPackage)resource1.getContents().get(0);
 		child = root.getESubpackages().get(0);
 		child.setName("newChild");
@@ -315,8 +315,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		assertTrue(file22.exists());
 		// Check the contents
 		resourceSet.getResources().clear();
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
 		resource2 = resourceSet.getResource(URI.createFileURI(file2.getAbsolutePath()), true);
 		// The proxy of child element has the following form : "platform:/resource/..."
 		// So we have to update the uri of the resource2
@@ -364,8 +364,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		repository.addAllAndCommit("1st-commit");
 		repository.createBranch(MASTER, BRANCH_1);
 
-		TestProject testProject2 = new TestProject("Project2", ResourcesPlugin.getWorkspace().getRoot()
-				.getLocation().toString());
+		TestProject testProject2 = new TestProject("Project2",
+				ResourcesPlugin.getWorkspace().getRoot().getLocation().toString());
 		IProject iProject2 = testProject2.getProject();
 		File file2 = testProject2.getOrCreateFile(iProject2, "file2.ecore");
 		IFile iFile2 = testProject2.getIFile(iProject2, file2);
@@ -393,8 +393,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		// 3rd commit:
 		// Add a new attribute under C1
 		resourceSet.getResources().clear();
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
 		root = (EPackage)resource1.getContents().get(0);
 		c1 = (EClass)root.getEClassifiers().get(0);
 		EAttribute att1 = createAttribute(c1, "attribute1", null);
@@ -419,10 +419,10 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		assertTrue(file22.exists());
 		// Check the contents
 		resourceSet.getResources().clear();
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
-		resource2 = resourceSet.getResource(URI.createPlatformResourceURI(iFile2.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
+		resource2 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile2.getFullPath().toString(), true), true);
 		root = (EPackage)resource1.getContents().get(0);
 		assertEquals("parent", root.getName());
 		c1 = (EClass)root.getEClassifiers().get(0);
@@ -451,8 +451,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 			throws Exception {
 		ResourceSetImpl resourceSet = new ResourceSetImpl();
 		File workingDirectory = repository.getRepository().getWorkTree();
-		TestProject testProject1 = new TestProject("Project1", workingDirectory.getAbsolutePath()
-				+ "/a/b/c/d/e/f/g/");
+		TestProject testProject1 = new TestProject("Project1",
+				workingDirectory.getAbsolutePath() + "/a/b/c/d/e/f/g/");
 		IProject iProject = testProject1.getProject();
 		repository.connect(iProject);
 		File file1 = testProject1.getOrCreateFile(iProject, "folder1/folder2/folder3/file1.ecore");
@@ -471,7 +471,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		repository.addAllAndCommit("1st-commit");
 		repository.createBranch(MASTER, BRANCH_1);
 
-		TestProject testProject2 = new TestProject("Project2", workingDirectory.getAbsolutePath() + "/h/i/j/");
+		TestProject testProject2 = new TestProject("Project2",
+				workingDirectory.getAbsolutePath() + "/h/i/j/");
 		IProject iProject2 = testProject2.getProject();
 		repository.connect(iProject2);
 		File file2 = testProject2.getOrCreateFile(iProject2, "folder1/folder2/folder3/folder4/file2.ecore");
@@ -523,8 +524,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		assertTrue(file22.exists());
 		// Check the contents
 		resourceSet.getResources().clear();
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
 		resource2 = resourceSet.getResource(URI.createFileURI(file2.getAbsolutePath()), true);
 		// The proxy of child element has the following form : "platform:/resource/..."
 		// So we have to update the uri of the resource2
@@ -570,8 +571,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		repository.addAllAndCommit("1st-commit");
 		repository.createBranch(MASTER, BRANCH_1);
 
-		TestProject testProject2 = new TestProject("Project2", workingDirectory.getAbsolutePath()
-				+ "/Project1/a/");
+		TestProject testProject2 = new TestProject("Project2",
+				workingDirectory.getAbsolutePath() + "/Project1/a/");
 		IProject iProject2 = testProject2.getProject();
 		repository.connect(iProject2);
 		File file2 = testProject2.getOrCreateFile(iProject2, "file2.ecore");
@@ -623,8 +624,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		assertTrue(file22.exists());
 		// Check the contents
 		resourceSet.getResources().clear();
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
 		resource2 = resourceSet.getResource(URI.createFileURI(file2.getAbsolutePath()), true);
 		// The proxy of child element has the following form : "platform:/resource/..."
 		// So we have to update the uri of the resource2
@@ -705,8 +706,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		// 3rd commit:
 		// Change the name of the sub-packages.
 		resourceSet.getResources().clear();
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
 		root = (EPackage)resource1.getContents().get(0);
 		child1 = root.getESubpackages().get(0);
 		child1.setName("newChild1");
@@ -735,8 +736,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		assertTrue(file22.exists());
 		// Check the contents
 		resourceSet.getResources().clear();
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
 		resource2 = resourceSet.getResource(URI.createFileURI(file2.getAbsolutePath()), true);
 		resource3 = resourceSet.getResource(URI.createFileURI(file3.getAbsolutePath()), true);
 		// The proxy of child element has the following form : "platform:/resource/..."
@@ -829,8 +830,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		// 3rd commit:
 		// Change the name of the sub-packages.
 		resourceSet.getResources().clear();
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
 		root = (EPackage)resource1.getContents().get(0);
 		child1 = root.getESubpackages().get(0);
 		child1.setName("newChild1");
@@ -861,8 +862,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		resourceSet.getResources().clear();
 		resource3 = resourceSet.getResource(URI.createFileURI(file3.getAbsolutePath()), true);
 		resource2 = resourceSet.getResource(URI.createFileURI(file2.getAbsolutePath()), true);
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
 		// The proxy of child element has the following form : "platform:/resource/..."
 		// So we have to update the uri of the resource2
 		resource2.setURI(URI.createPlatformResourceURI(iFile2.getFullPath().toString(), true));
@@ -940,8 +941,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		// 3rd commit:
 		// Change the name of the sub-package.
 		resourceSet.getResources().clear();
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
 		root = (EPackage)resource1.getContents().get(0);
 		child = root.getESubpackages().get(0);
 		child.setName("newChild");
@@ -963,8 +964,8 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		assertTrue(iFile22.exists());
 		// Check the contents
 		resourceSet.getResources().clear();
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
 		resource2 = resourceSet.getResource(URI.createFileURI(file2.getAbsolutePath()), true);
 		// The proxy of child element has the following form : "platform:/resource/..."
 		// So we have to update the uri of the resource2
@@ -1059,10 +1060,10 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		assertTrue(iFile22.exists());
 		// Check the contents
 		resourceSet.getResources().clear();
-		resource1 = resourceSet.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(),
-				true), true);
-		resource2 = resourceSet.getResource(URI.createPlatformResourceURI(iFile2.getFullPath().toString(),
-				true), true);
+		resource1 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile1.getFullPath().toString(), true), true);
+		resource2 = resourceSet
+				.getResource(URI.createPlatformResourceURI(iFile2.getFullPath().toString(), true), true);
 		// The proxy of child element has the following form : "platform:/resource/..."
 		// So we have to update the uri of the resource2
 		// resource2.setURI(URI.createPlatformResourceURI(iFile2.getFullPath().toString(), true));

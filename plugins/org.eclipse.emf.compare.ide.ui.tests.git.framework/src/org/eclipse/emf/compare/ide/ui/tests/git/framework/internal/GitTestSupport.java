@@ -115,8 +115,8 @@ public class GitTestSupport {
 		}
 	};
 
-	protected void createRepositoryFromPath(Class<?> clazz, String path) throws IOException,
-			InvocationTargetException, InterruptedException, CoreException {
+	protected void createRepositoryFromPath(Class<?> clazz, String path)
+			throws IOException, InvocationTargetException, InterruptedException, CoreException {
 		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		// Delete all projects that can remain in the workspace : prevent errors dues to wrong cleanup of
 		// other tests
@@ -162,8 +162,8 @@ public class GitTestSupport {
 		return null;
 	}
 
-	private void importProjects(File file) throws InvocationTargetException, InterruptedException,
-			CoreException {
+	private void importProjects(File file)
+			throws InvocationTargetException, InterruptedException, CoreException {
 		for (File child : file.listFiles()) {
 			if (child.isDirectory() && !child.getName().equals(".metadata") //$NON-NLS-1$
 					&& !child.getName().equals(".git")) { //$NON-NLS-1$
@@ -174,10 +174,10 @@ public class GitTestSupport {
 		}
 	}
 
-	private void importProject(File file) throws InvocationTargetException, InterruptedException,
-			CoreException {
-		IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(
-				new Path(file.getAbsolutePath()));
+	private void importProject(File file)
+			throws InvocationTargetException, InterruptedException, CoreException {
+		IProjectDescription description = ResourcesPlugin.getWorkspace()
+				.loadProjectDescription(new Path(file.getAbsolutePath()));
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
 		project.create(description, new NullProgressMonitor());
 		project.open(new NullProgressMonitor());
@@ -405,14 +405,14 @@ public class GitTestSupport {
 		// Launch the comparison now that the logical model is computed
 		// and can be provided to a new GitSynchronizeData object
 		final ResourceMapping[] mappings = allMappings.toArray(new ResourceMapping[allMappings.size()]);
-		final GitSynchronizeData gsdThatCoverLogicalModel = new GitSynchronizeData(repository,
-				normalizedFrom, normalizedTo, true, includedResources);
+		final GitSynchronizeData gsdThatCoverLogicalModel = new GitSynchronizeData(repository, normalizedFrom,
+				normalizedTo, true, includedResources);
 		final GitSynchronizeDataSet gsds2 = new GitSynchronizeDataSet(gsdThatCoverLogicalModel);
 		final GitResourceVariantTreeSubscriber subscriber2 = new GitResourceVariantTreeSubscriber(gsds2);
 		RemoteResourceMappingContext remoteContext = new GitSubscriberResourceMappingContext(subscriber2,
 				gsds2);
-		final SubscriberScopeManager subscriberScopeManager = new SubscriberScopeManager(subscriber2
-				.getName(), mappings, subscriber2, remoteContext, true);
+		final SubscriberScopeManager subscriberScopeManager = new SubscriberScopeManager(
+				subscriber2.getName(), mappings, subscriber2, remoteContext, true);
 		subscriber2.init(new NullProgressMonitor());
 		disposers.add(new Runnable() {
 			public void run() {

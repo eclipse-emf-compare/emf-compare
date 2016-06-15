@@ -43,8 +43,8 @@ public class ComparisonEditorInput extends AbstractEMFCompareEditorInput {
 	 * @see org.eclipse.emf.compare.ide.ui.internal.editor.AbstractEMFCompareEditorInput#doPrepareInput(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	protected Object doPrepareInput(IProgressMonitor monitor) throws InvocationTargetException,
-			InterruptedException {
+	protected Object doPrepareInput(IProgressMonitor monitor)
+			throws InvocationTargetException, InterruptedException {
 		final TreeNode treeNode = TreeFactory.eINSTANCE.createTreeNode();
 		treeNode.setData(comparison);
 		return getAdapterFactory().adapt(treeNode, ICompareInput.class);

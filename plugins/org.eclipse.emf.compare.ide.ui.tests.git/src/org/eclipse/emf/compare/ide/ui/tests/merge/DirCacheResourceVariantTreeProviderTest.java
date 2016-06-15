@@ -42,8 +42,8 @@ public class DirCacheResourceVariantTreeProviderTest {
 		IFile iFile1 = project.getFile("file1"); //$NON-NLS-1$
 
 		// untracked file : not part of the index
-		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(
-				repository, true);
+		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(repository,
+				true);
 		assertTrue(treeProvider.getKnownResources().isEmpty());
 		assertFalse(treeProvider.getBaseTree().hasResourceVariant(iFile1));
 		assertFalse(treeProvider.getSourceTree().hasResourceVariant(iFile1));
@@ -69,8 +69,8 @@ public class DirCacheResourceVariantTreeProviderTest {
 		IFile iFile2 = iProject.getFile("file2"); //$NON-NLS-1$
 
 		// no conflict on either file : present in the trees anyway
-		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(
-				repository, true);
+		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(repository,
+				true);
 		assertEquals(3, treeProvider.getKnownResources().size());
 
 		assertTrue(treeProvider.getBaseTree().hasResourceVariant(iFile1));
@@ -93,8 +93,8 @@ public class DirCacheResourceVariantTreeProviderTest {
 
 		// conflict on file 1 : present in all three trees
 		// no conflict on file 2 : present anyway
-		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(
-				repository, true);
+		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(repository,
+				true);
 		assertTrue(treeProvider.getKnownResources().contains(iFile1));
 		assertTrue(treeProvider.getKnownResources().contains(iFile2));
 
@@ -118,8 +118,8 @@ public class DirCacheResourceVariantTreeProviderTest {
 
 		// conflict on file 1 : file 1 has three stages.
 		// conflict on file 2, but was not in the base : only stage 2 and 3
-		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(
-				repository, true);
+		DirCacheResourceVariantTreeProvider treeProvider = new DirCacheResourceVariantTreeProvider(repository,
+				true);
 		assertTrue(treeProvider.getKnownResources().contains(iFile1));
 		assertTrue(treeProvider.getKnownResources().contains(iFile2));
 
@@ -133,8 +133,8 @@ public class DirCacheResourceVariantTreeProviderTest {
 		assertTrue(treeProvider.getRemoteTree().hasResourceVariant(iFile2));
 	}
 
-	private void addToIndex(Repository repository, IFile file) throws CoreException, IOException,
-			NoFilepatternException, GitAPIException {
+	private void addToIndex(Repository repository, IFile file)
+			throws CoreException, IOException, NoFilepatternException, GitAPIException {
 		String filePath = file.getProject().getName() + "/" + file.getProjectRelativePath(); //$NON-NLS-1$
 		Git git = new Git(repository);
 		try {

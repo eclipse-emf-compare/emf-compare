@@ -131,11 +131,11 @@ public class AddIncludeTest extends AbstractUMLTest {
 		assertEquals(1, count(differences, instanceOf(DirectedRelationshipChange.class)));
 		Diff addUMLExtend = null;
 		if (kind.equals(TestKind.ADD)) {
-			addUMLExtend = Iterators.find(differences.iterator(), and(
-					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.ADD)));
+			addUMLExtend = Iterators.find(differences.iterator(),
+					and(instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.ADD)));
 		} else {
-			addUMLExtend = Iterators.find(differences.iterator(), and(
-					instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
+			addUMLExtend = Iterators.find(differences.iterator(),
+					and(instanceOf(DirectedRelationshipChange.class), ofKind(DifferenceKind.DELETE)));
 		}
 		assertNotNull(addUMLExtend);
 		assertEquals(2, addUMLExtend.getRefinedBy().size());

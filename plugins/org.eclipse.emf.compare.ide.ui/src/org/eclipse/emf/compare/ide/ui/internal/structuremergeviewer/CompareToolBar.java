@@ -85,11 +85,11 @@ public class CompareToolBar implements ISelectionChangedListener {
 		mergeActions = newArrayListWithCapacity(2);
 		mergeAllNonConflictingActions = newArrayListWithCapacity(2);
 
-		groupActionMenu = new GroupActionMenu(checkNotNull(viewerGrouper), EMFCompareRCPUIPlugin.getDefault()
-				.getDifferenceGroupProviderRegistry());
+		groupActionMenu = new GroupActionMenu(checkNotNull(viewerGrouper),
+				EMFCompareRCPUIPlugin.getDefault().getDifferenceGroupProviderRegistry());
 
-		filterActionMenu = new FilterActionMenu(checkNotNull(viewerFilter), EMFCompareRCPUIPlugin
-				.getDefault().getDifferenceFilterRegistry());
+		filterActionMenu = new FilterActionMenu(checkNotNull(viewerFilter),
+				EMFCompareRCPUIPlugin.getDefault().getDifferenceFilterRegistry());
 	}
 
 	public final void initToolbar(AbstractTreeViewer viewer, INavigatable nav) {
@@ -142,11 +142,11 @@ public class CompareToolBar implements ISelectionChangedListener {
 			toolbarManager.add(new CollapseAllModelAction(viewer));
 			toolbarManager.add(new Separator());
 			toolbarManager.add(groupActionMenu);
-			groupActionMenu.updateMenu(compareConfiguration.getComparisonScope(), compareConfiguration
-					.getComparison());
+			groupActionMenu.updateMenu(compareConfiguration.getComparisonScope(),
+					compareConfiguration.getComparison());
 			toolbarManager.add(filterActionMenu);
-			filterActionMenu.updateMenu(compareConfiguration.getComparisonScope(), compareConfiguration
-					.getComparison());
+			filterActionMenu.updateMenu(compareConfiguration.getComparisonScope(),
+					compareConfiguration.getComparison());
 			toolbarManager.add(new Separator());
 			toolbarManager.add(new SaveComparisonModelAction(compareConfiguration));
 

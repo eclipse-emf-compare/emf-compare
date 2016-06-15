@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.examples.extlibrary.impl;
 
-
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
@@ -21,182 +20,173 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.examples.extlibrary.EXTLibraryPackage;
 import org.eclipse.emf.examples.extlibrary.Person;
 
-
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Person</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Person</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.PersonImpl#getAddress <em>Address</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.PersonImpl#getFirstName <em>First Name</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.PersonImpl#getLastName <em>Last Name</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.PersonImpl#getAddress <em>Address</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.PersonImpl#getFirstName <em>First Name</em>}</li>
+ * <li>{@link org.eclipse.emf.examples.extlibrary.impl.PersonImpl#getLastName <em>Last Name</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class PersonImpl extends MinimalEObjectImpl.Container implements Person
-{
-  /**
-	 * The default value of the '{@link #getAddress() <em>Address</em>}' attribute.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+public class PersonImpl extends MinimalEObjectImpl.Container implements Person {
+	/**
+	 * The default value of the '{@link #getAddress() <em>Address</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getAddress()
 	 * @generated
 	 * @ordered
 	 */
-  protected static final String ADDRESS_EDEFAULT = null;
+	protected static final String ADDRESS_EDEFAULT = null;
 
-  /**
-	 * The cached value of the '{@link #getAddress() <em>Address</em>}' attribute.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The cached value of the '{@link #getAddress() <em>Address</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getAddress()
 	 * @generated
 	 * @ordered
 	 */
-  protected String address = ADDRESS_EDEFAULT;
+	protected String address = ADDRESS_EDEFAULT;
 
-  /**
-	 * The default value of the '{@link #getFirstName() <em>First Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The default value of the '{@link #getFirstName() <em>First Name</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @see #getFirstName()
 	 * @generated
 	 * @ordered
 	 */
-  protected static final String FIRST_NAME_EDEFAULT = null;
+	protected static final String FIRST_NAME_EDEFAULT = null;
 
-  /**
-	 * The cached value of the '{@link #getFirstName() <em>First Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The cached value of the '{@link #getFirstName() <em>First Name</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @see #getFirstName()
 	 * @generated
 	 * @ordered
 	 */
-  protected String firstName = FIRST_NAME_EDEFAULT;
+	protected String firstName = FIRST_NAME_EDEFAULT;
 
-  /**
-	 * The default value of the '{@link #getLastName() <em>Last Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The default value of the '{@link #getLastName() <em>Last Name</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getLastName()
 	 * @generated
 	 * @ordered
 	 */
-  protected static final String LAST_NAME_EDEFAULT = null;
+	protected static final String LAST_NAME_EDEFAULT = null;
 
-  /**
-	 * The cached value of the '{@link #getLastName() <em>Last Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * The cached value of the '{@link #getLastName() <em>Last Name</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getLastName()
 	 * @generated
 	 * @ordered
 	 */
-  protected String lastName = LAST_NAME_EDEFAULT;
+	protected String lastName = LAST_NAME_EDEFAULT;
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  protected PersonImpl()
-  {
+	protected PersonImpl() {
 		super();
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  protected EClass eStaticClass()
-  {
+	@Override
+	protected EClass eStaticClass() {
 		return EXTLibraryPackage.Literals.PERSON;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public String getAddress()
-  {
+	public String getAddress() {
 		return address;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public void setAddress(String newAddress)
-  {
+	public void setAddress(String newAddress) {
 		String oldAddress = address;
 		address = newAddress;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.PERSON__ADDRESS, oldAddress, address));
+			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.PERSON__ADDRESS,
+					oldAddress, address));
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public String getFirstName()
-  {
+	public String getFirstName() {
 		return firstName;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public void setFirstName(String newFirstName)
-  {
+	public void setFirstName(String newFirstName) {
 		String oldFirstName = firstName;
 		firstName = newFirstName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.PERSON__FIRST_NAME, oldFirstName, firstName));
+			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.PERSON__FIRST_NAME,
+					oldFirstName, firstName));
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public String getLastName()
-  {
+	public String getLastName() {
 		return lastName;
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  public void setLastName(String newLastName)
-  {
+	public void setLastName(String newLastName) {
 		String oldLastName = lastName;
 		lastName = newLastName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.PERSON__LAST_NAME, oldLastName, lastName));
+			eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.PERSON__LAST_NAME,
+					oldLastName, lastName));
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public Object eGet(int featureID, boolean resolve, boolean coreType)
-  {
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case EXTLibraryPackage.PERSON__ADDRESS:
 				return getAddress();
@@ -208,14 +198,13 @@ public class PersonImpl extends MinimalEObjectImpl.Container implements Person
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public void eSet(int featureID, Object newValue)
-  {
+	@Override
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case EXTLibraryPackage.PERSON__ADDRESS:
 				setAddress((String)newValue);
@@ -230,14 +219,13 @@ public class PersonImpl extends MinimalEObjectImpl.Container implements Person
 		super.eSet(featureID, newValue);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public void eUnset(int featureID)
-  {
+	@Override
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case EXTLibraryPackage.PERSON__ADDRESS:
 				setAddress(ADDRESS_EDEFAULT);
@@ -252,34 +240,34 @@ public class PersonImpl extends MinimalEObjectImpl.Container implements Person
 		super.eUnset(featureID);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public boolean eIsSet(int featureID)
-  {
+	@Override
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case EXTLibraryPackage.PERSON__ADDRESS:
 				return ADDRESS_EDEFAULT == null ? address != null : !ADDRESS_EDEFAULT.equals(address);
 			case EXTLibraryPackage.PERSON__FIRST_NAME:
-				return FIRST_NAME_EDEFAULT == null ? firstName != null : !FIRST_NAME_EDEFAULT.equals(firstName);
+				return FIRST_NAME_EDEFAULT == null ? firstName != null
+						: !FIRST_NAME_EDEFAULT.equals(firstName);
 			case EXTLibraryPackage.PERSON__LAST_NAME:
 				return LAST_NAME_EDEFAULT == null ? lastName != null : !LAST_NAME_EDEFAULT.equals(lastName);
 		}
 		return super.eIsSet(featureID);
 	}
 
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-  @Override
-  public String toString()
-  {
-		if (eIsProxy()) return super.toString();
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (address: "); //$NON-NLS-1$
@@ -292,4 +280,4 @@ public class PersonImpl extends MinimalEObjectImpl.Container implements Person
 		return result.toString();
 	}
 
-} //PersonImpl
+} // PersonImpl

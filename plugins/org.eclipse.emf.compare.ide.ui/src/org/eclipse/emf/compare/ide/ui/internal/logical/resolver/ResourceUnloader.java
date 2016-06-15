@@ -38,7 +38,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
 	 */
-	public ResourceUnloader(SynchronizedResourceSet resourceSet, Resource resource, IProgressMonitor monitor) {
+	public ResourceUnloader(SynchronizedResourceSet resourceSet, Resource resource,
+			IProgressMonitor monitor) {
 		this.resourceSet = resourceSet;
 		this.resource = resource;
 		this.monitor = monitor;

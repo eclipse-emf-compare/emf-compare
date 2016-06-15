@@ -157,8 +157,8 @@ public class UMLStereotypeApplicationChangeFeatureAccessor extends ManyStructura
 		// We'll display all diffs of the same type, excluding the pseudo conflicts.
 		Predicate<? super Diff> diffFilter = not(hasConflict(ConflictKind.PSEUDO));
 
-		return ImmutableList.copyOf(filter(filter(siblingDifferences, diffFilter), getInitialDiff()
-				.getClass()));
+		return ImmutableList
+				.copyOf(filter(filter(siblingDifferences, diffFilter), getInitialDiff().getClass()));
 	}
 
 	/**
@@ -224,9 +224,9 @@ public class UMLStereotypeApplicationChangeFeatureAccessor extends ManyStructura
 					final Comparison comparison = diff.getMatch().getComparison();
 					final Match match = comparison.getMatch((EObject)element);
 					if (match != null) {
-						return Iterables.any(match.getDifferences(), and(
-								instanceOf(StereotypeApplicationChange.class),
-								hasState(DifferenceState.UNRESOLVED)));
+						return Iterables.any(match.getDifferences(),
+								and(instanceOf(StereotypeApplicationChange.class),
+										hasState(DifferenceState.UNRESOLVED)));
 					}
 				}
 				return false;

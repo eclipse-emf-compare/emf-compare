@@ -144,8 +144,8 @@ public final class MergeDependenciesUtil {
 		final Set<Diff> resultingMerges = new LinkedHashSet<Diff>();
 		resultingMerges.add(diff);
 
-		Set<Diff> relations = internalGetResultingMerges(diff, mergerRegistry, mergeRightToLeft, diff
-				.getSource());
+		Set<Diff> relations = internalGetResultingMerges(diff, mergerRegistry, mergeRightToLeft,
+				diff.getSource());
 		Set<Diff> difference = Sets.difference(relations, resultingMerges);
 		while (!difference.isEmpty()) {
 			final Set<Diff> newRelations = new LinkedHashSet<Diff>(difference);
@@ -198,12 +198,12 @@ public final class MergeDependenciesUtil {
 		}
 
 		// FIXME [PERF] Useless copy
-		final LinkedHashSet<Diff> directRelated = Sets.newLinkedHashSet(Sets.union(directParents,
-				directImplications));
+		final LinkedHashSet<Diff> directRelated = Sets
+				.newLinkedHashSet(Sets.union(directParents, directImplications));
 
 		if (merger instanceof IMergeOptionAware) {
-			Object subDiffs = ((IMergeOptionAware)merger).getMergeOptions().get(
-					AbstractMerger.SUB_DIFF_AWARE_OPTION);
+			Object subDiffs = ((IMergeOptionAware)merger).getMergeOptions()
+					.get(AbstractMerger.SUB_DIFF_AWARE_OPTION);
 			if (subDiffs == Boolean.TRUE) {
 				addAll(directRelated, ComparisonUtil.getSubDiffs(!direction).apply(diff));
 			}
@@ -231,8 +231,8 @@ public final class MergeDependenciesUtil {
 
 		final Set<Diff> allResultingMerges = getAllResultingMerges(diff, mergerRegistry, mergeRightToLeft);
 		for (Diff resulting : allResultingMerges) {
-			Set<Diff> rejections = internalGetResultingRejections(resulting, mergerRegistry,
-					mergeRightToLeft, diff.getSource());
+			Set<Diff> rejections = internalGetResultingRejections(resulting, mergerRegistry, mergeRightToLeft,
+					diff.getSource());
 			Set<Diff> difference = Sets.difference(rejections, resultingRejections);
 			while (!difference.isEmpty()) {
 				final Set<Diff> newRejections = new LinkedHashSet<Diff>(difference);
@@ -241,10 +241,10 @@ public final class MergeDependenciesUtil {
 				for (Diff rejected : newRejections) {
 					final IMerger merger = mergerRegistry.getHighestRankingMerger(rejected);
 					if (merger instanceof IMerger2) {
-						rejections.addAll(((IMerger2)merger).getDirectMergeDependencies(rejected,
-								mergeRightToLeft));
-						rejections.addAll(((IMerger2)merger).getDirectResultingMerges(rejected,
-								mergeRightToLeft));
+						rejections.addAll(
+								((IMerger2)merger).getDirectMergeDependencies(rejected, mergeRightToLeft));
+						rejections.addAll(
+								((IMerger2)merger).getDirectResultingMerges(rejected, mergeRightToLeft));
 					}
 				}
 				difference = Sets.difference(rejections, resultingRejections);

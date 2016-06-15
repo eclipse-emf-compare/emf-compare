@@ -58,8 +58,8 @@ public class UMLStereotypeManyStructuralFeatureChangeAccessor extends ManyStruct
 		Match match = getInitialDiff().getMatch();
 		List<Diff> siblingDifferences = match.getDifferences();
 		EStructuralFeature affectedFeature = getAffectedFeature(getInitialDiff());
-		return ImmutableList.copyOf(filter(siblingDifferences, onFeature(getStructuralFeature().getName(),
-				affectedFeature)));
+		return ImmutableList.copyOf(
+				filter(siblingDifferences, onFeature(getStructuralFeature().getName(), affectedFeature)));
 	}
 
 	/**

@@ -138,9 +138,8 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 	}
 
 	/**
-	 * Specifies whether the two given diffs, {@code diff1} and {@code diff2}, are both
-	 * {@link AttributeChange attribute changes} of String attributes and can be merged with a line-based
-	 * three-way merge.
+	 * Specifies whether the two given diffs, {@code diff1} and {@code diff2}, are both {@link AttributeChange
+	 * attribute changes} of String attributes and can be merged with a line-based three-way merge.
 	 * 
 	 * @see org.eclipse.emf.compare.internal.ThreeWayTextDiff
 	 * @param diff1
@@ -171,8 +170,8 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 	 *         otherwise.
 	 */
 	protected boolean isStringAttributeChange(Diff toCheck) {
-		return toCheck instanceof AttributeChange
-				&& ((AttributeChange)toCheck).getAttribute().getEAttributeType().getInstanceClass() == String.class;
+		return toCheck instanceof AttributeChange && ((AttributeChange)toCheck).getAttribute()
+				.getEAttributeType().getInstanceClass() == String.class;
 	}
 
 	/**
@@ -334,8 +333,8 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 		} else {
 			expectedValue = value;
 		}
-		return Iterables.any(match.getDifferences(), and(onFeature(feature.getName()),
-				valueIs(expectedValue), ofKind(DELETE)));
+		return Iterables.any(match.getDifferences(),
+				and(onFeature(feature.getName()), valueIs(expectedValue), ofKind(DELETE)));
 	}
 
 	/**
@@ -442,8 +441,8 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 				soughtMatch = matchRes;
 			}
 		}
-		checkState(soughtMatch != null, EMFCompareMessages.getString(
-				"ResourceAttachmentChangeSpec.MissingMatch", resource.getURI().lastSegment())); //$NON-NLS-1$
+		checkState(soughtMatch != null, EMFCompareMessages
+				.getString("ResourceAttachmentChangeSpec.MissingMatch", resource.getURI().lastSegment())); //$NON-NLS-1$
 		return soughtMatch;
 	}
 

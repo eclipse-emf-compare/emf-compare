@@ -61,8 +61,8 @@ public class ThreadedModelResolverGraphTest {
 				+ SEP + "ide" + SEP + "ui" + SEP + "tests" + SEP + "structuremergeviewer" + SEP
 				+ "notloadedfragment" + SEP + "data" + SEP + projectName + SEP + ".project");
 		URL fileURL = FileLocator.toFileURL(entry);
-		IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(
-				new Path(fileURL.getPath()));
+		IProjectDescription description = ResourcesPlugin.getWorkspace()
+				.loadProjectDescription(new Path(fileURL.getPath()));
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
 		if (!project.exists()) {
 			project.create(description, new NullProgressMonitor());
@@ -96,8 +96,8 @@ public class ThreadedModelResolverGraphTest {
 		final IGraphView<URI> graph = initGraph(projectName);
 		// Left
 		String leftPath = projectName + URI_SEP + LEFT + URI_SEP;
-		URI parentData = graph.getParentData(URI.createPlatformResourceURI(leftPath + URI_SEP + "R1.ecore",
-				false));
+		URI parentData = graph
+				.getParentData(URI.createPlatformResourceURI(leftPath + URI_SEP + "R1.ecore", false));
 		assertNull(parentData);
 		parentData = graph.getParentData(URI.createPlatformResourceURI(leftPath + "R2.ecore", false));
 		assertEquals(PLATFORM_RESOURCE + URI_SEP + leftPath + "R1.ecore#_A", parentData.toString());

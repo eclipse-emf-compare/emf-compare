@@ -52,8 +52,7 @@ public class DanglingStereotypeApplicationCustomItemProvider extends UMLDiffCust
 	@Override
 	public IComposedStyledString getStyledText(Object object) {
 		ComposedStyledString ret = new ComposedStyledString(getInternalText(object));
-		ret.append(
-				" [" + EMFCompareUML2EditMessages.getString("DanglingStereotypeApplication.message") + "]", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		ret.append(" [" + EMFCompareUML2EditMessages.getString("DanglingStereotypeApplication.message") + "]", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				Style.DECORATIONS_STYLER);
 
 		return ret;

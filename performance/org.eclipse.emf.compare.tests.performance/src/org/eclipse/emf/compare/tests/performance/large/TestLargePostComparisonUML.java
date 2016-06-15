@@ -25,20 +25,20 @@ import fr.obeo.performance.api.PerformanceMonitor;
 
 /**
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
- *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestLargePostComparisonUML extends AbstractEMFComparePerformanceTest {
 
-	/** 
+	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.tests.performance.AbstractEMFComparePerformanceTest#setSUTName()
 	 */
 	@Override
 	protected void setSUTName() {
 		getPerformance().getSystemUnderTest().setName(TestPostComparisonUML.class.getSimpleName());
 	}
-	
+
 	@Test
 	public void a_pcUMLUMLLarge() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLLarge");
@@ -56,7 +56,7 @@ public class TestLargePostComparisonUML extends AbstractEMFComparePerformanceTes
 		});
 		data.dispose();
 	}
-	
+
 	@Test
 	public void b_pcUMLUMLLargeSplit() throws IOException {
 		PerformanceMonitor monitor = getPerformance().createMonitor("pcUMLUMLLargeSplit");

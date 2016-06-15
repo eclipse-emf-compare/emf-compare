@@ -106,8 +106,9 @@ public class ThreadedModelResolver extends AbstractModelResolver implements IGra
 	 * @return The resolution context to use.
 	 */
 	protected DefaultResolutionContext createContext(EventBus eventBus, IGraph<URI> aGraph) {
-		return new DefaultResolutionContext(eventBus, aGraph, new DependencyGraphUpdater<URI>(aGraph,
-				eventBus), new ResourceComputationScheduler<URI>(), new ModelResourceListener());
+		return new DefaultResolutionContext(eventBus, aGraph,
+				new DependencyGraphUpdater<URI>(aGraph, eventBus), new ResourceComputationScheduler<URI>(),
+				new ModelResourceListener());
 	}
 
 	/** {@inheritDoc} */

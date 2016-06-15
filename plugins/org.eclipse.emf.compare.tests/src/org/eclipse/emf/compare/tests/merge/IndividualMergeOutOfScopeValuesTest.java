@@ -175,8 +175,8 @@ public class IndividualMergeOutOfScopeValuesTest {
 		// We need left and right to point to the same proxy uri after the merge
 		assertEquals(((InternalEObject)leftValue).eProxyURI(), ((InternalEObject)rightValue).eProxyURI());
 		// Though the origin did not change and still points to the "old" proxy
-		assertFalse(((InternalEObject)leftValue).eProxyURI().equals(
-				((InternalEObject)originValue).eProxyURI()));
+		assertFalse(
+				((InternalEObject)leftValue).eProxyURI().equals(((InternalEObject)originValue).eProxyURI()));
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = new DefaultComparisonScope(left, right, null);
@@ -333,8 +333,8 @@ public class IndividualMergeOutOfScopeValuesTest {
 		// We need left and right to point to the same proxy uri after the merge
 		assertEquals(((InternalEObject)leftValue).eProxyURI(), ((InternalEObject)rightValue).eProxyURI());
 		// Though the origin did not change and still points to the "old" proxy
-		assertFalse(((InternalEObject)leftValue).eProxyURI().equals(
-				((InternalEObject)originValue).eProxyURI()));
+		assertFalse(
+				((InternalEObject)leftValue).eProxyURI().equals(((InternalEObject)originValue).eProxyURI()));
 
 		// We should have no difference between left and right ... though they might be different from origin
 		scope = new DefaultComparisonScope(left, right, null);

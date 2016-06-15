@@ -82,7 +82,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 		 * structural feature). This candidate will be considered as a containment reference to the target
 		 * value.
 		 */
-		public RefiningCandidate() {
+		RefiningCandidate() {
 		}
 
 		/**
@@ -93,7 +93,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 		 * @param feature
 		 *            the structural feature to the target value.
 		 */
-		public RefiningCandidate(EObject holdingObject, EStructuralFeature feature) {
+		RefiningCandidate(EObject holdingObject, EStructuralFeature feature) {
 			this.holdingObject = holdingObject;
 			this.eStructuralFeature = feature;
 		}
@@ -178,7 +178,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 		 * @param refiningCandidates
 		 *            The specified settings.
 		 */
-		public DifferencesOnRefiningCandidates(Comparison comparison,
+		DifferencesOnRefiningCandidates(Comparison comparison,
 				HashMultimap<Object, RefiningCandidate> refiningCandidates) {
 			fComparison = comparison;
 			fRefiningCandidates = refiningCandidates;
@@ -207,9 +207,8 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 						if (setting.getEStructuralFeature() != null) {
 							// ... and the structural feature is the same as the specified one in the
 							// setting.
-							res = res
-									&& MatchUtil.getStructuralFeature(input) == setting
-											.getEStructuralFeature();
+							res = res && MatchUtil.getStructuralFeature(input) == setting
+									.getEStructuralFeature();
 						} else {
 							// If no structural feature specified, check that the reference of the
 							// difference is containment.
@@ -519,9 +518,8 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 			Predicate<Diff> p) {
 		if (lookup instanceof EObject) {
 			List<Diff> crossReferences = findCrossReferences(comparison, (EObject)lookup, p);
-			refinedExtension.getRefinedBy().addAll(
-					Collections2.filter(crossReferences, EMFComparePredicates.fromSide(refinedExtension
-							.getSource())));
+			refinedExtension.getRefinedBy().addAll(Collections2.filter(crossReferences,
+					EMFComparePredicates.fromSide(refinedExtension.getSource())));
 		}
 	}
 
@@ -584,7 +582,8 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 	 *            The discriminant found for the given difference.
 	 * @return True if it is related to a CHANGE in an ADD/DELETE.
 	 */
-	private boolean isChangeOnAddOrDelete(Diff input, final Comparison comparison, final EObject discriminant) {
+	private boolean isChangeOnAddOrDelete(Diff input, final Comparison comparison,
+			final EObject discriminant) {
 		boolean result = false;
 		Match match = comparison.getMatch(discriminant);
 		if (match != null
@@ -598,7 +597,8 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 					// ignore this one
 				} else {
 					DifferenceKind relatedExtensionKind = getRelatedExtensionKind(diff);
-					if ((relatedExtensionKind == DifferenceKind.ADD || relatedExtensionKind == DifferenceKind.DELETE)
+					if ((relatedExtensionKind == DifferenceKind.ADD
+							|| relatedExtensionKind == DifferenceKind.DELETE)
 							&& getDiscriminant(diff) == discriminant) {
 						result = true;
 						break;
