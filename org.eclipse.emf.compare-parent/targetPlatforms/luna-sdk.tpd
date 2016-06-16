@@ -15,4 +15,5 @@ location "http://download.eclipse.org/releases/luna" {
 	org.eclipse.emf.ecoretools.feature.group
 	org.eclipse.papyrus.sdk.feature.feature.group
 	org.eclipse.team.svn.feature.group
+	org.eclipse.pde.junit.runtime
 }

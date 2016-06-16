@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - Consider profile definition changes on origin (bug 495259)
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor;
 
@@ -16,6 +17,7 @@ import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUn
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -116,10 +118,11 @@ public class UMLPostProcessor implements IPostProcessor {
 			Collection<Match> annotationsMatches = Collections2.filter(match.getSubmatches(),
 					ANNOTATION_REFERENCING_PROFILE_DEFINITION);
 			for (Match annotationMatch : annotationsMatches) {
+				EAnnotation originAnnot = (EAnnotation)annotationMatch.getOrigin();
 				EAnnotation leftAnnot = (EAnnotation)annotationMatch.getLeft();
 				EAnnotation rightAnnot = (EAnnotation)annotationMatch.getRight();
-				if (!checkProfileVersion(match.getComparison(), (ProfileApplication)left, leftAnnot,
-						rightAnnot)) {
+				if (!checkProfileVersion(match.getComparison(), (ProfileApplication)left, originAnnot,
+						leftAnnot, rightAnnot)) {
 					return false;
 				}
 			}
@@ -136,6 +139,8 @@ public class UMLPostProcessor implements IPostProcessor {
 	 *            The comparison.
 	 * @param profileApplication
 	 *            The profile application to compare (on the left or right side)
+	 * @param originAnnot
+	 *            The annotation referencing the profile on the origin side
 	 * @param leftAnnot
 	 *            The annotation referencing the profile on the left side
 	 * @param rightAnnot
@@ -143,12 +148,23 @@ public class UMLPostProcessor implements IPostProcessor {
 	 * @return False if the version of the referenced profile is different, True otherwise.
 	 */
 	private boolean checkProfileVersion(Comparison comparison, ProfileApplication profileApplication,
-			EAnnotation leftAnnot, EAnnotation rightAnnot) {
+			EAnnotation originAnnot, EAnnotation leftAnnot, EAnnotation rightAnnot) {
+		Collection<URI> originUris = Lists.newArrayList();
+		if (comparison.isThreeWay()) {
+			originUris = getNormalizedURIs(
+					ReferenceUtil.getAsList(originAnnot, EcorePackage.Literals.EANNOTATION__REFERENCES));
+		}
 		Collection<URI> leftUris = getNormalizedURIs(
 				ReferenceUtil.getAsList(leftAnnot, EcorePackage.Literals.EANNOTATION__REFERENCES));
 		Collection<URI> rightUris = getNormalizedURIs(
 				ReferenceUtil.getAsList(rightAnnot, EcorePackage.Literals.EANNOTATION__REFERENCES));
-		if (leftUris.size() != rightUris.size() || !leftUris.containsAll(rightUris)) {
+
+		boolean notEqualSize = leftUris.size() != rightUris.size()
+				|| (comparison.isThreeWay() && leftUris.size() != originUris.size());
+
+		if (notEqualSize || !leftUris.containsAll(rightUris)
+				|| (comparison.isThreeWay() && !leftUris.containsAll(originUris))) {
+			// different uri on one of the sides
 			org.eclipse.uml2.uml.Package impactedPackage = profileApplication.getApplyingPackage();
 			String message;
 			if (impactedPackage != null) {

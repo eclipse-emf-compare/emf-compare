@@ -31,3 +31,7 @@ location "http://download.eclipse.org/sirius/updates/nightly/latest/neon" {
 location "http://obeo-umldesigner-nightly.s3-website-eu-west-1.amazonaws.com/master/repository" {
 	org.obeonetwork.dsl.uml2.runtime.feature.feature.group
 }
+
+location "http://download.eclipse.org/modeling/mdt/papyrus/updates/releases/neon/" {
+	org.eclipse.papyrus.sysml.feature.feature.group lazy
+}

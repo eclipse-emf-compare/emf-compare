@@ -18,3 +18,7 @@ location "http://download.eclipse.org/releases/mars" {
 	org.eclipse.papyrus.sdk.feature.feature.group lazy
 	org.eclipse.team.svn.feature.group lazy
 }
+
+location "http://download.eclipse.org/modeling/mdt/papyrus/updates/releases/mars/" {
+	org.eclipse.papyrus.sysml.feature.feature.group lazy
+}

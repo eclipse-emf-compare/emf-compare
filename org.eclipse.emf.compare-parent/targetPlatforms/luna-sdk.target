@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Luna SDK" sequenceNumber="1436775785">
+<target name="EMF Compare based on Luna SDK" sequenceNumber="1466060892">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -32,6 +32,7 @@
       <unit id="org.eclipse.emf.ecoretools.feature.group" version="2.0.3.201411191338"/>
       <unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="1.0.2.v201502181349"/>
       <unit id="org.eclipse.team.svn.feature.group" version="2.0.4.I20150123-1700"/>
+      <unit id="org.eclipse.pde.junit.runtime" version="3.4.400.v20140204-1740"/>
       <repository location="http://download.eclipse.org/releases/luna"/>
     </location>
   </locations>

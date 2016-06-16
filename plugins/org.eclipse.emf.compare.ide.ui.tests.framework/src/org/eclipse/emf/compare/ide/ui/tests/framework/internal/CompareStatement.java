@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Obeo.
+ * Copyright (c) 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - resource set hook extension for bug 495259
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.framework.internal;
 
@@ -45,16 +46,18 @@ public class CompareStatement extends AbstractCompareStatement {
 	public void evaluate() throws Throwable {
 		setEMFComparePreferences();
 
-		Compare compare = test.getAnnotation(Compare.class);
-		String left = normalizePath(compare.left());
-		String right = normalizePath(compare.right());
-		String ancestor = normalizePath(compare.ancestor());
+		final Compare compare = test.getAnnotation(Compare.class);
+		final String left = normalizePath(compare.left());
+		final String right = normalizePath(compare.right());
+		final String ancestor = normalizePath(compare.ancestor());
 
-		CompareTestSupport testSupport = new CompareTestSupport();
+		final Class<?>[] resourceSetHooks = compare.resourceSetHooks();
+
+		final CompareTestSupport testSupport = new CompareTestSupport(resourceSetHooks);
 		try {
 			testSupport.loadResources(test.getMethod().getDeclaringClass(), left, right, ancestor);
-			Comparison comparison = testSupport.compare();
-			Class<?>[] parameters = test.getMethod().getParameterTypes();
+			final Comparison comparison = testSupport.compare();
+			final Class<?>[] parameters = test.getMethod().getParameterTypes();
 			if (parameters[parameters.length - 1].getName().equals(CompareTestSupport.class.getName())) {
 				test.invokeExplosively(testObject, comparison, testSupport);
 			} else {
@@ -65,5 +68,4 @@ public class CompareStatement extends AbstractCompareStatement {
 			testSupport.tearDown();
 		}
 	}
-
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Tests="http://www.eclipse.org/emf/compare/uml2/tests/1.0.0/MigrationTestProfile/Tests" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http://www.eclipse.org/emf/compare/uml2/tests/1.0.1/MigrationTestProfile/Tests pathmap://UML_PROFILE_MIGRATION_TESTS/migration_test_profile_v101.profile.uml#_j9QKwSc_Eea1w6GXMU4o3A">
+  <uml:Model xmi:id="_57GBcCdHEea6lK3Kyl3eiQ" name="TestModel">
+    <packagedElement xmi:type="uml:Class" xmi:id="__A_kQCdHEea6lK3Kyl3eiQ" name="ClassA"/>
+    <profileApplication xmi:id="_9A0cQCdHEea6lK3Kyl3eiQ">
+      <eAnnotations xmi:id="_9A7J8CdHEea6lK3Kyl3eiQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="pathmap://UML_PROFILE_MIGRATION_TESTS/migration_test_profile_v101.profile.uml#_6UW_ISfNEeasbP46VDziUg"/>
+      </eAnnotations>
+      <appliedProfile href="pathmap://UML_PROFILE_MIGRATION_TESTS/migration_test_profile_v101.profile.uml#_mRGrcCc5EearTrG5yP5eJg"/>
+    </profileApplication>
+  </uml:Model>
+  <Tests:StereotypeA xmi:id="_HCptkCdIEea6lK3Kyl3eiQ" singleValuedAttribute="This is my test class" base_Class="__A_kQCdHEea6lK3Kyl3eiQ"/>
+</xmi:XMI>

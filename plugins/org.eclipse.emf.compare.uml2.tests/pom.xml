@@ -26,6 +26,17 @@
             <useUIThread>false</useUIThread>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-surefire-plugin</artifactId>
+          <configuration>
+            <includes>
+			  <include>org/eclipse/emf/compare/uml2/tests/suite/AllUITests.class</include>
+            </includes>     
+            <useUIHarness>true</useUIHarness>
+            <useUIThread>false</useUIThread>
+          </configuration>
+        </plugin>
     </plugins>
   </build>
 

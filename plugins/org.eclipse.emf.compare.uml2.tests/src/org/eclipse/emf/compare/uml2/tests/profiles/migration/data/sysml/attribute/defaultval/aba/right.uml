@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:Blocks="http://www.eclipse.org/papyrus/0.6.0/SysML/Blocks/1" 
+	xmlns:ModelElements="http://www.eclipse.org/papyrus/0.6.0/SysML/ModelElements/1" 
+	xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
+	xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" 
+	xsi:schemaLocation="
+		http://www.eclipse.org/papyrus/0.6.0/SysML/Blocks/1 http://www.eclipse.org/papyrus/0.6.0/SysML#//blocks 
+		http://www.eclipse.org/papyrus/0.6.0/SysML/ModelElements/1 http://www.eclipse.org/papyrus/0.6.0/SysML#//modelelements">
+  <uml:Model xmi:id="_j7ML4CdYEea7OLrFgBltsw" name="RootElement">
+    <packagedElement xmi:type="uml:Class" xmi:id="_mPfJwCdYEea7OLrFgBltsw" name="MyBlock"/>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_j_rqUCdYEea7OLrFgBltsw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_j_rqUSdYEea7OLrFgBltsw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/0.6.0/SysML#//modelelements"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://SysML_PROFILES/SysML.profile.uml#_Gx8MgLX7EduFmqQsrNB9lw"/>
+    </profileApplication>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_j_sRYCdYEea7OLrFgBltsw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_j_sRYSdYEea7OLrFgBltsw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/0.6.0/SysML#//blocks"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://SysML_PROFILES/SysML.profile.uml#_fSw28LX7EduFmqQsrNB9lw"/>
+    </profileApplication>
+  </uml:Model>
+  <Blocks:Block xmi:id="_mPjbMCdYEea7OLrFgBltsw" isEncapsulated="true" base_Class="_mPfJwCdYEea7OLrFgBltsw"/>
+  <ModelElements:ViewPoint xmi:id="_N_15cCdZEea7OLrFgBltsw" base_Class="_mPfJwCdYEea7OLrFgBltsw" />
+</xmi:XMI>

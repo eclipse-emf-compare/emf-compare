@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Obeo.
+ * Copyright (c) 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - resource set hook extension for bug 495259
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.framework.annotations;
 
@@ -48,4 +49,9 @@ public @interface Compare {
 	 * @return the value or an empty String if not used
 	 */
 	String ancestor() default "";
+
+	/**
+	 * Classes of resource set hooks to consider during resource loading.
+	 */
+	Class<?>[] resourceSetHooks() default {};
 }
