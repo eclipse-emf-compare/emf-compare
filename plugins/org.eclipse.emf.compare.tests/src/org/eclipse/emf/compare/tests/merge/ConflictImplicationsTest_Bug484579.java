@@ -27,6 +27,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
@@ -43,6 +44,7 @@ import org.junit.Test;
  * 
  * @see bug <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=484579">484579</a> for more details.
  */
+@SuppressWarnings("nls")
 public class ConflictImplicationsTest_Bug484579 {
 
 	private IndividualDiffInputData input = new IndividualDiffInputData();
@@ -148,21 +150,29 @@ public class ConflictImplicationsTest_Bug484579 {
 		EList<Diff> differences = comparison.getDifferences();
 
 		assertEquals(9, comparison.getDifferences().size());
-		assertEquals(3, conflicts.size());
+		assertEquals(4, conflicts.size());
 
 		Collection<Conflict> pseudoConflicts = Collections2.filter(conflicts,
 				EMFComparePredicates.containsConflictOfTypes(PSEUDO));
 		Collection<Conflict> realConflicts = Collections2.filter(conflicts,
 				EMFComparePredicates.containsConflictOfTypes(REAL));
 
-		assertEquals(1, pseudoConflicts.size());
+		assertEquals(2, pseudoConflicts.size());
 		assertEquals(2, realConflicts.size());
 
-		EList<Diff> pseudoConflictDifferences = pseudoConflicts.iterator().next().getDifferences();
-		Collection<Diff> pseudoConflictsFromLeft = Collections2.filter(pseudoConflictDifferences,
-				fromSide(LEFT));
-		Collection<Diff> pseudoConflictFromRight = Collections2.filter(pseudoConflictDifferences,
-				fromSide(RIGHT));
+		Conflict pseudo1 = null;
+		Conflict pseudo2 = null;
+		for (Conflict conflict : pseudoConflicts) {
+			if (conflict.getLeftDifferences().get(0).getMatch().getOrigin().toString().contains("ClassZ")) {
+				pseudo1 = conflict;
+			} else if (conflict.getLeftDifferences().get(0).getMatch().getOrigin().toString()
+					.contains("PackageY")) {
+				pseudo2 = conflict;
+			}
+		}
+
+		assertNotNull(pseudo1);
+		assertNotNull(pseudo2);
 
 		Conflict real1 = null;
 		Conflict real2 = null;
@@ -199,27 +209,41 @@ public class ConflictImplicationsTest_Bug484579 {
 		Diff renamePackageA = conflict2FromRight.iterator().next();
 		differences.remove(renamePackageA);
 
-		// Each pseudo-conflicting diff from left should implies 6 other diff when merging from right to left,
-		// and 3 other when merging from left to right.
-		for (Diff diff : pseudoConflictsFromLeft) {
+		// Deleting classB from supertypes of classZ.
+		// Rejecting the left side implies 6 others, accepting only implies the pseudo conflicting one
+		// and inversely on the right side diff.
+		for (Diff diff : pseudo1.getDifferences()) {
 			differences.remove(diff);
 			checker = getChecker(diff);
-			checker.rightToLeft().implies(7).rejects(0).check();
-			checker.leftToRight().implies(4).rejects(0).check();
+			if (diff.getSource() == DifferenceSource.LEFT) {
+				checker.rightToLeft().implies(7).rejects(0).check();
+				checker.leftToRight().implies(2).rejects(0).check();
+			} else {
+				checker.rightToLeft().implies(2).rejects(0).check();
+				checker.leftToRight().implies(7).rejects(0).check();
+			}
 		}
 
-		// Each pseudo-conflicting diff from right should implies 3 other diff when merging from right to
-		// left, and 6 other when merging from left to right.
-		for (Diff diff : pseudoConflictFromRight) {
+		// Deleting classZ
+		// Rejecting the left side only implies the pseudo-conflicting and rejecting its container's deletion,
+		// while accepting implies both diffs from the other pseudo-conflict. The diff from the right side is
+		// the reverse.
+		// Note that we're not considering cascading diffs.
+		for (Diff diff : pseudo2.getDifferences()) {
 			differences.remove(diff);
 			checker = getChecker(diff);
-			checker.rightToLeft().implies(4).rejects(0).check();
-			checker.leftToRight().implies(7).rejects(0).check();
+			if (diff.getSource() == DifferenceSource.LEFT) {
+				checker.rightToLeft().implies(3).rejects(0).check();
+				checker.leftToRight().implies(4).rejects(0).check();
+			} else {
+				checker.rightToLeft().implies(4).rejects(0).check();
+				checker.leftToRight().implies(3).rejects(0).check();
+			}
 		}
 
 		checker = getChecker(deleteClassB);
 		checker.rightToLeft().implies(2).rejects(0).check();
-		checker.leftToRight().implies(5).rejects(1).check();
+		checker.leftToRight().implies(3).rejects(1).check();
 
 		checker = getChecker(renameClassB);
 		checker.rightToLeft().implies(1).rejects(2).check();
@@ -227,7 +251,7 @@ public class ConflictImplicationsTest_Bug484579 {
 
 		checker = getChecker(deletePackageA);
 		checker.rightToLeft().implies(1).rejects(0).check();
-		checker.leftToRight().implies(6).rejects(2).check();
+		checker.leftToRight().implies(4).rejects(2).check();
 
 		checker = getChecker(renamePackageA);
 		checker.rightToLeft().implies(1).rejects(1).check();
@@ -254,14 +278,14 @@ public class ConflictImplicationsTest_Bug484579 {
 		EList<Conflict> conflicts = comparison.getConflicts();
 
 		assertEquals(17, comparison.getDifferences().size());
-		assertEquals(3, conflicts.size());
+		assertEquals(7, conflicts.size());
 
 		Collection<Conflict> pseudoConflicts = Collections2.filter(conflicts,
 				EMFComparePredicates.containsConflictOfTypes(PSEUDO));
 		Collection<Conflict> realConflicts = Collections2.filter(conflicts,
 				EMFComparePredicates.containsConflictOfTypes(REAL));
 
-		assertEquals(2, pseudoConflicts.size());
+		assertEquals(6, pseudoConflicts.size());
 		assertEquals(1, realConflicts.size());
 
 		return realConflicts;

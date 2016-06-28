@@ -55,7 +55,7 @@ public class PseudoConflictDetectionTest {
 		 */
 		Object[] test1 = new Object[] {inputData.getPseudoConflictCase1Ancestor(),
 				inputData.getPseudoConflictCase1RightAndLeftModel(),
-				inputData.getPseudoConflictCase1RightAndLeftModel(), new Integer(4) };
+				inputData.getPseudoConflictCase1RightAndLeftModel(), new Integer(5) };
 		/**
 		 * Right and left models add the same univaluated containment EReference.
 		 */

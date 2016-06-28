@@ -89,15 +89,19 @@ public class ExtLibraryTest {
 
 		final Conflict readerConflict = rightRemovedReaderDiff.getConflict();
 		assertNotNull(readerConflict);
-		assertEquals(4, readerConflict.getDifferences().size());
+		assertEquals(2, readerConflict.getDifferences().size());
 		assertTrue(readerConflict.getDifferences().contains(rightRemovedReaderDiff));
-		assertTrue(readerConflict.getDifferences().contains(rightUnsetReaderTypeDiff));
 		assertTrue(readerConflict.getDifferences().contains(leftRemovedReaderDiff));
-		assertTrue(readerConflict.getDifferences().contains(leftUnsetReaderTypeDiff));
-		assertSame(readerConflict, rightUnsetReaderTypeDiff.getConflict());
 		assertSame(readerConflict, leftRemovedReaderDiff.getConflict());
-		assertSame(readerConflict, leftUnsetReaderTypeDiff.getConflict());
 		assertSame(ConflictKind.PSEUDO, readerConflict.getKind());
+
+		final Conflict readerETypeConflict = rightUnsetReaderTypeDiff.getConflict();
+		assertNotNull(readerETypeConflict);
+		assertEquals(2, readerETypeConflict.getDifferences().size());
+		assertTrue(readerETypeConflict.getDifferences().contains(rightUnsetReaderTypeDiff));
+		assertTrue(readerETypeConflict.getDifferences().contains(leftUnsetReaderTypeDiff));
+		assertSame(readerETypeConflict, leftUnsetReaderTypeDiff.getConflict());
+		assertSame(ConflictKind.PSEUDO, readerETypeConflict.getKind());
 
 		final Predicate<? super Diff> rightRenamedFamilyname = and(fromSide(DifferenceSource.RIGHT),
 				changedAttribute("extlibrary.Person.familyName", "name", "lastName", "familyName"));
@@ -153,13 +157,18 @@ public class ExtLibraryTest {
 
 		final Conflict titleConflict = leftRemovedTitleDiff.getConflict();
 		assertNotNull(titleConflict);
-		assertEquals(4, titleConflict.getDifferences().size());
+		assertEquals(2, titleConflict.getDifferences().size());
 		assertTrue(titleConflict.getDifferences().contains(leftRemovedTitleDiff));
-		assertTrue(titleConflict.getDifferences().contains(leftUnsetTitleTypeDiff));
 		assertTrue(titleConflict.getDifferences().contains(rightRemovedTitleDiff));
-		assertTrue(titleConflict.getDifferences().contains(rightUnsetTitleTypeDiff));
 		assertSame(ConflictKind.PSEUDO, titleConflict.getKind());
 
-		assertEquals(5, comparison.getConflicts().size());
+		final Conflict titleETypeConflict = leftUnsetTitleTypeDiff.getConflict();
+		assertNotNull(titleETypeConflict);
+		assertEquals(2, titleETypeConflict.getDifferences().size());
+		assertTrue(titleETypeConflict.getDifferences().contains(leftUnsetTitleTypeDiff));
+		assertTrue(titleETypeConflict.getDifferences().contains(rightUnsetTitleTypeDiff));
+		assertSame(ConflictKind.PSEUDO, titleETypeConflict.getKind());
+
+		assertEquals(7, comparison.getConflicts().size());
 	}
 }

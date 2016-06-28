@@ -247,7 +247,10 @@ public class DefaultConflictDetector implements IConflictDetector {
 			while (diffIterator.hasNext()) {
 				Diff extendedCandidate = diffIterator.next();
 				if (isDeleteOrUnsetDiff(extendedCandidate)) {
-					conflictOn(comparison, diff, extendedCandidate, ConflictKind.PSEUDO);
+					// We do not want to create a pseudo conflict between a deleted container and its deleted
+					// content, since that would prevent us from merging the container deletion altogether
+					// (since pseudo conflicts usually mean that no action is needed).
+					// conflictOn(comparison, diff, extendedCandidate, ConflictKind.PSEUDO);
 				} else {
 					conflictOn(comparison, diff, extendedCandidate, ConflictKind.REAL);
 				}
@@ -397,7 +400,10 @@ public class DefaultConflictDetector implements IConflictDetector {
 			while (diffIterator.hasNext()) {
 				Diff extendedCandidate = diffIterator.next();
 				if (isDeleteOrUnsetDiff(extendedCandidate)) {
-					conflictOn(comparison, diff, extendedCandidate, ConflictKind.PSEUDO);
+					// We do not want to create a pseudo conflict between a deleted container and its deleted
+					// content, since that would prevent us from merging the container deletion altogether
+					// (since pseudo conflicts usually mean that no action is needed).
+					// conflictOn(comparison, diff, extendedCandidate, ConflictKind.PSEUDO);
 				} else {
 					conflictOn(comparison, diff, extendedCandidate, ConflictKind.REAL);
 				}
@@ -999,7 +1005,10 @@ public class DefaultConflictDetector implements IConflictDetector {
 				for (Diff extendedCandidate : Iterables.filter(match.getAllDifferences(),
 						possiblyConflictingWith(diff))) {
 					if (isDeleteOrUnsetDiff(extendedCandidate)) {
-						conflictOn(comparison, diff, extendedCandidate, ConflictKind.PSEUDO);
+						// We do not want to create a pseudo conflict between a deleted container and its
+						// deleted content, since that would prevent us from merging the container deletion
+						// altogether (since pseudo conflicts usually mean that no action is needed).
+						// conflictOn(comparison, diff, extendedCandidate, ConflictKind.PSEUDO);
 					} else {
 						conflictOn(comparison, diff, extendedCandidate, ConflictKind.REAL);
 					}

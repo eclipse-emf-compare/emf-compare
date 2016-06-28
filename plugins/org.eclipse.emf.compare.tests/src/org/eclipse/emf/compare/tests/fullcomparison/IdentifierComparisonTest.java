@@ -267,13 +267,15 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 			return;
 		}
 
-		assertEquals(5, conflicts.size());
+		assertEquals(7, conflicts.size());
 
 		Conflict periodicalConflict = null;
 		Conflict titleConflict = null;
+		Conflict titleETypeConflict = null;
 		Conflict lastNameConflict = null;
 		Conflict minutesLengthConflict = null;
 		Conflict readerConflict = null;
+		Conflict readerETypeConflict = null;
 
 		for (Conflict conflict : conflicts) {
 			for (Diff diff : conflict.getDifferences()) {
@@ -294,6 +296,12 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 				} else if (isMatchOf(match, "minutesLength")) {
 					minutesLengthConflict = conflict;
 					breakLoop = true;
+				} else if (isMatchOf(match, "reader")) {
+					readerETypeConflict = conflict;
+					breakLoop = true;
+				} else if (isMatchOf(match, "title")) {
+					titleETypeConflict = conflict;
+					breakLoop = true;
 				}
 				if (breakLoop) {
 					break;
@@ -303,16 +311,20 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 
 		assertNotNull(periodicalConflict);
 		assertNotNull(titleConflict);
+		assertNotNull(titleETypeConflict);
 		assertNotNull(lastNameConflict);
 		assertNotNull(minutesLengthConflict);
 		assertNotNull(readerConflict);
+		assertNotNull(readerETypeConflict);
 
 		// These classic asserts will make the compiler happy.
 		assert periodicalConflict != null;
 		assert titleConflict != null;
+		assert titleETypeConflict != null;
 		assert lastNameConflict != null;
 		assert minutesLengthConflict != null;
 		assert readerConflict != null;
+		assert readerETypeConflict != null;
 
 		final List<Diff> periodicalDiffs = Lists.newArrayList(periodicalConflict.getDifferences());
 		assertSame(ConflictKind.REAL, periodicalConflict.getKind());
@@ -341,22 +353,30 @@ public class IdentifierComparisonTest extends EMFCompareTestBase {
 		final List<Diff> titleDiffs = Lists.newArrayList(titleConflict.getDifferences());
 		assertSame(ConflictKind.PSEUDO, titleConflict.getKind());
 		assertRemoved(titleDiffs, "extlibrary.Periodical.title", DifferenceSource.LEFT);
-		assertChangedReference(titleDiffs, "extlibrary.Periodical.title", "eType", "ecore.EString", null,
-				DifferenceSource.LEFT);
-		assertChangedReference(titleDiffs, "extlibrary.Periodical.title", "eType", "ecore.EString", null,
-				DifferenceSource.RIGHT);
 		assertRemoved(titleDiffs, "extlibrary.Periodical.title", DifferenceSource.RIGHT);
 		assertTrue(titleDiffs.isEmpty());
+
+		final List<Diff> titleETypeDiffs = Lists.newArrayList(titleETypeConflict.getDifferences());
+		assertSame(ConflictKind.PSEUDO, titleConflict.getKind());
+		assertChangedReference(titleETypeDiffs, "extlibrary.Periodical.title", "eType", "ecore.EString", null,
+				DifferenceSource.LEFT);
+		assertChangedReference(titleETypeDiffs, "extlibrary.Periodical.title", "eType", "ecore.EString", null,
+				DifferenceSource.RIGHT);
+		assertTrue(titleETypeDiffs.isEmpty());
 
 		final List<Diff> readerDiffs = Lists.newArrayList(readerConflict.getDifferences());
 		assertSame(ConflictKind.PSEUDO, readerConflict.getKind());
 		assertRemoved(readerDiffs, "extlibrary.BookOnTape.reader", DifferenceSource.LEFT);
 		assertRemoved(readerDiffs, "extlibrary.BookOnTape.reader", DifferenceSource.RIGHT);
-		assertChangedReference(readerDiffs, "extlibrary.BookOnTape.reader", "eType", "extlibrary.Person",
-				null, DifferenceSource.LEFT);
-		assertChangedReference(readerDiffs, "extlibrary.BookOnTape.reader", "eType", "extlibrary.Person",
-				null, DifferenceSource.RIGHT);
 		assertTrue(readerDiffs.isEmpty());
+
+		final List<Diff> readerETypeDiffs = Lists.newArrayList(readerETypeConflict.getDifferences());
+		assertSame(ConflictKind.PSEUDO, readerETypeConflict.getKind());
+		assertChangedReference(readerETypeDiffs, "extlibrary.BookOnTape.reader", "eType", "extlibrary.Person",
+				null, DifferenceSource.LEFT);
+		assertChangedReference(readerETypeDiffs, "extlibrary.BookOnTape.reader", "eType", "extlibrary.Person",
+				null, DifferenceSource.RIGHT);
+		assertTrue(readerETypeDiffs.isEmpty());
 	}
 
 	private boolean isMatchOf(Match match, String name) {

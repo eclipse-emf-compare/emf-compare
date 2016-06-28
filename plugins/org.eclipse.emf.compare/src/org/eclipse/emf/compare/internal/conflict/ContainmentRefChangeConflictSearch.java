@@ -225,7 +225,10 @@ public class ContainmentRefChangeConflictSearch {
 			while (diffIterator.hasNext()) {
 				Diff extendedCandidate = diffIterator.next();
 				if (isDeleteOrUnsetDiff(extendedCandidate)) {
-					conflict(extendedCandidate, PSEUDO);
+					// We do not want to create a pseudo conflict between a deleted container and its
+					// deleted content, since that would prevent us from merging the container deletion
+					// altogether (since pseudo conflicts usually mean that no action is needed).
+					// conflict(extendedCandidate, PSEUDO);
 				} else {
 					conflict(extendedCandidate, REAL);
 				}

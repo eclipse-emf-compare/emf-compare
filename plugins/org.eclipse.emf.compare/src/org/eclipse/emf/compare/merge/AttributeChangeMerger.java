@@ -316,9 +316,15 @@ public class AttributeChangeMerger extends AbstractMerger {
 	 *            Direction of the merge.
 	 */
 	protected void changeValue(AttributeChange diff, boolean rightToLeft) {
+		final EObject targetContainer = getTargetContainer(diff, rightToLeft);
+		if (targetContainer == null) {
+			// We're merging the unset of an attribute value under a containment deletion.
+			// There's actually no action to take in such a case.
+			return;
+		}
+
 		final EStructuralFeature attribute = diff.getAttribute();
 		final Object targetValue = getTargetValue(diff, rightToLeft);
-		final EObject targetContainer = getTargetContainer(diff, rightToLeft);
 
 		if (isUnset(diff, targetValue)) {
 			targetContainer.eUnset(attribute);

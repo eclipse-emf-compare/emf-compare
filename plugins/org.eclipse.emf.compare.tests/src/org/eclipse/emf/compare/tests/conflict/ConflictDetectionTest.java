@@ -33,6 +33,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromAttr
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -264,9 +265,13 @@ public class ConflictDetectionTest {
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
 
-		// We should have no less and no more than 2 differences, composing a single conflict
+		// We should have 2 differences
+		// Deleted a container on one side, unset one of its attributes on the other
+		// There are no conflict on this since we do not consider pseudo conflicts between a container and its
+		// sub-diffs... and we do not consider attribute changes on the same side of the container deletion as
+		// standalone diffs (they're not even created as Diffs by the engine).
 		assertEquals(2, differences.size());
-		assertEquals(1, conflicts.size());
+		assertTrue(conflicts.isEmpty());
 
 		final Predicate<? super Diff> leftDiffDescription = changedAttribute("root.conflictHolder",
 				"singleValuedAttribute", "origin", null);
@@ -279,15 +284,6 @@ public class ConflictDetectionTest {
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
-
-		// We know there's only one conflict
-		final Conflict conflict = conflicts.get(0);
-
-		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertEquals(2, conflictDiff.size());
-		assertTrue(conflictDiff.contains(leftDiff));
-		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -331,11 +327,12 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertEquals(3, conflictDiff.size());
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftReferenceDiff));
 		assertTrue(conflictDiff.contains(rightReferenceDiff));
-		assertTrue(conflictDiff.contains(rightDeleteDiff));
 		assertSame(PSEUDO, conflict.getKind());
+
+		assertNull(rightDeleteDiff.getConflict());
 	}
 
 	@Test
@@ -955,7 +952,7 @@ public class ConflictDetectionTest {
 
 		// We should have no less and no more than 2 differences, composing a single conflict
 		assertEquals(2, differences.size());
-		assertEquals(1, conflicts.size());
+		assertTrue(conflicts.isEmpty());
 
 		final Predicate<? super Diff> leftDiffDescription = removedFromAttribute("root.conflictHolder",
 				"multiValuedAttribute", "origin1");
@@ -968,15 +965,6 @@ public class ConflictDetectionTest {
 
 		assertNotNull(leftDiff);
 		assertNotNull(rightDiff);
-
-		// We know there's only one conflict
-		final Conflict conflict = conflicts.get(0);
-
-		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertEquals(2, conflictDiff.size());
-		assertTrue(conflictDiff.contains(leftDiff));
-		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -1032,11 +1020,12 @@ public class ConflictDetectionTest {
 		final Conflict conflict = conflicts.get(0);
 
 		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertEquals(3, conflictDiff.size());
+		assertEquals(2, conflictDiff.size());
 		assertTrue(conflictDiff.contains(leftReferenceDiff));
-		assertTrue(conflictDiff.contains(rightDeleteDiff));
 		assertTrue(conflictDiff.contains(rightReferenceDiff1));
 		assertSame(PSEUDO, conflict.getKind());
+
+		assertNull(rightDeleteDiff.getConflict());
 	}
 
 	@Test
@@ -1129,11 +1118,11 @@ public class ConflictDetectionTest {
 
 		/*
 		 * We expect 4 differences here. On the right side, an element has been deleted. On the left side, all
-		 * three values of one of this element's features have been removed. All three diffs on the left are
-		 * in conflict with the right diff.
+		 * three values of one of this element's features have been removed. We do not consider this as a
+		 * conflict.
 		 */
 		assertEquals(4, differences.size());
-		assertEquals(1, conflicts.size());
+		assertTrue(conflicts.isEmpty());
 
 		final Predicate<? super Diff> leftAttributeDiff1Description = removedFromAttribute(
 				"root.conflictHolder", "multiValuedAttribute", "origin1");
@@ -1156,17 +1145,6 @@ public class ConflictDetectionTest {
 		assertNotNull(leftAttributeDiff2);
 		assertNotNull(leftAttributeDiff3);
 		assertNotNull(rightDiff);
-
-		// We know there's only one conflict
-		final Conflict conflict = conflicts.get(0);
-
-		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertEquals(4, conflictDiff.size());
-		assertTrue(conflictDiff.contains(leftAttributeDiff1));
-		assertTrue(conflictDiff.contains(leftAttributeDiff2));
-		assertTrue(conflictDiff.contains(leftAttributeDiff3));
-		assertTrue(conflictDiff.contains(rightDiff));
-		assertSame(PSEUDO, conflict.getKind());
 	}
 
 	@Test
@@ -1184,10 +1162,14 @@ public class ConflictDetectionTest {
 		/*
 		 * We expect 7 differences here. On the right, an element has been deleted. All three values of this
 		 * element's reference have been removed. On the left, we've also removed all three values of that
-		 * same reference. All 7 differences are in pseudo-conflict with each other.
+		 * same reference.
+		 */
+		/*
+		 * The element deletion is a standalone diffs, but all of the diffs under it are in pseudo-conflict
+		 * two-by-two.
 		 */
 		assertEquals(7, differences.size());
-		assertEquals(1, conflicts.size());
+		assertEquals(3, conflicts.size());
 
 		final Predicate<? super Diff> referenceDiff1Description = removedFromReference("root.conflictHolder",
 				"multiValuedReference", "root.origin1");
@@ -1220,19 +1202,30 @@ public class ConflictDetectionTest {
 		assertNotNull(rightReferenceDiff2);
 		assertNotNull(rightReferenceDiff3);
 
-		// We know there's only one conflict
-		final Conflict conflict = conflicts.get(0);
+		// We're expecting three conflicts with 2 differences each
 
-		final List<Diff> conflictDiff = conflict.getDifferences();
-		assertEquals(7, conflictDiff.size());
-		assertTrue(conflictDiff.contains(leftReferenceDiff1));
-		assertTrue(conflictDiff.contains(leftReferenceDiff2));
-		assertTrue(conflictDiff.contains(leftReferenceDiff3));
-		assertTrue(conflictDiff.contains(rightDeleteDiff));
-		assertTrue(conflictDiff.contains(rightReferenceDiff1));
-		assertTrue(conflictDiff.contains(rightReferenceDiff2));
-		assertTrue(conflictDiff.contains(rightReferenceDiff3));
-		assertSame(PSEUDO, conflict.getKind());
+		final Conflict conflict1 = leftReferenceDiff1.getConflict();
+		assertNotNull(conflict1);
+		assertEquals(2, conflict1.getDifferences().size());
+		assertTrue(conflict1.getDifferences().contains(leftReferenceDiff1));
+		assertTrue(conflict1.getDifferences().contains(rightReferenceDiff1));
+		assertSame(PSEUDO, conflict1.getKind());
+
+		final Conflict conflict2 = leftReferenceDiff2.getConflict();
+		assertNotNull(conflict2);
+		assertEquals(2, conflict2.getDifferences().size());
+		assertTrue(conflict2.getDifferences().contains(leftReferenceDiff2));
+		assertTrue(conflict2.getDifferences().contains(rightReferenceDiff2));
+		assertSame(PSEUDO, conflict2.getKind());
+
+		final Conflict conflict3 = leftReferenceDiff3.getConflict();
+		assertNotNull(conflict3);
+		assertEquals(2, conflict3.getDifferences().size());
+		assertTrue(conflict3.getDifferences().contains(leftReferenceDiff3));
+		assertTrue(conflict3.getDifferences().contains(rightReferenceDiff3));
+		assertSame(PSEUDO, conflict3.getKind());
+
+		assertNull(rightDeleteDiff.getConflict());
 	}
 
 	@Test
@@ -2121,10 +2114,12 @@ public class ConflictDetectionTest {
 		final List<Conflict> conflicts = comparison.getConflicts();
 
 		assertEquals(5, differences.size());
-		assertEquals(1, conflicts.size());
+		assertEquals(2, conflicts.size());
 
-		Conflict soleConflict = conflicts.get(0);
-		assertSame(PSEUDO, soleConflict.getKind());
+		for (Conflict conflict : conflicts) {
+			assertSame(PSEUDO, conflict.getKind());
+			assertEquals(2, conflict.getDifferences().size());
+		}
 	}
 
 	@Test
