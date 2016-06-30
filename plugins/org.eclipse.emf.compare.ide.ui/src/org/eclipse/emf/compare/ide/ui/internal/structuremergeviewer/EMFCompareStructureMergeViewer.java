@@ -10,6 +10,7 @@
  *     Michael Borkowski - bug 467191
  *     Philip Langer - bug 462884
  *     Stefan Dirix - bugs 473985 and 474030
+ *     Martin Fleck - bug 497066
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -1371,25 +1372,53 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		g.fillRectangle(areaBounds.x, itemBounds.y, areaBounds.width, itemBounds.height);
 	}
 
-	private void updateProblemIndication(Diagnostic diagnostic) {
+	/**
+	 * Returns a problem indication composite for the given diagnostic. If a problem indication composite
+	 * already exists, the existing one is returned. If no composite exists, a new composite is created if the
+	 * severity of the provided diagnostic is anything besides OK. If no composite exists and the severity
+	 * does not warrant the creation of a new composite, this method returns null.
+	 * 
+	 * @param diagnostic
+	 *            comparison diagnostic
+	 * @return the existing or a newly created problem indication composite or null if no indication is
+	 *         necessary
+	 */
+	private ProblemIndicationComposite getProblemIndication(Diagnostic diagnostic) {
 		Assert.isNotNull(diagnostic);
 		int lastEditorPage = getPageCount() - 1;
+		ProblemIndicationComposite problemIndicationComposite = null;
 		if (lastEditorPage >= 0 && getItemControl(lastEditorPage) instanceof ProblemIndicationComposite) {
-			((ProblemIndicationComposite)getItemControl(lastEditorPage)).setDiagnostic(diagnostic);
-			if (diagnostic.getSeverity() != Diagnostic.OK) {
-				setActivePage(lastEditorPage);
-				updateLayout(false, true);
-			}
+			problemIndicationComposite = ((ProblemIndicationComposite)getItemControl(lastEditorPage));
 		} else if (diagnostic.getSeverity() != Diagnostic.OK && !getControl().isDisposed()) {
-			ProblemIndicationComposite problemIndicationComposite = new ProblemIndicationComposite(
-					getControl(), SWT.NONE);
-			problemIndicationComposite.setDiagnostic(diagnostic);
+			problemIndicationComposite = new ProblemIndicationComposite(getControl(), SWT.NONE);
 			createItem(++lastEditorPage, problemIndicationComposite);
 			getControl().getItem(lastEditorPage)
 					.setText(CommonUIPlugin.getPlugin().getString("_UI_Problems_label")); //$NON-NLS-1$
-			setActivePage(lastEditorPage);
-			updateLayout(false, true);
 			showTabs();
+		}
+		return problemIndicationComposite;
+	}
+
+	/**
+	 * Updates the problem indication for the provided diagnostic. If everything is {@link Diagnostic#OK} and
+	 * no problem indication is available, this method does nothing. In any other case, the existing or a
+	 * newly created problem indication is updated and automatically revealed if the diagnostics
+	 * {@link Diagnostic#getSeverity() severity} is anything besides {@link Diagnostic#OK} and
+	 * {@link Diagnostic#WARNING}.
+	 * 
+	 * @param diagnostic
+	 *            comparison diagnostic
+	 */
+	private void updateProblemIndication(Diagnostic diagnostic) {
+		ProblemIndicationComposite problemIndicationComposite = getProblemIndication(diagnostic);
+		if (problemIndicationComposite != null) {
+			problemIndicationComposite.setDiagnostic(diagnostic);
+			if (diagnostic.getSeverity() != Diagnostic.OK && diagnostic.getSeverity() != Diagnostic.WARNING) {
+				// reveal problem indication composite (last editor page)
+				int lastEditorPage = getPageCount() - 1;
+				setActivePage(lastEditorPage);
+				updateLayout(false, true);
+			}
 		}
 	}
 

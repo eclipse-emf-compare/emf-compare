@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 497066
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -34,12 +35,17 @@ public class ProblemIndicationComposite extends Composite {
 		 * @return a not null String
 		 */
 		public String getMessage(Diagnostic rootDiagnostic) {
-			if (rootDiagnostic.getSeverity() == Diagnostic.OK) {
-				return EMFCompareIDEUIMessages.getString("_UI_NoProblems_message"); //$NON-NLS-1$
-			} else if (rootDiagnostic.getSeverity() == Diagnostic.CANCEL) {
-				return EMFCompareIDEUIMessages.getString("_UI_Cancel_message"); //$NON-NLS-1$
-			} else {
-				return EMFCompareIDEUIMessages.getString("_UI_DefaultProblem_message"); //$NON-NLS-1$
+			switch (rootDiagnostic.getSeverity()) {
+				case Diagnostic.OK:
+					return EMFCompareIDEUIMessages.getString("_UI_NoProblems_message"); //$NON-NLS-1$
+				case Diagnostic.CANCEL:
+					return EMFCompareIDEUIMessages.getString("_UI_Cancel_message"); //$NON-NLS-1$
+				case Diagnostic.WARNING:
+					return EMFCompareIDEUIMessages.getString("_UI_Warning_message"); //$NON-NLS-1$
+				case Diagnostic.ERROR:
+					return EMFCompareIDEUIMessages.getString("_UI_Error_message"); //$NON-NLS-1$
+				default:
+					return EMFCompareIDEUIMessages.getString("_UI_DefaultProblem_message"); //$NON-NLS-1$
 			}
 		}
 	}
