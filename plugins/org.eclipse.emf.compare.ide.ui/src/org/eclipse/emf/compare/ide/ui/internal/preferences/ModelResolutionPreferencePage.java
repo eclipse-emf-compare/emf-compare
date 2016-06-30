@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Simon Delisle - bug 495753
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.preferences;
 
@@ -55,7 +56,9 @@ public class ModelResolutionPreferencePage extends FieldEditorPreferencePage imp
 
 	private Label resolutionScopeMainDescription;
 
-	private Label resolutionScopeDescription;
+	private Label resolutionScopeDescriptionLabel;
+
+	private Composite resolutionScopeDescriptionComposite;
 
 	private Composite resolutionScopeComboComposite;
 
@@ -99,10 +102,15 @@ public class ModelResolutionPreferencePage extends FieldEditorPreferencePage imp
 		addField(resolutionScope);
 		resolutionScopeComboComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
-		resolutionScopeDescription = new Label(resolutionScopeComposite, SWT.WRAP | SWT.BORDER);
-		final GridData descriptionData = new GridData(SWT.FILL, SWT.FILL, true, false);
+		resolutionScopeDescriptionComposite = new Composite(resolutionScopeComposite, SWT.BORDER);
+		resolutionScopeDescriptionComposite.setLayout(new GridLayout(1, true));
+		GridData descriptionData = new GridData(SWT.FILL, SWT.FILL, true, false);
 		descriptionData.widthHint = 200;
-		resolutionScopeDescription.setLayoutData(descriptionData);
+		resolutionScopeDescriptionComposite.setLayoutData(descriptionData);
+
+		resolutionScopeDescriptionLabel = new Label(resolutionScopeDescriptionComposite, SWT.WRAP);
+		GridData labelData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		resolutionScopeDescriptionLabel.setLayoutData(labelData);
 
 		updateFieldEnablement(
 				getPreferenceStore().getBoolean(EMFCompareUIPreferences.DISABLE_RESOLVERS_PREFERENCE));
@@ -124,7 +132,7 @@ public class ModelResolutionPreferencePage extends FieldEditorPreferencePage imp
 		useThreads.setEnabled(!disabled, getFieldEditorParent());
 		resolutionScopeMainDescription.setEnabled(!disabled);
 		resolutionScope.setEnabled(!disabled, resolutionScopeComboComposite);
-		resolutionScopeDescription.setEnabled(!disabled);
+		resolutionScopeDescriptionComposite.setEnabled(!disabled);
 	}
 
 	private void updateScopeDescription(String scopeValue) {
@@ -136,24 +144,24 @@ public class ModelResolutionPreferencePage extends FieldEditorPreferencePage imp
 		}
 		switch (scope) {
 			case WORKSPACE:
-				resolutionScopeDescription.setText(EMFCompareIDEUIMessages
+				resolutionScopeDescriptionLabel.setText(EMFCompareIDEUIMessages
 						.getString("ModelResolutionPreferencesPage.resolutionScope.workspace.description")); //$NON-NLS-1$
 				break;
 			case PROJECT:
-				resolutionScopeDescription.setText(EMFCompareIDEUIMessages
+				resolutionScopeDescriptionLabel.setText(EMFCompareIDEUIMessages
 						.getString("ModelResolutionPreferencesPage.resolutionScope.project.description")); //$NON-NLS-1$
 				break;
 			case CONTAINER:
-				resolutionScopeDescription.setText(EMFCompareIDEUIMessages
+				resolutionScopeDescriptionLabel.setText(EMFCompareIDEUIMessages
 						.getString("ModelResolutionPreferencesPage.resolutionScope.container.description")); //$NON-NLS-1$
 				break;
 			case OUTGOING:
-				resolutionScopeDescription.setText(EMFCompareIDEUIMessages
+				resolutionScopeDescriptionLabel.setText(EMFCompareIDEUIMessages
 						.getString("ModelResolutionPreferencesPage.resolutionScope.outgoing.description")); //$NON-NLS-1$
 				break;
 			default:
 				// Shouldn't happen
-				resolutionScopeDescription.setText(EMFCompareIDEUIMessages
+				resolutionScopeDescriptionLabel.setText(EMFCompareIDEUIMessages
 						.getString("ModelResolutionPreferencesPage.resolutionScope.invalid")); //$NON-NLS-1$
 				break;
 		}

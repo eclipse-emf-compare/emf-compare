@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Simon Delisle - bug 495753
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.preferences.impl;
 
@@ -32,6 +33,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.preferences.DataHolder;
 import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -120,11 +122,11 @@ public final class InteractiveUIContent {
 		} else {
 			numberOfColumns = 1;
 		}
-		contentComposite.setLayout(new GridLayout(numberOfColumns, false));
+		GridLayoutFactory.fillDefaults().numColumns(numberOfColumns).applyTo(contentComposite);
 		contentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		// Engine chooser composite
 		this.viewerCompsite = new Composite(contentComposite, SWT.NONE);
-		viewerCompsite.setLayout(new GridLayout(1, true));
+		GridLayoutFactory.fillDefaults().applyTo(viewerCompsite);
 		viewerCompsite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		if (hasConfiguration) {
 			// Config composite
@@ -197,7 +199,7 @@ public final class InteractiveUIContent {
 				EMFCompareRCPUIMessages.getString("InteractiveUIContent.configurationComposite.label")); //$NON-NLS-1$
 		StackLayout layout = new StackLayout();
 		layout.marginHeight = 10;
-		layout.marginWidth = 10;
+		layout.marginWidth = 5;
 		confComposite.setLayout(layout);
 		GridData layoutData = new GridData(SWT.BEGINNING, SWT.FILL, false, true);
 		layoutData.widthHint = WIDTH_HINT_CONFIG_COMPOSITE;
@@ -220,8 +222,6 @@ public final class InteractiveUIContent {
 		descriptionComposite.setLayout(new GridLayout(1, false));
 		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		Label engineDescriptionLabel = new Label(descriptionComposite, SWT.WRAP);
-		engineDescriptionLabel
-				.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 		layoutData.heightHint = DESCRIPTION_COMPOSITE_HEIGHT_HINT;
 		layoutData.widthHint = DESCRIPTION_COMPOSITE_WIDTH_HINT;

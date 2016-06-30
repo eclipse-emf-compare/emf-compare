@@ -31,10 +31,10 @@ import org.eclipse.emf.compare.rcp.internal.tracer.TracingConstant;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.preferences.impl.InteractiveUIContent;
 import org.eclipse.emf.compare.rcp.ui.internal.preferences.impl.InteractiveUIContent.InteractiveUIBuilder;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -97,8 +97,9 @@ public class PostProcessorPreferencePage extends PreferencePage implements IWork
 
 	@Override
 	protected Control createContents(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
-		container.setLayout(new GridLayout(1, true));
+		Composite container = new Composite(parent, SWT.NONE);
+		GridLayoutFactory.fillDefaults().equalWidth(true).applyTo(container);
+		// container.setLayout(new GridLayout(1, true));
 		Label introductionText = new Label(container, SWT.WRAP);
 		introductionText.setText(
 				EMFCompareRCPUIMessages.getString("PostProcessorPreferencePage.preferencePage.description")); //$NON-NLS-1$

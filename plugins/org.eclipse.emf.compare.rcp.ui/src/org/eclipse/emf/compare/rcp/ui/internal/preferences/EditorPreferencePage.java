@@ -12,11 +12,11 @@ package org.eclipse.emf.compare.rcp.ui.internal.preferences;
 
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.CompareColorImpl;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
@@ -48,8 +48,9 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
 	@Override
 	protected Control createContents(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
-		container.setLayout(new GridLayout(1, false));
+		Composite container = new Composite(parent, SWT.NONE);
+		GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(false).applyTo(container);
+
 		// Link to color tab
 		PreferenceLinkArea fileEditorsArea = new PreferenceLinkArea(container, SWT.NONE,
 				"org.eclipse.ui.preferencePages.ColorsAndFonts", //$NON-NLS-1$

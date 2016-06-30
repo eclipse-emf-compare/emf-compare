@@ -12,6 +12,7 @@
      Obeo - initial API and implementation
      Stefan Dirix - bugs 456699, 474723
      Michael Borkowski - bug 467191
+     Simon Delisle - bug 495753
 -->
 
 <plugin>
@@ -430,7 +431,7 @@
             category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
             class="org.eclipse.emf.compare.ide.ui.internal.preferences.ModelResolutionPreferencePage"
             id="org.eclipse.emf.compare.ide.ui.preferencepage.resolvers"
-            name="Resolution strategy">
+            name="Resolution Strategy">
       </page>
       <page
             category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"

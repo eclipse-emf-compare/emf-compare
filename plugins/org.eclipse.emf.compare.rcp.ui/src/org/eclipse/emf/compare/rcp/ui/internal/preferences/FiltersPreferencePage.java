@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2016 Obeo.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,9 +7,15 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Simon Delisle - bug 495753
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.preferences;
 
+import static org.eclipse.jface.dialogs.MessageDialogWithToggle.ALWAYS;
+import static org.eclipse.jface.dialogs.MessageDialogWithToggle.NEVER;
+import static org.eclipse.jface.dialogs.MessageDialogWithToggle.PROMPT;
+
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
@@ -34,6 +40,8 @@ import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFi
 import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -47,13 +55,11 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
@@ -75,9 +81,11 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	/** Preference key holding synchronization behavior value. */
 	public static final String SYNCHRONIZATION_BEHAVIOR = "org.eclipse.emf.compare.rcp.ui.filters.syncbehavior"; //$NON-NLS-1$
 
+	/** Width hint for introduction label. */
+	private static final int INTRO_TEXT_WIDTH_HINT = 400;
+
 	/** Values used for the combobox. */
-	private static final List<String> comboValues = Lists.newArrayList(MessageDialogWithToggle.ALWAYS,
-			MessageDialogWithToggle.NEVER, MessageDialogWithToggle.PROMPT);
+	private static final List<String> SYNC_VALUES = ImmutableList.of(ALWAYS, NEVER, PROMPT);
 
 	/** Filter manager. Used to retrieve current and default configuration. */
 	private DifferenceFilterManager filterManager = null;
@@ -94,6 +102,12 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	/** The tab used to choose active filters. */
 	private Composite activateFilterTabComposite;
 
+	/** Combo holding synchronization behavior preferences. */
+	private Combo combo;
+
+	/** Field holding {@link SynchronizationBehavior} */
+	private String synchronizationBehaviorValue;
+
 	public void init(IWorkbench workbench) {
 		// Do not use InstanceScope.Instance to be compatible with Helios.
 		@SuppressWarnings("deprecation")
@@ -105,9 +119,15 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 
 	@Override
 	protected Control createContents(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
-		container.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite container = new Composite(parent, SWT.NONE);
+		GridLayoutFactory.fillDefaults().applyTo(container);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(container);
+
+		createSynchronizationBehaviorContent(container);
+		setComboInput(getCurrentSynchronizationBehavior());
+
 		TabFolder tabFolder = new TabFolder(container, SWT.NONE);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(tabFolder);
 
 		// Create tab to choose filters that are enabled by default
 		createDefaultEnabledFilterTab(tabFolder);
@@ -130,7 +150,6 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		}
 		defaultFilterInteractiveContent = new InteractiveFilterUIContent(enabledFilterTabComposite,
 				filterManager.getAllFilters(), filterManager.getCurrentByDefaultFilters(), false);
-		defaultFilterInteractiveContent.setComboInput(getCurrentSynchronizationBehavior());
 	}
 
 	/**
@@ -163,13 +182,59 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		tbtmMain.setText(tabLabel);
 		Composite tabComposite = new Composite(tabFolder, SWT.NONE);
 		tbtmMain.setControl(tabComposite);
-		tabComposite.setLayout(new GridLayout(1, true));
+		GridLayout layout = new GridLayout(1, true);
+		tabComposite.setLayout(layout);
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
 		tabComposite.setLayoutData(layoutData);
 		// Description text
 		Label introductionText = new Label(tabComposite, SWT.WRAP);
+		GridDataFactory.fillDefaults().grab(true, false).hint(INTRO_TEXT_WIDTH_HINT, SWT.DEFAULT)
+				.applyTo(introductionText);
 		introductionText.setText(introText);
 		return tabComposite;
+	}
+
+	/**
+	 * Content for synchronization behavior preferences.
+	 * 
+	 * @param parent
+	 */
+	private void createSynchronizationBehaviorContent(Composite parent) {
+		Composite synchronizationComposite = new Composite(parent, SWT.NONE);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(synchronizationComposite);
+		Label label = new Label(synchronizationComposite, SWT.WRAP);
+		label.setText(EMFCompareRCPUIMessages.getString("InteractiveFilterUIContent.sync.behavior.label")); //$NON-NLS-1$
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		combo = new Combo(synchronizationComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		for (String comboLabel : SYNC_VALUES) {
+			combo.add(comboLabel);
+		}
+		combo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true));
+		combo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (combo.equals(e.getSource())) {
+					synchronizationBehaviorValue = combo.getItem(combo.getSelectionIndex());
+				}
+			}
+
+		});
+	}
+
+	/**
+	 * Select the correct behavior in the interactive UI.
+	 * 
+	 * @param behavior
+	 */
+	public void setComboInput(String behavior) {
+		int index = 0;
+		for (String value : SYNC_VALUES) {
+			if (value.equals(behavior)) {
+				combo.select(index);
+				synchronizationBehaviorValue = behavior;
+			}
+			index++;
+		}
 	}
 
 	/**
@@ -187,7 +252,7 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	 */
 	public String getCurrentSynchronizationBehavior() {
 		String value = getPreferenceStore().getString(SYNCHRONIZATION_BEHAVIOR);
-		if (value == null || !comboValues.contains(value)) {
+		if (value == null || !SYNC_VALUES.contains(value)) {
 			value = getDefaultSynchronizationBehavior();
 		}
 		return value;
@@ -230,7 +295,7 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	public boolean performOk() {
 		filterManager.setCurrentByDefaultFilters(defaultFilterInteractiveContent.getCheckedFilter());
 		filterManager.setCurrentActiveFilters(activateFilterInteractiveContent.getCheckedFilter());
-		setCurrentSynchronizationBehavior(defaultFilterInteractiveContent.getSynchronizationBehavior());
+		setCurrentSynchronizationBehavior(synchronizationBehaviorValue);
 		return super.performOk();
 	}
 
@@ -244,7 +309,7 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		}
 		if (enabledFilterTabComposite.isVisible()) {
 			defaultFilterInteractiveContent.checkElements(filterManager.getInitialByDefaultFilters());
-			defaultFilterInteractiveContent.setComboInput(getDefaultSynchronizationBehavior());
+			setComboInput(getDefaultSynchronizationBehavior());
 		}
 		super.performDefaults();
 	}
@@ -255,6 +320,12 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	 * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
 	 */
 	private static class InteractiveFilterUIContent {
+
+		/** Height hint for the description label. */
+		private static final int DESCRIPTION_LABEL_HEIGHT_HINT = 50;
+
+		/** Width hint for configuration composite. */
+		private static final int DESCRIPTION_LABEL_WIDTH_HINT = 400;
 
 		/** Text that will be updated with the description of the viewer. */
 		private final Label descriptionText;
@@ -268,17 +339,11 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		/** DataHolder for activated/deactivated {@link IDifferenceFilter}. */
 		private FilterDataHolder allFilters = new FilterDataHolder();
 
-		/** Combo holding synchronization behavior preferences. */
-		private Combo combo;
-
-		/** Field holding {@link SynchronizationBehavior} */
-		private String synchronizationBehaviorValue;
-
 		private InteractiveFilterUIContent(Composite parent, Collection<? extends IDifferenceFilter> filters,
 				Collection<? extends IDifferenceFilter> defaultCheck, boolean isDeactivateTab) {
 			super();
-			Composite contentComposite = new Composite(parent, SWT.BORDER);
-			contentComposite.setLayout(new GridLayout(1, true));
+			Composite contentComposite = new Composite(parent, SWT.NONE);
+			GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 10, 0).applyTo(contentComposite);
 			contentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 			Label introductionText = new Label(contentComposite, SWT.WRAP);
@@ -292,14 +357,12 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 			introductionText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 			// Engine chooser composite
 			Composite viewerComposite = new Composite(contentComposite, SWT.NONE);
-			viewerComposite.setLayout(new GridLayout(1, true));
+			GridLayoutFactory.fillDefaults().applyTo(viewerComposite);
 			viewerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 			viewer = createViewer(viewerComposite);
 			// Descriptor engine Text
 			this.descriptionText = createDescriptionComposite(contentComposite);
-			if (!isDeactivateTab) {
-				createSynchronizationBehaviorContent(parent);
-			}
+
 			setViewerInput(Lists.newArrayList(filters));
 			if (isDeactivateTab) {
 				SetView<IDifferenceFilter> activatedFilters = Sets.difference(Sets.newLinkedHashSet(filters),
@@ -309,46 +372,6 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 				bindAndInit(Sets.newLinkedHashSet(defaultCheck));
 			}
 			allFilters.setFilters(Sets.newLinkedHashSet(filters));
-		}
-
-		/**
-		 * Content for synchronization behavior preferences.
-		 * 
-		 * @param parent
-		 */
-		private void createSynchronizationBehaviorContent(Composite parent) {
-			Group synchronizationGroup = new Group(parent, SWT.NONE);
-			GridData layoutData = new GridData(SWT.FILL, SWT.BOTTOM, true, false);
-			GridLayout layout = new GridLayout(2, false);
-			synchronizationGroup.setLayout(layout);
-			synchronizationGroup.setLayoutData(layoutData);
-			synchronizationGroup.setText(EMFCompareRCPUIMessages
-					.getString("InteractiveFilterUIContent.sync.behavior.group.label")); //$NON-NLS-1$
-			Label label = new Label(synchronizationGroup, SWT.WRAP);
-			label.setText(
-					EMFCompareRCPUIMessages.getString("InteractiveFilterUIContent.sync.behavior.label")); //$NON-NLS-1$
-			label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-			combo = new Combo(synchronizationGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
-			for (String comboLabel : comboValues) {
-				combo.add(comboLabel);
-			}
-			combo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true));
-			combo.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					if (combo.equals(e.getSource())) {
-						synchronizationBehaviorValue = combo.getItem(combo.getSelectionIndex());
-					}
-				}
-
-			});
-		}
-
-		/**
-		 * @return The state of the group synchronization behavior field.
-		 */
-		public String getSynchronizationBehavior() {
-			return synchronizationBehaviorValue;
 		}
 
 		/**
@@ -437,15 +460,12 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 			Group descriptionComposite = new Group(composite, SWT.NONE);
 			descriptionComposite.setText(
 					EMFCompareRCPUIMessages.getString("InteractiveUIContent.descriptionComposite.label")); //$NON-NLS-1$
-			descriptionComposite.setLayout(new GridLayout(1, false));
+			GridLayoutFactory.swtDefaults().applyTo(descriptionComposite);
 			descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 			Label engineDescriptionLabel = new Label(descriptionComposite, SWT.WRAP);
-			engineDescriptionLabel
-					.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-			GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-			layoutData.widthHint = 400;
-			layoutData.heightHint = 50;
-			engineDescriptionLabel.setLayoutData(layoutData);
+			GridDataFactory.fillDefaults().grab(true, false)
+					.hint(DESCRIPTION_LABEL_WIDTH_HINT, DESCRIPTION_LABEL_HEIGHT_HINT)
+					.applyTo(engineDescriptionLabel);
 			return engineDescriptionLabel;
 		}
 
@@ -473,22 +493,6 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		public void setViewer(CheckboxTableViewer inputViewer) {
 			this.viewer = inputViewer;
 			viewer.addSelectionChangedListener(new DescriptionListener());
-		}
-
-		/**
-		 * Select the correct behavior in the interactive UI.
-		 * 
-		 * @param behavior
-		 */
-		public void setComboInput(String behavior) {
-			int index = 0;
-			for (String value : comboValues) {
-				if (value.equals(behavior)) {
-					combo.select(index);
-					synchronizationBehaviorValue = behavior;
-				}
-				index++;
-			}
 		}
 
 		/**

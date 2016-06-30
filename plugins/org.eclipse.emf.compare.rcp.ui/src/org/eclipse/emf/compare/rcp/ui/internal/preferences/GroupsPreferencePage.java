@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,16 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Simon Delisle - bug 495753
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.preferences;
 
+import static org.eclipse.jface.dialogs.MessageDialogWithToggle.ALWAYS;
+import static org.eclipse.jface.dialogs.MessageDialogWithToggle.NEVER;
+import static org.eclipse.jface.dialogs.MessageDialogWithToggle.PROMPT;
+
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
@@ -27,12 +32,16 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -56,14 +65,19 @@ public class GroupsPreferencePage extends PreferencePage implements IWorkbenchPr
 	private static final String SYNC_DEFAULT_VALUE = MessageDialogWithToggle.PROMPT;
 
 	/** List of all available values possible for synchronization behavior. */
-	private static final List<String> SYNC_VALUES = Lists.newArrayList(MessageDialogWithToggle.ALWAYS,
-			MessageDialogWithToggle.NEVER, MessageDialogWithToggle.PROMPT);
+	private static final List<String> SYNC_VALUES = ImmutableList.of(ALWAYS, NEVER, PROMPT);
 
 	/** Synchronization behavior for group 2 way comparison capable. */
 	private static final String TWO_WAY_COMPARISON_SYNC_BEHAVIOR = "org.eclipse.emf.compare.rcp.ui.groups.2way.syncbehavior"; //$NON-NLS-1$
 
 	/** Synchronization behavior for group 3 way comparison capable. */
 	private static final String THREE_WAY_COMPARISON_SYNC_BEHAVIOR = "org.eclipse.emf.compare.rcp.ui.groups.3ways.syncbehavior"; //$NON-NLS-1$
+
+	/** Combo holding syncrhonization behavior preferences. */
+	private Combo combo;
+
+	/** Field holding the synchronization behavior chosen by the user. */
+	private String synchronizationBehaviorValue;
 
 	/** UI content for two way comparison tab. */
 	private GroupsInteractiveContent twoWayComparisonContent;
@@ -105,10 +119,11 @@ public class GroupsPreferencePage extends PreferencePage implements IWorkbenchPr
 
 	@Override
 	protected Control createContents(Composite parent) {
-		parent.setLayout(new GridLayout(1, true));
-		Composite container = new Composite(parent, SWT.NONE);
+		Composite container = new Composite(parent, SWT.NULL);
+		GridLayoutFactory.fillDefaults().applyTo(container);
 		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		container.setLayout(new GridLayout(1, true));
+
+		createSynchronizationBehaviorContent(container);
 
 		TabFolder tabFolder = new TabFolder(container, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -133,7 +148,7 @@ public class GroupsPreferencePage extends PreferencePage implements IWorkbenchPr
 
 		twoWayComparisonContent = createInteractiveContent(tabSkeletonComposite, currentGroupRanking,
 				currentGroupRanking.get(0));
-		twoWayComparisonContent.setComboInput(getCurrentSynchronizationBehavior(false));
+		setComboInput(getCurrentSynchronizationBehavior(false));
 	}
 
 	/**
@@ -150,7 +165,7 @@ public class GroupsPreferencePage extends PreferencePage implements IWorkbenchPr
 		List<IItemDescriptor<Descriptor>> currentGroupRanking = groupManager.getCurrentGroupRanking(true);
 		threeWayComparisonContent = createInteractiveContent(tabSkeletonComposite, currentGroupRanking,
 				currentGroupRanking.get(0));
-		threeWayComparisonContent.setComboInput(getCurrentSynchronizationBehavior(true));
+		setComboInput(getCurrentSynchronizationBehavior(true));
 	}
 
 	/**
@@ -198,9 +213,6 @@ public class GroupsPreferencePage extends PreferencePage implements IWorkbenchPr
 		tabComposite.setLayout(new GridLayout(1, true));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		tabComposite.setLayoutData(layoutData);
-		// Description text
-		Label introductionText = new Label(tabComposite, SWT.WRAP);
-		introductionText.setText(introText);
 		return tabComposite;
 	}
 
@@ -220,13 +232,56 @@ public class GroupsPreferencePage extends PreferencePage implements IWorkbenchPr
 		descriptorViewer.getControl().setLayoutData(gd);
 	}
 
+	/**
+	 * Content for synchronization behavior preferences.
+	 * 
+	 * @param parent
+	 *            Main composite.
+	 */
+	private void createSynchronizationBehaviorContent(Composite parent) {
+		Composite synchronizationComposite = new Composite(parent, SWT.NONE);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(synchronizationComposite);
+		Label label = new Label(synchronizationComposite, SWT.WRAP);
+		label.setText(EMFCompareRCPUIMessages.getString("GroupsInteractiveContent.SYNC_BEHAVIOR_LABEL")); //$NON-NLS-1$
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		combo = new Combo(synchronizationComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		for (String comboLabel : SYNC_VALUES) {
+			combo.add(comboLabel);
+		}
+		combo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true));
+		combo.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (combo.equals(e.getSource())) {
+					synchronizationBehaviorValue = SYNC_VALUES.get(combo.getSelectionIndex());
+				}
+			}
+
+		});
+	}
+
+	/**
+	 * Sets the combo to the given synchronization behavior.
+	 * 
+	 * @param behavior
+	 *            Input.
+	 */
+	public void setComboInput(String behavior) {
+		int index = SYNC_VALUES.indexOf(behavior);
+		if (index != -1) {
+			combo.select(index);
+			synchronizationBehaviorValue = behavior;
+		}
+	}
+
 	@Override
 	public boolean performOk() {
 		groupManager.setCurrentGroupRanking(twoWayComparisonContent.getOrderedItems(), false);
-		setCurrentSynchronizationBehavior(twoWayComparisonContent.getSynchronizationBehavior(), false);
+		setCurrentSynchronizationBehavior(synchronizationBehaviorValue, false);
 
 		groupManager.setCurrentGroupRanking(threeWayComparisonContent.getOrderedItems(), true);
-		setCurrentSynchronizationBehavior(threeWayComparisonContent.getSynchronizationBehavior(), true);
+		setCurrentSynchronizationBehavior(synchronizationBehaviorValue, true);
 		return super.performOk();
 	}
 
@@ -253,7 +308,7 @@ public class GroupsPreferencePage extends PreferencePage implements IWorkbenchPr
 	 */
 	private void resetGroupPreference(boolean isThreeWay, GroupsInteractiveContent interactiveContent) {
 		interactiveContent.setViewerInput(groupManager.getDefaultRankingConfiguration(isThreeWay));
-		interactiveContent.setComboInput(SYNC_DEFAULT_VALUE);
+		setComboInput(SYNC_DEFAULT_VALUE);
 	}
 
 	/**

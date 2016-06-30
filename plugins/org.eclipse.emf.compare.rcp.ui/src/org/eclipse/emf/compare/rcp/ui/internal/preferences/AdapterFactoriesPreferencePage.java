@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Simon Delisle - bug 495753
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.preferences;
 
@@ -27,6 +28,7 @@ import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescr
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -37,6 +39,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -76,12 +79,15 @@ public class AdapterFactoriesPreferencePage extends PreferencePage implements IW
 	@Override
 	protected Control createContents(Composite parent) {
 		Composite containerComposite = new Composite(parent, SWT.NONE);
-		containerComposite.setLayout(new GridLayout(1, false));
+		GridLayoutFactory.fillDefaults().applyTo(containerComposite);
 		containerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		Label introductionLabel = new Label(containerComposite, SWT.WRAP);
+		introductionLabel.setText(
+				EMFCompareRCPUIMessages.getString("AdapterFactoryPreferencePage.preferencePage.description")); //$NON-NLS-1$
 
 		createViewer(containerComposite);
 
-		createDescriptionText(parent);
+		createDescriptionText(containerComposite);
 
 		fillViewer();
 
@@ -99,6 +105,9 @@ public class AdapterFactoriesPreferencePage extends PreferencePage implements IW
 		});
 
 		adapterFactoryDescriptorViewer.setInput(descriptors);
+		if (!descriptors.isEmpty()) {
+			adapterFactoryDescriptorViewer.setSelection(new StructuredSelection(descriptors.get(0)), true);
+		}
 
 		List<String> disabledDescriptors = EMFComparePreferences.getDisabledAdapterFacotryDescriptorIds(
 				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences());
@@ -146,13 +155,7 @@ public class AdapterFactoriesPreferencePage extends PreferencePage implements IW
 	}
 
 	private void createViewer(Composite containerComposite) {
-		Group interactiveGroup = new Group(containerComposite, SWT.BORDER);
-		interactiveGroup.setText(
-				EMFCompareRCPUIMessages.getString("AdapterFactoryPreferencePage.itemProviderGroup.text")); //$NON-NLS-1$
-		interactiveGroup.setLayout(new GridLayout(1, false));
-		interactiveGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
-		adapterFactoryDescriptorViewer = CheckboxTableViewer.newCheckList(interactiveGroup,
+		adapterFactoryDescriptorViewer = CheckboxTableViewer.newCheckList(containerComposite,
 				SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION);
 
 		adapterFactoryDescriptorViewer.setContentProvider(ArrayContentProvider.getInstance());

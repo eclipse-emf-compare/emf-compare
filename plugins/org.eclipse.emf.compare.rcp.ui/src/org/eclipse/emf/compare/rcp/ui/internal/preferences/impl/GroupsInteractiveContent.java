@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Simon Delisle - bug 495753
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.preferences.impl;
 
@@ -21,7 +22,8 @@ import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -32,12 +34,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 
@@ -49,7 +48,7 @@ import org.eclipse.swt.widgets.Label;
 public class GroupsInteractiveContent {
 
 	/** Height hint for the description label. */
-	private static final int DESCRIPTION_LABEL_HEIGHT_HINT = 50;
+	private static final int DESCRIPTION_LABEL_HEIGHT_HINT = 40;
 
 	/** Width hint for configuration composite. */
 	private static final int DESCRIPTION_LABEL_WIDTH_HINT = 400;
@@ -60,21 +59,11 @@ public class GroupsInteractiveContent {
 	/** Up icon picture. */
 	private static final String ENABLE_UP_IMG = "icons/full/pref16/up.gif"; //$NON-NLS-1$
 
-	/** Combo values. */
-	private static final List<String> COMBO_VALUES = Lists.newArrayList(MessageDialogWithToggle.ALWAYS,
-			MessageDialogWithToggle.NEVER, MessageDialogWithToggle.PROMPT);
-
-	/** Combo holding syncrhonization behavior preferences. */
-	private Combo combo;
-
 	/** Label that will display the viewer's description. */
-	private final Label descriptionLabel;
+	private final Label descriptionText;
 
 	/** List of descriptors. */
 	private ArrayList<IItemDescriptor<IDifferenceGroupProvider.Descriptor>> descriptors;
-
-	/** Field holding the synchronization behavior chosen by the user. */
-	private String synchronizationBehaviorValue;
 
 	/** Button to decrease the rank of a item. */
 	private Button downButton;
@@ -97,55 +86,24 @@ public class GroupsInteractiveContent {
 	public GroupsInteractiveContent(Composite parent) {
 		super();
 		Composite containerComposite = new Composite(parent, SWT.NONE);
-		containerComposite.setLayout(new GridLayout(1, false));
+		GridLayoutFactory.fillDefaults().applyTo(containerComposite);
 		containerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite interactiveComposite = new Composite(containerComposite, SWT.BORDER);
-		interactiveComposite.setLayout(new GridLayout(2, false));
+		Composite interactiveComposite = new Composite(containerComposite, SWT.NONE);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(interactiveComposite);
 		interactiveComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
+		Label introductionText = new Label(interactiveComposite, SWT.WRAP);
+		introductionText
+				.setText(EMFCompareRCPUIMessages.getString("GroupsPreferencePage.viewerDescription.label")); //$NON-NLS-1$
+		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(introductionText);
 		// Engine chooser composite
 		this.viewerCompsite = new Composite(interactiveComposite, SWT.NONE);
-		viewerCompsite.setLayout(new GridLayout(1, true));
+		GridLayoutFactory.fillDefaults().applyTo(viewerCompsite);
 		viewerCompsite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		// Descriptor engine Label
 		createButtonComposite(interactiveComposite);
-		this.descriptionLabel = createDescriptionComposite(interactiveComposite);
-		createSynchronizationBehaviorContent(containerComposite);
-	}
-
-	/**
-	 * Content for synchronization behavior preferences.
-	 * 
-	 * @param parent
-	 *            Main composite.
-	 */
-	private void createSynchronizationBehaviorContent(Composite parent) {
-		Group synchronizationGroup = new Group(parent, SWT.NONE);
-		GridData layoutData = new GridData(SWT.FILL, SWT.BOTTOM, true, false);
-		GridLayout layout = new GridLayout(2, false);
-		synchronizationGroup.setLayout(layout);
-		synchronizationGroup.setLayoutData(layoutData);
-		synchronizationGroup.setText(
-				EMFCompareRCPUIMessages.getString("GroupsInteractiveContent.SYNC_BEHAVIOR_GROUP_LABEL")); //$NON-NLS-1$
-		Label label = new Label(synchronizationGroup, SWT.WRAP);
-		label.setText(EMFCompareRCPUIMessages.getString("GroupsInteractiveContent.SYNC_BEHAVIOR_LABEL")); //$NON-NLS-1$
-		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-		combo = new Combo(synchronizationGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
-		for (String comboLabel : COMBO_VALUES) {
-			combo.add(comboLabel);
-		}
-		combo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true));
-		combo.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (combo.equals(e.getSource())) {
-					synchronizationBehaviorValue = COMBO_VALUES.get(combo.getSelectionIndex());
-				}
-			}
-
-		});
+		this.descriptionText = createDescriptionComposite(interactiveComposite);
 	}
 
 	/**
@@ -213,25 +171,14 @@ public class GroupsInteractiveContent {
 		Group descriptionComposite = new Group(composite, SWT.NONE);
 		descriptionComposite.setText(
 				EMFCompareRCPUIMessages.getString("InteractiveUIContent.descriptionComposite.label")); //$NON-NLS-1$
-		descriptionComposite.setLayout(new GridLayout(1, false));
+		GridLayoutFactory.swtDefaults().applyTo(descriptionComposite);
 		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
-		Label engineDescriptionLabel = new Label(descriptionComposite, SWT.WRAP);
-		engineDescriptionLabel
-				.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
-		layoutData.heightHint = DESCRIPTION_LABEL_HEIGHT_HINT;
-		layoutData.widthHint = DESCRIPTION_LABEL_WIDTH_HINT;
-		engineDescriptionLabel.setLayoutData(layoutData);
-		return engineDescriptionLabel;
-	}
 
-	/**
-	 * Get Synchronization behavior.
-	 * 
-	 * @return The state of the group synchronization behavior field.
-	 */
-	public String getSynchronizationBehavior() {
-		return synchronizationBehaviorValue;
+		Label engineDescriptionLabel = new Label(descriptionComposite, SWT.WRAP);
+		GridDataFactory.fillDefaults().grab(true, false)
+				.hint(DESCRIPTION_LABEL_WIDTH_HINT, DESCRIPTION_LABEL_HEIGHT_HINT)
+				.applyTo(engineDescriptionLabel);
+		return engineDescriptionLabel;
 	}
 
 	/**
@@ -327,20 +274,6 @@ public class GroupsInteractiveContent {
 	}
 
 	/**
-	 * Sets the combo to the given synchronization behavior.
-	 * 
-	 * @param behavior
-	 *            Input.
-	 */
-	public void setComboInput(String behavior) {
-		int index = COMBO_VALUES.indexOf(behavior);
-		if (index != -1) {
-			combo.select(index);
-			synchronizationBehaviorValue = behavior;
-		}
-	}
-
-	/**
 	 * Set the viewer.
 	 * 
 	 * @param inputViewer
@@ -373,7 +306,7 @@ public class GroupsInteractiveContent {
 	 */
 	private void updateLinkedElements(IItemDescriptor<IDifferenceGroupProvider.Descriptor> descriptor) {
 		// Update description
-		descriptionLabel.setText(descriptor.getDescription());
+		descriptionText.setText(descriptor.getDescription());
 	}
 
 	/**
@@ -394,7 +327,7 @@ public class GroupsInteractiveContent {
 				if (selected instanceof IItemDescriptor<?>) {
 					IItemDescriptor<?> desc = (IItemDescriptor<?>)selected;
 					String description = desc.getDescription();
-					descriptionLabel.setText(description);
+					descriptionText.setText(description);
 				}
 			}
 

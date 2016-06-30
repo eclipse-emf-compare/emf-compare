@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Simon Delisle - bug 495753
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.preferences;
 
@@ -25,6 +26,7 @@ import java.util.Arrays;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -33,13 +35,11 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -101,21 +101,20 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 
 	@Override
 	protected Control createContents(Composite parent) {
-		Group group = new Group(parent, SWT.NULL);
-		group.setLayout(new GridLayout(3, false));
-		group.setText(EMFCompareRCPUIMessages.getString("LoggingPreferencePage.preferencePage.description")); //$NON-NLS-1$
+		Composite loggingComposite = new Composite(parent, SWT.NONE);
+		GridLayoutFactory.fillDefaults().numColumns(3).equalWidth(false).applyTo(loggingComposite);
 
-		new Label(group, SWT.LEAD)
+		new Label(loggingComposite, SWT.LEAD)
 				.setText(EMFCompareRCPUIMessages.getString("LoggingPreferencePage.log.level")); //$NON-NLS-1$
-		levelCombo = new Combo(group, SWT.DROP_DOWN);
+		levelCombo = new Combo(loggingComposite, SWT.DROP_DOWN);
 		levelCombo.setItems(LOG_LEVELS);
-		levelCombo.setLayoutData(getDefaultFieldGridData(40));
+		levelCombo.setLayoutData(getDefaultFieldGridData(100));
 
-		Label fileLabel = new Label(group, SWT.LEAD);
+		Label fileLabel = new Label(loggingComposite, SWT.LEAD);
 		fileLabel.setText(EMFCompareRCPUIMessages.getString("LoggingPreferencePage.log.file")); //$NON-NLS-1$
-		fileField = new Text(group, SWT.BORDER | SWT.SINGLE);
+		fileField = new Text(loggingComposite, SWT.BORDER | SWT.SINGLE);
 		fileField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		Button fileButton = new Button(group, SWT.PUSH);
+		Button fileButton = new Button(loggingComposite, SWT.PUSH);
 		fileButton.setText(EMFCompareRCPUIMessages.getString("LoggingPreferencePage.filebutton.label")); //$NON-NLS-1$
 		fileButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -131,21 +130,21 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 			}
 		});
 
-		Label maxSizeLabel = new Label(group, SWT.LEAD);
+		Label maxSizeLabel = new Label(loggingComposite, SWT.LEAD);
 		maxSizeLabel.setText(EMFCompareRCPUIMessages.getString("LoggingPreferencePage.log.file.size")); //$NON-NLS-1$
-		maxSizeField = new Text(group, SWT.BORDER | SWT.SINGLE);
+		maxSizeField = new Text(loggingComposite, SWT.BORDER | SWT.SINGLE);
 		maxSizeField.setLayoutData(getDefaultFieldGridData(80));
 		maxSizeField.addVerifyListener(new VerifyIntegerListener());
 
-		Label maxBackupLabel = new Label(group, SWT.LEAD);
+		Label maxBackupLabel = new Label(loggingComposite, SWT.LEAD);
 		maxBackupLabel.setText(EMFCompareRCPUIMessages.getString("LoggingPreferencePage.log.backup.count")); //$NON-NLS-1$
-		maxBackupField = new Text(group, SWT.BORDER | SWT.SINGLE);
+		maxBackupField = new Text(loggingComposite, SWT.BORDER | SWT.SINGLE);
 		maxBackupField.setLayoutData(getDefaultFieldGridData(80));
 		maxBackupField.addVerifyListener(new VerifyIntegerListener());
 
 		refreshWidgets();
 
-		return group;
+		return loggingComposite;
 	}
 
 	protected GridData getDefaultFieldGridData(int width) {
