@@ -15,9 +15,14 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Set;
 
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jgit.api.Status;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -25,8 +30,28 @@ import org.junit.Test;
  * 
  * @author Alexandra Buzila
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({"nls", "restriction", })
 public class GitMergeTest extends AbstractGitLogicalModelTest {
+
+	private final IPreferenceStore store = EMFCompareIDEUIPlugin.getDefault().getPreferenceStore();
+
+	@Override
+	@Before
+	public void setUp() throws Exception {
+		super.setUp();
+
+		// The test need to have the pre-merge preference set to true
+		store.setValue(EMFCompareUIPreferences.PRE_MERGE_MODELS_WHEN_CONFLICT, true);
+	}
+
+	@Override
+	@After
+	public void tearDown() throws Exception {
+		super.tearDown();
+
+		// Reset pre-merge default value to the classic one
+		store.setToDefault(EMFCompareUIPreferences.PRE_MERGE_MODELS_WHEN_CONFLICT);
+	}
 
 	/**
 	 * Sets up a repository with three commits on two branches:
