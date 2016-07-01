@@ -82,18 +82,32 @@ import org.eclipse.team.core.subscribers.SubscriberScopeManager;
 @SuppressWarnings({"restriction" })
 public class GitTestSupport extends InternalGitTestSupport {
 
-	public final static String COMPARE_NO_PROJECT_SELECTED = "noProject"; //$NON-NLS-1$
+	/**
+	 * Used to specify that there is only one project in the repository. The tester does not have to specify
+	 * it.
+	 */
+	public static final String COMPARE_NO_PROJECT_SELECTED = "noProject"; //$NON-NLS-1$
 
+	/** The result of the merge operation. */
 	private MergeResult mergeResult;
 
+	/** The result of the rebase operation. */
 	private RebaseResult rebaseResult;
 
+	/** The result of the cherry-pick operation. */
 	private CherryPickResult cherryPickResult;
 
 	public Repository getRepository() {
 		return repository;
 	}
 
+	/**
+	 * Get the list of projects in the workspace. All projects are refreshed before being returned.
+	 * 
+	 * @return the list of all projects
+	 * @throws CoreException
+	 *             Thrown if the refresh operation went wrong
+	 */
 	public List<IProject> getProjects() throws CoreException {
 		for (IProject project : projects) {
 			project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
@@ -101,6 +115,13 @@ public class GitTestSupport extends InternalGitTestSupport {
 		return Lists.newArrayList(projects);
 	}
 
+	/**
+	 * Get The JGit Status Object from the repository.
+	 * 
+	 * @return the status Object of the Git repository
+	 * @throws Exception
+	 *             If the status cannot be retrieved
+	 */
 	public Status getStatus() throws Exception {
 		Git git = new Git(repository);
 		try {
@@ -132,8 +153,11 @@ public class GitTestSupport extends InternalGitTestSupport {
 	 *            The branch to merge with (for example "master" or "refs/for/master", both syntaxes are
 	 *            accepted)
 	 * @throws CoreException
+	 *             Thrown if the merge operation or the refresh of projects went wrong
 	 * @throws IOException
+	 *             Thrown if the checkout operation went wrong
 	 * @throws InterruptedException
+	 *             Thrown if the checkout operation went wrong
 	 */
 	public void merge(String local, String remote) throws CoreException, IOException, InterruptedException {
 		checkoutBranch(normalizeBranch(local));
@@ -155,8 +179,11 @@ public class GitTestSupport extends InternalGitTestSupport {
 	 *            The branch where the commit will be cherry-picked (for example "master" or
 	 *            "refs/for/master", both syntaxes are accepted)
 	 * @throws CoreException
+	 *             Thrown if the cherry-pick operation or the refresh of projects went wrong
 	 * @throws IOException
+	 *             Thrown if the checkout operation went wrong
 	 * @throws InterruptedException
+	 *             Thrown if the checkout operation went wrong
 	 */
 	public void cherryPick(String local, String remote)
 			throws CoreException, IOException, InterruptedException {
@@ -185,8 +212,11 @@ public class GitTestSupport extends InternalGitTestSupport {
 	 *            The branch to rebase on (for example "master" or "refs/for/master", both syntaxes are
 	 *            accepted)
 	 * @throws CoreException
+	 *             Thrown if the rebase operation or the refresh of projects went wrong
 	 * @throws IOException
+	 *             Thrown if the checkout operation went wrong
 	 * @throws InterruptedException
+	 *             Thrown if the checkout operation went wrong
 	 */
 	public void rebase(String local, String remote) throws CoreException, IOException, InterruptedException {
 		checkoutBranch(normalizeBranch(local));
@@ -217,7 +247,9 @@ public class GitTestSupport extends InternalGitTestSupport {
 	 *            The file to compare (the relative path to the file from the project)
 	 * @return the comparison
 	 * @throws IOException
+	 *             Thrown if the checkout operation went wrong
 	 * @throws CoreException
+	 *             Thrown if the checkout operation went wrong
 	 */
 	public Comparison compare(String from, String to, String fileName) throws IOException, CoreException {
 		return compare(from, to, fileName, COMPARE_NO_PROJECT_SELECTED);
@@ -246,7 +278,9 @@ public class GitTestSupport extends InternalGitTestSupport {
 	 *            file will be used (use this when their is only one project)
 	 * @return the comparison
 	 * @throws IOException
+	 *             Thrown if the checkout operation went wrong
 	 * @throws CoreException
+	 *             Thrown if the checkout operation went wrong
 	 */
 	public Comparison compare(String from, String to, String fileName, String containerProject)
 			throws IOException, CoreException {
@@ -348,6 +382,15 @@ public class GitTestSupport extends InternalGitTestSupport {
 		return comparisonBuilder.build().compare(scope, new BasicMonitor());
 	}
 
+	/**
+	 * Get the resources associated with the given mappings.
+	 * 
+	 * @param mappings
+	 *            An array of resourceMappings
+	 * @param context
+	 *            The context of resourceMappings
+	 * @return a list of resources
+	 */
 	private Set<IResource> collectResources(ResourceMapping[] mappings, ResourceMappingContext context) {
 		final Set<IResource> resources = new HashSet<IResource>();
 		for (ResourceMapping mapping : mappings) {
@@ -370,6 +413,9 @@ public class GitTestSupport extends InternalGitTestSupport {
 	 *            The branch to checkout (for example "master" or "refs/heads/master", both syntaxes are
 	 *            accepted)
 	 * @throws CoreException
+	 *             Thrown if the merge operation or the refresh of projects went wrong
+	 * @throws IOException
+	 *             Thrown if the cannot retrieve the current branch
 	 */
 	public void checkoutBranch(String refName) throws CoreException, IOException {
 		ResetOperation reset = new ResetOperation(repository, repository.getBranch(), ResetType.HARD);
@@ -390,7 +436,7 @@ public class GitTestSupport extends InternalGitTestSupport {
 	 * 
 	 * @return <code>true</code> if the repository is in a conflict state, <code>false</code> otherwise.
 	 * @throws Exception
-	 *             if the status of the repository could not be created queried.
+	 *             If the status of the repository could not be created queried.
 	 */
 	public boolean noConflict() throws Exception {
 		return getStatus().getConflicting().isEmpty();

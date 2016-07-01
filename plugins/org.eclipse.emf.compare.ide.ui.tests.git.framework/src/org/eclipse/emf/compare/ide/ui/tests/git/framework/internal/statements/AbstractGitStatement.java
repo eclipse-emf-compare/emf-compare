@@ -32,14 +32,43 @@ import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.runners.model.FrameworkMethod;
 
+/**
+ * EMFCompare specific Git statements must extends this class.
+ * 
+ * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
+ */
 public abstract class AbstractGitStatement extends AbstractCompareStatement {
 
+	/**
+	 * Constructor for the classic (no Git) comparison statement.
+	 * 
+	 * @param testObject
+	 *            The test class
+	 * @param test
+	 *            The test method
+	 * @param resolutionStrategy
+	 *            The resolution strategy used for this test
+	 * @param configuration
+	 *            EMFCompare configuration for this test
+	 */
 	public AbstractGitStatement(Object testObject, FrameworkMethod test,
 			ResolutionStrategyID resolutionStrategy, EMFCompareTestConfiguration configuration) {
 		super(testObject, test, resolutionStrategy, configuration);
 	}
 
-	protected Object[] createParameters(Method method, GitTestSupport gitTestsSupport) throws Throwable {
+	/**
+	 * Compute the list of parameters to give to the test method. The parameters are returned in the correct
+	 * order.
+	 * 
+	 * @param method
+	 *            The test method
+	 * @param gitTestsSupport
+	 *            The support class used for Git operations
+	 * @return the list of parameters for the method
+	 * @throws Exception
+	 *             If the method use an incorrect parameter
+	 */
+	protected Object[] createParameters(Method method, GitTestSupport gitTestsSupport) throws Exception {
 		final Builder<Object> builder = ImmutableList.builder();
 		Class<?>[] paramTypes = method.getParameterTypes();
 		for (Class<?> paramType : paramTypes) {
@@ -67,6 +96,13 @@ public abstract class AbstractGitStatement extends AbstractCompareStatement {
 		return builder.build().toArray();
 	}
 
+	/**
+	 * Test if the given type is some kind of Collection.
+	 * 
+	 * @param paramType
+	 *            The Class to test
+	 * @return <code>true</code> if the given parameter is a Collection
+	 */
 	private boolean isCollectionCompatible(Class<?> paramType) {
 		return paramType.equals(Collection.class) || paramType.equals(List.class)
 				|| paramType.equals(Iterable.class);

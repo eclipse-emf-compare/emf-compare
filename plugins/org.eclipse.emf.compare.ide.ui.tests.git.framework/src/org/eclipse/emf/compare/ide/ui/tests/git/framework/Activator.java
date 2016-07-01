@@ -10,11 +10,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.git.framework;
 
-import org.osgi.framework.BundleActivator;
+import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-public class Activator implements BundleActivator {
+/**
+ * Activator for the EMFCompare Git Test Framework plugin.
+ * 
+ * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
+ */
+public class Activator extends Plugin {
 
+	/** The bundle context. */
 	private static BundleContext context;
 
 	static BundleContext getContext() {
@@ -25,6 +31,7 @@ public class Activator implements BundleActivator {
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
 	}
@@ -33,6 +40,7 @@ public class Activator implements BundleActivator {
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
 		Activator.context = null;
 	}

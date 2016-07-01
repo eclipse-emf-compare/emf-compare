@@ -33,6 +33,7 @@ public class GitTestRunner extends AbstractCompareTestRunner {
 	 * @param testClass
 	 *            The class to test
 	 * @throws InitializationError
+	 *             If the test cannot be created
 	 */
 	public GitTestRunner(Class<?> testClass) throws InitializationError {
 		super(testClass);

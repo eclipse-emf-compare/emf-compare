@@ -28,8 +28,10 @@ public @interface GitMergeStrategy {
 
 	/**
 	 * The merge strategy used for all tests in the class. If the annotation is used empty, the default value
-	 * will be returned. If the annotation is not used the merge strategy defined in the class
-	 * EMFCompareGitTestRunner will be used.
+	 * will be returned (which is set to "model recursive"). If the annotation is not used the merge strategy
+	 * defined in the class EMFCompareGitTestRunner will be used.
+	 * 
+	 * @return the merge strategy or its default value ("model recursive")
 	 */
 	GitMergeStrategyID value() default GitMergeStrategyID.MODEL_RECURSIVE;
 

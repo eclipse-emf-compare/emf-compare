@@ -130,20 +130,20 @@ public abstract class AbstractCompareStatement extends Statement {
 	 *            The test method
 	 * @param resolutionStrategy
 	 *            The resolution strategy used for this test
-	 * @param selectedEngines
-	 *            EMFComapre configurations for this test
+	 * @param configuration
+	 *            EMFCompare configurations for this test
 	 */
 	public AbstractCompareStatement(Object testObject, FrameworkMethod test,
-			ResolutionStrategyID resolutionStrategy, EMFCompareTestConfiguration selectedEngines) {
+			ResolutionStrategyID resolutionStrategy, EMFCompareTestConfiguration configuration) {
 		this.testObject = testObject;
 		this.test = test;
 		this.resolutionStrategy = resolutionStrategy;
-		this.disabledMatchEngines = selectedEngines.getDisabledMatchEngines();
-		this.diffEngine = selectedEngines.getDiffEngine();
-		this.eqEngine = selectedEngines.getEqEngine();
-		this.reqEngine = selectedEngines.getReqEngine();
-		this.conflictDetector = selectedEngines.getConflictDetector();
-		this.disabledPostProcessors = selectedEngines.getDisabledPostProcessors();
+		this.disabledMatchEngines = configuration.getDisabledMatchEngines();
+		this.diffEngine = configuration.getDiffEngine();
+		this.eqEngine = configuration.getEqEngine();
+		this.reqEngine = configuration.getReqEngine();
+		this.conflictDetector = configuration.getConflictDetector();
+		this.disabledPostProcessors = configuration.getDisabledPostProcessors();
 	}
 
 	/**

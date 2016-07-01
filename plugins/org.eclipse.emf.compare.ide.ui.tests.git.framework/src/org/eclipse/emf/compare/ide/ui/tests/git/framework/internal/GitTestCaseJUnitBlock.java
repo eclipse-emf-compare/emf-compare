@@ -30,17 +30,35 @@ import org.eclipse.emf.compare.ide.ui.tests.git.framework.internal.statements.Gi
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.internal.statements.GitRebaseStatement;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.internal.statements.GitTestStatement;
 import org.junit.Assert;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
 /**
+ * EMFCompare specific {@link BlockJUnit4ClassRunner} used for Git comparisons.
+ * 
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
 public class GitTestCaseJUnitBlock extends AbstractCompareTestCaseJUnitBlock {
 
+	/** The merge strategy to use for the test. */
 	private GitMergeStrategyID mergeStrategy;
 
+	/**
+	 * Constructor for the classic (no Git) comparison statement.
+	 * 
+	 * @param klass
+	 *            The test class
+	 * @param resolutionStrategy
+	 *            The resolution strategy used for this test
+	 * @param configuration
+	 *            EMFCompare configurations for this test
+	 * @param mergeStrategy
+	 *            The merge strategy to use for this test.
+	 * @throws InitializationError
+	 *             If something went wrong during test initialization
+	 */
 	public GitTestCaseJUnitBlock(Class<?> klass, ResolutionStrategyID resolutionStrategy,
 			EMFCompareTestConfiguration configuration, GitMergeStrategyID mergeStrategy)
 			throws InitializationError {
@@ -74,7 +92,9 @@ public class GitTestCaseJUnitBlock extends AbstractCompareTestCaseJUnitBlock {
 		Object testObject = null;
 		try {
 			testObject = createTest();
+			// CHECKSTYLE:OFF JUnit createTest() method throws an Exception
 		} catch (Exception e) {
+			// CHECKSTYLE:ON
 			Assert.fail(e.getMessage());
 		}
 

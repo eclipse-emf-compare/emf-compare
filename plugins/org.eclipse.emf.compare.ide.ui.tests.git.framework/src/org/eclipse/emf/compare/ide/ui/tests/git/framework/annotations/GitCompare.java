@@ -37,20 +37,44 @@ import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestSupport;
 @Target(ElementType.METHOD)
 public @interface GitCompare {
 
-	/** The name of the local branch. */
+	/**
+	 * The name of the local branch. User can specified qualified name or simple name (i.e.
+	 * refs/heads/myBranch or myBranch).
+	 * 
+	 * <pre>
+	 * The qualified name of the branch used for the test will always be on the format refs/heads/... which
+	 * means it is not possible to make a comparison on a Gerrit like branch (refs/for/...)
+	 * </pre>
+	 * 
+	 * @return the local branch
+	 */
 	String local();
 
-	/** The name of the remote branch. */
+	/**
+	 * The name of the remote branch. User can specified qualified name or simple name (i.e.
+	 * refs/heads/myBranch or myBranch).
+	 * 
+	 * <pre>
+	 * The qualified name of the branch used for the test will always be on the format refs/heads/... which
+	 * means it is not possible to make a comparison on a Gerrit like branch (refs/for/...)
+	 * </pre>
+	 * 
+	 * @return the remote branch
+	 */
 	String remote();
 
 	/**
 	 * The path of the file to compare. The path must be project relative
+	 * 
+	 * @return the path to the file to compare
 	 */
 	String file();
 
 	/**
 	 * This value is optional. If not used, the runner will assume that only one project is contained in the
 	 * repository. If used, the value will be used to get the project containing the file to compare.
+	 * 
+	 * @return the project containing the file to compare or the default value
 	 */
 	String containerProject() default GitTestSupport.COMPARE_NO_PROJECT_SELECTED;
 

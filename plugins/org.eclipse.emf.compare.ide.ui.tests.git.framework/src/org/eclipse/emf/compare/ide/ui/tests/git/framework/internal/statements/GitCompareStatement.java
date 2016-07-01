@@ -25,8 +25,23 @@ import org.junit.runners.model.FrameworkMethod;
  */
 public class GitCompareStatement extends AbstractGitStatement {
 
+	/** The path of the archive containing the repository. */
 	private final String path;
 
+	/**
+	 * Constructor for the Git comparison statement.
+	 * 
+	 * @param testObject
+	 *            The test class
+	 * @param test
+	 *            The test method
+	 * @param resolutionStrategy
+	 *            The resolution strategy used for this test
+	 * @param configuration
+	 *            EMFCompare configuration for this test
+	 * @param path
+	 *            The path of the archive containing the repository
+	 */
 	public GitCompareStatement(Object testObject, FrameworkMethod test,
 			ResolutionStrategyID resolutionStrategy, EMFCompareTestConfiguration configuration, String path) {
 		super(testObject, test, resolutionStrategy, configuration);

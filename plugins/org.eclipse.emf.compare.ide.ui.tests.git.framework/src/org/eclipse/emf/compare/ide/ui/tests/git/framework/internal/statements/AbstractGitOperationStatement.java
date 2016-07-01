@@ -29,14 +29,34 @@ import org.junit.runners.model.FrameworkMethod;
 @SuppressWarnings("restriction")
 public abstract class AbstractGitOperationStatement extends AbstractGitStatement {
 
-	private final GitMergeStrategyID mergeStrategy;
-
-	private final IEclipsePreferences eGitPreferences;
-
+	/** The path of the archive containing the repository. */
 	protected final String path;
 
+	/** The merge strategy used for the test. */
+	private final GitMergeStrategyID mergeStrategy;
+
+	/** The EGit preferences. */
+	private final IEclipsePreferences eGitPreferences;
+
+	/** The default merge strategy to use if none is provided by user. */
 	private String defaultMergeStrategy = GitMergeStrategyID.MODEL_RECURSIVE.getValue();
 
+	/**
+	 * Constructor for Git comparison statements.
+	 * 
+	 * @param testObject
+	 *            The test class
+	 * @param test
+	 *            The test method
+	 * @param resolutionStrategy
+	 *            The resolution strategy used for this test
+	 * @param configuration
+	 *            EMFCompare configuration for this test
+	 * @param mergeStrategy
+	 *            The merge strategy used for the test
+	 * @param path
+	 *            The path of the archive containing the repository
+	 */
 	public AbstractGitOperationStatement(Object testObject, FrameworkMethod test,
 			ResolutionStrategyID resolutionStrategy, EMFCompareTestConfiguration configuration,
 			GitMergeStrategyID mergeStrategy, String path) {
@@ -65,12 +85,37 @@ public abstract class AbstractGitOperationStatement extends AbstractGitStatement
 		}
 	}
 
+	/**
+	 * Get the branch that will be used as local branch for the test. This method have to be sub-classed by
+	 * clients to properly get the branch.
+	 * 
+	 * @return the local branch
+	 */
 	protected abstract String getCheckoutedBranch();
 
+	/**
+	 * Get the branch that will be used as remote branch for the test. This method have to be sub-classed by
+	 * clients to properly get the branch..
+	 * 
+	 * @return the remote branch
+	 */
 	protected abstract String getOtherBranch();
 
+	/**
+	 * Call the Git operation used in for the test. This method have to be sub-classed by clients to call the
+	 * correct operation.
+	 * 
+	 * @param gitTestsSupport
+	 *            The support class that allow to perform Git operations
+	 * @param from
+	 *            The local branch
+	 * @param to
+	 *            The remote branch
+	 * @throws Exception
+	 *             Thrown if a Git operation have an issue during execution
+	 */
 	protected abstract void callGitOperation(GitTestSupport gitTestsSupport, String from, String to)
-			throws Throwable;
+			throws Exception;
 
 	@Override
 	protected void setEMFComparePreferences() {
@@ -84,6 +129,9 @@ public abstract class AbstractGitOperationStatement extends AbstractGitStatement
 		eGitPreferences.put(GitCorePreferences.core_preferredMergeStrategy, defaultMergeStrategy);
 	}
 
+	/**
+	 * Set the merge strategy preference to run the test in the correct conditions.
+	 */
 	private void setMergeStrategyPreference() {
 		defaultMergeStrategy = eGitPreferences.get(GitCorePreferences.core_preferredMergeStrategy,
 				defaultMergeStrategy);

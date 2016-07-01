@@ -24,6 +24,22 @@ import org.junit.runners.model.FrameworkMethod;
  */
 public class GitCherryPickStatement extends AbstractGitOperationStatement {
 
+	/**
+	 * Constructor for Git cherry-pick statements.
+	 * 
+	 * @param testObject
+	 *            The test class
+	 * @param test
+	 *            The test method
+	 * @param resolutionStrategy
+	 *            The resolution strategy used for this test
+	 * @param configuration
+	 *            EMFCompare configuration for this test
+	 * @param mergeStrategy
+	 *            The merge strategy used for the test
+	 * @param path
+	 *            The path of the archive containing the repository
+	 */
 	public GitCherryPickStatement(Object testObject, FrameworkMethod test,
 			ResolutionStrategyID resolutionStrategy, EMFCompareTestConfiguration configuration,
 			GitMergeStrategyID mergeStrategy, String path) {
@@ -32,7 +48,7 @@ public class GitCherryPickStatement extends AbstractGitOperationStatement {
 
 	@Override
 	protected void callGitOperation(GitTestSupport gitTestsSupport, String localBranch, String remoteBranch)
-			throws Throwable {
+			throws Exception {
 		gitTestsSupport.cherryPick(localBranch, remoteBranch);
 	}
 

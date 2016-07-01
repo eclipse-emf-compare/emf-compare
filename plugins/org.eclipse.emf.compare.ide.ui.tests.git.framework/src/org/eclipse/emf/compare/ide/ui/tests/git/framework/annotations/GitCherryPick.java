@@ -53,10 +53,30 @@ import org.eclipse.jgit.lib.Repository;
 @Target(ElementType.METHOD)
 public @interface GitCherryPick {
 
-	/** The name of the local branch. */
+	/**
+	 * The name of the local branch. User can specified qualified name or simple name (i.e.
+	 * refs/heads/myBranch or myBranch).
+	 * 
+	 * <pre>
+	 * The qualified name of the branch used for the test will always be on the format refs/heads/... which
+	 * means it is not possible to make a comparison on a Gerrit like branch (refs/for/...)
+	 * </pre>
+	 * 
+	 * @return the local branch
+	 */
 	String local();
 
-	/** The name of the remote branch. */
+	/**
+	 * The name of the remote branch. User can specified qualified name or simple name (i.e.
+	 * refs/heads/myBranch or myBranch).
+	 * 
+	 * <pre>
+	 * The qualified name of the branch used for the test will always be on the format refs/heads/... which
+	 * means it is not possible to make a comparison on a Gerrit like branch (refs/for/...)
+	 * </pre>
+	 * 
+	 * @return the remote branch
+	 */
 	String remote();
 
 }

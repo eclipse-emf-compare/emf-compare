@@ -17,15 +17,25 @@ package org.eclipse.emf.compare.ide.ui.tests.git.framework;
  */
 public enum GitMergeStrategyID {
 
+	/** The default merge strategy used by JGit. */
 	JGIT_DEFAULT("jgit-default-mergeStrategy"), //$NON-NLS-1$
 
+	/** The default merge strategy for EMFCompare. */
 	MODEL_RECURSIVE("model recursive"), //$NON-NLS-1$
 
+	/** The merge strategy used for additif merge in EMFCompare. */
 	MODEL_ADDITIVE("model additive"); //$NON-NLS-1$
 
+	/** The value of the enum to return. */
 	private String value;
 
-	private GitMergeStrategyID(String value) {
+	/**
+	 * Constructor.
+	 * 
+	 * @param value
+	 *            The text value associated with the enum value
+	 */
+	GitMergeStrategyID(String value) {
 		this.value = value;
 	}
 
