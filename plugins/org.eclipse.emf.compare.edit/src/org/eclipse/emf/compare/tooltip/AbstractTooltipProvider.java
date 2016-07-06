@@ -474,8 +474,7 @@ public abstract class AbstractTooltipProvider<T extends Diff> extends AdapterImp
 				if (isFromLeft) {
 					if ("".equals(rightValue)) { //$NON-NLS-1$
 						body = getString("ContextualTooltip.set.left.leftToRight.empty", //$NON-NLS-1$
-								structuralFeatureName,
-								containerName, leftValue);
+								structuralFeatureName, containerName, leftValue);
 
 					} else {
 						body = getString("ContextualTooltip.set.left.leftToRight", structuralFeatureName, //$NON-NLS-1$
@@ -506,8 +505,7 @@ public abstract class AbstractTooltipProvider<T extends Diff> extends AdapterImp
 				} else {
 					if ("".equals(leftValue)) { //$NON-NLS-1$
 						body = getString("ContextualTooltip.set.right.rightToLeft.empty", //$NON-NLS-1$
-								structuralFeatureName,
-								containerName, rightValue);
+								structuralFeatureName, containerName, rightValue);
 					} else {
 						body = getString("ContextualTooltip.set.right.rightToLeft", structuralFeatureName, //$NON-NLS-1$
 								containerName, rightValue, leftValue);
@@ -563,8 +561,7 @@ public abstract class AbstractTooltipProvider<T extends Diff> extends AdapterImp
 								containerName);
 					} else {
 						body = getString("ContextualTooltip.set.right.reject", previousValue, //$NON-NLS-1$
-								structuralFeatureName,
-								containerName);
+								structuralFeatureName, containerName);
 					}
 					tooltip = rejectAndUnchanged(body);
 				}

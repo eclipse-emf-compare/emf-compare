@@ -124,8 +124,7 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	private void createDefaultEnabledFilterTab(TabFolder tabFolder) {
 		enabledFilterTabComposite = createTabSkeleton(tabFolder,
 				EMFCompareRCPUIMessages.getString("FiltersPreferencePage.select.tab.label"), //$NON-NLS-1$
-				EMFCompareRCPUIMessages
-						.getString("FiltersPreferencePage.selectIntro.text")); //$NON-NLS-1$
+				EMFCompareRCPUIMessages.getString("FiltersPreferencePage.selectIntro.text")); //$NON-NLS-1$
 		if (filterManager == null) {
 			filterManager = EMFCompareRCPUIPlugin.getDefault().getDifferenceFilterManager();
 		}
@@ -142,8 +141,7 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	private void createActivateFilterTab(TabFolder tabFolder) {
 		activateFilterTabComposite = createTabSkeleton(tabFolder,
 				EMFCompareRCPUIMessages.getString("FiltersPreferencePage.activate.tab.label"), //$NON-NLS-1$
-				EMFCompareRCPUIMessages
-						.getString("FiltersPreferencePage.activateIntro.text")); //$NON-NLS-1$
+				EMFCompareRCPUIMessages.getString("FiltersPreferencePage.activateIntro.text")); //$NON-NLS-1$
 		if (filterManager == null) {
 			filterManager = EMFCompareRCPUIPlugin.getDefault().getDifferenceFilterManager();
 		}

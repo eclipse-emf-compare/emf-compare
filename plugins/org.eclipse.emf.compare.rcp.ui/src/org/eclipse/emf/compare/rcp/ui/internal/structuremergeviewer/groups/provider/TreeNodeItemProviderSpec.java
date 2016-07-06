@@ -289,8 +289,7 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 			ret.append(
 					" [" //$NON-NLS-1$
 							+ EMFCompareEditMessages.getString("unresolved", //$NON-NLS-1$
-									Integer.valueOf(unresolvedDiffCount),
-									Integer.valueOf(d.size()))
+									Integer.valueOf(unresolvedDiffCount), Integer.valueOf(d.size()))
 							+ "]", //$NON-NLS-1$
 					Style.DECORATIONS_STYLER);
 		} else {

@@ -51,8 +51,9 @@ public class EMFCompareTestConfiguration {
 	 * @param disabledPostProcessors
 	 *            The post processors disabled for the test
 	 */
-	public EMFCompareTestConfiguration(Class<?>[] disabledMatchEngineFactory, Class<?> diffEngine, Class<?> eqEngine,
-			Class<?> reqEngine, Class<?> conflictDetector, Class<?>[] disabledPostProcessors) {
+	public EMFCompareTestConfiguration(Class<?>[] disabledMatchEngineFactory, Class<?> diffEngine,
+			Class<?> eqEngine, Class<?> reqEngine, Class<?> conflictDetector,
+			Class<?>[] disabledPostProcessors) {
 		this.disabledMatchEngines = disabledMatchEngineFactory;
 		this.diffEngine = diffEngine;
 		this.eqEngine = eqEngine;

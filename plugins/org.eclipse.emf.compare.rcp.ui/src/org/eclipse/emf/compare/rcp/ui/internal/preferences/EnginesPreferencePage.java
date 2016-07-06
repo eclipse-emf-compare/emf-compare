@@ -229,8 +229,7 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		// Create tab structure
 		Composite tabComposite = createTabSkeleton(tabFolder,
 				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.differenceEngine.tab.label"), //$NON-NLS-1$
-				EMFCompareRCPUIMessages
-						.getString("EnginesPreferencePage.diffEngineIntro.text")); //$NON-NLS-1$
+				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.diffEngineIntro.text")); //$NON-NLS-1$
 
 		InteractiveUIContent interactiveContent = createEngineUIBuilder(diffEngineDescriptorRegistry,
 				EMFComparePreferences.DIFF_ENGINES,
@@ -253,8 +252,7 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 				.getItemDescriptor(DefaultRCPMatchEngineFactory.class.getCanonicalName());
 		Composite tabComposite = createTabSkeleton(tabFolder,
 				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.matchEngine.tab.label"), //$NON-NLS-1$
-				EMFCompareRCPUIMessages
-						.getString("EnginesPreferencePage.matchEngineIntro.text")); //$NON-NLS-1$
+				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.matchEngineIntro.text")); //$NON-NLS-1$
 
 		Map<String, IConfigurationUIFactory> configuratorUIRegistry = EMFCompareRCPUIPlugin.getDefault()
 				.getMatchEngineConfiguratorRegistry();

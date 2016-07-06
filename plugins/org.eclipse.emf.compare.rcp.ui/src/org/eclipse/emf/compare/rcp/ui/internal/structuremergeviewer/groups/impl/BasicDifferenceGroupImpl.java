@@ -134,8 +134,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	public BasicDifferenceGroupImpl(Comparison comparison, Predicate<? super Diff> filter,
 			ECrossReferenceAdapter crossReferenceAdapter) {
 		this(comparison, filter, EMFCompareRCPUIMessages.getString("BasicDifferenceGroup.name"), //$NON-NLS-1$
-				EMFCompareRCPUIPlugin
-						.getImage("icons/full/toolb16/group.gif"), //$NON-NLS-1$
+				EMFCompareRCPUIPlugin.getImage("icons/full/toolb16/group.gif"), //$NON-NLS-1$
 				crossReferenceAdapter);
 	}
 

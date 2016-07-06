@@ -119,8 +119,7 @@ public class EMFComparisonSourceActionHandler extends AbstractHandler {
 
 		String inputTitle = MessageFormat.format(
 				EMFCompareIDEUIMessages.getString("EMFComparisonSourceActionHandler_InputTitle_Base"), //$NON-NLS-1$
-				leftSource.getName(), rightSource
-						.getName());
+				leftSource.getName(), rightSource.getName());
 		if (originSource != null) {
 			inputTitle += MessageFormat.format(
 					' ' + EMFCompareIDEUIMessages

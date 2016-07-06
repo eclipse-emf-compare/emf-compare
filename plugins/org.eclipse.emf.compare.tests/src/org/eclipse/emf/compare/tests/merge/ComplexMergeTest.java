@@ -106,7 +106,8 @@ public class ComplexMergeTest {
 	public static Iterable<Object[]> data() {
 		Collection<List<Predicate<? super Diff>>> rightConflictPermutations = permutations(
 				Arrays.<Predicate<? super Diff>> asList(added("Root.Node0"), //$NON-NLS-1$
-						moved("Root.Node1", "containmentRef1"), moved("Root.Node6", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						moved("Root.Node1", "containmentRef1"), //$NON-NLS-1$ //$NON-NLS-2$
+						moved("Root.Node6", //$NON-NLS-1$
 								"containmentRef1"), //$NON-NLS-1$
 						added("Root.Node9"))); //$NON-NLS-1$
 		Collection<List<Predicate<? super Diff>>> leftConflictPermutations = permutations(

@@ -206,12 +206,11 @@ public class PapyrusResourceAttachmentChangeMerger extends ResourceAttachmentCha
 		try {
 			toDelete.delete(Collections.EMPTY_MAP);
 		} catch (IOException e) {
-			CompareDiagramIDEUIPapyrusPlugin.getDefault()
-					.getLog().log(
-							new Status(IStatus.ERROR,
-									CompareDiagramIDEUIPapyrusPlugin.PLUGIN_ID, CompareUIPapyrusMessages
-											.getString("PapyrusResourceAttachmentChangeMerge.deleteFailure"), //$NON-NLS-1$
-									e));
+			CompareDiagramIDEUIPapyrusPlugin.getDefault().getLog()
+					.log(new Status(IStatus.ERROR, CompareDiagramIDEUIPapyrusPlugin.PLUGIN_ID,
+							CompareUIPapyrusMessages
+									.getString("PapyrusResourceAttachmentChangeMerge.deleteFailure"), //$NON-NLS-1$
+							e));
 		}
 	}
 
