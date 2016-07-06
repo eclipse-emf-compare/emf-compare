@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 import org.eclipse.emf.compare.utils.MatchUtil;
+import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -190,7 +191,7 @@ public abstract class AbstractTooltipProvider<T extends Diff> extends AdapterImp
 	private String getPreviousValue(EStructuralFeature eStructuralFeature, EObject eObject) {
 		Object ancestor = null;
 		if (eObject != null) {
-			ancestor = eObject.eGet(eStructuralFeature);
+			ancestor = ReferenceUtil.safeEGet(eObject, eStructuralFeature);
 		}
 		String value = ""; //$NON-NLS-1$
 		if (ancestor instanceof EObject) {
