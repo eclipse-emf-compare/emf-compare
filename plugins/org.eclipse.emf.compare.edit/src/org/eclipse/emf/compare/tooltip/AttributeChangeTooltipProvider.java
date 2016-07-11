@@ -93,6 +93,9 @@ public class AttributeChangeTooltipProvider extends AbstractTooltipProvider<Attr
 			default:
 				throw new IllegalArgumentException();
 		}
+		if (changedContainer == null) {
+			return null;
+		}
 		return String.valueOf(safeEGet(changedContainer, attribute));
 	}
 
