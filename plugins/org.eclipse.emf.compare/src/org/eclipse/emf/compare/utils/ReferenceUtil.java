@@ -81,9 +81,9 @@ public final class ReferenceUtil {
 	 * nonetheless, and thus we can use the feature name in order to retrieve the feature's value.
 	 * 
 	 * @param object
-	 *            The object for which feature we need a value.
+	 *            The object for which feature we need a value, must not be <code>null</code>.
 	 * @param feature
-	 *            The actual feature of which we need the value.
+	 *            The actual feature of which we need the value, must not be <code>null</code>.
 	 * @return The value of the given {@code feature} for the given {@code object}.
 	 */
 	public static Object safeEGet(EObject object, EStructuralFeature feature) {
@@ -103,9 +103,9 @@ public final class ReferenceUtil {
 	 * nonetheless, and thus we can use the feature name in order to retrieve the feature's value.
 	 * 
 	 * @param object
-	 *            The object for which feature we need a value.
+	 *            The object for which feature we need a value, must not be <code>null</code>.
 	 * @param feature
-	 *            The actual feature of which we need the value.
+	 *            The actual feature of which we need the value, must not be <code>null</code>.
 	 * @return whether the {@code feature} for the given {@code object} is set.
 	 */
 	public static boolean safeEIsSet(EObject object, EStructuralFeature feature) {
@@ -125,11 +125,11 @@ public final class ReferenceUtil {
 	 * nonetheless, and thus we can use the feature name in order to retrieve the feature's value.
 	 * 
 	 * @param object
-	 *            The object for which feature we'll set the value.
+	 *            The object for which feature we'll set the value, must not be <code>null</code>.
 	 * @param feature
-	 *            The actual feature of which we'll set the value.
+	 *            The actual feature of which we'll set the value, must not be <code>null</code>.
 	 * @param newValue
-	 *            The value to set.
+	 *            The value to set, can be <code>null</code>.
 	 */
 	public static void safeESet(EObject object, EStructuralFeature feature, Object newValue) {
 		final EClass clazz = object.eClass();
