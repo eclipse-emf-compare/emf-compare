@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,27 +10,18 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Iterators.any;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.transform;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.newLinkedHashSet;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
@@ -43,32 +34,28 @@ import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
-import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
-import org.eclipse.emf.compare.rcp.ui.internal.util.ResourceUIUtil;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.ConflictNode;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.DiffNode;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.MatchNode;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.MatchResourceNode;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
-import org.eclipse.emf.edit.tree.TreeFactory;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.swt.graphics.Image;
 
@@ -103,9 +90,6 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 
 	/** The list of children of this group. */
 	protected List<TreeNode> children;
-
-	/** The list of already processed refined diffs. */
-	protected Set<Diff> extensionDiffProcessed;
 
 	/** The comparison that is the parent of this group. */
 	private final Comparison comparison;
@@ -275,228 +259,6 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	}
 
 	/**
-	 * Build the sub tree of the given {@link MatchResource}.
-	 * 
-	 * @param matchResource
-	 *            the given MatchResource.
-	 * @return the sub tree of the given MatchResource.
-	 */
-	protected TreeNode buildSubTree(MatchResource matchResource,
-			Set<ResourceAttachmentChange> attachmentChanges) {
-		TreeNode treeNode = wrap(matchResource);
-		Collection<ResourceAttachmentChange> filteredChanges = filter(attachmentChanges, filter);
-		for (ResourceAttachmentChange attachmentChange : filteredChanges) {
-			treeNode.getChildren().add(wrap(attachmentChange));
-		}
-		return treeNode;
-	}
-
-	/**
-	 * Build the sub tree of the given {@link Match}.
-	 * 
-	 * @param parentMatch
-	 *            the parent of the given Match.
-	 * @param match
-	 *            the given Match.
-	 * @return the sub tree of the given Match.
-	 */
-	public List<TreeNode> buildSubTree(Match parentMatch, Match match) {
-		return buildSubTree(match, false, ChildrenSide.BOTH);
-	}
-
-	public List<TreeNode> buildContainmentSubTree(Match match) {
-		return buildSubTree(match, true, ChildrenSide.BOTH);
-	}
-
-	/**
-	 * Build the sub tree of the given {@link Match}.
-	 * 
-	 * @param match
-	 *            the given Match.
-	 * @param containment
-	 *            true if the current level represents a containment diff, false otherwise.
-	 * @param side
-	 *            the accepted side(s) for children of current level.
-	 * @return the sub tree of the given Match.
-	 */
-	protected List<TreeNode> buildSubTree(Match match, boolean containment, ChildrenSide side) {
-		final List<TreeNode> ret = Lists.newArrayList();
-		final Set<TreeNode> nodeChildren = newLinkedHashSet();
-		final Set<Match> matchOfValues = newLinkedHashSet();
-		final TreeNode matchTreeNode = wrap(match);
-
-		if (!containment) {
-			ret.add(matchTreeNode);
-		}
-
-		boolean hasDiff = false;
-		for (Diff diff : filter(match.getDifferences(), and(filter, compatibleSide(side)))) {
-			if (CONTAINMENT_REFERENCE_CHANGE.apply(diff)) {
-				hasDiff = true;
-				final TreeNode node;
-				if (containment) {
-					node = wrap(diff);
-					ret.add(node);
-				} else {
-					node = buildSubTree(diff);
-					nodeChildren.add(node);
-				}
-				Match matchOfValue = match.getComparison().getMatch(((ReferenceChange)diff).getValue());
-				if (matchOfValue != null) {
-					matchOfValues.add(matchOfValue);
-					node.getChildren().addAll(buildSubTree(matchOfValue, true, DIFF_TO_SIDE.apply(diff)));
-				}
-				if (containment) {
-					ret.addAll(manageRefines(diff, side));
-				} else {
-					nodeChildren.addAll(manageRefines(diff, side));
-				}
-			} else if (!(diff instanceof ResourceAttachmentChange)) {
-				if (diff.getPrimeRefining() != null && extensionDiffProcessed.contains(diff)) {
-					continue;
-				}
-				hasDiff = true;
-				if (containment) {
-					ret.add(wrap(diff));
-				} else {
-					nodeChildren.add(buildSubTree(diff));
-				}
-			}
-		}
-
-		Collection<TreeNode> toRemove = Lists.newArrayList();
-		for (TreeNode treeNode : ret) {
-			boolean hasNonEmptySubMatch = false;
-			// SubMatches first
-			for (Match subMatch : Sets.difference(newLinkedHashSet(match.getSubmatches()), matchOfValues)) {
-				List<TreeNode> buildSubTree = buildSubTree(subMatch, containment, ChildrenSide.BOTH);
-				if (!buildSubTree.isEmpty()) {
-					hasNonEmptySubMatch = true;
-					treeNode.getChildren().addAll(buildSubTree);
-				}
-			}
-			// Differences last
-			treeNode.getChildren().addAll(nodeChildren);
-			if (!(containment || hasDiff || hasNonEmptySubMatch || filter.equals(Predicates.alwaysTrue()))) {
-				toRemove.add(treeNode);
-			} else if (!containment && isMatchWithOnlyResourceAttachmentChanges(match)) {
-				toRemove.add(treeNode);
-			} else if (isMatchWithProxyData(match)) {
-				toRemove.add(treeNode);
-			} else {
-				for (IDifferenceGroupExtender ext : registry.getExtenders()) {
-					if (ext.handle(treeNode)) {
-						ext.addChildren(treeNode);
-					}
-				}
-			}
-		}
-
-		ret.removeAll(toRemove);
-
-		return ret;
-	}
-
-	/**
-	 * Check if the given match holds a proxy.
-	 * 
-	 * @param match
-	 *            the given match
-	 * @return true if the given match holds a proxy, false otherwise.
-	 */
-	private boolean isMatchWithProxyData(Match match) {
-		boolean proxy = false;
-		if (match.getLeft() != null) {
-			if (match.getLeft().eIsProxy()) {
-				proxy = true;
-			}
-		} else if (match.getRight() != null) {
-			if (match.getRight().eIsProxy()) {
-				proxy = true;
-			}
-		} else if (match.getOrigin() != null) {
-			if (match.getOrigin().eIsProxy()) {
-				proxy = true;
-			}
-		}
-		return proxy;
-	}
-
-	/**
-	 * Manage the addition of refines diffs of the given Diff.
-	 * 
-	 * @param diff
-	 *            the given Diff.
-	 * @param side
-	 *            the accepted side(s) for children of current level.
-	 * @return the sub tree of refines diffs.
-	 */
-	private List<TreeNode> manageRefines(Diff diff, ChildrenSide side) {
-		final List<TreeNode> ret = Lists.newArrayList();
-		final EList<Diff> refines = diff.getRefines();
-		for (Diff refine : refines) {
-			Diff mainDiff = refine.getPrimeRefining();
-			if (mainDiff != null && mainDiff == diff && and(filter, compatibleSide(side)).apply(refine)) {
-				TreeNode refineSubTree = buildSubTree(refine);
-				ret.add(refineSubTree);
-				extensionDiffProcessed.add(refine);
-			}
-		}
-		return ret;
-	}
-
-	/**
-	 * Build the sub tree for the given {@link Diff}.
-	 * 
-	 * @param diff
-	 *            the given diff.
-	 * @return the sub tree of the given diff.
-	 */
-	private TreeNode buildSubTree(Diff diff) {
-		TreeNode treeNode = wrap(diff);
-		for (IDifferenceGroupExtender ext : registry.getExtenders()) {
-			if (ext.handle(treeNode)) {
-				ext.addChildren(treeNode);
-			}
-		}
-		return treeNode;
-	}
-
-	/**
-	 * Creates a TreeNode form the given EObject.
-	 * 
-	 * @param data
-	 *            the given EObject.
-	 * @return a TreeNode.
-	 */
-	protected TreeNode wrap(EObject data) {
-		TreeNode treeNode = TreeFactory.eINSTANCE.createTreeNode();
-		treeNode.setData(data);
-		treeNode.eAdapters().add(this);
-		return treeNode;
-	}
-
-	/**
-	 * Checks if the given {@link Match} contains only differences of type {@link ResourceAttachmentChange}.
-	 * 
-	 * @param match
-	 *            the given Match.
-	 * @return true, if the given Match contains only differences of type ResourceAttachmentChange.
-	 */
-	private boolean isMatchWithOnlyResourceAttachmentChanges(Match match) {
-		boolean ret = false;
-		Iterable<Diff> allDifferences = match.getAllDifferences();
-		if (Iterables.isEmpty(allDifferences)) {
-			ret = false;
-		} else if (Iterables.all(allDifferences, instanceOf(ResourceAttachmentChange.class))) {
-			if (match.getSubmatches() == null || match.getSubmatches().isEmpty()) {
-				ret = true;
-			}
-		}
-		return ret;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup#dispose()
@@ -509,108 +271,168 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	}
 
 	/**
-	 * An enum that represents, for a given diff, the accepted side(s) for its children and provides utilty
-	 * methods to manage sides.
-	 * 
-	 * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
-	 * @since 4.0
-	 */
-	protected enum ChildrenSide {
-		/** Values: both sides, left side. */
-		BOTH, LEFT, RIGHT;
-
-		public static ChildrenSide getValueFrom(DifferenceSource source) {
-			switch (source) {
-				case LEFT:
-					return LEFT;
-				case RIGHT:
-					return RIGHT;
-				default:
-					return BOTH;
-			}
-		}
-	}
-
-	/**
-	 * Get the accepted side(s) for children of a given Diff.
-	 */
-	private static final Function<Diff, ChildrenSide> DIFF_TO_SIDE = new Function<Diff, ChildrenSide>() {
-		public ChildrenSide apply(Diff diff) {
-			final ChildrenSide side;
-			if (diff != null) {
-				final Conflict c = diff.getConflict();
-				if (c != null && or(hasConflict(ConflictKind.PSEUDO),
-						and(hasConflict(ConflictKind.REAL), ofKind(DifferenceKind.ADD))).apply(diff)) {
-					side = ChildrenSide.getValueFrom(diff.getSource());
-				} else {
-					side = ChildrenSide.BOTH;
-				}
-			} else {
-				side = ChildrenSide.BOTH;
-			}
-			return side;
-		}
-	};
-
-	/**
-	 * This can be used to check that a given Diff is compatible with the given side.
-	 * 
-	 * @param source
-	 *            The side for which we accept the given Diff.
-	 * @return The created predicate.
-	 */
-	private static Predicate<? super Diff> compatibleSide(final ChildrenSide side) {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				if (input != null && side != ChildrenSide.BOTH) {
-					return side == ChildrenSide.getValueFrom(input.getSource());
-				} else {
-					return side == ChildrenSide.BOTH;
-				}
-			}
-		};
-	}
-
-	/**
 	 * Builds the sub tree for this group.
 	 */
 	public void buildSubTree() {
-		children = newArrayList();
-		extensionDiffProcessed = newLinkedHashSet();
-		children.addAll(buildMatchSubTrees());
-		children.addAll(buildMatchResourceSubTrees());
+		children = createChildren();
+		doBuildSubTrees();
+		customize(children);
 		registerCrossReferenceAdapter(children);
 	}
 
-	protected List<TreeNode> buildMatchSubTrees() {
-		final List<TreeNode> matchSubTrees = new ArrayList<TreeNode>();
-
-		for (Match match : comparison.getMatches()) {
-			List<? extends TreeNode> buildSubTree = buildSubTree((Match)null, match);
-			if (buildSubTree != null) {
-				matchSubTrees.addAll(buildSubTree);
-			}
-		}
-
-		final List<TreeNode> rootNodes = addNotLoadedFragmentNodes(matchSubTrees);
-
-		return rootNodes;
+	/**
+	 * Perform the creation of the sub-trees of the group.
+	 */
+	protected void doBuildSubTrees() {
+		children.addAll(buildMatchTrees());
+		children.addAll(buildMatchResourceTrees());
 	}
 
-	protected List<TreeNode> buildMatchResourceSubTrees() {
-		final List<TreeNode> matchResourceSubTrees = new ArrayList<TreeNode>();
-		if (comparison.getMatchedResources().isEmpty()) {
-			return matchResourceSubTrees;
+	/**
+	 * This creates the root-level children of the group.
+	 * 
+	 * @return This default implementation returns a new ArrayList. It may be overridden by sub-classes.
+	 */
+	protected List<TreeNode> createChildren() {
+		return newArrayList();
+	}
+
+	/**
+	 * Compute a subTree for each root match of the comparison.
+	 * 
+	 * @return the list of matchSubTrees
+	 */
+	protected List<TreeNode> buildMatchTrees() {
+		final List<TreeNode> matchTrees = new ArrayList<TreeNode>();
+		for (Match match : getComparison().getMatches()) {
+			MatchNode matchNode = buildTree(match);
+			if (matchNode != null) {
+				matchTrees.add(matchNode);
+			}
+		}
+		return matchTrees;
+	}
+
+	/**
+	 * Compute a tree for the given match.
+	 * 
+	 * @param match
+	 *            The given match
+	 * @return a list of subTree for this match, must not be <code>null</code>
+	 */
+	protected MatchNode buildTree(Match match) {
+		MatchNode result = null;
+		MatchNode matchNode = createMatchNode(match);
+		populateMatchNode(matchNode);
+		if (!matchNode.getChildren().isEmpty()) {
+			result = matchNode;
+		}
+		return result;
+	}
+
+	/**
+	 * Build the subtree for the given match.
+	 * 
+	 * @param matchNode
+	 *            The root matchNode
+	 * @return the computed matchNode
+	 */
+	protected void populateMatchNode(MatchNode matchNode) {
+		Match match = matchNode.getMatch();
+		Multimap<Match, Diff> diffsBySubMatch = LinkedHashMultimap.create();
+		for (Diff diff : filter(match.getDifferences(), filter)) {
+			// If a diff is part of a larger diff (is refined by), we don't want to add it to the tree. It
+			// will be added by the algorithm in a second step. This way we avoid duplication and all diffs
+			// that are part of a 'master' diff are grouped as children of this 'master' diff
+			if (mustDisplayAsDirectChildOfMatch(diff)) {
+				Match targetMatch = getTargetMatch(diff);
+				if (match == targetMatch) {
+					addDiffNode(matchNode, diff);
+				} else if (match.getSubmatches().contains(targetMatch)) {
+					diffsBySubMatch.put(targetMatch, diff);
+				} else if (targetMatch != null) {
+					MatchNode targetMatchNode = createMatchNode(targetMatch);
+					matchNode.addSubMatchNode(targetMatchNode);
+					addDiffNode(targetMatchNode, diff);
+				}
+			}
+		}
+		for (Match subMatch : match.getSubmatches()) {
+			MatchNode subMatchNode = createMatchNode(subMatch);
+			for (Diff subMatchDiff : diffsBySubMatch.get(subMatch)) {
+				addDiffNode(subMatchNode, subMatchDiff);
+			}
+			diffsBySubMatch.removeAll(subMatch);
+			populateMatchNode(subMatchNode);
+			if (!subMatchNode.getChildren().isEmpty()) {
+				matchNode.addSubMatchNode(subMatchNode);
+			}
+		}
+	}
+
+	/**
+	 * Provide the Match that should directly contain the given diff. If the given diff should not be a direct
+	 * child of a Match, the method must return <code>null</code>. For a given strategy, a diff should only be
+	 * displayed in the same Match (i.e. the {@link DiffNode}s that represent the diff should always be
+	 * children of the {@link MatchNode}s that represent the returned Match.
+	 * 
+	 * @param diff
+	 *            The difference
+	 * @return The Match that is a direct parent of the given diff, can be <code>null</code>.
+	 */
+	protected Match getTargetMatch(Diff diff) {
+		if (mustDisplayAsDirectChildOfMatch(diff)) {
+			if (isContainmentRefChange(diff)) {
+				Match valueMatch = diff.getMatch().getComparison()
+						.getMatch(((ReferenceChange)diff).getValue());
+				return valueMatch; // This match may not be a sub-match because the child may have moved
+			} else if (isContainmentRefChange(diff.getPrimeRefining())) {
+				Match valueMatch = diff.getMatch().getComparison()
+						.getMatch(((ReferenceChange)diff.getPrimeRefining()).getValue());
+				return valueMatch; // This match may not be a sub-match because the child may have moved
+			}
+			return diff.getMatch();
+		}
+		return null;
+	}
+
+	/**
+	 * Does the given difference have to be displayed as direct child of a Match?
+	 * 
+	 * @param diff
+	 *            The diff
+	 * @return <code>true</code> if the diff's node should be a child of a MatchNode.
+	 */
+	protected boolean mustDisplayAsDirectChildOfMatch(Diff diff) {
+		return diff.getRefines().isEmpty();
+	}
+
+	/**
+	 * Is it a containment reference change?
+	 * 
+	 * @param diff
+	 *            The diff
+	 * @return <code>true</code> if the diff is a {@link ReferenceChange} whose {@link EReference} is a
+	 *         containment reference.
+	 */
+	protected boolean isContainmentRefChange(Diff diff) {
+		return diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment();
+	}
+
+	protected List<TreeNode> buildMatchResourceTrees() {
+		final List<TreeNode> matchResourceTrees = new ArrayList<TreeNode>();
+		if (getComparison().getMatchedResources().isEmpty()) {
+			return matchResourceTrees;
 		}
 
 		final Iterable<ResourceAttachmentChange> attachmentChanges = Iterables
-				.filter(comparison.getDifferences(), ResourceAttachmentChange.class);
+				.filter(getComparison().getDifferences(), ResourceAttachmentChange.class);
 
 		final Multimap<String, ResourceAttachmentChange> uriToRAC = LinkedHashMultimap.create();
 		for (ResourceAttachmentChange attachmentChange : attachmentChanges) {
 			uriToRAC.put(attachmentChange.getResourceURI(), attachmentChange);
 		}
-		for (MatchResource matchResource : comparison.getMatchedResources()) {
+		for (MatchResource matchResource : getComparison().getMatchedResources()) {
 			final Collection<ResourceAttachmentChange> leftRAC = uriToRAC.get(matchResource.getLeftURI());
 			final Collection<ResourceAttachmentChange> rightRAC = uriToRAC.get(matchResource.getRightURI());
 			final Collection<ResourceAttachmentChange> originRAC = uriToRAC.get(matchResource.getOriginURI());
@@ -619,177 +441,142 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 			racForMatchResource.addAll(rightRAC);
 			racForMatchResource.addAll(originRAC);
 
-			TreeNode buildSubTree = buildSubTree(matchResource, racForMatchResource);
-			if (buildSubTree != null) {
-				matchResourceSubTrees.add(buildSubTree);
+			MatchResourceNode matchNode = buildSubTree(matchResource, racForMatchResource);
+			if (matchNode != null) {
+				matchResourceTrees.add(matchNode);
 			}
 
 		}
-		return matchResourceSubTrees;
+		return matchResourceTrees;
 	}
 
 	/**
-	 * When a model is split into fragments, and only some of them have changes, the structure merge viewer
-	 * (SMV) and the content merge viewers (CMV) display the models involved in the comparison but don’t
-	 * display the fragments that have no changes.
-	 * <p>
-	 * If a change (x) is detected in a fragment (B), and this fragment is a child of another fragment (A)
-	 * that has no changes, then (A) won't appear in the SMV and the CMV's. As a result, users will think (B)
-	 * is the root of the global model.
-	 * </p>
-	 * <p>
-	 * To avoid this, the idea is to display intermediate node(s) (a.k.a NotLoadedFragmentNodes) in order to
-	 * show to users that it exists something (fragments, i.e. a parts of models) between/above the changes.
-	 * </p>
-	 * This method add these NotLoadedFragmentNodes in the given list of root TreeNodes.
+	 * Build the sub tree of the given {@link MatchResource}.
 	 * 
-	 * @param rootNodes
-	 *            the given list of root TreeNodes.
-	 * @return a new list of root TreeNodes, completed with NotLoadedFragmentNodes if needed.
+	 * @param matchResource
+	 *            the given MatchResource.
+	 * @return the sub tree of the given MatchResource.
 	 */
-	private List<TreeNode> addNotLoadedFragmentNodes(List<TreeNode> rootNodes) {
-		final List<TreeNode> newRootNodes = new ArrayList<TreeNode>(rootNodes);
-		for (TreeNode treeNode : rootNodes) {
-			EObject data = TREE_NODE_DATA.apply(treeNode);
-			if (data instanceof Match) {
-				URI uri = ResourceUIUtil.getDataURI((Match)data);
-				if (ResourceUIUtil.isFragment(uri)) {
-					newRootNodes.remove(treeNode);
-					TreeNode notLoadedFragment = addNotLoadedFragment(rootNodes, treeNode, (Match)data, uri);
-					if (notLoadedFragment != null) {
-						newRootNodes.add(notLoadedFragment);
-					}
-				}
-			}
+	protected MatchResourceNode buildSubTree(MatchResource matchResource,
+			Set<ResourceAttachmentChange> attachmentChanges) {
+		MatchResourceNode matchResourceNode = createMatchResourceNode(matchResource);
+		Collection<ResourceAttachmentChange> filteredChanges = filter(attachmentChanges, filter);
+		for (ResourceAttachmentChange attachmentChange : filteredChanges) {
+			DiffNode diffNode = createDiffNode(attachmentChange);
+			matchResourceNode.addDiffNode(diffNode);
 		}
-		// if several root nodes are NotLoadedFragment nodes, add new parent node for these
-		// NotLoadedFragmentNodes.
-		if (ResourceUIUtil.containsNotLoadedFragmentNodes(newRootNodes)) {
-			Collection<TreeNode> nodes = encapsulateNotLoadedFragmentNodes(newRootNodes);
-			newRootNodes.clear();
-			newRootNodes.addAll(nodes);
-		}
-
-		return newRootNodes;
+		return matchResourceNode;
 	}
 
 	/**
-	 * Encapsulate the given TreeNode under a new NotLoadedFragmentNode.
+	 * Add the diff in the given match. This method handles refined diffs and allows to customize the result.
 	 * 
-	 * @param rootNodes
-	 *            the given list of root TreeNodes.
-	 * @param treeNode
-	 *            the given TreeNode.
+	 * @param matchNode
+	 *            The given match node
+	 * @param diff
+	 *            The diff to add
+	 */
+	protected void addDiffNode(MatchNode matchNode, Diff diff) {
+		DiffNode diffNode = createDiffNode(diff);
+		handleRefiningDiffs(diffNode);
+		matchNode.addDiffNode(diffNode);
+	}
+
+	/**
+	 * Create a diff node.
+	 * 
+	 * @param diff
+	 *            The given diff
+	 * @return the DiffNode
+	 */
+	protected DiffNode createDiffNode(Diff diff) {
+		DiffNode diffNode = new DiffNode(diff);
+		diffNode.eAdapters().add(this);
+		return diffNode;
+	}
+
+	/**
+	 * Create a match node.
+	 * 
 	 * @param match
-	 *            the match associated to the given TreeNode.
-	 * @param uri
-	 *            the data resource's URI of the given match.
-	 * @return
+	 *            The given match
+	 * @return the MatchNode
 	 */
-	private TreeNode addNotLoadedFragment(final List<TreeNode> rootNodes, TreeNode treeNode, Match match,
-			URI uri) {
-		TreeNode newRootNode = null;
-		TreeNode notLoadedFragmentNode = createNotLoadedFragmentMatchNode(treeNode, match);
-		if (ResourceUIUtil.isFirstLevelFragment(uri)) {
-			URI rootURI = ResourceUIUtil.getRootResourceURI(uri);
-			if (rootURI != null) {
-				// if root uri matches a tree node's data resource, the current treeNode has to be
-				// moved under this tree node.
-				TreeNode realParent = ResourceUIUtil.getTreeNodeFromURI(rootNodes, rootURI);
-				if (realParent != null) {
-					realParent.getChildren().add(notLoadedFragmentNode);
-				} else {
-					newRootNode = notLoadedFragmentNode;
-				}
-			}
-		} else { // Get the first loaded parent object
-			ResourceSet rs = ResourceUIUtil.getDataResourceSet(match);
-			EObject eObject = ResourceUIUtil.getEObjectParent(rs, uri);
-			if (eObject != null) {
-				Match newParentMatch = getComparison().getMatch(eObject);
-				TreeNode newParentNode = ResourceUIUtil.getTreeNode(rootNodes, newParentMatch);
-				if (newParentNode != null) {
-					EList<TreeNode> newParentNodeChildren = newParentNode.getChildren();
-					newParentNodeChildren.add(notLoadedFragmentNode);
-					setNotLoadedFragmentNodesName(newParentNodeChildren);
-				} else {
-					newRootNode = notLoadedFragmentNode;
-				}
-			} else {
-				newRootNode = notLoadedFragmentNode;
-			}
-		}
-		return newRootNode;
+	protected MatchNode createMatchNode(Match match) {
+		MatchNode matchNode = new MatchNode(match);
+		matchNode.eAdapters().add(this);
+		return matchNode;
 	}
 
 	/**
-	 * If the given list of nodes contains at least two nodes with NotLoadedFragmentMatches, then it set the
-	 * name of these NotLoadedFragmentMatches.
+	 * Create a conflict node.
+	 * 
+	 * @param conflict
+	 *            The given conflict
+	 * @return the ConflictNode
+	 */
+	protected ConflictNode createConflictNode(Conflict conflict) {
+		ConflictNode conflictNode = new ConflictNode(conflict);
+		conflictNode.eAdapters().add(this);
+		return conflictNode;
+	}
+
+	/**
+	 * Create a matchResource node.
+	 * 
+	 * @param matchResource
+	 *            The given matchResource
+	 * @return the MatchResourceNode
+	 */
+	protected MatchResourceNode createMatchResourceNode(MatchResource matchResource) {
+		MatchResourceNode matchResourceNode = new MatchResourceNode(matchResource);
+		matchResourceNode.eAdapters().add(this);
+		return matchResourceNode;
+	}
+
+	/**
+	 * Walk the given trees and customize each node in the tree, starting by the deeper nodes all the way up
+	 * to the root nodes. This method calls itself recursively.
 	 * 
 	 * @param nodes
-	 *            the given list of nodes.
+	 *            The list of nodes to customize.
 	 */
-	private void setNotLoadedFragmentNodesName(Collection<TreeNode> nodes) {
-		if (ResourceUIUtil.containsNotLoadedFragmentNodes(nodes)) {
-			for (TreeNode node : nodes) {
-				EObject data = TREE_NODE_DATA.apply(node);
-				if (data instanceof NotLoadedFragmentMatch) {
-					((NotLoadedFragmentMatch)data)
-							.setName(ResourceUIUtil.getResourceName((NotLoadedFragmentMatch)data));
-				}
-			}
-		}
-	}
-
-	/**
-	 * Creates a TreeNode that holds a {@link org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch}. The
-	 * holding NotLoadedFragmentMatch will be created by this method and will contains the given Match as a
-	 * child. The newly created TreeNode will be the parent of the given TreeNode. The given match must
-	 * correspond to the given TreeNode's data.
-	 * 
-	 * @param node
-	 *            the child of the newly created TreeNode.
-	 * @param match
-	 *            the match that will be the child of the newly created NotLoadedFragmentMatch.
-	 * @return the newly created TreeNode.
-	 */
-	private TreeNode createNotLoadedFragmentMatchNode(TreeNode node, Match match) {
-		TreeNode notLoadedFragmentNode = TreeFactory.eINSTANCE.createTreeNode();
-		NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(match);
-		notLoadedFragmentNode.setData(notLoadedFragmentMatch);
-		notLoadedFragmentNode.eAdapters().add(this);
-		notLoadedFragmentNode.getChildren().add(node);
-		return notLoadedFragmentNode;
-	}
-
-	/**
-	 * For the given list of TreeNodes, encapsulates under a new TreeNode container all TreeNode holding
-	 * NotLoadingFragmentMatches.
-	 * 
-	 * @param nodes
-	 *            the initial TreeNodes.
-	 * @return the modified TreeNodes.
-	 */
-	private Collection<TreeNode> encapsulateNotLoadedFragmentNodes(Collection<TreeNode> nodes) {
-		final Collection<TreeNode> newNodes = Lists.newArrayList(nodes);
-		final Collection<TreeNode> fragmentNodes = Lists.newArrayList();
-		TreeNode notLoadedFragmentNode = TreeFactory.eINSTANCE.createTreeNode();
-		Collection<Match> matches = new ArrayList<Match>();
+	protected void customize(List<? extends TreeNode> nodes) {
 		for (TreeNode node : nodes) {
-			EObject data = TREE_NODE_DATA.apply(node);
-			if (data instanceof NotLoadedFragmentMatch) {
-				matches.add((Match)data);
-				((NotLoadedFragmentMatch)data)
-						.setName(ResourceUIUtil.getResourceName((NotLoadedFragmentMatch)data));
-				newNodes.remove(node);
-				fragmentNodes.add(node);
+			customize(node.getChildren());
+			customize(node);
+		}
+	}
+
+	/**
+	 * Allow extenders to customize a TreeNode.
+	 * 
+	 * @param treeNode
+	 *            the TreeNode to customize.
+	 */
+	protected void customize(TreeNode treeNode) {
+		for (IDifferenceGroupExtender ext : registry.getExtenders()) {
+			if (ext.handle(treeNode)) {
+				ext.addChildren(treeNode);
 			}
 		}
-		NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(matches);
-		notLoadedFragmentNode.setData(notLoadedFragmentMatch);
-		notLoadedFragmentNode.eAdapters().add(this);
-		notLoadedFragmentNode.getChildren().addAll(fragmentNodes);
-		newNodes.add(notLoadedFragmentNode);
-		return newNodes;
 	}
+
+	/**
+	 * Handle the diffs that refine the given diff. Refining diffs are added as children of the given diff,
+	 * and so on recursively.
+	 * 
+	 * @param diffNode
+	 *            The diff node to handle, which is not necessarily a child of a MatchNode since this method
+	 *            is called recursively.
+	 */
+	protected void handleRefiningDiffs(DiffNode diffNode) {
+		Diff diff = diffNode.getDiff();
+		for (Diff refiningDiff : diff.getRefinedBy()) {
+			DiffNode refinedDiffNode = createDiffNode(refiningDiff);
+			diffNode.addRefinedDiffNode(refinedDiffNode);
+			handleRefiningDiffs(refinedDiffNode);
+		}
+	}
+
 }

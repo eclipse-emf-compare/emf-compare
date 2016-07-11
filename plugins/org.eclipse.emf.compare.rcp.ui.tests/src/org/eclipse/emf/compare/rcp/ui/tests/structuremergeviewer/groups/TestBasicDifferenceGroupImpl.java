@@ -21,7 +21,6 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.provider.spec.CompareItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.data.nodes.addconflict.NodesAddConflictInputData;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.AbstractTestTreeNodeItemProviderAdapter;
@@ -79,426 +78,270 @@ public class TestBasicDifferenceGroupImpl extends AbstractTestTreeNodeItemProvid
 
 		TreeNode node = roots.get(0);
 
-		assertEquals("extlibrary", itemDelegator.getText(node));
+		checkText(node, "extlibrary");
 
 		List<? extends TreeNode> extlibraryChildren = node.getChildren();
-		assertEquals(18, extlibraryChildren.size());
+		assertEquals(10, extlibraryChildren.size());
 
+		// Book
 		node = extlibraryChildren.get(0);
-		assertEquals("Book -> CirculatingItem", itemDelegator.getText(node));
+		checkText(node, "Book -> CirculatingItem");
 
 		List<? extends TreeNode> bookChildren = node.getChildren();
-		assertEquals(6, bookChildren.size());
+		assertEquals(3, bookChildren.size());
 
 		node = bookChildren.get(0);
-		assertEquals("pages : EInt", itemDelegator.getText(node));
+		checkText(node, "TitledItem [eSuperTypes add]");
 		assertEquals(0, node.getChildren().size());
 
-		node = bookChildren.get(1);
-		assertEquals("category : BookCategory", itemDelegator.getText(node));
+		TreeNode titleNode = bookChildren.get(1);
+		checkText(titleNode, "title : EString");
+
+		List<TreeNode> bookTitleChildren = titleNode.getChildren();
+		assertEquals(2, bookTitleChildren.size());
+		node = bookTitleChildren.get(0);
+		checkText(node, "title : EString [eStructuralFeatures delete]");
+		assertEquals(0, node.getChildren().size());
+		node = bookTitleChildren.get(1);
+		checkText(node, "EString [java.lang.String] [eType unset]");
 		assertEquals(0, node.getChildren().size());
 
-		node = bookChildren.get(2);
-		assertEquals("author : Writer", itemDelegator.getText(node));
+		TreeNode subtitleNode = bookChildren.get(2);
+		checkText(subtitleNode, "subtitle : EString");
 		assertEquals(0, node.getChildren().size());
 
-		node = bookChildren.get(3);
-		assertEquals("TitledItem [eSuperTypes add]", itemDelegator.getText(node));
+		List<TreeNode> bookSubtitleChildren = subtitleNode.getChildren();
+		assertEquals(2, bookSubtitleChildren.size());
+		node = bookSubtitleChildren.get(0);
+		checkText(node, "subtitle : EString [eStructuralFeatures add]");
+		assertEquals(0, node.getChildren().size());
+		node = bookSubtitleChildren.get(1);
+		checkText(node, "EString [java.lang.String] [eType set]");
 		assertEquals(0, node.getChildren().size());
 
-		node = bookChildren.get(4);
-		assertEquals("subtitle : EString [eStructuralFeatures add]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> subtitleChildren = node.getChildren();
-		assertEquals(1, subtitleChildren.size());
-		node = subtitleChildren.get(0);
-		assertEquals("EString [java.lang.String] [eType set]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = bookChildren.get(5);
-		assertEquals("title : EString [eStructuralFeatures delete]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> titleChildren = node.getChildren();
-		assertEquals(1, titleChildren.size());
-		node = titleChildren.get(0);
-		assertEquals("EString [java.lang.String] [eType unset]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
+		// BookCategory
 		node = extlibraryChildren.get(1);
-		assertEquals("Library -> Addressable", itemDelegator.getText(node));
+		checkText(node, "BookCategory");
+		assertEquals(4, node.getChildren().size());
 
-		List<? extends TreeNode> libraryChildren = node.getChildren();
-		assertEquals(9, libraryChildren.size());
+		TreeNode childNode = node.getChildren().get(0);
+		checkText(childNode, "Encyclopedia = 3");
+		assertEquals(1, childNode.getChildren().size());
+		checkText(childNode.getChildren().get(0), "Encyclopedia = 3 [eLiterals add]");
 
-		node = libraryChildren.get(0);
-		assertEquals("name : EString", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
+		childNode = node.getChildren().get(1);
+		checkText(childNode, "Dictionary = 4");
+		assertEquals(1, childNode.getChildren().size());
+		checkText(childNode.getChildren().get(0), "Dictionary = 4 [eLiterals add]");
 
-		node = libraryChildren.get(1);
-		assertEquals("writers : Writer", itemDelegator.getText(node));
-		assertEquals(1, node.getChildren().size()); // ExtendedMetaData
+		childNode = node.getChildren().get(2);
+		checkText(childNode, "Manga = 3");
+		assertEquals(1, childNode.getChildren().size());
+		checkText(childNode.getChildren().get(0), "Manga = 3 [eLiterals add]");
 
-		node = libraryChildren.get(2);
-		assertEquals("employees : Employee", itemDelegator.getText(node));
-		assertEquals(1, node.getChildren().size()); // ExtendedMetaData
+		childNode = node.getChildren().get(3);
+		checkText(childNode, "Manhwa = 5");
+		assertEquals(1, childNode.getChildren().size());
+		checkText(childNode.getChildren().get(0), "Manhwa = 5 [eLiterals add]");
 
-		node = libraryChildren.get(3);
-		assertEquals("borrowers : Borrower", itemDelegator.getText(node));
-		assertEquals(1, node.getChildren().size()); // ExtendedMetaData
-
-		node = libraryChildren.get(4);
-		assertEquals("stock : Item", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = libraryChildren.get(5);
-		assertEquals("books : Book", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = libraryChildren.get(6);
-		assertEquals("branches : Library", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = libraryChildren.get(7);
-		assertEquals("parentBranch : Library", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = libraryChildren.get(8);
-		assertEquals("people : EFeatureMapEntry", itemDelegator.getText(node));
-		assertEquals(1, node.getChildren().size()); // ExtendedMetaData
-
+		// Borrowable
 		node = extlibraryChildren.get(2);
-		assertEquals("Writer -> Person", itemDelegator.getText(node));
+		checkText(node, "Borrowable");
+		assertEquals(1, node.getChildren().size());
+		checkText(node.getChildren().get(0), "Borrowable [name changed]");
 
-		List<? extends TreeNode> writerChildren = node.getChildren();
-		assertEquals(2, writerChildren.size());
-
-		node = writerChildren.get(0);
-		assertEquals("name : EString", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = writerChildren.get(1);
-		assertEquals("books : Book", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
+		// AudioVisualItem
 		node = extlibraryChildren.get(3);
-		assertEquals("BookCategory", itemDelegator.getText(node));
+		checkText(node, "AudioVisualItem -> CirculatingItem");
+		assertEquals(3, node.getChildren().size());
 
-		List<? extends TreeNode> bookCategoryChildren = node.getChildren();
-		assertEquals(7, bookCategoryChildren.size());
+		childNode = node.getChildren().get(0);
+		checkText(childNode, "TitledItem [eSuperTypes add]");
+		assertEquals(0, childNode.getChildren().size());
 
-		node = bookCategoryChildren.get(0);
-		assertEquals("Mystery = 0", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
+		childNode = node.getChildren().get(1);
+		checkText(childNode, "title : EString");
+		assertEquals(2, childNode.getChildren().size());
+		checkText(childNode.getChildren().get(0), "title : EString [eStructuralFeatures delete]");
+		checkText(childNode.getChildren().get(1), "EString [java.lang.String] [eType unset]");
 
-		node = bookCategoryChildren.get(1);
-		assertEquals("ScienceFiction = 1", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
+		childNode = node.getChildren().get(2);
+		checkText(childNode, "length : EInt");
+		assertEquals(2, childNode.getChildren().size());
+		checkText(childNode.getChildren().get(0), "length [name changed]");
+		checkText(childNode.getChildren().get(1), "minutes [name changed]");
 
-		node = bookCategoryChildren.get(2);
-		assertEquals("Biography = 2", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = bookCategoryChildren.get(3);
-		assertEquals("Encyclopedia = 3 [eLiterals add]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = bookCategoryChildren.get(4);
-		assertEquals("Dictionary = 4 [eLiterals add]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = bookCategoryChildren.get(5);
-		assertEquals("Manga = 3 [eLiterals add]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = bookCategoryChildren.get(6);
-		assertEquals("Manhwa = 5 [eLiterals add]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
+		// BookOnTape
 		node = extlibraryChildren.get(4);
-		assertEquals("Item", itemDelegator.getText(node));
-
-		List<? extends TreeNode> itemChildren = node.getChildren();
-		assertEquals(1, itemChildren.size());
-
-		node = itemChildren.get(0);
-		assertEquals("publicationDate : EDate", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = extlibraryChildren.get(5);
-		assertEquals("Borrowable", itemDelegator.getText(node));
-
-		List<? extends TreeNode> borrowableChildren = node.getChildren();
-		assertEquals(3, borrowableChildren.size());
-
-		node = borrowableChildren.get(0);
-		assertEquals("copies : EInt", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = borrowableChildren.get(1);
-		assertEquals("borrowers : Borrower", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = borrowableChildren.get(2);
-		assertEquals("Borrowable [name changed]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = extlibraryChildren.get(6);
-		assertEquals("CirculatingItem -> Item, Borrowable", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = extlibraryChildren.get(7);
-		assertEquals("AudioVisualItem -> CirculatingItem", itemDelegator.getText(node));
-
-		List<? extends TreeNode> audioVisualItemChildren = node.getChildren();
-		assertEquals(4, audioVisualItemChildren.size());
-
-		node = audioVisualItemChildren.get(0);
-		assertEquals("length : EInt", itemDelegator.getText(node));
-
-		List<? extends TreeNode> lengthChildren = node.getChildren();
-		assertEquals(2, lengthChildren.size());
-
-		node = lengthChildren.get(0);
-		assertEquals("length [name changed]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = lengthChildren.get(1);
-		assertEquals("minutes [name changed]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = audioVisualItemChildren.get(1);
-		assertEquals("damaged : EBoolean", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = audioVisualItemChildren.get(2);
-		assertEquals("TitledItem [eSuperTypes add]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = audioVisualItemChildren.get(3);
-		assertEquals("title : EString [eStructuralFeatures delete]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> audioTitleChildren = node.getChildren();
-		assertEquals(1, audioTitleChildren.size());
-
-		node = audioTitleChildren.get(0);
-		assertEquals("EString [java.lang.String] [eType unset]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = extlibraryChildren.get(8);
-		assertEquals("BookOnTape -> AudioVisualItem", itemDelegator.getText(node));
-
-		List<? extends TreeNode> bookOnTapeChildren = node.getChildren();
-		assertEquals(3, bookOnTapeChildren.size());
-
-		node = bookOnTapeChildren.get(0);
-		assertEquals("author : Writer", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = bookOnTapeChildren.get(1);
-		assertEquals("reader : Person [eStructuralFeatures delete]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> reader1Children = node.getChildren();
-		assertEquals(1, reader1Children.size());
-
-		node = reader1Children.get(0);
-		assertEquals("Person -> Addressable [eType unset]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = bookOnTapeChildren.get(2);
-		assertEquals("reader : Person [eStructuralFeatures delete]", itemDelegator.getText(node));
+		checkText(node, "BookOnTape -> AudioVisualItem");
 		assertEquals(1, node.getChildren().size());
 
-		List<? extends TreeNode> reader2Children = node.getChildren();
-		assertEquals(1, reader2Children.size());
+		node = node.getChildren().get(0);
+		checkText(node, "reader : Person");
+		assertEquals(4, node.getChildren().size());
 
-		node = reader2Children.get(0);
-		assertEquals("Person -> Addressable [eType unset]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
+		childNode = node.getChildren().get(0);
+		checkText(childNode, "reader : Person [eStructuralFeatures delete]");
+		assertEquals(0, childNode.getChildren().size());
 
+		childNode = node.getChildren().get(1);
+		checkText(childNode, "reader : Person [eStructuralFeatures delete]");
+		assertEquals(0, childNode.getChildren().size());
+
+		childNode = node.getChildren().get(2);
+		checkText(childNode, "Person -> Addressable [eType unset]");
+		assertEquals(0, childNode.getChildren().size());
+
+		childNode = node.getChildren().get(3);
+		checkText(childNode, "Person -> Addressable [eType unset]");
+		assertEquals(0, childNode.getChildren().size());
+
+		// Person
+		node = extlibraryChildren.get(5);
+		checkText(node, "Person -> Addressable");
+		assertEquals(3, node.getChildren().size());
+		// Person.fullName
+		childNode = node.getChildren().get(0);
+		checkText(childNode, "fullName : EString");
+		assertEquals(2, childNode.getChildren().size());
+
+		TreeNode childNode2 = childNode.getChildren().get(0);
+		checkText(childNode2, "fullName : EString [eStructuralFeatures add]");
+		assertEquals(0, childNode2.getChildren().size());
+
+		childNode2 = childNode.getChildren().get(1);
+		checkText(childNode2, "EString [java.lang.String] [eType set]");
+		assertEquals(0, childNode2.getChildren().size());
+		// Person.firstName
+		childNode = node.getChildren().get(1);
+		checkText(childNode, "firstName : EString");
+		assertEquals(2, childNode.getChildren().size());
+
+		childNode2 = childNode.getChildren().get(0);
+		checkText(childNode2, "firstName : EString [eStructuralFeatures delete]");
+		assertEquals(0, childNode2.getChildren().size());
+
+		childNode2 = childNode.getChildren().get(1);
+		checkText(childNode2, "EString [java.lang.String] [eType unset]");
+		assertEquals(0, childNode2.getChildren().size());
+		// Person.lastName
+		childNode = node.getChildren().get(2);
+		checkText(childNode, "lastName : EString");
+		assertEquals(3, childNode.getChildren().size());
+
+		childNode2 = childNode.getChildren().get(0);
+		checkText(childNode2, "lastName : EString [eStructuralFeatures delete]");
+		assertEquals(0, childNode2.getChildren().size());
+
+		childNode2 = childNode.getChildren().get(1);
+		checkText(childNode2, "EString [java.lang.String] [eType unset]");
+		assertEquals(0, childNode2.getChildren().size());
+
+		childNode2 = childNode.getChildren().get(2);
+		checkText(childNode2, "familyName [name set]");
+		assertEquals(0, childNode2.getChildren().size());
+
+		// Magazine
+		node = extlibraryChildren.get(6);
+		checkText(node, "Magazine -> CirculatingItem");
+		assertEquals(4, node.getChildren().size());
+		// eClassifiers add
+		childNode = node.getChildren().get(0);
+		checkText(childNode, "Magazine -> CirculatingItem [eClassifiers add]");
+		assertEquals(0, childNode.getChildren().size());
+		// eSuperTypes add
+		childNode = node.getChildren().get(1);
+		checkText(childNode, "CirculatingItem -> Item, Borrowable [eSuperTypes add]");
+		assertEquals(0, childNode.getChildren().size());
+		// Magazine.title
+		childNode = node.getChildren().get(2);
+		checkText(childNode, "title : EString");
+		assertEquals(2, childNode.getChildren().size());
+
+		childNode2 = childNode.getChildren().get(0);
+		checkText(childNode2, "title : EString [eStructuralFeatures add]");
+		assertEquals(0, childNode2.getChildren().size());
+
+		childNode2 = childNode.getChildren().get(1);
+		checkText(childNode2, "EString [java.lang.String] [eType set]");
+		assertEquals(0, childNode2.getChildren().size());
+		// Magazine.pages
+		childNode = node.getChildren().get(3);
+		checkText(childNode, "pages : EInt");
+		assertEquals(2, childNode.getChildren().size());
+
+		childNode2 = childNode.getChildren().get(0);
+		checkText(childNode2, "pages : EInt [eStructuralFeatures add]");
+		assertEquals(0, childNode2.getChildren().size());
+
+		childNode2 = childNode.getChildren().get(1);
+		checkText(childNode2, "EInt [int] [eType set]");
+		assertEquals(0, childNode2.getChildren().size());
+
+		// Periodical
+		node = extlibraryChildren.get(7);
+		checkText(node, "Periodical -> Item");
+		assertEquals(5, node.getChildren().size());
+		// eClassifiers add
+		childNode = node.getChildren().get(0);
+		checkText(childNode, "Periodical -> Item [eClassifiers delete]");
+		assertEquals(0, childNode.getChildren().size());
+		// eSuperTypes add
+		childNode = node.getChildren().get(1);
+		checkText(childNode, "TitledItem [eSuperTypes add]");
+		assertEquals(0, childNode.getChildren().size());
+		// eSuperTypes delete
+		childNode = node.getChildren().get(2);
+		checkText(childNode, "Item [eSuperTypes delete]");
+		assertEquals(0, childNode.getChildren().size());
+
+		// Periodical.issuesPerYear
+		childNode = node.getChildren().get(3);
+		checkText(childNode, "issuesPerYear : EInt");
+		assertEquals(2, childNode.getChildren().size());
+		childNode2 = childNode.getChildren().get(0);
+		checkText(childNode2, "issuesPerYear : EInt [eStructuralFeatures delete]");
+		assertEquals(0, childNode2.getChildren().size());
+		childNode2 = childNode.getChildren().get(1);
+		checkText(childNode2, "EInt [int] [eType unset]");
+		assertEquals(0, childNode2.getChildren().size());
+
+		// Periodical.title
+		childNode = node.getChildren().get(4);
+		checkText(childNode, "title : EString");
+		assertEquals(4, childNode.getChildren().size());
+		checkText(childNode.getChildren().get(0), "title : EString [eStructuralFeatures delete]");
+		checkText(childNode.getChildren().get(1), "title : EString [eStructuralFeatures delete]");
+		checkText(childNode.getChildren().get(2), "EString [java.lang.String] [eType unset]");
+		checkText(childNode.getChildren().get(3), "EString [java.lang.String] [eType unset]");
+
+		// Magazine (from the right)
+		node = extlibraryChildren.get(8);
+		checkText(node, "Magazine -> Periodical");
+		assertEquals(2, node.getChildren().size());
+		childNode = node.getChildren().get(0);
+		checkText(childNode, "Magazine -> Periodical [eClassifiers add]");
+		assertEquals(0, childNode.getChildren().size());
+		childNode = node.getChildren().get(1);
+		checkText(childNode, "Periodical -> Item, TitledItem [eSuperTypes add]");
+		assertEquals(0, childNode.getChildren().size());
+
+		// TitledItem
 		node = extlibraryChildren.get(9);
-		assertEquals("VideoCassette -> AudioVisualItem", itemDelegator.getText(node));
-
-		List<? extends TreeNode> videoCassetteChildren = node.getChildren();
-		assertEquals(1, videoCassetteChildren.size());
-
-		node = videoCassetteChildren.get(0);
-		assertEquals("cast : Person", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = extlibraryChildren.get(10);
-		assertEquals("Borrower -> Person", itemDelegator.getText(node));
-
-		List<? extends TreeNode> borrowerChildren = node.getChildren();
-		assertEquals(1, borrowerChildren.size());
-
-		node = borrowerChildren.get(0);
-		assertEquals("borrowed : Borrowable", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = extlibraryChildren.get(11);
-		assertEquals("Person -> Addressable", itemDelegator.getText(node));
-
-		List<? extends TreeNode> personChildren = node.getChildren();
-		assertEquals(3, personChildren.size());
-
-		node = personChildren.get(0);
-		assertEquals("fullName : EString [eStructuralFeatures add]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> fullNameChildren = node.getChildren();
-		assertEquals(1, fullNameChildren.size());
-
-		node = fullNameChildren.get(0);
-		assertEquals("EString [java.lang.String] [eType set]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = personChildren.get(1);
-		assertEquals("firstName : EString [eStructuralFeatures delete]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> firstNameChildren = node.getChildren();
-		assertEquals(1, firstNameChildren.size());
-
-		node = firstNameChildren.get(0);
-		assertEquals("EString [java.lang.String] [eType unset]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = personChildren.get(2);
-		assertEquals("lastName : EString [eStructuralFeatures delete]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> lastNameChildren = node.getChildren();
-		assertEquals(2, lastNameChildren.size());
-
-		node = lastNameChildren.get(0);
-		assertEquals("EString [java.lang.String] [eType unset]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = lastNameChildren.get(1);
-		assertEquals("familyName [name set]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = extlibraryChildren.get(12);
-		assertEquals("Employee -> Person", itemDelegator.getText(node));
-
-		List<? extends TreeNode> employeeChildren = node.getChildren();
-		assertEquals(1, employeeChildren.size());
-
-		node = employeeChildren.get(0);
-		assertEquals("manager : Employee", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = extlibraryChildren.get(13);
-		assertEquals("Addressable", itemDelegator.getText(node));
-
-		List<? extends TreeNode> addressableChildren = node.getChildren();
-		assertEquals(1, addressableChildren.size());
-
-		node = addressableChildren.get(0);
-		assertEquals("address : EString", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = extlibraryChildren.get(14);
-		assertEquals("Magazine -> CirculatingItem [eClassifiers add]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> magazineCirculatingItemChildren = node.getChildren();
-		assertEquals(3, magazineCirculatingItemChildren.size());
-
-		node = magazineCirculatingItemChildren.get(0);
-		assertEquals("CirculatingItem -> Item, Borrowable [eSuperTypes add]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = magazineCirculatingItemChildren.get(1);
-		assertEquals("title : EString [eStructuralFeatures add]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> circulatingItemTitleChildren = node.getChildren();
-		assertEquals(1, circulatingItemTitleChildren.size());
-
-		node = circulatingItemTitleChildren.get(0);
-		assertEquals("EString [java.lang.String] [eType set]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = magazineCirculatingItemChildren.get(2);
-		assertEquals("pages : EInt [eStructuralFeatures add]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> pagesChildren = node.getChildren();
-		assertEquals(1, pagesChildren.size());
-
-		node = pagesChildren.get(0);
-		assertEquals("EInt [int] [eType set]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = extlibraryChildren.get(15);
-		assertEquals("Magazine -> Periodical [eClassifiers add]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> magazineChildren = node.getChildren();
-		assertEquals(1, magazineChildren.size());
-
-		node = magazineChildren.get(0);
-		assertEquals("Periodical -> Item, TitledItem [eSuperTypes add]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = extlibraryChildren.get(16);
-		assertEquals("TitledItem [eClassifiers add]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> titledItemChildren = node.getChildren();
-		assertEquals(1, titledItemChildren.size());
-
-		node = titledItemChildren.get(0);
-		assertEquals("title : EString [eStructuralFeatures add]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> titledItemTitleChildren = node.getChildren();
-		assertEquals(1, titledItemTitleChildren.size());
-
-		node = titledItemTitleChildren.get(0);
-		assertEquals("EString [java.lang.String] [eType set]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = extlibraryChildren.get(17);
-		assertEquals("Periodical -> Item [eClassifiers delete]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> periodicalItemChildren = node.getChildren();
-		assertEquals(5, periodicalItemChildren.size());
-
-		node = periodicalItemChildren.get(0);
-		assertEquals("TitledItem [eSuperTypes add]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = periodicalItemChildren.get(1);
-		assertEquals("Item [eSuperTypes delete]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = periodicalItemChildren.get(2);
-		assertEquals("title : EString [eStructuralFeatures delete]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> title1Children = node.getChildren();
-		assertEquals(1, title1Children.size());
-
-		node = title1Children.get(0);
-		assertEquals("EString [java.lang.String] [eType unset]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = periodicalItemChildren.get(3);
-		assertEquals("title : EString [eStructuralFeatures delete]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> title2Children = node.getChildren();
-		assertEquals(1, title2Children.size());
-
-		node = title2Children.get(0);
-		assertEquals("EString [java.lang.String] [eType unset]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = periodicalItemChildren.get(4);
-		assertEquals("issuesPerYear : EInt [eStructuralFeatures delete]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> issuesPerYearChildren = node.getChildren();
-		assertEquals(1, issuesPerYearChildren.size());
-
-		node = issuesPerYearChildren.get(0);
-		assertEquals("EInt [int] [eType unset]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = roots.get(1);
-		assertEquals("extlibraryLeft.ecore <-> extlibraryRight.ecore (extlibraryOrigin.ecore)",
-				itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
+		checkText(node, "TitledItem");
+		assertEquals(2, node.getChildren().size());
+		childNode = node.getChildren().get(0);
+		checkText(childNode, "TitledItem [eClassifiers add]");
+		assertEquals(0, childNode.getChildren().size());
+		childNode = node.getChildren().get(1);
+		checkText(childNode, "title : EString");
+		assertEquals(2, childNode.getChildren().size());
+		childNode2 = childNode.getChildren().get(0);
+		checkText(childNode2, "title : EString [eStructuralFeatures add]");
+		assertEquals(0, childNode2.getChildren().size());
+		childNode2 = childNode.getChildren().get(1);
+		checkText(childNode2, "EString [java.lang.String] [eType set]");
+		assertEquals(0, childNode2.getChildren().size());
 	}
 
 	@Test
@@ -523,63 +366,70 @@ public class TestBasicDifferenceGroupImpl extends AbstractTestTreeNodeItemProvid
 
 		TreeNode node = roots.get(0);
 
-		assertEquals("Node root", itemDelegator.getText(node));
+		checkText(node, "Node root");
 
 		List<? extends TreeNode> nodeRootChildren = node.getChildren();
 		assertEquals(3, nodeRootChildren.size());
 
 		node = nodeRootChildren.get(0);
-		assertEquals("Node A", itemDelegator.getText(node));
+		checkText(node, "Node A");
 
 		List<? extends TreeNode> aChildren = node.getChildren();
 		assertEquals(1, aChildren.size());
 
-		node = aChildren.get(0);
-		assertEquals("Node C [containmentRef1 add]", itemDelegator.getText(node));
+		TreeNode nodeC1 = aChildren.get(0);
+		checkText(nodeC1, "Node C");
+		assertEquals(4, nodeC1.getChildren().size());
 
-		List<? extends TreeNode> c1Children = node.getChildren();
-		assertEquals(2, c1Children.size());
+		node = nodeC1.getChildren().get(0);
+		checkText(node, "Node C [containmentRef1 add]");
 
-		node = c1Children.get(0);
-		assertEquals("Node D [containmentRef1 add]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
+		node = nodeC1.getChildren().get(1);
+		checkText(node, "Node D");
+		assertEquals(2, node.getChildren().size());
+		TreeNode childNode = node.getChildren().get(0);
+		checkText(childNode, "Node D [containmentRef1 add]");
+		childNode = node.getChildren().get(1);
+		checkText(childNode, "Node D [containmentRef1 add]");
 
-		node = c1Children.get(1);
-		assertEquals("Node E [containmentRef1 add]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
+		node = nodeC1.getChildren().get(2);
+		checkText(node, "Node E");
+		assertEquals(1, node.getChildren().size());
+		childNode = node.getChildren().get(0);
+		checkText(childNode, "Node E [containmentRef1 add]");
+
+		node = nodeC1.getChildren().get(3);
+		checkText(node, "Node F");
+		assertEquals(1, node.getChildren().size());
+		childNode = node.getChildren().get(0);
+		checkText(childNode, "Node F [containmentRef1 add]");
 
 		node = nodeRootChildren.get(1);
-		assertEquals("Node B", itemDelegator.getText(node));
-
-		List<? extends TreeNode> bChildren = node.getChildren();
-		assertEquals(1, bChildren.size());
-
-		node = bChildren.get(0);
-		assertEquals("Node C [containmentRef1 add]", itemDelegator.getText(node));
-
-		List<? extends TreeNode> c2Children = node.getChildren();
-		assertEquals(2, c2Children.size());
-
-		node = c2Children.get(0);
-		assertEquals("Node D [containmentRef1 add]", itemDelegator.getText(node));
-		assertEquals(0, node.getChildren().size());
-
-		node = c2Children.get(1);
-		assertEquals("Node F [containmentRef1 add]", itemDelegator.getText(node));
+		checkText(node, "Node B");
+		assertEquals(1, node.getChildren().size());
+		node = node.getChildren().get(0);
+		checkText(node, "Node C");
+		assertEquals(1, node.getChildren().size());
+		node = node.getChildren().get(0);
+		checkText(node, "Node C [containmentRef1 add]");
 		assertEquals(0, node.getChildren().size());
 
 		node = nodeRootChildren.get(2);
-		assertEquals("Node G", itemDelegator.getText(node));
-
-		List<? extends TreeNode> gChildren = node.getChildren();
-		assertEquals(1, gChildren.size());
-
-		node = gChildren.get(0);
-		assertEquals("Node H [containmentRef1 add]", itemDelegator.getText(node));
+		checkText(node, "Node G");
+		assertEquals(1, node.getChildren().size());
+		node = node.getChildren().get(0);
+		checkText(node, "Node H");
+		assertEquals(1, node.getChildren().size());
+		node = node.getChildren().get(0);
+		checkText(node, "Node H [containmentRef1 add]");
 		assertEquals(0, node.getChildren().size());
 
 		node = roots.get(1);
-		assertEquals("left.nodes <-> right.nodes (ancestor.nodes)", itemDelegator.getText(node));
+		checkText(node, "left.nodes <-> right.nodes (ancestor.nodes)");
 		assertEquals(0, node.getChildren().size());
+	}
+
+	protected void checkText(TreeNode childNode, String expected) {
+		assertEquals(expected, itemDelegator.getText(childNode));
 	}
 }

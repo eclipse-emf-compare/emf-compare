@@ -1,107 +1,54 @@
 <?xml version="1.0" encoding="ASCII"?>
-<xmi:XMI xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI"
-    xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes">
-  <nodes:Node
-      xmi:id="_CiZ94OvwEeOe_vfK-oM2bA"
-      name="&lt;Model> model">
-    <containmentRef1
-        xmi:id="_CiZ94evwEeOe_vfK-oM2bA"
-        name="&lt;Package> OldHoldingPackage"/>
-    <containmentRef1
-        xmi:id="_CiZ94uvwEeOe_vfK-oM2bA"
-        name="&lt;Package> NewHoldingPackage">
-      <containmentRef1
-          xmi:id="_CiZ94-vwEeOe_vfK-oM2bA"
-          name="&lt;Class> MovingNode [packagedElement move]"/>
-    </containmentRef1>
-    <containmentRef1
-        xmi:id="_CiZ95OvwEeOe_vfK-oM2bA"
-        name="&lt;Class> AssociationSource">
-      <containmentRef1
-          xmi:id="_CiZ95evwEeOe_vfK-oM2bA"
-          name="&lt;Property> associationOldTarget : AssociationOl... [ownedAttribute delete]">
-        <containmentRef1
-            xmi:id="_CiZ95uvwEeOe_vfK-oM2bA"
-            name="&lt;Class> AssociationOldTarget [type unset]"/>
-        <containmentRef1
-            xmi:id="_CiZ95-vwEeOe_vfK-oM2bA"
-            name="&lt;Literal Integer> 1 [lowerValue delete]"/>
-        <containmentRef1
-            xmi:id="_CiZ96OvwEeOe_vfK-oM2bA"
-            name="&lt;Literal Unlimited Natural> 1 [upperValue delete]"/>
-        <containmentRef1
-            xmi:id="_CiZ96evwEeOe_vfK-oM2bA"
-            name="&lt;Association> A_associationSource_associationOl... [association unset]"/>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes">
+  <nodes:Node xmi:id="_p_Iq0FlqEeaOcaiTMa7_Pg" name="&lt;Model> model">
+    <containmentRef1 xmi:id="_p_Iq0VlqEeaOcaiTMa7_Pg" name="&lt;Package> NewHoldingPackage">
+      <containmentRef1 xmi:id="_p_Iq0llqEeaOcaiTMa7_Pg" name="&lt;Class> MovingNode">
+        <containmentRef1 xmi:id="_p_Iq01lqEeaOcaiTMa7_Pg" name="&lt;Class> MovingNode [packagedElement move]"/>
       </containmentRef1>
     </containmentRef1>
-    <containmentRef1
-        xmi:id="_CiZ96uvwEeOe_vfK-oM2bA"
-        name="&lt;Class> AssociationOldTarget"/>
-    <containmentRef1
-        xmi:id="_Ciak8OvwEeOe_vfK-oM2bA"
-        name="&lt;Class> AssociationNewTarget"/>
-    <containmentRef1
-        xmi:id="_Ciak8evwEeOe_vfK-oM2bA"
-        name="&lt;Class> ChangingNameNode_NewName">
-      <containmentRef1
-          xmi:id="_Ciak8uvwEeOe_vfK-oM2bA"
-          name="ChangingNameNode_NewName [name changed]"/>
-    </containmentRef1>
-    <containmentRef1
-        xmi:id="_Ciak8-vwEeOe_vfK-oM2bA"
-        name="&lt;Class> PseudoConflictingNode_NewName">
-      <containmentRef1
-          xmi:id="_Ciak9OvwEeOe_vfK-oM2bA"
-          name="PseudoConflictingNode [name changed]"/>
-      <containmentRef1
-          xmi:id="_Ciak9evwEeOe_vfK-oM2bA"
-          name="PseudoConflictingNode [name changed]"/>
-    </containmentRef1>
-    <containmentRef1
-        xmi:id="_Ciak9uvwEeOe_vfK-oM2bA"
-        name="&lt;Class> NewNode [packagedElement add]"/>
-    <containmentRef1
-        xmi:id="_Ciak9-vwEeOe_vfK-oM2bA"
-        name="&lt;Association> A_associationSource_associationOl... [packagedElement delete]">
-      <containmentRef1
-          xmi:id="_Ciak-OvwEeOe_vfK-oM2bA"
-          name="&lt;Property> associationSource : AssociationSource [memberEnd delete]"/>
-      <containmentRef1
-          xmi:id="_Ciak-evwEeOe_vfK-oM2bA"
-          name="&lt;Property> associationOldTarget : AssociationOl... [memberEnd delete]"/>
-      <containmentRef1
-          xmi:id="_Ciak-uvwEeOe_vfK-oM2bA"
-          name="&lt;Property> associationSource : AssociationSource [ownedEnd delete]">
-        <containmentRef1
-            xmi:id="_Ciak--vwEeOe_vfK-oM2bA"
-            name="&lt;Class> AssociationSource [type unset]"/>
-        <containmentRef1
-            xmi:id="_Ciak_OvwEeOe_vfK-oM2bA"
-            name="&lt;Literal Integer> 1 [lowerValue delete]"/>
-        <containmentRef1
-            xmi:id="_Ciak_evwEeOe_vfK-oM2bA"
-            name="&lt;Literal Unlimited Natural> 1 [upperValue delete]"/>
-        <containmentRef1
-            xmi:id="_Ciak_uvwEeOe_vfK-oM2bA"
-            name="&lt;Association> A_associationSource_associationOl... [association unset]"/>
+    <containmentRef1 xmi:id="_p_Iq1FlqEeaOcaiTMa7_Pg" name="&lt;Association> A_associationSource_associationOldTarget_1">
+      <containmentRef1 xmi:id="_p_Iq1VlqEeaOcaiTMa7_Pg" name="&lt;Association> A_associationSource_associationOl... [packagedElement delete]">
+        <containmentRef1 xmi:id="_p_Iq1llqEeaOcaiTMa7_Pg" name="&lt;Association> A_associationSource_associationOl... [association unset]"/>
+        <containmentRef1 xmi:id="_p_Iq11lqEeaOcaiTMa7_Pg" name="&lt;Class> AssociationOldTarget [type unset]"/>
+        <containmentRef1 xmi:id="_p_Iq2FlqEeaOcaiTMa7_Pg" name="&lt;Property> associationOldTarget : AssociationOl... [ownedAttribute delete]"/>
+        <containmentRef1 xmi:id="_p_Iq2VlqEeaOcaiTMa7_Pg" name="&lt;Property> associationOldTarget : AssociationOl... [memberEnd delete]"/>
+        <containmentRef1 xmi:id="_p_Iq2llqEeaOcaiTMa7_Pg" name="&lt;Association> A_associationSource_associationOl... [association unset]"/>
+        <containmentRef1 xmi:id="_p_Iq21lqEeaOcaiTMa7_Pg" name="&lt;Association> A_associationSource_associationOl... [packagedElement delete]"/>
+        <containmentRef1 xmi:id="_p_Iq3FlqEeaOcaiTMa7_Pg" name="&lt;Class> AssociationSource [type unset]"/>
+        <containmentRef1 xmi:id="_p_Iq3VlqEeaOcaiTMa7_Pg" name="&lt;Property> associationSource : AssociationSource [memberEnd delete]"/>
+        <containmentRef1 xmi:id="_p_Iq3llqEeaOcaiTMa7_Pg" name="&lt;Property> associationSource : AssociationSource [ownedEnd delete]"/>
+        <containmentRef1 xmi:id="_p_Iq31lqEeaOcaiTMa7_Pg" name="&lt;Property> associationSource : AssociationSource [navigableOwnedEnd delete]"/>
+        <containmentRef1 xmi:id="_p_Iq4FlqEeaOcaiTMa7_Pg" name="&lt;Literal Integer> 1 [lowerValue delete]">
+          <containmentRef1 xmi:id="_p_JR4FlqEeaOcaiTMa7_Pg" name="&lt;Literal Integer> 1 [lowerValue delete]"/>
+        </containmentRef1>
+        <containmentRef1 xmi:id="_p_JR4VlqEeaOcaiTMa7_Pg" name="&lt;Literal Unlimited Natural> 1 [upperValue delete]">
+          <containmentRef1 xmi:id="_p_JR4llqEeaOcaiTMa7_Pg" name="&lt;Literal Unlimited Natural> 1 [upperValue delete]"/>
+        </containmentRef1>
+        <containmentRef1 xmi:id="_p_JR41lqEeaOcaiTMa7_Pg" name="&lt;Literal Integer> 1 [lowerValue delete]">
+          <containmentRef1 xmi:id="_p_JR5FlqEeaOcaiTMa7_Pg" name="&lt;Literal Integer> 1 [lowerValue delete]"/>
+        </containmentRef1>
+        <containmentRef1 xmi:id="_p_JR5VlqEeaOcaiTMa7_Pg" name="&lt;Literal Unlimited Natural> 1 [upperValue delete]">
+          <containmentRef1 xmi:id="_p_JR5llqEeaOcaiTMa7_Pg" name="&lt;Literal Unlimited Natural> 1 [upperValue delete]"/>
+        </containmentRef1>
       </containmentRef1>
-      <containmentRef1
-          xmi:id="_Ciak_-vwEeOe_vfK-oM2bA"
-          name="&lt;Property> associationSource : AssociationSource [navigableOwnedEnd delete]"/>
     </containmentRef1>
-    <containmentRef1
-        xmi:id="_CialAOvwEeOe_vfK-oM2bA"
-        name="&lt;Class> NodeToDelete [packagedElement delete]"/>
-    <containmentRef1
-        xmi:id="_CialAevwEeOe_vfK-oM2bA"
-        name="&lt;Class> ConflictingNode [packagedElement delete]">
-      <containmentRef1
-          xmi:id="_CialAuvwEeOe_vfK-oM2bA"
-          name="ConflictingNode_ConflictingName [name set]"/>
+    <containmentRef1 xmi:id="_p_JR51lqEeaOcaiTMa7_Pg" name="&lt;Class> ChangingNameNode_NewName">
+      <containmentRef1 xmi:id="_p_JR6FlqEeaOcaiTMa7_Pg" name="ChangingNameNode_NewName [name changed]"/>
+    </containmentRef1>
+    <containmentRef1 xmi:id="_p_JR6VlqEeaOcaiTMa7_Pg" name="&lt;Class> PseudoConflictingNode_NewName">
+      <containmentRef1 xmi:id="_p_JR6llqEeaOcaiTMa7_Pg" name="PseudoConflictingNode [name changed]"/>
+      <containmentRef1 xmi:id="_p_JR61lqEeaOcaiTMa7_Pg" name="PseudoConflictingNode [name changed]"/>
+    </containmentRef1>
+    <containmentRef1 xmi:id="_p_JR7FlqEeaOcaiTMa7_Pg" name="&lt;Class> NodeToDelete">
+      <containmentRef1 xmi:id="_p_JR7VlqEeaOcaiTMa7_Pg" name="&lt;Class> NodeToDelete [packagedElement delete]"/>
+    </containmentRef1>
+    <containmentRef1 xmi:id="_p_JR7llqEeaOcaiTMa7_Pg" name="&lt;Class> ConflictingNode">
+      <containmentRef1 xmi:id="_p_JR71lqEeaOcaiTMa7_Pg" name="&lt;Class> ConflictingNode [packagedElement delete]"/>
+      <containmentRef1 xmi:id="_p_JR8FlqEeaOcaiTMa7_Pg" name="ConflictingNode_ConflictingName [name set]"/>
+    </containmentRef1>
+    <containmentRef1 xmi:id="_p_JR8VlqEeaOcaiTMa7_Pg" name="&lt;Class> NewNode">
+      <containmentRef1 xmi:id="_p_JR8llqEeaOcaiTMa7_Pg" name="&lt;Class> NewNode [packagedElement add]"/>
     </containmentRef1>
   </nodes:Node>
-  <nodes:Node
-      xmi:id="_CialA-vwEeOe_vfK-oM2bA"
-      name="left.uml &lt;-> right.uml (origin.uml)"/>
+  <nodes:Node xmi:id="_p_LHEFlqEeaOcaiTMa7_Pg" name="left.uml &lt;-> right.uml (origin.uml)"/>
 </xmi:XMI>

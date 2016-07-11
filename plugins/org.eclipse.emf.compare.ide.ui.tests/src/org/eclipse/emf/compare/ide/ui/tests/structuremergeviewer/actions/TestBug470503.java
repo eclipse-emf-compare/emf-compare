@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions;
 
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.transform;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -19,14 +18,13 @@ import com.google.common.collect.Iterables;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
@@ -39,7 +37,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeNodeItemProviderSpec;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.tree.TreeFactory;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -52,7 +49,7 @@ import org.junit.Test;
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-@SuppressWarnings({"nls", "restriction" })
+@SuppressWarnings({"restriction" })
 public class TestBug470503 extends AbstractTestUITreeNodeItemProviderAdapter {
 
 	private static TreeNodeItemProviderSpec itemProvider;
@@ -80,35 +77,21 @@ public class TestBug470503 extends AbstractTestUITreeNodeItemProviderAdapter {
 
 		editingDomain = EMFCompareEditingDomain.create(left, right, null);
 
-		TreeNode ePackageMatch = getExtlibrary_EPackageMatch(comparison);
-		Collection<?> ePackage_MatchChildren = ePackageMatch.getChildren();
-		Iterable<EObject> ePackage_MatchChildrenData = transform(ePackage_MatchChildren, TREE_NODE_DATA);
+		TreeNode extLibraryNode = getExtlibrary_EPackageMatch(comparison);
+		List<TreeNode> extLibraryNodeChildren = extLibraryNode.getChildren();
 
 		// Get children of Match Book
-		Match book_Match = getMatchWithFeatureValue(ePackage_MatchChildrenData, "name", "Book");
-		TreeNode book_Match_Node = getTreeNode(ePackageMatch, book_Match);
-		Collection<?> book_MatchChildren = book_Match_Node.getChildren();
-		Iterable<EObject> book_MatchChildrenData = transform(book_MatchChildren, TREE_NODE_DATA);
+		TreeNode bookNode = extLibraryNodeChildren.get(0);
 
 		// Get TitledItem [eSuperTypes delete] difference
-		ReferenceChange titledItemESuperTypesDeleteChange = getReferenceChangeWithFeatureValue(
-				book_MatchChildrenData, "name", "TitledItem");
-		titledItemESuperTypesDelete = getTreeNode(book_Match_Node, titledItemESuperTypesDeleteChange);
+		titledItemESuperTypesDelete = bookNode.getChildren().get(0);
 
 		// Get TitledItem [eClassifiers delete] difference
-		ReferenceChange titledItemEClassifiersDeleteChange = getReferenceChangeWithFeatureValue(
-				ePackage_MatchChildrenData, "name", "TitledItem");
-		titledItemEClassifiersDelete = getTreeNode(ePackageMatch, titledItemEClassifiersDeleteChange);
-
-		// Get children of Match TitledItem
-		TreeNode titledItem_Match_Node = getTreeNode(ePackageMatch, titledItemEClassifiersDeleteChange);
-		Collection<?> titledItem_MatchChildren = titledItem_Match_Node.getChildren();
-		Iterable<EObject> titledItem_MatchChildrenData = transform(titledItem_MatchChildren, TREE_NODE_DATA);
+		TreeNode titledItemNode = extLibraryNodeChildren.get(1);
+		titledItemEClassifiersDelete = titledItemNode.getChildren().get(0);
 
 		// Get title [eStructuralFeatures delete] difference
-		ReferenceChange titleESFDeleteChange = getReferenceChangeWithFeatureValue(
-				titledItem_MatchChildrenData, "name", "title");
-		titleESFDelete = getTreeNode(titledItem_Match_Node, titleESFDeleteChange);
+		titleESFDelete = titledItemNode.getChildren().get(1).getChildren().get(0);
 	}
 
 	@Test

@@ -11,17 +11,19 @@
 package org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.filters;
 
 import static com.google.common.base.Predicates.alwaysTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.DiffNode;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.MatchNode;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.AbstractTestTreeNodeItemProviderAdapter;
 import org.eclipse.emf.compare.tests.edit.data.ResourceScopeProvider;
@@ -32,7 +34,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.emf.edit.tree.TreePackage;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.base.Predicate;
@@ -52,7 +53,7 @@ public class TestBug435365 extends AbstractTestTreeNodeItemProviderAdapter {
 	 * @throws IOException
 	 */
 	@Test
-	public void testCascadingFilterNotHiddingDiffUnderMove() throws IOException {
+	public void testCascadingFilterNotHidingDiffUnderMove() throws IOException {
 		// Builds the input tree.
 		Comparison comparison = getComparison(new Bug435365Scope());
 		ECrossReferenceAdapter crossReferenceAdapter = new ECrossReferenceAdapter() {
@@ -70,39 +71,20 @@ public class TestBug435365 extends AbstractTestTreeNodeItemProviderAdapter {
 				crossReferenceAdapter);
 		List<? extends TreeNode> roots = group.getChildren();
 		// Gets the node matching the move diff.
-		TreeNode moveNode = getMoveNode(roots);
-		Predicate<? super EObject> whenSelectedCascadingFilterPredicate = new CascadingDifferencesFilter()
+		TreeNode movingNode = roots.get(0).getChildren().get(0).getChildren().get(0);
+		Predicate<? super EObject> cascadingFilter = new CascadingDifferencesFilter()
 				.getPredicateWhenSelected();
-		Assert.assertEquals(false, whenSelectedCascadingFilterPredicate.apply(moveNode));
-		EList<TreeNode> children = moveNode.getChildren();
-		Assert.assertEquals(1, children.size());
-		TreeNode newAdditionNode = children.get(0);
+		assertFalse(cascadingFilter.apply(movingNode));
+		EList<TreeNode> children = movingNode.getChildren();
+		assertEquals(2, children.size());
+		DiffNode diffNode = (DiffNode)children.get(0);
 		// Checks that its child is not hidden by the filter.
-		Assert.assertEquals(false, whenSelectedCascadingFilterPredicate.apply(newAdditionNode));
-	}
-
-	/**
-	 * Retrieves the node matching the Move difference.
-	 * 
-	 * @param roots
-	 * @return
-	 */
-	private TreeNode getMoveNode(List<? extends TreeNode> roots) {
-		for (TreeNode root : roots) {
-			TreeIterator<EObject> nodeIte = root.eAllContents();
-			while (nodeIte.hasNext()) {
-				EObject n = nodeIte.next();
-				if (n instanceof TreeNode) {
-					TreeNode treeNode = (TreeNode)n;
-					EObject data = treeNode.getData();
-					if (data instanceof ReferenceChange
-							&& ((ReferenceChange)data).getKind() == DifferenceKind.MOVE) {
-						return treeNode;
-					}
-				}
-			}
-		}
-		return null;
+		assertFalse(cascadingFilter.apply(diffNode));
+		MatchNode matchNode = (MatchNode)children.get(1);
+		assertFalse(cascadingFilter.apply(matchNode));
+		assertEquals(1, matchNode.getChildren().size());
+		diffNode = (DiffNode)matchNode.getChildren().get(0);
+		assertFalse(cascadingFilter.apply(diffNode));
 	}
 
 	/**

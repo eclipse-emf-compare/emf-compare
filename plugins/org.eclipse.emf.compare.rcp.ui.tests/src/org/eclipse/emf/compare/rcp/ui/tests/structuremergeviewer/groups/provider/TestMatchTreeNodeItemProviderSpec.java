@@ -10,10 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Iterables.transform;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -23,6 +26,8 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.DefaultGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeNodeItemProviderSpec;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.DiffNode;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.MatchNode;
 import org.eclipse.emf.compare.tests.edit.data.ecore.a1.EcoreA1InputData;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeFactory;
@@ -52,10 +57,10 @@ public class TestMatchTreeNodeItemProviderSpec extends AbstractTestTreeNodeItemP
 		TreeNode ePackageMatch = getEcoreA1_EPackageMatch();
 
 		Collection<?> ePackageMatchChildren = ePackageMatch.getChildren();
-		assertEquals(18, ePackageMatchChildren.size());
+		assertEquals(10, ePackageMatchChildren.size());
+		assertTrue(all(ePackageMatchChildren, instanceOf(MatchNode.class)));
 		Iterable<EObject> ePackageData = transform(ePackageMatchChildren, TREE_NODE_DATA);
-		assertEquals(4, size(filter(ePackageData, Diff.class)));
-		assertEquals(14, size(filter(ePackageData, Match.class)));
+		assertEquals(10, size(filter(ePackageData, Match.class)));
 	}
 
 	static TreeNode getEcoreA1_EPackageMatch() throws IOException {
@@ -97,11 +102,11 @@ public class TestMatchTreeNodeItemProviderSpec extends AbstractTestTreeNodeItemP
 
 		Collection<?> audioVisualItem_MatchChildren = audioVisualItem_Match_Node.getChildren();
 
-		assertEquals(4, audioVisualItem_MatchChildren.size());
+		assertEquals(3, audioVisualItem_MatchChildren.size());
 
 		Iterable<EObject> audioData = transform(audioVisualItem_MatchChildren, TREE_NODE_DATA);
 
-		assertEquals(2, size(filter(audioData, Diff.class)));
+		assertEquals(1, size(filter(audioData, Diff.class)));
 		assertEquals(2, size(filter(audioData, Match.class)));
 	}
 
@@ -128,6 +133,7 @@ public class TestMatchTreeNodeItemProviderSpec extends AbstractTestTreeNodeItemP
 		Collection<?> audioVisualItem_length_MatchChildren = itemProvider.getChildren(audioLengthTreeNode);
 
 		assertEquals(2, audioVisualItem_length_MatchChildren.size());
+		assertTrue(all(audioVisualItem_length_MatchChildren, instanceOf(DiffNode.class)));
 
 		Iterable<EObject> audioLengthData = transform(audioVisualItem_length_MatchChildren, TREE_NODE_DATA);
 
@@ -149,12 +155,12 @@ public class TestMatchTreeNodeItemProviderSpec extends AbstractTestTreeNodeItemP
 
 		Collection<?> book_MatchChildren = book_Match_Node.getChildren();
 
-		assertEquals(6, book_MatchChildren.size());
+		assertEquals(3, book_MatchChildren.size());
 
 		Iterable<EObject> book_MatchChildrenData = transform(book_MatchChildren, TREE_NODE_DATA);
 
-		assertEquals(3, size(filter(book_MatchChildrenData, Diff.class)));
-		assertEquals(3, size(filter(book_MatchChildrenData, Match.class)));
+		assertEquals(1, size(filter(book_MatchChildrenData, Diff.class)));
+		assertEquals(2, size(filter(book_MatchChildrenData, Match.class)));
 	}
 
 	@Test
@@ -170,15 +176,18 @@ public class TestMatchTreeNodeItemProviderSpec extends AbstractTestTreeNodeItemP
 
 		TreeNode bookCategory_Match_Node = getTreeNode(ePackageMatch, bookCategory_Match);
 
-		Collection<?> bookCategory_MatchChildren = bookCategory_Match_Node.getChildren();
+		Collection<? extends TreeNode> bookCategory_MatchChildren = bookCategory_Match_Node.getChildren();
 
-		assertEquals(7, bookCategory_MatchChildren.size());
+		assertEquals(4, bookCategory_MatchChildren.size());
+		assertTrue(all(bookCategory_MatchChildren, instanceOf(MatchNode.class)));
 
 		Iterable<EObject> bookCategory_MatchChildrenData = transform(bookCategory_MatchChildren,
 				TREE_NODE_DATA);
 
-		assertEquals(4, size(filter(bookCategory_MatchChildrenData, Diff.class)));
-		assertEquals(3, size(filter(bookCategory_MatchChildrenData, Match.class)));
+		assertEquals(4, size(filter(bookCategory_MatchChildrenData, Match.class)));
+		for (TreeNode matchNode : bookCategory_MatchChildren) {
+			assertEquals(1, matchNode.getChildren().size());
+		}
 	}
 
 	@Test
@@ -193,14 +202,13 @@ public class TestMatchTreeNodeItemProviderSpec extends AbstractTestTreeNodeItemP
 
 		TreeNode borrowable_Match_Node = getTreeNode(ePackageMatch, borrowable_Match);
 
-		Collection<?> borrowable_MatchChildren = borrowable_Match_Node.getChildren();
+		Collection<? extends TreeNode> borrowable_MatchChildren = borrowable_Match_Node.getChildren();
 
-		assertEquals(3, borrowable_MatchChildren.size());
+		assertEquals(1, borrowable_MatchChildren.size());
 
 		Iterable<EObject> borrowable_MatchChildrenData = transform(borrowable_MatchChildren, TREE_NODE_DATA);
 
 		assertEquals(1, size(filter(borrowable_MatchChildrenData, Diff.class)));
-		assertEquals(2, size(filter(borrowable_MatchChildrenData, Match.class)));
 	}
 
 	@Test
@@ -215,13 +223,12 @@ public class TestMatchTreeNodeItemProviderSpec extends AbstractTestTreeNodeItemP
 
 		TreeNode person_Match_Node = getTreeNode(ePackageMatch, person_Match);
 
-		Collection<?> person_MatchChildren = person_Match_Node.getChildren();
+		Collection<? extends TreeNode> person_MatchChildren = person_Match_Node.getChildren();
 
 		assertEquals(3, person_MatchChildren.size());
 
 		Iterable<EObject> person_MatchChildrenData = transform(person_MatchChildren, TREE_NODE_DATA);
 
-		assertEquals(3, size(filter(person_MatchChildrenData, Diff.class)));
-		assertEquals(0, size(filter(person_MatchChildrenData, Match.class)));
+		assertEquals(3, size(filter(person_MatchChildrenData, Match.class)));
 	}
 }

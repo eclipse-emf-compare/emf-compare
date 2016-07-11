@@ -58,6 +58,7 @@ import org.eclipse.gmf.runtime.notation.provider.NotationItemProviderAdapterFact
 import org.eclipse.gmf.runtime.notation.util.NotationAdapterFactory;
 import org.eclipse.uml2.uml.edit.providers.UMLItemProviderAdapterFactory;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 @SuppressWarnings("restriction")
@@ -95,6 +96,7 @@ public class PapyrusConflictsGroupProviderTests extends AbstractTest {
 	 * @throws IOException
 	 */
 	@Test
+	@Ignore("This should be tested manually during validation of releases. The set-up doesn't allow this test to behave like a real running eclipse with papyrus installed.")
 	public void testBug478539() throws IOException {
 
 		final Resource left = input.getBug478539Left();

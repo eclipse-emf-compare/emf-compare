@@ -23,8 +23,7 @@ Export-Package: org.eclipse.emf.compare.diagram.ide.ui.internal;x-internal:=true
  org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory;x-internal:=true,
  org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram;x-internal:=true,
  org.eclipse.emf.compare.diagram.ide.ui.internal.preferences;x-internal:=true,
- org.eclipse.emf.compare.diagram.ide.ui.internal.structuremergeviewer.filters;x-friends:="org.eclipse.emf.compare.diagram.papyrus.tests",
- org.eclipse.emf.compare.diagram.ide.ui.internal.structuremergeviewer.filters.groups.extenders
+ org.eclipse.emf.compare.diagram.ide.ui.internal.structuremergeviewer.filters;x-friends:="org.eclipse.emf.compare.diagram.papyrus.tests"
 Bundle-Vendor: %providerName
 Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
  com.google.common.collect;version="[11.0.0,16.0.0)"

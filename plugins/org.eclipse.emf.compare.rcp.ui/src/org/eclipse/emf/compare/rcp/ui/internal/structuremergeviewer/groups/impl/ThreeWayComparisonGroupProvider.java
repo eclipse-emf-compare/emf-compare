@@ -17,8 +17,6 @@ import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.filter;
 import static com.google.common.collect.Iterators.transform;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.newLinkedHashSet;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
@@ -27,12 +25,10 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
-import com.google.common.collect.Sets.SetView;
 import com.google.common.collect.UnmodifiableIterator;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Comparison;
@@ -41,22 +37,19 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
-import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.SideLabelProvider;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.ConflictNode;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
  * This implementation of a
@@ -101,6 +94,30 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		}
 
 		/**
+		 * In conflicts, a special case must be handled for refining diffs: If they are not part of the same
+		 * conflict then they should not be in the same group as the refined diff.
+		 * 
+		 * @param diff
+		 *            The difference
+		 * @return <code>true</code> if the diff refines nothing or if its conflict does not contain all the
+		 *         diffs it refines.
+		 */
+		@Override
+		protected boolean mustDisplayAsDirectChildOfMatch(Diff diff) {
+			return diff.getRefines().isEmpty() || (diff.getConflict() != null
+					&& !diff.getConflict().getDifferences().containsAll(diff.getRefines()));
+		}
+
+		@Override
+		protected void doBuildSubTrees() {
+			for (Conflict conflict : getComparison().getConflicts()) {
+				ConflictNodeBuilder builder = new ConflictNodeBuilder(conflict, this);
+				ConflictNode conflictNode = builder.buildNode();
+				children.add(conflictNode);
+			}
+		}
+
+		/**
 		 * {@inheritDoc}
 		 * 
 		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#getStyledName()
@@ -119,179 +136,6 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 			}
 			ret.append(getName());
 			return ret;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#buildSubTree()
-		 */
-		@Override
-		public synchronized void buildSubTree() {
-			children = newArrayList();
-			extensionDiffProcessed = newLinkedHashSet();
-			for (Conflict conflict : getComparison().getConflicts()) {
-				TreeNode buildSubTree = buildSubTree(conflict);
-				if (buildSubTree != null) {
-					children.add(buildSubTree);
-				}
-			}
-			registerCrossReferenceAdapter(children);
-		}
-
-		/**
-		 * Build sub tree for the given Conflict.
-		 * 
-		 * @param conflict
-		 *            the given Conflict.
-		 * @return the sub tree for the given Conflict.
-		 */
-		protected TreeNode buildSubTree(Conflict conflict) {
-			TreeNode ret = wrap(conflict);
-
-			for (Match match : getComparison().getMatches()) {
-				buildSubTree(ret, conflict, match, Sets.<Match> newLinkedHashSet());
-			}
-
-			return ret;
-
-		}
-
-		/**
-		 * Build sub tree for the given Match.
-		 * 
-		 * @param parentNode
-		 *            the parent node of the given match.
-		 * @param conflict
-		 *            the conflict of the tree.
-		 * @param match
-		 *            the given match.
-		 * @param alreadyProcessedContainedMatches
-		 *            already processed matches that are contained in the given <code>match</code>.
-		 */
-		protected void buildSubTree(TreeNode parentNode, Conflict conflict, Match match,
-				Collection<Match> alreadyProcessedContainedMatches) {
-			buildSubTree(parentNode, conflict, match, alreadyProcessedContainedMatches,
-					Sets.<Match> newHashSet());
-		}
-
-		/**
-		 * Build sub tree for the given Match.
-		 * 
-		 * @param parentNode
-		 *            the parent node of the given match.
-		 * @param conflict
-		 *            the conflict of the tree.
-		 * @param match
-		 *            the given match.
-		 * @param alreadyProcessedContainedMatches
-		 *            already processed matches that are contained in the given <code>match</code>.
-		 * @param alreadyProcessedMatches
-		 *            already processed matches.
-		 */
-		private void buildSubTree(TreeNode parentNode, Conflict conflict, Match match,
-				Collection<Match> alreadyProcessedContainedMatches,
-				Collection<Match> alreadyProcessedMatches) {
-			// Use a LinkedHashSet for the first argument of Sets.intersection, in order to keep the order of
-			// differences.
-			SetView<Diff> setView = Sets.intersection(Sets.newLinkedHashSet(match.getDifferences()),
-					Sets.newHashSet(conflict.getDifferences()));
-			for (Diff diff : setView) {
-				if (!isParentPseudoConflictFromOtherSide(diff, parentNode.getData())) {
-					TreeNode diffNode = wrap(diff);
-					parentNode.getChildren().add(diffNode);
-					if (isContainment(diff)) {
-						final Match diffMatch = ComparisonUtil.getComparison(diff)
-								.getMatch(((ReferenceChange)diff).getValue());
-						if (diffMatch != null && !alreadyProcessedContainedMatches.contains(diffMatch)) {
-							// we don't want callers deeper in the tree to modify the sets of already
-							// processed contained matches
-							LinkedHashSet<Match> updatedProcessedContainedMatches = Sets
-									.newLinkedHashSet(alreadyProcessedContainedMatches);
-							updatedProcessedContainedMatches.add(diffMatch);
-							buildSubTree(diffNode, conflict, diffMatch, updatedProcessedContainedMatches);
-						}
-					} else {
-						alreadyProcessedMatches.add(match);
-						for (Diff refinedBy : diff.getRefinedBy()) {
-							Match refinedByMatch = refinedBy.getMatch();
-							if (alreadyProcessedMatches.add(refinedByMatch)) {
-								buildSubTree(diffNode, conflict, refinedByMatch,
-										alreadyProcessedContainedMatches, alreadyProcessedMatches);
-							}
-						}
-					}
-				}
-			}
-			for (Match subMatch : match.getSubmatches()) {
-				if (!isMatchOfConflictContainmentDiff(conflict, subMatch)) {
-					buildSubTree(parentNode, conflict, subMatch, alreadyProcessedContainedMatches,
-							alreadyProcessedMatches);
-					alreadyProcessedMatches.add(subMatch);
-				}
-			}
-		}
-
-		/**
-		 * Checks if the parent of the given diff is a pseudo conflict with a different side than the given
-		 * diff.
-		 * 
-		 * @param diff
-		 *            the given diff.
-		 * @param parent
-		 *            the parent of the given duff.
-		 * @return true if the parent of the given diff is a pseudo conflict with a different side than the
-		 *         given diff, false otherwise.
-		 */
-		private boolean isParentPseudoConflictFromOtherSide(Diff diff, EObject parent) {
-			boolean ret = false;
-			if (parent instanceof Diff) {
-				Conflict conflict = ((Diff)parent).getConflict();
-				if (conflict != null) {
-					if (ConflictKind.PSEUDO == conflict.getKind()) {
-						ret = !fromSide(((Diff)parent).getSource()).apply(diff);
-					}
-				}
-			}
-			return ret;
-		}
-
-		/**
-		 * Checks if the given match is a match of one of the containment diffs of the given Conflict.
-		 * 
-		 * @param conflict
-		 *            the given conflict.
-		 * @param subMatch
-		 *            the given match.
-		 * @return true, if the given match is a match of one of the containment diffs of the given Conflict,
-		 *         false otherwise.
-		 */
-		protected boolean isMatchOfConflictContainmentDiff(Conflict conflict, Match subMatch) {
-			if (subMatch != null) {
-				for (Diff diff : conflict.getDifferences()) {
-					if (isContainment(diff)) {
-						final Match realMatch = diff.getMatch().getComparison()
-								.getMatch(((ReferenceChange)diff).getValue());
-						if (subMatch.equals(realMatch)) {
-							return true;
-						}
-					}
-				}
-			}
-			return false;
-		}
-
-		/**
-		 * Checks whether the given diff corresponds to a containment change. This holds true for differences
-		 * on containment references' values.
-		 * 
-		 * @param diff
-		 *            The diff to consider.
-		 * @return <code>true</code> if the given {@code diff} is to be considered a containment change,
-		 *         <code>false</code> otherwise.
-		 */
-		private boolean isContainment(Diff diff) {
-			return diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment();
 		}
 	}
 
@@ -314,7 +158,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 			rightLabel = EMFCompareRCPUIMessages.getString("ThreeWayComparisonGroupProvider.right.label"); //$NON-NLS-1$
 		}
 
-		final BasicDifferenceGroupImpl conflicts = new ConflictsGroupImpl(getComparison(),
+		final ConflictsGroupImpl conflicts = new ConflictsGroupImpl(getComparison(),
 				hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO),
 				EMFCompareRCPUIMessages.getString("ThreeWayComparisonGroupProvider.conflicts.label"), //$NON-NLS-1$
 				getCrossReferenceAdapter());

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,26 +40,26 @@ public class KindGroupProvider extends AbstractDifferenceGroupProvider {
 	 */
 	@Override
 	protected Collection<? extends IDifferenceGroup> buildGroups(Comparison comparison2) {
-		final IDifferenceGroup additions = new BasicDifferenceGroupImpl(getComparison(),
+		final BasicDifferenceGroupImpl additions = new BasicDifferenceGroupImpl(getComparison(),
 				ofKind(DifferenceKind.ADD),
 				EMFCompareRCPUIMessages.getString("KindGroupProvider.addition.label"), //$NON-NLS-1$
 				getCrossReferenceAdapter());
-		((BasicDifferenceGroupImpl)additions).buildSubTree();
-		final IDifferenceGroup deletions = new BasicDifferenceGroupImpl(getComparison(),
+		additions.buildSubTree();
+		final BasicDifferenceGroupImpl deletions = new BasicDifferenceGroupImpl(getComparison(),
 				ofKind(DifferenceKind.DELETE),
 				EMFCompareRCPUIMessages.getString("KindGroupProvider.deletion.label"), //$NON-NLS-1$
 				getCrossReferenceAdapter());
-		((BasicDifferenceGroupImpl)deletions).buildSubTree();
-		final IDifferenceGroup changes = new BasicDifferenceGroupImpl(getComparison(),
+		deletions.buildSubTree();
+		final BasicDifferenceGroupImpl changes = new BasicDifferenceGroupImpl(getComparison(),
 				ofKind(DifferenceKind.CHANGE),
 				EMFCompareRCPUIMessages.getString("KindGroupProvider.change.label"), //$NON-NLS-1$
 				getCrossReferenceAdapter());
-		((BasicDifferenceGroupImpl)changes).buildSubTree();
-		final IDifferenceGroup moves = new BasicDifferenceGroupImpl(getComparison(),
+		changes.buildSubTree();
+		final BasicDifferenceGroupImpl moves = new BasicDifferenceGroupImpl(getComparison(),
 				ofKind(DifferenceKind.MOVE),
 				EMFCompareRCPUIMessages.getString("KindGroupProvider.move.label"), //$NON-NLS-1$
 				getCrossReferenceAdapter());
-		((BasicDifferenceGroupImpl)moves).buildSubTree();
+		moves.buildSubTree();
 
 		Collection<IDifferenceGroup> groups = Lists.newArrayList();
 		if (!additions.getChildren().isEmpty()) {

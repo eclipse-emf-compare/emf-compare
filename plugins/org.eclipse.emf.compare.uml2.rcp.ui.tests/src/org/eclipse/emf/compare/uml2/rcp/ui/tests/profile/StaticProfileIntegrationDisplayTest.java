@@ -27,8 +27,7 @@ import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl
 import org.eclipse.emf.compare.provider.spec.CompareItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.EmptyMatchedResourcesFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.IdenticalElementsFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.TechnicalitiesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
@@ -101,8 +100,7 @@ public class StaticProfileIntegrationDisplayTest extends AbstractDifferenceOrder
 	@Test
 	public void testStaticProfileDisplay() throws IOException {
 		getFilter().addFilter(new UMLRefinedElementsFilter());
-		getFilter().addFilter(new EmptyMatchedResourcesFilter());
-		getFilter().addFilter(new IdenticalElementsFilter());
+		getFilter().addFilter(new TechnicalitiesFilter());
 		getFilter().addFilter(new CascadingDifferencesFilter());
 
 		IDifferenceGroup group = new BasicDifferenceGroupImpl(getComparison(), alwaysTrue(),

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,9 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.DiffNode;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.MatchNode;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.MatchResourceNode;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.ecore.EObject;
@@ -98,7 +101,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 
 		/** {@inheritDoc} */
 		@Override
-		protected List<TreeNode> buildMatchSubTrees() {
+		protected List<TreeNode> buildMatchTrees() {
 			// All of our nodes will be under MatchResources for this group.
 			return new ArrayList<TreeNode>();
 		}
@@ -110,23 +113,26 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 		 *      Set)
 		 */
 		@Override
-		protected TreeNode buildSubTree(MatchResource matchResource,
+		protected MatchResourceNode buildSubTree(MatchResource matchResource,
 				Set<ResourceAttachmentChange> attachmentChanges) {
-			TreeNode ret = wrap(matchResource);
+			MatchResourceNode matchResourceNode = createMatchResourceNode(matchResource);
 
 			for (ResourceAttachmentChange attachmentChange : attachmentChanges) {
-				ret.getChildren().add(wrap(attachmentChange));
+				DiffNode diffNode = createDiffNode(attachmentChange);
+				matchResourceNode.addDiffNode(diffNode);
 			}
 
 			for (Match match : roots) {
 				if (isUnderResourceWithURI(match.getLeft(), matchResource.getLeftURI())
 						|| isUnderResourceWithURI(match.getRight(), matchResource.getRightURI())
 						|| isUnderResourceWithURI(match.getOrigin(), matchResource.getOriginURI())) {
-					ret.getChildren().addAll(buildSubTree(match, false, ChildrenSide.BOTH));
+					MatchNode matchNode = createMatchNode(match);
+					populateMatchNode(matchNode);
+					matchResourceNode.addMatchNode(matchNode);
 				}
 			}
 
-			return ret;
+			return matchResourceNode;
 		}
 
 		/**
@@ -155,7 +161,7 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 	@Override
 	protected Collection<? extends IDifferenceGroup> buildGroups(Comparison comparison2) {
 		ResourceGroup group = new ResourceGroup(comparison2, getCrossReferenceAdapter());
-		((BasicDifferenceGroupImpl)group).buildSubTree();
+		group.buildSubTree();
 		return ImmutableList.of(group);
 	}
 }

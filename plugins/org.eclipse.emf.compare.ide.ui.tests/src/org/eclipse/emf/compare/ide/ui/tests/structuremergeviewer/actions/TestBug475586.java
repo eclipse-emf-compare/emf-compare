@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions;
 
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.transform;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -22,12 +21,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
-import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
@@ -40,7 +37,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeNodeItemProviderSpec;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.tree.TreeFactory;
 import org.eclipse.emf.edit.tree.TreeNode;
@@ -60,7 +56,7 @@ import org.junit.Test;
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-@SuppressWarnings({"nls", "restriction" })
+@SuppressWarnings({"restriction" })
 public class TestBug475586 extends AbstractTestUITreeNodeItemProviderAdapter {
 
 	private static TreeNodeItemProviderSpec itemProvider;
@@ -90,24 +86,12 @@ public class TestBug475586 extends AbstractTestUITreeNodeItemProviderAdapter {
 		editingDomain = EMFCompareEditingDomain.create(left, right, ancestor);
 
 		TreeNode nodeRoot = getMatchNodeRoot(comparison);
-		Collection<?> nodeRootChildren = nodeRoot.getChildren();
-		Iterable<EObject> nodeRootChildrenData = transform(nodeRootChildren, TREE_NODE_DATA);
 
 		// Get Node Single Value Reference A [containmentRef1 delete] difference
-		ReferenceChange nodeA = getReferenceChangeWithFeatureValue(nodeRootChildrenData, "name", "A");
-		containmentRefDeleteA = getTreeNode(nodeRoot, nodeA);
-
-		// Get children of Match Node Single Value Reference A
-		Collection<?> nodeAChildren = containmentRefDeleteA.getChildren();
-		Iterable<EObject> nodeAChildrenData = transform(nodeAChildren, TREE_NODE_DATA);
-
-		// Get C [name set] difference
-		AttributeChange nodeC = getAttributeChangeWithFeatureValue(nodeAChildrenData, "name", "C");
-		nameSetC = getTreeNode(containmentRefDeleteA, nodeC);
-
-		// Get Node B [singleValuedReference unset] difference
-		ReferenceChange nodeB = getReferenceChangeWithFeatureValue(nodeAChildrenData, "name", "B");
-		singleValuedReferenceUnsetB = getTreeNode(containmentRefDeleteA, nodeB);
+		TreeNode nodeA = nodeRoot.getChildren().get(0);
+		containmentRefDeleteA = nodeA.getChildren().get(0);
+		singleValuedReferenceUnsetB = nodeA.getChildren().get(1);
+		nameSetC = nodeA.getChildren().get(2);
 	}
 
 	@Test

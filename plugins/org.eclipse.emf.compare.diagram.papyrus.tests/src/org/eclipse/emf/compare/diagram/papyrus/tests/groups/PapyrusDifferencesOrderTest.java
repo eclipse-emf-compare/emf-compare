@@ -31,9 +31,7 @@ import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl
 import org.eclipse.emf.compare.provider.spec.CompareItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.EmptyMatchedResourcesFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.IdenticalElementsFilter;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.PseudoConflictsFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.TechnicalitiesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
@@ -74,10 +72,8 @@ public class PapyrusDifferencesOrderTest extends AbstractDifferenceOrderTest {
 	public void before() throws IOException {
 		super.before();
 		getFilter().removeFilter(new CascadingDifferencesFilter());
-		getFilter().removeFilter(new PseudoConflictsFilter());
-		getFilter().removeFilter(new EmptyMatchedResourcesFilter());
+		getFilter().removeFilter(new TechnicalitiesFilter());
 		// Adds this filter for clarity
-		getFilter().addFilter(new IdenticalElementsFilter());
 		getFilter().addFilter(new UMLRefinedElementsFilter());
 		expectedResultData = new ExpectedResultData();
 	}

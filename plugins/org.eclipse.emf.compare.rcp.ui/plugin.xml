@@ -51,33 +51,15 @@
          point="org.eclipse.emf.compare.rcp.ui.filters">
       <filter
             activeByDefault="true"
-            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.EmptyMatchedResourcesFilter"
-            description="%emf.compare.empty.resource.mappings.filter.description"
-            label="%emf.compare.empty.resource.mappings.filter">
-      </filter>
-      <filter
-            activeByDefault="true"
-            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.FeatureMapDifferencesFilter"
-            description="%emf.compare.feature.map.filter.description"
-            label="%emf.compare.feature.map.filter">
-      </filter>
-      <filter
-            activeByDefault="true"
-            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.PseudoConflictsFilter"
-            description="%emf.compare.pseudo.conflicts.differences.filter.description"
-            label="%emf.compare.pseudo.conflicts.differences.filter">
-      </filter>
-      <filter
-            activeByDefault="true"
-            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.IdenticalElementsFilter"
-            description="%emf.compare.identical.elements.filter.description"
-            label="%emf.compare.identical.elements.filter">
-      </filter>
-      <filter
-            activeByDefault="true"
             class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter"
             description="%emf.compare.cascading.differences.filter.description"
             label="%emf.compare.cascading.differences.filter">
+      </filter>
+      <filter
+            activeByDefault="true"
+            class="org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.TechnicalitiesFilter"
+            description="%emf.compare.technicalities.filter.description"
+            label="%emf.compare.technicalities.filter">
       </filter>
    </extension>
    <extension

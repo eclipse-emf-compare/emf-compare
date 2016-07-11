@@ -16,12 +16,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
@@ -70,40 +70,30 @@ public class MergeActionTest extends AbstractTestUITreeNodeItemProviderAdapter {
 				scopeProvider.getOrigin());
 
 		TreeNode ePackageMatch = getEcoreA1_EPackageMatch(comparison);
-		Collection<?> ePackage_MatchChildren = ePackageMatch.getChildren();
+		List<TreeNode> ePackage_MatchChildren = ePackageMatch.getChildren();
 		Iterable<EObject> ePackage_MatchChildrenData = transform(ePackage_MatchChildren, TREE_NODE_DATA);
 
 		// Get children of Match Person
 		Match person_Match = getMatchWithFeatureValue(ePackage_MatchChildrenData, "name", "Person");
 		TreeNode person_Match_Node = getTreeNode(ePackageMatch, person_Match);
-		Collection<?> person_MatchChildren = person_Match_Node.getChildren();
-		Iterable<EObject> person_MatchChildrenData = transform(person_MatchChildren, TREE_NODE_DATA);
+		List<TreeNode> personChildren = person_Match_Node.getChildren();
 
-		// Get left add difference
-		ReferenceChange fullNameChange = getReferenceChangeWithFeatureValue(person_MatchChildrenData, "name",
-				"fullName");
-		leftAdd = getTreeNode(person_Match_Node, fullNameChange);
+		// Get left add difference (fullName)
+		leftAdd = personChildren.get(0).getChildren().get(0);
 
-		// Get left delete difference
-		ReferenceChange firstNameChange = getReferenceChangeWithFeatureValue(person_MatchChildrenData, "name",
-				"firstName");
-		leftDelete = getTreeNode(person_Match_Node, firstNameChange);
+		// Get left delete difference (firstName)
+		leftDelete = personChildren.get(1).getChildren().get(0);
 
 		// Get children of Match Book
 		Match book_Match = getMatchWithFeatureValue(ePackage_MatchChildrenData, "name", "Book");
 		TreeNode book_Match_Node = getTreeNode(ePackageMatch, book_Match);
-		Collection<?> book_MatchChildren = book_Match_Node.getChildren();
-		Iterable<EObject> book_MatchChildrenData = transform(book_MatchChildren, TREE_NODE_DATA);
+		List<TreeNode> bookChildren = book_Match_Node.getChildren();
 
-		// Get right add difference
-		ReferenceChange subtitleNameChange = getReferenceChangeWithFeatureValue(book_MatchChildrenData,
-				"name", "subtitle");
-		rightAdd = getTreeNode(book_Match_Node, subtitleNameChange);
+		// Get right add difference (subtitle)
+		rightAdd = bookChildren.get(2).getChildren().get(0);
 
-		// Get right delete difference
-		ReferenceChange titleNameChange = getReferenceChangeWithFeatureValue(book_MatchChildrenData, "name",
-				"title");
-		rightDelete = getTreeNode(book_Match_Node, titleNameChange);
+		// Get right delete difference (title)
+		rightDelete = bookChildren.get(1).getChildren().get(0);
 	}
 
 	@Test

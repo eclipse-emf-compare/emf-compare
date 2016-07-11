@@ -90,29 +90,29 @@ public class PseudoConflictsMergeActionTest extends AbstractTestUITreeNodeItemPr
 				scopeProvider.getOriginPseudoConflictFullScope());
 
 		TreeNode nodeRootMatch = getNodeRootMatch(comparison);
-		TreeNode nodeD = nodeRootMatch.getChildren().get(0).getChildren().get(0);
 		EList<Diff> differences = comparison.getDifferences();
 
 		// Get left add difference
 		Diff leftAddDiff = Iterators.find(differences.iterator(),
 				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD)));
-		leftAdd = getTreeNode(nodeRootMatch, leftAddDiff);
+		leftAdd = getTreeNode(nodeRootMatch.getChildren().get(0), leftAddDiff);
 
 		// Get right add difference
 		Diff rightAddDiff = Iterators.find(differences.iterator(),
 				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD)));
-		rightAdd = getTreeNode(nodeRootMatch, rightAddDiff);
+		rightAdd = getTreeNode(nodeRootMatch.getChildren().get(0), rightAddDiff);
 
 		// Get left delete difference
 		Diff leftDeleteDiff = Iterators.find(differences.iterator(),
 				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.DELETE)));
-		leftDelete = getTreeNode(nodeRootMatch, leftDeleteDiff);
+		leftDelete = getTreeNode(nodeRootMatch.getChildren().get(2), leftDeleteDiff);
 
 		// Get right delete difference
 		Diff rightDeleteDiff = Iterators.find(differences.iterator(),
 				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.DELETE)));
-		rightDelete = getTreeNode(nodeRootMatch, rightDeleteDiff);
+		rightDelete = getTreeNode(nodeRootMatch.getChildren().get(2), rightDeleteDiff);
 
+		TreeNode nodeD = nodeRootMatch.getChildren().get(1).getChildren().get(0);
 		// Get left change difference
 		Diff leftChangeDiff = Iterators.find(differences.iterator(),
 				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.CHANGE)));

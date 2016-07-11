@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.diagram.ide.ui.internal.structuremergeviewer.fil
 import static com.google.common.base.Predicates.instanceOf;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 
 import org.eclipse.emf.compare.Comparison;
@@ -101,7 +102,7 @@ public class GMFRefinedElementsFilter extends AbstractDifferenceFilter {
 	 */
 	@Override
 	public Predicate<? super EObject> getPredicateWhenUnselected() {
-		return PREDICATE_WHEN_UNSELECTED;
+		return Predicates.alwaysFalse();
 	}
 
 }

@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.uml2.rcp.ui.internal.structuremergeviewer.filter
 import static com.google.common.base.Predicates.instanceOf;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 
 import org.eclipse.emf.compare.Comparison;
@@ -101,6 +102,6 @@ public class UMLRefinedElementsFilter extends AbstractDifferenceFilter {
 	 */
 	@Override
 	public Predicate<? super EObject> getPredicateWhenUnselected() {
-		return PREDICATE_WHEN_UNSELECTED;
+		return Predicates.alwaysFalse();
 	}
 }

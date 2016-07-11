@@ -42,21 +42,6 @@
               label="Diagram Refined elements">
         </filter>
      </extension>
-     <extension
-           point="org.eclipse.emf.compare.rcp.ui.differenceGroupExtender">
-        <differenceGroupExtender
-              class="org.eclipse.emf.compare.diagram.ide.ui.internal.structuremergeviewer.filters.groups.extenders.DiagramDiffExtender">
-        </differenceGroupExtender>
-        <differenceGroupExtender
-              class="org.eclipse.emf.compare.diagram.ide.ui.internal.structuremergeviewer.filters.groups.extenders.DiagramChangeExtender">
-        </differenceGroupExtender>
-        <differenceGroupExtender
-              class="org.eclipse.emf.compare.diagram.ide.ui.internal.structuremergeviewer.filters.groups.extenders.EdgeChangeExtender">
-        </differenceGroupExtender>
-        <differenceGroupExtender
-              class="org.eclipse.emf.compare.diagram.ide.ui.internal.structuremergeviewer.filters.groups.extenders.NodeChangeExtender">
-        </differenceGroupExtender>
-     </extension>
    <extension
          point="org.eclipse.compare.contentMergeViewers">
       <viewer

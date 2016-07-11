@@ -18,7 +18,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.FeatureMapChange;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.FeatureMapDifferencesFilter;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.TechnicalitiesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.AbstractTestTreeNodeItemProviderAdapter;
@@ -65,7 +65,7 @@ public class TestFeatureMapDifferencesFilter extends AbstractTestTreeNodeItemPro
 		IDifferenceGroup group = new BasicDifferenceGroupImpl(comparison, alwaysTrue(),
 				crossReferenceAdapter);
 		List<? extends TreeNode> roots = group.getChildren();
-		Predicate<? super EObject> featureMapDifferencesFilter = new FeatureMapDifferencesFilter()
+		Predicate<? super EObject> featureMapDifferencesFilter = new TechnicalitiesFilter()
 				.getPredicateWhenSelected();
 
 		for (TreeNode root : roots) {

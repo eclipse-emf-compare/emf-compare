@@ -10,19 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions;
 
-import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.find;
 import static org.eclipse.emf.compare.internal.EMFCompareEditMessages.getString;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToAttribute;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.moved;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 import static org.junit.Assert.assertEquals;
 
 import com.google.common.collect.Lists;
@@ -31,10 +20,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
@@ -147,151 +133,60 @@ public class TooltipProviderTest extends AbstractTestUITreeNodeItemProviderAdapt
 		editingDomain = EMFCompareEditingDomain.create(scopeProvider.getLeft(), scopeProvider.getRight(),
 				scopeProvider.getOrigin());
 
-		TreeNode nodeRootMatch = getNodeRootMatch(comparison);
-		EList<Diff> differences = comparison.getDifferences();
+		TreeNode root = getNodeRootMatch(comparison);
 
 		// Get the compare editor tree nodes linked with each diff
-		TreeNode nodeA = nodeRootMatch.getChildren().get(1).getChildren().get(0);
-		Diff leftSet = find(differences,
-				and(changedAttribute("Root.SetString.A", "singleValuedAttribute", "value1", "value1bis"),
-						ofKind(DifferenceKind.CHANGE)));
-		leftStringSet = getTreeNode(nodeA, leftSet);
+		TreeNode nodeSetString = root.getChildren().get(0);
+		leftStringSet = nodeSetString.getChildren().get(0).getChildren().get(0);
+		rightStringSet = nodeSetString.getChildren().get(1).getChildren().get(0);
 
-		TreeNode nodeB = nodeRootMatch.getChildren().get(1).getChildren().get(1);
-		Diff rightSet = find(differences,
-				and(changedAttribute("Root.SetString.B", "singleValuedAttribute", "value2", "value2bis"),
-						ofKind(DifferenceKind.CHANGE)));
-		rightStringSet = getTreeNode(nodeB, rightSet);
+		TreeNode nodeSetFromEmptyString = root.getChildren().get(1);
+		leftEmptyStringSet = nodeSetFromEmptyString.getChildren().get(0).getChildren().get(0);
+		rightEmptyStringSet = nodeSetFromEmptyString.getChildren().get(1).getChildren().get(0);
 
-		TreeNode nodeC = nodeRootMatch.getChildren().get(2).getChildren().get(0);
-		Diff leftEmptySet = find(differences,
-				and(changedAttribute("Root.SetFromEmptyString.C", "singleValuedAttribute", "", "newValue1"),
-						ofKind(DifferenceKind.CHANGE)));
-		leftEmptyStringSet = getTreeNode(nodeC, leftEmptySet);
+		TreeNode nodeSetReference = root.getChildren().get(2);
+		leftReferenceSet = nodeSetReference.getChildren().get(0).getChildren().get(0);
+		rightReferenceSet = nodeSetReference.getChildren().get(1).getChildren().get(0);
 
-		TreeNode nodeD = nodeRootMatch.getChildren().get(2).getChildren().get(1);
-		Diff rightEmptySet = find(differences,
-				and(changedAttribute("Root.SetFromEmptyString.D", "singleValuedAttribute", "", "newValue2"),
-						ofKind(DifferenceKind.CHANGE)));
-		rightEmptyStringSet = getTreeNode(nodeD, rightEmptySet);
+		TreeNode nodeSetFromEmptyReference = root.getChildren().get(3);
+		leftEmptyReferenceSet = nodeSetFromEmptyReference.getChildren().get(0).getChildren().get(0);
+		rightEmptyReferenceSet = nodeSetFromEmptyReference.getChildren().get(1).getChildren().get(0);
 
-		TreeNode nodeE = nodeRootMatch.getChildren().get(3).getChildren().get(0);
-		Diff leftRefSet = find(differences,
-				and(changedReference("Root.SetReference.E", "singleValuedReference", "Root.temp.temp1",
-						"Root.temp.temp5"), ofKind(DifferenceKind.CHANGE)));
-		leftReferenceSet = getTreeNode(nodeE, leftRefSet);
+		TreeNode nodeUnsetString = root.getChildren().get(4);
+		leftStringUnset = nodeUnsetString.getChildren().get(0).getChildren().get(0);
+		rightStringUnset = nodeUnsetString.getChildren().get(1).getChildren().get(0);
 
-		TreeNode nodeF = nodeRootMatch.getChildren().get(3).getChildren().get(1);
-		Diff rightRefSet = find(differences,
-				and(changedReference("Root.SetReference.F", "singleValuedReference", "Root.temp.temp2",
-						"Root.temp.temp6"), ofKind(DifferenceKind.CHANGE)));
-		rightReferenceSet = getTreeNode(nodeF, rightRefSet);
+		TreeNode nodeUnsetRef = root.getChildren().get(5);
+		leftReferenceUnset = nodeUnsetRef.getChildren().get(0).getChildren().get(0);
+		rightReferenceUnset = nodeUnsetRef.getChildren().get(1).getChildren().get(0);
 
-		TreeNode nodeG = nodeRootMatch.getChildren().get(4).getChildren().get(0);
-		Diff leftRefSetEmpty = find(differences, and(changedReference("Root.SetFromEmptyReference.G",
-				"singleValuedReference", null, "Root.temp.temp5"), ofKind(DifferenceKind.CHANGE)));
-		leftEmptyReferenceSet = getTreeNode(nodeG, leftRefSetEmpty);
+		TreeNode nodeAddAttribute = root.getChildren().get(6);
+		leftAttributeAdd = nodeAddAttribute.getChildren().get(0).getChildren().get(0);
+		rightAttributeAdd = nodeAddAttribute.getChildren().get(1).getChildren().get(0);
 
-		TreeNode nodeH = nodeRootMatch.getChildren().get(4).getChildren().get(1);
-		Diff rightRefSetEmpty = find(differences, and(changedReference("Root.SetFromEmptyReference.H",
-				"singleValuedReference", null, "Root.temp.temp6"), ofKind(DifferenceKind.CHANGE)));
-		rightEmptyReferenceSet = getTreeNode(nodeH, rightRefSetEmpty);
+		TreeNode nodeAddRef = root.getChildren().get(7);
+		leftContainmentAdd = nodeAddRef.getChildren().get(2).getChildren().get(0); // newNode1
+		rightContainmentAdd = nodeAddRef.getChildren().get(3).getChildren().get(0); // newNode2
 
-		TreeNode nodeI = nodeRootMatch.getChildren().get(5).getChildren().get(0);
-		Diff leftUnset = find(differences,
-				and(changedAttribute("Root.UnsetString.I", "singleValuedAttribute", "value3", ""),
-						ofKind(DifferenceKind.CHANGE)));
-		leftStringUnset = getTreeNode(nodeI, leftUnset);
+		TreeNode nodeAddRefNonCont1 = root.getChildren().get(8);
+		leftNonContainmentAdd = nodeAddRefNonCont1.getChildren().get(0).getChildren().get(0);
+		rightNonContainmentAdd = nodeAddRefNonCont1.getChildren().get(1).getChildren().get(0);
 
-		TreeNode nodeJ = nodeRootMatch.getChildren().get(5).getChildren().get(1);
-		Diff rightUnset = find(differences,
-				and(changedAttribute("Root.UnsetString.J", "singleValuedAttribute", "value4", ""),
-						ofKind(DifferenceKind.CHANGE)));
-		rightStringUnset = getTreeNode(nodeJ, rightUnset);
+		TreeNode nodeDel = root.getChildren().get(9);
+		leftContainmentDelete = nodeDel.getChildren().get(1).getChildren().get(0);
+		rightContainmentDelete = nodeDel.getChildren().get(0).getChildren().get(0);
 
-		TreeNode nodeK = nodeRootMatch.getChildren().get(6).getChildren().get(0);
-		Diff leftRefUnset = find(differences, and(
-				changedReference("Root.UnsetReference.K", "singleValuedReference", "Root.temp.temp3", null),
-				ofKind(DifferenceKind.CHANGE)));
-		leftReferenceUnset = getTreeNode(nodeK, leftRefUnset);
+		TreeNode nodeDelNonCont = root.getChildren().get(10);
+		leftNonContainmentDelete = nodeDelNonCont.getChildren().get(0).getChildren().get(0);
+		rightNonContainmentDelete = nodeDelNonCont.getChildren().get(1).getChildren().get(0);
 
-		TreeNode nodeL = nodeRootMatch.getChildren().get(6).getChildren().get(1);
-		Diff rightRefUnset = find(differences, and(
-				changedReference("Root.UnsetReference.L", "singleValuedReference", "Root.temp.temp4", null),
-				ofKind(DifferenceKind.CHANGE)));
-		rightReferenceUnset = getTreeNode(nodeL, rightRefUnset);
+		TreeNode nodeMoveCont = root.getChildren().get(11);
+		leftContainerMove = nodeMoveCont.getChildren().get(1).getChildren().get(0);
+		rightContainerMove = nodeMoveCont.getChildren().get(0).getChildren().get(0);
 
-		TreeNode nodeAddAtt1 = nodeRootMatch.getChildren().get(7).getChildren().get(0);
-		Diff leftAddAtribute = find(differences,
-				and(addedToAttribute("Root.AddAttribute.attribute1", "multiValuedAttribute", "value 1"),
-						ofKind(DifferenceKind.ADD)));
-		leftAttributeAdd = getTreeNode(nodeAddAtt1, leftAddAtribute);
-
-		TreeNode nodeAddAtt2 = nodeRootMatch.getChildren().get(7).getChildren().get(1);
-		Diff rightAddAtribute = find(differences,
-				and(addedToAttribute("Root.AddAttribute.attribute2", "multiValuedAttribute", "value 2"),
-						ofKind(DifferenceKind.ADD)));
-		rightAttributeAdd = getTreeNode(nodeAddAtt2, rightAddAtribute);
-
-		TreeNode nodeAddRef = nodeRootMatch.getChildren().get(8);
-		Diff leftAddRef = find(differences,
-				and(added("Root.AddReference.newNode1"), ofKind(DifferenceKind.ADD)));
-		leftContainmentAdd = getTreeNode(nodeAddRef, leftAddRef);
-
-		Diff rightAddRef = find(differences,
-				and(added("Root.AddReference.newNode2"), ofKind(DifferenceKind.ADD)));
-		rightContainmentAdd = getTreeNode(nodeAddRef, rightAddRef);
-
-		TreeNode nodeAddRefNonCont1 = nodeRootMatch.getChildren().get(9).getChildren().get(0);
-		Diff leftAddNonCont = find(differences,
-				and(addedToReference("Root.AddReferenceNonContainment.reference1", "multiValuedReference",
-						"Root.temp.temp1"), ofKind(DifferenceKind.ADD)));
-		leftNonContainmentAdd = getTreeNode(nodeAddRefNonCont1, leftAddNonCont);
-
-		TreeNode nodeAddRefNonCont2 = nodeRootMatch.getChildren().get(9).getChildren().get(1);
-		Diff rightAddNonCont = find(differences,
-				and(addedToReference("Root.AddReferenceNonContainment.reference2", "multiValuedReference",
-						"Root.temp.temp2"), ofKind(DifferenceKind.ADD)));
-		rightNonContainmentAdd = getTreeNode(nodeAddRefNonCont2, rightAddNonCont);
-
-		TreeNode nodeDel = nodeRootMatch.getChildren().get(10);
-		Diff leftDelete = find(differences,
-				and(removed("Root.DelContainment.M"), ofKind(DifferenceKind.DELETE)));
-		leftContainmentDelete = getTreeNode(nodeDel, leftDelete);
-
-		Diff rightDelete = find(differences,
-				and(removed("Root.DelContainment.N"), ofKind(DifferenceKind.DELETE)));
-		rightContainmentDelete = getTreeNode(nodeDel, rightDelete);
-
-		TreeNode nodeDelNonCont1 = nodeRootMatch.getChildren().get(11).getChildren().get(0);
-		Diff leftDeleteNonCont = find(differences,
-				and(removedFromReference("Root.DelNonContainment.reference3", "multiValuedReference",
-						"Root.temp.temp7"), ofKind(DifferenceKind.DELETE)));
-		leftNonContainmentDelete = getTreeNode(nodeDelNonCont1, leftDeleteNonCont);
-
-		TreeNode nodeDelNonCont2 = nodeRootMatch.getChildren().get(11).getChildren().get(1);
-		Diff rightDeleteNonCont = find(differences,
-				and(removedFromReference("Root.DelNonContainment.reference4", "multiValuedReference",
-						"Root.temp.temp8"), ofKind(DifferenceKind.DELETE)));
-		rightNonContainmentDelete = getTreeNode(nodeDelNonCont2, rightDeleteNonCont);
-
-		TreeNode nodeMoveCont = nodeRootMatch.getChildren().get(13);
-		Diff leftMoveCont = find(differences, and(moved("Root.MoveContainerDestination.O", "containmentRef1"),
-				ofKind(DifferenceKind.MOVE)));
-		leftContainerMove = getTreeNode(nodeMoveCont, leftMoveCont);
-
-		Diff rightMoveCont = find(differences, and(
-				moved("Root.MoveContainerDestination.P", "containmentRef1"), ofKind(DifferenceKind.MOVE)));
-		rightContainerMove = getTreeNode(nodeMoveCont, rightMoveCont);
-
-		TreeNode nodeMovePos = nodeRootMatch.getChildren().get(14);
-		Diff leftMovePos = find(differences,
-				and(moved("Root.MovePosition.Q", "containmentRef1"), ofKind(DifferenceKind.MOVE)));
-		leftPositionMove = getTreeNode(nodeMovePos, leftMovePos);
-
-		Diff rightMovePos = find(differences,
-				and(moved("Root.MovePosition.S", "containmentRef1"), ofKind(DifferenceKind.MOVE)));
-		rightPositionMove = getTreeNode(nodeMovePos, rightMovePos);
+		TreeNode nodeMovePos = root.getChildren().get(12);
+		leftPositionMove = nodeMovePos.getChildren().get(0).getChildren().get(0);
+		rightPositionMove = nodeMovePos.getChildren().get(1).getChildren().get(0);
 
 	}
 

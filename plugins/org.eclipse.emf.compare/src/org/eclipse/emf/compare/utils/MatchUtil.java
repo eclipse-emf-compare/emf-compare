@@ -266,4 +266,28 @@ public final class MatchUtil {
 		return customSwitch.doSwitch(input);
 	}
 
+	/**
+	 * Get the object matched by a Match on a given side.
+	 * 
+	 * @param m
+	 *            The match, must not be <code>null</code>
+	 * @param side
+	 *            The side for which we want the matched value, use <code>null</code> for ORIGIN.
+	 * @return The value matched by this match on the given side.
+	 * @since 3.4
+	 */
+	public static EObject getMatchedObject(Match m, DifferenceSource side) {
+		if (side == null) {
+			return m.getOrigin();
+		}
+		switch (side) {
+			case LEFT:
+				return m.getLeft();
+			case RIGHT:
+				return m.getRight();
+			default:
+				throw new IllegalArgumentException("Value " + side + " is not a valid DifferenceSource."); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
 }

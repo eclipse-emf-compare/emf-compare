@@ -11,23 +11,23 @@
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl;
 
 import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.not;
-import static com.google.common.collect.Iterators.any;
-import static com.google.common.collect.Iterators.transform;
+import static com.google.common.base.Predicates.or;
+import static org.eclipse.emf.compare.DifferenceKind.ADD;
+import static org.eclipse.emf.compare.DifferenceKind.DELETE;
+import static org.eclipse.emf.compare.DifferenceKind.MOVE;
+import static org.eclipse.emf.compare.DifferenceSource.LEFT;
+import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Predicate;
 
-import java.util.Iterator;
-
-import org.eclipse.emf.compare.Conflict;
-import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.AbstractDifferenceFilter;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
+import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 
@@ -49,48 +49,68 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 			if (input instanceof TreeNode) {
 				TreeNode treeNode = (TreeNode)input;
 				EObject data = treeNode.getData();
-				if (data instanceof Diff && ofKind(DifferenceKind.MOVE).apply((Diff)data)) {
-					ret = false;
-				} else {
-					TreeNode parent = treeNode.getParent();
-					final EObject parentData;
-					if (parent != null) {
-						parentData = parent.getData();
-					} else {
-						parentData = null;
-					}
-					if (parentData instanceof Diff
-							&& !((parentData instanceof ResourceAttachmentChange)
-									|| ofKind(DifferenceKind.MOVE).apply((Diff)parentData))
-							&& data instanceof Diff) {
-						Iterator<EObject> eAllDataContents = transform(treeNode.eAllContents(),
-								IDifferenceGroup.TREE_NODE_DATA);
-						return CASCADING_DIFF.apply(data) && !any(eAllDataContents, not(CASCADING_DIFF));
+				if (data instanceof Diff && !(data instanceof ResourceAttachmentChange)) {
+					Diff diff = (Diff)data;
+					if (diff.getKind() != MOVE && (diff.getConflict() == null)) {
+						TreeNode parent = treeNode.getParent();
+						if (parent != null && parent.getData() instanceof Match) {
+							Match match = (Match)parent.getData();
+							if (match.eContainer() instanceof Match) {
+								Match parentMatch = (Match)match.eContainer();
+								if (isAddOrDeleteMatch(parentMatch, diff.getSource())) {
+									ret = true;
+								} else if (isAddOrDeleteMatch(match, diff.getSource())) {
+									ret = !and(or(CONTAINMENT_REFERENCE_CHANGE,
+											REFINED_BY_CONTAINMENT_REF_CHANGE), ofKind(ADD, DELETE))
+													.apply(diff);
+								}
+							} else if (isAddOrDeleteMatch(match, diff.getSource())) {
+								ret = !and(
+										or(CONTAINMENT_REFERENCE_CHANGE, REFINED_BY_CONTAINMENT_REF_CHANGE),
+										ofKind(ADD, DELETE)).apply(diff);
+							}
+						}
 					}
 				}
 			}
 			return ret;
 		}
-	};
 
-	/**
-	 * Predicate to know if the given diff is a conflictual diff.
-	 */
-	private static final Predicate<EObject> IS_NON_CONFLICTUAL_DIFF = new Predicate<EObject>() {
-		public boolean apply(EObject eObject) {
-			if (eObject instanceof Diff) {
-				Conflict conflict = ((Diff)eObject).getConflict();
-				return conflict == null || ConflictKind.PSEUDO == conflict.getKind();
+		/**
+		 * Indicate whether a Match is that of an object that was either added or deleted on the given side.
+		 * 
+		 * @param match
+		 *            The match
+		 * @param side
+		 *            The side
+		 * @return <code>true</code> if the matched object is present on side but not on origin or vice-versa.
+		 */
+		protected boolean isAddOrDeleteMatch(Match match, DifferenceSource side) {
+			if (match.getComparison().isThreeWay()) {
+				return (MatchUtil.getMatchedObject(match, side) == null) != (match.getOrigin() == null);
 			}
-			return false;
+			return (MatchUtil.getMatchedObject(match, side) == null) != (MatchUtil.getMatchedObject(match,
+					opposite(side)) == null);
+		}
+
+		protected DifferenceSource opposite(DifferenceSource side) {
+			switch (side) {
+				case LEFT:
+					return RIGHT;
+				case RIGHT:
+					return LEFT;
+				default:
+					throw new IllegalArgumentException("Source value not supported: " + side); //$NON-NLS-1$
+			}
 		}
 	};
 
-	/**
-	 * Predicate to know if the given diff respects the requirements of a cascading diff.
-	 */
-	private static final Predicate<EObject> CASCADING_DIFF = and(IS_NON_CONFLICTUAL_DIFF,
-			not(instanceOf(ResourceAttachmentChange.class)));
+	private static final Predicate<Diff> REFINED_BY_CONTAINMENT_REF_CHANGE = new Predicate<Diff>() {
+		public boolean apply(Diff input) {
+			return input.getPrimeRefining() != null
+					&& CONTAINMENT_REFERENCE_CHANGE.apply(input.getPrimeRefining());
+		}
+	};
 
 	/**
 	 * {@inheritDoc}

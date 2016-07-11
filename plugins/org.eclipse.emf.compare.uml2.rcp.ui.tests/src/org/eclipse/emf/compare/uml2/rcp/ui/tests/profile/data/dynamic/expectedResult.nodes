@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="ASCII"?>
-<nodes:NodeSingleValueAttribute xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" xmi:id="_ZXd1sAEbEeSEjKYb5Aambw" name="&lt;Model> model" singleValuedAttribute="Model.gif,match_ov.gif">
-  <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC8AEbEeSEjKYb5Aambw" name="&lt;Class> NormalClass" singleValuedAttribute="Class.gif,VisibilityKind_protected.gif,match_ov.gif">
-    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC8QEbEeSEjKYb5Aambw" name="&lt;Property> newProperty [ownedAttribute add]" singleValuedAttribute="Property.gif,add_ov.gif"/>
-    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC8gEbEeSEjKYb5Aambw" name="protected [visibility changed]" singleValuedAttribute="AttributeChange.gif,chg_ov.gif"/>
-    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC8wEbEeSEjKYb5Aambw" name="true [isLeaf changed]" singleValuedAttribute="AttributeChange.gif,chg_ov.gif"/>
+<nodes:NodeSingleValueAttribute xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" xmi:id="_F2U9sFl3EeaigaO7rTdRnw" name="&lt;Model> model" singleValuedAttribute="Model.gif,match_ov.gif">
+  <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2VkwFl3EeaigaO7rTdRnw" name="&lt;Class> NormalClass" singleValuedAttribute="Class.gif,VisibilityKind_protected.gif,match_ov.gif">
+    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2VkwVl3EeaigaO7rTdRnw" name="protected [visibility changed]" singleValuedAttribute="AttributeChange.gif,chg_ov.gif"/>
+    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2Vkwll3EeaigaO7rTdRnw" name="true [isLeaf changed]" singleValuedAttribute="AttributeChange.gif,chg_ov.gif"/>
+    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2Vkw1l3EeaigaO7rTdRnw" name="&lt;Property> newProperty" singleValuedAttribute="Property.gif,match_ov.gif">
+      <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2VkxFl3EeaigaO7rTdRnw" name="&lt;Property> newProperty [ownedAttribute add]" singleValuedAttribute="Property.gif,add_ov.gif"/>
+    </containmentRef1>
   </containmentRef1>
-  <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC9AEbEeSEjKYb5Aambw" name="&lt;ACliche> ACliche_Element" singleValuedAttribute="eclipse_luna.gif,match_ov.gif">
-    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC9QEbEeSEjKYb5Aambw" name="&lt;ACliche2> ACliche2_Element [singleValuedReference changed]" singleValuedAttribute="Class.gif,VisibilityKind_package.gif,chg_ov.gif"/>
-    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC9gEbEeSEjKYb5Aambw" name="&lt;ACliche3> ACliche3_Element [manyValuedReference delete]" singleValuedAttribute="Class.gif,del_ov.gif"/>
-    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC9wEbEeSEjKYb5Aambw" name="cliche attribute value [New] [singleValuedAttribute changed]" singleValuedAttribute="AttributeChange.gif,chg_ov.gif"/>
-    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC-AEbEeSEjKYb5Aambw" name="Value3 [manyValuedAttribute add]" singleValuedAttribute="AttributeChange.gif,add_ov.gif"/>
+  <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2VkxVl3EeaigaO7rTdRnw" name="&lt;ACliche> ACliche_Element" singleValuedAttribute="eclipse_luna.gif,match_ov.gif">
+    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2Vkxll3EeaigaO7rTdRnw" name="&lt;ACliche2> ACliche2_Element [singleValuedReference changed]" singleValuedAttribute="Class.gif,VisibilityKind_package.gif,chg_ov.gif"/>
+    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2Vkx1l3EeaigaO7rTdRnw" name="&lt;ACliche3> ACliche3_Element [manyValuedReference delete]" singleValuedAttribute="Class.gif,del_ov.gif"/>
+    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2VkyFl3EeaigaO7rTdRnw" name="cliche attribute value [New] [singleValuedAttribute changed]" singleValuedAttribute="AttributeChange.gif,chg_ov.gif"/>
+    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2VkyVl3EeaigaO7rTdRnw" name="Value3 [manyValuedAttribute add]" singleValuedAttribute="AttributeChange.gif,add_ov.gif"/>
   </containmentRef1>
-  <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC-QEbEeSEjKYb5Aambw" name="&lt;ACliche2> ACliche2_Element" singleValuedAttribute="Class.gif,VisibilityKind_package.gif,match_ov.gif">
-    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC-gEbEeSEjKYb5Aambw" name="package [visibility changed]" singleValuedAttribute="AttributeChange.gif,chg_ov.gif"/>
-    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC-wEbEeSEjKYb5Aambw" name="&lt;ACliche3> ACliche3_Element [manyValuedReference add]" singleValuedAttribute="Class.gif,VisibilityKind_private.gif,add_ov.gif"/>
-    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC_AEbEeSEjKYb5Aambw" name="Setting of value [singleValuedAttribute set]" singleValuedAttribute="AttributeChange.gif,chg_ov.gif"/>
-    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC_QEbEeSEjKYb5Aambw" name="Value1 [manyValuedAttribute add]" singleValuedAttribute="AttributeChange.gif,add_ov.gif"/>
+  <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2Vkyll3EeaigaO7rTdRnw" name="&lt;ACliche2> ACliche2_Element" singleValuedAttribute="Class.gif,VisibilityKind_package.gif,match_ov.gif">
+    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2Vky1l3EeaigaO7rTdRnw" name="package [visibility changed]" singleValuedAttribute="AttributeChange.gif,chg_ov.gif"/>
+    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2VkzFl3EeaigaO7rTdRnw" name="&lt;ACliche3> ACliche3_Element [manyValuedReference add]" singleValuedAttribute="Class.gif,VisibilityKind_private.gif,add_ov.gif"/>
+    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2VkzVl3EeaigaO7rTdRnw" name="Setting of value [singleValuedAttribute set]" singleValuedAttribute="AttributeChange.gif,chg_ov.gif"/>
+    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2Vkzll3EeaigaO7rTdRnw" name="Value1 [manyValuedAttribute add]" singleValuedAttribute="AttributeChange.gif,add_ov.gif"/>
   </containmentRef1>
-  <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC_gEbEeSEjKYb5Aambw" name="&lt;ACliche3> ACliche3_Element" singleValuedAttribute="Class.gif,VisibilityKind_private.gif,match_ov.gif">
-    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_ZXqC_wEbEeSEjKYb5Aambw" name="private [visibility changed]" singleValuedAttribute="AttributeChange.gif,chg_ov.gif"/>
+  <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2Vkz1l3EeaigaO7rTdRnw" name="&lt;ACliche3> ACliche3_Element" singleValuedAttribute="Class.gif,VisibilityKind_private.gif,match_ov.gif">
+    <containmentRef1 xsi:type="nodes:NodeSingleValueAttribute" xmi:id="_F2Vk0Fl3EeaigaO7rTdRnw" name="private [visibility changed]" singleValuedAttribute="AttributeChange.gif,chg_ov.gif"/>
   </containmentRef1>
 </nodes:NodeSingleValueAttribute>
