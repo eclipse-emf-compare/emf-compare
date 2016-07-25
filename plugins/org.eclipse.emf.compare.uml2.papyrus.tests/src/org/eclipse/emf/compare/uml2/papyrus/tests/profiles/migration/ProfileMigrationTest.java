@@ -8,7 +8,7 @@
  * Contributors:
  *     Martin Fleck - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.uml2.tests.profiles.migration;
+package org.eclipse.emf.compare.uml2.papyrus.tests.profiles.migration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

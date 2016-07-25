@@ -8,9 +8,9 @@
  * Contributors:
  *     Martin Fleck - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.uml2.tests.suite;
+package org.eclipse.emf.compare.uml2.papyrus.tests.suite;
 
-import org.eclipse.emf.compare.uml2.tests.profiles.migration.ProfileMigrationTest;
+import org.eclipse.emf.compare.uml2.papyrus.tests.profiles.migration.ProfileMigrationTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;

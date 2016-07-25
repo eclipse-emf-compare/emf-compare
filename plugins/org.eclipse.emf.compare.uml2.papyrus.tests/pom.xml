@@ -9,7 +9,7 @@
     <relativePath>../../org.eclipse.emf.compare-parent/test-parent</relativePath>
   </parent>
   <groupId>org.eclipse.emf.compare</groupId>
-  <artifactId>org.eclipse.emf.compare.uml2.tests</artifactId>
+  <artifactId>org.eclipse.emf.compare.uml2.papyrus.tests</artifactId>
   <version>2.5.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
  
@@ -20,9 +20,9 @@
           <artifactId>tycho-surefire-plugin</artifactId>
           <configuration>
             <includes>
-			  <include>org/eclipse/emf/compare/uml2/tests/suite/AllTests.class</include>
+			  <include>org/eclipse/emf/compare/uml2/papyrus/tests/suite/AllUITests.class</include>
             </includes>     
-            <useUIHarness>false</useUIHarness>
+            <useUIHarness>true</useUIHarness>
             <useUIThread>false</useUIThread>
           </configuration>
         </plugin>

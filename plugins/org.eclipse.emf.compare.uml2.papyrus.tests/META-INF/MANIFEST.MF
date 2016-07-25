@@ -1,18 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.emf.compare.uml2.tests;singleton:=true
+Bundle-SymbolicName: org.eclipse.emf.compare.uml2.papyrus.tests
 Bundle-Version: 2.5.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile,
- org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl,
- org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.provider,
- org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.util,
- org.eclipse.emf.compare.uml2.tests,
- org.eclipse.emf.compare.uml2.tests.edit.provider
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.uml2.uml;bundle-version="5.0.0";visibility:=reexport,
@@ -30,8 +24,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare.edit,
  org.eclipse.emf.compare.ide.ui.tests.framework,
  org.eclipse.emf.compare.ide;bundle-version="3.3.0",
- org.eclipse.papyrus.sysml;bundle-version="[1.0.2,2.0.0)"
+ org.eclipse.papyrus.sysml;bundle-version="[1.0.2,2.0.0)",
+ org.eclipse.emf.compare.uml2.papyrus
 Bundle-ActivationPolicy: lazy
 Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
  com.google.common.collect;version="[11.0.0,16.0.0)"
-Bundle-Activator: org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.provider.UML2CompareTestProfileEditPlugin$Implementation

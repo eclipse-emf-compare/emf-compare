@@ -8,7 +8,7 @@
  * Contributors:
  *     Martin Fleck - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.uml2.tests.profiles.migration;
+package org.eclipse.emf.compare.uml2.papyrus.tests.profiles.migration;
 
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;

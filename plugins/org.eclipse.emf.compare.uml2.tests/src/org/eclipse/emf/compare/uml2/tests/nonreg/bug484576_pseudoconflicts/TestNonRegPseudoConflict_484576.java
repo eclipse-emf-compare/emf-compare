@@ -34,8 +34,8 @@ public class TestNonRegPseudoConflict_484576 extends AbstractUMLTest {
 
 		final Comparison comparison = compare(left, right, ancestor);
 
-		assertEquals(3, comparison.getConflicts().size());
-		assertEquals(2, filter(comparison.getConflicts(), new Predicate<Conflict>() {
+		assertEquals(7, comparison.getConflicts().size());
+		assertEquals(6, filter(comparison.getConflicts(), new Predicate<Conflict>() {
 			public boolean apply(Conflict conflict) {
 				return conflict.getKind() == ConflictKind.PSEUDO;
 			}
