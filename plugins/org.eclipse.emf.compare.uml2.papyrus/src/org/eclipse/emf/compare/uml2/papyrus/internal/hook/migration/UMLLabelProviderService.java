@@ -31,7 +31,9 @@ class UMLLabelProviderService implements LabelProviderService {
 	 * {@inheritDoc}
 	 */
 	public void disposeService() throws ServiceException {
-		labelProvider.dispose();
+		if (labelProvider != null) {
+			labelProvider.dispose();
+		}
 	}
 
 	/**
