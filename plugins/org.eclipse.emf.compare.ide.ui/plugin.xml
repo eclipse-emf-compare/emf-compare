@@ -244,7 +244,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.eclipse.ui.popup.any">
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
          <menu
                id="compareWithMenu"
                label="%compare.with.label">
@@ -477,27 +477,17 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-         <menu
-               id="compareWithMenu"
-               label="Compare With">
-            <separator
-                  name="compareWithGroup">
-            </separator>
-         </menu>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
             locationURI="popup:compareWithMenu?after=compareWithGroup">
          <command
                commandId="org.eclipse.emf.compare.ide.ui.emfComparisonSourceCompareCommand"
-               label="Each Other (EMFCompare)"
+               label="%command.each.other.emfComparisonSource"
                style="push">
             <visibleWhen
                   checkEnabled="false">
                <with
                      variable="activeMenuSelection">
-                  <iterate>
+                  <iterate
+                        ifEmpty="false">
                      <and>
                         <adapt
                               type="org.eclipse.emf.compare.ide.ui.source.IEMFComparisonSource">
