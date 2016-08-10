@@ -535,4 +535,15 @@
          </activeWhen>
       </handler>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.rcp.ui.contentMergeViewerCustomization">
+      <treeContentCustomization
+            contentProvider="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.provider.TreeMergeViewerItemContentProvider"
+            ranking="1">
+      </treeContentCustomization>
+      <contentCustomization
+            mergeViewerItemProvider="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.CompareAccessorMergeViewerItemProvider"
+            ranking="1">
+      </contentCustomization>
+   </extension>
 </plugin>

@@ -193,7 +193,6 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 				ret = createBasicContainer((EObject)parent);
 			}
 		}
-
 		return ret;
 	}
 
@@ -255,7 +254,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	/**
 	 * @return the fComparison
 	 */
-	protected final Comparison getComparison() {
+	public final Comparison getComparison() {
 		return fComparison;
 	}
 
@@ -266,6 +265,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		return fAdapterFactory;
 	}
 
+	@Deprecated
 	protected final IMergeViewerItem.Container createBasicContainer(EObject eObject) {
 		IMergeViewerItem.Container ret = null;
 		Match parentMatch = fComparison.getMatch(eObject);
@@ -337,6 +337,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	 *            the given {@link ResourceAttachmentChange}.
 	 * @return an IMergeViewerItem.
 	 */
+	@Deprecated
 	protected final IMergeViewerItem.Container createBasicContainer(ResourceAttachmentChange diff) {
 		final Comparison comparison = getComparison();
 		Resource left = MergeViewerUtil.getResource(comparison, MergeViewerSide.LEFT, diff);
@@ -347,6 +348,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		return ret;
 	}
 
+	@Deprecated
 	protected final List<IMergeViewerItem> createInsertionPoints(Comparison comparison,
 			EStructuralFeature eStructuralFeature, final List<? extends IMergeViewerItem> values,
 			List<? extends Diff> differences) {
@@ -487,6 +489,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		return insertionPoint;
 	}
 
+	@Deprecated
 	protected final List<IMergeViewerItem> createMergeViewerItemFrom(Collection<?> values) {
 		List<IMergeViewerItem> ret = newArrayListWithCapacity(values.size());
 		for (EObject value : filter(values, EObject.class)) {
@@ -501,6 +504,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		return ret;
 	}
 
+	@Deprecated
 	protected boolean yieldsMergeViewerItem(Collection<?> values) {
 		Iterable<EObject> elements = filter(values, EObject.class);
 		if (fDiff != null && !Iterables.isEmpty(elements)) {
@@ -517,6 +521,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		return false;
 	}
 
+	@Deprecated
 	protected boolean yieldsInsertionPoint(Iterable<Diff> diffs) {
 		return Iterables.any(diffs, new Predicate<Diff>() {
 			public boolean apply(Diff diff) {
@@ -572,6 +577,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	 *            the given eObject.
 	 * @return an IMergeViewerItem.
 	 */
+	@Deprecated
 	protected IMergeViewerItem createMergeViewerItemFrom(EObject eObject) {
 
 		Match match = getComparison().getMatch(eObject);
@@ -610,11 +616,13 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	 *            the active group provider
 	 * @return a list of the filtered diffs
 	 */
+	@Deprecated
 	protected List<? extends Diff> filteredDiffs(Iterable<? extends Diff> unfilteredDiffs,
 			Predicate<? super EObject> predicate, IDifferenceGroupProvider groupProvider) {
 		return Lists.newArrayList(filter(unfilteredDiffs, visibleInMergeViewer(predicate, groupProvider)));
 	}
 
+	@Deprecated
 	protected Predicate<Diff> visibleInMergeViewer(final Predicate<? super EObject> predicate,
 			final IDifferenceGroupProvider groupProvider) {
 		if (predicate == null) {
@@ -628,6 +636,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 		};
 	}
 
+	@Deprecated
 	public static class Container extends MergeViewerItem implements IMergeViewerItem.Container {
 
 		/**

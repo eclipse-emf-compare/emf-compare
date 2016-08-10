@@ -100,7 +100,11 @@ public interface IMergeViewerItem extends Adapter {
 	 * 
 	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
 	 * @since 4.0
+	 * @deprecated IMergeViewerItem.Container is no longer needed since its functionality is now provided by
+	 *             {@link org.eclipse.emf.compare.rcp.ui.mergeviewer.item.provider.IMergeViewerItemContentProvider
+	 *             IMergeViewerItemContentProvider}. Use an {@link IMergeViewerItem} instead.
 	 */
+	@Deprecated
 	interface Container extends IMergeViewerItem {
 		/**
 		 * Returns whether this container has at least one child. In some cases this methods avoids having to

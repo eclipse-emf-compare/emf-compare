@@ -13,15 +13,14 @@ package org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer.provid
 import java.util.ResourceBundle;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer.item.ContentProviderMergeViewerItem;
-import org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer.item.PapyrusContentProviderMergeViewerItem;
 import org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.CompareDiagramIDEUIPapyrusPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.provider.TreeContentMergeViewerItemLabelProvider;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.papyrus.emf.facet.custom.metamodel.v0_2_0.internal.treeproxy.TreeElement;
+import org.eclipse.papyrus.emf.facet.custom.metamodel.v0_2_0.internal.treeproxy.EObjectTreeElement;
+import org.eclipse.papyrus.emf.facet.custom.metamodel.v0_2_0.internal.treeproxy.TreeproxyFactory;
 import org.eclipse.papyrus.infra.gmfdiag.css.notation.CSSDiagram;
 import org.eclipse.papyrus.infra.services.labelprovider.service.LabelProviderService;
 import org.eclipse.swt.graphics.Image;
@@ -57,7 +56,7 @@ public class PapyrusTreeContentMergeViewerItemLabelProvider extends TreeContentM
 
 	@Override
 	public Image getImage(Object object) {
-		if (!ContentProviderMergeViewerItem.class.isInstance(object)) {
+		if (!IMergeViewerItem.class.isInstance(object)) {
 			return super.getImage(object);
 		}
 
@@ -78,9 +77,9 @@ public class PapyrusTreeContentMergeViewerItemLabelProvider extends TreeContentM
 			if (hasModelExplorerLabel(value)) {
 				final LabelProviderService labelProviderService = CompareDiagramIDEUIPapyrusPlugin
 						.getDefault().getLabelProviderService();
-				if (PapyrusContentProviderMergeViewerItem.class.isInstance(object)) {
-					final TreeElement treeElement = PapyrusContentProviderMergeViewerItem.class.cast(object)
-							.getTreeElement();
+				if (value instanceof EObject) {
+					EObjectTreeElement treeElement = TreeproxyFactory.eINSTANCE.createEObjectTreeElement();
+					treeElement.setEObject(EObject.class.cast(value));
 					image = labelProviderService.getLabelProvider().getImage(treeElement);
 				} else {
 					image = labelProviderService.getLabelProvider().getImage(value);
@@ -94,7 +93,7 @@ public class PapyrusTreeContentMergeViewerItemLabelProvider extends TreeContentM
 
 	@Override
 	public String getText(Object object) {
-		if (!ContentProviderMergeViewerItem.class.isInstance(object)) {
+		if (!IMergeViewerItem.class.isInstance(object)) {
 			return super.getText(object);
 		}
 
@@ -116,9 +115,9 @@ public class PapyrusTreeContentMergeViewerItemLabelProvider extends TreeContentM
 			if (hasModelExplorerLabel(value)) {
 				final LabelProviderService labelProviderService = CompareDiagramIDEUIPapyrusPlugin
 						.getDefault().getLabelProviderService();
-				if (PapyrusContentProviderMergeViewerItem.class.isInstance(object)) {
-					final TreeElement treeElement = PapyrusContentProviderMergeViewerItem.class.cast(object)
-							.getTreeElement();
+				if (value instanceof EObject) {
+					EObjectTreeElement treeElement = TreeproxyFactory.eINSTANCE.createEObjectTreeElement();
+					treeElement.setEObject(EObject.class.cast(value));
 					text = labelProviderService.getLabelProvider().getText(treeElement);
 				} else {
 					text = labelProviderService.getLabelProvider().getText(value);

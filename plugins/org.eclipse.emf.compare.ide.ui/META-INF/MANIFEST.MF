@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.ide.ui;singleton:=true
-Bundle-Version: 4.3.0.qualifier
+Bundle-Version: 4.4.0.qualifier
 Bundle-Activator: org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.core.runtime,
@@ -30,6 +30,7 @@ Export-Package: org.eclipse.emf.compare.ide.ui.dependency;x-friends:="org.eclips
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.accessor;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label;x-internal:=true,
+ org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;x-internal:=true,

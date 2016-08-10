@@ -22,17 +22,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer.item.PapyrusContentProviderMergeViewerItem;
-import org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer.provider.PapyrusTreeContentMergeViewerItemContentProvider;
+import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer.facet.PapyrusFacetContentProviderWrapperAdapterFactory;
 import org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer.provider.PapyrusTreeContentMergeViewerItemLabelProvider;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewer;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.provider.MergeViewerItemProviderConfiguration;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractTableOrTreeMergeViewer.ElementComparer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.TreeMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.provider.IMergeViewerItemProviderConfiguration;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -86,9 +89,7 @@ public class PapyrusTreeContentMergeViewer extends TreeContentMergeViewer {
 	protected AbstractMergeViewer createMergeViewer(final Composite parent, final MergeViewerSide side) {
 		final TreeMergeViewer mergeTreeViewer = new TreeMergeViewer(parent, side, this,
 				getCompareConfiguration());
-		final IContentProvider contentProvider = new PapyrusTreeContentMergeViewerItemContentProvider(
-				getAdapterFactory(), getCompareConfiguration(), getDifferenceGroupProvider(),
-				getDifferenceFilterPredicate());
+		final IContentProvider contentProvider = createMergeViewerContentProvider(side);
 		mergeTreeViewer.setContentProvider(contentProvider);
 
 		final IBaseLabelProvider labelProvider = new PapyrusTreeContentMergeViewerItemLabelProvider(
@@ -98,6 +99,14 @@ public class PapyrusTreeContentMergeViewer extends TreeContentMergeViewer {
 		hookListeners(mergeTreeViewer);
 
 		return mergeTreeViewer;
+	}
+
+	@Override
+	protected IMergeViewerItemProviderConfiguration createMergeViewerItemProviderConfiguration(MergeViewerSide side) {
+		ComposedAdapterFactory factory = new ComposedAdapterFactory(new AdapterFactory[] {
+				new PapyrusFacetContentProviderWrapperAdapterFactory(), getAdapterFactory(), });
+		return new MergeViewerItemProviderConfiguration(factory, getDifferenceGroupProvider(),
+				getDifferenceFilterPredicate(), getCompareConfiguration().getComparison(), side);
 	}
 
 	/**

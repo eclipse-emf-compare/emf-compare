@@ -49,4 +49,11 @@
             label="UML refined elements">
       </filter>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.rcp.ui.contentMergeViewerCustomization">
+      <treeContentCustomization
+            contentProvider="org.eclipse.emf.compare.uml2.rcp.ui.internal.mergeviewer.item.impl.DanglingStereotypeApplicationMergeViewerItemProvider"
+            ranking="101">
+      </treeContentCustomization>
+   </extension>
 </plugin>

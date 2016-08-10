@@ -102,4 +102,17 @@
             ranking="1000">
       </factory>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.rcp.ui.contentMergeViewerCustomization">
+      <treeContentCustomization
+            contentProvider="org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer.provider.PapyrusMergeViewerItemContentProvider"
+            context="org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer.provider.PapyrusContextTester"
+            ranking="20">
+      </treeContentCustomization>
+      <contentCustomization
+            context="org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer.provider.PapyrusContextTester"
+            mergeViewerItemProvider="org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer.provider.PapyrusCompareAccessorMergeViewerItemProvider"
+            ranking="10">
+      </contentCustomization>
+   </extension>
 </plugin>

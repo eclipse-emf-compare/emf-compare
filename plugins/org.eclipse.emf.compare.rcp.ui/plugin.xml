@@ -19,6 +19,7 @@
    <extension-point id="accessorFactory" name="Accessor Factory" schema="schema/accessorFactory.exsd"/>
    <extension-point id="differenceGroupExtender" name="EMF Compare Difference Group Extender" schema="schema/differenceGroupExtender.exsd"/>
    <extension-point id="matchEngineFactoryConfigurationUI" name="matchEngineFactoryConfigurationUI" schema="schema/matchEngineFactoryConfigurationUI.exsd"/>
+   <extension-point id="contentMergeViewerCustomization" name="Customization of ContentMergeViewers" schema="schema/contentMergeViewerCustomization.exsd"/>
    <extension
          point="org.eclipse.emf.compare.rcp.ui.groups">
       <group
@@ -226,4 +227,11 @@
           uiProvider="org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.match.DefaultMatchEngineConfiguatorUIFactory">
     </configurator>
  </extension>
+   <extension
+         point="org.eclipse.emf.compare.rcp.ui.contentMergeViewerCustomization">
+      <treeContentCustomization
+            contentProvider="org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.ResourceAttachmentChangeProvider"
+            ranking="100">
+      </treeContentCustomization>
+   </extension>
 </plugin>

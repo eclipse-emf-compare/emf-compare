@@ -31,6 +31,8 @@ import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.ConfigurationUIR
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.IConfigurationUIFactory;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AccessorFactoryExtensionRegistryListener;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AccessorFactoryRegistryImpl;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.customization.ContentMergeViewerCustomizationRegistry;
+import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.customization.ContentMergeViewerCustomizationRegistryListener;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterExtensionRegistryListener;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterManager;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterRegistryImpl;
@@ -87,6 +89,11 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	private static final String MATCH_ENGINE_FACTORY_CONFIGURATION_UI_PPID = "matchEngineFactoryConfigurationUI";//$NON-NLS-1$
 
 	/**
+	 * @since 4.4
+	 */
+	private static final String CONTENT_CUSTOMIZATION_PPID = "contentMergeViewerCustomization"; //$NON-NLS-1$
+
+	/**
 	 * the shared instance.
 	 */
 	private static EMFCompareRCPUIPlugin plugin;
@@ -117,6 +124,10 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	private Map<String, IConfigurationUIFactory> matchEngineConfiguratorRegistry;
 
 	private ConfigurationUIRegistryEventListener matchEngineConfiguratorRegistryListener;
+
+	private AbstractRegistryEventListener contentMergeViewerCustomizationRegistryListener;
+
+	private ContentMergeViewerCustomizationRegistry contentMergeViewerCustomizationRegistry;
 
 	@Deprecated
 	private IEMFCompareConfiguration compareConfiguration;
@@ -188,6 +199,13 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 		extensionRegistry.addListener(matchEngineConfiguratorRegistryListener,
 				PLUGIN_ID + '.' + MATCH_ENGINE_FACTORY_CONFIGURATION_UI_PPID);
 		matchEngineConfiguratorRegistryListener.readRegistry(extensionRegistry);
+
+		contentMergeViewerCustomizationRegistry = new ContentMergeViewerCustomizationRegistry();
+		contentMergeViewerCustomizationRegistryListener = new ContentMergeViewerCustomizationRegistryListener(
+				PLUGIN_ID, CONTENT_CUSTOMIZATION_PPID, getLog(), contentMergeViewerCustomizationRegistry);
+		extensionRegistry.addListener(contentMergeViewerCustomizationRegistryListener,
+				PLUGIN_ID + '.' + CONTENT_CUSTOMIZATION_PPID);
+		contentMergeViewerCustomizationRegistryListener.readRegistry(extensionRegistry);
 	}
 
 	/*
@@ -301,6 +319,17 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	 */
 	public IDifferenceGroupExtender.Registry getDifferenceGroupExtenderRegistry() {
 		return differenceGroupExtenderRegistry;
+	}
+
+	/**
+	 * Returns the registry containing all known content merge viewer customizations.
+	 * 
+	 * @return the {@link ContentMergeViewerCustomizationRegistry} containing all known content merge viewer
+	 *         customizations.
+	 * @since 4.4
+	 */
+	public ContentMergeViewerCustomizationRegistry getContentMergeViewerCustomizationRegistry() {
+		return contentMergeViewerCustomizationRegistry;
 	}
 
 	/**
