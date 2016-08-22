@@ -393,23 +393,17 @@ public final class ComparisonUtil {
 	 * diffs (see {@link DiffUtil#getSubDiffs(boolean)}) of these associated diffs.
 	 * <p>
 	 * The associated diffs of a diff are :
-	 * <p>
-	 * - {@link Diff#getRequiredBy()} if the source of the diff is the left side and the direction of the
-	 * merge is right to left.
 	 * </p>
-	 * <p>
-	 * - {@link Diff#getRequiredBy()} if the source of the diff is the right side and the direction of the
-	 * merge is left to right.
-	 * </p>
-	 * <p>
-	 * - {@link Diff#getRequires()} if the source of the diff is the left side and the direction of the merge
-	 * is left to right.
-	 * </p>
-	 * <p>
-	 * - {@link Diff#getRequires()} if the source of the diff is the right side and the direction of the merge
-	 * is right to left.
-	 * </p>
-	 * </p>
+	 * <li>{@link Diff#getRequiredBy()} if the source of the diff is the left side and the direction of the
+	 * merge is right to left.</li>
+	 * <li>{@link Diff#getRequiredBy()} if the source of the diff is the right side and the direction of the
+	 * merge is left to right.</li>
+	 * <li>{@link Diff#getRequires()} if the source of the diff is the left side and the direction of the
+	 * merge is left to right.</li>
+	 * <li>{@link Diff#getRequires()} if the source of the diff is the right side and the direction of the
+	 * merge is right to left.</li>
+	 * <li>{@link Diff#getRefines()} in any case.</li>
+	 * </ul>
 	 * 
 	 * @param diffRoot
 	 *            the given diff.
