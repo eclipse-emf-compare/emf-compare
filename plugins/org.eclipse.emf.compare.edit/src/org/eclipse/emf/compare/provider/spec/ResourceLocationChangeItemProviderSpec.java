@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer (EclipseSource) - bug 488618
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
@@ -19,6 +20,7 @@ import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 import org.eclipse.emf.compare.provider.ResourceLocationChangeItemProvider;
+import org.eclipse.emf.compare.provider.SafeAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
@@ -50,7 +52,7 @@ public class ResourceLocationChangeItemProviderSpec extends ResourceLocationChan
 	 */
 	public ResourceLocationChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
-		itemDelegator = new AdapterFactoryItemDelegator(getRootAdapterFactory());
+		itemDelegator = new SafeAdapterFactoryItemDelegator(getRootAdapterFactory());
 		overlayProvider = new OverlayImageProvider(getResourceLocator());
 	}
 
@@ -89,6 +91,7 @@ public class ResourceLocationChangeItemProviderSpec extends ResourceLocationChan
 	 * 
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
+	@Override
 	public IComposedStyledString getStyledText(Object object) {
 		final ResourceLocationChange resourceLocationChange = (ResourceLocationChange)object;
 		final String baseLocation = resourceLocationChange.getBaseLocation();

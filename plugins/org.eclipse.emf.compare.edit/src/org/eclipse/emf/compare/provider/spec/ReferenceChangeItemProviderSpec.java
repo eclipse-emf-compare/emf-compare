@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer (EclipseSource) - bug 488618
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
@@ -26,6 +27,7 @@ import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 import org.eclipse.emf.compare.provider.ReferenceChangeItemProvider;
+import org.eclipse.emf.compare.provider.SafeAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
@@ -62,7 +64,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	 */
 	public ReferenceChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
-		itemDelegator = new AdapterFactoryItemDelegator(getRootAdapterFactory());
+		itemDelegator = new SafeAdapterFactoryItemDelegator(getRootAdapterFactory());
 		overlayProvider = new OverlayImageProvider(getResourceLocator());
 	}
 
@@ -238,6 +240,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	 * 
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
+	@Override
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		final ReferenceChange refChange = (ReferenceChange)object;
 

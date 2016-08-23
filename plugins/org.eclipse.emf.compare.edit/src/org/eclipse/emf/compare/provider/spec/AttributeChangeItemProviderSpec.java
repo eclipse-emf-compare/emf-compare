@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - fixed bug 461504
+ *     Philip Langer - fixed bugs 461504, 488618
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.provider.AttributeChangeItemProvider;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
+import org.eclipse.emf.compare.provider.SafeAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
@@ -61,7 +62,7 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 	 */
 	public AttributeChangeItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
-		itemDelegator = new AdapterFactoryItemDelegator(getRootAdapterFactory());
+		itemDelegator = new SafeAdapterFactoryItemDelegator(getRootAdapterFactory());
 		overlayProvider = new OverlayImageProvider(getResourceLocator());
 	}
 
@@ -164,6 +165,7 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 	 * 
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
+	@Override
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		final AttributeChange attChange = (AttributeChange)object;
 

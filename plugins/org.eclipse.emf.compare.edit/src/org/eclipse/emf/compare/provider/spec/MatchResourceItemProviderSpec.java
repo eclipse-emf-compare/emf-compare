@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer (EclipseSource) - bug 488618
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
@@ -21,6 +22,7 @@ import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchResourceItemProvider;
+import org.eclipse.emf.compare.provider.SafeAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -45,7 +47,7 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 	 */
 	public MatchResourceItemProviderSpec(AdapterFactory adapterFactory) {
 		super(adapterFactory);
-		itemDelegator = new AdapterFactoryItemDelegator(getRootAdapterFactory());
+		itemDelegator = new SafeAdapterFactoryItemDelegator(getRootAdapterFactory());
 	}
 
 	/**
@@ -182,6 +184,7 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 	 * 
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
+	@Override
 	public IStyledString.IComposedStyledString getStyledText(Object object) {
 		return new ComposedStyledString(getText(object));
 	}
