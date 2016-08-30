@@ -29,5 +29,5 @@ location "http://download.eclipse.org/sirius/updates/nightly/latest/neon" {
 }
 
 location "http://obeo-umldesigner-nightly.s3-website-eu-west-1.amazonaws.com/master/repository" {
-	org.obeonetwork.dsl.uml2.runtime.feature.feature.group
+	org.obeonetwork.dsl.uml2.runtime.feature.feature.group lazy
 }
