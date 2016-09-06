@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,13 +18,19 @@ import static org.eclipse.emf.compare.DifferenceKind.MOVE;
 import static org.eclipse.emf.compare.DifferenceSource.LEFT;
 import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
+
+import java.util.Iterator;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.AbstractDifferenceFilter;
 import org.eclipse.emf.compare.utils.MatchUtil;
@@ -32,8 +38,16 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
- * A filter used by default that filtered out cascading differences (differences located under differences,
- * also known as sub differences). The MOVE differences are not hidden by this filter.
+ * A filter used by default that filters out cascading differences (differences located under a Match that is
+ * either ADDed or DELETEd on the diff's side). The MOVE differences are not hidden by this filter.
+ * Differences hidden are all those that match the following criteria:
+ * <ul>
+ * <li>this.kind != MOVE</li>
+ * <li>this.conflict == null</li>
+ * <li>this.refines is empty</li>
+ * <li>this is located inside a TreeNode that represents a Match that is either ADDed or DELETEd, and for
+ * which the diff that represents this addition or deletion is not refined by this.</li>
+ * </ul>
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 4.0
@@ -41,7 +55,7 @@ import org.eclipse.emf.edit.tree.TreeNode;
 public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 
 	/**
-	 * The predicate use by this filter when it is selected.
+	 * The predicate used by this filter when it is selected.
 	 */
 	private static final Predicate<? super EObject> PREDICATE_WHEN_SELECTED = new Predicate<EObject>() {
 		public boolean apply(EObject input) {
@@ -51,20 +65,12 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 				EObject data = treeNode.getData();
 				if (data instanceof Diff && !(data instanceof ResourceAttachmentChange)) {
 					Diff diff = (Diff)data;
-					if (diff.getKind() != MOVE && (diff.getConflict() == null)) {
+					if (diff.getKind() != MOVE && diff.getConflict() == null && diff.getRefines().isEmpty()) {
 						TreeNode parent = treeNode.getParent();
 						if (parent != null && parent.getData() instanceof Match) {
-							Match match = (Match)parent.getData();
-							if (match.eContainer() instanceof Match) {
-								Match parentMatch = (Match)match.eContainer();
-								if (isAddOrDeleteMatch(parentMatch, diff.getSource())) {
-									ret = true;
-								} else if (isAddOrDeleteMatch(match, diff.getSource())) {
-									ret = !and(or(CONTAINMENT_REFERENCE_CHANGE,
-											REFINED_BY_CONTAINMENT_REF_CHANGE), ofKind(ADD, DELETE))
-													.apply(diff);
-								}
-							} else if (isAddOrDeleteMatch(match, diff.getSource())) {
+							Match parentMatch = (Match)parent.getData();
+							ret = isInsideAddOrDeleteTreeNode(diff, parent);
+							if (!ret && isAddOrDeleteMatch(parentMatch, diff.getSource())) {
 								ret = !and(
 										or(CONTAINMENT_REFERENCE_CHANGE, REFINED_BY_CONTAINMENT_REF_CHANGE),
 										ofKind(ADD, DELETE)).apply(diff);
@@ -76,6 +82,44 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 			return ret;
 		}
 
+		private boolean isInsideAddOrDeleteTreeNode(Diff diff, TreeNode parent) {
+			boolean ret = false;
+			DifferenceSource side = diff.getSource();
+			TreeNode grandParent = parent.getParent();
+			Match grandParentMatch = null;
+			if (grandParent != null && grandParent.getData() instanceof Match) {
+				grandParentMatch = (Match)grandParent.getData();
+			}
+			if (isAddOrDeleteMatch(grandParentMatch, side)) {
+				// The ancestor has been added/deleted, we must filter the current diff
+				// _unless_ it is refined by the diff that represents the grand-parent
+				// add/delete
+				ReferenceChange addOrDeleteDiff = findAddOrDeleteDiff(grandParentMatch, side);
+				if (addOrDeleteDiff != null) {
+					if (diff.getRefinedBy().contains(addOrDeleteDiff)) {
+						// recurse
+						ret = isInsideAddOrDeleteTreeNode(diff, grandParent);
+					} else {
+						ret = true;
+					}
+				}
+			}
+			return ret;
+		}
+
+		private ReferenceChange findAddOrDeleteDiff(Match match, DifferenceSource side) {
+			EObject container = match.eContainer();
+			if (container instanceof Match) {
+				@SuppressWarnings("unchecked")
+				Iterator<Diff> candidates = Iterators.filter(((Match)container).getDifferences().iterator(),
+						and(fromSide(side), CONTAINMENT_REFERENCE_CHANGE, ofKind(ADD, DELETE)));
+				if (candidates.hasNext()) {
+					return (ReferenceChange)candidates.next();
+				}
+			}
+			return null;
+		}
+
 		/**
 		 * Indicate whether a Match is that of an object that was either added or deleted on the given side.
 		 * 
@@ -84,8 +128,12 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 		 * @param side
 		 *            The side
 		 * @return <code>true</code> if the matched object is present on side but not on origin or vice-versa.
+		 *         <code>false</code> if match is <code>null</code>.
 		 */
 		protected boolean isAddOrDeleteMatch(Match match, DifferenceSource side) {
+			if (match == null) {
+				return false;
+			}
 			if (match.getComparison().isThreeWay()) {
 				return (MatchUtil.getMatchedObject(match, side) == null) != (match.getOrigin() == null);
 			}
@@ -107,16 +155,10 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 
 	private static final Predicate<Diff> REFINED_BY_CONTAINMENT_REF_CHANGE = new Predicate<Diff>() {
 		public boolean apply(Diff input) {
-			return input.getPrimeRefining() != null
-					&& CONTAINMENT_REFERENCE_CHANGE.apply(input.getPrimeRefining());
+			return Iterables.any(input.getRefinedBy(), CONTAINMENT_REFERENCE_CHANGE);
 		}
 	};
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter#getPredicateWhenSelected()
-	 */
 	@Override
 	public Predicate<? super EObject> getPredicateWhenSelected() {
 		return PREDICATE_WHEN_SELECTED;
