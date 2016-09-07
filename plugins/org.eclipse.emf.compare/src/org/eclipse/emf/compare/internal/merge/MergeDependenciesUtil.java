@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo and others.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,8 +11,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.merge;
 
+import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.addAll;
+import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -146,16 +149,28 @@ public final class MergeDependenciesUtil {
 
 		Set<Diff> relations = internalGetResultingMerges(diff, mergerRegistry, mergeRightToLeft,
 				diff.getSource());
-		Set<Diff> difference = Sets.difference(relations, resultingMerges);
+		// We don't want to take in account pseudo conflicts since there is nothing to do with them
+		// and there dependencies may cause incorrect merge dependencies computation.
+		Set<Diff> difference = Sets.filter(Sets.difference(relations, resultingMerges),
+				not(hasConflict(PSEUDO)));
 		while (!difference.isEmpty()) {
 			final Set<Diff> newRelations = new LinkedHashSet<Diff>(difference);
 			resultingMerges.addAll(newRelations);
 			relations = new LinkedHashSet<Diff>();
 			for (Diff newRelation : newRelations) {
-				relations.addAll(internalGetResultingMerges(newRelation, mergerRegistry, mergeRightToLeft,
-						diff.getSource()));
+				Set<Diff> internalResultingMerges = internalGetResultingMerges(newRelation, mergerRegistry,
+						mergeRightToLeft, diff.getSource());
+				// We don't want to take in account pseudo conflicts since there is nothing to do with them
+				// and there dependencies may cause incorrect merge dependencies computation.
+				relations.addAll(Sets.filter(internalResultingMerges, not(hasConflict(PSEUDO))));
 			}
 			difference = Sets.difference(relations, resultingMerges);
+		}
+
+		// If a pseudo conflict is directly selected, we want to display other diffs of the pseudo conflict as
+		// resulting merge for the user
+		if (diff.getConflict() != null && diff.getConflict().getKind() == PSEUDO) {
+			resultingMerges.addAll(diff.getConflict().getDifferences());
 		}
 
 		return resultingMerges;
@@ -233,7 +248,10 @@ public final class MergeDependenciesUtil {
 		for (Diff resulting : allResultingMerges) {
 			Set<Diff> rejections = internalGetResultingRejections(resulting, mergerRegistry, mergeRightToLeft,
 					diff.getSource());
-			Set<Diff> difference = Sets.difference(rejections, resultingRejections);
+			// We don't want to take in account pseudo conflicts since there is nothing to do with them
+			// and there dependencies may cause incorrect merge dependencies computation.
+			Set<Diff> difference = Sets.filter(Sets.difference(rejections, resultingRejections),
+					not(hasConflict(PSEUDO)));
 			while (!difference.isEmpty()) {
 				final Set<Diff> newRejections = new LinkedHashSet<Diff>(difference);
 				resultingRejections.addAll(newRejections);
@@ -241,16 +259,19 @@ public final class MergeDependenciesUtil {
 				for (Diff rejected : newRejections) {
 					final IMerger merger = mergerRegistry.getHighestRankingMerger(rejected);
 					if (merger instanceof IMerger2) {
-						rejections.addAll(
-								((IMerger2)merger).getDirectMergeDependencies(rejected, mergeRightToLeft));
-						rejections.addAll(
-								((IMerger2)merger).getDirectResultingMerges(rejected, mergeRightToLeft));
+						Set<Diff> directMergeDependencies = ((IMerger2)merger)
+								.getDirectMergeDependencies(rejected, mergeRightToLeft);
+						// We don't want to take in account pseudo conflicts since there is nothing to do with
+						// them and there dependencies may cause incorrect merge dependencies computation.
+						rejections.addAll(Sets.filter(directMergeDependencies, not(hasConflict(PSEUDO))));
+						Set<Diff> directResultingMerges = ((IMerger2)merger)
+								.getDirectResultingMerges(rejected, mergeRightToLeft);
+						rejections.addAll(Sets.filter(directResultingMerges, not(hasConflict(PSEUDO))));
 					}
 				}
 				difference = Sets.difference(rejections, resultingRejections);
 			}
 		}
-
 		return resultingRejections;
 	}
 

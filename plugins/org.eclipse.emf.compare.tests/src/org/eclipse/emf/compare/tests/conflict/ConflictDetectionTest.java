@@ -13,6 +13,8 @@ package org.eclipse.emf.compare.tests.conflict;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.size;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
@@ -20,6 +22,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToAttribut
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.containsConflictOfTypes;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.moved;
@@ -39,7 +42,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 import java.io.IOException;
@@ -2137,9 +2139,11 @@ public class ConflictDetectionTest {
 		assertEquals(6, differences.size());
 		assertEquals(2, conflicts.size());
 
-		for (Conflict conflict : conflicts) {
-			assertSame(REAL, conflict.getKind());
-		}
+		Iterable<Conflict> realConflicts = filter(conflicts, containsConflictOfTypes(REAL));
+		Iterable<Conflict> pseudoConflicts = filter(conflicts, containsConflictOfTypes(PSEUDO));
+
+		assertEquals(1, size(realConflicts));
+		assertEquals(1, size(pseudoConflicts));
 	}
 
 	@Test
@@ -2157,9 +2161,11 @@ public class ConflictDetectionTest {
 		assertEquals(8, differences.size());
 		assertEquals(3, conflicts.size());
 
-		for (Conflict conflict : conflicts) {
-			assertSame(REAL, conflict.getKind());
-		}
+		Iterable<Conflict> realConflicts = filter(conflicts, containsConflictOfTypes(REAL));
+		Iterable<Conflict> pseudoConflicts = filter(conflicts, containsConflictOfTypes(PSEUDO));
+
+		assertEquals(1, size(realConflicts));
+		assertEquals(2, size(pseudoConflicts));
 	}
 
 	@Test
@@ -2177,9 +2183,11 @@ public class ConflictDetectionTest {
 		assertEquals(6, differences.size());
 		assertEquals(3, conflicts.size());
 
-		for (Conflict conflict : conflicts) {
-			assertSame(REAL, conflict.getKind());
-		}
+		Iterable<Conflict> realConflicts = filter(conflicts, containsConflictOfTypes(REAL));
+		Iterable<Conflict> pseudoConflicts = filter(conflicts, containsConflictOfTypes(PSEUDO));
+
+		assertEquals(1, size(realConflicts));
+		assertEquals(2, size(pseudoConflicts));
 	}
 
 	@Test
@@ -2340,9 +2348,9 @@ public class ConflictDetectionTest {
 
 		assertEquals(5, differences.size());
 		assertEquals(2, conflicts.size());
-		assertEquals(4, Iterables.size(Iterables.filter(differences, hasConflict(REAL))));
-		Iterable<Diff> nonConflictingDiffs = Iterables.filter(differences, not(hasConflict(REAL, PSEUDO)));
-		assertEquals(1, Iterables.size(nonConflictingDiffs));
+		assertEquals(4, size(filter(differences, hasConflict(REAL))));
+		Iterable<Diff> nonConflictingDiffs = filter(differences, not(hasConflict(REAL, PSEUDO)));
+		assertEquals(1, size(nonConflictingDiffs));
 		Diff nonConflictingDiff = nonConflictingDiffs.iterator().next();
 		assertTrue(nonConflictingDiff instanceof ResourceAttachmentChange);
 		assertEquals(DifferenceSource.RIGHT, nonConflictingDiff.getSource());

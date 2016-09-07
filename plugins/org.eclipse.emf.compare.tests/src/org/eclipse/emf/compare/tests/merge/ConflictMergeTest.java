@@ -119,7 +119,7 @@ public class ConflictMergeTest {
 
 		assertEquals(DifferenceState.MERGED, diffNodeCLeft.getState());
 		assertEquals(DifferenceState.MERGED, diffNodeCRight.getState());
-		assertEquals(DifferenceState.UNRESOLVED, diffNodeDLeft.getState());
+		assertEquals(DifferenceState.MERGED, diffNodeDLeft.getState());
 		assertEquals(DifferenceState.MERGED, diffNodeDRight.getState());
 		assertEquals(DifferenceState.UNRESOLVED, diffNodeELeft.getState());
 		assertEquals(DifferenceState.MERGED, diffNodeFRight.getState());
@@ -182,7 +182,7 @@ public class ConflictMergeTest {
 
 		assertEquals(DifferenceState.UNRESOLVED, diffNodeCLeft.getState());
 		assertEquals(DifferenceState.MERGED, diffNodeCRight.getState());
-		assertEquals(DifferenceState.UNRESOLVED, diffNodeDLeft.getState());
+		assertEquals(DifferenceState.MERGED, diffNodeDLeft.getState());
 		assertEquals(DifferenceState.MERGED, diffNodeDRight.getState());
 		assertEquals(DifferenceState.UNRESOLVED, diffNodeELeft.getState());
 		assertEquals(DifferenceState.MERGED, diffNodeFRight.getState());
@@ -246,7 +246,7 @@ public class ConflictMergeTest {
 		assertEquals(DifferenceState.MERGED, diffNodeCLeft.getState());
 		assertEquals(DifferenceState.UNRESOLVED, diffNodeCRight.getState());
 		assertEquals(DifferenceState.MERGED, diffNodeDLeft.getState());
-		assertEquals(DifferenceState.UNRESOLVED, diffNodeDRight.getState());
+		assertEquals(DifferenceState.MERGED, diffNodeDRight.getState());
 		assertEquals(DifferenceState.MERGED, diffNodeELeft.getState());
 		assertEquals(DifferenceState.UNRESOLVED, diffNodeFRight.getState());
 	}
@@ -309,7 +309,7 @@ public class ConflictMergeTest {
 		assertEquals(DifferenceState.MERGED, diffNodeCLeft.getState());
 		assertEquals(DifferenceState.MERGED, diffNodeCRight.getState());
 		assertEquals(DifferenceState.MERGED, diffNodeDLeft.getState());
-		assertEquals(DifferenceState.UNRESOLVED, diffNodeDRight.getState());
+		assertEquals(DifferenceState.MERGED, diffNodeDRight.getState());
 		assertEquals(DifferenceState.MERGED, diffNodeELeft.getState());
 		assertEquals(DifferenceState.UNRESOLVED, diffNodeFRight.getState());
 	}

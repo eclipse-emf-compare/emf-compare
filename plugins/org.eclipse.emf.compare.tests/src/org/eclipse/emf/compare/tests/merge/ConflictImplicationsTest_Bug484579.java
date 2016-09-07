@@ -85,7 +85,7 @@ public class ConflictImplicationsTest_Bug484579 {
 
 		MergeDependenciesChecker checker = getChecker(deletePackageY);
 		checker.rightToLeft().implies(1).rejects(0).check();
-		checker.leftToRight().implies(5).rejects(0).check();
+		checker.leftToRight().implies(1).rejects(0).check();
 	}
 
 	/**
@@ -216,11 +216,11 @@ public class ConflictImplicationsTest_Bug484579 {
 			differences.remove(diff);
 			checker = getChecker(diff);
 			if (diff.getSource() == DifferenceSource.LEFT) {
-				checker.rightToLeft().implies(7).rejects(0).check();
+				checker.rightToLeft().implies(4).rejects(0).check();
 				checker.leftToRight().implies(2).rejects(0).check();
 			} else {
 				checker.rightToLeft().implies(2).rejects(0).check();
-				checker.leftToRight().implies(7).rejects(0).check();
+				checker.leftToRight().implies(2).rejects(0).check();
 			}
 		}
 
@@ -234,16 +234,16 @@ public class ConflictImplicationsTest_Bug484579 {
 			checker = getChecker(diff);
 			if (diff.getSource() == DifferenceSource.LEFT) {
 				checker.rightToLeft().implies(3).rejects(0).check();
-				checker.leftToRight().implies(4).rejects(0).check();
+				checker.leftToRight().implies(2).rejects(0).check();
 			} else {
-				checker.rightToLeft().implies(4).rejects(0).check();
-				checker.leftToRight().implies(3).rejects(0).check();
+				checker.rightToLeft().implies(2).rejects(0).check();
+				checker.leftToRight().implies(2).rejects(0).check();
 			}
 		}
 
 		checker = getChecker(deleteClassB);
 		checker.rightToLeft().implies(2).rejects(0).check();
-		checker.leftToRight().implies(3).rejects(1).check();
+		checker.leftToRight().implies(1).rejects(1).check();
 
 		checker = getChecker(renameClassB);
 		checker.rightToLeft().implies(1).rejects(2).check();
@@ -251,7 +251,7 @@ public class ConflictImplicationsTest_Bug484579 {
 
 		checker = getChecker(deletePackageA);
 		checker.rightToLeft().implies(1).rejects(0).check();
-		checker.leftToRight().implies(4).rejects(2).check();
+		checker.leftToRight().implies(2).rejects(2).check();
 
 		checker = getChecker(renamePackageA);
 		checker.rightToLeft().implies(1).rejects(1).check();

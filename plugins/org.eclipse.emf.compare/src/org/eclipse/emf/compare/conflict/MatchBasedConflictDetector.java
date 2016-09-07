@@ -10,23 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.conflict;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.isEmpty;
-import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
-import static org.eclipse.emf.compare.ConflictKind.REAL;
-import static org.eclipse.emf.compare.DifferenceKind.ADD;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
-
-import com.google.common.base.Predicate;
-
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ComparisonCanceledException;
-import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
@@ -51,27 +40,6 @@ public class MatchBasedConflictDetector implements IConflictDetector {
 
 	/** The logger. */
 	private static final Logger LOGGER = Logger.getLogger(MatchBasedConflictDetector.class);
-
-	/**
-	 * This can be used to check whether a given conflict involves add containment reference changes.
-	 */
-	private static final Predicate<? super Conflict> IS_REAL_CONTAINMENT_ADD_CONFLICT = new Predicate<Conflict>() {
-		public boolean apply(Conflict input) {
-			boolean isRealAddContainmentConflict = false;
-			if (input != null && input.getKind() == REAL) {
-				Iterable<Diff> containmentRefs = filter(input.getDifferences(), CONTAINMENT_REFERENCE_CHANGE);
-				if (!isEmpty(containmentRefs)) {
-					for (Diff diff : containmentRefs) {
-						if (diff.getKind() != ADD) {
-							return false;
-						}
-					}
-					isRealAddContainmentConflict = true;
-				}
-			}
-			return isRealAddContainmentConflict;
-		}
-	};
 
 	/**
 	 * {@inheritDoc}
@@ -101,43 +69,9 @@ public class MatchBasedConflictDetector implements IConflictDetector {
 			search.detectConflicts();
 		}
 
-		handlePseudoUnderRealAdd(comparison);
 		if (LOGGER.isInfoEnabled()) {
 			LOGGER.info(String.format("detect conflicts - END - Took %d ms", Long.valueOf(System //$NON-NLS-1$
 					.currentTimeMillis() - start)));
-		}
-	}
-
-	/**
-	 * If a real add conflict contains pseudo conflicts, these pseudo conflicts must be changed to real
-	 * conflicts.
-	 * 
-	 * @param comparison
-	 *            The originating comparison of those diffs.
-	 */
-	private void handlePseudoUnderRealAdd(Comparison comparison) {
-		for (Conflict realContainmentAdd : filter(comparison.getConflicts(),
-				IS_REAL_CONTAINMENT_ADD_CONFLICT)) {
-			changeKindOfPseudoConflictsUnder(realContainmentAdd);
-		}
-	}
-
-	/**
-	 * Change all pseudo conflicts under the given real conflict to real conflicts.
-	 * 
-	 * @param conflict
-	 *            the given conflict.
-	 */
-	private void changeKindOfPseudoConflictsUnder(Conflict conflict) {
-		for (Diff diff : conflict.getDifferences()) {
-			final Match realConflictMatch = diff.getMatch();
-			for (Match subMatch : realConflictMatch.getSubmatches()) {
-				for (Diff conflictDiffUnder : filter(subMatch.getDifferences(), hasConflict(PSEUDO))) {
-					Conflict conflictUnder = conflictDiffUnder.getConflict();
-					conflictUnder.setKind(REAL);
-					changeKindOfPseudoConflictsUnder(conflictUnder);
-				}
-			}
 		}
 	}
 }
