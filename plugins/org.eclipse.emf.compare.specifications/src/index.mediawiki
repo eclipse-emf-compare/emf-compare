@@ -1,8 +1,10 @@
 = Specifications =
 
+== [[./3.3.0-release.html|3.3.0 release (Simultaneous but not included in Eclipse Neon.1)]] ==
+
+
 == [[./3.2.0-release.html|3.2.0 release (Eclipse Neon)]] ==
 
-* [[./3.2.0-release.html#US_320_001 - UML Dangling stereotypes|US_320_001 - UML Dangling stereotypes]]
 
 == [[./3.1.0-release.html|3.1.0 release (Eclipse Mars)]] ==
 
@@ -16,11 +18,15 @@
 
 == UI-related Specifications ==
 
+* [[./3.3.0-release.html#US_330_001 - Improve Group Providers and Filters|US_330_001 - Improve Group Providers and Filters]]
+* [[./3.3.0-release.html#US_330_004 - User can deactivate filters|US_330_004 - User can deactivate filters]]
+* [[./3.3.0-release.html#US_330_005 - Improve EMFCompare Preference Pages|US_330_005 - Improve EMFCompare Preference Pages]]
 * [[./3.2.0-release.html#US_320_001 - UML Dangling stereotypes|US_320_001 - UML Dangling stereotypes]]
 * [[./3.2.0-release.html#US_320_003 - Synchronize view integration|US_320_003 - Synchronize view integration]]
 
 == UML-related Specifications ==
 
+* [[./3.3.0-release.html#US_330_003 - Automatic Profile Migration on Papyrus UML models|US_330_003 - Automatic Profile Migration on Papyrus UML models]]
 * [[./3.2.0-release.html#US_320_001 - UML Dangling stereotypes|US_320_001 - UML Dangling stereotypes]]
 * [[./3.2.0-release.html#US_320_008 - Ignore changes in Papyrus di-files|US_320_008 - Ignore changes in Papyrus di-files]]
 * [[./3.2.0-release.html#US_320_009 - Multiplicity Element Change|US_320_009 - Multiplicity Element Change]]
@@ -32,5 +38,7 @@
 * [[./3.2.0-release.html#US_320_003 - Synchronize view integration|US_320_003 - Synchronize view integration]]
 
 == EGit-related Specifications ==
+
+* [[./3.3.0-release.html#US_330_002 - Additive Merge|US_330_002 - Additive Merge]]
 
 == Command Line-related Specifications ==

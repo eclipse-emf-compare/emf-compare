@@ -1,0 +1,103 @@
+= Specifications of the EMF Compare 3.3.0 release (Simultaneous with Eclipse Neon.1 but not included in Neon.1) =
+
+== US_330_001 - Improve Group Providers and Filters ==
+
+=== Description ===
+
+Group Providers are responsible for computing the tress displayed in the Structure Merge Viewer.
+Previous implementations suffered some issues that led to instabilities, missing diffs in the UI, and a poor user experience when it came to understanding the comparisons displayed. Moreover, the base implementation of the groups providers was a hotspot in the code base that was very hard to maintain.
+Another problem identified was the performance of the computation of the UI tree which had severe impacts on the time it took to display the comparison.
+
+Version 3.1.0 brings a new implementation to resolve these issues and make it easier to maintain the code, faster to display the comparison and easier to understand the UI.
+
+This is accompanied by a number of 'great principles' that EMFCompare complies with:
+* Filters:
+** They should only hide differences when selected, and do nothing when they are not selected
+** Consequently, unchecking all the filters should display all the diffs of the comparison in the UI
+* Groups:
+** A node in the tree should represent either a diff or a match but not both at the same time
+** A diff is displayed as a node whose parent represents a match, or another diff if (and only if) it is a refining diff
+** A match should never be displayed as child of a diff
+** Refining diffs should be displayed as children of their refined diff(s)
+** In the group 'conflicts', a conflict should never be empty. It should display _at least_ all the diffs that are part of this conflict
+
+==== Categories ====
+[[./index.html#UI-related Specifications|UI]]
+
+=== Content ===
+
+One major difference in the display of the tree used in the Structure Merge Viewer (top part of the comparison editor) concerns added/deleted objects.
+
+Previously, and object added or deleted caused the display of a node that represented both the object's '''Match''', and the add/delete containment '''ReferenceChange'''.
+
+Now, a node is displayed for the '''Match''', and inside another node is displayed which represents the containment '''ReferenceChange''', i.e. the add or delete difference. It's important to note that in this case, the diff is not displayed as a child of it Match, but is displayed as a child of the Match of its '''value'''. Since it is a '''ReferenceChange''', this means that the Match of the displayed diff is the ''grand-parent'' node.
+
+Feedback and suggestions on this choice are very welcome!
+
+== US_330_002 - Additive Merge ==
+
+=== Description ===
+
+Support a merge mode that allows an end-user to merge two versions of a model by rejecting all deletions (and associated changes such as unsets) that are only made on one side.
+
+==== Categories ====
+[[./index.html#UI-related Specifications|core]], [[./index.html#UI-related Specifications|egit]]
+
+=== Content ===
+
+A new MergeStrategy has been implemented and can be used by setting the relevant preference in the EGit preferences.
+This merge strategy is consequently only supported when merging git branches.
+
+Review [[https://git.eclipse.org/r/55389]] proposes an improvement in EGit dialogs to make it possible to select the merge strategy to be used for the operation at hand (merge, rebase, cherry-pick, and so on).
+
+
+== US_330_003 - Automatic Profile Migration on Papyrus UML models ==
+
+=== Description ===
+Make it possible to compare versions of Papyrus models that use different versions of a profile by automatically applying the papyrus tools to migration applied profiles prior to launching the comparison.
+
+==== Categories ====
+[[./index.html#Team-related Specifications|UML]]
+
+=== Related Bugs & Reviews ===
+
+This user story is linked with these bugs & reviews:
+* https://bugs.eclipse.org/bugs/show_bug.cgi?id=495259
+
+=== Content ===
+
+== US_330_004 - User can deactivate filters ==
+
+=== Description ===
+Make it possible for users to completely deactivate filters, so that they don't appear in the EMFCompare UI (comparison editor) nor are applied.
+
+==== Categories ====
+[[./index.html#UI-related Specifications|UI]]
+
+=== Related Bugs & Reviews ===
+
+This user story is linked with these bugs & reviews:
+* https://bugs.eclipse.org/bugs/show_bug.cgi?id=493921
+
+=== Content ===
+This has been addressed by supplying in the preferences the possibility to completely deactivate filters.
+This is available in a new tab in the preference page 'Filters'.
+
+'''Note:''' It has recently been reported that is would also be useful to hide filters in the combo-box without deactivating the associated filter. This could be useful for third-parties that build their own products upon EMFCompare and don't wish their users to be able to deactivate certain filters.
+ 
+
+== US_330_005 - Improve EMFCompare Preference Pages ==
+
+=== Description ===
+Several minor differences in the layout and organization of the numerous preference pages of EMFCompare make these pages unsightly.
+
+==== Categories ====
+[[./index.html#UI-related Specifications|UI]]
+
+=== Related Bugs & Reviews ===
+
+This user story is linked with these bugs & reviews:
+* https://bugs.eclipse.org/bugs/show_bug.cgi?id=495753
+
+=== Content ===
+The pages have been harmonized and reorganized a bit, as described in the bug and associated reviews.

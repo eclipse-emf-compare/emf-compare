@@ -4,12 +4,12 @@
   <parent>
     <artifactId>emf.compare-parent</artifactId>
     <groupId>org.eclipse.emf.compare</groupId>
-    <version>3.2.0-SNAPSHOT</version>
+    <version>3.3.0-SNAPSHOT</version>
     <relativePath>../../org.eclipse.emf.compare-parent</relativePath>
   </parent>
   <artifactId>org.eclipse.emf.compare.update</artifactId>
   <packaging>eclipse-repository</packaging>
-  <version>3.2.0-SNAPSHOT</version>
+  <version>3.3.0-SNAPSHOT</version>
   <build>
     <resources>
       <resource>
