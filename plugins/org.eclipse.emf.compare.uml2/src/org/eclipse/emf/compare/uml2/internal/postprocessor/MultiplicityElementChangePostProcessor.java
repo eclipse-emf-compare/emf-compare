@@ -7,24 +7,31 @@
  * 
  * Contributors:
  *     Alexandra Buzila - initial API and implementation
+ *     Philip Langer - bug 501864
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Iterables.filter;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.anyRefinedDiffs;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
@@ -33,8 +40,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.uml2.uml.MultiplicityElement;
-import org.eclipse.uml2.uml.UMLPackage;
 
 /**
  * Post processor handling conflicts of {@link MultiplicityElementChange MultiplicityElementChanges}.
@@ -42,35 +47,6 @@ import org.eclipse.uml2.uml.UMLPackage;
  * @author Alexandra Buzila <abuzila@eclipsesource.com>
  */
 public class MultiplicityElementChangePostProcessor implements IPostProcessor {
-
-	/**
-	 * A predicate that can be used to check whether a {@link Diff} is a {@link MultiplicityElementChange}.
-	 */
-	private static final Predicate<Diff> IS_MULTIPLICITY_CHANGE = new Predicate<Diff>() {
-		public boolean apply(Diff diff) {
-			return diff instanceof MultiplicityElementChange;
-		}
-	};
-
-	/**
-	 * A predicate that can be used to check whether a {@link Diff} is a {@link MultiplicityElementChange} and
-	 * its {@link DifferenceSource} is LEFT.
-	 */
-	private static final Predicate<Diff> IS_LEFT_MULTIPLICITY_CHANGE = new Predicate<Diff>() {
-		public boolean apply(Diff diff) {
-			return DifferenceSource.LEFT.equals(diff.getSource()) && IS_MULTIPLICITY_CHANGE.apply(diff);
-		}
-	};
-
-	/**
-	 * A predicate that can be used to check whether a {@link Diff} is a {@link MultiplicityElementChange} and
-	 * its {@link DifferenceSource} is RIGHT.
-	 */
-	private static final Predicate<Diff> IS_RIGHT_MULTIPLICITY_CHANGE = new Predicate<Diff>() {
-		public boolean apply(Diff diff) {
-			return DifferenceSource.RIGHT.equals(diff.getSource()) && IS_MULTIPLICITY_CHANGE.apply(diff);
-		}
-	};
 
 	/** {@inheritDoc} */
 	public void postMatch(Comparison comparison, Monitor monitor) {
@@ -119,7 +95,7 @@ public class MultiplicityElementChangePostProcessor implements IPostProcessor {
 	 */
 	private void updateRequiresAndRefines(Comparison comparison) {
 		Iterator<Diff> multiplicityChanges = Iterators.filter(comparison.getDifferences().iterator(),
-				IS_MULTIPLICITY_CHANGE);
+				instanceOf(MultiplicityElementChange.class));
 		while (multiplicityChanges.hasNext()) {
 			MultiplicityElementChange refChange = (MultiplicityElementChange)multiplicityChanges.next();
 			for (Diff refiningDiff : refChange.getRefinedBy()) {
@@ -145,20 +121,39 @@ public class MultiplicityElementChangePostProcessor implements IPostProcessor {
 	 *            the comparison containing the conflicts
 	 */
 	private void verifyConflicts(Comparison comparison) {
-		final EList<Diff> diffs = comparison.getDifferences();
-		final Iterable<Diff> leftChanges = filter(diffs, IS_LEFT_MULTIPLICITY_CHANGE);
-		for (Diff leftDiff : leftChanges) {
-			final MultiplicityElementChange leftChange = (MultiplicityElementChange)leftDiff;
-
-			final Match match = leftChange.getMatch();
-			final Iterable<Diff> rightChanges = filter(diffs, IS_RIGHT_MULTIPLICITY_CHANGE);
-			for (Diff rightDiff : rightChanges) {
-				MultiplicityElementChange rightChange = (MultiplicityElementChange)rightDiff;
-				if (leftChange.getConflict() != null) {
-					verifyConflict(match, leftChange, rightChange);
+		for (Conflict conflict : comparison.getConflicts()) {
+			if (all(conflict.getDifferences(),
+					anyRefinedDiffs(instanceOf(MultiplicityElementChange.class)))) {
+				final Iterable<Diff> leftDiffs = collectRefinedDiffs(conflict.getLeftDifferences(),
+						instanceOf(MultiplicityElementChange.class));
+				for (Diff leftDiff : leftDiffs) {
+					final MultiplicityElementChange leftMultiplicityChange = (MultiplicityElementChange)leftDiff;
+					final Match match = leftMultiplicityChange.getMatch();
+					final Iterable<Diff> rightDiffs = collectRefinedDiffs(conflict.getRightDifferences(),
+							instanceOf(MultiplicityElementChange.class));
+					for (Diff rightDiff : rightDiffs) {
+						verifyConflict(match, leftMultiplicityChange, (MultiplicityElementChange)rightDiff);
+					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * Collects the refined differences that fulfill the given predicate from the given diffs.
+	 * 
+	 * @param diffs
+	 *            The diffs to collect its refined differences from.
+	 * @param predicate
+	 *            The predicate to be fulfilled.
+	 * @return The list of refined differences fulfilling the predicate.
+	 */
+	private Iterable<Diff> collectRefinedDiffs(List<Diff> diffs, Predicate<Object> predicate) {
+		Builder<Diff> builder = ImmutableList.builder();
+		for (Diff diff : diffs) {
+			builder.addAll(filter(diff.getRefines(), predicate));
+		}
+		return builder.build();
 	}
 
 	/**
@@ -176,101 +171,57 @@ public class MultiplicityElementChangePostProcessor implements IPostProcessor {
 	 */
 	private void verifyConflict(Match match, MultiplicityElementChange leftChange,
 			MultiplicityElementChange rightChange) {
-		if (!isRefinedByReferenceChange(leftChange) || !isRefinedByReferenceChange(rightChange)) {
+		final Optional<ReferenceChange> leftReferenceChange = tryGetReferenceChange(leftChange);
+		final Optional<ReferenceChange> rightReferenceChange = tryGetReferenceChange(rightChange);
+		if (!leftReferenceChange.isPresent() || !rightReferenceChange.isPresent()) {
 			return;
 		}
-		ReferenceChange leftRefChange = (ReferenceChange)leftChange.getRefinedBy().get(0);
-		EReference reference = leftRefChange.getReference();
 
-		if (!affectsReference(reference, rightChange)) {
+		final EReference leftReference = leftReferenceChange.get().getReference();
+		final EReference rightReference = rightReferenceChange.get().getReference();
+		if (!leftReference.equals(rightReference)) {
 			return;
 		}
-		boolean sameValue = sameValue(reference, match.getLeft(), match.getRight());
-		updateConflict(leftChange, rightChange, sameValue);
 
+		final boolean sameValue = sameValue(leftReference, match.getLeft(), match.getRight());
+		updateConflict(leftReferenceChange.get(), rightReferenceChange.get(), sameValue);
 	}
 
 	/**
-	 * Updates the conflict kind of the given MultiplicityElementChanges.
+	 * Updates the conflict kind of the given references that refine MultiplicityElementChanges.
 	 * 
-	 * @param leftChange
+	 * @param diff
 	 *            the change from the left side
-	 * @param rightChange
+	 * @param diff2
 	 *            the change from the right side
 	 * @param sameValue
 	 *            specifies whether the conflicting references have the same value (pseudo conflict) or not
 	 *            (real conflict)
 	 */
-	private void updateConflict(MultiplicityElementChange leftChange, MultiplicityElementChange rightChange,
-			boolean sameValue) {
-		if (sameValue && leftChange.getConflict().getKind() != ConflictKind.PSEUDO
-				&& containsOnlyMultiplicityReferenceChanges(leftChange.getConflict())) {
-			leftChange.getConflict().setKind(ConflictKind.PSEUDO);
-		} else if (!sameValue && (leftChange.getConflict().getKind() != ConflictKind.REAL
-				|| rightChange.getConflict().getKind() != ConflictKind.REAL)) {
-			Conflict conflict = leftChange.getConflict();
+	private void updateConflict(Diff diff, Diff diff2, boolean sameValue) {
+		if (sameValue && diff.getConflict().getKind() != ConflictKind.PSEUDO) {
+			diff.getConflict().setKind(ConflictKind.PSEUDO);
+		} else if (!sameValue && (diff.getConflict().getKind() != ConflictKind.REAL
+				|| diff2.getConflict().getKind() != ConflictKind.REAL)) {
+			Conflict conflict = diff.getConflict();
 			conflict.setKind(ConflictKind.REAL);
 			// make sure the multiplicity changes' conflict is the real one
-			leftChange.setConflict(conflict);
-			rightChange.setConflict(conflict);
+			diff.setConflict(conflict);
+			diff2.setConflict(conflict);
 		}
-
 	}
 
 	/**
-	 * Returns true if the prime refining of the multiplicity element change is a reference change.
+	 * Returns the reference change that refines the given multiplicity element change. A multiplicity change
+	 * should only have one refining diff, which is a reference change.
 	 * 
 	 * @param change
-	 *            the {@link MultiplicityElementChange} to check
-	 * @return whether the given change has a {@link ReferenceChange} as its prime refining
+	 *            The {@link MultiplicityElementChange} to get its refining reference change.
+	 * @return The refining reference change.
 	 */
-	private boolean isRefinedByReferenceChange(MultiplicityElementChange change) {
-		return change.getPrimeRefining() instanceof ReferenceChange;
-	}
-
-	/**
-	 * Checks if the given conflict contains differences that are not of type
-	 * {@link MultiplicityElementChange} or are not {@link ReferenceChange reference changes} of
-	 * {@link MultiplicityElement multiplicity elements}.
-	 * 
-	 * @param conflict
-	 *            the conflict to check
-	 * @return <code>true</code> if the conflict contains only {@link MultiplicityElementChange} diffs
-	 */
-	private boolean containsOnlyMultiplicityReferenceChanges(Conflict conflict) {
-		for (Diff diff : conflict.getDifferences()) {
-			if (diff instanceof MultiplicityElementChange) {
-				continue;
-			}
-			if (!(diff instanceof ReferenceChange)) {
-				return false;
-			}
-			EReference reference = ((ReferenceChange)diff).getReference();
-			if (reference != UMLPackage.eINSTANCE.getMultiplicityElement_LowerValue()
-					&& reference != UMLPackage.eINSTANCE.getMultiplicityElement_UpperValue()) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Checks whether the given change affects the specified eReference.
-	 * 
-	 * @param eReference
-	 *            the {@link EReference}
-	 * @param change
-	 *            the {@link MultiplicityElementChange}
-	 * @return true if the given {@link MultiplicityElementChange} contains a refining {@link ReferenceChange}
-	 *         affecting the provided {@link EReference}
-	 */
-	private boolean affectsReference(EReference eReference, MultiplicityElementChange change) {
-		for (ReferenceChange diff : filter(change.getRefinedBy(), ReferenceChange.class)) {
-			if (diff.getReference() == eReference) {
-				return true;
-			}
-		}
-		return false;
+	private Optional<ReferenceChange> tryGetReferenceChange(MultiplicityElementChange change) {
+		final Iterable<ReferenceChange> refChanges = filter(change.getRefinedBy(), ReferenceChange.class);
+		return Optional.fromNullable(Iterables.getFirst(refChanges, null));
 	}
 
 	/**

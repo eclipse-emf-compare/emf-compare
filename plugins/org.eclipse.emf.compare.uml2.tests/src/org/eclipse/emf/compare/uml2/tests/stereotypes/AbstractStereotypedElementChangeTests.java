@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 501864
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.stereotypes;
 
@@ -17,11 +18,14 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Iterables;
 
 import java.io.IOException;
@@ -886,16 +890,22 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		final ReferenceChange baseDiff = assertDeletedBaseElementDiff(differences, "model.Class0", //$NON-NLS-1$
 				stereotypedElementChange);
 
-		final Conflict conflict = stereotypedElementChange.getConflict();
+		// the stereotype change itself is not in a conflict
+		assertNull(stereotypedElementChange.getConflict());
+
+		// but one of its refining diffs is in exactly one conflict
+		final Set<Conflict> conflicts = getConflictsOfRefiningDiffs(stereotypedElementChange);
+		final Conflict conflict = Iterables.getOnlyElement(conflicts);
+
 		assertNotNull(conflict);
-		assertEquals(3, conflict.getDifferences().size());
+		assertEquals(2, conflict.getDifferences().size());
 
 		final EList<Diff> leftDifferences = conflict.getLeftDifferences();
 		assertEquals(1, leftDifferences.size());
 
 		final Diff leftDiff = leftDifferences.get(0);
 		assertTrue(leftDiff instanceof AttributeChange);
-		assertEquals(2, conflict.getRightDifferences().size());
+		assertEquals(1, conflict.getRightDifferences().size());
 		assertTrue(conflict.getRightDifferences().contains(baseDiff));
 
 		// Merges
@@ -974,9 +984,13 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		final ReferenceChange baseDiff = assertDeletedBaseElementDiff(differences, "model.Class0", //$NON-NLS-1$
 				stereotypedElementChange);
 
-		final Conflict conflict = stereotypedElementChange.getConflict();
-		assertNotNull(conflict);
-		assertEquals(3, conflict.getDifferences().size());
+		// the stereotype change itself is not in a conflict
+		assertNull(stereotypedElementChange.getConflict());
+
+		// but one of its refining diffs is in exactly one conflict
+		final Set<Conflict> conflicts = getConflictsOfRefiningDiffs(stereotypedElementChange);
+		final Conflict conflict = Iterables.getOnlyElement(conflicts);
+		assertEquals(2, conflict.getDifferences().size());
 
 		final EList<Diff> leftDifferences = conflict.getLeftDifferences();
 		assertEquals(1, leftDifferences.size());
@@ -984,7 +998,7 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		final Diff leftConflictDiff = leftDifferences.get(0);
 
 		assertTrue(leftConflictDiff instanceof AttributeChange);
-		assertEquals(2, conflict.getRightDifferences().size());
+		assertEquals(1, conflict.getRightDifferences().size());
 		assertTrue(conflict.getRightDifferences().contains(baseDiff));
 		// Merges
 		mergeLeftToRight(stereotypedElementChange);
@@ -1003,6 +1017,23 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		// Checks left model content after merging
 		assertEqualsM5(left);
 
+	}
+
+	/**
+	 * Returns the conflicts of the refining diffs of the given {@code refinedDiff}.
+	 * 
+	 * @param refinedDiff
+	 *            The refined diff to get the conflicts from.
+	 * @return the list of conflicts.
+	 */
+	private Set<Conflict> getConflictsOfRefiningDiffs(Diff refinedDiff) {
+		Builder<Conflict> builder = ImmutableSet.builder();
+		for (Diff refiningDiff : refinedDiff.getRefinedBy()) {
+			if (refiningDiff.getConflict() != null) {
+				builder.add(refiningDiff.getConflict());
+			}
+		}
+		return builder.build();
 	}
 
 	/**

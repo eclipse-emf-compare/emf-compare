@@ -8,12 +8,13 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 441172
- *     Philip Langer - add containsConflictOfTypes(ConflictKind...)
+ *     Philip Langer - add additional predicates
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.and;
+import static com.google.common.collect.Iterators.any;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
 
 import com.google.common.base.Predicate;
@@ -1105,6 +1106,66 @@ public final class EMFComparePredicates {
 			}
 		}
 		return nameFeature;
+	}
+
+	/**
+	 * This predicate can be used to check whether any refining diffs of a given diff fulfill the given
+	 * predicate.
+	 * 
+	 * @param predicate
+	 *            The predicate to check.
+	 * @return The predicate.
+	 */
+	public static Predicate<? super Diff> anyRefiningDiffs(final Predicate<? super Diff> predicate) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input != null && any(input.getRefinedBy().iterator(), predicate);
+			}
+		};
+	}
+
+	/**
+	 * This predicate can be used to check whether any refined diffs of a given diff fulfill the given
+	 * predicate.
+	 * 
+	 * @param predicate
+	 *            The predicate to check.
+	 * @return The predicate.
+	 */
+	public static Predicate<? super Diff> anyRefinedDiffs(final Predicate<? super Diff> predicate) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input != null && any(input.getRefines().iterator(), predicate);
+			}
+		};
+	}
+
+	/**
+	 * This predicate can be used to check whether a diff is in a conflict directly or indirectly.
+	 * <p>
+	 * A diff is directly in a conflict if it {@link #hasConflict(ConflictKind...) has a conflict}. A diff is
+	 * indirectly in a conflict, if one of its refining diffs is in a conflict.
+	 * </p>
+	 * 
+	 * @param kinds
+	 *            Type(s) of the conflict(s) we seek.
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Diff> hasDirectOrIndirectConflict(final ConflictKind... kinds) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff diff) {
+				if (hasConflict(kinds).apply(diff)) {
+					return true;
+				} else {
+					for (ConflictKind kind : kinds) {
+						if (anyRefiningDiffs(hasConflict(kind)).apply(diff)) {
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+		};
 	}
 
 	/**

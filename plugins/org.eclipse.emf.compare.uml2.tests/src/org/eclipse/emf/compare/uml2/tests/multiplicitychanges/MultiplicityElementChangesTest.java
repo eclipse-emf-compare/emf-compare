@@ -7,15 +7,18 @@
  * 
  * Contributors:
  *     Alexandra Buzila - initial API and implementation
+ *     Philip Langer - bug 501864
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.multiplicitychanges;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterables.size;
 import static org.eclipse.emf.compare.DifferenceSource.LEFT;
 import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -133,12 +136,12 @@ public class MultiplicityElementChangesTest {
 
 		MultiplicityElementChange leftChange = (MultiplicityElementChange)leftChanges.iterator().next();
 		assertEquals(1, leftChange.getRefinedBy().size());
-		assertTrue(leftChange.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(leftChange) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.ADD, leftChange.getKind());
 
 		MultiplicityElementChange rightChange = (MultiplicityElementChange)rightChanges.iterator().next();
 		assertEquals(1, rightChange.getRefinedBy().size());
-		assertTrue(rightChange.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(rightChange) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.ADD, rightChange.getKind());
 
 		assertEquals(0, comparison.getConflicts().size());
@@ -163,29 +166,29 @@ public class MultiplicityElementChangesTest {
 
 		MultiplicityElementChange leftChange = (MultiplicityElementChange)leftChanges.get(0);
 		assertEquals(1, leftChange.getRefinedBy().size());
-		assertTrue(leftChange.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(leftChange) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.ADD, leftChange.getKind());
 
 		MultiplicityElementChange rightChange1 = (MultiplicityElementChange)rightChanges.get(0);
 		assertEquals(1, rightChange1.getRefinedBy().size());
-		assertTrue(rightChange1.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(rightChange1) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.ADD, rightChange1.getKind());
 
 		MultiplicityElementChange rightChange2 = (MultiplicityElementChange)rightChanges.get(1);
 		assertEquals(1, rightChange2.getRefinedBy().size());
-		assertTrue(rightChange2.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(rightChange2) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.ADD, rightChange2.getKind());
 
 		assertEquals(1, comparison.getConflicts().size());
 		Conflict conflict = comparison.getConflicts().get(0);
 		assertEquals(ConflictKind.PSEUDO, conflict.getKind());
-		assertTrue(conflict.getDifferences().contains(leftChange));
+		assertTrue(conflict.getDifferences().contains(getFirstRefiningDiff(leftChange)));
 
 		if (isLowerValueChange(rightChange1)) {
-			assertEquals(conflict, rightChange1.getConflict());
+			assertEquals(conflict, getRefiningsConflict(rightChange1));
 		} else {
 			assertTrue(isLowerValueChange(rightChange2));
-			assertEquals(conflict, rightChange2.getConflict());
+			assertEquals(conflict, getRefiningsConflict(rightChange2));
 		}
 	}
 
@@ -208,17 +211,17 @@ public class MultiplicityElementChangesTest {
 
 		MultiplicityElementChange leftChange = (MultiplicityElementChange)leftChanges.get(0);
 		assertEquals(1, leftChange.getRefinedBy().size());
-		assertTrue(leftChange.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(leftChange) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.ADD, leftChange.getKind());
 
 		MultiplicityElementChange rightChange1 = (MultiplicityElementChange)rightChanges.get(0);
 		assertEquals(1, rightChange1.getRefinedBy().size());
-		assertTrue(rightChange1.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(rightChange1) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.ADD, rightChange1.getKind());
 
 		MultiplicityElementChange rightChange2 = (MultiplicityElementChange)rightChanges.get(1);
 		assertEquals(1, rightChange2.getRefinedBy().size());
-		assertTrue(rightChange2.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(rightChange2) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.ADD, rightChange2.getKind());
 
 		assertEquals(1, comparison.getConflicts().size());
@@ -226,10 +229,10 @@ public class MultiplicityElementChangesTest {
 		assertEquals(ConflictKind.REAL, conflict.getKind());
 
 		if (isLowerValueChange(rightChange1)) {
-			assertEquals(conflict, rightChange1.getConflict());
+			assertEquals(conflict, getRefiningsConflict(rightChange1));
 		} else {
 			assertTrue(isLowerValueChange(rightChange2));
-			assertEquals(conflict, rightChange2.getConflict());
+			assertEquals(conflict, getRefiningsConflict(rightChange2));
 		}
 	}
 
@@ -248,19 +251,19 @@ public class MultiplicityElementChangesTest {
 		assertEquals(1, size(leftChanges));
 		MultiplicityElementChange leftChange = (MultiplicityElementChange)leftChanges.iterator().next();
 		assertEquals(1, leftChange.getRefinedBy().size());
-		assertTrue(leftChange.getRefinedBy().get(0) instanceof AttributeChange);
+		assertTrue(getFirstRefiningDiff(leftChange) instanceof AttributeChange);
 		assertEquals(DifferenceKind.CHANGE, leftChange.getKind());
 
 		assertEquals(1, size(rightChanges));
 		MultiplicityElementChange rightChange = (MultiplicityElementChange)rightChanges.iterator().next();
 		assertEquals(1, rightChange.getRefinedBy().size());
-		assertTrue(rightChange.getRefinedBy().get(0) instanceof AttributeChange);
+		assertTrue(getFirstRefiningDiff(rightChange) instanceof AttributeChange);
 		assertEquals(DifferenceKind.CHANGE, rightChange.getKind());
 
 		assertEquals(1, comparison.getConflicts().size());
 		Conflict conflict = comparison.getConflicts().get(0);
 		assertEquals(ConflictKind.REAL, conflict.getKind());
-		assertEquals(conflict, rightChange.getConflict());
+		assertEquals(conflict, getRefiningsConflict(rightChange));
 	}
 
 	/**
@@ -290,7 +293,7 @@ public class MultiplicityElementChangesTest {
 		assertEquals(1, comparison.getConflicts().size());
 		Conflict conflict = comparison.getConflicts().get(0);
 		assertEquals(ConflictKind.PSEUDO, conflict.getKind());
-		assertEquals(conflict, rightChange.getConflict());
+		assertEquals(conflict, getRefiningsConflict(rightChange));
 
 	}
 
@@ -310,19 +313,19 @@ public class MultiplicityElementChangesTest {
 		assertEquals(1, size(leftChanges));
 		MultiplicityElementChange leftChange = (MultiplicityElementChange)leftChanges.iterator().next();
 		assertEquals(1, leftChange.getRefinedBy().size());
-		assertTrue(leftChange.getRefinedBy().get(0) instanceof AttributeChange);
+		assertTrue(getFirstRefiningDiff(leftChange) instanceof AttributeChange);
 		assertEquals(DifferenceKind.CHANGE, leftChange.getKind());
 
 		assertEquals(2, size(rightChanges));
 
 		MultiplicityElementChange rightChange1 = (MultiplicityElementChange)rightChanges.get(0);
 		assertEquals(1, rightChange1.getRefinedBy().size());
-		assertTrue(rightChange1.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(rightChange1) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.DELETE, rightChange1.getKind());
 
 		MultiplicityElementChange rightChange2 = (MultiplicityElementChange)rightChanges.get(1);
 		assertEquals(1, rightChange2.getRefinedBy().size());
-		assertTrue(rightChange2.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(rightChange2) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.DELETE, rightChange2.getKind());
 
 		assertEquals(1, comparison.getConflicts().size());
@@ -331,11 +334,11 @@ public class MultiplicityElementChangesTest {
 
 		if (isLowerValueChange(rightChange1)) {
 			assertTrue(isUpperValueChange(rightChange2));
-			assertEquals(conflict, rightChange1.getConflict());
+			assertEquals(conflict, getRefiningsConflict(rightChange1));
 		} else {
 			assertTrue(isUpperValueChange(rightChange1));
 			assertTrue(isLowerValueChange(rightChange2));
-			assertEquals(conflict, rightChange2.getConflict());
+			assertEquals(conflict, getRefiningsConflict(rightChange2));
 		}
 	}
 
@@ -353,13 +356,13 @@ public class MultiplicityElementChangesTest {
 		assertEquals(1, size(leftChanges));
 		MultiplicityElementChange leftChange = (MultiplicityElementChange)leftChanges.iterator().next();
 		assertEquals(1, leftChange.getRefinedBy().size());
-		assertTrue(leftChange.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(leftChange) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.DELETE, leftChange.getKind());
 
 		assertEquals(1, size(rightChanges));
 		MultiplicityElementChange rightChange = (MultiplicityElementChange)rightChanges.iterator().next();
 		assertEquals(1, rightChange.getRefinedBy().size());
-		assertTrue(rightChange.getRefinedBy().get(0) instanceof AttributeChange);
+		assertTrue(getFirstRefiningDiff(rightChange) instanceof AttributeChange);
 		assertEquals(DifferenceKind.CHANGE, rightChange.getKind());
 
 		assertEquals(0, comparison.getConflicts().size());
@@ -382,12 +385,12 @@ public class MultiplicityElementChangesTest {
 
 		MultiplicityElementChange leftChange = (MultiplicityElementChange)leftChanges.iterator().next();
 		assertEquals(1, leftChange.getRefinedBy().size());
-		assertTrue(leftChange.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(leftChange) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.DELETE, leftChange.getKind());
 
 		MultiplicityElementChange rightChange = (MultiplicityElementChange)rightChanges.iterator().next();
 		assertEquals(1, rightChange.getRefinedBy().size());
-		assertTrue(rightChange.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(rightChange) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.DELETE, rightChange.getKind());
 
 		assertEquals(1, comparison.getConflicts().size());
@@ -412,12 +415,12 @@ public class MultiplicityElementChangesTest {
 
 		MultiplicityElementChange leftChange = (MultiplicityElementChange)leftChanges.iterator().next();
 		assertEquals(1, leftChange.getRefinedBy().size());
-		assertTrue(leftChange.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(leftChange) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.DELETE, leftChange.getKind());
 
 		MultiplicityElementChange rightChange = (MultiplicityElementChange)rightChanges.iterator().next();
 		assertEquals(1, rightChange.getRefinedBy().size());
-		assertTrue(rightChange.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(rightChange) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.ADD, rightChange.getKind());
 
 		assertEquals(0, comparison.getConflicts().size());
@@ -442,22 +445,22 @@ public class MultiplicityElementChangesTest {
 
 		MultiplicityElementChange leftChange1 = (MultiplicityElementChange)leftChanges.get(0);
 		assertEquals(1, leftChange1.getRefinedBy().size());
-		assertTrue(leftChange1.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(leftChange1) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.ADD, leftChange1.getKind());
 
 		MultiplicityElementChange leftChange2 = (MultiplicityElementChange)leftChanges.get(1);
 		assertEquals(1, leftChange2.getRefinedBy().size());
-		assertTrue(leftChange2.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(leftChange2) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.ADD, leftChange2.getKind());
 
 		MultiplicityElementChange rightChange1 = (MultiplicityElementChange)rightChanges.get(0);
 		assertEquals(1, rightChange1.getRefinedBy().size());
-		assertTrue(rightChange1.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(rightChange1) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.ADD, rightChange1.getKind());
 
 		MultiplicityElementChange rightChange2 = (MultiplicityElementChange)rightChanges.get(1);
 		assertEquals(1, rightChange2.getRefinedBy().size());
-		assertTrue(rightChange2.getRefinedBy().get(0) instanceof ReferenceChange);
+		assertTrue(getFirstRefiningDiff(rightChange2) instanceof ReferenceChange);
 		assertEquals(DifferenceKind.ADD, rightChange2.getKind());
 
 		assertEquals(2, comparison.getConflicts().size());
@@ -479,25 +482,25 @@ public class MultiplicityElementChangesTest {
 		} else {
 			assertTrue(isLowerValueChange(leftChange1));
 			assertTrue(isUpperValueChange(leftChange2));
-			assertNotNull(leftChange1.getConflict());
-			assertEquals(ConflictKind.PSEUDO, leftChange1.getConflict().getKind());
-			assertNotNull(leftChange2.getConflict());
-			assertEquals(ConflictKind.REAL, leftChange2.getConflict().getKind());
+			assertNotNull(getRefiningsConflict(leftChange1));
+			assertEquals(ConflictKind.PSEUDO, getRefiningsConflict(leftChange1).getKind());
+			assertNotNull(getRefiningsConflict(leftChange2));
+			assertEquals(ConflictKind.REAL, getRefiningsConflict(leftChange2).getKind());
 		}
 
 		if (isUpperValueChange(rightChange1)) {
 			assertTrue(isLowerValueChange(rightChange2));
-			assertNotNull(rightChange1.getConflict());
-			assertEquals(ConflictKind.REAL, rightChange1.getConflict().getKind());
-			assertNotNull(rightChange2.getConflict());
-			assertEquals(ConflictKind.PSEUDO, rightChange2.getConflict().getKind());
+			assertNotNull(getRefiningsConflict(rightChange1));
+			assertEquals(ConflictKind.REAL, getRefiningsConflict(rightChange1).getKind());
+			assertNotNull(getRefiningsConflict(rightChange2));
+			assertEquals(ConflictKind.PSEUDO, getRefiningsConflict(rightChange2).getKind());
 		} else {
 			assertTrue(isLowerValueChange(rightChange1));
 			assertTrue(isUpperValueChange(rightChange2));
-			assertNotNull(rightChange1.getConflict());
-			assertEquals(ConflictKind.PSEUDO, rightChange1.getConflict().getKind());
-			assertNotNull(rightChange2.getConflict());
-			assertEquals(ConflictKind.REAL, rightChange2.getConflict().getKind());
+			assertNotNull(getRefiningsConflict(rightChange1));
+			assertEquals(ConflictKind.PSEUDO, getRefiningsConflict(rightChange1).getKind());
+			assertNotNull(getRefiningsConflict(rightChange2));
+			assertEquals(ConflictKind.REAL, getRefiningsConflict(rightChange2).getKind());
 		}
 
 	}
@@ -506,14 +509,14 @@ public class MultiplicityElementChangesTest {
 		if (multiplicityElementChange.getRefinedBy().size() != 1) {
 			return false;
 		}
-		return IS_LOWER_VALUE_CHANGE.apply(multiplicityElementChange.getRefinedBy().get(0));
+		return IS_LOWER_VALUE_CHANGE.apply(getFirstRefiningDiff(multiplicityElementChange));
 	}
 
 	private boolean isUpperValueChange(MultiplicityElementChange multiplicityElementChange) {
 		if (multiplicityElementChange.getRefinedBy().size() != 1) {
 			return false;
 		}
-		return IS_UPPER_VALUE_CHANGE.apply(multiplicityElementChange.getRefinedBy().get(0));
+		return IS_UPPER_VALUE_CHANGE.apply(getFirstRefiningDiff(multiplicityElementChange));
 	}
 
 	/**
@@ -534,43 +537,27 @@ public class MultiplicityElementChangesTest {
 		assertEquals(2, size(leftChanges));
 		assertEquals(2, size(rightChanges));
 
-		MultiplicityElementChange leftAddChange;
-		MultiplicityElementChange leftDeleteChange;
-
-		if (leftChanges.get(0).getKind() == DifferenceKind.ADD) {
-			leftAddChange = (MultiplicityElementChange)leftChanges.get(0);
-			leftDeleteChange = (MultiplicityElementChange)leftChanges.get(1);
-		} else {
-			leftAddChange = (MultiplicityElementChange)leftChanges.get(1);
-			leftDeleteChange = (MultiplicityElementChange)leftChanges.get(0);
-		}
+		MultiplicityElementChange leftAddChange = (MultiplicityElementChange)find(leftChanges,
+				ofKind(DifferenceKind.ADD));
+		MultiplicityElementChange leftDeleteChange = (MultiplicityElementChange)find(leftChanges,
+				ofKind(DifferenceKind.DELETE));
 
 		assertEquals(1, leftAddChange.getRefinedBy().size());
-		assertTrue(leftAddChange.getRefinedBy().get(0) instanceof ReferenceChange);
-		assertEquals(DifferenceKind.ADD, leftAddChange.getKind());
+		assertTrue(getFirstRefiningDiff(leftAddChange) instanceof ReferenceChange);
 
 		assertEquals(1, leftDeleteChange.getRefinedBy().size());
-		assertTrue(leftDeleteChange.getRefinedBy().get(0) instanceof ReferenceChange);
-		assertEquals(DifferenceKind.DELETE, leftDeleteChange.getKind());
+		assertTrue(getFirstRefiningDiff(leftDeleteChange) instanceof ReferenceChange);
 
-		MultiplicityElementChange rightChange;
-		MultiplicityElementChange rightAddChange;
-
-		if (rightChanges.get(0).getKind() == DifferenceKind.ADD) {
-			rightAddChange = (MultiplicityElementChange)rightChanges.get(0);
-			rightChange = (MultiplicityElementChange)rightChanges.get(1);
-		} else {
-			rightAddChange = (MultiplicityElementChange)rightChanges.get(1);
-			rightChange = (MultiplicityElementChange)rightChanges.get(0);
-		}
+		MultiplicityElementChange rightAddChange = (MultiplicityElementChange)find(leftChanges,
+				ofKind(DifferenceKind.ADD));
+		MultiplicityElementChange rightChange = (MultiplicityElementChange)find(rightChanges,
+				ofKind(DifferenceKind.CHANGE));
 
 		assertEquals(1, rightAddChange.getRefinedBy().size());
-		assertTrue(rightAddChange.getRefinedBy().get(0) instanceof ReferenceChange);
-		assertEquals(DifferenceKind.ADD, rightAddChange.getKind());
+		assertTrue(getFirstRefiningDiff(rightAddChange) instanceof ReferenceChange);
 
 		assertEquals(1, rightChange.getRefinedBy().size());
-		assertTrue(rightChange.getRefinedBy().get(0) instanceof AttributeChange);
-		assertEquals(DifferenceKind.CHANGE, rightChange.getKind());
+		assertTrue(getFirstRefiningDiff(rightChange) instanceof AttributeChange);
 
 		assertEquals(2, comparison.getConflicts().size());
 		Conflict conflict1 = comparison.getConflicts().get(0);
@@ -581,20 +568,43 @@ public class MultiplicityElementChangesTest {
 		} else {
 			assertEquals(ConflictKind.PSEUDO, conflict2.getKind());
 		}
-		assertEquals(ConflictKind.REAL, leftDeleteChange.getConflict().getKind());
-		assertEquals(leftDeleteChange.getConflict(), rightChange.getConflict());
-		assertEquals(ConflictKind.PSEUDO, leftAddChange.getConflict().getKind());
-		assertEquals(leftAddChange.getConflict(), rightAddChange.getConflict());
+		final Conflict leftChangeConflict = getRefiningsConflict(leftDeleteChange);
+		final Conflict rightChangeConflict = getRefiningsConflict(rightChange);
+		final Conflict leftAddConflict = getRefiningsConflict(leftAddChange);
+		final Conflict rightAddConflict = getRefiningsConflict(rightAddChange);
+		assertEquals(ConflictKind.REAL, leftChangeConflict.getKind());
+		assertEquals(leftChangeConflict, rightChangeConflict);
+		assertEquals(ConflictKind.PSEUDO, leftAddConflict.getKind());
+		assertEquals(leftAddConflict, rightAddConflict);
 	}
 
-	// @Override
-	// protected void registerPostProcessors(
-	// org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry<String> postProcessorRegistry)
-	// {
-	// super.registerPostProcessors(postProcessorRegistry);
-	// postProcessorRegistry.put(MultiplicityElementChangePostProcessor.class.getName(),
-	// new TestPostProcessor.TestPostProcessorDescriptor(Pattern
-	// .compile("http://www.eclipse.org/uml2/\\d\\.0\\.0/UML"), null, //$NON-NLS-1$
-	// new MultiplicityElementChangePostProcessor(), 25));
-	// }
+	/**
+	 * Returns the first refining diff.
+	 * <p>
+	 * In the context of MultiplicityElementChanges, this is the prime refining, i.e., the attribute or
+	 * reference change that essentially performs the multiplicity change.
+	 * </p>
+	 * 
+	 * @param change
+	 *            The multiplicity change.
+	 * @return The first refining diff.
+	 */
+	private Diff getFirstRefiningDiff(Diff change) {
+		return change.getRefinedBy().get(0);
+	}
+
+	/**
+	 * Returns the conflict of the {@link #getFirstRefiningDiff(Diff) first refining diff}.
+	 * <p>
+	 * In the context of MultiplicityElementChanges, this is the conflict in which the
+	 * MultiplicityElementChanges is involved.
+	 * </p>
+	 * 
+	 * @param change
+	 *            The multiplicity change.
+	 * @return The conflict of the multiplicity change.
+	 */
+	private Conflict getRefiningsConflict(Diff change) {
+		return getFirstRefiningDiff(change).getConflict();
+	}
 }

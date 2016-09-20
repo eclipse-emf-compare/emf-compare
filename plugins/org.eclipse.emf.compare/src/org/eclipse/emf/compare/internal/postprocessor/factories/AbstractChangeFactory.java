@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,13 +7,13 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 501864
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.postprocessor.factories;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -72,18 +72,6 @@ public abstract class AbstractChangeFactory implements IChangeFactory {
 		ret.setSource(input.getSource());
 
 		setRefiningChanges(ret, extensionKind, input);
-
-		// FIXME: Maybe it would be better to get all conflict objects from all conflicting unit differences
-		// and
-		// create a new conflict object with these differences, to set on the macroscopic change (ret).
-		Diff conflictingDiff = Iterators.find(ret.getRefinedBy().iterator(), new Predicate<Diff>() {
-			public boolean apply(Diff difference) {
-				return difference.getConflict() != null;
-			}
-		}, null);
-		if (conflictingDiff != null) {
-			ret.setConflict(conflictingDiff.getConflict());
-		}
 
 		return ret;
 	}
