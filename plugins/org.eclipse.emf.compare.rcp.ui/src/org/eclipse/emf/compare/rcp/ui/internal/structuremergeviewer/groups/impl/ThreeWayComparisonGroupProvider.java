@@ -9,14 +9,17 @@
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 488941
  *     Simon Delisle, Edgar Mueller - bug 486923
+ *     Tanja Mayerhofer - bug 501864
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.filter;
 import static com.google.common.collect.Iterators.transform;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
@@ -29,14 +32,20 @@ import com.google.common.collect.UnmodifiableIterator;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
+import org.eclipse.emf.compare.impl.ConflictImpl;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString.IComposedStyledString;
@@ -111,10 +120,78 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		@Override
 		protected void doBuildSubTrees() {
 			for (Conflict conflict : getComparison().getConflicts()) {
-				ConflictNodeBuilder builder = new ConflictNodeBuilder(conflict, this);
+				ConflictGroup conflictGroup = new ConflictGroup(conflict);
+				ConflictNodeBuilder builder = new ConflictNodeBuilder(conflictGroup, this);
 				ConflictNode conflictNode = builder.buildNode();
 				children.add(conflictNode);
 			}
+		}
+
+		/**
+		 * This implementation of {@link Conflict} is used to re-define conflicts for the SMV. Conflicts are
+		 * re-define to contain refined diffs instead of refining diffs.
+		 * 
+		 * @author <a href="mailto:tmayerhofer@eclipsesource.com">Tanja Mayerhofer</a>
+		 */
+		public static class ConflictGroup extends ConflictImpl {
+
+			private final Conflict conflict;
+
+			private EList<Diff> diffs = new BasicEList<Diff>();
+
+			public ConflictGroup(Conflict conflict) {
+				this.conflict = checkNotNull(conflict);
+				this.diffs.addAll(computeDiffs());
+			}
+
+			/**
+			 * Computes the re-defined diffs of the conflict. In particular, refining diffs are replaces by
+			 * refined diffs.
+			 * 
+			 * @return The set of re-defined diffs of the conflict
+			 */
+			private Set<Diff> computeDiffs() {
+				LinkedHashSet<Diff> computedDiffs = new LinkedHashSet<Diff>();
+				for (Diff diff : conflict.getDifferences()) {
+					if (diff.getRefines().isEmpty()) {
+						computedDiffs.add(diff);
+					} else {
+						computedDiffs.addAll(getRootRefinedDiffs(diff));
+					}
+				}
+				return computedDiffs;
+			}
+
+			/**
+			 * Determines the leaf refined diff of a refining diff, i.e., a refined diff that is not refining
+			 * another diff.
+			 * 
+			 * @param diff
+			 *            The diff for which the leaf refined diff is to be determined
+			 * @return The leaf refined diff of the provided (refining diff)
+			 */
+			private List<Diff> getRootRefinedDiffs(Diff diff) {
+				List<Diff> rootRefinedDiffs = newArrayList();
+				for (Diff refinedDiff : diff.getRefines()) {
+					if (refinedDiff.getRefines().isEmpty()) {
+						rootRefinedDiffs.add(refinedDiff);
+					} else {
+						rootRefinedDiffs.addAll(getRootRefinedDiffs(refinedDiff));
+					}
+				}
+				return rootRefinedDiffs;
+			}
+
+			@Override
+			public ConflictKind getKind() {
+				return this.conflict.getKind();
+			}
+
+			@Override
+			public EList<Diff> getDifferences() {
+				return this.diffs;
+			}
+
 		}
 
 		/**

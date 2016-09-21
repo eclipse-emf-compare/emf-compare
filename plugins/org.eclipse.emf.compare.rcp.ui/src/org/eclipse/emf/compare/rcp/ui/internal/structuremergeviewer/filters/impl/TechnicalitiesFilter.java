@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Obeo.
+ * Copyright (c) 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,14 +7,15 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 501864
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl;
 
 import static com.google.common.collect.Iterators.any;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasDirectOrIndirectConflict;
 
 import com.google.common.base.Predicate;
 
-import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.FeatureMapChange;
@@ -91,14 +92,27 @@ public class TechnicalitiesFilter extends AbstractDifferenceFilter {
 				if (data instanceof Diff) {
 					Diff diff = (Diff)data;
 					if (diff.getMatch().getComparison().isThreeWay()) {
-						Conflict conflict = diff.getConflict();
-						ret = conflict != null && conflict.getKind() == ConflictKind.PSEUDO;
+						ret = hasDirectOrIndirectPseudoConflictOnly(diff);
 					}
 				}
 			}
 			return ret;
 		}
 	};
+
+	/**
+	 * Specifies whether the given diff has a direct or indirect pseudo conflict, but not a direct or indirect
+	 * real conflict.
+	 * 
+	 * @param diff
+	 *            The diff to check.
+	 * @return <code>true</code> if it only has a direct or indirect pseudo conflict, <code>false</code>
+	 *         otherwise.
+	 */
+	private static boolean hasDirectOrIndirectPseudoConflictOnly(Diff diff) {
+		return hasDirectOrIndirectConflict(ConflictKind.PSEUDO).apply(diff)
+				&& !hasDirectOrIndirectConflict(ConflictKind.REAL).apply(diff);
+	}
 
 	/**
 	 * The predicate use to filter identical elements.

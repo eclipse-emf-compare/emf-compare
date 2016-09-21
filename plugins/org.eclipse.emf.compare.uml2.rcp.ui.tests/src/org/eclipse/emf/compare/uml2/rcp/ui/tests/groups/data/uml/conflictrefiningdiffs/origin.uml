@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_lVcg8H_MEeayp7MnooaiIA" name="model">
+  <packagedElement xmi:type="uml:Activity" xmi:id="_lVsYkH_MEeayp7MnooaiIA" name="Activity1" node="_sI5KsH_MEeayp7MnooaiIA">
+    <node xmi:type="uml:OpaqueAction" xmi:id="_sI5KsH_MEeayp7MnooaiIA" name="OpaqueAction"/>
+  </packagedElement>
+</uml:Model>
