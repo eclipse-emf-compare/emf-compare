@@ -201,18 +201,24 @@ public abstract class AbstractGitMergeTestCase {
 
 	private static void copyDirectoryContents(File rootDirectory, final File workingDirectory)
 			throws IOException {
-		for (String child : rootDirectory.list()) {
-			copyDirectory(new File(rootDirectory, child), new File(workingDirectory, child));
+		String[] list = rootDirectory.list();
+		if (list != null) {
+			for (String child : list) {
+				copyDirectory(new File(rootDirectory, child), new File(workingDirectory, child));
+			}
 		}
 	}
 
 	private static void copyDirectory(File source, File destination) throws IOException {
-		if (source.isDirectory()) {
-			if (!destination.exists()) {
+		if (source != null && source.isDirectory()) {
+			if (destination != null && !destination.exists()) {
 				destination.mkdir();
 			}
-			for (String child : source.list()) {
-				copyDirectory(new File(source, child), new File(destination, child));
+			String[] list = source.list();
+			if (list != null) {
+				for (String child : list) {
+					copyDirectory(new File(source, child), new File(destination, child));
+				}
 			}
 		} else {
 			copyFile(source, destination);
@@ -235,11 +241,14 @@ public abstract class AbstractGitMergeTestCase {
 
 	private Iterable<File> getAllContainedFiles(File workingDirectory) {
 		final Builder<File> builder = ImmutableList.builder();
-		for (File containedFile : workingDirectory.listFiles()) {
-			if (containedFile.isFile()) {
-				builder.add(containedFile);
-			} else if (containedFile.isDirectory()) {
-				builder.addAll(getAllContainedFiles(containedFile));
+		File[] listFiles = workingDirectory.listFiles();
+		if (listFiles != null) {
+			for (File containedFile : listFiles) {
+				if (containedFile.isFile()) {
+					builder.add(containedFile);
+				} else if (containedFile.isDirectory()) {
+					builder.addAll(getAllContainedFiles(containedFile));
+				}
 			}
 		}
 		return builder.build();

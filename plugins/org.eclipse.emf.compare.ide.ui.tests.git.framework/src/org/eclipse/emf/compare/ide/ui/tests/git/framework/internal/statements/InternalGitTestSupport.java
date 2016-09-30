@@ -151,13 +151,16 @@ public class InternalGitTestSupport {
 	 * @return The path to the .git folder
 	 */
 	private File findGitDir(File file) {
-		for (File child : file.listFiles()) {
-			if (child.isDirectory() && child.getName().equals(".git")) { //$NON-NLS-1$
-				return child;
-			} else if (child.isDirectory()) {
-				File findGitDir = findGitDir(child);
-				if (findGitDir != null) {
-					return findGitDir;
+		File[] listFiles = file.listFiles();
+		if (listFiles != null) {
+			for (File child : listFiles) {
+				if (child.isDirectory() && child.getName().equals(".git")) { //$NON-NLS-1$
+					return child;
+				} else if (child.isDirectory()) {
+					File findGitDir = findGitDir(child);
+					if (findGitDir != null) {
+						return findGitDir;
+					}
 				}
 			}
 		}
@@ -178,12 +181,15 @@ public class InternalGitTestSupport {
 	 */
 	private void importProjects(File file)
 			throws InvocationTargetException, InterruptedException, CoreException {
-		for (File child : file.listFiles()) {
-			if (child.isDirectory() && !child.getName().equals(METADATA_FOLDER)
-					&& !child.getName().equals(".git")) { //$NON-NLS-1$
-				importProjects(child);
-			} else if (child.getName().equals(".project")) { //$NON-NLS-1$
-				importProject(child);
+		File[] listFiles = file.listFiles();
+		if (listFiles != null) {
+			for (File child : listFiles) {
+				if (child.isDirectory() && !child.getName().equals(METADATA_FOLDER)
+						&& !child.getName().equals(".git")) { //$NON-NLS-1$
+					importProjects(child);
+				} else if (child.getName().equals(".project")) { //$NON-NLS-1$
+					importProject(child);
+				}
 			}
 		}
 	}
@@ -282,9 +288,12 @@ public class InternalGitTestSupport {
 		Activator.getDefault().getRepositoryCache().clear();
 
 		File file = new File(workspaceRoot.getLocation().toOSString());
-		for (File child : file.listFiles()) {
-			if (!child.getName().equals(METADATA_FOLDER)) {
-				FileUtils.delete(child, FileUtils.RECURSIVE | FileUtils.RETRY);
+		File[] listFiles = file.listFiles();
+		if (listFiles != null) {
+			for (File child : listFiles) {
+				if (!child.getName().equals(METADATA_FOLDER)) {
+					FileUtils.delete(child, FileUtils.RECURSIVE | FileUtils.RETRY);
+				}
 			}
 		}
 	}
@@ -319,9 +328,12 @@ public class InternalGitTestSupport {
 		}
 
 		File file = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString());
-		for (File child : file.listFiles()) {
-			if (!child.getName().equals(METADATA_FOLDER)) {
-				FileUtils.delete(child, FileUtils.RECURSIVE | FileUtils.RETRY);
+		File[] listFiles = file.listFiles();
+		if (listFiles != null) {
+			for (File child : listFiles) {
+				if (!child.getName().equals(METADATA_FOLDER)) {
+					FileUtils.delete(child, FileUtils.RECURSIVE | FileUtils.RETRY);
+				}
 			}
 		}
 	}
