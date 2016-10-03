@@ -13,15 +13,18 @@ package org.eclipse.emf.compare.diagram.papyrus.tests.merge;
 import static com.google.common.collect.Iterables.all;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
+import static org.eclipse.emf.compare.DifferenceKind.MOVE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasDirectOrIndirectConflict;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.conflict.MatchBasedConflictDetector;
 import org.eclipse.emf.compare.ide.ui.tests.framework.annotations.ConflictDetectors;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitMergeStrategyID;
@@ -32,8 +35,10 @@ import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMerge;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMergeStrategy;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.lib.Repository;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
 
 @RunWith(GitTestRunner.class)
 @GitMergeStrategy(GitMergeStrategyID.MODEL_ADDITIVE)
@@ -44,7 +49,6 @@ public class AdditiveMergeDiagramTests {
 
 	@GitMerge(local = "wave", remote = "wired")
 	@GitInput("data/additive/rac.zip")
-	@Ignore("Avoiding to put the refined diff into each conflict of its refining seems to break this test")
 	public void testAdditiveMergeWithRAC_MergeWiredOnWave(Status status, Repository repository,
 			List<IProject> projects, GitTestSupport support) throws Exception {
 		assertFalse(status.hasUncommittedChanges());
@@ -57,7 +61,6 @@ public class AdditiveMergeDiagramTests {
 
 	@GitMerge(local = "wired", remote = "wave")
 	@GitInput("data/additive/rac.zip")
-	@Ignore("Avoiding to put the refined diff into each conflict of its refining seems to break this test")
 	public void testAdditiveMergeWithRAC_WaveOnWired(Status status, Repository repository,
 			List<IProject> projects, GitTestSupport support) throws Exception {
 		assertFalse(status.hasUncommittedChanges());
@@ -73,7 +76,6 @@ public class AdditiveMergeDiagramTests {
 	 */
 	@GitMerge(local = "branch1", remote = "branch2")
 	@GitInput("data/additive/solvable.zip")
-	@Ignore("Avoiding to put the refined diff into each conflict of its refining seems to break this test")
 	public void testAdditiveMergeSolvableConflicts_Branch2OnBranch1(Status status, Repository repository,
 			List<IProject> projects, GitTestSupport support) throws Exception {
 		assertFalse(status.hasUncommittedChanges());
@@ -86,12 +88,22 @@ public class AdditiveMergeDiagramTests {
 		// package on both sides and it's (currently) impossible to guarantee
 		// the order in which they will be placed in their parent during a merge
 		// Let's just check that all diffs are in conflict
-		assertTrue(all(comparison.getDifferences(), hasDirectOrIndirectConflict(PSEUDO, REAL)));
+
+		Collection<Diff> diffs = Collections2.filter(comparison.getDifferences(),
+				Predicates.not(hasDirectOrIndirectConflict(PSEUDO, REAL)));
+		assertEquals(2, diffs.size());
+
+		// Since we cannot be sure of the order of the merged element, this is possible that a side and the
+		// ancestor are placed in the same position and the other side is in another position, resulting in a
+		// move diff which is not in conflict with the expected result. This depend of the checkout branch
+		// when the merge is launched.
+		for (Diff diff : diffs) {
+			assertEquals(MOVE, diff.getKind());
+		}
 	}
 
 	@GitMerge(local = "branch2", remote = "branch1")
 	@GitInput("data/additive/solvable.zip")
-	@Ignore("Avoiding to put the refined diff into each conflict of its refining seems to break this test")
 	public void testAdditiveMergeSolvableConflicts_Branch1OnBranch2(Status status, Repository repository,
 			List<IProject> projects, GitTestSupport support) throws Exception {
 		assertFalse(status.hasUncommittedChanges());
@@ -104,6 +116,6 @@ public class AdditiveMergeDiagramTests {
 		// package on both sides and it's (currently) impossible to guarantee
 		// the order in which they will be placed in their parent during a merge
 		// Let's just check that all diffs are in conflict
-		assertTrue(all(comparison.getDifferences(), hasDirectOrIndirectConflict(PSEUDO, REAL)));
+		assertTrue(all(comparison.getDifferences(), hasDirectOrIndirectConflict(PSEUDO)));
 	}
 }
