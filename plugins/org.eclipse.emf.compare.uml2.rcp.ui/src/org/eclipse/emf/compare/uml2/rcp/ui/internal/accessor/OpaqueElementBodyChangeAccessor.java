@@ -14,6 +14,7 @@ import com.google.common.base.Optional;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -111,6 +112,9 @@ public class OpaqueElementBodyChangeAccessor extends AbstractTypedElementAdapter
 	 */
 	@SuppressWarnings("unchecked")
 	private List<String> getLanguageValues() {
+		if (eObject == null) {
+			return Collections.emptyList();
+		}
 		return (List<String>)ReferenceUtil.safeEGet(eObject, getLanguageFeature());
 	}
 
@@ -121,6 +125,9 @@ public class OpaqueElementBodyChangeAccessor extends AbstractTypedElementAdapter
 	 */
 	@SuppressWarnings("unchecked")
 	private List<String> getBodyValues() {
+		if (eObject == null) {
+			return Collections.emptyList();
+		}
 		return (List<String>)ReferenceUtil.safeEGet(eObject, getBodyFeature());
 	}
 
