@@ -24,13 +24,11 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
-
-import java.util.Iterator;
+import com.google.common.collect.UnmodifiableIterator;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.AbstractDifferenceFilter;
 import org.eclipse.emf.compare.utils.MatchUtil;
@@ -94,7 +92,7 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 				// The ancestor has been added/deleted, we must filter the current diff
 				// _unless_ it is refined by the diff that represents the grand-parent
 				// add/delete
-				ReferenceChange addOrDeleteDiff = findAddOrDeleteDiff(grandParentMatch, side);
+				Diff addOrDeleteDiff = findAddOrDeleteDiff(grandParentMatch, side);
 				if (addOrDeleteDiff != null) {
 					if (diff.getRefinedBy().contains(addOrDeleteDiff)) {
 						// recurse
@@ -107,14 +105,14 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 			return ret;
 		}
 
-		private ReferenceChange findAddOrDeleteDiff(Match match, DifferenceSource side) {
-			EObject container = match.eContainer();
-			if (container instanceof Match) {
-				@SuppressWarnings("unchecked")
-				Iterator<Diff> candidates = Iterators.filter(((Match)container).getDifferences().iterator(),
-						and(fromSide(side), CONTAINMENT_REFERENCE_CHANGE, ofKind(ADD, DELETE)));
-				if (candidates.hasNext()) {
-					return (ReferenceChange)candidates.next();
+		private Diff findAddOrDeleteDiff(Match match, DifferenceSource side) {
+			final Iterable<Diff> addOrDeleteContainmentDiffs = MatchUtil
+					.findAddOrDeleteContainmentDiffs(match);
+			if (addOrDeleteContainmentDiffs != null) {
+				final UnmodifiableIterator<Diff> sideChanges = Iterators
+						.filter(addOrDeleteContainmentDiffs.iterator(), fromSide(side));
+				if (sideChanges.hasNext()) {
+					return sideChanges.next();
 				}
 			}
 			return null;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,14 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
+import static com.google.common.base.Predicates.and;
+import static org.eclipse.emf.compare.DifferenceKind.ADD;
+import static org.eclipse.emf.compare.DifferenceKind.DELETE;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.getAsList;
+
+import com.google.common.collect.Iterables;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.AttributeChange;
@@ -288,6 +295,24 @@ public final class MatchUtil {
 			default:
 				throw new IllegalArgumentException("Value " + side + " is not a valid DifferenceSource."); //$NON-NLS-1$ //$NON-NLS-2$
 		}
+	}
+
+	/**
+	 * Get the potential ReferenceChanges that represent add/delete containment differences in the parent
+	 * Match of the given Match.
+	 * 
+	 * @param match
+	 *            the given Match.
+	 * @return the potential ReferenceChanges that represent add/delete containment differences in the parent
+	 *         Match of the given Match, <code>null</code> otherwise.
+	 */
+	public static Iterable<Diff> findAddOrDeleteContainmentDiffs(Match match) {
+		final EObject container = match.eContainer();
+		if (container instanceof Match) {
+			return Iterables.filter(((Match)container).getDifferences(),
+					and(CONTAINMENT_REFERENCE_CHANGE, ofKind(ADD, DELETE)));
+		}
+		return null;
 	}
 
 }

@@ -13,6 +13,7 @@
 package org.eclipse.emf.compare.rcp.ui.tests.suite;
 
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.rcp.ui.tests.contentmergeviewer.accessor.match.MatchAccessorTest;
 import org.eclipse.emf.compare.rcp.ui.tests.match.RCPMatchEngineFactoryRegistryTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemFeatureMapsTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemPseudoConflictTest;
@@ -43,7 +44,7 @@ import junit.textui.TestRunner;
 		MergeViewerItemPseudoConflictTest.class, MergeViewerItemFeatureMapsTest.class,
 		TestBasicDifferenceGroupImpl.class, BugsTestSuite.class, TestFeatureMapDifferencesFilter.class,
 		RCPMatchEngineFactoryRegistryTest.class, ThreeWayComparisonGroupProviderTest.class,
-		ConflictsGroupTest.class, })
+		ConflictsGroupTest.class, MatchAccessorTest.class, })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.
