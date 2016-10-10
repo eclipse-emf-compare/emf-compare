@@ -9,11 +9,13 @@
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 441172
  *     Philip Langer - add additional predicates
+ *     Tanja Mayerhofer - bug 501864
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterators.any;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
 
@@ -1166,6 +1168,21 @@ public final class EMFComparePredicates {
 				return false;
 			}
 		};
+	}
+
+	/**
+	 * This predicate can be used to check whether a diff is not in a conflict directly or indirectly.
+	 * <p>
+	 * A diff is directly in a conflict if it {@link #hasConflict(ConflictKind...) has a conflict}. A diff is
+	 * indirectly in a conflict, if one of its refining diffs is in a conflict.
+	 * </p>
+	 * 
+	 * @param kinds
+	 *            Type(s) of the conflict(s) we seek.
+	 * @return The created predicate.
+	 */
+	public static Predicate<? super Diff> hasNoDirectOrIndirectConflict(final ConflictKind... kinds) {
+		return and(not(hasConflict(kinds)), not(anyRefiningDiffs(hasConflict(kinds))));
 	}
 
 	/**

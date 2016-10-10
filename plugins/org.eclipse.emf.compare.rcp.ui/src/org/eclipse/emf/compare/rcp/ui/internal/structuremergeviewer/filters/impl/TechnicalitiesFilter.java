@@ -8,11 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - bug 501864
+ *     Tanja Mayerhofer - bug 501864
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl;
 
 import static com.google.common.collect.Iterators.any;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.anyRefiningDiffs;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasDirectOrIndirectConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasNoDirectOrIndirectConflict;
 
 import com.google.common.base.Predicate;
 
@@ -111,7 +114,9 @@ public class TechnicalitiesFilter extends AbstractDifferenceFilter {
 	 */
 	private static boolean hasDirectOrIndirectPseudoConflictOnly(Diff diff) {
 		return hasDirectOrIndirectConflict(ConflictKind.PSEUDO).apply(diff)
-				&& !hasDirectOrIndirectConflict(ConflictKind.REAL).apply(diff);
+				&& !hasDirectOrIndirectConflict(ConflictKind.REAL).apply(diff)
+				&& !anyRefiningDiffs(hasNoDirectOrIndirectConflict(ConflictKind.REAL, ConflictKind.PSEUDO))
+						.apply(diff);
 	}
 
 	/**

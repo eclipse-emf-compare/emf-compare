@@ -15,18 +15,21 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.filter;
 import static com.google.common.collect.Iterators.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.anyRefiningDiffs;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasDirectOrIndirectConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasNoDirectOrIndirectConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
@@ -76,6 +79,15 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProvider {
 
 	/**
+	 * The default predicate used to filter differences in difference groups. The predicate returns true for
+	 * diffs that do not have a direct or indirect real conflict and that do not have only pseudo conflicts.
+	 */
+	public static final Predicate<? super Diff> DEFAULT_DIFF_GROUP_FILTER_PREDICATE = and(
+			not(hasDirectOrIndirectConflict(ConflictKind.REAL)),
+			not(and(anyRefiningDiffs(hasConflict(ConflictKind.PSEUDO)), not(anyRefiningDiffs(
+					hasNoDirectOrIndirectConflict(ConflictKind.PSEUDO, ConflictKind.REAL))))));
+	
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider#isEnabled(org
@@ -97,6 +109,12 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	public static class ConflictsGroupImpl extends BasicDifferenceGroupImpl {
 
 		/**
+		 * The default predicate used to filter differences.
+		 */
+		private static final Predicate<? super Diff> DEFAULT_CONFLICT_GROUP_FILTER_PREDICATE = hasConflict(
+				ConflictKind.REAL, ConflictKind.PSEUDO);
+		
+		/**
 		 * Conflict groups to show in SMV.
 		 */
 		private final List<CompositeConflict> compositeConflicts = newArrayList();
@@ -117,6 +135,22 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 			super(comparison, filter, name, crossReferenceAdapter);
 		}
 
+		/**
+		 * Instantiates this group given the comparison. It will use the default filter to determine its list
+		 * of differences. It will be displayed in the UI with the default icon and the given name.
+		 * 
+		 * @param comparison
+		 *            The comparison that is the parent of this group.
+		 * @param name
+		 *            The name that the EMF Compare UI will display for this group.
+		 * @param crossReferenceAdapter
+		 *            The cross reference adapter that will be added to this group's children.
+		 */
+		public ConflictsGroupImpl(Comparison comparison, String name,
+				ECrossReferenceAdapter crossReferenceAdapter) {
+			super(comparison, DEFAULT_CONFLICT_GROUP_FILTER_PREDICATE, name, crossReferenceAdapter);
+		}
+		
 		/**
 		 * In conflicts, a special case must be handled for refining diffs: If they are not part of the same
 		 * conflict then they should not be in the same group as the refined diff.
@@ -340,21 +374,18 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		}
 
 		final ConflictsGroupImpl conflicts = new ConflictsGroupImpl(getComparison(),
-				hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO),
 				EMFCompareRCPUIMessages.getString("ThreeWayComparisonGroupProvider.conflicts.label"), //$NON-NLS-1$
 				getCrossReferenceAdapter());
 		conflicts.buildSubTree();
 
 		final BasicDifferenceGroupImpl leftSide = new BasicDifferenceGroupImpl(getComparison(),
-				Predicates.and(fromSide(DifferenceSource.LEFT),
-						Predicates.not(hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO))),
-				leftLabel, getCrossReferenceAdapter());
+				and(fromSide(DifferenceSource.LEFT), DEFAULT_DIFF_GROUP_FILTER_PREDICATE), leftLabel,
+				getCrossReferenceAdapter());
 		leftSide.buildSubTree();
 
 		final BasicDifferenceGroupImpl rightSide = new BasicDifferenceGroupImpl(getComparison(),
-				Predicates.and(fromSide(DifferenceSource.RIGHT),
-						Predicates.not(hasConflict(ConflictKind.REAL, ConflictKind.PSEUDO))),
-				rightLabel, getCrossReferenceAdapter());
+				and(fromSide(DifferenceSource.RIGHT), DEFAULT_DIFF_GROUP_FILTER_PREDICATE), rightLabel,
+				getCrossReferenceAdapter());
 		rightSide.buildSubTree();
 
 		return ImmutableList.of(conflicts, leftSide, rightSide);
