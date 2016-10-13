@@ -19,6 +19,23 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 
+/**
+ * This test scenario creates a comparison like this:
+ * <ul>
+ * <li>diff1 (LEFT), refined by
+ * <ul>
+ * <li>diff1a (LEFT)</li>
+ * <li>diff1b (RIGHT)</li>
+ * </ul>
+ * </li>
+ * <li>diff2 (RIGHT), refined by
+ * <ul>
+ * <li>diff2a (LEFT)</li>
+ * <li>diff2b (RIGHT)</li>
+ * </ul>
+ * </li>
+ * </ul>
+ */
 public class ConflictsGroupWithRefinedDiffTestScenario {
 
 	private static final CompareFactory FACTORY = CompareFactory.eINSTANCE;
@@ -73,6 +90,14 @@ public class ConflictsGroupWithRefinedDiffTestScenario {
 		comparison.getMatches().add(match1);
 	}
 
+	/**
+	 * Add a conflict between 2 existing differences of this scenario's comparison.
+	 * 
+	 * @param conflictingDiff1
+	 * @param conflictingDiff2
+	 * @param kind
+	 * @return The created conflict.
+	 */
 	Conflict addConflict(Diff conflictingDiff1, Diff conflictingDiff2, ConflictKind kind) {
 		final Conflict conflict = FACTORY.createConflict();
 		conflict.getDifferences().add(conflictingDiff1);

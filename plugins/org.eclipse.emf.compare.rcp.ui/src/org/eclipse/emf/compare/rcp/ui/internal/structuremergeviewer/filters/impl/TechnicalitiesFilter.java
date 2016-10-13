@@ -12,14 +12,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl;
 
+import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterators.any;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.anyRefiningDiffs;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasDirectOrIndirectConflict;
+import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
+import static org.eclipse.emf.compare.ConflictKind.REAL;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.allAtomicRefining;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasNoDirectOrIndirectConflict;
 
 import com.google.common.base.Predicate;
 
-import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
@@ -40,16 +42,6 @@ import org.eclipse.emf.edit.tree.TreeNode;
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
 public class TechnicalitiesFilter extends AbstractDifferenceFilter {
-
-	/**
-	 * The predicate use by this filter when it is selected.
-	 */
-	private static final Predicate<? super EObject> PREDICATE_WHEN_SELECTED = new Predicate<EObject>() {
-		public boolean apply(EObject input) {
-			return PREDICATE_EMPTY_MATCH_RESOURCES.apply(input) || PREDICATE_FEATURE_MAP.apply(input)
-					|| PREDICATE_IDENTICAL_ELEMENTS.apply(input) || PREDICATE_PSEUDO_CONFLICT.apply(input);
-		}
-	};
 
 	/**
 	 * The predicate use to filter empty match resources.
@@ -95,7 +87,7 @@ public class TechnicalitiesFilter extends AbstractDifferenceFilter {
 				if (data instanceof Diff) {
 					Diff diff = (Diff)data;
 					if (diff.getMatch().getComparison().isThreeWay()) {
-						ret = hasDirectOrIndirectPseudoConflictOnly(diff);
+						ret = isConsideredAsPseudoConflicting(diff);
 					}
 				}
 			}
@@ -104,19 +96,17 @@ public class TechnicalitiesFilter extends AbstractDifferenceFilter {
 	};
 
 	/**
-	 * Specifies whether the given diff has a direct or indirect pseudo conflict, but not a direct or indirect
-	 * real conflict.
+	 * Specifies whether the given diff can be considered as part of a pseudo conflict, but not of a real
+	 * conflict.
 	 * 
 	 * @param diff
 	 *            The diff to check.
-	 * @return <code>true</code> if it only has a direct or indirect pseudo conflict, <code>false</code>
-	 *         otherwise.
+	 * @return <code>true</code> if it has a direct pseudo-conflict or of all its atomic refining diffs are in
+	 *         pseudo-conflict.
 	 */
-	private static boolean hasDirectOrIndirectPseudoConflictOnly(Diff diff) {
-		return hasDirectOrIndirectConflict(ConflictKind.PSEUDO).apply(diff)
-				&& !hasDirectOrIndirectConflict(ConflictKind.REAL).apply(diff)
-				&& !anyRefiningDiffs(hasNoDirectOrIndirectConflict(ConflictKind.REAL, ConflictKind.PSEUDO))
-						.apply(diff);
+	private static boolean isConsideredAsPseudoConflicting(Diff diff) {
+		return allAtomicRefining(hasConflict(PSEUDO)).apply(diff)
+				&& hasNoDirectOrIndirectConflict(REAL).apply(diff);
 	}
 
 	/**
@@ -134,6 +124,14 @@ public class TechnicalitiesFilter extends AbstractDifferenceFilter {
 			return false;
 		}
 	};
+
+	/**
+	 * The predicate use by this filter when it is selected.
+	 */
+	@SuppressWarnings("unchecked")
+	private static final Predicate<? super EObject> PREDICATE_WHEN_SELECTED = or(
+			PREDICATE_EMPTY_MATCH_RESOURCES, PREDICATE_FEATURE_MAP, PREDICATE_IDENTICAL_ELEMENTS,
+			PREDICATE_PSEUDO_CONFLICT);
 
 	/**
 	 * Predicate to know if the given TreeNode is a diff.

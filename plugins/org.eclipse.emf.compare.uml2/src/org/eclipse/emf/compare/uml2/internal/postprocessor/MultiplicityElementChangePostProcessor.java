@@ -14,7 +14,7 @@ package org.eclipse.emf.compare.uml2.internal.postprocessor;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Iterables.filter;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.anyRefinedDiffs;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.anyRefined;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -122,8 +122,7 @@ public class MultiplicityElementChangePostProcessor implements IPostProcessor {
 	 */
 	private void verifyConflicts(Comparison comparison) {
 		for (Conflict conflict : comparison.getConflicts()) {
-			if (all(conflict.getDifferences(),
-					anyRefinedDiffs(instanceOf(MultiplicityElementChange.class)))) {
+			if (all(conflict.getDifferences(), anyRefined(instanceOf(MultiplicityElementChange.class)))) {
 				final Iterable<Diff> leftDiffs = collectRefinedDiffs(conflict.getLeftDifferences(),
 						instanceOf(MultiplicityElementChange.class));
 				for (Diff leftDiff : leftDiffs) {

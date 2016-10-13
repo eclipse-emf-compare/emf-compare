@@ -16,23 +16,28 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.not;
+import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.filter;
 import static com.google.common.collect.Iterators.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.anyRefiningDiffs;
+import static java.util.Collections.unmodifiableSet;
+import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
+import static org.eclipse.emf.compare.ConflictKind.REAL;
+import static org.eclipse.emf.compare.internal.utils.DiffUtil.getRootRefinedDiffs;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.allAtomicRefining;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.anyRefining;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.containsConflictOfTypes;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasDirectOrIndirectConflict;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasNoDirectOrIndirectConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 import com.google.common.collect.UnmodifiableIterator;
 
 import java.util.Collection;
@@ -63,7 +68,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.Confli
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -72,6 +76,45 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * This implementation of a
  * {@link org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider} will be used to
  * group the differences by their {@link DifferenceSource side} : left, right and conflicts.
+ * <p>
+ * The table below describes the location of a diff depending on its status and that of its refining diffs
+ * (whether all or some of them are in a real/pseudo conflict). <br/>
+ * <br/>
+ * <table style="border-collapse:collapse;">
+ * <thead>
+ * <tr>
+ * <th rowspan="2"></th>
+ * <th colspan="2" style="border:1px solid;">Real Conflicts</th>
+ * <th colspan="2" style="border:1px solid;">Pseudo-Conflicts</th>
+ * <th style="border:1px solid;">No Conflict</th>
+ * </tr>
+ * <tr>
+ * <th style="border:1px solid;">All</th>
+ * <th style="border:1px solid;">Some</th>
+ * <th style="border:1px solid;">All</th>
+ * <th style="border:1px solid;">Some</th>
+ * <th style="border:1px solid;">All</th>
+ * </tr>
+ * </thead> <tbody>
+ * <tr>
+ * <td style="border:1px solid; padding:0 2px;">Tech. filter ON</td>
+ * <td style="border:1px solid; padding:0 2px;">Conflict</td>
+ * <td style="border:1px solid; padding:0 2px;">Conflict</td>
+ * <td style="border:1px solid; padding:0 2px;">Conflict (hidden)</td>
+ * <td style="border:1px solid; padding:0 2px;">Side</td>
+ * <td style="border:1px solid; padding:0 2px;">Side</td>
+ * </tr>
+ * <tr>
+ * <td style="border:1px solid; padding:0 2px;">Tech. filter OFF</td>
+ * <td style="border:1px solid; padding:0 2px;">Conflict</td>
+ * <td style="border:1px solid; padding:0 2px;">Conflict</td>
+ * <td style="border:1px solid; padding:0 2px;">Conflict</td>
+ * <td style="border:1px solid; padding:0 2px;">Side</td>
+ * <td style="border:1px solid; padding:0 2px;">Side</td>
+ * </tr>
+ * </tbody>
+ * </table>
+ * </p>
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  * @since 4.0
@@ -83,10 +126,9 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	 * diffs that do not have a direct or indirect real conflict and that do not have only pseudo conflicts.
 	 */
 	public static final Predicate<? super Diff> DEFAULT_DIFF_GROUP_FILTER_PREDICATE = and(
-			not(hasDirectOrIndirectConflict(ConflictKind.REAL)),
-			not(and(anyRefiningDiffs(hasConflict(ConflictKind.PSEUDO)), not(anyRefiningDiffs(
-					hasNoDirectOrIndirectConflict(ConflictKind.PSEUDO, ConflictKind.REAL))))));
-	
+			not(hasConflict(REAL, PSEUDO)),
+			not(or(anyRefining(hasConflict(REAL)), allAtomicRefining(hasConflict(PSEUDO)))));
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -113,7 +155,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		 */
 		private static final Predicate<? super Diff> DEFAULT_CONFLICT_GROUP_FILTER_PREDICATE = hasConflict(
 				ConflictKind.REAL, ConflictKind.PSEUDO);
-		
+
 		/**
 		 * Conflict groups to show in SMV.
 		 */
@@ -150,7 +192,7 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 				ECrossReferenceAdapter crossReferenceAdapter) {
 			super(comparison, DEFAULT_CONFLICT_GROUP_FILTER_PREDICATE, name, crossReferenceAdapter);
 		}
-		
+
 		/**
 		 * In conflicts, a special case must be handled for refining diffs: If they are not part of the same
 		 * conflict then they should not be in the same group as the refined diff.
@@ -216,121 +258,6 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 		}
 
 		/**
-		 * This extension of {@link Conflict} is used to handle {@link Diff#getRefinedBy() refined} diffs and
-		 * to join conflicts for the SMV. If refining diffs are part of a conflict, we show their refined
-		 * diffs instead. As we show refined diffs instead of the refining diffs, multiple conflicts may
-		 * consequently include the same refined diffs. To avoid that, this extension of a conflict also joins
-		 * such overlapping conflicts.
-		 * 
-		 * @author <a href="mailto:tmayerhofer@eclipsesource.com">Tanja Mayerhofer</a>
-		 */
-		public static class CompositeConflict extends ConflictImpl {
-
-			/** The joined conflicts. */
-			private Set<Conflict> conflicts = new LinkedHashSet<Conflict>();
-
-			/** The diffs of all composed conflicts. */
-			private EList<Diff> diffs = new BasicEList<Diff>();
-
-			/** The conflict kind of this composite conflict. */
-			private ConflictKind conflictKind = ConflictKind.REAL;
-
-			/**
-			 * Creates a new composite conflict for the given conflict.
-			 * 
-			 * @param conflict
-			 *            The conflict to create a composite conflict for.
-			 */
-			public CompositeConflict(Conflict conflict) {
-				this.conflicts.add(checkNotNull(conflict));
-				this.conflictKind = conflict.getKind();
-				this.diffs.addAll(computeRefinedDiffs(conflict));
-			}
-
-			/**
-			 * Computes the refined diffs of the conflict. In particular, refining diffs are replaced by
-			 * refined diffs.
-			 * 
-			 * @param conflict
-			 *            The conflict to compute its refined diffs for.
-			 * @return The set of refined diffs of the conflict
-			 */
-			private Set<Diff> computeRefinedDiffs(Conflict conflict) {
-				final LinkedHashSet<Diff> computedDiffs = new LinkedHashSet<Diff>();
-				for (Diff diff : conflict.getDifferences()) {
-					if (diff.getRefines().isEmpty()) {
-						computedDiffs.add(diff);
-					} else {
-						computedDiffs.addAll(getRootRefinedDiffs(diff));
-					}
-				}
-				return computedDiffs;
-			}
-
-			/**
-			 * Determines the leaf refined diff of a refining diff, i.e., a refined diff that is not refining
-			 * another diff.
-			 * 
-			 * @param diff
-			 *            The diff for which the leaf refined diff is to be determined
-			 * @return The leaf refined diff of the provided (refining diff)
-			 */
-			private List<Diff> getRootRefinedDiffs(Diff diff) {
-				final List<Diff> rootRefinedDiffs = newArrayList();
-				for (Diff refinedDiff : diff.getRefines()) {
-					if (refinedDiff.getRefines().isEmpty()) {
-						rootRefinedDiffs.add(refinedDiff);
-					} else {
-						rootRefinedDiffs.addAll(getRootRefinedDiffs(refinedDiff));
-					}
-				}
-				return rootRefinedDiffs;
-			}
-
-			@Override
-			public ConflictKind getKind() {
-				return this.conflictKind;
-			}
-
-			@Override
-			public EList<Diff> getDifferences() {
-				return this.diffs;
-			}
-
-			/**
-			 * Returns the joined conflicts.
-			 * 
-			 * @return The joined conflicts
-			 */
-			public Set<Conflict> getConflicts() {
-				return conflicts;
-			}
-
-			/**
-			 * Joins the provided composite conflict with this composite conflict.
-			 * 
-			 * @param conflict
-			 *            The conflict to be joined with this composite conflict
-			 */
-			public void join(CompositeConflict conflict) {
-				final LinkedHashSet<Diff> joinedDiffs = new LinkedHashSet<Diff>(
-						Sets.union(new LinkedHashSet<Diff>(this.diffs),
-								new LinkedHashSet<Diff>(conflict.getDifferences())));
-				this.diffs.clear();
-				this.diffs.addAll(joinedDiffs);
-				this.conflicts.addAll(conflict.getConflicts());
-
-				final Conflict realConflict = Iterators.find(this.conflicts.iterator(),
-						EMFComparePredicates.containsConflictOfTypes(ConflictKind.REAL), null);
-				if (realConflict != null) {
-					this.conflictKind = ConflictKind.REAL;
-				} else {
-					this.conflictKind = ConflictKind.PSEUDO;
-				}
-			}
-		}
-
-		/**
 		 * {@inheritDoc}
 		 * 
 		 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl#getStyledName()
@@ -353,10 +280,105 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * This extension of {@link Conflict} is used to handle {@link Diff#getRefinedBy() refined} diffs and to
+	 * join conflicts for the SMV. If refining diffs are part of a conflict, we show their refined diffs
+	 * instead. As we show refined diffs instead of the refining diffs, multiple conflicts may consequently
+	 * include the same refined diffs. To avoid that, this extension of a conflict also joins such overlapping
+	 * conflicts.
 	 * 
-	 * @see org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.AbstractBuildingDifferenceGroupProvider#buildGroups(org.eclipse.emf.compare.Comparison)
+	 * @author <a href="mailto:tmayerhofer@eclipsesource.com">Tanja Mayerhofer</a>
 	 */
+	public static class CompositeConflict extends ConflictImpl {
+
+		/** The joined conflicts. */
+		private Set<Conflict> conflicts = new LinkedHashSet<Conflict>();
+
+		/** The diffs of all composed conflicts. */
+		private EList<Diff> diffs = new BasicEList<Diff>();
+
+		/** The conflict kind of this composite conflict. */
+		private ConflictKind conflictKind = ConflictKind.REAL;
+
+		/**
+		 * Creates a new composite conflict for the given conflict.
+		 * 
+		 * @param conflict
+		 *            The conflict to create a composite conflict for, must not be <code>null</code> and must
+		 *            have a non-<code>null</code> {@link Conflict#getKind() kind}.
+		 */
+		public CompositeConflict(Conflict conflict) {
+			conflicts.add(checkNotNull(conflict));
+			conflictKind = checkNotNull(conflict.getKind());
+			diffs.addAll(computeRefinedDiffs(conflict));
+		}
+
+		/**
+		 * Computes the refined diffs of the conflict. In particular, refining diffs are replaced by refined
+		 * diffs.
+		 * 
+		 * @param conflict
+		 *            The conflict to compute its refined diffs for.
+		 * @return The set of refined diffs of the conflict
+		 */
+		private Set<Diff> computeRefinedDiffs(Conflict conflict) {
+			Set<Diff> computedDiffs = new LinkedHashSet<Diff>();
+			for (Diff diff : conflict.getDifferences()) {
+				if (diff.getRefines().isEmpty()) {
+					computedDiffs.add(diff);
+				} else {
+					computedDiffs.addAll(getRootRefinedDiffs(diff));
+				}
+			}
+			return computedDiffs;
+		}
+
+		@Override
+		public ConflictKind getKind() {
+			return conflictKind;
+		}
+
+		/**
+		 * Returns an EList built by aggregating the diffs of all the aggregated conflicts.
+		 * <p>
+		 * <b>This list is not supposed to be used for update, since modifying this list will not modify the
+		 * underlying conflicts.</b>
+		 * </p>
+		 */
+		@Override
+		public EList<Diff> getDifferences() {
+			return diffs;
+		}
+
+		/**
+		 * Returns an unmodifiable view of the joined conflicts.
+		 * 
+		 * @return An unmodifiable view of the joined conflicts, never <code>null</code> nor empty.
+		 */
+		public Set<Conflict> getConflicts() {
+			return unmodifiableSet(conflicts);
+		}
+
+		/**
+		 * Joins the provided composite conflict with this composite conflict.
+		 * 
+		 * @param conflict
+		 *            The conflict to be joined with this composite conflict
+		 */
+		public void join(CompositeConflict conflict) {
+			Set<Diff> currentDiffSet = new LinkedHashSet<Diff>(diffs);
+			Set<Diff> otherDiffSet = new LinkedHashSet<Diff>(conflict.getDifferences());
+			SetView<Diff> newDiffs = Sets.difference(otherDiffSet, currentDiffSet);
+			diffs.addAll(newDiffs);
+			if (conflicts.addAll(conflict.getConflicts()) && conflictKind != REAL) {
+				if (any(conflicts, containsConflictOfTypes(REAL))) {
+					conflictKind = REAL;
+				} else {
+					conflictKind = PSEUDO;
+				}
+			}
+		}
+	}
+
 	@Override
 	protected Collection<? extends IDifferenceGroup> buildGroups(Comparison comparison2) {
 		Adapter adapter = EcoreUtil.getAdapter(getComparison().eAdapters(), SideLabelProvider.class);

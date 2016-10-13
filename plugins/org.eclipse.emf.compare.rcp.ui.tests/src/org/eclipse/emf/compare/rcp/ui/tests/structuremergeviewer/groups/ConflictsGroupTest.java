@@ -32,8 +32,8 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.Stru
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.TechnicalitiesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.BasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.ThreeWayComparisonGroupProvider;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.ThreeWayComparisonGroupProvider.CompositeConflict;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.ThreeWayComparisonGroupProvider.ConflictsGroupImpl;
-import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.ThreeWayComparisonGroupProvider.ConflictsGroupImpl.CompositeConflict;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.ConflictNode;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.DiffNode;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.MatchNode;
@@ -355,7 +355,7 @@ public class ConflictsGroupTest extends AbstractTestTreeNodeItemProviderAdapter 
 	 * href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=501864"</a>
 	 */
 	@Test
-	public void testRefinedDiffsWithOnlyOnePseudoConflictAreInConflictGroupAndDiffGroup() {
+	public void testRefinedDiffsWithOnlyOnePseudoConflictAreInDiffGroupOnly() {
 		ConflictsGroupWithRefinedDiffTestScenario scenario = new ConflictsGroupWithRefinedDiffTestScenario();
 
 		// Create pseudo conflict
@@ -403,7 +403,7 @@ public class ConflictsGroupTest extends AbstractTestTreeNodeItemProviderAdapter 
 		assertEquals(1, diffNodesLeftFiltered.size());
 		final List<? extends TreeNode> subDiffNodesLeftFiltered = applyTechnicalitiesFilter(
 				diffNodesLeftFiltered.get(0).getChildren());
-		assertEquals(1, subDiffNodesLeftFiltered.size());
+		assertEquals(2, subDiffNodesLeftFiltered.size());
 
 		// Build right side
 		final BasicDifferenceGroupImpl rightSide = buildDifferenceGroup(scenario.comparison,
@@ -422,7 +422,7 @@ public class ConflictsGroupTest extends AbstractTestTreeNodeItemProviderAdapter 
 		assertEquals(1, diffNodesRightFiltered.size());
 		final List<? extends TreeNode> subDiffNodesRightFiltered = applyTechnicalitiesFilter(
 				diffNodesRightFiltered.get(0).getChildren());
-		assertEquals(1, subDiffNodesRightFiltered.size());
+		assertEquals(2, subDiffNodesRightFiltered.size());
 	}
 
 	/**

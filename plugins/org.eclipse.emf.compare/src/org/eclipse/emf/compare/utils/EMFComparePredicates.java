@@ -16,13 +16,18 @@ package org.eclipse.emf.compare.utils;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.not;
-import static com.google.common.collect.Iterators.any;
+import static com.google.common.base.Predicates.or;
+import static com.google.common.collect.Iterables.all;
+import static com.google.common.collect.Iterables.any;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
+import static org.eclipse.emf.compare.internal.utils.DiffUtil.getAllAtomicRefiningDiffs;
+import static org.eclipse.emf.compare.internal.utils.DiffUtil.getAllRefiningDiffs;
 
 import com.google.common.base.Predicate;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Conflict;
@@ -1111,33 +1116,59 @@ public final class EMFComparePredicates {
 	}
 
 	/**
-	 * This predicate can be used to check whether any refining diffs of a given diff fulfill the given
+	 * This predicate can be used to check whether any refining diff of a given diff fulfills the given
 	 * predicate.
 	 * 
 	 * @param predicate
 	 *            The predicate to check.
 	 * @return The predicate.
+	 * @since 3.4
 	 */
-	public static Predicate<? super Diff> anyRefiningDiffs(final Predicate<? super Diff> predicate) {
+	public static Predicate<Diff> anyRefining(final Predicate<? super Diff> predicate) {
 		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				return input != null && any(input.getRefinedBy().iterator(), predicate);
+			public boolean apply(Diff diff) {
+				return diff != null && any(getAllRefiningDiffs(diff), predicate);
 			}
 		};
 	}
 
 	/**
-	 * This predicate can be used to check whether any refined diffs of a given diff fulfill the given
+	 * This predicate can be used to check whether any refined diff of a given diff fulfills the given
 	 * predicate.
 	 * 
 	 * @param predicate
 	 *            The predicate to check.
 	 * @return The predicate.
+	 * @since 3.4
 	 */
-	public static Predicate<? super Diff> anyRefinedDiffs(final Predicate<? super Diff> predicate) {
+	public static Predicate<Diff> anyRefined(final Predicate<? super Diff> predicate) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				return input != null && any(input.getRefines().iterator(), predicate);
+				return input != null && any(input.getRefines(), predicate);
+			}
+		};
+	}
+
+	/**
+	 * This predicate can be used to check whether a diff has refiningDiffs AND all these refining diffs
+	 * fulfill the given predicate.
+	 * <p>
+	 * <b>BEWARE: If the given diff has no refining diff, the predicate returns <code>false</code>.</b>
+	 * </p>
+	 * 
+	 * @param predicate
+	 *            The predicate to check on each 'atomic' (i.e. not refined) refining diff.
+	 * @return The predicate.
+	 * @since 3.4
+	 */
+	public static Predicate<Diff> allAtomicRefining(final Predicate<? super Diff> predicate) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff diff) {
+				Set<Diff> atomicRefiningDiffs = getAllAtomicRefiningDiffs(diff);
+				if (atomicRefiningDiffs.isEmpty()) {
+					return false;
+				}
+				return all(atomicRefiningDiffs, predicate);
 			}
 		};
 	}
@@ -1152,22 +1183,10 @@ public final class EMFComparePredicates {
 	 * @param kinds
 	 *            Type(s) of the conflict(s) we seek.
 	 * @return The created predicate.
+	 * @since 3.4
 	 */
 	public static Predicate<? super Diff> hasDirectOrIndirectConflict(final ConflictKind... kinds) {
-		return new Predicate<Diff>() {
-			public boolean apply(Diff diff) {
-				if (hasConflict(kinds).apply(diff)) {
-					return true;
-				} else {
-					for (ConflictKind kind : kinds) {
-						if (anyRefiningDiffs(hasConflict(kind)).apply(diff)) {
-							return true;
-						}
-					}
-				}
-				return false;
-			}
-		};
+		return or(hasConflict(kinds), anyRefining(hasConflict(kinds)));
 	}
 
 	/**
@@ -1180,9 +1199,10 @@ public final class EMFComparePredicates {
 	 * @param kinds
 	 *            Type(s) of the conflict(s) we seek.
 	 * @return The created predicate.
+	 * @since 3.4
 	 */
 	public static Predicate<? super Diff> hasNoDirectOrIndirectConflict(final ConflictKind... kinds) {
-		return and(not(hasConflict(kinds)), not(anyRefiningDiffs(hasConflict(kinds))));
+		return not(hasDirectOrIndirectConflict(kinds));
 	}
 
 	/**
