@@ -14,11 +14,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.imp
 
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterators.any;
-import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
-import static org.eclipse.emf.compare.ConflictKind.REAL;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.allAtomicRefining;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasNoDirectOrIndirectConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.canBeConsideredAsPseudoConflicting;
 
 import com.google.common.base.Predicate;
 
@@ -87,27 +83,13 @@ public class TechnicalitiesFilter extends AbstractDifferenceFilter {
 				if (data instanceof Diff) {
 					Diff diff = (Diff)data;
 					if (diff.getMatch().getComparison().isThreeWay()) {
-						ret = isConsideredAsPseudoConflicting(diff);
+						ret = canBeConsideredAsPseudoConflicting().apply(diff);
 					}
 				}
 			}
 			return ret;
 		}
 	};
-
-	/**
-	 * Specifies whether the given diff can be considered as part of a pseudo conflict, but not of a real
-	 * conflict.
-	 * 
-	 * @param diff
-	 *            The diff to check.
-	 * @return <code>true</code> if it has a direct pseudo-conflict or of all its atomic refining diffs are in
-	 *         pseudo-conflict.
-	 */
-	private static boolean isConsideredAsPseudoConflicting(Diff diff) {
-		return allAtomicRefining(hasConflict(PSEUDO)).apply(diff)
-				&& hasNoDirectOrIndirectConflict(REAL).apply(diff);
-	}
 
 	/**
 	 * The predicate use to filter identical elements.

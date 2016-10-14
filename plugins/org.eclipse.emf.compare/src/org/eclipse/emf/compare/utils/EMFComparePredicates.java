@@ -19,6 +19,7 @@ import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Iterables.any;
+import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.DifferenceKind.ADD;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
@@ -1197,6 +1198,40 @@ public final class EMFComparePredicates {
 				return all(atomicRefiningDiffs, predicate);
 			}
 		};
+	}
+
+	/**
+	 * Check whether a diff is not refined and has a direct conflict of (one of) the given type(s).
+	 * 
+	 * @param kinds
+	 *            Type(s) of the conflict(s) we seek.
+	 * @return The created predicate.
+	 * @since 3.4
+	 */
+	public static Predicate<Diff> isNotRefinedDirectlyConflicting(final ConflictKind... kinds) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input != null && input.getConflict() != null && input.getRefinedBy().isEmpty()
+						&& Arrays.asList(kinds).contains(input.getConflict().getKind());
+			}
+		};
+	}
+
+	/**
+	 * This predicate can be used to test if a diff is in a pseudo conflict. Several cases are possible:
+	 * 
+	 * <pre>
+	 * - if the diff is not a refined diff and has a direct pseudo conflict (i.e. diff.getConflict = a pseudo conflict)
+	 * - if the diff is a refined diff and all its refining diffs are in pseudo conflicts.
+	 * 		The refining diffs must not be part of a real conflict  directly or indirectly
+	 * </pre>
+	 * 
+	 * @return the predicate
+	 * @since 3.4
+	 */
+	public static Predicate<Diff> canBeConsideredAsPseudoConflicting() {
+		return or(isNotRefinedDirectlyConflicting(PSEUDO),
+				and(allAtomicRefining(hasConflict(PSEUDO)), hasNoDirectOrIndirectConflict(REAL)));
 	}
 
 	/**

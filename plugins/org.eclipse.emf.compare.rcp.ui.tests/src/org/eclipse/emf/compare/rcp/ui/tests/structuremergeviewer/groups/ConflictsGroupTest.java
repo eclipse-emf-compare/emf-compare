@@ -350,9 +350,8 @@ public class ConflictsGroupTest extends AbstractTestTreeNodeItemProviderAdapter 
 
 	/**
 	 * Tests that a refined diff that is refined by one diff involved in a pseudo conflict
-	 * {@link ConflictKind#PSEUDO} and one diff involved in no conflict is shown in the conflicts group and in
-	 * the left or right diff group. This test is related to <a
-	 * href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=501864"</a>
+	 * {@link ConflictKind#PSEUDO} and one diff involved in no conflict is shown only in the side group. This
+	 * test is related to <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=501864"</a>
 	 */
 	@Test
 	public void testRefinedDiffsWithOnlyOnePseudoConflictAreInDiffGroupOnly() {
@@ -403,7 +402,7 @@ public class ConflictsGroupTest extends AbstractTestTreeNodeItemProviderAdapter 
 		assertEquals(1, diffNodesLeftFiltered.size());
 		final List<? extends TreeNode> subDiffNodesLeftFiltered = applyTechnicalitiesFilter(
 				diffNodesLeftFiltered.get(0).getChildren());
-		assertEquals(2, subDiffNodesLeftFiltered.size());
+		assertEquals(1, subDiffNodesLeftFiltered.size());
 
 		// Build right side
 		final BasicDifferenceGroupImpl rightSide = buildDifferenceGroup(scenario.comparison,
@@ -422,7 +421,7 @@ public class ConflictsGroupTest extends AbstractTestTreeNodeItemProviderAdapter 
 		assertEquals(1, diffNodesRightFiltered.size());
 		final List<? extends TreeNode> subDiffNodesRightFiltered = applyTechnicalitiesFilter(
 				diffNodesRightFiltered.get(0).getChildren());
-		assertEquals(2, subDiffNodesRightFiltered.size());
+		assertEquals(1, subDiffNodesRightFiltered.size());
 	}
 
 	/**

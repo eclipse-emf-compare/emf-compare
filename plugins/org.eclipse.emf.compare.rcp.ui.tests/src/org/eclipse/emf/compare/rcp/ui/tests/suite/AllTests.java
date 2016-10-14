@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.rcp.ui.tests.match.RCPMatchEngineFactoryRegistryT
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemFeatureMapsTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemPseudoConflictTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemTest;
+import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.filters.TechnicalitiesFilterTests;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.filters.TestFeatureMapDifferencesFilter;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.ConflictsGroupTest;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.TestBasicDifferenceGroupImpl;
@@ -44,7 +45,7 @@ import junit.textui.TestRunner;
 		MergeViewerItemPseudoConflictTest.class, MergeViewerItemFeatureMapsTest.class,
 		TestBasicDifferenceGroupImpl.class, BugsTestSuite.class, TestFeatureMapDifferencesFilter.class,
 		RCPMatchEngineFactoryRegistryTest.class, ThreeWayComparisonGroupProviderTest.class,
-		ConflictsGroupTest.class, MatchAccessorTest.class, })
+		ConflictsGroupTest.class, MatchAccessorTest.class, TechnicalitiesFilterTests.class, })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.
