@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.imp
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.or;
+import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.DifferenceKind.ADD;
 import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.DifferenceKind.MOVE;
@@ -19,6 +20,7 @@ import static org.eclipse.emf.compare.DifferenceSource.LEFT;
 import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasNoDirectOrIndirectConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Predicate;
@@ -41,7 +43,7 @@ import org.eclipse.emf.edit.tree.TreeNode;
  * Differences hidden are all those that match the following criteria:
  * <ul>
  * <li>this.kind != MOVE</li>
- * <li>this.conflict == null</li>
+ * <li>this.conflict == null && this.'indirect real conflicts' is empty</li>
  * <li>this.refines is empty</li>
  * <li>this is located inside a TreeNode that represents a Match that is either ADDed or DELETEd, and for
  * which the diff that represents this addition or deletion is not refined by this.</li>
@@ -63,7 +65,8 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 				EObject data = treeNode.getData();
 				if (data instanceof Diff && !(data instanceof ResourceAttachmentChange)) {
 					Diff diff = (Diff)data;
-					if (diff.getKind() != MOVE && diff.getConflict() == null && diff.getRefines().isEmpty()) {
+					if (diff.getKind() != MOVE && hasNoDirectOrIndirectConflict(REAL).apply(diff)
+							&& diff.getRefines().isEmpty()) {
 						TreeNode parent = treeNode.getParent();
 						if (parent != null && parent.getData() instanceof Match) {
 							Match parentMatch = (Match)parent.getData();

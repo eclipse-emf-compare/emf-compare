@@ -61,7 +61,7 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 	 * @return the comparison
 	 * @throws IOException
 	 */
-	protected static Comparison getComparison(ResourceScopeProvider scopeProvider) throws IOException {
+	public static Comparison getComparison(ResourceScopeProvider scopeProvider) throws IOException {
 		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(),
 				scopeProvider.getRight(), scopeProvider.getOrigin());
 		final Builder builder = EMFCompare.builder();
