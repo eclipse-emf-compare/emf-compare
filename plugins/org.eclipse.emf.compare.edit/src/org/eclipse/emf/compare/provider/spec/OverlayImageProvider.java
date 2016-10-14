@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,9 @@
 package org.eclipse.emf.compare.provider.spec;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.eclipse.emf.compare.ConflictKind.REAL;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.canBeConsideredAsPseudoConflicting;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasDirectOrIndirectConflict;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,8 +21,6 @@ import java.util.List;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Conflict;
-import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
@@ -168,15 +169,21 @@ public class OverlayImageProvider {
 	// Nothing here has to be externalized
 	@SuppressWarnings("nls")
 	private String getThreeWayOverlay(final Diff diff) {
-		final Conflict conflict = diff.getConflict();
 		final DifferenceKind diffKind = diff.getKind();
 		final DifferenceSource source = diff.getSource();
+
 		String path = "";
-		if (conflict != null) {
-			if (conflict.getKind() == ConflictKind.PSEUDO) {
-				path += "p";
-			}
+		if (hasDirectOrIndirectConflict(REAL).apply(diff)) {
+			// The diff or one of its refining diffs are in a pseudo conflict
 			path += "conf";
+			if (source == DifferenceSource.RIGHT) {
+				path += "r_";
+			}
+		} else if (canBeConsideredAsPseudoConflicting().apply(diff)) {
+			// If the diff is not a refined diff and are in a pseudo conflict
+			// Or if the diff is a refined diff that are not in a direct pseudo conflict, but all its refining
+			// diffs are in pseudo conflicts
+			path += "pconf";
 			if (source == DifferenceSource.RIGHT) {
 				path += "r_";
 			}
