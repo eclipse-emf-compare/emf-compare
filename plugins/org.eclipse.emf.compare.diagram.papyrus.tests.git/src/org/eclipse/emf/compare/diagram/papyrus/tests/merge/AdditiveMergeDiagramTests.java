@@ -10,11 +10,14 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests.merge;
 
+import static com.google.common.base.Predicates.not;
+import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.all;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.DifferenceKind.MOVE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasDirectOrIndirectConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.isInRealAddAddConflict;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -37,7 +40,6 @@ import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.runner.RunWith;
 
-import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 
 @RunWith(GitTestRunner.class)
@@ -56,7 +58,8 @@ public class AdditiveMergeDiagramTests {
 
 		Comparison comparison = support.compare("wave", "expected", "model.notation");
 
-		assertTrue(all(comparison.getDifferences(), hasDirectOrIndirectConflict(PSEUDO)));
+		assertTrue(all(comparison.getDifferences(),
+				or(hasDirectOrIndirectConflict(PSEUDO), isInRealAddAddConflict())));
 	}
 
 	@GitMerge(local = "wired", remote = "wave")
@@ -68,7 +71,8 @@ public class AdditiveMergeDiagramTests {
 
 		Comparison comparison = support.compare("wired", "expected", "model.notation");
 
-		assertTrue(all(comparison.getDifferences(), hasDirectOrIndirectConflict(PSEUDO)));
+		assertTrue(all(comparison.getDifferences(),
+				or(hasDirectOrIndirectConflict(PSEUDO), isInRealAddAddConflict())));
 	}
 
 	/**
@@ -90,7 +94,7 @@ public class AdditiveMergeDiagramTests {
 		// Let's just check that all diffs are in conflict
 
 		Collection<Diff> diffs = Collections2.filter(comparison.getDifferences(),
-				Predicates.not(hasDirectOrIndirectConflict(PSEUDO, REAL)));
+				not(hasDirectOrIndirectConflict(PSEUDO, REAL)));
 		assertEquals(2, diffs.size());
 
 		// Since we cannot be sure of the order of the merged element, this is possible that a side and the
@@ -116,6 +120,7 @@ public class AdditiveMergeDiagramTests {
 		// package on both sides and it's (currently) impossible to guarantee
 		// the order in which they will be placed in their parent during a merge
 		// Let's just check that all diffs are in conflict
-		assertTrue(all(comparison.getDifferences(), hasDirectOrIndirectConflict(PSEUDO)));
+		assertTrue(all(comparison.getDifferences(),
+				or(hasDirectOrIndirectConflict(PSEUDO), isInRealAddAddConflict())));
 	}
 }

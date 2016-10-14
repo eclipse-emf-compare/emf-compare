@@ -12,14 +12,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.conflict;
 
-import static com.google.common.base.Predicates.and;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isAddOrSetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isFeatureMapContainment;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.possiblyConflictingWith;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
+import static org.eclipse.emf.compare.utils.MatchUtil.matchingIndices;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -280,7 +277,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 			} else if (diff.getMatch() == candidate.getMatch()
 					&& diff.getReference() == candidate.getReference()) {
 				// Same value added in the same container/reference couple
-				if (!diffIsDelete && !candidateIsDelete && matchingIndices(comparison, diff.getMatch(),
+				if (!diffIsDelete && !candidateIsDelete && matchingIndices(diff.getMatch(),
 						diff.getReference(), diff.getValue(), candidate.getValue())) {
 					kind = ConflictKind.PSEUDO;
 				}
@@ -381,9 +378,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 			} else if (diff.getMatch() == candidate.getMatch()
 					&& diff.getAttribute() == candidate.getAttribute()) {
 				// Same value added in the same container/reference couple with the same key
-				if (!diffIsDelete
-						&& !candidateIsDelete && matchingIndices(comparison, diff.getMatch(),
-								diff.getAttribute(), diff.getValue(), candidate.getValue())
+				if (!diffIsDelete && !candidateIsDelete && matchingIndices(diff.getMatch(),
+						diff.getAttribute(), diff.getValue(), candidate.getValue())
 						&& haveSameKey(diff, candidate)) {
 					kind = ConflictKind.PSEUDO;
 				}
@@ -673,7 +669,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 			if (diff.getMatch() == candidate.getMatch()
 					&& comparison.getEqualityHelper().matchingValues(changedValue, candidateValue)) {
 				// Same value moved in both side of the same container
-				if (matchingIndices(comparison, diff.getMatch(), feature, changedValue, candidateValue)) {
+				if (matchingIndices(diff.getMatch(), feature, changedValue, candidateValue)) {
 					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
 				} else {
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
@@ -839,8 +835,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 																// same value can appear twice.
 						conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 					}
-				} else if (matchingIndices(comparison, diff.getMatch(), feature, addedValue,
-						candidateValue)) {
+				} else if (matchingIndices(diff.getMatch(), feature, addedValue, candidateValue)) {
 					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
 				} else {
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
@@ -1041,114 +1036,6 @@ public class DefaultConflictDetector implements IConflictDetector {
 				}
 			}
 		}
-	}
-
-	/**
-	 * This will be used whenever we check for conflictual MOVEs in order to determine whether we have a
-	 * pseudo conflict or a real conflict.
-	 * <p>
-	 * Namely, this will retrieve the value of the given {@code feature} on the right and left sides of the
-	 * given {@code match}, then check whether the two given values are on the same index.
-	 * </p>
-	 * <p>
-	 * Note that no sanity checks will be made on either the match's sides or the feature.
-	 * </p>
-	 * 
-	 * @param comparison
-	 *            Provides us with the necessary information to match EObjects.
-	 * @param match
-	 *            Match for which we need to check a feature.
-	 * @param feature
-	 *            The feature which values we need to check.
-	 * @param value1
-	 *            First of the two values which index we are to compare.
-	 * @param value2
-	 *            Second of the two values which index we are to compare.
-	 * @return {@code true} if the two given values are located at the same index in the given feature's
-	 *         values list, {@code false} otherwise.
-	 */
-	@SuppressWarnings("unchecked")
-	private boolean matchingIndices(Comparison comparison, Match match, EStructuralFeature feature,
-			Object value1, Object value2) {
-		boolean matching = false;
-		if (feature.isMany()) {
-			final List<Object> leftValues = (List<Object>)ReferenceUtil.safeEGet(match.getLeft(), feature);
-			final List<Object> rightValues = (List<Object>)ReferenceUtil.safeEGet(match.getRight(), feature);
-
-			// FIXME the detection _will_ fail for non-unique lists with multiple identical values...
-			int leftIndex = -1;
-			int rightIndex = -1;
-			for (int i = 0; i < leftValues.size(); i++) {
-				final Object left = leftValues.get(i);
-				if (comparison.getEqualityHelper().matchingValues(left, value1)) {
-					break;
-				} else if (hasDiff(match, feature, left) || hasDeleteDiff(match, feature, left)) {
-					// Do not increment.
-				} else {
-					leftIndex++;
-				}
-			}
-			for (int i = 0; i < rightValues.size(); i++) {
-				final Object right = rightValues.get(i);
-				if (comparison.getEqualityHelper().matchingValues(right, value2)) {
-					break;
-				} else if (hasDiff(match, feature, right) || hasDeleteDiff(match, feature, right)) {
-					// Do not increment.
-				} else {
-					rightIndex++;
-				}
-			}
-			matching = leftIndex == rightIndex;
-		} else {
-			matching = true;
-		}
-		return matching;
-	}
-
-	/**
-	 * Checks whether the given {@code match} presents a difference of any kind on the given {@code feature}'s
-	 * {@code value}.
-	 * 
-	 * @param match
-	 *            The match which differences we'll check.
-	 * @param feature
-	 *            The feature on which we expect a difference.
-	 * @param value
-	 *            The value we expect to have changed inside {@code feature}.
-	 * @return <code>true</code> if there is such a Diff on {@code match}, <code>false</code> otherwise.
-	 */
-	private boolean hasDiff(Match match, EStructuralFeature feature, Object value) {
-		return Iterables.any(match.getDifferences(), and(onFeature(feature.getName()), valueIs(value)));
-	}
-
-	/**
-	 * Checks whether the given {@code value} has been deleted from the given {@code feature} of {@code match}
-	 * .
-	 * 
-	 * @param match
-	 *            The match which differences we'll check.
-	 * @param feature
-	 *            The feature on which we expect a difference.
-	 * @param value
-	 *            The value we expect to have been removed from {@code feature}.
-	 * @return <code>true</code> if there is such a Diff on {@code match}, <code>false</code> otherwise.
-	 */
-	@SuppressWarnings("unchecked")
-	private boolean hasDeleteDiff(Match match, EStructuralFeature feature, Object value) {
-		final Comparison comparison = match.getComparison();
-		final Object expectedValue;
-		if (value instanceof EObject && comparison.isThreeWay()) {
-			final Match valueMatch = comparison.getMatch((EObject)value);
-			if (valueMatch != null) {
-				expectedValue = valueMatch.getOrigin();
-			} else {
-				expectedValue = value;
-			}
-		} else {
-			expectedValue = value;
-		}
-		return Iterables.any(match.getDifferences(),
-				and(onFeature(feature.getName()), valueIs(expectedValue), ofKind(DifferenceKind.DELETE)));
 	}
 
 	/**

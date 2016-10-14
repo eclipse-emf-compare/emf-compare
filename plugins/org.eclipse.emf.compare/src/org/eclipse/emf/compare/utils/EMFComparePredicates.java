@@ -19,6 +19,8 @@ import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Iterables.any;
+import static org.eclipse.emf.compare.ConflictKind.REAL;
+import static org.eclipse.emf.compare.DifferenceKind.ADD;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
 import static org.eclipse.emf.compare.internal.utils.DiffUtil.getAllAtomicRefiningDiffs;
 import static org.eclipse.emf.compare.internal.utils.DiffUtil.getAllRefiningDiffs;
@@ -347,6 +349,30 @@ public final class EMFComparePredicates {
 		// This is only meant for multi-valued attributes
 		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName),
 				attributeValueMatch(attributeName, removedValue, true));
+	}
+
+	/**
+	 * Indicates whether a diff is part of a real add/add conflict.
+	 * 
+	 * @return a predicate to check if a diff belongs to an add/add conflict.
+	 * @since 3.4
+	 */
+	public static Predicate<Diff> isInRealAddAddConflict() {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				Conflict conflict = input.getConflict();
+				if (conflict != null) {
+					if (conflict.getKind() != REAL) {
+						return false;
+					} else {
+						if (all(conflict.getDifferences(), ofKind(ADD))) {
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+		};
 	}
 
 	/**
