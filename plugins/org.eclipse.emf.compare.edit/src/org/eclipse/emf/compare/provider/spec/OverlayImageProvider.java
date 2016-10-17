@@ -172,28 +172,28 @@ public class OverlayImageProvider {
 		final DifferenceKind diffKind = diff.getKind();
 		final DifferenceSource source = diff.getSource();
 
-		String path = "";
+		StringBuilder path = new StringBuilder();
 		if (hasDirectOrIndirectConflict(REAL).apply(diff)) {
 			// The diff or one of its refining diffs are in a pseudo conflict
-			path += "conf";
+			path.append("conf");
 			if (source == DifferenceSource.RIGHT) {
-				path += "r_";
+				path.append("r_");
 			}
 		} else if (canBeConsideredAsPseudoConflicting().apply(diff)) {
 			// If the diff is not a refined diff and are in a pseudo conflict
 			// Or if the diff is a refined diff that are not in a direct pseudo conflict, but all its refining
 			// diffs are in pseudo conflicts
-			path += "pconf";
+			path.append("pconf");
 			if (source == DifferenceSource.RIGHT) {
-				path += "r_";
+				path.append("r_");
 			}
 		} else {
 			switch (source) {
 				case LEFT:
-					path += "r_out";
+					path.append("r_out");
 					break;
 				case RIGHT:
-					path += "r_in";
+					path.append("r_in");
 					break;
 				default:
 					// Cannot happen ... for now
@@ -203,21 +203,21 @@ public class OverlayImageProvider {
 
 		switch (diffKind) {
 			case ADD:
-				path += ADD_OV;
+				path.append(ADD_OV);
 				break;
 			case DELETE:
-				path += DEL_OV;
+				path.append(DEL_OV);
 				break;
 			case CHANGE:
 				// fallthrough
 			case MOVE:
-				path += CHG_OV;
+				path.append(CHG_OV);
 				break;
 			default:
 				// Cannot happen ... for now
 				break;
 		}
-		return path;
+		return path.toString();
 	}
 
 	/**
