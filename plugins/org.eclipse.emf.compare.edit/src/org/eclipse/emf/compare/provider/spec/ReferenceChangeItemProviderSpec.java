@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,6 +64,19 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		super(adapterFactory);
 		itemDelegator = new AdapterFactoryItemDelegator(getRootAdapterFactory());
 		overlayProvider = new OverlayImageProvider(getResourceLocator());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#isAdapterForType(Object)
+	 */
+	@Override
+	public boolean isAdapterForType(Object type) {
+		if (type == ReferenceChangeItemProviderSpec.class) {
+			return true;
+		}
+		return super.isAdapterForType(type);
 	}
 
 	/**
