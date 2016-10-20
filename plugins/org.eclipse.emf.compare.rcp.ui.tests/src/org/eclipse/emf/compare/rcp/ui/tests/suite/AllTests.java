@@ -26,6 +26,7 @@ import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.TestMatchTreeNodeItemProviderSpec;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.TestReferenceChangeTreeNodeItemProviderSpec;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.ThreeWayComparisonGroupProviderTest;
+import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.match.MatchOfContainmentReferenceChangeAdapterTest;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
 import org.eclipse.emf.ecore.EPackage;
@@ -45,7 +46,8 @@ import junit.textui.TestRunner;
 		MergeViewerItemPseudoConflictTest.class, MergeViewerItemFeatureMapsTest.class,
 		TestBasicDifferenceGroupImpl.class, BugsTestSuite.class, TestFeatureMapDifferencesFilter.class,
 		RCPMatchEngineFactoryRegistryTest.class, ThreeWayComparisonGroupProviderTest.class,
-		ConflictsGroupTest.class, MatchAccessorTest.class, TechnicalitiesFilterTests.class, })
+		ConflictsGroupTest.class, MatchAccessorTest.class, TechnicalitiesFilterTests.class,
+		MatchOfContainmentReferenceChangeAdapterTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

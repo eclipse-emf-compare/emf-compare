@@ -16,8 +16,6 @@ import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.DifferenceKind.ADD;
 import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.DifferenceKind.MOVE;
-import static org.eclipse.emf.compare.DifferenceSource.LEFT;
-import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasNoDirectOrIndirectConflict;
@@ -28,13 +26,16 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.UnmodifiableIterator;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.match.MatchOfContainmentReferenceChangeAdapter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.AbstractDifferenceFilter;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
@@ -135,22 +136,9 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 			if (match == null) {
 				return false;
 			}
-			if (match.getComparison().isThreeWay()) {
-				return (MatchUtil.getMatchedObject(match, side) == null) != (match.getOrigin() == null);
-			}
-			return (MatchUtil.getMatchedObject(match, side) == null) != (MatchUtil.getMatchedObject(match,
-					opposite(side)) == null);
-		}
-
-		protected DifferenceSource opposite(DifferenceSource side) {
-			switch (side) {
-				case LEFT:
-					return RIGHT;
-				case RIGHT:
-					return LEFT;
-				default:
-					throw new IllegalArgumentException("Source value not supported: " + side); //$NON-NLS-1$
-			}
+			Adapter adapter = EcoreUtil.getAdapter(match.eAdapters(),
+					MatchOfContainmentReferenceChangeAdapter.class);
+			return adapter != null;
 		}
 	};
 
