@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ import static org.eclipse.emf.compare.internal.EMFCompareEditMessages.getString;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
-import org.eclipse.emf.compare.provider.ITooltipLabelProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
@@ -26,7 +25,7 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
  * 
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
-public class ResourceAttachmentChangeTooltipProvider extends AbstractTooltipProvider<ResourceAttachmentChange> implements ITooltipLabelProvider {
+public class ResourceAttachmentChangeTooltipProvider extends AbstractTooltipProvider<ResourceAttachmentChange> {
 
 	/**
 	 * The constructor.
