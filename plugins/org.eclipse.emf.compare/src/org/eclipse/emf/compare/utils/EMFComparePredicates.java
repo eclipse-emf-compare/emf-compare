@@ -8,18 +8,29 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 441172
- *     Philip Langer - add containsConflictOfTypes(ConflictKind...)
+ *     Philip Langer - add additional predicates
+ *     Tanja Mayerhofer - bug 501864
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.not;
+import static com.google.common.base.Predicates.or;
+import static com.google.common.collect.Iterables.all;
+import static com.google.common.collect.Iterables.any;
+import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
+import static org.eclipse.emf.compare.ConflictKind.REAL;
+import static org.eclipse.emf.compare.DifferenceKind.ADD;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
+import static org.eclipse.emf.compare.internal.utils.DiffUtil.getAllAtomicRefiningDiffs;
+import static org.eclipse.emf.compare.internal.utils.DiffUtil.getAllRefiningDiffs;
 
 import com.google.common.base.Predicate;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Conflict;
@@ -339,6 +350,30 @@ public final class EMFComparePredicates {
 		// This is only meant for multi-valued attributes
 		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName),
 				attributeValueMatch(attributeName, removedValue, true));
+	}
+
+	/**
+	 * Indicates whether a diff is part of a real add/add conflict.
+	 * 
+	 * @return a predicate to check if a diff belongs to an add/add conflict.
+	 * @since 3.4
+	 */
+	public static Predicate<Diff> isInRealAddAddConflict() {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				Conflict conflict = input.getConflict();
+				if (conflict != null) {
+					if (conflict.getKind() != REAL) {
+						return false;
+					} else {
+						if (all(conflict.getDifferences(), ofKind(ADD))) {
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+		};
 	}
 
 	/**
@@ -1105,6 +1140,130 @@ public final class EMFComparePredicates {
 			}
 		}
 		return nameFeature;
+	}
+
+	/**
+	 * This predicate can be used to check whether any refining diff of a given diff fulfills the given
+	 * predicate.
+	 * 
+	 * @param predicate
+	 *            The predicate to check.
+	 * @return The predicate.
+	 * @since 3.4
+	 */
+	public static Predicate<Diff> anyRefining(final Predicate<? super Diff> predicate) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff diff) {
+				return diff != null && any(getAllRefiningDiffs(diff), predicate);
+			}
+		};
+	}
+
+	/**
+	 * This predicate can be used to check whether any refined diff of a given diff fulfills the given
+	 * predicate.
+	 * 
+	 * @param predicate
+	 *            The predicate to check.
+	 * @return The predicate.
+	 * @since 3.4
+	 */
+	public static Predicate<Diff> anyRefined(final Predicate<? super Diff> predicate) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input != null && any(input.getRefines(), predicate);
+			}
+		};
+	}
+
+	/**
+	 * This predicate can be used to check whether a diff has refiningDiffs AND all these refining diffs
+	 * fulfill the given predicate.
+	 * <p>
+	 * <b>BEWARE: If the given diff has no refining diff, the predicate returns <code>false</code>.</b>
+	 * </p>
+	 * 
+	 * @param predicate
+	 *            The predicate to check on each 'atomic' (i.e. not refined) refining diff.
+	 * @return The predicate.
+	 * @since 3.4
+	 */
+	public static Predicate<Diff> allAtomicRefining(final Predicate<? super Diff> predicate) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff diff) {
+				Set<Diff> atomicRefiningDiffs = getAllAtomicRefiningDiffs(diff);
+				if (atomicRefiningDiffs.isEmpty()) {
+					return false;
+				}
+				return all(atomicRefiningDiffs, predicate);
+			}
+		};
+	}
+
+	/**
+	 * Check whether a diff is not refined and has a direct conflict of (one of) the given type(s).
+	 * 
+	 * @param kinds
+	 *            Type(s) of the conflict(s) we seek.
+	 * @return The created predicate.
+	 * @since 3.4
+	 */
+	public static Predicate<Diff> isNotRefinedDirectlyConflicting(final ConflictKind... kinds) {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				return input != null && input.getConflict() != null && input.getRefinedBy().isEmpty()
+						&& Arrays.asList(kinds).contains(input.getConflict().getKind());
+			}
+		};
+	}
+
+	/**
+	 * This predicate can be used to test if a diff is in a pseudo conflict. Several cases are possible:
+	 * 
+	 * <pre>
+	 * - if the diff is not a refined diff and has a direct pseudo conflict (i.e. diff.getConflict = a pseudo conflict)
+	 * - if the diff is a refined diff and all its refining diffs are in pseudo conflicts.
+	 * 		The refining diffs must not be part of a real conflict  directly or indirectly
+	 * </pre>
+	 * 
+	 * @return the predicate
+	 * @since 3.4
+	 */
+	public static Predicate<Diff> canBeConsideredAsPseudoConflicting() {
+		return or(isNotRefinedDirectlyConflicting(PSEUDO),
+				and(allAtomicRefining(hasConflict(PSEUDO)), hasNoDirectOrIndirectConflict(REAL)));
+	}
+
+	/**
+	 * This predicate can be used to check whether a diff is in a conflict directly or indirectly.
+	 * <p>
+	 * A diff is directly in a conflict if it {@link #hasConflict(ConflictKind...) has a conflict}. A diff is
+	 * indirectly in a conflict, if one of its refining diffs is in a conflict.
+	 * </p>
+	 * 
+	 * @param kinds
+	 *            Type(s) of the conflict(s) we seek.
+	 * @return The created predicate.
+	 * @since 3.4
+	 */
+	public static Predicate<? super Diff> hasDirectOrIndirectConflict(final ConflictKind... kinds) {
+		return or(hasConflict(kinds), anyRefining(hasConflict(kinds)));
+	}
+
+	/**
+	 * This predicate can be used to check whether a diff is not in a conflict directly or indirectly.
+	 * <p>
+	 * A diff is directly in a conflict if it {@link #hasConflict(ConflictKind...) has a conflict}. A diff is
+	 * indirectly in a conflict, if one of its refining diffs is in a conflict.
+	 * </p>
+	 * 
+	 * @param kinds
+	 *            Type(s) of the conflict(s) we seek.
+	 * @return The created predicate.
+	 * @since 3.4
+	 */
+	public static Predicate<? super Diff> hasNoDirectOrIndirectConflict(final ConflictKind... kinds) {
+		return not(hasDirectOrIndirectConflict(kinds));
 	}
 
 	/**

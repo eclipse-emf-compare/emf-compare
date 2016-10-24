@@ -8,24 +8,25 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - bug 486923
+ *     Tanja Mayerhofer - bug 501864
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.tests.suite;
 
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.textui.TestRunner;
-
 import org.eclipse.emf.compare.ComparePackage;
+import org.eclipse.emf.compare.rcp.ui.tests.contentmergeviewer.accessor.match.MatchAccessorTest;
 import org.eclipse.emf.compare.rcp.ui.tests.match.RCPMatchEngineFactoryRegistryTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemFeatureMapsTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemPseudoConflictTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemTest;
+import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.filters.TechnicalitiesFilterTests;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.filters.TestFeatureMapDifferencesFilter;
+import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.ConflictsGroupTest;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.TestBasicDifferenceGroupImpl;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.TestComparisonTreeNodeItemProviderSpec;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.TestMatchTreeNodeItemProviderSpec;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.TestReferenceChangeTreeNodeItemProviderSpec;
 import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.groups.provider.ThreeWayComparisonGroupProviderTest;
+import org.eclipse.emf.compare.rcp.ui.tests.structuremergeviewer.match.MatchOfContainmentReferenceChangeAdapterTest;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
 import org.eclipse.emf.ecore.EPackage;
@@ -35,12 +36,18 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import junit.framework.JUnit4TestAdapter;
+import junit.framework.Test;
+import junit.textui.TestRunner;
+
 @RunWith(Suite.class)
 @SuiteClasses({TestComparisonTreeNodeItemProviderSpec.class, TestMatchTreeNodeItemProviderSpec.class,
 		TestReferenceChangeTreeNodeItemProviderSpec.class, MergeViewerItemTest.class,
 		MergeViewerItemPseudoConflictTest.class, MergeViewerItemFeatureMapsTest.class,
 		TestBasicDifferenceGroupImpl.class, BugsTestSuite.class, TestFeatureMapDifferencesFilter.class,
-		RCPMatchEngineFactoryRegistryTest.class, ThreeWayComparisonGroupProviderTest.class, })
+		RCPMatchEngineFactoryRegistryTest.class, ThreeWayComparisonGroupProviderTest.class,
+		ConflictsGroupTest.class, MatchAccessorTest.class, TechnicalitiesFilterTests.class,
+		MatchOfContainmentReferenceChangeAdapterTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

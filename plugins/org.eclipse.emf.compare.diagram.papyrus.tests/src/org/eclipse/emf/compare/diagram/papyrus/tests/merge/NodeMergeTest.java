@@ -7,19 +7,22 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - bug 482404
+ *     Philip Langer - bug 482404, 501864
  *     Alexandra Buzila - Bug 479449
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests.merge;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.tryFind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueNameMatches;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
@@ -27,8 +30,10 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
@@ -1492,10 +1497,38 @@ public class NodeMergeTest extends AbstractTest {
 	private static Predicate<Diff> isMergedFor3way(final Diff diff) {
 		return new Predicate<Diff>() {
 			public boolean apply(Diff input) {
-				return input.getConflict() != null && input.getConflict().getKind() == ConflictKind.PSEUDO
-						&& input.getConflict().getDifferences().contains(diff);
+				final Conflict conflict = getConflictOrConflictOfRefining(input);
+				return diff != null && conflict != null && conflict.getKind() == ConflictKind.PSEUDO
+						&& containsDiffOrAnyOfItsRefiningDiffs(diff, conflict);
 			}
 		};
+	}
+
+	private static Conflict getConflictOrConflictOfRefining(Diff input) {
+		Conflict conflict = null;
+		if (input.getConflict() != null) {
+			conflict = input.getConflict();
+		} else {
+			Optional<Diff> conflictingRefiningDiff = tryFind(input.getRefinedBy(), hasConflict());
+			if (conflictingRefiningDiff.isPresent()) {
+				conflict = conflictingRefiningDiff.get().getConflict();
+			}
+		}
+		return conflict;
+	}
+
+	private static boolean containsDiffOrAnyOfItsRefiningDiffs(Diff diff, Conflict conflict) {
+		return conflict.getDifferences().contains(diff)
+				|| containsAny(conflict.getDifferences(), diff.getRefinedBy());
+	}
+
+	private static boolean containsAny(EList<Diff> diffs, EList<Diff> toBeContained) {
+		for (Diff currentDiff : toBeContained) {
+			if (Iterables.contains(diffs, currentDiff)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

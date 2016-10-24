@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch;
@@ -46,6 +47,9 @@ public class MatchAccessor extends AbstractTypedElementAdapter implements ICompa
 	/** The match associated with this accessor. */
 	private final Match fMatch;
 
+	/** The diff associated with this accessor. */
+	private Diff fDiff;
+
 	/** The side of this accessor. */
 	private final MergeViewerSide fSide;
 
@@ -60,8 +64,25 @@ public class MatchAccessor extends AbstractTypedElementAdapter implements ICompa
 	 *            the side of this accessor.
 	 */
 	public MatchAccessor(AdapterFactory adapterFactory, Match match, MergeViewerSide side) {
+		this(adapterFactory, match, null, side);
+	}
+
+	/**
+	 * Creates a new object wrapping the given <code>eObject</code>.
+	 * 
+	 * @param adapterFactory
+	 *            the adapter factory used to create the accessor.
+	 * @param match
+	 *            the match to associate with this accessor.
+	 * @param diff
+	 *            the diff associated with this accessor.
+	 * @param side
+	 *            the side of this accessor.
+	 */
+	public MatchAccessor(AdapterFactory adapterFactory, Match match, Diff diff, MergeViewerSide side) {
 		super(adapterFactory);
 		fMatch = match;
+		fDiff = diff;
 		fSide = side;
 	}
 
@@ -130,10 +151,10 @@ public class MatchAccessor extends AbstractTypedElementAdapter implements ICompa
 	public IMergeViewerItem getInitialItem() {
 		final MergeViewerItem.Container container;
 		if (fMatch instanceof NotLoadedFragmentMatch) {
-			container = new MergeViewerItem.Container(fMatch.getComparison(), null, fMatch, fMatch, fMatch,
+			container = new MergeViewerItem.Container(fMatch.getComparison(), fDiff, fMatch, fMatch, fMatch,
 					fSide, getRootAdapterFactory());
 		} else {
-			container = new MergeViewerItem.Container(fMatch.getComparison(), null, fMatch, fSide,
+			container = new MergeViewerItem.Container(fMatch.getComparison(), fDiff, fMatch, fSide,
 					getRootAdapterFactory());
 		}
 		return container;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Iterables;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -67,6 +70,70 @@ public final class DiffUtil {
 	}
 
 	/**
+	 * The set of all the diffs that refine the given diff or one of its refining diffs, recursively.
+	 * 
+	 * @param diff
+	 *            The diff for which all the refining diffs are seeked
+	 * @return A set of all the refining diffs (as opposed to getting only the 1st level of refining diffs
+	 *         that would be obtained by calling getRefinedBy() on diff.
+	 */
+	public static Set<Diff> getAllRefiningDiffs(Diff diff) {
+		Set<Diff> result = new LinkedHashSet<Diff>();
+		if (diff != null) {
+			for (Diff refiningDiff : diff.getRefinedBy()) {
+				result.add(refiningDiff);
+				if (!refiningDiff.getRefinedBy().isEmpty()) {
+					result.addAll(getAllRefiningDiffs(refiningDiff));
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Determines the root refined diff of a refining diff, i.e. a refined diff that is not refining another
+	 * diff.
+	 * 
+	 * @param diff
+	 *            The diff for which the root refined diffs are to be determined
+	 * @return The root refined diffs of the provided (refining) diff, as a list. Never <code>null</code>.
+	 *         Empty if the provided diff does not refine any diff.
+	 */
+	public static List<Diff> getRootRefinedDiffs(Diff diff) {
+		List<Diff> rootRefinedDiffs = newArrayList();
+		for (Diff refinedDiff : diff.getRefines()) {
+			if (refinedDiff.getRefines().isEmpty()) {
+				rootRefinedDiffs.add(refinedDiff);
+			} else {
+				rootRefinedDiffs.addAll(getRootRefinedDiffs(refinedDiff));
+			}
+		}
+		return rootRefinedDiffs;
+	}
+
+	/**
+	 * The set of all the diffs that refine the given diff or one of its refining diffs, recursively.
+	 * 
+	 * @param diff
+	 *            The diff for which all the refining diffs are seeked
+	 * @return A set of all the refining diffs (as opposed to getting only the 1st level of refining diffs
+	 *         that would be obtained by calling getRefinedBy() on diff.
+	 */
+	public static Set<Diff> getAllAtomicRefiningDiffs(Diff diff) {
+		Set<Diff> result = new LinkedHashSet<Diff>();
+		if (diff != null) {
+			for (Diff refiningDiff : diff.getRefinedBy()) {
+				if (refiningDiff.getRefinedBy().isEmpty()) {
+					result.add(refiningDiff);
+				} else {
+					result.addAll(getAllAtomicRefiningDiffs(refiningDiff));
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Computes the dice coefficient between the two given String's bigrams.
 	 * <p>
 	 * This implementation is case sensitive.
@@ -77,10 +144,10 @@ public final class DiffUtil {
 	 * want the similarity between <code>"v1"</code> and <code>"v2"</code> to be <code>0.5</code> and not
 	 * <code>0</code>. However, we also want <code>"v1"</code> and <code>"v2"</code> to be "more similar" to
 	 * each other than <code>"v"</code> and <code>"v2"</code> and <code>"v1"</code> and <code>"v11"</code> to
-	 * be "more similar" than <code>"v"</code> and <code>"v11"</code> while this latter also needs to be
-	 * "less similar" than <code>"v1"</code> and <code>"v2"</code>. This requires a slightly different
-	 * handling for comparisons with a "single character"-long string than for "two character"-long ones. A
-	 * set of invariants we wish to meet can be found in the unit tests.
+	 * be "more similar" than <code>"v"</code> and <code>"v11"</code> while this latter also needs to be "less
+	 * similar" than <code>"v1"</code> and <code>"v2"</code>. This requires a slightly different handling for
+	 * comparisons with a "single character"-long string than for "two character"-long ones. A set of
+	 * invariants we wish to meet can be found in the unit tests.
 	 * </p>
 	 * 
 	 * @param first

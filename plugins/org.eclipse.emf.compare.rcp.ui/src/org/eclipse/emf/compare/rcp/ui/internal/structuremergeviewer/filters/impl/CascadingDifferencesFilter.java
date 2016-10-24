@@ -12,29 +12,30 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.imp
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.or;
+import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.DifferenceKind.ADD;
 import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.DifferenceKind.MOVE;
-import static org.eclipse.emf.compare.DifferenceSource.LEFT;
-import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasNoDirectOrIndirectConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.UnmodifiableIterator;
 
-import java.util.Iterator;
-
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.match.MatchOfContainmentReferenceChangeAdapter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.AbstractDifferenceFilter;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.tree.TreeNode;
 
 /**
@@ -43,7 +44,7 @@ import org.eclipse.emf.edit.tree.TreeNode;
  * Differences hidden are all those that match the following criteria:
  * <ul>
  * <li>this.kind != MOVE</li>
- * <li>this.conflict == null</li>
+ * <li>this.conflict == null && this.'indirect real conflicts' is empty</li>
  * <li>this.refines is empty</li>
  * <li>this is located inside a TreeNode that represents a Match that is either ADDed or DELETEd, and for
  * which the diff that represents this addition or deletion is not refined by this.</li>
@@ -65,7 +66,8 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 				EObject data = treeNode.getData();
 				if (data instanceof Diff && !(data instanceof ResourceAttachmentChange)) {
 					Diff diff = (Diff)data;
-					if (diff.getKind() != MOVE && diff.getConflict() == null && diff.getRefines().isEmpty()) {
+					if (diff.getKind() != MOVE && hasNoDirectOrIndirectConflict(REAL).apply(diff)
+							&& diff.getRefines().isEmpty()) {
 						TreeNode parent = treeNode.getParent();
 						if (parent != null && parent.getData() instanceof Match) {
 							Match parentMatch = (Match)parent.getData();
@@ -94,7 +96,7 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 				// The ancestor has been added/deleted, we must filter the current diff
 				// _unless_ it is refined by the diff that represents the grand-parent
 				// add/delete
-				ReferenceChange addOrDeleteDiff = findAddOrDeleteDiff(grandParentMatch, side);
+				Diff addOrDeleteDiff = findAddOrDeleteDiff(grandParentMatch, side);
 				if (addOrDeleteDiff != null) {
 					if (diff.getRefinedBy().contains(addOrDeleteDiff)) {
 						// recurse
@@ -107,14 +109,14 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 			return ret;
 		}
 
-		private ReferenceChange findAddOrDeleteDiff(Match match, DifferenceSource side) {
-			EObject container = match.eContainer();
-			if (container instanceof Match) {
-				@SuppressWarnings("unchecked")
-				Iterator<Diff> candidates = Iterators.filter(((Match)container).getDifferences().iterator(),
-						and(fromSide(side), CONTAINMENT_REFERENCE_CHANGE, ofKind(ADD, DELETE)));
-				if (candidates.hasNext()) {
-					return (ReferenceChange)candidates.next();
+		private Diff findAddOrDeleteDiff(Match match, DifferenceSource side) {
+			final Iterable<Diff> addOrDeleteContainmentDiffs = MatchUtil
+					.findAddOrDeleteContainmentDiffs(match);
+			if (addOrDeleteContainmentDiffs != null) {
+				final UnmodifiableIterator<Diff> sideChanges = Iterators
+						.filter(addOrDeleteContainmentDiffs.iterator(), fromSide(side));
+				if (sideChanges.hasNext()) {
+					return sideChanges.next();
 				}
 			}
 			return null;
@@ -134,22 +136,9 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 			if (match == null) {
 				return false;
 			}
-			if (match.getComparison().isThreeWay()) {
-				return (MatchUtil.getMatchedObject(match, side) == null) != (match.getOrigin() == null);
-			}
-			return (MatchUtil.getMatchedObject(match, side) == null) != (MatchUtil.getMatchedObject(match,
-					opposite(side)) == null);
-		}
-
-		protected DifferenceSource opposite(DifferenceSource side) {
-			switch (side) {
-				case LEFT:
-					return RIGHT;
-				case RIGHT:
-					return LEFT;
-				default:
-					throw new IllegalArgumentException("Source value not supported: " + side); //$NON-NLS-1$
-			}
+			Adapter adapter = EcoreUtil.getAdapter(match.eAdapters(),
+					MatchOfContainmentReferenceChangeAdapter.class);
+			return adapter != null;
 		}
 	};
 

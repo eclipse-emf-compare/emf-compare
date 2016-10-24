@@ -13,10 +13,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.suite;
 
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.textui.TestRunner;
-
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.tests.command.CommandStackTestSuite;
 import org.eclipse.emf.compare.tests.conflict.ConflictDetectionTest;
@@ -65,6 +61,7 @@ import org.eclipse.emf.compare.tests.postprocess.PostProcessorTest;
 import org.eclipse.emf.compare.tests.req.ReqComputingTest;
 import org.eclipse.emf.compare.tests.scope.ComparisonScopeAdapterTest;
 import org.eclipse.emf.compare.tests.scope.DefaultComparisonScopeTest;
+import org.eclipse.emf.compare.tests.utils.EMFComparePredicatesTest;
 import org.eclipse.emf.compare.tests.utils.EqualityHelperTest;
 import org.eclipse.emf.compare.tests.utils.MatchUtilFeatureContainsTest;
 import org.eclipse.emf.ecore.EPackage;
@@ -73,6 +70,10 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+
+import junit.framework.JUnit4TestAdapter;
+import junit.framework.Test;
+import junit.textui.TestRunner;
 
 /**
  * This test suite allows us to launch all tests for EMF Compare at once.
@@ -96,7 +97,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		MultiLineAttributeMergeTest.class, MonitorCancelTest.class, IdentifierEObjectMatcherTest.class,
 		MatchUtilFeatureContainsTest.class, RefineMergeTest.class, Bug484557ConflictTest.class,
 		Bug485266_MoveDeleteConflict_Test.class, ResourceAttachmentChangeBug492261.class,
-		ComparisonScopeAdapterTest.class, })
+		ComparisonScopeAdapterTest.class, EMFComparePredicatesTest.class, })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

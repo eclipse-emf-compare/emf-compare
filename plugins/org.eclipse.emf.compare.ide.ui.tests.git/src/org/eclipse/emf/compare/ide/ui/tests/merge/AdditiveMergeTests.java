@@ -8,8 +8,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.merge;
 
+import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.all;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasDirectOrIndirectConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.isInRealAddAddConflict;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -24,7 +27,6 @@ import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestSupport;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitInput;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMerge;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMergeStrategy;
-import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.runner.RunWith;
@@ -43,7 +45,8 @@ public class AdditiveMergeTests {
 
 		Comparison comparison = support.compare("branch1", "expected", "network.ecore");
 
-		assertTrue(all(comparison.getDifferences(), EMFComparePredicates.hasConflict(PSEUDO)));
+		assertTrue(all(comparison.getDifferences(),
+				or(hasDirectOrIndirectConflict(PSEUDO), isInRealAddAddConflict())));
 	}
 
 	@GitMerge(local = "branch2", remote = "branch1")
@@ -55,7 +58,8 @@ public class AdditiveMergeTests {
 
 		Comparison comparison = support.compare("branch2", "expected", "network.ecore");
 
-		assertTrue(all(comparison.getDifferences(), EMFComparePredicates.hasConflict(PSEUDO)));
+		assertTrue(all(comparison.getDifferences(),
+				or(hasDirectOrIndirectConflict(PSEUDO), isInRealAddAddConflict())));
 	}
 
 	@GitMerge(local = "branch1", remote = "branch2")
@@ -67,7 +71,8 @@ public class AdditiveMergeTests {
 
 		Comparison comparison = support.compare("branch1", "expected", "network.uml");
 
-		assertTrue(all(comparison.getDifferences(), EMFComparePredicates.hasConflict(PSEUDO)));
+		assertTrue(all(comparison.getDifferences(),
+				or(hasDirectOrIndirectConflict(PSEUDO), isInRealAddAddConflict())));
 	}
 
 	@GitMerge(local = "branch2", remote = "branch1")
@@ -79,6 +84,7 @@ public class AdditiveMergeTests {
 
 		Comparison comparison = support.compare("branch2", "expected", "network.uml");
 
-		assertTrue(all(comparison.getDifferences(), EMFComparePredicates.hasConflict(PSEUDO)));
+		assertTrue(all(comparison.getDifferences(),
+				or(hasDirectOrIndirectConflict(PSEUDO), isInRealAddAddConflict())));
 	}
 }

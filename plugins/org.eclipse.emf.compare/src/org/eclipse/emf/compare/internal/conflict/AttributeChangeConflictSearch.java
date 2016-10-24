@@ -21,6 +21,7 @@ import static org.eclipse.emf.compare.DifferenceKind.MOVE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.possiblyConflictingWith;
+import static org.eclipse.emf.compare.utils.MatchUtil.matchingIndices;
 
 import com.google.common.collect.Iterables;
 

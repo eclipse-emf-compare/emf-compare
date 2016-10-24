@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,9 +20,9 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
@@ -46,7 +46,7 @@ import com.google.common.eventbus.EventBus;
 @SuppressWarnings("restriction")
 public class AbstractTestTreeNodeItemProviderAdapter {
 
-	protected static TreeItemProviderAdapterFactorySpec treeItemProviderAdapterFactory;
+	protected TreeItemProviderAdapterFactorySpec treeItemProviderAdapterFactory;
 
 	protected EventBus eventBus;
 
@@ -61,7 +61,7 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 	 * @return the comparison
 	 * @throws IOException
 	 */
-	protected static Comparison getComparison(ResourceScopeProvider scopeProvider) throws IOException {
+	public static Comparison getComparison(ResourceScopeProvider scopeProvider) throws IOException {
 		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(),
 				scopeProvider.getRight(), scopeProvider.getOrigin());
 		final Builder builder = EMFCompare.builder();

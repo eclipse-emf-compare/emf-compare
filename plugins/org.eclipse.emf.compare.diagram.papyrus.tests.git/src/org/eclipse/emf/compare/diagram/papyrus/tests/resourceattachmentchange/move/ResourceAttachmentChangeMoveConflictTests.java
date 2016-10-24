@@ -1,10 +1,14 @@
 /*******************************************************************************
- * Copyright (C) 2015 Obeo.
+ * Copyright (C) 2015, 2016 Obeo and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *     Philip Langer - bug 501864
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.move;
 
@@ -15,95 +19,29 @@ import static com.google.common.collect.Iterables.size;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.mapping.ModelProvider;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.egit.core.Activator;
-import org.eclipse.egit.core.GitCorePreferences;
-import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.diagram.internal.extensions.DiagramChange;
 import org.eclipse.emf.compare.diagram.papyrus.tests.AbstractGitTestCase;
-import org.eclipse.emf.compare.diagram.papyrus.tests.egit.fixture.GitTestRepository;
-import org.eclipse.emf.compare.diagram.papyrus.tests.egit.fixture.MockSystemReader;
-import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
-import org.eclipse.emf.compare.ide.ui.internal.logical.EMFModelProvider;
-import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
-import org.eclipse.emf.compare.ide.ui.internal.logical.StorageTypedElement;
-import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
-import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope;
-import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
-import org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences;
-import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
-import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
-import org.eclipse.emf.compare.ide.ui.tests.CompareTestCase;
 import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
-import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
-import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.utils.EMFComparePredicates;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.gmf.runtime.notation.Shape;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.util.FileUtils;
-import org.eclipse.jgit.util.SystemReader;
-import org.eclipse.team.core.subscribers.Subscriber;
-import org.eclipse.uml2.uml.Class;
-import org.eclipse.uml2.uml.Package;
-import org.eclipse.uml2.uml.PackageableElement;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.osgi.framework.Bundle;
-
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
 
 /**
  * Tests for ResourceAttachmentChange with MOVE kind.
  * 
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
-@SuppressWarnings({"restriction", "nls", "unused" })
+@SuppressWarnings({"nls", "unused" })
 public class ResourceAttachmentChangeMoveConflictTests extends AbstractGitTestCase {
 
 	/**
@@ -146,13 +84,11 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractGitTestCa
 		// There is a conflict between the move in 2nd commit & the deletion in 3rd commit
 		Conflict conflict = comparison.getConflicts().get(1);
 		EList<Diff> differences = conflict.getDifferences();
-		assertEquals(3, differences.size());
+		assertEquals(2, differences.size());
 		assertEquals(1, size(filter(differences,
 				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.DELETE)))));
 		assertEquals(1, size(filter(differences,
 				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
-		assertEquals(1, size(
-				filter(differences, and(instanceOf(DiagramChange.class), ofKind(DifferenceKind.DELETE)))));
 
 		testProject1.dispose();
 	}
@@ -174,13 +110,11 @@ public class ResourceAttachmentChangeMoveConflictTests extends AbstractGitTestCa
 		// There is a conflict between the move in 2nd commit & the deletion in 3rd commit
 		Conflict conflict = comparison.getConflicts().get(1);
 		EList<Diff> differences = conflict.getDifferences();
-		assertEquals(3, differences.size());
+		assertEquals(2, differences.size());
 		assertEquals(1, size(filter(differences,
 				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.DELETE)))));
 		assertEquals(1, size(filter(differences,
 				and(instanceOf(ResourceAttachmentChange.class), ofKind(DifferenceKind.MOVE)))));
-		assertEquals(1, size(
-				filter(differences, and(instanceOf(DiagramChange.class), ofKind(DifferenceKind.DELETE)))));
 
 		testProject1.dispose();
 	}

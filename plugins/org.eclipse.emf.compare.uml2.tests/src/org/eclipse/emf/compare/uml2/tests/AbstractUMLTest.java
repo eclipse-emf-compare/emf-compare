@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - update priority value for UML merger
+ *     Philip Langer - bug 501864
  */
 package org.eclipse.emf.compare.uml2.tests;
 
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterators.all;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasDirectOrIndirectConflict;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -70,7 +71,7 @@ import org.junit.Before;
 /**
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({"nls", "restriction" })
 public abstract class AbstractUMLTest {
 
 	protected EMFCompare emfCompare;
@@ -253,7 +254,7 @@ public abstract class AbstractUMLTest {
 		EList<Diff> differencesAfter = comparisonAfter.getDifferences();
 		final boolean diffs;
 		if (pseudoAllowed) {
-			diffs = all(differencesAfter.iterator(), hasConflict(ConflictKind.PSEUDO));
+			diffs = all(differencesAfter.iterator(), hasDirectOrIndirectConflict(ConflictKind.PSEUDO));
 		} else {
 			diffs = differencesAfter.isEmpty();
 		}
@@ -271,7 +272,7 @@ public abstract class AbstractUMLTest {
 		EList<Diff> differencesAfter = comparisonAfter.getDifferences();
 		final boolean diffs;
 		if (pseudoAllowed) {
-			diffs = all(differencesAfter.iterator(), hasConflict(ConflictKind.PSEUDO));
+			diffs = all(differencesAfter.iterator(), hasDirectOrIndirectConflict(ConflictKind.PSEUDO));
 		} else {
 			diffs = differencesAfter.isEmpty();
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo and others.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -1081,7 +1083,8 @@ public class Graph<E> implements IGraph<E> {
 			}
 			currentIterator = Iterators.filter(difference.iterator(), new Predicate<Node<E>>() {
 				public boolean apply(Node<E> input) {
-					return consumedNodes.containsAll(input.getParents());
+					SetView<Node<E>> trueParents = Sets.difference(input.getParents(), input.getChildren());
+					return consumedNodes.containsAll(trueParents);
 				}
 			});
 			nextIterable.clear();

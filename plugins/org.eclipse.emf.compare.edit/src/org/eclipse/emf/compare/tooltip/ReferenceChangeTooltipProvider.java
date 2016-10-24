@@ -16,7 +16,6 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
-import org.eclipse.emf.compare.provider.ITooltipLabelProvider;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
@@ -27,7 +26,7 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
  * 
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
-public class ReferenceChangeTooltipProvider extends AbstractTooltipProvider<ReferenceChange> implements ITooltipLabelProvider {
+public class ReferenceChangeTooltipProvider extends AbstractTooltipProvider<ReferenceChange> {
 
 	/**
 	 * The constructor.

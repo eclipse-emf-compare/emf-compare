@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Obeo.
+ * Copyright (c) 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,15 +7,17 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 501864
+ *     Tanja Mayerhofer - bug 501864
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl;
 
+import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterators.any;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.canBeConsideredAsPseudoConflicting;
 
 import com.google.common.base.Predicate;
 
-import org.eclipse.emf.compare.Conflict;
-import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
@@ -36,16 +38,6 @@ import org.eclipse.emf.edit.tree.TreeNode;
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
 public class TechnicalitiesFilter extends AbstractDifferenceFilter {
-
-	/**
-	 * The predicate use by this filter when it is selected.
-	 */
-	private static final Predicate<? super EObject> PREDICATE_WHEN_SELECTED = new Predicate<EObject>() {
-		public boolean apply(EObject input) {
-			return PREDICATE_EMPTY_MATCH_RESOURCES.apply(input) || PREDICATE_FEATURE_MAP.apply(input)
-					|| PREDICATE_IDENTICAL_ELEMENTS.apply(input) || PREDICATE_PSEUDO_CONFLICT.apply(input);
-		}
-	};
 
 	/**
 	 * The predicate use to filter empty match resources.
@@ -91,8 +83,7 @@ public class TechnicalitiesFilter extends AbstractDifferenceFilter {
 				if (data instanceof Diff) {
 					Diff diff = (Diff)data;
 					if (diff.getMatch().getComparison().isThreeWay()) {
-						Conflict conflict = diff.getConflict();
-						ret = conflict != null && conflict.getKind() == ConflictKind.PSEUDO;
+						ret = canBeConsideredAsPseudoConflicting().apply(diff);
 					}
 				}
 			}
@@ -115,6 +106,14 @@ public class TechnicalitiesFilter extends AbstractDifferenceFilter {
 			return false;
 		}
 	};
+
+	/**
+	 * The predicate use by this filter when it is selected.
+	 */
+	@SuppressWarnings("unchecked")
+	private static final Predicate<? super EObject> PREDICATE_WHEN_SELECTED = or(
+			PREDICATE_EMPTY_MATCH_RESOURCES, PREDICATE_FEATURE_MAP, PREDICATE_IDENTICAL_ELEMENTS,
+			PREDICATE_PSEUDO_CONFLICT);
 
 	/**
 	 * Predicate to know if the given TreeNode is a diff.

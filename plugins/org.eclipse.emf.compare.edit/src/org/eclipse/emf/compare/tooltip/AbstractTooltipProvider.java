@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo and others.
+ * Copyright (c) 2015, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
+import org.eclipse.emf.compare.provider.ITooltipLabelProvider;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -34,7 +35,7 @@ import org.eclipse.emf.edit.provider.IItemLabelProvider;
  *            The parametric type of the class
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
-public abstract class AbstractTooltipProvider<T extends Diff> extends AdapterImpl {
+public abstract class AbstractTooltipProvider<T extends Diff> extends AdapterImpl implements ITooltipLabelProvider {
 
 	/**
 	 * The line separator used to compute tooltips.
@@ -50,6 +51,19 @@ public abstract class AbstractTooltipProvider<T extends Diff> extends AdapterImp
 	 * The label provider.
 	 */
 	protected IItemLabelProvider labelProvider;
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#isAdapterForType(Object)
+	 */
+	@Override
+	public boolean isAdapterForType(Object type) {
+		if (type == ITooltipLabelProvider.class) {
+			return true;
+		}
+		return super.isAdapterForType(type);
+	}
 
 	/**
 	 * Create the final tooltip for an accepted change which lead to a modification of the left side.

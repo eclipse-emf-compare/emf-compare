@@ -120,6 +120,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.Stru
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.match.MatchOfContainmentReferenceChangeProcessor;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilterChange;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
@@ -1208,6 +1209,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					labelProvider.getRightImage(input));
 			compareResult.eAdapters().add(sideLabelProvider);
 		}
+		// Bug 501569: The cascading filter does not hide merged cascading diffs
+		new MatchOfContainmentReferenceChangeProcessor().execute(compareResult);
 	}
 
 	/**

@@ -12,8 +12,11 @@ package org.eclipse.emf.compare.provider.spec;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.match.MatchOfContainmentReferenceChangeAdapter;
 import org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
@@ -21,6 +24,7 @@ import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 
 /**
@@ -71,6 +75,18 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 		}
 
 		if (ret == null) {
+			Adapter adapter = EcoreUtil.getAdapter(match.eAdapters(),
+					MatchOfContainmentReferenceChangeAdapter.class);
+			if (adapter instanceof MatchOfContainmentReferenceChangeAdapter) {
+				ReferenceChange referenceChange = ((MatchOfContainmentReferenceChangeAdapter)adapter)
+						.getReferenceChange();
+				if (referenceChange != null) {
+					ret = itemDelegator.getImage(referenceChange.getValue());
+				}
+			}
+		}
+
+		if (ret == null) {
 			ret = super.getImage(object);
 		}
 
@@ -106,7 +122,23 @@ public class MatchItemProviderSpec extends MatchItemProvider implements IItemSty
 					ret += " (" + name + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			} else {
-				ret = super.getText(object);
+				Adapter matchAdapter = EcoreUtil.getAdapter(match.eAdapters(),
+						MatchOfContainmentReferenceChangeAdapter.class);
+				if (matchAdapter instanceof MatchOfContainmentReferenceChangeAdapter) {
+					ReferenceChange referenceChange = ((MatchOfContainmentReferenceChangeAdapter)matchAdapter)
+							.getReferenceChange();
+					Adapter rcAdapter = null;
+					if (referenceChange != null) {
+						rcAdapter = EcoreUtil.getAdapter(referenceChange.eAdapters(),
+								ReferenceChangeItemProviderSpec.class);
+					}
+					if (rcAdapter instanceof ReferenceChangeItemProviderSpec) {
+						ret = ((ReferenceChangeItemProviderSpec)rcAdapter).getValueText(referenceChange);
+					}
+				}
+				if (isNullOrEmpty(ret)) {
+					ret = super.getText(object);
+				}
 			}
 		}
 
