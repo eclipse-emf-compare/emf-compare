@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 473985
  *     Conor O'Mahony - bug 507465
+ *     Martin Fleck - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -34,6 +35,7 @@ import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.IAdapterFactoryChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ICompareEditingDomainChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IComparisonAndScopeChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
@@ -226,6 +228,16 @@ public class CompareToolBar implements ISelectionChangedListener {
 		}
 		for (MergeAction mergeAction : mergeAllNonConflictingActions) {
 			mergeAction.setEditingDomain(event.getNewValue());
+		}
+	}
+
+	@Subscribe
+	public void adapterFactoryChange(IAdapterFactoryChange event) {
+		for (MergeAction mergeAction : mergeActions) {
+			mergeAction.setAdapterFactory(event.getNewValue());
+		}
+		for (MergeAction mergeAction : mergeAllNonConflictingActions) {
+			mergeAction.setAdapterFactory(event.getNewValue());
 		}
 	}
 

@@ -11,6 +11,7 @@
  *     Philip Langer - bug 462884
  *     Stefan Dirix - bugs 473985 and 474030
  *     Martin Fleck - bug 497066
+ *     Martin Fleck - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -27,6 +28,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 
@@ -77,6 +79,7 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
+import org.eclipse.emf.compare.adapterfactory.context.IContextTester;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
@@ -514,17 +517,29 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 */
 	@Override
 	protected void preHookCreateControlAndViewer() {
-		fAdapterFactory = new ComposedAdapterFactory(
-				EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry());
-		fAdapterFactory.addAdapterFactory(new TreeItemProviderAdapterFactorySpec(
-				getCompareConfiguration().getStructureMergeViewerFilter()));
-		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-
+		fAdapterFactory = initAdapterFactory(getCompareConfiguration().getComparison());
 		getCompareConfiguration().setAdapterFactory(fAdapterFactory);
 
 		inputChangedTask = new CompareInputChangedJob(EMFCompareIDEUIMessages
 				.getString("EMFCompareStructureMergeViewer.computingModelDifferences")); //$NON-NLS-1$
+	}
+
+	/**
+	 * Creates a new adapter factory based on the current compare configuration.
+	 * 
+	 * @return adapter factory
+	 */
+	protected ComposedAdapterFactory initAdapterFactory(Comparison comparison) {
+		Map<Object, Object> context = Maps.newLinkedHashMap();
+		context.put(IContextTester.CTX_COMPARISON, comparison);
+
+		ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
+				EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry(context));
+		adapterFactory.addAdapterFactory(new TreeItemProviderAdapterFactorySpec(
+				getCompareConfiguration().getStructureMergeViewerFilter()));
+		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
+		return adapterFactory;
 	}
 
 	@Subscribe
@@ -649,6 +664,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	@Override
 	public EMFCompareStructureMergeViewerContentProvider getContentProvider() {
 		return (EMFCompareStructureMergeViewerContentProvider)super.getContentProvider();
+	}
+
+	@Override
+	public DelegatingStyledCellLabelProvider getLabelProvider() {
+		return (DelegatingStyledCellLabelProvider)super.getLabelProvider();
 	}
 
 	private CTabItem createItem(int index, Control control) {
@@ -994,11 +1014,23 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	void compareInputChanged(final IComparisonScope scope, final Comparison comparison) {
 		if (!getControl().isDisposed()) { // guard against disposal
+			final EMFCompareConfiguration config = getCompareConfiguration();
+
+			// re-initialize adapter factory due to new comparison
+			if (fAdapterFactory != null) {
+				fAdapterFactory.dispose();
+			}
+			fAdapterFactory = initAdapterFactory(comparison);
+
+			// propagate new adapter factory
+			config.setAdapterFactory(fAdapterFactory);
+			getContentProvider().setAdapterFactory(fAdapterFactory);
+			((EMFCompareStructureMergeViewerLabelProvider)getLabelProvider().getStyledStringProvider())
+					.setAdapterFactory(fAdapterFactory);
+
 			final TreeNode treeNode = TreeFactory.eINSTANCE.createTreeNode();
 			treeNode.setData(comparison);
 			final Object input = fAdapterFactory.adapt(treeNode, ICompareInput.class);
-
-			final EMFCompareConfiguration config = getCompareConfiguration();
 
 			// this will set to the EMPTY difference group provider, but necessary to avoid NPE while setting
 			// input.

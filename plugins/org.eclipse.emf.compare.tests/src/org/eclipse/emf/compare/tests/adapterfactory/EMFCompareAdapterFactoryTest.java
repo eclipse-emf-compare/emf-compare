@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.adapterfactory;
 
@@ -24,6 +25,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.adapterfactory.context.IContextTester;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptorRegistryImpl;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
@@ -96,6 +98,10 @@ public class EMFCompareAdapterFactoryTest {
 
 		public int getRanking() {
 			return ranking;
+		}
+
+		public IContextTester getContextTester() {
+			return null;
 		}
 
 		public String getId() {

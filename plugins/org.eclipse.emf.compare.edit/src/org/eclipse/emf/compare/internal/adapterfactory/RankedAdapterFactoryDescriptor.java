@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,13 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.adapterfactory;
 
 import java.util.Set;
 
+import org.eclipse.emf.compare.adapterfactory.context.IContextTester;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 
 /**
@@ -28,6 +30,13 @@ public interface RankedAdapterFactoryDescriptor extends ComposedAdapterFactory.D
 	 * @return the ranking of the adapter factory binded to this descriptor.
 	 */
 	int getRanking();
+
+	/**
+	 * The context tester of the adapter factory binded to this descriptor. The context tester may be null.
+	 * 
+	 * @return the context tester of the adapter factory binded to this descriptor.
+	 */
+	IContextTester getContextTester();
 
 	/**
 	 * Gets a unique id for this descriptor.

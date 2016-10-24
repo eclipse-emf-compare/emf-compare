@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 487595
+ *     Martin Fleck - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;
 
@@ -20,8 +21,10 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -31,6 +34,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.adapterfactory.context.IContextTester;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.provider.TreeContentMergeViewerItemContentProvider;
@@ -114,8 +118,11 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			EMFCompareConfiguration config) {
 		super(style, bundle, config);
 
+		Map<Object, Object> context = Maps.newLinkedHashMap();
+		context.put(IContextTester.CTX_COMPARISON, config.getComparison());
+
 		fAdapterFactory = new ComposedAdapterFactory(
-				EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry());
+				EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry(context));
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 		fSyncExpandedState = new AtomicBoolean();

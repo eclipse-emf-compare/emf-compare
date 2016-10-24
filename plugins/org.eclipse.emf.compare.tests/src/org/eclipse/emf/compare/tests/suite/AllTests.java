@@ -58,6 +58,7 @@ import org.eclipse.emf.compare.tests.monitor.MonitorCancelTest;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
 import org.eclipse.emf.compare.tests.postprocess.PostProcessorTest;
+import org.eclipse.emf.compare.tests.registry.RankedAdapterFactoryRegistryTest;
 import org.eclipse.emf.compare.tests.req.ReqComputingTest;
 import org.eclipse.emf.compare.tests.scope.ComparisonScopeAdapterTest;
 import org.eclipse.emf.compare.tests.scope.DefaultComparisonScopeTest;
@@ -97,7 +98,7 @@ import junit.textui.TestRunner;
 		MultiLineAttributeMergeTest.class, MonitorCancelTest.class, IdentifierEObjectMatcherTest.class,
 		MatchUtilFeatureContainsTest.class, RefineMergeTest.class, Bug484557ConflictTest.class,
 		Bug485266_MoveDeleteConflict_Test.class, ResourceAttachmentChangeBug492261.class,
-		ComparisonScopeAdapterTest.class, EMFComparePredicatesTest.class, })
+		ComparisonScopeAdapterTest.class, EMFComparePredicatesTest.class, RankedAdapterFactoryRegistryTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

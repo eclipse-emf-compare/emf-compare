@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.emf.compare.rcp" id="adapterFactory" name="EMF Compare Adapter Factory"/>
       </appinfo>
       <documentation>
-         The aim is to provide a mechanism that allow users to provide their own adapter factory with a specific rank. 
+         The aim is to provide a mechanism that allow users to provide their own adapter factory with a specific rank and for a specific context. 
 With this mechanism you will able to provide, for example, your own CompareItemProviderAdapterFactory in order to provide your own labels of the emf compare metamodel, or provide your own EcoreItemProviderAdapterFactory if you just want to overrides the labels of ecore metamodel.
       </documentation>
    </annotation>
@@ -79,6 +79,16 @@ With this mechanism you will able to provide, for example, your own CompareItemP
                <documentation>
                   The lower the ranking of an extension, the lesser its priority as compared with others.
                </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="context" type="string">
+            <annotation>
+               <documentation>
+                  The tester that evaluates in which context this factory should be applied. If no context tester is given, the factory is applied in all contexts.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.adapterfactory.context.IContextTester"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="label" type="string">

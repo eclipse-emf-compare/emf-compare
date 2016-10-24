@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Conor O'Mahony - bug 507465
+ *     Martin Fleck - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.configuration;
 
@@ -30,6 +31,7 @@ import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.AdapterFactoryChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.CompareEditingDomainChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.ComparisonAndScopeChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.EMFComparatorChange;
@@ -286,7 +288,9 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	}
 
 	public void setAdapterFactory(AdapterFactory adapterFactory) {
+		AdapterFactory oldValue = getAdapterFactory();
 		setProperty(ADAPTER_FACTORY, adapterFactory);
+		getEventBus().post(new AdapterFactoryChange(oldValue, adapterFactory));
 	}
 
 	private class PropertyChangeListener implements IPropertyChangeListener {

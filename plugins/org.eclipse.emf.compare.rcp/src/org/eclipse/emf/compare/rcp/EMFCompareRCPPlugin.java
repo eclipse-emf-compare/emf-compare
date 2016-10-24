@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp;
 
@@ -22,6 +23,7 @@ import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePrefere
 import com.google.common.base.Predicate;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
@@ -45,6 +47,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChang
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
@@ -578,21 +581,38 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * 
 	 * @return the the adapter factory descriptor registry to which extension will be registered
 	 * @since 2.3
+	 * @deprecated Use {@link #createFilteredAdapterFactoryRegistry(Comparison)} to take the context into
+	 *             consideration. If no comparison context is available, use an empty context.
 	 */
+	@Deprecated
 	public RankedAdapterFactoryDescriptor.Registry createFilteredAdapterFactoryRegistry() {
+		return createFilteredAdapterFactoryRegistry(Maps.newLinkedHashMap());
+	}
+
+	/**
+	 * Returns a new instance of EMF Compare adapter factory descriptor registry to which extension will be
+	 * registered. It filters available adapter factories using preferences.
+	 * 
+	 * @param context
+	 *            context for the adapter factories. This context cannot be null but may be empty.
+	 * @return the adapter factory descriptor registry to which extension will be registered
+	 * @since 2.5
+	 */
+	public RankedAdapterFactoryDescriptor.Registry createFilteredAdapterFactoryRegistry(
+			Map<Object, Object> context) {
 		final List<String> disabledAdapterFactories = EMFComparePreferences
 				.getDisabledAdapterFacotryDescriptorIds(getEMFComparePreferences());
 		// Filters disabled adapter factories
 		Multimap<Collection<?>, RankedAdapterFactoryDescriptor> filteredBackingMultimap = ImmutableMultimap
 				.copyOf(Multimaps.filterValues(adapterFactoryRegistryBackingMultimap,
 						new Predicate<RankedAdapterFactoryDescriptor>() {
-
 							public boolean apply(RankedAdapterFactoryDescriptor input) {
 								return !disabledAdapterFactories.contains(input.getId());
 							}
 						}));
+
 		return new RankedAdapterFactoryDescriptorRegistryImpl(
-				ComposedAdapterFactory.Descriptor.Registry.INSTANCE, filteredBackingMultimap);
+				ComposedAdapterFactory.Descriptor.Registry.INSTANCE, filteredBackingMultimap, context);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.extension;
 
@@ -18,6 +19,7 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IRegistryEventListener;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.compare.rcp.internal.EMFCompareRCPMessages;
 
 /**
  * Abstract utility class to listen to the {@link IExtensionRegistry}. It provides base implementation to
@@ -185,7 +187,8 @@ public abstract class AbstractRegistryEventListener implements IRegistryEventLis
 	 *            the name of the missing attribute.
 	 */
 	protected void logMissingAttribute(IConfigurationElement element, String attributeName) {
-		log(IStatus.ERROR, element, "The required attribute '" + attributeName + "' not defined"); //$NON-NLS-1$ //$NON-NLS-2$
+		log(IStatus.ERROR, element, EMFCompareRCPMessages.getString("missing.extension.attribute", //$NON-NLS-1$
+				attributeName));
 	}
 
 	/**

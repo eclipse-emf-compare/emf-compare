@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,13 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.internal.adapterfactory;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.adapterfactory.context.IContextTester;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor;
 import org.eclipse.emf.compare.rcp.extension.PluginClassDescriptor;
 
@@ -34,6 +36,9 @@ public class RankedAdapterFactoryDescriptorImpl extends PluginClassDescriptor<Ad
 	/** Ranking of this adapter factory. */
 	private final int ranking;
 
+	/** ContextTester of this adapter factory. */
+	private final IContextTester contextTester;
+
 	/** Holds the id of this descriptor. */
 	private final String id;
 
@@ -46,8 +51,24 @@ public class RankedAdapterFactoryDescriptorImpl extends PluginClassDescriptor<Ad
 	 *            The ranking of the adapter factory.
 	 */
 	public RankedAdapterFactoryDescriptorImpl(IConfigurationElement element, int ranking) {
+		this(element, ranking, null);
+	}
+
+	/**
+	 * Creates a descriptor corresponding to the information of the given <em>element</em>.
+	 * 
+	 * @param element
+	 *            Configuration element from which to create this descriptor.
+	 * @param ranking
+	 *            The ranking of the adapter factory.
+	 * @param contextTester
+	 *            The context tester of the adapter factory.
+	 */
+	public RankedAdapterFactoryDescriptorImpl(IConfigurationElement element, int ranking,
+			IContextTester contextTester) {
 		super(element, AdapterFactoryDescriptorRegistryListener.ATT_CLASS);
 		this.ranking = ranking;
+		this.contextTester = contextTester;
 		this.id = element.getAttribute(AdapterFactoryDescriptorRegistryListener.ATT_CLASS);
 	}
 
@@ -67,6 +88,15 @@ public class RankedAdapterFactoryDescriptorImpl extends PluginClassDescriptor<Ad
 	 */
 	public int getRanking() {
 		return ranking;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor#getContextTester()
+	 */
+	public IContextTester getContextTester() {
+		return contextTester;
 	}
 
 	/**

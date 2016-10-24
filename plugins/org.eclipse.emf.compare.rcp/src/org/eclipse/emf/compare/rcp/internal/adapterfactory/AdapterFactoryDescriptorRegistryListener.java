@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.internal.adapterfactory;
 
@@ -18,11 +19,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.compare.adapterfactory.context.IContextTester;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
+import org.eclipse.emf.compare.rcp.internal.EMFCompareRCPMessages;
 
 /**
  * This listener will allow us to be aware of contribution changes against the emf compare adapter factory
@@ -46,6 +50,9 @@ public class AdapterFactoryDescriptorRegistryListener extends AbstractRegistryEv
 
 	/** ATT_RANKING. */
 	static final String ATT_RANKING = "ranking"; //$NON-NLS-1$
+
+	/** ATT_CONTEXT. */
+	static final String ATT_CONTEXT = "context"; //$NON-NLS-1$
 
 	/** The adapter factory descriptor registry against which extension will be registered. */
 	private final Multimap<Collection<?>, RankedAdapterFactoryDescriptor> adapterFactoryRegistry;
@@ -91,7 +98,9 @@ public class AdapterFactoryDescriptorRegistryListener extends AbstractRegistryEv
 				try {
 					Integer.parseInt(ordinalStr);
 				} catch (NumberFormatException nfe) {
-					log(IStatus.ERROR, element, "Attribute ranking is malformed, should be an integer."); //$NON-NLS-1$
+					log(IStatus.ERROR, element,
+							EMFCompareRCPMessages.getString("malformed.extension.attribute", //$NON-NLS-1$
+									ATT_RANKING));
 					return false;
 				}
 				valid = true;
@@ -121,7 +130,18 @@ public class AdapterFactoryDescriptorRegistryListener extends AbstractRegistryEv
 	@Override
 	protected boolean addedValid(IConfigurationElement element) {
 		int ranking = Integer.parseInt(element.getAttribute(ATT_RANKING));
-		RankedAdapterFactoryDescriptor descriptor = new RankedAdapterFactoryDescriptorImpl(element, ranking);
+		IContextTester contextTester = null;
+		if (element.getAttribute(ATT_CONTEXT) != null) {
+			try {
+				contextTester = (IContextTester)element.createExecutableExtension(ATT_CONTEXT);
+			} catch (CoreException e) {
+				log(IStatus.WARNING, element,
+						EMFCompareRCPMessages.getString("malformed.extension.executable", //$NON-NLS-1$
+								ATT_CONTEXT, element.getAttribute(ATT_CONTEXT)));
+			}
+		}
+		RankedAdapterFactoryDescriptor descriptor = new RankedAdapterFactoryDescriptorImpl(element, ranking,
+				contextTester);
 		String supportedTypes = element.getAttribute(ATT_SUPPORTED_TYPES);
 
 		for (StringTokenizer stringTokenizer = new StringTokenizer(supportedTypes); stringTokenizer

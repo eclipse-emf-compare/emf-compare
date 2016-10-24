@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 462237
+ *     Martin Fleck - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
@@ -264,6 +265,19 @@ public class MergeAction extends BaseSelectionListenerAction {
 		this.editingDomain = editingDomain;
 		clearCache();
 		setEnabled(editingDomain != null && updateSelection(getStructuredSelection()));
+	}
+
+	/**
+	 * Set the adapter factory used by this action.
+	 * 
+	 * @param adapterFactory
+	 *            adapter factory
+	 */
+	public final void setAdapterFactory(AdapterFactory adapterFactory) {
+		this.adapterFactory = adapterFactory;
+		if (adapterFactory != null) {
+			contextualizeTooltip();
+		}
 	}
 
 	/**

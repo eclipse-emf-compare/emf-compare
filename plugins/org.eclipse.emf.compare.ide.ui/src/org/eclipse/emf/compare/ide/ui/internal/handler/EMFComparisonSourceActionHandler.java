@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.ide.ui.internal.handler;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -71,8 +72,8 @@ public class EMFComparisonSourceActionHandler extends AbstractHandler {
 
 		final IEMFComparisonSource[] sources = adaptSelection(selection.toList());
 
-		final AdapterFactory adapterFactory = new ComposedAdapterFactory(
-				EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry());
+		final AdapterFactory adapterFactory = new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault()
+				.createFilteredAdapterFactoryRegistry(Maps.newLinkedHashMap()));
 
 		final IEMFComparisonSource leftSource;
 		final IEMFComparisonSource rightSource;

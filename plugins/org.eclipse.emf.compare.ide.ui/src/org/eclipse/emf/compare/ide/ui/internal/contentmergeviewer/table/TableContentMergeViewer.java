@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 
@@ -16,10 +17,13 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.adapterfactory.context.IContextTester;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
@@ -77,8 +81,12 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	protected TableContentMergeViewer(Composite parent, EMFCompareConfiguration config) {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
+
+		Map<Object, Object> context = Maps.newLinkedHashMap();
+		context.put(IContextTester.CTX_COMPARISON, config.getComparison());
+
 		fAdapterFactory = new ComposedAdapterFactory(
-				EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry());
+				EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry(context));
 		fAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 
