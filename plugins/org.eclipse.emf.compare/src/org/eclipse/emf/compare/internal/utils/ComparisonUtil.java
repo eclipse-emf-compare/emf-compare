@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,13 +11,18 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
 
-import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
+import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.addAll;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
+import static org.eclipse.emf.compare.ConflictKind.REAL;
+import static org.eclipse.emf.compare.DifferenceKind.ADD;
+import static org.eclipse.emf.compare.DifferenceKind.CHANGE;
+import static org.eclipse.emf.compare.DifferenceKind.DELETE;
+import static org.eclipse.emf.compare.DifferenceKind.MOVE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
@@ -36,9 +41,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
-import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.FeatureMapChange;
@@ -65,8 +68,9 @@ public final class ComparisonUtil {
 	/**
 	 * Predicate to know if the given diff respects the requirements of a cascading diff.
 	 */
-	private static final Predicate<Diff> CASCADING_DIFF = and(not(hasConflict(ConflictKind.REAL)),
-			not(instanceOf(ResourceAttachmentChange.class)));
+	@SuppressWarnings("unchecked")
+	private static final Predicate<Diff> CASCADING_DIFF = not(
+			or(hasConflict(REAL), instanceOf(ResourceAttachmentChange.class), ofKind(MOVE)));
 
 	/** Hides default constructor. */
 	private ComparisonUtil() {
@@ -130,9 +134,9 @@ public final class ComparisonUtil {
 	 */
 	public static boolean isAddOrSetDiff(Diff difference) {
 		boolean result = false;
-		if (difference.getKind() == DifferenceKind.ADD) {
+		if (difference.getKind() == ADD) {
 			result = true;
-		} else if (difference.getKind() == DifferenceKind.CHANGE) {
+		} else if (difference.getKind() == CHANGE) {
 			final EStructuralFeature feature;
 			if (difference instanceof ReferenceChange) {
 				feature = ((ReferenceChange)difference).getReference();
@@ -190,9 +194,9 @@ public final class ComparisonUtil {
 	 */
 	public static boolean isDeleteOrUnsetDiff(Diff difference) {
 		boolean result = false;
-		if (difference.getKind() == DifferenceKind.DELETE) {
+		if (difference.getKind() == DELETE) {
 			result = true;
-		} else if (difference.getKind() == DifferenceKind.CHANGE) {
+		} else if (difference.getKind() == CHANGE) {
 			final EStructuralFeature feature;
 			if (difference instanceof ReferenceChange) {
 				feature = ((ReferenceChange)difference).getReference();
@@ -368,7 +372,7 @@ public final class ComparisonUtil {
 					if (((ReferenceChange)diff).getReference().isContainment()) {
 						final Iterable<Diff> subDiffs;
 						// if the diff is a Move diff, we don't want its children.
-						if (ofKind(DifferenceKind.MOVE).apply(diff)) {
+						if (ofKind(MOVE).apply(diff)) {
 							subDiffs = ImmutableList.of();
 						} else if (matchOfValue != null && !firstLevelOnly) {
 							subDiffs = filter(matchOfValue.getAllDifferences(), CASCADING_DIFF);
