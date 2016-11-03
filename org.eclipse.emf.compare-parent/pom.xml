@@ -345,12 +345,73 @@
   </build>
   <profiles>
     <!--
-      EMF Compare can be built against Neon, Mars, Luna, Kepler, Juno, Indigo, Helios and Galileo.
+      EMF Compare can be built against Oxygen, Neon, Mars, Luna, Kepler, Juno, Indigo, Helios and Galileo.
       However, some parts of EMF Compare are dependent on recent platforms.
       Namely, the UML and diagram comparison supports are only available for platforms Juno and higher.
       Please set the "platform" variable to either one of the supported platform to activate the proper set of profiles.
     -->
     <!-- Target platforms are located in org.eclipse.emf.compare-parent/targetPlatforms. -->
+    <profile>
+      <id>oxygen</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <configuration>
+              <target>
+                <artifact>
+                  <groupId>org.eclipse.emf.compare</groupId>
+                  <artifactId>emf.compare-parent</artifactId>
+                  <version>${parent-version}</version>
+                  <classifier>targetPlatforms/oxygen-sdk</classifier>
+                </artifact>
+              </target>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+      <modules>
+        <module>../packaging/org.eclipse.emf.compare.update</module>
+        <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git</module>
+        <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git.framework</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests.git</module>
+        <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.rcp</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.tests</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.rcp.ui.tests</module>
+        <module>../packaging/org.eclipse.emf.compare.diagram.gmf-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
+        <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.papyrus</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.edit.papyrus</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.papyrus</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.ide</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.ide.tests</module>
+        <module>../plugins/org.eclipse.emf.compare.uml2.ide.ui.tests</module>
+
+        <module>../plugins/org.eclipse.emf.compare.egit</module>
+        <module>../plugins/org.eclipse.emf.compare.egit.ui</module>
+        <module>../packaging/org.eclipse.emf.compare.egit-feature</module>
+        <module>../plugins/org.eclipse.emf.compare.subversive</module>
+        <module>../packaging/org.eclipse.emf.compare.subversive-feature</module>
+        
+        <module>../plugins/org.eclipse.emf.compare.diagram.sirius</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.sirius</module>
+        <module>../packaging/org.eclipse.emf.compare.diagram.sirius-feature</module>
+        
+      </modules>
+    </profile>
     <profile>
       <id>neon</id>
       <activation>
