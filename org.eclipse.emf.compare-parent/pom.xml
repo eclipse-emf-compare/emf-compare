@@ -409,13 +409,12 @@
         <module>../plugins/org.eclipse.emf.compare.diagram.sirius</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.sirius</module>
         <module>../packaging/org.eclipse.emf.compare.diagram.sirius-feature</module>
-        
       </modules>
     </profile>
     <profile>
       <id>neon</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <activeByDefault>false</activeByDefault>
       </activation>
       <build>
         <plugins>
@@ -436,7 +435,6 @@
         </plugins>
       </build>
       <modules>
-        <module>../packaging/org.eclipse.emf.compare.update</module>
         <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git</module>
         <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git.framework</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests.git</module>
@@ -470,7 +468,6 @@
         <module>../plugins/org.eclipse.emf.compare.diagram.sirius</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.sirius</module>
         <module>../packaging/org.eclipse.emf.compare.diagram.sirius-feature</module>
-        
       </modules>
     </profile>
     <profile>
@@ -497,7 +494,6 @@
         </plugins>
       </build>
       <modules>
-        <module>../packaging/org.eclipse.emf.compare.update</module>
         <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git</module>
         <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git.framework</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests.git</module>
@@ -531,7 +527,6 @@
         <module>../plugins/org.eclipse.emf.compare.diagram.sirius</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.sirius</module>
         <module>../packaging/org.eclipse.emf.compare.diagram.sirius-feature</module>
-        
       </modules>
     </profile>
     <profile>
