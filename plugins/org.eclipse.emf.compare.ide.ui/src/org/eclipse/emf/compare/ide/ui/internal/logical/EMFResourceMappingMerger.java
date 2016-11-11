@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Philip Langer - bugs 461713, 465331, 470268, 476363, 476417, 486940, refactorings
  *     Alexandra Buzila - bugs 470332, 478620
+ *     Stefan Dirix - bug 507050
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -260,11 +261,17 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 				BasicMonitor.toMonitor(SubMonitor.convert(subMonitor.newChild(1), 10))); // 50%
 
 		if (hasRealConflict(comparison)) {
-			final Set<URI> conflictingURIs = performPreMerge(comparison, subMonitor.newChild(3)); // 80%
-			save(scope.getLeft(), syncModel.getLeftTraversal(), syncModel.getRightTraversal(),
-					syncModel.getOriginTraversal());
 			failingMappings.add(mapping);
-			markResourcesAsMerged(mergeContext, resources, conflictingURIs, subMonitor.newChild(2)); // 100%
+
+			final IPreferenceStore store = EMFCompareIDEUIPlugin.getDefault().getPreferenceStore();
+			boolean preMerge = store.getBoolean(EMFCompareUIPreferences.PRE_MERGE_MODELS_WHEN_CONFLICT);
+
+			if (preMerge) {
+				final Set<URI> conflictingURIs = performPreMerge(comparison, subMonitor.newChild(3)); // 80%
+				save(scope.getLeft(), syncModel.getLeftTraversal(), syncModel.getRightTraversal(),
+						syncModel.getOriginTraversal());
+				markResourcesAsMerged(mergeContext, resources, conflictingURIs, subMonitor.newChild(2));
+			}
 		} else {
 			final ResourceAdditionAndDeletionTracker resourceTracker = new ResourceAdditionAndDeletionTracker();
 			try {
@@ -314,30 +321,22 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 * @return the set of the uri for resources on which conflicts were not auto-mergeable.
 	 */
 	private Set<URI> performPreMerge(Comparison comparison, SubMonitor subMonitor) {
-		final IPreferenceStore store = EMFCompareIDEUIPlugin.getDefault().getPreferenceStore();
-		boolean preMerge = store.getBoolean(EMFCompareUIPreferences.PRE_MERGE_MODELS_WHEN_CONFLICT);
-		return performPreMerge(comparison, preMerge, subMonitor);
-	}
-
-	private Set<URI> performPreMerge(Comparison comparison, boolean preMerge, SubMonitor subMonitor) {
 		final Monitor emfMonitor = BasicMonitor.toMonitor(subMonitor);
 		final Set<URI> conflictingURIs = new LinkedHashSet<URI>();
 		for (Diff next : comparison.getDifferences()) {
-			doMergeForDiff(preMerge, emfMonitor, conflictingURIs, next);
+			doMergeForDiff(emfMonitor, conflictingURIs, next);
 		}
 		return conflictingURIs;
 	}
 
-	protected void doMergeForDiff(boolean preMerge, Monitor emfMonitor, Set<URI> conflictingURIs, Diff diff) {
+	protected void doMergeForDiff(Monitor emfMonitor, Set<URI> conflictingURIs, Diff diff) {
 		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(true, MERGER_REGISTRY)
 				.failOnRealConflictUnless(alwaysFalse());
 		try {
 			Set<Diff> diffsToMerge = computer.getAllDiffsToMerge(diff);
-			if (preMerge) {
-				for (Diff toMerge : diffsToMerge) {
-					final IMerger merger = MERGER_REGISTRY.getHighestRankingMerger(toMerge);
-					merger.copyRightToLeft(toMerge, emfMonitor);
-				}
+			for (Diff toMerge : diffsToMerge) {
+				final IMerger merger = MERGER_REGISTRY.getHighestRankingMerger(toMerge);
+				merger.copyRightToLeft(toMerge, emfMonitor);
 			}
 		} catch (MergeBlockedByConflictException e) {
 			conflictingURIs.addAll(collectConflictingResources(e.getConflictingDiffs().iterator()));
