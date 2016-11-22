@@ -1,5 +1,5 @@
 target "Performance testing related dependencies"
 
-location "http://axelrichard.github.io/fr.obeo.performance/" {
+location "http://obeo.github.io/fr.obeo.performance/" {
 	fr.obeo.performance
 }
