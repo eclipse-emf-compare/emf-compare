@@ -23,6 +23,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,13 +42,15 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.internal.utils.URIStorage;
+import org.eclipse.emf.compare.merge.ResourceChangeAdapter;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * This class will be used to provide various utilities aimed at IResource manipulation.
@@ -414,7 +417,7 @@ public final class ResourceUtil {
 	 *            The options we are to pass on to {@link Resource#save(Map)}.
 	 */
 	public static void saveAllResources(ResourceSet resourceSet, Map<?, ?> options) {
-		EList<Resource> resources = resourceSet.getResources();
+		List<Resource> resources = Lists.newArrayList(resourceSet.getResources());
 		for (Resource resource : resources) {
 			saveResource(resource, options);
 		}
@@ -543,7 +546,7 @@ public final class ResourceUtil {
 	}
 
 	/**
-	 * This can be called to save the given resource. This will not try and save a resource that do not
+	 * This can be called to save the given resource. This will not try and save a resource that does not
 	 * support output.
 	 * 
 	 * @param resource
@@ -555,10 +558,45 @@ public final class ResourceUtil {
 	public static void saveResource(Resource resource, Map<?, ?> options) {
 		if (supportsOutput(resource)) {
 			try {
-				resource.save(options);
+				if (mustDelete(resource)) {
+					deleteResource(resource);
+				} else {
+					resource.save(options);
+				}
 			} catch (IOException e) {
 				logError(e);
 			}
+		}
+	}
+
+	/**
+	 * Check if the given resource must be deleted.
+	 * 
+	 * @param resource
+	 *            The resource to delete, must not be null.
+	 * @return true if the given resource must be deleted, false otherwise.
+	 * @since 3.4
+	 */
+	protected static boolean mustDelete(Resource resource) {
+		Adapter adapter = EcoreUtil.getAdapter(resource.eAdapters(), ResourceChangeAdapter.class);
+		if (adapter instanceof ResourceChangeAdapter) {
+			return ((ResourceChangeAdapter)adapter).mustDelete(resource);
+		}
+		return false;
+	}
+
+	/**
+	 * Delete the given resource.
+	 * 
+	 * @param resource
+	 *            The resource to delete, must not be null.
+	 * @since 3.4
+	 */
+	protected static void deleteResource(final Resource resource) {
+		try {
+			resource.delete(Collections.emptyMap());
+		} catch (IOException e) {
+			logError(e);
 		}
 	}
 

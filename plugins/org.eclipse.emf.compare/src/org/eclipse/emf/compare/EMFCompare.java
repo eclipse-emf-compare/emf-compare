@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,12 +38,16 @@ import org.eclipse.emf.compare.internal.spec.ComparisonSpec;
 import org.eclipse.emf.compare.internal.utils.SafeSubMonitor;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
+import org.eclipse.emf.compare.merge.ResourceChangeAdapter;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.req.DefaultReqEngine;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * This class serves as the main entry point of a comparison. When all that is wanted is a basic comparison of
@@ -218,6 +222,8 @@ public class EMFCompare {
 			comparison = matchEngineFactoryRegistry.getHighestRankingMatchEngineFactory(scope)
 					.getMatchEngine().match(scope, subMonitor);
 
+			installResourceChangeAdapter(comparison, scope);
+
 			monitor.worked(1);
 			List<IPostProcessor> postProcessors = postProcessorDescriptorRegistry.getPostProcessors(scope);
 
@@ -312,6 +318,39 @@ public class EMFCompare {
 		}
 
 		return comparison;
+	}
+
+	/**
+	 * Install a new {@link ResourceChangeAdapter} on the given comparison and on all the resources on the
+	 * left and right side of the scope, unless it's already been done. If a {@link ResourceChangeAdapter} is
+	 * already registered on the given comparison, nothing happens. Otherwise, a new
+	 * {@link ResourceChangeAdapter} is created and installed on the comparison and on all the
+	 * {@link ResourceSet}s and {@link Resource}s of the left and right sides of the scope if its left and
+	 * right notifiers are actually {@link ResourceSet}s.
+	 * 
+	 * @param comparison
+	 *            The comparison
+	 * @param scope
+	 *            The scope
+	 */
+	private void installResourceChangeAdapter(Comparison comparison, IComparisonScope scope) {
+		if (scope.getLeft() instanceof ResourceSet && scope.getRight() instanceof ResourceSet) {
+			Adapter existingAdapter = EcoreUtil.getExistingAdapter(comparison, ResourceChangeAdapter.class);
+			if (existingAdapter == null) {
+				ResourceChangeAdapter adapter = new ResourceChangeAdapter(comparison, scope);
+				comparison.eAdapters().add(adapter);
+				ResourceSet left = (ResourceSet)scope.getLeft();
+				left.eAdapters().add(adapter);
+				for (Resource r : left.getResources()) {
+					r.eAdapters().add(adapter);
+				}
+				ResourceSet right = (ResourceSet)scope.getRight();
+				right.eAdapters().add(adapter);
+				for (Resource r : right.getResources()) {
+					r.eAdapters().add(adapter);
+				}
+			}
+		}
 	}
 
 	/**

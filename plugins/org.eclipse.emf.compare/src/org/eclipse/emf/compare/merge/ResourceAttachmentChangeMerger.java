@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ package org.eclipse.emf.compare.merge;
 
 import static org.eclipse.emf.compare.merge.IMergeCriterion.NONE;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -166,7 +165,6 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 
 		// We have the container, reference and value. We need to know the insertion index.
 		final Resource initialResource = sourceValue.eResource();
-		final Resource oldResource = expectedValue.eResource();
 		final List<EObject> sourceList = initialResource.getContents();
 		final List<EObject> targetList = expectedResource.getContents();
 		final int insertionIndex = findInsertionIndex(comparison, sourceList, targetList, expectedValue);
@@ -177,8 +175,6 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 			((XMIResource)expectedResource).setID(expectedValue,
 					((XMIResource)initialResource).getID(sourceValue));
 		}
-
-		deleteFormerResourceIfNecessary(comparison, oldResource, rightToLeft);
 	}
 
 	/**
@@ -191,55 +187,47 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 	 *            The resource from where the EObject has been moved
 	 * @param rightToLeft
 	 *            The direction of the change
+	 * @deprecated Use
+	 *             {@link ResourceAttachmentChangeMerger#deleteFormerResourceIfNecessary(ResourceAttachmentChange, Resource, boolean)}
+	 *             instead.
 	 */
+	@Deprecated
 	protected void deleteFormerResourceIfNecessary(final Comparison comparison, final Resource oldResource,
 			boolean rightToLeft) {
-		if (oldResource == null) {
-			return;
-		}
-		// If after a move of a {@link ResourceAttachmentChange} the initial resource is empty, we have to
-		// delete this resource ONLY IF it does not exist on the target side
-		MatchResource matchResource = getMatchResource(comparison, oldResource);
-		if (!resourceExistsInSource(matchResource, rightToLeft)) {
-			deleteResource(oldResource);
-		}
+		// Do nothing
 	}
 
 	/**
-	 * Delete the given resource.
+	 * Indicate whether the given resource must be marked for deletion or not. Can be overridden in
+	 * sub-classes if necessary.
 	 * 
 	 * @param resource
-	 *            The resource to delete, must not be null.
+	 *            The resource candidate for deletion
+	 * @param diff
+	 *            The ResourceAttachmentChange that's just been merged
+	 * @param rightToLeft
+	 *            The direction of the merge
+	 * @return <code>true</code> if the given resource must be deleted.
+	 * @deprecated Don't use this method.
 	 */
-	protected void deleteResource(final Resource resource) {
-		try {
-			resource.delete(Collections.emptyMap());
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("Deleted resource " + resource.getURI()); //$NON-NLS-1$
-			}
-		} catch (IOException e) {
-			// FIXME log exception.
-		}
+	@Deprecated
+	protected boolean mustDelete(Resource resource, ResourceAttachmentChange diff, boolean rightToLeft) {
+		return false;
 	}
 
 	/**
-	 * Indicates whether a non-null resource exists in the source side for the given MatchResource.
+	 * This method doesn't do anything now. The deletion of resources that need to be deleted is performed
+	 * elsewhere.
 	 * 
-	 * @param matchResource
-	 *            The matchResource
-	 * @param rightToLeft
-	 *            The direction of the merge
-	 * @return true if the given MatchResource has a non-null resource for the side indicated by rightToLeft
-	 *         (i.e. on the left if true, on the right if false).
+	 * @param resource
+	 *            The resource to delete
+	 * @deprecated Not used anymore, it's not the responsibility of the ResourceAttachmentChangeMerger to
+	 *             delete resources. This is now achieved by installing a {@link ResourceChangeAdapter} on
+	 *             comparisons.
 	 */
-	protected boolean resourceExistsInSource(MatchResource matchResource, boolean rightToLeft) {
-		boolean existsInTarget;
-		if (rightToLeft) {
-			existsInTarget = matchResource.getRight() != null;
-		} else {
-			existsInTarget = matchResource.getLeft() != null;
-		}
-		return existsInTarget;
+	@Deprecated
+	protected void deleteResource(final Resource resource) {
+		// Don't do anything
 	}
 
 	/**
@@ -362,7 +350,6 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 			// FIXME this will most likely fail with remote URIs : we'll need to make it local afterwards
 			if (targetURI == null) {
 				// We treat null as "no valid target". We'll cancel the merge operation.
-				// FIXME we need to rollback the current merge operation.
 				throw new RuntimeException("Couldn't create a valid target resource for " //$NON-NLS-1$
 						+ sourceRes.getURI());
 			}
@@ -385,13 +372,20 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 						.getString("ResourceAttachmentChangeSpec.MissingRS", targetURI.lastSegment())); //$NON-NLS-1$
 			}
 
-			// This resource might already exists... in which case we cannot use it
+			// This resource might already exists (on disk)... in which case we cannot use it
 			if (targetSet.getURIConverter().exists(targetURI, Collections.emptyMap())) {
-				// FIXME we need to rollback the current merge operation.
 				throw new RuntimeException("The resource '" + sourceRes.getURI() //$NON-NLS-1$
 						+ "' already exists at that location."); //$NON-NLS-1$
 			} else {
-				target = targetSet.createResource(targetURI);
+				// The resource might already exist because a IResourceChangeParticipant has created it or in
+				// some undo/redo cases
+				// If that is the case, just reuse the existing resource
+				Resource existing = targetSet.getResource(targetURI, false);
+				if (existing == null) {
+					target = targetSet.createResource(targetURI);
+				} else {
+					target = existing;
+				}
 				if (LOGGER.isInfoEnabled()) {
 					LOGGER.info("Created resource " + targetURI); //$NON-NLS-1$
 				}
@@ -545,9 +539,6 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 			// We only wish to remove the element from its containing resource, not from its container.
 			// This will not affect the match.
 			resource.getContents().remove(expectedValue);
-
-			// We maybe need to delete the former resource
-			deleteFormerResourceIfNecessary(diff.getMatch().getComparison(), resource, rightToLeft);
 		}
 	}
 
