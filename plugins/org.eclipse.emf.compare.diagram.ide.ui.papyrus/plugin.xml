@@ -81,6 +81,19 @@
               papyrus-NODE_TYPE__EMF_RESOURCESET,
               papyrus-NODE_TYPE__EMF_COMPARISON">
       </viewer>
+      <viewer
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.TextFallbackCompareViewerCreator"
+            extensions=
+            "papyrus-org.eclipse.emf.compare.rcp.ui.eTreeDiff,
+              papyrus-org.eclipse.emf.compare.rcp.ui.eMatch,
+              papyrus-org.eclipse.emf.compare.rcp.ui.eResourceDiff,
+              papyrus-NODE_TYPE__EMF_EOBJECT,
+              papyrus-NODE_TYPE__EMF_RESOURCE,
+              papyrus-NODE_TYPE__EMF_RESOURCESET,
+              papyrus-NODE_TYPE__EMF_COMPARISON"
+            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.TextFallbackCompareViewer"
+            label="%emf.compare.fallback.textcompare">
+      </viewer>
    </extension>
    <extension
          point="org.eclipse.emf.compare.rcp.ui.accessorFactory">
