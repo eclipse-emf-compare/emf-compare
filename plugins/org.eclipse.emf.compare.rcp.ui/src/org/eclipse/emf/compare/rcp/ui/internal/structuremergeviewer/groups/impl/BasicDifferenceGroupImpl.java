@@ -477,9 +477,11 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 	 *            The diff to add
 	 */
 	protected void addDiffNode(MatchNode matchNode, Diff diff) {
-		DiffNode diffNode = createDiffNode(diff);
-		handleRefiningDiffs(diffNode);
-		matchNode.addDiffNode(diffNode);
+		if (!(diff instanceof ResourceAttachmentChange)) {
+			DiffNode diffNode = createDiffNode(diff);
+			handleRefiningDiffs(diffNode);
+			matchNode.addDiffNode(diffNode);
+		}
 	}
 
 	/**

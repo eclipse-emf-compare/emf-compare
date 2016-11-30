@@ -128,7 +128,9 @@ public class ByResourceGroupProvider extends AbstractDifferenceGroupProvider {
 						|| isUnderResourceWithURI(match.getOrigin(), matchResource.getOriginURI())) {
 					MatchNode matchNode = createMatchNode(match);
 					populateMatchNode(matchNode);
-					matchResourceNode.addMatchNode(matchNode);
+					if (!matchNode.getChildren().isEmpty()) {
+						matchResourceNode.addMatchNode(matchNode);
+					}
 				}
 			}
 

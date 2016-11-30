@@ -31,6 +31,9 @@ import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.edit.data.ResourceScopeProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.junit.Before;
@@ -62,8 +65,37 @@ public class AbstractTestTreeNodeItemProviderAdapter {
 	 * @throws IOException
 	 */
 	public static Comparison getComparison(ResourceScopeProvider scopeProvider) throws IOException {
-		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(),
-				scopeProvider.getRight(), scopeProvider.getOrigin());
+		Resource left = scopeProvider.getLeft();
+		ResourceSet leftResourceSet = null;
+		if (left != null) {
+			leftResourceSet = left.getResourceSet();
+			if (leftResourceSet != null) {
+				EcoreUtil.resolveAll(leftResourceSet);
+			}
+		}
+		Resource right = scopeProvider.getRight();
+		ResourceSet rightResourceSet = null;
+		if (right != null) {
+			rightResourceSet = right.getResourceSet();
+			if (rightResourceSet != null) {
+				EcoreUtil.resolveAll(rightResourceSet);
+			}
+		}
+		Resource origin = scopeProvider.getOrigin();
+		ResourceSet originResourceSet = null;
+		if (origin != null) {
+			originResourceSet = origin.getResourceSet();
+			if (originResourceSet != null) {
+				EcoreUtil.resolveAll(originResourceSet);
+			}
+		}
+
+		final IComparisonScope scope;
+		if (leftResourceSet != null && rightResourceSet != null) {
+			scope = new DefaultComparisonScope(leftResourceSet, rightResourceSet, originResourceSet);
+		} else {
+			scope = new DefaultComparisonScope(left, right, origin);
+		}
 		final Builder builder = EMFCompare.builder();
 		EMFCompareBuilderConfigurator.createDefault().configure(builder);
 		return builder.build().compare(scope);

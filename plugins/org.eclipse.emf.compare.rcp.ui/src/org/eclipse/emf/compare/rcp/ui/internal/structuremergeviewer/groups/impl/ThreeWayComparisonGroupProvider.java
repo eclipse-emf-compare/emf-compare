@@ -65,6 +65,8 @@ import org.eclipse.emf.compare.provider.utils.IStyledString.Style;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.SideLabelProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.ConflictNode;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.DiffNode;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes.MatchNode;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.AbstractDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -276,6 +278,21 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 			}
 			ret.append(getName());
 			return ret;
+		}
+
+		/**
+		 * In the conflicts group, we want to be able to see the ResourceAttachmentChanges.
+		 * 
+		 * @param matchNode
+		 *            The given match node
+		 * @param diff
+		 *            The diff to add
+		 */
+		@Override
+		protected void addDiffNode(MatchNode matchNode, Diff diff) {
+			DiffNode diffNode = createDiffNode(diff);
+			handleRefiningDiffs(diffNode);
+			matchNode.addDiffNode(diffNode);
 		}
 	}
 
