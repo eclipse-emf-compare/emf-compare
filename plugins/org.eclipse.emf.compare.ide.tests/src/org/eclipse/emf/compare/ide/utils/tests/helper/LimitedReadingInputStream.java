@@ -8,7 +8,7 @@
  * Contributors:
  *     Michael Borkowski - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ide.utils.tests;
+package org.eclipse.emf.compare.ide.utils.tests.helper;
 
 import java.io.IOException;
 import java.io.InputStream;
