@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -98,7 +98,8 @@ import junit.textui.TestRunner;
 		MultiLineAttributeMergeTest.class, MonitorCancelTest.class, IdentifierEObjectMatcherTest.class,
 		MatchUtilFeatureContainsTest.class, RefineMergeTest.class, Bug484557ConflictTest.class,
 		Bug485266_MoveDeleteConflict_Test.class, ResourceAttachmentChangeBug492261.class,
-		ComparisonScopeAdapterTest.class, EMFComparePredicatesTest.class, RankedAdapterFactoryRegistryTest.class })
+		ComparisonScopeAdapterTest.class, EMFComparePredicatesTest.class,
+		RankedAdapterFactoryRegistryTest.class, ComparisonUtilTest.class, })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

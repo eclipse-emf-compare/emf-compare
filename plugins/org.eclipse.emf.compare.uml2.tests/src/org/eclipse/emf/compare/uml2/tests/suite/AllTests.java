@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,15 +7,11 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - addition of OpaqueTest
+ *     Philip Langer - addition of OpaqueTest, ImplicationsInstanceSpecificationClassifiersTest
  *     Stefan Dirix - addition of PseudoConflictTest
  *     Martin Fleck - addition of RemoveStereotypeApplicationPseudoConflictTest
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.suite;
-
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociation2Test;
 import org.eclipse.emf.compare.uml2.tests.association.AddAssociation3Test;
@@ -41,6 +37,7 @@ import org.eclipse.emf.compare.uml2.tests.implications.ImplicationsInterfaceReal
 import org.eclipse.emf.compare.uml2.tests.implications.ImplicationsTransitionTest;
 import org.eclipse.emf.compare.uml2.tests.include.AddIncludeTest;
 import org.eclipse.emf.compare.uml2.tests.merge.ExtensionMergeTest;
+import org.eclipse.emf.compare.uml2.tests.merge.InstanceSpecificationClassifiersMergeTest;
 import org.eclipse.emf.compare.uml2.tests.merge.MergeDiffInvolvingRefineDiffTest;
 import org.eclipse.emf.compare.uml2.tests.message.AddMessageTest;
 import org.eclipse.emf.compare.uml2.tests.multiplicitychanges.MultiplicityElementChangesTest;
@@ -59,6 +56,10 @@ import org.eclipse.emf.compare.uml2.tests.timeConstraint.AddTimeConstraintTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+
+import junit.framework.JUnit4TestAdapter;
+import junit.framework.Test;
+import junit.textui.TestRunner;
 
 /**
  * This test suite allows us to launch all tests for EMF Compare at once.
@@ -81,7 +82,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		OpaqueElementBodyChangeDiffTest.class, OpaqueElementBodyChangeMergeTest.class,
 		DanglingStereotypeApplicationTest.class, MergeDiffInvolvingRefineDiffTest.class,
 		TestNonRegPseudoConflict_484576.class, RemoveStereotypeApplicationPseudoConflictTest.class,
-		MultiplicityElementChangesTest.class })
+		MultiplicityElementChangesTest.class, InstanceSpecificationClassifiersMergeTest.class, })
 public class AllTests {
 
 	/**

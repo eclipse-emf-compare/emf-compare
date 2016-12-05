@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,11 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Martin Fleck - Consider profile definition changes on origin (bug 495259)
+ *     Philip Langer - bug 508665
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor;
 
+import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.delete;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isAddOrSetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
+import static org.eclipse.uml2.uml.UMLPackage.Literals.INSTANCE_SPECIFICATION__CLASSIFIER;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -51,6 +54,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.uml2.uml.Enumeration;
+import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.ProfileApplication;
 
 /**
@@ -301,9 +306,12 @@ public class UMLPostProcessor implements IPostProcessor {
 		}
 
 		// Filling implications with subsets
+		// And delete enumeration literal classifier changes, as it is actually a derived feature
 		for (Diff diff : comparison.getDifferences()) {
 			if (diff instanceof ReferenceChange) {
-				fillImplicationsWithUMLSubsets((ReferenceChange)diff);
+				final ReferenceChange referenceChange = (ReferenceChange)diff;
+				fillImplicationsWithUMLSubsets(referenceChange);
+				deleteEnumerationLiteralClassifierChanges(referenceChange);
 			}
 		}
 
@@ -384,5 +392,54 @@ public class UMLPostProcessor implements IPostProcessor {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Deletes the given <code>referenceChange</code>, if it is an {@link EnumerationLiteral#getClassifier()
+	 * enumeration literal classifier} change.
+	 * 
+	 * @param referenceChange
+	 *            The reference change to check and delete.
+	 */
+	private void deleteEnumerationLiteralClassifierChanges(ReferenceChange referenceChange) {
+		if (isEnumerationLiteralClassifierChange(referenceChange)) {
+			delete(referenceChange);
+		}
+	}
+
+	/**
+	 * Specifies whether the given <code>referenceChange</code> is a change of an
+	 * {@link EnumerationLiteral#getClassifier() enumeration literal classifier}, whereas the type of the
+	 * reference change's value must be Enumeration.
+	 * 
+	 * @param referenceChange
+	 *            The reference change to check.
+	 * @return <code>true</code> if it is a EnumerationLiteral classifier change, <code>false</code>
+	 *         otherwise.
+	 */
+	private boolean isEnumerationLiteralClassifierChange(ReferenceChange referenceChange) {
+		return INSTANCE_SPECIFICATION__CLASSIFIER.equals(referenceChange.getReference())
+				&& getAnyMatchedEObject(referenceChange) instanceof EnumerationLiteral
+				&& referenceChange.getValue() instanceof Enumeration;
+	}
+
+	/**
+	 * Returns the left-, right-, or origin object of the given <code>diff</code>'s match.
+	 * 
+	 * @param diff
+	 *            The diff to get the matched object for.
+	 * @return The matched object of any side.
+	 */
+	private EObject getAnyMatchedEObject(Diff diff) {
+		final Match match = diff.getMatch();
+		final EObject eObject;
+		if (match.getLeft() != null) {
+			eObject = match.getLeft();
+		} else if (match.getRight() != null) {
+			eObject = match.getRight();
+		} else {
+			eObject = match.getOrigin();
+		}
+		return eObject;
 	}
 }

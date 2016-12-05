@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - added #getExpectedSide
+ *     Philip Langer - added #delete(Diff)
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
 
@@ -55,6 +56,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.ExtendedMetaData;
 import org.eclipse.emf.ecore.util.FeatureMap;
 
@@ -623,5 +625,32 @@ public final class ComparisonUtil {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * {@link EcoreUtil#delete(EObject) Deletes} the given <code>diff</code>.
+	 * <p>
+	 * Conflicts and equivalences of the <code>diff</code> will also be removed if they get meaningless after
+	 * the <code>diff</code> has been deleted. A conflict is meaningless, if it has diffs only on one side
+	 * after the deletion. An equivalence is meaningless, if it has only one diff left.
+	 * </p>
+	 * 
+	 * @param diff
+	 *            The diff to delete.
+	 */
+	public static void delete(Diff diff) {
+		final Comparison comparison = diff.getMatch().getComparison();
+		final Conflict conflict = diff.getConflict();
+		final Equivalence equivalence = diff.getEquivalence();
+		EcoreUtil.delete(diff);
+		if (conflict != null
+				&& (conflict.getLeftDifferences().isEmpty() || conflict.getRightDifferences().isEmpty())) {
+			conflict.getDifferences().clear();
+			comparison.getConflicts().remove(conflict);
+		}
+		if (equivalence != null && equivalence.getDifferences().size() < 2) {
+			equivalence.getDifferences().clear();
+			comparison.getEquivalences().remove(equivalence);
+		}
 	}
 }
