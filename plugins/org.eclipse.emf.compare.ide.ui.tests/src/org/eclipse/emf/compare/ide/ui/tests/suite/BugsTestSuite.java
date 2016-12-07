@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2016 Obeo.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,9 +7,11 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Tobias Ortmayr - bug 506928
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.suite;
 
+import org.eclipse.emf.compare.ide.ui.tests.internal.editor.TestBug506928;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TestBug434822;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TestBug434827;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TestBug434828;
@@ -29,6 +31,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({TestBug434827.class, TestBug434822.class, TestBug434828.class, TestBug434828_2.class,
-		TestBug459131.class, TestBug470503.class, TestBug475586.class, TestBug497566.class })
+		TestBug459131.class, TestBug470503.class, TestBug475586.class, TestBug497566.class,
+		TestBug506928.class })
 public class BugsTestSuite {
 }

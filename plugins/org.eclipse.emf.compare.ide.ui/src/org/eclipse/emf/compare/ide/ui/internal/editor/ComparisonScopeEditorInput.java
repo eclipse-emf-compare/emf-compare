@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Tobias Ortmayr - bug 506928
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.editor;
 
@@ -50,8 +51,12 @@ public class ComparisonScopeEditorInput extends AbstractEMFCompareEditorInput {
 	@Override
 	protected Object doPrepareInput(IProgressMonitor monitor)
 			throws InvocationTargetException, InterruptedException {
-		getCompareConfiguration().setEMFComparator(comparator);
-		return new ComparisonScopeInput(scope, getAdapterFactory());
+		EMFCompareConfiguration configuration = getCompareConfiguration();
+		configuration.setEMFComparator(comparator);
+		ComparisonScopeInput input = new ComparisonScopeInput(scope, getAdapterFactory());
+		input.setLeftEditable(configuration.isLeftEditable());
+		input.setRightEditable(configuration.isRightEditable());
+		return input;
 	}
 
 	/**
