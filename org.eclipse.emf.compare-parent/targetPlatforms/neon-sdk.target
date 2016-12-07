@@ -39,16 +39,16 @@
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.acceleo.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.acceleo.query.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/acceleo/updates/nightly/latest"/>
+<repository location="http://download.eclipse.org/acceleo/updates/releases/3.6"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sirius" version="0.0.0"/>
 <unit id="org.eclipse.sirius.runtime.acceleo.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/sirius/updates/nightly/latest/neon"/>
+<repository location="http://download.eclipse.org/sirius/updates/nightly/4.1.x/neon"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.obeonetwork.dsl.uml2.runtime.feature.feature.group" version="0.0.0"/>
-<repository location="http://obeo-umldesigner-nightly.s3-website-eu-west-1.amazonaws.com/master/repository"/>
+<repository location="http://obeo-umldesigner-releases.s3-website-eu-west-1.amazonaws.com/7.1.0/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.papyrus.sysml.feature.feature.group" version="0.0.0"/>

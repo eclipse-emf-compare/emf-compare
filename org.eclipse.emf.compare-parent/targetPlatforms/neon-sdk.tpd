@@ -2,7 +2,6 @@ target "EMF Compare based on Neon SDK"
 
 include "fragments/licence.tpd"
 include "fragments/orbit.tpd"
-include "fragments/egit-nightly.tpd"
 include "fragments/perf.tpd"
 
 with source, requirements
@@ -16,19 +15,20 @@ location "http://download.eclipse.org/releases/neon" {
 	org.eclipse.emf.ecoretools.sdk.feature.group lazy
 	org.eclipse.papyrus.sdk.feature.feature.group lazy
 	org.eclipse.team.svn.feature.group lazy
+	org.eclipse.egit.feature.group lazy
 }
 
-location "http://download.eclipse.org/acceleo/updates/nightly/latest" {
+location "http://download.eclipse.org/acceleo/updates/releases/3.6" {
 	org.eclipse.acceleo.feature.group lazy
 	org.eclipse.acceleo.query.feature.group lazy
 }
 
-location "http://download.eclipse.org/sirius/updates/nightly/latest/neon" {
+location "http://download.eclipse.org/sirius/updates/nightly/4.1.x/neon" {
 	org.eclipse.sirius lazy
 	org.eclipse.sirius.runtime.acceleo.feature.group lazy
 }
 
-location "http://obeo-umldesigner-nightly.s3-website-eu-west-1.amazonaws.com/master/repository" {
+location "http://obeo-umldesigner-releases.s3-website-eu-west-1.amazonaws.com/7.1.0/repository" {
 	org.obeonetwork.dsl.uml2.runtime.feature.feature.group lazy
 }
 
