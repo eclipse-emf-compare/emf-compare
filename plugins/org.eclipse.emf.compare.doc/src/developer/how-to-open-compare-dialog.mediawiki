@@ -17,15 +17,15 @@ Both are available from the '''org.eclipse.emf.compare.ide.ui''' plug-in, in the
 
 == Preparing the configuration  ==
 
-When instantiating an EMF Compare specific implementation of CompareEditorInput, you have to give it at least three paramaters:
+When instantiating an EMF Compare specific implementation of CompareEditorInput, you have to give it at least three parameters:
 
-*a [http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fcompare%2FCompareConfiguration.html CompareConfiguration]. This is a standard CompareConfiguration (no specific implementation needed) so you just instantiated it like this:
+*An [http://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.emf.compare.doc%2Fhelp%2Fdeveloper%2Fjavadoc%2Forg%2Feclipse%2Femf%2Fcompare%2Fide%2Fui%2Finternal%2Fconfiguration%2FEMFCompareConfiguration.html EMFCompareConfiguration]. This is a refined configuration of the standard CompareConfiguration so you just instantiate it like this:
 
 <source lang="java">
-CompareConfiguration configuration = new CompareConfiguration();
+EMFCompareConfiguration configuration = new EMFCompareConfiguration(new CompareConfiguration());
 </source>
 
-*an EMFCompareEditingDomain. It is not an implementation of [http://download.eclipse.org/modeling/emf/emf/javadoc/2.5.0/org/eclipse/emf/edit/domain/EditingDomain.html EditingDomain] from EMF. It shares similar concepts (it has a command stack, it can create some commands) but is much simpler. You can create it through the factory method:
+*An EMFCompareEditingDomain. It is not an implementation of [http://download.eclipse.org/modeling/emf/emf/javadoc/2.5.0/org/eclipse/emf/edit/domain/EditingDomain.html EditingDomain] from EMF. It shares similar concepts (it has a command stack, it can create some commands) but is much simpler. You can create it through the factory method:
 
 <source lang="java">
 // ancestor may be null
@@ -76,9 +76,10 @@ public void compare(Notifier left, Notifier right, Notifier ancestor) {
     EMFCompare comparator = EMFCompare.builder().build();
     Comparison comparison = comparator.compare(EMFCompare.createDefaultScope(left, right, ancestor));
 
+    EMFCompareConfiguration configuration = new EMFCompareConfiguration(new CompareConfiguration());
     ICompareEditingDomain editingDomain = EMFCompareEditingDomain.create(left, right, ancestor);
     AdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-    CompareEditorInput input = new ComparisonEditorInput(new CompareConfiguration(), comparison, editingDomain, adapterFactory);
+    CompareEditorInput input = new ComparisonEditorInput(configuration, comparison, editingDomain, adapterFactory);
 
     CompareUI.openCompareDialog(input); // or CompareUI.openCompareEditor(input);
 }
@@ -91,10 +92,10 @@ public void compare(Notifier left, Notifier right, Notifier ancestor) {
     EMFCompare comparator = EMFCompare.builder().build();
     IComparisonScope scope = EMFCompare.createDefaultScope(left, right, ancestor));
 
+    EMFCompareConfiguration configuration = new EMFCompareConfiguration(new CompareConfiguration());
     ICompareEditingDomain editingDomain = EMFCompareEditingDomain.create(left, right, ancestor);
     AdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-    CompareEditorInput input = new ComparisonScopeEditorInput(new CompareConfiguration(), 
-        editingDomain, adapterFactory, comparator, scope);
+    CompareEditorInput input = new ComparisonScopeEditorInput(configuration, editingDomain, adapterFactory, comparator, scope);
 
     CompareUI.openCompareDialog(input); // or CompareUI.openCompareEditor(input);
 }
