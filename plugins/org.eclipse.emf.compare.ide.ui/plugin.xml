@@ -13,6 +13,7 @@
      Stefan Dirix - bugs 456699, 474723
      Michael Borkowski - bug 467191
      Simon Delisle - bug 495753
+     Philip Langer - bug 508855
 -->
 
 <plugin>
@@ -365,52 +366,64 @@
             class="org.eclipse.emf.compare.ide.ui.internal.logical.EMFModelProvider">
       </modelProvider>
       <enablement>
-         <and>
-            <adapt
-                  type="org.eclipse.core.resources.IFile">
-            </adapt>
-            <or>
+         <or>
+            <and>
+               <adapt
+                     type="org.eclipse.core.resources.IContainer">
+               </adapt>
                <test
-                     args="kindOf"
-                     property="org.eclipse.core.resources.contentTypeId"
-                     value="org.eclipse.emf.ecore">
+                     args="org.eclipse.emf.compare.ide.ui, org.eclipse.emf.compare.ide.ui.preference.enableModelResolutionFromContainers"
+                     property="org.eclipse.emf.compare.preferenceValueEquals"
+                     value="true">
                </test>
-               <test
-                     args="kindOf"
-                     property="org.eclipse.core.resources.contentTypeId"
-                     value="org.eclipse.emf.ecore.xmi">
-               </test>
-               <test
-                     args="kindOf"
-                     property="org.eclipse.core.resources.contentTypeId"
-                     value="org.eclipse.emf.compare.content.type">
-               </test>
-               <test
-                     property="org.eclipse.core.resources.extension"
-                     value="ecore">
-               </test>
-               <test
-                     property="org.eclipse.core.resources.extension"
-                     value="notation">
-               </test>
-               <test
-                     property="org.eclipse.core.resources.extension"
-                     value="uml">
-               </test>
-               <test
-                     property="org.eclipse.core.resources.extension"
-                     value="di">
-               </test>
-               <test
-                     property="org.eclipse.core.resources.extension"
-                     value="sash">
-               </test>
-               <test
-                     property="org.eclipse.core.resources.extension"
-                     value="xmi">
-               </test>
-            </or>
-         </and>
+            </and>
+            <and>
+               <adapt
+                     type="org.eclipse.core.resources.IFile">
+               </adapt>
+               <or>
+                  <test
+                        args="kindOf"
+                        property="org.eclipse.core.resources.contentTypeId"
+                        value="org.eclipse.emf.ecore">
+                  </test>
+                  <test
+                        args="kindOf"
+                        property="org.eclipse.core.resources.contentTypeId"
+                        value="org.eclipse.emf.ecore.xmi">
+                  </test>
+                  <test
+                        args="kindOf"
+                        property="org.eclipse.core.resources.contentTypeId"
+                        value="org.eclipse.emf.compare.content.type">
+                  </test>
+                  <test
+                        property="org.eclipse.core.resources.extension"
+                        value="ecore">
+                  </test>
+                  <test
+                        property="org.eclipse.core.resources.extension"
+                        value="notation">
+                  </test>
+                  <test
+                        property="org.eclipse.core.resources.extension"
+                        value="uml">
+                  </test>
+                  <test
+                        property="org.eclipse.core.resources.extension"
+                        value="di">
+                  </test>
+                  <test
+                        property="org.eclipse.core.resources.extension"
+                        value="sash">
+                  </test>
+                  <test
+                        property="org.eclipse.core.resources.extension"
+                        value="xmi">
+                  </test>
+               </or>
+            </and>
+         </or>
       </enablement>
       <extends-model
             id="org.eclipse.core.resources.modelProvider">

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2016 Obeo and others.
+ * Copyright (c) 2014, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Simon Delisle - bug 495753
+ *     Philip Langer - bug 508855
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.preferences;
 
@@ -52,6 +53,8 @@ public class ModelResolutionPreferencePage extends FieldEditorPreferencePage imp
 
 	private BooleanFieldEditor useThreads;
 
+	private BooleanFieldEditor enableModelResolutionFromContainers;
+
 	private ComboFieldEditor resolutionScope;
 
 	private Label resolutionScopeMainDescription;
@@ -80,6 +83,12 @@ public class ModelResolutionPreferencePage extends FieldEditorPreferencePage imp
 				EMFCompareIDEUIMessages.getString("ModelResolutionPreferencesPage.disableThreading"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(useThreads);
+		enableModelResolutionFromContainers = new BooleanFieldEditor(
+				EMFCompareUIPreferences.ENABLE_MODEL_RESOLUTION_FROM_CONTAINERS,
+				EMFCompareIDEUIMessages
+						.getString("ModelResolutionPreferencesPage.enableModelResolutionFromContainers"), //$NON-NLS-1$
+				getFieldEditorParent());
+		addField(enableModelResolutionFromContainers);
 
 		final Composite resolutionScopeComposite = new Composite(getFieldEditorParent(), SWT.BORDER);
 		resolutionScopeComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
@@ -133,6 +142,7 @@ public class ModelResolutionPreferencePage extends FieldEditorPreferencePage imp
 		resolutionScopeMainDescription.setEnabled(!disabled);
 		resolutionScope.setEnabled(!disabled, resolutionScopeComboComposite);
 		resolutionScopeDescriptionComposite.setEnabled(!disabled);
+		enableModelResolutionFromContainers.setEnabled(!disabled, getFieldEditorParent());
 	}
 
 	private void updateScopeDescription(String scopeValue) {

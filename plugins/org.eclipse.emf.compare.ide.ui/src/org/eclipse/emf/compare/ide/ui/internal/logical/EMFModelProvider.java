@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 466607
+ *     Philip Langer - bug 508855
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -32,8 +33,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.eclipse.compare.ITypedElement;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.mapping.ModelProvider;
 import org.eclipse.core.resources.mapping.RemoteResourceMappingContext;
@@ -117,7 +120,32 @@ public class EMFModelProvider extends ModelProvider {
 		if (LOGGER.isInfoEnabled()) {
 			LOGGER.info("getMappings() - START for " + resource); //$NON-NLS-1$
 		}
-		if (resource instanceof IFile) {
+
+		if (resource instanceof IContainer) {
+
+			final List<IResource> modelResources = new ArrayList<IResource>();
+			resource.accept(new IResourceVisitor() {
+				public boolean visit(IResource visitedResource) throws CoreException {
+					if (visitedResource instanceof IFile) {
+						final IFile visitedFile = (IFile)visitedResource;
+						if (ResourceUtil.hasModelType(visitedFile)) {
+							modelResources.add(visitedFile);
+						}
+						return false;
+					}
+					return true;
+				}
+			});
+			if (!modelResources.isEmpty()) {
+				if (LOGGER.isInfoEnabled()) {
+					LOGGER.info("getMappings() - " + resource + " is a container with models: " //$NON-NLS-1$ //$NON-NLS-2$
+							+ modelResources.toString());
+				}
+				return this.getMappings(modelResources.toArray(new IResource[] {}), context, monitor);
+			}
+
+		} else if (resource instanceof IFile) {
+
 			try {
 				final SynchronizationModel syncModel = getOrComputeLogicalModel((IFile)resource, context,
 						monitor);
@@ -135,6 +163,7 @@ public class EMFModelProvider extends ModelProvider {
 				Thread.currentThread().interrupt();
 				// fall back to super
 			}
+
 		}
 		if (LOGGER.isInfoEnabled()) {
 			LOGGER.info("getMappings() - fallback to super."); //$NON-NLS-1$

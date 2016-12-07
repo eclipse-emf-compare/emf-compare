@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2016 Obeo.
+ * Copyright (c) 2014, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 508855
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.preferences;
 
@@ -30,5 +31,6 @@ public class EMFCompareUIPreferencesInitializer extends AbstractPreferenceInitia
 		store.setDefault(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE,
 				CrossReferenceResolutionScope.CONTAINER.name());
 		store.setDefault(EMFCompareUIPreferences.PRE_MERGE_MODELS_WHEN_CONFLICT, false);
+		store.setDefault(EMFCompareUIPreferences.ENABLE_MODEL_RESOLUTION_FROM_CONTAINERS, false);
 	}
 }

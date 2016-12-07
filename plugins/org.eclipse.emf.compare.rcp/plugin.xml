@@ -153,5 +153,15 @@
             ranking="101">
       </provider>
    </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.eclipse.emf.compare.rcp.internal.preferences.PreferencesPropertyTester"
+            id="org.eclipse.emf.compare.rcp.preferencesTester"
+            namespace="org.eclipse.emf.compare"
+            properties="preferenceValueEquals"
+            type="java.lang.Object">
+      </propertyTester>
+   </extension>
    
 </plugin>
