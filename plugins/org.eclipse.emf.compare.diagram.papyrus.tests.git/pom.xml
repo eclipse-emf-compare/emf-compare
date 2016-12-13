@@ -23,6 +23,7 @@
             <include>org/eclipse/emf/compare/diagram/papyrus/tests/suite/PapyrusGitTests.class</include>
           </includes>
           <useUIHarness>true</useUIHarness>
+          <argLine>-Xmx2048m</argLine>
 		</configuration>
 	  </plugin>
     </plugins>
