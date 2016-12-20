@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 473985
+ *     Conor O'Mahony - bug 507465
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -85,11 +86,21 @@ public class CompareToolBar implements ISelectionChangedListener {
 		mergeActions = newArrayListWithCapacity(2);
 		mergeAllNonConflictingActions = newArrayListWithCapacity(2);
 
-		groupActionMenu = new GroupActionMenu(checkNotNull(viewerGrouper),
-				EMFCompareRCPUIPlugin.getDefault().getDifferenceGroupProviderRegistry());
+		// check configuration if group provider action menu is to be displayed
+		if (compareConfiguration.getBooleanProperty(EMFCompareConfiguration.DISPLAY_GROUP_PROVIDERS, true)) {
+			groupActionMenu = new GroupActionMenu(checkNotNull(viewerGrouper),
+					EMFCompareRCPUIPlugin.getDefault().getDifferenceGroupProviderRegistry());
+		} else {
+			groupActionMenu = null;
+		}
 
-		filterActionMenu = new FilterActionMenu(checkNotNull(viewerFilter),
-				EMFCompareRCPUIPlugin.getDefault().getDifferenceFilterRegistry());
+		// check configuration if filter action menu is to be displayed
+		if (compareConfiguration.getBooleanProperty(EMFCompareConfiguration.DISPLAY_FILTERS, true)) {
+			filterActionMenu = new FilterActionMenu(checkNotNull(viewerFilter),
+					EMFCompareRCPUIPlugin.getDefault().getDifferenceFilterRegistry());
+		} else {
+			filterActionMenu = null;
+		}
 	}
 
 	public final void initToolbar(AbstractTreeViewer viewer, INavigatable nav) {
@@ -141,14 +152,26 @@ public class CompareToolBar implements ISelectionChangedListener {
 			toolbarManager.add(new ExpandAllModelAction(viewer));
 			toolbarManager.add(new CollapseAllModelAction(viewer));
 			toolbarManager.add(new Separator());
-			toolbarManager.add(groupActionMenu);
-			groupActionMenu.updateMenu(compareConfiguration.getComparisonScope(),
-					compareConfiguration.getComparison());
-			toolbarManager.add(filterActionMenu);
-			filterActionMenu.updateMenu(compareConfiguration.getComparisonScope(),
-					compareConfiguration.getComparison());
+
+			// only add/update menus if they have been created
+			if (groupActionMenu != null) {
+				toolbarManager.add(groupActionMenu);
+				groupActionMenu.updateMenu(compareConfiguration.getComparisonScope(),
+						compareConfiguration.getComparison());
+			}
+
+			if (filterActionMenu != null) {
+				toolbarManager.add(filterActionMenu);
+				filterActionMenu.updateMenu(compareConfiguration.getComparisonScope(),
+						compareConfiguration.getComparison());
+			}
+
 			toolbarManager.add(new Separator());
-			toolbarManager.add(new SaveComparisonModelAction(compareConfiguration));
+
+			// check configuration if we want to display save button in the toolbar
+			if (compareConfiguration.getBooleanProperty(EMFCompareConfiguration.DISPLAY_SAVE_ACTION, true)) {
+				toolbarManager.add(new SaveComparisonModelAction(compareConfiguration));
+			}
 
 			toolbarManager.update(true);
 
@@ -210,8 +233,12 @@ public class CompareToolBar implements ISelectionChangedListener {
 	public void comparisonAndScopeChange(final IComparisonAndScopeChange event) {
 		SWTUtil.safeAsyncExec(new Runnable() {
 			public void run() {
-				filterActionMenu.updateMenu(event.getNewScope(), event.getNewComparison());
-				groupActionMenu.updateMenu(event.getNewScope(), event.getNewComparison());
+				if (filterActionMenu != null) {
+					filterActionMenu.updateMenu(event.getNewScope(), event.getNewComparison());
+				}
+				if (groupActionMenu != null) {
+					groupActionMenu.updateMenu(event.getNewScope(), event.getNewComparison());
+				}
 			}
 		});
 		for (MergeAllNonConflictingAction mergeAction : mergeAllNonConflictingActions) {

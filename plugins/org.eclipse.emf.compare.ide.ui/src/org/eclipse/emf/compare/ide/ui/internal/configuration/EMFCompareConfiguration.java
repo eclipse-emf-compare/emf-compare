@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Conor O'Mahony - bug 507465
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.configuration;
 
@@ -69,6 +70,13 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	private static final String SMV_GROUP_PROVIDERS = EMFCompareIDEUIPlugin.PLUGIN_ID
 			+ ".SMV_GROUP_PROVIDERS"; //$NON-NLS-1$ ;
 
+	public static final String DISPLAY_GROUP_PROVIDERS = EMFCompareIDEUIPlugin.PLUGIN_ID
+			+ ".DISPLAY_GROUP_PROVIDERS"; //$NON-NLS-1$
+
+	public static final String DISPLAY_FILTERS = EMFCompareIDEUIPlugin.PLUGIN_ID + ".DISPLAY_FILTERS"; //$NON-NLS-1$
+
+	public static final String DISPLAY_SAVE_ACTION = EMFCompareIDEUIPlugin.PLUGIN_ID + ".DISPLAY_SAVE_ACTION"; //$NON-NLS-1$
+
 	private final PropertyChangeListener propertyChangeListener;
 
 	private final CompareConfiguration compareConfiguration;
@@ -102,6 +110,18 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 
 		if (getProperty(EVENT_BUS) == null) {
 			setProperty(EVENT_BUS, eventBus);
+		}
+
+		if (getProperty(DISPLAY_GROUP_PROVIDERS) == null) {
+			setProperty(DISPLAY_GROUP_PROVIDERS, Boolean.TRUE);
+		}
+
+		if (getProperty(DISPLAY_FILTERS) == null) {
+			setProperty(DISPLAY_FILTERS, Boolean.TRUE);
+		}
+
+		if (getProperty(DISPLAY_SAVE_ACTION) == null) {
+			setProperty(DISPLAY_SAVE_ACTION, Boolean.TRUE);
 		}
 	}
 
@@ -143,6 +163,9 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		compareConfiguration.setProperty(ADAPTER_FACTORY, null);
 		compareConfiguration.setProperty(SMV_GROUP_PROVIDERS, null);
 		compareConfiguration.setProperty(PREVIEW_MERGE_MODE, null);
+		compareConfiguration.setProperty(DISPLAY_GROUP_PROVIDERS, null);
+		compareConfiguration.setProperty(DISPLAY_FILTERS, null);
+		compareConfiguration.setProperty(DISPLAY_SAVE_ACTION, null);
 	}
 
 	public boolean getBooleanProperty(String key, boolean dflt) {
