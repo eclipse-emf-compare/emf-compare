@@ -256,4 +256,16 @@ public class NodeChangeFactory extends AbstractDiagramChangeFactory {
 				&& ReferenceUtil.safeEGet(input.getValue(), NotationPackage.Literals.VIEW__ELEMENT) != null;
 	}
 
+	/**
+	 * It returns the predicate to check that the given difference is an instance of this
+	 * {@link #getExtensionKind()} and of the specified <code>diffKind</code>.
+	 * 
+	 * @param diffKind
+	 *            The difference kind.
+	 * @return The predicate.
+	 */
+	public Predicate<? super Diff> isExtensionKind(DifferenceKind diffKind) {
+		return and(instanceOf(getExtensionKind()), ofKind(diffKind));
+	}
+
 }

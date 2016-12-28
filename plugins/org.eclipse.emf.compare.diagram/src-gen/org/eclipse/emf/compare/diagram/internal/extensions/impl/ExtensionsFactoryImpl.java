@@ -35,7 +35,7 @@ public class ExtensionsFactoryImpl extends EFactoryImpl implements ExtensionsFac
 	 */
 	public static ExtensionsFactory init() {
 		try {
-			ExtensionsFactory theExtensionsFactory = (ExtensionsFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/emf/compare/diagram/2.0"); 
+			ExtensionsFactory theExtensionsFactory = (ExtensionsFactory)EPackage.Registry.INSTANCE.getEFactory(ExtensionsPackage.eNS_URI);
 			if (theExtensionsFactory != null) {
 				return theExtensionsFactory;
 			}
@@ -68,6 +68,7 @@ public class ExtensionsFactoryImpl extends EFactoryImpl implements ExtensionsFac
 			case ExtensionsPackage.HIDE: return createHide();
 			case ExtensionsPackage.NODE_CHANGE: return createNodeChange();
 			case ExtensionsPackage.COORDINATES_CHANGE: return createCoordinatesChange();
+			case ExtensionsPackage.SIZE_CHANGE: return createSizeChange();
 			case ExtensionsPackage.EDGE_CHANGE: return createEdgeChange();
 			case ExtensionsPackage.DIAGRAM_CHANGE: return createDiagramChange();
 			default:
@@ -113,6 +114,16 @@ public class ExtensionsFactoryImpl extends EFactoryImpl implements ExtensionsFac
 	public CoordinatesChange createCoordinatesChange() {
 		CoordinatesChangeImpl coordinatesChange = new CoordinatesChangeImpl();
 		return coordinatesChange;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SizeChange createSizeChange() {
+		SizeChangeImpl sizeChange = new SizeChangeImpl();
+		return sizeChange;
 	}
 
 	/**

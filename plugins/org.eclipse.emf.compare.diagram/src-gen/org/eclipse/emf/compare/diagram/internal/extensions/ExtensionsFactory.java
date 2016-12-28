@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - add SizeChange
  */
 package org.eclipse.emf.compare.diagram.internal.extensions;
 
@@ -64,6 +65,15 @@ public interface ExtensionsFactory extends EFactory {
 	 * @generated
 	 */
 	CoordinatesChange createCoordinatesChange();
+
+	/**
+	 * Returns a new object of class '<em>Size Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Size Change</em>'.
+	 * @generated
+	 */
+	SizeChange createSizeChange();
 
 	/**
 	 * Returns a new object of class '<em>Edge Change</em>'.

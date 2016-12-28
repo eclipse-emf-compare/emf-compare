@@ -135,6 +135,29 @@ public class ExtensionsItemProviderAdapterFactory extends ExtensionsAdapterFacto
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diagram.internal.extensions.SizeChange} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected SizeChangeItemProvider sizeChangeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diagram.internal.extensions.SizeChange}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createSizeChangeAdapter() {
+		if (sizeChangeItemProvider == null) {
+			sizeChangeItemProvider = new SizeChangeItemProvider(this);
+		}
+
+		return sizeChangeItemProvider;
+	}
+
+	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.diagram.internal.extensions.EdgeChange}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - add SizeChange
  */
 package org.eclipse.emf.compare.diagram.internal.extensions.util;
 
@@ -92,6 +93,10 @@ public class ExtensionsAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseCoordinatesChange(CoordinatesChange object) {
 				return createCoordinatesChangeAdapter();
+			}
+			@Override
+			public Adapter caseSizeChange(SizeChange object) {
+				return createSizeChangeAdapter();
 			}
 			@Override
 			public Adapter caseEdgeChange(EdgeChange object) {
@@ -182,6 +187,20 @@ public class ExtensionsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createCoordinatesChangeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diagram.internal.extensions.SizeChange <em>Size Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.SizeChange
+	 * @generated
+	 */
+	public Adapter createSizeChangeAdapter() {
 		return null;
 	}
 

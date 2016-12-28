@@ -11,13 +11,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.internal.factories.extensions;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Collections2.filter;
+import static org.eclipse.emf.compare.DifferenceKind.CHANGE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
 
 import java.util.ArrayList;
@@ -89,8 +87,8 @@ public class CoordinatesChangeFactory extends NodeChangeFactory {
 	@Override
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
 		if (extensionKind == DifferenceKind.CHANGE) {
-			extension.getRefinedBy().addAll(Collections2.filter(getAllDifferencesForChange(refiningDiff),
-					fromSide(extension.getSource())));
+			extension.getRefinedBy().addAll(
+					filter(getAllDifferencesForChange(refiningDiff), fromSide(extension.getSource())));
 		}
 	}
 
@@ -102,21 +100,12 @@ public class CoordinatesChangeFactory extends NodeChangeFactory {
 	@Override
 	protected Collection<Diff> getAllDifferencesForChange(final Diff input) {
 		final Collection<Diff> diffs = super.getAllDifferencesForChange(input);
-		return Collections2.filter(diffs, new Predicate<Diff>() {
+		return filter(diffs, new Predicate<Diff>() {
 			public boolean apply(Diff diff) {
 				return diff instanceof AttributeChange && isCoordinatesChange((AttributeChange)diff)
 						&& fromSide(input.getSource()).apply(diff);
 			}
 		});
-	}
-
-	/**
-	 * It returns the predicate to check that the given difference is a macroscopic coordinates change.
-	 * 
-	 * @return The predicate.
-	 */
-	public static Predicate<? super Diff> isCoordinatesChangeExtension() {
-		return and(instanceOf(CoordinatesChange.class), ofKind(DifferenceKind.CHANGE));
 	}
 
 	/**
@@ -126,8 +115,7 @@ public class CoordinatesChangeFactory extends NodeChangeFactory {
 	 */
 	@Override
 	protected boolean isRelatedToAnExtensionChange(AttributeChange input) {
-		return isCoordinatesChange(input)
-				&& Collections2.filter(input.getRefines(), isCoordinatesChangeExtension()).isEmpty()
+		return isCoordinatesChange(input) && filter(input.getRefines(), isExtensionKind(CHANGE)).isEmpty()
 				&& isOverThreshold(input) && !isLeadedByMoveNode(input);
 	}
 

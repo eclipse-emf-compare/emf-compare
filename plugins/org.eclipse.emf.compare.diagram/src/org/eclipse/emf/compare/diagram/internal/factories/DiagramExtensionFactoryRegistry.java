@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - add SizeChange
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.internal.factories;
 
@@ -24,6 +25,7 @@ import org.eclipse.emf.compare.diagram.internal.factories.extensions.EdgeChangeF
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.HideFactory;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.NodeChangeFactory;
 import org.eclipse.emf.compare.diagram.internal.factories.extensions.ShowFactory;
+import org.eclipse.emf.compare.diagram.internal.factories.extensions.SizeChangeFactory;
 import org.eclipse.emf.compare.internal.postprocessor.factories.IChangeFactory;
 
 /**
@@ -56,6 +58,7 @@ public final class DiagramExtensionFactoryRegistry {
 		factories.add(new ShowFactory());
 		factories.add(new NodeChangeFactory());
 		factories.add(new CoordinatesChangeFactory(configuration));
+		factories.add(new SizeChangeFactory());
 		factories.add(new EdgeChangeFactory());
 		factories.add(new DiagramChangeFactory());
 

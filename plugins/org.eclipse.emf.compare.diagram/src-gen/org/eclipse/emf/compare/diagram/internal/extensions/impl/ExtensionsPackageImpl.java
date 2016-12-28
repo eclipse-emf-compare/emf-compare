@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.diagram.internal.extensions.Hide;
 import org.eclipse.emf.compare.diagram.internal.extensions.NodeChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.Show;
 
+import org.eclipse.emf.compare.diagram.internal.extensions.SizeChange;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -63,6 +64,13 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 	 * @generated
 	 */
 	private EClass coordinatesChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass sizeChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -190,6 +198,15 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getSizeChange() {
+		return sizeChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getEdgeChange() {
 		return edgeChangeEClass;
 	}
@@ -266,6 +283,8 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 
 		coordinatesChangeEClass = createEClass(COORDINATES_CHANGE);
 
+		sizeChangeEClass = createEClass(SIZE_CHANGE);
+
 		edgeChangeEClass = createEClass(EDGE_CHANGE);
 
 		diagramDiffEClass = createEClass(DIAGRAM_DIFF);
@@ -311,6 +330,7 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 		hideEClass.getESuperTypes().add(this.getDiagramDiff());
 		nodeChangeEClass.getESuperTypes().add(this.getDiagramDiff());
 		coordinatesChangeEClass.getESuperTypes().add(this.getNodeChange());
+		sizeChangeEClass.getESuperTypes().add(this.getNodeChange());
 		edgeChangeEClass.getESuperTypes().add(this.getDiagramDiff());
 		diagramDiffEClass.getESuperTypes().add(theComparePackage.getDiff());
 		diagramChangeEClass.getESuperTypes().add(this.getDiagramDiff());
@@ -323,6 +343,8 @@ public class ExtensionsPackageImpl extends EPackageImpl implements ExtensionsPac
 		initEClass(nodeChangeEClass, NodeChange.class, "NodeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(coordinatesChangeEClass, CoordinatesChange.class, "CoordinatesChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(sizeChangeEClass, SizeChange.class, "SizeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(edgeChangeEClass, EdgeChange.class, "EdgeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

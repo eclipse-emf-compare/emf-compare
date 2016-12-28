@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - adaptation for refactoring regarding SizeChange
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram;
 
@@ -57,7 +58,6 @@ import org.eclipse.emf.compare.diagram.internal.extensions.CoordinatesChange;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.diagram.internal.extensions.Hide;
 import org.eclipse.emf.compare.diagram.internal.extensions.Show;
-import org.eclipse.emf.compare.diagram.internal.factories.extensions.CoordinatesChangeFactory;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
@@ -1258,13 +1258,13 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			// Look for a related change coordinates on the extremity of the edge reference.
 			Collection<Diff> diffs = Collections2.filter(
 					getCompareConfiguration().getComparison().getDifferences(referenceView),
-					CoordinatesChangeFactory.isCoordinatesChangeExtension());
+					instanceOf(CoordinatesChange.class));
 			if (diffs.isEmpty()) {
 				// Look for a related change coordinates on the matching extremity (other side) of the edge
 				// reference.
 				diffs = Collections2.filter(
 						getCompareConfiguration().getComparison().getDifferences(extremity),
-						CoordinatesChangeFactory.isCoordinatesChangeExtension());
+						instanceOf(CoordinatesChange.class));
 			}
 			return !diffs.isEmpty();
 		}

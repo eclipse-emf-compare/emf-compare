@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - add SizeChangeItemProviderSpec
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.internal.extensions.provider.spec;
 
@@ -38,6 +39,9 @@ public class ExtensionsItemProviderAdapterFactorySpec extends ExtensionsItemProv
 
 	/** Item provider used for the coordinates change. */
 	CoordinatesChangeItemProviderSpec fCoordinatesChangeItemProvider;
+
+	/** Item provider used for the size change. */
+	SizeChangeItemProviderSpec fSizeChangeItemProvider;
 
 	/** Item provider used for the diagram change. */
 	DiagramChangeItemProviderSpec fDiagramChangeItemProvider;
@@ -119,6 +123,20 @@ public class ExtensionsItemProviderAdapterFactorySpec extends ExtensionsItemProv
 					(ItemProviderAdapter)super.createCoordinatesChangeAdapter());
 		}
 		return fCoordinatesChangeItemProvider;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.internal.extensions.provider.ExtensionsItemProviderAdapterFactory#createSizeChangeAdapter()
+	 */
+	@Override
+	public Adapter createSizeChangeAdapter() {
+		if (fSizeChangeItemProvider == null) {
+			fSizeChangeItemProvider = new SizeChangeItemProviderSpec(
+					(ItemProviderAdapter)super.createSizeChangeAdapter());
+		}
+		return fSizeChangeItemProvider;
 	}
 
 	/**
