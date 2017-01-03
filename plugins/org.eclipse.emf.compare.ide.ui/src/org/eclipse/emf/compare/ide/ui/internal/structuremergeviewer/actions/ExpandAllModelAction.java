@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
@@ -24,7 +25,7 @@ public class ExpandAllModelAction extends Action {
 
 	public ExpandAllModelAction(AbstractTreeViewer treeViewer) {
 		this.treeViewer = treeViewer;
-		setToolTipText("Expand All"); //$NON-NLS-1$
+		setToolTipText(EMFCompareIDEUIMessages.getString("expand.all.tooltip")); //$NON-NLS-1$
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
 				"icons/full/toolb16/expand_all.gif")); //$NON-NLS-1$
 	}
