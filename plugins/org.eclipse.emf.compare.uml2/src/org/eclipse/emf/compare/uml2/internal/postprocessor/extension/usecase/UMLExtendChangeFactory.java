@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.uml2.internal.postprocessor.extension.usecase;
 import com.google.common.base.Predicate;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -71,7 +71,7 @@ public class UMLExtendChangeFactory extends UMLDirectedRelationshipFactory {
 		 */
 		@Override
 		public Set<EObject> caseExtend(Extend object) {
-			Set<EObject> result = new HashSet<EObject>();
+			Set<EObject> result = new LinkedHashSet<EObject>();
 			result.add(object);
 			result.addAll(object.getExtensionLocations());
 			return result;
@@ -84,7 +84,7 @@ public class UMLExtendChangeFactory extends UMLDirectedRelationshipFactory {
 		 */
 		@Override
 		public Set<EObject> caseExtensionPoint(ExtensionPoint object) {
-			Set<EObject> result = new HashSet<EObject>();
+			Set<EObject> result = new LinkedHashSet<EObject>();
 			final Setting setting = getInverseReferences(object, new Predicate<EStructuralFeature.Setting>() {
 				public boolean apply(EStructuralFeature.Setting input) {
 					return input.getEStructuralFeature() == UMLPackage.Literals.EXTEND__EXTENSION_LOCATION;

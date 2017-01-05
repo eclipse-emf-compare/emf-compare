@@ -14,7 +14,7 @@ import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.find;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.emf.compare.AttributeChange;
@@ -115,7 +115,7 @@ public class MultiplicityElementChangeFactory extends AbstractUMLChangeFactory {
 		return new DiscriminantsGetter() {
 			@Override
 			public Set<EObject> caseValueSpecification(ValueSpecification object) {
-				Set<EObject> result = new HashSet<EObject>();
+				Set<EObject> result = new LinkedHashSet<EObject>();
 				result.add(object);
 				return result;
 			}

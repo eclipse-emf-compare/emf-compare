@@ -16,7 +16,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
@@ -52,7 +52,7 @@ public class UMLAssociationChangeFactory extends AbstractUMLChangeFactory {
 		 */
 		@Override
 		public Set<EObject> caseAssociation(final Association object) {
-			Set<EObject> result = new HashSet<EObject>();
+			Set<EObject> result = new LinkedHashSet<EObject>();
 			result.add(object);
 			result.addAll(Collections2.filter(object.getMemberEnds(), new Predicate<Property>() {
 				public boolean apply(Property property) {
@@ -69,7 +69,7 @@ public class UMLAssociationChangeFactory extends AbstractUMLChangeFactory {
 		 */
 		@Override
 		public Set<EObject> caseProperty(Property object) {
-			Set<EObject> result = new HashSet<EObject>();
+			Set<EObject> result = new LinkedHashSet<EObject>();
 			if (object.eContainer() instanceof Association) {
 				result.addAll(caseAssociation((Association)object.eContainer()));
 			} else if (object.getAssociation() != null) {
@@ -85,7 +85,7 @@ public class UMLAssociationChangeFactory extends AbstractUMLChangeFactory {
 		 */
 		@Override
 		public Set<EObject> caseClassifier(Classifier object) {
-			Set<EObject> result = new HashSet<EObject>();
+			Set<EObject> result = new LinkedHashSet<EObject>();
 			for (Association association : object.getAssociations()) {
 				caseAssociation(association);
 			}

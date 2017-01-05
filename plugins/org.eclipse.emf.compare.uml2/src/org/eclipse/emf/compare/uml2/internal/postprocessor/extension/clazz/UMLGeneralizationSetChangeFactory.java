@@ -14,7 +14,7 @@ import static com.google.common.base.Predicates.instanceOf;
 
 import com.google.common.collect.Iterables;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
@@ -74,7 +74,7 @@ public class UMLGeneralizationSetChangeFactory extends AbstractUMLChangeFactory 
 
 			@Override
 			public Set<EObject> caseGeneralizationSet(GeneralizationSet object) {
-				Set<EObject> result = new HashSet<EObject>();
+				Set<EObject> result = new LinkedHashSet<EObject>();
 				result.add(object);
 				return result;
 			}

@@ -14,7 +14,7 @@ import static com.google.common.base.Predicates.instanceOf;
 
 import com.google.common.collect.Iterables;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
@@ -50,7 +50,7 @@ public class UMLMessageChangeFactory extends AbstractUMLChangeFactory {
 		 */
 		@Override
 		public Set<EObject> caseMessage(Message object) {
-			Set<EObject> result = new HashSet<EObject>();
+			Set<EObject> result = new LinkedHashSet<EObject>();
 			result.add(object);
 			if (object.getSendEvent() != null) {
 				result.add(object.getSendEvent());
@@ -68,7 +68,7 @@ public class UMLMessageChangeFactory extends AbstractUMLChangeFactory {
 		 */
 		@Override
 		public Set<EObject> caseMessageOccurrenceSpecification(MessageOccurrenceSpecification object) {
-			Set<EObject> result = new HashSet<EObject>();
+			Set<EObject> result = new LinkedHashSet<EObject>();
 			Message message = object.getMessage();
 			if (message != null) {
 				result.addAll(caseMessage(message));
@@ -83,7 +83,7 @@ public class UMLMessageChangeFactory extends AbstractUMLChangeFactory {
 		 */
 		@Override
 		public Set<EObject> caseLifeline(Lifeline object) {
-			Set<EObject> result = new HashSet<EObject>();
+			Set<EObject> result = new LinkedHashSet<EObject>();
 			for (InteractionFragment fragment : object.getCoveredBys()) {
 				result.addAll(doSwitch(fragment));
 			}

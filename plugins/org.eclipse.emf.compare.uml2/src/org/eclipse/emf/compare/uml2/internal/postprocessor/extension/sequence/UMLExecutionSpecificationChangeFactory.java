@@ -14,7 +14,7 @@ import static com.google.common.base.Predicates.instanceOf;
 
 import com.google.common.collect.Iterables;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
@@ -51,7 +51,7 @@ public class UMLExecutionSpecificationChangeFactory extends AbstractUMLChangeFac
 		 */
 		@Override
 		public Set<EObject> caseExecutionSpecification(ExecutionSpecification object) {
-			Set<EObject> result = new HashSet<EObject>();
+			Set<EObject> result = new LinkedHashSet<EObject>();
 			result.add(object);
 			if (object.getStart() != null) {
 				result.add(object.getStart());
@@ -69,7 +69,7 @@ public class UMLExecutionSpecificationChangeFactory extends AbstractUMLChangeFac
 		 */
 		@Override
 		public Set<EObject> caseExecutionOccurrenceSpecification(ExecutionOccurrenceSpecification object) {
-			Set<EObject> result = new HashSet<EObject>();
+			Set<EObject> result = new LinkedHashSet<EObject>();
 			if (object.getExecution() != null) {
 				result.addAll(caseExecutionSpecification(object.getExecution()));
 			}
@@ -83,7 +83,7 @@ public class UMLExecutionSpecificationChangeFactory extends AbstractUMLChangeFac
 		 */
 		@Override
 		public Set<EObject> caseLifeline(Lifeline object) {
-			Set<EObject> result = new HashSet<EObject>();
+			Set<EObject> result = new LinkedHashSet<EObject>();
 			for (InteractionFragment fragment : object.getCoveredBys()) {
 				result.addAll(doSwitch(fragment));
 			}

@@ -14,7 +14,7 @@ import static com.google.common.base.Predicates.instanceOf;
 
 import com.google.common.collect.Iterables;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.emf.compare.AttributeChange;
@@ -61,7 +61,7 @@ public class UMLStereotypeAttributeChangeFactory extends AbstractUMLChangeFactor
 		return new EcoreSwitch<Set<EObject>>() {
 			@Override
 			public Set<EObject> defaultCase(EObject object) {
-				Set<EObject> result = new HashSet<EObject>();
+				Set<EObject> result = new LinkedHashSet<EObject>();
 				if (object.eContainer() == null) {
 					result.add(object);
 				} else {

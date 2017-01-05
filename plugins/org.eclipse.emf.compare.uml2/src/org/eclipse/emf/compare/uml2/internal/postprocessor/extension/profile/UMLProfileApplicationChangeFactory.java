@@ -15,8 +15,8 @@ import static com.google.common.base.Predicates.instanceOf;
 import com.google.common.collect.Iterables;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -84,7 +84,7 @@ public class UMLProfileApplicationChangeFactory extends AbstractUMLChangeFactory
 
 			@Override
 			public Set<EObject> caseProfileApplication(ProfileApplication object) {
-				Set<EObject> result = new HashSet<EObject>();
+				Set<EObject> result = new LinkedHashSet<EObject>();
 				result.add(object);
 				return result;
 			}

@@ -29,7 +29,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -511,7 +511,7 @@ public class UMLOpaqueElementBodyChangeFactory extends AbstractUMLChangeFactory 
 			}
 
 			private Set<EObject> getObjectAsSet(EObject object) {
-				Set<EObject> result = new HashSet<EObject>();
+				Set<EObject> result = new LinkedHashSet<EObject>();
 				result.add(object);
 				return result;
 			}

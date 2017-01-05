@@ -15,7 +15,7 @@ import static com.google.common.base.Predicates.instanceOf;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
@@ -56,7 +56,7 @@ public class UMLIntervalConstraintChangeFactory extends AbstractUMLChangeFactory
 		 */
 		@Override
 		public Set<EObject> caseIntervalConstraint(IntervalConstraint object) {
-			Set<EObject> result = new HashSet<EObject>();
+			Set<EObject> result = new LinkedHashSet<EObject>();
 			result.add(object);
 			ValueSpecification value = object.getSpecification();
 			if (value instanceof Interval) {
@@ -79,7 +79,7 @@ public class UMLIntervalConstraintChangeFactory extends AbstractUMLChangeFactory
 		 */
 		@Override
 		public Set<EObject> caseInterval(Interval object) {
-			Set<EObject> result = new HashSet<EObject>();
+			Set<EObject> result = new LinkedHashSet<EObject>();
 			if (object.eContainer() instanceof IntervalConstraint) {
 				result.addAll(caseIntervalConstraint((IntervalConstraint)object.eContainer()));
 			}
@@ -93,7 +93,7 @@ public class UMLIntervalConstraintChangeFactory extends AbstractUMLChangeFactory
 		 */
 		@Override
 		public Set<EObject> caseValueSpecification(ValueSpecification object) {
-			Set<EObject> result = new HashSet<EObject>();
+			Set<EObject> result = new LinkedHashSet<EObject>();
 			EObject container = object.eContainer();
 			if (container instanceof IntervalConstraint || container instanceof ValueSpecification) {
 				result.addAll(doSwitch(object.eContainer()));
