@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -23,6 +24,7 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeRunnableImpl;
 import org.eclipse.emf.compare.internal.merge.IMergeData;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
@@ -150,8 +152,7 @@ public class TestBug434828 {
 	 */
 	@Test
 	public void testAcceptConflictDiffWithConflictingDiffWithRequiredByProg() {
-		mergerRegistry.getHighestRankingMerger(refChangeDiff).copyLeftToRight(refChangeDiff,
-				new BasicMonitor());
+		new BatchMerger(mergerRegistry).copyAllLeftToRight(Arrays.asList(refChangeDiff), new BasicMonitor());
 
 		Assert.assertEquals(DifferenceState.MERGED, refChangeDiff.getState());
 		Assert.assertEquals(DifferenceState.MERGED, holdingRefDeletionDiff.getState());

@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
+import static com.google.common.base.Predicates.alwaysFalse;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -63,12 +63,9 @@ import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.graph.IGraph;
-import org.eclipse.emf.compare.graph.PruningIterator;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences;
@@ -76,12 +73,12 @@ import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
-import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
-import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.BatchMerger;
+import org.eclipse.emf.compare.merge.ComputeDiffsToMerge;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry2;
+import org.eclipse.emf.compare.merge.MergeBlockedByConflictException;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -324,24 +321,28 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	}
 
 	private Set<URI> performPreMerge(Comparison comparison, boolean preMerge, SubMonitor subMonitor) {
-		final IGraph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison,
-				MERGER_REGISTRY, true, MergeMode.RIGHT_TO_LEFT);
-		final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
 		final Monitor emfMonitor = BasicMonitor.toMonitor(subMonitor);
-
 		final Set<URI> conflictingURIs = new LinkedHashSet<URI>();
-		while (iterator.hasNext()) {
-			final Diff next = iterator.next();
-			if (hasConflict(ConflictKind.REAL).apply(next)) {
-				iterator.prune();
-				conflictingURIs
-						.addAll(collectConflictingResources(differencesGraph.depthFirstIterator(next)));
-			} else if (next.getState() != DifferenceState.MERGED && preMerge) {
-				final IMerger merger = MERGER_REGISTRY.getHighestRankingMerger(next);
-				merger.copyRightToLeft(next, emfMonitor);
-			}
+		for (Diff next : comparison.getDifferences()) {
+			doMergeForDiff(preMerge, emfMonitor, conflictingURIs, next);
 		}
 		return conflictingURIs;
+	}
+
+	protected void doMergeForDiff(boolean preMerge, Monitor emfMonitor, Set<URI> conflictingURIs, Diff diff) {
+		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(true, MERGER_REGISTRY)
+				.failOnRealConflictUnless(alwaysFalse());
+		try {
+			Set<Diff> diffsToMerge = computer.getAllDiffsToMerge(diff);
+			if (preMerge) {
+				for (Diff toMerge : diffsToMerge) {
+					final IMerger merger = MERGER_REGISTRY.getHighestRankingMerger(toMerge);
+					merger.copyRightToLeft(toMerge, emfMonitor);
+				}
+			}
+		} catch (MergeBlockedByConflictException e) {
+			conflictingURIs.addAll(collectConflictingResources(e.getConflictingDiffs().iterator()));
+		}
 	}
 
 	/**

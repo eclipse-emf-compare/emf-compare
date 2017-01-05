@@ -8,16 +8,28 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - bug 469355, bug 462884, refactorings
+ *     Martin Fleck - bug 507177
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Predicates.alwaysFalse;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
+import static org.eclipse.emf.compare.DifferenceSource.LEFT;
+import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.ACCEPT;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.LEFT_TO_RIGHT;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.REJECT;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.RIGHT_TO_LEFT;
+import static org.eclipse.emf.compare.internal.merge.MergeOperation.MARK_AS_MERGE;
+import static org.eclipse.emf.compare.merge.AbstractMerger.isInTerminalState;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.containsConflictOfTypes;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -34,20 +46,20 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
-import org.eclipse.emf.compare.graph.IGraph;
-import org.eclipse.emf.compare.graph.PruningIterator;
 import org.eclipse.emf.compare.internal.domain.IMergeAllNonConflictingRunnable;
 import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.merge.BatchMerger;
+import org.eclipse.emf.compare.merge.ComputeDiffsToMerge;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
+import org.eclipse.emf.compare.merge.IMerger.Registry2;
 import org.eclipse.emf.compare.merge.IMerger2;
+import org.eclipse.emf.compare.merge.MergeBlockedByConflictException;
 
 /**
  * Implements the "merge non-conflicting" and "merge all non-conflicting" action.
@@ -221,55 +233,73 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 	 * @param leftToRight
 	 *            The direction in which {@code differences} should be merged.
 	 * @param mergerRegistry
-	 *            The registry of mergers.
+	 *            The registry of mergers, must be an instance of Registry2.
 	 * @return an iterable over the differences that have actually been merged by this operation.
 	 */
 	private Iterable<Diff> mergeWithConflicts(Collection<Diff> differences, boolean leftToRight,
 			Registry mergerRegistry) {
 		final List<Diff> affectedDiffs = new ArrayList<Diff>();
 		final Monitor emfMonitor = new BasicMonitor();
-		final IGraph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(differences,
-				mergerRegistry, !leftToRight, getMergeMode());
-		final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
-
-		while (iterator.hasNext()) {
-			final Diff next = iterator.next();
-			if (hasConflict(ConflictKind.REAL).apply(next)) {
-				iterator.prune();
-			} else {
-				if (next.getState() != DifferenceState.MERGED) {
-					affectedDiffs.add(next);
-					final IMerger merger = mergerRegistry.getHighestRankingMerger(next);
-
-					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug(
-								"mergeWithConflicts(Collection<Diff>, boolean, Registry) - Selected merger for diff " //$NON-NLS-1$
-										+ next.hashCode() + ": " + merger.getClass().getSimpleName()); //$NON-NLS-1$
+		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(!leftToRight, (Registry2)mergerRegistry)
+				.failOnRealConflictUnless(alwaysFalse());
+		final Predicate<? super Diff> filter;
+		if (getMergeMode() == RIGHT_TO_LEFT) {
+			filter = fromSide(RIGHT);
+		} else if (getMergeMode() == LEFT_TO_RIGHT) {
+			filter = fromSide(LEFT);
+		} else {
+			filter = Predicates.alwaysTrue();
+		}
+		Set<Diff> conflictingDiffs = newHashSet();
+		for (Diff diff : Iterables.filter(differences, filter)) {
+			if (!conflictingDiffs.contains(diff)) {
+				try {
+					Set<Diff> diffsToMerge = computer.getAllDiffsToMerge(diff);
+					for (Diff toMerge : diffsToMerge) {
+						doMergeDiffWithConflicts(leftToRight, mergerRegistry, affectedDiffs, emfMonitor,
+								toMerge);
 					}
-
-					if (getMergeMode() == MergeMode.LEFT_TO_RIGHT) {
-						merger.copyLeftToRight(next, emfMonitor);
-					} else if (getMergeMode() == MergeMode.RIGHT_TO_LEFT) {
-						merger.copyRightToLeft(next, emfMonitor);
-					} else if (getMergeMode() == MergeMode.ACCEPT || getMergeMode() == MergeMode.REJECT) {
-						MergeOperation mergeAction = getMergeOperation(next);
-						if (mergeAction == MergeOperation.MARK_AS_MERGE) {
-							markAsMerged(next, getMergeMode(), leftToRight, mergerRegistry);
-						} else {
-							if (isLeftEditable() && !leftToRight) {
-								merger.copyRightToLeft(next, emfMonitor);
-							} else if (isRightEditable() && leftToRight) {
-								merger.copyLeftToRight(next, emfMonitor);
-							}
-						}
-					} else {
-						throw new IllegalStateException();
-					}
+				} catch (MergeBlockedByConflictException e) {
+					conflictingDiffs.addAll(e.getConflictingDiffs());
 				}
 			}
 		}
+
 		addOrUpdateMergeData(affectedDiffs, getMergeMode());
 		return affectedDiffs;
+	}
+
+	protected void doMergeDiffWithConflicts(boolean leftToRight, Registry mergerRegistry,
+			List<Diff> affectedDiffs, Monitor emfMonitor, Diff diff) {
+		if (!isInTerminalState(diff)) {
+			affectedDiffs.add(diff);
+			final IMerger merger = mergerRegistry.getHighestRankingMerger(diff);
+
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug(
+						"mergeWithConflicts(Collection<Diff>, boolean, Registry) - Selected merger for diff " //$NON-NLS-1$
+								+ diff.hashCode() + ": " + merger.getClass().getSimpleName()); //$NON-NLS-1$
+			}
+
+			if (getMergeMode() == LEFT_TO_RIGHT) {
+				merger.copyLeftToRight(diff, emfMonitor);
+			} else if (getMergeMode() == RIGHT_TO_LEFT) {
+				merger.copyRightToLeft(diff, emfMonitor);
+			} else if (getMergeMode() == ACCEPT || getMergeMode() == REJECT) {
+				MergeOperation mergeAction = getMergeOperation(diff);
+				if (mergeAction == MARK_AS_MERGE) {
+					markAsMerged(diff, getMergeMode(), leftToRight, mergerRegistry);
+				} else {
+					if (isLeftEditable() && !leftToRight) {
+						merger.copyRightToLeft(diff, emfMonitor);
+					} else if (isRightEditable() && leftToRight) {
+						merger.copyLeftToRight(diff, emfMonitor);
+					}
+				}
+			} else {
+				throw new IllegalStateException();
+			}
+		}
 	}
 
 	/**

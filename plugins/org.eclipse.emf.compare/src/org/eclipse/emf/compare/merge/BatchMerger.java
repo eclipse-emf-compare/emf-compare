@@ -16,10 +16,11 @@ import static com.google.common.base.Predicates.alwaysTrue;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceState;
 
 /**
  * This implementation of an {@link IBatchMerger} leaves some choice to the client as to what should be
@@ -34,7 +35,7 @@ public class BatchMerger implements IBatchMerger {
 	private static final Logger LOGGER = Logger.getLogger(BatchMerger.class);
 
 	/** The registry from which we'll retrieve our mergers. */
-	private final IMerger.Registry registry;
+	private final IMerger.Registry2 registry;
 
 	/** Filter the differences that should be merged. */
 	private final Predicate<? super Diff> filter;
@@ -44,7 +45,8 @@ public class BatchMerger implements IBatchMerger {
 	 * such a merger will merge every differences passed to its "copy" methods : conflictual or not.
 	 * 
 	 * @param registry
-	 *            The registry from which we'll retrieve delegate mergers.
+	 *            The registry from which we'll retrieve delegate mergers, must be an instance of
+	 *            IMerger.Registry2.
 	 */
 	public BatchMerger(IMerger.Registry registry) {
 		this(registry, alwaysTrue());
@@ -67,7 +69,8 @@ public class BatchMerger implements IBatchMerger {
 	 * </p>
 	 * 
 	 * @param registry
-	 *            The registry from which we'll retrieve delegate mergers.
+	 *            The registry from which we'll retrieve delegate mergers, must be an instance of
+	 *            IMerger.Registry2.
 	 * @param filter
 	 *            Additional filter for the differences. This could be set in order to ignore diffs
 	 *            originating from a given side. Note that the filter describes the differences that will be
@@ -76,7 +79,7 @@ public class BatchMerger implements IBatchMerger {
 	 * @see org.eclipse.emf.compare.utils.EMFComparePredicates
 	 */
 	public BatchMerger(IMerger.Registry registry, Predicate<? super Diff> filter) {
-		this.registry = checkNotNull(registry);
+		this.registry = (IMerger.Registry2)checkNotNull(registry);
 		this.filter = checkNotNull(filter);
 	}
 
@@ -92,26 +95,19 @@ public class BatchMerger implements IBatchMerger {
 			start = System.currentTimeMillis();
 			LOGGER.debug("copyAllLeftToRight(differences, monitor) - Start"); //$NON-NLS-1$
 		}
-		if (filter == alwaysTrue()) {
-			for (Diff diff : differences) {
-				if (diff.getState() != DifferenceState.MERGED) {
-					final IMerger merger = registry.getHighestRankingMerger(diff);
-					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("copyAllLeftToRight - Selected merger: " //$NON-NLS-1$
-								+ merger.getClass().getSimpleName());
+		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(false, registry);
+		for (Diff diff : Iterables.filter(differences, filter)) {
+			if (!AbstractMerger.isInTerminalState(diff)) {
+				Set<Diff> diffsToMerge = computer.getAllDiffsToMerge(diff);
+				for (Diff toMerge : diffsToMerge) {
+					if (!AbstractMerger.isInTerminalState(toMerge)) {
+						final IMerger merger = registry.getHighestRankingMerger(toMerge);
+						if (LOGGER.isDebugEnabled()) {
+							LOGGER.debug("copyAllLeftToRight - Selected merger: " //$NON-NLS-1$
+									+ merger.getClass().getSimpleName());
+						}
+						merger.copyLeftToRight(toMerge, monitor);
 					}
-					merger.copyLeftToRight(diff, monitor);
-				}
-			}
-		} else {
-			for (Diff diff : Iterables.filter(differences, filter)) {
-				if (diff.getState() != DifferenceState.MERGED) {
-					final IMerger merger = registry.getHighestRankingMerger(diff);
-					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("copyAllLeftToRight - Selected merger: " //$NON-NLS-1$
-								+ merger.getClass().getSimpleName());
-					}
-					merger.copyLeftToRight(diff, monitor);
 				}
 			}
 		}
@@ -133,26 +129,19 @@ public class BatchMerger implements IBatchMerger {
 			start = System.currentTimeMillis();
 			LOGGER.debug("copyAllRightToLeft(differences, monitor) - Start"); //$NON-NLS-1$
 		}
-		if (filter == alwaysTrue()) {
-			for (Diff diff : differences) {
-				if (diff.getState() != DifferenceState.MERGED) {
-					final IMerger merger = registry.getHighestRankingMerger(diff);
-					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("copyAllRightToLeft - Selected merger: " //$NON-NLS-1$
-								+ merger.getClass().getSimpleName());
+		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(true, registry);
+		for (Diff diff : Iterables.filter(differences, filter)) {
+			if (!AbstractMerger.isInTerminalState(diff)) {
+				Set<Diff> diffsToMerge = computer.getAllDiffsToMerge(diff);
+				for (Diff toMerge : diffsToMerge) {
+					if (!AbstractMerger.isInTerminalState(toMerge)) {
+						final IMerger merger = registry.getHighestRankingMerger(toMerge);
+						if (LOGGER.isDebugEnabled()) {
+							LOGGER.debug("copyAllLeftToRight - Selected merger: " //$NON-NLS-1$
+									+ merger.getClass().getSimpleName());
+						}
+						merger.copyRightToLeft(toMerge, monitor);
 					}
-					merger.copyRightToLeft(diff, monitor);
-				}
-			}
-		} else {
-			for (Diff diff : Iterables.filter(differences, filter)) {
-				if (diff.getState() != DifferenceState.MERGED) {
-					final IMerger merger = registry.getHighestRankingMerger(diff);
-					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("copyAllRightToLeft - Selected merger: " //$NON-NLS-1$
-								+ merger.getClass().getSimpleName());
-					}
-					merger.copyRightToLeft(diff, monitor);
 				}
 			}
 		}

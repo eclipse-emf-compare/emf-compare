@@ -395,7 +395,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="DifferenceState">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="This will be used to represent the state of a detected diff.&#xD;&#xA;&lt;ul>&#xD;&#xA;&#x9;&lt;li>UNRESOLVED if the Diff is still in its initial state and the two sides differ,&lt;/li>&#xD;&#xA;&#x9;&lt;li>MERGED if the Diff has already been merged by the user,&lt;/li>&#xD;&#xA;&#x9;&lt;li>DISCARDED if the user chose to ignore this Diff.&lt;/li>&#xD;&#xA;&lt;/ul>"/>
+      <details key="documentation" value="This will be used to represent the state of a detected diff.&#xD;&#xA;&lt;ul>&#xD;&#xA;&#x9;&lt;li>UNRESOLVED if the Diff is still in its initial state and the two sides differ,&lt;/li>&#xD;&#xA;&#x9;&lt;li>MERGED if the Diff has already been merged by the user,&lt;/li>&#xD;&#xA;&#x9;&lt;li>DISCARDED if the user chose to ignore this Diff,&lt;/li>&#xA;&#x9;&lt;li>MERGING if the Diff is in the process of being merged.&lt;/li>&#xD;&#xA;&lt;/ul>"/>
     </eAnnotations>
     <eLiterals name="UNRESOLVED" literal="UNRESOLVED">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -410,6 +410,11 @@
     <eLiterals name="DISCARDED" value="2" literal="DISCARDED">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Indicates that the user chose to ignore this Diff."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="MERGING" value="3" literal="MERGING">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Indicates that the Diff is in the process of being merged."/>
       </eAnnotations>
     </eLiterals>
   </eClassifiers>

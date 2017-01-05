@@ -13,7 +13,8 @@ package org.eclipse.emf.compare.merge;
 import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.DifferenceSource.LEFT;
 import static org.eclipse.emf.compare.DifferenceState.MERGED;
-import static org.eclipse.emf.compare.DifferenceState.UNRESOLVED;
+
+import java.util.Set;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Diff;
@@ -42,7 +43,7 @@ public class AdditiveResourceAttachmentChangeMerger extends ResourceAttachmentCh
 
 	@Override
 	public void copyRightToLeft(Diff target, Monitor monitor) {
-		if (target.getState() != UNRESOLVED) {
+		if (isInTerminalState(target)) {
 			return;
 		}
 
@@ -60,4 +61,29 @@ public class AdditiveResourceAttachmentChangeMerger extends ResourceAttachmentCh
 		}
 	}
 
+	@Override
+	public Set<Diff> getDirectMergeDependencies(Diff diff, boolean mergeRightToLeft) {
+		if (diff.getKind() == DELETE) {
+			if (diff.getSource() == LEFT) {
+				return super.getDirectMergeDependencies(diff, mergeRightToLeft);
+			} else {
+				return super.getDirectMergeDependencies(diff, !mergeRightToLeft);
+			}
+		} else {
+			return super.getDirectMergeDependencies(diff, mergeRightToLeft);
+		}
+	}
+
+	@Override
+	public Set<Diff> getDirectResultingMerges(Diff diff, boolean mergeRightToLeft) {
+		if (diff.getKind() == DELETE) {
+			if (diff.getSource() == LEFT) {
+				return super.getDirectResultingMerges(diff, mergeRightToLeft);
+			} else {
+				return super.getDirectResultingMerges(diff, !mergeRightToLeft);
+			}
+		} else {
+			return super.getDirectResultingMerges(diff, mergeRightToLeft);
+		}
+	}
 }

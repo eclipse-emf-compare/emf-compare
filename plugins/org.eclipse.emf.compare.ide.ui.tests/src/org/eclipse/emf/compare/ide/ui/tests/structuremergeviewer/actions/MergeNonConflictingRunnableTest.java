@@ -26,7 +26,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.common.collect.Iterators;
+
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
@@ -42,10 +45,15 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeNonConflictingRunnable;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.merge.IMergeCriterion;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
+import org.eclipse.emf.compare.merge.IMerger.Registry2;
+import org.eclipse.emf.compare.merge.IMerger2;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
  * Tests the {@link MergeNonConflictingRunnable} according to the specification given in
@@ -63,9 +71,9 @@ public class MergeNonConflictingRunnableTest {
 
 	private Comparison comparison;
 
-	private Registry mergerRegistry;
+	private Registry2 mergerRegistry;
 
-	private IMerger merger;
+	private IMerger2 merger;
 
 	private Diff leftDelete;
 
@@ -78,9 +86,15 @@ public class MergeNonConflictingRunnableTest {
 	@Before
 	public void setupMocks() {
 		comparison = mock(Comparison.class);
-		mergerRegistry = mock(Registry.class);
-		merger = mock(IMerger.class);
+		mergerRegistry = mock(Registry2.class);
+		merger = mock(IMerger2.class);
 		when(mergerRegistry.getHighestRankingMerger(any(Diff.class))).thenReturn(merger);
+		when(mergerRegistry.getMergersByRankDescending(any(Diff.class), any(IMergeCriterion.class)))
+				.thenAnswer(new Answer<Iterator<IMerger>>() {
+					public Iterator<IMerger> answer(InvocationOnMock invocation) throws Throwable {
+						return Iterators.<IMerger> singletonIterator(merger);
+					}
+				});
 	}
 
 	@Test
@@ -486,6 +500,8 @@ public class MergeNonConflictingRunnableTest {
 		final ReferenceChange diff = mock(ReferenceChange.class, name);
 		when(diff.getSource()).thenReturn(side);
 		when(diff.getKind()).thenReturn(kind);
+		when(diff.getRefinedBy()).thenReturn(new BasicEList<Diff>());
+		when(diff.getRefines()).thenReturn(new BasicEList<Diff>());
 		when(diff.getState()).thenReturn(UNRESOLVED);
 		return diff;
 	}

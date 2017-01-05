@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import com.google.common.collect.Iterators;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +37,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -58,7 +60,7 @@ public class FeatureMaps2wayMergeTest {
 
 	private IndividualDiffInputData input = new IndividualDiffInputData();
 
-	private final IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
+	private final BatchMerger batchMerger = new BatchMerger(IMerger.RegistryImpl.createStandaloneInstance());
 
 	@Test
 	public void test2wayContainmentAdd_LtR_1() throws IOException {
@@ -78,7 +80,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node1[firstKey add] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map add] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -123,7 +125,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map add] from left to right : the ReferenceChange
 		// Node node1[firstKey add] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -168,7 +170,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node1[firstKey add] from right to left : the FeatureMapChange
 		// <firstKey> Node node1 [map add] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still doesn't exists in right
 		final EObject rightNode1 = getNodeNamed(right, "node1");
@@ -213,7 +215,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map add] from right to left : the
 		// ReferenceChange Node node1[firstKey add] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still doesn't exists in right
 		final EObject rightNode1 = getNodeNamed(right, "node1");
@@ -258,7 +260,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node2[firstKey delete] from left to right : the FeatureMapChange
 		// <firstKey> Node node2 [map delete] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node2 doesn't still exists in left
 		final EObject leftNode2 = getNodeNamed(left, "node2");
@@ -303,7 +305,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node2 [map delete] from left to right : the
 		// ReferenceChange Node node2[firstKey delete] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node2 doesn't still exists in left
 		final EObject leftNode2 = getNodeNamed(left, "node2");
@@ -348,7 +350,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node2[firstKey delete] from right to left: the FeatureMapChange
 		// <firstKey> Node node2 [map delete] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node2 still exists in right
 		final EObject rightNode2 = getNodeNamed(right, "node2");
@@ -393,7 +395,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node2[firstKey delete] from right to left: the FeatureMapChange
 		// <firstKey> Node node2 [map delete] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node2 still exists in right
 		final EObject rightNode2 = getNodeNamed(right, "node2");
@@ -439,7 +441,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node1[firstKey move] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map entry key change] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -485,7 +487,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map entry key change] from left to right : the
 		// ReferenceChange Node node1[firstKey move] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -531,7 +533,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node1[firstKey move] from right to left : the FeatureMapChange
 		// <firstKey> Node node1 [map entry key change] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in right
 		final EObject rightNode1 = getNodeNamed(right, "node1");
@@ -577,7 +579,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map entry key change] from left to right : the
 		// ReferenceChange Node node1[firstKey move] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in right
 		final EObject rightNode1 = getNodeNamed(right, "node1");
@@ -623,7 +625,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node1[firstKey move] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -669,7 +671,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from left to right : the
 		// ReferenceChange Node node1[firstKey move] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -715,7 +717,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node1[firstKey move] from right to left : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in right
 		final EObject rightNode1 = getNodeNamed(right, "node1");
@@ -761,7 +763,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from right to left : the
 		// ReferenceChange Node node1[firstKey move] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in right
 		final EObject rightNode1 = getNodeNamed(right, "node1");
@@ -807,7 +809,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node1[firstKey move] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -855,7 +857,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from left to right : the
 		// ReferenceChange Node node1[firstKey move] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -903,7 +905,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node1[firstKey move] from right to left : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in right
 		final EObject rightNode1 = getNodeNamed(right, "node1");
@@ -951,7 +953,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from right to left : the
 		// ReferenceChange Node node1[firstKey move] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in right
 		final EObject rightNode1 = getNodeNamed(right, "node1");
@@ -999,7 +1001,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node1[firstKey move] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -1045,7 +1047,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from left to right : the
 		// ReferenceChange Node node1[firstKey move] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -1091,7 +1093,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node1[firstKey move] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -1137,7 +1139,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from left to right : the
 		// ReferenceChange Node node1[firstKey move] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -1181,7 +1183,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// reject all -> element a is moved out from a featuremap-containment
 		for (Diff diff : differences) {
-			mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+			batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 		}
 
 		// no differences should be left
@@ -1204,7 +1206,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// accept all -> element a is moved into a featuremap-containment
 		for (Diff diff : differences) {
-			mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+			batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 		}
 
 		// no differences should be left
@@ -1237,10 +1239,8 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(2, referenceChangeDiff.getEquivalence().getDifferences().size());
 
 		// accept both
-		mergerRegistry.getHighestRankingMerger(featureMapChangeDiff).copyLeftToRight(featureMapChangeDiff,
-				new BasicMonitor());
-		mergerRegistry.getHighestRankingMerger(referenceChangeDiff).copyLeftToRight(referenceChangeDiff,
-				new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(featureMapChangeDiff), new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(referenceChangeDiff), new BasicMonitor());
 
 		// no differences should be left
 		comparison = EMFCompare.builder().build().compare(scope);
@@ -1272,10 +1272,8 @@ public class FeatureMaps2wayMergeTest {
 		assertEquals(2, referenceChangeDiff.getEquivalence().getDifferences().size());
 
 		// reject both
-		mergerRegistry.getHighestRankingMerger(featureMapChangeDiff).copyRightToLeft(featureMapChangeDiff,
-				new BasicMonitor());
-		mergerRegistry.getHighestRankingMerger(referenceChangeDiff).copyRightToLeft(referenceChangeDiff,
-				new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(featureMapChangeDiff), new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(referenceChangeDiff), new BasicMonitor());
 
 		// no differences should be left
 		comparison = EMFCompare.builder().build().compare(scope);
@@ -1301,7 +1299,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node1[firstKey add] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map add] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -1359,7 +1357,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map add] from left to right : the ReferenceChange
 		// Node node1[firstKey add] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -1417,7 +1415,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node1[firstKey add] from right to left : the FeatureMapChange
 		// <firstKey> Node node1 [map add] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -1471,7 +1469,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map add] from right to left : the ReferenceChange
 		// Node node1[firstKey add] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -1525,7 +1523,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node2[firstKey delete] from left to right : the FeatureMapChange
 		// <firstKey> Node node2 [map delete] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node2 still exists in left
 		final EObject leftNode2 = getNodeNamed(left, "node2");
@@ -1579,7 +1577,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node2 [map delete] from left to right : the
 		// ReferenceChange Node node2[firstKey delete] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node2 still exists in left
 		final EObject leftNode2 = getNodeNamed(left, "node2");
@@ -1633,7 +1631,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node2[firstKey delete] from right to left : the FeatureMapChange
 		// <firstKey> Node node2 [map delete] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node2 still exists in left
 		final EObject leftNode2 = getNodeNamed(left, "node2");
@@ -1691,7 +1689,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node2 [map delete] from right to left : the
 		// ReferenceChange Node node2[firstKey delete] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node2 still exists in left
 		final EObject leftNode2 = getNodeNamed(left, "node2");
@@ -1750,7 +1748,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node1[firstKey move] from left to right : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -1809,7 +1807,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from left to right : the
 		// ReferenceChange Node node1[firstKey move] will be merge from left to right too.
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
+		batchMerger.copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -1868,7 +1866,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the ReferenceChange Node node1[firstKey move] from right to left : the FeatureMapChange
 		// <firstKey> Node node1 [map move] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");
@@ -1927,7 +1925,7 @@ public class FeatureMaps2wayMergeTest {
 
 		// Merge the FeatureMapChange <firstKey> Node node1 [map move] from right to left : the
 		// ReferenceChange Node node1[firstKey move] will be merge from right to left too.
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		batchMerger.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 
 		// node1 still exists in left
 		final EObject leftNode1 = getNodeNamed(left, "node1");

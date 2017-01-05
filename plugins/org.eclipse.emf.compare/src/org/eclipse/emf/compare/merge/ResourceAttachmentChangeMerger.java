@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
+import static org.eclipse.emf.compare.merge.IMergeCriterion.NONE;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +54,7 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 
 	@Override
 	public boolean apply(IMergeCriterion criterion) {
-		return criterion == null;
+		return criterion == null || criterion == NONE;
 	}
 
 	/**

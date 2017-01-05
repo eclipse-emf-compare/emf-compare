@@ -19,6 +19,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -31,6 +32,7 @@ import org.eclipse.emf.compare.diagram.internal.extensions.NodeChange;
 import org.eclipse.emf.compare.diagram.papyrus.tests.AbstractTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.DiagramInputData;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.data.EdgeMergeInputData;
+import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
 import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
@@ -219,7 +221,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyLeftToRight(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -242,7 +244,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyRightToLeft(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -266,7 +268,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyLeftToRight(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -290,7 +292,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyRightToLeft(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -313,7 +315,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), association);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyLeftToRight(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -336,7 +338,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), association);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyRightToLeft(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -359,7 +361,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), association);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyLeftToRight(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -382,7 +384,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), association);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyRightToLeft(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -407,7 +409,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyLeftToRight(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -432,7 +434,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyRightToLeft(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -458,7 +460,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyLeftToRight(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -484,7 +486,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyRightToLeft(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -509,7 +511,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), association);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyLeftToRight(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -535,7 +537,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), association);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyRightToLeft(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -561,7 +563,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), association);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyLeftToRight(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -587,7 +589,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), association);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyRightToLeft(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -613,7 +615,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyLeftToRight(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -638,7 +640,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyRightToLeft(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -664,7 +666,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyLeftToRight(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -691,7 +693,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyRightToLeft(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -716,7 +718,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), association);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyLeftToRight(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -742,7 +744,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), association);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyRightToLeft(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -768,7 +770,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), association);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyLeftToRight(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -794,7 +796,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), association);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyRightToLeft(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -824,7 +826,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge1);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyLeftToRight(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -856,7 +858,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge1);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyRightToLeft(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -885,7 +887,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge1);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyLeftToRight(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -915,7 +917,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeChange = Iterables.find(comparison.getDifferences(), edge1);
-		getMergerRegistry().getHighestRankingMerger(edgeChange).copyRightToLeft(edgeChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(edgeChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -950,7 +952,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), asso1);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyLeftToRight(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -983,7 +985,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), asso1);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyRightToLeft(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -1016,7 +1018,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), asso1);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyLeftToRight(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -1049,7 +1051,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff associationChange = Iterables.find(comparison.getDifferences(), asso1);
-		getMergerRegistry().getHighestRankingMerger(associationChange).copyRightToLeft(associationChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(associationChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -1088,7 +1090,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff nodeBChange = Iterables.find(comparison.getDifferences(), nodeB);
-		getMergerRegistry().getHighestRankingMerger(nodeBChange).copyLeftToRight(nodeBChange,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(nodeBChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -1130,7 +1132,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff nodeBChange = Iterables.find(comparison.getDifferences(), nodeB);
-		getMergerRegistry().getHighestRankingMerger(nodeBChange).copyRightToLeft(nodeBChange,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(nodeBChange),
 				new BasicMonitor());
 
 		// ** MERGE CHECKING **
@@ -1207,8 +1209,8 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edgeAbstractionChange = Iterables.find(comparison.getDifferences(), edgeAbstraction);
-		getMergerRegistry().getHighestRankingMerger(edgeAbstractionChange)
-				.copyLeftToRight(edgeAbstractionChange, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edgeAbstractionChange),
+				new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -1289,7 +1291,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edge = Iterables.find(comparison.getDifferences(), edgeAssociation);
-		getMergerRegistry().getHighestRankingMerger(edge).copyLeftToRight(edge, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edge), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -1369,7 +1371,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edge = Iterables.find(comparison.getDifferences(), edgeDependency);
-		getMergerRegistry().getHighestRankingMerger(edge).copyLeftToRight(edge, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edge), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -1450,7 +1452,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edge = Iterables.find(comparison.getDifferences(), edgeImport);
-		getMergerRegistry().getHighestRankingMerger(edge).copyLeftToRight(edge, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edge), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -1533,7 +1535,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edge = Iterables.find(comparison.getDifferences(), edgeGeneralization);
-		getMergerRegistry().getHighestRankingMerger(edge).copyLeftToRight(edge, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edge), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -1617,7 +1619,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edge = Iterables.find(comparison.getDifferences(), edgeFlow);
-		getMergerRegistry().getHighestRankingMerger(edge).copyLeftToRight(edge, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edge), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -1700,7 +1702,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edge = Iterables.find(comparison.getDifferences(), edgeInterfaceRealization);
-		getMergerRegistry().getHighestRankingMerger(edge).copyLeftToRight(edge, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edge), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -1781,7 +1783,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edge = Iterables.find(comparison.getDifferences(), edgeRealization);
-		getMergerRegistry().getHighestRankingMerger(edge).copyLeftToRight(edge, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edge), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -1862,7 +1864,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edge = Iterables.find(comparison.getDifferences(), edgeSubstitution);
-		getMergerRegistry().getHighestRankingMerger(edge).copyLeftToRight(edge, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edge), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -1943,7 +1945,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edge = Iterables.find(comparison.getDifferences(), edgeUsage);
-		getMergerRegistry().getHighestRankingMerger(edge).copyLeftToRight(edge, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edge), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -1988,7 +1990,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edge = Iterables.find(comparison.getDifferences(), edge1);
-		getMergerRegistry().getHighestRankingMerger(edge).copyLeftToRight(edge, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edge), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -2022,7 +2024,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edge = Iterables.find(comparison.getDifferences(), edge2);
-		getMergerRegistry().getHighestRankingMerger(edge).copyLeftToRight(edge, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edge), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -2056,7 +2058,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edge = Iterables.find(comparison.getDifferences(), edge3);
-		getMergerRegistry().getHighestRankingMerger(edge).copyLeftToRight(edge, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edge), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -2090,7 +2092,7 @@ public class EdgeMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff edge = Iterables.find(comparison.getDifferences(), edgeTarget);
-		getMergerRegistry().getHighestRankingMerger(edge).copyLeftToRight(edge, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(edge), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);

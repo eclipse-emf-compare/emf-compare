@@ -14,7 +14,8 @@ import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.DifferenceSource.LEFT;
 import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
 import static org.eclipse.emf.compare.DifferenceState.MERGED;
-import static org.eclipse.emf.compare.DifferenceState.UNRESOLVED;
+
+import java.util.Set;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Diff;
@@ -48,7 +49,7 @@ public class AdditiveReferenceChangeMerger extends ReferenceChangeMerger {
 
 	@Override
 	public void copyRightToLeft(Diff target, Monitor monitor) {
-		if (target.getState() != UNRESOLVED) {
+		if (isInTerminalState(target)) {
 			return;
 		}
 
@@ -127,18 +128,86 @@ public class AdditiveReferenceChangeMerger extends ReferenceChangeMerger {
 	}
 
 	/**
-	 * Mark a diff and its required diffs as merged.
+	 * Mark a diff and its refining diffs as merged.
 	 * 
 	 * @param diff
 	 *            The diff to merge
 	 */
 	private void markAsMerged(Diff diff) {
-		// diff.setState(MERGED);
 		diff.setState(MERGED);
 		for (Diff refiningDiff : diff.getRefinedBy()) {
-			// markAsMerged(refiningDiff);
 			refiningDiff.setState(MERGED);
 		}
 	}
 
+	// CHECKSTYLE:OFF
+	@Override
+	public Set<Diff> getDirectMergeDependencies(Diff diff, boolean mergeRightToLeft) {
+		ReferenceChange rc = (ReferenceChange)diff;
+		if (rc.getReference().isContainment()) {
+			if (rc.getSource() == RIGHT) {
+				if (rc.getKind() == DELETE) {
+					return super.getDirectMergeDependencies(diff, !mergeRightToLeft);
+				} else {
+					return super.getDirectMergeDependencies(diff, mergeRightToLeft);
+				}
+			} else {
+				if (rc.getKind() == DELETE) {
+					return super.getDirectMergeDependencies(diff, mergeRightToLeft);
+				} else {
+					return super.getDirectMergeDependencies(diff, !mergeRightToLeft);
+				}
+			}
+		} else {
+			if (rc.getSource() == RIGHT) {
+				if (rc.getKind() == DELETE || isUnsetRelatedToDeletion(rc)) {
+					return super.getDirectMergeDependencies(diff, !mergeRightToLeft);
+				} else {
+					return super.getDirectMergeDependencies(diff, mergeRightToLeft);
+				}
+			} else {
+				if (rc.getKind() == DELETE || isUnsetRelatedToDeletion(rc)) {
+					return super.getDirectMergeDependencies(diff, mergeRightToLeft);
+				} else {
+					return super.getDirectMergeDependencies(diff, !mergeRightToLeft);
+				}
+			}
+		}
+	}
+
+	@Override
+	public Set<Diff> getDirectResultingMerges(Diff diff, boolean mergeRightToLeft) {
+		ReferenceChange rc = (ReferenceChange)diff;
+		if (rc.getReference().isContainment()) {
+			if (rc.getSource() == RIGHT) {
+				if (rc.getKind() == DELETE) {
+					return super.getDirectResultingMerges(diff, !mergeRightToLeft);
+				} else {
+					return super.getDirectResultingMerges(diff, mergeRightToLeft);
+				}
+			} else {
+				if (rc.getKind() == DELETE) {
+					return super.getDirectResultingMerges(diff, mergeRightToLeft);
+				} else {
+					return super.getDirectResultingMerges(diff, !mergeRightToLeft);
+				}
+			}
+		} else {
+			if (rc.getSource() == RIGHT) {
+				if (rc.getKind() == DELETE || isUnsetRelatedToDeletion(rc)) {
+					return super.getDirectResultingMerges(diff, !mergeRightToLeft);
+				} else {
+					return super.getDirectResultingMerges(diff, mergeRightToLeft);
+				}
+			} else {
+				if (rc.getKind() == DELETE || isUnsetRelatedToDeletion(rc)) {
+					return super.getDirectResultingMerges(diff, mergeRightToLeft);
+				} else {
+					return super.getDirectResultingMerges(diff, !mergeRightToLeft);
+				}
+			}
+		}
+	}
+
+	// CHECKSTYLE:ON
 }

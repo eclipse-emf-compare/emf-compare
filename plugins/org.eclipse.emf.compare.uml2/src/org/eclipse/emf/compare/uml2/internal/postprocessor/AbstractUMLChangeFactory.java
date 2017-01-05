@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 507177
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor;
 
@@ -14,12 +15,14 @@ import static com.google.common.base.Predicates.instanceOf;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.SetMultimap;
 
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -168,7 +171,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 		private final Comparison fComparison;
 
 		/** The specified settings. */
-		private final HashMultimap<Object, RefiningCandidate> fRefiningCandidates;
+		private final SetMultimap<Object, RefiningCandidate> fRefiningCandidates;
 
 		/**
 		 * Constructor.
@@ -179,7 +182,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 		 *            The specified settings.
 		 */
 		DifferencesOnRefiningCandidates(Comparison comparison,
-				HashMultimap<Object, RefiningCandidate> refiningCandidates) {
+				SetMultimap<Object, RefiningCandidate> refiningCandidates) {
 			fComparison = comparison;
 			fRefiningCandidates = refiningCandidates;
 		}
@@ -268,7 +271,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 	 */
 	@Override
 	public void setRefiningChanges(Diff extension, DifferenceKind extensionKind, Diff refiningDiff) {
-		HashMultimap<Object, RefiningCandidate> refiningCandidates = HashMultimap.create();
+		SetMultimap<Object, RefiningCandidate> refiningCandidates = LinkedHashMultimap.create();
 
 		Comparison comparison = ComparisonUtil.getComparison(refiningDiff);
 		// From each discriminant business object, ...
@@ -405,7 +408,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 	 */
 	protected static Set<EObject> defaultCaseForDiscriminantsGetter(Switch<Set<EObject>> discriminantsGetter,
 			EObject object) {
-		Set<EObject> result = new HashSet<EObject>();
+		Set<EObject> result = new LinkedHashSet<EObject>();
 		EObject parent = object.eContainer();
 		if (parent != null) {
 			result.addAll(discriminantsGetter.doSwitch(parent));
@@ -436,7 +439,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 	 *            differences. This map must not be null.
 	 */
 	private void defineRefiningCandidates(EObject discriminant,
-			HashMultimap<Object, RefiningCandidate> refiningCandidates) {
+			Multimap<Object, RefiningCandidate> refiningCandidates) {
 		// The discriminant itself is a candidate, only on an incoming containment reference.
 		refiningCandidates.put(discriminant, new RefiningCandidate());
 		// Delegation to a recursive method to find the other candidates.
@@ -456,7 +459,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 	 *            differences. This map must not be null.
 	 */
 	private void defineRefiningCandidatesFrom(EObject discriminant,
-			HashMultimap<Object, RefiningCandidate> refiningCandidates) {
+			Multimap<Object, RefiningCandidate> refiningCandidates) {
 		Iterator<EStructuralFeature> outgoingFeatures = discriminant.eClass().getEAllStructuralFeatures()
 				.iterator();
 		while (outgoingFeatures.hasNext()) {

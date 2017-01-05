@@ -37,6 +37,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -220,12 +221,11 @@ public class ComplexMergeTest {
 	}
 
 	private void copyRightToLeft(Diff diff) {
-		mergerRegistry.getHighestRankingMerger(diff).copyRightToLeft(diff, new BasicMonitor());
+		new BatchMerger(mergerRegistry).copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
 	}
 
 	private void copyLeftToRight(Diff diff) {
-		mergerRegistry.getHighestRankingMerger(diff).copyLeftToRight(diff, new BasicMonitor());
-
+		new BatchMerger(mergerRegistry).copyAllLeftToRight(Arrays.asList(diff), new BasicMonitor());
 	}
 
 	/**

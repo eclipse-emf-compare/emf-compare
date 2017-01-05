@@ -18,12 +18,13 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 
 import java.io.IOException;
+import java.util.Arrays;
 
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.merge.AbstractMerger;
-import org.eclipse.emf.compare.merge.IMergeOptionAware;
+import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -34,6 +35,7 @@ import org.eclipse.emf.compare.uml2.tests.merge.data.DiffInvolvingRefineDiffInpu
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
@@ -57,6 +59,7 @@ public class MergeDiffInvolvingRefineDiffTest extends AbstractUMLTest {
 	}
 
 	@Test
+	@Ignore("Mergers should not be aware of the cascading filter.")
 	public void testMergeRightToLeftWithSubDiffsAwareOption() throws IOException {
 		final Resource left = input.getLeft();
 		final Resource right = input.getRight();
@@ -74,12 +77,14 @@ public class MergeDiffInvolvingRefineDiffTest extends AbstractUMLTest {
 				"ownedConnector", "SysMLmodel.InternalBlock.Block1.Connector2");
 		final Diff diff = Iterators.find(differences.iterator(), removedFromReference);
 
-		IMerger merger = registry.getHighestRankingMerger(diff);
-		if (merger instanceof IMergeOptionAware) {
-			((IMergeOptionAware)merger).getMergeOptions().put(AbstractMerger.SUB_DIFF_AWARE_OPTION,
-					Boolean.TRUE);
-		}
-		merger.copyRightToLeft(diff, null);
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
+		// IMerger merger = registry.getHighestRankingMerger(diff);
+		// if (merger instanceof IMergeOptionAware) {
+		// ((IMergeOptionAware)merger).getMergeOptions().put(AbstractMerger.SUB_DIFF_AWARE_OPTION,
+		// Boolean.TRUE);
+		// }
+		// merger.copyRightToLeft(diff, null);
 
 		final Comparison comparisonAfter = getCompare().compare(scope);
 		// The subdiffs are merged with the selected diff (and the dependencies of these subdiffs)
@@ -105,12 +110,14 @@ public class MergeDiffInvolvingRefineDiffTest extends AbstractUMLTest {
 				"ownedConnector", "SysMLmodel.InternalBlock.Block1.Connector2");
 		final Diff diff = Iterators.find(differences.iterator(), removedFromReference);
 
-		IMerger merger = registry.getHighestRankingMerger(diff);
-		if (merger instanceof IMergeOptionAware) {
-			((IMergeOptionAware)merger).getMergeOptions().put(AbstractMerger.SUB_DIFF_AWARE_OPTION,
-					Boolean.FALSE);
-		}
-		merger.copyRightToLeft(diff, null);
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllRightToLeft(Arrays.asList(diff), new BasicMonitor());
+		// IMerger merger = registry.getHighestRankingMerger(diff);
+		// if (merger instanceof IMergeOptionAware) {
+		// ((IMergeOptionAware)merger).getMergeOptions().put(AbstractMerger.SUB_DIFF_AWARE_OPTION,
+		// Boolean.FALSE);
+		// }
+		// merger.copyRightToLeft(diff, null);
 
 		final Comparison comparisonAfter = getCompare().compare(scope);
 		// The subdiffs are not merge, only the selected diff

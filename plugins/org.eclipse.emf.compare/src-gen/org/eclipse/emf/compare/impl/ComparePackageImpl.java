@@ -1160,6 +1160,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		addEEnumLiteral(differenceStateEEnum, DifferenceState.UNRESOLVED);
 		addEEnumLiteral(differenceStateEEnum, DifferenceState.MERGED);
 		addEEnumLiteral(differenceStateEEnum, DifferenceState.DISCARDED);
+		addEEnumLiteral(differenceStateEEnum, DifferenceState.MERGING);
 
 		initEEnum(conflictKindEEnum, ConflictKind.class, "ConflictKind"); //$NON-NLS-1$
 		addEEnumLiteral(conflictKindEEnum, ConflictKind.REAL);

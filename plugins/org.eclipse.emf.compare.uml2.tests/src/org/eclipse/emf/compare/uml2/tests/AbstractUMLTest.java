@@ -9,12 +9,14 @@
  *     Obeo - initial API and implementation
  *     Stefan Dirix - update priority value for UML merger
  *     Philip Langer - bug 501864
+ *     Martin Fleck - bug 507177
  */
 package org.eclipse.emf.compare.uml2.tests;
 
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterators.all;
+import static org.eclipse.emf.compare.merge.AbstractMerger.SUB_DIFF_AWARE_OPTION;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasDirectOrIndirectConflict;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -22,9 +24,12 @@ import static org.junit.Assert.assertTrue;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Maps;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.EMFPlugin;
@@ -41,6 +46,7 @@ import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
+import org.eclipse.emf.compare.merge.IMergeOptionAware;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
@@ -77,6 +83,9 @@ public abstract class AbstractUMLTest {
 	protected EMFCompare emfCompare;
 
 	private IMerger.Registry mergerRegistry;
+
+	/** Cached cascading options before the last time the filter was enabled or disabled. */
+	private static final Map<IMergeOptionAware, Object> CACHED_OPTIONS = Maps.newHashMap();
 
 	/**
 	 * Each sublass of AbstractUMLTest have to call this method in a @BeforeClass annotated method. This allow
@@ -290,6 +299,51 @@ public abstract class AbstractUMLTest {
 			assertFalse("Wrong number of refines (of type StereotypedElementChange) on " + diff,
 					stereotypedElementChangeRefines > 1);
 
+		}
+	}
+
+	/**
+	 * Enables the cascading filter by setting the filter option in all mergers to true. Any changes done by
+	 * this method can be restored by calling {@link #restoreCascadingFilter()}.
+	 */
+	protected void enableCascadingFilter() {
+		setCascadingFilter(true);
+	}
+
+	/**
+	 * Disables the cascading filter by setting the filter option in all mergers to false. Any changes done by
+	 * this method can be restored by calling {@link #restoreCascadingFilter()}.
+	 */
+	protected void disableCascadingFilter() {
+		setCascadingFilter(false);
+	}
+
+	/**
+	 * Sets the cascading filter option (subdiff-awareness) of all mergers to the given state. Any changes
+	 * done by this method can be restored by calling {@link #restoreCascadingFilter()}.
+	 * 
+	 * @param enabled
+	 *            filter state
+	 */
+	private void setCascadingFilter(boolean enabled) {
+		for (IMergeOptionAware merger : Iterables.filter(mergerRegistry.getMergers(null),
+				IMergeOptionAware.class)) {
+			Map<Object, Object> mergeOptions = merger.getMergeOptions();
+			Object previousValue = mergeOptions.get(SUB_DIFF_AWARE_OPTION);
+			CACHED_OPTIONS.put(merger, previousValue);
+			mergeOptions.put(SUB_DIFF_AWARE_OPTION, Boolean.valueOf(enabled));
+		}
+	}
+
+	/**
+	 * Restores the cascading filter options changed by the last call to {@link #enableCascadingFilter()},
+	 * {@link #disableCascadingFilter()}, or {@link #setCascadingFilter(boolean)}.
+	 */
+	protected void restoreCascadingFilter() {
+		// restore previous values
+		for (Entry<IMergeOptionAware, Object> entry : CACHED_OPTIONS.entrySet()) {
+			IMergeOptionAware merger = entry.getKey();
+			merger.getMergeOptions().put(SUB_DIFF_AWARE_OPTION, entry.getValue());
 		}
 	}
 }

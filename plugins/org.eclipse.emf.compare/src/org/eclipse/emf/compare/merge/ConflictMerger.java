@@ -16,9 +16,10 @@ import static org.eclipse.emf.compare.DifferenceKind.MOVE;
 import static org.eclipse.emf.compare.DifferenceSource.LEFT;
 import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
 import static org.eclipse.emf.compare.DifferenceState.MERGED;
-import static org.eclipse.emf.compare.DifferenceState.UNRESOLVED;
+import static org.eclipse.emf.compare.merge.IMergeCriterion.NONE;
 
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Conflict;
@@ -45,7 +46,7 @@ public class ConflictMerger extends AbstractMerger {
 
 	@Override
 	public boolean apply(IMergeCriterion criterion) {
-		return criterion == null;
+		return criterion == null || criterion == NONE;
 	}
 
 	/**
@@ -56,8 +57,7 @@ public class ConflictMerger extends AbstractMerger {
 	 */
 	@Override
 	public void copyLeftToRight(Diff target, Monitor monitor) {
-		// Don't merge an already merged (or discarded) diff
-		if (target.getState() != UNRESOLVED) {
+		if (isInTerminalState(target)) {
 			return;
 		}
 
@@ -88,8 +88,7 @@ public class ConflictMerger extends AbstractMerger {
 	 */
 	@Override
 	public void copyRightToLeft(Diff target, Monitor monitor) {
-		// Don't merge an already merged (or discarded) diff
-		if (target.getState() != UNRESOLVED) {
+		if (isInTerminalState(target)) {
 			return;
 		}
 
@@ -109,6 +108,40 @@ public class ConflictMerger extends AbstractMerger {
 
 		// Call the appropriate merger for the current diff
 		getMergerDelegate(target).copyRightToLeft(target, monitor);
+	}
+
+	@Override
+	public Set<Diff> getDirectMergeDependencies(Diff diff, boolean rightToLeft) {
+		Set<Diff> result = super.getDirectMergeDependencies(diff, rightToLeft);
+		// Add each conflicting diff from the other side
+		Conflict conflict = diff.getConflict();
+		if (AbstractMerger.isAccepting(diff, rightToLeft)) {
+			for (Diff conflictingDiff : conflict.getDifferences()) {
+				if (conflictingDiff.getSource() != diff.getSource()
+						&& !isConflictVsMoveAndDelete(conflictingDiff, diff, !rightToLeft)
+						&& conflictingDiff.getKind() != MOVE) {
+					result.add(conflictingDiff);
+				}
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public Set<Diff> getDirectResultingMerges(Diff diff, boolean rightToLeft) {
+		Set<Diff> result = super.getDirectResultingMerges(diff, rightToLeft);
+
+		Conflict conflict = diff.getConflict();
+		if (AbstractMerger.isAccepting(diff, rightToLeft)) {
+			for (Diff conflictingDiff : conflict.getDifferences()) {
+				if (conflictingDiff.getSource() != diff.getSource()
+						&& (isConflictVsMoveAndDelete(conflictingDiff, diff, !rightToLeft)
+								|| conflictingDiff.getKind() != MOVE)) {
+					result.add(conflictingDiff);
+				}
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -166,8 +199,8 @@ public class ConflictMerger extends AbstractMerger {
 
 	@Override
 	protected DelegatingMerger getMergerDelegate(Diff diff) {
-		IMergeCriterion criterion = (IMergeCriterion)getMergeOptions().get(
-				IMergeCriterion.OPTION_MERGE_CRITERION);
+		IMergeCriterion criterion = (IMergeCriterion)getMergeOptions()
+				.get(IMergeCriterion.OPTION_MERGE_CRITERION);
 		Iterator<IMerger> it = ((Registry2)getRegistry()).getMergersByRankDescending(diff, criterion);
 		IMerger merger = this;
 		while (it.hasNext() && merger == this) {

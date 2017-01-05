@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 507177: adapt for refinement behavior
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.implications;
 
@@ -16,6 +17,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReferenc
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -23,11 +25,13 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.uml2.internal.DirectedRelationshipChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
@@ -42,6 +46,8 @@ import org.junit.Test;
 public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 
 	private static final int NB_DIFFS = 9;
+
+	private static final int NB_INTERFACE_REALIZATION_DIFFS = 5;
 
 	private ImplicationsInputData input = new ImplicationsInputData();
 
@@ -65,8 +71,6 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		Predicate<? super Diff> addSubstitutionDescription = null;
 		Predicate<? super Diff> addClientInSubstitutionDescription = null;
 		Predicate<? super Diff> addSupplierInSubstitutionDescription = null;
-		Predicate<? super Diff> addUMLInterfaceRealizationDescription = null;
-		Predicate<? super Diff> addUMLSubstitutionDescription = null;
 
 		if (kind.equals(TestKind.DELETE)) {
 			addInterfaceRealizationDescription = removedFromReference("model.Class0", "interfaceRealization",
@@ -164,20 +168,32 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
-				.copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addClientInInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+		// .copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
 
-		checkMergeAddClientInInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
-	private void checkMergeAddClientInInterfaceRealization(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 3, comparison.getDifferences().size());
-		assertNull(diffs.addClientInInterfaceRealization);
-		assertNull(diffs.addInterfaceRealization);
+	private void checkMergeInterfaceRealization(Comparison comparison, DiffsOfInterest diffs) {
+		assertEquals(NB_DIFFS - NB_INTERFACE_REALIZATION_DIFFS, comparison.getDifferences().size());
+
+		// interface realization refinement has been merged together as a whole, diffs are null
 		assertNull(diffs.addUMLInterfaceRealization);
+		assertNull(diffs.addInterfaceRealization);
+		assertNull(diffs.addClientInInterfaceRealization);
+		assertNull(diffs.addContractInInterfaceRealization);
+		assertNull(diffs.addSupplierInInterfaceRealization);
+
+		// substitution not merged as a whole, diffs are still set
+		assertNotNull(diffs.addUMLSubstitution);
+		assertNotNull(diffs.addSubstitution);
+		assertNotNull(diffs.addClientInSubstitution);
+		assertNotNull(diffs.addSupplierInSubstitution);
 	}
 
 	@Test
@@ -190,13 +206,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
-				.copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addClientInInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+		// .copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
 
-		checkMergeAddClientInInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -209,22 +227,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
-				.copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addClientInInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+		// .copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, left);
 		diffs = getDiffs(comparison, TestKind.ADD);
 
-		checkMergeDeleteClientInInterfaceRealization(comparison, diffs);
-	}
-
-	private void checkMergeDeleteClientInInterfaceRealization(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 5, comparison.getDifferences().size());
-		assertNull(diffs.addClientInInterfaceRealization);
-		assertNull(diffs.addInterfaceRealization);
-		assertNull(diffs.addSupplierInInterfaceRealization);
-		assertNull(diffs.addContractInInterfaceRealization);
-		assertNull(diffs.addUMLInterfaceRealization);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -237,20 +248,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
-				.copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+		// .copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
 
-		checkMergeAddInterfaceRealization(comparison, diffs);
-	}
-
-	private void checkMergeAddInterfaceRealization(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 3, comparison.getDifferences().size());
-		assertNull(diffs.addInterfaceRealization);
-		assertNull(diffs.addClientInInterfaceRealization);
-		assertNull(diffs.addUMLInterfaceRealization);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -263,13 +269,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
-				.copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+		// .copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
 
-		checkMergeAddInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -282,22 +290,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
-				.copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+		// .copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, left);
 		diffs = getDiffs(comparison, TestKind.ADD);
 
-		checkMergeDeleteInterfaceRealization(comparison, diffs);
-	}
-
-	private void checkMergeDeleteInterfaceRealization(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 5, comparison.getDifferences().size());
-		assertNull(diffs.addInterfaceRealization);
-		assertNull(diffs.addClientInInterfaceRealization);
-		assertNull(diffs.addSupplierInInterfaceRealization);
-		assertNull(diffs.addContractInInterfaceRealization);
-		assertNull(diffs.addUMLInterfaceRealization);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -310,13 +311,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
-				.copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addClientInInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+		// .copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
 
-		checkMergeDeleteClientInInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -329,13 +332,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
-				.copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addClientInInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+		// .copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
 
-		checkMergeDeleteClientInInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -348,13 +353,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
-				.copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addClientInInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+		// .copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, left);
 		diffs = getDiffs(comparison, TestKind.ADD);
 
-		checkMergeAddClientInInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -367,13 +374,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
-				.copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+		// .copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
 
-		checkMergeDeleteInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -386,13 +395,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
-				.copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+		// .copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
 
-		checkMergeDeleteInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -405,13 +416,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
-				.copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+		// .copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, left);
 		diffs = getDiffs(comparison, TestKind.ADD);
 
-		checkMergeAddInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -453,13 +466,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
-				.copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addClientInInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+		// .copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
 
-		checkMergeDeleteClientInInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -472,13 +487,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
-				.copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addClientInInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+		// .copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
 
-		checkMergeDeleteClientInInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -491,13 +508,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
-				.copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addClientInInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+		// .copyLeftToRight(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, left);
 		diffs = getDiffs(comparison, TestKind.DELETE);
 
-		checkMergeAddClientInInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -510,13 +529,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
-				.copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+		// .copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
 
-		checkMergeDeleteInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -529,13 +550,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
-				.copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+		// .copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
 
-		checkMergeDeleteInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -548,13 +571,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
-				.copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+		// .copyLeftToRight(diffs.addInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, left);
 		diffs = getDiffs(comparison, TestKind.DELETE);
 
-		checkMergeAddInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -567,13 +592,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
-				.copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addClientInInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+		// .copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
 
-		checkMergeAddClientInInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -586,13 +613,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
-				.copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addClientInInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+		// .copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
 
-		checkMergeAddClientInInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -605,13 +634,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
-				.copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addClientInInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addClientInInterfaceRealization)
+		// .copyRightToLeft(diffs.addClientInInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, left);
 		diffs = getDiffs(comparison, TestKind.DELETE);
 
-		checkMergeDeleteClientInInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -624,13 +655,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
-				.copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+		// .copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
 
-		checkMergeAddInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -643,13 +676,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
-				.copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+		// .copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
 
-		checkMergeAddInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	@Test
@@ -662,13 +697,15 @@ public class ImplicationsInterfaceRealizationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
-				.copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addInterfaceRealization), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addInterfaceRealization)
+		// .copyRightToLeft(diffs.addInterfaceRealization, new BasicMonitor());
 
-		comparison = compare(left, right);
+		comparison = compare(left, right, left);
 		diffs = getDiffs(comparison, TestKind.DELETE);
 
-		checkMergeDeleteInterfaceRealization(comparison, diffs);
+		checkMergeInterfaceRealization(comparison, diffs);
 	}
 
 	private void testAB1(TestKind kind, final Comparison comparison) {

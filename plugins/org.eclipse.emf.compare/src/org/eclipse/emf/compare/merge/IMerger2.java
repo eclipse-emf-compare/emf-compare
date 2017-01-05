@@ -31,21 +31,23 @@ import org.eclipse.emf.compare.Diff;
  */
 public interface IMerger2 extends IMerger {
 	/**
-	 * Retrieves the set of <b>directly</b> required diffs in order to merge the current one. This may
-	 * includes the diff's {@link Diff#getRequires() requirements}, its {@link Diff#getImpliedBy() implying
-	 * diff}, or any other diff that we need to merge <u>before</u> the given one.
+	 * Retrieves the set of <b>directly</b> required diffs needed in order to merge the current one. This may
+	 * includes the diff's {@link Diff#getRequires() requirements} or any other diff that we need to merge
+	 * <u>before</u> the given one.
 	 * 
 	 * @param diff
 	 *            The diff which direct requirements we need.
-	 * @param mergeLeftToRight
+	 * @param mergeRightToLeft
 	 *            The direction in which we're considering a merge.
 	 * @return The set of <b>directly</b> required diffs in order to merge the current one.
 	 */
-	Set<Diff> getDirectMergeDependencies(Diff diff, boolean mergeLeftToRight);
+	Set<Diff> getDirectMergeDependencies(Diff diff, boolean mergeRightToLeft);
 
 	/**
 	 * Returns all differences that will be merged because of our merging the given <code>target</code>
-	 * difference.
+	 * difference. This may include the diff's {@link Diff#getImplies() implications}, the diff's
+	 * {@link Diff#getEquivalence() equivalences}, the diff's {@link Diff#getRefines() refinements} or any
+	 * other diff that we need to merge <u>together</u> with the given diff.
 	 * 
 	 * @param target
 	 *            The difference we're considering merging.

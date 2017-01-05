@@ -19,8 +19,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Sets.SetView;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -1007,7 +1005,8 @@ public class Graph<E> implements IGraph<E> {
 
 		/** {@inheritDoc} */
 		public boolean hasNext() {
-			return next != null || currentIterator.hasNext() || !consumedNodes.containsAll(nextIterable);
+			// next is updated after a node is returned or pruned
+			return next != null;
 		}
 
 		/** {@inheritDoc} */
@@ -1046,6 +1045,10 @@ public class Graph<E> implements IGraph<E> {
 					}
 				}
 			}
+			// update next according to newly pruned nodes, if necessary
+			if (consumedNodes.contains(next)) {
+				prepareNext();
+			}
 		}
 
 		/**
@@ -1057,17 +1060,43 @@ public class Graph<E> implements IGraph<E> {
 			throw new UnsupportedOperationException();
 		}
 
-		/** This will prepare this iterator for a subsequent call to {@link #next()}. */
+		/**
+		 * This method prepares the {@link #next()} node by checking first the current iterator if there are
+		 * any unconsumed nodes left and if not switching to the next iterator. If neither the current nor the
+		 * next iterator have any unconsumed nodes, next will be set to null.
+		 */
 		private void prepareNext() {
-			if (!currentIterator.hasNext()) {
+			// check if current iterator still has unconsumed nodes
+			boolean isConsumed = true;
+			while (isConsumed) {
+				next = currentNext();
+				// check if node has already been consumed (or pruned)
+				isConsumed = next != null && consumedNodes.contains(next);
+			}
+
+			if (next == null) {
+				// could not find unconsumed nodes in current iterator, try next iterator
 				prepareNextIterator();
+
+				// next iterator is now currentIterator only containing unconsumed nodes, if there are any
+				next = currentNext();
 			}
+		}
+
+		/**
+		 * Returns the next node from the current iterator, if such a node exists. The children of the next
+		 * node will be remembered for the next iterator.
+		 * 
+		 * @return current next node
+		 */
+		private Node<E> currentNext() {
+			Node<E> currentNext = null;
 			if (currentIterator.hasNext()) {
-				next = currentIterator.next();
-				nextIterable.addAll(next.getChildren());
-			} else {
-				next = null;
+				currentNext = currentIterator.next();
+				// remember children for next iterator
+				nextIterable.addAll(currentNext.getChildren());
 			}
+			return currentNext;
 		}
 
 		/**
@@ -1081,12 +1110,7 @@ public class Graph<E> implements IGraph<E> {
 					difference.add(node);
 				}
 			}
-			currentIterator = Iterators.filter(difference.iterator(), new Predicate<Node<E>>() {
-				public boolean apply(Node<E> input) {
-					SetView<Node<E>> trueParents = Sets.difference(input.getParents(), input.getChildren());
-					return consumedNodes.containsAll(trueParents);
-				}
-			});
+			currentIterator = difference.iterator();
 			nextIterable.clear();
 		}
 	}

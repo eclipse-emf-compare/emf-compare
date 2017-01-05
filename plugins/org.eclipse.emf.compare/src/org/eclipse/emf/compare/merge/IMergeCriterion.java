@@ -24,4 +24,10 @@ public interface IMergeCriterion {
 	 * mergers can propagate the criterion to the mergers they may invoke.
 	 */
 	String OPTION_MERGE_CRITERION = "merge.criterion"; //$NON-NLS-1$
+
+	/**
+	 * Default criterion that means that no special criterion is set.
+	 */
+	IMergeCriterion NONE = new IMergeCriterion() {
+	};
 }

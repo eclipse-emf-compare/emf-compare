@@ -17,7 +17,9 @@ import static org.eclipse.emf.compare.DifferenceSource.LEFT;
 import static org.eclipse.emf.compare.DifferenceState.DISCARDED;
 import static org.eclipse.emf.compare.DifferenceState.MERGED;
 import static org.eclipse.emf.compare.merge.AbstractMerger.getMergerDelegate;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
+import static org.eclipse.emf.compare.merge.AbstractMerger.isInTerminalState;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasDirectOrIndirectConflict;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.isAdditiveConflict;
 
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
@@ -48,30 +50,25 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompare.Builder;
-import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.graph.IGraph;
-import org.eclipse.emf.compare.graph.PruningIterator;
 import org.eclipse.emf.compare.ide.IAdditiveResourceMappingMerger;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
-import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
+import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.merge.AdditiveMergeCriterion;
+import org.eclipse.emf.compare.merge.ComputeDiffsToMerge;
+import org.eclipse.emf.compare.merge.DelegatingMerger;
+import org.eclipse.emf.compare.merge.MergeBlockedByConflictException;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.mapping.IMergeContext;
 
 public class AdditiveResourceMappingMerger extends EMFResourceMappingMerger implements IAdditiveResourceMappingMerger {
-
-	public AdditiveResourceMappingMerger() {
-		super();
-	}
 
 	@Override
 	protected void mergeMapping(ResourceMapping mapping, IMergeContext mergeContext,
@@ -111,34 +108,40 @@ public class AdditiveResourceMappingMerger extends EMFResourceMappingMerger impl
 	}
 
 	private Set<URI> performPreMerge(Comparison comparison, SubMonitor subMonitor) {
-		final IGraph<Diff> differencesGraph = MergeDependenciesUtil.mapDifferences(comparison,
-				MERGER_REGISTRY, true, null);
-		final PruningIterator<Diff> iterator = differencesGraph.breadthFirstIterator();
 		final Monitor emfMonitor = BasicMonitor.toMonitor(subMonitor);
-
 		final Set<URI> conflictingURIs = new LinkedHashSet<URI>();
-
-		while (iterator.hasNext()) {
-			final Diff next = iterator.next();
-			doMergeForDiff(next, differencesGraph, iterator, emfMonitor, conflictingURIs);
+		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(true, MERGER_REGISTRY,
+				AdditiveMergeCriterion.INSTANCE).failOnRealConflictUnless(isAdditiveConflict());
+		for (Diff next : comparison.getDifferences()) {
+			doMergeForDiff(next, computer, emfMonitor, conflictingURIs);
 		}
-
 		return conflictingURIs;
 	}
 
-	private void doMergeForDiff(final Diff diff, final IGraph<Diff> differencesGraph,
-			final PruningIterator<Diff> iterator, final Monitor emfMonitor, final Set<URI> conflictingURIs) {
-		if (diff.getState() != DifferenceState.UNRESOLVED) {
+	private void doMergeForDiff(final Diff diff, final ComputeDiffsToMerge computer, final Monitor emfMonitor,
+			final Set<URI> conflictingURIs) {
+		if (isInTerminalState(diff)) {
 			return;
 		}
-		if (hasConflict(REAL).apply(diff)) {
-			if (isInAdditiveConflict(diff)) {
-				// The diff is part of conflict that can be considered as an additive conflict.
+		try {
+			Set<Diff> diffsToMerge = computer.getAllDiffsToMerge(diff);
+			for (Diff toMerge : diffsToMerge) {
+				atomicMerge(toMerge, emfMonitor);
+			}
+		} catch (MergeBlockedByConflictException e) {
+			conflictingURIs.addAll(collectConflictingResources(e.getConflictingDiffs().iterator()));
+		}
+	}
+
+	private void atomicMerge(final Diff diff, final Monitor emfMonitor) {
+		if (hasDirectOrIndirectConflict(REAL).apply(diff)) {
+			if (isOnlyInAdditiveConflicts(diff)) {
 				if (diff.getSource() == LEFT) {
 					if (isRequiredByDeletion(diff)) {
 						// Deletion from left side must be overriden by right changes
-						getMergerDelegate(diff, MERGER_REGISTRY, AdditiveMergeCriterion.INSTANCE)
-								.copyRightToLeft(diff, emfMonitor);
+						DelegatingMerger delegatingMerger = getMergerDelegate(diff, MERGER_REGISTRY,
+								AdditiveMergeCriterion.INSTANCE);
+						delegatingMerger.copyRightToLeft(diff, emfMonitor);
 					} else {
 						// other left changes have to be kept. Mark them as merged
 						diff.setState(MERGED);
@@ -154,14 +157,12 @@ public class AdditiveResourceMappingMerger extends EMFResourceMappingMerger impl
 					}
 				}
 			} else {
-				// The diff is part of a real conflict. Mark the resource as conflicting.
-				iterator.prune();
-				conflictingURIs
-						.addAll(collectConflictingResources(differencesGraph.depthFirstIterator(diff)));
+				throw new IllegalStateException();
 			}
 
 		} else if (isPseudoConflicting(diff)) {
 			EList<Diff> conflictingDiffs = diff.getConflict().getDifferences();
+			// FIXME This doesn't seem useful
 			for (Diff conflictingDiff : conflictingDiffs) {
 				conflictingDiff.setState(MERGED);
 			}
@@ -248,11 +249,11 @@ public class AdditiveResourceMappingMerger extends EMFResourceMappingMerger impl
 	}
 
 	/**
-	 * Test if a diff or one of the diff that required this one are delete diffs.
+	 * Test if a diff or one of the diffs that require it are delete diffs.
 	 * 
 	 * @param diff
 	 *            The given diff
-	 * @return <code>true</code> if the diff or one of the diff that requires this one is a deletion
+	 * @return <code>true</code> if the diff or one of the diff that require it is a deletion
 	 */
 	private boolean isRequiredByDeletion(Diff diff) {
 		if (diff.getKind() == DELETE) {
@@ -291,39 +292,30 @@ public class AdditiveResourceMappingMerger extends EMFResourceMappingMerger impl
 	 *            The given diff
 	 * @return <code>true</code> if the diff is part of an additive conflict
 	 */
-	private boolean isInAdditiveConflict(Diff diff) {
-		boolean isAdditiveConflict = false;
-		EList<Diff> leftDifferences = diff.getConflict().getLeftDifferences();
-		EList<Diff> rightDifferences = diff.getConflict().getRightDifferences();
-		if (inAdditiveConflict(leftDifferences)) {
-			isAdditiveConflict = true;
-		} else if (inAdditiveConflict(rightDifferences)) {
-			isAdditiveConflict = true;
+	private boolean isOnlyInAdditiveConflicts(Diff diff) {
+		Set<Conflict> checkedConflicts = new LinkedHashSet<Conflict>();
+		Conflict conflict = diff.getConflict();
+		boolean result = false;
+		if (conflict != null && conflict.getKind() == REAL && checkedConflicts.add(conflict)) {
+			if (isAdditiveConflict().apply(conflict)) {
+				result = true;
+			} else {
+				// Short-circuit as soon as non-additive conflict is found
+				return false;
+			}
 		}
-
-		return isAdditiveConflict;
-	}
-
-	/**
-	 * Test an list of diff representing one side of a conflict to determine if we are in an additive conflict
-	 * configuration.
-	 * 
-	 * @param diffs
-	 *            A list of diffs from on side of a conflict
-	 * @return <code>true</code> if there is a deletion of a containment reference
-	 */
-	private boolean inAdditiveConflict(EList<Diff> diffs) {
-		boolean isCorrect = false;
-		for (Diff diff : diffs) {
-			if (diff instanceof ReferenceChange) {
-				ReferenceChange rc = (ReferenceChange)diff;
-				if (rc.getReference().isContainment()) {
-					isCorrect = true;
-					break;
+		Set<Diff> allRefiningDiffs = DiffUtil.getAllRefiningDiffs(diff);
+		for (Diff refiningDiff : allRefiningDiffs) {
+			conflict = refiningDiff.getConflict();
+			if (conflict != null && conflict.getKind() == REAL && checkedConflicts.add(conflict)) {
+				if (isAdditiveConflict().apply(conflict)) {
+					result = true;
+				} else {
+					// Short-circuit as soon as non-additive conflict is found
+					return false;
 				}
 			}
 		}
-		return isCorrect;
+		return result;
 	}
-
 }

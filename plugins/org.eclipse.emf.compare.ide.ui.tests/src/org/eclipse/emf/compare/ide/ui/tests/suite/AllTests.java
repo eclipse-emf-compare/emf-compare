@@ -10,6 +10,8 @@
  *     Philip Langer - adds test classes
  *     Stefan Dirix - add EMFModelProviderTest
  *     Alexandra Buzila - SynchronizationModelDiagnosticTest
+ *     Martin Fleck - add CascadingFilterRefinementTest and
+ *                    MergeNonConflictingRunnableRefinementTest
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.suite;
 
@@ -31,7 +33,9 @@ import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolv
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.ThreadedModelResolverWithCustomDependencyProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.synchronizationmodel.SynchronizationModelDiagnosticTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.NavigatableTest;
+import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.CascadingFilterRefinementTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeActionTest;
+import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeNonConflictingRunnableRefinementTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeNonConflictingRunnableTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.PseudoConflictsMergeActionTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TooltipProviderTest;
@@ -59,7 +63,8 @@ import junit.textui.TestRunner;
 		MergeAllCommandTests.class, LocalMonitoredProxyCreationListenerTest.class,
 		RemoteMonitoredProxyCreationListenerTest.class, MergeNonConflictingRunnableTest.class,
 		RenameDetectorTest.class, SimilarityComputerTest.class, TooltipProviderTest.class,
-		SynchronizationModelDiagnosticTest.class })
+		SynchronizationModelDiagnosticTest.class, CascadingFilterRefinementTest.class,
+		MergeNonConflictingRunnableRefinementTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

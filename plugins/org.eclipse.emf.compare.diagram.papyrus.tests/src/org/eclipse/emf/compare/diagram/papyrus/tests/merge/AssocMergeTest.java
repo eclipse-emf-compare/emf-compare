@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import com.google.common.base.Predicate;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -36,6 +37,7 @@ import org.eclipse.emf.compare.diagram.papyrus.internal.PapyrusDiagramPostProces
 import org.eclipse.emf.compare.diagram.papyrus.tests.AbstractTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.DiagramInputData;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.data.AssocMergeInputData;
+import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -71,7 +73,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class3"));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(node), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -97,7 +99,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class3"));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(node), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -124,7 +126,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class3"));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(node), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -151,7 +153,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class3"));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(node), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -178,7 +180,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("State2"));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(node), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -204,7 +206,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("State2"));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(node), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		comparison = buildComparison(left, right);
@@ -234,9 +236,9 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class1", LEFT));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(node), new BasicMonitor());
 		node = find(diffs, edgeTargetChangeTo("Class3", LEFT));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(node), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -267,9 +269,9 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class2", RIGHT));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(node), new BasicMonitor());
 		node = find(diffs, edgeTargetChangeTo("Class4", RIGHT));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(node), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -300,7 +302,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("State3"));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(node), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -331,7 +333,7 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("State4"));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(node), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -359,9 +361,9 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("State3", LEFT));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(node), new BasicMonitor());
 		node = find(diffs, edgeSourceChangeTo("State3", RIGHT));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(node), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -389,9 +391,9 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class3", LEFT));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(node), new BasicMonitor());
 		node = find(diffs, edgeTargetChangeTo("Class1", RIGHT));
-		getMergerRegistry().getHighestRankingMerger(node).copyLeftToRight(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(node), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -419,9 +421,9 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("Class3", LEFT));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(node), new BasicMonitor());
 		node = find(diffs, edgeTargetChangeTo("Class1", RIGHT));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(node), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal
@@ -449,9 +451,9 @@ public class AssocMergeTest extends AbstractTest {
 
 		// ** MERGE **
 		Diff node = find(diffs, edgeTargetChangeTo("State3", LEFT));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(node), new BasicMonitor());
 		node = find(diffs, edgeSourceChangeTo("State3", RIGHT));
-		getMergerRegistry().getHighestRankingMerger(node).copyRightToLeft(node, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(node), new BasicMonitor());
 
 		// ** MERGE CHECKING **
 		// left and right must now be equal

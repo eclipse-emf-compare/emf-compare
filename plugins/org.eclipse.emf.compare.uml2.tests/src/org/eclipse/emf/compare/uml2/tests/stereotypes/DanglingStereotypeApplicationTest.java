@@ -16,6 +16,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 
 import org.eclipse.emf.common.EMFPlugin;
@@ -24,6 +25,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.uml2.internal.DanglingStereotypeApplication;
 import org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
@@ -160,7 +162,7 @@ public class DanglingStereotypeApplicationTest extends AbstractUMLProfileTest {
 		Iterable<DanglingStereotypeApplication> danglings = filter(comparison.getDifferences(),
 				DanglingStereotypeApplication.class);
 		for (Diff diff : danglings) {
-			getMergerRegistry().getHighestRankingMerger(diff).copyLeftToRight(diff, null);
+			new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diff), null);
 		}
 		assertEquals(1, left.getContents().size());
 		assertEquals(1, right.getContents().size());
@@ -182,7 +184,7 @@ public class DanglingStereotypeApplicationTest extends AbstractUMLProfileTest {
 		Iterable<DanglingStereotypeApplication> danglings = filter(comparison.getDifferences(),
 				DanglingStereotypeApplication.class);
 		for (Diff diff : danglings) {
-			getMergerRegistry().getHighestRankingMerger(diff).copyRightToLeft(diff, null);
+			new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diff), null);
 		}
 		assertEquals(2, left.getContents().size());
 		assertEquals(2, right.getContents().size());
@@ -205,7 +207,7 @@ public class DanglingStereotypeApplicationTest extends AbstractUMLProfileTest {
 		Iterable<DanglingStereotypeApplication> danglings = filter(comparison.getDifferences(),
 				DanglingStereotypeApplication.class);
 		for (Diff diff : danglings) {
-			getMergerRegistry().getHighestRankingMerger(diff).copyLeftToRight(diff, null);
+			new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diff), null);
 		}
 		assertEquals(1, left.getContents().size());
 		assertEquals(1, right.getContents().size());
@@ -229,7 +231,7 @@ public class DanglingStereotypeApplicationTest extends AbstractUMLProfileTest {
 		Iterable<DanglingStereotypeApplication> danglings = filter(comparison.getDifferences(),
 				DanglingStereotypeApplication.class);
 		for (Diff diff : danglings) {
-			getMergerRegistry().getHighestRankingMerger(diff).copyRightToLeft(diff, null);
+			new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diff), null);
 		}
 		assertEquals(2, left.getContents().size());
 		assertEquals(2, right.getContents().size());

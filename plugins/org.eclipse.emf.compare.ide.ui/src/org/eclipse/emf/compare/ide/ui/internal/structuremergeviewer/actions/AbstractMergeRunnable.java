@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
+import com.google.common.collect.Sets;
+
 import java.util.Collection;
 import java.util.Set;
 
@@ -84,7 +86,7 @@ public abstract class AbstractMergeRunnable {
 	}
 
 	/**
-	 * Marks a single diff as merged, keeping track of the merged mode used for the operation.
+	 * Marks a single diff as merged, keeping track of the merge mode used for the operation.
 	 * 
 	 * @param diff
 	 *            Diff to mark as merged.
@@ -103,13 +105,13 @@ public abstract class AbstractMergeRunnable {
 
 		final Set<Diff> implied = MergeDependenciesUtil.getAllResultingMerges(diff, mergerRegistry,
 				mergeRightToLeft);
-		for (Diff impliedDiff : implied) {
+		final Set<Diff> rejections = MergeDependenciesUtil.getAllResultingRejections(diff, mergerRegistry,
+				mergeRightToLeft);
+		for (Diff impliedDiff : Sets.difference(implied, rejections)) {
 			impliedDiff.setState(DifferenceState.MERGED);
 			addOrUpdateMergeData(impliedDiff, mode);
 		}
 
-		final Set<Diff> rejections = MergeDependenciesUtil.getAllResultingRejections(diff, mergerRegistry,
-				mergeRightToLeft);
 		for (Diff impliedRejection : rejections) {
 			impliedRejection.setState(DifferenceState.MERGED);
 			if (mergeMode == MergeMode.LEFT_TO_RIGHT || mergeMode == MergeMode.RIGHT_TO_LEFT) {

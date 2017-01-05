@@ -74,6 +74,7 @@ public class DependencyData {
 				rejectedDiffs.addAll(
 						MergeDependenciesUtil.getAllResultingRejections(diff, mergerRegistry, !leftToRight));
 				rejectedDiffs.remove(diff);
+				requires.removeAll(rejectedDiffs);
 			}
 		}
 	}

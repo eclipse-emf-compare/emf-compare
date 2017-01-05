@@ -9,19 +9,24 @@
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bugs 441172, 452147 and 454579
  *     Alexandra Buzila - Fixes for Bug 446252
+ *     Martin Fleck - bug 507177
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
 import static com.google.common.base.Predicates.in;
+import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
-import static com.google.common.collect.Iterables.addAll;
 import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Iterables.transform;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
+import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
+import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
+import static org.eclipse.emf.compare.DifferenceState.MERGED;
+import static org.eclipse.emf.compare.DifferenceState.MERGING;
+import static org.eclipse.emf.compare.DifferenceState.UNRESOLVED;
+import static org.eclipse.emf.compare.merge.IMergeCriterion.NONE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasSameReferenceAs;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.isDiffOnEOppositeOf;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.sameSideAs;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -149,7 +154,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 * @since 3.4
 	 */
 	public boolean apply(IMergeCriterion criterion) {
-		return criterion == null || criterion == AdditiveMergeCriterion.INSTANCE;
+		return criterion == null || criterion == NONE || criterion == AdditiveMergeCriterion.INSTANCE;
 	}
 
 	/**
@@ -191,23 +196,14 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 */
 	public Set<Diff> getDirectMergeDependencies(Diff diff, boolean mergeRightToLeft) {
 		long start = System.currentTimeMillis();
+
 		final Set<Diff> dependencies = new LinkedHashSet<Diff>();
-		if (mergeRightToLeft) {
-			if (DifferenceSource.LEFT == diff.getSource()) {
-				dependencies.addAll(diff.getImplies());
-				dependencies.addAll(diff.getRequiredBy());
-			} else {
-				dependencies.addAll(diff.getImpliedBy());
-				dependencies.addAll(diff.getRequires());
-			}
+		if (isAccepting(diff, mergeRightToLeft)) {
+			dependencies.addAll(diff.getRequires());
+			dependencies.addAll(diff.getImpliedBy());
 		} else {
-			if (DifferenceSource.LEFT == diff.getSource()) {
-				dependencies.addAll(diff.getImpliedBy());
-				dependencies.addAll(diff.getRequires());
-			} else {
-				dependencies.addAll(diff.getImplies());
-				dependencies.addAll(diff.getRequiredBy());
-			}
+			dependencies.addAll(diff.getImplies());
+			dependencies.addAll(diff.getRequiredBy());
 		}
 		dependencies.addAll(diff.getRefinedBy());
 		if (diff.getEquivalence() != null) {
@@ -235,58 +231,10 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 */
 	public Set<Diff> getDirectResultingMerges(Diff target, boolean mergeRightToLeft) {
 		long start = System.currentTimeMillis();
+
 		final Set<Diff> resulting = new LinkedHashSet<Diff>();
-		if (mergeRightToLeft) {
-			if (DifferenceSource.LEFT == target.getSource()) {
-				resulting.addAll(target.getImpliedBy());
-			} else {
-				resulting.addAll(target.getImplies());
-			}
-		} else {
-			if (DifferenceSource.LEFT == target.getSource()) {
-				resulting.addAll(target.getImplies());
-			} else {
-				resulting.addAll(target.getImpliedBy());
-			}
-		}
-		if (target.getEquivalence() != null) {
-			resulting.addAll(target.getEquivalence().getDifferences());
-			resulting.remove(target);
-		}
-		if (target.getConflict() != null && target.getConflict().getKind() == ConflictKind.PSEUDO) {
-			resulting.addAll(target.getConflict().getDifferences());
-			resulting.remove(target);
-		}
-
-		// If a diff refines another, we have to check if the "macro" diff has to be merged with it. It is the
-		// case when the unresolved diffs that refine the "macro" diff are all contained by the set
-		// (target + resulting) (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=458961)
-		for (Diff refine : target.getRefines()) {
-			Set<Diff> tmp = Sets.newHashSet(resulting);
-			tmp.add(target);
-			Collection<Diff> unresolvedRefinedDiffs = Collections2.filter(refine.getRefinedBy(),
-					EMFComparePredicates.hasState(DifferenceState.UNRESOLVED));
-			if (tmp.containsAll(unresolvedRefinedDiffs)) {
-				resulting.add(refine);
-			}
-		}
-
-		// Bug 452147:
-		// Add interlocked differences to the resulting merges to avoid merging redundant differences with
-		// undefined consequences.
-		if (target instanceof ReferenceChange) {
-			final ReferenceChange refTarget = (ReferenceChange)target;
-			if (isOneToOneAndChange(refTarget)) {
-				resulting.addAll(findInterlockedOneToOneDiffs(refTarget, mergeRightToLeft));
-			}
-		}
-
-		if (isHandleSubDiffs()) {
-			final Set<Diff> resultingToMerge = Sets.newLinkedHashSet(resulting);
-			Iterable<Diff> subDiffs = concat(
-					transform(resultingToMerge, ComparisonUtil.getSubDiffs(!mergeRightToLeft)));
-			addAll(resulting, subDiffs);
-		}
+		resulting.addAll(getImpliedMerges(target, mergeRightToLeft));
+		resulting.addAll(getLogicallyResultingMerges(target, mergeRightToLeft));
 
 		if (LOGGER.isDebugEnabled()) {
 			Long duration = new Long(System.currentTimeMillis() - start);
@@ -399,18 +347,15 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 * 
 	 * @since 3.2
 	 */
-	public Set<Diff> getDirectResultingRejections(Diff target, boolean mergeRightToLeft) {
+	public Set<Diff> getDirectResultingRejections(Diff target, boolean rightToLeft) {
 		long start = System.currentTimeMillis();
 
 		final Set<Diff> directlyImpliedRejections = new LinkedHashSet<Diff>();
 		final Conflict conflict = target.getConflict();
 		if (conflict != null && conflict.getKind() == ConflictKind.REAL) {
-			if (mergeRightToLeft && target.getSource() == DifferenceSource.RIGHT) {
+			if (isAccepting(target, rightToLeft)) {
 				Iterables.addAll(directlyImpliedRejections,
-						Iterables.filter(conflict.getDifferences(), fromSide(DifferenceSource.LEFT)));
-			} else if (!mergeRightToLeft && target.getSource() == DifferenceSource.LEFT) {
-				Iterables.addAll(directlyImpliedRejections,
-						Iterables.filter(conflict.getDifferences(), fromSide(DifferenceSource.RIGHT)));
+						Iterables.filter(conflict.getDifferences(), not(sameSideAs(target))));
 			}
 		}
 
@@ -496,6 +441,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 *            The {@link Diff} to check.
 	 * @return {@code true} if the diff exists and has a conflict of kind {@link ConflictKind#REAL},
 	 *         {@code false} otherwise.
+	 * @since 3.4
 	 */
 	private boolean hasRealConflict(Diff diff) {
 		return diff != null && diff.getConflict() != null
@@ -718,6 +664,168 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	}
 
 	/**
+	 * Returns a set of differences that should be logically merged with the given diff. As opposed to
+	 * {@link #getDirectMergeDependencies(Diff, boolean) merge dependencies}, it is not structurally necessary
+	 * to merge these diffs before the given diff. This may include the diff's {@link Diff#getImpliedBy()
+	 * implications}, the diff's {@link Diff#getRefines() refinement} or any other diff that should be
+	 * logically merged with the given diff.
+	 * 
+	 * @param diff
+	 *            The difference we're considering merging.
+	 * @param mergeRightToLeft
+	 *            The direction in which we're considering a merge.
+	 * @return The Set of all differences that will be merged because we've merged <code>diff</code>.
+	 * @since 3.5
+	 */
+	protected Set<Diff> getLogicallyResultingMerges(Diff diff, boolean mergeRightToLeft) {
+		long start = System.currentTimeMillis();
+
+		final Set<Diff> resulting = new LinkedHashSet<Diff>();
+
+		// we need to add the implication side that actually needs merging
+		if (isAccepting(diff, mergeRightToLeft)) {
+			resulting.addAll(diff.getImpliedBy());
+		} else {
+			resulting.addAll(diff.getImplies());
+		}
+
+		// refinements should only be merged together
+		resulting.addAll(diff.getRefines());
+
+		// any logically linked sub diffs should be merged as well
+		if (isHandleSubDiffs()) {
+			Set<Diff> subDiffs = Sets
+					.newLinkedHashSet(ComparisonUtil.getDirectSubDiffs(!mergeRightToLeft).apply(diff));
+			resulting.addAll(subDiffs);
+		}
+
+		if (LOGGER.isDebugEnabled()) {
+			Long duration = new Long(System.currentTimeMillis() - start);
+			String log = String.format(
+					"getLogicallyResultingMerges(Diff, boolean) - %d merges found in %d ms for diff %d", //$NON-NLS-1$
+					new Integer(resulting.size()), duration, new Integer(diff.hashCode()));
+			LOGGER.debug(log);
+		}
+
+		return resulting;
+	}
+
+	/**
+	 * Returns all differences that are automatically set to the targets {@link Diff#getState() state} if the
+	 * given target diff is merged. This may include the diff's {@link Diff#getImplies() implications}, the
+	 * diff's {@link Diff#getEquivalence() equivalences} or any other diff that requires no merging by itself.
+	 * 
+	 * @param target
+	 *            The difference we're considering merging.
+	 * @param mergeRightToLeft
+	 *            The direction in which we're considering a merge.
+	 * @return The Set of all differences that will be set to <code>MERGED</code> because we've merged
+	 *         <code>target</code>.
+	 * @since 3.5
+	 */
+	protected Set<Diff> getImpliedMerges(Diff target, boolean mergeRightToLeft) {
+		long start = System.currentTimeMillis();
+		final Set<Diff> impliedMerges = new LinkedHashSet<Diff>();
+
+		if (isAccepting(target, mergeRightToLeft)) {
+			impliedMerges.addAll(target.getImplies());
+		} else {
+			impliedMerges.addAll(target.getImpliedBy());
+		}
+
+		if (target.getEquivalence() != null) {
+			impliedMerges.addAll(target.getEquivalence().getDifferences());
+			impliedMerges.remove(target);
+		}
+
+		if (target.getConflict() != null && target.getConflict().getKind() == PSEUDO) {
+			impliedMerges.addAll(target.getConflict().getDifferences());
+			impliedMerges.remove(target);
+		}
+
+		// If a diff refines another, we have to check if the "macro" diff has to be merged with it. It is the
+		// case when the unresolved diffs that refine the "macro" diff are all contained by the set
+		// (target + resulting) (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=458961)
+		for (Diff refine : target.getRefines()) {
+			Set<Diff> tmp = Sets.newHashSet(impliedMerges);
+			tmp.add(target);
+			Collection<Diff> unresolvedRefinedDiffs = Collections2.filter(refine.getRefinedBy(),
+					EMFComparePredicates.hasState(UNRESOLVED));
+			if (tmp.containsAll(unresolvedRefinedDiffs)) {
+				impliedMerges.add(refine);
+			}
+		}
+
+		// Bug 452147:
+		// Add interlocked differences to the resulting merges to avoid merging redundant differences with
+		// undefined consequences.
+		if (target instanceof ReferenceChange) {
+			final ReferenceChange refTarget = (ReferenceChange)target;
+			if (isOneToOneAndChange(refTarget)) {
+				impliedMerges.addAll(findInterlockedOneToOneDiffs(refTarget, mergeRightToLeft));
+			}
+		}
+
+		if (LOGGER.isDebugEnabled()) {
+			Long duration = new Long(System.currentTimeMillis() - start);
+			String log = String.format(
+					"getImpliedMerges(Diff, boolean) - %d implied merges found in %d ms for diff %d", //$NON-NLS-1$
+					new Integer(impliedMerges.size()), duration, new Integer(target.hashCode()));
+			LOGGER.debug(log);
+		}
+		return impliedMerges;
+	}
+
+	/**
+	 * Executes a copy in the given merge direction. This method is a generalization of
+	 * {@link #copyLeftToRight(Diff, Monitor)} and {@link #copyRightToLeft(Diff, Monitor)}.
+	 * 
+	 * @param target
+	 *            The difference to handle.
+	 * @param monitor
+	 *            Monitor.
+	 * @param rightToLeft
+	 *            Merge direction.
+	 * @since 3.5
+	 */
+	protected void copyDiff(Diff target, Monitor monitor, boolean rightToLeft) {
+		if (isInTerminalState(target)) {
+			return;
+		}
+
+		long start = System.currentTimeMillis();
+
+		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
+		target.setState(MERGING);
+
+		// Mark all implied diffs as merged before actually merging this one
+		Set<Diff> impliedMerges = getImpliedMerges(target, rightToLeft);
+		while (!impliedMerges.isEmpty()) {
+			Diff impliedMerge = impliedMerges.iterator().next();
+			// avoid implication circles
+			if (impliedMerge != target && !isInTerminalState(impliedMerge)) {
+				impliedMerge.setState(MERGED);
+				impliedMerges.addAll(getImpliedMerges(impliedMerge, rightToLeft));
+			}
+			impliedMerges.remove(impliedMerge);
+			impliedMerges.remove(target);
+		}
+		if (isAccepting(target, rightToLeft)) {
+			accept(target, rightToLeft);
+		} else {
+			reject(target, rightToLeft);
+		}
+		target.setState(MERGED);
+
+		if (LOGGER.isDebugEnabled()) {
+			long duration = System.currentTimeMillis() - start;
+			LOGGER.debug("copyDiff(Diff, Monitor, Boolean) - diff " + target.hashCode() //$NON-NLS-1$
+					+ " merged (rightToLeft: " + rightToLeft + ") in " //$NON-NLS-1$ //$NON-NLS-2$
+					+ duration + "ms"); //$NON-NLS-1$
+		}
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.merge.IMerger#copyLeftToRight(org.eclipse.emf.compare.Diff,
@@ -725,51 +833,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 * @since 3.1
 	 */
 	public void copyLeftToRight(Diff target, Monitor monitor) {
-		// Don't merge an already merged (or discarded) diff
-		if (target.getState() != DifferenceState.UNRESOLVED) {
-			return;
-		}
-		long start = System.currentTimeMillis();
-
-		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
-		target.setState(DifferenceState.MERGED);
-
-		final Set<Diff> dependencies = getDirectMergeDependencies(target, false);
-
-		// We'll redo some of the work from getDirectMergeDependencies here in order to ensure we haven't been
-		// merged by another diff (equivalence or implication).
-		// requiresMerging must be executed before actually merging the dependencies because
-		// findMasterEquivalence may return a different result after merging.
-		boolean requiresMerging = requiresMerging(target, false);
-
-		for (Diff mergeMe : dependencies) {
-			mergeDiff(mergeMe, false, monitor);
-		}
-
-		for (Diff transitiveMerge : getDirectResultingMerges(target, false)) {
-			transitiveMerge.setState(DifferenceState.MERGED);
-		}
-
-		if (requiresMerging) {
-			if (target.getSource() == DifferenceSource.LEFT) {
-				accept(target, false);
-			} else {
-				reject(target, false);
-			}
-		}
-
-		if (isHandleSubDiffs()) {
-			Set<Diff> subDiffs = Sets.newLinkedHashSet(ComparisonUtil.getDirectSubDiffs(true).apply(target));
-			for (Diff subDiff : subDiffs) {
-				mergeDiff(subDiff, false, monitor);
-			}
-		}
-
-		if (LOGGER.isDebugEnabled()) {
-			long duration = System.currentTimeMillis() - start;
-			LOGGER.debug("copyLeftToRight(Diff, Monitor) - diff " + target.hashCode() + " merged in " //$NON-NLS-1$ //$NON-NLS-2$
-					+ duration + "ms"); //$NON-NLS-1$
-		}
+		copyDiff(target, monitor, false);
 	}
 
 	/**
@@ -780,149 +844,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 * @since 3.1
 	 */
 	public void copyRightToLeft(Diff target, Monitor monitor) {
-		// Don't merge an already merged (or discarded) diff
-		if (target.getState() != DifferenceState.UNRESOLVED) {
-			return;
-		}
-		long start = System.currentTimeMillis();
-
-		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
-		target.setState(DifferenceState.MERGED);
-
-		final Set<Diff> dependencies = getDirectMergeDependencies(target, true);
-
-		// We'll redo some of the work from getDirectMergeDependencies here in order to ensure we haven't been
-		// merged by another diff (equivalence or implication).
-		// requiresMerging must be executed before actually merging the dependencies because
-		// findMasterEquivalence may return a different result after merging.
-		boolean requiresMerging = requiresMerging(target, true);
-
-		for (Diff mergeMe : dependencies) {
-			mergeDiff(mergeMe, true, monitor);
-		}
-
-		for (Diff transitiveMerge : getDirectResultingMerges(target, true)) {
-			transitiveMerge.setState(DifferenceState.MERGED);
-		}
-
-		if (requiresMerging) {
-			if (target.getSource() == DifferenceSource.LEFT) {
-				reject(target, true);
-			} else {
-				accept(target, true);
-			}
-		}
-
-		if (isHandleSubDiffs()) {
-			Set<Diff> subDiffs = Sets.newLinkedHashSet(ComparisonUtil.getDirectSubDiffs(false).apply(target));
-			for (Diff subDiff : subDiffs) {
-				mergeDiff(subDiff, true, monitor);
-			}
-		}
-
-		if (LOGGER.isDebugEnabled()) {
-			long duration = System.currentTimeMillis() - start;
-			LOGGER.debug("copyLeftToRight(Diff, Monitor) - diff " + target.hashCode() + " merged in " //$NON-NLS-1$ //$NON-NLS-2$
-					+ duration + "ms"); //$NON-NLS-1$
-		}
-	}
-
-	/**
-	 * Checks whether the given diff still needs to be merged or if it has been merged because of an
-	 * implication or 'master' equivalence.
-	 * 
-	 * @param target
-	 *            The difference we are considering merging.
-	 * @param mergeRightToLeft
-	 *            The direction in which we're considering a merge.
-	 * @return <code>true</code> if the <code>target</code> diff hasn't been merged yet and requires handling
-	 *         of its own.
-	 */
-	private boolean requiresMerging(Diff target, boolean mergeRightToLeft) {
-		boolean requiresMerging = true;
-		if (isImpliedMerge(target, mergeRightToLeft)) {
-			// first, if we are implied by something, then we're already merged
-			requiresMerging = false;
-		} else if (target.getEquivalence() != null) {
-			final Diff masterEquivalence = findMasterEquivalence(target, mergeRightToLeft);
-			if (masterEquivalence != null && masterEquivalence != target) {
-				// If we have a "master" equivalence (see doc on findMasterEquivalence) then we've been merged
-				// along with it
-				requiresMerging = false;
-			} else {
-				// We also need to check for implications on our equivalence (dependency loops)
-				requiresMerging = !hasTransitiveImplicationBeenMerged(target, mergeRightToLeft);
-			}
-		}
-		return requiresMerging;
-	}
-
-	/**
-	 * Checks if the given diff is implied by another in the given merge direction, which means that it
-	 * doesn't need to be merged individually.
-	 * 
-	 * @param target
-	 *            The diff we're considering merging.
-	 * @param mergeRightToLeft
-	 *            The direction in which we're currently merging.
-	 * @return <code>true</code> if the given diff will be implicitely merged by another in that direction.
-	 */
-	private boolean isImpliedMerge(Diff target, boolean mergeRightToLeft) {
-		final boolean isImpliedForDirection;
-		if (mergeRightToLeft) {
-			if (DifferenceSource.LEFT == target.getSource()) {
-				isImpliedForDirection = !target.getImplies().isEmpty();
-			} else {
-				isImpliedForDirection = !target.getImpliedBy().isEmpty();
-			}
-		} else {
-			if (DifferenceSource.LEFT == target.getSource()) {
-				isImpliedForDirection = !target.getImpliedBy().isEmpty();
-			} else {
-				isImpliedForDirection = !target.getImplies().isEmpty();
-			}
-		}
-		return isImpliedForDirection;
-	}
-
-	// FIXME find a use case and check whether this is still required.
-	/**
-	 * Checks whether the given diff has been merged through a dependency cycle on its equivalence relations
-	 * (this diff requires the merging of a diff that implies one of its equivalences).
-	 * <p>
-	 * This should only be called on differences that have equivalences.
-	 * </p>
-	 * 
-	 * @param target
-	 *            The difference we are considering merging.
-	 * @param mergeRightToLeft
-	 *            The direction in which we're considering a merge.
-	 * @return <code>true</code> if the <code>target</code> diff has already been merged.
-	 */
-	private boolean hasTransitiveImplicationBeenMerged(Diff target, boolean mergeRightToLeft) {
-		boolean mergedThroughEquivalentImplication = false;
-		final Iterator<Diff> equivalenceIterator = target.getEquivalence().getDifferences().iterator();
-		while (!mergedThroughEquivalentImplication && equivalenceIterator.hasNext()) {
-			final Diff equivalent = equivalenceIterator.next();
-			if (equivalent != target && mergeRightToLeft) {
-				if (target.getSource() == DifferenceSource.LEFT) {
-					mergedThroughEquivalentImplication = any(equivalent.getImplies(),
-							in(target.getRequiredBy()));
-				} else {
-					mergedThroughEquivalentImplication = any(equivalent.getImpliedBy(),
-							in(target.getRequires()));
-				}
-			} else if (equivalent != target) {
-				if (target.getSource() == DifferenceSource.LEFT) {
-					mergedThroughEquivalentImplication = any(equivalent.getImpliedBy(),
-							in(target.getRequires()));
-				} else {
-					mergedThroughEquivalentImplication = any(equivalent.getImplies(),
-							in(target.getRequiredBy()));
-				}
-			}
-		}
-		return mergedThroughEquivalentImplication;
+		copyDiff(target, monitor, true);
 	}
 
 	/**
@@ -1095,6 +1017,25 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	}
 
 	/**
+	 * Returns whether the given difference is in a terminal state or not. Differences that are in a terminal
+	 * state, i.e., either MERGED or DISCARDED, do not need to be handled by the merger.
+	 * 
+	 * @param target
+	 *            difference
+	 * @return true if the target should be merged, false otherwise.
+	 * @since 3.5
+	 */
+	public static boolean isInTerminalState(Diff target) {
+		switch (target.getState()) {
+			case MERGED:
+			case DISCARDED:
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	/**
 	 * Handles the equivalences of this difference.
 	 * <p>
 	 * Note that in certain cases, we'll merge our opposite instead of merging this diff. This is done to
@@ -1155,21 +1096,12 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 			 * a merged diff, then we have a dependency loop : the "current" difference has already been
 			 * merged because of this implication. This will allow us to break out of that loop.
 			 */
-			if (rightToLeft) {
-				if (diff.getSource() == DifferenceSource.LEFT) {
-					continueMerge = continueMerge && !any(equivalent.getImplies(), in(diff.getRequiredBy()));
-				} else {
-					continueMerge = continueMerge && !any(equivalent.getImpliedBy(), in(diff.getRequires()));
-				}
+			if (isAccepting(diff, rightToLeft)) {
+				continueMerge = continueMerge && !any(equivalent.getImpliedBy(), in(diff.getRequires()));
 			} else {
-				if (diff.getSource() == DifferenceSource.LEFT) {
-					continueMerge = continueMerge && !any(equivalent.getImpliedBy(), in(diff.getRequires()));
-				} else {
-					continueMerge = continueMerge && !any(equivalent.getImplies(), in(diff.getRequiredBy()));
-				}
+				continueMerge = continueMerge && !any(equivalent.getImplies(), in(diff.getRequiredBy()));
 			}
-
-			equivalent.setState(DifferenceState.MERGED);
+			equivalent.setState(MERGED);
 		}
 		return continueMerge;
 	}
@@ -1242,7 +1174,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 *         this will either "set" or "change" values... or if the given diff is affecting a multi-valued
 	 *         reference.
 	 */
-	private boolean isUnset(ReferenceChange diff, boolean mergeRightToLeft) {
+	protected boolean isUnset(ReferenceChange diff, boolean mergeRightToLeft) {
 		if (diff.getKind() != DifferenceKind.CHANGE) {
 			return false;
 		}
@@ -1259,12 +1191,12 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 		if (container == null) {
 			// This is an unset diff. However, if we're merging towards the source, we're actually "rejecting"
 			// the unset, and the merge operation will be a "set"
-			isUnset = !isRejecting(diff, mergeRightToLeft);
+			isUnset = isAccepting(diff, mergeRightToLeft);
 		} else {
 			if (!ReferenceUtil.safeEIsSet(container, diff.getReference())) {
 				// No value on the source side, this is an unset
 				// Same case as above, if we are rejecting the diff, it is a "set" operation
-				isUnset = !isRejecting(diff, mergeRightToLeft);
+				isUnset = isAccepting(diff, mergeRightToLeft);
 			} else {
 				// The feature is set on the source side. If we're merging towards the other side, this cannot
 				// be an unset.
@@ -1299,8 +1231,9 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 * @return <code>true</code> if {@code diff} will set a value with this merge, <code>false</code> if this
 	 *         will either "unset" or "change" values... or if the given diff is affecting a multi-valued
 	 *         reference.
+	 * @since 3.5
 	 */
-	private boolean isSet(ReferenceChange diff, boolean mergeRightToLeft) {
+	protected boolean isSet(ReferenceChange diff, boolean mergeRightToLeft) {
 		if (diff.getKind() != DifferenceKind.CHANGE) {
 			return false;
 		}
@@ -1358,6 +1291,33 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	}
 
 	/**
+	 * Checks whether the given merge direction will result in accepting this difference based on the
+	 * difference's {@link Diff#getSource() source}.
+	 * 
+	 * <pre>
+	 *                     | LEFT  | RIGHT
+	 * --------------------+-------+-------
+	 * Merge Left to Right | true  | false
+	 * Merge Right to Left | false | true
+	 * </pre>
+	 * 
+	 * @param diff
+	 *            difference
+	 * @param mergeRightToLeft
+	 *            merge direction
+	 * @return true if the merge source direction matches the difference source, false otherwise.
+	 * @see #isRejecting(Diff, boolean)
+	 * @since 3.5
+	 */
+	public static boolean isAccepting(Diff diff, boolean mergeRightToLeft) {
+		if (diff.getSource() == RIGHT) {
+			return mergeRightToLeft;
+		} else {
+			return !mergeRightToLeft;
+		}
+	}
+
+	/**
 	 * Checks whether the given merge direction will result in rejecting this difference.
 	 *
 	 * @param diff
@@ -1365,13 +1325,10 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 * @param mergeRightToLeft
 	 *            Direction of the merge operation.
 	 * @return <code>true</code> if we're rejecting this diff.
+	 * @see #isAccepting(Diff, boolean)
 	 */
 	private boolean isRejecting(Diff diff, boolean mergeRightToLeft) {
-		if (diff.getSource() == DifferenceSource.LEFT) {
-			return mergeRightToLeft;
-		} else {
-			return !mergeRightToLeft;
-		}
+		return !isAccepting(diff, mergeRightToLeft);
 	}
 
 	/**

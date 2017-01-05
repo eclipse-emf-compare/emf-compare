@@ -22,6 +22,7 @@ import static com.google.common.collect.Iterables.any;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.DifferenceKind.ADD;
+import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
 import static org.eclipse.emf.compare.internal.utils.DiffUtil.getAllAtomicRefiningDiffs;
 import static org.eclipse.emf.compare.internal.utils.DiffUtil.getAllRefiningDiffs;
@@ -32,6 +33,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
@@ -42,6 +44,7 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.ResourceLocationChange;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EGenericType;
@@ -1267,6 +1270,16 @@ public final class EMFComparePredicates {
 	}
 
 	/**
+	 * Predicate to test whether a conflict is additive or not.
+	 * 
+	 * @return A predicate that returns <code>true</code> for additive conflicts.
+	 * @since 3.5
+	 */
+	public static Predicate<Conflict> isAdditiveConflict() {
+		return IsAdditive.INSTANCE;
+	}
+
+	/**
 	 * This particular predicate will be used to check that a given Diff corresponds to a ReferenceChange on a
 	 * given reference, with known "original" and "changed" values.
 	 * 
@@ -1571,4 +1584,93 @@ public final class EMFComparePredicates {
 		}
 	}
 
+	/**
+	 * Predicate to test whether a conflict is additive or not. A conflict is additive if it is REAL and at
+	 * least one of its diffs is a containment deletion or is required by a containment deletion.
+	 * 
+	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
+	 */
+	private static final class IsAdditive implements Predicate<Conflict> {
+		/** The singleton instance of this predicate. */
+		private static final IsAdditive INSTANCE = new IsAdditive();
+
+		/**
+		 * Apply the predicate.
+		 * 
+		 * @param conflict
+		 *            The conflict to test
+		 * @return <code>true</code> if the conflict is additive.
+		 */
+		public boolean apply(Conflict conflict) {
+			return conflict.getKind() == REAL && hasContainmentDeletion(conflict.getDifferences());
+		}
+
+		/**
+		 * Test a list of diff representing one side of a conflict to determine if we are in an additive
+		 * conflict configuration.
+		 * 
+		 * @param diffs
+		 *            A list of diffs from one side of a conflict
+		 * @return <code>true</code> if there is a deletion of a containment reference or of a root node.
+		 */
+		private boolean hasContainmentDeletion(EList<Diff> diffs) {
+			for (Diff diff : diffs) {
+				if (isContainmentDelete(diff)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Check whether a diff is a containment delete (either a DELETE ReferenceChange of a containment
+		 * reference, or a DELETE ResourceAttachmentChange of a root EObject) or is required by a containment
+		 * delete.
+		 * 
+		 * @param diff
+		 *            The difference to test
+		 * @return <code>true</code> if the given diff represents a containment deletion.
+		 */
+		private boolean isContainmentDelete(Diff diff) {
+			if (diff instanceof ReferenceChange) {
+				ReferenceChange rc = (ReferenceChange)diff;
+				if (rc.getReference().isContainment() && isRequiredByDeletion(rc)) {
+					return true;
+				}
+			} else if (diff instanceof ResourceAttachmentChange) {
+				ResourceAttachmentChange rac = (ResourceAttachmentChange)diff;
+				if (rac.getKind() == DELETE) {
+					Match match = rac.getMatch();
+					EObject origin = match.getOrigin();
+					// A ResourceAttachmentChange indicates the deletion of a root object only if its origin
+					// value is non-null and has no eContainer.
+					if (origin != null && origin.eContainer() == null) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Test if a diff or one of the diffs that require it are delete diffs.
+		 * 
+		 * @param diff
+		 *            The given diff
+		 * @return <code>true</code> if the diff or one of the diff that require it is a deletion.
+		 */
+		private boolean isRequiredByDeletion(Diff diff) {
+			if (diff.getKind() == DELETE) {
+				return true;
+			} else {
+				EList<Diff> requiredBy = diff.getRequiredBy();
+				for (Diff requiredDiff : requiredBy) {
+					if (isRequiredByDeletion(requiredDiff)) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
 }

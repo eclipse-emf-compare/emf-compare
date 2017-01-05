@@ -7,11 +7,14 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 507177
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.association;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
+import static org.eclipse.emf.compare.DifferenceKind.ADD;
+import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToReference;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.changedReference;
@@ -33,7 +36,6 @@ import java.util.regex.Pattern;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor.Registry;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
@@ -72,6 +74,20 @@ public class AddAssociationTest extends AbstractUMLTest {
 	}
 
 	@Test
+	public void testA10UseCaseFilter() throws IOException {
+		try {
+			enableCascadingFilter();
+			final Resource left = input.getA1Left();
+			final Resource right = input.getA1Right();
+
+			final Comparison comparison = compare(left, right);
+			testAB1(TestKind.ADD, comparison);
+		} finally {
+			restoreCascadingFilter();
+		}
+	}
+
+	@Test
 	public void testMergeRtLA10UseCase() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
@@ -80,11 +96,37 @@ public class AddAssociationTest extends AbstractUMLTest {
 	}
 
 	@Test
+	public void testMergeRtLA10UseCaseFilter() throws IOException {
+		try {
+			enableCascadingFilter();
+			final Resource left = input.getA1Left();
+			final Resource right = input.getA1Right();
+
+			testMergeRightToLeft(left, right, null);
+		} finally {
+			restoreCascadingFilter();
+		}
+	}
+
+	@Test
 	public void testMergeLtRA10UseCase() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
 		testMergeLeftToRight(left, right, null);
+	}
+
+	@Test
+	public void testMergeLtRA10UseCaseFilter() throws IOException {
+		try {
+			enableCascadingFilter();
+			final Resource left = input.getA1Left();
+			final Resource right = input.getA1Right();
+
+			testMergeLeftToRight(left, right, null);
+		} finally {
+			restoreCascadingFilter();
+		}
 	}
 
 	@Test
@@ -97,6 +139,20 @@ public class AddAssociationTest extends AbstractUMLTest {
 	}
 
 	@Test
+	public void testA11UseCaseFilter() throws IOException {
+		try {
+			enableCascadingFilter();
+			final Resource left = input.getA1Right();
+			final Resource right = input.getA1Left();
+
+			final Comparison comparison = compare(left, right);
+			testAB1(TestKind.DELETE, comparison);
+		} finally {
+			restoreCascadingFilter();
+		}
+	}
+
+	@Test
 	public void testMergeRtLA11UseCase() throws IOException {
 		final Resource left = input.getA1Right();
 		final Resource right = input.getA1Left();
@@ -105,11 +161,37 @@ public class AddAssociationTest extends AbstractUMLTest {
 	}
 
 	@Test
+	public void testMergeRtLA11UseCaseFilter() throws IOException {
+		try {
+			enableCascadingFilter();
+			final Resource left = input.getA1Right();
+			final Resource right = input.getA1Left();
+
+			testMergeRightToLeft(left, right, null);
+		} finally {
+			restoreCascadingFilter();
+		}
+	}
+
+	@Test
 	public void testMergeLtRA11UseCase() throws IOException {
 		final Resource left = input.getA1Right();
 		final Resource right = input.getA1Left();
 
 		testMergeLeftToRight(left, right, null);
+	}
+
+	@Test
+	public void testMergeLtRA11UseCaseFilter() throws IOException {
+		try {
+			enableCascadingFilter();
+			final Resource left = input.getA1Right();
+			final Resource right = input.getA1Left();
+
+			testMergeLeftToRight(left, right, null);
+		} finally {
+			restoreCascadingFilter();
+		}
 	}
 
 	@Test
@@ -122,6 +204,20 @@ public class AddAssociationTest extends AbstractUMLTest {
 	}
 
 	@Test
+	public void testA10UseCase3wayFilter() throws IOException {
+		try {
+			enableCascadingFilter();
+			final Resource left = input.getA1Left();
+			final Resource right = input.getA1Right();
+
+			final Comparison comparison = compare(left, right, right);
+			testAB1(TestKind.ADD, comparison);
+		} finally {
+			restoreCascadingFilter();
+		}
+	}
+
+	@Test
 	public void testMergeRtLA10UseCase3way() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
@@ -130,11 +226,37 @@ public class AddAssociationTest extends AbstractUMLTest {
 	}
 
 	@Test
+	public void testMergeRtLA10UseCase3wayFilter() throws IOException {
+		try {
+			enableCascadingFilter();
+			final Resource left = input.getA1Left();
+			final Resource right = input.getA1Right();
+
+			testMergeRightToLeft(left, right, right);
+		} finally {
+			restoreCascadingFilter();
+		}
+	}
+
+	@Test
 	public void testMergeLtRA10UseCase3way() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
 		testMergeLeftToRight(left, right, right);
+	}
+
+	@Test
+	public void testMergeLtRA10UseCase3wayFilter() throws IOException {
+		try {
+			enableCascadingFilter();
+			final Resource left = input.getA1Left();
+			final Resource right = input.getA1Right();
+
+			testMergeLeftToRight(left, right, right);
+		} finally {
+			restoreCascadingFilter();
+		}
 	}
 
 	@Test
@@ -147,6 +269,20 @@ public class AddAssociationTest extends AbstractUMLTest {
 	}
 
 	@Test
+	public void testA11UseCase3wayFilter() throws IOException {
+		try {
+			enableCascadingFilter();
+			final Resource left = input.getA1Left();
+			final Resource right = input.getA1Right();
+
+			final Comparison comparison = compare(left, right, left);
+			testAB1(TestKind.DELETE, comparison);
+		} finally {
+			restoreCascadingFilter();
+		}
+	}
+
+	@Test
 	public void testMergeRtLA11UseCase3way() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
@@ -155,11 +291,37 @@ public class AddAssociationTest extends AbstractUMLTest {
 	}
 
 	@Test
+	public void testMergeRtLA11UseCase3wayFilter() throws IOException {
+		try {
+			enableCascadingFilter();
+			final Resource left = input.getA1Left();
+			final Resource right = input.getA1Right();
+
+			testMergeRightToLeft(left, right, left);
+		} finally {
+			restoreCascadingFilter();
+		}
+	}
+
+	@Test
 	public void testMergeLtRA11UseCase3way() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
 		testMergeLeftToRight(left, right, left);
+	}
+
+	@Test
+	public void testMergeLtRA11UseCase3wayFilter() throws IOException {
+		try {
+			enableCascadingFilter();
+			final Resource left = input.getA1Left();
+			final Resource right = input.getA1Right();
+
+			testMergeLeftToRight(left, right, left);
+		} finally {
+			restoreCascadingFilter();
+		}
 	}
 
 	private void testAB1(TestKind kind, final Comparison comparison) {
@@ -289,10 +451,10 @@ public class AddAssociationTest extends AbstractUMLTest {
 		Diff addUMLAssociation = null;
 		if (kind.equals(TestKind.ADD)) {
 			addUMLAssociation = Iterators.find(differences.iterator(),
-					and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.ADD)));
+					and(instanceOf(AssociationChange.class), ofKind(ADD)));
 		} else {
 			addUMLAssociation = Iterators.find(differences.iterator(),
-					and(instanceOf(AssociationChange.class), ofKind(DifferenceKind.DELETE)));
+					and(instanceOf(AssociationChange.class), ofKind(DELETE)));
 		}
 		assertNotNull(addUMLAssociation);
 		assertEquals(15, addUMLAssociation.getRefinedBy().size());
@@ -394,19 +556,19 @@ public class AddAssociationTest extends AbstractUMLTest {
 	}
 
 	private static Predicate<? super Diff> addedLowerValueIn(final String qualifiedName) {
-		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), onFeature("lowerValue"));
+		return and(ofKind(ADD), onEObject(qualifiedName), onFeature("lowerValue"));
 	}
 
 	private static Predicate<? super Diff> addedUpperValueIn(final String qualifiedName) {
-		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), onFeature("upperValue"));
+		return and(ofKind(ADD), onEObject(qualifiedName), onFeature("upperValue"));
 	}
 
 	private static Predicate<? super Diff> removedLowerValueIn(final String qualifiedName) {
-		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), onFeature("lowerValue"));
+		return and(ofKind(DELETE), onEObject(qualifiedName), onFeature("lowerValue"));
 	}
 
 	private static Predicate<? super Diff> removedUpperValueIn(final String qualifiedName) {
-		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), onFeature("upperValue"));
+		return and(ofKind(DELETE), onEObject(qualifiedName), onFeature("upperValue"));
 	}
 
 	@Override

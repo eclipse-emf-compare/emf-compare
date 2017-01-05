@@ -14,7 +14,8 @@ import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.DifferenceSource.LEFT;
 import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
 import static org.eclipse.emf.compare.DifferenceState.MERGED;
-import static org.eclipse.emf.compare.DifferenceState.UNRESOLVED;
+
+import java.util.Set;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Diff;
@@ -45,7 +46,7 @@ public class AdditiveCompareDiagramMerger extends CompareDiagramMerger {
 
 	@Override
 	public void copyRightToLeft(Diff target, Monitor monitor) {
-		if (target.getState() != UNRESOLVED) {
+		if (isInTerminalState(target)) {
 			return;
 		}
 
@@ -61,4 +62,25 @@ public class AdditiveCompareDiagramMerger extends CompareDiagramMerger {
 		}
 	}
 
+	@Override
+	public Set<Diff> getDirectMergeDependencies(Diff target, boolean mergeRightToLeft) {
+		if (target.getSource() == RIGHT && target.getKind() != DELETE) {
+			return super.getDirectMergeDependencies(target, mergeRightToLeft);
+		} else if (target.getSource() == LEFT && target.getKind() == DELETE) {
+			return super.getDirectMergeDependencies(target, mergeRightToLeft);
+		} else {
+			return super.getDirectMergeDependencies(target, !mergeRightToLeft);
+		}
+	}
+
+	@Override
+	public Set<Diff> getDirectResultingMerges(Diff target, boolean mergeRightToLeft) {
+		if (target.getSource() == RIGHT && target.getKind() != DELETE) {
+			return super.getDirectResultingMerges(target, mergeRightToLeft);
+		} else if (target.getSource() == LEFT && target.getKind() == DELETE) {
+			return super.getDirectResultingMerges(target, mergeRightToLeft);
+		} else {
+			return super.getDirectResultingMerges(target, !mergeRightToLeft);
+		}
+	}
 }

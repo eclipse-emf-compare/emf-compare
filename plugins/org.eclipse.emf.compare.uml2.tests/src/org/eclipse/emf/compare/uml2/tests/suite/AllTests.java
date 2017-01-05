@@ -10,6 +10,7 @@
  *     Philip Langer - addition of OpaqueTest, ImplicationsInstanceSpecificationClassifiersTest
  *     Stefan Dirix - addition of PseudoConflictTest
  *     Martin Fleck - addition of RemoveStereotypeApplicationPseudoConflictTest
+ *     Martin Fleck - addition of AddMessageSubDiffTest
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.suite;
 
@@ -40,6 +41,7 @@ import org.eclipse.emf.compare.uml2.tests.merge.ExtensionMergeTest;
 import org.eclipse.emf.compare.uml2.tests.merge.InstanceSpecificationClassifiersMergeTest;
 import org.eclipse.emf.compare.uml2.tests.merge.MergeDiffInvolvingRefineDiffTest;
 import org.eclipse.emf.compare.uml2.tests.message.AddMessageTest;
+import org.eclipse.emf.compare.uml2.tests.message.bug507177.AddMessageSubDiffTest;
 import org.eclipse.emf.compare.uml2.tests.multiplicitychanges.MultiplicityElementChangesTest;
 import org.eclipse.emf.compare.uml2.tests.nonreg.bug484576_pseudoconflicts.TestNonRegPseudoConflict_484576;
 import org.eclipse.emf.compare.uml2.tests.opaque.OpaqueElementBodyChangeDiffTest;
@@ -82,7 +84,8 @@ import junit.textui.TestRunner;
 		OpaqueElementBodyChangeDiffTest.class, OpaqueElementBodyChangeMergeTest.class,
 		DanglingStereotypeApplicationTest.class, MergeDiffInvolvingRefineDiffTest.class,
 		TestNonRegPseudoConflict_484576.class, RemoveStereotypeApplicationPseudoConflictTest.class,
-		MultiplicityElementChangesTest.class, InstanceSpecificationClassifiersMergeTest.class, })
+		MultiplicityElementChangesTest.class, InstanceSpecificationClassifiersMergeTest.class,
+		AddMessageSubDiffTest.class, })
 public class AllTests {
 
 	/**

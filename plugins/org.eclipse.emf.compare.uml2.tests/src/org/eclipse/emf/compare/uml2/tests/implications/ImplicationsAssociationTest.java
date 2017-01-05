@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 507177: consider refinement in tests
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.implications;
 
@@ -21,19 +22,20 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.uml2.internal.AssociationChange;
 import org.eclipse.emf.compare.uml2.internal.MultiplicityElementChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
@@ -64,6 +66,7 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 
 	private DiffsOfInterest getDiffs(Comparison comparison, TestKind kind) {
 		final List<Diff> differences = comparison.getDifferences();
+
 		Predicate<? super Diff> addAssociationDescription = null;
 		Predicate<? super Diff> addNavigableOwnedEndClass1InAssociationDescription = null;
 		Predicate<? super Diff> addNavigableOwnedEndClass2InAssociationDescription = null;
@@ -170,6 +173,10 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		return diffs;
 	}
 
+	private void assertNoDifferences(Comparison comparison) {
+		assertTrue(comparison.getDifferences().isEmpty());
+	}
+
 	@Test
 	public void testA10UseCase() throws IOException {
 		final Resource left = input.getA1Left();
@@ -209,23 +216,14 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
-				.copyLeftToRight(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addNavigableOwnedEndClass1InAssociation),
+				new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeAddNavigableOwnedEnd(comparison, diffs);
-	}
-
-	private void checkMergeAddNavigableOwnedEnd(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 6, comparison.getDifferences().size());
-		assertNull(diffs.addNavigableOwnedEndClass1InAssociation);
-		assertNull(diffs.addOwnedEndClass1InAssociation);
-		assertNull(diffs.addMemberEndClass1InAssociation);
-		assertNull(diffs.addRefAssociationInPropertyClass1);
-		assertNull(diffs.addAssociation);
-		assertNull(diffs.addUMLAssociation);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -238,13 +236,14 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
-				.copyLeftToRight(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addNavigableOwnedEndClass1InAssociation),
+				new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeAddNavigableOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -257,25 +256,14 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
-				.copyLeftToRight(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addNavigableOwnedEndClass1InAssociation),
+				new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeDeleteNavigableOwnedEnd(comparison, diffs);
-	}
-
-	private void checkMergeDeleteNavigableOwnedEnd(Comparison comparison, DiffsOfInterest diffs) {
-		// 7 diffs of interest + 2 MultiplicityElementChanges
-		assertEquals(NB_DIFFS - 9, comparison.getDifferences().size());
-		assertNull(diffs.addNavigableOwnedEndClass1InAssociation);
-		assertNull(diffs.addOwnedEndClass1InAssociation);
-		assertNull(diffs.addMemberEndClass1InAssociation);
-		assertNull(diffs.addRefAssociationInPropertyClass1);
-		assertNull(diffs.addLiteralIntegerInClass1);
-		assertNull(diffs.addUnlimitedNaturalInClass1);
-		assertNull(diffs.addRefTypeInPropertyClass1);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -288,23 +276,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
-				.copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addOwnedEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeAddOwnedEnd(comparison, diffs);
-	}
-
-	private void checkMergeAddOwnedEnd(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 6, comparison.getDifferences().size());
-		assertNull(diffs.addOwnedEndClass1InAssociation);
-		assertNull(diffs.addMemberEndClass1InAssociation);
-		assertNull(diffs.addNavigableOwnedEndClass1InAssociation);
-		assertNull(diffs.addRefAssociationInPropertyClass1);
-		assertNull(diffs.addAssociation);
-		assertNull(diffs.addUMLAssociation);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -317,13 +295,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
-				.copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addOwnedEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeAddOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -336,25 +314,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
-				.copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addOwnedEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeDeleteOwnedEnd(comparison, diffs);
-	}
-
-	private void checkMergeDeleteOwnedEnd(Comparison comparison, DiffsOfInterest diffs) {
-		// 7 diffs of interest+ 2 MultiplicityElementChanges
-		assertEquals(NB_DIFFS - 9, comparison.getDifferences().size());
-		assertNull(diffs.addOwnedEndClass1InAssociation);
-		assertNull(diffs.addMemberEndClass1InAssociation);
-		assertNull(diffs.addRefAssociationInPropertyClass1);
-		assertNull(diffs.addNavigableOwnedEndClass1InAssociation);
-		assertNull(diffs.addLiteralIntegerInClass1);
-		assertNull(diffs.addUnlimitedNaturalInClass1);
-		assertNull(diffs.addRefTypeInPropertyClass1);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -367,23 +333,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
-				.copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addMemberEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeAddMemberEnd(comparison, diffs);
-	}
-
-	private void checkMergeAddMemberEnd(Comparison comparison, DiffsOfInterest diffs) {
-		assertEquals(NB_DIFFS - 6, comparison.getDifferences().size());
-		assertNull(diffs.addMemberEndClass1InAssociation);
-		assertNull(diffs.addRefAssociationInPropertyClass1);
-		assertNull(diffs.addOwnedEndClass1InAssociation);
-		assertNull(diffs.addNavigableOwnedEndClass1InAssociation);
-		assertNull(diffs.addAssociation);
-		assertNull(diffs.addUMLAssociation);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -396,13 +352,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
-				.copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addMemberEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeAddMemberEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -415,13 +371,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
-				.copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addMemberEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeDeleteOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -434,13 +390,14 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
-				.copyRightToLeft(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addNavigableOwnedEndClass1InAssociation),
+				new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeDeleteNavigableOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -453,13 +410,14 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
-				.copyRightToLeft(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addNavigableOwnedEndClass1InAssociation),
+				new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeDeleteNavigableOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -472,13 +430,14 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
-				.copyRightToLeft(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addNavigableOwnedEndClass1InAssociation),
+				new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeAddNavigableOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -491,13 +450,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
-				.copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addOwnedEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeDeleteOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -510,13 +469,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
-				.copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addOwnedEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeDeleteOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -529,13 +488,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
-				.copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addOwnedEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeAddOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -548,13 +507,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
-				.copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addMemberEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeDeleteOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -567,13 +526,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
-				.copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addMemberEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeDeleteOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -586,13 +545,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
-				.copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addMemberEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.ADD);
-
-		checkMergeAddMemberEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -634,13 +593,14 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
-				.copyLeftToRight(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addNavigableOwnedEndClass1InAssociation),
+				new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeDeleteNavigableOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -653,13 +613,14 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
-				.copyLeftToRight(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addNavigableOwnedEndClass1InAssociation),
+				new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeDeleteNavigableOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -672,13 +633,14 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
-				.copyLeftToRight(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addNavigableOwnedEndClass1InAssociation),
+				new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeAddNavigableOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -691,13 +653,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
-				.copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addOwnedEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeDeleteOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -710,13 +672,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
-				.copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addOwnedEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeDeleteOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -729,13 +691,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
-				.copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addOwnedEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeAddOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -748,13 +710,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
-				.copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addMemberEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeDeleteOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -767,13 +729,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
-				.copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addMemberEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeDeleteOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -786,13 +748,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
-				.copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addMemberEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+		// .copyLeftToRight(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeAddMemberEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -805,13 +767,14 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
-				.copyRightToLeft(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addNavigableOwnedEndClass1InAssociation),
+				new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeAddNavigableOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -824,13 +787,14 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
-				.copyRightToLeft(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addNavigableOwnedEndClass1InAssociation),
+				new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeAddNavigableOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -843,13 +807,14 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
-				.copyRightToLeft(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addNavigableOwnedEndClass1InAssociation),
+				new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addNavigableOwnedEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addNavigableOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeDeleteNavigableOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -862,13 +827,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
-				.copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addOwnedEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeAddOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -881,13 +846,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
-				.copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addOwnedEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeAddOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -900,13 +865,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
-				.copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addOwnedEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addOwnedEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addOwnedEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeDeleteOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -919,13 +884,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
-				.copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addMemberEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeAddMemberEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -938,13 +903,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
-				.copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addMemberEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeAddMemberEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	@Test
@@ -957,13 +922,13 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
-				.copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
+		BatchMerger bm = new BatchMerger(getMergerRegistry());
+		bm.copyAllLeftToRight(Arrays.asList(diffs.addMemberEndClass1InAssociation), new BasicMonitor());
+		// getMergerRegistry().getHighestRankingMerger(diffs.addMemberEndClass1InAssociation)
+		// .copyRightToLeft(diffs.addMemberEndClass1InAssociation, new BasicMonitor());
 
 		comparison = compare(left, right);
-		diffs = getDiffs(comparison, TestKind.DELETE);
-
-		checkMergeDeleteOwnedEnd(comparison, diffs);
+		assertNoDifferences(comparison);
 	}
 
 	private void testAB1(TestKind kind, final Comparison comparison) {
@@ -1013,7 +978,6 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 			assertTrue(diffs.addMemberEndClass1InAssociation.getImpliedBy()
 					.contains(diffs.addOwnedEndClass1InAssociation));
 		}
-
 	}
 
 	@Override
@@ -1021,21 +985,25 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		return input;
 	}
 
+	@SuppressWarnings("unchecked")
 	private static Predicate<? super Diff> addedLowerValueIn(final String qualifiedName) {
 		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), onFeature("lowerValue"),
 				refinesMultiplicityElementChange());
 	}
 
+	@SuppressWarnings("unchecked")
 	private static Predicate<? super Diff> addedUpperValueIn(final String qualifiedName) {
 		return and(ofKind(DifferenceKind.ADD), onEObject(qualifiedName), onFeature("upperValue"),
 				refinesMultiplicityElementChange());
 	}
 
+	@SuppressWarnings("unchecked")
 	private static Predicate<? super Diff> removedLowerValueIn(final String qualifiedName) {
 		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), onFeature("lowerValue"),
 				refinesMultiplicityElementChange());
 	}
 
+	@SuppressWarnings("unchecked")
 	private static Predicate<? super Diff> removedUpperValueIn(final String qualifiedName) {
 		return and(ofKind(DifferenceKind.DELETE), onEObject(qualifiedName), onFeature("upperValue"),
 				refinesMultiplicityElementChange());
@@ -1050,6 +1018,7 @@ public class ImplicationsAssociationTest extends AbstractUMLTest {
 		};
 	}
 
+	@SuppressWarnings("unused")
 	private class DiffsOfInterest {
 		public Diff addAssociation;
 

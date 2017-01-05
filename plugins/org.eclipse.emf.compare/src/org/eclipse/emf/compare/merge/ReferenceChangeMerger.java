@@ -12,6 +12,7 @@
 package org.eclipse.emf.compare.merge;
 
 import static com.google.common.collect.Iterators.filter;
+import static org.eclipse.emf.compare.merge.IMergeCriterion.NONE;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEGet;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEIsSet;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.safeESet;
@@ -55,7 +56,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 
 	@Override
 	public boolean apply(IMergeCriterion criterion) {
-		return criterion == null;
+		return criterion == null || criterion == NONE;
 	}
 
 	/**
@@ -393,9 +394,8 @@ public class ReferenceChangeMerger extends AbstractMerger {
 		}
 
 		if (expectedContainer == null) {
-			// FIXME throw exception? log? re-try to merge our requirements?
-			// one of the "required" diffs should have created our container.
-			return;
+			throw new IllegalStateException(
+					"Couldn't add in target because its parent hasn't been merged yet: " + diff); //$NON-NLS-1$
 		}
 
 		final Comparison comparison = match.getComparison();
@@ -494,9 +494,8 @@ public class ReferenceChangeMerger extends AbstractMerger {
 		final Match valueMatch = comparison.getMatch(diff.getValue());
 
 		if (currentContainer == null) {
-			// FIXME throw exception? log? re-try to merge our requirements?
-			// one of the "required" diffs should have created our container.
-			return;
+			throw new IllegalStateException(
+					"Couldn't add in target because its parent hasn't been merged yet: " + diff); //$NON-NLS-1$
 		}
 
 		final EObject expectedValue;
@@ -604,18 +603,10 @@ public class ReferenceChangeMerger extends AbstractMerger {
 	protected void checkImpliedDiffsOrdering(ReferenceChange diff, boolean rightToLeft) {
 		final EReference reference = diff.getReference();
 		final List<Diff> mergedImplications;
-		if (rightToLeft) {
-			if (diff.getSource() == DifferenceSource.LEFT) {
-				mergedImplications = diff.getImpliedBy();
-			} else {
-				mergedImplications = diff.getImplies();
-			}
+		if (isAccepting(diff, rightToLeft)) {
+			mergedImplications = diff.getImplies();
 		} else {
-			if (diff.getSource() == DifferenceSource.LEFT) {
-				mergedImplications = diff.getImplies();
-			} else {
-				mergedImplications = diff.getImpliedBy();
-			}
+			mergedImplications = diff.getImpliedBy();
 		}
 
 		Iterator<Diff> impliedDiffs = mergedImplications.iterator();
@@ -629,6 +620,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 			if (implied != diff && implied.getState() == DifferenceState.MERGED) {
 				if (implied.getReference().isMany() && isAdd(implied, rightToLeft)) {
 					internalCheckOrdering(implied, rightToLeft);
+					checkImpliedDiffsOrdering(implied, rightToLeft);
 				}
 			}
 		}

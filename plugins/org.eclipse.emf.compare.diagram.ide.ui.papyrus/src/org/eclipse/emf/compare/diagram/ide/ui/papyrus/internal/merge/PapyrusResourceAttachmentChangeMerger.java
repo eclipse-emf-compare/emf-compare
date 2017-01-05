@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.merge;
 
 import static org.eclipse.emf.compare.DifferenceSource.LEFT;
 import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
+import static org.eclipse.emf.compare.merge.IMergeCriterion.NONE;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -82,7 +83,7 @@ public class PapyrusResourceAttachmentChangeMerger extends ResourceAttachmentCha
 
 	@Override
 	public boolean apply(IMergeCriterion criterion) {
-		return criterion == null;
+		return criterion == null || criterion == NONE;
 	}
 
 	/**

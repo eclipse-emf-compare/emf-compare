@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_dGlfkLCUEeaDmogxouGepA" name="RootElement">
+  <packagedElement xmi:type="uml:Interaction" xmi:id="_fZ4-8LCUEeaDmogxouGepA" name="InteractionA">
+    <ownedParameter xmi:id="_i49t4LCUEeaDmogxouGepA" name="ca" type="_qvI_8LCUEeaDmogxouGepA"/>
+    <ownedParameter xmi:id="_U1-e0LCVEeaDmogxouGepA" name="cb" type="_SZZHoLCVEeaDmogxouGepA"/>
+    <lifeline xmi:id="_kqbrgLCUEeaDmogxouGepA" name="LifelineCA" represents="_i49t4LCUEeaDmogxouGepA"/>
+    <lifeline xmi:id="_XCkSMLCVEeaDmogxouGepA" name="LifelineCB" represents="_U1-e0LCVEeaDmogxouGepA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Component" xmi:id="_qvI_8LCUEeaDmogxouGepA" name="ComponentA"/>
+  <packagedElement xmi:type="uml:Component" xmi:id="_SZZHoLCVEeaDmogxouGepA" name="ComponentB"/>
+  <packagedElement xmi:type="uml:Interface" xmi:id="_b33NMLCVEeaDmogxouGepA" name="InterfaceA">
+    <nestedClassifier xmi:type="uml:Signal" xmi:id="_i6KyULCVEeaDmogxouGepA" name="SignalA"/>
+    <ownedReception xmi:id="_l7EXgLCVEeaDmogxouGepA" name="SignalA" signal="_i6KyULCVEeaDmogxouGepA"/>
+  </packagedElement>
+</uml:Model>

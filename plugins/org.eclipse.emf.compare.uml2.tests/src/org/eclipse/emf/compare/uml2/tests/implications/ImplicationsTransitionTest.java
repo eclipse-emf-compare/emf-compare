@@ -23,11 +23,13 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
 import org.eclipse.emf.compare.uml2.tests.implications.data.ImplicationsInputData;
@@ -126,8 +128,8 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addPrecondition)
-				.copyLeftToRight(diffs.addPrecondition, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addPrecondition),
+				new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -153,8 +155,8 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addPrecondition)
-				.copyLeftToRight(diffs.addPrecondition, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addPrecondition),
+				new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -172,8 +174,8 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addPrecondition)
-				.copyLeftToRight(diffs.addPrecondition, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addPrecondition),
+				new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -198,7 +200,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addGuard).copyLeftToRight(diffs.addGuard,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addGuard),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -225,7 +227,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addGuard).copyLeftToRight(diffs.addGuard,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addGuard),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -244,7 +246,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addGuard).copyLeftToRight(diffs.addGuard,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addGuard),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -270,7 +272,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedRule).copyLeftToRight(diffs.addOwnedRule,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addOwnedRule),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -297,7 +299,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedRule).copyLeftToRight(diffs.addOwnedRule,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addOwnedRule),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -316,7 +318,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedRule).copyLeftToRight(diffs.addOwnedRule,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addOwnedRule),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -342,8 +344,8 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addPrecondition)
-				.copyRightToLeft(diffs.addPrecondition, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addPrecondition),
+				new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -361,8 +363,8 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addPrecondition)
-				.copyRightToLeft(diffs.addPrecondition, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addPrecondition),
+				new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -380,8 +382,8 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addPrecondition)
-				.copyRightToLeft(diffs.addPrecondition, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addPrecondition),
+				new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.ADD);
@@ -399,7 +401,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addGuard).copyRightToLeft(diffs.addGuard,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addGuard),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -418,7 +420,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addGuard).copyRightToLeft(diffs.addGuard,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addGuard),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -437,7 +439,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addGuard).copyRightToLeft(diffs.addGuard,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addGuard),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -456,7 +458,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedRule).copyRightToLeft(diffs.addOwnedRule,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addOwnedRule),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -475,7 +477,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedRule).copyRightToLeft(diffs.addOwnedRule,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addOwnedRule),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -494,7 +496,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.ADD);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedRule).copyRightToLeft(diffs.addOwnedRule,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addOwnedRule),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -542,8 +544,8 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addPrecondition)
-				.copyLeftToRight(diffs.addPrecondition, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addPrecondition),
+				new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -561,8 +563,8 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addPrecondition)
-				.copyLeftToRight(diffs.addPrecondition, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addPrecondition),
+				new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -580,8 +582,8 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addPrecondition)
-				.copyLeftToRight(diffs.addPrecondition, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addPrecondition),
+				new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -599,7 +601,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addGuard).copyLeftToRight(diffs.addGuard,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addGuard),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -618,7 +620,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addGuard).copyLeftToRight(diffs.addGuard,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addGuard),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -637,7 +639,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addGuard).copyLeftToRight(diffs.addGuard,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addGuard),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -656,7 +658,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedRule).copyLeftToRight(diffs.addOwnedRule,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addOwnedRule),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -675,7 +677,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedRule).copyLeftToRight(diffs.addOwnedRule,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addOwnedRule),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -694,7 +696,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedRule).copyLeftToRight(diffs.addOwnedRule,
+		new BatchMerger(getMergerRegistry()).copyAllLeftToRight(Arrays.asList(diffs.addOwnedRule),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -713,8 +715,8 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addPrecondition)
-				.copyRightToLeft(diffs.addPrecondition, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addPrecondition),
+				new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -732,8 +734,8 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addPrecondition)
-				.copyRightToLeft(diffs.addPrecondition, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addPrecondition),
+				new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -751,8 +753,8 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addPrecondition)
-				.copyRightToLeft(diffs.addPrecondition, new BasicMonitor());
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addPrecondition),
+				new BasicMonitor());
 
 		comparison = compare(left, right);
 		diffs = getDiffs(comparison, TestKind.DELETE);
@@ -770,7 +772,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addGuard).copyRightToLeft(diffs.addGuard,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addGuard),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -789,7 +791,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addGuard).copyRightToLeft(diffs.addGuard,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addGuard),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -808,7 +810,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addGuard).copyRightToLeft(diffs.addGuard,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addGuard),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -827,7 +829,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedRule).copyRightToLeft(diffs.addOwnedRule,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addOwnedRule),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -846,7 +848,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedRule).copyRightToLeft(diffs.addOwnedRule,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addOwnedRule),
 				new BasicMonitor());
 
 		comparison = compare(left, right);
@@ -865,7 +867,7 @@ public class ImplicationsTransitionTest extends AbstractUMLTest {
 		DiffsOfInterest diffs = getDiffs(comparison, TestKind.DELETE);
 
 		// ** MERGE **
-		getMergerRegistry().getHighestRankingMerger(diffs.addOwnedRule).copyRightToLeft(diffs.addOwnedRule,
+		new BatchMerger(getMergerRegistry()).copyAllRightToLeft(Arrays.asList(diffs.addOwnedRule),
 				new BasicMonitor());
 
 		comparison = compare(left, right);

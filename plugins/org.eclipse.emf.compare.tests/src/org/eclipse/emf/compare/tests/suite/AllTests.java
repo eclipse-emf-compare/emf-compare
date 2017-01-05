@@ -10,6 +10,7 @@
  *     Philip Langer - Adds additional test classes
  *     Stefan Dirix - Adds additional test classes
  *     Michael Borkowski - Adds additional test classes
+ *     Martin Fleck - Add ImplicationMergeTest, GraphTest
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.suite;
 
@@ -46,6 +47,7 @@ import org.eclipse.emf.compare.tests.merge.FeatureMaps2wayMergeTest;
 import org.eclipse.emf.compare.tests.merge.FeatureMaps3wayMergeTest;
 import org.eclipse.emf.compare.tests.merge.FeatureMapsConflictsMergeTest;
 import org.eclipse.emf.compare.tests.merge.FeatureMapsPseudoConflictsMergeTest;
+import org.eclipse.emf.compare.tests.merge.ImplicationsMergeTest;
 import org.eclipse.emf.compare.tests.merge.IndividualMergeOutOfScopeValuesTest;
 import org.eclipse.emf.compare.tests.merge.IndividualMergeTest;
 import org.eclipse.emf.compare.tests.merge.MultiLineAttributeMergeTest;
@@ -64,6 +66,7 @@ import org.eclipse.emf.compare.tests.scope.ComparisonScopeAdapterTest;
 import org.eclipse.emf.compare.tests.scope.DefaultComparisonScopeTest;
 import org.eclipse.emf.compare.tests.utils.EMFComparePredicatesTest;
 import org.eclipse.emf.compare.tests.utils.EqualityHelperTest;
+import org.eclipse.emf.compare.tests.utils.GraphTest;
 import org.eclipse.emf.compare.tests.utils.MatchUtilFeatureContainsTest;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -98,8 +101,8 @@ import junit.textui.TestRunner;
 		MultiLineAttributeMergeTest.class, MonitorCancelTest.class, IdentifierEObjectMatcherTest.class,
 		MatchUtilFeatureContainsTest.class, RefineMergeTest.class, Bug484557ConflictTest.class,
 		Bug485266_MoveDeleteConflict_Test.class, ResourceAttachmentChangeBug492261.class,
-		ComparisonScopeAdapterTest.class, EMFComparePredicatesTest.class,
-		RankedAdapterFactoryRegistryTest.class, ComparisonUtilTest.class, })
+		RankedAdapterFactoryRegistryTest.class, ComparisonScopeAdapterTest.class,
+		EMFComparePredicatesTest.class, ImplicationsMergeTest.class, GraphTest.class, })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

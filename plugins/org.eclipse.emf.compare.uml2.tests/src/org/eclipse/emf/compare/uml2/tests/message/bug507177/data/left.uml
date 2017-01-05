@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_dGlfkLCUEeaDmogxouGepA" name="RootElement">
+  <packagedElement xmi:type="uml:Interaction" xmi:id="_fZ4-8LCUEeaDmogxouGepA" name="InteractionA">
+    <ownedParameter xmi:type="uml:Parameter" xmi:id="_i49t4LCUEeaDmogxouGepA" name="ca" type="_qvI_8LCUEeaDmogxouGepA"/>
+    <ownedParameter xmi:type="uml:Parameter" xmi:id="_U1-e0LCVEeaDmogxouGepA" name="cb" type="_SZZHoLCVEeaDmogxouGepA"/>
+    <lifeline xmi:type="uml:Lifeline" xmi:id="_kqbrgLCUEeaDmogxouGepA" name="LifelineCA" represents="_i49t4LCUEeaDmogxouGepA" coveredBy="_A4EJcLCWEeaDmogxouGepA"/>
+    <lifeline xmi:type="uml:Lifeline" xmi:id="_XCkSMLCVEeaDmogxouGepA" name="LifelineCB" represents="_U1-e0LCVEeaDmogxouGepA" coveredBy="_A4F-oLCWEeaDmogxouGepA"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_A4EJcLCWEeaDmogxouGepA" name="SignalA_MessageSend" covered="_kqbrgLCUEeaDmogxouGepA" message="_A3-C0LCWEeaDmogxouGepA"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_A4F-oLCWEeaDmogxouGepA" name="SignalA_MessageRecv" covered="_XCkSMLCVEeaDmogxouGepA" message="_A3-C0LCWEeaDmogxouGepA"/>
+    <message xmi:type="uml:Message" xmi:id="_A3-C0LCWEeaDmogxouGepA" name="SignalA_MessageA" messageSort="asynchSignal" receiveEvent="_A4F-oLCWEeaDmogxouGepA" sendEvent="_A4EJcLCWEeaDmogxouGepA" signature="_i6KyULCVEeaDmogxouGepA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Component" xmi:id="_qvI_8LCUEeaDmogxouGepA" name="ComponentA"/>
+  <packagedElement xmi:type="uml:Component" xmi:id="_SZZHoLCVEeaDmogxouGepA" name="ComponentB"/>
+  <packagedElement xmi:type="uml:Interface" xmi:id="_b33NMLCVEeaDmogxouGepA" name="InterfaceA">
+    <nestedClassifier xmi:type="uml:Signal" xmi:id="_i6KyULCVEeaDmogxouGepA" name="SignalA"/>
+    <ownedReception xmi:type="uml:Reception" xmi:id="_l7EXgLCVEeaDmogxouGepA" name="SignalA" signal="_i6KyULCVEeaDmogxouGepA"/>
+  </packagedElement>
+</uml:Model>

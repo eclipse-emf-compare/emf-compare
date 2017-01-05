@@ -17,6 +17,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -40,7 +42,7 @@ public class ResourceAttachmentChangeBug492261 {
 
 	private final FragmentationInputData input = new FragmentationInputData();
 
-	private final IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
+	private final BatchMerger batchMerger = new BatchMerger(IMerger.RegistryImpl.createStandaloneInstance());
 
 	@Test
 	public void testUncontrolRootResourceImplication_1() throws IOException {
@@ -172,18 +174,18 @@ public class ResourceAttachmentChangeBug492261 {
 		assertNotNull(innerNode);
 
 		if (fragmentedOnLeft) {
-			mergerRegistry.getHighestRankingMerger(rac).copyRightToLeft(rac, new BasicMonitor());
+			batchMerger.copyAllRightToLeft(Arrays.asList(rac), new BasicMonitor());
 		} else {
-			mergerRegistry.getHighestRankingMerger(rac).copyLeftToRight(rac, new BasicMonitor());
+			batchMerger.copyAllLeftToRight(Arrays.asList(rac), new BasicMonitor());
 		}
 		assertEquals(DifferenceState.MERGED, rac.getState());
 		assertEquals(DifferenceState.MERGED, container.getState());
 		assertEquals(DifferenceState.UNRESOLVED, innerNode.getState());
 
 		if (fragmentedOnLeft) {
-			mergerRegistry.getHighestRankingMerger(innerNode).copyRightToLeft(innerNode, new BasicMonitor());
+			batchMerger.copyAllRightToLeft(Arrays.asList(innerNode), new BasicMonitor());
 		} else {
-			mergerRegistry.getHighestRankingMerger(innerNode).copyLeftToRight(innerNode, new BasicMonitor());
+			batchMerger.copyAllLeftToRight(Arrays.asList(innerNode), new BasicMonitor());
 		}
 		assertEquals(DifferenceState.MERGED, rac.getState());
 		assertEquals(DifferenceState.MERGED, container.getState());
@@ -223,18 +225,18 @@ public class ResourceAttachmentChangeBug492261 {
 		assertNotNull(innerNode);
 
 		if (fragmentedOnLeft) {
-			mergerRegistry.getHighestRankingMerger(rac).copyRightToLeft(rac, new BasicMonitor());
+			batchMerger.copyAllRightToLeft(Arrays.asList(rac), new BasicMonitor());
 		} else {
-			mergerRegistry.getHighestRankingMerger(rac).copyLeftToRight(rac, new BasicMonitor());
+			batchMerger.copyAllLeftToRight(Arrays.asList(rac), new BasicMonitor());
 		}
 		assertEquals(DifferenceState.MERGED, rac.getState());
 		assertEquals(DifferenceState.UNRESOLVED, container.getState());
 		assertEquals(DifferenceState.UNRESOLVED, innerNode.getState());
 
 		if (fragmentedOnLeft) {
-			mergerRegistry.getHighestRankingMerger(container).copyRightToLeft(container, new BasicMonitor());
+			batchMerger.copyAllRightToLeft(Arrays.asList(container), new BasicMonitor());
 		} else {
-			mergerRegistry.getHighestRankingMerger(container).copyLeftToRight(container, new BasicMonitor());
+			batchMerger.copyAllLeftToRight(Arrays.asList(container), new BasicMonitor());
 		}
 		assertEquals(DifferenceState.MERGED, rac.getState());
 		assertEquals(DifferenceState.MERGED, container.getState());

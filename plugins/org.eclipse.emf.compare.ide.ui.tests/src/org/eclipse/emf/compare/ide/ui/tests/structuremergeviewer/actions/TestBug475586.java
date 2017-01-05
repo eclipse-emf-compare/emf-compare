@@ -42,6 +42,7 @@ import org.eclipse.emf.edit.tree.TreeFactory;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -95,6 +96,9 @@ public class TestBug475586 extends AbstractTestUITreeNodeItemProviderAdapter {
 	}
 
 	@Test
+	@Ignore("The cascading filter must not be handled by the mergers.\n"
+			+ "It's the responsibility of the UI to compute a list of diffs 'hidden' by the cascading filter"
+			+ "for a selected diff and to call the BatchMerger to merge all these diffs at the same time.")
 	public void testAcceptWithCascadingFilter() {
 		final MergeMode accept = MergeMode.ACCEPT;
 		final boolean leftEditable = true;

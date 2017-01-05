@@ -70,7 +70,8 @@ public final class DiffUtil {
 	}
 
 	/**
-	 * The set of all the diffs that refine the given diff or one of its refining diffs, recursively.
+	 * The set of all the diffs (atomic or not) that refine the given diff or one of its refining diffs,
+	 * recursively.
 	 * 
 	 * @param diff
 	 *            The diff for which all the refining diffs are seeked
@@ -112,12 +113,13 @@ public final class DiffUtil {
 	}
 
 	/**
-	 * The set of all the diffs that refine the given diff or one of its refining diffs, recursively.
+	 * The set of all the atomic diffs that refine the given diff or one of its refining diffs, recursively.
+	 * An atomic diff is a diff that is not refined by any diff.
 	 * 
 	 * @param diff
 	 *            The diff for which all the refining diffs are seeked
-	 * @return A set of all the refining diffs (as opposed to getting only the 1st level of refining diffs
-	 *         that would be obtained by calling getRefinedBy() on diff.
+	 * @return A set of all the atomic refining diffs (as opposed to getting only the 1st level of refining
+	 *         diffs that would be obtained by calling getRefinedBy() on diff.
 	 */
 	public static Set<Diff> getAllAtomicRefiningDiffs(Diff diff) {
 		Set<Diff> result = new LinkedHashSet<Diff>();

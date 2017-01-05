@@ -2,6 +2,8 @@ package org.eclipse.emf.compare.tests.checkers;
 
 import static org.junit.Assert.assertEquals;
 
+import com.google.common.collect.Sets;
+
 import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
@@ -17,9 +19,9 @@ public class MergeDependenciesChecker {
 
 	private int nbMerges = 0;
 
-	private int nbDeletions = 0;
+	private int nbRejections = 0;
 
-	private boolean isFromRight = true;
+	private boolean rightToLeft = true;
 
 	private MergeDependenciesChecker() {
 		// Do nothing
@@ -41,26 +43,26 @@ public class MergeDependenciesChecker {
 	}
 
 	public MergeDependenciesChecker rejects(int nbResultingRejections) {
-		this.nbDeletions = nbResultingRejections;
+		this.nbRejections = nbResultingRejections;
 		return this;
 	}
 
 	public MergeDependenciesChecker rightToLeft() {
-		this.isFromRight = true;
+		this.rightToLeft = true;
 		return this;
 	}
 
 	public MergeDependenciesChecker leftToRight() {
-		this.isFromRight = false;
+		this.rightToLeft = false;
 		return this;
 	}
 
 	public void check() {
 		Set<Diff> allResultingMerges = MergeDependenciesUtil.getAllResultingMerges(diff, registry,
-				this.isFromRight);
+				this.rightToLeft);
 		Set<Diff> allResultingRejections = MergeDependenciesUtil.getAllResultingRejections(diff, registry,
-				this.isFromRight);
-		assertEquals(this.nbMerges, allResultingMerges.size());
-		assertEquals(this.nbDeletions, allResultingRejections.size());
+				this.rightToLeft);
+		assertEquals(this.nbMerges, Sets.difference(allResultingMerges, allResultingRejections).size());
+		assertEquals(this.nbRejections, allResultingRejections.size());
 	}
 }

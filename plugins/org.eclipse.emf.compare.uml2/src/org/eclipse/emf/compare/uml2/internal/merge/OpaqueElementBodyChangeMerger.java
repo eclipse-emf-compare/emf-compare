@@ -7,9 +7,11 @@
  * 
  * Contributors:
  *     Philip Langer - initial API and implementation
+ *     Martin Fleck - bug 507177: consider refinement behavior
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.merge;
 
+import static org.eclipse.emf.compare.DifferenceState.MERGED;
 import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.getOpaqueElementLanguages;
 import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.isChangeOfOpaqueElementBodyAttribute;
 import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.isChangeOfOpaqueElementLanguageAttribute;
@@ -113,11 +115,36 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 		return Optional.absent();
 	}
 
+	/**
+	 * Returns true if the complete body change has been merged, i.e., the change and all its refinements.
+	 * 
+	 * @param bodyChange
+	 *            The {@link OpaqueElementBodyChange} to check.
+	 * @return true if the complete body change is merged, false otherwise.
+	 */
+	private boolean isFullyMerged(OpaqueElementBodyChange bodyChange) {
+		if (bodyChange.getState() != MERGED) {
+			return false;
+		}
+		for (Diff refiningDiff : bodyChange.getRefinedBy()) {
+			if (refiningDiff.getState() != MERGED) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	@Override
 	protected void accept(Diff diff, boolean rightToLeft) {
 		final Optional<OpaqueElementBodyChange> possibleBodyChange = getOpaqueElementBodyChange(diff);
 		if (possibleBodyChange.isPresent()) {
 			final OpaqueElementBodyChange bodyChange = getOpaqueElementBodyChange(diff).get();
+
+			// ensure that we do not merge an already MERGED OpaqueElementChange, e.g., when both language and
+			// body try to merge it
+			if (isFullyMerged(bodyChange)) {
+				return;
+			}
 
 			if (LOGGER.isDebugEnabled()) {
 				int refinedElementCount = bodyChange.getRefinedBy().size();
@@ -142,6 +169,9 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 					break;
 
 			}
+
+			// we set the whole refinement diff to merged
+			setFullyMerged(bodyChange);
 		}
 	}
 
@@ -150,6 +180,12 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 		final Optional<OpaqueElementBodyChange> possibleBodyChange = getOpaqueElementBodyChange(diff);
 		if (possibleBodyChange.isPresent()) {
 			final OpaqueElementBodyChange bodyChange = possibleBodyChange.get();
+
+			// ensure that we do not merge an already MERGED OpaqueElementChange, e.g., when both language and
+			// body try to merge it
+			if (isFullyMerged(bodyChange)) {
+				return;
+			}
 
 			if (LOGGER.isDebugEnabled()) {
 				int refinedElementCount = bodyChange.getRefinedBy().size();
@@ -173,6 +209,9 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 				default:
 					break;
 			}
+
+			// we set the whole refinement diff to merged
+			setFullyMerged(bodyChange);
 		}
 	}
 
@@ -186,7 +225,6 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 	 *            The direction of merging.
 	 */
 	private void acceptRefiningDiffs(OpaqueElementBodyChange bodyChange, boolean rightToLeft) {
-		bodyChange.setState(DifferenceState.MERGED);
 		final List<Diff> sortedRefiningDiffs = sortByMergePriority(bodyChange.getRefinedBy());
 		for (Diff refiningDiff : sortedRefiningDiffs) {
 			super.accept(refiningDiff, rightToLeft);
@@ -203,7 +241,6 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 	 *            The direction of merging.
 	 */
 	private void rejectRefiningDiffs(OpaqueElementBodyChange bodyChange, boolean rightToLeft) {
-		bodyChange.setState(DifferenceState.MERGED);
 		final List<Diff> sortedRefiningDiffs = sortByMergePriority(bodyChange.getRefinedBy());
 		for (Diff refiningDiff : sortedRefiningDiffs) {
 			super.reject(refiningDiff, rightToLeft);
@@ -260,9 +297,6 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 		final String targetValue = getTargetBodyValue(bodyChange, rightToLeft);
 
 		setBody(targetContainer, targetValue, bodyChange.getLanguage());
-
-		// we merge the body change as a whole, so set all refining to merged too
-		setRefiningDiffsMerged(bodyChange);
 	}
 
 	/**
@@ -453,9 +487,6 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 		final int targetIndex = DiffUtil.findInsertionIndex(comparison, languageAttributeMove, rightToLeft);
 
 		doMove(container, sourceIndex, targetIndex);
-
-		// we merged the body change as a whole, so set all refining to merged too
-		setRefiningDiffsMerged(bodyChange);
 	}
 
 	/**
@@ -553,12 +584,14 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 	}
 
 	/**
-	 * Sets the {@link DifferenceState state} of all refining differences to merged.
+	 * Sets the {@link DifferenceState state} of all refinement differences, i.e., the body change and its
+	 * refining diffs, to merged.
 	 * 
 	 * @param bodyChange
-	 *            The {@link OpaqueElementBodyChange} to set its refining differences to merged.
+	 *            The {@link OpaqueElementBodyChange} to set to merged.
 	 */
-	private void setRefiningDiffsMerged(OpaqueElementBodyChange bodyChange) {
+	private void setFullyMerged(OpaqueElementBodyChange bodyChange) {
+		bodyChange.setState(DifferenceState.MERGED);
 		for (Diff refiningDiff : bodyChange.getRefinedBy()) {
 			refiningDiff.setState(DifferenceState.MERGED);
 		}
