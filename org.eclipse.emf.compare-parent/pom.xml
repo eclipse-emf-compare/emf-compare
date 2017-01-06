@@ -40,7 +40,7 @@
 
     <!-- plugins versions -->
     <!-- use 'mvn versions:display-plugin-updates' to check for the latest -->
-    <tycho-version>0.21.0</tycho-version>
+    <tycho-version>0.26.0</tycho-version>
     <tycho-extras-version>0.21.0</tycho-extras-version>
     <maven-resources-version>2.6</maven-resources-version>
     <maven-antrun-version>1.7</maven-antrun-version>
@@ -57,7 +57,7 @@
     <maven-site-version>3.4</maven-site-version>
     <maven-surefire-version>2.17</maven-surefire-version>
     <jacoco-maven-version>0.7.1.201405082137</jacoco-maven-version>
-    <eclipse-jarsigner-version>1.0.5</eclipse-jarsigner-version>
+    <eclipse-jarsigner-version>1.1.2</eclipse-jarsigner-version>
     <maven-jxr-version>2.3</maven-jxr-version>
 
     <!-- Sonar properties -->
