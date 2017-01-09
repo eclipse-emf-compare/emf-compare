@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015, 2017 Obeo and others.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,10 +9,13 @@
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 462237, refactoring
  *     Simon Delisle - bug 511172
+ *     Philip Langer - bug 509975
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
+import static org.eclipse.emf.compare.DifferenceState.UNRESOLVED;
 import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_ASYNC;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -22,9 +25,7 @@ import java.util.List;
 
 import org.eclipse.compare.INavigatable;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType;
-import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.OpenEvent;
@@ -141,7 +142,7 @@ public class Navigatable implements INavigatable {
 	 * @see org.eclipse.compare.INavigatable#hasChange(int)
 	 */
 	public boolean hasChange(int changeFlag) {
-		TreeItem[] selection = viewer.getTree().getItems();
+		TreeItem[] selection = viewer.getTree().getSelection();
 		TreeItem firstSelectedItem = selection.length > 0 ? selection[0] : null;
 		switch (changeFlag) {
 			case NEXT_CHANGE:
@@ -188,7 +189,14 @@ public class Navigatable implements INavigatable {
 	 * @return the previous TreeNode that contains an unresolvable diff.
 	 */
 	private Object getNextUnresolvedDiff(TreeItem start) {
-		return getNextData(start, EMFComparePredicates.hasState(DifferenceState.UNRESOLVED));
+		Object nextUnresolvedDiff = getNextData(start, hasState(UNRESOLVED));
+		if (nextUnresolvedDiff == null) {
+			// we don't have an unresolved diff AFTER the the current one (TreeItem start)
+			// thus, we look for the next unresolved diff starting from the beginning
+			nextUnresolvedDiff = getNextData(getFirstItemInTree(), hasState(UNRESOLVED));
+		}
+
+		return nextUnresolvedDiff;
 	}
 
 	/**
