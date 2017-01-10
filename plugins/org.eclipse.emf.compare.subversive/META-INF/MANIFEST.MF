@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-SymbolicName: org.eclipse.emf.compare.subversive;singleton:=true
 Bundle-Version: 1.1.0.qualifier
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.equinox.registry,
  org.eclipse.team.svn.ui,

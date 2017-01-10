@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.compare.uml2.tests,
  org.eclipse.emf.compare.rcp,
  org.eclipse.emf.compare.rcp.ui.tests;bundle-version="4.3.0"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",

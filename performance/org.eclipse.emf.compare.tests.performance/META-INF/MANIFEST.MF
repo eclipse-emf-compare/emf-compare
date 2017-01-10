@@ -4,7 +4,7 @@ Bundle-Name: EMFCompare Performance Tests
 Bundle-SymbolicName: org.eclipse.emf.compare.tests.performance
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Eclipse Modeling
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.swt,

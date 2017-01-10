@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.diagram.ide.ecoretools.tests
 Bundle-Version: 2.4.0.qualifier
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.emf.ecore;bundle-version="2.6.0",
  org.junit,
  org.eclipse.emf.compare.tests;bundle-version="2.0.0",

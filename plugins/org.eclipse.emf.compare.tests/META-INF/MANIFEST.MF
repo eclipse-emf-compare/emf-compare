@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.hamcrest;bundle-version="1.1.0",
  org.objenesis;bundle-version="1.0.0"
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.eclipse.emf.compare.tests,
  org.eclipse.emf.compare.tests.command,
  org.eclipse.emf.compare.tests.conflict,
