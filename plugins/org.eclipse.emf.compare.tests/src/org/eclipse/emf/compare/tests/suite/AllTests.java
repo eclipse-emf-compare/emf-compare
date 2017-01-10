@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.tests.command.CommandStackTestSuite;
 import org.eclipse.emf.compare.tests.conflict.ConflictDetectionTest;
 import org.eclipse.emf.compare.tests.conflict.MultiLineAttributeConflictDetectionTest;
+import org.eclipse.emf.compare.tests.conflict.PseudoConflictDetectionTest;
 import org.eclipse.emf.compare.tests.conflict.data.bug484557.Bug484557ConflictTest;
 import org.eclipse.emf.compare.tests.diff.ComparisonUtilTest;
 import org.eclipse.emf.compare.tests.diff.DiffUtilTest;
@@ -41,6 +42,8 @@ import org.eclipse.emf.compare.tests.match.ProxyMatchingTest;
 import org.eclipse.emf.compare.tests.match.RootIDMatchingTest;
 import org.eclipse.emf.compare.tests.match.XMIMatchingTest;
 import org.eclipse.emf.compare.tests.merge.Bug485266_MoveDeleteConflict_Test;
+import org.eclipse.emf.compare.tests.merge.ComplexMergeTest;
+import org.eclipse.emf.compare.tests.merge.ConflictImplicationsTest_Bug484579;
 import org.eclipse.emf.compare.tests.merge.ConflictMergeTest;
 import org.eclipse.emf.compare.tests.merge.ExtensionMergeTest;
 import org.eclipse.emf.compare.tests.merge.FeatureMaps2wayMergeTest;
@@ -102,7 +105,9 @@ import junit.textui.TestRunner;
 		MatchUtilFeatureContainsTest.class, RefineMergeTest.class, Bug484557ConflictTest.class,
 		Bug485266_MoveDeleteConflict_Test.class, ResourceAttachmentChangeBug492261.class,
 		RankedAdapterFactoryRegistryTest.class, ComparisonScopeAdapterTest.class,
-		EMFComparePredicatesTest.class, ImplicationsMergeTest.class, GraphTest.class, })
+		EMFComparePredicatesTest.class, ImplicationsMergeTest.class, GraphTest.class,
+		ConflictImplicationsTest_Bug484579.class, PseudoConflictDetectionTest.class,
+		ComplexMergeTest.class, })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

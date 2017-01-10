@@ -21,7 +21,6 @@
       <configuration>
         <includes>
           <include>org/eclipse/emf/compare/tests/suite/AllTests.class</include>
-          <include>org/eclipse/emf/compare/tests/suite/AtLeastLunaVersionTests.class</include>
         </includes> 
       </configuration>
      </plugin>
