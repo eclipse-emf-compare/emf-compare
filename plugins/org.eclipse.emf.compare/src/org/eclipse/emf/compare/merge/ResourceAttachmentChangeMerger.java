@@ -131,9 +131,7 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 		final Resource expectedResource = findOrCreateTargetResource(match, rightToLeft);
 
 		if (expectedResource == null) {
-			// TODO log
-			diff.setState(DifferenceState.UNRESOLVED);
-			return;
+			throw new IllegalStateException("Another diff should have been merged before " + diff); //$NON-NLS-1$
 		}
 
 		final EObject sourceValue;

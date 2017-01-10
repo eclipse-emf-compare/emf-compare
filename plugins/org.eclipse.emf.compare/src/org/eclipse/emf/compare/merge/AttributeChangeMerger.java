@@ -137,21 +137,20 @@ public class AttributeChangeMerger extends AbstractMerger {
 		final EObject targetContainer = getTargetContainer(diff, rightToLeft);
 
 		if (targetContainer == null) {
-			// FIXME throw exception? log? re-try to merge our requirements?
-			// one of the "required" diffs should have created our container.
-		} else {
-			final Comparison comparison = match.getComparison();
-			final EStructuralFeature attribute = diff.getAttribute();
-			final Object expectedValue = diff.getValue();
-			// We have the container, attribute and value. We need to know the insertion index.
-			if (attribute.isMany()) {
-				final int insertionIndex = findInsertionIndex(comparison, diff, rightToLeft);
+			throw new IllegalStateException(
+					"Couldn't add in target because its parent hasn't been merged yet: " + diff); //$NON-NLS-1$
+		}
+		final Comparison comparison = match.getComparison();
+		final EStructuralFeature attribute = diff.getAttribute();
+		final Object expectedValue = diff.getValue();
+		// We have the container, attribute and value. We need to know the insertion index.
+		if (attribute.isMany()) {
+			final int insertionIndex = findInsertionIndex(comparison, diff, rightToLeft);
 
-				final List<Object> targetList = (List<Object>)safeEGet(targetContainer, attribute);
-				addAt(targetList, expectedValue, insertionIndex);
-			} else {
-				safeESet(targetContainer, attribute, expectedValue);
-			}
+			final List<Object> targetList = (List<Object>)safeEGet(targetContainer, attribute);
+			addAt(targetList, expectedValue, insertionIndex);
+		} else {
+			safeESet(targetContainer, attribute, expectedValue);
 		}
 	}
 
@@ -186,9 +185,7 @@ public class AttributeChangeMerger extends AbstractMerger {
 	protected void removeFromTarget(AttributeChange diff, boolean rightToLeft) {
 		final EObject currentContainer = getTargetContainer(diff, rightToLeft);
 
-		if (currentContainer == null) {
-			// FIXME throw exception? log? re-try to merge our requirements?
-		} else {
+		if (currentContainer != null) {
 			final Object expectedValue = diff.getValue();
 			final EStructuralFeature attribute = diff.getAttribute();
 			// We have the container, attribute and value to remove.
@@ -217,14 +214,14 @@ public class AttributeChangeMerger extends AbstractMerger {
 		final EObject expectedContainer = getTargetContainer(diff, rightToLeft);
 
 		if (expectedContainer == null) {
-			// TODO throws exception?
-		} else {
-			final Comparison comparison = diff.getMatch().getComparison();
-			final Object expectedValue = diff.getValue();
-
-			// We now know the target container, target attribute and target value.
-			doMove(diff, comparison, expectedContainer, expectedValue, rightToLeft);
+			throw new IllegalStateException(
+					"Couldn't move element because its target parent hasn't been merged yet: " + diff); //$NON-NLS-1$
 		}
+		final Comparison comparison = diff.getMatch().getComparison();
+		final Object expectedValue = diff.getValue();
+
+		// We now know the target container, target attribute and target value.
+		doMove(diff, comparison, expectedContainer, expectedValue, rightToLeft);
 	}
 
 	/**

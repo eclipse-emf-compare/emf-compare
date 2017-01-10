@@ -147,20 +147,18 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 		} else {
 			expectedContainer = match.getRight();
 		}
-
 		if (expectedContainer == null) {
-			// FIXME throw exception? log? re-try to merge our requirements?
-			// one of the "required" diffs should have created our container.
-		} else {
-			final Comparison comparison = match.getComparison();
-			final EStructuralFeature attribute = diff.getAttribute();
-			final FeatureMap.Entry expectedValue = (FeatureMap.Entry)diff.getValue();
-			// We have the container, attribute and value. We need to know the insertion index.
-			final int insertionIndex = findInsertionIndex(comparison, diff, rightToLeft);
-
-			final List<Object> targetList = (List<Object>)safeEGet(expectedContainer, attribute);
-			addFeatureMapValueInTarget(comparison, rightToLeft, targetList, insertionIndex, expectedValue);
+			throw new IllegalStateException(
+					"Couldn't add in target because its parent hasn't been merged yet: " + diff); //$NON-NLS-1$
 		}
+		final Comparison comparison = match.getComparison();
+		final EStructuralFeature attribute = diff.getAttribute();
+		final FeatureMap.Entry expectedValue = (FeatureMap.Entry)diff.getValue();
+		// We have the container, attribute and value. We need to know the insertion index.
+		final int insertionIndex = findInsertionIndex(comparison, diff, rightToLeft);
+
+		final List<Object> targetList = (List<Object>)safeEGet(expectedContainer, attribute);
+		addFeatureMapValueInTarget(comparison, rightToLeft, targetList, insertionIndex, expectedValue);
 	}
 
 	/**
@@ -253,9 +251,7 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 			currentContainer = diff.getMatch().getRight();
 		}
 
-		if (currentContainer == null) {
-			// FIXME throw exception? log? re-try to merge our requirements?
-		} else {
+		if (currentContainer != null) {
 			FeatureMap.Entry expectedValue = (FeatureMap.Entry)diff.getValue();
 
 			if (!isDiffSourceIsMergeTarget(diff, rightToLeft)) {
@@ -322,15 +318,14 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 		final Comparison comparison = match.getComparison();
 		final EObject expectedContainer = ComparisonUtil.moveElementGetExpectedContainer(comparison, diff,
 				rightToLeft);
-
 		if (expectedContainer == null) {
-			// TODO throws exception?
-		} else {
-			final FeatureMap.Entry expectedEntry = moveElementGetExpectedEntry(comparison, diff,
-					expectedContainer, rightToLeft);
-			// We now know the target container, target attribute and target entry.
-			doMove(diff, comparison, expectedContainer, expectedEntry, rightToLeft);
+			throw new IllegalStateException(
+					"Couldn't move element because its parent hasn't been merged yet: " + diff); //$NON-NLS-1$
 		}
+		final FeatureMap.Entry expectedEntry = moveElementGetExpectedEntry(comparison, diff,
+				expectedContainer, rightToLeft);
+		// We now know the target container, target attribute and target entry.
+		doMove(diff, comparison, expectedContainer, expectedEntry, rightToLeft);
 	}
 
 	/**

@@ -202,9 +202,8 @@ public class ReferenceChangeMerger extends AbstractMerger {
 			expectedContainer = diff.getMatch().getRight();
 		}
 		if (expectedContainer == null) {
-			// FIXME throw exception? log? re-try to merge our requirements?
-			// one of the "required" diffs should have created our container.
-			return;
+			throw new IllegalStateException(
+					"Couldn't move element because its parent hasn't been merged yet: " + diff); //$NON-NLS-1$
 		}
 
 		final EObject expectedValue;
@@ -494,8 +493,8 @@ public class ReferenceChangeMerger extends AbstractMerger {
 		final Match valueMatch = comparison.getMatch(diff.getValue());
 
 		if (currentContainer == null) {
-			throw new IllegalStateException(
-					"Couldn't add in target because its parent hasn't been merged yet: " + diff); //$NON-NLS-1$
+			// Nothing to do, parent already removed
+			return;
 		}
 
 		final EObject expectedValue;
