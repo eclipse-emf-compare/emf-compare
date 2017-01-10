@@ -85,7 +85,6 @@ public class ResourceLocationChangeItemProviderSpec extends ResourceLocationChan
 		return getStyledText(object).getString();
 	}
 
-	/* Missing override : only for EMF 2.10 and later. Do not tag. */
 	/**
 	 * {@inheritDoc}
 	 * 

@@ -95,12 +95,12 @@ public class GroupItemProviderAdapter extends ItemProviderAdapter implements IEd
 		return group.getName();
 	}
 
-	/* Missing override : only for EMF 2.10 and later. Do not tag. */
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.provider.IItemStyledLabelProvider#getStyledText(java.lang.Object)
 	 */
+	@Override
 	public IComposedStyledString getStyledText(Object object) {
 		return group.getStyledName();
 	}

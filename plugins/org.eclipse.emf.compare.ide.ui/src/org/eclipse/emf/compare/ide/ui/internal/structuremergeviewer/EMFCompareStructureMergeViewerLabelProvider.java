@@ -125,13 +125,13 @@ class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryLabelPro
 		return ret;
 	}
 
-	/* Missing override : only for EMF 2.10 and later. Do not tag. */
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider.getStyledText(
 	 *      java .lang.Object)
 	 */
+	@Override
 	public StyledString getStyledText(Object element) {
 		final StyledString ret;
 		if (element instanceof ItemProviderAdapter) {

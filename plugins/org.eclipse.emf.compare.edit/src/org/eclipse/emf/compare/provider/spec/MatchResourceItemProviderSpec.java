@@ -178,7 +178,6 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 		return buffer.toString();
 	}
 
-	/* Missing override : only for EMF 2.10 and later. Do not tag. */
 	/**
 	 * {@inheritDoc}
 	 * 
