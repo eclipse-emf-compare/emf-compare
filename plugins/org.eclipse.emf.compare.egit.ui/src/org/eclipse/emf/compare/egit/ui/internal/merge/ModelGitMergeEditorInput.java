@@ -169,18 +169,15 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 			throw new InvocationTargetException(
 					new IllegalStateException(UIText.RepositoryAction_multiRepoSelection));
 		}
-		final Repository repository = pathsByRepository.keySet().iterator().next();
-		final List<String> filterPaths = new ArrayList<String>(pathsByRepository.get(repository));
 
 		checkCanceled(monitor);
 
 		// The merge drivers have done their job of putting the necessary
 		// information in the index
 		// Read that info and provide it to the file-specific comparators
-		RevWalk rw = null;
-		try {
-			rw = new RevWalk(repository);
-
+		try (final Repository repository = pathsByRepository.keySet().iterator().next();
+				RevWalk rw = new RevWalk(repository)) {
+			final List<String> filterPaths = new ArrayList<String>(pathsByRepository.get(repository));
 			// get the "right" side (MERGE_HEAD for merge, ORIG_HEAD for rebase)
 			final RevCommit rightCommit = getRightCommit(rw, repository);
 
@@ -205,11 +202,6 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		} catch (IOException e) {
 			throw new InvocationTargetException(e);
 		} finally {
-			if (rw != null) {
-				rw.close();
-				rw.dispose();
-			}
-			repository.close();
 			monitor.done();
 		}
 	}
@@ -503,11 +495,9 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		} catch (IOException e) {
 			throw new InvocationTargetException(e);
 		}
-		setTitle(
-				NLS.bind(UIText.GitMergeEditorInput_MergeEditorTitle,
-						new Object[] {
-								Activator.getDefault().getRepositoryUtil().getRepositoryName(repository),
-								rightCommit.getShortMessage(), fullBranch }));
+		setTitle(NLS.bind(UIText.GitMergeEditorInput_MergeEditorTitle,
+				new Object[] {Activator.getDefault().getRepositoryUtil().getRepositoryName(repository),
+						rightCommit.getShortMessage(), fullBranch }));
 	}
 
 	@Override
@@ -530,8 +520,7 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		monitor.setTaskName(UIText.GitMergeEditorInput_CalculatingDiffTaskName);
 		IDiffContainer result = new DiffNode(Differencer.CONFLICTING);
 
-		TreeWalk tw = new TreeWalk(repository);
-		try {
+		try (TreeWalk tw = new TreeWalk(repository)) {
 			int dirCacheIndex = tw.addTree(new DirCacheIterator(repository.readDirCache()));
 			int fileTreeIndex = tw.addTree(new FileTreeIterator(repository));
 			int repositoryTreeIndex = tw.addTree(rw.parseTree(repository.resolve(Constants.HEAD)));
@@ -661,8 +650,6 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 				new DiffNode(fileParent, kind, anc, leftEditable, right);
 			}
 			return result;
-		} finally {
-			tw.close();
 		}
 	}
 

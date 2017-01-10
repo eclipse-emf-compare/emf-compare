@@ -213,20 +213,10 @@ public class SynchronizedResourceSet extends ResourceSetImpl implements Disposab
 			return former;
 		}
 
-		InputStream stream = null;
-		try {
-			stream = getURIConverter().createInputStream(trimmed, null);
+		try (InputStream stream = getURIConverter().createInputStream(trimmed, null)) {
 			resource.load(stream, Collections.emptyMap());
 		} catch (IOException e) {
 			handleDemandLoadException(resource, e);
-		} finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					// handled by the outer try
-				}
-			}
 		}
 		loadedPackages.add(resource);
 		return resource;

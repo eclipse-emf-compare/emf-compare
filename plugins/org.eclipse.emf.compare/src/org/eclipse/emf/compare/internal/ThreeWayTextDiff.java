@@ -90,8 +90,7 @@ public class ThreeWayTextDiff {
 	 * @return The line separator used in string or &quot;\n&quot; as default.
 	 */
 	private String determineLineSeparator(String string) {
-		final StringReader stringReader = new StringReader(nullToEmpty(string));
-		try {
+		try (final StringReader stringReader = new StringReader(nullToEmpty(string))) {
 			int read = 0;
 			while (read != -1) {
 				read = stringReader.read();
@@ -109,8 +108,6 @@ public class ThreeWayTextDiff {
 			}
 		} catch (IOException e) {
 			// must never happen as we read strings
-		} finally {
-			stringReader.close();
 		}
 		return "\n"; //$NON-NLS-1$
 	}
@@ -131,11 +128,9 @@ public class ThreeWayTextDiff {
 		final TwoWayTextDiff leftDiffs = new TwoWayTextDiff(origin, left);
 		final TwoWayTextDiff rightDiffs = new TwoWayTextDiff(origin, right);
 		final LinkedList<ThreeWayLineDifference> threeWayDiffs = new LinkedList<ThreeWayLineDifference>();
-		try {
-			final LinkedList<Diff> leftDiffQueue = new LinkedList<Diff>(leftDiffs.getDifferences());
-			final LinkedList<Diff> rightDiffQueue = new LinkedList<Diff>(rightDiffs.getDifferences());
-			final BufferedReader originReader = createBufferedReader(nullToEmpty(origin));
-
+		final LinkedList<Diff> leftDiffQueue = new LinkedList<Diff>(leftDiffs.getDifferences());
+		final LinkedList<Diff> rightDiffQueue = new LinkedList<Diff>(rightDiffs.getDifferences());
+		try (final BufferedReader originReader = createBufferedReader(nullToEmpty(origin))) {
 			String originLine;
 			while ((originLine = originReader.readLine()) != null) {
 				final List<Diff> leftRange = collectDifferenceRange(originLine, leftDiffQueue);
@@ -147,8 +142,6 @@ public class ThreeWayTextDiff {
 			if (!leftDiffQueue.isEmpty() || !rightDiffQueue.isEmpty()) {
 				threeWayDiffs.add(new ThreeWayLineDifference(leftDiffQueue, rightDiffQueue));
 			}
-
-			originReader.close();
 		} catch (IOException e) {
 			// must never happen as we read strings
 		}
@@ -438,12 +431,10 @@ public class ThreeWayTextDiff {
 			LinkedList<Diff> flattenedDifferences = new LinkedList<Diff>();
 			for (Diff diff : differences) {
 				String line;
-				try {
-					final BufferedReader reader = createBufferedReader(diff.text);
+				try (final BufferedReader reader = createBufferedReader(diff.text)) {
 					while ((line = reader.readLine()) != null) {
 						flattenedDifferences.add(new Diff(diff.operation, line));
 					}
-					reader.close();
 				} catch (IOException e) {
 					// this must never happen as we are reading strings
 				}

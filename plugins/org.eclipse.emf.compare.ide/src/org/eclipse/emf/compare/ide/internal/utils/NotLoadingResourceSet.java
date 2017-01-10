@@ -249,18 +249,12 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	 *             Exception raised if there is an error with the {@link IStorage}.
 	 */
 	private void loadFromStorage(Resource resource, IStorage storage) throws IOException {
-		InputStream stream = null;
-		try {
-			stream = storage.getContents();
+		try (InputStream stream = storage.getContents()) {
 			resource.load(stream, getLoadOptions());
 		} catch (CoreException e) {
 			logLoadingFromStorageFailed(resource, storage, e);
 		} catch (WrappedException e) {
 			logLoadingFromStorageFailed(resource, storage, e);
-		} finally {
-			if (stream != null) {
-				stream.close();
-			}
 		}
 	}
 

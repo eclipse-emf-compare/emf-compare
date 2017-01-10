@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -516,16 +515,10 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 						} else {
 							// The project that will contain the resource is not accessible.
 							// We have to copy the file "manually" from the right side to the left side.
-							try {
-								InputStream inputStream = rightStorage.getContents();
-								FileOutputStream outputStream = new FileOutputStream(
-										ResourceUtil.getAbsolutePath(rightStorage).toFile());
+							try (InputStream inputStream = rightStorage.getContents();
+									FileOutputStream outputStream = new FileOutputStream(
+											ResourceUtil.getAbsolutePath(rightStorage).toFile())) {
 								ByteStreams.copy(inputStream, outputStream);
-								inputStream.close();
-								outputStream.close();
-							} catch (FileNotFoundException e) {
-								EMFCompareIDEUIPlugin.getDefault().log(e);
-								// TODO Should we throw the exception here to interrupt the merge ?
 							} catch (IOException e) {
 								EMFCompareIDEUIPlugin.getDefault().log(e);
 								// TODO Should we throw the exception here to interrupt the merge ?

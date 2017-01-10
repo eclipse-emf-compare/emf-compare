@@ -17,7 +17,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.common.io.Closeables;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -107,30 +106,16 @@ public final class ResourceUtil {
 	 */
 	public static Resource loadResource(IStorage storage, ResourceSet resourceSet, Map<?, ?> options) {
 		final URI uri = createURIFor(storage);
-
-		InputStream stream = null;
-		Resource resource = null;
 		try {
-			resource = resourceSet.createResource(uri);
-			stream = storage.getContents();
-			resource.load(stream, options);
-		} catch (IOException e) {
-			// return null
-		} catch (CoreException e) {
-			// return null
-		} catch (WrappedException e) {
-			// return null
-		} finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					// Should have been caught by the outer try
-				}
+			Resource resource = resourceSet.createResource(uri);
+			try (InputStream stream = storage.getContents()) {
+				resource.load(stream, options);
 			}
+			return resource;
+		} catch (IOException | CoreException | WrappedException e) {
+			// return null
 		}
-
-		return resource;
+		return null;
 	}
 
 	/**
@@ -143,15 +128,11 @@ public final class ResourceUtil {
 	 * @return <code>true</code> if {@code left} and {@code right} are binary identical.
 	 */
 	public static boolean binaryIdentical(IStorage left, IStorage right) {
-		BufferedInputStream leftStream = null;
-		BufferedInputStream rightStream = null;
-		try {
-			final int maxBufferSize = 8192;
-			final byte[] buffer = new byte[maxBufferSize];
-
-			leftStream = new BufferedInputStream(left.getContents(), maxBufferSize);
-			rightStream = new BufferedInputStream(right.getContents(), maxBufferSize);
-
+		final int maxBufferSize = 8192;
+		final byte[] buffer = new byte[maxBufferSize];
+		try (BufferedInputStream leftStream = new BufferedInputStream(left.getContents(), maxBufferSize);
+				BufferedInputStream rightStream = new BufferedInputStream(right.getContents(),
+						maxBufferSize);) {
 			int readLeft;
 			boolean identical = true;
 			do {
@@ -168,13 +149,8 @@ public final class ResourceUtil {
 			} while (readLeft > 0);
 
 			return identical;
-		} catch (CoreException e) {
+		} catch (CoreException | IOException e) {
 			logError(e);
-		} catch (IOException e) {
-			logError(e);
-		} finally {
-			Closeables.closeQuietly(leftStream);
-			Closeables.closeQuietly(rightStream);
 		}
 		return false;
 	}
@@ -193,17 +169,11 @@ public final class ResourceUtil {
 	 * @return <code>true</code> if {@code left}, {@code right} and {@code origin} are binary identical.
 	 */
 	public static boolean binaryIdentical(IStorage left, IStorage right, IStorage origin) {
-		BufferedInputStream leftStream = null;
-		BufferedInputStream rightStream = null;
-		BufferedInputStream originStream = null;
-		try {
-			final int maxBufferSize = 8192;
-			final byte[] buffer = new byte[maxBufferSize];
-
-			leftStream = new BufferedInputStream(left.getContents(), maxBufferSize);
-			rightStream = new BufferedInputStream(right.getContents(), maxBufferSize);
-			originStream = new BufferedInputStream(origin.getContents(), maxBufferSize);
-
+		final int maxBufferSize = 8192;
+		final byte[] buffer = new byte[maxBufferSize];
+		try (InputStream leftStream = new BufferedInputStream(left.getContents(), maxBufferSize);
+				InputStream rightStream = new BufferedInputStream(right.getContents(), maxBufferSize);
+				InputStream originStream = new BufferedInputStream(origin.getContents(), maxBufferSize);) {
 			int readLeft;
 			boolean identical = true;
 			do {
@@ -221,14 +191,8 @@ public final class ResourceUtil {
 			} while (readLeft > 0);
 
 			return identical;
-		} catch (CoreException e) {
+		} catch (CoreException | IOException e) {
 			logError(e);
-		} catch (IOException e) {
-			logError(e);
-		} finally {
-			Closeables.closeQuietly(leftStream);
-			Closeables.closeQuietly(rightStream);
-			Closeables.closeQuietly(originStream);
 		}
 		return false;
 	}
@@ -668,18 +632,13 @@ public final class ResourceUtil {
 	 */
 	public static IContentType[] getContentTypes(IFile file) {
 		final IContentTypeManager ctManager = Platform.getContentTypeManager();
-
-		InputStream resourceContent = null;
 		IContentType[] contentTypes = new IContentType[0];
-		try {
-			resourceContent = file.getContents();
+		try (InputStream resourceContent = file.getContents()) {
 			contentTypes = ctManager.findContentTypesFor(resourceContent, file.getName());
 		} catch (CoreException e) {
 			ctManager.findContentTypesFor(file.getName());
 		} catch (IOException e) {
 			ctManager.findContentTypesFor(file.getName());
-		} finally {
-			Closeables.closeQuietly(resourceContent);
 		}
 		return contentTypes;
 	}

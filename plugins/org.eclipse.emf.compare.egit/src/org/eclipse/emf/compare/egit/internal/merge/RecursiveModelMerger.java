@@ -95,14 +95,14 @@ public class RecursiveModelMerger extends RecursiveMerger {
 	 * been cleanly merged and we should thus make sure the DirCacheBuilder takes their latest working
 	 * directory version before committing.
 	 */
-	private final Set<String> makeInSync = new LinkedHashSet<String>();
+	private final Set<String> makeInSync = new LinkedHashSet<>();
 
 	/**
 	 * keeps track of the files we've already merged. Since we iterate one file at a time but may merge
 	 * multiple files at once when they are part of the same model, this will help us avoid merging the same
 	 * file or model twice.
 	 */
-	private final Set<String> handledPaths = new HashSet<String>();
+	private final Set<String> handledPaths = new HashSet<>();
 
 	/**
 	 * Default recursive model merger.
@@ -267,8 +267,7 @@ public class RecursiveModelMerger extends RecursiveMerger {
 	 */
 	private void indexModelMergedFiles()
 			throws CorruptObjectException, MissingObjectException, IncorrectObjectTypeException, IOException {
-		TreeWalk syncingTreeWalk = new TreeWalk(getRepository());
-		try {
+		try (TreeWalk syncingTreeWalk = new TreeWalk(getRepository())) {
 			syncingTreeWalk.addTree(new DirCacheIterator(dircache));
 			syncingTreeWalk.addTree(new FileTreeIterator(getRepository()));
 			syncingTreeWalk.setRecursive(true);
@@ -294,12 +293,9 @@ public class RecursiveModelMerger extends RecursiveMerger {
 						if (FileMode.GITLINK != mode) {
 							dce.setLength(workingTree.getEntryLength());
 							dce.setLastModified(workingTree.getEntryLastModified());
-							InputStream is = workingTree.openEntryStream();
-							try {
+							try (InputStream is = workingTree.openEntryStream()) {
 								dce.setObjectId(getObjectInserter().insert(Constants.OBJ_BLOB,
 										workingTree.getEntryContentLength(), is));
-							} finally {
-								is.close();
 							}
 						} else {
 							dce.setObjectId(workingTree.getEntryObjectId());
@@ -313,8 +309,6 @@ public class RecursiveModelMerger extends RecursiveMerger {
 					builder.add(dirCache.getDirCacheEntry());
 				}
 			}
-		} finally {
-			syncingTreeWalk.close();
 		}
 	}
 
@@ -464,7 +458,7 @@ public class RecursiveModelMerger extends RecursiveMerger {
 						&& !merger.makeInSync.contains(filePath)) {
 					merger.unmergedPaths.add(filePath);
 					merger.mergeResults.put(filePath,
-							new MergeResult<RawText>(Collections.<RawText> emptyList()));
+							new MergeResult<>(Collections.<RawText> emptyList()));
 					final TreeParserResourceVariant baseVariant = (TreeParserResourceVariant)subscriber
 							.getBaseTree().getResourceVariant(handledFile);
 					final TreeParserResourceVariant ourVariant = (TreeParserResourceVariant)subscriber

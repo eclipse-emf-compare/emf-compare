@@ -17,7 +17,6 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.io.ByteStreams;
-import com.google.common.io.Closeables;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -172,18 +171,13 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		});
 	}
 
-	// closed by Closeables
 	private String getString(IStreamContentAccessor contentAccessor) {
 		String ret = null;
-		InputStream content = null;
 		if (contentAccessor != null) {
-			try {
-				content = contentAccessor.getContents();
+			try (InputStream content = contentAccessor.getContents()) {
 				ret = new String(ByteStreams.toByteArray(content), Charsets.UTF_8.name());
-			} catch (CoreException e) {
-			} catch (IOException e) {
-			} finally {
-				Closeables.closeQuietly(content);
+			} catch (CoreException | IOException e) {
+				// Empty on purpose
 			}
 		}
 		return ret;
