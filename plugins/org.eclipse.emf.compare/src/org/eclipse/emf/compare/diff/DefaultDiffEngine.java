@@ -27,8 +27,6 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.MatchResource;
-import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
@@ -231,21 +229,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 						DifferenceSource.LEFT);
 			}
 		}
-	}
-
-	/**
-	 * Checks if resources URIs of the given {@link MatchResource} have changed.
-	 * 
-	 * @param matchResource
-	 *            The matchResource that is to be checked.
-	 * @param monitor
-	 *            The monitor to report progress or to check for cancellation.
-	 * @deprecated {@link org.eclipse.emf.compare.ResourceLocationChange}s have been replaced by
-	 *             {@link ResourceAttachmentChange}s of kind Move.
-	 */
-	@Deprecated
-	protected void checkResourceLocationChange(MatchResource matchResource, Monitor monitor) {
-		// Nothing to do here.
 	}
 
 	/**

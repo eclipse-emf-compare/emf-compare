@@ -105,10 +105,6 @@
             class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.ContainmentReferenceChangeAccessorFactory"
             ranking="15">
       </factory>
-      <factory
-            class="org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.ResourceLocationChangeAccessorFactory"
-            ranking="10">
-      </factory>
    </extension>
    <extension
          point="org.eclipse.ui.themes">

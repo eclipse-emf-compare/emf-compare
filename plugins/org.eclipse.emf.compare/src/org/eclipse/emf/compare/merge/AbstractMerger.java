@@ -13,10 +13,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
-import static com.google.common.base.Predicates.in;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
-import static com.google.common.collect.Iterables.any;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
 import static org.eclipse.emf.compare.DifferenceState.MERGED;
@@ -53,7 +51,6 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -605,49 +602,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	}
 
 	/**
-	 * Specifies whether the given reference changes, {@code diff} and {@code equivalent}, affect references
-	 * constituting an one-to-many relationship and whether {@code equivalent} is an addition in the current
-	 * merging.
-	 *
-	 * @param diff
-	 *            The difference to check. One-side of the relation.
-	 * @param equivalent
-	 *            The equivalent to the {@code diff}. Many-side of the relation.
-	 * @param mergeRightToLeft
-	 *            Direction of the merge.
-	 * @return <code>true</code> if {@code diff} and {@code equivalent} are one-to-many eOpposites with
-	 *         {@code equivalent} resulting in an Add-operation, <code>false</code> otherwise.
-	 * @deprecated
-	 */
-	@Deprecated
-	private boolean isOneToManyAndAdd(ReferenceChange diff, ReferenceChange equivalent,
-			boolean mergeRightToLeft) {
-		return !diff.getReference().isMany() && equivalent.getReference().isMany()
-				&& isAdd(equivalent, mergeRightToLeft);
-	}
-
-	/**
-	 * Specifies whether the given reference changes, {@code diff} and {@code equivalent}, affect references
-	 * constituting a one-to-one relationship and whether {@code equivalent} is a set in the current merging.
-	 *
-	 * @param diff
-	 *            The difference to check.
-	 * @param equivalent
-	 *            The equivalent to the {@code diff}.
-	 * @param mergeRightToLeft
-	 *            Direction of the merge.
-	 * @return <code>true</code> if {@code diff} and {@code equivalent} are one-to-many eOpposites with
-	 *         {@code equivalent} resulting in an Add-operation, <code>false</code> otherwise.
-	 * @deprecated
-	 */
-	@Deprecated
-	private boolean isOneToOneAndSet(ReferenceChange diff, ReferenceChange equivalent,
-			boolean mergeRightToLeft) {
-		return !diff.getReference().isMany() && !equivalent.getReference().isMany()
-				&& isSet(equivalent, mergeRightToLeft);
-	}
-
-	/**
 	 * Checks whether the given {@code diff} is of kind {@link DifferenceKind#CHANGE} and its reference is
 	 * one-to-one.
 	 * 
@@ -874,89 +828,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	}
 
 	/**
-	 * This will merge all {@link Diff#getRequiredBy() differences that require} {@code diff} in the given
-	 * direction.
-	 * 
-	 * @param diff
-	 *            We need to merge all differences that require this one (see {@link Diff#getRequiredBy()}.
-	 * @param rightToLeft
-	 *            If {@code true}, {@link #copyRightToLeft(Diff, Monitor) apply} all differences that require
-	 *            {@code diff}. Otherwise, {@link #copyLeftToRight(Diff, Monitor) revert} them.
-	 * @param monitor
-	 *            The monitor we should use to report progress.
-	 * @Deprecated
-	 */
-	@Deprecated
-	protected void mergeRequiredBy(Diff diff, boolean rightToLeft, Monitor monitor) {
-		// TODO log back to the user what we will merge along?
-		for (Diff dependency : diff.getRequiredBy()) {
-			// TODO: what to do when state = Discarded but is required?
-			mergeDiff(dependency, rightToLeft, monitor);
-		}
-	}
-
-	/**
-	 * Mark as {@link DifferenceState#MERGED merged} all the implied differences recursively from the given
-	 * one.
-	 * 
-	 * @param diff
-	 *            The difference from which the implications have to be marked.
-	 * @param rightToLeft
-	 *            The direction of the merge.
-	 * @param monitor
-	 *            Monitor.
-	 * @since 3.1
-	 * @deprecated
-	 */
-	@Deprecated
-	protected void handleImplies(Diff diff, boolean rightToLeft, Monitor monitor) {
-		for (Diff implied : diff.getImplies()) {
-			implied.setState(DifferenceState.MERGED);
-			handleImplies(implied, rightToLeft, monitor);
-		}
-	}
-
-	/**
-	 * Mark as {@link DifferenceState#MERGED merged} all the implying differences recursively from the given
-	 * one.
-	 * 
-	 * @param diff
-	 *            The difference from which the implications have to be marked.
-	 * @param rightToLeft
-	 *            The direction of the merge.
-	 * @param monitor
-	 *            Monitor.
-	 * @since 3.1
-	 * @deprecated
-	 */
-	@Deprecated
-	protected void handleImpliedBy(Diff diff, boolean rightToLeft, Monitor monitor) {
-		// Do nothing, this was an implementation error
-	}
-
-	/**
-	 * This will merge all {@link Diff#getRequires() differences required by} {@code diff} in the given
-	 * direction.
-	 * 
-	 * @param diff
-	 *            The difference which requirements we need to merge.
-	 * @param rightToLeft
-	 *            If {@code true}, {@link #copyRightToLeft(Diff, Monitor) apply} all required differences.
-	 *            Otherwise, {@link #copyLeftToRight(Diff, Monitor) revert} them.
-	 * @param monitor
-	 *            The monitor we should use to report progress.
-	 * @deprecated
-	 */
-	@Deprecated
-	protected void mergeRequires(Diff diff, boolean rightToLeft, Monitor monitor) {
-		// TODO log back to the user what we will merge along?
-		for (Diff dependency : diff.getRequires()) {
-			// TODO: what to do when state = Discarded but is required?
-			mergeDiff(dependency, rightToLeft, monitor);
-		}
-	}
-
-	/**
 	 * This can be used by mergers to merge another (required, equivalent...) difference using the right
 	 * merger for that diff.
 	 * 
@@ -1033,77 +904,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 			default:
 				return false;
 		}
-	}
-
-	/**
-	 * Handles the equivalences of this difference.
-	 * <p>
-	 * Note that in certain cases, we'll merge our opposite instead of merging this diff. This is done to
-	 * avoid merge orders where merging differences of kind {@link DifferenceKind.REMOVE} or
-	 * {@link DifferenceKind.CHANGE} (resulting in an unset) first can lead to information loss. Additionally
-	 * in case of one-to-many eOpposites this allows us not to worry about the order of the references on the
-	 * 'many' side.
-	 * </p>
-	 * <p>
-	 * This is called before the merge of <code>this</code>. In short, if this returns <code>false</code>, we
-	 * won't carry on merging <code>this</code> after returning.
-	 * </p>
-	 * 
-	 * @param diff
-	 *            The diff we are currently merging.
-	 * @param rightToLeft
-	 *            Direction of the merge.
-	 * @param monitor
-	 *            The monitor to use in order to report progress information.
-	 * @return <code>true</code> if the current difference should still be merged after handling its
-	 *         equivalences, <code>false</code> if it should be considered "already merged".
-	 * @since 3.1
-	 * @Deprecated
-	 */
-	@Deprecated
-	protected boolean handleEquivalences(Diff diff, boolean rightToLeft, Monitor monitor) {
-		boolean continueMerge = true;
-		for (Diff equivalent : diff.getEquivalence().getDifferences()) {
-
-			if (diff instanceof ReferenceChange && equivalent instanceof ReferenceChange) {
-
-				final ReferenceChange diffRC = (ReferenceChange)diff;
-				final ReferenceChange equivalentRC = (ReferenceChange)equivalent;
-
-				if (diffRC.getReference().getEOpposite() == equivalentRC.getReference()
-						&& equivalent.getState() == DifferenceState.UNRESOLVED) {
-
-					// This equivalence is on our eOpposite. Should we merge it instead of 'this'?
-					final boolean mergeEquivalence = isOneToManyAndAdd(diffRC, equivalentRC, rightToLeft)
-							|| isOneToOneAndSet(diffRC, equivalentRC, rightToLeft);
-
-					if (mergeEquivalence) {
-						mergeDiff(equivalent, rightToLeft, monitor);
-						continueMerge = false;
-					}
-				}
-			}
-
-			// in the case of a ReferenceChange-FeatureMapChange equivalence, the FeatureMapChange is
-			// preferred to the ReferenceChange - cf. Bug 446252
-			if (diff instanceof ReferenceChange && equivalent instanceof FeatureMapChange) {
-				mergeDiff(equivalent, rightToLeft, monitor);
-				continueMerge = false;
-			}
-
-			/*
-			 * If one of the equivalent differences is implied or implying (depending on the merge direction)
-			 * a merged diff, then we have a dependency loop : the "current" difference has already been
-			 * merged because of this implication. This will allow us to break out of that loop.
-			 */
-			if (isAccepting(diff, rightToLeft)) {
-				continueMerge = continueMerge && !any(equivalent.getImpliedBy(), in(diff.getRequires()));
-			} else {
-				continueMerge = continueMerge && !any(equivalent.getImplies(), in(diff.getRequiredBy()));
-			}
-			equivalent.setState(MERGED);
-		}
-		return continueMerge;
 	}
 
 	/**

@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -26,7 +25,6 @@ import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemRegistry;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.factory.IAccessorFactory;
-import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.ConfigurationUIRegistryEventListener;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.IConfigurationUIFactory;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.factory.impl.AccessorFactoryExtensionRegistryListener;
@@ -56,16 +54,6 @@ import org.osgi.service.prefs.Preferences;
  * @since 3.0
  */
 public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
-
-	/**
-	 * Log4j logger to use throughout EMFCompare for logging purposes.
-	 * 
-	 * @since 4.1
-	 * @deprecated This should never have been public. Loggers should be obtained where needed by using
-	 *             {@code Logger.getLogger(...)} as appropriate.
-	 */
-	@Deprecated
-	public static final Logger LOGGER = Logger.getLogger("org.eclipse.emf.compare"); //$NON-NLS-1$
 
 	/**
 	 * The plug-in ID.
@@ -128,9 +116,6 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	private AbstractRegistryEventListener contentMergeViewerCustomizationRegistryListener;
 
 	private ContentMergeViewerCustomizationRegistry contentMergeViewerCustomizationRegistry;
-
-	@Deprecated
-	private IEMFCompareConfiguration compareConfiguration;
 
 	/**
 	 * Instance scope for preferences.
@@ -403,32 +388,5 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	 */
 	public Preferences getEMFCompareUIPreferences() {
 		return instanceScope.getNode(PLUGIN_ID);
-	}
-
-	/**
-	 * The compareConfiguration is not provided by the RCPUI plugin anymore. This plugin provide cross
-	 * comparison elements and the compareConfiguration is configuration dependent.
-	 * 
-	 * @return null
-	 * @deprecated
-	 * @since 4.1
-	 */
-	@Deprecated
-	public IEMFCompareConfiguration getEMFCompareConfiguration() {
-		return null;
-	}
-
-	/**
-	 * The compareConfiguration is not provided by the RCPUI plugin anymore. This plugin provide cross
-	 * comparison elements and the compareConfiguration is configuration dependent.
-	 * 
-	 * @param compareConfiguration
-	 *            the compare configuration object
-	 * @deprecated
-	 * @since 4.1
-	 */
-	@Deprecated
-	public void setEMFCompareConfiguration(IEMFCompareConfiguration compareConfiguration) {
-		// Do nothing
 	}
 }
