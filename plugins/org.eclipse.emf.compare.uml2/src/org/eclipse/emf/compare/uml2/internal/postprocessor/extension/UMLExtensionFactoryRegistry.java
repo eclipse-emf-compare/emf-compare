@@ -38,10 +38,10 @@ import org.eclipse.emf.compare.uml2.internal.postprocessor.extension.usecase.UML
 public final class UMLExtensionFactoryRegistry {
 
 	/**
-	 * Constructor.
+	 * Private Constructor to prevent direct instantiation.
 	 */
 	private UMLExtensionFactoryRegistry() {
-		// TODO Auto-generated constructor stub
+		// Nothing to do
 	}
 
 	/**

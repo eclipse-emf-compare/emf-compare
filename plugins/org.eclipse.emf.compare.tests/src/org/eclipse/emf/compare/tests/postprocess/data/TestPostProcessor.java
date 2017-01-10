@@ -44,8 +44,7 @@ public class TestPostProcessor implements IPostProcessor {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postConflicts(Comparison comparison, Monitor monitor) {
-		// TODO Auto-generated method stub
-
+		// Nothing to do
 	}
 
 	/**
@@ -55,8 +54,7 @@ public class TestPostProcessor implements IPostProcessor {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postEquivalences(Comparison comparison, Monitor monitor) {
-		// TODO Auto-generated method stub
-
+		// Nothing to do
 	}
 
 	/**
@@ -66,8 +64,7 @@ public class TestPostProcessor implements IPostProcessor {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postRequirements(Comparison comparison, Monitor monitor) {
-		// TODO Auto-generated method stub
-
+		// Nothing to do
 	}
 
 	/**
@@ -77,8 +74,7 @@ public class TestPostProcessor implements IPostProcessor {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postDiff(Comparison comparison, Monitor monitor) {
-		// TODO Auto-generated method stub
-
+		// Nothing to do
 	}
 
 	/**
@@ -88,8 +84,7 @@ public class TestPostProcessor implements IPostProcessor {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void postComparison(Comparison comparison, Monitor monitor) {
-		// TODO Auto-generated method stub
-
+		// Nothing to do
 	}
 
 	public static class TestPostProcessorDescriptor implements IPostProcessor.Descriptor {
