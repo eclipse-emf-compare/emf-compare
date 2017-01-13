@@ -47,11 +47,7 @@
             extensions=
             "org.eclipse.emf.compare.rcp.ui.eTreeDiff,
             org.eclipse.emf.compare.rcp.ui.eMatch,
-            org.eclipse.emf.compare.rcp.ui.eResourceDiff,
-            NODE_TYPE__EMF_EOBJECT,
-            NODE_TYPE__EMF_RESOURCE,
-            NODE_TYPE__EMF_RESOURCESET,
-            NODE_TYPE__EMF_COMPARISON"
+            org.eclipse.emf.compare.rcp.ui.eResourceDiff"
             id="org.eclipse.emf.compare.ide.ui.internal.EObjectContentMergeViewer"
             label="%model.compare.containment.feature">
       </viewer>
@@ -69,7 +65,11 @@
       </viewer>
       <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.LabeledViewerCreator"
-            extensions="org.eclipse.emf.compare.rcp.ui.eWait"
+            extensions="org.eclipse.emf.compare.rcp.ui.eWait,
+                        NODE_TYPE__EMF_EOBJECT,
+			            NODE_TYPE__EMF_RESOURCE,
+			            NODE_TYPE__EMF_RESOURCESET,
+			            NODE_TYPE__EMF_COMPARISON"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.WaitViewer"
             label="%emf.compare.wait.viewer">
       </viewer>

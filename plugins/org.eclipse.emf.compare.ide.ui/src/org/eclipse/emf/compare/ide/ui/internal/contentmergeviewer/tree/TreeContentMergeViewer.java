@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Stefan Dirix - bug 487595
+ *     Stefan Dirix - bugs 487595, 510442
  *     Martin Fleck - bug 483798
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;
@@ -57,7 +57,9 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.MouseEvent;
@@ -237,6 +239,11 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	protected IContentProvider createMergeViewerContentProvider(MergeViewerSide side) {
 		final Comparison comparison = getCompareConfiguration().getComparison();
+
+		if (comparison == null) {
+			// We were called although there is nothing to show, return a dummy TreeContentProvider
+			return new NullTreeContentProvider();
+		}
 
 		final IMergeViewerItemProviderConfiguration configuration = createMergeViewerItemProviderConfiguration(
 				side);
@@ -535,6 +542,35 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 			return comparison.getMatch(eContainer);
 		}
 		return null;
+	}
+
+	/**
+	 * Dummy {@link ITreeContentProvider} which does not return anything.
+	 */
+	private class NullTreeContentProvider implements ITreeContentProvider {
+
+		public Object[] getElements(Object inputElement) {
+			return new Object[0];
+		}
+
+		public Object[] getChildren(Object parentElement) {
+			return new Object[0];
+		}
+
+		public Object getParent(Object element) {
+			return null;
+		}
+
+		public boolean hasChildren(Object element) {
+			return false;
+		}
+
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		}
+
+		public void dispose() {
+		}
+
 	}
 
 }
