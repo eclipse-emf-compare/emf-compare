@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo.
+ * Copyright (c) 2014, 2017 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
@@ -38,6 +39,8 @@ import org.eclipse.swt.widgets.Composite;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class TextFallbackCompareViewerCreator implements IViewerCreator {
+
+	private static TextFallbackMergeViewerContentProvider fContentProvider;
 
 	/**
 	 * {@inheritDoc}
@@ -83,13 +86,16 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 	private static final class TextFallbackMergeViewer extends TextMergeViewer {
 		private Object originalInput;
 
+		private Boolean fIsMirrored;
+
 		/**
 		 * @param parent
 		 * @param configuration
 		 */
 		private TextFallbackMergeViewer(Composite parent, CompareConfiguration configuration) {
 			super(parent, configuration);
-			setContentProvider(new TextFallbackMergeViewerContentProvider(configuration));
+			fContentProvider = new TextFallbackMergeViewerContentProvider(configuration);
+			setMirrored(MirrorUtil.isMirrored(getCompareConfiguration()));
 		}
 
 		@Override
@@ -133,6 +139,29 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 		@Override
 		public String getTitle() {
 			return EMFCompareIDEUIMessages.getString("TextFallbackCompareViewer.title"); //$NON-NLS-1$
+		}
+
+		/**
+		 * Sets the viewers {@link #isMirrored() mirrored} state and triggers an
+		 * {@link #updateMirrored(boolean) update}, if necessary.
+		 */
+		protected void setMirrored(boolean isMirrored) {
+			if (fIsMirrored == null || fIsMirrored.booleanValue() != isMirrored) {
+				fIsMirrored = Boolean.valueOf(isMirrored);
+				updateMirrored(isMirrored);
+			}
+		}
+
+		/**
+		 * Updates the viewer based on its {@link #isMirrored() mirrored} state.
+		 */
+		protected void updateMirrored(boolean isMirrored) {
+			if (isMirrored) {
+				setContentProvider(new MirroredTextFallbackMergeViewerContentProvider(
+						getCompareConfiguration(), fContentProvider));
+			} else {
+				setContentProvider(fContentProvider);
+			}
 		}
 	}
 
@@ -416,6 +445,116 @@ public class TextFallbackCompareViewerCreator implements IViewerCreator {
 				rightContent = super.getRightContent(element);
 			}
 			return rightContent;
+		}
+	}
+
+	/**
+	 * Merge viewer content provider implementation that mirrors the left and right side. Swapping sides is
+	 * introduced in Eclipse Compare version 3.7, but due to backwards compatibility we cannot use their
+	 * implementation.
+	 * 
+	 * @author Martin Fleck <mfleck@eclipsesource.com>
+	 */
+	private static final class MirroredTextFallbackMergeViewerContentProvider extends MergeViewerContentProvider {
+
+		private TextFallbackMergeViewerContentProvider delegate;
+
+		public MirroredTextFallbackMergeViewerContentProvider(CompareConfiguration cc,
+				TextFallbackMergeViewerContentProvider delegate) {
+			super(cc);
+			this.delegate = delegate;
+		}
+
+		@Override
+		public void setLeftError(String errorMessage) {
+			delegate.setRightError(errorMessage);
+		}
+
+		@Override
+		public String getLeftLabel(Object element) {
+			return delegate.getRightLabel(element);
+		}
+
+		@Override
+		public Image getLeftImage(Object element) {
+			return delegate.getRightImage(element);
+		}
+
+		@Override
+		public Object getLeftContent(Object element) {
+			return delegate.getRightContent(element);
+		}
+
+		@Override
+		public boolean isLeftEditable(Object element) {
+			return delegate.isRightEditable(element);
+		}
+
+		@Override
+		public void saveLeftContent(Object element, byte[] bytes) {
+			// The EMFCompareStructurededMergeViewer already "unswaps" the sides before saving-> keep sides
+			delegate.saveLeftContent(element, bytes);
+		}
+
+		@Override
+		public void setRightError(String errorMessage) {
+			delegate.setLeftError(errorMessage);
+		}
+
+		@Override
+		public String getRightLabel(Object element) {
+			return delegate.getLeftLabel(element);
+		}
+
+		@Override
+		public Image getRightImage(Object element) {
+			return delegate.getLeftImage(element);
+		}
+
+		@Override
+		public Object getRightContent(Object element) {
+			return delegate.getLeftContent(element);
+		}
+
+		@Override
+		public boolean isRightEditable(Object element) {
+			return delegate.isLeftEditable(element);
+		}
+
+		@Override
+		public void saveRightContent(Object element, byte[] bytes) {
+			// The EMFCompareStructurededMergeViewer already "unswaps" the sides before saving-> keep sides
+			delegate.saveRightContent(element, bytes);
+		}
+
+		@Override
+		public void inputChanged(Viewer v, Object o1, Object o2) {
+			delegate.inputChanged(v, o1, o2);
+		}
+
+		@Override
+		public void setAncestorError(String errorMessage) {
+			delegate.setAncestorError(errorMessage);
+		}
+
+		@Override
+		public String getAncestorLabel(Object element) {
+			return delegate.getAncestorLabel(element);
+		}
+
+		@Override
+		public Image getAncestorImage(Object element) {
+			return delegate.getAncestorImage(element);
+		}
+
+		@Override
+		public Object getAncestorContent(Object element) {
+			return delegate.getAncestorContent(element);
+		}
+
+		@Override
+		public boolean showAncestor(Object element) {
+			return delegate.showAncestor(element);
 		}
 	}
 

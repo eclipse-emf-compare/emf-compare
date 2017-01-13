@@ -88,6 +88,7 @@ import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.MirrorUtil;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoDifferencesCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoVisibleItemCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.OnlyPseudoConflictsCompareInput;
@@ -146,6 +147,9 @@ import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -274,6 +278,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	private boolean cascadingDifferencesFilterEnabled;
 
+	private IPropertyChangeListener fPreferenceChangeListener;
+
+	private IPreferenceStore fPreferenceStore;
+
 	/**
 	 * Constructor.
 	 * 
@@ -371,6 +379,34 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		final boolean enabled = any(config.getStructureMergeViewerFilter().getSelectedDifferenceFilters(),
 				instanceOf(CascadingDifferencesFilter.class));
 		setCascadingDifferencesFilterEnabled(enabled);
+
+		fPreferenceChangeListener = new IPropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent event) {
+				EMFCompareStructureMergeViewer.this.handlePreferenceChangeEvent(event);
+			}
+		};
+
+		fPreferenceStore = getCompareConfiguration().getPreferenceStore();
+		if (fPreferenceStore != null) {
+			fPreferenceStore.addPropertyChangeListener(fPreferenceChangeListener);
+		}
+	}
+
+	protected void handlePreferenceChangeEvent(PropertyChangeEvent event) {
+		if (MirrorUtil.isMirroredPreference(event.getProperty())) {
+			MirrorUtil.setMirrored(getCompareConfiguration(),
+					Boolean.parseBoolean(event.getNewValue().toString()));
+			// Since the content merge viewer will only be recreated, we simulate a selection change to
+			// re-create the content merge viewer with correct sides
+			ISelection originalSelection = getSelection();
+
+			setSelection(null);
+			getViewer().handleOpen(null); // parameter not used in super implementation -> null ok
+
+			setSelection(originalSelection);
+			getViewer().handleOpen(null);
+		}
 	}
 
 	/**
@@ -877,6 +913,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		fAdapterFactory.dispose();
 		toolBar.dispose();
 		fColors.dispose();
+
+		if (fPreferenceChangeListener != null) {
+			if (fPreferenceStore != null) {
+				fPreferenceStore.removePropertyChangeListener(fPreferenceChangeListener);
+			}
+			fPreferenceChangeListener = null;
+		}
 		super.handleDispose(event);
 	}
 

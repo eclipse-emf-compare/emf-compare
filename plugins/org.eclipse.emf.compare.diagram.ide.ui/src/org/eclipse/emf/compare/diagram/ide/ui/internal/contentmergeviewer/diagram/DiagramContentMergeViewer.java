@@ -63,6 +63,7 @@ import org.eclipse.emf.compare.diagram.internal.extensions.Hide;
 import org.eclipse.emf.compare.diagram.internal.extensions.Show;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.MirroredTreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer;
@@ -81,6 +82,7 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
@@ -544,7 +546,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 */
 		protected IFigure getLayer(View referenceView, MergeViewerSide side) {
 			Diagram referenceDiagram = referenceView.getDiagram();
-			Diagram targetDiagram = (Diagram)getMatchView(referenceDiagram, side);
+			MergeViewerSide matchSide = computeSide(side);
+			Diagram targetDiagram = (Diagram)getMatchView(referenceDiagram, matchSide);
 			DiagramMergeViewer targetViewer = getViewer(side);
 			EditPart editPart = targetViewer.getEditPart(targetDiagram);
 			if (editPart != null) {
@@ -1006,8 +1009,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		 */
 		private Phantom createPhantom(Diff diff, View referenceView, IFigure referenceFigure,
 				MergeViewerSide side) {
-
-			IFigure targetLayer = getLayer(referenceView, side);
+			MergeViewerSide targetSide = computeSide(side);
+			IFigure targetLayer = getLayer(referenceView, targetSide);
 			if (targetLayer != null) {
 				MergeViewerSide referenceSide = getSide(referenceView);
 
@@ -1736,6 +1739,12 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	/** The current "opened" difference. */
 	private Diff fCurrentSelectedDiff;
 
+	/** Flag to indicate that the decorators should be refreshed. */
+	private boolean fRefreshDecorators;
+
+	/** The unmirrored content provider of this merge viewer. */
+	private TreeContentMergeViewerContentProvider fContentProvider;
+
 	/**
 	 * Creates a new {@link DiagramContentMergeViewer} by calling the super constructor with the given
 	 * parameters.
@@ -1753,7 +1762,8 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	public DiagramContentMergeViewer(Composite parent, EMFCompareConfiguration config) {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
 		buildControl(parent);
-		setContentProvider(new TreeContentMergeViewerContentProvider(config));
+		fContentProvider = new TreeContentMergeViewerContentProvider(config);
+		setMirrored(isMirrored());
 	}
 
 	/**
@@ -1852,11 +1862,12 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 
 				Diff diff = input.getDiff(); // equivalent to getInput().getTarget()
 
-				if (!isInTerminalState(diff) && diff != fCurrentSelectedDiff) {
+				if (!isInTerminalState(diff) && (diff != fCurrentSelectedDiff || fRefreshDecorators)) {
 					fDecoratorsManager.revealDecorators(diff);
 				}
 
 				fCurrentSelectedDiff = diff;
+				fRefreshDecorators = false;
 			} else {
 				fCurrentSelectedDiff = null;
 			}
@@ -1955,7 +1966,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		} else if (match.getOrigin() == view) {
 			result = MergeViewerSide.ANCESTOR;
 		}
-		return result;
+		return computeSide(result);
 	}
 
 	/**
@@ -1996,6 +2007,22 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 			default:
 		}
 		return result;
+	}
+
+	@Override
+	protected void updateMirrored(boolean isMirrored) {
+		fRefreshDecorators = true;
+		super.updateMirrored(isMirrored);
+	}
+
+	@Override
+	protected IContentProvider getUnmirroredContentProvider() {
+		return fContentProvider;
+	}
+
+	@Override
+	protected IContentProvider getMirroredContentProvider() {
+		return new MirroredTreeContentMergeViewerContentProvider(getCompareConfiguration(), fContentProvider);
 	}
 
 }

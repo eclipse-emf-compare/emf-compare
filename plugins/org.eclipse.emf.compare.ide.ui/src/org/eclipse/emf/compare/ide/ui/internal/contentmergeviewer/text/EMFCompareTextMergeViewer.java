@@ -10,6 +10,7 @@
  *     Alexandra Buzila - Bug 457117
  *     Philip Langer - bug 457839, 516489
  *     Michael Borkowski - Bug 462863
+ *     Martin Fleck - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
@@ -48,6 +49,7 @@ import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewerResourceBundle;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.MirrorUtil;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
@@ -87,6 +89,11 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 	private MergeResolutionManager mergeResolutionManager;
 
+	/** The unmirrored content provider. */
+	private EMFCompareTextMergeViewerContentProvider fContentProvider;
+
+	private Boolean fIsMirrored;
+
 	/**
 	 * @param parent
 	 * @param configuration
@@ -94,7 +101,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	public EMFCompareTextMergeViewer(Composite parent, EMFCompareConfiguration configuration) {
 		super(parent, configuration);
 		setContentProvider(new EMFCompareTextMergeViewerContentProvider(configuration));
-
+		fContentProvider = new EMFCompareTextMergeViewerContentProvider(configuration);
+		setMirrored(MirrorUtil.isMirrored(getCompareConfiguration()));
 		editingDomainChange(null, configuration.getEditingDomain());
 
 		configuration.getEventBus().register(this);
@@ -543,5 +551,28 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	protected void flushContent(Object oldInput, IProgressMonitor monitor) {
 		super.flushContent(oldInput, monitor);
 		mergeResolutionManager.handleFlush(oldInput);
+	}
+
+	/**
+	 * Sets the viewers {@link #isMirrored() mirrored} state and triggers an {@link #updateMirrored(boolean)
+	 * update}, if necessary.
+	 */
+	protected void setMirrored(boolean isMirrored) {
+		if (fIsMirrored == null || fIsMirrored.booleanValue() != isMirrored) {
+			fIsMirrored = Boolean.valueOf(isMirrored);
+			updateMirrored(isMirrored);
+		}
+	}
+
+	/**
+	 * Updates the viewer based on its {@link #isMirrored() mirrored} state.
+	 */
+	protected void updateMirrored(boolean isMirrored) {
+		if (isMirrored) {
+			setContentProvider(new MirroredEMFCompareTextMergeViewerContentProvider(getCompareConfiguration(),
+					fContentProvider));
+		} else {
+			setContentProvider(fContentProvider);
+		}
 	}
 }

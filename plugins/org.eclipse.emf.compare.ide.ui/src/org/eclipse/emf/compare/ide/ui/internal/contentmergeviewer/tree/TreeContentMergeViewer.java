@@ -55,6 +55,7 @@ import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -99,6 +100,15 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 
 	private double[] fBasicCenterCurve;
 
+	/** The unmirrored content provider of this merge viewer. */
+	protected TreeContentMergeViewerContentProvider fContentProvider;
+
+	/** Label provider remembered for swapping sides in the viewer. */
+	protected IBaseLabelProvider fLeftLabelProvider, fRightLabelProvider;
+
+	/** Content provider remembered for swapping sides in the viewer. */
+	protected IContentProvider fLeftContentProvider, fRightContentProvider;
+
 	/**
 	 * Creates a new {@link TreeContentMergeViewer} by calling the super constructor with the given
 	 * parameters.
@@ -132,7 +142,12 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 		fSyncExpandedState = new AtomicBoolean();
 
 		buildControl(parent);
-		setContentProvider(new TreeContentMergeViewerContentProvider(config));
+		fContentProvider = new TreeContentMergeViewerContentProvider(config);
+		fLeftContentProvider = getLeftMergeViewer().getContentProvider();
+		fRightContentProvider = getRightMergeViewer().getContentProvider();
+		fLeftLabelProvider = getLeftMergeViewer().getLabelProvider();
+		fRightLabelProvider = getRightMergeViewer().getLabelProvider();
+		setMirrored(isMirrored());
 	}
 
 	protected ComposedAdapterFactory getAdapterFactory() {
@@ -573,4 +588,29 @@ public class TreeContentMergeViewer extends EMFCompareContentMergeViewer {
 
 	}
 
+	@Override
+	protected IContentProvider getUnmirroredContentProvider() {
+		return fContentProvider;
+	}
+
+	@Override
+	protected IContentProvider getMirroredContentProvider() {
+		return new MirroredTreeContentMergeViewerContentProvider(getCompareConfiguration(), fContentProvider);
+	}
+
+	@Override
+	protected void updateMirrored(boolean isMirrored) {
+		if (isMirrored) {
+			getLeftMergeViewer().setContentProvider(fRightContentProvider);
+			getLeftMergeViewer().setLabelProvider(fRightLabelProvider);
+			getRightMergeViewer().setContentProvider(fLeftContentProvider);
+			getRightMergeViewer().setLabelProvider(fLeftLabelProvider);
+		} else {
+			getLeftMergeViewer().setContentProvider(fLeftContentProvider);
+			getLeftMergeViewer().setLabelProvider(fLeftLabelProvider);
+			getRightMergeViewer().setContentProvider(fRightContentProvider);
+			getRightMergeViewer().setLabelProvider(fRightLabelProvider);
+		}
+		super.updateMirrored(isMirrored);
+	}
 }

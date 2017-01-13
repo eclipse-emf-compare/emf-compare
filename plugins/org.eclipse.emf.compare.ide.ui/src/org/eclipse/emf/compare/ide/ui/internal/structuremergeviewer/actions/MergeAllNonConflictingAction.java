@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
@@ -14,6 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
+import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -34,8 +36,6 @@ public class MergeAllNonConflictingAction extends MergeAction {
 
 	private Comparison comparison;
 
-	private IMergeAllNonConflictingRunnable runnable;
-
 	/**
 	 * Constructor.
 	 * 
@@ -46,8 +46,12 @@ public class MergeAllNonConflictingAction extends MergeAction {
 			IMerger.Registry mergerRegistry, MergeMode mode) {
 		super(compareConfiguration, mergerRegistry, mode, null);
 		this.comparison = comparison;
-		this.runnable = new MergeNonConflictingRunnable(compareConfiguration.isLeftEditable(),
-				compareConfiguration.isRightEditable(), mode);
+	}
+
+	@Override
+	protected IMergeRunnable createMergeRunnable(MergeMode mode, boolean isLeftEditable,
+			boolean isRightEditable) {
+		return new MergeNonConflictingRunnable(isLeftEditable, isRightEditable, mode);
 	}
 
 	@Override
@@ -90,7 +94,7 @@ public class MergeAllNonConflictingAction extends MergeAction {
 		if (editingDomain instanceof EMFCompareEditingDomain) {
 			ICompareCopyCommand mergeCommand = ((EMFCompareEditingDomain)editingDomain)
 					.createCopyAllNonConflictingCommand(comparison, isLeftToRight(), mergerRegistry,
-							runnable);
+							(IMergeAllNonConflictingRunnable)mergeRunnable);
 			editingDomain.getCommandStack().execute(mergeCommand);
 		} else {
 			// FIXME remove this once we have pulled "createCopyAllNonConflictingCommand" up as API.

@@ -10,6 +10,7 @@
  *     Michael Borkowski - bug 462863
  *     Stefan Dirix - bug 473985
  *     Philip Langer - bug 516645
+ *     Martin Fleck - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
@@ -62,10 +63,12 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -133,6 +136,8 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	private IDifferenceGroupProvider differenceGroupProvider;
 
 	private MergeResolutionManager mergeResolutionManager;
+
+	private Boolean fIsMirrored;
 
 	/**
 	 * @param style
@@ -356,6 +361,12 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	protected void createToolItems(final ToolBarManager toolBarManager) {
 		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
 		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
+
+		// switch left and right view action, may be null -> set the initial toggle state of the button
+		Action switchLeftAndRightAction = MirrorUtil.getAction(this);
+		if (switchLeftAndRightAction != null) {
+			switchLeftAndRightAction.setChecked(isMirrored());
+		}
 
 		IContributionItem[] items = toolBarManager.getItems();
 		for (IContributionItem iContributionItem : items) {
@@ -807,5 +818,67 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	protected void flushContent(Object input, IProgressMonitor monitor) {
 		super.flushContent(input, monitor);
 		mergeResolutionManager.handleFlush(input);
+	}
+
+	/**
+	 * Queries the compare configuration whether the left and right side of the viewer should be mirrored.
+	 * 
+	 * @return true if the left and right side of the viewer should be mirrored, false otherwise
+	 */
+	protected boolean isMirrored() {
+		return MirrorUtil.isMirrored(getCompareConfiguration());
+	}
+
+	/**
+	 * Returns the correctly mirrored side for this viewer based on the current {@link #isMirrored() mirrored
+	 * state}. If this viewer is not mirrored, the side is returned as is, otherwise its opposite site is
+	 * returned.
+	 * 
+	 * @param side
+	 *            merge viewer side
+	 * @return side to be used based on the current mirror state.
+	 */
+	protected MergeViewerSide computeSide(MergeViewerSide side) {
+		if (isMirrored()) {
+			return side.opposite();
+		}
+		return side;
+	}
+
+	/**
+	 * Returns the content provider that should be used when this viewer is NOT {@link #isMirrored()
+	 * mirrored}.
+	 * 
+	 * @return unmirrored content provider
+	 */
+	protected abstract IContentProvider getUnmirroredContentProvider();
+
+	/**
+	 * Returns the content provider that should be used when this viewer is {@link #isMirrored() mirrored}.
+	 * 
+	 * @return mirrored content provider
+	 */
+	protected abstract IContentProvider getMirroredContentProvider();
+
+	/**
+	 * Sets the viewers {@link #isMirrored() mirrored} state and triggers an {@link #updateMirrored(boolean)
+	 * update}, if necessary.
+	 */
+	protected void setMirrored(boolean isMirrored) {
+		if (fIsMirrored == null || fIsMirrored.booleanValue() != isMirrored) {
+			fIsMirrored = Boolean.valueOf(isMirrored);
+			updateMirrored(isMirrored);
+		}
+	}
+
+	/**
+	 * Updates the viewer based on its {@link #isMirrored() mirrored} state.
+	 */
+	protected void updateMirrored(boolean isMirrored) {
+		if (isMirrored) {
+			setContentProvider(getMirroredContentProvider());
+		} else {
+			setContentProvider(getUnmirroredContentProvider());
+		}
 	}
 }

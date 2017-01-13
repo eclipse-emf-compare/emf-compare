@@ -41,6 +41,8 @@ import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
@@ -74,6 +76,12 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 
 	private double[] fBasicCenterCurve;
 
+	private TableContentMergeViewerContentProvider fContentProvider;
+
+	private IBaseLabelProvider fLeftLabelProvider;
+
+	private IBaseLabelProvider fRightLabelProvider;
+
 	/**
 	 * Call the super constructor.
 	 * 
@@ -91,7 +99,10 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 
 		buildControl(parent);
-		setContentProvider(new TableContentMergeViewerContentProvider(config));
+		fContentProvider = new TableContentMergeViewerContentProvider(config);
+		fLeftLabelProvider = getLeftMergeViewer().getLabelProvider();
+		fRightLabelProvider = getRightMergeViewer().getLabelProvider();
+		setMirrored(isMirrored());
 	}
 
 	/**
@@ -370,5 +381,28 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			double r = i / width;
 			fBasicCenterCurve[i] = Math.cos(Math.PI * r);
 		}
+	}
+
+	@Override
+	protected IContentProvider getUnmirroredContentProvider() {
+		return fContentProvider;
+	}
+
+	@Override
+	protected IContentProvider getMirroredContentProvider() {
+		return new MirroredTableContentMergeViewerContentProvider(getCompareConfiguration(),
+				fContentProvider);
+	}
+
+	@Override
+	protected void updateMirrored(boolean isMirrored) {
+		if (isMirrored) {
+			getLeftMergeViewer().setLabelProvider(fRightLabelProvider);
+			getRightMergeViewer().setLabelProvider(fLeftLabelProvider);
+		} else {
+			getLeftMergeViewer().setLabelProvider(fLeftLabelProvider);
+			getRightMergeViewer().setLabelProvider(fRightLabelProvider);
+		}
+		super.updateMirrored(isMirrored);
 	}
 }

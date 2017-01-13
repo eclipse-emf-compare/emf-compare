@@ -63,9 +63,9 @@ public class MergeAction extends BaseSelectionListenerAction {
 
 	protected ICompareEditingDomain editingDomain;
 
-	private final boolean leftToRight;
+	private boolean leftToRight;
 
-	private final IMergeRunnable mergeRunnable;
+	protected IMergeRunnable mergeRunnable;
 
 	private final List<Diff> selectedDifferences;
 
@@ -81,6 +81,12 @@ public class MergeAction extends BaseSelectionListenerAction {
 	 */
 	private AdapterFactory adapterFactory;
 
+	private boolean isMirrored;
+
+	private final boolean isLeftEditable;
+
+	private final boolean isRightEditable;
+
 	/**
 	 * Constructor.
 	 * 
@@ -92,8 +98,8 @@ public class MergeAction extends BaseSelectionListenerAction {
 		super(""); //$NON-NLS-1$
 
 		adapterFactory = compareConfiguration.getAdapterFactory();
-		boolean isLeftEditable = compareConfiguration.isLeftEditable();
-		boolean isRightEditable = compareConfiguration.isRightEditable();
+		isLeftEditable = compareConfiguration.isLeftEditable();
+		isRightEditable = compareConfiguration.isRightEditable();
 
 		this.navigatable = navigatable;
 		Preconditions.checkNotNull(mode);
@@ -125,9 +131,9 @@ public class MergeAction extends BaseSelectionListenerAction {
 		updateSelection(selection);
 	}
 
-	protected IMergeRunnable createMergeRunnable(MergeMode mode, boolean isLeftEditable,
-			boolean isRightEditable) {
-		return new MergeRunnableImpl(isLeftEditable, isRightEditable, mode);
+	protected IMergeRunnable createMergeRunnable(MergeMode mode, boolean leftEditable,
+			boolean rightEditable) {
+		return new MergeRunnableImpl(leftEditable, rightEditable, mode);
 	}
 
 	protected void initToolTipAndImage(MergeMode mode) {
@@ -277,6 +283,28 @@ public class MergeAction extends BaseSelectionListenerAction {
 		this.adapterFactory = adapterFactory;
 		if (adapterFactory != null) {
 			contextualizeTooltip();
+		}
+	}
+
+	/**
+	 * Refreshes the merge action by re-creating the necessary elements based on the current compare
+	 * configuration.
+	 */
+	public void setMirrored(boolean mirrored) {
+		if (selectedMode == MergeMode.ACCEPT || selectedMode == MergeMode.REJECT) {
+			return;
+		}
+
+		if (this.isMirrored != mirrored) {
+			this.isMirrored = mirrored;
+			if (mirrored) {
+				MergeMode mirroredMode = selectedMode.inverse();
+				leftToRight = mirroredMode.isLeftToRight(isRightEditable, isLeftEditable);
+				mergeRunnable = createMergeRunnable(mirroredMode, isRightEditable, isLeftEditable);
+			} else {
+				leftToRight = selectedMode.isLeftToRight(isLeftEditable, isRightEditable);
+				mergeRunnable = createMergeRunnable(selectedMode, isLeftEditable, isRightEditable);
+			}
 		}
 	}
 

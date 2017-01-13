@@ -39,6 +39,7 @@ import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.Cascadi
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeActionTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeNonConflictingRunnableRefinementTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeNonConflictingRunnableTest;
+import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MirroredMergeActionTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.PseudoConflictsMergeActionTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.TooltipProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.DependenciesTest;
@@ -66,7 +67,8 @@ import junit.textui.TestRunner;
 		RemoteMonitoredProxyCreationListenerTest.class, MergeNonConflictingRunnableTest.class,
 		RenameDetectorTest.class, SimilarityComputerTest.class, TooltipProviderTest.class,
 		SynchronizationModelDiagnosticTest.class, CascadingFilterRefinementTest.class,
-		MergeNonConflictingRunnableRefinementTest.class, CachingImplicitDependenciesTest.class })
+		MergeNonConflictingRunnableRefinementTest.class, CachingImplicitDependenciesTest.class,
+		MirroredMergeActionTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

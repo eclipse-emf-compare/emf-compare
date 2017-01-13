@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.eclipse.compare.INavigatable;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.MirrorUtil;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.CollapseAllModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.DropDownMergeMenuAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.ExpandAllModelAction;
@@ -46,6 +47,8 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.Struc
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -59,7 +62,7 @@ import org.eclipse.ui.services.IServiceLocator;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class CompareToolBar implements ISelectionChangedListener {
+public class CompareToolBar implements ISelectionChangedListener, IPropertyChangeListener {
 
 	private final GroupActionMenu groupActionMenu;
 
@@ -108,6 +111,7 @@ public class CompareToolBar implements ISelectionChangedListener {
 	public final void initToolbar(AbstractTreeViewer viewer, INavigatable nav) {
 		if (!this.doOnce) {
 			compareConfiguration.getEventBus().register(this);
+			compareConfiguration.addPropertyChangeListener(this);
 
 			// Add extension point contributions to the structure merge viewer toolbar
 			if (PlatformUI.isWorkbenchRunning()) {
@@ -175,6 +179,7 @@ public class CompareToolBar implements ISelectionChangedListener {
 				toolbarManager.add(new SaveComparisonModelAction(compareConfiguration));
 			}
 
+			setMirrored(MirrorUtil.isMirrored(compareConfiguration));
 			toolbarManager.update(true);
 
 			this.doOnce = true;
@@ -268,6 +273,21 @@ public class CompareToolBar implements ISelectionChangedListener {
 		ToolBar toolbar = toolbarManager.getControl();
 		if (toolbar != null) {
 			toolbar.setEnabled(enable);
+		}
+	}
+
+	public void setMirrored(boolean mirrored) {
+		for (MergeAction action : mergeActions) {
+			action.setMirrored(mirrored);
+		}
+		for (MergeAllNonConflictingAction action : mergeAllNonConflictingActions) {
+			action.setMirrored(mirrored);
+		}
+	}
+
+	public void propertyChange(PropertyChangeEvent event) {
+		if (MirrorUtil.isMirroredProperty(event.getProperty())) {
+			setMirrored(MirrorUtil.isMirrored(compareConfiguration));
 		}
 	}
 
