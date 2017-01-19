@@ -13,13 +13,16 @@ package org.eclipse.emf.compare.internal.conflict;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
@@ -307,8 +310,15 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 			toBeMerged.getDifferences().clear();
 		}
 
-		conflict.getDifferences().add(diff);
-		conflict.getDifferences().add(other);
+		Set<Diff> toAdd = newLinkedHashSet();
+		for (Diff conflicting : ImmutableSet.of(diff, other)) {
+			if (conflicting.getEquivalence() == null) {
+				toAdd.add(conflicting);
+			} else {
+				toAdd.addAll(conflicting.getEquivalence().getDifferences());
+			}
+		}
+		conflict.getDifferences().addAll(toAdd);
 	}
 
 	/**

@@ -17,6 +17,7 @@ package org.eclipse.emf.compare.tests.suite;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.tests.command.CommandStackTestSuite;
 import org.eclipse.emf.compare.tests.conflict.ConflictDetectionTest;
+import org.eclipse.emf.compare.tests.conflict.ConflictSearchTest;
 import org.eclipse.emf.compare.tests.conflict.MultiLineAttributeConflictDetectionTest;
 import org.eclipse.emf.compare.tests.conflict.PseudoConflictDetectionTest;
 import org.eclipse.emf.compare.tests.conflict.data.bug484557.Bug484557ConflictTest;
@@ -106,8 +107,8 @@ import junit.textui.TestRunner;
 		Bug485266_MoveDeleteConflict_Test.class, ResourceAttachmentChangeBug492261.class,
 		RankedAdapterFactoryRegistryTest.class, ComparisonScopeAdapterTest.class,
 		EMFComparePredicatesTest.class, ImplicationsMergeTest.class, GraphTest.class,
-		ConflictImplicationsTest_Bug484579.class, PseudoConflictDetectionTest.class,
-		ComplexMergeTest.class, })
+		ConflictImplicationsTest_Bug484579.class, PseudoConflictDetectionTest.class, ComplexMergeTest.class,
+		ConflictSearchTest.class, })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.
