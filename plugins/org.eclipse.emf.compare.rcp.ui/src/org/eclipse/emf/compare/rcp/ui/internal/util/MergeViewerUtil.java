@@ -11,9 +11,6 @@
 package org.eclipse.emf.compare.rcp.ui.internal.util;
 
 import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.isEmpty;
-import static com.google.common.collect.Iterables.transform;
 
 import com.google.common.base.Predicate;
 
@@ -38,7 +35,6 @@ import org.eclipse.emf.compare.internal.merge.MergeOperation;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
@@ -393,38 +389,22 @@ public final class MergeViewerUtil {
 
 	/**
 	 * Returns true if the given diff is displayed in an group as provided by the {@code groupProvider} and
-	 * not filtered by the given {@code filters}.
+	 * not filtered by the given filter {@code predicate}.
 	 * 
 	 * @param diff
+	 *            the {@link Diff} to check.
 	 * @param groupProvider
-	 * @param selectedFilters
-	 * @return
+	 *            the {@link IDifferenceGroupProvider}.
+	 * @param predicate
+	 *            the filter {@link Predicate}.
+	 * @return {@code true} if the given {@code diff} is visible in the given {@code groupProvider},
+	 *         {@code false} otherwise.
 	 */
 	public static boolean isVisibleInMergeViewer(Diff diff, IDifferenceGroupProvider groupProvider,
 			Predicate<? super EObject> predicate) {
 		Iterable<TreeNode> nodes = groupProvider.getTreeNodes(diff);
-
-		boolean isDisplayedInSMV = any(nodes, predicate);
-		boolean isPrimeRefining = !isEmpty(
-				filter(transform(nodes, IDifferenceGroup.TREE_NODE_DATA), IS_PRIME_REFINING));
-		return (isDisplayedInSMV || isPrimeRefining);
+		return any(nodes, predicate);
 	}
-
-	/**
-	 * Check if the given object is a Diff that is a prime refining of one of its refine diffs.
-	 */
-	private static final Predicate<EObject> IS_PRIME_REFINING = new Predicate<EObject>() {
-		public boolean apply(EObject eObject) {
-			if (eObject instanceof Diff) {
-				for (Diff refine : ((Diff)eObject).getRefines()) {
-					if (refine.getPrimeRefining() == eObject) {
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-	};
 
 	/**
 	 * Checks if the given diff is considered as a mark as merged diff.
