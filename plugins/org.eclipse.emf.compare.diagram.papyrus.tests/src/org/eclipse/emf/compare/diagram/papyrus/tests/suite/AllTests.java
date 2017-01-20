@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2016 Obeo and others.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Stefan Dirix - add ModelExtensionUtil, SaveParameterHook and URIAttachment tests
  *     Philip Langer - add IngoreDiFileModelElementsTest
+ *     Martin Fleck - add MergeNonConflictingCascadingDifferencesFilterTest
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests.suite;
 
@@ -24,6 +25,7 @@ import org.eclipse.emf.compare.diagram.papyrus.tests.merge.NodeMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.modelextension.ModelExtensionUtilTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.saveparameter.SaveParameterHookIntegrationTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.saveparameter.SaveParameterHookTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.structuremergeviewer.actions.MergeNonConflictingCascadingFilterTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.uriattachment.URIAttachmentTest;
 import org.eclipse.emf.compare.tests.suite.CompareTestSuite;
 import org.eclipse.emf.ecore.EPackage;
@@ -53,7 +55,8 @@ import junit.textui.TestRunner;
 @SuiteClasses({AssocMergeTest.class, EdgeMergeTest.class, NodeMergeTest.class, ModelExtensionUtilTest.class,
 		SaveParameterHookTest.class, SaveParameterHookIntegrationTest.class, URIAttachmentTest.class,
 		DiagramTooltipProviderTest.class, PapyrusConflictsGroupProviderTests.class,
-		IgnoreDiFilePostProcessorTest.class, PapyrusContextUtilTest.class })
+		IgnoreDiFilePostProcessorTest.class, PapyrusContextUtilTest.class,
+		MergeNonConflictingCascadingFilterTest.class })
 public class AllTests {
 
 	/**

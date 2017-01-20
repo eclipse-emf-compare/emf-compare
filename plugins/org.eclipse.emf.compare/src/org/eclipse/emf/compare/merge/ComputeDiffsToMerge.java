@@ -17,12 +17,10 @@ import static org.eclipse.emf.compare.merge.IMergeCriterion.NONE;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.compare.Conflict;
@@ -144,7 +142,7 @@ public class ComputeDiffsToMerge {
 	 *            The diff to merge
 	 */
 	protected void addDiff(Diff diff) {
-		addDiffs(Collections.singleton(diff));
+		addDiffs(Collections.singleton(diff), Sets.<Diff> newLinkedHashSet());
 	}
 
 	/**
@@ -153,16 +151,18 @@ public class ComputeDiffsToMerge {
 	 * 
 	 * @param diffs
 	 *            The diffs to merge at the current step of the computation
+	 * @param diffPath
+	 *            The path that lead to a diff
 	 */
-	protected void addDiffs(Collection<Diff> diffs) {
+	protected void addDiffs(Collection<Diff> diffs, Set<Diff> diffPath) {
 		if (diffs.isEmpty()) {
 			return;
 		}
 		Set<Diff> consequences = new LinkedHashSet<Diff>();
 		for (Diff diff : diffs) {
-			addDiff(diff, consequences);
+			addDiff(diff, consequences, diffPath);
 		}
-		addDiffs(Sets.difference(consequences, result));
+		addDiffs(Sets.difference(consequences, result), diffPath);
 	}
 
 	/**
@@ -173,21 +173,22 @@ public class ComputeDiffsToMerge {
 	 *            The diff to add
 	 * @param consequences
 	 *            The set of diffs that must be merged at the next step.
+	 * @param diffPath
+	 *            The path that lead to the diff to add
 	 */
-	protected void addDiff(Diff diff, Set<Diff> consequences) {
+	protected void addDiff(Diff diff, Set<Diff> consequences, Set<Diff> diffPath) {
 		if (!result.contains(diff) && computing.add(diff)) {
+			diffPath.add(diff);
 			Conflict conflict = diff.getConflict();
 			if (conflictChecker != null && conflict != null && !conflictChecker.apply(conflict)
 					&& diff.getConflict().getKind() == REAL) {
-				List<Diff> diffsThatLedToConflict = new ArrayList<Diff>(result);
-				diffsThatLedToConflict.add(diff);
-				throw new MergeBlockedByConflictException(diffsThatLedToConflict);
+				throw new MergeBlockedByConflictException(diffPath);
 			}
 
 			if (relationshipComputer.hasMerger(diff)) {
 				Set<Diff> dependencies = relationshipComputer.getDirectMergeDependencies(diff, rightToLeft);
 				for (Diff required : dependencies) {
-					addDiff(required, consequences);
+					addDiff(required, consequences, Sets.newLinkedHashSet(diffPath));
 				}
 
 				result.add(diff);

@@ -544,6 +544,18 @@ public class ConflictInputData extends AbstractInputData {
 		return loadFromClassLoader("e2/conflict_e2_right.nodes");
 	}
 
+	public Resource getE3Left() throws IOException {
+		return loadFromClassLoader("e3/conflict_e3_left.nodes");
+	}
+
+	public Resource getE3Origin() throws IOException {
+		return loadFromClassLoader("e3/conflict_e3_origin.nodes");
+	}
+
+	public Resource getE3Right() throws IOException {
+		return loadFromClassLoader("e3/conflict_e3_right.nodes");
+	}
+
 	public Resource getFLeft() throws IOException {
 		return loadFromClassLoader("f/conflict_f_left.nodes");
 	}

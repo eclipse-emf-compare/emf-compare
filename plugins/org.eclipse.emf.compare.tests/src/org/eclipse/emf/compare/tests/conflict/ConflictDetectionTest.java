@@ -1931,6 +1931,22 @@ public class ConflictDetectionTest {
 	}
 
 	@Test
+	public void testE3UseCase() throws IOException {
+		final Resource left = input.getE3Left();
+		final Resource origin = input.getE3Origin();
+		final Resource right = input.getE3Right();
+
+		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
+		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		final List<Diff> differences = comparison.getDifferences();
+		final List<Conflict> conflicts = comparison.getConflicts();
+
+		assertEquals(3, differences.size());
+		assertEquals(1, conflicts.size());
+	}
+
+	@Test
 	public void testFUseCase() throws IOException {
 		final Resource left = input.getFLeft();
 		final Resource origin = input.getFOrigin();

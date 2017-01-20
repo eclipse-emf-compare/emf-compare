@@ -36,6 +36,7 @@ These only apply to reference changes
 e - Adding reference towards deleted Notifier.
 	e1 - Within single-valued reference.
 	e2 - Within multi-valued reference.
+	e3 - Add a single-valued reference on the right side to a node that has been deleted on the left side.
 	
 f - Changing containment feature of Notifier to two distinct features in left and right.
 g - Changing container of Notifier to two distinct Notifiers in left and right.
