@@ -10,9 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.monitor;
 
+import static java.util.Collections.emptyIterator;
 import static org.junit.Assert.assertEquals;
-
-import com.google.common.collect.Iterators;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -159,15 +158,15 @@ public class MonitorCancelTest {
 		return new AbstractComparisonScope(null, null, null) {
 
 			public Iterator<? extends Resource> getCoveredResources(ResourceSet resourceSet) {
-				return Iterators.emptyIterator();
+				return emptyIterator();
 			}
 
 			public Iterator<? extends EObject> getCoveredEObjects(Resource resource) {
-				return Iterators.emptyIterator();
+				return emptyIterator();
 			}
 
 			public Iterator<? extends EObject> getChildren(EObject eObject) {
-				return Iterators.emptyIterator();
+				return emptyIterator();
 			}
 		};
 	}

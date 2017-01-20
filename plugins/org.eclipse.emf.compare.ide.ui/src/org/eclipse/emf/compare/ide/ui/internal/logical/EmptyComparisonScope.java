@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
-import com.google.common.collect.Iterators;
+import static java.util.Collections.emptyIterator;
 
 import java.util.Iterator;
 
@@ -34,16 +34,16 @@ public class EmptyComparisonScope extends AbstractComparisonScope {
 
 	/** {@inheritDoc} */
 	public Iterator<? extends Resource> getCoveredResources(ResourceSet resourceSet) {
-		return Iterators.emptyIterator();
+		return emptyIterator();
 	}
 
 	/** {@inheritDoc} */
 	public Iterator<? extends EObject> getCoveredEObjects(Resource resource) {
-		return Iterators.emptyIterator();
+		return emptyIterator();
 	}
 
 	/** {@inheritDoc} */
 	public Iterator<? extends EObject> getChildren(EObject eObject) {
-		return Iterators.emptyIterator();
+		return emptyIterator();
 	}
 }

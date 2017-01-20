@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.match;
 
+import static java.util.Collections.emptyIterator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 import java.io.IOException;
@@ -66,7 +66,7 @@ public class IdentifierEObjectMatcherTest {
 
 		Iterator<? extends EObject> leftEObjects = nodes.iterator();
 		Iterator<? extends EObject> rightEObjects = nodes.iterator();
-		Iterator<? extends EObject> originEObjects = Iterators.emptyIterator();
+		Iterator<? extends EObject> originEObjects = emptyIterator();
 		List<EObject> leftEObjectsNoID = Lists.newArrayList();
 		List<EObject> rightEObjectsNoID = Lists.newArrayList();
 		List<EObject> originEObjectsNoID = Lists.newArrayList();

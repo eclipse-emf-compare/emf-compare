@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.handler;
 
-import com.google.common.collect.Iterators;
+import static java.util.Collections.emptyIterator;
 
 import java.util.Iterator;
 
@@ -239,7 +239,7 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 			if (origin != null) {
 				originEObjects = scope.getChildren(origin);
 			} else {
-				originEObjects = Iterators.emptyIterator();
+				originEObjects = emptyIterator();
 			}
 
 			getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects,

@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.scope;
 
+import static java.util.Collections.emptyIterator;
+
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ForwardingIterator;
@@ -74,7 +76,7 @@ public class FilterComparisonScope extends AbstractComparisonScope {
 	 */
 	public Iterator<? extends Resource> getCoveredResources(ResourceSet resourceSet) {
 		if (resourceSet == null) {
-			return Iterators.emptyIterator();
+			return emptyIterator();
 		}
 
 		final Iterator<Resource> allResources = resourceSet.getResources().iterator();
@@ -96,7 +98,7 @@ public class FilterComparisonScope extends AbstractComparisonScope {
 	 */
 	public Iterator<? extends EObject> getCoveredEObjects(Resource resource) {
 		if (resource == null) {
-			return Iterators.emptyIterator();
+			return emptyIterator();
 		}
 
 		final Iterator<EObject> properContent = EcoreUtil.getAllProperContents(resource, false);
@@ -118,7 +120,7 @@ public class FilterComparisonScope extends AbstractComparisonScope {
 	 */
 	public Iterator<? extends EObject> getChildren(EObject eObject) {
 		if (eObject == null) {
-			return Iterators.emptyIterator();
+			return emptyIterator();
 		}
 
 		final Iterator<EObject> properContent = EcoreUtil.getAllProperContents(eObject, false);

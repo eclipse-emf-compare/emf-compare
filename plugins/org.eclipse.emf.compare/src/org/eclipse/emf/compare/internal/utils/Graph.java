@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.internal.utils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterators.concat;
+import static java.util.Collections.emptyIterator;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
@@ -772,10 +773,10 @@ public class Graph<E> implements IGraph<E> {
 							&& SubgraphBuilder.this.set.add(nextNode.getElement())) {
 						nextNodeIterator = new NodeIterator(nextNode);
 					} else {
-						nextNodeIterator = Iterators.emptyIterator();
+						nextNodeIterator = emptyIterator();
 					}
 				} else {
-					nextNodeIterator = Iterators.emptyIterator();
+					nextNodeIterator = emptyIterator();
 				}
 			}
 		}

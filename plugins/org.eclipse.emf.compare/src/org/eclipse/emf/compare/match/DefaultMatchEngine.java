@@ -12,6 +12,7 @@
 package org.eclipse.emf.compare.match;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Collections.emptyIterator;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -189,7 +190,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 		if (origin != null) {
 			originChildren = scope.getCoveredResources(origin);
 		} else {
-			originChildren = Iterators.emptyIterator();
+			originChildren = emptyIterator();
 		}
 
 		// TODO Change API to pass the monitor to createMappings()
@@ -296,19 +297,19 @@ public class DefaultMatchEngine implements IMatchEngine {
 		if (left != null) {
 			leftEObjects = scope.getCoveredEObjects(left);
 		} else {
-			leftEObjects = Iterators.emptyIterator();
+			leftEObjects = emptyIterator();
 		}
 		final Iterator<? extends EObject> rightEObjects;
 		if (right != null) {
 			rightEObjects = scope.getCoveredEObjects(right);
 		} else {
-			rightEObjects = Iterators.emptyIterator();
+			rightEObjects = emptyIterator();
 		}
 		final Iterator<? extends EObject> originEObjects;
 		if (origin != null) {
 			originEObjects = scope.getCoveredEObjects(origin);
 		} else {
-			originEObjects = Iterators.emptyIterator();
+			originEObjects = emptyIterator();
 		}
 
 		getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects, monitor);
@@ -350,7 +351,7 @@ public class DefaultMatchEngine implements IMatchEngine {
 		if (origin != null) {
 			originEObjects = Iterators.concat(Iterators.singletonIterator(origin), scope.getChildren(origin));
 		} else {
-			originEObjects = Iterators.emptyIterator();
+			originEObjects = emptyIterator();
 		}
 
 		getEObjectMatcher().createMatches(comparison, leftEObjects, rightEObjects, originEObjects, monitor);
