@@ -47,7 +47,6 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChang
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
@@ -581,8 +580,10 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * 
 	 * @return the the adapter factory descriptor registry to which extension will be registered
 	 * @since 2.3
-	 * @deprecated Use {@link #createFilteredAdapterFactoryRegistry(Comparison)} to take the context into
-	 *             consideration. If no comparison context is available, use an empty context.
+	 * @deprecated Use {@link #createFilteredAdapterFactoryRegistry(Map)} to take the context into
+	 *             consideration. Typically, you would provide the comparison as a context map by passing
+	 *             <code>ImmutableMap.of(IContextTester.CTX_COMPARISON, comparison)</code> as an argument. If
+	 *             no comparison context is available, use an empty context.
 	 */
 	@Deprecated
 	public RankedAdapterFactoryDescriptor.Registry createFilteredAdapterFactoryRegistry() {
