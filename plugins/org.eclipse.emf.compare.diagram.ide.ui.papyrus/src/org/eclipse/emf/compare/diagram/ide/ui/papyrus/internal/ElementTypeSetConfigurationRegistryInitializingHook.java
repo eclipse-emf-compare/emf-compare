@@ -70,19 +70,9 @@ public class ElementTypeSetConfigurationRegistryInitializingHook extends Abstrac
 					}
 					Method getInstanceMethod = registryClass.getDeclaredMethod(GET_INSTANCE);
 					getInstanceMethod.invoke(null);
-				} catch (ClassNotFoundException e) {
-					logException(e);
-				} catch (NoSuchMethodException e) {
-					logException(e);
-				} catch (SecurityException e) {
-					logException(e);
-				} catch (IllegalAccessException e) {
-					logException(e);
-				} catch (IllegalArgumentException e) {
-					logException(e);
-				} catch (InvocationTargetException e) {
-					logException(e);
-				} catch (NullPointerException e) {
+				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException
+						| IllegalAccessException | IllegalArgumentException | InvocationTargetException
+						| NullPointerException e) {
 					logException(e);
 				}
 			}

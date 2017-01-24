@@ -228,9 +228,7 @@ public class CompareTestSupport {
 			resource = resourceSet.createResource(uri);
 			stream = fileURL.openStream();
 			resource.load(stream, Collections.emptyMap());
-		} catch (final IOException e) {
-			// return null
-		} catch (final WrappedException e) {
+		} catch (final IOException | WrappedException e) {
 			// return null
 		} finally {
 			if (stream != null) {

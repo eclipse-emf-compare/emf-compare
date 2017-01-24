@@ -84,9 +84,7 @@ public abstract class AbstractInputData {
 			resource = resourceSet.createResource(uri);
 			stream = fileURL.openStream();
 			resource.load(stream, Collections.emptyMap());
-		} catch (IOException e) {
-			// return null
-		} catch (WrappedException e) {
+		} catch (IOException | WrappedException e) {
 			// return null
 		} finally {
 			if (stream != null) {

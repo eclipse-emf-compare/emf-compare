@@ -509,11 +509,7 @@ public class ForwardingXMLHandler extends XMLHandler {
 				throw new RuntimeException(new NoSuchMethodException("Could not find method " + methodName //$NON-NLS-1$
 						+ " on " + XMLHandler.class.getName())); //$NON-NLS-1$
 			}
-		} catch (IllegalArgumentException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		} catch (InvocationTargetException e) {
+		} catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -538,11 +534,7 @@ public class ForwardingXMLHandler extends XMLHandler {
 				throw new RuntimeException(new NoSuchFieldException("Could not find field " + fieldName //$NON-NLS-1$
 						+ " on " + XMLHandler.class.getName())); //$NON-NLS-1$
 			}
-		} catch (IllegalArgumentException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		} catch (ExecutionException e) {
+		} catch (IllegalArgumentException | IllegalAccessException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
 	}

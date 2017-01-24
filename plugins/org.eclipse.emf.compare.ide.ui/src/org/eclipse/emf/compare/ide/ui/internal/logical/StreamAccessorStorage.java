@@ -313,13 +313,8 @@ public class StreamAccessorStorage implements IStorage, IStoragePathAdapterProvi
 				if (value instanceof IFileRevision) {
 					revision = (IFileRevision)value;
 				}
-			} catch (NoSuchMethodException e) {
-				// Ignore exceptions
-			} catch (IllegalAccessException e) {
-				// Ignore exceptions
-			} catch (IllegalArgumentException e) {
-				// Ignore exceptions
-			} catch (InvocationTargetException e) {
+			} catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException e) {
 				// Ignore exceptions
 			}
 		}

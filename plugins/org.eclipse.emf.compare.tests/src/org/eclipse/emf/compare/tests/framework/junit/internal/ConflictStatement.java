@@ -16,8 +16,8 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.conflict.MatchBasedConflictDetector;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
+import org.eclipse.emf.compare.conflict.MatchBasedConflictDetector;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.DiffBuilder;
 import org.eclipse.emf.compare.diff.IDiffEngine;
@@ -112,9 +112,7 @@ public class ConflictStatement extends Statement {
 		IMatchEngine engine = null;
 		try {
 			engine = engineClass.newInstance();
-		} catch (InstantiationException e) {
-			// Swallow : we'll create a default engine instead.
-		} catch (IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			// Swallow : we'll create a default engine instead.
 		}
 		if (engine == null) {
@@ -142,9 +140,7 @@ public class ConflictStatement extends Statement {
 		IDiffEngine engine = null;
 		try {
 			engine = engineClass.newInstance();
-		} catch (InstantiationException e) {
-			// Swallow : we'll create a default engine instead.
-		} catch (IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			// Swallow : we'll create a default engine instead.
 		}
 		if (engine == null) {

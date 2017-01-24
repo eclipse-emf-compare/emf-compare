@@ -1123,11 +1123,9 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 					method.setAccessible(true);
 					ret = (Collection<? extends EStructuralFeature>)method.invoke(itemProviderAdapter,
 							object);
-				} catch (SecurityException e) {
-				} catch (NoSuchMethodException e) {
-				} catch (IllegalArgumentException e) {
-				} catch (IllegalAccessException e) {
-				} catch (InvocationTargetException e) {
+				} catch (SecurityException | NoSuchMethodException | IllegalArgumentException
+						| IllegalAccessException | InvocationTargetException e) {
+					// ignore
 				}
 			}
 

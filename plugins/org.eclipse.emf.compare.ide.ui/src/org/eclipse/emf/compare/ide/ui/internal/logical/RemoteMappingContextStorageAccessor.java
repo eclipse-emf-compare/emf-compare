@@ -72,13 +72,8 @@ public class RemoteMappingContextStorageAccessor implements IStorageProviderAcce
 					field.setAccessible(true);
 					final Object subscriberValue = field.get(remoteResourceMappingContext);
 					return subscriberValue;
-				} catch (NoSuchFieldException e) {
-					// ignore and live without subscriber
-				} catch (SecurityException e) {
-					// ignore and live without subscriber
-				} catch (IllegalArgumentException e) {
-					// ignore and live without subscriber
-				} catch (IllegalAccessException e) {
+				} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
+						| IllegalAccessException e) {
 					// ignore and live without subscriber
 				}
 				return null;

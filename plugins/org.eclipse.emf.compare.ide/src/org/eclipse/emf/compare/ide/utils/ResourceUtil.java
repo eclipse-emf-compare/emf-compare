@@ -635,9 +635,7 @@ public final class ResourceUtil {
 		IContentType[] contentTypes = new IContentType[0];
 		try (InputStream resourceContent = file.getContents()) {
 			contentTypes = ctManager.findContentTypesFor(resourceContent, file.getName());
-		} catch (CoreException e) {
-			ctManager.findContentTypesFor(file.getName());
-		} catch (IOException e) {
+		} catch (CoreException | IOException e) {
 			ctManager.findContentTypesFor(file.getName());
 		}
 		return contentTypes;

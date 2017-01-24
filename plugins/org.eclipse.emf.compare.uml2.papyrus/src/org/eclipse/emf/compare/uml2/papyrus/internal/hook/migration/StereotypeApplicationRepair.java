@@ -72,9 +72,10 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 				s.disposeService();
 			}
 		} catch (ServiceException ex) {
-			UMLPapyrusComparePlugin.getDefault().getLog().log(new Status(IStatus.WARNING,
-					UMLPapyrusComparePlugin.PLUGIN_ID, "Unable to dispose Label Provider Service", //$NON-NLS-1$
-					ex));
+			UMLPapyrusComparePlugin.getDefault().getLog()
+					.log(new Status(IStatus.WARNING, UMLPapyrusComparePlugin.PLUGIN_ID,
+							"Unable to dispose Label Provider Service", //$NON-NLS-1$
+							ex));
 		}
 		super.dispose(modelsManager);
 	}
@@ -92,13 +93,8 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 			final Field superField = getClass().getSuperclass().getDeclaredField(fieldName);
 			superField.setAccessible(true);
 			superField.set(this, fieldValue);
-		} catch (final NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (final SecurityException e) {
-			e.printStackTrace();
-		} catch (final IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (final IllegalAccessException e) {
+		} catch (final NoSuchFieldException | SecurityException | IllegalArgumentException
+				| IllegalAccessException e) {
 			e.printStackTrace();
 		}
 	}
@@ -116,13 +112,8 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 			final Field superField = getClass().getSuperclass().getDeclaredField(fieldName);
 			superField.setAccessible(true);
 			return superField.get(this);
-		} catch (final NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (final SecurityException e) {
-			e.printStackTrace();
-		} catch (final IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (final IllegalAccessException e) {
+		} catch (final NoSuchFieldException | SecurityException | IllegalArgumentException
+				| IllegalAccessException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -178,9 +169,10 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 		try {
 			umlLabelProviderService.startService();
 		} catch (ServiceException ex) {
-			UMLPapyrusComparePlugin.getDefault().getLog().log(new Status(IStatus.WARNING,
-					UMLPapyrusComparePlugin.PLUGIN_ID, "Unable to start UML Label Provider Service", //$NON-NLS-1$
-					ex));
+			UMLPapyrusComparePlugin.getDefault().getLog()
+					.log(new Status(IStatus.WARNING, UMLPapyrusComparePlugin.PLUGIN_ID,
+							"Unable to start UML Label Provider Service", //$NON-NLS-1$
+							ex));
 		}
 		return umlLabelProviderService;
 	}
@@ -240,11 +232,12 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 			// CHECKSTYLE:OFF
 		} catch (Exception e) {
 			// CHECKSTYLE:ON
-			resource.getErrors().add(new ProfileMigrationDiagnostic(UMLPapyrusCompareMessages.getString(
-					"profile.migration.exception", e, resource))); //$NON-NLS-1$
-			UMLPapyrusComparePlugin.getDefault().getLog().log(new Status(IStatus.ERROR,
-					UMLPapyrusComparePlugin.PLUGIN_ID, "Exception occurred during profile migration", //$NON-NLS-1$
-					e)); // The exception stack trace will appear in the error log
+			resource.getErrors().add(new ProfileMigrationDiagnostic(
+					UMLPapyrusCompareMessages.getString("profile.migration.exception", e, resource))); //$NON-NLS-1$
+			UMLPapyrusComparePlugin.getDefault().getLog()
+					.log(new Status(IStatus.ERROR, UMLPapyrusComparePlugin.PLUGIN_ID,
+							"Exception occurred during profile migration", //$NON-NLS-1$
+							e)); // The exception stack trace will appear in the error log
 		}
 		return null;
 	}

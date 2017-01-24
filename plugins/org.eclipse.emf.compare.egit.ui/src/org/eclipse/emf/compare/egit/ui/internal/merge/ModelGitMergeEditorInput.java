@@ -358,9 +358,7 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 					// model. Fall back to default.
 				}
 			}
-		} catch (IOException e) {
-			throw new InvocationTargetException(e);
-		} catch (CoreException e) {
+		} catch (IOException | CoreException e) {
 			throw new InvocationTargetException(e);
 		}
 		return null;

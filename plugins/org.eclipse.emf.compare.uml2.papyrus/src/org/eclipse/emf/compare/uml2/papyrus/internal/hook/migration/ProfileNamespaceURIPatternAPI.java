@@ -109,19 +109,10 @@ public final class ProfileNamespaceURIPatternAPI {
 			registryRegisterMethod = registryClass.getMethod(REGISTRY_METHOD_REGISTER, patternClass);
 			registryUnregisterMethod = registryClass.getMethod(REGISTRY_METHOD_UNREGISTER, patternClass);
 
-			comparisonIsEqualVersionlessNamespaceURIMethod = comparisonClass.getMethod(
-					COMPARISON_METHOD_IS_EQUAL_VERSIONLESS_NAMESPACE_URI);
-		} catch (ClassNotFoundException e) {
-			// do nothing
-		} catch (NoSuchFieldException e) {
-			// do nothing
-		} catch (SecurityException e) {
-			// do nothing
-		} catch (IllegalArgumentException e) {
-			// do nothing
-		} catch (IllegalAccessException e) {
-			// do nothing
-		} catch (NoSuchMethodException e) {
+			comparisonIsEqualVersionlessNamespaceURIMethod = comparisonClass
+					.getMethod(COMPARISON_METHOD_IS_EQUAL_VERSIONLESS_NAMESPACE_URI);
+		} catch (ClassNotFoundException | NoSuchFieldException | SecurityException | IllegalArgumentException
+				| IllegalAccessException | NoSuchMethodException e) {
 			// do nothing
 		}
 	}
@@ -147,11 +138,7 @@ public final class ProfileNamespaceURIPatternAPI {
 	protected static Object callMethod(Method method, Object object, Object... args) {
 		try {
 			return method.invoke(object, args);
-		} catch (IllegalAccessException e) {
-			// do nothing
-		} catch (IllegalArgumentException e) {
-			// do nothing
-		} catch (InvocationTargetException e) {
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			// do nothing
 		}
 		return null;
@@ -185,17 +172,8 @@ public final class ProfileNamespaceURIPatternAPI {
 		try {
 			Constructor<?> patternConstructor = patternClass.getConstructor(String.class);
 			patternObject = patternConstructor.newInstance(pattern);
-		} catch (NoSuchMethodException e) {
-			// do nothing
-		} catch (SecurityException e) {
-			// do nothing
-		} catch (InstantiationException e) {
-			// do nothing
-		} catch (IllegalAccessException e) {
-			// do nothing
-		} catch (IllegalArgumentException e) {
-			// do nothing
-		} catch (InvocationTargetException e) {
+		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
+				| IllegalArgumentException | InvocationTargetException e) {
 			// do nothing
 		}
 		return patternObject;

@@ -110,9 +110,7 @@ public class MatchStatement extends Statement {
 		IMatchEngine engine = null;
 		try {
 			engine = engineClass.newInstance();
-		} catch (InstantiationException e) {
-			// Swallow : we'll create a default engine instead.
-		} catch (IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			// Swallow : we'll create a default engine instead.
 		}
 		if (engine == null) {

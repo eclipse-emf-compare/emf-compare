@@ -273,15 +273,8 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 						}
 						method.setAccessible(true);
 						return method.invoke(teamSubscriber);
-					} catch (SecurityException e) {
-						// Swallow all this, don't use the variant tree.
-					} catch (NoSuchMethodException e) {
-						// Swallow all this, don't use the variant tree.
-					} catch (IllegalArgumentException e) {
-						// Swallow all this, don't use the variant tree.
-					} catch (IllegalAccessException e) {
-						// Swallow all this, don't use the variant tree.
-					} catch (InvocationTargetException e) {
+					} catch (SecurityException | NoSuchMethodException | IllegalArgumentException
+							| IllegalAccessException | InvocationTargetException e) {
 						// Swallow all this, don't use the variant tree.
 					}
 					return null;

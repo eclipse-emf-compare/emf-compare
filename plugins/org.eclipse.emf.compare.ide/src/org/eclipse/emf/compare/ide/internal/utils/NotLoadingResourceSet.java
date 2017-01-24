@@ -251,9 +251,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	private void loadFromStorage(Resource resource, IStorage storage) throws IOException {
 		try (InputStream stream = storage.getContents()) {
 			resource.load(stream, getLoadOptions());
-		} catch (CoreException e) {
-			logLoadingFromStorageFailed(resource, storage, e);
-		} catch (WrappedException e) {
+		} catch (CoreException | WrappedException e) {
 			logLoadingFromStorageFailed(resource, storage, e);
 		}
 	}

@@ -388,9 +388,7 @@ public class RenameDetector {
 			if (origin != null && added != null) {
 				return SimilarityComputer.isSimilar(origin.getContents(), added.getContents());
 			}
-		} catch (CoreException e) {
-			// can't access a storage so ignore, fall through and return false
-		} catch (IOException e) {
+		} catch (CoreException | IOException e) {
 			// can't access a storage so ignore, fall through and return false
 		}
 		return false;
@@ -411,9 +409,8 @@ public class RenameDetector {
 							allChildren.add(child).addAll(toAllChildren().apply(child));
 						}
 					}
-				} catch (TeamException e) {
+				} catch (TeamException | NullPointerException e) {
 					// ignore and fall through
-				} catch (NullPointerException e) {
 					// org.eclipse.egit.core.internal.merge.GitResourceVariantCache.members(IResource)
 					// throws NPE if base doesn't contain a folder that exists in source or remote
 					// so ignore and fall through

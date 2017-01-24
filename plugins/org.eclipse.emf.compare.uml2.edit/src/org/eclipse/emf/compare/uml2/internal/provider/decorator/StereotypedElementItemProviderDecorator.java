@@ -15,7 +15,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -228,13 +227,6 @@ public class StereotypedElementItemProviderDecorator extends ExtendedItemProvide
 					url = new URL(uriConverter.normalize(uri).toString());
 					url.openStream().close();
 					img = url;
-				} catch (MalformedURLException e) {
-					UMLCompareEditPlugin.getPlugin().getLog()
-							.log(new Status(IStatus.WARNING, "org.eclipse.emf.compare.uml2.edit", //$NON-NLS-1$
-									UMLCompareEditPlugin.INSTANCE.getString(
-											"Unable_To_Retreive_Icon_Error_Message", //$NON-NLS-1$
-											new Object[] {location }),
-									e));
 				} catch (IOException e) {
 					UMLCompareEditPlugin.getPlugin().getLog()
 							.log(new Status(IStatus.WARNING, "org.eclipse.emf.compare.uml2.edit", //$NON-NLS-1$

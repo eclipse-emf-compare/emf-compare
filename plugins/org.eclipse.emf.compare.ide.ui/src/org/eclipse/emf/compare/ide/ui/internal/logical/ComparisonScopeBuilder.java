@@ -330,12 +330,8 @@ public final class ComparisonScopeBuilder {
 					}
 				});
 				participant = (ISynchronizeParticipant)field.get(modelInput);
-			} catch (NoSuchFieldException e) {
+			} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
 				// Swallow this, this private field was there at least from 3.5 to 4.3
-			} catch (IllegalArgumentException e) {
-				// Cannot happen
-			} catch (IllegalAccessException e) {
-				// "Should" not happen, but ignore it anyway
 			}
 			if (participant instanceof ModelSynchronizeParticipant
 					&& ((ModelSynchronizeParticipant)participant)
