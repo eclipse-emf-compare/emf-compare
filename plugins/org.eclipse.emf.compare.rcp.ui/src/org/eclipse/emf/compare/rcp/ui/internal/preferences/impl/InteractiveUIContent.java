@@ -14,6 +14,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.preferences.impl;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -189,7 +190,17 @@ public final class InteractiveUIContent {
 	 * @param descriptors
 	 *            elements to check.
 	 */
-	public void checkElements(IItemDescriptor<?>[] descriptors) {
+	public <T> void checkElements(Collection<IItemDescriptor<T>> descriptors) {
+		viewer.setCheckedElements(descriptors.toArray());
+	}
+
+	/**
+	 * Checks multiple element in the viewer. (Only use if multiple selection is allowed)
+	 * 
+	 * @param descriptors
+	 *            elements to check.
+	 */
+	public <T> void checkElements(IItemDescriptor<T>[] descriptors) {
 		viewer.setCheckedElements(descriptors);
 	}
 
@@ -267,10 +278,20 @@ public final class InteractiveUIContent {
 	 * @param descriptor
 	 *            Item to select.
 	 */
-	public void select(IItemDescriptor<?> descriptor) {
+	public <T> void select(IItemDescriptor<T> descriptor) {
+		selectAll(Collections.singleton(descriptor));
+	}
+
+	/**
+	 * Handles a selection in the viewer. Update related components.
+	 * 
+	 * @param descriptor
+	 *            Item to select.
+	 */
+	public <T> void selectAll(Collection<IItemDescriptor<T>> descriptors) {
 		// Update viewer
-		viewer.setSelection(new StructuredSelection(descriptor), true);
-		updateLinkedElements(descriptor);
+		viewer.setSelection(new StructuredSelection(descriptors), true);
+		updateLinkedElements(descriptors.iterator().next());
 	}
 
 	/**

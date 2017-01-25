@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo.
+ * Copyright (c) 2014, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,16 +7,24 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 499986, refactorings
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.preferences;
 
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.CONFLICTS_DETECTOR;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.DIFF_ENGINES;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.EQUI_ENGINES;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.REQ_ENGINES;
+import static org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages.getString;
+
+import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -34,8 +42,6 @@ import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
-import org.eclipse.emf.compare.rcp.internal.match.DefaultRCPMatchEngineFactory;
-import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.eclipse.emf.compare.rcp.internal.tracer.TracingConstant;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
@@ -69,6 +75,42 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
 public class EnginesPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+
+	/** The match engine registry. */
+	private static final IItemRegistry<Factory> MATCH_ENGINE_REGISTRY = EMFCompareRCPPlugin.getDefault()
+			.getMatchEngineFactoryDescriptorRegistry();
+
+	/** The req engine registry. */
+	private static final IItemRegistry<IReqEngine> REQ_ENGINE_REGISTRY = EMFCompareRCPPlugin.getDefault()
+			.getReqEngineDescriptorRegistry();
+
+	/** The diff engine registry. */
+	private static final IItemRegistry<IDiffEngine> DIFF_ENGINE_REGISTRY = EMFCompareRCPPlugin.getDefault()
+			.getDiffEngineDescriptorRegistry();
+
+	/** The equi engine registry. */
+	private static final IItemRegistry<IEquiEngine> EQUI_ENGINE_REGISTRY = EMFCompareRCPPlugin.getDefault()
+			.getEquiEngineDescriptorRegistry();
+
+	/** The conflict engine registry. */
+	private static final IItemRegistry<IConflictDetector> CONFLICT_DETECTOR_REGISTRY = EMFCompareRCPPlugin
+			.getDefault().getConflictDetectorDescriptorRegistry();
+
+	/** Option to specify what is the default, if no preference or default preference is available. */
+	private enum DefaultOption {
+		/** The highest ranked is the default. */
+		HIGHEST_RANKED,
+		/** All registered engines should be the default. */
+		ALL;
+	}
+
+	/** An option to specify what should be stored in the preferences. */
+	private enum StoreOption {
+		/** The enabled items. */
+		ENABLED_ITEMS,
+		/** The disabled items. */
+		DISABLED_ITEMS;
+	}
 
 	/** Pointer to all {@link InteractiveUIContent} of each tab */
 	private final Map<String, InteractiveUIContent> interactiveUis = new HashMap<String, InteractiveUIContent>();
@@ -114,15 +156,10 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 		TabFolder tabFolder = new TabFolder(container, SWT.NONE);
 
-		// Create match engine tab
 		createMatchEngineTab(tabFolder);
-		// Create diff engine tab
 		createDiffEngineTab(tabFolder);
-		// Create equi engine tab
 		createEquiEngineTab(tabFolder);
-		// Create req engine tab
 		createReqEngineTab(tabFolder);
-		// Create conflicts detectors tab
 		createConflictDetectorTab(tabFolder);
 
 		return container;
@@ -133,8 +170,6 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 * 
 	 * @param registry
 	 *            Registry holding engines.
-	 * @param enginePreferenceKey
-	 *            Preference key use to store preferences
 	 * @param tabComposite
 	 *            Holding composite.
 	 * @param dataHolder
@@ -143,13 +178,36 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 *            type of engine.
 	 * @return {@link InteractiveUIContent} for a specific type of engine.
 	 */
-	private <T> InteractiveUIContent createEngineUIBuilder(IItemRegistry<T> registry,
-			String enginePreferenceKey, Composite tabComposite, DataHolder<T> dataHolder) {
-		IItemDescriptor<T> defaultEngine = ItemUtil.getDefaultItemDescriptor(registry, enginePreferenceKey);
+	private <T> InteractiveUIContent createEngineUIBuilder(IItemRegistry<T> registry, Composite tabComposite,
+			DataHolder<T> dataHolder) {
+		String preferenceKey = preferenceKey(registry);
+		IItemDescriptor<T> defaultEngine = ItemUtil.getDefaultItemDescriptor(registry, preferenceKey);
 		InteractiveUIBuilder<T> uiBuilder = new InteractiveUIBuilder<T>(tabComposite, registry);
 		uiBuilder.setSimple(true).setDefaultCheck(Collections.singleton(defaultEngine))
 				.setDefaultSelection(defaultEngine).setHoldingData(dataHolder);
 		return uiBuilder.build();
+	}
+
+	/**
+	 * Returns the preference key for the given registry.
+	 * 
+	 * @param registry
+	 *            The registry to get the preference key for.
+	 * @return The preference key.
+	 */
+	private String preferenceKey(IItemRegistry<?> registry) {
+		if (registry == MATCH_ENGINE_REGISTRY) {
+			return MATCH_ENGINE_DISABLE_ENGINES;
+		} else if (registry == DIFF_ENGINE_REGISTRY) {
+			return DIFF_ENGINES;
+		} else if (registry == REQ_ENGINE_REGISTRY) {
+			return REQ_ENGINES;
+		} else if (registry == EQUI_ENGINE_REGISTRY) {
+			return EQUI_ENGINES;
+		} else if (registry == CONFLICT_DETECTOR_REGISTRY) {
+			return CONFLICTS_DETECTOR;
+		}
+		throw new IllegalArgumentException("Unknown registry."); //$NON-NLS-1$
 	}
 
 	/**
@@ -158,19 +216,14 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 * @param tabFolder
 	 */
 	private void createConflictDetectorTab(TabFolder tabFolder) {
-		IItemRegistry<IConflictDetector> conflictDetectorDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
-				.getConflictDetectorDescriptorRegistry();
-
-		// Create tab structure
 		Composite tabComposite = createTabSkeleton(tabFolder,
-				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.conflictDetector.tab.label"), //$NON-NLS-1$
-				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.conflictDetectorIntro.text"));//$NON-NLS-1$
+				getString("EnginesPreferencePage.conflictDetector.tab.label"), //$NON-NLS-1$
+				getString("EnginesPreferencePage.conflictDetectorIntro.text"));//$NON-NLS-1$
 
-		InteractiveUIContent interactiveContent = createEngineUIBuilder(conflictDetectorDescriptorRegistry,
-				EMFComparePreferences.CONFLICTS_DETECTOR, tabComposite, conflictsDetectorData);
+		InteractiveUIContent interactiveContent = createEngineUIBuilder(CONFLICT_DETECTOR_REGISTRY,
+				tabComposite, conflictsDetectorData);
 
-		// Save for reset default
-		interactiveUis.put(EMFComparePreferences.CONFLICTS_DETECTOR, interactiveContent);
+		interactiveUis.put(preferenceKey(CONFLICT_DETECTOR_REGISTRY), interactiveContent);
 	}
 
 	/**
@@ -179,18 +232,14 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 * @param tabFolder
 	 */
 	private void createReqEngineTab(TabFolder tabFolder) {
-		IItemRegistry<IReqEngine> reqEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
-				.getReqEngineDescriptorRegistry();
-		// Create tab structure
 		Composite tabComposite = createTabSkeleton(tabFolder,
-				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.requirementEngine.tab.label"), //$NON-NLS-1$
-				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.reqEngineIntro.text")); //$NON-NLS-1$
+				getString("EnginesPreferencePage.requirementEngine.tab.label"), //$NON-NLS-1$
+				getString("EnginesPreferencePage.reqEngineIntro.text")); //$NON-NLS-1$
 
-		InteractiveUIContent interactiveContent = createEngineUIBuilder(reqEngineDescriptorRegistry,
-				EMFComparePreferences.REQ_ENGINES, tabComposite, reqEngineData);
+		InteractiveUIContent interactiveContent = createEngineUIBuilder(REQ_ENGINE_REGISTRY, tabComposite,
+				reqEngineData);
 
-		// Save for reset default
-		interactiveUis.put(EMFComparePreferences.REQ_ENGINES, interactiveContent);
+		interactiveUis.put(preferenceKey(REQ_ENGINE_REGISTRY), interactiveContent);
 	}
 
 	/**
@@ -199,18 +248,14 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 * @param tabFolder
 	 */
 	private void createEquiEngineTab(TabFolder tabFolder) {
-		IItemRegistry<IEquiEngine> equiEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
-				.getEquiEngineDescriptorRegistry();
-		// Create tab structure
 		Composite tabComposite = createTabSkeleton(tabFolder,
-				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.equivalenceEngine.tab.label"), //$NON-NLS-1$
-				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.equiEngineIntro.text")); //$NON-NLS-1$
+				getString("EnginesPreferencePage.equivalenceEngine.tab.label"), //$NON-NLS-1$
+				getString("EnginesPreferencePage.equiEngineIntro.text")); //$NON-NLS-1$
 
-		InteractiveUIContent interactiveContent = createEngineUIBuilder(equiEngineDescriptorRegistry,
-				EMFComparePreferences.EQUI_ENGINES, tabComposite, equiEngineData);
+		InteractiveUIContent interactiveContent = createEngineUIBuilder(EQUI_ENGINE_REGISTRY, tabComposite,
+				equiEngineData);
 
-		// Save for reset default
-		interactiveUis.put(EMFComparePreferences.EQUI_ENGINES, interactiveContent);
+		interactiveUis.put(preferenceKey(EQUI_ENGINE_REGISTRY), interactiveContent);
 	}
 
 	/**
@@ -219,19 +264,14 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 * @param tabFolder
 	 */
 	private void createDiffEngineTab(TabFolder tabFolder) {
-		IItemRegistry<IDiffEngine> diffEngineDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
-				.getDiffEngineDescriptorRegistry();
-		// Create tab structure
 		Composite tabComposite = createTabSkeleton(tabFolder,
-				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.differenceEngine.tab.label"), //$NON-NLS-1$
-				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.diffEngineIntro.text")); //$NON-NLS-1$
+				getString("EnginesPreferencePage.differenceEngine.tab.label"), //$NON-NLS-1$
+				getString("EnginesPreferencePage.diffEngineIntro.text")); //$NON-NLS-1$
 
-		InteractiveUIContent interactiveContent = createEngineUIBuilder(diffEngineDescriptorRegistry,
-				EMFComparePreferences.DIFF_ENGINES, tabComposite, diffEngineData);
+		InteractiveUIContent interactiveContent = createEngineUIBuilder(DIFF_ENGINE_REGISTRY, tabComposite,
+				diffEngineData);
 
-		// Save for reset default
-		interactiveUis.put(EMFComparePreferences.DIFF_ENGINES, interactiveContent);
-
+		interactiveUis.put(preferenceKey(DIFF_ENGINE_REGISTRY), interactiveContent);
 	}
 
 	/**
@@ -240,27 +280,19 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 * @param tabFolder
 	 */
 	private void createMatchEngineTab(TabFolder tabFolder) {
-		IItemRegistry<Factory> matchEngineFactoryDescriptorRegistry = EMFCompareRCPPlugin.getDefault()
-				.getMatchEngineFactoryDescriptorRegistry();
-		IItemDescriptor<Factory> defaultMatchEngineDescriptor = matchEngineFactoryDescriptorRegistry
-				.getItemDescriptor(DefaultRCPMatchEngineFactory.class.getCanonicalName());
 		Composite tabComposite = createTabSkeleton(tabFolder,
-				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.matchEngine.tab.label"), //$NON-NLS-1$
-				EMFCompareRCPUIMessages.getString("EnginesPreferencePage.matchEngineIntro.text")); //$NON-NLS-1$
+				getString("EnginesPreferencePage.matchEngine.tab.label"), //$NON-NLS-1$
+				getString("EnginesPreferencePage.matchEngineIntro.text")); //$NON-NLS-1$
 
 		Map<String, IConfigurationUIFactory> configuratorUIRegistry = EMFCompareRCPUIPlugin.getDefault()
 				.getMatchEngineConfiguratorRegistry();
-		String matchEnginePreferenceKey = EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES;
-
-		Set<IItemDescriptor<Factory>> activeItems = ItemUtil.getActiveItems(
-				matchEngineFactoryDescriptorRegistry, EMFCompareRCPPlugin.PLUGIN_ID,
-				matchEnginePreferenceKey);
+		Set<IItemDescriptor<Factory>> activeItems = ItemUtil.getActiveItems(MATCH_ENGINE_REGISTRY,
+				EMFCompareRCPPlugin.PLUGIN_ID, MATCH_ENGINE_DISABLE_ENGINES);
 
 		InteractiveUIBuilder<IMatchEngine.Factory> builder = new InteractiveUIBuilder<IMatchEngine.Factory>(
-				tabComposite, matchEngineFactoryDescriptorRegistry);
+				tabComposite, MATCH_ENGINE_REGISTRY);
 		builder.setConfiguratorUIRegistry(configuratorUIRegistry).setDefaultCheck(activeItems)
-				.setConfigurationNodeKey(matchEnginePreferenceKey)
-				.setDefaultSelection(defaultMatchEngineDescriptor).setHoldingData(matchEnginesData);
+				.setConfigurationNodeKey(MATCH_ENGINE_DISABLE_ENGINES).setHoldingData(matchEnginesData);
 		// Forbid unchecking all match engines
 		InteractiveUIContent uiContent = builder.build();
 		uiContent.getViewer().addCheckStateListener(new ICheckStateListener() {
@@ -281,7 +313,7 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 			}
 		});
 		// Save for reset default
-		interactiveUis.put(matchEnginePreferenceKey, uiContent);
+		interactiveUis.put(MATCH_ENGINE_DISABLE_ENGINES, uiContent);
 	}
 
 	/**
@@ -301,9 +333,8 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 		tabComposite.setLayout(new GridLayout(1, true));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
 		tabComposite.setLayoutData(layoutData);
-		// Description text
-		Label introductionText = new Label(tabComposite, SWT.WRAP);
-		introductionText.setText(introText);
+		Label descriptionText = new Label(tabComposite, SWT.WRAP);
+		descriptionText.setText(introText);
 		return tabComposite;
 	}
 
@@ -318,26 +349,12 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 * Set all engines preferences.
 	 */
 	private void setEnginesPreferences() {
-		// Update preferences preferences
-		setEnginePreferences(EMFComparePreferences.DIFF_ENGINES, diffEngineData.getData(),
-				Collections.singleton(EMFCompareRCPPlugin.getDefault().getDiffEngineDescriptorRegistry()
-						.getHighestRankingDescriptor()));
-		setEnginePreferences(EMFComparePreferences.EQUI_ENGINES, equiEngineData.getData(),
-				Collections.singleton(EMFCompareRCPPlugin.getDefault().getEquiEngineDescriptorRegistry()
-						.getHighestRankingDescriptor()));
-		setEnginePreferences(EMFComparePreferences.REQ_ENGINES, reqEngineData.getData(),
-				Collections.singleton(EMFCompareRCPPlugin.getDefault().getReqEngineDescriptorRegistry()
-						.getHighestRankingDescriptor()));
-		setEnginePreferences(EMFComparePreferences.CONFLICTS_DETECTOR, conflictsDetectorData.getData(),
-				Collections.singleton(EMFCompareRCPPlugin.getDefault().getConflictDetectorDescriptorRegistry()
-						.getHighestRankingDescriptor()));
-		// Set match engine to disable
-		Set<IItemDescriptor<Factory>> matchEngineRegsitry = Sets.newHashSet(EMFCompareRCPPlugin.getDefault()
-				.getMatchEngineFactoryDescriptorRegistry().getItemDescriptors());
-		Set<IItemDescriptor<Factory>> matchingEngineToDisable = Sets.difference(matchEngineRegsitry,
-				matchEnginesData.getData());
-		setEnginePreferences(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, matchingEngineToDisable,
-				Collections.<IItemDescriptor<Factory>> emptyList());
+		setEnginePreferences(DIFF_ENGINE_REGISTRY, diffEngineData);
+		setEnginePreferences(EQUI_ENGINE_REGISTRY, equiEngineData);
+		setEnginePreferences(REQ_ENGINE_REGISTRY, reqEngineData);
+		setEnginePreferences(CONFLICT_DETECTOR_REGISTRY, conflictsDetectorData);
+		setEnginePreferences(MATCH_ENGINE_REGISTRY, matchEnginesData, DefaultOption.ALL,
+				StoreOption.DISABLED_ITEMS);
 	}
 
 	/**
@@ -355,47 +372,29 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 			StringBuilder traceMessage = new StringBuilder("Engines preference serialization:\n"); //$NON-NLS-1$
 			String prefDelimiter = " :\n"; //$NON-NLS-1$
 			String newLine = "\n"; //$NON-NLS-1$
-			traceMessage.append(EMFComparePreferences.DIFF_ENGINES).append(prefDelimiter)
-					.append(getPreferenceStore().getString(EMFComparePreferences.DIFF_ENGINES))
-					.append(newLine);
-			traceMessage.append(EMFComparePreferences.EQUI_ENGINES).append(prefDelimiter)
-					.append(getPreferenceStore().getString(EMFComparePreferences.EQUI_ENGINES))
-					.append(newLine);
-			traceMessage.append(EMFComparePreferences.REQ_ENGINES).append(prefDelimiter)
-					.append(getPreferenceStore().getString(EMFComparePreferences.REQ_ENGINES))
-					.append(newLine);
-			traceMessage.append(EMFComparePreferences.CONFLICTS_DETECTOR).append(prefDelimiter)
-					.append(getPreferenceStore().getString(EMFComparePreferences.CONFLICTS_DETECTOR))
-					.append(newLine);
-			traceMessage.append(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES).append(prefDelimiter)
-					.append(getPreferenceStore()
-							.getString(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES))
-					.append(newLine);
-
+			traceMessage.append(DIFF_ENGINES).append(prefDelimiter)
+					.append(getPreferenceStore().getString(DIFF_ENGINES)).append(newLine);
+			traceMessage.append(EQUI_ENGINES).append(prefDelimiter)
+					.append(getPreferenceStore().getString(EQUI_ENGINES)).append(newLine);
+			traceMessage.append(REQ_ENGINES).append(prefDelimiter)
+					.append(getPreferenceStore().getString(REQ_ENGINES)).append(newLine);
+			traceMessage.append(CONFLICTS_DETECTOR).append(prefDelimiter)
+					.append(getPreferenceStore().getString(CONFLICTS_DETECTOR)).append(newLine);
+			traceMessage.append(MATCH_ENGINE_DISABLE_ENGINES).append(prefDelimiter)
+					.append(getPreferenceStore().getString(MATCH_ENGINE_DISABLE_ENGINES)).append(newLine);
 			EMFCompareRCPPlugin.getDefault().log(IStatus.INFO, traceMessage.toString());
 		}
 	}
 
 	@Override
 	protected void performDefaults() {
-		resetDefaultPreferencesToHighestRank(
-				EMFCompareRCPPlugin.getDefault().getDiffEngineDescriptorRegistry(),
-				EMFComparePreferences.DIFF_ENGINES, diffEngineData);
-		resetDefaultPreferencesToHighestRank(
-				EMFCompareRCPPlugin.getDefault().getReqEngineDescriptorRegistry(),
-				EMFComparePreferences.REQ_ENGINES, reqEngineData);
-		resetDefaultPreferencesToHighestRank(
-				EMFCompareRCPPlugin.getDefault().getEquiEngineDescriptorRegistry(),
-				EMFComparePreferences.EQUI_ENGINES, equiEngineData);
-		resetDefaultPreferencesToHighestRank(
-				EMFCompareRCPPlugin.getDefault().getConflictDetectorDescriptorRegistry(),
-				EMFComparePreferences.CONFLICTS_DETECTOR, conflictsDetectorData);
-		resetDefaultPreferencesToAll(
-				EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryDescriptorRegistry(),
-				EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, matchEnginesData);
-
+		resetDefaultPreferences(DIFF_ENGINE_REGISTRY, diffEngineData);
+		resetDefaultPreferences(REQ_ENGINE_REGISTRY, reqEngineData);
+		resetDefaultPreferences(EQUI_ENGINE_REGISTRY, equiEngineData);
+		resetDefaultPreferences(CONFLICT_DETECTOR_REGISTRY, conflictsDetectorData);
+		resetDefaultPreferences(MATCH_ENGINE_REGISTRY, matchEnginesData, DefaultOption.ALL,
+				StoreOption.DISABLED_ITEMS);
 		resetConfigurations();
-
 		super.performDefaults();
 	}
 
@@ -417,60 +416,175 @@ public class EnginesPreferencePage extends PreferencePage implements IWorkbenchP
 	 * @param registry
 	 * @param preferenceKey
 	 */
-	private <T> void resetDefaultPreferencesToHighestRank(IItemRegistry<T> registry, String preferenceKey,
-			DataHolder<T> dataObject) {
-		InteractiveUIContent interactiveContent = interactiveUis.get(preferenceKey);
-		if (interactiveContent != null) {
-			IItemDescriptor<T> defaultEngine = registry.getHighestRankingDescriptor();
-			interactiveContent.select(defaultEngine);
-			interactiveContent.checkElement(defaultEngine);
-			dataObject.setData(Collections.singleton(defaultEngine));
-		}
+	private <T> void resetDefaultPreferences(IItemRegistry<T> registry, DataHolder<T> dataObject) {
+		resetDefaultPreferences(registry, dataObject, DefaultOption.HIGHEST_RANKED,
+				StoreOption.ENABLED_ITEMS);
 	}
 
 	/**
-	 * Reset to default for a collection (using all is default).
+	 * Reset engine preference to default using the specified <code>defaultOption</code>.
 	 * 
 	 * @param registry
-	 * @param preferenceKey
 	 * @param dataObject
+	 * @param defaultOption
 	 */
-	private <T> void resetDefaultPreferencesToAll(IItemRegistry<T> registry, String preferenceKey,
-			DataHolder<T> dataObject) {
-		InteractiveUIContent interactiveContent = interactiveUis.get(preferenceKey);
+	private <T> void resetDefaultPreferences(IItemRegistry<T> registry, DataHolder<T> dataObject,
+			DefaultOption defaultOption, StoreOption storeOption) {
+		InteractiveUIContent interactiveContent = interactiveUis.get(preferenceKey(registry));
 		if (interactiveContent != null) {
-			IItemDescriptor<T> defaultEngine = registry.getHighestRankingDescriptor();
-			interactiveContent.select(defaultEngine);
-			List<IItemDescriptor<T>> itemDescriptors = registry.getItemDescriptors();
-			interactiveContent
-					.checkElements(itemDescriptors.toArray(new IItemDescriptor[itemDescriptors.size()]));
-			dataObject.setData(Sets.newHashSet(itemDescriptors));
+			Set<IItemDescriptor<T>> defaultEngines = getDefaultDescriptors(registry, defaultOption);
+			Set<IItemDescriptor<T>> defaultEnginesToSelect = getItemsToSelect(defaultEngines, registry,
+					storeOption);
+			interactiveContent.selectAll(defaultEnginesToSelect);
+			interactiveContent.checkElements(defaultEnginesToSelect);
+			dataObject.setData(defaultEnginesToSelect);
 		}
 	}
 
 	/**
-	 * Set an engine preferences into the preferences (for a collection).
+	 * Returns the items to select in the UI.
+	 * <p>
+	 * This is equal to {@link #getItemsToStore(Set, IItemRegistry, StoreOption)}, which considers whether the
+	 * {@link StoreOption#ENABLED_ITEMS} or {@link StoreOption#DISABLED_ITEMS} are stored, except that it
+	 * returns <em>all</em> registered engines from the <code>registry</code> are returned, if
+	 * <code>engines</code> is empty.
+	 * </p>
 	 * 
-	 * @param preferenceKey
-	 * @param currentSelectedEngine
-	 * @param defaultConf
+	 * @param engines
+	 * @param registry
+	 * @param storeOption
+	 * @return
 	 */
-	private <T> void setEnginePreferences(String preferenceKey, Set<IItemDescriptor<T>> currentSelectedEngine,
-			Collection<IItemDescriptor<T>> defaultConf) {
-		if (currentSelectedEngine != null && !currentSelectedEngine.containsAll(defaultConf)) {
+	private <T> Set<IItemDescriptor<T>> getItemsToSelect(Set<IItemDescriptor<T>> engines,
+			IItemRegistry<T> registry, StoreOption storeOption) {
+		Set<IItemDescriptor<T>> itemsToStore = getItemsToStore(engines, registry, storeOption);
+		if (StoreOption.DISABLED_ITEMS.equals(storeOption) && itemsToStore.isEmpty()) {
+			return Sets.newHashSet(registry.getItemDescriptors());
+		}
+		return itemsToStore;
+	}
+
+	/**
+	 * Returns the configured default item descriptors or the highest ranked item descriptor if there is no
+	 * default.
+	 * 
+	 * @param registry
+	 *            The registry to obtain item descriptors from.
+	 * @param defaultOption
+	 *            Option specifying what is the default if no other default is pre-configured (all or
+	 *            highest-ranked).
+	 * @return The default item descriptors.
+	 */
+	private <T> Set<IItemDescriptor<T>> getDefaultDescriptors(IItemRegistry<T> registry,
+			DefaultOption defaultOption) {
+		final String defaultValue = getPreferenceStore().getDefaultString(preferenceKey(registry));
+		final Set<IItemDescriptor<T>> defaultDescriptors = new LinkedHashSet<>();
+		if (!Strings.isNullOrEmpty(defaultValue)) {
+			for (String engineId : defaultValue.split(ItemUtil.PREFERENCE_DELIMITER)) {
+				final IItemDescriptor<T> itemDescriptor = registry.getItemDescriptor(engineId);
+				if (itemDescriptor != null) {
+					defaultDescriptors.add(itemDescriptor);
+				}
+			}
+		}
+		if (defaultDescriptors.isEmpty()) {
+			switch (defaultOption) {
+				case ALL:
+					defaultDescriptors.addAll(registry.getItemDescriptors());
+					break;
+				case HIGHEST_RANKED:
+					// fall through
+				default:
+					defaultDescriptors.add(registry.getHighestRankingDescriptor());
+					break;
+			}
+		}
+		return defaultDescriptors;
+	}
+
+	/**
+	 * Stores the engines specified in <code>data</code> for the items in the given <code>registry</code>.
+	 * <p>
+	 * This method will store the enabled items considering the highest ranked item as the default.
+	 * </p>
+	 * 
+	 * @param registry
+	 *            The registry.
+	 * @param data
+	 *            The data holding the selected items.
+	 */
+	private <T> void setEnginePreferences(IItemRegistry<T> registry, DataHolder<T> data) {
+		setEnginePreferences(registry, data, DefaultOption.HIGHEST_RANKED, StoreOption.ENABLED_ITEMS);
+	}
+
+	/**
+	 * Stores the engines specified in <code>data</code> for the items in the given <code>registry</code>.
+	 * 
+	 * @param registry
+	 *            The registry.
+	 * @param data
+	 *            The data holding the selected items.
+	 * @param defaultOption
+	 *            The default option to consider when storing the preferences.
+	 * @param storeOption
+	 *            The store option to consider when storing the preferences.
+	 */
+	private <T> void setEnginePreferences(IItemRegistry<T> registry, DataHolder<T> data,
+			DefaultOption defaultOption, StoreOption storeOption) {
+		Set<IItemDescriptor<T>> selectedEngines = data.getData();
+		Set<IItemDescriptor<T>> toStore = getItemsToStore(selectedEngines, registry, storeOption);
+		if (deviatesFromDefaults(toStore, registry, defaultOption, storeOption)) {
 			StringBuilder descriptorsKey = new StringBuilder();
-			for (Iterator<IItemDescriptor<T>> iterator = currentSelectedEngine.iterator(); iterator
-					.hasNext();) {
+			for (Iterator<IItemDescriptor<T>> iterator = toStore.iterator(); iterator.hasNext();) {
 				IItemDescriptor<T> iItemDescriptor = iterator.next();
 				descriptorsKey.append(iItemDescriptor.getID());
 				if (iterator.hasNext()) {
 					descriptorsKey.append(ItemUtil.PREFERENCE_DELIMITER);
 				}
 			}
-			getPreferenceStore().setValue(preferenceKey, descriptorsKey.toString());
+			getPreferenceStore().setValue(preferenceKey(registry), descriptorsKey.toString());
 		} else {
-			getPreferenceStore().setToDefault(preferenceKey);
+			getPreferenceStore().setToDefault(preferenceKey(registry));
 		}
 	}
 
+	/**
+	 * Returns the items to be stored to store <code>selectedEngines</code> considering the given
+	 * <code>storeOption</code>.
+	 * 
+	 * @param selectedEngines
+	 * @param registry
+	 * @param storeOption
+	 * @return The items to be stored.
+	 */
+	private <T> Set<IItemDescriptor<T>> getItemsToStore(Set<IItemDescriptor<T>> selectedEngines,
+			IItemRegistry<T> registry, StoreOption storeOption) {
+		switch (storeOption) {
+			case DISABLED_ITEMS:
+				return Sets.difference(Sets.newHashSet(registry.getItemDescriptors()), selectedEngines);
+			case ENABLED_ITEMS:
+				// fall through
+			default:
+				return selectedEngines;
+		}
+	}
+
+	/**
+	 * Specifies whether the list <code>itemsToStore</code> are different from the defaults.
+	 * <p>
+	 * This takes into account how the items should be stored, as specified by the <code>storeOptions</code>,
+	 * as well as what the defaults are, as specified by the <code>defaultOptions</code>.
+	 * 
+	 * @param itemsToStore
+	 * @param registry
+	 * @param defaultOption
+	 * @param storeOption
+	 * @return <code>true</code> if the items to store are different from the defaults and thus shall be
+	 *         stored, or <code>false</code> otherwise.
+	 */
+	private <T> boolean deviatesFromDefaults(Set<IItemDescriptor<T>> itemsToStore, IItemRegistry<T> registry,
+			DefaultOption defaultOption, StoreOption storeOption) {
+		Set<IItemDescriptor<T>> defaults = getDefaultDescriptors(registry, defaultOption);
+		return itemsToStore != null && !Sets.symmetricDifference(defaults, itemsToStore).isEmpty();
+	}
 }
