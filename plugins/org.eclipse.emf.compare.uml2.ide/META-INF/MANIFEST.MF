@@ -4,6 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.uml2.ide;singleton:=true
 Bundle-Version: 3.3.0.qualifier
 Bundle-Activator: org.eclipse.emf.compare.uml2.ide.Activator
+Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.emf.compare.ide,
@@ -12,6 +13,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.compare.uml2.rcp;bundle-version="2.3.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Bundle-Vendor: %providerName
+Bundle-Localization: plugin
 Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
  com.google.common.collect;version="[11.0.0,16.0.0)"
