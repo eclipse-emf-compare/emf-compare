@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - adaptation for refactoring regarding SizeChange
+ *     Simon Delisle - bug 511047
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram;
 
@@ -1337,10 +1338,10 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 					Phantom phantomToTarget = phantoms.get(0);
 					final IFigure figureToTarget = phantomToTarget.getFigure();
 
-					edgeExtremityEp = new AbstractGraphicalEditPart() {
-
+					edgeExtremityEp = new org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart(
+							referenceExtremityView) {
 						@Override
-						protected void createEditPolicies() {
+						protected void createDefaultEditPolicies() {
 						}
 
 						@Override
