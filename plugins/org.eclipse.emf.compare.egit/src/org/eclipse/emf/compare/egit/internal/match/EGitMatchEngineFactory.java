@@ -66,7 +66,7 @@ public class EGitMatchEngineFactory extends DefaultRCPMatchEngineFactory {
 	 */
 	@Override
 	public IMatchEngine getMatchEngine() {
-		final UseIdentifiers useUdentifier = getUseIdentifierValue(getConfiguration());
+		final UseIdentifiers useUdentifier = getUseIdentifierValue();
 		final Collection<IResourceMatchingStrategy> strategies = Sets.newLinkedHashSet();
 		strategies.add(new LocationMatchingStrategy());
 		return DefaultMatchEngine.create(useUdentifier,

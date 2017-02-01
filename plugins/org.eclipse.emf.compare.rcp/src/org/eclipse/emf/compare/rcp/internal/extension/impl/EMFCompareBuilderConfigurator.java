@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.internal.extension.impl;
 
-import com.google.common.base.Preconditions;
-
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
 import org.eclipse.emf.compare.diff.IDiffEngine;
@@ -31,9 +28,6 @@ import org.eclipse.emf.compare.req.IReqEngine;
  */
 public class EMFCompareBuilderConfigurator implements IEMFCompareBuilderConfigurator {
 
-	/** {@link IEclipsePreferences} holding engines information. */
-	private final IEclipsePreferences enginePreferences;
-
 	/** Match engine factory registry. */
 	private final IMatchEngine.Factory.Registry matchEngineFactoryRegistry;
 
@@ -43,18 +37,13 @@ public class EMFCompareBuilderConfigurator implements IEMFCompareBuilderConfigur
 	/**
 	 * Constructor.
 	 * 
-	 * @param enginePreferences
-	 *            {@link EMFCompareBuilderConfigurator#enginePreferences}
 	 * @param matchEngineFactoryRegistry
 	 *            {@link IMatchEngine.Factory.Registry} that holds Match Engine factories.
 	 * @param postProcessorRegistry
 	 *            {@link IPostProcessor.Descriptor.Registry} that holds post processors.
 	 */
-	public EMFCompareBuilderConfigurator(IEclipsePreferences enginePreferences,
-			IMatchEngine.Factory.Registry matchEngineFactoryRegistry,
+	protected EMFCompareBuilderConfigurator(IMatchEngine.Factory.Registry matchEngineFactoryRegistry,
 			IPostProcessor.Descriptor.Registry<String> postProcessorRegistry) {
-		Preconditions.checkNotNull(enginePreferences);
-		this.enginePreferences = enginePreferences;
 		this.matchEngineFactoryRegistry = matchEngineFactoryRegistry;
 		this.postProcessorRegistry = postProcessorRegistry;
 	}
@@ -67,7 +56,7 @@ public class EMFCompareBuilderConfigurator implements IEMFCompareBuilderConfigur
 	 * @return Default EMFCompareBuilderConfigurator;
 	 */
 	public static EMFCompareBuilderConfigurator createDefault() {
-		return new EMFCompareBuilderConfigurator(EMFCompareRCPPlugin.getDefault().getEMFComparePreferences(),
+		return new EMFCompareBuilderConfigurator(
 				EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry(),
 				EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
 	}
@@ -80,7 +69,7 @@ public class EMFCompareBuilderConfigurator implements IEMFCompareBuilderConfigur
 	 */
 	private IDiffEngine getDiffEngine() {
 		return ItemUtil.getItem(EMFCompareRCPPlugin.getDefault().getDiffEngineDescriptorRegistry(),
-				EMFComparePreferences.DIFF_ENGINES, enginePreferences);
+				EMFComparePreferences.DIFF_ENGINES);
 	}
 
 	/**
@@ -91,7 +80,7 @@ public class EMFCompareBuilderConfigurator implements IEMFCompareBuilderConfigur
 	 */
 	private IEquiEngine getEquiEngine() {
 		return ItemUtil.getItem(EMFCompareRCPPlugin.getDefault().getEquiEngineDescriptorRegistry(),
-				EMFComparePreferences.EQUI_ENGINES, enginePreferences);
+				EMFComparePreferences.EQUI_ENGINES);
 	}
 
 	/**
@@ -102,7 +91,7 @@ public class EMFCompareBuilderConfigurator implements IEMFCompareBuilderConfigur
 	 */
 	private IReqEngine getReqEngine() {
 		return ItemUtil.getItem(EMFCompareRCPPlugin.getDefault().getReqEngineDescriptorRegistry(),
-				EMFComparePreferences.REQ_ENGINES, enginePreferences);
+				EMFComparePreferences.REQ_ENGINES);
 	}
 
 	/**
@@ -113,7 +102,7 @@ public class EMFCompareBuilderConfigurator implements IEMFCompareBuilderConfigur
 	 */
 	private IConflictDetector getConflictDetector() {
 		return ItemUtil.getItem(EMFCompareRCPPlugin.getDefault().getConflictDetectorDescriptorRegistry(),
-				EMFComparePreferences.CONFLICTS_DETECTOR, enginePreferences);
+				EMFComparePreferences.CONFLICTS_DETECTOR);
 	}
 
 	/**

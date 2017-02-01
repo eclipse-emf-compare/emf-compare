@@ -72,8 +72,8 @@ public class GroupActionMenu extends Action implements IMenuCreator {
 	public void updateMenu(IComparisonScope scope, Comparison comparison) {
 		menuManager.removeAll();
 		DifferenceGroupManager groupManager = new DifferenceGroupManager(
-				EMFCompareRCPUIPlugin.getDefault().getEMFCompareUIPreferences(),
-				EMFCompareRCPUIPlugin.getDefault().getItemDifferenceGroupProviderRegistry());
+				EMFCompareRCPUIPlugin.getDefault().getItemDifferenceGroupProviderRegistry(),
+				EMFCompareRCPUIPlugin.getDefault().getPreferenceStore());
 		for (IDifferenceGroupProvider.Descriptor dgp : registry.getGroupProviders(scope, comparison)) {
 			IDifferenceGroupProvider gp = dgp.createGroupProvider();
 			if (gp != null) {

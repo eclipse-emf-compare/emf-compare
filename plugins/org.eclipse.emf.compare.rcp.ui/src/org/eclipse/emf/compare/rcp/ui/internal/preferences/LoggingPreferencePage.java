@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Simon Delisle - bug 495753
+ *     Mathias Schaefer - preferences refactoring
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.preferences;
 
@@ -21,9 +22,14 @@ import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePrefere
 import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_LEVEL_KEY;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -44,6 +50,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
@@ -96,7 +103,10 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 	 * {@inheritDoc}
 	 */
 	public void init(IWorkbench workbench) {
-		// Nothing to do
+		ScopedPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE,
+				EMFCompareRCPPlugin.PLUGIN_ID);
+		store.setSearchContexts(new IScopeContext[] {InstanceScope.INSTANCE, ConfigurationScope.INSTANCE });
+		setPreferenceStore(store);
 	}
 
 	@Override
@@ -153,30 +163,31 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 		return gd;
 	}
 
-	protected void savePreferences() throws BackingStoreException {
-		IEclipsePreferences prefs = EMFCompareRCPPlugin.getDefault().getEMFComparePreferences();
-		prefs.put(LOG_FILENAME_KEY, fileField.getText());
+	protected void savePreferences() throws BackingStoreException, IOException {
+		getPreferenceStore().setValue(LOG_FILENAME_KEY, fileField.getText());
 		String item = levelCombo.getItem(levelCombo.getSelectionIndex());
-		prefs.put(LOG_LEVEL_KEY, item);
-		prefs.put(LOG_BACKUP_COUNT_KEY, maxBackupField.getText());
-		prefs.put(LOG_FILE_MAX_SIZE_KEY, maxSizeField.getText());
-		prefs.flush();
+		getPreferenceStore().setValue(LOG_LEVEL_KEY, item);
+		getPreferenceStore().setValue(LOG_BACKUP_COUNT_KEY, maxBackupField.getText());
+		getPreferenceStore().setValue(LOG_FILE_MAX_SIZE_KEY, maxSizeField.getText());
 	}
 
 	protected void resetPreferences() {
-		IEclipsePreferences prefs = EMFCompareRCPPlugin.getDefault().getEMFComparePreferences();
-		prefs.put(LOG_FILENAME_KEY, ""); //$NON-NLS-1$
-		prefs.put(LOG_LEVEL_KEY, "OFF"); //$NON-NLS-1$
-		prefs.putInt(LOG_BACKUP_COUNT_KEY, LOG_BACKUP_DEFAULT);
-		prefs.putInt(LOG_FILE_MAX_SIZE_KEY, LOG_FILE_SIZE_DEFAULT);
+		getPreferenceStore().setToDefault(LOG_FILENAME_KEY);
+		getPreferenceStore().setToDefault(LOG_LEVEL_KEY);
+		getPreferenceStore().setToDefault(LOG_BACKUP_COUNT_KEY);
+		getPreferenceStore().setToDefault(LOG_FILE_MAX_SIZE_KEY);
 	}
 
 	protected void refreshWidgets() {
-		IEclipsePreferences prefs = EMFCompareRCPPlugin.getDefault().getEMFComparePreferences();
-		String fileName = prefs.get(LOG_FILENAME_KEY, LOG_FILE_DEFAULT);
-		String level = prefs.get(LOG_LEVEL_KEY, LOG_LEVEL_DEFAULT);
-		int maxBackupCount = prefs.getInt(LOG_BACKUP_COUNT_KEY, LOG_BACKUP_DEFAULT);
-		int maxSizeInMB = prefs.getInt(LOG_FILE_MAX_SIZE_KEY, LOG_FILE_SIZE_DEFAULT);
+		IPreferencesService prefsService = Platform.getPreferencesService();
+		String fileName = prefsService.getString(EMFCompareRCPPlugin.PLUGIN_ID, LOG_FILENAME_KEY,
+				LOG_FILE_DEFAULT, null);
+		String level = prefsService.getString(EMFCompareRCPPlugin.PLUGIN_ID, LOG_LEVEL_KEY, LOG_LEVEL_DEFAULT,
+				null);
+		int maxBackupCount = prefsService.getInt(EMFCompareRCPPlugin.PLUGIN_ID, LOG_BACKUP_COUNT_KEY,
+				LOG_BACKUP_DEFAULT, null);
+		int maxSizeInMB = prefsService.getInt(EMFCompareRCPPlugin.PLUGIN_ID, LOG_FILE_MAX_SIZE_KEY,
+				LOG_FILE_SIZE_DEFAULT, null);
 		levelCombo.select(Arrays.asList(LOG_LEVELS).indexOf(level));
 		levelCombo.pack();
 		fileField.setText(fileName);
@@ -190,7 +201,7 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 			savePreferences();
 			refreshWidgets();
 			return super.performOk();
-		} catch (BackingStoreException e) {
+		} catch (IOException | BackingStoreException e) {
 			return false;
 		}
 	}

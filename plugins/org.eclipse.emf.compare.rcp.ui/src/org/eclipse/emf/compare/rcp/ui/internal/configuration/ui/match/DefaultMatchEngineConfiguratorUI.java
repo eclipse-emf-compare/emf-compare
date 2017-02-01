@@ -21,13 +21,13 @@ import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.AbstractConfigurationUI;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.osgi.service.prefs.Preferences;
 
 /**
  * {@link AbstractConfigurationUI} for {@link DefaultRCPMatchEngineFactory}.
@@ -49,8 +49,8 @@ public class DefaultMatchEngineConfiguratorUI extends AbstractConfigurationUI {
 
 	private DataHolder dataHolder;
 
-	public DefaultMatchEngineConfiguratorUI(Composite parent, int style, Preferences pref) {
-		super(parent, style, pref);
+	public DefaultMatchEngineConfiguratorUI(Composite parent, int style, IPreferenceStore store) {
+		super(parent, style, store);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class DefaultMatchEngineConfiguratorUI extends AbstractConfigurationUI {
 		neverButton
 				.setText(EMFCompareRCPUIMessages.getString("DefaultMatchEngineConfiguratorUI.never.label")); //$NON-NLS-1$
 
-		UseIdentifiers defaultValue = DefaultRCPMatchEngineFactory.getUseIdentifierValue(getPreference());
+		UseIdentifiers defaultValue = DefaultRCPMatchEngineFactory.getUseIdentifierValue();
 		dataHolder = new DataHolder(defaultValue);
 
 		bindData();
@@ -109,9 +109,9 @@ public class DefaultMatchEngineConfiguratorUI extends AbstractConfigurationUI {
 	public void storeConfiguration() {
 		UseIdentifiers value = dataHolder.getValue();
 		if (value != DefaultRCPMatchEngineFactory.DEFAULT_USE_IDENTIFIER_ATRIBUTE) {
-			getPreference().put(DefaultRCPMatchEngineFactory.USE_IDENTIFIER_ATTR, value.toString());
+			getPreferenceStore().setValue(DefaultRCPMatchEngineFactory.USE_IDENTIFIER_ATTR, value.toString());
 		} else {
-			getPreference().remove(DefaultRCPMatchEngineFactory.USE_IDENTIFIER_ATTR);
+			getPreferenceStore().setToDefault(DefaultRCPMatchEngineFactory.USE_IDENTIFIER_ATTR);
 		}
 	}
 
@@ -135,7 +135,7 @@ public class DefaultMatchEngineConfiguratorUI extends AbstractConfigurationUI {
 		}
 		dataHolder.setValue(DefaultRCPMatchEngineFactory.DEFAULT_USE_IDENTIFIER_ATRIBUTE);
 		try {
-			getPreference().remove(DefaultRCPMatchEngineFactory.USE_IDENTIFIER_ATTR);
+			getPreferenceStore().setToDefault(DefaultRCPMatchEngineFactory.USE_IDENTIFIER_ATTR);
 		} catch (IllegalStateException e) {
 			Throwables.propagate(e);
 		}

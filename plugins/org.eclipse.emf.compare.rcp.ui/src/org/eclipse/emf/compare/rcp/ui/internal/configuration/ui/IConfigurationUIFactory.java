@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.configuration.ui;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
-import org.osgi.service.prefs.Preferences;
 
 /**
  * Factory for {@link AbstractConfigurationUI}.
@@ -27,10 +27,10 @@ public interface IConfigurationUIFactory {
 	 *            Parent composite.
 	 * @param style
 	 *            Style of the new {@link AbstractConfigurationUI}
-	 * @param pref
-	 *            {@link Preferences} to store configuration.
+	 * @param store
+	 *            {@link IPreferenceStore} to store configuration.
 	 * @return Configuration UI
 	 */
-	AbstractConfigurationUI createUI(Composite parent, int style, Preferences pref);
+	AbstractConfigurationUI createUI(Composite parent, int style, IPreferenceStore store);
 
 }

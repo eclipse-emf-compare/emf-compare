@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
@@ -28,10 +27,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
-import org.osgi.service.prefs.Preferences;
 
 /**
  * This action will allow us to group differences by their kind.
@@ -56,7 +54,7 @@ public class GroupAction extends Action {
 	private final DifferenceGroupManager groupManager;
 
 	/** Preferences holding synchronization behavior value. */
-	private final Preferences preferences;
+	private final IPreferenceStore preferences;
 
 	/**
 	 * Instantiates our action given its target grouper.
@@ -80,7 +78,7 @@ public class GroupAction extends Action {
 		this.groupManager = groupManager;
 		this.isThreeWay = isThreeWay;
 		this.provider = gp;
-		this.preferences = EMFCompareRCPUIPlugin.getDefault().getEMFCompareUIPreferences();
+		this.preferences = EMFCompareRCPUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	@Override
@@ -108,9 +106,11 @@ public class GroupAction extends Action {
 	 */
 	private void handleSynchronization(Event event) {
 		final Shell shell = event.display.getActiveShell();
-		String preferenceValue = preferences.get(
-				GroupsPreferencePage.getGroupSynchronizationPreferenceKey(isThreeWay),
-				MessageDialogWithToggle.PROMPT);
+		String preferenceValue = preferences
+				.getString(GroupsPreferencePage.getGroupSynchronizationPreferenceKey(isThreeWay));
+		if ("".equals(preferenceValue)) { //$NON-NLS-1$
+			preferenceValue = MessageDialogWithToggle.PROMPT;
+		}
 		if (MessageDialogWithToggle.PROMPT.equals(preferenceValue)) {
 			shell.getDisplay().asyncExec(new SynchronizationRunnable(shell));
 		} else if (MessageDialogWithToggle.ALWAYS.equals(preferenceValue)) {
@@ -173,8 +173,7 @@ public class GroupAction extends Action {
 					GroupsPreferencePage.PAGE_ID);
 
 			dialog.setPrefKey(GroupsPreferencePage.getGroupSynchronizationPreferenceKey(isThreeWay));
-			dialog.setPrefStore(
-					new ScopedPreferenceStore(new InstanceScope(), EMFCompareRCPUIPlugin.PLUGIN_ID));
+			dialog.setPrefStore(EMFCompareRCPUIPlugin.getDefault().getPreferenceStore());
 			if (dialog.open() == IDialogConstants.YES_ID) {
 				setSelectedGroupAsDefault();
 			}

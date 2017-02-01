@@ -24,9 +24,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine.Factory;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.AbstractItemDescriptor;
@@ -48,22 +48,14 @@ public class MatchEngineFactoryRegistryWrapper implements IMatchEngine.Factory.R
 	/** Instance of the registry that need to be wrapped. */
 	private IItemRegistry<IMatchEngine.Factory> registry;
 
-	/** Preferences holding disabled match engines. */
-	private final IEclipsePreferences preferences;
-
 	/**
 	 * Constructor.
 	 * 
-	 * @param registy
+	 * @param registry
 	 *            {@link MatchEngineFactoryRegistryWrapper#registry}
-	 * @param preferences
-	 *            Preferences holding disabled match engines.
 	 */
-	public MatchEngineFactoryRegistryWrapper(IItemRegistry<Factory> registy,
-			IEclipsePreferences preferences) {
-		super();
-		this.registry = registy;
-		this.preferences = preferences;
+	public MatchEngineFactoryRegistryWrapper(IItemRegistry<Factory> registry) {
+		this.registry = registry;
 	}
 
 	/**
@@ -176,7 +168,7 @@ public class MatchEngineFactoryRegistryWrapper implements IMatchEngine.Factory.R
 	 */
 	private Collection<IItemDescriptor<IMatchEngine.Factory>> getDisabledEngines() {
 		Collection<IItemDescriptor<Factory>> result = ItemUtil.getItemsDescriptor(registry,
-				EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, preferences);
+				EMFCompareRCPPlugin.PLUGIN_ID, EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES);
 		if (result == null) {
 			result = Collections.emptyList();
 		}

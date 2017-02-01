@@ -23,6 +23,10 @@ import java.util.Set;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
@@ -34,6 +38,7 @@ import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -53,6 +58,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.service.prefs.Preferences;
 
 /**
@@ -157,12 +163,13 @@ public final class InteractiveUIContent {
 	 *            Id of the item to configure
 	 * @param configuratorfactory
 	 *            Factory for the configuration
-	 * @param pref
+	 * @param store
 	 *            Preference store that will hold this {@link IConfigurationUIFactory} value.
 	 */
-	public void addConfigurator(String id, IConfigurationUIFactory configuratorfactory, Preferences pref) {
+	public void addConfigurator(String id, IConfigurationUIFactory configuratorfactory,
+			IPreferenceStore store) {
 		AbstractConfigurationUI configurator = configuratorfactory.createUI(configurationComposite, SWT.NONE,
-				pref);
+				store);
 		configurators.put(id, configurator);
 	}
 
@@ -241,7 +248,7 @@ public final class InteractiveUIContent {
 	 * 
 	 * @return The viewer.
 	 */
-	private CheckboxTableViewer getViewer() {
+	public CheckboxTableViewer getViewer() {
 		return viewer;
 	}
 
@@ -619,8 +626,13 @@ public final class InteractiveUIContent {
 				String itemId = item.getID();
 				IConfigurationUIFactory configuratorFactory = configurationUIRegistry.get(itemId);
 				if (configuratorFactory != null) {
-					Preferences pref = ItemUtil.getConfigurationPreferenceNode(configurationNodeKey, itemId);
-					interactiveUI.addConfigurator(itemId, configuratorFactory, pref);
+					// Preferences pref = ItemUtil.getConfigurationPreferenceNode(configurationNodeKey,
+					// itemId);
+					ScopedPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE,
+							EMFCompareRCPPlugin.PLUGIN_ID);
+					store.setSearchContexts(
+							new IScopeContext[] {InstanceScope.INSTANCE, ConfigurationScope.INSTANCE });
+					interactiveUI.addConfigurator(itemId, configuratorFactory, store);
 				}
 			}
 		}

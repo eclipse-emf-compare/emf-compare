@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo.
+ * Copyright (c) 2014, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Mathias Schaefer - preferences refactoring
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.tests;
 
@@ -16,19 +17,16 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine.Factory;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryImpl;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
@@ -42,6 +40,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.osgi.service.prefs.BackingStoreException;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+
 /**
  * Test class for {@link MatchEngineFactoryRegistryWrapper}.
  * 
@@ -51,8 +52,6 @@ import org.osgi.service.prefs.BackingStoreException;
 public class MatchEngineFactoryRegistryWrapperTest {
 
 	private MatchEngineFactoryRegistryWrapper registryWrapper;
-
-	private IEclipsePreferences preferences;
 
 	/**
 	 * Creates a comparison scope from Ecore model.
@@ -65,21 +64,15 @@ public class MatchEngineFactoryRegistryWrapperTest {
 		return new DefaultComparisonScope(ecoreData.getLeft(), ecoreData.getRight(), ecoreData.getOrigin());
 	}
 
-	// For Helios compatibility.
-	@SuppressWarnings("deprecation")
 	@Before
 	public void setUp() throws BackingStoreException {
-		ItemRegistry<Factory> registry = new ItemRegistry<IMatchEngine.Factory>();
-		// Mock preference node.
-		preferences = new InstanceScope()
-				.getNode("org.eclipse.emf.compare.tests.rcp.MatchEngineFactoryRegistryWrapperTest");
-		preferences.clear();
-		registryWrapper = new MatchEngineFactoryRegistryWrapper(registry, preferences);
+		ItemRegistry<Factory> registry = new ItemRegistry<>();
+		registryWrapper = new MatchEngineFactoryRegistryWrapper(registry);
 	}
 
 	@After
 	public void tearDown() throws BackingStoreException {
-		preferences.clear();
+		InstanceScope.INSTANCE.getNode(EMFCompareRCPPlugin.PLUGIN_ID).clear();
 	}
 
 	/**
@@ -274,12 +267,12 @@ public class MatchEngineFactoryRegistryWrapperTest {
 		IComparisonScope scope = createComparisonScope();
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(scope), factory3);
 
-		disableEngine(preferences, EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
+		disableEngine(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
 				Collections.singleton(factory3.getClass().getName()));
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(scope), factory2);
 		assertTrue(!registryWrapper.getMatchEngineFactories(scope).contains(factory3));
 
-		disableEngine(preferences, EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
+		disableEngine(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
 				Lists.newArrayList(factory3.getClass().getName(), factory2.getClass().getName()));
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(scope), factory);
 		assertTrue(!registryWrapper.getMatchEngineFactories(scope).contains(factory2));
@@ -319,18 +312,17 @@ public class MatchEngineFactoryRegistryWrapperTest {
 	/**
 	 * Disables engine in preferences.
 	 * 
-	 * @param preference
-	 *            {@link IEclipsePreferences}
 	 * @param key
 	 * @param toDisable
-	 *            {@link Collection} of {@link IItemDescriptor} to disable.
+	 *            {@link Collection} of {@link IItemDescriptor} to disable, null or empty to enable all
+	 *            engines.
 	 */
-	private void disableEngine(IEclipsePreferences preference, String key, Collection<String> toDisable) {
+	private void disableEngine(String key, Collection<String> toDisable) {
 		if (toDisable != null && !toDisable.isEmpty()) {
 			String newPreferenceValue = Joiner.on(ItemUtil.PREFERENCE_DELIMITER).join(toDisable);
-			preference.put(key, newPreferenceValue);
+			InstanceScope.INSTANCE.getNode(EMFCompareRCPPlugin.PLUGIN_ID).put(key, newPreferenceValue);
 		} else {
-			preference.remove(key);
+			InstanceScope.INSTANCE.getNode(EMFCompareRCPPlugin.PLUGIN_ID).remove(key);
 		}
 	}
 

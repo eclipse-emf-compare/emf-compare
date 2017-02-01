@@ -13,8 +13,8 @@ package org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.match;
 import org.eclipse.emf.compare.rcp.internal.match.DefaultRCPMatchEngineFactory;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.AbstractConfigurationUI;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.IConfigurationUIFactory;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
-import org.osgi.service.prefs.Preferences;
 
 /**
  * IConfiguratorUIFactory for {@link DefaultRCPMatchEngineFactory}
@@ -23,12 +23,9 @@ import org.osgi.service.prefs.Preferences;
  */
 public class DefaultMatchEngineConfiguatorUIFactory implements IConfigurationUIFactory {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public AbstractConfigurationUI createUI(Composite parent, int style, Preferences pref) {
+	public AbstractConfigurationUI createUI(Composite parent, int style, IPreferenceStore store) {
 		DefaultMatchEngineConfiguratorUI composite = new DefaultMatchEngineConfiguratorUI(parent, style,
-				pref);
+				store);
 		composite.createContent();
 		return composite;
 	}

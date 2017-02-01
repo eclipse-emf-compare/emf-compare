@@ -103,8 +103,7 @@ public class PostProcessorRegistryImpl implements IPostProcessor.Descriptor.Regi
 	 */
 	private Collection<IItemDescriptor<IPostProcessor.Descriptor>> getDisabledEngines() {
 		List<IItemDescriptor<IPostProcessor.Descriptor>> result = ItemUtil.getItemsDescriptor(baseRegisty,
-				EMFComparePreferences.DISABLED_POST_PROCESSOR,
-				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences());
+				EMFCompareRCPPlugin.PLUGIN_ID, EMFComparePreferences.DISABLED_POST_PROCESSOR);
 		if (result == null) {
 			result = Collections.emptyList();
 		}

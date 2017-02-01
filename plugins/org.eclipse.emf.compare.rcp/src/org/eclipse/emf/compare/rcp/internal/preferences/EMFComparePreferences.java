@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo.
+ * Copyright (c) 2014, 2016 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,10 +15,11 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 
-/**
- * All preferences constant for EMF Compare.
+/***
+ * Preferences constants and utilities for the EMF Compare RCP plug-in.
  * 
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
@@ -91,13 +92,11 @@ public final class EMFComparePreferences {
 	/**
 	 * Gets the ids of all disabled EMF Compare adapter factory descriptors.
 	 * 
-	 * @param preferenceStore
-	 *            {@link IEclipsePreferences} where are stored the preferences.
 	 * @return List of ids;
 	 */
-	public static List<String> getDisabledAdapterFacotryDescriptorIds(IEclipsePreferences preferenceStore) {
-		String disabledAdapterFactoriesString = preferenceStore
-				.get(EMFComparePreferences.DISABLED_ADAPTER_FACTORY, ""); //$NON-NLS-1$
+	public static List<String> getDisabledAdapterFactoryDescriptorIds() {
+		String disabledAdapterFactoriesString = Platform.getPreferencesService()
+				.getString(EMFCompareRCPPlugin.PLUGIN_ID, DISABLED_ADAPTER_FACTORY, "", null); //$NON-NLS-1$
 
 		final List<String> disabledAdapterFactories = Lists.newArrayList(
 				Splitter.on(';').omitEmptyStrings().trimResults().split(disabledAdapterFactoriesString));

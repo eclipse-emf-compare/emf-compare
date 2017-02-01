@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Martin Fleck - bug 483798
+ *     Mathias Schaefer - preferences refactoring
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp;
 
@@ -17,6 +18,7 @@ import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePrefere
 import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILENAME_KEY;
 import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILE_MAX_SIZE_KEY;
 import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILE_SIZE_DEFAULT;
+import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_LEVEL_DEFAULT;
 import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_LEVEL_KEY;
 import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_PATTERN;
 
@@ -42,9 +44,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
@@ -202,23 +204,12 @@ public class EMFCompareRCPPlugin extends Plugin {
 	private WeightProviderDescriptorRegistryListener weightProviderListener;
 
 	/** Will listen to preference changes and update log4j configuration accordingly. */
-	private IPreferenceChangeListener preferenceChangeListener;
+	private LoggingPreferenceChangeListener preferenceChangeListener;
 
 	/**
 	 * Keep all resources graphs identified by their id.
 	 */
 	private Map<String, IGraphView<URI>> graphsById = new HashMap<String, IGraphView<URI>>();
-
-	/**
-	 * Instance scope for preferences.
-	 * <p>
-	 * Do not use singleton to respect Helios compatibility
-	 * </p>
-	 * 
-	 * @see org.eclipse.core.runtime.preferences.InstanceScope#INSTANCE
-	 */
-	@SuppressWarnings("deprecation")
-	private InstanceScope instanceScope = new InstanceScope();
 
 	/*
 	 * (non-Javadoc)
@@ -285,8 +276,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 		matchEngineFactoryRegistryListener = new MatchEngineFactoryRegistryListener(PLUGIN_ID,
 				MATCH_ENGINE_PPID, getLog(), matchEngineFactoryRegistry);
 		matchEngineFactoryRegistryListener.readRegistry(registry);
-		matchEngineFactoryRegistryWrapped = new MatchEngineFactoryRegistryWrapper(matchEngineFactoryRegistry,
-				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences());
+		matchEngineFactoryRegistryWrapped = new MatchEngineFactoryRegistryWrapper(matchEngineFactoryRegistry);
 	}
 
 	/**
@@ -411,10 +401,9 @@ public class EMFCompareRCPPlugin extends Plugin {
 	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
 		if (preferenceChangeListener != null) {
-			getEMFComparePreferences().removePreferenceChangeListener(preferenceChangeListener);
+			InstanceScope.INSTANCE.getNode(EMFCompareRCPPlugin.PLUGIN_ID)
+					.removePreferenceChangeListener(preferenceChangeListener);
 		}
-
-		EMFCompareRCPPlugin.plugin = null;
 
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
@@ -602,7 +591,7 @@ public class EMFCompareRCPPlugin extends Plugin {
 	public RankedAdapterFactoryDescriptor.Registry createFilteredAdapterFactoryRegistry(
 			Map<Object, Object> context) {
 		final List<String> disabledAdapterFactories = EMFComparePreferences
-				.getDisabledAdapterFacotryDescriptorIds(getEMFComparePreferences());
+				.getDisabledAdapterFactoryDescriptorIds();
 		// Filters disabled adapter factories
 		Multimap<Collection<?>, RankedAdapterFactoryDescriptor> filteredBackingMultimap = ImmutableMultimap
 				.copyOf(Multimaps.filterValues(adapterFactoryRegistryBackingMultimap,
@@ -741,39 +730,36 @@ public class EMFCompareRCPPlugin extends Plugin {
 	}
 
 	/**
-	 * Get the {@link IEclipsePreferences} for this plugin.
-	 * 
-	 * @return {@link IEclipsePreferences}
-	 */
-	public IEclipsePreferences getEMFComparePreferences() {
-		return instanceScope.getNode(EMFCompareRCPPlugin.PLUGIN_ID);
-	}
-
-	/**
 	 * Initializes log4j by reading the preferences.
 	 */
 	private void initLogging() {
-		IEclipsePreferences prefs = getEMFComparePreferences();
-		LOGGER.setLevel(Level.toLevel(prefs.get(LOG_LEVEL_KEY, "OFF"))); //$NON-NLS-1$
+		LOGGER.setLevel(Level.toLevel(Platform.getPreferencesService()
+				.getString(EMFCompareRCPPlugin.PLUGIN_ID, LOG_LEVEL_KEY, LOG_LEVEL_DEFAULT, null)));
 		if (!Level.OFF.equals(LOGGER.getLevel())) {
 			RollingFileAppender appender = (RollingFileAppender)LOGGER.getAppender(EMFC_APPENDER_NAME);
-			String logFileName = prefs.get(LOG_FILENAME_KEY, ""); //$NON-NLS-1$
+			String logFileName = Platform.getPreferencesService().getString(EMFCompareRCPPlugin.PLUGIN_ID,
+					LOG_FILENAME_KEY, "", null); //$NON-NLS-1$
 			if (logFileName.length() > 0) {
 				if (appender == null) {
 					try {
 						createLogAppender(logFileName);
 					} catch (IOException e) {
 						// Invalidate file name
-						prefs.put(LOG_FILENAME_KEY, ""); //$NON-NLS-1$
+						Platform.getPreferencesService().getString(EMFCompareRCPPlugin.PLUGIN_ID,
+								LOG_FILENAME_KEY, "", null); //$NON-NLS-1$
 					}
 				} else {
-					appender.setMaxBackupIndex(prefs.getInt(LOG_BACKUP_COUNT_KEY, 10));
-					appender.setMaximumFileSize((prefs.getInt(LOG_FILE_MAX_SIZE_KEY, 100)) * MEGABYTE);
+					appender.setMaxBackupIndex(Platform.getPreferencesService().getInt(
+							EMFCompareRCPPlugin.PLUGIN_ID, LOG_BACKUP_COUNT_KEY, LOG_BACKUP_DEFAULT, null));
+					appender.setMaximumFileSize(
+							(Platform.getPreferencesService().getInt(EMFCompareRCPPlugin.PLUGIN_ID,
+									LOG_FILE_MAX_SIZE_KEY, LOG_FILE_SIZE_DEFAULT, null)) * MEGABYTE);
 				}
 			}
 		}
 		preferenceChangeListener = new LoggingPreferenceChangeListener();
-		prefs.addPreferenceChangeListener(preferenceChangeListener);
+		InstanceScope.INSTANCE.getNode(EMFCompareRCPPlugin.PLUGIN_ID)
+				.addPreferenceChangeListener(preferenceChangeListener);
 	}
 
 	/**
@@ -790,10 +776,10 @@ public class EMFCompareRCPPlugin extends Plugin {
 		appender = new RollingFileAppender(new PatternLayout(LOG_PATTERN), newFileName, true);
 		LOGGER.removeAllAppenders(); // We don't want to log elsewhere
 		LOGGER.addAppender(appender);
-		appender.setMaxBackupIndex(
-				getEMFComparePreferences().getInt(LOG_BACKUP_COUNT_KEY, LOG_BACKUP_DEFAULT));
-		appender.setMaximumFileSize(
-				(getEMFComparePreferences().getInt(LOG_FILE_MAX_SIZE_KEY, LOG_FILE_SIZE_DEFAULT)) * MEGABYTE);
+		appender.setMaxBackupIndex(Platform.getPreferencesService().getInt(EMFCompareRCPPlugin.PLUGIN_ID,
+				LOG_BACKUP_COUNT_KEY, LOG_BACKUP_DEFAULT, null));
+		appender.setMaximumFileSize((Platform.getPreferencesService().getInt(EMFCompareRCPPlugin.PLUGIN_ID,
+				LOG_FILE_MAX_SIZE_KEY, LOG_FILE_SIZE_DEFAULT, null)) * MEGABYTE);
 	}
 
 	/**
@@ -802,16 +788,6 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
 	 */
 	private static class LoggingPreferenceChangeListener implements IPreferenceChangeListener {
-
-		/**
-		 * Instance scope for preferences.
-		 * <p>
-		 * Do not use singleton to respect Helios compatibility
-		 * </p>
-		 * 
-		 * @see org.eclipse.core.runtime.preferences.InstanceScope#INSTANCE
-		 */
-		private InstanceScope instanceScope = new InstanceScope();
 
 		/**
 		 * The path of the logging file.
@@ -830,8 +806,9 @@ public class EMFCompareRCPPlugin extends Plugin {
 		 *            the preference change event.
 		 */
 		public void preferenceChange(PreferenceChangeEvent event) {
-			IEclipsePreferences prefs = instanceScope.getNode(EMFCompareRCPPlugin.PLUGIN_ID);
-			path = prefs.get(LOG_FILENAME_KEY, ""); //$NON-NLS-1$
+			final IPreferencesService prefs = Platform.getPreferencesService();
+
+			path = prefs.getString(EMFCompareRCPPlugin.PLUGIN_ID, LOG_FILENAME_KEY, "", null); //$NON-NLS-1$
 			if (LOG_LEVEL_KEY.equals(event.getKey())) {
 				loggingLevel = Level.toLevel((String)event.getNewValue());
 				LOGGER.setLevel(loggingLevel);
@@ -863,7 +840,8 @@ public class EMFCompareRCPPlugin extends Plugin {
 				try {
 					EMFCompareRCPPlugin.getDefault().createLogAppender(path);
 				} catch (IOException e) {
-					EMFCompareRCPPlugin.getDefault().getEMFComparePreferences().put(LOG_FILENAME_KEY, ""); //$NON-NLS-1$
+					// Force the value to be harmless
+					InstanceScope.INSTANCE.getNode(EMFCompareRCPPlugin.PLUGIN_ID).put(LOG_FILENAME_KEY, ""); //$NON-NLS-1$
 					getDefault().log(IStatus.ERROR,
 							EMFCompareRCPMessages.getString("logging.appender.error", path, e.getMessage())); //$NON-NLS-1$
 				}

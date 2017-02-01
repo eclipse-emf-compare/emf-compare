@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptor;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
@@ -69,10 +71,9 @@ public class AdapterFactoriesPreferencePage extends PreferencePage implements IW
 	private CheckboxTableViewer adapterFactoryDescriptorViewer;
 
 	public void init(IWorkbench workbench) {
-		// Do not use InstanceScope.Instance to be compatible with Helios.
-		@SuppressWarnings("deprecation")
-		ScopedPreferenceStore store = new ScopedPreferenceStore(new InstanceScope(),
+		ScopedPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE,
 				EMFCompareRCPPlugin.PLUGIN_ID);
+		store.setSearchContexts(new IScopeContext[] {InstanceScope.INSTANCE, ConfigurationScope.INSTANCE });
 		setPreferenceStore(store);
 	}
 
@@ -109,8 +110,7 @@ public class AdapterFactoriesPreferencePage extends PreferencePage implements IW
 			adapterFactoryDescriptorViewer.setSelection(new StructuredSelection(descriptors.get(0)), true);
 		}
 
-		List<String> disabledDescriptors = EMFComparePreferences.getDisabledAdapterFacotryDescriptorIds(
-				EMFCompareRCPPlugin.getDefault().getEMFComparePreferences());
+		List<String> disabledDescriptors = EMFComparePreferences.getDisabledAdapterFactoryDescriptorIds();
 
 		initViewer(disabledDescriptors);
 	}

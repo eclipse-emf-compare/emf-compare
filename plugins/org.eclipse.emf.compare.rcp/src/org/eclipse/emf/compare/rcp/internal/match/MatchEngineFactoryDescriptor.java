@@ -16,11 +16,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine.Factory;
-import org.eclipse.emf.compare.rcp.internal.extension.IConfigurableItem;
-import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemUtil;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.LazyItemDescriptor;
-import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
-import org.osgi.service.prefs.Preferences;
 
 /**
  * Descriptor for {@link IMatchEngine.Factory}.
@@ -39,7 +35,7 @@ public class MatchEngineFactoryDescriptor extends LazyItemDescriptor<IMatchEngin
 	 * @param rank
 	 *            {@link LazyItemDescriptor#getRank()}
 	 * @param config
-	 *            {@link IConfigurableItem} element used to create this item.
+	 *            {@link IConfigurationElement} element used to create this item.
 	 * @param id
 	 *            {@link LazyItemDescriptor#getID()}
 	 */
@@ -58,11 +54,6 @@ public class MatchEngineFactoryDescriptor extends LazyItemDescriptor<IMatchEngin
 			factory = (Factory)getConfig()
 					.createExecutableExtension(MatchEngineFactoryRegistryListener.ATT_CLASS);
 			factory.setRanking(getRank());
-			if (factory instanceof IConfigurableItem) {
-				Preferences configuration = ItemUtil.getConfigurationPreferenceNode(
-						EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES, getID());
-				((IConfigurableItem)factory).setConfiguration(configuration);
-			}
 		} catch (CoreException e) {
 			Throwables.propagate(e);
 		}

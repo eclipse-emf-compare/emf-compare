@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2017 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.configuration.ui;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 import org.osgi.service.prefs.Preferences;
 
@@ -20,9 +23,8 @@ import org.osgi.service.prefs.Preferences;
  * @author <a href="mailto:arthur.daussy@obeo.fr">Arthur Daussy</a>
  */
 public abstract class AbstractConfigurationUI extends Composite {
-
-	/** {@link Preferences} holding the configuration. */
-	private final Preferences pref;
+	/** The preference store. */
+	private final IPreferenceStore store;
 
 	/**
 	 * Constructor.
@@ -31,22 +33,12 @@ public abstract class AbstractConfigurationUI extends Composite {
 	 *            Parent {@link Composite}.
 	 * @param style
 	 *            Style of this {@link Composite}
-	 * @param pref
-	 *            {@link Preferences} holding the configuration reprenseted by this composite.
+	 * @param store
+	 *            The {@link IPreferenceStore} to use for preferences, cannot be <code>null</code>
 	 */
-	public AbstractConfigurationUI(Composite parent, int style, Preferences pref) {
+	public AbstractConfigurationUI(Composite parent, int style, IPreferenceStore store) {
 		super(parent, style);
-		this.pref = pref;
-
-	}
-
-	/**
-	 * {@link AbstractConfigurationUI#pref}
-	 * 
-	 * @return
-	 */
-	protected Preferences getPreference() {
-		return pref;
+		this.store = checkNotNull(store);
 	}
 
 	/**
@@ -64,5 +56,14 @@ public abstract class AbstractConfigurationUI extends Composite {
 	 * Called to restore default preferences. This should be used to reset the configuration in the store.
 	 */
 	public abstract void resetDefault();
+
+	/**
+	 * Get the preference store used by this object.
+	 * 
+	 * @return The preference store used by this object.
+	 */
+	protected IPreferenceStore getPreferenceStore() {
+		return store;
+	}
 
 }

@@ -19,6 +19,8 @@ import com.google.common.collect.Sets.SetView;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor.Descriptor;
@@ -88,10 +90,9 @@ public class PostProcessorPreferencePage extends PreferencePage implements IWork
 	 * {@inheritDoc}
 	 */
 	public void init(IWorkbench workbench) {
-		// Do not use InstanceScope.Instance to be compatible with Helios.
-		@SuppressWarnings("deprecation")
-		ScopedPreferenceStore store = new ScopedPreferenceStore(new InstanceScope(),
+		ScopedPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE,
 				EMFCompareRCPPlugin.PLUGIN_ID);
+		store.setSearchContexts(new IScopeContext[] {InstanceScope.INSTANCE, ConfigurationScope.INSTANCE });
 		setPreferenceStore(store);
 	}
 
@@ -107,7 +108,8 @@ public class PostProcessorPreferencePage extends PreferencePage implements IWork
 		IItemRegistry<IPostProcessor.Descriptor> postProcessorRegistryDescriptor = EMFCompareRCPPlugin
 				.getDefault().getPostProcessorDescriptorRegistry();
 		Set<IItemDescriptor<Descriptor>> activesPostProcessor = ItemUtil.getActiveItems(
-				postProcessorRegistryDescriptor, EMFComparePreferences.DISABLED_POST_PROCESSOR);
+				postProcessorRegistryDescriptor, EMFCompareRCPPlugin.PLUGIN_ID,
+				EMFComparePreferences.DISABLED_POST_PROCESSOR);
 		InteractiveUIBuilder<Descriptor> postProcessorUIBuilder = new InteractiveUIBuilder<IPostProcessor.Descriptor>(
 				container, postProcessorRegistryDescriptor);
 		Set<IItemDescriptor<Descriptor>> descriptors = Sets

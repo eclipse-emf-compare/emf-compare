@@ -30,7 +30,6 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
 import org.eclipse.emf.compare.rcp.internal.tracer.TracingConstant;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
@@ -66,7 +65,6 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 /**
  * Preference page for {@link IDifferenceFilter}.
@@ -109,12 +107,7 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 	private String synchronizationBehaviorValue;
 
 	public void init(IWorkbench workbench) {
-		// Do not use InstanceScope.Instance to be compatible with Helios.
-		@SuppressWarnings("deprecation")
-		ScopedPreferenceStore store = new ScopedPreferenceStore(new InstanceScope(),
-				EMFCompareRCPUIPlugin.PLUGIN_ID);
-		setPreferenceStore(store);
-
+		setPreferenceStore(EMFCompareRCPUIPlugin.getDefault().getPreferenceStore());
 	}
 
 	@Override

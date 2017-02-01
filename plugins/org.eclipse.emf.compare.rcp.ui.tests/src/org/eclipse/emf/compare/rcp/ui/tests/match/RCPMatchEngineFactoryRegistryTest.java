@@ -17,14 +17,12 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine.Factory;
@@ -38,10 +36,14 @@ import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.eclipse.emf.compare.rcp.ui.tests.match.data.EcoreInputData;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.osgi.service.prefs.BackingStoreException;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 /**
  * Test class for {@link MatchEngineFactoryRegistryWrapper}.
@@ -53,7 +55,7 @@ public class RCPMatchEngineFactoryRegistryTest {
 
 	private IMatchEngine.Factory.Registry registryWrapper;
 
-	private IEclipsePreferences preferences;
+	private ScopedPreferenceStore preferenceStore;
 
 	/**
 	 * Creates a comparison scope from Ecore model.
@@ -68,13 +70,15 @@ public class RCPMatchEngineFactoryRegistryTest {
 
 	@Before
 	public void setUp() throws BackingStoreException {
-		preferences = EMFCompareRCPPlugin.getDefault().getEMFComparePreferences();
+		preferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, EMFCompareRCPPlugin.PLUGIN_ID);
 		registryWrapper = EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry();
 	}
 
 	@After
 	public void tearDown() throws BackingStoreException {
-		preferences.clear();
+		for (IEclipsePreferences prefs : preferenceStore.getPreferenceNodes(false)) {
+			prefs.clear();
+		}
 	}
 
 	/**
@@ -258,12 +262,12 @@ public class RCPMatchEngineFactoryRegistryTest {
 		IComparisonScope scope = createComparisonScope();
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(scope), factory3);
 
-		disableEngine(preferences, EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
+		disableEngine(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
 				Collections.singleton(factory3.getClass().getName()));
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(scope), factory2);
 		assertTrue(!registryWrapper.getMatchEngineFactories(scope).contains(factory3));
 
-		disableEngine(preferences, EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
+		disableEngine(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
 				Lists.newArrayList(factory3.getClass().getName(), factory2.getClass().getName()));
 		assertSame(registryWrapper.getHighestRankingMatchEngineFactory(scope), factory);
 		assertTrue(!registryWrapper.getMatchEngineFactories(scope).contains(factory2));
@@ -303,18 +307,16 @@ public class RCPMatchEngineFactoryRegistryTest {
 	/**
 	 * Disables engine in preferences.
 	 * 
-	 * @param preference
-	 *            {@link IEclipsePreferences}
 	 * @param key
 	 * @param toDisable
 	 *            {@link Collection} of {@link IItemDescriptor} to disable.
 	 */
-	private void disableEngine(IEclipsePreferences preference, String key, Collection<String> toDisable) {
+	private void disableEngine(String key, Collection<String> toDisable) {
 		if (toDisable != null && !toDisable.isEmpty()) {
 			String newPreferenceValue = Joiner.on(ItemUtil.PREFERENCE_DELIMITER).join(toDisable);
-			preference.put(key, newPreferenceValue);
+			preferenceStore.setValue(key, newPreferenceValue);
 		} else {
-			preference.remove(key);
+			preferenceStore.setToDefault(key);
 		}
 	}
 

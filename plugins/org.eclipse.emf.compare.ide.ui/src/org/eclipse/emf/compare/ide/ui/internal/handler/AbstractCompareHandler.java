@@ -17,7 +17,6 @@ import java.util.Iterator;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
@@ -58,12 +57,6 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 
 	protected static CompareEditorInput createCompareEditorInput(IWorkbenchPart part,
 			AdapterFactory adapterFactory, Notifier left, Notifier right, Notifier origin) {
-		return createCompareEditorInput(part, adapterFactory, left, right, origin, null);
-	}
-
-	protected static CompareEditorInput createCompareEditorInput(IWorkbenchPart part,
-			AdapterFactory adapterFactory, Notifier left, Notifier right, Notifier origin,
-			IEclipsePreferences enginePreferences) {
 		CompareEditorInput input = null;
 
 		final ICompareEditingDomain editingDomain = createEMFCompareEditingDomain(part, left, right, origin);
@@ -76,20 +69,8 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 		matchEngineFactoryRegistry.add(eObjectMatchEngineFactory);
 
 		final Builder builder = EMFCompare.builder();
-		final IEclipsePreferences preferences;
-		if (enginePreferences == null) {
-			preferences = EMFCompareRCPPlugin.getDefault().getEMFComparePreferences();
-		} else {
-			preferences = enginePreferences;
-		}
-		if (preferences != null) {
-			EMFCompareBuilderConfigurator engineProvider = new EMFCompareBuilderConfigurator(preferences,
-					matchEngineFactoryRegistry, EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
-			engineProvider.configure(builder);
-		} else {
-			builder.setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
-					.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
-		}
+		EMFCompareBuilderConfigurator engineProvider = EMFCompareBuilderConfigurator.createDefault();
+		engineProvider.configure(builder);
 		EMFCompare comparator = builder.build();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);

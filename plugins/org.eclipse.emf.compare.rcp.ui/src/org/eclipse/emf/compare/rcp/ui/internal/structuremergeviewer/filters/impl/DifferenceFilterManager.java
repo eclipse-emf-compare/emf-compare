@@ -33,7 +33,7 @@ import org.eclipse.emf.compare.rcp.internal.tracer.TracingConstant;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDeactivableDiffFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
-import org.osgi.service.prefs.Preferences;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
  * Manager of filters.
@@ -57,8 +57,8 @@ public class DifferenceFilterManager {
 	/** A map that associates the class name to their {@link IDifferenceFilter}s. */
 	private final Map<String, DifferenceFilterDefaultConfiguration> map;
 
-	/** The {@link Preferences} holding the value for filter preferences. */
-	private final Preferences preferenceStore;
+	/** The {@link IPreferenceStore} holding the value for filter preferences. */
+	private final IPreferenceStore preferenceStore;
 
 	/**
 	 * Predicate use to transform {@link DifferenceFilterDefaultConfiguration} to {@link IDifferenceFilter}.
@@ -77,9 +77,9 @@ public class DifferenceFilterManager {
 	 * Constructor.
 	 * 
 	 * @param preferenceStore
-	 *            The {@link Preferences} holding the value for filter preferences.
+	 *            The {@link IPreferenceStore} holding the value for filter preferences.
 	 */
-	public DifferenceFilterManager(Preferences preferenceStore) {
+	public DifferenceFilterManager(IPreferenceStore preferenceStore) {
 		map = Collections.synchronizedMap(new LinkedHashMap<String, DifferenceFilterDefaultConfiguration>());
 		this.preferenceStore = preferenceStore;
 	}
@@ -183,7 +183,7 @@ public class DifferenceFilterManager {
 			StringBuilder builder = new StringBuilder();
 			// Print each preferences
 			builder.append("Preference ").append(BY_DEFAULT_DISABLED_FILTER).append(":\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			String preferenceValue = preferenceStore.get(BY_DEFAULT_DISABLED_FILTER, ""); //$NON-NLS-1$
+			String preferenceValue = preferenceStore.getString(BY_DEFAULT_DISABLED_FILTER);
 			String[] groups = preferenceValue.split(ItemUtil.PREFERENCE_DELIMITER);
 			for (int rank = 0; rank < groups.length; rank++) {
 				builder.append(rank).append(". ").append(groups[rank]).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -215,7 +215,7 @@ public class DifferenceFilterManager {
 			StringBuilder builder = new StringBuilder();
 			// Print each preferences
 			builder.append("Preference ").append(INACTIVE_FILTERS_PREF_KEY).append(":\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			String preferenceValue = preferenceStore.get(INACTIVE_FILTERS_PREF_KEY, ""); //$NON-NLS-1$
+			String preferenceValue = preferenceStore.getString(INACTIVE_FILTERS_PREF_KEY);
 			String[] groups = preferenceValue.split(ItemUtil.PREFERENCE_DELIMITER);
 			for (int rank = 0; rank < groups.length; rank++) {
 				builder.append(rank).append(". ").append(groups[rank]).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -243,9 +243,9 @@ public class DifferenceFilterManager {
 	 * @return A {@link Set} of disabled by default {@link IDifferenceFilter} from preferences.
 	 */
 	private Set<IDifferenceFilter> getDisabledFilters() {
-		String diffEngineKey = preferenceStore.get(BY_DEFAULT_DISABLED_FILTER, null);
+		String diffEngineKey = preferenceStore.getString(BY_DEFAULT_DISABLED_FILTER);
 		Set<IDifferenceFilter> result = null;
-		if (diffEngineKey != null) {
+		if (diffEngineKey != null && !diffEngineKey.isEmpty()) {
 			String[] diffEngineKeys = diffEngineKey.split(ItemUtil.PREFERENCE_DELIMITER);
 			for (String nonTrimedKey : diffEngineKeys) {
 				String key = nonTrimedKey.trim();
@@ -271,9 +271,9 @@ public class DifferenceFilterManager {
 	 *         not implement {@link IDeactivableDiffFilter} cannot be deactivated).
 	 */
 	private Set<IDeactivableDiffFilter> getInactiveFilters() {
-		String diffEngineKey = preferenceStore.get(INACTIVE_FILTERS_PREF_KEY, null);
+		String diffEngineKey = preferenceStore.getString(INACTIVE_FILTERS_PREF_KEY);
 		Set<IDeactivableDiffFilter> result = null;
-		if (diffEngineKey != null) {
+		if (diffEngineKey != null && !diffEngineKey.isEmpty()) {
 			String[] diffEngineKeys = diffEngineKey.split(ItemUtil.PREFERENCE_DELIMITER);
 			for (String nonTrimedKey : diffEngineKeys) {
 				String key = nonTrimedKey.trim();
@@ -306,9 +306,9 @@ public class DifferenceFilterManager {
 			Map<String, IDifferenceFilter> toStore = Maps.filterValues(Maps.transformValues(map, TO_FILTER),
 					Predicates.in(currentValue));
 			String preferenceValue = Joiner.on(ItemUtil.PREFERENCE_DELIMITER).join(toStore.keySet());
-			preferenceStore.put(prefKey, preferenceValue);
+			preferenceStore.putValue(prefKey, preferenceValue);
 		} else {
-			preferenceStore.remove(prefKey);
+			preferenceStore.setToDefault(prefKey);
 		}
 	}
 

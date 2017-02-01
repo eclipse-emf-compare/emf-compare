@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Mathias Schaefer - preferences refactoring
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui;
 
@@ -19,6 +20,9 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
@@ -42,11 +46,12 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.impl.
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.extender.IDifferenceGroupExtender;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.framework.BundleContext;
-import org.osgi.service.prefs.Preferences;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -118,17 +123,6 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	private ContentMergeViewerCustomizationRegistry contentMergeViewerCustomizationRegistry;
 
 	/**
-	 * Instance scope for preferences.
-	 * <p>
-	 * Do not use singleton to respect Helios compatibility
-	 * </p>
-	 * 
-	 * @see org.eclipse.core.runtime.preferences.InstanceScope#INSTANCE
-	 */
-	@SuppressWarnings("deprecation")
-	private InstanceScope instanceScope = new InstanceScope();
-
-	/**
 	 * The constructor.
 	 */
 	public EMFCompareRCPUIPlugin() {
@@ -147,8 +141,8 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 
 		groupItemRegistry = new ItemRegistry<IDifferenceGroupProvider.Descriptor>();
-		DifferenceGroupManager groupManager = new DifferenceGroupManager(getEMFCompareUIPreferences(),
-				groupItemRegistry);
+		DifferenceGroupManager groupManager = new DifferenceGroupManager(groupItemRegistry,
+				getPreferenceStore());
 		groupProviderRegistry = new DifferenceGroupRegistryImpl(groupManager, groupItemRegistry);
 		groupProviderRegistryListener = new DifferenceGroupProviderExtensionRegistryListener(PLUGIN_ID,
 				GROUP_PROVIDER_PPID, getLog(), groupItemRegistry);
@@ -156,7 +150,7 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 		extensionRegistry.addListener(groupProviderRegistryListener, PLUGIN_ID + "." + GROUP_PROVIDER_PPID); //$NON-NLS-1$
 		groupProviderRegistryListener.readRegistry(extensionRegistry);
 
-		filterManager = new DifferenceFilterManager(getEMFCompareUIPreferences());
+		filterManager = new DifferenceFilterManager(getPreferenceStore());
 		filterRegistry = new DifferenceFilterRegistryImpl(filterManager);
 		filterRegistryListener = new DifferenceFilterExtensionRegistryListener(PLUGIN_ID,
 				FILTER_PROVIDER_PPID, getLog(), filterManager);
@@ -384,9 +378,13 @@ public class EMFCompareRCPUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * @return the preferences related to EMF Compare RCP UI plugin.
+	 * Provide this plug-in's preference store, which searches values in {@link InstanceScope}, then
+	 * {@link ConfigurationScope}, and then {@link DefaultScope}.
 	 */
-	public Preferences getEMFCompareUIPreferences() {
-		return instanceScope.getNode(PLUGIN_ID);
+	@Override
+	public IPreferenceStore getPreferenceStore() {
+		ScopedPreferenceStore store = (ScopedPreferenceStore)super.getPreferenceStore();
+		store.setSearchContexts(new IScopeContext[] {InstanceScope.INSTANCE, ConfigurationScope.INSTANCE });
+		return store;
 	}
 }

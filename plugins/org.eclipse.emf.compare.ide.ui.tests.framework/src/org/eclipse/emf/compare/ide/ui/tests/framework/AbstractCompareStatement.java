@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Obeo.
+ * Copyright (c) 2016 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,10 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Mathias Schaefer - preferences refactoring
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.framework;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -20,12 +20,13 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 
@@ -65,6 +66,24 @@ public abstract class AbstractCompareStatement extends Statement {
 	private static final String CONFLICT_EXTENSION_POINT_ID = EMFCompareRCPPlugin.PLUGIN_ID + ID_SEPARATOR
 			+ EMFCompareRCPPlugin.CONFLICT_DETECTOR_PPID;
 
+	/** The default disabled match engines. */
+	private static final List<String> DEFAULT_DISABLED_MATCH_ENGINES = Collections.emptyList();
+
+	/** The default diff engine. */
+	private static final String DEFAULT_DIFF_ENGINE = "org.eclipse.emf.compare.rcp.default.diffEngine"; //$NON-NLS-1$
+
+	/** The default eq engine. */
+	private static final String DEFAULT_EQ_ENGINE = "org.eclipse.emf.compare.rcp.default.equiEngine"; //$NON-NLS-1$
+
+	/** The default req engine. */
+	private static final String DEFAULT_REQ_ENGINE = "org.eclipse.emf.compare.rcp.default.reqEngine"; //$NON-NLS-1$
+
+	/** The default conflict detector. */
+	private static final String DEFAULT_CONFLICT_DETECTOR = "org.eclipse.emf.compare.rcp.fast.conflictDetector"; //$NON-NLS-1$
+
+	/** The default disabled post-processors. */
+	private static final List<String> DEFAULT_DISABLED_POST_PROCESSORS = Collections.emptyList();
+
 	/** The test class. */
 	protected final Object testObject;
 
@@ -72,8 +91,8 @@ public abstract class AbstractCompareStatement extends Statement {
 	protected final FrameworkMethod test;
 
 	/** The EMFCompare preferences. */
-	private final IEclipsePreferences emfComparePreferences = EMFCompareRCPPlugin.getDefault()
-			.getEMFComparePreferences();
+	private final IPreferenceStore rcpPreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE,
+			EMFCompareRCPPlugin.PLUGIN_ID);
 
 	/** The EMFCompare UI preferences. */
 	private final IPreferenceStore uiPreferenceStore = EMFCompareIDEUIPlugin.getDefault()
@@ -103,24 +122,6 @@ public abstract class AbstractCompareStatement extends Statement {
 	/** The default resolution strategy. */
 	private String defaultResolutionStrategy = "WORKSPACE"; //$NON-NLS-1$
 
-	/** The default disabled match engines. */
-	private List<String> defaultDisabledMatchEngines = new ArrayList<String>();
-
-	/** The default diff engine. */
-	private String defaultDiffEngine = "org.eclipse.emf.compare.rcp.default.diffEngine"; //$NON-NLS-1$
-
-	/** The default eq engine. */
-	private String defaultEqEngine = "org.eclipse.emf.compare.rcp.default.equiEngine"; //$NON-NLS-1$
-
-	/** The default req engine. */
-	private String defaultReqEngine = "org.eclipse.emf.compare.rcp.default.reqEngine"; //$NON-NLS-1$
-
-	/** The default conflict detector. */
-	private String defaultConflictDetector = "org.eclipse.emf.compare.rcp.fast.conflictDetector"; //$NON-NLS-1$
-
-	/** The default disabled post-processors. */
-	private List<String> defaultDisabledPostProcessors = new ArrayList<String>();
-
 	/**
 	 * Constructor for the classic (no Git) comparison statement.
 	 * 
@@ -144,6 +145,7 @@ public abstract class AbstractCompareStatement extends Statement {
 		this.reqEngine = configuration.getReqEngine();
 		this.conflictDetector = configuration.getConflictDetector();
 		this.disabledPostProcessors = configuration.getDisabledPostProcessors();
+		setEMFComparePreferencesDefaults();
 	}
 
 	/**
@@ -164,19 +166,32 @@ public abstract class AbstractCompareStatement extends Statement {
 	}
 
 	/**
-	 * Restore preferences as they were before the test.
+	 * Set the default values to use for all test-relevant preference settings.
+	 */
+	private void setEMFComparePreferencesDefaults() {
+		uiPreferenceStore.setDefault(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE,
+				defaultResolutionStrategy);
+		rcpPreferenceStore.setDefault(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
+				join(DEFAULT_DISABLED_MATCH_ENGINES, PREFERENCES_SEPARATOR));
+		rcpPreferenceStore.setDefault(EMFComparePreferences.DIFF_ENGINES, DEFAULT_DIFF_ENGINE);
+		rcpPreferenceStore.setDefault(EMFComparePreferences.EQUI_ENGINES, DEFAULT_EQ_ENGINE);
+		rcpPreferenceStore.setDefault(EMFComparePreferences.REQ_ENGINES, DEFAULT_REQ_ENGINE);
+		rcpPreferenceStore.setDefault(EMFComparePreferences.CONFLICTS_DETECTOR, DEFAULT_CONFLICT_DETECTOR);
+		rcpPreferenceStore.setDefault(EMFComparePreferences.DISABLED_POST_PROCESSOR,
+				join(DEFAULT_DISABLED_POST_PROCESSORS, PREFERENCES_SEPARATOR));
+	}
+
+	/**
+	 * Restore preferences as if they were unset by the user.
 	 */
 	protected void restoreEMFComparePreferences() {
-		uiPreferenceStore.setValue(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE,
-				defaultResolutionStrategy);
-		emfComparePreferences.put(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
-				join(defaultDisabledMatchEngines, PREFERENCES_SEPARATOR));
-		emfComparePreferences.put(EMFComparePreferences.DIFF_ENGINES, defaultDiffEngine);
-		emfComparePreferences.put(EMFComparePreferences.EQUI_ENGINES, defaultEqEngine);
-		emfComparePreferences.put(EMFComparePreferences.REQ_ENGINES, defaultReqEngine);
-		emfComparePreferences.put(EMFComparePreferences.CONFLICTS_DETECTOR, defaultConflictDetector);
-		emfComparePreferences.put(EMFComparePreferences.DISABLED_POST_PROCESSOR,
-				join(defaultDisabledPostProcessors, PREFERENCES_SEPARATOR));
+		uiPreferenceStore.setToDefault(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE);
+		rcpPreferenceStore.setToDefault(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES);
+		rcpPreferenceStore.setToDefault(EMFComparePreferences.DIFF_ENGINES);
+		rcpPreferenceStore.setToDefault(EMFComparePreferences.EQUI_ENGINES);
+		rcpPreferenceStore.setToDefault(EMFComparePreferences.REQ_ENGINES);
+		rcpPreferenceStore.setToDefault(EMFComparePreferences.CONFLICTS_DETECTOR);
+		rcpPreferenceStore.setToDefault(EMFComparePreferences.DISABLED_POST_PROCESSOR);
 	}
 
 	/**
@@ -206,19 +221,11 @@ public abstract class AbstractCompareStatement extends Statement {
 	 * Set the match engine preference.
 	 */
 	private void setMatchPreference() {
-		String disabMatchEngine = emfComparePreferences.get(
-				EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
-				join(defaultDisabledMatchEngines, PREFERENCES_SEPARATOR));
-		defaultDisabledMatchEngines.clear();
-		for (String matchEngine : disabMatchEngine.split(PREFERENCES_SEPARATOR)) {
-			defaultDisabledMatchEngines.add(matchEngine);
-		}
-
 		List<String> matchEngineNames = Collections.emptyList();
 		for (Class<?> matchEngine : disabledMatchEngines) {
 			matchEngineNames.add(matchEngine.getCanonicalName());
 		}
-		emfComparePreferences.put(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
+		rcpPreferenceStore.setValue(EMFComparePreferences.MATCH_ENGINE_DISABLE_ENGINES,
 				join(matchEngineNames, PREFERENCES_SEPARATOR));
 	}
 
@@ -229,7 +236,7 @@ public abstract class AbstractCompareStatement extends Statement {
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 		IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint(DIFF_EXTENSION_POINT_ID);
 		IExtension[] extensions = extensionPoint.getExtensions();
-		String diffEngineId = defaultDiffEngine;
+		String diffEngineId = null;
 		for (IExtension iExtension : extensions) {
 			for (IConfigurationElement iConfig : iExtension.getConfigurationElements()) {
 				if (iConfig.getAttribute(EXTENSION_POINT_CLASS_SELECTOR)
@@ -239,9 +246,9 @@ public abstract class AbstractCompareStatement extends Statement {
 				}
 			}
 		}
-
-		defaultDiffEngine = emfComparePreferences.get(EMFComparePreferences.DIFF_ENGINES, defaultDiffEngine);
-		emfComparePreferences.put(EMFComparePreferences.DIFF_ENGINES, diffEngineId);
+		if (diffEngineId != null) {
+			rcpPreferenceStore.setValue(EMFComparePreferences.DIFF_ENGINES, diffEngineId);
+		}
 	}
 
 	/**
@@ -251,7 +258,7 @@ public abstract class AbstractCompareStatement extends Statement {
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 		IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint(EQ_EXTENSION_POINT_ID);
 		IExtension[] extensions = extensionPoint.getExtensions();
-		String eqEngineId = defaultEqEngine;
+		String eqEngineId = null;
 		for (IExtension iExtension : extensions) {
 			for (IConfigurationElement iConfig : iExtension.getConfigurationElements()) {
 				if (iConfig.getAttribute(EXTENSION_POINT_CLASS_SELECTOR)
@@ -261,9 +268,9 @@ public abstract class AbstractCompareStatement extends Statement {
 				}
 			}
 		}
-
-		defaultEqEngine = emfComparePreferences.get(EMFComparePreferences.EQUI_ENGINES, defaultEqEngine);
-		emfComparePreferences.put(EMFComparePreferences.EQUI_ENGINES, eqEngineId);
+		if (eqEngineId != null) {
+			rcpPreferenceStore.setValue(EMFComparePreferences.EQUI_ENGINES, eqEngineId);
+		}
 	}
 
 	/**
@@ -273,7 +280,7 @@ public abstract class AbstractCompareStatement extends Statement {
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 		IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint(REQ_EXTENSION_POINT_ID);
 		IExtension[] extensions = extensionPoint.getExtensions();
-		String reqEngineId = defaultReqEngine;
+		String reqEngineId = null;
 		for (IExtension iExtension : extensions) {
 			for (IConfigurationElement iConfig : iExtension.getConfigurationElements()) {
 				if (iConfig.getAttribute(EXTENSION_POINT_CLASS_SELECTOR)
@@ -283,9 +290,9 @@ public abstract class AbstractCompareStatement extends Statement {
 				}
 			}
 		}
-
-		defaultReqEngine = emfComparePreferences.get(EMFComparePreferences.REQ_ENGINES, defaultReqEngine);
-		emfComparePreferences.put(EMFComparePreferences.REQ_ENGINES, reqEngineId);
+		if (reqEngineId != null) {
+			rcpPreferenceStore.setValue(EMFComparePreferences.REQ_ENGINES, reqEngineId);
+		}
 	}
 
 	/**
@@ -295,7 +302,7 @@ public abstract class AbstractCompareStatement extends Statement {
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 		IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint(CONFLICT_EXTENSION_POINT_ID);
 		IExtension[] extensions = extensionPoint.getExtensions();
-		String conflictDetectorId = defaultConflictDetector;
+		String conflictDetectorId = null;
 		for (IExtension iExtension : extensions) {
 			for (IConfigurationElement iConfig : iExtension.getConfigurationElements()) {
 				if (iConfig.getAttribute(EXTENSION_POINT_CLASS_SELECTOR)
@@ -305,28 +312,20 @@ public abstract class AbstractCompareStatement extends Statement {
 				}
 			}
 		}
-
-		defaultConflictDetector = emfComparePreferences.get(EMFComparePreferences.CONFLICTS_DETECTOR,
-				defaultConflictDetector);
-		emfComparePreferences.put(EMFComparePreferences.CONFLICTS_DETECTOR, conflictDetectorId);
+		if (conflictDetectorId != null) {
+			rcpPreferenceStore.setValue(EMFComparePreferences.CONFLICTS_DETECTOR, conflictDetectorId);
+		}
 	}
 
 	/**
 	 * Set the post-processors preference.
 	 */
 	private void setPostProcessorPreference() {
-		String disabPostProcessors = emfComparePreferences.get(EMFComparePreferences.DISABLED_POST_PROCESSOR,
-				join(defaultDisabledPostProcessors, PREFERENCES_SEPARATOR));
-		defaultDisabledPostProcessors.clear();
-		for (String postProcessor : disabPostProcessors.split(PREFERENCES_SEPARATOR)) {
-			defaultDisabledPostProcessors.add(postProcessor);
-		}
-
 		List<String> postProcessorNames = Collections.emptyList();
 		for (Class<?> postProcessor : disabledPostProcessors) {
 			postProcessorNames.add(postProcessor.getCanonicalName());
 		}
-		emfComparePreferences.put(EMFComparePreferences.DISABLED_POST_PROCESSOR,
+		rcpPreferenceStore.setValue(EMFComparePreferences.DISABLED_POST_PROCESSOR,
 				join(postProcessorNames, PREFERENCES_SEPARATOR));
 	}
 

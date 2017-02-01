@@ -28,7 +28,6 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notifier;
@@ -183,16 +182,8 @@ public class EMFComparisonSourceActionHandler extends AbstractHandler {
 		final EMFCompareConfiguration configuration = new EMFCompareConfiguration(new CompareConfiguration());
 
 		final Builder builder = EMFCompare.builder();
-		final IEclipsePreferences preferences = EMFCompareRCPPlugin.getDefault().getEMFComparePreferences();
 
-		final EMFCompareBuilderConfigurator engineProvider;
-		if (preferences != null) {
-			engineProvider = new EMFCompareBuilderConfigurator(preferences,
-					EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry(),
-					EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry());
-		} else {
-			engineProvider = EMFCompareBuilderConfigurator.createDefault();
-		}
+		final EMFCompareBuilderConfigurator engineProvider = EMFCompareBuilderConfigurator.createDefault();
 		engineProvider.configure(builder);
 		final EMFCompare comparator = builder.build();
 

@@ -31,7 +31,7 @@ import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.ComparisonType;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider.Descriptor;
-import org.osgi.service.prefs.Preferences;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
  * This manager can be used to modify EMF Compare UI behavior regarding groups.
@@ -78,25 +78,24 @@ public class DifferenceGroupManager {
 	/** Ordered list of groups for three way comparison. */
 	private static final String THREE_WAY_GROUP_RANKING = "org.eclipse.emf.compare.rcp.ui.groups.3way.ranking"; //$NON-NLS-1$
 
-	/** Preferences holding preference values. */
-	private final Preferences preferences;
-
 	/** Registry of {@link IDifferenceGroupProvider.Descriptor}. */
 	private final IItemRegistry<IDifferenceGroupProvider.Descriptor> registry;
+
+	/** The {@link IPreferenceStore} holding the value for group preferences. */
+	private final IPreferenceStore preferenceStore;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param preferences
-	 *            Preferences holding preference values.
 	 * @param registry
 	 *            Registry of {@link IDifferenceGroupProvider.Descriptor}.
+	 * @param preferenceStore
+	 *            The {@link IPreferenceStore} holding the value for group preferences.
 	 */
-	public DifferenceGroupManager(Preferences preferences,
-			IItemRegistry<IDifferenceGroupProvider.Descriptor> registry) {
-		super();
-		this.preferences = preferences;
+	public DifferenceGroupManager(IItemRegistry<IDifferenceGroupProvider.Descriptor> registry,
+			IPreferenceStore preferenceStore) {
 		this.registry = registry;
+		this.preferenceStore = preferenceStore;
 	}
 
 	/**
@@ -178,7 +177,7 @@ public class DifferenceGroupManager {
 	private <T> List<IItemDescriptor<T>> getOrderedItems(List<IItemDescriptor<T>> orderedDefaultDescriptor,
 			IItemRegistry<T> descriptorRegistry, String orderedItemPreferenceKey) {
 		List<IItemDescriptor<T>> itemsDescriptor = ItemUtil.getItemsDescriptor(descriptorRegistry,
-				orderedItemPreferenceKey, preferences);
+				EMFCompareRCPUIPlugin.PLUGIN_ID, orderedItemPreferenceKey);
 
 		if (itemsDescriptor == null) {
 			itemsDescriptor = orderedDefaultDescriptor;
@@ -218,7 +217,7 @@ public class DifferenceGroupManager {
 			StringBuilder builder = new StringBuilder();
 			// Print each preferences
 			builder.append("Preference ").append(getGroupPreferenceKey(isThreeWay)).append(":\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			String preferenceValue = preferences.get(getGroupPreferenceKey(isThreeWay), ""); //$NON-NLS-1$
+			String preferenceValue = preferenceStore.getString(getGroupPreferenceKey(isThreeWay));
 			String[] groups = preferenceValue.split(ItemUtil.PREFERENCE_DELIMITER);
 			for (int rank = 0; rank < groups.length; rank++) {
 				builder.append(rank).append(". ").append(groups[rank]).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -250,9 +249,9 @@ public class DifferenceGroupManager {
 						}
 					});
 			String preferenceValue = Joiner.on(ItemUtil.PREFERENCE_DELIMITER).join(currentIDs);
-			preferences.put(preferenceKey, preferenceValue);
+			preferenceStore.putValue(preferenceKey, preferenceValue);
 		} else {
-			preferences.remove(preferenceKey);
+			preferenceStore.setToDefault(preferenceKey);
 		}
 	}
 
