@@ -112,13 +112,13 @@ public class TestBug470503 extends AbstractTestUITreeNodeItemProviderAdapter {
 		action.updateSelection(new StructuredSelection(titledItemESuperTypesDelete));
 		setCascadingDifferencesFilterEnabled(cascadingFilter);
 		action.run();
-		assertEquals(DifferenceState.MERGED, titledItemESuperTypesDeleteDiff.getState());
+		assertEquals(DifferenceState.DISCARDED, titledItemESuperTypesDeleteDiff.getState());
 
 		Diff titledItemEClassifiersDeleteDiff = (Diff)titledItemEClassifiersDelete.getData();
-		assertEquals(DifferenceState.MERGED, titledItemEClassifiersDeleteDiff.getState());
+		assertEquals(DifferenceState.DISCARDED, titledItemEClassifiersDeleteDiff.getState());
 
 		Diff titleESFDeleteDiff = (Diff)titleESFDelete.getData();
-		assertEquals(DifferenceState.MERGED, titleESFDeleteDiff.getState());
+		assertEquals(DifferenceState.DISCARDED, titleESFDeleteDiff.getState());
 	}
 
 	@Test
@@ -139,10 +139,10 @@ public class TestBug470503 extends AbstractTestUITreeNodeItemProviderAdapter {
 		action.updateSelection(new StructuredSelection(titledItemESuperTypesDelete));
 		setCascadingDifferencesFilterEnabled(cascadingFilter);
 		action.run();
-		assertEquals(DifferenceState.MERGED, titledItemESuperTypesDeleteDiff.getState());
+		assertEquals(DifferenceState.DISCARDED, titledItemESuperTypesDeleteDiff.getState());
 
 		Diff titledItemEClassifiersDeleteDiff = (Diff)titledItemEClassifiersDelete.getData();
-		assertEquals(DifferenceState.MERGED, titledItemEClassifiersDeleteDiff.getState());
+		assertEquals(DifferenceState.DISCARDED, titledItemEClassifiersDeleteDiff.getState());
 
 		Diff titleESFDeleteDiff = (Diff)titleESFDelete.getData();
 		assertEquals(DifferenceState.UNRESOLVED, titleESFDeleteDiff.getState());

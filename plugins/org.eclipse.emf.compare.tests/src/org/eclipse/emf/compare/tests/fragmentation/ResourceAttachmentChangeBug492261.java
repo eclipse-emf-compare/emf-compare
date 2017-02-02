@@ -178,8 +178,8 @@ public class ResourceAttachmentChangeBug492261 {
 		} else {
 			batchMerger.copyAllLeftToRight(Arrays.asList(rac), new BasicMonitor());
 		}
-		assertEquals(DifferenceState.MERGED, rac.getState());
-		assertEquals(DifferenceState.MERGED, container.getState());
+		assertEquals(DifferenceState.DISCARDED, rac.getState());
+		assertEquals(DifferenceState.DISCARDED, container.getState());
 		assertEquals(DifferenceState.UNRESOLVED, innerNode.getState());
 
 		if (fragmentedOnLeft) {
@@ -187,9 +187,9 @@ public class ResourceAttachmentChangeBug492261 {
 		} else {
 			batchMerger.copyAllLeftToRight(Arrays.asList(innerNode), new BasicMonitor());
 		}
-		assertEquals(DifferenceState.MERGED, rac.getState());
-		assertEquals(DifferenceState.MERGED, container.getState());
-		assertEquals(DifferenceState.MERGED, innerNode.getState());
+		assertEquals(DifferenceState.DISCARDED, rac.getState());
+		assertEquals(DifferenceState.DISCARDED, container.getState());
+		assertEquals(DifferenceState.DISCARDED, innerNode.getState());
 
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertEquals(0, comparison.getDifferences().size());
@@ -229,7 +229,7 @@ public class ResourceAttachmentChangeBug492261 {
 		} else {
 			batchMerger.copyAllLeftToRight(Arrays.asList(rac), new BasicMonitor());
 		}
-		assertEquals(DifferenceState.MERGED, rac.getState());
+		assertEquals(DifferenceState.DISCARDED, rac.getState());
 		assertEquals(DifferenceState.UNRESOLVED, container.getState());
 		assertEquals(DifferenceState.UNRESOLVED, innerNode.getState());
 
@@ -238,9 +238,9 @@ public class ResourceAttachmentChangeBug492261 {
 		} else {
 			batchMerger.copyAllLeftToRight(Arrays.asList(container), new BasicMonitor());
 		}
-		assertEquals(DifferenceState.MERGED, rac.getState());
-		assertEquals(DifferenceState.MERGED, container.getState());
-		assertEquals(DifferenceState.MERGED, innerNode.getState());
+		assertEquals(DifferenceState.DISCARDED, rac.getState());
+		assertEquals(DifferenceState.DISCARDED, container.getState());
+		assertEquals(DifferenceState.DISCARDED, innerNode.getState());
 
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertEquals(0, comparison.getDifferences().size());

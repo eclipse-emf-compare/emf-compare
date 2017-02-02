@@ -10,6 +10,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions;
 
+import static org.eclipse.emf.compare.DifferenceState.DISCARDED;
+import static org.eclipse.emf.compare.DifferenceState.MERGED;
+import static org.eclipse.emf.compare.DifferenceState.UNRESOLVED;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.ACCEPT;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.REJECT;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.getMergeMode;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import com.google.common.collect.Lists;
 
 import java.io.IOException;
@@ -17,11 +27,10 @@ import java.util.ArrayList;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeRunnableImpl;
 import org.eclipse.emf.compare.internal.merge.IMergeData;
-import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.internal.merge.MergeDataImpl;
 import org.eclipse.emf.compare.internal.spec.ReferenceChangeSpec;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
@@ -34,7 +43,6 @@ import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -85,6 +93,10 @@ public class TestBug434827 {
 		Resource origin = inputData.getResource("origin.nodes"); //$NON-NLS-1$
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		comparison = EMFCompare.builder().build().compare(scope);
+
+		// Add a IMergeData to handle status decorations on Diffs
+		comparison.eAdapters().add(new MergeDataImpl(true, false));
+
 		mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 
 		// Keeps track of the 3 differences
@@ -113,28 +125,28 @@ public class TestBug434827 {
 	@Test
 	public void testMergeDataAfterAcceptingDeletion() {
 
-		Assert.assertNotNull(subDiff);
-		Assert.assertNotNull(deletionDiff);
-		Assert.assertNotNull(oppositeDiff);
+		assertNotNull(subDiff);
+		assertNotNull(deletionDiff);
+		assertNotNull(oppositeDiff);
 
 		// Mocks the UI behavior of UI if the deleting diff is selected with cascading diff filter active.
 		// The subDiff is not added in this list because it is not considered as a cascading diff.
 		ArrayList<Diff> uiDiff = Lists.newArrayList(deletionDiff);
 
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, MergeMode.ACCEPT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT);
 		mergeRunnable.merge(uiDiff, false, mergerRegistry);
 
 		Node rootNode = (Node)left.getContents().get(0);
 		// Checks that ReferencedNode has been deleted.
-		Assert.assertEquals(0, rootNode.getContainmentRef1().get(0).getContainmentRef1().size());
+		assertEquals(0, rootNode.getContainmentRef1().get(0).getContainmentRef1().size());
 
 		// Assert merge data
-		Assert.assertEquals(DifferenceState.MERGED, deletionDiff.getState());
-		Assert.assertEquals(DifferenceState.MERGED, subDiff.getState());
-		Assert.assertEquals(DifferenceState.MERGED, oppositeDiff.getState());
-		Assert.assertEquals(MergeMode.ACCEPT, getMergeData(deletionDiff).getMergeMode());
-		Assert.assertEquals(MergeMode.REJECT, getMergeData(subDiff).getMergeMode());
-		Assert.assertEquals(MergeMode.REJECT, getMergeData(oppositeDiff).getMergeMode());
+		assertEquals(MERGED, deletionDiff.getState());
+		assertEquals(DISCARDED, subDiff.getState());
+		assertEquals(DISCARDED, oppositeDiff.getState());
+		assertEquals(ACCEPT, getMergeMode(deletionDiff, true, false));
+		assertEquals(REJECT, getMergeMode(subDiff, true, false));
+		assertEquals(REJECT, getMergeMode(oppositeDiff, true, false));
 
 	}
 
@@ -148,36 +160,36 @@ public class TestBug434827 {
 	@Test
 	public void testMergeDataAfterRejectingDeletion() {
 
-		Assert.assertNotNull(subDiff);
-		Assert.assertNotNull(deletionDiff);
-		Assert.assertNotNull(oppositeDiff);
+		assertNotNull(subDiff);
+		assertNotNull(deletionDiff);
+		assertNotNull(oppositeDiff);
 
 		// Mocks the UI behavior of UI if the deleting diff is selected with cascading diff filter active.
 		// The subDiff is not added in this list because it is not considered as a cascading diff.
 		ArrayList<Diff> uiDiff = Lists.newArrayList(deletionDiff);
 
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, MergeMode.REJECT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, REJECT);
 		mergeRunnable.merge(uiDiff, false, mergerRegistry);
 
 		Node rootNode = (Node)left.getContents().get(0);
 		// Checks that ReferenceNode node has not been deleted.
-		Assert.assertEquals(1, rootNode.getContainmentRef1().get(0).getContainmentRef1().size());
+		assertEquals(1, rootNode.getContainmentRef1().get(0).getContainmentRef1().size());
 		NodeOppositeRefOneToOne holdingRefNode = (NodeOppositeRefOneToOne)rootNode.getContainmentRef1()
 				.get(1);
 		NodeOppositeRefOneToOne referencedNode = (NodeOppositeRefOneToOne)rootNode.getContainmentRef1().get(0)
 				.getContainmentRef1().get(0);
 		// Checks that the opposite reference has been set.
-		Assert.assertEquals(holdingRefNode, referencedNode.getSource());
-		Assert.assertEquals(referencedNode, holdingRefNode.getDestination());
+		assertEquals(holdingRefNode, referencedNode.getSource());
+		assertEquals(referencedNode, holdingRefNode.getDestination());
 
 		// Assert merge data
-		Assert.assertEquals(DifferenceState.MERGED, deletionDiff.getState());
-		Assert.assertEquals(MergeMode.REJECT, getMergeData(deletionDiff).getMergeMode());
+		assertEquals(DISCARDED, deletionDiff.getState());
+		assertEquals(REJECT, getMergeMode(deletionDiff, true, false));
 		// The two differences should be Unresolved.
-		Assert.assertNull(getMergeData(subDiff));
-		Assert.assertNull(getMergeData(oppositeDiff));
-		Assert.assertEquals(DifferenceState.UNRESOLVED, subDiff.getState());
-		Assert.assertEquals(DifferenceState.UNRESOLVED, oppositeDiff.getState());
+		assertNull(getMergeData(subDiff));
+		assertNull(getMergeData(oppositeDiff));
+		assertEquals(UNRESOLVED, subDiff.getState());
+		assertEquals(UNRESOLVED, oppositeDiff.getState());
 	}
 
 	private IMergeData getMergeData(Diff diff) {

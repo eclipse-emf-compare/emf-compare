@@ -14,6 +14,9 @@ package org.eclipse.emf.compare.ide.ui.tests.command;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.size;
+import static org.eclipse.emf.compare.DifferenceState.DISCARDED;
+import static org.eclipse.emf.compare.DifferenceState.MERGED;
+import static org.eclipse.emf.compare.DifferenceState.UNRESOLVED;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
@@ -30,7 +33,6 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.command.impl.MergeAllNonConflictingCommand;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
@@ -92,20 +94,20 @@ public class MergeAllCommandTests {
 		EList<Diff> differencesBefore = comparison.getDifferences();
 		// Test state of differences before command
 		// 3 Left Delete differences
-		Iterable<Diff> leftDelete = filter(differencesBefore, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> leftDelete = filter(differencesBefore,
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.DELETE), hasState(UNRESOLVED)));
 		assertEquals(3, size(leftDelete));
 		// 3 Right Delete differences
-		Iterable<Diff> rightDelete = filter(differencesBefore, and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> rightDelete = filter(differencesBefore,
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.DELETE), hasState(UNRESOLVED)));
 		assertEquals(3, size(rightDelete));
 		// 3 Left Add differences
-		Iterable<Diff> leftAdd = filter(differencesBefore, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.ADD), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> leftAdd = filter(differencesBefore,
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), hasState(UNRESOLVED)));
 		assertEquals(3, size(leftAdd));
 		// 3 Right Add differences
-		Iterable<Diff> rightAdd = filter(differencesBefore, and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.ADD), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> rightAdd = filter(differencesBefore,
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), hasState(UNRESOLVED)));
 		assertEquals(3, size(rightAdd));
 
 		// Execute command
@@ -115,19 +117,19 @@ public class MergeAllCommandTests {
 		// Test state of differences before command
 		// 3 Left Delete differences merged
 		leftDelete = filter(differencesAfter, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.MERGED)));
+				ofKind(DifferenceKind.DELETE), hasState(MERGED, DISCARDED)));
 		assertEquals(3, size(leftDelete));
 		// 0 Right Delete differences merged
 		rightDelete = filter(differencesAfter, and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.MERGED)));
+				ofKind(DifferenceKind.DELETE), hasState(MERGED, DISCARDED)));
 		assertEquals(0, size(rightDelete));
 		// 3 Left Add differences merged
 		leftAdd = filter(differencesAfter, and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD),
-				hasState(DifferenceState.MERGED)));
+				hasState(MERGED, DISCARDED)));
 		assertEquals(3, size(leftAdd));
 		// 0 Right Add differences merged
 		rightAdd = filter(differencesAfter, and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
-				hasState(DifferenceState.MERGED)));
+				hasState(MERGED, DISCARDED)));
 		assertEquals(0, size(rightAdd));
 
 		command.dispose();
@@ -161,20 +163,20 @@ public class MergeAllCommandTests {
 		EList<Diff> differencesBefore = comparison.getDifferences();
 		// Test state of differences before command
 		// 3 Left Delete differences
-		Iterable<Diff> leftDelete = filter(differencesBefore, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> leftDelete = filter(differencesBefore,
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.DELETE), hasState(UNRESOLVED)));
 		assertEquals(3, size(leftDelete));
 		// 3 Right Delete differences
-		Iterable<Diff> rightDelete = filter(differencesBefore, and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> rightDelete = filter(differencesBefore,
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.DELETE), hasState(UNRESOLVED)));
 		assertEquals(3, size(rightDelete));
 		// 3 Left Add differences
-		Iterable<Diff> leftAdd = filter(differencesBefore, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.ADD), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> leftAdd = filter(differencesBefore,
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), hasState(UNRESOLVED)));
 		assertEquals(3, size(leftAdd));
 		// 3 Right Add differences
-		Iterable<Diff> rightAdd = filter(differencesBefore, and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.ADD), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> rightAdd = filter(differencesBefore,
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), hasState(UNRESOLVED)));
 		assertEquals(3, size(rightAdd));
 
 		// Execute command
@@ -184,19 +186,19 @@ public class MergeAllCommandTests {
 		// Test state of differences after command
 		// 0 Left Delete differences merged
 		leftDelete = filter(differencesAfter, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.MERGED)));
+				ofKind(DifferenceKind.DELETE), hasState(MERGED, DISCARDED)));
 		assertEquals(0, size(leftDelete));
 		// 3 Right Delete differences merged
 		rightDelete = filter(differencesAfter, and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.MERGED)));
+				ofKind(DifferenceKind.DELETE), hasState(MERGED, DISCARDED)));
 		assertEquals(3, size(rightDelete));
 		// 0 Left Add differences merged
 		leftAdd = filter(differencesAfter, and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD),
-				hasState(DifferenceState.MERGED)));
+				hasState(MERGED, DISCARDED)));
 		assertEquals(0, size(leftAdd));
 		// 3 Right Add differences merged
 		rightAdd = filter(differencesAfter, and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
-				hasState(DifferenceState.MERGED)));
+				hasState(MERGED, DISCARDED)));
 		assertEquals(3, size(rightAdd));
 
 		command.dispose();
@@ -230,20 +232,20 @@ public class MergeAllCommandTests {
 		EList<Diff> differencesBefore = comparison.getDifferences();
 		// Test state of differences before command
 		// 3 Left Delete differences
-		Iterable<Diff> leftDelete = filter(differencesBefore, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> leftDelete = filter(differencesBefore,
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.DELETE), hasState(UNRESOLVED)));
 		assertEquals(3, size(leftDelete));
 		// 3 Right Delete differences
-		Iterable<Diff> rightDelete = filter(differencesBefore, and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> rightDelete = filter(differencesBefore,
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.DELETE), hasState(UNRESOLVED)));
 		assertEquals(3, size(rightDelete));
 		// 3 Left Add differences
-		Iterable<Diff> leftAdd = filter(differencesBefore, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.ADD), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> leftAdd = filter(differencesBefore,
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), hasState(UNRESOLVED)));
 		assertEquals(3, size(leftAdd));
 		// 3 Right Add differences
-		Iterable<Diff> rightAdd = filter(differencesBefore, and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.ADD), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> rightAdd = filter(differencesBefore,
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), hasState(UNRESOLVED)));
 		assertEquals(3, size(rightAdd));
 
 		// Execute command
@@ -253,19 +255,19 @@ public class MergeAllCommandTests {
 		// Test state of differences after command
 		// 3 Left Delete differences merged
 		leftDelete = filter(differencesAfter, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.MERGED)));
+				ofKind(DifferenceKind.DELETE), hasState(MERGED, DISCARDED)));
 		assertEquals(3, size(leftDelete));
 		// 3 Right Delete differences merged
 		rightDelete = filter(differencesAfter, and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.MERGED)));
+				ofKind(DifferenceKind.DELETE), hasState(MERGED, DISCARDED)));
 		assertEquals(3, size(rightDelete));
 		// 3 Left Add differences merged
 		leftAdd = filter(differencesAfter, and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD),
-				hasState(DifferenceState.MERGED)));
+				hasState(MERGED, DISCARDED)));
 		assertEquals(3, size(leftAdd));
 		// 3 Right Add differences merged
 		rightAdd = filter(differencesAfter, and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
-				hasState(DifferenceState.MERGED)));
+				hasState(MERGED, DISCARDED)));
 		assertEquals(3, size(rightAdd));
 
 		command.dispose();
@@ -299,20 +301,20 @@ public class MergeAllCommandTests {
 		EList<Diff> differencesBefore = comparison.getDifferences();
 		// Test state of differences before command
 		// 3 Left Delete differences
-		Iterable<Diff> leftDelete = filter(differencesBefore, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> leftDelete = filter(differencesBefore,
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.DELETE), hasState(UNRESOLVED)));
 		assertEquals(3, size(leftDelete));
 		// 3 Right Delete differences
-		Iterable<Diff> rightDelete = filter(differencesBefore, and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> rightDelete = filter(differencesBefore,
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.DELETE), hasState(UNRESOLVED)));
 		assertEquals(3, size(rightDelete));
 		// 3 Left Add differences
-		Iterable<Diff> leftAdd = filter(differencesBefore, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.ADD), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> leftAdd = filter(differencesBefore,
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), hasState(UNRESOLVED)));
 		assertEquals(3, size(leftAdd));
 		// 3 Right Add differences
-		Iterable<Diff> rightAdd = filter(differencesBefore, and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.ADD), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> rightAdd = filter(differencesBefore,
+				and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD), hasState(UNRESOLVED)));
 		assertEquals(3, size(rightAdd));
 
 		// Execute command
@@ -322,19 +324,19 @@ public class MergeAllCommandTests {
 		// Test state of differences after command
 		// 3 Left Delete differences merged
 		leftDelete = filter(differencesAfter, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.MERGED)));
+				ofKind(DifferenceKind.DELETE), hasState(MERGED, DISCARDED)));
 		assertEquals(3, size(leftDelete));
 		// 3 Right Delete differences merged
 		rightDelete = filter(differencesAfter, and(fromSide(DifferenceSource.RIGHT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.MERGED)));
+				ofKind(DifferenceKind.DELETE), hasState(MERGED, DISCARDED)));
 		assertEquals(3, size(rightDelete));
 		// 3 Left Add differences merged
 		leftAdd = filter(differencesAfter, and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD),
-				hasState(DifferenceState.MERGED)));
+				hasState(MERGED, DISCARDED)));
 		assertEquals(3, size(leftAdd));
 		// 3 Right Add differences merged
 		rightAdd = filter(differencesAfter, and(fromSide(DifferenceSource.RIGHT), ofKind(DifferenceKind.ADD),
-				hasState(DifferenceState.MERGED)));
+				hasState(MERGED, DISCARDED)));
 		assertEquals(3, size(rightAdd));
 
 		command.dispose();
@@ -376,12 +378,12 @@ public class MergeAllCommandTests {
 		EList<Diff> differencesBefore = comparison.getDifferences();
 		// Test state of differences before command
 		// 3 Left Delete differences
-		Iterable<Diff> leftDelete = filter(differencesBefore, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> leftDelete = filter(differencesBefore,
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.DELETE), hasState(UNRESOLVED)));
 		assertEquals(3, size(leftDelete));
 		// 3 Left Add differences
-		Iterable<Diff> leftAdd = filter(differencesBefore, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.ADD), hasState(DifferenceState.UNRESOLVED)));
+		Iterable<Diff> leftAdd = filter(differencesBefore,
+				and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD), hasState(UNRESOLVED)));
 		assertEquals(3, size(leftAdd));
 
 		// Execute command
@@ -391,11 +393,11 @@ public class MergeAllCommandTests {
 		// Test state of differences after command
 		// 3 Left Delete differences merged
 		leftDelete = filter(differencesAfter, and(fromSide(DifferenceSource.LEFT),
-				ofKind(DifferenceKind.DELETE), hasState(DifferenceState.MERGED)));
+				ofKind(DifferenceKind.DELETE), hasState(MERGED, DISCARDED)));
 		assertEquals(3, size(leftDelete));
 		// 3 Left Add differences merged
 		leftAdd = filter(differencesAfter, and(fromSide(DifferenceSource.LEFT), ofKind(DifferenceKind.ADD),
-				hasState(DifferenceState.MERGED)));
+				hasState(MERGED, DISCARDED)));
 		assertEquals(3, size(leftAdd));
 
 		command.dispose();

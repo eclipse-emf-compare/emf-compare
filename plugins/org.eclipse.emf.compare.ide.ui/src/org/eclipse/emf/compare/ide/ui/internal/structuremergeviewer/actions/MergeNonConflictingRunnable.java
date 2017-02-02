@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2016 Obeo and others.
+ * Copyright (c) 2014, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,7 +35,6 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +47,6 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.internal.domain.IMergeAllNonConflictingRunnable;
-import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
@@ -58,7 +56,6 @@ import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.merge.IMerger.Registry2;
-import org.eclipse.emf.compare.merge.IMerger2;
 import org.eclipse.emf.compare.merge.MergeBlockedByConflictException;
 
 /**
@@ -155,16 +152,15 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 			Registry mergerRegistry) {
 		final List<Diff> affectedDiffs;
 		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+
 		if (getMergeMode() == MergeMode.LEFT_TO_RIGHT) {
 			affectedDiffs = Lists
 					.newArrayList(Iterables.filter(differences, fromSide(DifferenceSource.LEFT)));
 			merger.copyAllLeftToRight(affectedDiffs, new BasicMonitor());
-			addOrUpdateMergeData(affectedDiffs, getMergeMode());
 		} else if (getMergeMode() == MergeMode.RIGHT_TO_LEFT) {
 			affectedDiffs = Lists
 					.newArrayList(Iterables.filter(differences, fromSide(DifferenceSource.RIGHT)));
 			merger.copyAllRightToLeft(affectedDiffs, new BasicMonitor());
-			addOrUpdateMergeData(affectedDiffs, getMergeMode());
 		} else if (getMergeMode() == MergeMode.ACCEPT || getMergeMode() == MergeMode.REJECT) {
 			affectedDiffs = acceptOrRejectWithoutConflicts(differences, leftToRight, mergerRegistry, merger);
 		} else {
@@ -210,12 +206,10 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 			affectedDiffs = Lists
 					.newArrayList(Iterables.filter(differences, fromSide(DifferenceSource.LEFT)));
 			merger.copyAllLeftToRight(affectedDiffs, new BasicMonitor());
-			addOrUpdateMergeData(affectedDiffs, getMergeMode());
 		} else if (getMergeMode() == MergeMode.RIGHT_TO_LEFT) {
 			affectedDiffs = Lists
 					.newArrayList(Iterables.filter(differences, fromSide(DifferenceSource.LEFT)));
 			merger.copyAllRightToLeft(affectedDiffs, new BasicMonitor());
-			addOrUpdateMergeData(affectedDiffs, getMergeMode());
 		} else if (getMergeMode() == MergeMode.ACCEPT || getMergeMode() == MergeMode.REJECT) {
 			affectedDiffs = acceptOrRejectWithoutConflicts(differences, leftToRight, mergerRegistry, merger);
 		} else {
@@ -242,6 +236,7 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 		final Monitor emfMonitor = new BasicMonitor();
 		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(!leftToRight, (Registry2)mergerRegistry)
 				.failOnRealConflictUnless(alwaysFalse());
+
 		final Predicate<? super Diff> filter;
 		if (getMergeMode() == RIGHT_TO_LEFT) {
 			filter = fromSide(RIGHT);
@@ -265,7 +260,6 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 			}
 		}
 
-		addOrUpdateMergeData(affectedDiffs, getMergeMode());
 		return affectedDiffs;
 	}
 
@@ -377,27 +371,6 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 			merger.copyAllLeftToRight(differences, emfMonitor);
 		} else {
 			merger.copyAllRightToLeft(differences, emfMonitor);
-		}
-
-		for (Diff difference : differences) {
-			final IMerger diffMerger = mergerRegistry.getHighestRankingMerger(difference);
-
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("mergeAll - Selected merger for diff " + difference.hashCode() //$NON-NLS-1$
-						+ ": " + merger.getClass().getSimpleName()); //$NON-NLS-1$
-			}
-
-			if (diffMerger instanceof IMerger2) {
-				final Set<Diff> resultingMerges = MergeDependenciesUtil.getAllResultingMerges(difference,
-						mergerRegistry, !leftToRight);
-				addOrUpdateMergeData(resultingMerges, getMergeMode());
-
-				final Set<Diff> resultingRejections = MergeDependenciesUtil
-						.getAllResultingRejections(difference, mergerRegistry, !leftToRight);
-				addOrUpdateMergeData(resultingRejections, getMergeMode().inverse());
-			} else {
-				addOrUpdateMergeData(Collections.singleton(difference), getMergeMode());
-			}
 		}
 	}
 }

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl;
 
+import static org.eclipse.emf.compare.merge.AbstractMerger.isInTerminalState;
+
 import com.google.common.collect.ImmutableList;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -17,7 +19,6 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.IResourceContentsAccessor;
@@ -86,7 +87,7 @@ public class ResourceContentsAccessorImpl extends AbstractTypedElementAdapter im
 		Diff initialDiff = fDiff;
 		EObject diffValue = (EObject)MergeViewerUtil
 				.getResourceAttachmentChangeValue((ResourceAttachmentChange)initialDiff, getSide());
-		if (DifferenceState.MERGED == initialDiff.getState()) {
+		if (isInTerminalState(initialDiff)) {
 			Object left = MergeViewerUtil.getValueFromResourceAttachmentChange(
 					(ResourceAttachmentChange)initialDiff, getComparison(), MergeViewerSide.LEFT);
 			Object right = MergeViewerUtil.getValueFromResourceAttachmentChange(

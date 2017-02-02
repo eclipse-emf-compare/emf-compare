@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2016 Obeo and others.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -109,6 +109,7 @@ import org.eclipse.emf.compare.ide.ui.internal.util.CompareHandlerService;
 import org.eclipse.emf.compare.ide.ui.internal.util.FilteredIterator;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
+import org.eclipse.emf.compare.internal.merge.MergeDataImpl;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.AbstractMerger;
 import org.eclipse.emf.compare.merge.IMergeOptionAware;
@@ -1243,6 +1244,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 		// Bug 501569: The cascading filter does not hide merged cascading diffs
 		new MatchOfContainmentReferenceChangeProcessor().execute(compareResult);
+
+		// Add a MergeData to handle status decorations on Diffs
+		MergeDataImpl mergeData = new MergeDataImpl(getCompareConfiguration().isLeftEditable(),
+				getCompareConfiguration().isRightEditable());
+		compareResult.eAdapters().add(mergeData);
 	}
 
 	/**

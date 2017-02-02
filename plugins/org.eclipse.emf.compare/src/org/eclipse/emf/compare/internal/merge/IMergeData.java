@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.internal.merge;
 
 import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.compare.DifferenceSource;
 
 /**
  * Interface implemented by {@link org.eclipse.emf.compare.internal.merge.MergeDataImpl}. It helps to know the
@@ -20,28 +19,6 @@ import org.eclipse.emf.compare.DifferenceSource;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
 public interface IMergeData extends Adapter {
-
-	/**
-	 * Returns the merge mode the {@link #getTarget() associated} diff has been merged with.
-	 * 
-	 * @return the merge mode the {@link #getTarget() associated} diff has been merged with.
-	 */
-	MergeMode getMergeMode();
-
-	/**
-	 * Set the merge mode the {@link #getTarget() associated} diff has been merged with.
-	 * 
-	 * @param mergeMode
-	 *            the merge mode the {@link #getTarget() associated} diff has been merged with.
-	 */
-	void setMergeMode(MergeMode mergeMode);
-
-	/**
-	 * Returns the target side of the merge.
-	 * 
-	 * @return the target side of the merge.
-	 */
-	DifferenceSource getMergeTarget();
 
 	/**
 	 * Returns whether the left side of the comparison is editable.

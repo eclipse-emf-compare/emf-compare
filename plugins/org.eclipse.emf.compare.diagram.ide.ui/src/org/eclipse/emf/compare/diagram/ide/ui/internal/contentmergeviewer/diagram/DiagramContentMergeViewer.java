@@ -15,6 +15,7 @@ package org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagr
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.or;
+import static org.eclipse.emf.compare.merge.AbstractMerger.isInTerminalState;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
@@ -1850,7 +1851,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 
 				Diff diff = input.getDiff(); // equivalent to getInput().getTarget()
 
-				if (diff.getState() != DifferenceState.MERGED && diff != fCurrentSelectedDiff) {
+				if (!isInTerminalState(diff) && diff != fCurrentSelectedDiff) {
 					fDecoratorsManager.revealDecorators(diff);
 				}
 

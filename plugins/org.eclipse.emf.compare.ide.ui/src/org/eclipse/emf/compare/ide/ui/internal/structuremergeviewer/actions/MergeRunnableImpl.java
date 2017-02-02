@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2017 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,21 +15,16 @@ import static com.google.common.collect.Lists.newArrayList;
 import com.google.common.base.Preconditions;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
-import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
-import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
-import org.eclipse.emf.compare.merge.IMerger2;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -45,7 +40,6 @@ public final class MergeRunnableImpl extends AbstractMergeRunnable implements IM
 	public void merge(List<? extends Diff> differences, boolean leftToRight, Registry mergerRegistry) {
 		Preconditions
 				.checkState(getMergeMode().isLeftToRight(isLeftEditable(), isRightEditable()) == leftToRight);
-
 		// Execute merge
 		if (getMergeMode() == MergeMode.LEFT_TO_RIGHT || getMergeMode() == MergeMode.RIGHT_TO_LEFT) {
 			mergeAll(differences, leftToRight, mergerRegistry);
@@ -81,25 +75,6 @@ public final class MergeRunnableImpl extends AbstractMergeRunnable implements IM
 			merger.copyAllLeftToRight(differences, new BasicMonitor());
 		} else {
 			merger.copyAllRightToLeft(differences, new BasicMonitor());
-		}
-
-		for (Diff difference : differences) {
-			final IMerger diffMerger = mergerRegistry.getHighestRankingMerger(difference);
-			if (diffMerger instanceof IMerger2) {
-				final Set<Diff> resultingMerges = MergeDependenciesUtil.getAllResultingMerges(difference,
-						mergerRegistry, !leftToRight);
-				addOrUpdateMergeData(resultingMerges, getMergeMode());
-
-				final Set<Diff> resultingRejections = MergeDependenciesUtil
-						.getAllResultingRejections(difference, mergerRegistry, !leftToRight);
-				if (getMergeMode() == MergeMode.LEFT_TO_RIGHT || getMergeMode() == MergeMode.RIGHT_TO_LEFT) {
-					addOrUpdateMergeData(resultingRejections, getMergeMode());
-				} else {
-					addOrUpdateMergeData(resultingRejections, getMergeMode().inverse());
-				}
-			} else {
-				addOrUpdateMergeData(Collections.singleton(difference), getMergeMode());
-			}
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2015, 2017 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,6 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.collect.Iterators;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.util.BasicEList;
@@ -636,11 +635,6 @@ public class MergeNonConflictingRunnableTest {
 				throw new IllegalArgumentException();
 		}
 		return new MergeNonConflictingRunnable(isLeftEditable, isRightEditable, mergeMode) {
-			@Override
-			protected void addOrUpdateMergeData(Collection<Diff> differences, MergeMode mode) {
-				// do nothing to prevent call of EcoreUtil.getAdapter()
-			}
-
 			@Override
 			protected void markAsMerged(Diff diff, MergeMode mode, boolean mergeRightToLeft,
 					Registry registry) {

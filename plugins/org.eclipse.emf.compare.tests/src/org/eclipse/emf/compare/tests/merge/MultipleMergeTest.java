@@ -441,17 +441,17 @@ public class MultipleMergeTest {
 
 		batchMerger.copyAllRightToLeft(Arrays.asList(diff1), new BasicMonitor());
 		// Check that diff1 got properly merged (we're unsetting values)
-		assertMerged(comparison, diff1, true, true);
+		assertDiscarded(comparison, diff1, true, true);
 		// And validate that diff2 got merged as an equivalent diff
-		assertMerged(comparison, diff2, true, true);
+		assertDiscarded(comparison, diff2, true, true);
 
 		batchMerger.copyAllRightToLeft(Arrays.asList(diff3), new BasicMonitor());
-		assertMerged(comparison, diff3, true, true);
-		assertMerged(comparison, diff4, true, true);
+		assertDiscarded(comparison, diff3, true, true);
+		assertDiscarded(comparison, diff4, true, true);
 
 		batchMerger.copyAllRightToLeft(Arrays.asList(diff5), new BasicMonitor());
-		assertMerged(comparison, diff5, true, true);
-		assertMerged(comparison, diff6, true, true);
+		assertDiscarded(comparison, diff5, true, true);
+		assertDiscarded(comparison, diff6, true, true);
 
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertEquals(0, comparison.getDifferences().size());
@@ -520,12 +520,12 @@ public class MultipleMergeTest {
 				addedToReference("Requirements.A", "source", "Requirements.B"));
 
 		batchMerger.copyAllRightToLeft(Arrays.asList(diff1), new BasicMonitor());
-		assertMerged(comparison, diff1, true, true);
-		assertMerged(comparison, diff2, true, true);
+		assertDiscarded(comparison, diff1, true, true);
+		assertDiscarded(comparison, diff2, true, true);
 
 		batchMerger.copyAllRightToLeft(Arrays.asList(diff3), new BasicMonitor());
-		assertMerged(comparison, diff3, true, true);
-		assertMerged(comparison, diff4, true, true);
+		assertDiscarded(comparison, diff3, true, true);
+		assertDiscarded(comparison, diff4, true, true);
 
 		comparison = EMFCompare.builder().build().compare(scope);
 		assertEquals(0, comparison.getDifferences().size());
@@ -650,20 +650,20 @@ public class MultipleMergeTest {
 		// Removing the link between A and B does not necessarily means removing A and B
 		// The "required" diffs will ne be merged
 		batchMerger.copyAllRightToLeft(Arrays.asList(diff1), new BasicMonitor());
-		assertMerged(comparison, diff1, true, true);
-		assertMerged(comparison, diff2, true, true);
+		assertDiscarded(comparison, diff1, true, true);
+		assertDiscarded(comparison, diff2, true, true);
 		assertSame(DifferenceState.UNRESOLVED, diff7.getState());
 		assertSame(DifferenceState.UNRESOLVED, diff8.getState());
 
 		batchMerger.copyAllRightToLeft(Arrays.asList(diff3), new BasicMonitor());
-		assertMerged(comparison, diff3, true, true);
-		assertMerged(comparison, diff4, true, true);
+		assertDiscarded(comparison, diff3, true, true);
+		assertDiscarded(comparison, diff4, true, true);
 		assertSame(DifferenceState.UNRESOLVED, diff9.getState());
 		assertSame(DifferenceState.UNRESOLVED, diff10.getState());
 
 		batchMerger.copyAllRightToLeft(Arrays.asList(diff5), new BasicMonitor());
-		assertMerged(comparison, diff5, true, true);
-		assertMerged(comparison, diff6, true, true);
+		assertDiscarded(comparison, diff5, true, true);
+		assertDiscarded(comparison, diff6, true, true);
 		assertSame(DifferenceState.UNRESOLVED, diff11.getState());
 		assertSame(DifferenceState.UNRESOLVED, diff12.getState());
 
@@ -790,8 +790,8 @@ public class MultipleMergeTest {
 
 		batchMerger.copyAllRightToLeft(Arrays.asList(diff2), new BasicMonitor());
 		assertSame(DifferenceState.UNRESOLVED, diff1.getState());
-		assertMerged(comparison, diff3, false, true);
-		assertMerged(comparison, diff4, true, true);
+		assertDiscarded(comparison, diff3, false, true);
+		assertDiscarded(comparison, diff4, true, true);
 		/*
 		 * Diff 2 is a little more complicated than the usual. We are on a mono-valued refrence, and the merge
 		 * operation is actually resetting the value to its original state. We will need to check that.
@@ -898,18 +898,18 @@ public class MultipleMergeTest {
 		// 1 is required by 3, which is required by 2 and equivalent to 4 and 5.
 		// Resetting 1 should thus reset all other diffs.
 		batchMerger.copyAllRightToLeft(Arrays.asList(diff1), new BasicMonitor());
-		assertMerged(comparison, diff1, true, true);
-		assertMerged(comparison, diff2, false, true);
+		assertDiscarded(comparison, diff1, true, true);
+		assertDiscarded(comparison, diff2, false, true);
 
 		// C has been removed, thus the value match of diff3 has neither left nor right.
-		assertSame(DifferenceState.MERGED, diff3.getState());
+		assertSame(DifferenceState.DISCARDED, diff3.getState());
 		final EObject nodeA = diff3.getMatch().getLeft();
 		final EObject nodeB = diff4.getMatch().getLeft();
 		assertSame(nodeB, nodeA.eGet(diff3.getReference()));
 
-		assertMerged(comparison, diff4, false, true);
+		assertDiscarded(comparison, diff4, false, true);
 
-		assertSame(DifferenceState.MERGED, diff5.getState());
+		assertSame(DifferenceState.DISCARDED, diff5.getState());
 		assertNull(diff5.getMatch().getLeft());
 		assertNull(diff5.getMatch().getRight());
 
@@ -1139,7 +1139,7 @@ public class MultipleMergeTest {
 		batchMerger.copyAllRightToLeft(Arrays.asList(setCSourceDiff), new BasicMonitor());
 
 		// Check if the non-equivalent diff is marked as merged
-		assertEquals(DifferenceState.MERGED, setDSourceDiff.getState());
+		assertEquals(DifferenceState.DISCARDED, setDSourceDiff.getState());
 
 		// Check if no differences between models are left
 		comparison = EMFCompare.builder().build().compare(scope);
@@ -1345,7 +1345,18 @@ public class MultipleMergeTest {
 	private static void assertMerged(Comparison comparison, ReferenceChange referenceChange, boolean unset,
 			boolean rightToLeft) {
 		assertSame(referenceChange.getState(), DifferenceState.MERGED);
+		checkFinalState(comparison, referenceChange, unset, rightToLeft);
+	}
 
+	/* NOTE : not meant for containment changes */
+	private static void assertDiscarded(Comparison comparison, ReferenceChange referenceChange, boolean unset,
+			boolean rightToLeft) {
+		assertSame(referenceChange.getState(), DifferenceState.DISCARDED);
+		checkFinalState(comparison, referenceChange, unset, rightToLeft);
+	}
+
+	private static void checkFinalState(Comparison comparison, ReferenceChange referenceChange, boolean unset,
+			boolean rightToLeft) {
 		final EObject container;
 		if (rightToLeft) {
 			container = referenceChange.getMatch().getLeft();

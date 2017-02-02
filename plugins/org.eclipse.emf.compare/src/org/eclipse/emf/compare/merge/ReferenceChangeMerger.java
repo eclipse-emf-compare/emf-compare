@@ -26,7 +26,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
@@ -616,7 +615,7 @@ public class ReferenceChangeMerger extends AbstractMerger {
 
 		while (impliedReferenceChanges.hasNext()) {
 			final ReferenceChange implied = impliedReferenceChanges.next();
-			if (implied != diff && implied.getState() == DifferenceState.MERGED) {
+			if (implied != diff && isInTerminalState(implied)) {
 				if (implied.getReference().isMany() && isAdd(implied, rightToLeft)) {
 					internalCheckOrdering(implied, rightToLeft);
 					checkImpliedDiffsOrdering(implied, rightToLeft);

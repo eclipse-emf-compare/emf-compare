@@ -10,6 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions;
 
+import static org.eclipse.emf.compare.DifferenceState.DISCARDED;
+import static org.eclipse.emf.compare.DifferenceState.MERGED;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.ACCEPT;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.REJECT;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.getMergeMode;
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,11 +26,9 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeRunnableImpl;
-import org.eclipse.emf.compare.internal.merge.IMergeData;
-import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.internal.merge.MergeDataImpl;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
@@ -32,8 +37,6 @@ import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.compare.tests.nodes.Node;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -84,25 +87,29 @@ public class TestBug434828_2 {
 		final Resource origin = inputData.getResource("origin.nodes"); //$NON-NLS-1$
 		scope = new DefaultComparisonScope(left, right, origin);
 		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		// Add a IMergeData to handle status decorations on Diffs
+		comparison.eAdapters().add(new MergeDataImpl(true, false));
+
 		mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 
 		// Keeps tracks of the differences to test.
 		EList<Conflict> conflicts = comparison.getConflicts();
-		Assert.assertEquals(1, conflicts.size());
+		assertEquals(1, conflicts.size());
 		Conflict conflict = conflicts.get(0);
 
 		// Get the right diff of the conflict: change of eopposite reference
 		EList<Diff> rightConflicts = conflict.getRightDifferences();
-		Assert.assertEquals(2, rightConflicts.size());
+		assertEquals(2, rightConflicts.size());
 		refChangeDiff = rightConflicts.get(0);// Both difference are equivalent.
 
 		// Get the left diff of the conflict; deletion of "ReferencedNode"
 		EList<Diff> leftConflicts = conflict.getLeftDifferences();
-		Assert.assertEquals(1, leftConflicts.size());
+		assertEquals(1, leftConflicts.size());
 		holdingRefDeletionDiff = leftConflicts.get(0);
 		// Get the required by diff of the left conflict
 		EList<Diff> leftRequiredBy = holdingRefDeletionDiff.getRequiredBy();
-		Assert.assertEquals(1, leftRequiredBy.size());
+		assertEquals(1, leftRequiredBy.size());
 		deletedNodeDeletionDiff = leftRequiredBy.get(0);
 
 	}
@@ -120,29 +127,29 @@ public class TestBug434828_2 {
 	 */
 	@Test
 	public void testAcceptConflictDiffWithConflictingDiffWithRequiredBy() {
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, MergeMode.ACCEPT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT);
 		mergeRunnable.merge(Collections.singletonList(refChangeDiff), false, mergerRegistry);
 
-		Assert.assertEquals(DifferenceState.MERGED, refChangeDiff.getState());
-		Assert.assertEquals(MergeMode.ACCEPT, getMergeData(refChangeDiff).getMergeMode());
-		Assert.assertEquals(DifferenceState.MERGED, holdingRefDeletionDiff.getState());
-		Assert.assertEquals(MergeMode.REJECT, getMergeData(holdingRefDeletionDiff).getMergeMode());
+		assertEquals(MERGED, refChangeDiff.getState());
+		assertEquals(ACCEPT, getMergeMode(refChangeDiff, true, false));
+		assertEquals(DISCARDED, holdingRefDeletionDiff.getState());
+		assertEquals(REJECT, getMergeMode(holdingRefDeletionDiff, true, false));
 
-		Assert.assertEquals(DifferenceState.MERGED, deletedNodeDeletionDiff.getState());
-		Assert.assertEquals(MergeMode.REJECT, getMergeData(deletedNodeDeletionDiff).getMergeMode());
+		assertEquals(DISCARDED, deletedNodeDeletionDiff.getState());
+		assertEquals(REJECT, getMergeMode(deletedNodeDeletionDiff, true, false));
 
 		// Checks that the content of the left resource is correct.
 		Resource leftResource = (Resource)scope.getLeft();
 
 		EList<EObject> content = leftResource.getContents();
-		Assert.assertEquals(1, content.size());
+		assertEquals(1, content.size());
 		Node root = (Node)content.get(0);
 		EList<Node> children = root.getContainmentRef1();
 		// Checks that "HoldingDeletedNode" is in the model.
-		Assert.assertEquals(2, children.size());
+		assertEquals(2, children.size());
 		Node firstChildren = children.get(0);
 		// Checks that "ReferencedNode" is in the model.
-		Assert.assertEquals(1, firstChildren.getContainmentRef1().size());
+		assertEquals(1, firstChildren.getContainmentRef1().size());
 	}
 
 	/**
@@ -152,26 +159,22 @@ public class TestBug434828_2 {
 	public void testAcceptConflictDiffWithConflictingDiffWithRequiredByProg() {
 		new BatchMerger(mergerRegistry).copyAllRightToLeft(Arrays.asList(refChangeDiff), new BasicMonitor());
 
-		Assert.assertEquals(DifferenceState.MERGED, refChangeDiff.getState());
-		Assert.assertEquals(DifferenceState.MERGED, holdingRefDeletionDiff.getState());
-		Assert.assertEquals(DifferenceState.MERGED, deletedNodeDeletionDiff.getState());
+		assertEquals(MERGED, refChangeDiff.getState());
+		assertEquals(DISCARDED, holdingRefDeletionDiff.getState());
+		assertEquals(DISCARDED, deletedNodeDeletionDiff.getState());
 
 		// Checks that the content of the right resource is correct.
 		Resource leftResource = (Resource)scope.getLeft();
 
 		EList<EObject> content = leftResource.getContents();
-		Assert.assertEquals(1, content.size());
+		assertEquals(1, content.size());
 		Node root = (Node)content.get(0);
 		EList<Node> children = root.getContainmentRef1();
 		// Checks that "DeletedNode" is in the model.
-		Assert.assertEquals(2, children.size());
+		assertEquals(2, children.size());
 		Node firstChildren = children.get(0);
 		// Checks that "ReferencedNode" is in the model.
-		Assert.assertEquals(1, firstChildren.getContainmentRef1().size());
-	}
-
-	private IMergeData getMergeData(Diff diff) {
-		return (IMergeData)EcoreUtil.getExistingAdapter(diff, IMergeData.class);
+		assertEquals(1, firstChildren.getContainmentRef1().size());
 	}
 
 	/**

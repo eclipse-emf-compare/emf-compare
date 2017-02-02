@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
+import static org.eclipse.emf.compare.merge.AbstractMerger.isInTerminalState;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
 
 import com.google.common.collect.ImmutableList;
@@ -22,7 +23,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.TypeConstants;
@@ -77,8 +77,7 @@ public class ContainmentReferenceChangeAccessorImpl extends AbstractStructuralFe
 		EObject diffValue = (EObject)MergeViewerUtil.getDiffValue(initialDiff);
 		Match match = getComparison().getMatch(diffValue);
 
-		if (match == null && DifferenceState.MERGED == initialDiff.getState()
-				&& MergeViewerSide.ANCESTOR != getSide()) {
+		if (match == null && isInTerminalState(initialDiff) && MergeViewerSide.ANCESTOR != getSide()) {
 			match = getMatchWithNullValues(initialDiff.getMatch());
 		}
 		if (match != null) {

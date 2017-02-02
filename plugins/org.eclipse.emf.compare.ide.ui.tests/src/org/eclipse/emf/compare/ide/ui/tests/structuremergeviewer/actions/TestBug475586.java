@@ -139,7 +139,7 @@ public class TestBug475586 extends AbstractTestUITreeNodeItemProviderAdapter {
 		action.updateSelection(new StructuredSelection(nameSetC));
 		setCascadingDifferencesFilterEnabled(cascadingFilter);
 		action.run();
-		assertEquals(DifferenceState.MERGED, nodeC.getState());
+		assertEquals(DifferenceState.DISCARDED, nodeC.getState());
 
 		Diff nodeA = (Diff)containmentRefDeleteA.getData();
 		assertEquals(DifferenceState.UNRESOLVED, nodeA.getState());
@@ -167,7 +167,7 @@ public class TestBug475586 extends AbstractTestUITreeNodeItemProviderAdapter {
 		assertEquals(DifferenceState.MERGED, nodeC.getState());
 
 		Diff nodeA = (Diff)containmentRefDeleteA.getData();
-		assertEquals(DifferenceState.MERGED, nodeA.getState());
+		assertEquals(DifferenceState.DISCARDED, nodeA.getState());
 
 		Diff nodeB = (Diff)singleValuedReferenceUnsetB.getData();
 		assertEquals(DifferenceState.UNRESOLVED, nodeB.getState());
@@ -189,7 +189,7 @@ public class TestBug475586 extends AbstractTestUITreeNodeItemProviderAdapter {
 		action.updateSelection(new StructuredSelection(nameSetC));
 		setCascadingDifferencesFilterEnabled(cascadingFilter);
 		action.run();
-		assertEquals(DifferenceState.MERGED, nodeC.getState());
+		assertEquals(DifferenceState.DISCARDED, nodeC.getState());
 
 		Diff nodeA = (Diff)containmentRefDeleteA.getData();
 		assertEquals(DifferenceState.UNRESOLVED, nodeA.getState());

@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.merge;
 
+import static org.eclipse.emf.compare.internal.merge.MergeOperation.MARK_AS_MERGE;
+import static org.eclipse.emf.compare.internal.merge.MergeOperation.MERGE;
+
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 
@@ -150,40 +153,40 @@ public enum MergeMode {
 		switch (this) {
 			case LEFT_TO_RIGHT:
 			case RIGHT_TO_LEFT:
-				ret = MergeOperation.MERGE;
+				ret = MERGE;
 				break;
 			case ACCEPT:
 				if (isLeftEditable) {
 					if (difference.getSource() == DifferenceSource.LEFT) {
-						ret = MergeOperation.MARK_AS_MERGE;
+						ret = MARK_AS_MERGE;
 					} else {
-						ret = MergeOperation.MERGE;
+						ret = MERGE;
 					}
 				} else if (isRightEditable) {
 					if (difference.getSource() == DifferenceSource.LEFT) {
-						ret = MergeOperation.MERGE;
+						ret = MERGE;
 					} else {
-						ret = MergeOperation.MARK_AS_MERGE;
+						ret = MARK_AS_MERGE;
 					}
 				} else {
-					throw new IllegalStateException();
+					throw new IllegalArgumentException();
 				}
 				break;
 			case REJECT:
 				if (isLeftEditable) {
 					if (difference.getSource() == DifferenceSource.LEFT) {
-						ret = MergeOperation.MERGE;
+						ret = MERGE;
 					} else {
-						ret = MergeOperation.MARK_AS_MERGE;
+						ret = MARK_AS_MERGE;
 					}
 				} else if (isRightEditable) {
 					if (difference.getSource() == DifferenceSource.LEFT) {
-						ret = MergeOperation.MARK_AS_MERGE;
+						ret = MARK_AS_MERGE;
 					} else {
-						ret = MergeOperation.MERGE;
+						ret = MERGE;
 					}
 				} else {
-					throw new IllegalStateException();
+					throw new IllegalArgumentException();
 				}
 				break;
 			default:
@@ -191,4 +194,44 @@ public enum MergeMode {
 		}
 		return ret;
 	}
+
+	// CHECKSTYLE:OFF
+	public static MergeMode getMergeMode(Diff diff, boolean leftEditable, boolean rightEditable) {
+		if (leftEditable && rightEditable) {
+			switch (diff.getState()) {
+				case MERGED:
+					switch (diff.getSource()) {
+						case LEFT:
+							return RIGHT_TO_LEFT;
+						case RIGHT:
+							return LEFT_TO_RIGHT;
+						default:
+							throw new IllegalArgumentException();
+					}
+				case DISCARDED:
+					switch (diff.getSource()) {
+						case LEFT:
+							return LEFT_TO_RIGHT;
+						case RIGHT:
+							return RIGHT_TO_LEFT;
+						default:
+							throw new IllegalArgumentException();
+					}
+				default:
+					return null;
+			}
+		} else if (leftEditable || rightEditable) {
+			switch (diff.getState()) {
+				case MERGED:
+					return ACCEPT;
+				case DISCARDED:
+					return REJECT;
+				default:
+					return null;
+			}
+		} else {
+			throw new IllegalArgumentException();
+		}
+	}
+	// CHECKSTYLE:ON
 }

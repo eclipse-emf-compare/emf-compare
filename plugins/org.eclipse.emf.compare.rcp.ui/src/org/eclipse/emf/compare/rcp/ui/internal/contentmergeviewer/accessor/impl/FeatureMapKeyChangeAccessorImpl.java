@@ -10,14 +10,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl;
 
+import static org.eclipse.emf.compare.merge.AbstractMerger.isInTerminalState;
+
 import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.internal.merge.IMergeData;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
@@ -88,9 +91,9 @@ public class FeatureMapKeyChangeAccessorImpl extends AbstractStructuralFeatureAc
 		final FeatureMapChange diff = (FeatureMapChange)getInitialDiff();
 		final FeatureMap.Entry entry = (FeatureMap.Entry)diff.getValue();
 		if ((side != MergeViewerSide.ANCESTOR && side.convertToDifferenceSource().equals(diff.getSource()))
-				&& diff.getState() != DifferenceState.MERGED) {
+				&& !isInTerminalState(diff)) {
 			key = entry.getEStructuralFeature();
-		} else if (diff.getState() == DifferenceState.MERGED && !isMergedTargetIsSource(diff)) {
+		} else if (isInTerminalState(diff) && !isMergedTargetIsSource(diff)) {
 			key = entry.getEStructuralFeature();
 		} else {
 			// The entry of the diff source side.
@@ -124,7 +127,14 @@ public class FeatureMapKeyChangeAccessorImpl extends AbstractStructuralFeatureAc
 	 *         source, false otherwise.
 	 */
 	private boolean isMergedTargetIsSource(FeatureMapChange diff) {
-		IMergeData mergeData = (IMergeData)EcoreUtil.getExistingAdapter(diff, IMergeData.class);
-		return diff.getSource() == mergeData.getMergeTarget();
+		IMergeData mergeData = (IMergeData)EcoreUtil.getExistingAdapter(ComparisonUtil.getComparison(diff),
+				IMergeData.class);
+		if (mergeData != null) {
+			MergeMode mode = MergeMode.getMergeMode(diff, mergeData.isLeftEditable(),
+					mergeData.isRightEditable());
+			return diff.getSource() == mode.getMergeTarget(mergeData.isLeftEditable(),
+					mergeData.isRightEditable());
+		}
+		return false;
 	}
 }

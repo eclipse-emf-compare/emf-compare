@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.uml2.tests.stereotypes;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
+import static org.eclipse.emf.compare.merge.AbstractMerger.isInTerminalState;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.added;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removed;
@@ -339,7 +340,7 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 
 		// Checks comparison model after merging
 		for (Diff diff : differences) {
-			assertSame(DifferenceState.MERGED, diff.getState());
+			assertTrue(isInTerminalState(diff));
 		}
 
 		// Checks right model content after merging
@@ -402,7 +403,7 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		// Merges
 		mergeRightToLeft(stereotypedElementChange);
 		for (Diff diff : differences) {
-			assertSame(DifferenceState.MERGED, diff.getState());
+			assertTrue(isInTerminalState(diff));
 		}
 
 		// Checks right model content after merging
@@ -616,7 +617,7 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		for (Diff diff : differences) {
 			final DifferenceState expectedDiffState;
 			if (expectedMergeDifferences.contains(diff) || stereotypedElementChange.equals(diff)) {
-				expectedDiffState = DifferenceState.MERGED;
+				expectedDiffState = DifferenceState.DISCARDED;
 			} else {
 				expectedDiffState = DifferenceState.UNRESOLVED;
 			}
@@ -694,7 +695,7 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		// Check comparison model
 		// Everything should be merged
 		for (Diff diff : differences) {
-			assertSame(DifferenceState.MERGED, diff.getState());
+			assertTrue(isInTerminalState(diff));
 		}
 
 		// Checks left model content after merging
@@ -820,7 +821,7 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 
 		// Check comparison model
 		for (Diff diff : differences) {
-			assertSame(DifferenceState.MERGED, diff.getState());
+			assertTrue(isInTerminalState(diff));
 		}
 
 		// Checks left model content after merging
@@ -912,7 +913,7 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 		mergeRightToLeft(stereotypedElementChange);
 
 		for (Diff diff : differences) {
-			assertSame(DifferenceState.MERGED, diff.getState());
+			assertTrue(isInTerminalState(diff));
 		}
 		// Checks left model content after merging
 		assertEqualsM2(left);
@@ -1007,7 +1008,7 @@ public abstract class AbstractStereotypedElementChangeTests extends AbstractUMLP
 			if (leftConflictDiff.equals(diff)) {
 				assertSame(DifferenceState.UNRESOLVED, diff.getState());
 			} else {
-				assertSame(DifferenceState.MERGED, diff.getState());
+				assertSame(DifferenceState.DISCARDED, diff.getState());
 			}
 		}
 

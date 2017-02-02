@@ -12,19 +12,19 @@ package org.eclipse.emf.compare.provider.spec;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
+import static org.eclipse.emf.compare.DifferenceState.DISCARDED;
+import static org.eclipse.emf.compare.DifferenceState.MERGED;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.canBeConsideredAsPseudoConflicting;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasDirectOrIndirectConflict;
 
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.internal.merge.IMergeData;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
@@ -141,20 +141,18 @@ public class OverlayImageProvider {
 	 *            the diff we have to find an image for.
 	 * @return the path to the image overlay for the given {@code diff}.
 	 */
-	// Nothing here has to be externalized
-	@SuppressWarnings("nls")
 	private String getImageOverlay(Diff diff) {
 		final Comparison comparison = ComparisonUtil.getComparison(diff);
-		String path = "full/ovr16/";
+		String path = "full/ovr16/"; //$NON-NLS-1$
 
-		if (diff.getState() == DifferenceState.MERGED) {
+		if (diff.getState() == MERGED) {
 			path += getMergedOverlay(diff);
-		} else if (diff.getState() == DifferenceState.DISCARDED) {
-			path += REJECTED_OV;
+		} else if (diff.getState() == DISCARDED) {
+			path += getDiscardedOverlay(diff);
 		} else if (comparison.isThreeWay()) {
 			path += getThreeWayOverlay(diff);
 		} else {
-			path += getTwoWayDiffOverlay(diff);
+			path += getTwoWayOverlay(diff);
 		}
 		return path;
 	}
@@ -166,41 +164,36 @@ public class OverlayImageProvider {
 	 *            the diff we have to find an image for.
 	 * @return the overlay path for the given unmerged diff.
 	 */
-	// Nothing here has to be externalized
-	@SuppressWarnings("nls")
 	private String getThreeWayOverlay(final Diff diff) {
-		final DifferenceKind diffKind = diff.getKind();
-		final DifferenceSource source = diff.getSource();
-
+		DifferenceKind diffKind = diff.getKind();
+		DifferenceSource source = diff.getSource();
 		StringBuilder path = new StringBuilder();
 		if (hasDirectOrIndirectConflict(REAL).apply(diff)) {
 			// The diff or one of its refining diffs are in a pseudo conflict
-			path.append("conf");
+			path.append("conf"); //$NON-NLS-1$
 			if (source == DifferenceSource.RIGHT) {
-				path.append("r_");
+				path.append("r_"); //$NON-NLS-1$
 			}
 		} else if (canBeConsideredAsPseudoConflicting().apply(diff)) {
-			// If the diff is not a refined diff and are in a pseudo conflict
-			// Or if the diff is a refined diff that are not in a direct pseudo conflict, but all its refining
-			// diffs are in pseudo conflicts
-			path.append("pconf");
+			// If the diff is not a refined diff and is in a pseudo conflict
+			// Or if the diff is a refined diff that is not in a direct pseudo conflict, but all its
+			// refining diffs are in pseudo conflicts
+			path.append("pconf"); //$NON-NLS-1$
 			if (source == DifferenceSource.RIGHT) {
-				path.append("r_");
+				path.append("r_"); //$NON-NLS-1$
 			}
 		} else {
 			switch (source) {
 				case LEFT:
-					path.append("r_out");
+					path.append("r_out"); //$NON-NLS-1$
 					break;
 				case RIGHT:
-					path.append("r_in");
+					path.append("r_in"); //$NON-NLS-1$
 					break;
 				default:
-					// Cannot happen ... for now
-					break;
+					throw new IllegalArgumentException();
 			}
 		}
-
 		switch (diffKind) {
 			case ADD:
 				path.append(ADD_OV);
@@ -214,52 +207,80 @@ public class OverlayImageProvider {
 				path.append(CHG_OV);
 				break;
 			default:
-				// Cannot happen ... for now
-				break;
+				throw new IllegalArgumentException();
 		}
 		return path.toString();
 	}
 
 	/**
-	 * Return the merged overlay path for the given diff.
+	 * Returns the overlay for a diff that's in a 'DISCARDED' state.
 	 * 
 	 * @param diff
-	 *            the diff we have to find an image for.
-	 * @return the merged overlay for the given diff.
+	 *            The diff
+	 * @return The overlay path to use.
 	 */
-	private String getMergedOverlay(Diff diff) {
-		final String path;
-		Adapter adapter = EcoreUtil.getExistingAdapter(diff, IMergeData.class);
-		if (adapter != null) {
-			IMergeData mergeData = (IMergeData)adapter;
-			switch (mergeData.getMergeMode()) {
-				case LEFT_TO_RIGHT:
-					path = MERGED_TO_RIGHT_OV;
-					break;
-				case RIGHT_TO_LEFT:
-					path = MERGED_TO_LEFT_OV;
-					break;
-				case ACCEPT:
-					path = ACCEPTED_OV;
-					break;
-				case REJECT:
-					path = REJECTED_OV;
-					break;
+	// @CHECKSTYLE:OFF
+	private String getDiscardedOverlay(Diff diff) {
+		DifferenceSource source = diff.getSource();
+		Comparison comp = ComparisonUtil.getComparison(diff);
+		IMergeData mergeData = (IMergeData)EcoreUtil.getExistingAdapter(comp, IMergeData.class);
+		if (mergeData != null) {
+			switch (source) {
+				case LEFT:
+					if (mergeData.isLeftEditable() && mergeData.isRightEditable()) {
+						return MERGED_TO_LEFT_OV;
+					} else {
+						return REJECTED_OV;
+					}
+				case RIGHT:
+					if (mergeData.isLeftEditable() && mergeData.isRightEditable()) {
+						return MERGED_TO_RIGHT_OV;
+					} else {
+						return REJECTED_OV;
+					}
 				default:
-					throw new IllegalStateException();
-			}
-		} else {
-			// fall-back to standard overlay.
-			final Match match = diff.getMatch();
-			final Comparison comparison = match.getComparison();
-			if (comparison.isThreeWay()) {
-				path = getThreeWayOverlay(diff);
-			} else {
-				path = getTwoWayDiffOverlay(diff);
+					throw new IllegalArgumentException();
 			}
 		}
-		return path;
+		// Cannot determine direction
+		return REJECTED_OV;
 	}
+	// @CHECKSTYLE:ON
+
+	/**
+	 * Returns the overlay for a diff that's in a 'MERGED' state.
+	 * 
+	 * @param diff
+	 *            The diff
+	 * @return The overlay path to use.
+	 */
+	// @CHECKSTYLE:OFF
+	private String getMergedOverlay(Diff diff) {
+		DifferenceSource source = diff.getSource();
+		Comparison comp = ComparisonUtil.getComparison(diff);
+		IMergeData mergeData = (IMergeData)EcoreUtil.getExistingAdapter(comp, IMergeData.class);
+		if (mergeData != null) {
+			switch (source) {
+				case LEFT:
+					if (mergeData.isLeftEditable() && mergeData.isRightEditable()) {
+						return MERGED_TO_RIGHT_OV;
+					} else {
+						return ACCEPTED_OV;
+					}
+				case RIGHT:
+					if (mergeData.isLeftEditable() && mergeData.isRightEditable()) {
+						return MERGED_TO_LEFT_OV;
+					} else {
+						return ACCEPTED_OV;
+					}
+				default:
+					throw new IllegalArgumentException();
+			}
+		}
+		// Cannot determine direction
+		return ACCEPTED_OV;
+	}
+	// @CHECKSTYLE:ON
 
 	/**
 	 * Returns the overlay path for the given unmerged diff.
@@ -268,7 +289,7 @@ public class OverlayImageProvider {
 	 *            the diff we have to find an image for.
 	 * @return the overlay path for the given unmerged diff.
 	 */
-	private String getTwoWayDiffOverlay(Diff diff) {
+	private String getTwoWayOverlay(Diff diff) {
 		final String path;
 		final DifferenceKind diffKind = diff.getKind();
 		switch (diffKind) {
@@ -294,10 +315,8 @@ public class OverlayImageProvider {
 	 * 
 	 * @return the overlay path for the given match.
 	 */
-	// Nothing here has to be externalized
-	@SuppressWarnings("nls")
 	private String getImageOverlay() {
-		return "full/ovr16/match_ov";
+		return "full/ovr16/match_ov"; //$NON-NLS-1$
 	}
 
 	/**

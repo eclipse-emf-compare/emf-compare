@@ -12,6 +12,10 @@ package org.eclipse.emf.compare.tests.merge;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.not;
+import static org.eclipse.emf.compare.DifferenceState.DISCARDED;
+import static org.eclipse.emf.compare.DifferenceState.MERGED;
+import static org.eclipse.emf.compare.DifferenceState.UNRESOLVED;
+import static org.eclipse.emf.compare.merge.AbstractMerger.isInTerminalState;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.addedToAttribute;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
@@ -39,7 +43,6 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
@@ -119,12 +122,12 @@ public class ConflictMergeTest {
 		final EList<Node> bContainmentRef1s = ((Node)rightNodeB).getContainmentRef1();
 		assertFalse(bContainmentRef1s.contains(rightNodeC));
 
-		assertEquals(DifferenceState.MERGED, diffNodeCLeft.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeCRight.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeDLeft.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeDRight.getState());
-		assertEquals(DifferenceState.UNRESOLVED, diffNodeELeft.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeFRight.getState());
+		assertEquals(MERGED, diffNodeCLeft.getState());
+		assertEquals(DISCARDED, diffNodeCRight.getState());
+		assertEquals(MERGED, diffNodeDLeft.getState());
+		assertEquals(MERGED, diffNodeDRight.getState());
+		assertEquals(UNRESOLVED, diffNodeELeft.getState());
+		assertEquals(DISCARDED, diffNodeFRight.getState());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -182,12 +185,12 @@ public class ConflictMergeTest {
 		final EList<Node> bContainmentRef1s = ((Node)rightNodeB).getContainmentRef1();
 		assertFalse(bContainmentRef1s.contains(rightNodeC));
 
-		assertEquals(DifferenceState.UNRESOLVED, diffNodeCLeft.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeCRight.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeDLeft.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeDRight.getState());
-		assertEquals(DifferenceState.UNRESOLVED, diffNodeELeft.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeFRight.getState());
+		assertEquals(UNRESOLVED, diffNodeCLeft.getState());
+		assertEquals(MERGED, diffNodeCRight.getState());
+		assertEquals(MERGED, diffNodeDLeft.getState());
+		assertEquals(MERGED, diffNodeDRight.getState());
+		assertEquals(UNRESOLVED, diffNodeELeft.getState());
+		assertEquals(MERGED, diffNodeFRight.getState());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -245,12 +248,12 @@ public class ConflictMergeTest {
 		final EList<Node> bContainmentRef1s = ((Node)leftNodeB).getContainmentRef1();
 		assertFalse(bContainmentRef1s.contains(leftNodeC));
 
-		assertEquals(DifferenceState.MERGED, diffNodeCLeft.getState());
-		assertEquals(DifferenceState.UNRESOLVED, diffNodeCRight.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeDLeft.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeDRight.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeELeft.getState());
-		assertEquals(DifferenceState.UNRESOLVED, diffNodeFRight.getState());
+		assertEquals(MERGED, diffNodeCLeft.getState());
+		assertEquals(UNRESOLVED, diffNodeCRight.getState());
+		assertEquals(MERGED, diffNodeDLeft.getState());
+		assertEquals(MERGED, diffNodeDRight.getState());
+		assertEquals(MERGED, diffNodeELeft.getState());
+		assertEquals(UNRESOLVED, diffNodeFRight.getState());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -307,12 +310,12 @@ public class ConflictMergeTest {
 		final EList<Node> bContainmentRef1s = ((Node)leftNodeB).getContainmentRef1();
 		assertTrue(bContainmentRef1s.contains(leftNodeC));
 
-		assertEquals(DifferenceState.MERGED, diffNodeCLeft.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeCRight.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeDLeft.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeDRight.getState());
-		assertEquals(DifferenceState.MERGED, diffNodeELeft.getState());
-		assertEquals(DifferenceState.UNRESOLVED, diffNodeFRight.getState());
+		assertEquals(DISCARDED, diffNodeCLeft.getState());
+		assertEquals(MERGED, diffNodeCRight.getState());
+		assertEquals(MERGED, diffNodeDLeft.getState());
+		assertEquals(MERGED, diffNodeDRight.getState());
+		assertEquals(DISCARDED, diffNodeELeft.getState());
+		assertEquals(UNRESOLVED, diffNodeFRight.getState());
 	}
 
 	@Test
@@ -345,7 +348,7 @@ public class ConflictMergeTest {
 		final EList<EClass> eSuperTypes = ((EClass)rightEClassA).getESuperTypes();
 		assertTrue(eSuperTypes.contains(rightEClassB));
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -379,9 +382,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.RIGHT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -420,7 +423,7 @@ public class ConflictMergeTest {
 		assertTrue(featureValue instanceof Collection<?>);
 		assertTrue(((Collection<?>)featureValue).containsAll(Lists.newArrayList(NodeEnum.A, NodeEnum.B)));
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -442,7 +445,7 @@ public class ConflictMergeTest {
 		final EObject rightElement = getNodeNamed(left, "origin");
 		assertNull(rightElement);
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -476,9 +479,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.LEFT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -513,7 +516,7 @@ public class ConflictMergeTest {
 		final EList<EClass> eSuperTypes = ((EClass)leftEClassA).getESuperTypes();
 		assertTrue(eSuperTypes.isEmpty());
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -546,7 +549,7 @@ public class ConflictMergeTest {
 		final EList<EClass> eSuperTypes = ((EClass)rightEClassA).getESuperTypes();
 		assertTrue(eSuperTypes.isEmpty());
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -580,9 +583,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.RIGHT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -618,9 +621,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.LEFT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -655,7 +658,7 @@ public class ConflictMergeTest {
 		final EList<EClass> eSuperTypes = ((EClass)leftEClassA).getESuperTypes();
 		assertTrue(eSuperTypes.contains(leftEClassB));
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -682,7 +685,7 @@ public class ConflictMergeTest {
 		final EObject rightEClassA = getNodeNamed(right, "A");
 		assertNull(rightEClassA);
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -722,9 +725,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.RIGHT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -757,9 +760,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.LEFT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -799,7 +802,7 @@ public class ConflictMergeTest {
 		assertTrue(((EClass)leftEClassA).isAbstract());
 		assertTrue(((EClass)leftEClassA).isInterface());
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -837,7 +840,7 @@ public class ConflictMergeTest {
 		assertTrue(((EClass)rightEClassA).isAbstract());
 		assertTrue(((EClass)rightEClassA).isInterface());
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -868,9 +871,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.RIGHT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -912,9 +915,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.LEFT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -943,7 +946,7 @@ public class ConflictMergeTest {
 		final EObject leftEClassA = getNodeNamed(left, "A");
 		assertNull(leftEClassA);
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -976,7 +979,7 @@ public class ConflictMergeTest {
 		assertNotNull(eType);
 		assertEquals(eType.getName(), "EBoolean");
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -1011,9 +1014,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.RIGHT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -1050,9 +1053,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.LEFT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -1086,7 +1089,7 @@ public class ConflictMergeTest {
 		final EClassifier eType = ((EAttribute)leftEAttributeName).getEType();
 		assertNull(eType);
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -1118,7 +1121,7 @@ public class ConflictMergeTest {
 		final EClassifier eType = ((EAttribute)rightEAttributeName).getEType();
 		assertNull(eType);
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -1153,9 +1156,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.RIGHT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -1192,9 +1195,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.LEFT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -1229,7 +1232,7 @@ public class ConflictMergeTest {
 		assertNotNull(eType);
 		assertEquals(eType.getName(), "EBoolean");
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -1256,7 +1259,7 @@ public class ConflictMergeTest {
 		final EObject rightEClassB = getNodeNamed(right, "B");
 		assertNull(rightEClassB);
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -1299,9 +1302,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.RIGHT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -1346,9 +1349,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.LEFT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -1390,7 +1393,7 @@ public class ConflictMergeTest {
 				.getEStructuralFeature("name");
 		assertNull(eStructuralFeatureNameA);
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -1436,7 +1439,7 @@ public class ConflictMergeTest {
 				.getEStructuralFeature("name");
 		assertNotNull(eStructuralFeatureNameB);
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -1484,9 +1487,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.RIGHT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -1536,9 +1539,9 @@ public class ConflictMergeTest {
 
 		for (Diff currentDiff : differences) {
 			if (currentDiff.getSource() == DifferenceSource.LEFT) {
-				assertTrue(currentDiff.getState() == DifferenceState.MERGED);
+				assertTrue(isInTerminalState(currentDiff));
 			} else {
-				assertTrue(currentDiff.getState() == DifferenceState.UNRESOLVED);
+				assertTrue(currentDiff.getState() == UNRESOLVED);
 			}
 		}
 	}
@@ -1581,7 +1584,7 @@ public class ConflictMergeTest {
 				.getEStructuralFeature("name");
 		assertNull(eStructuralFeatureNameA);
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -1615,7 +1618,7 @@ public class ConflictMergeTest {
 		final Object leftValue = leftNode.eGet(feature);
 		assertEquals(NodeEnum.B, leftValue);
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	@Test
@@ -1649,7 +1652,7 @@ public class ConflictMergeTest {
 		final Object leftValue = leftNode.eGet(feature);
 		assertEquals(NodeEnum.C, leftValue);
 
-		assertFalse(Iterators.any(differences.iterator(), not(hasState(DifferenceState.MERGED))));
+		assertFalse(Iterators.any(differences.iterator(), not(hasState(MERGED, DISCARDED))));
 	}
 
 	private EObject getNodeNamed(Resource res, String name) {

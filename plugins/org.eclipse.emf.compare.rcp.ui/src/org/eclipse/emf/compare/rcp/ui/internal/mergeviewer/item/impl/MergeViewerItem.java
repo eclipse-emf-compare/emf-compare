@@ -17,6 +17,7 @@ import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
+import static org.eclipse.emf.compare.merge.AbstractMerger.isInTerminalState;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
@@ -47,7 +48,6 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
@@ -367,7 +367,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 			Match match = getComparison().getMatch(value);
 			if (!isPseudoAddConflict(diff) && (isAddOnOppositeSide(diff) || isDeleteOnSameSide(diff)
 					|| isInsertOnBothSides(diff, match))) {
-				if (match == null && diff.getState() == DifferenceState.MERGED) {
+				if (match == null && isInTerminalState(diff)) {
 					EObject bestSideValue = (EObject)getBestSideValue();
 					match = getComparison().getMatch(bestSideValue);
 					match = getMatchWithNullValues(match);
@@ -410,7 +410,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	}
 
 	private boolean isAddOnOppositeSide(Diff diff) {
-		if (diff.getState() != DifferenceState.MERGED && diff.getKind() == DifferenceKind.ADD) {
+		if (!isInTerminalState(diff) && diff.getKind() == DifferenceKind.ADD) {
 			DifferenceSource source = diff.getSource();
 			MergeViewerSide side = getSide();
 			return (source == DifferenceSource.LEFT && side == MergeViewerSide.RIGHT)
@@ -421,7 +421,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	}
 
 	private boolean isDeleteOnSameSide(Diff diff) {
-		if (diff.getState() != DifferenceState.MERGED && diff.getKind() == DifferenceKind.DELETE) {
+		if (!isInTerminalState(diff) && diff.getKind() == DifferenceKind.DELETE) {
 			DifferenceSource source = diff.getSource();
 			MergeViewerSide side = getSide();
 			return (source == DifferenceSource.LEFT && side == MergeViewerSide.LEFT)
@@ -432,7 +432,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 	}
 
 	private boolean isInsertOnBothSides(Diff diff, Match match) {
-		return diff.getState() == DifferenceState.MERGED
+		return isInTerminalState(diff)
 				&& (match == null || (match.getLeft() == null && match.getRight() == null));
 	}
 
@@ -533,7 +533,7 @@ public class MergeViewerItem extends AdapterImpl implements IMergeViewerItem {
 				Match match = getComparison().getMatch(value);
 				if (isAddOnOppositeSide(diff) || isDeleteOnSameSide(diff)
 						|| isInsertOnBothSides(diff, match)) {
-					if (match == null && diff.getState() == DifferenceState.MERGED) {
+					if (match == null && isInTerminalState(diff)) {
 						EObject bestSideValue = (EObject)getBestSideValue();
 						match = getComparison().getMatch(bestSideValue);
 						match = getMatchWithNullValues(match);

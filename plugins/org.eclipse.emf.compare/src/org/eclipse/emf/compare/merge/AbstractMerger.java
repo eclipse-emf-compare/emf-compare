@@ -17,6 +17,7 @@ import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
+import static org.eclipse.emf.compare.DifferenceState.DISCARDED;
 import static org.eclipse.emf.compare.DifferenceState.MERGED;
 import static org.eclipse.emf.compare.DifferenceState.MERGING;
 import static org.eclipse.emf.compare.DifferenceState.UNRESOLVED;
@@ -758,7 +759,11 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 			Diff impliedMerge = impliedMerges.iterator().next();
 			// avoid implication circles
 			if (impliedMerge != target && !isInTerminalState(impliedMerge)) {
-				impliedMerge.setState(MERGED);
+				if (isAccepting(impliedMerge, rightToLeft)) {
+					impliedMerge.setState(MERGED);
+				} else {
+					impliedMerge.setState(DISCARDED);
+				}
 				impliedMerges.addAll(getImpliedMerges(impliedMerge, rightToLeft));
 			}
 			impliedMerges.remove(impliedMerge);
@@ -766,10 +771,11 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 		}
 		if (isAccepting(target, rightToLeft)) {
 			accept(target, rightToLeft);
+			target.setState(MERGED);
 		} else {
 			reject(target, rightToLeft);
+			target.setState(DISCARDED);
 		}
-		target.setState(MERGED);
 
 		if (LOGGER.isDebugEnabled()) {
 			long duration = System.currentTimeMillis() - start;

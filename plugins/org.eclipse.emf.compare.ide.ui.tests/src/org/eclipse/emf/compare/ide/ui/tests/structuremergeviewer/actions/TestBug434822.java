@@ -10,6 +10,14 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions;
 
+import static org.eclipse.emf.compare.DifferenceState.DISCARDED;
+import static org.eclipse.emf.compare.DifferenceState.MERGED;
+import static org.eclipse.emf.compare.DifferenceState.UNRESOLVED;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.ACCEPT;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.REJECT;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.getMergeMode;
+import static org.junit.Assert.assertEquals;
+
 import com.google.common.collect.Lists;
 
 import java.io.IOException;
@@ -17,18 +25,14 @@ import java.util.ArrayList;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeRunnableImpl;
-import org.eclipse.emf.compare.internal.merge.IMergeData;
-import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.internal.merge.MergeDataImpl;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,9 +46,9 @@ public class TestBug434822 {
 
 	private IMerger.Registry mergerRegistry;
 
-	private Diff deletionDiff;
+	private Diff rightDelete;
 
-	private Diff movingDiff;
+	private Diff leftMove;
 
 	/**
 	 * Set up the three test models.
@@ -81,16 +85,20 @@ public class TestBug434822 {
 		Resource origin = inputData.getResource("origin.nodes"); //$NON-NLS-1$
 		DefaultComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
+
+		// Add a IMergeData to handle status decorations on Diffs
+		comparison.eAdapters().add(new MergeDataImpl(true, false));
+
 		mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 
 		// Keeps track of the 2 differences
 		for (Diff diff : comparison.getDifferences()) {
 			switch (diff.getKind()) {
 				case MOVE:
-					movingDiff = diff;
+					leftMove = diff;
 					break;
 				case DELETE:
-					deletionDiff = diff;
+					rightDelete = diff;
 					break;
 				default:
 			}
@@ -102,27 +110,35 @@ public class TestBug434822 {
 	 */
 	@Test
 	public void testMergeDataAfterAcceptingDeletion() {
+		ArrayList<Diff> uiDiff = Lists.newArrayList(rightDelete);
 
-		Assert.assertNotNull(movingDiff);
-		Assert.assertNotNull(deletionDiff);
-
-		/*
-		 * Mocks the UI behavior of UI if the deleting diff is selected for merging (with cascading diff
-		 * filter activated).
-		 */
-		ArrayList<Diff> uiDiff = Lists.newArrayList(deletionDiff, movingDiff);
-
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, MergeMode.ACCEPT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT);
 		mergeRunnable.merge(uiDiff, false, mergerRegistry);
 
 		// Assert merge data and diff states
-		Assert.assertEquals(DifferenceState.MERGED, deletionDiff.getState());
-		Assert.assertEquals(MergeMode.ACCEPT, getMergeData(deletionDiff).getMergeMode());
-		Assert.assertEquals(DifferenceState.MERGED, movingDiff.getState());
-		IMergeData mergeData = getMergeData(movingDiff);
-		Assert.assertNotNull(mergeData);
-		Assert.assertEquals(MergeMode.REJECT, mergeData.getMergeMode());
+		assertEquals(MERGED, rightDelete.getState());
+		assertEquals(ACCEPT, getMergeMode(rightDelete, true, false));
+		assertEquals(DISCARDED, leftMove.getState());
+		assertEquals(REJECT, getMergeMode(leftMove, true, false));
+	}
 
+	/**
+	 * Checks that accepting the deletion works properly (no crash and correct merge data).
+	 */
+	@Test
+	public void testMergeDataAfterAcceptingDeletionSeveral() {
+		// Mocks the UI behavior of UI if the deleting diff is selected for merging (with cascading diff
+		// filter activated).
+		ArrayList<Diff> uiDiff = Lists.newArrayList(rightDelete, leftMove);
+
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT);
+		mergeRunnable.merge(uiDiff, false, mergerRegistry);
+
+		// Assert merge data and diff states
+		assertEquals(MERGED, rightDelete.getState());
+		assertEquals(ACCEPT, getMergeMode(rightDelete, true, false));
+		assertEquals(DISCARDED, leftMove.getState());
+		assertEquals(REJECT, getMergeMode(leftMove, true, false));
 	}
 
 	/**
@@ -130,26 +146,19 @@ public class TestBug434822 {
 	 */
 	@Test
 	public void testMergeDataAfterRejectingDeletion() {
-
-		Assert.assertNotNull(movingDiff);
-		Assert.assertNotNull(deletionDiff);
-
 		/*
 		 * Mocks the UI behavior of UI if the deleting diff is selected for merging (with cascading diff
 		 * filter activated).
 		 */
-		ArrayList<Diff> uiDiff = Lists.newArrayList(deletionDiff);
+		ArrayList<Diff> uiDiff = Lists.newArrayList(rightDelete);
 
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, MergeMode.REJECT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, REJECT);
 		mergeRunnable.merge(uiDiff, false, mergerRegistry);
 
 		// Assert merge data and diff states
-		Assert.assertEquals(DifferenceState.MERGED, deletionDiff.getState());
-		Assert.assertEquals(MergeMode.REJECT, getMergeData(deletionDiff).getMergeMode());
-		Assert.assertEquals(DifferenceState.UNRESOLVED, movingDiff.getState());
-		IMergeData mergeData = getMergeData(movingDiff);
-		Assert.assertNull(mergeData);
-
+		assertEquals(DISCARDED, rightDelete.getState());
+		assertEquals(REJECT, getMergeMode(rightDelete, true, false));
+		assertEquals(UNRESOLVED, leftMove.getState());
 	}
 
 	/**
@@ -157,24 +166,17 @@ public class TestBug434822 {
 	 */
 	@Test
 	public void testMergeDataAfterAcceptingMovement() {
-
-		Assert.assertNotNull(movingDiff);
-		Assert.assertNotNull(deletionDiff);
-
 		// Mocks the UI behavior of UI if the movement diff is selected for merging.
-		ArrayList<Diff> uiDiff = Lists.newArrayList(movingDiff);
+		ArrayList<Diff> uiDiff = Lists.newArrayList(leftMove);
 
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, MergeMode.ACCEPT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT);
 		mergeRunnable.merge(uiDiff, false, mergerRegistry);
 
 		// Assert merge data
-		Assert.assertEquals(DifferenceState.MERGED, movingDiff.getState());
-		Assert.assertEquals(MergeMode.ACCEPT, getMergeData(movingDiff).getMergeMode());
-		Assert.assertEquals(DifferenceState.MERGED, deletionDiff.getState());
-		IMergeData mergeData = getMergeData(deletionDiff);
-		Assert.assertNotNull(mergeData);
-		Assert.assertEquals(MergeMode.REJECT, mergeData.getMergeMode());
-
+		assertEquals(MERGED, leftMove.getState());
+		assertEquals(ACCEPT, getMergeMode(leftMove, true, false));
+		assertEquals(DISCARDED, rightDelete.getState());
+		assertEquals(REJECT, getMergeMode(rightDelete, true, false));
 	}
 
 	/**
@@ -182,27 +184,16 @@ public class TestBug434822 {
 	 */
 	@Test
 	public void testMergeDataAfterRejectingMovement() {
-
-		Assert.assertNotNull(movingDiff);
-		Assert.assertNotNull(deletionDiff);
-
 		// Mocks the UI behavior of UI if the movement diff is selected for merging.
-		ArrayList<Diff> uiDiff = Lists.newArrayList(movingDiff);
+		ArrayList<Diff> uiDiff = Lists.newArrayList(leftMove);
 
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, MergeMode.REJECT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, REJECT);
 		mergeRunnable.merge(uiDiff, false, mergerRegistry);
 
 		// Assert merge data
-		Assert.assertEquals(DifferenceState.MERGED, movingDiff.getState());
-		Assert.assertEquals(MergeMode.REJECT, getMergeData(movingDiff).getMergeMode());
-		Assert.assertEquals(DifferenceState.UNRESOLVED, deletionDiff.getState());
-		IMergeData mergeData = getMergeData(deletionDiff);
-		Assert.assertNull(mergeData);
-
-	}
-
-	private IMergeData getMergeData(Diff diff) {
-		return (IMergeData)EcoreUtil.getExistingAdapter(diff, IMergeData.class);
+		assertEquals(DISCARDED, leftMove.getState());
+		assertEquals(REJECT, getMergeMode(leftMove, true, false));
+		assertEquals(UNRESOLVED, rightDelete.getState());
 	}
 
 	/**

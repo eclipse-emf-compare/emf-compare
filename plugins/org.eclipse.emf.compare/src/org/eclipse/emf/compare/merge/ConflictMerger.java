@@ -15,7 +15,7 @@ import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.DifferenceKind.MOVE;
 import static org.eclipse.emf.compare.DifferenceSource.LEFT;
 import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
-import static org.eclipse.emf.compare.DifferenceState.MERGED;
+import static org.eclipse.emf.compare.DifferenceState.DISCARDED;
 import static org.eclipse.emf.compare.merge.IMergeCriterion.NONE;
 
 import java.util.Iterator;
@@ -67,7 +67,7 @@ public class ConflictMerger extends AbstractMerger {
 			for (Diff conflictedDiff : conflict.getDifferences()) {
 				if (conflictedDiff.getSource() == RIGHT) {
 					if (isConflictVsMoveAndDelete(target, conflictedDiff, true)) {
-						conflictedDiff.setState(MERGED);
+						conflictedDiff.setState(DISCARDED);
 					} else {
 						mergeConflictedDiff(conflictedDiff, true, monitor);
 					}
@@ -98,7 +98,7 @@ public class ConflictMerger extends AbstractMerger {
 			for (Diff conflictedDiff : conflict.getDifferences()) {
 				if (conflictedDiff.getSource() == LEFT) {
 					if (isConflictVsMoveAndDelete(target, conflictedDiff, false)) {
-						conflictedDiff.setState(MERGED);
+						conflictedDiff.setState(DISCARDED);
 					} else {
 						mergeConflictedDiff(conflictedDiff, false, monitor);
 					}
@@ -193,7 +193,7 @@ public class ConflictMerger extends AbstractMerger {
 				delegate.copyRightToLeft(conflictedDiff, monitor);
 			}
 		} else {
-			conflictedDiff.setState(MERGED);
+			conflictedDiff.setState(DISCARDED);
 		}
 	}
 

@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.merge;
 
-import static org.eclipse.emf.compare.DifferenceState.MERGED;
 import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.getOpaqueElementLanguages;
 import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.isChangeOfOpaqueElementBodyAttribute;
 import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.isChangeOfOpaqueElementLanguageAttribute;
@@ -123,11 +122,11 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 	 * @return true if the complete body change is merged, false otherwise.
 	 */
 	private boolean isFullyMerged(OpaqueElementBodyChange bodyChange) {
-		if (bodyChange.getState() != MERGED) {
+		if (!isInTerminalState(bodyChange)) {
 			return false;
 		}
 		for (Diff refiningDiff : bodyChange.getRefinedBy()) {
-			if (refiningDiff.getState() != MERGED) {
+			if (!isInTerminalState(refiningDiff)) {
 				return false;
 			}
 		}
@@ -171,7 +170,7 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 			}
 
 			// we set the whole refinement diff to merged
-			setFullyMerged(bodyChange);
+			setFullyMerged(bodyChange, rightToLeft);
 		}
 	}
 
@@ -211,7 +210,7 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 			}
 
 			// we set the whole refinement diff to merged
-			setFullyMerged(bodyChange);
+			setFullyMerged(bodyChange, rightToLeft);
 		}
 	}
 
@@ -589,11 +588,20 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 	 * 
 	 * @param bodyChange
 	 *            The {@link OpaqueElementBodyChange} to set to merged.
+	 * @param rightToLeft
+	 *            The direction of the merge
 	 */
-	private void setFullyMerged(OpaqueElementBodyChange bodyChange) {
-		bodyChange.setState(DifferenceState.MERGED);
-		for (Diff refiningDiff : bodyChange.getRefinedBy()) {
-			refiningDiff.setState(DifferenceState.MERGED);
+	private void setFullyMerged(OpaqueElementBodyChange bodyChange, boolean rightToLeft) {
+		if (isAccepting(bodyChange, rightToLeft)) {
+			bodyChange.setState(DifferenceState.MERGED);
+			for (Diff refiningDiff : bodyChange.getRefinedBy()) {
+				refiningDiff.setState(DifferenceState.MERGED);
+			}
+		} else {
+			bodyChange.setState(DifferenceState.DISCARDED);
+			for (Diff refiningDiff : bodyChange.getRefinedBy()) {
+				refiningDiff.setState(DifferenceState.DISCARDED);
+			}
 		}
 	}
 

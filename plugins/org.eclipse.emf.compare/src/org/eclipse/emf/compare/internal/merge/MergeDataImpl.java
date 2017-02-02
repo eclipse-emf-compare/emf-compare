@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.internal.merge;
 
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.compare.DifferenceSource;
 
 /**
  * Adapter that help to know the way of merge and the editable sides of a difference.
@@ -27,41 +26,17 @@ public class MergeDataImpl extends AdapterImpl implements IMergeData {
 	/** Right side is editable. */
 	private boolean rightEditable;
 
-	/** The merge mode used to merge the associated diff. */
-	private MergeMode mergeMode;
-
 	/**
 	 * Constructor.
 	 * 
-	 * @param mergeMode
-	 *            The merge mode.
 	 * @param leftEditable
 	 *            Left side editable.
 	 * @param rightEditable
 	 *            Right side editable.
 	 */
-	public MergeDataImpl(MergeMode mergeMode, boolean leftEditable, boolean rightEditable) {
-		this.mergeMode = mergeMode;
+	public MergeDataImpl(boolean leftEditable, boolean rightEditable) {
 		this.leftEditable = leftEditable;
 		this.rightEditable = rightEditable;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.internal.merge.IMergeData#getMergeMode()
-	 */
-	public MergeMode getMergeMode() {
-		return mergeMode;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.internal.merge.IMergeData#getMergeTarget()
-	 */
-	public DifferenceSource getMergeTarget() {
-		return mergeMode.getMergeTarget(leftEditable, rightEditable);
 	}
 
 	/**
@@ -105,12 +80,4 @@ public class MergeDataImpl extends AdapterImpl implements IMergeData {
 		this.rightEditable = rightEditable;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.internal.merge.IMergeData#setMergeMode(org.eclipse.emf.compare.internal.merge.MergeMode)
-	 */
-	public void setMergeMode(MergeMode mergeMode) {
-		this.mergeMode = mergeMode;
-	}
 }

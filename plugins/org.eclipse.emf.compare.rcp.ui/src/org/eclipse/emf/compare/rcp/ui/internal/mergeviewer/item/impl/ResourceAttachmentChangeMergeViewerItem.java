@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Lists.newArrayList;
+import static org.eclipse.emf.compare.merge.AbstractMerger.isInTerminalState;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
@@ -26,7 +27,6 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
@@ -106,7 +106,7 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 				Object ancestor = getAncestor();
 				for (ResourceAttachmentChange resourceAttachmentChange : racs) {
 					// filter out merged reference changes
-					if (resourceAttachmentChange.getState() == DifferenceState.MERGED) {
+					if (isInTerminalState(resourceAttachmentChange)) {
 						// Remove resource attachment changes that are not linked with the current resources.
 						resourceAttachmentChanges.remove(resourceAttachmentChange);
 					} else if (isUnrelated(resourceAttachmentChange, left)
@@ -195,23 +195,22 @@ public class ResourceAttachmentChangeMergeViewerItem extends MergeViewerItem.Con
 
 			DifferenceSource source = diff.getSource();
 			DifferenceKind kind = diff.getKind();
-			DifferenceState state = diff.getState();
 			boolean b1 = source == DifferenceSource.LEFT && kind == DifferenceKind.DELETE
-					&& getSide() == MergeViewerSide.LEFT && DifferenceState.MERGED != state;
+					&& getSide() == MergeViewerSide.LEFT && !isInTerminalState(diff);
 			boolean b2 = source == DifferenceSource.LEFT && kind == DifferenceKind.ADD
-					&& getSide() == MergeViewerSide.RIGHT && DifferenceState.MERGED != state;
+					&& getSide() == MergeViewerSide.RIGHT && !isInTerminalState(diff);
 			boolean b3 = source == DifferenceSource.RIGHT && kind == DifferenceKind.ADD
-					&& getSide() == MergeViewerSide.LEFT && DifferenceState.MERGED != state;
+					&& getSide() == MergeViewerSide.LEFT && !isInTerminalState(diff);
 			boolean b4 = source == DifferenceSource.RIGHT && kind == DifferenceKind.DELETE
-					&& getSide() == MergeViewerSide.RIGHT && DifferenceState.MERGED != state;
+					&& getSide() == MergeViewerSide.RIGHT && !isInTerminalState(diff);
 
-			boolean b5 = DifferenceState.MERGED == state && source == DifferenceSource.LEFT
+			boolean b5 = isInTerminalState(diff) && source == DifferenceSource.LEFT
 					&& kind == DifferenceKind.ADD && right == null;
-			boolean b6 = DifferenceState.MERGED == state && source == DifferenceSource.LEFT
+			boolean b6 = isInTerminalState(diff) && source == DifferenceSource.LEFT
 					&& kind == DifferenceKind.DELETE && left == null;
-			boolean b7 = DifferenceState.MERGED == state && source == DifferenceSource.RIGHT
+			boolean b7 = isInTerminalState(diff) && source == DifferenceSource.RIGHT
 					&& kind == DifferenceKind.ADD && left == null;
-			boolean b8 = DifferenceState.MERGED == state && source == DifferenceSource.RIGHT
+			boolean b8 = isInTerminalState(diff) && source == DifferenceSource.RIGHT
 					&& kind == DifferenceKind.DELETE && right == null;
 			// do not duplicate insertion point for pseudo add conflict
 			// so we must only create one for pseudo delete conflict

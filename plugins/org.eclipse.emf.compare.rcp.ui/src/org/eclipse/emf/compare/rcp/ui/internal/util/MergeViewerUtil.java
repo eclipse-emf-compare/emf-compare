@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.rcp.ui.internal.util;
 
 import static com.google.common.collect.Iterables.any;
+import static org.eclipse.emf.compare.merge.AbstractMerger.isInTerminalState;
 
 import com.google.common.base.Predicate;
 
@@ -23,7 +24,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
@@ -411,7 +411,7 @@ public final class MergeViewerUtil {
 	 * 
 	 * @see MergeOperation
 	 * @param diff
-	 *            the given Diff..
+	 *            the given Diff.
 	 * @param item
 	 *            the given IMergeViewerItem associated with the diff.
 	 * @param compareConfiguration
@@ -421,12 +421,12 @@ public final class MergeViewerUtil {
 	public static boolean isMarkAsMerged(Diff diff, IMergeViewerItem item,
 			IEMFCompareConfiguration compareConfiguration) {
 		final boolean markAsMerged;
-		if (diff.getState() == DifferenceState.MERGED) {
+		if (isInTerminalState(diff)) {
 			IMergeData mergeData = (IMergeData)EcoreUtil.getExistingAdapter(diff, IMergeData.class);
 			if (mergeData != null) {
 				boolean leftEditable = compareConfiguration.isLeftEditable();
 				boolean rightEditable = compareConfiguration.isRightEditable();
-				MergeMode mergeMode = mergeData.getMergeMode();
+				MergeMode mergeMode = MergeMode.getMergeMode(diff, leftEditable, rightEditable);
 				MergeOperation mergeAction = mergeMode.getMergeAction(diff, leftEditable, rightEditable);
 				if (mergeAction == MergeOperation.MARK_AS_MERGE) {
 					markAsMerged = true;
