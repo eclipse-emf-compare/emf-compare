@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2016, 2017 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
+import static java.util.Collections.emptyList;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.anyRefining;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
@@ -33,7 +34,6 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -449,7 +449,7 @@ public class TreeMergeViewerItemContentProvider implements IMergeViewerItemConte
 	 */
 	protected List<Object> getChildrenFromContentProvider(Object object, AdapterFactory adapterFactory) {
 		if (object == null) {
-			return Collections.emptyList();
+			return emptyList();
 		}
 		ITreeItemContentProvider treeItemContentProvider = (ITreeItemContentProvider)adapterFactory
 				.adapt(object, ITreeItemContentProvider.class);
@@ -457,7 +457,7 @@ public class TreeMergeViewerItemContentProvider implements IMergeViewerItemConte
 			final List<Object> children = new ArrayList<Object>(treeItemContentProvider.getChildren(object));
 			return unwrapFeatureMapEntryProviders(children);
 		}
-		return Collections.emptyList();
+		return emptyList();
 	}
 
 	/**
@@ -566,12 +566,15 @@ public class TreeMergeViewerItemContentProvider implements IMergeViewerItemConte
 	 * Indicates whether the match has not loaded fragments.
 	 * 
 	 * @param match
-	 *            the {@link Match} to check.
+	 *            the {@link Match} to check, can be <code>null</code>.
 	 * @param side
 	 *            the {@link MergeViewerSide} to check.
 	 * @return {@code true} if there are not loaded fragments, {@code false} otherwise.
 	 */
 	private boolean hasNotLoadedFragmentsItems(Match match, MergeViewerSide side) {
+		if (match == null) {
+			return false;
+		}
 		Collection<Match> childrenMatches = ResourceUIUtil
 				.getChildrenMatchWithNotLoadedParent(match.getComparison(), match, side);
 		return !childrenMatches.isEmpty();
@@ -596,10 +599,15 @@ public class TreeMergeViewerItemContentProvider implements IMergeViewerItemConte
 		if (ResourceUIUtil.isFragment(uri)) {
 			final Object object = getBestSideValue(mergeViewerItem, configuration.getSide());
 			final Match matchOfValue = configuration.getComparison().getMatch((EObject)object);
-			final NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(matchOfValue);
-			parent = createMergeViewerItem(configuration.getComparison(), mergeViewerItem.getDiff(),
-					notLoadedFragmentMatch, notLoadedFragmentMatch, notLoadedFragmentMatch,
-					mergeViewerItem.getSide(), configuration.getAdapterFactory());
+			if (matchOfValue != null) {
+				final NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(
+						matchOfValue);
+				parent = createMergeViewerItem(configuration.getComparison(), mergeViewerItem.getDiff(),
+						notLoadedFragmentMatch, notLoadedFragmentMatch, notLoadedFragmentMatch,
+						mergeViewerItem.getSide(), configuration.getAdapterFactory());
+			} else {
+				parent = null;
+			}
 		} else {
 			parent = null;
 		}
@@ -784,13 +792,15 @@ public class TreeMergeViewerItemContentProvider implements IMergeViewerItemConte
 	 * find this match.
 	 * 
 	 * @param match
-	 *            the given match.
+	 *            the given match, can be <code>null</code>
 	 * @return the match associated with the given merged diff.
 	 */
 	private Match getMatchWithNullValues(Match match) {
-		for (Match subMatch : match.getSubmatches()) {
-			if (subMatch.getLeft() == null && subMatch.getRight() == null) {
-				return subMatch;
+		if (match != null) {
+			for (Match subMatch : match.getSubmatches()) {
+				if (subMatch.getLeft() == null && subMatch.getRight() == null) {
+					return subMatch;
+				}
 			}
 		}
 		return null;
@@ -999,15 +1009,18 @@ public class TreeMergeViewerItemContentProvider implements IMergeViewerItemConte
 	 * 
 	 * @param match
 	 *            the Match for which we want the potential NotLoadedFragment children items (as
-	 *            MergeViewerItems)
+	 *            MergeViewerItems), can be <code>null</code>
 	 * @return the NotLoadedFragment children items (a list of MergeViewerItems) of the given element.
 	 */
 	private List<IMergeViewerItem> getNotLoadedFragmentsItems(Comparison comparison, Match match,
 			MergeViewerSide side, AdapterFactory adapterFactory) {
+		if (match == null) {
+			return emptyList();
+		}
 		final List<IMergeViewerItem> ret = newArrayList();
 		final Collection<Match> childrenMatches = ResourceUIUtil
 				.getChildrenMatchWithNotLoadedParent(comparison, match, side);
-		if (childrenMatches.size() > 0) {
+		if (!childrenMatches.isEmpty()) {
 			boolean setNames = childrenMatches.size() > 1;
 			for (Match child : childrenMatches) {
 				NotLoadedFragmentMatch notLoadedFragmentMatch = new NotLoadedFragmentMatch(child);

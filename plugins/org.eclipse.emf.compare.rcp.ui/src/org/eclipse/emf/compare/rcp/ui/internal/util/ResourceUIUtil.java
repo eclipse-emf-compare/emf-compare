@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.rcp.ui.internal.util;
 
 import static com.google.common.collect.Iterables.filter;
+import static java.util.Collections.emptyList;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -543,15 +544,18 @@ public class ResourceUIUtil {
 	 * of the comparison.
 	 * 
 	 * @param comparison
-	 *            the given comparison.
+	 *            the given comparison, cannot be <code>null</code>.
 	 * @param match
-	 *            the given match.
+	 *            the given match, can be <code>null</code>.
 	 * @param side
 	 *            the given side of the comparison.
 	 * @return a list of Matches.
 	 */
 	public static Collection<Match> getChildrenMatchWithNotLoadedParent(Comparison comparison, Match match,
 			MergeViewerSide side) {
+		if (match == null) {
+			return emptyList();
+		}
 		final Collection<Match> childrenMatches = Sets.newLinkedHashSet();
 		final Collection<Match> matches = comparison.getMatches();
 		final IGraphView<URI> graph = getResourcesURIGraph();
