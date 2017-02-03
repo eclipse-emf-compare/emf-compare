@@ -30,9 +30,6 @@ import org.eclipse.papyrus.infra.services.labelprovider.service.LabelProviderSer
  */
 public class PapyrusItemProviderDecorator extends ExtendedItemProviderDecorator implements IEditingDomainItemProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource, IItemColorProvider, IItemFontProvider {
 
-	/** Context id for the comparison papyrus label providers. */
-	private static final String PAPYRUS_LABEL_PROVIDER_COMPARE_CONTEXT = "org.eclipse.emf.compare.uml2.edit.papyrus"; //$NON-NLS-1$
-
 	/**
 	 * Default constructor.
 	 * 
@@ -47,8 +44,7 @@ public class PapyrusItemProviderDecorator extends ExtendedItemProviderDecorator 
 	public String getText(Object object) {
 		LabelProviderService labelProviderService = Activator.getDefault().getLabelProviderService();
 		if (labelProviderService != null) {
-			ILabelProvider labelProvider = labelProviderService
-					.getLabelProvider(PAPYRUS_LABEL_PROVIDER_COMPARE_CONTEXT, object);
+			ILabelProvider labelProvider = labelProviderService.getLabelProvider(object);
 			if (labelProvider != null) {
 				return labelProvider.getText(object);
 			}
@@ -60,8 +56,7 @@ public class PapyrusItemProviderDecorator extends ExtendedItemProviderDecorator 
 	public Object getImage(Object object) {
 		LabelProviderService labelProviderService = Activator.getDefault().getLabelProviderService();
 		if (labelProviderService != null) {
-			ILabelProvider labelProvider = labelProviderService
-					.getLabelProvider(PAPYRUS_LABEL_PROVIDER_COMPARE_CONTEXT, object);
+			ILabelProvider labelProvider = labelProviderService.getLabelProvider(object);
 			if (labelProvider != null) {
 				return labelProvider.getImage(object);
 			}
