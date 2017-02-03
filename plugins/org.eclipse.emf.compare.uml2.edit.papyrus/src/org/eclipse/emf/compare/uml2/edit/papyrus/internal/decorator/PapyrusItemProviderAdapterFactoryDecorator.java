@@ -8,7 +8,7 @@
  * Contributors:
  *      Martin Fleck - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compre.uml2.edit.papyrus.internal.decorator;
+package org.eclipse.emf.compare.uml2.edit.papyrus.internal.decorator;
 
 import org.eclipse.emf.edit.provider.DecoratorAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemProviderDecorator;

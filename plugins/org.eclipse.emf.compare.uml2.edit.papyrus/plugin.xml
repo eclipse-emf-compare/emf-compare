@@ -4,7 +4,7 @@
     <extension
          point="org.eclipse.emf.compare.edit.adapterFactory">
       <factory
-            class="org.eclipse.emf.compre.uml2.edit.papyrus.internal.decorator.PapyrusItemProviderAdapterFactoryDecorator"
+            class="org.eclipse.emf.compare.uml2.edit.papyrus.internal.decorator.PapyrusItemProviderAdapterFactoryDecorator"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider
@@ -13,7 +13,7 @@
                org.eclipse.emf.edit.provider.IItemPropertySource
                org.eclipse.emf.compare.provider.IItemStyledLabelProvider
                org.eclipse.emf.compare.provider.IItemDescriptionProvider"
-            context="org.eclipse.emf.compre.uml2.edit.papyrus.internal.decorator.PapyrusItemProviderContextTester"
+            context="org.eclipse.emf.compare.uml2.edit.papyrus.internal.decorator.PapyrusItemProviderContextTester"
             description="This provider displays Papyrus elements like they are a new kind of UML element. It uses the icons and labels provided through the Papyrus label provider service."
             label="Papyrus element item provider"
             optional="true"
@@ -25,7 +25,7 @@
           point="org.eclipse.papyrus.infra.services.labelprovider.labelProvider">
        <labelProvider
              priority="10"
-             provider="org.eclipse.emf.compre.uml2.edit.papyrus.internal.decorator.PapyrusElementFilteredLabelProvider">
+             provider="org.eclipse.emf.compare.uml2.edit.papyrus.internal.decorator.PapyrusElementFilteredLabelProvider">
           <labelProviderContext
                 context="org.eclipse.emf.compare.uml2.edit.papyrus">
           </labelProviderContext>

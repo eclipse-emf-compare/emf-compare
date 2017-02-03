@@ -9,7 +9,7 @@
  *     Obeo - initial API and implementation
  *     Alexandra Buzila - bug 483798
  *******************************************************************************/
-package org.eclipse.emf.compre.uml2.edit.papyrus;
+package org.eclipse.emf.compare.uml2.edit.papyrus;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -27,7 +27,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
 	/** The plug-in ID. */
-	public static final String PLUGIN_ID = "org.eclipse.emf.compre.uml2.edit.papyrus"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.emf.compare.uml2.edit.papyrus"; //$NON-NLS-1$
 
 	/** The shared instance. */
 	private static Activator plugin;

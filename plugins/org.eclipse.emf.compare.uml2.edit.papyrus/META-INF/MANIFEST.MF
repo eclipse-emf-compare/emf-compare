@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-SymbolicName: org.eclipse.emf.compare.uml2.edit.papyrus;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.eclipse.emf.compre.uml2.edit.papyrus.Activator
+Bundle-Activator: org.eclipse.emf.compare.uml2.edit.papyrus.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.emf.compare.uml2.edit,
@@ -24,5 +24,5 @@ Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
  com.google.common.collect;version="[11.0.0,16.0.0)",
  org.eclipse.papyrus.emf.facet.efacet.metamodel.v0_2_0.efacet
 Bundle-Localization: plugin
-Export-Package: org.eclipse.emf.compre.uml2.edit.papyrus,
- org.eclipse.emf.compre.uml2.edit.papyrus.internal.decorator;x-internal:=true
+Export-Package: org.eclipse.emf.compare.uml2.edit.papyrus,
+ org.eclipse.emf.compare.uml2.edit.papyrus.internal.decorator;x-internal:=true
