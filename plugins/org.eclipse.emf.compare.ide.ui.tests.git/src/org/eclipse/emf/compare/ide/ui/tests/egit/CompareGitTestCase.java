@@ -16,6 +16,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.compare.ITypedElement;
@@ -103,7 +108,10 @@ public class CompareGitTestCase extends CompareTestCase {
 		gitDir = new File(workspaceRoot.getRawLocation().toFile(), Constants.DOT_GIT);
 		repository = new GitTestRepository(gitDir);
 		repository.connect(project.getProject());
-		repository.ignore(workspaceRoot.getRawLocation().append(".metadata").toFile());
+		File gitIgnoreFile = workspaceRoot.getRawLocation().append(".gitignore").toFile();
+		Path gitIgnorePath = gitIgnoreFile.toPath();
+		Files.write(gitIgnorePath, Collections.singleton("/.metadata/"), Charset.forName("UTF-8"),
+				StandardOpenOption.CREATE);
 	}
 
 	@Override
