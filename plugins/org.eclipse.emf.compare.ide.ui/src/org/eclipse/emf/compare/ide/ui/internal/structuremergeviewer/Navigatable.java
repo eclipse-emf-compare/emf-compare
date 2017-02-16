@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo and others.
+ * Copyright (c) 2013, 2015, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 462237, refactoring
+ *     Simon Delisle - bug 511172
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -342,13 +343,26 @@ public class Navigatable implements INavigatable {
 	 * @return the resulting item
 	 */
 	private TreeItem getLastDescendant(TreeItem input) {
-		TreeItem[] children = input.getItems();
+		TreeItem[] children = getChildren(input);
 		TreeItem deepestChild = input;
 		while (children.length > 0) {
 			deepestChild = children[children.length - 1];
-			children = deepestChild.getItems();
+			children = getChildren(deepestChild);
 		}
 		return deepestChild;
+	}
+
+	/**
+	 * Return a (possibly empty) array of TreeItem which are the children of the input item. This loads the
+	 * children in the tree before returning the array to avoid passing over hidden items (Bug 511172).
+	 * 
+	 * @param input
+	 *            TreeItem that you want to have the children
+	 * @return Direct item children of the input
+	 */
+	private TreeItem[] getChildren(TreeItem input) {
+		viewer.createChildren(input);
+		return input.getItems();
 	}
 
 	/**
