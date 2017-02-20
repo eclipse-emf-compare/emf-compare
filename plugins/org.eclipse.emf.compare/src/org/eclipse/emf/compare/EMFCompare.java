@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - add scope of a comparison to its adapters
+ *     Philip Langer - add scope of a comparison to its adapters, progress reporting
  *******************************************************************************/
 package org.eclipse.emf.compare;
 
@@ -286,6 +286,7 @@ public class EMFCompare {
 						}
 						// CHECKSTYLE:ON
 						postComparison(comparison, postProcessors, subMonitor);
+						monitor.worked(1);
 					}
 				}
 			}
@@ -540,17 +541,22 @@ public class EMFCompare {
 	 */
 	private void postComparison(final Comparison comparison, List<IPostProcessor> postProcessors,
 			final Monitor monitor) {
-		Iterator<IPostProcessor> processorsIterator = postProcessors.iterator();
+		final Iterator<IPostProcessor> processorsIterator = postProcessors.iterator();
+		int postProcessorIndex = 1;
 		while (!hasToStop(comparison, monitor) && processorsIterator.hasNext()) {
-			final IPostProcessor iPostProcessor = processorsIterator.next();
+			final IPostProcessor postProcessor = processorsIterator.next();
 			if (LOGGER.isInfoEnabled()) {
 				LOGGER.info("postComparison with post-processor: " //$NON-NLS-1$
-						+ iPostProcessor.getClass().getName() + START);
+						+ postProcessor.getClass().getName() + START);
 			}
-			iPostProcessor.postComparison(comparison, monitor);
+			monitor.subTask(EMFCompareMessages.getString("PostComparison.monitor.postprocessor", //$NON-NLS-1$
+					postProcessor.getClass().getSimpleName(), String.valueOf(postProcessorIndex),
+					String.valueOf(postProcessors.size())));
+			postProcessor.postComparison(comparison, monitor);
+			postProcessorIndex++;
 			if (LOGGER.isInfoEnabled()) {
 				LOGGER.info("postComparison with post-processor: " //$NON-NLS-1$
-						+ iPostProcessor.getClass().getName() + FINISH);
+						+ postProcessor.getClass().getName() + FINISH);
 			}
 		}
 	}

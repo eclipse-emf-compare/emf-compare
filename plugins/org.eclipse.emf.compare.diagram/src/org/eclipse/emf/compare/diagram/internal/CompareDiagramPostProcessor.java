@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,15 +7,18 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - progress reporting
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.internal;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ComparisonCanceledException;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
@@ -103,18 +106,52 @@ public class CompareDiagramPostProcessor implements IPostProcessor {
 		diagramExtensionFactories = new LinkedHashSet<IChangeFactory>(mapDiagramExtensionFactories.values());
 
 		// Creation of the diagram difference extensions
-		for (Diff diff : comparison.getDifferences()) {
-			applyManagedTypes(diff);
+		List<Diff> differences = comparison.getDifferences();
+		int diffCount = differences.size();
+		for (int i = 0; i < diffCount; i++) {
+			applyManagedTypes(differences.get(i));
+			reportProgress(monitor, "CompareDiagramPostProcessor.monitor.applyManagedTypes", i + 1, //$NON-NLS-1$
+					diffCount);
 		}
 
 		// Filling of the requirements link of the difference extensions
-		for (Diff diff : comparison.getDifferences()) {
+		// we must not reuse the variable "differences" as applyManagedTypes(Diff) may have added diffs
+		differences = comparison.getDifferences();
+		diffCount = differences.size();
+		for (int i = 0; i < diffCount; i++) {
+			final Diff diff = differences.get(i);
 			if (diff instanceof DiagramDiff) {
 				final Class<?> classDiffElement = diff.eClass().getInstanceClass();
 				final IChangeFactory diffFactory = mapDiagramExtensionFactories.get(classDiffElement);
 				if (diffFactory != null) {
 					diffFactory.fillRequiredDifferences(comparison, diff);
 				}
+			}
+			reportProgress(monitor, "CompareDiagramPostProcessor.monitor.fillRequiredDifferences", i + 1, //$NON-NLS-1$
+					diffCount);
+		}
+	}
+
+	/**
+	 * Reports the progress to the given <code>monitor</code> for the given <code>msgKey</code> in
+	 * {@link CompareDiagramUIMessages} with the <code>currentDiffIndex</code> of the total
+	 * <code>diffCount</code>. This method also checks for cancellation.
+	 * 
+	 * @param monitor
+	 *            The monitor to report progress.
+	 * @param msgKey
+	 *            The message key in {@link UMLCompareMessages}.
+	 * @param currentDiffIndex
+	 *            The current diff index.
+	 * @param diffCount
+	 *            The total diff count.
+	 */
+	private void reportProgress(Monitor monitor, String msgKey, int currentDiffIndex, int diffCount) {
+		if (currentDiffIndex % 100 == 1) {
+			monitor.subTask(CompareDiagramUIMessages.getString(msgKey, Integer.valueOf(currentDiffIndex),
+					Integer.valueOf(diffCount)));
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
 			}
 		}
 	}

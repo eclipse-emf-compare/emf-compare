@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Martin Fleck - Consider profile definition changes on origin (bug 495259)
- *     Philip Langer - bug 508665
+ *     Philip Langer - bug 508665, progress reporting
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor;
 
@@ -35,6 +35,7 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ComparisonCanceledException;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
@@ -290,12 +291,19 @@ public class UMLPostProcessor implements IPostProcessor {
 		uml2ExtensionFactories = new LinkedHashSet<IChangeFactory>(mapUml2ExtensionFactories.values());
 
 		// Creation of the UML difference extensions
-		for (Diff diff : comparison.getDifferences()) {
-			applyManagedTypes(diff);
+		List<Diff> differences = comparison.getDifferences();
+		int diffCount = differences.size();
+		for (int i = 0; i < diffCount; i++) {
+			applyManagedTypes(differences.get(i));
+			reportProgress(monitor, "UMLPostProcessor.monitor.applyManagedTypes", i + 1, diffCount); //$NON-NLS-1$
 		}
 
 		// Filling of the requirements link of the UML difference extensions
-		for (Diff umlDiff : comparison.getDifferences()) {
+		// we must not reuse the variable "differences" as applyManagedTypes(Diff) may have added diffs
+		differences = comparison.getDifferences();
+		diffCount = differences.size();
+		for (int i = 0; i < diffCount; i++) {
+			final Diff umlDiff = differences.get(i);
 			if (umlDiff instanceof UMLDiff) {
 				final Class<?> classDiffElement = umlDiff.eClass().getInstanceClass();
 				final IChangeFactory diffFactory = mapUml2ExtensionFactories.get(classDiffElement);
@@ -303,18 +311,44 @@ public class UMLPostProcessor implements IPostProcessor {
 					diffFactory.fillRequiredDifferences(comparison, umlDiff);
 				}
 			}
+			reportProgress(monitor, "UMLPostProcessor.monitor.fillRequiredDifferences", i + 1, diffCount); //$NON-NLS-1$
 		}
 
 		// Filling implications with subsets
 		// And delete enumeration literal classifier changes, as it is actually a derived feature
-		for (Diff diff : comparison.getDifferences()) {
+		for (int i = 0; i < diffCount; i++) {
+			final Diff diff = differences.get(i);
 			if (diff instanceof ReferenceChange) {
 				final ReferenceChange referenceChange = (ReferenceChange)diff;
 				fillImplicationsWithUMLSubsets(referenceChange);
 				deleteEnumerationLiteralClassifierChanges(referenceChange);
 			}
+			reportProgress(monitor, "UMLPostProcessor.monitor.fillImplications", i + 1, diffCount); //$NON-NLS-1$
 		}
+	}
 
+	/**
+	 * Reports the progress to the given <code>monitor</code> for the given <code>msgKey</code> in
+	 * {@link UMLCompareMessages} with the <code>currentDiffIndex</code> of the total <code>diffCount</code>.
+	 * This method also checks for cancellation.
+	 * 
+	 * @param monitor
+	 *            The monitor to report progress.
+	 * @param msgKey
+	 *            The message key in {@link UMLCompareMessages}.
+	 * @param currentDiffIndex
+	 *            The current diff index.
+	 * @param diffCount
+	 *            The total diff count.
+	 */
+	private void reportProgress(Monitor monitor, String msgKey, int currentDiffIndex, int diffCount) {
+		if (currentDiffIndex % 100 == 1) {
+			monitor.subTask(UMLCompareMessages.getString(msgKey, Integer.valueOf(currentDiffIndex),
+					Integer.valueOf(diffCount)));
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
+			}
+		}
 	}
 
 	/**
