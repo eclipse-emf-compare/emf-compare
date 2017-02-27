@@ -407,7 +407,7 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 				} else if (diff != null && item.getLeft() == null && item.getRight() == null) {
 					hashCode = Objects.hashCode(item.getAncestor(), diff);
 				} else {
-					hashCode = Objects.hashCode(item.getLeft(), item.getRight(), item.getAncestor(), diff);
+					hashCode = Objects.hashCode(item.getLeft(), item.getRight(), item.getAncestor());
 				}
 			} else {
 				hashCode = element.hashCode();
@@ -435,6 +435,11 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 				} else if (diffA != null && diffB != null && itemA.getLeft() == null
 						&& itemA.getRight() == null && itemB.getLeft() == null && itemB.getRight() == null) {
 					ret = Objects.equal(diffA, diffB);
+				} else if (diffA == null || diffB == null) {
+					// only compare diffs if they exist on both sides
+					ret = Objects.equal(itemA.getLeft(), itemB.getLeft())
+							&& Objects.equal(itemA.getRight(), itemB.getRight())
+							&& Objects.equal(itemA.getAncestor(), itemB.getAncestor());
 				} else {
 					ret = Objects.equal(itemA.getLeft(), itemB.getLeft())
 							&& Objects.equal(itemA.getRight(), itemB.getRight())

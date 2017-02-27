@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2016 Obeo.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,12 +9,14 @@
  *     Obeo - initial API and implementation
  *     Philip Langer - bug 486923
  *     Tanja Mayerhofer - bug 501864
+ *     Martin Fleck - bug 510968 and bug 510970
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.tests.suite;
 
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.rcp.ui.tests.contentmergeviewer.accessor.match.MatchAccessorTest;
 import org.eclipse.emf.compare.rcp.ui.tests.match.RCPMatchEngineFactoryRegistryTest;
+import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.TableOrTreeMergeViewerElementComparerTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemFeatureMapsTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemPseudoConflictTest;
 import org.eclipse.emf.compare.rcp.ui.tests.mergeviewer.item.MergeViewerItemTest;
@@ -48,7 +50,8 @@ import junit.textui.TestRunner;
 		TestBasicDifferenceGroupImpl.class, BugsTestSuite.class, TestFeatureMapDifferencesFilter.class,
 		RCPMatchEngineFactoryRegistryTest.class, ThreeWayComparisonGroupProviderTest.class,
 		ConflictsGroupTest.class, MatchAccessorTest.class, TechnicalitiesFilterTests.class,
-		MatchOfContainmentReferenceChangeAdapterTest.class, ResourceAttachmentChangeInGroupsTest.class })
+		MatchOfContainmentReferenceChangeAdapterTest.class, ResourceAttachmentChangeInGroupsTest.class,
+		TableOrTreeMergeViewerElementComparerTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.
