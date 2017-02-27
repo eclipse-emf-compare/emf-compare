@@ -19,6 +19,7 @@
 <plugin>
    <extension-point id="modelResolvers" name="Model Resolvers" schema="schema/modelResolvers.exsd"/>
    <extension-point id="logicalModelViewHandlers" name="Logical Model View Handlers" schema="schema/logicalModelViewHandlers.exsd"/>
+   <extension-point id="modelMinimizers" name="Logical Model Minimizers" schema="schema/modelMinimizers.exsd"/>
    <extension-point id="modelDependencyProvider" name="Model Dependency Provider" schema="schema/modelDependencyProvider.exsd"/>
    <extension-point id="mergeResolutionListener" name="Merge Resolution Listener" schema="schema/mergeResolutionListener.exsd"/>
    
@@ -558,5 +559,11 @@
             mergeViewerItemProvider="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.provider.CompareAccessorMergeViewerItemProvider"
             ranking="1">
       </contentCustomization>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.ide.ui.modelMinimizers">
+      <modelMinimizer
+            class="org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer">
+      </modelMinimizer>
    </extension>
 </plugin>

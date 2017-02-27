@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2015, 2017 Obeo and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests;
 
 import static org.junit.Assert.assertFalse;
@@ -34,7 +44,6 @@ import org.eclipse.emf.compare.diagram.papyrus.tests.egit.fixture.MockSystemRead
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.EMFModelProvider;
-import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
 import org.eclipse.emf.compare.ide.ui.internal.logical.StorageTypedElement;
 import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope;
@@ -69,7 +78,7 @@ public class AbstractGitTestCase extends CompareTestCase {
 	 * The bundle containing this test.
 	 */
 	protected static final String TEST_BUNDLE = "org.eclipse.emf.compare.diagram.papyrus.tests.git";
-	
+
 	protected static final String MASTER = Constants.R_HEADS + Constants.MASTER;
 
 	protected static final String BRANCH_1 = Constants.R_HEADS + "branch1";
@@ -116,8 +125,8 @@ public class AbstractGitTestCase extends CompareTestCase {
 		SystemReader.setInstance(mockSystemReader);
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		String gitRepoPath = workspaceRoot.getRawLocation().toFile() + File.separator + "repo";
-		mockSystemReader.setProperty(Constants.GIT_CEILING_DIRECTORIES_KEY, workspaceRoot.getLocation()
-				.toFile().getParentFile().getAbsoluteFile().toString());
+		mockSystemReader.setProperty(Constants.GIT_CEILING_DIRECTORIES_KEY,
+				workspaceRoot.getLocation().toFile().getParentFile().getAbsoluteFile().toString());
 		gitDir = new File(gitRepoPath, Constants.DOT_GIT);
 		repository = new GitTestRepository(gitDir);
 		repository.ignore(workspaceRoot.getRawLocation().append(".metadata").toFile());
@@ -126,8 +135,8 @@ public class AbstractGitTestCase extends CompareTestCase {
 	@Override
 	@After
 	public void tearDown() throws Exception {
-		final EMFModelProvider emfModelProvider = (EMFModelProvider)ModelProvider.getModelProviderDescriptor(
-				EMFModelProvider.PROVIDER_ID).getModelProvider();
+		final EMFModelProvider emfModelProvider = (EMFModelProvider)ModelProvider
+				.getModelProviderDescriptor(EMFModelProvider.PROVIDER_ID).getModelProvider();
 		emfModelProvider.clear();
 		repository.dispose();
 		Activator.getDefault().getRepositoryCache().clear();
@@ -138,7 +147,7 @@ public class AbstractGitTestCase extends CompareTestCase {
 			}
 		}
 	}
-	
+
 	/**
 	 * Copies the file located in {@link #testDataPath} + {@code filePath} to the given
 	 * {@code destinationPath} in {@code iProject}.
@@ -151,8 +160,8 @@ public class AbstractGitTestCase extends CompareTestCase {
 	 *            The path in the {@code iProject} to which the file will be copied.
 	 * @return The newly created {@link IFile}.
 	 */
-	protected IFile addToProject(String testDataPath, TestProject project, IProject iProject, String filePath, String destinationPath)
-			throws IOException, URISyntaxException, CoreException {
+	protected IFile addToProject(String testDataPath, TestProject project, IProject iProject, String filePath,
+			String destinationPath) throws IOException, URISyntaxException, CoreException {
 		final Bundle bundle = Platform.getBundle(TEST_BUNDLE);
 		final URI fileUri = getFileUri(bundle.getEntry(testDataPath + filePath));
 
@@ -201,7 +210,8 @@ public class AbstractGitTestCase extends CompareTestCase {
 		resolver.setGraph(new Graph<URI>());
 		resolver.initialize();
 		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
-				new IdenticalResourceMinimizer(), storageAccessor);
+				EMFCompareIDEUIPlugin.getDefault().getModelMinimizerRegistry().getCompoundMinimizer(),
+				storageAccessor);
 		final IComparisonScope scope = scopeBuilder.build(left, right, origin, monitor);
 
 		final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();
@@ -217,7 +227,7 @@ public class AbstractGitTestCase extends CompareTestCase {
 
 		return comparisonBuilder.build().compare(scope, new BasicMonitor());
 	}
-	
+
 	protected void merge(Repository repo, String refName) throws CoreException {
 		new MergeOperation(repo, refName).execute(null);
 	}

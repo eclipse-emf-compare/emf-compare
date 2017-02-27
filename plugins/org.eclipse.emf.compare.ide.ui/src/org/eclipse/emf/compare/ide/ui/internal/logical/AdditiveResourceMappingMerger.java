@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Obeo.
+ * Copyright (c) 2016, 2017 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 512562
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -80,7 +81,8 @@ public class AdditiveResourceMappingMerger extends EMFResourceMappingMerger impl
 		// get the involved resources before we run the minimizer
 		final Set<IResource> resources = Sets.newLinkedHashSet(syncModel.getResources());
 
-		final IModelMinimizer minimizer = new IdenticalResourceMinimizer();
+		final IModelMinimizer minimizer = EMFCompareIDEUIPlugin.getDefault().getModelMinimizerRegistry()
+				.getCompoundMinimizer();
 		minimizer.minimize(syncModel, subMonitor.newChild(1)); // 10%
 		final IComparisonScope scope = ComparisonScopeBuilder.create(syncModel, subMonitor.newChild(3)); // 40%
 

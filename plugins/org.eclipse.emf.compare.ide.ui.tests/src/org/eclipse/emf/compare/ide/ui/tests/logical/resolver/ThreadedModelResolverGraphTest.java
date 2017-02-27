@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 512562
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.logical.resolver;
 
@@ -33,7 +34,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.graph.IGraphView;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
-import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
 import org.eclipse.emf.compare.ide.ui.internal.logical.StorageTypedElement;
 import org.eclipse.emf.compare.ide.ui.internal.logical.StreamAccessorStorage;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
@@ -84,7 +84,7 @@ public class ThreadedModelResolverGraphTest {
 		assertTrue(resolver instanceof ThreadedModelResolver);
 
 		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
-				new IdenticalResourceMinimizer(), null);
+				EMFCompareIDEUIPlugin.getDefault().getModelMinimizerRegistry().getCompoundMinimizer(), null);
 		scopeBuilder.build(left, right, null, new NullProgressMonitor());
 
 		return ((ThreadedModelResolver)resolver).getGraphView();

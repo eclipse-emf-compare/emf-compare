@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2013, 2015 Obeo and others
+ * Copyright (C) 2013, 2017 Obeo and others
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -43,8 +43,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompare.Builder;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
-import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
 import org.eclipse.emf.compare.ide.ui.internal.logical.StorageTypedElement;
 import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.ThreadedModelResolver;
@@ -168,7 +168,8 @@ public class CompareGitTestCase extends CompareTestCase {
 		resolver.setGraph(new Graph<URI>());
 		resolver.initialize();
 		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
-				new IdenticalResourceMinimizer(), storageAccessor);
+				EMFCompareIDEUIPlugin.getDefault().getModelMinimizerRegistry().getCompoundMinimizer(),
+				storageAccessor);
 		final IComparisonScope scope = scopeBuilder.build(left, right, origin, monitor);
 
 		final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();

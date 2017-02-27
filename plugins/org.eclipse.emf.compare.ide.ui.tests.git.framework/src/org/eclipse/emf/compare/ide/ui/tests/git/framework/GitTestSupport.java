@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Obeo and others.
+ * Copyright (c) 2016, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - add convenience methods
+ *     Martin Fleck - bug 512562
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.git.framework;
 
@@ -51,7 +52,6 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
-import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
 import org.eclipse.emf.compare.ide.ui.internal.logical.StorageTypedElement;
 import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
@@ -366,7 +366,8 @@ public class GitTestSupport extends InternalGitTestSupport {
 		IModelResolver resolver = p.getModelResolverRegistry().getBestResolverFor(file);
 
 		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
-				new IdenticalResourceMinimizer(), accessor);
+				EMFCompareIDEUIPlugin.getDefault().getModelMinimizerRegistry().getCompoundMinimizer(),
+				accessor);
 		final IComparisonScope scope = scopeBuilder.build(left, right, origin, monitor);
 
 		final ResourceSet leftResourceSet = (ResourceSet)scope.getLeft();

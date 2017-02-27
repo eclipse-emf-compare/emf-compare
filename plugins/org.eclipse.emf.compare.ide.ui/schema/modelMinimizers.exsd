@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.emf.compare.ide.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.eclipse.emf.compare.ide.ui" id="modelMinimizers" name="Logical Model Minimizers"/>
+      </appinfo>
+      <documentation>
+         This extension point can be used to tell EMF Compare how to minimize the set of resources in the computed logical model before the comparison is started.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="modelMinimizer" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  Optional ID of the extension definition.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  Optional name of the extension definition.
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="modelMinimizer">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Class implementing the IModelMinimizer interface.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         4.4.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         Following is an example of a minimal model minimizer definition: 
+
+&lt;p&gt;
+&lt;pre&gt;
+   &lt;extension point=&quot;org.eclipse.emf.compare.ide.ui.modelMinimizers&quot;&gt;
+      &lt;modelMinimizer
+            class=&quot;org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer&quot;&gt;
+      &lt;/modelMinimizer&gt;
+   &lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiinfo"/>
+      </appinfo>
+      <documentation>
+         All model minimizers are instances of &lt;samp&gt;org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer&lt;/samp&gt; and may be collected in a &lt;samp&gt;org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer.Registry&lt;/samp&gt;.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         See org.eclipse.emf.compare.ide.ui/plugin.xml for existing contributions.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="copyright"/>
+      </appinfo>
+      <documentation>
+         Copyright (c) 2017 EclipseSource Services GmbH and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+    Martin Fleck - initial API and implementation
+      </documentation>
+   </annotation>
+
+</schema>

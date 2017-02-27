@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2016 Obeo.
+ * Copyright (c) 2013, 2017 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - fix use of StorageTraversal.getStorages()
+ *     Martin Fleck - bug 512562
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -16,6 +17,7 @@ import static org.eclipse.emf.compare.ide.utils.ResourceUtil.binaryIdentical;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
@@ -106,6 +108,17 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 			}
 			subMonitor.worked(1);
 		}
+	}
+
+	/**
+	 * {@inheritDoc} Specifically, this minimizer does not consider the selected file and performs the same
+	 * operation as it does without the file.
+	 * 
+	 * @see org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer#minimize(IFile, SynchronizationModel,
+	 *      IProgressMonitor)
+	 */
+	public void minimize(IFile file, SynchronizationModel syncModel, IProgressMonitor monitor) {
+		minimize(syncModel, monitor);
 	}
 
 	/**

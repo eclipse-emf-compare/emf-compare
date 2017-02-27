@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Stefan Dirix - Bug 456699
  *     Michael Borkowski - Bug 462863
+ *     Martin Fleck - Bug 512562
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal;
 
@@ -24,12 +25,15 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.ide.ui.dependency.ModelDependencyProviderRegistry;
 import org.eclipse.emf.compare.ide.ui.dependency.ModelDependencyProviderRegistryListener;
 import org.eclipse.emf.compare.ide.ui.internal.editor.PropertySheetAdapterFactory;
+import org.eclipse.emf.compare.ide.ui.internal.logical.ModelMinimizerRegistry;
+import org.eclipse.emf.compare.ide.ui.internal.logical.ModelMinimizerRegistryListener;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverRegistryListener;
 import org.eclipse.emf.compare.ide.ui.internal.logical.view.registry.LogicalModelViewHandlerRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.logical.view.registry.LogicalModelViewHandlerRegistryListener;
 import org.eclipse.emf.compare.ide.ui.internal.mergeresolution.MergeResolutionListenerRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.mergeresolution.MergeResolutionListenerRegistryListener;
+import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -53,6 +57,9 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 
 	/** Logical Model Editors Handlers extension point. */
 	private static final String LOGICAL_MODEL_VIEW_HANDLERS_PPID = "logicalModelViewHandlers"; //$NON-NLS-1$
+
+	/** Model Minimizers extension point. */
+	private static final String MODEL_MINIMIZERS_PPID = "modelMinimizers"; //$NON-NLS-1$
 
 	/** Model dependency providers extension point. */
 	private static final String MODEL_DEPENDENCY_PROVIDER_PPID = "modelDependencyProvider"; //$NON-NLS-1$
@@ -84,6 +91,12 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	/** Registry of model dependency providers. */
 	private ModelDependencyProviderRegistry modelDependencyProviderRegistry;
 
+	/** Registry for the model minimizers. */
+	private ModelMinimizerRegistry modelMinimizerRegistry;
+
+	/** Listener for the model minimizers extension point. */
+	private ModelMinimizerRegistryListener modelMinimizerRegistryListener;
+
 	/** Registry for the merge resolution listener extension point. */
 	private MergeResolutionListenerRegistry mergeResolutionListenerRegistry;
 
@@ -105,6 +118,7 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		modelDependencyProviderRegistry = new ModelDependencyProviderRegistry();
 		modelResolverRegistry = new ModelResolverRegistry();
 		logicalModelViewHandlerRegistry = new LogicalModelViewHandlerRegistry();
+		modelMinimizerRegistry = new ModelMinimizerRegistry();
 		mergeResolutionListenerRegistry = new MergeResolutionListenerRegistry();
 
 		final IExtensionRegistry globalRegistry = Platform.getExtensionRegistry();
@@ -128,6 +142,11 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 				LOGICAL_MODEL_VIEW_HANDLERS_PPID, getLog(), logicalModelViewHandlerRegistry);
 		globalRegistry.addListener(logicalModelViewHandlerRegistryListener);
 		logicalModelViewHandlerRegistryListener.readRegistry(globalRegistry);
+
+		modelMinimizerRegistryListener = new ModelMinimizerRegistryListener(PLUGIN_ID, MODEL_MINIMIZERS_PPID,
+				getLog(), modelMinimizerRegistry);
+		globalRegistry.addListener(modelMinimizerRegistryListener);
+		modelMinimizerRegistryListener.readRegistry(globalRegistry);
 
 		Platform.getAdapterManager().registerAdapters(new PropertySheetAdapterFactory(), CompareEditor.class);
 	}
@@ -231,6 +250,15 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	 */
 	public LogicalModelViewHandlerRegistry getLogicalModelViewHandlerRegistry() {
 		return logicalModelViewHandlerRegistry;
+	}
+
+	/**
+	 * Returns the registry containing all known model minimizers.
+	 * 
+	 * @return The registry containing all known model minimiers.
+	 */
+	public IModelMinimizer.Registry getModelMinimizerRegistry() {
+		return modelMinimizerRegistry;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 466607
  *     Philip Langer - bug 508855
+ *     Martin Fleck - bug 512562
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -284,7 +285,8 @@ public class EMFModelProvider extends ModelProvider {
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("EMFModelProvider - Minimizing model"); //$NON-NLS-1$
 					}
-					new IdenticalResourceMinimizer().minimize(syncModel, monitor);
+					EMFCompareIDEUIPlugin.getDefault().getModelMinimizerRegistry().getCompoundMinimizer()
+							.minimize(file, syncModel, monitor);
 				}
 			} else if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Cache FOUND entry for " + file); //$NON-NLS-1$

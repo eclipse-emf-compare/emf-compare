@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2016 Obeo and others.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 466607
  *     Philip Langer - add support for setting initial file URIs to scope
+ *     Martin Fleck - bug 512562
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -178,7 +179,7 @@ public final class ComparisonScopeBuilder {
 				syncModel = createSynchronizationModel(left, right, origin, subMonitor.newChild(60));
 			}
 
-			return createMinimizedScope(syncModel, subMonitor.newChild(40));
+			return createMinimizedScope(left, syncModel, subMonitor.newChild(40));
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 			EmptyComparisonScope scope = new EmptyComparisonScope();
@@ -231,7 +232,7 @@ public final class ComparisonScopeBuilder {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("buildSynchronizationModel - Minimizing model"); //$NON-NLS-1$
 		}
-		minimizer.minimize(syncModel, subMonitor.newChild(10));
+		minimizer.minimize(PlatformElementUtil.findFile(left), syncModel, subMonitor.newChild(10));
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("buildSynchronizationModel - FINISH NORMALLY"); //$NON-NLS-1$
 		}
@@ -265,7 +266,8 @@ public final class ComparisonScopeBuilder {
 		IModelResolver resolver = EMFCompareIDEUIPlugin.getDefault().getModelResolverRegistry()
 				.getBestResolverFor(leftStorage);
 		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
-				new IdenticalResourceMinimizer(), storageAccessor);
+				EMFCompareIDEUIPlugin.getDefault().getModelMinimizerRegistry().getCompoundMinimizer(),
+				storageAccessor);
 		return scopeBuilder.build(left, right, origin, monitor);
 	}
 
@@ -465,20 +467,23 @@ public final class ComparisonScopeBuilder {
 	/**
 	 * Prepare the given synchronization model for use, then create the corresponding comparison scope.
 	 * 
+	 * @param left
+	 *            The element that has been used as the starting point to resolve the left logical model.
 	 * @param syncModel
 	 *            The synchronization model describing our resource traversals.
 	 * @param monitor
 	 *            Monitor on which to report progress information to the user.
 	 * @return The created comparison scope.
 	 */
-	private IComparisonScope createMinimizedScope(SynchronizationModel syncModel, IProgressMonitor monitor) {
+	private IComparisonScope createMinimizedScope(ITypedElement left, SynchronizationModel syncModel,
+			IProgressMonitor monitor) {
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
 
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 		// Minimize the traversals to non-read-only resources with no binary identical counterparts.
-		minimizer.minimize(syncModel, subMonitor.newChild(10));
+		minimizer.minimize(PlatformElementUtil.findFile(left), syncModel, subMonitor.newChild(10));
 		return createScope(syncModel, subMonitor.newChild(90));
 	}
 

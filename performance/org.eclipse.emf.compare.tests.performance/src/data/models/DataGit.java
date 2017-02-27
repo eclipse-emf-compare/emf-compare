@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Obeo.
+ * Copyright (c) 2015, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 512562
  *******************************************************************************/
 package data.models;
 
@@ -38,8 +39,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.conflict.MatchBasedConflictDetector;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
+import org.eclipse.emf.compare.conflict.MatchBasedConflictDetector;
 import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
 import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.DiffBuilder;
@@ -49,7 +50,6 @@ import org.eclipse.emf.compare.equi.DefaultEquiEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
-import org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer;
 import org.eclipse.emf.compare.ide.ui.internal.logical.StorageTypedElement;
 import org.eclipse.emf.compare.ide.ui.internal.logical.SubscriberStorageAccessor;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry.ModelResolverRegistry;
@@ -165,7 +165,8 @@ public class DataGit {
 			ModelResolverRegistry mrr = EMFCompareIDEUIPlugin.getDefault().getModelResolverRegistry();
 			IModelResolver resolver = mrr.getBestResolverFor(sourceProvider.getStorage(m));
 			final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
-					new IdenticalResourceMinimizer(), storageAccessor);
+					EMFCompareIDEUIPlugin.getDefault().getModelMinimizerRegistry().getCompoundMinimizer(),
+					storageAccessor);
 			scope = scopeBuilder.build(left, right, origin, m);
 
 			resourceSets.add((ResourceSet)scope.getLeft());
