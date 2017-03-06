@@ -14,6 +14,7 @@
      Michael Borkowski - bug 467191
      Simon Delisle - bug 495753
      Philip Langer - bug 508855
+     Martin fleck - bug 512677
 -->
 
 <plugin>
@@ -422,6 +423,14 @@
                         property="org.eclipse.core.resources.extension"
                         value="xmi">
                   </test>
+                  <test
+                         property="org.eclipse.core.resources.extension"
+                         value="properties">
+                   </test>
+                   <test
+                         property="org.eclipse.core.resources.extension"
+                         value="internationalization">
+                   </test>
                </or>
             </and>
          </or>

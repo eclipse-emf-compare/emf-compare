@@ -244,7 +244,8 @@ public class ResourceDependencyLocalResolver implements IResourceDependencyLocal
 				new LocalMonitoredProxyCreationListener(tspm, eventBus, this, diagnostic));
 		Iterable<IFile> filesToResolve = Iterables.filter(Arrays.asList(files), new Predicate<IFile>() {
 			public boolean apply(IFile file) {
-				return !dependencyGraph.contains(ResourceUtil.asURI().apply(file));
+				return !dependencyGraph.contains(ResourceUtil.asURI().apply(file))
+						&& ResourceUtil.hasModelType(file);
 			}
 		});
 		context.getScheduler().runAll(Iterables.transform(filesToResolve, new Function<IFile, Runnable>() {

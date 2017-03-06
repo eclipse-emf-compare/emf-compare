@@ -13,6 +13,7 @@
  *     Martin Fleck - add CascadingFilterRefinementTest and
  *                    MergeNonConflictingRunnableRefinementTest
  *     Martin Fleck - add CachingImplicitDependenciesTest
+ *     Martin Fleck - add EMFModelProviderRegistrationTest
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.suite;
 
@@ -20,6 +21,7 @@ import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.ide.ui.tests.command.MergeAllCommandTests;
 import org.eclipse.emf.compare.ide.ui.tests.compareconfiguration.EMFCompareConfigurationTest;
 import org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.notloadedfragment.NotLoadedFragmentItemTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.modelprovider.EMFModelProviderRegistrationTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.modelprovider.EMFModelProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.CachingImplicitDependenciesTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.DependencyGraphUpdaterTest;
@@ -68,7 +70,7 @@ import junit.textui.TestRunner;
 		RenameDetectorTest.class, SimilarityComputerTest.class, TooltipProviderTest.class,
 		SynchronizationModelDiagnosticTest.class, CascadingFilterRefinementTest.class,
 		MergeNonConflictingRunnableRefinementTest.class, CachingImplicitDependenciesTest.class,
-		MirroredMergeActionTest.class })
+		MirroredMergeActionTest.class, EMFModelProviderRegistrationTest.class, })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.
