@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Simon Delisle - bug 495753
  *     Mathias Schaefer - preferences refactoring
+ *     Simon Delisle - Change verification for integer fields
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.preferences;
 
@@ -36,10 +37,10 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -144,13 +145,21 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 		maxSizeLabel.setText(EMFCompareRCPUIMessages.getString("LoggingPreferencePage.log.file.size")); //$NON-NLS-1$
 		maxSizeField = new Text(loggingComposite, SWT.BORDER | SWT.SINGLE);
 		maxSizeField.setLayoutData(getDefaultFieldGridData(80));
-		maxSizeField.addVerifyListener(new VerifyIntegerListener());
+		maxSizeField.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				verifyIntegerFields();
+			}
+		});
 
 		Label maxBackupLabel = new Label(loggingComposite, SWT.LEAD);
 		maxBackupLabel.setText(EMFCompareRCPUIMessages.getString("LoggingPreferencePage.log.backup.count")); //$NON-NLS-1$
 		maxBackupField = new Text(loggingComposite, SWT.BORDER | SWT.SINGLE);
 		maxBackupField.setLayoutData(getDefaultFieldGridData(80));
-		maxBackupField.addVerifyListener(new VerifyIntegerListener());
+		maxBackupField.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				verifyIntegerFields();
+			}
+		});
 
 		refreshWidgets();
 
@@ -214,17 +223,29 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	/**
-	 * Only allows to enter valid digits in numeric fields.
-	 * 
-	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
+	 * Verify if max size and max file fields are valid. It checks if the fields are integer and not empty.
 	 */
-	private static class VerifyIntegerListener implements VerifyListener {
-		public void verifyText(VerifyEvent evt) {
-			try {
-				Integer.parseInt(evt.text);
-			} catch (NumberFormatException e) {
-				evt.doit = false;
-			}
+	private void verifyIntegerFields() {
+		try {
+			Integer.parseInt(maxSizeField.getText());
+			Integer.parseInt(maxBackupField.getText());
+			setPreferencePageError(true, null);
+		} catch (Exception e) {
+			setPreferencePageError(false,
+					EMFCompareRCPUIMessages.getString("LoggingPreferencePage.error.message")); //$NON-NLS-1$
 		}
+	}
+
+	/**
+	 * Set preference page error message and if this page is valid.
+	 * 
+	 * @param isValid
+	 *            True if you can apply these preference
+	 * @param errorMessage
+	 *            Error message to display or null to remove the message
+	 */
+	private void setPreferencePageError(boolean isValid, String errorMessage) {
+		setValid(isValid);
+		setErrorMessage(errorMessage);
 	}
 }
