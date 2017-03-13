@@ -39,6 +39,7 @@ import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeNonConflictingRunnable;
 import org.eclipse.emf.compare.ide.ui.tests.command.data.MergeAllCommandInputData;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.merge.DiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -86,7 +87,7 @@ public class MergeAllCommandTests {
 				.addAll(ImmutableList.of(leftResource, rightResource, originResource)).build();
 
 		MergeNonConflictingRunnable runnable = new MergeNonConflictingRunnable(isLeftEditable,
-				isRightEditable, mergeMode);
+				isRightEditable, mergeMode, new DiffRelationshipComputer(mergerRegistry));
 
 		MergeAllNonConflictingCommand command = new MergeAllNonConflictingCommand(changeRecorder, notifiers,
 				comparison, leftToRight, mergerRegistry, runnable);
@@ -155,7 +156,7 @@ public class MergeAllCommandTests {
 				.addAll(ImmutableList.of(leftResource, rightResource, originResource)).build();
 
 		MergeNonConflictingRunnable runnable = new MergeNonConflictingRunnable(isLeftEditable,
-				isRightEditable, mergeMode);
+				isRightEditable, mergeMode, new DiffRelationshipComputer(mergerRegistry));
 
 		MergeAllNonConflictingCommand command = new MergeAllNonConflictingCommand(changeRecorder, notifiers,
 				comparison, leftToRight, mergerRegistry, runnable);
@@ -224,7 +225,7 @@ public class MergeAllCommandTests {
 				.addAll(ImmutableList.of(leftResource, rightResource, originResource)).build();
 
 		MergeNonConflictingRunnable runnable = new MergeNonConflictingRunnable(isLeftEditable,
-				isRightEditable, mergeMode);
+				isRightEditable, mergeMode, new DiffRelationshipComputer(mergerRegistry));
 
 		MergeAllNonConflictingCommand command = new MergeAllNonConflictingCommand(changeRecorder, notifiers,
 				comparison, leftToRight, mergerRegistry, runnable);
@@ -293,7 +294,7 @@ public class MergeAllCommandTests {
 				.addAll(ImmutableList.of(leftResource, rightResource, originResource)).build();
 
 		MergeNonConflictingRunnable runnable = new MergeNonConflictingRunnable(isLeftEditable,
-				isRightEditable, mergeMode);
+				isRightEditable, mergeMode, new DiffRelationshipComputer(mergerRegistry));
 
 		MergeAllNonConflictingCommand command = new MergeAllNonConflictingCommand(changeRecorder, notifiers,
 				comparison, leftToRight, mergerRegistry, runnable);
@@ -369,7 +370,7 @@ public class MergeAllCommandTests {
 				.addAll(ImmutableList.of(leftResource, originResource)).build();
 
 		MergeNonConflictingRunnable runnable = new MergeNonConflictingRunnable(isLeftEditable,
-				isRightEditable, mergeMode);
+				isRightEditable, mergeMode, new DiffRelationshipComputer(mergerRegistry));
 
 		MergeAllNonConflictingCommand command = new MergeAllNonConflictingCommand(changeRecorder, notifiers,
 				comparison, mergeMode.isLeftToRight(isLeftEditable, isRightEditable), mergerRegistry,

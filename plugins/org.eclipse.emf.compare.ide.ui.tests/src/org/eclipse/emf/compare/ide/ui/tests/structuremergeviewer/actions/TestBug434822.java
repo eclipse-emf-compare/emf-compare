@@ -28,6 +28,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeRunnableImpl;
 import org.eclipse.emf.compare.internal.merge.MergeDataImpl;
+import org.eclipse.emf.compare.merge.DiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
@@ -112,7 +113,8 @@ public class TestBug434822 {
 	public void testMergeDataAfterAcceptingDeletion() {
 		ArrayList<Diff> uiDiff = Lists.newArrayList(rightDelete);
 
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT,
+				new DiffRelationshipComputer(mergerRegistry));
 		mergeRunnable.merge(uiDiff, false, mergerRegistry);
 
 		// Assert merge data and diff states
@@ -131,7 +133,8 @@ public class TestBug434822 {
 		// filter activated).
 		ArrayList<Diff> uiDiff = Lists.newArrayList(rightDelete, leftMove);
 
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT,
+				new DiffRelationshipComputer(mergerRegistry));
 		mergeRunnable.merge(uiDiff, false, mergerRegistry);
 
 		// Assert merge data and diff states
@@ -152,7 +155,8 @@ public class TestBug434822 {
 		 */
 		ArrayList<Diff> uiDiff = Lists.newArrayList(rightDelete);
 
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, REJECT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, REJECT,
+				new DiffRelationshipComputer(mergerRegistry));
 		mergeRunnable.merge(uiDiff, false, mergerRegistry);
 
 		// Assert merge data and diff states
@@ -169,7 +173,8 @@ public class TestBug434822 {
 		// Mocks the UI behavior of UI if the movement diff is selected for merging.
 		ArrayList<Diff> uiDiff = Lists.newArrayList(leftMove);
 
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT,
+				new DiffRelationshipComputer(mergerRegistry));
 		mergeRunnable.merge(uiDiff, false, mergerRegistry);
 
 		// Assert merge data
@@ -187,7 +192,8 @@ public class TestBug434822 {
 		// Mocks the UI behavior of UI if the movement diff is selected for merging.
 		ArrayList<Diff> uiDiff = Lists.newArrayList(leftMove);
 
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, REJECT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, REJECT,
+				new DiffRelationshipComputer(mergerRegistry));
 		mergeRunnable.merge(uiDiff, false, mergerRegistry);
 
 		// Assert merge data

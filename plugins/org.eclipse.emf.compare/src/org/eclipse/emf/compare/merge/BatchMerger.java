@@ -40,6 +40,9 @@ public class BatchMerger implements IBatchMerger {
 	/** Filter the differences that should be merged. */
 	private final Predicate<? super Diff> filter;
 
+	/** The relationship computer used to calculate dependencies and requirements of diffs. */
+	private IDiffRelationshipComputer relationshipComputer;
+
 	/**
 	 * Constructs our batch merger provided the registry from which to retrieve the delegate mergers. Using
 	 * such a merger will merge every differences passed to its "copy" methods : conflictual or not.
@@ -49,7 +52,19 @@ public class BatchMerger implements IBatchMerger {
 	 *            IMerger.Registry2.
 	 */
 	public BatchMerger(IMerger.Registry registry) {
-		this(registry, alwaysTrue());
+		this(new DiffRelationshipComputer(registry), alwaysTrue());
+	}
+
+	/**
+	 * Constructs our batch merger provided the registry from which to retrieve the delegate mergers. Using
+	 * such a merger will merge every differences passed to its "copy" methods : conflictual or not.
+	 * 
+	 * @param relationshipComputer
+	 *            The relationship computer used to calculate dependencies and requirements of diffs.
+	 * @since 3.5
+	 */
+	public BatchMerger(IDiffRelationshipComputer relationshipComputer) {
+		this(relationshipComputer, alwaysTrue());
 	}
 
 	/**
@@ -79,7 +94,38 @@ public class BatchMerger implements IBatchMerger {
 	 * @see org.eclipse.emf.compare.utils.EMFComparePredicates
 	 */
 	public BatchMerger(IMerger.Registry registry, Predicate<? super Diff> filter) {
-		this.registry = (IMerger.Registry2)checkNotNull(registry);
+		this(new DiffRelationshipComputer(registry), filter);
+	}
+
+	/**
+	 * Constructs our batch merger provided the registry from which to retrieve the delegate mergers, and a
+	 * filter if you only wish to merge specific differences.
+	 * <p>
+	 * <b>Note</b> that the filter indicates differences that will be merged, not those that will be ignored.
+	 * </p>
+	 * <p>
+	 * For example, if you wish to ignore all differences in conflict, you can use :
+	 * 
+	 * <pre>
+	 * IMerger.Registry registry = IMerger.RegistryImpl.createStandaloneInstance();
+	 * IBatchMerger bathMerger = new BatchMerger(registry, {@link com.google.common.base.Predicates#not(Predicate) not}({@link org.eclipse.emf.compare.utils.EMFComparePredicates#hasConflict(org.eclipse.emf.compare.ConflictKind...) hasConflict}(ConflictKind.PSEUDO, ConflictKind.REAL)));
+	 * bathMerger.copyAll...
+	 * </pre>
+	 * </p>
+	 * 
+	 * @param filter
+	 *            Additional filter for the differences. This could be set in order to ignore diffs
+	 *            originating from a given side. Note that the filter describes the differences that will be
+	 *            merged, not those that will be ignored.
+	 * @param relationshipComputer
+	 *            The relationship computer used to calculate dependencies and requirements of diffs.
+	 * @see com.google.common.base.Predicates
+	 * @see org.eclipse.emf.compare.utils.EMFComparePredicates
+	 * @since 3.5
+	 */
+	public BatchMerger(IDiffRelationshipComputer relationshipComputer, Predicate<? super Diff> filter) {
+		this.relationshipComputer = checkNotNull(relationshipComputer);
+		this.registry = (IMerger.Registry2)checkNotNull(relationshipComputer.getMergerRegistry());
 		this.filter = checkNotNull(filter);
 	}
 
@@ -95,7 +141,7 @@ public class BatchMerger implements IBatchMerger {
 			start = System.currentTimeMillis();
 			LOGGER.debug("copyAllLeftToRight(differences, monitor) - Start"); //$NON-NLS-1$
 		}
-		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(false, registry);
+		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(false, relationshipComputer);
 		for (Diff diff : Iterables.filter(differences, filter)) {
 			if (!AbstractMerger.isInTerminalState(diff)) {
 				Set<Diff> diffsToMerge = computer.getAllDiffsToMerge(diff);
@@ -129,7 +175,7 @@ public class BatchMerger implements IBatchMerger {
 			start = System.currentTimeMillis();
 			LOGGER.debug("copyAllRightToLeft(differences, monitor) - Start"); //$NON-NLS-1$
 		}
-		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(true, registry);
+		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(true, relationshipComputer);
 		for (Diff diff : Iterables.filter(differences, filter)) {
 			if (!AbstractMerger.isInTerminalState(diff)) {
 				Set<Diff> diffsToMerge = computer.getAllDiffsToMerge(diff);

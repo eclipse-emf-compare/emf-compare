@@ -17,6 +17,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -57,6 +58,10 @@ public interface IEMFCompareConfiguration {
 	MergeMode getMergePreviewMode();
 
 	void setMergePreviewMode(MergeMode mergePreviewMode);
+
+	IDiffRelationshipComputer getDiffRelationshipComputer();
+
+	void setDiffRelationshipComputer(IDiffRelationshipComputer diffRelationshipComputer);
 
 	boolean getBooleanProperty(String key, boolean dflt);
 }

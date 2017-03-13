@@ -33,7 +33,8 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.ide.ui.tests.framework.RuntimeTestRunner;
 import org.eclipse.emf.compare.ide.ui.tests.framework.annotations.Compare;
 import org.eclipse.emf.compare.ide.ui.tests.framework.internal.CompareTestSupport;
-import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
+import org.eclipse.emf.compare.merge.DiffRelationshipComputer;
+import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMergeOptionAware;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
@@ -46,7 +47,7 @@ import org.junit.runner.RunWith;
  * 
  * @author Martin Fleck <mfleck@eclipsesource.com>
  */
-@SuppressWarnings({"restriction", "nls" })
+@SuppressWarnings({"nls" })
 @RunWith(RuntimeTestRunner.class)
 public class CascadingFilterRefinementTest {
 
@@ -172,8 +173,8 @@ public class CascadingFilterRefinementTest {
 	 */
 	public void verifyRefinement(List<Diff> differences, boolean mergeRightToLeft) {
 		for (Diff diff : differences) {
-			Set<Diff> resultingMerges = MergeDependenciesUtil.getAllResultingMerges(diff, MERGER_REGISTRY,
-					mergeRightToLeft);
+			IDiffRelationshipComputer computer = new DiffRelationshipComputer(MERGER_REGISTRY);
+			Set<Diff> resultingMerges = computer.getAllResultingMerges(diff, mergeRightToLeft);
 			assertTrue("Not all refined diffs are in resulting merges.",
 					resultingMerges.containsAll(diff.getRefines()));
 			assertTrue("Not all refining diffs are in resulting merges.",

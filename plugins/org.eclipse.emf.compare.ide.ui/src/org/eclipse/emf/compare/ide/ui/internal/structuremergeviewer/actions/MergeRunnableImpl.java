@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2017 Obeo.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 514415
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
@@ -24,6 +25,7 @@ import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
+import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 
 /**
@@ -33,8 +35,9 @@ import org.eclipse.emf.compare.merge.IMerger.Registry;
  */
 // Visible for testing
 public final class MergeRunnableImpl extends AbstractMergeRunnable implements IMergeRunnable {
-	public MergeRunnableImpl(boolean isLeftEditable, boolean isRightEditable, MergeMode mergeMode) {
-		super(isLeftEditable, isRightEditable, mergeMode);
+	public MergeRunnableImpl(boolean isLeftEditable, boolean isRightEditable, MergeMode mergeMode,
+			IDiffRelationshipComputer diffRelationshipComputer) {
+		super(isLeftEditable, isRightEditable, mergeMode, diffRelationshipComputer);
 	}
 
 	public void merge(List<? extends Diff> differences, boolean leftToRight, Registry mergerRegistry) {
@@ -70,7 +73,7 @@ public final class MergeRunnableImpl extends AbstractMergeRunnable implements IM
 
 	private void mergeAll(Collection<? extends Diff> differences, boolean leftToRight,
 			Registry mergerRegistry) {
-		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		final IBatchMerger merger = new BatchMerger(getDiffRelationshipComputer(mergerRegistry));
 		if (leftToRight) {
 			merger.copyAllLeftToRight(differences, new BasicMonitor());
 		} else {

@@ -34,6 +34,7 @@ import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.Navigatable;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.provider.ITooltipLabelProvider;
@@ -81,6 +82,8 @@ public class MergeAction extends BaseSelectionListenerAction {
 	 */
 	private AdapterFactory adapterFactory;
 
+	private IDiffRelationshipComputer diffRelationshipComputer;
+
 	private boolean isMirrored;
 
 	private final boolean isLeftEditable;
@@ -98,6 +101,7 @@ public class MergeAction extends BaseSelectionListenerAction {
 		super(""); //$NON-NLS-1$
 
 		adapterFactory = compareConfiguration.getAdapterFactory();
+		diffRelationshipComputer = compareConfiguration.getDiffRelationshipComputer();
 		isLeftEditable = compareConfiguration.isLeftEditable();
 		isRightEditable = compareConfiguration.isRightEditable();
 
@@ -118,7 +122,8 @@ public class MergeAction extends BaseSelectionListenerAction {
 		this.editingDomain = compareConfiguration.getEditingDomain();
 		this.mergerRegistry = mergerRegistry;
 		this.leftToRight = mode.isLeftToRight(isLeftEditable, isRightEditable);
-		this.mergeRunnable = createMergeRunnable(mode, isLeftEditable, isRightEditable);
+		this.mergeRunnable = createMergeRunnable(mode, isLeftEditable, isRightEditable,
+				diffRelationshipComputer);
 		this.selectedDifferences = newArrayList();
 		this.selectedMode = mode;
 
@@ -131,9 +136,9 @@ public class MergeAction extends BaseSelectionListenerAction {
 		updateSelection(selection);
 	}
 
-	protected IMergeRunnable createMergeRunnable(MergeMode mode, boolean leftEditable,
-			boolean rightEditable) {
-		return new MergeRunnableImpl(leftEditable, rightEditable, mode);
+	protected IMergeRunnable createMergeRunnable(MergeMode mode, boolean leftEditable, boolean rightEditable,
+			IDiffRelationshipComputer relationshipComputer) {
+		return new MergeRunnableImpl(leftEditable, rightEditable, mode, relationshipComputer);
 	}
 
 	protected void initToolTipAndImage(MergeMode mode) {
@@ -300,10 +305,12 @@ public class MergeAction extends BaseSelectionListenerAction {
 			if (mirrored) {
 				MergeMode mirroredMode = selectedMode.inverse();
 				leftToRight = mirroredMode.isLeftToRight(isRightEditable, isLeftEditable);
-				mergeRunnable = createMergeRunnable(mirroredMode, isRightEditable, isLeftEditable);
+				mergeRunnable = createMergeRunnable(mirroredMode, isRightEditable, isLeftEditable,
+						diffRelationshipComputer);
 			} else {
 				leftToRight = selectedMode.isLeftToRight(isLeftEditable, isRightEditable);
-				mergeRunnable = createMergeRunnable(selectedMode, isLeftEditable, isRightEditable);
+				mergeRunnable = createMergeRunnable(selectedMode, isLeftEditable, isRightEditable,
+						diffRelationshipComputer);
 			}
 		}
 	}

@@ -11,6 +11,7 @@
  *     Alexandra Buzila - bugs 470332, 478620
  *     Stefan Dirix - bug 507050
  *     Martin Fleck - bug 512562, 514382
+ *     Martin Fleck - bug 514415
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -76,8 +77,10 @@ import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.merge.BatchMerger;
+import org.eclipse.emf.compare.merge.CachingDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.ComputeDiffsToMerge;
 import org.eclipse.emf.compare.merge.IBatchMerger;
+import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry2;
 import org.eclipse.emf.compare.merge.MergeBlockedByConflictException;
@@ -325,15 +328,19 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	 */
 	private Set<URI> performPreMerge(Comparison comparison, SubMonitor subMonitor) {
 		final Monitor emfMonitor = BasicMonitor.toMonitor(subMonitor);
+		final CachingDiffRelationshipComputer relationshipComputer = new CachingDiffRelationshipComputer(
+				MERGER_REGISTRY);
 		final Set<URI> conflictingURIs = new LinkedHashSet<URI>();
 		for (Diff next : filter(comparison.getDifferences(), fromSide(DifferenceSource.RIGHT))) {
-			doMergeForDiff(emfMonitor, conflictingURIs, next);
+			doMergeForDiff(emfMonitor, conflictingURIs, next, relationshipComputer);
 		}
+		relationshipComputer.invalidate();
 		return conflictingURIs;
 	}
 
-	protected void doMergeForDiff(Monitor emfMonitor, Set<URI> conflictingURIs, Diff diff) {
-		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(true, MERGER_REGISTRY)
+	protected void doMergeForDiff(Monitor emfMonitor, Set<URI> conflictingURIs, Diff diff,
+			IDiffRelationshipComputer relationshipComputer) {
+		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(true, relationshipComputer)
 				.failOnRealConflictUnless(alwaysFalse());
 		try {
 			Set<Diff> diffsToMerge = computer.getAllDiffsToMerge(diff);

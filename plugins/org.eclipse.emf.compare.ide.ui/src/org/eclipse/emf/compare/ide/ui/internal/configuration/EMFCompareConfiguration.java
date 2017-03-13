@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2016 Obeo and others.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Conor O'Mahony - bug 507465
  *     Martin Fleck - bug 483798
+ *     Martin Fleck - bug 514415
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.configuration;
 
@@ -29,11 +30,15 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.merge.DiffRelationshipComputer;
+import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.EMFCompareRCPUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.AdapterFactoryChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.CompareEditingDomainChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.ComparisonAndScopeChange;
+import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.DiffRelationshipComputerChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.EMFComparatorChange;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.impl.MergePreviewModeChange;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
@@ -60,6 +65,9 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	private static final String EDITING_DOMAIN = EMFCompareIDEUIPlugin.PLUGIN_ID + ".EDITING_DOMAIN"; //$NON-NLS-1$
 
 	private static final String ADAPTER_FACTORY = EMFCompareIDEUIPlugin.PLUGIN_ID + ".ADAPTER_FACTORY"; //$NON-NLS-1$
+
+	private static final String DIFF_RELATIONSHIP_COMPUTER = EMFCompareIDEUIPlugin.PLUGIN_ID
+			+ ".DIFF_RELATIONSHIP_COMPUTER"; //$NON-NLS-1$
 
 	private static final String PREVIEW_MERGE_MODE = EMFCompareIDEUIPlugin.PLUGIN_ID + ".PREVIEW_MERGE_MODE"; //$NON-NLS-1$
 
@@ -125,6 +133,11 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		if (getProperty(DISPLAY_SAVE_ACTION) == null) {
 			setProperty(DISPLAY_SAVE_ACTION, Boolean.TRUE);
 		}
+
+		if (getProperty(DIFF_RELATIONSHIP_COMPUTER) == null) {
+			setProperty(DIFF_RELATIONSHIP_COMPUTER,
+					new DiffRelationshipComputer(EMFCompareRCPPlugin.getDefault().getMergerRegistry()));
+		}
 	}
 
 	/**
@@ -163,6 +176,7 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		compareConfiguration.setProperty(SMV_FILTERS, null);
 		compareConfiguration.setProperty(EDITING_DOMAIN, null);
 		compareConfiguration.setProperty(ADAPTER_FACTORY, null);
+		compareConfiguration.setProperty(DIFF_RELATIONSHIP_COMPUTER, null);
 		compareConfiguration.setProperty(SMV_GROUP_PROVIDERS, null);
 		compareConfiguration.setProperty(PREVIEW_MERGE_MODE, null);
 		compareConfiguration.setProperty(DISPLAY_GROUP_PROVIDERS, null);
@@ -199,6 +213,10 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 
 	public AdapterFactory getAdapterFactory() {
 		return (AdapterFactory)getProperty(ADAPTER_FACTORY);
+	}
+
+	public IDiffRelationshipComputer getDiffRelationshipComputer() {
+		return (IDiffRelationshipComputer)getProperty(DIFF_RELATIONSHIP_COMPUTER);
 	}
 
 	/**
@@ -291,6 +309,12 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		AdapterFactory oldValue = getAdapterFactory();
 		setProperty(ADAPTER_FACTORY, adapterFactory);
 		getEventBus().post(new AdapterFactoryChange(oldValue, adapterFactory));
+	}
+
+	public void setDiffRelationshipComputer(IDiffRelationshipComputer diffRelationshipComputer) {
+		IDiffRelationshipComputer oldValue = getDiffRelationshipComputer();
+		setProperty(DIFF_RELATIONSHIP_COMPUTER, diffRelationshipComputer);
+		getEventBus().post(new DiffRelationshipComputerChange(oldValue, diffRelationshipComputer));
 	}
 
 	private class PropertyChangeListener implements IPropertyChangeListener {

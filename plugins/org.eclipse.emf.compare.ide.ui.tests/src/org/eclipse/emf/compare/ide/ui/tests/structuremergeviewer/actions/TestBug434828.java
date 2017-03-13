@@ -30,6 +30,7 @@ import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeRunnableImpl;
 import org.eclipse.emf.compare.internal.merge.MergeDataImpl;
 import org.eclipse.emf.compare.merge.BatchMerger;
+import org.eclipse.emf.compare.merge.DiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
@@ -126,7 +127,8 @@ public class TestBug434828 {
 	 */
 	@Test
 	public void testAcceptConflictDiffWithConflictingDiffWithRequiredBy() {
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT,
+				new DiffRelationshipComputer(mergerRegistry));
 		mergeRunnable.merge(Collections.singletonList(refChangeDiff), false, mergerRegistry);
 
 		assertEquals(MERGED, refChangeDiff.getState());

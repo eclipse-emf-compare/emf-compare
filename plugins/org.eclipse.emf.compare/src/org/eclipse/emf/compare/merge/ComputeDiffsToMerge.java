@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Obeo.
+ * Copyright (c) 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,10 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 514415
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.merge.IMergeCriterion.NONE;
 
@@ -54,16 +54,6 @@ public class ComputeDiffsToMerge {
 	private final boolean rightToLeft;
 
 	/**
-	 * The merge criterion to use, can be <code>null</code>.
-	 */
-	private IMergeCriterion criterion;
-
-	/**
-	 * The merger registry to use.
-	 */
-	private IMerger.Registry2 registry;
-
-	/**
 	 * The ordered set of diffs to merge.
 	 */
 	private Set<Diff> result = new LinkedHashSet<Diff>();
@@ -77,6 +67,9 @@ public class ComputeDiffsToMerge {
 	 */
 	private Predicate<? super Conflict> conflictChecker;
 
+	/** The relationship computer used to calculate dependencies and requirements of diffs. */
+	private IDiffRelationshipComputer relationshipComputer;
+
 	/**
 	 * Constructor.
 	 * 
@@ -86,7 +79,7 @@ public class ComputeDiffsToMerge {
 	 *            The Registry to use.
 	 */
 	public ComputeDiffsToMerge(boolean rightToLeft, IMerger.Registry2 registry) {
-		this(rightToLeft, registry, NONE);
+		this(rightToLeft, new DiffRelationshipComputer(registry, NONE));
 	}
 
 	/**
@@ -100,9 +93,20 @@ public class ComputeDiffsToMerge {
 	 *            The merge criterion, must not be <code>null</code>
 	 */
 	public ComputeDiffsToMerge(boolean rightToLeft, IMerger.Registry2 registry, IMergeCriterion criterion) {
+		this(rightToLeft, new DiffRelationshipComputer(registry, criterion));
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param rightToLeft
+	 *            The merge direction
+	 * @param relationshipComputer
+	 *            The relationship computer used to calculate dependencies and requirements of diffs.
+	 */
+	public ComputeDiffsToMerge(boolean rightToLeft, IDiffRelationshipComputer relationshipComputer) {
 		this.rightToLeft = rightToLeft;
-		this.registry = registry;
-		this.criterion = checkNotNull(criterion);
+		this.relationshipComputer = relationshipComputer;
 	}
 
 	/**
@@ -179,16 +183,17 @@ public class ComputeDiffsToMerge {
 				diffsThatLedToConflict.add(diff);
 				throw new MergeBlockedByConflictException(diffsThatLedToConflict);
 			}
-			DelegatingMerger mergerDelegate = AbstractMerger.getMergerDelegate(diff, registry, criterion);
-			IMerger merger = mergerDelegate.getMerger();
-			if (merger instanceof IMerger2) {
-				Set<Diff> dependencies = ((IMerger2)merger).getDirectMergeDependencies(diff, rightToLeft);
+
+			if (relationshipComputer.hasMerger(diff)) {
+				Set<Diff> dependencies = relationshipComputer.getDirectMergeDependencies(diff, rightToLeft);
 				for (Diff required : dependencies) {
 					addDiff(required, consequences);
 				}
+
 				result.add(diff);
 				computing.remove(diff);
-				consequences.addAll(((IMerger2)merger).getDirectResultingMerges(diff, rightToLeft));
+
+				consequences.addAll(relationshipComputer.getDirectResultingMerges(diff, rightToLeft));
 			} else {
 				result.add(diff);
 			}

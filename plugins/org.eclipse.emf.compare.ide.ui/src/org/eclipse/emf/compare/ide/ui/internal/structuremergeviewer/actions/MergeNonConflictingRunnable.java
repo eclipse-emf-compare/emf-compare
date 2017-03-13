@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Philip Langer - bug 469355, bug 462884, refactorings
  *     Martin Fleck - bug 507177
+ *     Martin Fleck - bug 514415
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
@@ -53,9 +54,9 @@ import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.ComputeDiffsToMerge;
 import org.eclipse.emf.compare.merge.IBatchMerger;
+import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
-import org.eclipse.emf.compare.merge.IMerger.Registry2;
 import org.eclipse.emf.compare.merge.MergeBlockedByConflictException;
 
 /**
@@ -77,9 +78,12 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 	 *            Whether the right side of the comparison we're operating on is editable.
 	 * @param mergeMode
 	 *            Merge mode for this operation.
+	 * @param diffRelationshipComputer
+	 *            The diff relationship computer used to find resulting merges and rejections.
 	 */
-	public MergeNonConflictingRunnable(boolean isLeftEditable, boolean isRightEditable, MergeMode mergeMode) {
-		super(isLeftEditable, isRightEditable, mergeMode);
+	public MergeNonConflictingRunnable(boolean isLeftEditable, boolean isRightEditable, MergeMode mergeMode,
+			IDiffRelationshipComputer diffRelationshipComputer) {
+		super(isLeftEditable, isRightEditable, mergeMode, diffRelationshipComputer);
 	}
 
 	/**
@@ -151,7 +155,7 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 	private Iterable<Diff> mergeThreeWayWithoutConflicts(Collection<Diff> differences, boolean leftToRight,
 			Registry mergerRegistry) {
 		final List<Diff> affectedDiffs;
-		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		final IBatchMerger merger = new BatchMerger(getDiffRelationshipComputer(mergerRegistry));
 
 		if (getMergeMode() == MergeMode.LEFT_TO_RIGHT) {
 			affectedDiffs = Lists
@@ -199,7 +203,7 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 	private Iterable<Diff> mergeTwoWay(Collection<Diff> differences, boolean leftToRight,
 			Registry mergerRegistry) {
 		final List<Diff> affectedDiffs;
-		final IBatchMerger merger = new BatchMerger(mergerRegistry);
+		final IBatchMerger merger = new BatchMerger(getDiffRelationshipComputer(mergerRegistry));
 
 		// in two-way comparison, difference source is always LEFT
 		if (getMergeMode() == MergeMode.LEFT_TO_RIGHT) {
@@ -234,8 +238,8 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 			Registry mergerRegistry) {
 		final List<Diff> affectedDiffs = new ArrayList<Diff>();
 		final Monitor emfMonitor = new BasicMonitor();
-		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(!leftToRight, (Registry2)mergerRegistry)
-				.failOnRealConflictUnless(alwaysFalse());
+		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(!leftToRight,
+				getDiffRelationshipComputer(mergerRegistry)).failOnRealConflictUnless(alwaysFalse());
 
 		final Predicate<? super Diff> filter;
 		if (getMergeMode() == RIGHT_TO_LEFT) {

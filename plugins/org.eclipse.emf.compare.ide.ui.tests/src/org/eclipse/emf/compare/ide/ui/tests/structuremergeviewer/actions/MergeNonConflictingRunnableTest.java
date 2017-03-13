@@ -30,6 +30,7 @@ import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
@@ -44,6 +45,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeNonConflictingRunnable;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.merge.DiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMergeCriterion;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
@@ -502,6 +504,7 @@ public class MergeNonConflictingRunnableTest {
 		when(diff.getRefinedBy()).thenReturn(new BasicEList<Diff>());
 		when(diff.getRefines()).thenReturn(new BasicEList<Diff>());
 		when(diff.getState()).thenReturn(UNRESOLVED);
+		when(diff.eAdapters()).thenReturn(new BasicEList<Adapter>());
 		return diff;
 	}
 
@@ -634,7 +637,8 @@ public class MergeNonConflictingRunnableTest {
 			default:
 				throw new IllegalArgumentException();
 		}
-		return new MergeNonConflictingRunnable(isLeftEditable, isRightEditable, mergeMode) {
+		return new MergeNonConflictingRunnable(isLeftEditable, isRightEditable, mergeMode,
+				new DiffRelationshipComputer(mergerRegistry)) {
 			@Override
 			protected void markAsMerged(Diff diff, MergeMode mode, boolean mergeRightToLeft,
 					Registry registry) {

@@ -7,10 +7,10 @@ import com.google.common.collect.Sets;
 import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
+import org.eclipse.emf.compare.merge.DiffRelationshipComputer;
+import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 
-@SuppressWarnings("restriction")
 public class MergeDependenciesChecker {
 
 	private IMerger.Registry registry;
@@ -58,10 +58,9 @@ public class MergeDependenciesChecker {
 	}
 
 	public void check() {
-		Set<Diff> allResultingMerges = MergeDependenciesUtil.getAllResultingMerges(diff, registry,
-				this.rightToLeft);
-		Set<Diff> allResultingRejections = MergeDependenciesUtil.getAllResultingRejections(diff, registry,
-				this.rightToLeft);
+		IDiffRelationshipComputer computer = new DiffRelationshipComputer(registry);
+		Set<Diff> allResultingMerges = computer.getAllResultingMerges(diff, this.rightToLeft);
+		Set<Diff> allResultingRejections = computer.getAllResultingRejections(diff, this.rightToLeft);
 		assertEquals(this.nbMerges, Sets.difference(allResultingMerges, allResultingRejections).size());
 		assertEquals(this.nbRejections, allResultingRejections.size());
 	}

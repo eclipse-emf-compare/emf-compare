@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 EclipseSource Munich and others.
+ * Copyright (c) 2015, 2017 EclipseSource Munich and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Philip Langer - initial API and implementation
+ *     Martin Fleck - bug 514415
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
@@ -30,6 +31,7 @@ import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
@@ -124,8 +126,8 @@ public class MergeContainedNonConflictingAction extends MergeAction {
 
 	@Override
 	protected IMergeRunnable createMergeRunnable(MergeMode mode, boolean isLeftEditable,
-			boolean isRightEditable) {
-		return new MergeNonConflictingRunnable(isLeftEditable, isRightEditable, mode);
+			boolean isRightEditable, IDiffRelationshipComputer relationshipComputer) {
+		return new MergeNonConflictingRunnable(isLeftEditable, isRightEditable, mode, relationshipComputer);
 	}
 
 	@Override

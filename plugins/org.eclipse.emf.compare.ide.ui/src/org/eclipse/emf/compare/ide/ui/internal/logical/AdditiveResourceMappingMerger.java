@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2017 Obeo.
+ * Copyright (c) 2016, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Martin Fleck - bug 512562
+ *     Martin Fleck - bug 514415
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -60,6 +61,7 @@ import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.merge.AdditiveMergeCriterion;
+import org.eclipse.emf.compare.merge.CachingDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.ComputeDiffsToMerge;
 import org.eclipse.emf.compare.merge.DelegatingMerger;
 import org.eclipse.emf.compare.merge.MergeBlockedByConflictException;
@@ -111,11 +113,14 @@ public class AdditiveResourceMappingMerger extends EMFResourceMappingMerger impl
 	private Set<URI> performPreMerge(Comparison comparison, SubMonitor subMonitor) {
 		final Monitor emfMonitor = BasicMonitor.toMonitor(subMonitor);
 		final Set<URI> conflictingURIs = new LinkedHashSet<URI>();
-		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(true, MERGER_REGISTRY,
-				AdditiveMergeCriterion.INSTANCE).failOnRealConflictUnless(isAdditiveConflict());
+		CachingDiffRelationshipComputer relationshipComputer = new CachingDiffRelationshipComputer(
+				MERGER_REGISTRY, AdditiveMergeCriterion.INSTANCE);
+		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(true, relationshipComputer)
+				.failOnRealConflictUnless(isAdditiveConflict());
 		for (Diff next : comparison.getDifferences()) {
 			doMergeForDiff(next, computer, emfMonitor, conflictingURIs);
 		}
+		relationshipComputer.invalidate();
 		return conflictingURIs;
 	}
 

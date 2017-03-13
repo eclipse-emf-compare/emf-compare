@@ -13,6 +13,7 @@
  *     Martin Fleck - bug 497066
  *     Martin Fleck - bug 483798
  *     Martin Fleck - bug 514767
+ *     Martin Fleck - bug 514415
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -117,6 +118,7 @@ import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
 import org.eclipse.emf.compare.internal.merge.MergeDataImpl;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.AbstractMerger;
+import org.eclipse.emf.compare.merge.CachingDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMergeOptionAware;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
@@ -239,6 +241,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	/** The adapter factory. */
 	private ComposedAdapterFactory fAdapterFactory;
+
+	/** The diff relationship computer. */
+	private CachingDiffRelationshipComputer fDiffRelationshipComputer;
 
 	/** The tree ruler associated with this viewer. */
 	private EMFCompareDiffTreeRuler treeRuler;
@@ -578,6 +583,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	protected void preHookCreateControlAndViewer() {
 		fAdapterFactory = initAdapterFactory(getCompareConfiguration().getComparison());
 		getCompareConfiguration().setAdapterFactory(fAdapterFactory);
+
+		fDiffRelationshipComputer = new CachingDiffRelationshipComputer(
+				EMFCompareRCPPlugin.getDefault().getMergerRegistry());
+		getCompareConfiguration().setDiffRelationshipComputer(fDiffRelationshipComputer);
 
 		inputChangedTask = new CompareInputChangedJob(EMFCompareIDEUIMessages
 				.getString("EMFCompareStructureMergeViewer.computingModelDifferences")); //$NON-NLS-1$
@@ -934,6 +943,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		compareInputChanged((ICompareInput)null);
 		treeRuler.handleDispose();
 		fAdapterFactory.dispose();
+		fDiffRelationshipComputer.invalidate();
 		toolBar.dispose();
 		fColors.dispose();
 
@@ -1088,6 +1098,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				fAdapterFactory.dispose();
 			}
 			fAdapterFactory = initAdapterFactory(comparison);
+
+			// clear cache for new comparison
+			if (fDiffRelationshipComputer != null) {
+				fDiffRelationshipComputer.invalidate();
+			}
 
 			// propagate new adapter factory
 			config.setAdapterFactory(fAdapterFactory);

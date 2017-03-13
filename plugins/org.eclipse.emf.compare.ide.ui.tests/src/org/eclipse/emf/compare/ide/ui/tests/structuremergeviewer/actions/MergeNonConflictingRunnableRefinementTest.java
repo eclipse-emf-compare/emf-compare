@@ -32,6 +32,7 @@ import org.eclipse.emf.compare.internal.spec.ConflictSpec;
 import org.eclipse.emf.compare.internal.spec.DiffSpec;
 import org.eclipse.emf.compare.internal.spec.MatchSpec;
 import org.eclipse.emf.compare.merge.AbstractMerger;
+import org.eclipse.emf.compare.merge.DiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.junit.Assert;
 import org.junit.Test;
@@ -570,7 +571,7 @@ public class MergeNonConflictingRunnableRefinementTest {
 				throw new IllegalArgumentException();
 		}
 		MergeNonConflictingRunnable mergeNonConflicting = new MergeNonConflictingRunnable(isLeftEditable,
-				isRightEditable, mergeMode);
+				isRightEditable, mergeMode, new DiffRelationshipComputer(MERGER_REGISTRY));
 		mergeNonConflicting.merge(comparison, leftToRight, MERGER_REGISTRY);
 	}
 }

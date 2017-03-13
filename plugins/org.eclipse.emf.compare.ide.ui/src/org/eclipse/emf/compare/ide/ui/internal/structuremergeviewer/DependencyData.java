@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Martin Fleck - bug 514767
+ *     Martin Fleck - bug 514415
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -27,8 +28,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.merge.DiffRelationshipComputer;
+import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
@@ -55,6 +57,24 @@ public class DependencyData {
 	}
 
 	/**
+	 * Returns the diff relationship computer instance from the compare configuration with the given merger
+	 * registry. If no computer instance has been set, a default instance will be created.
+	 * 
+	 * @param mergerRegistry
+	 *            merger registry used to compute diff relationships.
+	 * @return a non-null diff relationship computer.
+	 */
+	protected IDiffRelationshipComputer getDiffRelationshipComputer(IMerger.Registry mergerRegistry) {
+		if (compareConfiguration == null || compareConfiguration.getDiffRelationshipComputer() == null) {
+			return new DiffRelationshipComputer(mergerRegistry);
+		}
+		IDiffRelationshipComputer diffRelationshipComputer = compareConfiguration
+				.getDiffRelationshipComputer();
+		diffRelationshipComputer.setMergerRegistry(mergerRegistry);
+		return diffRelationshipComputer;
+	}
+
+	/**
 	 * @param selection
 	 */
 	public void updateDependencies(ISelection selection, IMerger.Registry mergerRegistry) {
@@ -69,11 +89,10 @@ public class DependencyData {
 			rejectedDiffs = newHashSet();
 			for (Diff diff : selectedDiffs) {
 				boolean leftToRight = mergePreviewMode.isLeftToRight(diff, leftEditable, rightEditable);
-				requires.addAll(
-						MergeDependenciesUtil.getAllResultingMerges(diff, mergerRegistry, !leftToRight));
+				IDiffRelationshipComputer computer = getDiffRelationshipComputer(mergerRegistry);
+				requires.addAll(computer.getAllResultingMerges(diff, !leftToRight));
 				requires.remove(diff);
-				rejectedDiffs.addAll(
-						MergeDependenciesUtil.getAllResultingRejections(diff, mergerRegistry, !leftToRight));
+				rejectedDiffs.addAll(computer.getAllResultingRejections(diff, !leftToRight));
 				rejectedDiffs.remove(diff);
 				requires.removeAll(rejectedDiffs);
 			}

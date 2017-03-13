@@ -11,6 +11,7 @@
  *     Stefan Dirix - Adds additional test classes
  *     Michael Borkowski - Adds additional test classes
  *     Martin Fleck - Add ImplicationMergeTest, GraphTest
+ *     Martin Fleck - Add DiffCacheAdapterTest
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.suite;
 
@@ -22,6 +23,7 @@ import org.eclipse.emf.compare.tests.conflict.MultiLineAttributeConflictDetectio
 import org.eclipse.emf.compare.tests.conflict.PseudoConflictDetectionTest;
 import org.eclipse.emf.compare.tests.conflict.data.bug484557.Bug484557ConflictTest;
 import org.eclipse.emf.compare.tests.diff.ComparisonUtilTest;
+import org.eclipse.emf.compare.tests.diff.DiffRelationshipComputerTest;
 import org.eclipse.emf.compare.tests.diff.DiffUtilTest;
 import org.eclipse.emf.compare.tests.diff.FeatureFilterTest;
 import org.eclipse.emf.compare.tests.diff.FeatureMapMoveDiffTest;
@@ -108,7 +110,7 @@ import junit.textui.TestRunner;
 		RankedAdapterFactoryRegistryTest.class, ComparisonScopeAdapterTest.class,
 		EMFComparePredicatesTest.class, ImplicationsMergeTest.class, GraphTest.class,
 		ConflictImplicationsTest_Bug484579.class, PseudoConflictDetectionTest.class, ComplexMergeTest.class,
-		ConflictSearchTest.class, })
+		ConflictSearchTest.class, DiffRelationshipComputerTest.class })
 public class AllTests {
 	/**
 	 * Standalone launcher for all of compare's tests.

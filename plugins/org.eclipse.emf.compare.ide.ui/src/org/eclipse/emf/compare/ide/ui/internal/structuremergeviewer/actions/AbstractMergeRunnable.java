@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2017 Obeo.
+ * Copyright (c) 2014, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 514415
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
@@ -21,8 +22,10 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.internal.merge.MergeDependenciesUtil;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.merge.DiffRelationshipComputer;
+import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
+import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 
 /**
@@ -31,6 +34,7 @@ import org.eclipse.emf.compare.merge.IMerger.Registry;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public abstract class AbstractMergeRunnable {
+
 	/** Tells us whether the left side of the comparison we're operating on is editable. */
 	private final boolean isLeftEditable;
 
@@ -39,6 +43,9 @@ public abstract class AbstractMergeRunnable {
 
 	/** Current merging mode. */
 	private final MergeMode mergeMode;
+
+	/** Computer to calculate the relationship between diffs. */
+	private IDiffRelationshipComputer diffRelationshipComputer;
 
 	/**
 	 * Default constructor.
@@ -49,11 +56,15 @@ public abstract class AbstractMergeRunnable {
 	 *            Whether the right side of the comparison we're operating on is editable.
 	 * @param mergeMode
 	 *            Merge mode for this operation.
+	 * @param diffRelationshipComputer
+	 *            The diff relationship computer used to find resulting merges and rejections.
 	 */
-	public AbstractMergeRunnable(boolean isLeftEditable, boolean isRightEditable, MergeMode mergeMode) {
+	public AbstractMergeRunnable(boolean isLeftEditable, boolean isRightEditable, MergeMode mergeMode,
+			IDiffRelationshipComputer diffRelationshipComputer) {
 		this.isLeftEditable = isLeftEditable;
 		this.isRightEditable = isRightEditable;
 		this.mergeMode = mergeMode;
+		this.diffRelationshipComputer = diffRelationshipComputer;
 	}
 
 	protected boolean isLeftEditable() {
@@ -69,6 +80,22 @@ public abstract class AbstractMergeRunnable {
 	}
 
 	/**
+	 * Returns the diff relationship computer instance from the compare configuration with the given merger
+	 * registry. If no computer instance has been set, a default instance will be created.
+	 * 
+	 * @param mergerRegistry
+	 *            merger registry used to compute diff relationships.
+	 * @return a non-null diff relationship computer.
+	 */
+	protected IDiffRelationshipComputer getDiffRelationshipComputer(IMerger.Registry mergerRegistry) {
+		if (diffRelationshipComputer == null) {
+			diffRelationshipComputer = new DiffRelationshipComputer(mergerRegistry);
+		}
+		diffRelationshipComputer.setMergerRegistry(mergerRegistry);
+		return diffRelationshipComputer;
+	}
+
+	/**
 	 * Marks all of the given diffs as merged, keeping track of the merged mode used for the operation.
 	 * 
 	 * @param diffToMarkAsMerged
@@ -81,7 +108,7 @@ public abstract class AbstractMergeRunnable {
 	protected void markAllAsMerged(Collection<? extends Diff> diffToMarkAsMerged, MergeMode mode,
 			Registry mergerRegistry) {
 		for (Diff diff : diffToMarkAsMerged) {
-			boolean isLeftToRight = mode.isLeftToRight(diff, isLeftEditable, isRightEditable);
+			boolean isLeftToRight = mode.isLeftToRight(diff, isLeftEditable(), isRightEditable());
 			markAsMerged(diff, mode, !isLeftToRight, mergerRegistry);
 		}
 	}
@@ -103,11 +130,10 @@ public abstract class AbstractMergeRunnable {
 		if (isInTerminalState(diff)) {
 			return;
 		}
+		IDiffRelationshipComputer computer = getDiffRelationshipComputer(mergerRegistry);
 		if (isAccepting(diff, mergeRightToLeft)) {
-			final Set<Diff> implied = MergeDependenciesUtil.getAllResultingMerges(diff, mergerRegistry,
-					mergeRightToLeft);
-			final Set<Diff> rejections = MergeDependenciesUtil.getAllResultingRejections(diff, mergerRegistry,
-					mergeRightToLeft);
+			final Set<Diff> implied = computer.getAllResultingMerges(diff, mergeRightToLeft);
+			final Set<Diff> rejections = computer.getAllResultingRejections(diff, mergeRightToLeft);
 			for (Diff impliedDiff : Sets.difference(implied, rejections)) {
 				impliedDiff.setState(MERGED);
 			}
@@ -115,8 +141,7 @@ public abstract class AbstractMergeRunnable {
 				impliedRejection.setState(DISCARDED);
 			}
 		} else {
-			final Set<Diff> implied = MergeDependenciesUtil.getAllResultingMerges(diff, mergerRegistry,
-					mergeRightToLeft);
+			final Set<Diff> implied = computer.getAllResultingMerges(diff, mergeRightToLeft);
 			for (Diff impliedDiff : implied) {
 				impliedDiff.setState(DISCARDED);
 			}

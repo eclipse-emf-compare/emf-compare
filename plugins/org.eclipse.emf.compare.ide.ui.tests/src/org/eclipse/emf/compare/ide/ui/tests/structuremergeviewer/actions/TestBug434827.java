@@ -32,6 +32,7 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.Merg
 import org.eclipse.emf.compare.internal.merge.IMergeData;
 import org.eclipse.emf.compare.internal.merge.MergeDataImpl;
 import org.eclipse.emf.compare.internal.spec.ReferenceChangeSpec;
+import org.eclipse.emf.compare.merge.DiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
@@ -133,7 +134,8 @@ public class TestBug434827 {
 		// The subDiff is not added in this list because it is not considered as a cascading diff.
 		ArrayList<Diff> uiDiff = Lists.newArrayList(deletionDiff);
 
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, ACCEPT,
+				new DiffRelationshipComputer(mergerRegistry));
 		mergeRunnable.merge(uiDiff, false, mergerRegistry);
 
 		Node rootNode = (Node)left.getContents().get(0);
@@ -168,7 +170,8 @@ public class TestBug434827 {
 		// The subDiff is not added in this list because it is not considered as a cascading diff.
 		ArrayList<Diff> uiDiff = Lists.newArrayList(deletionDiff);
 
-		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, REJECT);
+		MergeRunnableImpl mergeRunnable = new MergeRunnableImpl(true, false, REJECT,
+				new DiffRelationshipComputer(mergerRegistry));
 		mergeRunnable.merge(uiDiff, false, mergerRegistry);
 
 		Node rootNode = (Node)left.getContents().get(0);
