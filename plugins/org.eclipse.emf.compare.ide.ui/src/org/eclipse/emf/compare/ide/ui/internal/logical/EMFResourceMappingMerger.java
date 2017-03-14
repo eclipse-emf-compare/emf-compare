@@ -10,11 +10,12 @@
  *     Philip Langer - bugs 461713, 465331, 470268, 476363, 476417, 486940, refactorings
  *     Alexandra Buzila - bugs 470332, 478620
  *     Stefan Dirix - bug 507050
- *     Martin Fleck - bug 512562
+ *     Martin Fleck - bug 512562, 514382
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
 import static com.google.common.base.Predicates.alwaysFalse;
+import static com.google.common.collect.Iterables.filter;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 
 import com.google.common.collect.ImmutableMap;
@@ -325,7 +326,7 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 	private Set<URI> performPreMerge(Comparison comparison, SubMonitor subMonitor) {
 		final Monitor emfMonitor = BasicMonitor.toMonitor(subMonitor);
 		final Set<URI> conflictingURIs = new LinkedHashSet<URI>();
-		for (Diff next : comparison.getDifferences()) {
+		for (Diff next : filter(comparison.getDifferences(), fromSide(DifferenceSource.RIGHT))) {
 			doMergeForDiff(emfMonitor, conflictingURIs, next);
 		}
 		return conflictingURIs;
