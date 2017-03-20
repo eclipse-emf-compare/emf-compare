@@ -9,11 +9,9 @@
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 467191
  *     Philip Langer - bug 462884, 516576
- *     Stefan Dirix - bugs 473985 and 474030
- *     Martin Fleck - bug 497066
- *     Martin Fleck - bug 483798
- *     Martin Fleck - bug 514767
- *     Martin Fleck - bug 514415
+ *     Stefan Dirix - bugs 473985, 474030
+ *     Martin Fleck - bug 497066, 483798, 514767, 514415
+ *     Alexandra Buzila - bug 513931
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -464,23 +462,25 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * 
 	 * @see #compareInputChanged(ICompareInput, IProgressMonitor)
 	 */
-	private void initToolbar() {
-		SWTUtil.safeSyncExec(new Runnable() {
-
-			public void run() {
-				toolBar.initToolbar(getViewer(), navigatable);
-				toolBar.setEnabled(false);
-			}
-		});
+	private void initToolbar(IProgressMonitor monitor) {
+		if (!monitor.isCanceled()) {
+			SWTUtil.safeSyncExec(new Runnable() {
+				public void run() {
+					toolBar.initToolbar(getViewer(), navigatable);
+					toolBar.setEnabled(false);
+				}
+			});
+		}
 	}
 
-	private void enableToolbar() {
-		SWTUtil.safeSyncExec(new Runnable() {
-
-			public void run() {
-				toolBar.setEnabled(true);
-			}
-		});
+	private void enableToolbar(IProgressMonitor monitor) {
+		if (!monitor.isCanceled()) {
+			SWTUtil.safeSyncExec(new Runnable() {
+				public void run() {
+					toolBar.setEnabled(true);
+				}
+			});
+		}
 	}
 
 	/**
@@ -1041,11 +1041,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	void compareInputChanged(CompareInputAdapter input, IProgressMonitor monitor) {
-		// TODO See why monitor is not used
-		compareInputChanged(null, (Comparison)input.getComparisonObject());
+		compareInputChanged(null, (Comparison)input.getComparisonObject(), monitor);
 	}
 
 	void compareInputChanged(ComparisonScopeInput input, IProgressMonitor monitor) {
+		if (monitor.isCanceled()) {
+			return;
+		}
 		IComparisonScope comparisonScope = input.getComparisonScope();
 		EMFCompareConfiguration compareConfiguration = getCompareConfiguration();
 
@@ -1078,11 +1080,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		// Bug 458802: NPE when synchronizing SMV & CMV if comparison is empty
 		hookAdapters(input, comparison);
 
-		compareInputChanged(input.getComparisonScope(), comparison);
+		compareInputChanged(input.getComparisonScope(), comparison, monitor);
 	}
 
-	void compareInputChanged(final IComparisonScope scope, final Comparison comparison) {
-		if (!getControl().isDisposed()) { // guard against disposal
+	void compareInputChanged(final IComparisonScope scope, final Comparison comparison,
+			final IProgressMonitor monitor) {
+		if (!getControl().isDisposed() && !monitor.isCanceled()) { // guard against disposal
 			final EMFCompareConfiguration config = getCompareConfiguration();
 
 			ComposedAdapterFactory oldAdapterFactory = fAdapterFactory;
@@ -1104,35 +1107,40 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			treeNode.setData(comparison);
 			final Object input = fAdapterFactory.adapt(treeNode, ICompareInput.class);
 
-			// this will set to the EMPTY difference group provider, but necessary to avoid NPE while setting
-			// input.
+			// this will set to the EMPTY difference group provider, but necessary to avoid NPE while
+			// setting input.
 			IDifferenceGroupProvider groupProvider = config.getStructureMergeViewerGrouper().getProvider();
 			treeNode.eAdapters().add(groupProvider);
 
 			// display problem tabs if any
-			SWTUtil.safeAsyncExec(new Runnable() {
-				public void run() {
-					Diagnostic diagnostic = comparison.getDiagnostic();
-					if (diagnostic == null) {
-						updateProblemIndication(Diagnostic.OK_INSTANCE);
-					} else {
-						updateProblemIndication(diagnostic);
+			if (!monitor.isCanceled()) {
+				SWTUtil.safeAsyncExec(new Runnable() {
+					public void run() {
+						Diagnostic diagnostic = comparison.getDiagnostic();
+						if (diagnostic == null) {
+							updateProblemIndication(Diagnostic.OK_INSTANCE);
+						} else {
+							updateProblemIndication(diagnostic);
+						}
 					}
-				}
-			});
+				});
+			}
 
 			// must set the input now in a synchronous mean. It will be used in the #setComparisonAndScope
 			// afterwards during the initialization of StructureMergeViewerFilter and
 			// StructureMergeViewerGrouper.
-			SWTUtil.safeSyncExec(new Runnable() {
-				public void run() {
-					getViewer().setInput(input);
-				}
-			});
+			if (!monitor.isCanceled()) {
+				SWTUtil.safeSyncExec(new Runnable() {
+					public void run() {
+						getViewer().setInput(input);
+					}
+				});
+			}
 
 			config.setComparisonAndScope(comparison, scope);
 
 			SWTUtil.safeAsyncExec(new Runnable() {
+
 				public void run() {
 					if (!getControl().isDisposed()) {
 						updateLayout(false, true);
@@ -1143,8 +1151,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
 				public void run() {
 					if (!getControl().isDisposed()) {
-						// title is not initialized as the comparison was set in the configuration after the
-						// refresh caused by the initialization of the viewer filters and the group providers.
+						// title is not initialized as the comparison was set in the configuration after
+						// the refresh caused by the initialization of the viewer filters and the group
+						// providers.
 						refreshTitle();
 
 						// Expands the tree viewer to the default expansion level
@@ -1175,15 +1184,15 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	void compareInputChanged(final ICompareInput input, IProgressMonitor monitor) {
-		if (input != null) {
+		if (input != null && !monitor.isCanceled()) {
 			if (input instanceof CompareInputAdapter) {
 				resourceSetShouldBeDisposed = false;
 				compareInputChanged((CompareInputAdapter)input, monitor);
-				initToolbar();
+				initToolbar(monitor);
 			} else if (input instanceof ComparisonScopeInput) {
 				resourceSetShouldBeDisposed = false;
 				compareInputChanged((ComparisonScopeInput)input, monitor);
-				initToolbar();
+				initToolbar(monitor);
 			} else {
 				resourceSetShouldBeDisposed = true;
 				SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
@@ -1290,11 +1299,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					leftStorage = StreamAccessorStorage.fromTypedElement(left);
 				}
 
-				initToolbar();
-				compareInputChanged(scope, compareResult);
+				initToolbar(monitor);
+				compareInputChanged(scope, compareResult, monitor);
 			}
 			// Protect compare actions from over-enthusiast users
-			enableToolbar();
+			enableToolbar(monitor);
 		} else {
 			compareInputChangedToNull();
 		}
