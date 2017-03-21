@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -127,8 +127,8 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 		monitor.subTask(EMFCompareMessages.getString("ProximityEObjectMatcher.monitor.matching")); //$NON-NLS-1$
 		matchIndexedObjects(comparison, monitor);
 
-		createUnmatchesForRemainingObjects(comparison);
-		restructureMatchModel(comparison);
+		createUnmatchesForRemainingObjects(comparison, monitor);
+		restructureMatchModel(comparison, monitor);
 
 	}
 
@@ -137,7 +137,7 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 	 * will be processed again later on.
 	 * 
 	 * @param comparison
-	 *            the current comoparison.
+	 *            the current comparison.
 	 * @param monitor
 	 *            monitor to track progress.
 	 */
@@ -181,15 +181,26 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 	 * 
 	 * @param comparison
 	 *            the current comparison.
+	 * @param monitor
+	 *            a monitor to track progress.
 	 */
-	private void createUnmatchesForRemainingObjects(Comparison comparison) {
+	private void createUnmatchesForRemainingObjects(Comparison comparison, Monitor monitor) {
 		for (EObject notFound : index.getValuesStillThere(Side.RIGHT)) {
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
+			}
 			areMatching(comparison, null, notFound, null);
 		}
 		for (EObject notFound : index.getValuesStillThere(Side.LEFT)) {
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
+			}
 			areMatching(comparison, notFound, null, null);
 		}
 		for (EObject notFound : index.getValuesStillThere(Side.ORIGIN)) {
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
+			}
 			areMatching(comparison, null, null, notFound);
 		}
 	}
@@ -307,12 +318,17 @@ public class ProximityEObjectMatcher implements IEObjectMatcher, ScopeQuery {
 	 * 
 	 * @param comparison
 	 *            the comparison to restructure.
+	 * @param monitor
+	 *            a monitor to track progress.
 	 */
-	private void restructureMatchModel(Comparison comparison) {
+	private void restructureMatchModel(Comparison comparison, Monitor monitor) {
 		Iterator<Match> it = ImmutableList.copyOf(Iterators.filter(comparison.eAllContents(), Match.class))
 				.iterator();
 
 		while (it.hasNext()) {
+			if (monitor.isCanceled()) {
+				throw new ComparisonCanceledException();
+			}
 			Match cur = it.next();
 			EObject possibleContainer = null;
 			if (cur.getLeft() != null) {
