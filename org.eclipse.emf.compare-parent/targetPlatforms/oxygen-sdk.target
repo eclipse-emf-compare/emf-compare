@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Oxygen SDK" sequenceNumber="1478164653">
+<target name="EMF Compare based on Oxygen SDK" sequenceNumber="1490198896">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -54,7 +54,7 @@
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.papyrus.sysml.feature.feature.group" version="0.0.0"/>
-      <repository location="http://download.eclipse.org/modeling/mdt/papyrus/updates/milestones/3.0"/>
+      <repository location="http://download.eclipse.org/modeling/mdt/papyrus/updates/nightly/oxygen"/>
     </location>
   </locations>
 </target>

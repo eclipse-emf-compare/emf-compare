@@ -31,7 +31,7 @@ location "http://obeo-umldesigner-nightly.s3-website-eu-west-1.amazonaws.com/mas
 	org.obeonetwork.dsl.uml2.runtime.feature.feature.group lazy
 }
 
-location "http://download.eclipse.org/modeling/mdt/papyrus/updates/milestones/3.0" {
+location "http://download.eclipse.org/modeling/mdt/papyrus/updates/nightly/oxygen" {
 	org.eclipse.papyrus.sdk.feature.feature.group lazy
 	org.eclipse.papyrus.sysml.feature.feature.group lazy
 }
