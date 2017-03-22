@@ -47,6 +47,7 @@ import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewerResourceBundle;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
@@ -425,7 +426,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 	@Override
 	protected ResourceBundle getResourceBundle() {
-		return ResourceBundle.getBundle(BUNDLE_NAME);
+		return new EMFCompareContentMergeViewerResourceBundle(ResourceBundle.getBundle(BUNDLE_NAME));
 	}
 
 	/**

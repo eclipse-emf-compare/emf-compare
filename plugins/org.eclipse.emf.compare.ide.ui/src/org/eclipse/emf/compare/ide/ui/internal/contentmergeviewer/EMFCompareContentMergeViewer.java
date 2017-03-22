@@ -139,7 +139,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 * @param cc
 	 */
 	protected EMFCompareContentMergeViewer(int style, ResourceBundle bundle, EMFCompareConfiguration cc) {
-		super(style, bundle, cc);
+		super(style, new EMFCompareContentMergeViewerResourceBundle(bundle), cc);
 
 		fDynamicObject = new DynamicObject(this);
 
