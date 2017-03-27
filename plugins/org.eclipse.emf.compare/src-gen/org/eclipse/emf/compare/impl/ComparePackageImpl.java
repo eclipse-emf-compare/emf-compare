@@ -1107,7 +1107,7 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 		initEAttribute(
 				getAttributeChange_Value(),
 				theEcorePackage.getEJavaObject(),
-				"value", null, 0, 1, AttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"value", null, 0, 1, AttributeChange.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(featureMapChangeEClass, FeatureMapChange.class,
 				"FeatureMapChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -1115,11 +1115,11 @@ public class ComparePackageImpl extends EPackageImpl implements ComparePackage {
 				getFeatureMapChange_Attribute(),
 				theEcorePackage.getEAttribute(),
 				null,
-				"attribute", null, 1, 1, FeatureMapChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"attribute", null, 1, 1, FeatureMapChange.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(
 				getFeatureMapChange_Value(),
 				theEcorePackage.getEJavaObject(),
-				"value", null, 0, 1, FeatureMapChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"value", null, 0, 1, FeatureMapChange.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(conflictEClass, Conflict.class,
 				"Conflict", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
