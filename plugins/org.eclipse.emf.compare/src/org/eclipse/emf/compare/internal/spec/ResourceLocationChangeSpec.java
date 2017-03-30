@@ -10,11 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
-import com.google.common.base.Objects;
-
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.ResourceLocationChangeImpl;
+import org.eclipse.emf.compare.utils.Objects;
 
 /**
  * This specialization of the {@link ResourceLocationChangeImpl} class allows us to define the derived

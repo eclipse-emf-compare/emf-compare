@@ -20,8 +20,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.compare.diagram.ide.ui.papyrus
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
- com.google.common.collect;version="[11.0.0,16.0.0)",
+Import-Package: com.google.common.base;version="[15.0.0,22.0.0)",
+ com.google.common.collect;version="[15.0.0,22.0.0)",
  org.eclipse.papyrus.emf.facet.efacet.metamodel.v0_2_0.efacet
 Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.uml2.edit.papyrus,

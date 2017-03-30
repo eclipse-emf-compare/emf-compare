@@ -2,8 +2,8 @@ target "Orbit"
 
 with source, requirements
 
-location "http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository/" {
-	com.google.guava [15.0.0,16.0.0)
+location "http://download.eclipse.org/tools/orbit/downloads/drops/R20170307180635/repository/" {
+	com.google.guava [15.0.0,22.0.0)
 	com.google.gson [2.2.4,3.0.0)
 	org.junit [4,5)
 	org.apache.log4j [1.2.0,1.3.0)

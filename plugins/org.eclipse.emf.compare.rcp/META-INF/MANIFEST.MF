@@ -25,6 +25,6 @@ Export-Package: org.eclipse.emf.compare.rcp,
  org.eclipse.emf.compare.rcp.internal.preferences;x-friends:="org.eclipse.emf.compare.rcp.ui,org.eclipse.emf.compare.ide.ui",
  org.eclipse.emf.compare.rcp.internal.tracer;x-friends:="org.eclipse.emf.compare.rcp.ui,org.eclipse.emf.compare.ide.ui",
  org.eclipse.emf.compare.rcp.policy
-Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
- com.google.common.collect;version="[11.0.0,16.0.0)",
+Import-Package: com.google.common.base;version="[15.0.0,22.0.0)",
+ com.google.common.collect;version="[15.0.0,22.0.0)",
  org.apache.log4j;version="[1.2.15,2.0.0)"

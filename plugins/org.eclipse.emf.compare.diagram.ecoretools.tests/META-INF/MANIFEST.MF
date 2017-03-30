@@ -13,8 +13,8 @@ Require-Bundle: org.eclipse.emf.ecore;bundle-version="2.5.0",
  org.eclipse.gmf.runtime.emf.core;bundle-version="1.2.2",
  org.eclipse.gmf.runtime.notation;bundle-version="1.2.0",
  org.eclipse.ui;bundle-version="3.5.0"
-Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
- com.google.common.collect;version="[11.0.0,16.0.0)"
+Import-Package: com.google.common.base;version="[15.0.0,22.0.0)",
+ com.google.common.collect;version="[15.0.0,22.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

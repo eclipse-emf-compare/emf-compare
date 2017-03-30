@@ -23,7 +23,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -60,6 +59,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.util.ResourceUIUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider;
+import org.eclipse.emf.compare.utils.Objects;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;

@@ -21,6 +21,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
@@ -791,7 +792,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 		protected Predicate<Diff> goodCandidate() {
 			return new Predicate<Diff>() {
 				public boolean apply(Diff difference) {
-					return or(isAddOrDelete, isHideOrReveal).apply(difference)
+					return Predicates.or(isAddOrDelete, isHideOrReveal).apply(difference)
 							&& difference.getState() == DifferenceState.UNRESOLVED;
 				}
 			};

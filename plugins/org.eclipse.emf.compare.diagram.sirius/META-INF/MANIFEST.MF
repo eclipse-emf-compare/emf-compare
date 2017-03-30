@@ -7,10 +7,10 @@ Bundle-Vendor: %providerName
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Localization: plugin
-Import-Package: com.google.common.annotations;version="[11.0.0,16.0.0)",
- com.google.common.base;version="[11.0.0,16.0.0)",
- com.google.common.cache;version="[11.0.0,16.0.0)",
- com.google.common.collect;version="[11.0.0,16.0.0)"
+Import-Package: com.google.common.annotations;version="[15.0.0,22.0.0)",
+ com.google.common.base;version="[15.0.0,22.0.0)",
+ com.google.common.cache;version="[15.0.0,22.0.0)",
+ com.google.common.collect;version="[15.0.0,22.0.0)"
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare;bundle-version="3.2.0",
  org.eclipse.emf.compare.diagram;bundle-version="2.3.0",

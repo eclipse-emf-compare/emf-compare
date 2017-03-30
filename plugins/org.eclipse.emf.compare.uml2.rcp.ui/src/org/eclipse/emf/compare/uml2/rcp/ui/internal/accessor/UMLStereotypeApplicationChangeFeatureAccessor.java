@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor;
 
-import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.filter;
@@ -18,6 +17,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -225,7 +225,7 @@ public class UMLStereotypeApplicationChangeFeatureAccessor extends ManyStructura
 					final Match match = comparison.getMatch((EObject)element);
 					if (match != null) {
 						return Iterables.any(match.getDifferences(),
-								and(instanceOf(StereotypeApplicationChange.class),
+								Predicates.and(instanceOf(StereotypeApplicationChange.class),
 										hasState(DifferenceState.UNRESOLVED)));
 					}
 				}

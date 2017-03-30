@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.or;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.DifferenceKind.ADD;
 import static org.eclipse.emf.compare.DifferenceKind.DELETE;
@@ -22,6 +20,7 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasNoDirectOrIn
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.UnmodifiableIterator;
@@ -73,9 +72,10 @@ public class CascadingDifferencesFilter extends AbstractDifferenceFilter {
 							Match parentMatch = (Match)parent.getData();
 							ret = isInsideAddOrDeleteTreeNode(diff, parent);
 							if (!ret && isAddOrDeleteMatch(parentMatch, diff.getSource())) {
-								ret = !and(
-										or(CONTAINMENT_REFERENCE_CHANGE, REFINED_BY_CONTAINMENT_REF_CHANGE),
-										ofKind(ADD, DELETE)).apply(diff);
+								ret = !Predicates
+										.and(Predicates.or(CONTAINMENT_REFERENCE_CHANGE,
+												REFINED_BY_CONTAINMENT_REF_CHANGE), ofKind(ADD, DELETE))
+										.apply(diff);
 							}
 						}
 					}

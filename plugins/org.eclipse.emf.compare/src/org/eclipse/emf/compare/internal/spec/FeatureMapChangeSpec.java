@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
-import com.google.common.base.Objects;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.ComparePackage;
@@ -19,6 +17,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.FeatureMapChangeImpl;
+import org.eclipse.emf.compare.utils.Objects;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;

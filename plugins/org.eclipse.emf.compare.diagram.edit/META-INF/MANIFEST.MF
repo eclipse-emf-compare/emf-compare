@@ -18,8 +18,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.gmf.runtime.notation;bundle-version="1.2.0",
  org.eclipse.gmf.runtime.notation.edit;bundle-version="1.4.0"
 Bundle-ActivationPolicy: lazy
-Import-Package: com.google.common.base;version="[11.0.0,16.0.0)",
- com.google.common.collect;version="[11.0.0,16.0.0)"
+Import-Package: com.google.common.base;version="[15.0.0,22.0.0)",
+ com.google.common.collect;version="[15.0.0,22.0.0)"
 Export-Package: org.eclipse.emf.compare.diagram.internal,
  org.eclipse.emf.compare.diagram.internal.extensions.provider;x-internal:=true,
  org.eclipse.emf.compare.diagram.internal.extensions.provider.spec;x-friends:="org.eclipse.emf.compare.diagram.papyrus.tests",
