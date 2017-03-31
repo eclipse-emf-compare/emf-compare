@@ -19,3 +19,6 @@ Require-Bundle: org.eclipse.emf.compare.egit,
  org.eclipse.emf.compare.ide.ui,
  org.eclipse.emf.compare.ide
 Bundle-Vendor: %providerName
+Export-Package: org.eclipse.emf.compare.egit.ui.internal;x-internal:=true,
+ org.eclipse.emf.compare.egit.ui.internal.actions;x-internal:=true,
+ org.eclipse.emf.compare.egit.ui.internal.merge;x-internal:=true
