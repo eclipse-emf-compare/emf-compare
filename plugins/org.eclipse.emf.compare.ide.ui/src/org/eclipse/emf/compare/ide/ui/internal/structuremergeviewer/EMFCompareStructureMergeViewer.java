@@ -12,6 +12,7 @@
  *     Stefan Dirix - bugs 473985 and 474030
  *     Martin Fleck - bug 497066
  *     Martin Fleck - bug 483798
+ *     Martin Fleck - bug 514767
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -22,6 +23,7 @@ import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCo
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.base.Function;
+import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Throwables;
@@ -90,6 +92,7 @@ import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.MirrorUtil;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoDifferencesCompareInput;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoSelectedItemCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoVisibleItemCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.OnlyPseudoConflictsCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.EMFCompareColor;
@@ -99,6 +102,7 @@ import org.eclipse.emf.compare.ide.ui.internal.editor.ComparisonScopeInput;
 import org.eclipse.emf.compare.ide.ui.internal.logical.ComparisonScopeBuilder;
 import org.eclipse.emf.compare.ide.ui.internal.logical.EmptyComparisonScope;
 import org.eclipse.emf.compare.ide.ui.internal.logical.StreamAccessorStorage;
+import org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences;
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressInfoComposite;
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressMonitorWrapper;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.FetchListener;
@@ -158,6 +162,7 @@ import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -228,6 +233,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 	};
 
+	/** Preference store holding UI-related settings for this viewer. */
+	protected final IPreferenceStore preferenceStore = EMFCompareIDEUIPlugin.getDefault()
+			.getPreferenceStore();
+
 	/** The adapter factory. */
 	private ComposedAdapterFactory fAdapterFactory;
 
@@ -259,6 +268,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	private DependencyData dependencyData;
 
 	private ISelectionChangedListener selectionChangeListener;
+
+	/** The current selection. */
+	protected ISelection currentSelection;
+
+	/** Listener reacting to changes in the {@link #preferenceStore}. */
+	protected IPropertyChangeListener preferenceChangeListener;
 
 	private final Listener fEraseItemListener;
 
@@ -326,6 +341,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			}
 		};
 		addSelectionChangedListener(selectionChangeListener);
+
+		preferenceChangeListener = new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				EMFCompareStructureMergeViewer.this.handlePreferenceChangedEvent(event);
+			}
+		};
+		preferenceStore.addPropertyChangeListener(preferenceChangeListener);
 
 		fWrappedTreeListener = new ITreeViewerListener() {
 			public void treeExpanded(TreeExpansionEvent event) {
@@ -804,11 +826,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	@Subscribe
 	public void mergePreviewModeChange(@SuppressWarnings("unused") IMergePreviewModeChange event) {
-		final IMerger.Registry registry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 		SWTUtil.safeAsyncExec(new Runnable() {
 			public void run() {
-				dependencyData.updateDependencies(getSelection(), registry);
-				internalRedraw();
+				updateHighlightRelatedChanges(getSelection());
 			}
 		});
 	}
@@ -904,6 +924,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		removeSelectionChangedListener(selectionChangeListener);
 		getViewer().removeSelectionChangedListener(toolBar);
 		getViewer().getTree().removeListener(SWT.EraseItem, fEraseItemListener);
+		if (preferenceChangeListener != null) {
+			preferenceStore.removePropertyChangeListener(preferenceChangeListener);
+		}
 		if (editingDomainNeedsToBeDisposed) {
 			((IDisposable)getCompareConfiguration().getEditingDomain()).dispose();
 		}
@@ -1119,6 +1142,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 						// refresh caused by the initialization of the viewer filters and the group providers.
 						refreshTitle();
 
+						// Expands the tree viewer to the default expansion level
+						expandTreeToLevel(getDefaultTreeExpansionLevel());
+
 						// Selects the first difference once the tree has been filled.
 						selectFirstDiffOrDisplayLabelViewer(comparison);
 					}
@@ -1295,6 +1321,72 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	/**
+	 * Returns whether the first change should be selected automatically after initialization.
+	 * 
+	 * @return true if the first change should be selected automatically, false otherwise.
+	 * @see #selectFirstDiffOrDisplayLabelViewer(Comparison)
+	 */
+	protected boolean isSelectFirstChange() {
+		return preferenceStore.getBoolean(EMFCompareUIPreferences.EDITOR_TREE_AUTO_SELECT_FIRST_CHANGE);
+	}
+
+	/**
+	 * Returns the default expansion level for the tree viewer.
+	 * 
+	 * @return non-negative level, or {@link AbstractTreeViewer#ALL_LEVELS ALL_LEVELS} to expand all levels of
+	 *         the tree
+	 * @see #expandTreeToLevel(int)
+	 */
+	protected int getDefaultTreeExpansionLevel() {
+		return preferenceStore.getInt(EMFCompareUIPreferences.EDITOR_TREE_AUTO_EXPAND_LEVEL);
+	}
+
+	/**
+	 * Expands the {@link #getViewer() tree viewer} to the given level.
+	 * 
+	 * @param level
+	 *            non-negative level, or {@link AbstractTreeViewer#ALL_LEVELS ALL_LEVELS} to expand all levels
+	 *            of the tree
+	 * @see TreeViewer#expandToLevel(int)
+	 */
+	protected void expandTreeToLevel(int level) {
+		getViewer().expandToLevel(level);
+	}
+
+	/**
+	 * Returns whether we highlight changes related to the current selected change.
+	 * 
+	 * @return true if we highlight related changes, false otherwise.
+	 * @see #updateHighlightRelatedChanges(ISelection)
+	 */
+	protected boolean isHighlightRelatedChanges() {
+		return preferenceStore.getBoolean(EMFCompareUIPreferences.EDITOR_TREE_HIGHLIGHT_RELATED_CHANGES);
+	}
+
+	/**
+	 * Updates the highlighting of related changes for the current selection, if it is
+	 * {@link #isHighlightRelatedChanges() enabled}.
+	 * 
+	 * @param selection
+	 *            selection
+	 */
+	protected void updateHighlightRelatedChanges(ISelection selection) {
+		if (!isHighlightRelatedChanges()) {
+			return;
+		}
+		dependencyData.updateDependencies(selection, EMFCompareRCPPlugin.getDefault().getMergerRegistry());
+		internalRedraw();
+	}
+
+	/**
+	 * Clears the highlighting of related changes for the current selection.
+	 */
+	protected void clearHighlightRelatedChanges() {
+		dependencyData.clearDependencies();
+		internalRedraw();
+	}
+
+	/**
 	 * Select the first difference...if there are differences, otherwise, display appropriate content viewer
 	 * (no differences or no visible differences)
 	 * 
@@ -1317,6 +1409,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				} else {
 					navigatable.fireOpen(new NoVisibleItemCompareInput(compareInput));
 				}
+			} else if (!isSelectFirstChange()) {
+				navigatable.fireOpen(new NoSelectedItemCompareInput(compareInput));
 			} else {
 				navigatable.selectChange(INavigatable.FIRST_CHANGE);
 			}
@@ -1591,11 +1685,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		// Updates dependency data when the viewer has been refreshed and the content provider is ready.
 		getContentProvider().runWhenReady(IN_UI_SYNC, new Runnable() {
 			public void run() {
-				dependencyData.updateDependencies(getSelection(),
-						EMFCompareRCPPlugin.getDefault().getMergerRegistry());
-
-				internalRedraw();
-
+				updateHighlightRelatedChanges(getSelection());
 			}
 		});
 		// Needs dependency data however do not need to be run in UI thread
@@ -1608,10 +1698,28 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	}
 
+	/**
+	 * Handles changes to the UI-related preferences in the {@link #preferenceStore}.
+	 * 
+	 * @param event
+	 *            change event for a preference property
+	 */
+	protected void handlePreferenceChangedEvent(PropertyChangeEvent event) {
+		if (event.getProperty() == EMFCompareUIPreferences.EDITOR_TREE_HIGHLIGHT_RELATED_CHANGES) {
+			boolean highlightRelatedChanges = Boolean.parseBoolean(event.getNewValue().toString());
+			if (highlightRelatedChanges) {
+				updateHighlightRelatedChanges(getSelection());
+			} else {
+				clearHighlightRelatedChanges();
+			}
+		}
+	}
+
 	private void handleSelectionChangedEvent(SelectionChangedEvent event) {
-		dependencyData.updateDependencies(event.getSelection(),
-				EMFCompareRCPPlugin.getDefault().getMergerRegistry());
-		internalRedraw();
+		if (!Objects.equal(currentSelection, event.getSelection())) {
+			this.currentSelection = event.getSelection();
+			updateHighlightRelatedChanges(event.getSelection());
+		}
 	}
 
 	/**

@@ -175,12 +175,6 @@
       </page>
       <page
             category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
-            class="org.eclipse.emf.compare.rcp.ui.internal.preferences.EditorPreferencePage"
-            id="org.eclipse.emf.compare.rcp.ui.preferencePage.editor"
-            name="Editor">
-      </page>
-      <page
-            category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
             class="org.eclipse.emf.compare.rcp.ui.internal.preferences.EnginesPreferencePage"
             id="org.eclipse.emf.compare.rcp.ui.preferencePage.engines"
             name="Engines">

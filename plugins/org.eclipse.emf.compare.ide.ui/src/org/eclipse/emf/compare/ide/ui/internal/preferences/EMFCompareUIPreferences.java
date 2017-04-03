@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - bug 508855
+ *     Martin Fleck - bug 514767
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.preferences;
 
@@ -54,4 +55,25 @@ public interface EMFCompareUIPreferences {
 	 */
 	String ENABLE_MODEL_RESOLUTION_FROM_CONTAINERS = EMFCompareIDEUIPlugin.PLUGIN_ID
 			+ ".preference.enableModelResolutionFromContainers"; //$NON-NLS-1$
+
+	/**
+	 * Preference key holding the value for the comparison editor to automatically expand the tree viewer of
+	 * the top panel to a specific level.
+	 */
+	String EDITOR_TREE_AUTO_EXPAND_LEVEL = EMFCompareIDEUIPlugin.PLUGIN_ID
+			+ ".preference.editor.tree.expand.level"; //$NON-NLS-1$
+
+	/**
+	 * Preference key holding the value for the comparison editor to automatically select the first change in
+	 * the tree viewer of the top panel.
+	 */
+	String EDITOR_TREE_AUTO_SELECT_FIRST_CHANGE = EMFCompareIDEUIPlugin.PLUGIN_ID
+			+ ".preference.editor.tree.selection.firstChange"; //$NON-NLS-1$
+
+	/**
+	 * Preference key holding the value for the comparison editor to automatically highlight changes related
+	 * to the current selection in the tree viewer of the top panel.
+	 */
+	String EDITOR_TREE_HIGHLIGHT_RELATED_CHANGES = EMFCompareIDEUIPlugin.PLUGIN_ID
+			+ ".preference.editor.tree.highlight"; //$NON-NLS-1$
 }

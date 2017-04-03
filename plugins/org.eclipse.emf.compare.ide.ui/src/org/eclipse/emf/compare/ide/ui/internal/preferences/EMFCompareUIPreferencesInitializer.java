@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - bug 508855
+ *     Martin Fleck - bug 514767
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.preferences;
 
@@ -32,5 +33,8 @@ public class EMFCompareUIPreferencesInitializer extends AbstractPreferenceInitia
 				CrossReferenceResolutionScope.CONTAINER.name());
 		store.setDefault(EMFCompareUIPreferences.PRE_MERGE_MODELS_WHEN_CONFLICT, false);
 		store.setDefault(EMFCompareUIPreferences.ENABLE_MODEL_RESOLUTION_FROM_CONTAINERS, false);
+		store.setDefault(EMFCompareUIPreferences.EDITOR_TREE_AUTO_EXPAND_LEVEL, 1);
+		store.setDefault(EMFCompareUIPreferences.EDITOR_TREE_AUTO_SELECT_FIRST_CHANGE, true);
+		store.setDefault(EMFCompareUIPreferences.EDITOR_TREE_HIGHLIGHT_RELATED_CHANGES, true);
 	}
 }

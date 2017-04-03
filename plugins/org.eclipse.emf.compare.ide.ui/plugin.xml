@@ -75,6 +75,12 @@
             label="%emf.compare.wait.viewer">
       </viewer>
       <viewer
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoSelectedItemViewerCreator"
+            extensions="org.eclipse.emf.compare.rcp.ui.eNoSelectedItem"
+            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.NoSelectedItemViewer"
+            label="%emf.compare.no.selected.item.viewer">
+      </viewer>
+      <viewer
             class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoDifferencesViewerCreator"
             extensions="org.eclipse.emf.compare.rcp.ui.eNoDiff"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.NoDifferencesViewer"
@@ -461,6 +467,12 @@
             class="org.eclipse.emf.compare.ide.ui.internal.preferences.MergePreferencesPage"
             id="org.eclipse.emf.compare.ide.ui.preferencepage.merge"
             name="Merge">
+      </page>
+      <page
+            category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
+            class="org.eclipse.emf.compare.ide.ui.internal.preferences.EditorPreferencePage"
+            id="org.eclipse.emf.compare.ide.ui.preferencepage.editor"
+            name="Editor">
       </page>
    </extension>
    <extension
