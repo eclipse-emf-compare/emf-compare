@@ -20,7 +20,6 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -243,8 +242,13 @@ public class ResourceChangeAdapter extends AdapterImpl {
 	 *         comparison.
 	 */
 	public boolean isEmptyAndMissingOnOtherSide(Resource resource) {
-		return resource.getContents().isEmpty()
-				&& (addedResources.contains(resource) || getResourceMatch(resource).isMissingOnOtherSide());
+		if (resource.getContents().isEmpty()) {
+			ResourceMatch match = getResourceMatch(resource);
+			if (addedResources.contains(resource) || (match != null && match.isMissingOnOtherSide())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -252,9 +256,8 @@ public class ResourceChangeAdapter extends AdapterImpl {
 	 * 
 	 * @param resource
 	 *            Resource for which we need a MatchResource.
-	 * @return The MatchResource corresponding to the given <code>resource</code>.
-	 * @throws IllegalStateException
-	 *             If no MatchResource is found with the given resource on its left or right.
+	 * @return The MatchResource corresponding to the given <code>resource</code>, <code>null</code> if the
+	 *         resource is not in any side of this comparison (package, profiles, ...).
 	 */
 	protected ResourceMatch getResourceMatch(Resource resource) {
 		for (MatchResource matchRes : comparison.getMatchedResources()) {
@@ -264,9 +267,7 @@ public class ResourceChangeAdapter extends AdapterImpl {
 				return new ResourceMatch(matchRes, RIGHT);
 			}
 		}
-		throw new IllegalStateException(
-				EMFCompareMessages.getString("ResourceAttachmentChangeSpec.MissingMatch", //$NON-NLS-1$
-						resource.getURI().lastSegment()));
+		return null;
 	}
 
 	/**
