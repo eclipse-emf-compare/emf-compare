@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 EclipseSource Services GmbH and others.
+ * Copyright (c) 2016, 2017 EclipseSource Services GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,9 @@
  * 
  * Contributors:
  *     Martin Fleck - initial API and implementation
+ *     Martin Fleck - bug 515041
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.papyrus.internal.hook.migration;
-
-import com.google.common.base.Optional;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -64,6 +63,16 @@ public final class ProfileNamespaceURIPatternAPI {
 	 * Name of the isEqualVersionlessNamespaceURI method of the ProfileNamespaceURIPatternComparison class.
 	 */
 	private static final String COMPARISON_METHOD_IS_EQUAL_VERSIONLESS_NAMESPACE_URI = "isEqualVersionlessNamespaceURI"; //$NON-NLS-1$
+
+	/**
+	 * Name of the isPresent method of the Optional class from Guava.
+	 */
+	private static final String OPTIONAL_METHOD_IS_PRESENT = "isPresent"; //$NON-NLS-1$
+
+	/**
+	 * Name of the get method of the Optional class from Guava.
+	 */
+	private static final String OPTIONAL_METHOD_GET = "get"; //$NON-NLS-1$
 
 	/**
 	 * ProfileNamespaceURIPatternRegistry singleton instance.
@@ -224,10 +233,26 @@ public final class ProfileNamespaceURIPatternAPI {
 		}
 		Object optionalComparison = callMethod(registryTryFindComparisonMethod, registryInstance,
 				lhsNamespaceUri, rhsNamespaceUri);
-		if (optionalComparison instanceof Optional<?> && ((Optional<?>)optionalComparison).isPresent()) {
-			Object comparison = ((Optional<?>)optionalComparison).get();
-			Object isEqual = callMethod(comparisonIsEqualVersionlessNamespaceURIMethod, comparison);
-			return isEqual != null && new Boolean(isEqual.toString()).booleanValue();
+		if (optionalComparison == null) {
+			return false;
+		}
+		// use reflection to query result due to potentially incompatible Guava versions, cf. bug 515041
+		try {
+			Method isPresentMethod = optionalComparison.getClass().getMethod(OPTIONAL_METHOD_IS_PRESENT);
+			isPresentMethod.setAccessible(true);
+			Object isPresent = isPresentMethod.invoke(optionalComparison);
+			if (isPresent != null && Boolean.parseBoolean(isPresent.toString())) {
+				Method getMethod = optionalComparison.getClass().getMethod(OPTIONAL_METHOD_GET);
+				getMethod.setAccessible(true);
+				Object comparison = getMethod.invoke(optionalComparison);
+				if (comparison != null) {
+					Object isEqual = callMethod(comparisonIsEqualVersionlessNamespaceURIMethod, comparison);
+					return isEqual != null && new Boolean(isEqual.toString()).booleanValue();
+				}
+			}
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			// do nothing
 		}
 		return false;
 	}

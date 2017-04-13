@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 EclipseSource Services GmbH and others.
+ * Copyright (c) 2016, 2017 EclipseSource Services GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,12 +9,15 @@
  *     Martin Fleck - initial API and implementation
  *     Stefan Dirix - bug 498583
  *     Laurent Delaigue - bug 498583
+ *     Martin Fleck - bug 515041
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.papyrus.internal.hook.migration;
 
 import com.google.common.base.Function;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -45,10 +48,23 @@ import org.eclipse.uml2.uml.UMLPackage;
 @SuppressWarnings("restriction")
 public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnippet {
 
-	/**
-	 * The resource under repair.
-	 */
-	private Resource resource;
+	/** The name of the private label provider service field in the super class. */
+	private static final String FIELD_LABEL_PROVIDER_SERVICE = "labelProviderService"; //$NON-NLS-1$
+
+	/** The name of the private adapter field in the super class. */
+	private static final String FIELD_ADAPTER = "adapter"; //$NON-NLS-1$
+
+	/** The name of the private dynamic profile supplier field in the super class. */
+	private static final String FIELD_DYNAMIC_PROFILE_SUPPLIER = "dynamicProfileSupplier"; //$NON-NLS-1$
+
+	/** The label provider service used to displays a user dialog during the migration. */
+	private LabelProviderService fLabelProviderService;
+
+	/** The resource under repair. */
+	private Resource fResource;
+
+	/** The profile supplier used to find a profile if a package is missing. */
+	private Object fProfileSupplier;
 
 	/**
 	 * Creates a new repair analyzer for zombie and orphan stereotype applications for the given resource.
@@ -59,15 +75,15 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 	public StereotypeApplicationRepair(Resource resource) {
 		// new constructor to provide our own profile supplier
 		super();
-		this.resource = resource;
-		setLabelProviderService(createLabelProviderService());
-		setProfileSupplier(createProfileSupplier());
+		this.fResource = resource;
+		this.fLabelProviderService = setLabelProviderService(createLabelProviderService());
+		this.fProfileSupplier = setProfileSupplier(createProfileSupplier());
 	}
 
 	@Override
 	public void dispose(ModelSet modelsManager) {
 		try {
-			LabelProviderService s = (LabelProviderService)getSuperField("labelProviderService"); //$NON-NLS-1$
+			LabelProviderService s = (LabelProviderService)getSuperField(FIELD_LABEL_PROVIDER_SERVICE);
 			if (s != null) {
 				s.disposeService();
 			}
@@ -87,16 +103,21 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 	 *            name of the field in the super class
 	 * @param fieldValue
 	 *            new value of the field in the super class
+	 * @param <T>
+	 *            type of the field value
+	 * @return the value set at the given field. If an exception occurred, null is returned.
 	 */
-	protected void setSuperField(String fieldName, Object fieldValue) {
+	protected <T> T setSuperField(String fieldName, T fieldValue) {
 		try {
 			final Field superField = getClass().getSuperclass().getDeclaredField(fieldName);
 			superField.setAccessible(true);
 			superField.set(this, fieldValue);
+			return fieldValue;
 		} catch (final NoSuchFieldException | SecurityException | IllegalArgumentException
 				| IllegalAccessException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	/**
@@ -128,7 +149,7 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 	 */
 	private void setAdapter(ModelSet resourceSet) {
 		// adapter needed to provide EPackage.Registry via the adapters resourceSet
-		final Object adapterObject = getSuperField("adapter"); //$NON-NLS-1$
+		final Object adapterObject = getSuperField(FIELD_ADAPTER);
 		if (adapterObject instanceof Adapter.Internal) {
 			((Adapter.Internal)adapterObject).setTarget(resourceSet);
 		}
@@ -142,9 +163,10 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 	 * 
 	 * @param labelProviderService
 	 *            label provider service
+	 * @return the set label provider service or null, if the label provider service could not be set
 	 */
-	private void setLabelProviderService(LabelProviderService labelProviderService) {
-		setSuperField("labelProviderService", labelProviderService); //$NON-NLS-1$
+	private LabelProviderService setLabelProviderService(LabelProviderService labelProviderService) {
+		return setSuperField(FIELD_LABEL_PROVIDER_SERVICE, labelProviderService);
 	}
 
 	/**
@@ -152,9 +174,10 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 	 * 
 	 * @param profileSupplier
 	 *            supplier of profiles for missing packages.
+	 * @return the set profile supplier or null, if the profile supplier could not be set
 	 */
-	protected void setProfileSupplier(Function<EPackage, Profile> profileSupplier) {
-		setSuperField("dynamicProfileSupplier", profileSupplier); //$NON-NLS-1$
+	protected Object setProfileSupplier(Object profileSupplier) {
+		return setSuperField(FIELD_DYNAMIC_PROFILE_SUPPLIER, profileSupplier);
 	}
 
 	/**
@@ -180,11 +203,46 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 	/***
 	 * Creates a new profile supplier that is called if a package is missing and we need to find a profile
 	 * that defines such a package.
+	 * <p>
+	 * <i>Note: The return type of this method is Object, as we may need to wrap our supplier in a
+	 * {@link Proxy#newProxyInstance(ClassLoader, Class[], InvocationHandler) dynamic proxy} due to a
+	 * different {@link Function} interface version being used in the super class (cf. bug 515041).</i>
+	 * </p>
 	 * 
+	 * @see #createProfileSupplierProxy(Function, Class)
 	 * @return newly created profile supplier
 	 */
-	protected Function<EPackage, Profile> createProfileSupplier() {
-		return new MissingProfileSupplier(getRootElement(resource));
+	protected Object createProfileSupplier() {
+		final MissingProfileSupplier missingProfileSupplier = new MissingProfileSupplier(
+				getRootElement(fResource));
+		try {
+			// check if our supplier is compatible and if not wrap it in a proxy
+			final Field superProfileSupplier = getClass().getSuperclass()
+					.getDeclaredField(FIELD_DYNAMIC_PROFILE_SUPPLIER);
+			Class<?> superProfileSupplierType = superProfileSupplier.getType();
+			if (superProfileSupplierType.isInstance(missingProfileSupplier)) {
+				return missingProfileSupplier;
+			}
+			return createProfileSupplierProxy(missingProfileSupplier, superProfileSupplierType);
+		} catch (final NoSuchFieldException | SecurityException | IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+		return missingProfileSupplier;
+	}
+
+	/**
+	 * Creates a proxy instance for the given profile supplier to be compatible with the given type.
+	 * 
+	 * @param profileSupplier
+	 *            profile supplier
+	 * @param profileSupplierType
+	 *            type of the returned proxy
+	 * @return proxy wrapping the provided profile supplier
+	 */
+	protected Object createProfileSupplierProxy(final Function<EPackage, Profile> profileSupplier,
+			Class<?> profileSupplierType) {
+		return Proxy.newProxyInstance(StereotypeApplicationRepairSnippet.class.getClassLoader(),
+				new Class<?>[] {profileSupplierType }, new DelegatingInvocationHandler(profileSupplier));
 	}
 
 	/**
@@ -193,7 +251,7 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 	 * @return resource
 	 */
 	public Resource getResource() {
-		return resource;
+		return fResource;
 	}
 
 	/**
@@ -207,8 +265,17 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 	protected ModelSet createModelSetWrapper(ResourceSet resourceSet) {
 		final ModelSetWrapper modelSet = new ModelSetWrapper(resourceSet);
 		// avoid read-only for our resource
-		modelSet.setReadOnly(resource, Boolean.FALSE);
+		modelSet.setReadOnly(fResource, Boolean.FALSE);
 		return modelSet;
+	}
+
+	/**
+	 * Evaluates whether all necessary fiels have been set successfully and a repair is possible.
+	 * 
+	 * @return true if a repair is possible, false otherwise.
+	 */
+	protected boolean isFieldMissing() {
+		return fResource == null || fLabelProviderService == null || fProfileSupplier == null;
 	}
 
 	/**
@@ -221,19 +288,28 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 	 * @return descriptor of zombie and orphan stereotypes
 	 */
 	public ZombieStereotypesDescriptor repair() {
+		if (isFieldMissing()) {
+			// fail silently but log warning
+			UMLPapyrusComparePlugin.getDefault().getLog().log(new Status(IStatus.WARNING,
+					UMLPapyrusComparePlugin.PLUGIN_ID,
+					"Unable to analyze and repair resource " + fResource //$NON-NLS-1$
+							+ " due to missing field: {resource=" + fResource + ", labelProviderService=" //$NON-NLS-1$ //$NON-NLS-2$
+							+ fLabelProviderService + ", profileSupplier=" + fProfileSupplier + "}")); //$NON-NLS-1$//$NON-NLS-2$
+			return null;
+		}
 		try {
-			final ResourceSet resourceSet = resource.getResourceSet();
+			final ResourceSet resourceSet = fResource.getResourceSet();
 			final ModelSet modelSet = createModelSetWrapper(resourceSet);
 			setAdapter(modelSet);
-			modelSet.getResources().add(resource);
-			final ZombieStereotypesDescriptor stereotypesDescriptor = getZombieStereotypes(resource);
-			resourceSet.getResources().add(resource);
+			modelSet.getResources().add(fResource);
+			final ZombieStereotypesDescriptor stereotypesDescriptor = getZombieStereotypes(fResource);
+			resourceSet.getResources().add(fResource);
 			return stereotypesDescriptor;
 			// CHECKSTYLE:OFF
 		} catch (Exception e) {
 			// CHECKSTYLE:ON
-			resource.getErrors().add(new ProfileMigrationDiagnostic(
-					UMLPapyrusCompareMessages.getString("profile.migration.exception", e, resource))); //$NON-NLS-1$
+			fResource.getErrors().add(new ProfileMigrationDiagnostic(
+					UMLPapyrusCompareMessages.getString("profile.migration.exception", e, fResource))); //$NON-NLS-1$
 			UMLPapyrusComparePlugin.getDefault().getLog()
 					.log(new Status(IStatus.ERROR, UMLPapyrusComparePlugin.PLUGIN_ID,
 							"Exception occurred during profile migration", //$NON-NLS-1$
