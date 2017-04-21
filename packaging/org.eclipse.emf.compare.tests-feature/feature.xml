@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.emf.compare.tests"
+      label="%featureName"
+      version="3.5.0.qualifier"
+      provider-name="%providerName"
+      plugin="org.eclipse.emf.compare.tests"
+      license-feature="org.eclipse.license"
+      license-feature-version="1.0.1">
+
+   <description>
+      %description
+   </description>
+
+   <copyright url="%copyrightURL">
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <requires>
+      <import feature="org.eclipse.emf.compare" version="3.3.1.qualifier"/>
+      <import feature="org.eclipse.emf.compare.diagram.gmf" version="3.3.1.qualifier"/>
+      <import feature="org.eclipse.emf.compare.egit" version="1.2.1.qualifier"/>
+      <import feature="org.eclipse.emf.compare.ide.ui" version="3.3.1.qualifier"/>
+      <import feature="org.eclipse.emf.compare.rcp.ui" version="3.3.1.qualifier"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.emf.compare.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.rcp.ui.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.ide.ui.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.uml2.rcp.ui.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.uml2.ide.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.uml2.ide.ui.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.ide.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.ide.ui.tests.framework"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.ide.ui.tests.git"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.ide.ui.tests.git.framework"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.rcp.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.uml2.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

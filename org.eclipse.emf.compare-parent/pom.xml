@@ -123,6 +123,8 @@
     <module>../plugins/org.eclipse.emf.compare.diagram</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.edit</module>
     <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui</module>
+    
+    <module>../packaging/org.eclipse.emf.compare.tests-feature</module>
   </modules>
 
   <build>

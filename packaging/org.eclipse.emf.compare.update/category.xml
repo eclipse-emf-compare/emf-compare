@@ -18,6 +18,12 @@
    <feature id="org.eclipse.emf.compare.rcp.ui.source" version="0.0.0">
       <category name="compare"/>
    </feature>
+   <feature id="org.eclipse.emf.compare.tests" version="0.0.0">
+      <category name="compare_testframework"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.tests.source" version="0.0.0">
+      <category name="compare_testframework"/>
+   </feature>
    <feature id="org.eclipse.emf.compare.uml2" version="0.0.0">
       <category name="compare_integration"/>
    </feature>
@@ -50,6 +56,11 @@
    <category-def name="compare_integration" label="EMF Compare tools support">
       <description>
          Features to integrate EMF Compare with other tools.
+      </description>
+   </category-def>
+   <category-def name="compare_testframework" label="EMF Compare test framework">
+      <description>
+         EMF Compare test framework for customizations and integrations that are based on EMF Compare.
       </description>
    </category-def>
 </site>
