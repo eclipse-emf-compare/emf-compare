@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo and others.
+ * Copyright (c) 2015, 2017 Obeo and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,15 +8,19 @@
  * 
  * Contributors:
  *     Michael Borkowski - conversion of inner classes to mockito mocks
+ *     Martin Fleck - bug 512677
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.unit;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -214,6 +218,60 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 		} catch (UnsupportedOperationException e) {
 			// expected this one to slip through
 		}
+	}
+
+	/**
+	 * Tests that the resource existences are cached correctly.
+	 * 
+	 * @throws CoreException
+	 *             mocking errors
+	 */
+	@Test
+	public void testExistsCache() throws CoreException {
+		// setup mocks
+		final IStorageProvider fileStorageProvider = mock(IStorageProvider.class);
+		when(fileStorageProvider.getStorage(any(IProgressMonitor.class))).thenReturn(iFile1);
+
+		final IStorageProvider nullStorageProvider = mock(IStorageProvider.class);
+		when(nullStorageProvider.getStorage(any(IProgressMonitor.class))).thenReturn(null);
+
+		IStorageProviderAccessor accessor = mock(IStorageProviderAccessor.class);
+		when(accessor.getStorageProvider(any(IResource.class), any(DiffSide.class)))
+				.then(new Answer<IStorageProvider>() {
+					public IStorageProvider answer(InvocationOnMock invocation) throws Throwable {
+						return iFile1.equals(invocation.getArguments()[0]) ? fileStorageProvider
+								: nullStorageProvider;
+					}
+				});
+
+		// verify mock setup
+		assertSame(nullStorageProvider, accessor.getStorageProvider(null, DiffSide.ORIGIN));
+		assertSame(fileStorageProvider, accessor.getStorageProvider(iFile1, DiffSide.ORIGIN));
+
+		URI fileURI = ResourceUtil.createURIFor(iFile1);
+		URI nullURI = URI.createURI("noProject/notExisting.file"); //$NON-NLS-1$
+		URIConverter delegate = new ExtensibleURIConverterImpl();
+		RevisionedURIConverter converter = new RevisionedURIConverter(delegate, accessor, DiffSide.ORIGIN);
+
+		// check existence
+		assertTrue(converter.exists(fileURI, null));
+		assertFalse(converter.exists(nullURI, null));
+
+		// storage providers where only called once
+		verify(fileStorageProvider, times(1)).getStorage(any(IProgressMonitor.class));
+		verify(nullStorageProvider, times(1)).getStorage(any(IProgressMonitor.class));
+
+		// check existence multiple times
+		assertTrue(converter.exists(fileURI, null));
+		assertFalse(converter.exists(nullURI, null));
+		assertTrue(converter.exists(fileURI, null));
+		assertFalse(converter.exists(nullURI, null));
+		assertTrue(converter.exists(fileURI, null));
+		assertFalse(converter.exists(nullURI, null));
+
+		// storage providers where only called once, cache was used
+		verify(fileStorageProvider, times(1)).getStorage(any(IProgressMonitor.class));
+		verify(nullStorageProvider, times(1)).getStorage(any(IProgressMonitor.class));
 	}
 
 	private Answer<IStorageProvider> getPathRedirectingStorageProvider() {

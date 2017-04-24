@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2015 Obeo.
+ * Copyright (c) 2011, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 512677
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
@@ -53,6 +54,12 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 	 * prefetched stream so that we can avoid loading it twice.
 	 */
 	private final ConcurrentMap<URI, InputStream> prefetchedStreams = new ConcurrentHashMap<URI, InputStream>();
+
+	/**
+	 * Cache for the existence of remote resources to reduce the number of expensive existence checks. As key,
+	 * we use the {@link #normalize(URI) normalized} form of the URI.
+	 */
+	private final ConcurrentMap<URI, Boolean> existsCache = new ConcurrentHashMap<>();
 
 	/**
 	 * Instantiates our URI converter given its delegate.
@@ -143,6 +150,14 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 		boolean exists = false;
 		try {
 			final URI normalizedUri = normalize(uri);
+
+			// check cache
+			Boolean cachedExists = existsCache.get(normalizedUri);
+			if (cachedExists != null) {
+				return cachedExists.booleanValue();
+			}
+
+			// query storage provider
 			IStorageProvider storageProvider = storageAccessor
 					.getStorageProvider(ResourceUtil.getResourceFromURI(normalizedUri), side);
 			if (storageProvider != null) {
@@ -150,6 +165,9 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 			} else {
 				exists = super.exists(normalizedUri, options);
 			}
+
+			// store in cache only when no exception is thrown
+			existsCache.put(normalizedUri, Boolean.valueOf(exists));
 		} catch (CoreException e) {
 			EMFCompareIDEUIPlugin.getDefault().log(IStatus.ERROR, e.getMessage());
 		}

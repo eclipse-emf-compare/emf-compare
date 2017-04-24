@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
  *     Alexandra Buzila - SynchronizationModelDiagnosticTest
  *     Martin Fleck - add CascadingFilterRefinementTest and
  *                    MergeNonConflictingRunnableRefinementTest
+ *     Martin Fleck - add CachingImplicitDependenciesTest
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.suite;
 
@@ -20,6 +21,7 @@ import org.eclipse.emf.compare.ide.ui.tests.command.MergeAllCommandTests;
 import org.eclipse.emf.compare.ide.ui.tests.compareconfiguration.EMFCompareConfigurationTest;
 import org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.notloadedfragment.NotLoadedFragmentItemTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.modelprovider.EMFModelProviderTest;
+import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.CachingImplicitDependenciesTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.DependencyGraphUpdaterTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.GraphResolutionTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.LocalMonitoredProxyCreationListenerTest;
@@ -64,7 +66,7 @@ import junit.textui.TestRunner;
 		RemoteMonitoredProxyCreationListenerTest.class, MergeNonConflictingRunnableTest.class,
 		RenameDetectorTest.class, SimilarityComputerTest.class, TooltipProviderTest.class,
 		SynchronizationModelDiagnosticTest.class, CascadingFilterRefinementTest.class,
-		MergeNonConflictingRunnableRefinementTest.class })
+		MergeNonConflictingRunnableRefinementTest.class, CachingImplicitDependenciesTest.class })
 public class AllTests {
 	/**
 	 * Launches the test with the given arguments.

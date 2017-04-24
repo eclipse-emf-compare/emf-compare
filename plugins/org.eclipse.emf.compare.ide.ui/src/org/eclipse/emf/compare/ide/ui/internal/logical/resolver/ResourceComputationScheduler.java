@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 512677
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
@@ -459,6 +460,18 @@ public class ResourceComputationScheduler<T> {
 			return ImmutableSet.of();
 		}
 		return ImmutableSet.copyOf(computedKeys);
+	}
+
+	/**
+	 * Evaluates whether a computation with the given key has been run or is still running since its set of
+	 * keys {@link #computedKeys} was last set.
+	 * 
+	 * @param key
+	 *            The key of the computation to check.
+	 * @return true, if a computation of the given key has been run or is still running.
+	 */
+	public boolean isScheduled(T key) {
+		return computedKeys != null && computedKeys.contains(key);
 	}
 
 	/**

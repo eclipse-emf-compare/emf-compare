@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Fleck - bug 512677
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
@@ -49,6 +50,9 @@ public abstract class AbstractResolution {
 	/** The logger */
 	protected final Logger logger = Logger.getLogger(getClass());
 
+	/** The implicit dependencies. */
+	protected IImplicitDependencies implicitDependencies;
+
 	/**
 	 * Constructor.
 	 * 
@@ -60,6 +64,19 @@ public abstract class AbstractResolution {
 	public AbstractResolution(IResolutionContext context, IProgressMonitor monitor) {
 		this.context = checkNotNull(context);
 		this.monitor = SubMonitor.convert(monitor, getTicks());
+	}
+
+	/**
+	 * Returns the implicit dependencies which can be used to retrieve a set of files that should be part of
+	 * the same logical model than a given file.
+	 * 
+	 * @return The {@link IImplicitDependencies} instance.
+	 */
+	protected IImplicitDependencies getImplicitDependencies() {
+		if (implicitDependencies == null) {
+			implicitDependencies = new CachingImplicitDependencies(context.getImplicitDependencies());
+		}
+		return implicitDependencies;
 	}
 
 	/**
@@ -144,7 +161,7 @@ public abstract class AbstractResolution {
 			Set<IFile> filesToResolve = Sets.newLinkedHashSet();
 			for (IFile newFile : filesToAdd) {
 				URI baseUri = ResourceUtil.createURIFor(newFile);
-				Set<URI> newURIs = context.getImplicitDependencies().of(baseUri, URIConverter.INSTANCE);
+				Set<URI> newURIs = getImplicitDependencies().of(baseUri, URIConverter.INSTANCE);
 				for (URI uri : newURIs) {
 					if (knownURIs.add(uri)) {
 						IFile toResolve = ResolutionUtil.getFileAt(uri);
