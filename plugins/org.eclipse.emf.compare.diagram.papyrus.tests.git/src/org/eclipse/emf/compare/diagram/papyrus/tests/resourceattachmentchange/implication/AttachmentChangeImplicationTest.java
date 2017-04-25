@@ -1,10 +1,20 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.diagram.papyrus.tests.resourceattachmentchange.implication;
 
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
-import static org.junit.Assert.*;
-
-import com.google.common.collect.Iterables;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.Iterator;
@@ -22,6 +32,8 @@ import org.eclipse.papyrus.infra.gmfdiag.common.model.NotationModel;
 import org.eclipse.papyrus.uml.tools.model.UmlModel;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import com.google.common.collect.Iterables;
 
 @SuppressWarnings({"nls", "unused" })
 public class AttachmentChangeImplicationTest extends AbstractGitTestCase {
