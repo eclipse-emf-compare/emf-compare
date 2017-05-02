@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2016 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2014, 2017 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,12 +8,15 @@
  * Contributors:
  *     Philip Langer - initial API and implementation
  *     Martin Fleck - bug 507177: consider refinement behavior
+ *     Martin Fleck - bug 516060
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.merge;
 
+import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.getOpaqueElementLanguages;
 import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.isChangeOfOpaqueElementBodyAttribute;
 import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareUtil.isChangeOfOpaqueElementLanguageAttribute;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
 import com.google.common.base.Optional;
 
@@ -328,7 +331,8 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 	 */
 	private String getTargetBodyValue(OpaqueElementBodyChange bodyChange, boolean rightToLeft) {
 		final String newBody;
-		if (bodyChange.getMatch().getComparison().isThreeWay()) {
+		boolean hasRealConflict = hasConflict(REAL).apply(bodyChange);
+		if (bodyChange.getMatch().getComparison().isThreeWay() && !hasRealConflict) {
 			newBody = performThreeWayTextMerge(bodyChange, rightToLeft);
 		} else if (rightToLeft) {
 			newBody = getRightBodyValue(bodyChange);

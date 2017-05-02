@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2014, 2017 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Philip Langer - initial API and implementation
+ *     Martin Fleck - bug 516060
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.opaque;
 
@@ -30,7 +31,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.merge.BatchMerger;
+import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.uml2.internal.OpaqueElementBodyChange;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
 import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
@@ -98,6 +100,24 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 
 	private static final String EXPECTED_C = "This is a C" + NL//
 			+ "test with multi-line" + NL //
+			+ "String attribute" + NL //
+			+ "and concurrent changes" + NL //
+			+ "of them.";
+
+	private static final String A2_ORIGIN = "This is a" + NL //
+			+ "test with multi-line" + NL //
+			+ "String attribute" + NL //
+			+ "and concurrent changes" + NL //
+			+ "of them.";
+
+	private static final String A2_LEFT = "This is a" + NL //
+			+ "test with multi-line (changed)" + NL //
+			+ "String attribute" + NL //
+			+ "and concurrent changes" + NL //
+			+ "of them.";
+
+	private static final String A2_RIGHT = "This is a" + NL //
+			+ "(changed)test with multi-line" + NL //
 			+ "String attribute" + NL //
 			+ "and concurrent changes" + NL //
 			+ "of them.";
@@ -234,6 +254,55 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 
 		Comparison comparison = compare(left, right, origin);
 		assertOneRealConflictOnOpaqueElementBodyChange(comparison);
+	}
+
+	@Test
+	public void testA2UseCaseLtoR() throws IOException {
+		Resource origin = input.getA2Origin();
+		Resource left = input.getA2Left();
+		Resource right = input.getA2Right();
+
+		Comparison comparison = compare(left, right, origin);
+		assertOneRealConflictOnOpaqueElementBodyChange(comparison);
+		assertA2UseCaseBody(origin.getEObject(OPAQUE_ACTION1_ID), A2_ORIGIN);
+		assertA2UseCaseBody(left.getEObject(OPAQUE_ACTION1_ID), A2_LEFT);
+		assertA2UseCaseBody(right.getEObject(OPAQUE_ACTION1_ID), A2_RIGHT);
+
+		// real conflict, apply left side
+		applyLeftOpaqueElementBodyChangesToRight(comparison);
+
+		assertA2UseCaseBody(origin.getEObject(OPAQUE_ACTION1_ID), A2_ORIGIN);
+		assertA2UseCaseBody(left.getEObject(OPAQUE_ACTION1_ID), A2_LEFT);
+		assertA2UseCaseBody(right.getEObject(OPAQUE_ACTION1_ID), A2_LEFT);
+	}
+
+	@Test
+	public void testA2UseCaseRtoL() throws IOException {
+		Resource origin = input.getA2Origin();
+		Resource left = input.getA2Left();
+		Resource right = input.getA2Right();
+
+		Comparison comparison = compare(left, right, origin);
+		assertOneRealConflictOnOpaqueElementBodyChange(comparison);
+		assertA2UseCaseBody(origin.getEObject(OPAQUE_ACTION1_ID), A2_ORIGIN);
+		assertA2UseCaseBody(left.getEObject(OPAQUE_ACTION1_ID), A2_LEFT);
+		assertA2UseCaseBody(right.getEObject(OPAQUE_ACTION1_ID), A2_RIGHT);
+
+		// real conflict, apply right side
+		applyRightOpaqueElementBodyChangesToLeft(comparison);
+
+		assertA2UseCaseBody(origin.getEObject(OPAQUE_ACTION1_ID), A2_ORIGIN);
+		assertA2UseCaseBody(left.getEObject(OPAQUE_ACTION1_ID), A2_RIGHT);
+		assertA2UseCaseBody(right.getEObject(OPAQUE_ACTION1_ID), A2_RIGHT);
+	}
+
+	private void assertA2UseCaseBody(EObject eObject, String expectedBody) {
+		assertTrue(eObject instanceof OpaqueAction);
+		OpaqueAction opaqueAction = (OpaqueAction)eObject;
+		assertEquals(1, opaqueAction.getBodies().size());
+		assertEquals(1, opaqueAction.getLanguages().size());
+		assertEquals(JAVA, opaqueAction.getLanguages().get(0));
+		assertEquals(expectedBody, opaqueAction.getBodies().get(0));
 	}
 
 	@Test
@@ -670,40 +739,32 @@ public class OpaqueElementBodyChangeMergeTest extends AbstractUMLTest {
 		final EList<Diff> allDifferences = comparison.getDifferences();
 		final Iterable<Diff> rightOpaqueElementBodyChanges = filter(allDifferences,
 				and(IS_OPAQUE_ELEMENT_CHANGE, fromSide(RIGHT)));
-		for (Diff diff : rightOpaqueElementBodyChanges) {
-			IMerger merger = getMergerRegistry().getHighestRankingMerger(diff);
-			merger.copyRightToLeft(diff, new BasicMonitor());
-		}
+		final IBatchMerger merger = new BatchMerger(getMergerRegistry());
+		merger.copyAllRightToLeft(rightOpaqueElementBodyChanges, new BasicMonitor());
 	}
 
 	private void revertLeftOpaqueElementBodyChanges(Comparison comparison) {
 		final EList<Diff> allDifferences = comparison.getDifferences();
 		final Iterable<Diff> leftOpaqueElementBodyChanges = filter(allDifferences,
 				and(IS_OPAQUE_ELEMENT_CHANGE, fromSide(LEFT)));
-		for (Diff diff : leftOpaqueElementBodyChanges) {
-			IMerger merger = getMergerRegistry().getHighestRankingMerger(diff);
-			merger.copyRightToLeft(diff, new BasicMonitor());
-		}
+		final IBatchMerger merger = new BatchMerger(getMergerRegistry());
+		merger.copyAllRightToLeft(leftOpaqueElementBodyChanges, new BasicMonitor());
 	}
 
 	private void revertRightOpaqueElementBodyChanges(Comparison comparison) {
 		final EList<Diff> allDifferences = comparison.getDifferences();
 		final Iterable<Diff> rightOpaqueElementBodyChanges = filter(allDifferences,
 				and(IS_OPAQUE_ELEMENT_CHANGE, fromSide(RIGHT)));
-		for (Diff diff : rightOpaqueElementBodyChanges) {
-			IMerger merger = getMergerRegistry().getHighestRankingMerger(diff);
-			merger.copyLeftToRight(diff, new BasicMonitor());
-		}
+		final IBatchMerger merger = new BatchMerger(getMergerRegistry());
+		merger.copyAllLeftToRight(rightOpaqueElementBodyChanges, new BasicMonitor());
 	}
 
 	private void applyLeftOpaqueElementBodyChangesToRight(Comparison comparison) {
 		final EList<Diff> allDifferences = comparison.getDifferences();
 		final Iterable<Diff> leftOpaqueElementBodyChanges = filter(allDifferences,
 				and(IS_OPAQUE_ELEMENT_CHANGE, fromSide(LEFT)));
-		for (Diff diff : leftOpaqueElementBodyChanges) {
-			IMerger merger = getMergerRegistry().getHighestRankingMerger(diff);
-			merger.copyLeftToRight(diff, new BasicMonitor());
-		}
+		final IBatchMerger merger = new BatchMerger(getMergerRegistry());
+		merger.copyAllLeftToRight(leftOpaqueElementBodyChanges, new BasicMonitor());
 	}
 
 	private void assertNoRealConflict(Comparison comparison) {
