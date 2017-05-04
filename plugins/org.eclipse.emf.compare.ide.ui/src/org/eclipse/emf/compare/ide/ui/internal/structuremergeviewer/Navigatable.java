@@ -11,6 +11,7 @@
  *     Simon Delisle - bug 511172
  *     Philip Langer - bug 509975
  *     Martin Fleck - bug 518572
+ *     Martin Fleck - bug 516248
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -42,6 +43,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 public class Navigatable implements INavigatable {
 
 	public static final int NEXT_UNRESOLVED_CHANGE = 80;
+
+	public static final int PREVIOUS_UNRESOLVED_CHANGE = 81;
 
 	private final WrappableTreeViewer viewer;
 
@@ -89,6 +92,8 @@ public class Navigatable implements INavigatable {
 				return getPreviousDiff(getFirstItem());
 			case NEXT_UNRESOLVED_CHANGE:
 				return getNextUnresolvedDiff(thisOrFirstItem(currentSelection));
+			case PREVIOUS_UNRESOLVED_CHANGE:
+				return getPreviousUnresolvedDiff(thisOrFirstItem(currentSelection));
 			default:
 				throw new IllegalStateException();
 		}
@@ -182,7 +187,7 @@ public class Navigatable implements INavigatable {
 	 * @return the previous item that contains a diff.
 	 */
 	private Object getPreviousDiff(Object start) {
-		return getPreviousItemWithDiff(start);
+		return getPreviousItemWithDiff(start, false);
 	}
 
 	/**
@@ -202,6 +207,27 @@ public class Navigatable implements INavigatable {
 		}
 
 		return nextUnresolvedDiff;
+	}
+
+	/**
+	 * Returns, from the given item, the previous item Node that contains an unresolved diff. This method
+	 * supports round-trip behavior, i.e., we start at the bottom after reaching top.
+	 * 
+	 * @param treeNode
+	 *            the given item for which we want to find the previous unresolved diff.
+	 * @return the previous item that contains an unresolved diff.
+	 */
+	private Object getPreviousUnresolvedDiff(Object start) {
+		Object previousUnresolvedDiff = getPreviousItemWithDiff(start, true);
+		if (previousUnresolvedDiff == null) {
+			Object lastItem = getLastItem();
+			if (hasDiff(lastItem, true)) {
+				previousUnresolvedDiff = lastItem;
+			} else {
+				previousUnresolvedDiff = getPreviousItemWithDiff(getLastItem(), true);
+			}
+		}
+		return previousUnresolvedDiff;
 	}
 
 	/**
@@ -229,12 +255,14 @@ public class Navigatable implements INavigatable {
 	 * 
 	 * @param start
 	 *            the item at which to start searching.
+	 * @param onlyUnresolvedDiff
+	 *            if true only items with unresolved diffs are considered.
 	 * @return the previous matching item.
 	 */
-	private Object getPreviousItemWithDiff(Object start) {
+	private Object getPreviousItemWithDiff(Object start, boolean onlyUnresolvedDiff) {
 		Object item = getPreviousItem(start);
 		while (item != null) {
-			if (hasDiff(item, false)) {
+			if (hasDiff(item, onlyUnresolvedDiff)) {
 				return item;
 			}
 			item = getPreviousItem(item);
@@ -267,6 +295,28 @@ public class Navigatable implements INavigatable {
 	 */
 	private Object getFirstItem() {
 		return viewer.getInput();
+	}
+
+	/**
+	 * Returns the last item in the viewer, i.e., it's input.
+	 * 
+	 * @return the last item in the viewer
+	 */
+	private Object getLastItem() {
+		Object lastItem = viewer.getInput();
+		Object parent = lastItem;
+		while (parent != null) {
+			parent = getAncestor(parent);
+			if (parent != null) {
+				lastItem = parent;
+			}
+		}
+
+		Object[] siblings = getSiblings(lastItem);
+		lastItem = siblings[siblings.length - 1];
+
+		lastItem = getLastDescendant(lastItem);
+		return lastItem;
 	}
 
 	/**

@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Michael Borkowski - extraction of nested classes, additional tests
  *     Martin Fleck - bug 518572
+ *     Martin Fleck - bug 516248
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer;
 
@@ -16,12 +17,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 import com.google.common.base.Strings;
 
 import org.eclipse.compare.INavigatable;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.Navigatable;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.TestContext.TestNavigatable;
+import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Shell;
@@ -174,6 +180,52 @@ public class NavigatableTest {
 		navigatable.selectChange(INavigatable.NEXT_CHANGE);
 		navigatable.selectChange(INavigatable.PREVIOUS_CHANGE);
 		assertSelectedItemIndex(1);
+	}
+
+	@Test
+	public void testSelectNextUnresolvedChange() {
+		TestNavigatable navigatable = testContext.buildTree(1, 3, false);
+		// set the second diff in the tree to a resolved state
+		updateDifferenceState(1, DifferenceState.MERGED);
+		navigatable.selectChange(Navigatable.NEXT_UNRESOLVED_CHANGE);
+		assertSelectedItemIndex(2);
+	}
+
+	@Test
+	public void testSelectNextUnresolvedChangeRoundTrip() {
+		TestNavigatable navigatable = testContext.buildTree(1, 3, false);
+		testContext.setSelection(testContext.getElement(2));
+		// set the first diff in the tree to a resolved state
+		updateDifferenceState(0, DifferenceState.MERGED);
+		navigatable.selectChange(Navigatable.NEXT_UNRESOLVED_CHANGE);
+		assertSelectedItemIndex(1);
+	}
+
+	@Test
+	public void testSelectPreviousUnresolvedChange() {
+		TestNavigatable navigatable = testContext.buildTree(1, 3, false);
+		testContext.setSelection(testContext.getElement(2));
+		// set the second diff in the tree to a resolved state
+		updateDifferenceState(1, DifferenceState.MERGED);
+		navigatable.selectChange(Navigatable.PREVIOUS_UNRESOLVED_CHANGE);
+		assertSelectedItemIndex(0);
+	}
+
+	@Test
+	public void testSelectPreviousUnresolvedChangeRoundTrip() {
+		TestNavigatable navigatable = testContext.buildTree(1, 3, false);
+		testContext.setSelection(testContext.getElement(0));
+		// set the third diff in the tree to a resolved state
+		updateDifferenceState(2, DifferenceState.MERGED);
+		navigatable.selectChange(Navigatable.NEXT_UNRESOLVED_CHANGE);
+		assertSelectedItemIndex(1);
+	}
+
+	private void updateDifferenceState(int i, DifferenceState differenceState) {
+		// Since the adapter is mocked we can safely type cast without additional checks
+		Adapter data = ((Adapter)testContext.getElement(i));
+		Diff diff = (Diff)((TreeNode)data.getTarget()).getData();
+		when(diff.getState()).thenReturn(differenceState);
 	}
 
 	private void assertSelectedItemIndex(int index) {

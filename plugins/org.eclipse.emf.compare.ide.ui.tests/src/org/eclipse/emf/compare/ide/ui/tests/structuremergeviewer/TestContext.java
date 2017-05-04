@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer;
 
+import static org.eclipse.emf.compare.DifferenceState.UNRESOLVED;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -221,6 +222,7 @@ final class TestContext {
 					Diff diff = mock(Diff.class);
 					when(adapter.getTarget()).thenReturn(notifier);
 					when(notifier.getData()).thenReturn(diff);
+					when(diff.getState()).thenReturn(UNRESOLVED);
 					data = adapter;
 				}
 				elementParent.put(data, parent);
@@ -264,6 +266,10 @@ final class TestContext {
 	 */
 	public Object[] getCurrentSelection() {
 		return currentSelection;
+	}
+
+	public void setSelection(Object element) {
+		viewer.setSelection(new StructuredSelection(element));
 	}
 
 }

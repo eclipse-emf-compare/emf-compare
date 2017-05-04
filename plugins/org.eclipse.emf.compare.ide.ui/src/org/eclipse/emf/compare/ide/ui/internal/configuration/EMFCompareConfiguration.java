@@ -10,6 +10,7 @@
  *     Conor O'Mahony - bug 507465
  *     Martin Fleck - bug 483798
  *     Martin Fleck - bug 514415
+ *     Tobias Ortmayr - bug 516248
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.configuration;
 
@@ -87,6 +88,9 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 
 	public static final String DISPLAY_SAVE_ACTION = EMFCompareIDEUIPlugin.PLUGIN_ID + ".DISPLAY_SAVE_ACTION"; //$NON-NLS-1$
 
+	public static final String DISPLAY_SELECT_UNRESOLVED_DIFF_ACTIONS = EMFCompareIDEUIPlugin.PLUGIN_ID
+			+ ".DISPLAY_SELECT_UNRESOLVED_DIFF_ACTIONS";//$NON-NLS-1$
+
 	private final PropertyChangeListener propertyChangeListener;
 
 	private final CompareConfiguration compareConfiguration;
@@ -138,6 +142,10 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 			setProperty(DIFF_RELATIONSHIP_COMPUTER,
 					new DiffRelationshipComputer(EMFCompareRCPPlugin.getDefault().getMergerRegistry()));
 		}
+
+		if (getProperty(DISPLAY_SELECT_UNRESOLVED_DIFF_ACTIONS) == null) {
+			setProperty(DISPLAY_SELECT_UNRESOLVED_DIFF_ACTIONS, Boolean.TRUE);
+		}
 	}
 
 	/**
@@ -182,6 +190,7 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		compareConfiguration.setProperty(DISPLAY_GROUP_PROVIDERS, null);
 		compareConfiguration.setProperty(DISPLAY_FILTERS, null);
 		compareConfiguration.setProperty(DISPLAY_SAVE_ACTION, null);
+		compareConfiguration.setProperty(DISPLAY_SELECT_UNRESOLVED_DIFF_ACTIONS, null);
 	}
 
 	public boolean getBooleanProperty(String key, boolean dflt) {

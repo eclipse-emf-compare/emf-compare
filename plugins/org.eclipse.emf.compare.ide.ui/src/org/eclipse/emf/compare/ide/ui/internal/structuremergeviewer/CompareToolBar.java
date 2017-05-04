@@ -18,6 +18,7 @@ import static com.google.common.collect.Lists.newArrayListWithCapacity;
 
 import com.google.common.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -30,8 +31,7 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.Expa
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAllNonConflictingAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SaveComparisonModelAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SelectNextDiffAction;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SelectPreviousDiffAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.SelectDiffAction;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
@@ -86,6 +86,11 @@ public class CompareToolBar implements ISelectionChangedListener, IPropertyChang
 	 * {@link IMenuCreator} that needs to be disposed
 	 */
 	private DropDownMergeMenuAction dropDownMergeMenuAction;
+
+	/**
+	 * The {@link SelectDiffAction SelectDiffActions} that we added and that need to be disposed.
+	 */
+	private List<SelectDiffAction> selectDiffActions = new ArrayList<>();
 
 	/**
 	 * 
@@ -160,8 +165,20 @@ public class CompareToolBar implements ISelectionChangedListener, IPropertyChang
 			}
 
 			toolbarManager.add(new Separator());
-			toolbarManager.add(new SelectNextDiffAction(nav));
-			toolbarManager.add(new SelectPreviousDiffAction(nav));
+
+			selectDiffActions.add(new SelectDiffAction(nav, INavigatable.NEXT_CHANGE));
+			selectDiffActions.add(new SelectDiffAction(nav, INavigatable.PREVIOUS_CHANGE));
+
+			if (compareConfiguration.getBooleanProperty(
+					EMFCompareConfiguration.DISPLAY_SELECT_UNRESOLVED_DIFF_ACTIONS, true)) {
+				selectDiffActions.add(new SelectDiffAction(nav, Navigatable.NEXT_UNRESOLVED_CHANGE));
+				selectDiffActions.add(new SelectDiffAction(nav, Navigatable.PREVIOUS_UNRESOLVED_CHANGE));
+			}
+
+			for (SelectDiffAction selectDiffAction : selectDiffActions) {
+				toolbarManager.add(selectDiffAction);
+			}
+
 			toolbarManager.add(new Separator());
 			toolbarManager.add(new ExpandAllModelAction(viewer));
 			toolbarManager.add(new CollapseAllModelAction(viewer));
@@ -217,6 +234,10 @@ public class CompareToolBar implements ISelectionChangedListener, IPropertyChang
 			dropDownMergeMenuAction.dispose();
 			dropDownMergeMenuAction = null;
 		}
+		for (SelectDiffAction selectDiffAction : selectDiffActions) {
+			selectDiffAction.dispose();
+		}
+		selectDiffActions.clear();
 		toolbarManager.removeAll();
 		if (doOnce) {
 			// doOnce makes sure we have been registered with the eventBus

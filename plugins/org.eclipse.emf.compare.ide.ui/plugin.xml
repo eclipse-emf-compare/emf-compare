@@ -513,6 +513,14 @@
             id="org.eclipse.emf.compare.ide.ui.emfComparisonSourceCompareCommand"
             name="Compare EMFComparisonSource">
       </command>
+      <command
+            id="org.eclipse.emf.compare.ide.ui.selectNextUnresolvedDiff"
+            name="SelectNextUnresolvedDiff">
+      </command>
+      <command
+            id="org.eclipse.emf.compare.ide.ui.selectPreviousUnresolvedDiff"
+            name="SelectPreviousUnresolvedDiff">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -565,5 +573,18 @@
       <contentTypeModelInclusionTester
             contentType="org.eclipse.emf.compare.content.type">
       </contentTypeModelInclusionTester>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+		<key sequence="M1+M2+ARROW_DOWN"
+			commandId="org.eclipse.emf.compare.ide.ui.selectNextUnresolvedDiff"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			contextId="org.eclipse.compare.compareEditorScope">
+		</key>
+			<key sequence="M1+M2+ARROW_UP"
+			commandId="org.eclipse.emf.compare.ide.ui.selectPreviousUnresolvedDiff"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			contextId="org.eclipse.compare.compareEditorScope">
+		</key>
    </extension>
 </plugin>
