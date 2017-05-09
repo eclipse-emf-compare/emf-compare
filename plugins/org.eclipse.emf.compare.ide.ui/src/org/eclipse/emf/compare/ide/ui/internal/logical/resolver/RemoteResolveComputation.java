@@ -35,8 +35,8 @@ class RemoteResolveComputation extends AbstractResourceResolver implements IComp
 	/**
 	 * Constructor.
 	 * 
-	 * @param scheduler
-	 *            The scheduler
+	 * @param context
+	 *            The context of this resolution.
 	 * @param diagnostic
 	 *            The diagnostic
 	 * @param resourceSet
@@ -48,18 +48,24 @@ class RemoteResolveComputation extends AbstractResourceResolver implements IComp
 	 * @param monitor
 	 *            The progress monitor
 	 */
-	public RemoteResolveComputation(ResourceComputationScheduler<URI> scheduler, DiagnosticSupport diagnostic,
+	public RemoteResolveComputation(IResolutionContext context, DiagnosticSupport diagnostic,
 			SynchronizedResourceSet resourceSet, URI uri, FutureCallback<Object> postTreatment,
 			ThreadSafeProgressMonitor monitor) {
-		super(scheduler, diagnostic, resourceSet, uri, monitor);
+		super(context, diagnostic, resourceSet, uri, monitor);
 		this.postTreatment = postTreatment;
 	}
 
 	/** {@inheritDoc} */
 	public void run() {
 		if (ResolutionUtil.isInterruptedOrCanceled(tspm)) {
-			scheduler.demandShutdown();
+			context.getScheduler().demandShutdown();
 			return;
+		}
+
+		for (URI currentUri : context.getImplicitDependencies().of(uri, resourceSet.getURIConverter())) {
+			RemoteResolveComputation computation = new RemoteResolveComputation(context, diagnostic,
+					resourceSet, currentUri, new MonitorCallback(diagnostic, tspm), tspm);
+			context.getScheduler().scheduleComputation(computation);
 		}
 
 		final Resource resource = resourceSet.loadResource(uri);

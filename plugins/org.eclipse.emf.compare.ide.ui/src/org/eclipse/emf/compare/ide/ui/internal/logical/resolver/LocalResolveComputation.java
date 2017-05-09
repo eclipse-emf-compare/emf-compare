@@ -41,10 +41,8 @@ class LocalResolveComputation extends AbstractResourceResolver implements ICompu
 	/**
 	 * Constructor.
 	 * 
-	 * @param scheduler
-	 *            The scheduler to use
-	 * @param eventBus
-	 *            The event bus
+	 * @param context
+	 *            The context of this resolution.
 	 * @param diagnostic
 	 *            The diagnostic
 	 * @param resourceSet
@@ -56,19 +54,25 @@ class LocalResolveComputation extends AbstractResourceResolver implements ICompu
 	 * @param monitor
 	 *            The progress monitor
 	 */
-	public LocalResolveComputation(ResourceComputationScheduler<URI> scheduler, EventBus eventBus,
-			DiagnosticSupport diagnostic, SynchronizedResourceSet resourceSet, URI uri,
-			FutureCallback<Object> postTreatment, ThreadSafeProgressMonitor monitor) {
-		super(scheduler, diagnostic, resourceSet, uri, monitor);
-		this.eventBus = checkNotNull(eventBus);
+	public LocalResolveComputation(IResolutionContext context, DiagnosticSupport diagnostic,
+			SynchronizedResourceSet resourceSet, URI uri, FutureCallback<Object> postTreatment,
+			ThreadSafeProgressMonitor monitor) {
+		super(context, diagnostic, resourceSet, uri, monitor);
+		this.eventBus = checkNotNull(context.getEventBus());
 		this.postTreatment = postTreatment;
 	}
 
 	/** {@inheritDoc} */
 	public void run() {
 		if (ResolutionUtil.isInterruptedOrCanceled(tspm)) {
-			scheduler.demandShutdown();
+			context.getScheduler().demandShutdown();
 			return;
+		}
+
+		for (URI currentUri : context.getImplicitDependencies().of(uri, resourceSet.getURIConverter())) {
+			LocalResolveComputation computation = new LocalResolveComputation(context, diagnostic,
+					resourceSet, currentUri, new MonitorCallback(diagnostic, tspm), tspm);
+			context.getScheduler().scheduleComputation(computation);
 		}
 
 		final Resource resource = resourceSet.loadResource(uri);

@@ -46,9 +46,6 @@ public class ResourceDependencyLocalResolver implements IResourceDependencyLocal
 	/** The logger. */
 	private static final Logger LOGGER = Logger.getLogger(ResourceDependencyLocalResolver.class);
 
-	/** The scheduler. */
-	private final ResourceComputationScheduler<URI> scheduler;
-
 	/** The event bus */
 	private final EventBus eventBus;
 
@@ -58,8 +55,8 @@ public class ResourceDependencyLocalResolver implements IResourceDependencyLocal
 	/** The resource listener. */
 	private final ModelResourceListener resourceListener;
 
-	/** The implicit dependencies */
-	private final IImplicitDependencies implicitDependencies;
+	/** The resolution context. */
+	private final IResolutionContext context;
 
 	/**
 	 * Constructor.
@@ -68,8 +65,7 @@ public class ResourceDependencyLocalResolver implements IResourceDependencyLocal
 	 *            The resolution context, must not be {@code null}
 	 */
 	public ResourceDependencyLocalResolver(IResolutionContext context) {
-		this.implicitDependencies = context.getImplicitDependencies();
-		this.scheduler = context.getScheduler();
+		this.context = context;
 		this.eventBus = context.getEventBus();
 		this.dependencyGraph = context.getGraph();
 		this.resourceListener = context.getModelResourceListener();
@@ -124,9 +120,9 @@ public class ResourceDependencyLocalResolver implements IResourceDependencyLocal
 			ThreadSafeProgressMonitor tspm) {
 		// this.diagnostic = createDiagnostic();
 		final Set<URI> removedURIs = Sets.difference(resourceListener.popRemovedURIs(),
-				scheduler.getComputedElements());
+				context.getScheduler().getComputedElements());
 		final Set<URI> changedURIs = Sets.difference(resourceListener.popChangedURIs(),
-				scheduler.getComputedElements());
+				context.getScheduler().getComputedElements());
 
 		eventBus.post(new ResourceRemovedEvent<URI>(removedURIs));
 
@@ -161,16 +157,14 @@ public class ResourceDependencyLocalResolver implements IResourceDependencyLocal
 	public void demandResolve(final SynchronizedResourceSet resourceSet, final URI uri,
 			final DiagnosticSupport diagnostic, final ThreadSafeProgressMonitor tspm) {
 		if (ResolutionUtil.isInterruptedOrCanceled(tspm)) {
-			scheduler.demandShutdown();
+			context.getScheduler().demandShutdown();
 			return;
 		}
-		if (scheduler.isScheduled(uri)) {
+		if (context.getScheduler().isScheduled(uri)) {
 			return;
 		}
-		for (URI currentUri : implicitDependencies.of(uri, resourceSet.getURIConverter())) {
-			scheduler.scheduleComputation(new LocalResolveComputation(scheduler, eventBus, diagnostic,
-					resourceSet, currentUri, new MonitorCallback(diagnostic, tspm), tspm));
-		}
+		context.getScheduler().scheduleComputation(new LocalResolveComputation(context, diagnostic,
+				resourceSet, uri, new MonitorCallback(diagnostic, tspm), tspm));
 	}
 
 	/**
@@ -192,10 +186,10 @@ public class ResourceDependencyLocalResolver implements IResourceDependencyLocal
 	 */
 	private void demandResolveAll(Iterable<URI> uris, final DiagnosticSupport diagnostic,
 			final SynchronizedResourceSet resourceSet, final ThreadSafeProgressMonitor tspm) {
-		scheduler.computeAll(Iterables.transform(uris, new Function<URI, IComputation<URI>>() {
+		context.getScheduler().computeAll(Iterables.transform(uris, new Function<URI, IComputation<URI>>() {
 			public IComputation<URI> apply(final URI uri) {
 				// In this case, we don't want to call the implicit dependencies extension point
-				return new LocalResolveComputation(scheduler, eventBus, diagnostic, resourceSet, uri,
+				return new LocalResolveComputation(context, diagnostic, resourceSet, uri,
 						new MonitorCallback(diagnostic, tspm), tspm);
 			}
 		}));
@@ -253,13 +247,14 @@ public class ResourceDependencyLocalResolver implements IResourceDependencyLocal
 				return !dependencyGraph.contains(ResourceUtil.asURI().apply(file));
 			}
 		});
-		scheduler.runAll(Iterables.transform(filesToResolve, new Function<IFile, Runnable>() {
+		context.getScheduler().runAll(Iterables.transform(filesToResolve, new Function<IFile, Runnable>() {
 			public Runnable apply(final IFile file) {
 				return new Runnable() {
 					public void run() {
 						final IResource startingPoint = getResolutionStartingPoint(file);
-						final ModelResourceVisitor modelVisitor = new ModelResourceVisitor(scheduler,
-								resourceSet, ResourceDependencyLocalResolver.this, diagnostic, tspm);
+						final ModelResourceVisitor modelVisitor = new ModelResourceVisitor(
+								context.getScheduler(), resourceSet, ResourceDependencyLocalResolver.this,
+								diagnostic, tspm);
 						try {
 							startingPoint.accept(modelVisitor);
 						} catch (CoreException e) {

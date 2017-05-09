@@ -27,8 +27,8 @@ import org.eclipse.emf.ecore.resource.Resource;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 abstract class AbstractResourceResolver implements Runnable {
-	/** The scheduler. */
-	protected final ResourceComputationScheduler<URI> scheduler;
+	/** The resolution context. */
+	protected final IResolutionContext context;
 
 	/** The resource set in which to load the resource. */
 	protected final SynchronizedResourceSet resourceSet;
@@ -45,8 +45,8 @@ abstract class AbstractResourceResolver implements Runnable {
 	/**
 	 * Default constructor.
 	 * 
-	 * @param scheduler
-	 *            The scheduler to use.
+	 * @param context
+	 *            The context of this resolution.
 	 * @param diagnostic
 	 *            The diagnostic to use.
 	 * @param resourceSet
@@ -56,9 +56,9 @@ abstract class AbstractResourceResolver implements Runnable {
 	 * @param monitor
 	 *            Monitor on which to report progress to the user.
 	 */
-	public AbstractResourceResolver(ResourceComputationScheduler<URI> scheduler, DiagnosticSupport diagnostic,
+	public AbstractResourceResolver(IResolutionContext context, DiagnosticSupport diagnostic,
 			SynchronizedResourceSet resourceSet, URI uri, ThreadSafeProgressMonitor monitor) {
-		this.scheduler = scheduler;
+		this.context = context;
 		this.diagnostic = diagnostic;
 		this.resourceSet = resourceSet;
 		this.uri = uri;
@@ -82,7 +82,7 @@ abstract class AbstractResourceResolver implements Runnable {
 		// Regardless of the amount of progress reported so far, use 0.1% of the space remaining in the
 		// monitor to process the next node.
 		tspm.setWorkRemaining(1000);
-		scheduler.scheduleUnload(new ResourceUnloader(resourceSet, resource, tspm),
+		context.getScheduler().scheduleUnload(new ResourceUnloader(resourceSet, resource, tspm),
 				new FutureCallback<Object>() {
 					public void onSuccess(Object result) {
 						if (!ResolutionUtil.isInterruptedOrCanceled(tspm)) {
