@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo and others.
+ * Copyright (c) 2014, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - bug 470268
+ *     Philip Langer - bug 470268, 516509
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -50,6 +50,11 @@ public class RemoteMappingContextStorageAccessor implements IStorageProviderAcce
 	public RemoteMappingContextStorageAccessor(RemoteResourceMappingContext context) {
 		this.context = checkNotNull(context);
 		renameDetector = new RenameDetector(obtainSubscriber(context), this);
+
+		// Avoid the cost of auto refresh.
+		if (context instanceof SubscriberResourceMappingContext) {
+			((SubscriberResourceMappingContext)context).setAutoRefresh(false);
+		}
 	}
 
 	/**
