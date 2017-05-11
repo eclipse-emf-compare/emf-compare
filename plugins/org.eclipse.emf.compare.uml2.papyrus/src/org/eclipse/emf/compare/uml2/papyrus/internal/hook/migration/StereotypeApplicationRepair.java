@@ -10,6 +10,7 @@
  *     Stefan Dirix - bug 498583
  *     Laurent Delaigue - bug 498583
  *     Martin Fleck - bug 515041
+ *     Philip Langer - bug 516484
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.papyrus.internal.hook.migration;
 
@@ -66,6 +67,9 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 	/** The profile supplier used to find a profile if a package is missing. */
 	private Object fProfileSupplier;
 
+	/** The model set used by {@link #repair()} and {@link #dispose()}. */
+	private ModelSetWrapper fModelSet;
+
 	/**
 	 * Creates a new repair analyzer for zombie and orphan stereotype applications for the given resource.
 	 * 
@@ -78,6 +82,9 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 		this.fResource = resource;
 		this.fLabelProviderService = setLabelProviderService(createLabelProviderService());
 		this.fProfileSupplier = setProfileSupplier(createProfileSupplier());
+		this.fModelSet = new ModelSetWrapper(resource.getResourceSet());
+		// avoid read-only for our resource
+		fModelSet.setReadOnly(resource, Boolean.FALSE);
 	}
 
 	@Override
@@ -94,6 +101,13 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 							ex));
 		}
 		super.dispose(modelsManager);
+	}
+
+	/**
+	 * Disposed the instance.
+	 */
+	public void dispose() {
+		dispose(this.fModelSet);
 	}
 
 	/**
@@ -255,21 +269,6 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 	}
 
 	/**
-	 * Creates a {@link ModelSet} wrapper around the given resource set to be used for profile migration
-	 * within Eclipse Luna.
-	 * 
-	 * @param resourceSet
-	 *            resource set containing the resource under repair
-	 * @return newly created model set wrapper
-	 */
-	protected ModelSet createModelSetWrapper(ResourceSet resourceSet) {
-		final ModelSetWrapper modelSet = new ModelSetWrapper(resourceSet);
-		// avoid read-only for our resource
-		modelSet.setReadOnly(fResource, Boolean.FALSE);
-		return modelSet;
-	}
-
-	/**
 	 * Evaluates whether all necessary fiels have been set successfully and a repair is possible.
 	 * 
 	 * @return true if a repair is possible, false otherwise.
@@ -299,9 +298,8 @@ public class StereotypeApplicationRepair extends StereotypeApplicationRepairSnip
 		}
 		try {
 			final ResourceSet resourceSet = fResource.getResourceSet();
-			final ModelSet modelSet = createModelSetWrapper(resourceSet);
-			setAdapter(modelSet);
-			modelSet.getResources().add(fResource);
+			setAdapter(fModelSet);
+			fModelSet.getResources().add(fResource);
 			final ZombieStereotypesDescriptor stereotypesDescriptor = getZombieStereotypes(fResource);
 			resourceSet.getResources().add(fResource);
 			return stereotypesDescriptor;

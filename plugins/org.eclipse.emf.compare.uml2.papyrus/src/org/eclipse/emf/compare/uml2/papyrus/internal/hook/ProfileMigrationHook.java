@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 EclipseSource Services GmbH and others.
+ * Copyright (c) 2016, 2017 EclipseSource Services GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Martin Fleck - initial API and implementation
+ *     Philip Langer - bug 516484
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.papyrus.internal.hook;
 
@@ -116,22 +117,26 @@ public class ProfileMigrationHook extends AbstractResourceSetHooks {
 		}
 
 		final StereotypeApplicationRepair repair = new StereotypeApplicationRepair(resource);
-		final ZombieStereotypesDescriptor stereotypesDescriptor = repair.repair();
-		if (stereotypesDescriptor == null || !stereotypesDescriptor.hasZombies()) {
-			return; // nothing to repair
-		}
-
-		// for each schema (missing EPackages) try to repair the respective stereotype applications
-		for (final IAdaptable schema : stereotypesDescriptor.getZombieSchemas()) {
-			// the stereotype descriptor already provides the most suitable repair action
-			// deletion for orphans (stereotypes whose base element is missing)
-			// profile migration for zombies (stereotypes whose defining package can not be found)
-			final IRepairAction repairAction = stereotypesDescriptor.getSuggestedRepairAction(schema);
-			if (repairAction != null) {
-				// execute any suggested action
-				stereotypesDescriptor.repair(schema, repairAction, new BasicDiagnostic(),
-						new NullProgressMonitor());
+		try {
+			final ZombieStereotypesDescriptor stereotypesDescriptor = repair.repair();
+			if (stereotypesDescriptor == null || !stereotypesDescriptor.hasZombies()) {
+				return; // nothing to repair
 			}
+
+			// for each schema (missing EPackages) try to repair the respective stereotype applications
+			for (final IAdaptable schema : stereotypesDescriptor.getZombieSchemas()) {
+				// the stereotype descriptor already provides the most suitable repair action
+				// deletion for orphans (stereotypes whose base element is missing)
+				// profile migration for zombies (stereotypes whose defining package can not be found)
+				final IRepairAction repairAction = stereotypesDescriptor.getSuggestedRepairAction(schema);
+				if (repairAction != null) {
+					// execute any suggested action
+					stereotypesDescriptor.repair(schema, repairAction, new BasicDiagnostic(),
+							new NullProgressMonitor());
+				}
+			}
+		} finally {
+			repair.dispose();
 		}
 	}
 }
