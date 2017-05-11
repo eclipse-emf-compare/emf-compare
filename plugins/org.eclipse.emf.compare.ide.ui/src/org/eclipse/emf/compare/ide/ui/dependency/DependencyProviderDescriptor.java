@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2015, 2017 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Stefan Dirix - initial API and implementation
+ *     Philip Langer - bug 516502
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.dependency;
 
@@ -38,6 +39,11 @@ public class DependencyProviderDescriptor {
 	private boolean logOnce;
 
 	/**
+	 * The cached provider demand created the first time {@link #getDependencyProvider()} is called.
+	 */
+	private IDependencyProvider provider;
+
+	/**
 	 * Default constructor.
 	 * 
 	 * @param attributeName
@@ -57,21 +63,23 @@ public class DependencyProviderDescriptor {
 	 * @return The newly created {@link IDependencyProvider}.
 	 */
 	public IDependencyProvider getDependencyProvider() {
-		try {
-			final IDependencyProvider provider = (IDependencyProvider)configurationElement
-					.createExecutableExtension(attributeClassName);
-			return provider;
-		} catch (CoreException e) {
-			if (!logOnce) {
-				logOnce = true;
-				final String className = configurationElement.getAttribute(attributeClassName);
-				final String message = EMFCompareIDEUIMessages
-						.getString("ModelDependencyProviderRegistry.invalidModelDependency", className); //$NON-NLS-1$
-				final IStatus status = new Status(IStatus.ERROR,
-						configurationElement.getDeclaringExtension().getContributor().getName(), message, e);
-				EMFCompareIDEUIPlugin.getDefault().getLog().log(status);
+		if (provider == null && !logOnce) {
+			try {
+				provider = (IDependencyProvider)configurationElement
+						.createExecutableExtension(attributeClassName);
+			} catch (CoreException e) {
+				if (!logOnce) {
+					logOnce = true;
+					final String className = configurationElement.getAttribute(attributeClassName);
+					final String message = EMFCompareIDEUIMessages
+							.getString("ModelDependencyProviderRegistry.invalidModelDependency", className); //$NON-NLS-1$
+					final IStatus status = new Status(IStatus.ERROR,
+							configurationElement.getDeclaringExtension().getContributor().getName(), message,
+							e);
+					EMFCompareIDEUIPlugin.getDefault().getLog().log(status);
+				}
 			}
 		}
-		return null;
+		return provider;
 	}
 }
