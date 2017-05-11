@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2016 Obeo.
+ * Copyright (c) 2014, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 516493
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal.utils;
 
@@ -287,19 +288,21 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 		@Override
 		public void setValue(EObject eObject, EStructuralFeature eStructuralFeature, Object value,
 				int position) {
-			boolean isContainment = eStructuralFeature instanceof EReference
-					&& ((EReference)eStructuralFeature).isContainment();
-			if (!containmentOnly || isContainment) {
-				super.setValue(eObject, eStructuralFeature, value, position);
-			}
-			if (value instanceof EObject) {
-				final ProxyEntry entry = new ProxyEntry(eObject, eStructuralFeature, (EObject)value,
-						position);
-				if (((EObject)value).eIsProxy()) {
+			if (eStructuralFeature instanceof EReference) {
+				boolean isContainment = eStructuralFeature instanceof EReference
+						&& ((EReference)eStructuralFeature).isContainment();
+				if (!containmentOnly || isContainment) {
+					super.setValue(eObject, eStructuralFeature, value, position);
+				}
+				EObject eObjectValue = (EObject)value;
+				final ProxyEntry entry = new ProxyEntry(eObject, eStructuralFeature, eObjectValue, position);
+				if (eObjectValue.eIsProxy()) {
 					notifyProxy(entry);
 				} else if (!isContainment) {
 					potentialProxies.add(entry);
 				}
+			} else if (!containmentOnly) {
+				super.setValue(eObject, eStructuralFeature, value, position);
 			}
 		}
 
