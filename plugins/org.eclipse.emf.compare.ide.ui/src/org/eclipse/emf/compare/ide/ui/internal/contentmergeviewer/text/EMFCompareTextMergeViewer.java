@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Alexandra Buzila - Bug 457117
- *     Philip Langer - integrated model update strategy (bug 457839)
+ *     Philip Langer - bug 457839, 516489
  *     Michael Borkowski - Bug 462863
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
@@ -442,6 +442,10 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 		fRedoAction = null;
 		fUndoAction = null;
+
+		// Remove all references to the inputs (avoid short-term leak of the resource sets retained via
+		// references to org.eclipse.compare.contentmergeviewer.TextMergeViewer$ContributorInfo.)
+		updateContent(null, null, null);
 
 		super.handleDispose(event);
 	}
