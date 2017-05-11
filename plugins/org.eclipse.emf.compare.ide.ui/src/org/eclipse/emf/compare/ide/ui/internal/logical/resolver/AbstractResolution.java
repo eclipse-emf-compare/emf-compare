@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Martin Fleck - bug 512677
+ *     Philip Langer - bug 516494
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
@@ -153,6 +154,7 @@ public abstract class AbstractResolution {
 	 * @return A {@link Set} of the file's outgoing and incoming dependencies, never null but possibly empty.
 	 */
 	protected Set<IStorage> resolveTraversal(IFile file, Set<URI> bounds) {
+		final Set<URI> effectiveBounds = Sets.newLinkedHashSet(bounds);
 		final Set<IStorage> traversalSet = Sets.newLinkedHashSet();
 		Set<IFile> filesToAdd = Sets.newLinkedHashSet();
 		filesToAdd.add(file);
@@ -162,16 +164,25 @@ public abstract class AbstractResolution {
 			for (IFile newFile : filesToAdd) {
 				URI baseUri = ResourceUtil.createURIFor(newFile);
 				Set<URI> newURIs = getImplicitDependencies().of(baseUri, URIConverter.INSTANCE);
+				// Don't visit all these URIs while we're visiting each URI.
+				effectiveBounds.addAll(newURIs);
 				for (URI uri : newURIs) {
 					if (knownURIs.add(uri)) {
+						// We must exclude the URI we're visiting now from the bounds.
+						effectiveBounds.remove(uri);
 						IFile toResolve = ResolutionUtil.getFileAt(uri);
 						Iterable<URI> dependencies = context.getDependencyProvider()
-								.getDependenciesOf(toResolve, bounds);
+								.getDependenciesOf(toResolve, effectiveBounds);
+						// But after this dependency computation don't visit it again.
+						effectiveBounds.add(uri);
 						for (URI dep : dependencies) {
 							IFile dependentFile = ResolutionUtil.getFileAt(dep);
 							if (dependentFile != null && traversalSet.add(dependentFile)
 									&& !knownURIs.contains(dep)) {
 								filesToResolve.add(dependentFile);
+								// Don't visit this dependency while visiting any other URIs.
+								// We'll visit it directly anyway when we visit the files to resolve.
+								effectiveBounds.add(ResourceUtil.createURIFor(dependentFile));
 							}
 							if (monitor.isCanceled()) {
 								throw new OperationCanceledException();
