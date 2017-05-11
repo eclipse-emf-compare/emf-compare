@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 EclipseSource Muenchen GmbH.
+ * Copyright (c) 2015, 2017 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Michael Borkowski - initial tests
+ *     Philip Langer - bug 516524
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.utils;
 
@@ -31,11 +32,13 @@ import org.junit.Test;
 @SuppressWarnings({"boxing", "nls" })
 public class MatchUtilFeatureContainsTest {
 
+	private static final int MOCK_FEATURE_ID = 1;
+
 	List<EObject> featureList;
 
 	InternalEObject value;
 
-	EObject container;
+	InternalEObject container;
 
 	EClass eClass;
 
@@ -45,17 +48,20 @@ public class MatchUtilFeatureContainsTest {
 	public void setUp() {
 		EPackage ePackage = mock(EPackage.class);
 
-		container = mock(EObject.class);
+		container = mock(InternalEObject.class);
+
 		feature = mock(EStructuralFeature.class);
+		when(feature.isMany()).thenReturn(true);
 
 		eClass = mock(EClass.class);
 		when(eClass.getEPackage()).thenReturn(ePackage);
+		when(eClass.getFeatureID(feature)).thenReturn(MOCK_FEATURE_ID);
 
 		when(container.eClass()).thenReturn(eClass);
 		when(feature.getEContainingClass()).thenReturn(eClass);
 
 		featureList = new LinkedList<EObject>();
-		when(container.eGet(feature, false)).thenReturn(featureList);
+		when(container.eGet(MOCK_FEATURE_ID, false, true)).thenReturn(featureList);
 
 		value = mockInternalObject();
 		featureList.add(value);
