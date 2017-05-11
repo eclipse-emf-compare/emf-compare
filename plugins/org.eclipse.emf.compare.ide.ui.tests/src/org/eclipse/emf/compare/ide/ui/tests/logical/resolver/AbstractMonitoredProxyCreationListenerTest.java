@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.junit.Before;
 
 @SuppressWarnings({"restriction", "nls" })
 public class AbstractMonitoredProxyCreationListenerTest {
@@ -54,7 +55,8 @@ public class AbstractMonitoredProxyCreationListenerTest {
 
 	InternalEObject proxy;
 
-	public void preSetUp() {
+	@Before
+	public void setUp() {
 		monitor = mock(ThreadSafeProgressMonitor.class);
 		eventBus = mock(EventBus.class);
 		localResolver = mock(IResourceDependencyLocalResolver.class);

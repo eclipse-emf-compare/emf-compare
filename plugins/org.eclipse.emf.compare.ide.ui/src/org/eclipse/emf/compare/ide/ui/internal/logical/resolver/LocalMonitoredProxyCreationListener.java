@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo and others.
+ * Copyright (c) 2015, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,12 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - public visibility
+ *     Philip Langer - bug 516500
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
 import com.google.common.eventbus.EventBus;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ide.internal.utils.IProxyCreationListener;
 import org.eclipse.emf.compare.ide.ui.internal.util.ThreadSafeProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -33,6 +35,10 @@ public class LocalMonitoredProxyCreationListener extends AbstractMonitoredProxyC
 
 	/** The local resolver. */
 	protected final IResourceDependencyLocalResolver localResolver;
+
+	/** Whether this listener should process proxies. */
+	protected final boolean processProxies = ResolutionUtil
+			.getResolutionScope() != CrossReferenceResolutionScope.SELF;
 
 	/**
 	 * Constructor.
@@ -58,14 +64,15 @@ public class LocalMonitoredProxyCreationListener extends AbstractMonitoredProxyC
 	 */
 	public void proxyCreated(Resource source, EObject eObject, EStructuralFeature feature, EObject proxy,
 			int position) {
-		final URI from = source.getURI();
-		final URI to = ((InternalEObject)proxy).eProxyURI().trimFragment();
-		// TODO Does this work with relative URIs? (isPlatformResource())
-		if (ResolutionUtil.getResolutionScope() != CrossReferenceResolutionScope.SELF
-				&& to.isPlatformResource()) {
-			SynchronizedResourceSet resourceSet = (SynchronizedResourceSet)source.getResourceSet();
-			eventBus.post(new ResourceDependencyFoundEvent(from, to, eObject, feature));
-			localResolver.demandResolve(resourceSet, to, diagnostic, tspm);
+		if (processProxies) {
+			final URI to = ((InternalEObject)proxy).eProxyURI().trimFragment();
+			// TODO Does this work with relative URIs? (isPlatformResource())
+			if (to.isPlatformResource()) {
+				final URI from = source.getURI();
+				SynchronizedResourceSet resourceSet = (SynchronizedResourceSet)source.getResourceSet();
+				eventBus.post(new ResourceDependencyFoundEvent(from, to, eObject, feature));
+				localResolver.demandResolve(resourceSet, to, diagnostic, tspm);
+			}
 		}
 	}
 }

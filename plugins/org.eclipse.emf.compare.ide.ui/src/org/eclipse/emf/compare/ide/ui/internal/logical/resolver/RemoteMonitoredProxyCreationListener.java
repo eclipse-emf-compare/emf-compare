@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo and others.
+ * Copyright (c) 2015, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - public visibility
+ *     Philip Langer - bug 516500
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
@@ -30,6 +31,10 @@ public class RemoteMonitoredProxyCreationListener extends AbstractMonitoredProxy
 	/** The remote resolver. */
 	protected final IResourceDependencyRemoteResolver remoteResolver;
 
+	/** Whether this listener should process proxies. */
+	protected final boolean processProxies = ResolutionUtil
+			.getResolutionScope() != CrossReferenceResolutionScope.SELF;
+
 	/**
 	 * Constructor.
 	 * 
@@ -51,12 +56,13 @@ public class RemoteMonitoredProxyCreationListener extends AbstractMonitoredProxy
 	 */
 	public void proxyCreated(Resource source, EObject eObject, EStructuralFeature feature, EObject proxy,
 			int position) {
-		final URI to = ((InternalEObject)proxy).eProxyURI().trimFragment();
-		// TODO Does this work with relative URIs? (isPlatformResource())
-		if (ResolutionUtil.getResolutionScope() != CrossReferenceResolutionScope.SELF
-				&& to.isPlatformResource()) {
-			SynchronizedResourceSet resourceSet = (SynchronizedResourceSet)source.getResourceSet();
-			remoteResolver.demandRemoteResolve(resourceSet, to, diagnostic, tspm);
+		if (processProxies) {
+			final URI to = ((InternalEObject)proxy).eProxyURI().trimFragment();
+			// TODO Does this work with relative URIs? (isPlatformResource())
+			if (to.isPlatformResource()) {
+				SynchronizedResourceSet resourceSet = (SynchronizedResourceSet)source.getResourceSet();
+				remoteResolver.demandRemoteResolve(resourceSet, to, diagnostic, tspm);
+			}
 		}
 	}
 }
