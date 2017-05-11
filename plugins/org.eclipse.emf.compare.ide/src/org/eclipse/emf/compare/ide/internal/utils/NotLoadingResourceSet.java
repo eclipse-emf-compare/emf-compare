@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 464904
+ *     Philip Langer - bug 516508
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal.utils;
 
@@ -283,9 +284,12 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	public Resource getResource(URI uri, boolean loadOnDemand) {
 		checkNotDisposed();
 
-		// Bypass the load on demand policies when possible
-		final Resource cached = getURIResourceMap().get(uri);
-		if (cached != null) {
+		// Bypass the load on demand policies when possible.
+		// Note that we cache null as well, so if a proxy fails to resolve we don't repeatedly try to load it.
+		// That lookup can be expensive for a resource set with hundreds of resources.
+		Map<URI, Resource> uriToResource = getURIResourceMap();
+		final Resource cached = uriToResource.get(uri);
+		if (cached != null || uriToResource.containsKey(uri)) {
 			return cached;
 		}
 
@@ -305,6 +309,11 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 				resource = super.getResource(uri, false);
 			}
 		}
+
+		// This is only necessary to cache the case of null.
+		// Caching that allows us to avoid repeated looking up a resource that doesn't exist in the case of a
+		// broken proxy.
+		uriToResource.put(uri, resource);
 		return resource;
 	}
 
@@ -329,20 +338,29 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 			EObject eObject = proxyEntry.eObject;
 			EStructuralFeature proxyFeature = proxyEntry.proxyFeature;
 
-			Object values = eObject.eGet(proxyFeature, true);
-			if (values instanceof InternalEList<?>) {
-				final ListIterator<?> crossRefs = ((InternalEList<?>)values).basicListIterator();
+			// Get the value without resolving proxies.
+			Object value = eObject.eGet(proxyFeature, false);
+			// If it's a list...
+			if (value instanceof InternalEList<?>) {
+				// Iterate over the values without resolving proxies.
+				@SuppressWarnings("unchecked")
+				InternalEList<InternalEObject> values = (InternalEList<InternalEObject>)value;
+				final ListIterator<InternalEObject> crossRefs = values.basicListIterator();
 				while (crossRefs.hasNext()) {
-					final Object nextValue = crossRefs.next();
-					if (nextValue instanceof EObject && ((EObject)nextValue).eIsProxy()) {
-						final URI proxyURI = ((InternalEObject)nextValue).eProxyURI();
-						final Resource targetRes = getResource(proxyURI.trimFragment(), false);
-
-						if (targetRes != null) {
-							// resolve this one
-							((InternalEList<?>)values).get(crossRefs.previousIndex());
-						}
+					// If it has a proxy URI and that resource is already loaded...
+					final InternalEObject nextValue = crossRefs.next();
+					URI eProxyURI = nextValue.eProxyURI();
+					if (eProxyURI != null && getResource(eProxyURI.trimFragment(), false) != null) {
+						// Force it to be resolved.
+						values.get(crossRefs.previousIndex());
 					}
+				}
+			} else if (value != null) {
+				// It must be an EObject and if has a proxy URI and that resource is already loaded...
+				URI eProxyURI = ((InternalEObject)value).eProxyURI();
+				if (eProxyURI != null && getResource(eProxyURI.trimFragment(), false) != null) {
+					// Force it to be resolved.
+					eObject.eGet(proxyFeature, true);
 				}
 			}
 
@@ -479,6 +497,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	@Override
 	public Resource createResource(URI uri, String contentType) {
 		checkNotDisposed();
+		getURIResourceMap().remove(uri); // clear potentially cached null value
 		return super.createResource(uri, contentType);
 	}
 
@@ -552,16 +571,18 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	 * Helper class to encapsulate pairs of {@link EObject}s and {@link EStructuralFeature}s pointing to proxy
 	 * objects.
 	 */
-	private class ProxyEntry {
+	private static class ProxyEntry {
 		/**
-		 * The {@link EObject} containing a {@link EStructuralFeature} pointing to a proxy object.
+		 * The {@link EObject} containing a {@link EStructuralFeature} pointing to a proxy object. It's
+		 * protected to avoid a generated bridge method when accessed.
 		 */
-		private final EObject eObject;
+		protected final EObject eObject;
 
 		/**
-		 * The {@link EStructuralFeature} within the {@link #eObject} pointing to a proxy object.
+		 * The {@link EStructuralFeature} within the {@link #eObject} pointing to a proxy object. It's
+		 * protected to avoid a generated bridge method when accessed.
 		 */
-		private final EStructuralFeature proxyFeature;
+		protected final EStructuralFeature proxyFeature;
 
 		/**
 		 * Constructor.
