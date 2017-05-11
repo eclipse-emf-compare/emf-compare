@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 516524
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
@@ -21,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.ExtendedMetaData;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
@@ -87,14 +89,8 @@ public final class ReferenceUtil {
 	 * @return The value of the given {@code feature} for the given {@code object}.
 	 */
 	public static Object safeEGet(EObject object, EStructuralFeature feature) {
-		final EClass clazz = object.eClass();
-		// TODO profile. This "if" might be counter productive : accessing both packages is probably as long
-		// as a direct lookup to the clazz.eGetEStructuralFeature...
-		if (clazz.getEPackage() == feature.getEContainingClass().getEPackage()) {
-			return object.eGet(feature, false);
-		}
-		// Assumes that the containing package is the same, let it fail otherwise
-		return object.eGet(clazz.getEStructuralFeature(feature.getName()), false);
+		final int featureID = getFeatureID(feature, object.eClass());
+		return ((InternalEObject)object).eGet(featureID, false, true);
 	}
 
 	/**
@@ -109,14 +105,8 @@ public final class ReferenceUtil {
 	 * @return whether the {@code feature} for the given {@code object} is set.
 	 */
 	public static boolean safeEIsSet(EObject object, EStructuralFeature feature) {
-		final EClass clazz = object.eClass();
-		// TODO profile. This "if" might be counter productive : accessing both packages is probably as long
-		// as a direct lookup to the clazz.eGetEStructuralFeature...
-		if (clazz.getEPackage() == feature.getEContainingClass().getEPackage()) {
-			return object.eIsSet(feature);
-		}
-		// Assumes that the containing package is the same, let it fail otherwise
-		return object.eIsSet(clazz.getEStructuralFeature(feature.getName()));
+		int featureID = getFeatureID(feature, object.eClass());
+		return ((InternalEObject)object).eIsSet(featureID);
 	}
 
 	/**
@@ -132,15 +122,33 @@ public final class ReferenceUtil {
 	 *            The value to set, can be <code>null</code>.
 	 */
 	public static void safeESet(EObject object, EStructuralFeature feature, Object newValue) {
-		final EClass clazz = object.eClass();
-		// TODO profile. This "if" might be counter productive : accessing both packages is probably as long
-		// as a direct lookup to the clazz.eGetEStructuralFeature...
-		if (clazz.getEPackage() == feature.getEContainingClass().getEPackage()) {
-			object.eSet(feature, newValue);
-		} else {
-			// Assumes that the containing package is the same, let it fail otherwise
-			object.eSet(clazz.getEStructuralFeature(feature.getName()), newValue);
+		int featureID = getFeatureID(feature, object.eClass());
+		((InternalEObject)object).eSet(featureID, newValue);
+	}
+
+	/**
+	 * Returns the ID of the given <code>feature</code> relative to the given <code>eClass</code>.
+	 * <p>
+	 * If the feature ID could not be found in <code>eClass</code> directly, this method will try find a
+	 * feature in <code>eClass</code> with the same name as the given <code>feature</code> and return its
+	 * feature ID. Otherwise, this method returns -1. , or -1 if the feature is not in this class.
+	 * </p>
+	 * 
+	 * @param feature
+	 *            The feature.
+	 * @param eClass
+	 *            The class.
+	 * @return The ID of the <code>feature</code> relative to <code>class</code>, or -1 if the feature or an
+	 *         equally named feature is not in <code>clazz</code>.
+	 */
+	private static int getFeatureID(EStructuralFeature feature, final EClass eClass) {
+		int featureID = eClass.getFeatureID(feature);
+		if (featureID == -1) {
+			// We may have a different but equivalent EClass, so try find the feature with the same name and
+			// compute the feature ID for that.
+			featureID = eClass.getFeatureID(eClass.getEStructuralFeature(feature.getName()));
 		}
+		return featureID;
 	}
 
 	/**
