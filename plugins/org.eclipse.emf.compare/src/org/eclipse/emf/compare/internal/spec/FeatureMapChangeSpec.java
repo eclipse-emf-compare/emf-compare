@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 EclipseSource Munich GmbH and others.
+ * Copyright (c) 2014, 2017 EclipseSource Munich GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -175,13 +175,17 @@ public class FeatureMapChangeSpec extends FeatureMapChangeImpl {
 		if (newMatch != null) {
 			EList<Diff> differences = newMatch.getDifferences();
 			differences.add(this);
-			eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.DIFF__MATCH, oldMatch,
-					newMatch));
+			if (eNotificationRequired()) {
+				eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.DIFF__MATCH, oldMatch,
+						newMatch));
+			}
 		} else if (eContainer() instanceof Match) {
 			EList<Diff> differences = ((Match)eContainer()).getDifferences();
 			differences.remove(this);
-			eNotify(new ENotificationImpl(this, Notification.UNSET, ComparePackage.DIFF__MATCH, oldMatch,
-					newMatch));
+			if (eNotificationRequired()) {
+				eNotify(new ENotificationImpl(this, Notification.UNSET, ComparePackage.DIFF__MATCH, oldMatch,
+						newMatch));
+			}
 
 		}
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 516520
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
 
@@ -97,13 +98,17 @@ public class ResourceAttachmentChangeSpec extends ResourceAttachmentChangeImpl {
 		if (newMatch != null) {
 			EList<Diff> differences = newMatch.getDifferences();
 			differences.add(this);
-			eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.DIFF__MATCH, oldMatch,
-					newMatch));
+			if (eNotificationRequired()) {
+				eNotify(new ENotificationImpl(this, Notification.SET, ComparePackage.DIFF__MATCH, oldMatch,
+						newMatch));
+			}
 		} else if (eContainer() instanceof Match) {
 			EList<Diff> differences = ((Match)eContainer()).getDifferences();
 			differences.remove(this);
-			eNotify(new ENotificationImpl(this, Notification.UNSET, ComparePackage.DIFF__MATCH, oldMatch,
-					newMatch));
+			if (eNotificationRequired()) {
+				eNotify(new ENotificationImpl(this, Notification.UNSET, ComparePackage.DIFF__MATCH, oldMatch,
+						newMatch));
+			}
 
 		}
 	}
