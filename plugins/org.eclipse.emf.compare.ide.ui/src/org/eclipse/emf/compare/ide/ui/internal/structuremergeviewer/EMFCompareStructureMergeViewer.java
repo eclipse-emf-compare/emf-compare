@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 467191
- *     Philip Langer - bug 462884
+ *     Philip Langer - bug 462884, 516576
  *     Stefan Dirix - bugs 473985 and 474030
  *     Martin Fleck - bug 497066
  *     Martin Fleck - bug 483798
@@ -1347,9 +1347,18 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
 
 		if (resourceSetShouldBeDisposed) {
-			disposeResourceSet(leftResourceSet);
-			disposeResourceSet(rightResourceSet);
-			disposeResourceSet(originResourceSet);
+			final ResourceSet finalLeftResourceSet = leftResourceSet;
+			final ResourceSet finalRightResourceSet = rightResourceSet;
+			final ResourceSet finalOriginResourceSet = originResourceSet;
+			new Job("Resource Disposer") { //$NON-NLS-1$
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					disposeResourceSet(finalLeftResourceSet);
+					disposeResourceSet(finalRightResourceSet);
+					disposeResourceSet(finalOriginResourceSet);
+					return Status.OK_STATUS;
+				}
+			}.schedule();
 		}
 
 		if (getCompareConfiguration() != null) {
