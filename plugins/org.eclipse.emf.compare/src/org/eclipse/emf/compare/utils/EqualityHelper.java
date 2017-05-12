@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 473730 (ignore URI type descriptions)
+ *     Philip Langer - performance improvements
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
@@ -117,41 +118,37 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 		final boolean equal;
 		if (object1 == object2) {
 			equal = true;
-		} else if (object1 instanceof EObject && object2 instanceof EObject) {
-			// [248442] This will handle FeatureMapEntries detection
-			equal = matchingEObjects((EObject)object1, (EObject)object2);
-		} else if (isNullOrEmptyString(object1) && isNullOrEmptyString(object2)) {
+		} else if (object1 == null) {
 			// Special case, consider that the empty String is equal to null (unset attributes)
-			equal = true;
+			equal = "".equals(object2); //$NON-NLS-1$
+		} else if (object2 == null) {
+			// Special case, consider that the empty String is equal to null (unset attributes)
+			equal = "".equals(object1); //$NON-NLS-1$
+		} else if (object1 instanceof EObject) {
+			if (object2 instanceof EObject) {
+				equal = matchingEObjects((EObject)object1, (EObject)object2);
+			} else {
+				equal = false;
+			}
 		} else if (object1 instanceof String || object1 instanceof Integer || object1 instanceof Boolean) {
 			// primitives and String are much more common than arrays... and isArray() is expensive.
 			equal = object1.equals(object2);
-		} else if (object1 != null && object1.getClass().isArray() && object2 != null
-				&& object2.getClass().isArray()) {
+		} else if (object1.getClass().isArray() && object2.getClass().isArray()) {
 			// [299641] compare arrays by their content instead of instance equality
 			equal = matchingArrays(object1, object2);
 		} else if (object1 instanceof FeatureMap.Entry && object2 instanceof FeatureMap.Entry) {
-			EStructuralFeature key1 = ((FeatureMap.Entry)object1).getEStructuralFeature();
-			EStructuralFeature key2 = ((FeatureMap.Entry)object2).getEStructuralFeature();
-			Object value1 = ((FeatureMap.Entry)object1).getValue();
-			Object value2 = ((FeatureMap.Entry)object2).getValue();
+			FeatureMap.Entry featureMapEntry1 = (FeatureMap.Entry)object1;
+			EStructuralFeature key1 = featureMapEntry1.getEStructuralFeature();
+			FeatureMap.Entry featureMapEntry2 = (FeatureMap.Entry)object2;
+			EStructuralFeature key2 = featureMapEntry2.getEStructuralFeature();
+			Object value1 = featureMapEntry1.getValue();
+			Object value2 = featureMapEntry2.getValue();
 
 			equal = key1.equals(key2) && matchingValues(value1, value2);
 		} else {
-			equal = object1 != null && object1.equals(object2);
+			equal = object1.equals(object2);
 		}
 		return equal;
-	}
-
-	/**
-	 * Returns {@code true} if the given {@code object} is {@code null} or the empty String.
-	 * 
-	 * @param object
-	 *            The object we need to test.
-	 * @return {@code true} if the given {@code object} is {@code null} or the empty String.
-	 */
-	private boolean isNullOrEmptyString(Object object) {
-		return object == null || object instanceof String && ((String)object).length() == 0;
 	}
 
 	/**
