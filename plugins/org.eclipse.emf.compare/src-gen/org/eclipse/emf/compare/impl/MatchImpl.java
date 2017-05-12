@@ -50,7 +50,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class MatchImpl extends MinimalEObjectImpl implements Match {
+public class MatchImpl extends MinimalEObjectImpl.Container implements Match {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

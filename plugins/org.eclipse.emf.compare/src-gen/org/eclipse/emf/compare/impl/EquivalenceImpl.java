@@ -41,7 +41,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class EquivalenceImpl extends MinimalEObjectImpl implements Equivalence {
+public class EquivalenceImpl extends MinimalEObjectImpl.Container implements Equivalence {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

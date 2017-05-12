@@ -52,7 +52,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 //Supressing warnings : generated code
 @SuppressWarnings("all")
-public class MatchResourceImpl extends MinimalEObjectImpl implements MatchResource {
+public class MatchResourceImpl extends MinimalEObjectImpl.Container implements MatchResource {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

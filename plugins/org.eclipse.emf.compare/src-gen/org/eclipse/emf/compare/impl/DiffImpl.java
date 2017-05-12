@@ -56,7 +56,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 // Supressing warnings : generated code
 @SuppressWarnings("all")
-public class DiffImpl extends MinimalEObjectImpl implements Diff {
+public class DiffImpl extends MinimalEObjectImpl.Container implements Diff {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated

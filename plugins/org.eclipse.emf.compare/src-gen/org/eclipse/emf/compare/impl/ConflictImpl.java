@@ -45,7 +45,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class ConflictImpl extends MinimalEObjectImpl implements Conflict {
+public class ConflictImpl extends MinimalEObjectImpl.Container implements Conflict {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

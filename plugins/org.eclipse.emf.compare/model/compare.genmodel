@@ -5,7 +5,7 @@
     editorDirectory="/org.eclipse.emf.compare.editor/src-gen" modelPluginID="org.eclipse.emf.compare"
     modelName="Compare" editPluginClass="org.eclipse.emf.compare.provider.EMFCompareEditPlugin"
     editorPluginClass="org.eclipse.emf.compare.presentation.EMFCompareEditorPlugin"
-    nonNLSMarkers="true" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl"
+    nonNLSMarkers="true" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     codeFormatting="true" testsDirectory="/org.eclipse.emf.compare.tests/src-gen"
     testSuiteClass="org.eclipse.emf.compare.tests.CompareAllTests" importerID="org.eclipse.emf.importer.ecore"
     complianceLevel="5.0" colorProviders="true" fontProviders="true" runtimeVersion="2.5"
@@ -27,6 +27,7 @@
       <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceState/UNRESOLVED"/>
       <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceState/MERGED"/>
       <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceState/DISCARDED"/>
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceState/MERGING"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="compare.ecore#//ConflictKind">
       <genEnumLiterals ecoreEnumLiteral="compare.ecore#//ConflictKind/REAL"/>

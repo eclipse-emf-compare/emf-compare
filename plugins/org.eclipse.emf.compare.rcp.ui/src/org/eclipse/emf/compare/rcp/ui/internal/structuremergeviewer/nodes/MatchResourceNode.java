@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.nodes;
 import com.google.common.collect.Iterables;
 
 import org.eclipse.emf.compare.MatchResource;
-import org.eclipse.emf.edit.tree.impl.TreeNodeImpl;
 
 /**
  * This class is wrapper for TreeNode used to represent a match resource TreeNode.

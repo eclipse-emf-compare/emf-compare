@@ -51,7 +51,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @generated
  */
 @SuppressWarnings("boxing")
-public class ComparisonImpl extends MinimalEObjectImpl implements Comparison {
+public class ComparisonImpl extends MinimalEObjectImpl.Container implements Comparison {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
