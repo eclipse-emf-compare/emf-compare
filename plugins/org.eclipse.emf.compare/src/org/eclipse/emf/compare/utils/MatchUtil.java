@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 467576
+ *     Philip Langer - performance improvements
  *******************************************************************************/
 package org.eclipse.emf.compare.utils;
 
@@ -20,10 +21,11 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REF
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueIs;
-import static org.eclipse.emf.compare.utils.ReferenceUtil.getAsList;
+import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEGet;
 
 import com.google.common.collect.Iterables;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
@@ -34,11 +36,12 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.util.CompareSwitch;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * This utility class holds methods that will be used by the diff and merge processes.
@@ -286,16 +289,18 @@ public final class MatchUtil {
 					throw new IllegalArgumentException();
 				}
 				if (source == DifferenceSource.LEFT) {
-					if (featureContains(match.getLeft(), feature, value)) {
-						result = match.getLeft();
+					final EObject left = match.getLeft();
+					if (featureContains(left, feature, value)) {
+						result = left;
 					} else if (comparison.isThreeWay()) {
 						result = match.getOrigin();
 					} else {
 						result = match.getRight();
 					}
 				} else {
-					if (featureContains(match.getRight(), feature, value)) {
-						result = match.getRight();
+					final EObject right = match.getRight();
+					if (featureContains(right, feature, value)) {
+						result = right;
 					} else if (comparison.isThreeWay()) {
 						result = match.getOrigin();
 					} else {
@@ -326,32 +331,69 @@ public final class MatchUtil {
 	// public for testing
 	public static boolean featureContains(EObject eObject, EStructuralFeature feature, Object value) {
 		boolean contains = false;
-
-		// only compute the value's URI once, and only if needed
-		URI valueURI = null;
-
-		for (Object element : getAsList(eObject, feature)) {
-			if (element == value) {
-				contains = true;
-				break;
-			}
-			if (element != null && element.equals(value)) {
-				contains = true;
-				break;
-			}
-
-			if (element instanceof EObject && ((EObject)element).eIsProxy()) {
-				if (valueURI == null && value instanceof EObject) {
-					valueURI = EcoreUtil.getURI((EObject)value);
+		
+		if (eObject != null && feature != null) {
+			final Object featureValue = safeEGet(eObject, feature);
+			if (feature.isMany()) {
+				// only compute the value's URI once, and only if needed
+				URI valueURI = null;
+				final Iterator<?> i;
+				if (featureValue instanceof InternalEList<?>) {
+					i = ((InternalEList<?>)featureValue).basicIterator();
+				} else {
+					i = ((List<?>)featureValue).iterator();
 				}
-				if (EcoreUtil.getURI((EObject)element).equals(valueURI)) {
-					contains = true;
-					break;
+				while (i.hasNext()) {
+					final Object element = i.next();
+					if (element == value) {
+						contains = true;
+						break;
+					}
+					if (element != null && element.equals(value)) {
+						contains = true;
+						break;
+					}
+
+					URI proxyURI = getProxyURI(element);
+					if (proxyURI != null) {
+						if (valueURI == null && value instanceof EObject) {
+							valueURI = EcoreUtil.getURI((EObject)value);
+						}
+						if (proxyURI.equals(valueURI)) {
+							contains = true;
+							break;
+						}
+					}
+				}
+			} else if (featureValue == value) {
+				contains = true;
+			} else if (featureValue != null && featureValue.equals(value)) {
+				contains = true;
+			} else {
+				URI proxyURI = getProxyURI(featureValue);
+				if (proxyURI != null && value instanceof EObject) {
+					if (proxyURI.equals(EcoreUtil.getURI((EObject)value))) {
+						contains = true;
+					}
 				}
 			}
 		}
 
 		return contains;
+	}
+
+	/**
+	 * Returns the proxy URI of the object if it's an EObject.
+	 * 
+	 * @param object
+	 *            the object to test.
+	 * @return the proxy URI.
+	 */
+	private static URI getProxyURI(Object object) {
+		if (object instanceof InternalEObject) {
+			return ((InternalEObject)object).eProxyURI();
+		}
+		return null;
 	}
 
 	/**
@@ -362,19 +404,14 @@ public final class MatchUtil {
 	 * @return the value of the difference.
 	 */
 	public static Object getValue(Diff input) {
-		final CompareSwitch<Object> customSwitch = new CompareSwitch<Object>() {
-			@Override
-			public Object caseAttributeChange(AttributeChange object) {
-				return object.getValue();
-			}
+		if (input instanceof AttributeChange) {
+			return ((AttributeChange)input).getValue();
+		}
+		if (input instanceof ReferenceChange) {
+			return ((ReferenceChange)input).getValue();
+		}
 
-			@Override
-			public Object caseReferenceChange(ReferenceChange object) {
-				return object.getValue();
-			}
-
-		};
-		return customSwitch.doSwitch(input);
+		return null;
 	}
 
 	/**
@@ -385,19 +422,14 @@ public final class MatchUtil {
 	 * @return the structural feature.
 	 */
 	public static EStructuralFeature getStructuralFeature(Diff input) {
-		final CompareSwitch<EStructuralFeature> customSwitch = new CompareSwitch<EStructuralFeature>() {
-			@Override
-			public EStructuralFeature caseAttributeChange(AttributeChange object) {
-				return object.getAttribute();
-			}
+		if (input instanceof AttributeChange) {
+			return ((AttributeChange)input).getAttribute();
+		}
+		if (input instanceof ReferenceChange) {
+			return ((ReferenceChange)input).getReference();
+		}
 
-			@Override
-			public EStructuralFeature caseReferenceChange(ReferenceChange object) {
-				return object.getReference();
-			}
-
-		};
-		return customSwitch.doSwitch(input);
+		return null;
 	}
 
 	/**
