@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 EclipseSource Munich and others.
+ * Copyright (c) 2015, 2017 EclipseSource Munich and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Optional;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -59,7 +60,7 @@ public class ResourceDependencyFoundEvent extends DependencyFoundEvent<URI> {
 	 */
 	private static Optional<URI> getParentUriIfContainmentReference(EObject parent,
 			EStructuralFeature feature) {
-		if (feature instanceof EReference && ((EReference)feature).isContainment()) {
+		if (DiffUtil.isContainmentReference(feature)) {
 			return Optional.of(getUri(parent));
 		}
 		return Optional.absent();

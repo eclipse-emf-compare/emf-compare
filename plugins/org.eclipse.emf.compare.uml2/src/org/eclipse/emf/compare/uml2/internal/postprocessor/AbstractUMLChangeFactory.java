@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2016 Obeo and others.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.postprocessor.factories.AbstractChangeFactory;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
+import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.uml2.internal.StereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2.internal.UMLDiff;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
@@ -216,8 +217,7 @@ public abstract class AbstractUMLChangeFactory extends AbstractChangeFactory {
 							// If no structural feature specified, check that the reference of the
 							// difference is containment.
 							EStructuralFeature diffFeature = MatchUtil.getStructuralFeature(input);
-							res = res && diffFeature instanceof EReference
-									&& ((EReference)diffFeature).isContainment();
+							res = res && DiffUtil.isContainmentReference(diffFeature);
 						}
 						return res;
 					}

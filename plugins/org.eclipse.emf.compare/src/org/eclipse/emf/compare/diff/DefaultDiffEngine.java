@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -99,8 +99,9 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * @return {@code true} if the given {@code iterable} contains {@code element}, {@code false} otherwise.
 	 */
 	protected <E> boolean contains(Comparison comparison, Iterable<E> iterable, E element) {
+		final IEqualityHelper equality = comparison.getEqualityHelper();
 		for (E candidate : iterable) {
-			if (comparison.getEqualityHelper().matchingValues(candidate, element)) {
+			if (equality.matchingValues(candidate, element)) {
 				return true;
 			}
 		}
@@ -333,6 +334,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 	protected void createContainmentDifferences(Match match, EReference reference, boolean checkOrdering,
 			List<Object> values, List<Object> lcsWithOrigin, DifferenceSource side) {
 		final Comparison comparison = match.getComparison();
+		final IEqualityHelper equality = comparison.getEqualityHelper();
 
 		int lcsCursor = 0;
 		Optional<Match> lcsCurrent = getMatchIfPresent(comparison, lcsWithOrigin, lcsCursor);
@@ -358,7 +360,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 				originValue = candidateMatch.getRight();
 			}
 
-			if (matchingContainment(comparison.getEqualityHelper(), value, originValue)) {
+			if (matchingContainment(equality, value, originValue)) {
 				/*
 				 * Contained in both compared side and the origin, and not part of the LCS. It has moved
 				 * within its (containment) reference.
@@ -551,13 +553,12 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * @return Either Origin, Left or Right if one of them exists, {@code null} otherwise.
 	 */
 	private EObject getOwner(Match match) {
-		EObject owner = null;
-		if (match.getOrigin() != null) {
-			owner = match.getOrigin();
-		} else if (match.getLeft() != null) {
+		EObject owner = match.getOrigin();
+		if (owner == null) {
 			owner = match.getLeft();
-		} else if (match.getRight() != null) {
-			owner = match.getRight();
+			if (owner == null) {
+				owner = match.getRight();
+			}
 		}
 		return owner;
 	}
@@ -908,11 +909,12 @@ public class DefaultDiffEngine implements IDiffEngine {
 			final List<Object> entries) {
 		final Object entryValue = entry.getValue();
 		final EStructuralFeature entryKey = entry.getEStructuralFeature();
-		if (entryKey instanceof EReference && ((EReference)entryKey).isContainment()) {
+		if (DiffUtil.isContainmentReference(entryKey)) {
 			for (Object object : entries) {
 				if (object instanceof FeatureMap.Entry) {
-					if (equality.matchingValues(entryValue, ((FeatureMap.Entry)object).getValue())) {
-						return !entryKey.equals(((FeatureMap.Entry)object).getEStructuralFeature());
+					final FeatureMap.Entry featureMapEntry = (FeatureMap.Entry)object;
+					if (equality.matchingValues(entryValue, featureMapEntry.getValue())) {
+						return !entryKey.equals(featureMapEntry.getEStructuralFeature());
 					}
 				}
 			}
@@ -939,8 +941,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final Object entryValue = entry.getValue();
 		final EStructuralFeature structuralFeature = entry.getEStructuralFeature();
 
-		if (entryValue instanceof EObject && structuralFeature instanceof EReference
-				&& ((EReference)structuralFeature).isContainment()) {
+		if (entryValue instanceof EObject && DiffUtil.isContainmentReference(structuralFeature)) {
 			final Match candidateMatch = comparison.getMatch((EObject)entryValue);
 
 			if (candidateMatch == null) {
@@ -985,32 +986,33 @@ public class DefaultDiffEngine implements IDiffEngine {
 	protected void computeSingleValuedAttributeDifferences(Match match, EAttribute attribute) {
 		final Comparison comparison = match.getComparison();
 
+		final EObject left = match.getLeft();
 		Object leftValue = UNMATCHED_VALUE;
-		if (match.getLeft() != null) {
-			leftValue = safeEGet(match.getLeft(), attribute);
+		if (left != null) {
+			leftValue = safeEGet(left, attribute);
 		}
+		final EObject right = match.getRight();
 		Object rightValue = UNMATCHED_VALUE;
-		if (match.getRight() != null) {
-			rightValue = safeEGet(match.getRight(), attribute);
+		if (right != null) {
+			rightValue = safeEGet(right, attribute);
 		}
 
-		IEqualityHelper helper = comparison.getEqualityHelper();
+		final IEqualityHelper helper = comparison.getEqualityHelper();
+		final EObject origin = match.getOrigin();
 		if (helper.matchingValues(leftValue, rightValue)) {
 			// Identical values in left and right. The only problematic case is if they do not match the
 			// origin (and left and right are defined, i.e don't detect attribute change on unmatched)
 			if (leftValue != UNMATCHED_VALUE && comparison.isThreeWay()) {
 				final Object originValue;
-				if (match.getOrigin() == null) {
+				if (origin == null) {
 					originValue = null;
 				} else {
-					originValue = safeEGet(match.getOrigin(), attribute);
+					originValue = safeEGet(origin, attribute);
 				}
 				final boolean matchingLO = helper.matchingValues(leftValue, originValue);
 
-				/*
-				 * if !matchingLO, the same change has been made on both side. This is actually a
-				 * pseudo-conflict. It can be either a set or unset diff according to the value of origin.
-				 */
+				// if !matchingLO, the same change has been made on both side. This is actually a
+				// pseudo-conflict. It can be either a set or unset diff according to the value of origin.
 				if (!matchingLO && isNullOrEmptyString(originValue)) {
 					// The same value has been SET on both sides
 					getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
@@ -1025,8 +1027,8 @@ public class DefaultDiffEngine implements IDiffEngine {
 							DifferenceSource.RIGHT);
 				}
 			}
-		} else if (match.getOrigin() != null) {
-			final Object originValue = safeEGet(match.getOrigin(), attribute);
+		} else if (origin != null) {
+			final Object originValue = safeEGet(origin, attribute);
 
 			if (helper.matchingValues(leftValue, originValue)) {
 				Object changedValue = rightValue;
@@ -1110,7 +1112,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * @return {@code true} if the given {@code object} is {@code null} or the empty String.
 	 */
 	private boolean isNullOrEmptyString(Object object) {
-		return object == null || object instanceof String && ((String)object).length() == 0;
+		return object == null || "".equals(object); //$NON-NLS-1$
 	}
 
 	/**
@@ -1142,17 +1144,20 @@ public class DefaultDiffEngine implements IDiffEngine {
 	protected void computeSingleValuedReferenceDifferencesThreeWay(Match match, EReference reference) {
 		final Comparison comparison = match.getComparison();
 
+		final EObject left = match.getLeft();
 		Object leftValue = UNMATCHED_VALUE;
-		if (match.getLeft() != null) {
-			leftValue = safeEGet(match.getLeft(), reference);
+		if (left != null) {
+			leftValue = safeEGet(left, reference);
 		}
+		final EObject right = match.getRight();
 		Object rightValue = UNMATCHED_VALUE;
-		if (match.getRight() != null) {
-			rightValue = safeEGet(match.getRight(), reference);
+		if (right != null) {
+			rightValue = safeEGet(right, reference);
 		}
+		final EObject origin = match.getOrigin();
 		Object originValue = UNMATCHED_VALUE;
-		if (match.getOrigin() != null) {
-			originValue = safeEGet(match.getOrigin(), reference);
+		if (origin != null) {
+			originValue = safeEGet(origin, reference);
 		}
 
 		boolean distinctValueLO = !comparison.getEqualityHelper().matchingValues(leftValue, originValue);
@@ -1210,13 +1215,15 @@ public class DefaultDiffEngine implements IDiffEngine {
 	protected void computeSingleValuedReferenceDifferencesTwoWay(Match match, EReference reference) {
 		final Comparison comparison = match.getComparison();
 
+		final EObject left = match.getLeft();
 		Object leftValue = UNMATCHED_VALUE;
-		if (match.getLeft() != null) {
-			leftValue = safeEGet(match.getLeft(), reference);
+		if (left != null) {
+			leftValue = safeEGet(left, reference);
 		}
+		final EObject right = match.getRight();
 		Object rightValue = UNMATCHED_VALUE;
-		if (match.getRight() != null) {
-			rightValue = safeEGet(match.getRight(), reference);
+		if (right != null) {
+			rightValue = safeEGet(right, reference);
 		}
 
 		boolean distinctValue = !comparison.getEqualityHelper().matchingValues(leftValue, rightValue);

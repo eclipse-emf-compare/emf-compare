@@ -22,6 +22,7 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -326,8 +327,7 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 		@Override
 		public List<XMIException> setManyReference(ManyReference reference, String location) {
 			EStructuralFeature eStructuralFeature = reference.getFeature();
-			boolean isContainment = eStructuralFeature instanceof EReference
-					&& ((EReference)eStructuralFeature).isContainment();
+			boolean isContainment = DiffUtil.isContainmentReference(eStructuralFeature);
 			if (!containmentOnly || isContainment) {
 				return super.setManyReference(reference, location);
 			}

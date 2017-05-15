@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import com.google.common.collect.Iterators;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -105,8 +106,7 @@ public class FeatureFilter {
 	 */
 	public boolean checkForOrderingChanges(EStructuralFeature feature) {
 		if (feature.isMany()) {
-			return feature.isOrdered()
-					|| feature instanceof EReference && ((EReference)feature).isContainment();
+			return feature.isOrdered() || DiffUtil.isContainmentReference(feature);
 		}
 		return false;
 	}

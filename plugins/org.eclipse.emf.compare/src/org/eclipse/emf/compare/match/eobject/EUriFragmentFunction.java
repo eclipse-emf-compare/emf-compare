@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EDataType;
@@ -80,7 +81,7 @@ public class EUriFragmentFunction implements Function<EObject, String> {
 			for (int i = 0, size = featureMap.size(); i < size; ++i) {
 				if (featureMap.getValue(i) == eObject) {
 					EStructuralFeature entryFeature = featureMap.getEStructuralFeature(i);
-					if (entryFeature instanceof EReference && ((EReference)entryFeature).isContainment()) {
+					if (DiffUtil.isContainmentReference(entryFeature)) {
 						result.append('.');
 						result.append(i);
 						return result.toString();

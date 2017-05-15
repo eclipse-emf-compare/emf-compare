@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo and others.
+ * Copyright (c) 2014, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -196,7 +196,7 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 
 			((BasicFeatureMap)(Object)list).addUnique(insertionIndex, FeatureMapUtil.createEntry(key, copy));
 
-			if (key instanceof EReference && ((EReference)key).isContainment()) {
+			if (DiffUtil.isContainmentReference(key)) {
 				if (rightToLeft) {
 					match.setLeft(copy);
 				} else {
@@ -615,8 +615,8 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 
 					// setUnique(int, Entry) doesn't keep ID, so copy XMI ID when applicable.
 					final Resource targetResource;
-					if (originKey instanceof EReference && ((EReference)originKey).isContainment()
-							&& targetValue instanceof EObject && originValueId != null) {
+					if (DiffUtil.isContainmentReference(originKey) && targetValue instanceof EObject
+							&& originValueId != null) {
 						targetResource = ((EObject)targetValue).eResource();
 					} else {
 						targetResource = null;

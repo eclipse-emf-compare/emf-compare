@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2015, 2017 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,8 +53,9 @@ public class PapyrusDependencyProvider implements IDependencyProvider {
 	 */
 	public Set<URI> getDependencies(URI uri, URIConverter uriConverter) {
 		final Set<URI> dependencies = new LinkedHashSet<URI>();
+		final URI baseURI = uri.trimFileExtension();
 		for (String fileExtension : fileExtensions) {
-			URI dependencyURI = uri.trimFileExtension().appendFileExtension(fileExtension);
+			final URI dependencyURI = baseURI.appendFileExtension(fileExtension);
 			if (uriConverter.exists(dependencyURI, null)) {
 				dependencies.add(dependencyURI);
 			}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1153,8 +1153,20 @@ public final class DiffUtil {
 	 */
 	private static boolean isContainmentReferenceMove(Diff diff) {
 		final EStructuralFeature diffFeature = getChangedFeature(diff);
-		return diffFeature instanceof EReference && ((EReference)diffFeature).isContainment()
-				&& diff.getKind() == DifferenceKind.MOVE;
+		return isContainmentReference(diffFeature) && diff.getKind() == DifferenceKind.MOVE;
+	}
+
+	/**
+	 * Specifies whether the given <code>feature</code> is a {@link EReference#isContainment() containment}
+	 * {@link EReference reference}.
+	 * 
+	 * @param feature
+	 *            The feature to check.
+	 * @return <code>true</code> if the <code>feature</code> is a containment reference, <code>false</code>
+	 *         otherwise.
+	 */
+	public static boolean isContainmentReference(EStructuralFeature feature) {
+		return feature != null && ((EStructuralFeature.Internal)feature).isContainment();
 	}
 
 	/**

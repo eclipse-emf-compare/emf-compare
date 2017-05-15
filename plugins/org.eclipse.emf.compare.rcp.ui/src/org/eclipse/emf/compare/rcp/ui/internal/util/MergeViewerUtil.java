@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,7 @@ import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
@@ -218,21 +218,15 @@ public final class MergeViewerUtil {
 		switch (side) {
 			case ANCESTOR:
 				EObject origin = match.getOrigin();
-				if (origin instanceof MinimalEObjectImpl) {
-					resource = ((MinimalEObjectImpl)origin).eDirectResource();
-				}
+				resource = ((InternalEObject)origin).eDirectResource();
 				break;
 			case LEFT:
 				EObject left = match.getLeft();
-				if (left instanceof MinimalEObjectImpl) {
-					resource = ((MinimalEObjectImpl)left).eDirectResource();
-				}
+				resource = ((InternalEObject)left).eDirectResource();
 				break;
 			case RIGHT:
 				EObject right = match.getRight();
-				if (right instanceof MinimalEObjectImpl) {
-					resource = ((MinimalEObjectImpl)right).eDirectResource();
-				}
+				resource = ((InternalEObject)right).eDirectResource();
 				break;
 			default:
 				throw new IllegalStateException();

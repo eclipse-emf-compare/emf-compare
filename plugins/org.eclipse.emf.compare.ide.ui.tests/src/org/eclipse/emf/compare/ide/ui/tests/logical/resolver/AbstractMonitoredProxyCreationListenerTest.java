@@ -69,7 +69,7 @@ public class AbstractMonitoredProxyCreationListenerTest {
 	public void prepareTest(String toUri, CrossReferenceResolutionScope scope) {
 		source = mock(Resource.class);
 		eObject = mock(EObject.class);
-		feature = mock(EStructuralFeature.class);
+		feature = mock(EStructuralFeature.Internal.class);
 		proxy = mock(InternalEObject.class);
 		from = URI.createURI("platform:/resource/from");
 		when(source.getURI()).thenReturn(from);
