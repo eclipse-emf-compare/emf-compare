@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 462863
  *     Stefan Dirix - bug 473985
+ *     Philip Langer - bug 516645
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
@@ -378,6 +379,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 						"toolbar:org.eclipse.emf.compare.contentmergeviewer.toolbar"); //$NON-NLS-1$
 				toolBarManager.getControl().addDisposeListener(new DisposeListener() {
 					public void widgetDisposed(DisposeEvent e) {
+						menuService.releaseContributions(toolBarManager);
+						// re-populate and release menu contributions to fix memory leak (see bug 516645)
+						menuService.populateContributionManager(toolBarManager, "nothing"); //$NON-NLS-1$
 						menuService.releaseContributions(toolBarManager);
 					}
 				});
