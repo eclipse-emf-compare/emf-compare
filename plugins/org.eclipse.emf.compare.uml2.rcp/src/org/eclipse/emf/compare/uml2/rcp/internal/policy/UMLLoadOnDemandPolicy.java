@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,6 @@ import java.util.Map;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
 import org.eclipse.emf.ecore.resource.URIConverter;
-import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.uml2.uml.UMLPlugin;
 
 /**
@@ -60,7 +59,7 @@ public class UMLLoadOnDemandPolicy implements ILoadOnDemandPolicy {
 	 * @see org.eclipse.emf.compare.ide.policy.ILoadOnDemandPolicy#isAuthorizing(org.eclipse.emf.compare.ide.policy.URI)
 	 */
 	public boolean isAuthorizing(URI uri) {
-		URIConverter uriConverter = new ExtensibleURIConverterImpl();
+		URIConverter uriConverter = URIConverter.INSTANCE;
 		// Needs to normalize the URI in order to resolve URI using path map
 		URI normalizedURI = uriConverter.normalize(uri);
 		return isConventionalURIForUMLProfile(normalizedURI) || isUMLMetaModel(normalizedURI)
