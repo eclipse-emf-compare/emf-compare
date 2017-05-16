@@ -39,6 +39,7 @@ import org.eclipse.emf.compare.ide.ui.tests.logical.synchronizationmodel.Synchro
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.NavigatableTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.CascadingFilterRefinementTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeActionTest;
+import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeConflictingRunnableTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeNonConflictingRunnableRefinementTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MergeNonConflictingRunnableTest;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions.MirroredMergeActionTest;
@@ -66,7 +67,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		RenameDetectorTest.class, SimilarityComputerTest.class, TooltipProviderTest.class,
 		SynchronizationModelDiagnosticTest.class, CascadingFilterRefinementTest.class,
 		MergeNonConflictingRunnableRefinementTest.class, CachingImplicitDependenciesTest.class,
-		MirroredMergeActionTest.class, EMFModelProviderRegistrationTest.class, })
+		MirroredMergeActionTest.class, EMFModelProviderRegistrationTest.class,
+		MergeConflictingRunnableTest.class })
 public class AllTests {
 
 	@BeforeClass

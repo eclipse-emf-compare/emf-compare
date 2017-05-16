@@ -324,4 +324,13 @@ public class MergeAction extends BaseSelectionListenerAction {
 		return leftToRight;
 	}
 
+	/**
+	 * Returns the cached selected differences.
+	 * 
+	 * @return The cached selected differences.
+	 */
+	public List<Diff> getSelectedDifferences() {
+		return selectedDifferences;
+	}
+
 }

@@ -103,6 +103,7 @@ import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressInfoComposite
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressMonitorWrapper;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.FetchListener;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeContainedConflictingAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeContainedNonConflictingAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeCompareInputAdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeNodeCompareInput;
@@ -536,6 +537,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 							getCompareConfiguration(), mergerRegistry, mode, navigatable,
 							(IStructuredSelection)getSelection(), filterPredicate);
 					manager.add(mergeAction);
+
+					MergeContainedConflictingAction mergeConflictingAction = new MergeContainedConflictingAction(
+							getCompareConfiguration(), mergerRegistry, mode, navigatable,
+							(IStructuredSelection)getSelection(), filterPredicate);
+					manager.add(mergeConflictingAction);
 				}
 			}
 		}
