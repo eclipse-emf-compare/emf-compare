@@ -33,5 +33,8 @@ location "http://obeo-umldesigner-nightly.s3-website-eu-west-1.amazonaws.com/mas
 
 location "http://download.eclipse.org/modeling/mdt/papyrus/updates/nightly/oxygen" {
 	org.eclipse.papyrus.sdk.feature.feature.group lazy
+}
+
+location "https://hudson.eclipse.org/papyrus/view/Sysml/job/papyrus-sysml11-oxygen/lastSuccessfulBuild/artifact/org.eclipse.papyrus.sysml11.p2/target/repository" {
 	org.eclipse.papyrus.sysml.feature.feature.group lazy
 }

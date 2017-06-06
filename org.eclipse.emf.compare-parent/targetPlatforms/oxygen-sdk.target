@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Oxygen SDK" sequenceNumber="1490198898">
+<target name="EMF Compare based on Oxygen SDK" sequenceNumber="1496743668">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -53,11 +53,11 @@
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="0.0.0"/>
-      <unit id="org.eclipse.papyrus.sysml.feature.feature.group" version="0.0.0"/>
       <repository location="http://download.eclipse.org/modeling/mdt/papyrus/updates/nightly/oxygen"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <repository id="nattable" location="http://download.eclipse.org/nattable/releases/1.5.0/repository"/>
+      <unit id="org.eclipse.papyrus.sysml.feature.feature.group" version="0.0.0"/>
+      <repository location="https://hudson.eclipse.org/papyrus/view/Sysml/job/papyrus-sysml11-oxygen/lastSuccessfulBuild/artifact/org.eclipse.papyrus.sysml11.p2/target/repository"/>
     </location>
   </locations>
 </target>
