@@ -287,23 +287,24 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 		}
 
 		@Override
-		public void setValue(EObject eObject, EStructuralFeature eStructuralFeature, Object value,
-				int position) {
-			if (eStructuralFeature instanceof EReference) {
-				boolean isContainment = eStructuralFeature instanceof EReference
-						&& ((EReference)eStructuralFeature).isContainment();
+		public void setValue(EObject eObject, EStructuralFeature feature, Object value, int position) {
+			if (feature instanceof EReference) {
+				boolean isContainment = feature instanceof EReference
+						&& ((EReference)feature).isContainment();
 				if (!containmentOnly || isContainment) {
-					super.setValue(eObject, eStructuralFeature, value, position);
+					super.setValue(eObject, feature, value, position);
 				}
-				EObject eObjectValue = (EObject)value;
-				final ProxyEntry entry = new ProxyEntry(eObject, eStructuralFeature, eObjectValue, position);
-				if (eObjectValue.eIsProxy()) {
-					notifyProxy(entry);
-				} else if (!isContainment) {
-					potentialProxies.add(entry);
+				if (value instanceof EObject) {
+					final EObject eObjectValue = (EObject)value;
+					final ProxyEntry entry = new ProxyEntry(eObject, feature, eObjectValue, position);
+					if (eObjectValue.eIsProxy()) {
+						notifyProxy(entry);
+					} else if (!isContainment) {
+						potentialProxies.add(entry);
+					}
 				}
 			} else if (!containmentOnly) {
-				super.setValue(eObject, eStructuralFeature, value, position);
+				super.setValue(eObject, feature, value, position);
 			}
 		}
 
