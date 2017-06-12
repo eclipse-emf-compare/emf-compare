@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
@@ -28,14 +25,13 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareSt
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.Navigatable;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.WrappableTreeViewer;
 import org.eclipse.emf.edit.tree.TreeNode;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.IOpenListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 /**
  * Utils class used for creating the {@link Tree} and the {@link WrappableTreeViewer}.
@@ -51,7 +47,7 @@ final class TestContext {
 
 	private Tree swtTree;
 
-	private Map<Integer, TreeItem> itemRetreiver;
+	private Map<Integer, TreeItem> itemRetriever;
 
 	private WrappableTreeViewer viewer;
 
@@ -62,7 +58,7 @@ final class TestContext {
 	public TestContext(Shell shell) {
 		super();
 		currentShell = shell;
-		this.itemRetreiver = new HashMap<Integer, TreeItem>();
+		this.itemRetriever = new HashMap<Integer, TreeItem>();
 	}
 
 	private Integer increment() {
@@ -74,11 +70,19 @@ final class TestContext {
 	}
 
 	public TreeItem getItem(int id) {
-		return itemRetreiver.get(Integer.valueOf(id));
+		return itemRetriever.get(Integer.valueOf(id));
 	}
 
 	public int getNumberOfNodes() {
 		return counter - 1;
+	}
+
+	public void dispose() {
+		if (swtTree != null) {
+			swtTree.dispose();
+			swtTree = null;
+		}
+		itemRetriever.clear();
 	}
 
 	/**
@@ -111,28 +115,21 @@ final class TestContext {
 			swtTree = new Tree(currentShell, SWT.NONE);
 			swtTree.setData("root"); //$NON-NLS-1$
 			createSubNodes(swtTree, numberOfChildren, depth, useStrings);
-			viewer = spy(new WrappableTreeViewer(swtTree));
-			doAnswer(selectionChanged()).when(viewer).setSelection(any(ISelection.class));
+			viewer = new WrappableTreeViewer(swtTree);
+			viewer.addOpenListener(new IOpenListener() {
+				public void open(OpenEvent event) {
+					if (event.getSelection() instanceof IStructuredSelection) {
+						currentSelection = ((IStructuredSelection)event.getSelection()).toArray();
+					}
+				}
+			});
 			AdapterFactory adapterFactory = mock(AdapterFactory.class);
 			EMFCompareStructureMergeViewerContentProvider contentProvider = new EMFCompareStructureMergeViewerContentProvider(
-					adapterFactory, viewer); // mock(EMFCompareStructureMergeViewerContentProvider.class);
+					adapterFactory, viewer);
 			return new TestNavigatable(viewer, contentProvider);
 		} else {
 			throw new AssertionError("The tree can only be built once"); //$NON-NLS-1$
 		}
-	}
-
-	private Answer<Void> selectionChanged() {
-		return new Answer<Void>() {
-			public Void answer(InvocationOnMock invocation) throws Throwable {
-				ISelection selection = (ISelection)invocation.getArguments()[0];
-				if (selection instanceof StructuredSelection) {
-					currentSelection = ((StructuredSelection)selection).toArray();
-				}
-				invocation.callRealMethod();
-				return null;
-			}
-		};
 	}
 
 	private void createSubNodes(Object parent, int numberOfChild, int depth, boolean useStrings) {
@@ -157,7 +154,7 @@ final class TestContext {
 					when(notifier.getData()).thenReturn(diff);
 					item.setData(adapter);
 				}
-				itemRetreiver.put(increment, item);
+				itemRetriever.put(increment, item);
 				createSubNodes(item, numberOfChild, depth - 1, useStrings);
 			}
 		}

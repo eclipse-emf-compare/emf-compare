@@ -19,7 +19,6 @@ import static org.junit.Assert.assertTrue;
 import com.google.common.base.Strings;
 
 import org.eclipse.compare.INavigatable;
-import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.Navigatable;
 import org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.TestContext.TestNavigatable;
 import org.eclipse.swt.widgets.Display;
@@ -52,10 +51,7 @@ public class NavigatableTest {
 
 	@After
 	public void after() {
-		Tree swtTree = testContext.getTree();
-		if (swtTree != null) {
-			swtTree.dispose();
-		}
+		testContext.dispose();
 		shell.dispose();
 	}
 
@@ -180,10 +176,11 @@ public class NavigatableTest {
 	}
 
 	private void assertSelectedItemIndex(int index) {
-		Adapter data = ((Adapter)testContext.getTree().getItem(index).getData());
-		Object[] selection = testContext.getCurrentSelection();
-		assertEquals(1, selection.length);
-		assertTrue(data == selection[0]);
+		Object data = testContext.getTree().getItem(index).getData();
+		assertNotNull(data);
+		Object[] currentSelection = testContext.getCurrentSelection();
+		assertEquals(1, currentSelection.length);
+		assertTrue(data == currentSelection[0]);
 	}
 
 	private void assertAllNextItems(TestNavigatable navigatable, TestContext context) {
