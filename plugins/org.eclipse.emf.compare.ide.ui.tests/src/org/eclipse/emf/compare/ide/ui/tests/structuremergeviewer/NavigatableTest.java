@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo and others.
+ * Copyright (c) 2014, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - extraction of nested classes, additional tests
+ *     Martin Fleck - bug 518572
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer;
 
@@ -176,7 +177,7 @@ public class NavigatableTest {
 	}
 
 	private void assertSelectedItemIndex(int index) {
-		Object data = testContext.getTree().getItem(index).getData();
+		Object data = testContext.getElement(index);
 		assertNotNull(data);
 		Object[] currentSelection = testContext.getCurrentSelection();
 		assertEquals(1, currentSelection.length);
@@ -197,16 +198,16 @@ public class NavigatableTest {
 	}
 
 	private void assertNextIterations(TestNavigatable navigatable, TestContext context, int startingElement) {
-		TreeItem previousSelection = context.getItem(startingElement);
+		Object previousSelection = context.getElement(startingElement);
 		for (int expectedElement = startingElement + 1; expectedElement <= context
 				.getNumberOfNodes(); expectedElement++) {
-			TreeItem nextItem = navigatable.getNextItem(previousSelection);
+			Object nextItem = navigatable.getNextItem(previousSelection);
 			StringBuilder messageBuilder = new StringBuilder();
 			messageBuilder.append("Error with configuration: Starting iteration point=").append( //$NON-NLS-1$
-					startingElement).append(", previsous item=").append(previousSelection.getText()); //$NON-NLS-1$
+					startingElement).append(", previous item=").append(previousSelection.toString()); //$NON-NLS-1$
 			assertNotNull(messageBuilder.toString(), nextItem);
 			assertEquals(messageBuilder.toString(), expectedElement,
-					Integer.valueOf(nextItem.getText()).intValue());
+					Integer.valueOf(nextItem.toString()).intValue());
 			previousSelection = nextItem;
 		}
 		assertNull(navigatable.getNextItem(previousSelection));
@@ -227,18 +228,22 @@ public class NavigatableTest {
 
 	private void assertPreviousIterations(TestNavigatable navigatable, TestContext context,
 			int startingElement) {
-		TreeItem previousSelection = context.getItem(startingElement);
+		Object previousSelection = context.getElement(startingElement);
 		for (int expectedElement = startingElement - 1; expectedElement >= 0; expectedElement--) {
-			TreeItem previousItem = navigatable.getPreviousItem(previousSelection);
+			Object previousItem = navigatable.getPreviousItem(previousSelection);
 			StringBuilder messageBuilder = new StringBuilder();
 			messageBuilder.append("Error with configuration: Starting iteration point=").append( //$NON-NLS-1$
-					startingElement).append(", previsous item=").append(previousSelection.getText()); //$NON-NLS-1$
+					startingElement).append(", previsous item=").append(previousSelection.toString()); //$NON-NLS-1$
 			assertNotNull(messageBuilder.toString(), previousItem);
 			assertEquals(messageBuilder.toString(), expectedElement,
-					Integer.valueOf(previousItem.getText()).intValue());
+					Integer.valueOf(previousItem.toString()).intValue());
 			previousSelection = previousItem;
 		}
-		assertNull(navigatable.getPreviousItem(previousSelection));
+		assertRoot(context, navigatable.getPreviousItem(previousSelection));
+	}
+
+	protected void assertRoot(TestContext context, Object object) {
+		assertEquals(context.getRoot(), object);
 	}
 
 	/**

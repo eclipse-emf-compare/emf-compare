@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Obeo and others.
+ * Copyright (c) 2014, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +8,17 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - extraction of nested classes, TreeItem creation 
+ *     Martin Fleck - bug 518572
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.common.collect.Lists;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -27,11 +31,13 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.WrappableTre
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.OpenEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 
 /**
  * Utils class used for creating the {@link Tree} and the {@link WrappableTreeViewer}.
@@ -47,7 +53,25 @@ final class TestContext {
 
 	private Tree swtTree;
 
-	private Map<Integer, TreeItem> itemRetriever;
+	/**
+	 * Artificial root element created for the element content provider.
+	 */
+	private Object root;
+
+	/**
+	 * Convenience map to retrieve elements by their counter number.
+	 */
+	private Map<Integer, Object> elementRetriever;
+
+	/**
+	 * Map to back the element content provider: Element -> Children.
+	 */
+	private Map<Object, List<Object>> elementChildren;
+
+	/**
+	 * Map to back the element content provider: Element -> Parent.
+	 */
+	private Map<Object, Object> elementParent;
 
 	private WrappableTreeViewer viewer;
 
@@ -58,7 +82,9 @@ final class TestContext {
 	public TestContext(Shell shell) {
 		super();
 		currentShell = shell;
-		this.itemRetriever = new HashMap<Integer, TreeItem>();
+		this.elementRetriever = new HashMap<Integer, Object>();
+		this.elementChildren = new HashMap<Object, List<Object>>();
+		this.elementParent = new HashMap<Object, Object>();
 	}
 
 	private Integer increment() {
@@ -69,8 +95,12 @@ final class TestContext {
 		return swtTree;
 	}
 
-	public TreeItem getItem(int id) {
-		return itemRetriever.get(Integer.valueOf(id));
+	public Object getRoot() {
+		return root;
+	}
+
+	public Object getElement(int id) {
+		return elementRetriever.get(Integer.valueOf(id));
 	}
 
 	public int getNumberOfNodes() {
@@ -82,7 +112,7 @@ final class TestContext {
 			swtTree.dispose();
 			swtTree = null;
 		}
-		itemRetriever.clear();
+		elementRetriever.clear();
 	}
 
 	/**
@@ -112,9 +142,8 @@ final class TestContext {
 	 */
 	public TestNavigatable buildTree(int depth, int numberOfChildren, boolean useStrings) {
 		if (swtTree == null) {
+			// create viewer and tree
 			swtTree = new Tree(currentShell, SWT.NONE);
-			swtTree.setData("root"); //$NON-NLS-1$
-			createSubNodes(swtTree, numberOfChildren, depth, useStrings);
 			viewer = new WrappableTreeViewer(swtTree);
 			viewer.addOpenListener(new IOpenListener() {
 				public void open(OpenEvent event) {
@@ -123,41 +152,84 @@ final class TestContext {
 					}
 				}
 			});
+
+			// create elements
+			root = swtTree;
+			elementChildren.put(root, createSubNodes(root, numberOfChildren, depth, useStrings));
+
+			// create content providers
 			AdapterFactory adapterFactory = mock(AdapterFactory.class);
-			EMFCompareStructureMergeViewerContentProvider contentProvider = new EMFCompareStructureMergeViewerContentProvider(
+			EMFCompareStructureMergeViewerContentProvider navigatableContentProvider = new EMFCompareStructureMergeViewerContentProvider(
 					adapterFactory, viewer);
-			return new TestNavigatable(viewer, contentProvider);
+
+			// init viewer
+			ITreeContentProvider viewerContentProvider = createElementContentProvider();
+			viewer.setContentProvider(viewerContentProvider);
+			viewer.setInput(root);
+			List<Object> rootChildren = elementChildren.get(root);
+			if (!rootChildren.isEmpty()) {
+				viewer.setSelection(new StructuredSelection(rootChildren.get(0)));
+			}
+
+			return new TestNavigatable(viewer, navigatableContentProvider);
 		} else {
 			throw new AssertionError("The tree can only be built once"); //$NON-NLS-1$
 		}
 	}
 
-	private void createSubNodes(Object parent, int numberOfChild, int depth, boolean useStrings) {
+	private ITreeContentProvider createElementContentProvider() {
+		return new ITreeContentProvider() {
+
+			public Object[] getElements(Object inputElement) {
+				return elementChildren.get(inputElement).toArray();
+			}
+
+			public Object[] getChildren(Object parentElement) {
+				return elementChildren.get(parentElement).toArray();
+			}
+
+			public Object getParent(Object element) {
+				return elementParent.get(element);
+			}
+
+			public boolean hasChildren(Object element) {
+				return !elementChildren.get(element).isEmpty();
+			}
+
+			public void dispose() {
+				// do nothing
+			}
+
+			public void inputChanged(Viewer viewers, Object oldInput, Object newInput) {
+				// do nothing
+			}
+		};
+	}
+
+	private List<Object> createSubNodes(Object parent, int numberOfChild, int depth, boolean useStrings) {
+		List<Object> children = Lists.newArrayList();
 		if (depth > 0) {
 			for (int childIndex = 0; childIndex < numberOfChild; childIndex++) {
-				final TreeItem item;
-				if (parent instanceof Tree) {
-					item = new TreeItem((Tree)parent, SWT.NONE);
-				} else {
-					item = new TreeItem((TreeItem)parent, SWT.NONE);
-				}
 				Integer increment = increment();
 				String name = String.valueOf(increment);
-				item.setText(name);
+				Object data = null;
 				if (useStrings) {
-					item.setData(name);
+					data = name;
 				} else {
 					Adapter adapter = mock(Adapter.class);
 					TreeNode notifier = mock(TreeNode.class);
 					Diff diff = mock(Diff.class);
 					when(adapter.getTarget()).thenReturn(notifier);
 					when(notifier.getData()).thenReturn(diff);
-					item.setData(adapter);
+					data = adapter;
 				}
-				itemRetriever.put(increment, item);
-				createSubNodes(item, numberOfChild, depth - 1, useStrings);
+				elementParent.put(data, parent);
+				children.add(data);
+				elementRetriever.put(increment, data);
+				elementChildren.put(data, createSubNodes(data, numberOfChild, depth - 1, useStrings));
 			}
 		}
+		return children;
 	}
 
 	/**
@@ -174,13 +246,13 @@ final class TestContext {
 		}
 
 		@Override
-		public TreeItem getNextItem(TreeItem previousItem) {
-			return super.getNextItem(previousItem);
+		public Object getNextItem(Object start) {
+			return super.getNextItem(start);
 		}
 
 		@Override
-		public TreeItem getPreviousItem(TreeItem previousItem) {
-			return super.getPreviousItem(previousItem);
+		public Object getPreviousItem(Object start) {
+			return super.getPreviousItem(start);
 		}
 
 	}

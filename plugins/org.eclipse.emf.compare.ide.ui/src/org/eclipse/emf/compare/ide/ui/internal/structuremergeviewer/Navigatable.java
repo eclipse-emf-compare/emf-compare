@@ -10,27 +10,31 @@
  *     Michael Borkowski - bug 462237, refactoring
  *     Simon Delisle - bug 511172
  *     Philip Langer - bug 509975
+ *     Martin Fleck - bug 518572
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
-import static org.eclipse.emf.compare.DifferenceState.UNRESOLVED;
 import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_ASYNC;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
+import com.google.common.collect.Lists;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.compare.INavigatable;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeNodeCompareInput;
+import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.swt.widgets.TreeItem;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
@@ -45,6 +49,10 @@ public class Navigatable implements INavigatable {
 
 	protected CallbackType uiSyncCallbackType = IN_UI_ASYNC;
 
+	private Object cachedParent;
+
+	private Object[] cachedChildren;
+
 	public Navigatable(WrappableTreeViewer viewer,
 			EMFCompareStructureMergeViewerContentProvider contentProvider) {
 		this.viewer = viewer;
@@ -54,9 +62,8 @@ public class Navigatable implements INavigatable {
 	public boolean selectChange(final int flag) {
 		contentProvider.runWhenReady(uiSyncCallbackType, new Runnable() {
 			public void run() {
-				TreeItem[] selection = viewer.getTree().getSelection();
-				TreeItem firstSelectedItem = firstOrNull(selection);
-				Object newSelection = calculateNextSelection(firstSelectedItem, flag);
+				Object firstSelectedElement = getFirstSelectedItem();
+				Object newSelection = calculateNextSelection(firstSelectedElement, flag);
 				if (newSelection != null) {
 					fireOpen(newSelection);
 				}
@@ -65,23 +72,21 @@ public class Navigatable implements INavigatable {
 		return false;
 	}
 
-	private static TreeItem firstOrNull(TreeItem[] items) {
-		if (items.length > 0) {
-			return items[0];
-		}
-		return null;
+	private Object getFirstSelectedItem() {
+		IStructuredSelection selection = (IStructuredSelection)viewer.getSelection();
+		return selection.getFirstElement();
 	}
 
-	private Object calculateNextSelection(TreeItem currentSelection, int flag) {
+	private Object calculateNextSelection(Object currentSelection, int flag) {
 		switch (flag) {
 			case NEXT_CHANGE:
 				return getNextDiff(thisOrFirstItem(currentSelection));
 			case PREVIOUS_CHANGE:
 				return getPreviousDiff(thisOrFirstItem(currentSelection));
 			case FIRST_CHANGE:
-				return getNextDiff(getFirstItemInTree());
+				return getNextDiff(getFirstItem());
 			case LAST_CHANGE:
-				return getPreviousDiff(getFirstItemInTree());
+				return getPreviousDiff(getFirstItem());
 			case NEXT_UNRESOLVED_CHANGE:
 				return getNextUnresolvedDiff(thisOrFirstItem(currentSelection));
 			default:
@@ -89,11 +94,11 @@ public class Navigatable implements INavigatable {
 		}
 	}
 
-	private TreeItem thisOrFirstItem(TreeItem item) {
-		if (item != null) {
-			return item;
+	private Object thisOrFirstItem(Object object) {
+		if (object != null) {
+			return object;
 		}
-		return getFirstItemInTree();
+		return getFirstItem();
 	}
 
 	/**
@@ -142,8 +147,7 @@ public class Navigatable implements INavigatable {
 	 * @see org.eclipse.compare.INavigatable#hasChange(int)
 	 */
 	public boolean hasChange(int changeFlag) {
-		TreeItem[] selection = viewer.getTree().getSelection();
-		TreeItem firstSelectedItem = selection.length > 0 ? selection[0] : null;
+		Object firstSelectedItem = getFirstSelectedItem();
 		switch (changeFlag) {
 			case NEXT_CHANGE:
 				return getNextDiff(thisOrFirstItem(firstSelectedItem)) != null;
@@ -152,7 +156,7 @@ public class Navigatable implements INavigatable {
 			case NEXT_UNRESOLVED_CHANGE:
 				return getNextUnresolvedDiff(thisOrFirstItem(firstSelectedItem)) != null;
 			case FIRST_CHANGE:
-				TreeItem firstItemInTree = getFirstItemInTree();
+				Object firstItemInTree = getFirstItem();
 				return firstItemInTree != null && getNextDiff(firstItemInTree) != null;
 			default:
 				throw new IllegalStateException();
@@ -160,199 +164,199 @@ public class Navigatable implements INavigatable {
 	}
 
 	/**
-	 * Returns, from the given TreeNode, the next TreeNode that contains a diff.
+	 * Returns, from the given item, the next item that contains a diff.
 	 * 
-	 * @param treeNode
-	 *            the given TreeNode for which we want to find the next.
-	 * @return the next TreeNode that contains a diff.
+	 * @param start
+	 *            the given item for which we want to find the next.
+	 * @return the next item that contains a diff.
 	 */
-	private Object getNextDiff(TreeItem start) {
-		return getNextData(start, Predicates.alwaysTrue());
+	private Object getNextDiff(Object start) {
+		return getNextItemWithDiff(start, false);
 	}
 
 	/**
-	 * Returns, from the given TreeNode, the previous TreeNode that contains a diff.
+	 * Returns, from the given item, the previous item that contains a diff.
 	 * 
-	 * @param treeNode
-	 *            the given TreeNode for which we want to find the previous.
-	 * @return the previous TreeNode that contains a diff.
+	 * @param start
+	 *            the given item for which we want to find the previous.
+	 * @return the previous item that contains a diff.
 	 */
-	private Object getPreviousDiff(TreeItem item) {
-		return getPreviousData(item, Predicates.alwaysTrue());
+	private Object getPreviousDiff(Object start) {
+		return getPreviousItemWithDiff(start);
 	}
 
 	/**
-	 * Returns, from the given TreeNode, the next TreeNode that contains an unresolved diff.
+	 * Returns, from the given item, the next item that contains an unresolved diff. This method supports
+	 * round-trip behavior, i.e., we start at the top after reaching bottom.
 	 * 
-	 * @param treeNode
-	 *            the given TreeNode for which we want to find the next unresolvable diff.
-	 * @return the previous TreeNode that contains an unresolvable diff.
+	 * @param start
+	 *            the given item for which we want to find the next unresolved diff.
+	 * @return the next item that contains an unresolved diff.
 	 */
-	private Object getNextUnresolvedDiff(TreeItem start) {
-		Object nextUnresolvedDiff = getNextData(start, hasState(UNRESOLVED));
+	private Object getNextUnresolvedDiff(Object start) {
+		Object nextUnresolvedDiff = getNextItemWithDiff(start, true);
 		if (nextUnresolvedDiff == null) {
 			// we don't have an unresolved diff AFTER the the current one (TreeItem start)
 			// thus, we look for the next unresolved diff starting from the beginning
-			nextUnresolvedDiff = getNextData(getFirstItemInTree(), hasState(UNRESOLVED));
+			nextUnresolvedDiff = getNextItemWithDiff(getFirstItem(), true);
 		}
 
 		return nextUnresolvedDiff;
 	}
 
 	/**
-	 * Returns the data of the next tree item meeting the supplied predicate
+	 * Returns, from the given item, the next item that contains a diff matching the supplied criteria.
 	 * 
 	 * @param start
-	 *            the TreeNode at which to start searching
-	 * @param predicate
-	 *            the predicate to match
-	 * @return the next matching TreeNode
+	 *            the item at which to start searching.
+	 * @param onlyUnresolvedDiff
+	 *            if true only items with unresolved diffs are considered.
+	 * @return the next matching item.
 	 */
-	private Object getNextData(TreeItem start, Predicate<? super Diff> predicate) {
-		TreeItem current = getNextItem(start);
-		while (current != null) {
-			EObject data = EMFCompareStructureMergeViewer.getDataOfTreeNodeOfAdapter(current.getData());
-			if (data instanceof Diff && predicate.apply((Diff)data)) {
-				return current.getData();
+	private Object getNextItemWithDiff(Object start, boolean onlyUnresolvedDiff) {
+		Object item = getNextItem(start);
+		while (item != null) {
+			if (hasDiff(item, onlyUnresolvedDiff)) {
+				return item;
 			}
-			current = getNextItem(current);
+			item = getNextItem(item);
 		}
 		return null;
 	}
 
 	/**
-	 * Returns the data of the previous tree item meeting the supplied predicate
+	 * Returns, from the given item, the previous item that contains a diff.
 	 * 
 	 * @param start
-	 *            the TreeNode at which to start searching
-	 * @param predicate
-	 *            the predicate to match
-	 * @return the previous matching TreeNode
+	 *            the item at which to start searching.
+	 * @return the previous matching item.
 	 */
-	private Object getPreviousData(TreeItem start, Predicate<? super Diff> predicate) {
-		TreeItem current = getPreviousItem(start);
-		while (current != null) {
-			EObject data = EMFCompareStructureMergeViewer.getDataOfTreeNodeOfAdapter(current.getData());
-			if (data instanceof Diff && predicate.apply((Diff)data)) {
-				return current.getData();
+	private Object getPreviousItemWithDiff(Object start) {
+		Object item = getPreviousItem(start);
+		while (item != null) {
+			if (hasDiff(item, false)) {
+				return item;
 			}
-			current = getPreviousItem(current);
+			item = getPreviousItem(item);
 		}
 		return null;
 	}
 
 	/**
-	 * Returns the first TreeItem
+	 * Returns whether the given item has a matching diff.
 	 * 
-	 * @return the first TreeItem
+	 * @param item
+	 *            the item to test.
+	 * @param onlyUnresolved
+	 *            if true only an unresolved diff is considered.
+	 * @return true if the given item has a matching diff, false otherwise.
 	 */
-	private TreeItem getFirstItemInTree() {
-		final TreeItem startingItem;
-		TreeItem[] roots = viewer.getTree().getItems();
-		if (roots != null && roots.length > 0) {
-			startingItem = roots[0];
-		} else {
-			startingItem = null;
+	private boolean hasDiff(Object item, boolean onlyUnresolved) {
+		EObject data = EMFCompareStructureMergeViewer.getDataOfTreeNodeOfAdapter(item);
+		if (data instanceof Diff) {
+			Diff diff = (Diff)data;
+			return !onlyUnresolved || diff.getState() == DifferenceState.UNRESOLVED;
 		}
-		return startingItem;
+		return false;
 	}
 
 	/**
-	 * Starting at the given TreeItem, returns the next item in the tree.
+	 * Returns the first item in the viewer, i.e., it's input.
+	 * 
+	 * @return the first item in the viewer
+	 */
+	private Object getFirstItem() {
+		return viewer.getInput();
+	}
+
+	/**
+	 * Starting at the given item, returns the next item in the viewer.
 	 * 
 	 * @param start
-	 *            the item for which to find the next one
-	 * @return the next TreeItem
+	 *            the item for which to find the next one.
+	 * @return the next item.
 	 */
 	// Protected for testing purposes
-	protected TreeItem getNextItem(TreeItem start) {
-		viewer.createChildren(start);
-		if (hasChildren(start)) {
-			return start.getItem(0);
-		} else if (hasNextSibling(start)) {
-			return getNextSibling(start);
+	protected Object getNextItem(Object start) {
+		Object[] children = getChildren(start);
+		if (children.length > 0) {
+			return children[0];
 		} else {
-			return getNextAncestor(start);
+			Object nextSibling = getNextSibling(start);
+			if (nextSibling != null) {
+				return nextSibling;
+			} else {
+				return getNextAncestor(start);
+			}
 		}
 	}
 
 	/**
-	 * Checks whether the given item has children.
+	 * Returns the next ancestor of the given item. "Next" means that it is the closest available sibling for
+	 * one of the given item's ancestors.
 	 * 
 	 * @param item
-	 *            the item to check
-	 * @return whether it has children
-	 */
-	private boolean hasChildren(TreeItem item) {
-		return item.getItems().length != 0;
-	}
-
-	/**
-	 * Checks whether the given item has a next sibling.
-	 * 
-	 * @param item
-	 *            the item to check
-	 * @return whether it has a next sibling
-	 */
-	private boolean hasNextSibling(TreeItem item) {
-		return getNextSibling(item) != null;
-	}
-
-	/**
-	 * Returns the next ancestor of the given TreeItem. "Next" means that it is the closest available sibling
-	 * for one of the given TreeNode's ancestors.
-	 * 
-	 * @param item
-	 *            the item for which to get the next ancestor
+	 *            the item for which to get the next ancestor.
 	 * @return the next ancestor
 	 */
-	private TreeItem getNextAncestor(TreeItem item) {
-		TreeItem nextAncestor = null;
-		TreeItem ancestor = item.getParentItem();
+	private Object getNextAncestor(Object item) {
+		Object nextAncestor = null;
+		Object ancestor = getAncestor(item);
 		while (ancestor != null && nextAncestor == null) {
 			nextAncestor = getNextSibling(ancestor);
-			ancestor = ancestor.getParentItem();
+			ancestor = getAncestor(ancestor);
 		}
 		return nextAncestor;
 	}
 
 	/**
-	 * Starting at the given TreeItem, returns the previous item in the tree.
+	 * Returns the ancestor of the given item, i.e., its parent.
+	 * 
+	 * @param item
+	 *            the item for which to get the ancestor.
+	 * @return the ancestor item.
+	 */
+	private Object getAncestor(Object item) {
+		Object ancestor = viewer.getParentElement(item);
+		if (ancestor != null) {
+			return ancestor;
+		}
+		// use difference group hidden by the content provider as parent, if available
+		return getDifferenceGroup(item);
+	}
+
+	/**
+	 * Starting at the given element, returns the previous item in the viewer.
 	 * 
 	 * @param start
-	 *            the item for which to find the previous one
-	 * @return the previous TreeItem
+	 *            the item for which to find the previous one.
+	 * @return the previous item.
 	 */
 	// Protected for testing purposes
-	protected TreeItem getPreviousItem(TreeItem start) {
-		if (hasPreviousSibling(start)) {
-			return getLastDescendant(getPreviousSibling(start));
+	protected Object getPreviousItem(Object start) {
+		Object previousSibling = getPreviousSibling(start);
+		if (previousSibling != null) {
+			return getLastDescendant(previousSibling);
 		} else {
-			return start.getParentItem();
+			Object parent = getAncestor(start);
+			if (parent != null) {
+				return parent;
+			} else {
+				return null;
+			}
 		}
 	}
 
 	/**
-	 * Checks whether the given item has a previous sibling.
+	 * Returns the last item of a depth-first search starting at the given item
 	 * 
-	 * @param item
-	 *            the item to check
-	 * @return whether it has a previous sibling
+	 * @param parent
+	 *            the starting item.
+	 * @return the last descendant of the parent.
 	 */
-	private boolean hasPreviousSibling(TreeItem item) {
-		return getPreviousSibling(item) != null;
-	}
-
-	/**
-	 * Returns the last item of a depth-first search starting at the given TreeItem
-	 * 
-	 * @param input
-	 *            the starting item
-	 * @return the resulting item
-	 */
-	private TreeItem getLastDescendant(TreeItem input) {
-		TreeItem[] children = getChildren(input);
-		TreeItem deepestChild = input;
+	private Object getLastDescendant(Object parent) {
+		Object[] children = getChildren(parent);
+		Object deepestChild = parent;
 		while (children.length > 0) {
 			deepestChild = children[children.length - 1];
 			children = getChildren(deepestChild);
@@ -361,30 +365,44 @@ public class Navigatable implements INavigatable {
 	}
 
 	/**
-	 * Return a (possibly empty) array of TreeItem which are the children of the input item. This loads the
-	 * children in the tree before returning the array to avoid passing over hidden items (Bug 511172).
+	 * Return a (possibly empty) array of items which are the children of the input item.
 	 * 
 	 * @param input
-	 *            TreeItem that you want to have the children
-	 * @return Direct item children of the input
+	 *            the item for which we to find the children.
+	 * @return direct children of the input item.
 	 */
-	private TreeItem[] getChildren(TreeItem input) {
-		viewer.createChildren(input);
-		return input.getItems();
+	private Object[] getChildren(Object input) {
+		if (input == cachedParent) {
+			return cachedChildren;
+		}
+
+		cachedParent = input;
+		if (input instanceof IDifferenceGroup) {
+			cachedChildren = getChildren((IDifferenceGroup)input);
+		} else {
+			cachedChildren = viewer.getFilteredChildren(input);
+		}
+
+		return cachedChildren;
 	}
 
 	/**
-	 * Returns the previous sibling of the given TreeItem.
+	 * Returns the previous sibling of the given item.
 	 * 
 	 * @param item
-	 *            the item to get the sibling for
-	 * @return the sibling
+	 *            the item for which to get the sibling.
+	 * @return the previous sibling item.
 	 */
-	private TreeItem getPreviousSibling(TreeItem item) {
-		List<TreeItem> siblings = Arrays.asList(getSiblings(item));
-		int indexOfCurrent = siblings.indexOf(item);
-		if (indexOfCurrent > 0) {
-			return siblings.get(indexOfCurrent - 1);
+	private Object getPreviousSibling(Object item) {
+		Object[] siblings = getSiblings(item);
+		for (int i = 0; i < siblings.length; ++i) {
+			if (siblings[i] == item) {
+				if (--i >= 0) {
+					return siblings[i];
+				} else {
+					return null;
+				}
+			}
 		}
 		return null;
 	}
@@ -394,29 +412,76 @@ public class Navigatable implements INavigatable {
 	 * 
 	 * @param item
 	 *            the item to get the sibling for
-	 * @return the sibling
+	 * @return the next sibling item.
 	 */
-	private TreeItem getNextSibling(TreeItem item) {
-		List<TreeItem> siblings = Arrays.asList(getSiblings(item));
-		int indexOfItem = siblings.indexOf(item);
-		if (indexOfItem >= 0 && indexOfItem < siblings.size() - 1) {
-			return siblings.get(indexOfItem + 1);
+	private Object getNextSibling(Object item) {
+		Object[] siblings = getSiblings(item);
+		for (int i = 0; i < siblings.length; ++i) {
+			if (siblings[i] == item) {
+				if (++i < siblings.length) {
+					return siblings[i];
+				} else {
+					return null;
+				}
+			}
 		}
 		return null;
 	}
 
 	/**
-	 * Returns the siblings for a given TreeItem (including the item itself).
+	 * Returns the siblings for a given item (including the item itself).
 	 * 
 	 * @param item
-	 *            the item to get the siblings for
-	 * @return the siblings
+	 *            the item for which to get the siblings.
+	 * @return the sibling items.
 	 */
-	private TreeItem[] getSiblings(TreeItem item) {
-		if (item.getParentItem() == null) {
-			return viewer.getTree().getItems();
+	private Object[] getSiblings(Object item) {
+		Object parent = getAncestor(item);
+		if (parent == null) {
+			return new Object[] {item };
 		} else {
-			return item.getParentItem().getItems();
+			return getChildren(parent);
 		}
+	}
+
+	/**
+	 * Returns the difference group associated with the given item.
+	 * 
+	 * @param item
+	 *            the item for which we want to get the difference group.
+	 * @return the associated difference group or null.
+	 */
+	private static IDifferenceGroup getDifferenceGroup(Object item) {
+		if (item instanceof TreeNodeCompareInput) {
+			TreeNodeCompareInput treeNodeCompareInput = (TreeNodeCompareInput)item;
+			Notifier target = treeNodeCompareInput.getTarget();
+			IDifferenceGroup differenceGroup = (IDifferenceGroup)EcoreUtil.getExistingAdapter(target,
+					IDifferenceGroup.class);
+			return differenceGroup;
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the children of the given difference group.
+	 * 
+	 * @param differenceGroup
+	 *            the difference group for which we want to get the children.
+	 * @return a non-null array of children elements.
+	 */
+	private static Object[] getChildren(IDifferenceGroup differenceGroup) {
+		if (differenceGroup == null) {
+			return new Object[0];
+		}
+
+		List<Object> children = Lists.newArrayList();
+		for (TreeNode child : differenceGroup.getChildren()) {
+			for (Adapter adapter : child.eAdapters()) {
+				if (adapter instanceof TreeNodeCompareInput) {
+					children.add(adapter);
+				}
+			}
+		}
+		return children.toArray();
 	}
 }

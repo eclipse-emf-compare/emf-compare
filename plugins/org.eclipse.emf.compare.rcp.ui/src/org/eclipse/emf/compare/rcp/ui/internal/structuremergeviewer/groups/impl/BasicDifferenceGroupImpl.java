@@ -278,6 +278,7 @@ public class BasicDifferenceGroupImpl extends AdapterImpl implements IDifference
 		doBuildSubTrees();
 		customize(children);
 		registerCrossReferenceAdapter(children);
+		setTarget(comparison);
 	}
 
 	/**
