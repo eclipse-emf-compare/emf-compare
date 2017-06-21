@@ -1093,10 +1093,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		if (!getControl().isDisposed()) { // guard against disposal
 			final EMFCompareConfiguration config = getCompareConfiguration();
 
+			ComposedAdapterFactory oldAdapterFactory = fAdapterFactory;
 			// re-initialize adapter factory due to new comparison
-			if (fAdapterFactory != null) {
-				fAdapterFactory.dispose();
-			}
 			fAdapterFactory = initAdapterFactory(comparison);
 
 			// clear cache for new comparison
@@ -1172,11 +1170,15 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 						public void run() {
 							fHandlerService.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
 							fHandlerService.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
-
 						}
 					});
 				}
 			});
+
+			// Disposing this at the start of this method would meet frequent CME
+			if (oldAdapterFactory != null) {
+				oldAdapterFactory.dispose();
+			}
 		}
 	}
 
