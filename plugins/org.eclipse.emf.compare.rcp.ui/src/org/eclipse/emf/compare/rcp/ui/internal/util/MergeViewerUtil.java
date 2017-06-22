@@ -218,14 +218,23 @@ public final class MergeViewerUtil {
 		switch (side) {
 			case ANCESTOR:
 				EObject origin = match.getOrigin();
+				if (origin == null) {
+					return null;
+				}
 				resource = ((InternalEObject)origin).eDirectResource();
 				break;
 			case LEFT:
 				EObject left = match.getLeft();
+				if (left == null) {
+					return null;
+				}
 				resource = ((InternalEObject)left).eDirectResource();
 				break;
 			case RIGHT:
 				EObject right = match.getRight();
+				if (right == null) {
+					return null;
+				}
 				resource = ((InternalEObject)right).eDirectResource();
 				break;
 			default:
