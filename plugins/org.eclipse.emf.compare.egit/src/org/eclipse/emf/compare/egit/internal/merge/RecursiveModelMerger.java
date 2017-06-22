@@ -434,6 +434,11 @@ public class RecursiveModelMerger extends RecursiveMerger {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Registering handled file " + filePath); //$NON-NLS-1$
 				}
+
+				if (merger.handledPaths.contains(filePath)) {
+					continue;
+				}
+
 				if (filePath != null) {
 					merger.modifiedFiles.add(filePath);
 					merger.handledPaths.add(filePath);
@@ -454,8 +459,12 @@ public class RecursiveModelMerger extends RecursiveMerger {
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("Merged non-modified file: " + filePath); //$NON-NLS-1$
 					}
-				} else if (filePath != null && status.getSeverity() != IStatus.OK
-						&& !merger.makeInSync.contains(filePath)) {
+				} else if (filePath != null && status.getSeverity() != IStatus.OK) {
+					if (merger.makeInSync.contains(filePath)) {
+						// The conflict has priority over the merge. This only can happen when
+						// the comparison could not finish successful.
+						merger.makeInSync.remove(filePath);
+					}
 					merger.unmergedPaths.add(filePath);
 					merger.mergeResults.put(filePath,
 							new MergeResult<>(Collections.<RawText> emptyList()));
@@ -564,7 +573,7 @@ public class RecursiveModelMerger extends RecursiveMerger {
 	}
 
 	private boolean registerMergedPath(String path) {
-		if (path != null) {
+		if (path != null && !unmergedPaths.contains(path)) {
 			return makeInSync.add(path);
 		}
 		return false;
