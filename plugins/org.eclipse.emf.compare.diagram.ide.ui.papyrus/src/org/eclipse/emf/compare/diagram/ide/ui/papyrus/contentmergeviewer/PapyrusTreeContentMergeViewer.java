@@ -11,14 +11,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.not;
-import static com.google.common.collect.Iterables.any;
-import static java.util.Arrays.asList;
-
 import com.google.common.collect.ImmutableList;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -35,6 +37,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.TreeMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.provider.IMergeViewerItemProviderConfiguration;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -57,11 +60,23 @@ public class PapyrusTreeContentMergeViewer extends TreeContentMergeViewer {
 	private static final int MAX_SEARCH_LEVEL = 20;
 
 	/**
-	 * Map of objects to {@link PapyrusContentProviderMergeViewerItem Papyrus merge viewer items } used when
+	 * Map of objects to {@link PapyrusContentProviderMergeViewerItem Papyrus merge viewer items} used when
 	 * changing the selection in order to find the merge viewer item to be selected when a specific object
 	 * (model element or diff) is to be revealed.
 	 */
 	private Map<Object, IMergeViewerItem> cachedMapForSelection;
+
+	/**
+	 * A queue of computations for computing the content tree items in the {@linked #getLeftMergeViewer()
+	 * right merge viewer}.
+	 */
+	private LinkedList<AbstractContentFunction> leftContentComputations;
+
+	/**
+	 * A queue of computations for computing the content tree items in the {@linked #getRightMergeViewer()
+	 * left merge viewer}.
+	 */
+	private LinkedList<AbstractContentFunction> rightContentComputations;
 
 	/**
 	 * Constructor.
@@ -102,7 +117,8 @@ public class PapyrusTreeContentMergeViewer extends TreeContentMergeViewer {
 	}
 
 	@Override
-	protected IMergeViewerItemProviderConfiguration createMergeViewerItemProviderConfiguration(MergeViewerSide side) {
+	protected IMergeViewerItemProviderConfiguration createMergeViewerItemProviderConfiguration(
+			MergeViewerSide side) {
 		ComposedAdapterFactory factory = new ComposedAdapterFactory(new AdapterFactory[] {
 				new PapyrusFacetContentProviderWrapperAdapterFactory(), getAdapterFactory(), });
 		return new MergeViewerItemProviderConfiguration(factory, getDifferenceGroupProvider(),
@@ -174,6 +190,10 @@ public class PapyrusTreeContentMergeViewer extends TreeContentMergeViewer {
 			getAncestorMergeViewer().setInput(ancestor);
 			getLeftMergeViewer().setInput(left);
 			getRightMergeViewer().setInput(right);
+
+			leftContentComputations = null;
+			rightContentComputations = null;
+			cachedMapForSelection = null;
 		}
 
 		IMergeViewerItem leftInitialItem = null;
@@ -204,112 +224,6 @@ public class PapyrusTreeContentMergeViewer extends TreeContentMergeViewer {
 	}
 
 	/**
-	 * Caches the tree viewer content given by the objects <code>left</code> and <code>right</code>, if we
-	 * haven't built a cache yet.
-	 * <p>
-	 * The caching builds a {@link #cachedMapForSelection map} of objects to be objects of the tree and their
-	 * {@link IMergeViewerItem} that represent those objects.
-	 * </p>
-	 * 
-	 * @param left
-	 *            the left object, which must be a {@link ICompareAccessor}.
-	 * @param right
-	 *            the right object, which must be a {@link ICompareAccessor}.
-	 */
-	private void cacheTreeViewerContentIfNecessary(Object left, Object right) {
-		if (cachedMapForSelection != null || notICompareAccessor(left, right)) {
-			// we already have a cache or can't build one anyway
-			return;
-		}
-
-		cachedMapForSelection = new HashMap<Object, IMergeViewerItem>();
-
-		cacheTreeViewerContent((ICompareAccessor)left, getLeftMergeViewer(), MergeViewerSide.LEFT);
-		cacheTreeViewerContent((ICompareAccessor)right, getRightMergeViewer(), MergeViewerSide.RIGHT);
-	}
-
-	/**
-	 * Specifies whether the given <code>objects</code> are all instances of {@link ICompareAccessor}.
-	 * 
-	 * @param objects
-	 *            The objects to check.
-	 * @return <code>true</code> if they all are instances of {@link ICompareAccessor}, <code>false</code>
-	 *         otherwise.
-	 */
-	private boolean notICompareAccessor(Object... objects) {
-		return any(asList(objects), not(instanceOf(ICompareAccessor.class)));
-	}
-
-	/**
-	 * Traverses all {@link ITreeContentProvider#getElements(Object) elements} of the given
-	 * <code>accessor</code> and caches its content for the given <code>side</code>.
-	 * <p>
-	 * Note that this may be an expensive method, if the model is very large.
-	 * </p>
-	 * 
-	 * @param accessor
-	 *            The accessor representing the content to be cached.
-	 * @param viewer
-	 *            The viewer for obtaining the content provider from.
-	 * @param side
-	 *            The side of the viewer.
-	 */
-	private void cacheTreeViewerContent(ICompareAccessor accessor, TreeMergeViewer viewer,
-			MergeViewerSide side) {
-		final ITreeContentProvider provider = ITreeContentProvider.class.cast(viewer.getContentProvider());
-		for (Object element : provider.getElements(accessor)) {
-			if (element instanceof IMergeViewerItem) {
-				final IMergeViewerItem item = IMergeViewerItem.class.cast(element);
-				cacheTreeViewerContent(item, provider, side, MAX_SEARCH_LEVEL);
-			}
-		}
-	}
-
-	/**
-	 * Caches the given <code>item</code> and its children determined by the given <code>provider</code>.
-	 * 
-	 * @param item
-	 *            The item to be cached.
-	 * @param provider
-	 *            The content provider for determining the children of <code>item</code>.
-	 * @param side
-	 *            The merge viewer side.
-	 * @param maxSearchLevel
-	 *            The maximum search level.
-	 */
-	private void cacheTreeViewerContent(IMergeViewerItem item, ITreeContentProvider provider,
-			MergeViewerSide side, int maxSearchLevel) {
-		if (maxSearchLevel == 0) {
-			return;
-		}
-
-		cacheItem(item, side);
-
-		for (Object child : provider.getChildren(item)) {
-			if (child instanceof IMergeViewerItem) {
-				final IMergeViewerItem childItem = (IMergeViewerItem)child;
-				cacheTreeViewerContent(childItem, provider, side, maxSearchLevel - 1);
-			}
-		}
-	}
-
-	/**
-	 * Caches the given <code>item</code> for the given side.
-	 * 
-	 * @param item
-	 *            The item to cache.
-	 * @param side
-	 *            The side.
-	 */
-	private void cacheItem(IMergeViewerItem item, MergeViewerSide side) {
-		if (MergeViewerSide.LEFT.equals(side) && item.getLeft() != null) {
-			cachedMapForSelection.put(item.getLeft(), item);
-		} else if (MergeViewerSide.RIGHT.equals(side) && item.getRight() != null) {
-			cachedMapForSelection.put(item.getRight(), item);
-		}
-	}
-
-	/**
 	 * Sets the selection according to the accessor.
 	 * 
 	 * @param accessor
@@ -325,10 +239,7 @@ public class PapyrusTreeContentMergeViewer extends TreeContentMergeViewer {
 
 		// if that didn't work (empty selection), use cache to find correct merge viewer item
 		if (viewer.getSelection().isEmpty()) {
-			// init cache, if necessary
-			cacheTreeViewerContentIfNecessary(getLeftMergeViewer().getInput(),
-					getRightMergeViewer().getInput());
-			final IMergeViewerItem itemToBeSelected = getItemToBeSelectedFromCache(initialItem);
+			IMergeViewerItem itemToBeSelected = getItemToBeSelected(initialItem);
 			if (itemToBeSelected != null) {
 				viewer.setSelection(new StructuredSelection(itemToBeSelected), true);
 			} else {
@@ -338,28 +249,342 @@ public class PapyrusTreeContentMergeViewer extends TreeContentMergeViewer {
 	}
 
 	/**
-	 * Obtains the item for the selection in the tree viewers for the given <code>item</code>.
+	 * Determines the item to select from the corresponding side viewer, given an input item.
 	 * 
 	 * @param item
-	 *            The item to be selected.
-	 * @return The item that can be used for selection in the merge viewer trees.
+	 *            the input item.
+	 * @return the item to be selected.
 	 */
-	private IMergeViewerItem getItemToBeSelectedFromCache(IMergeViewerItem item) {
-		IMergeViewerItem itemToBeSelected = null;
-		if (MergeViewerSide.LEFT.equals(item.getSide()) && item.getLeft() != null) {
-			itemToBeSelected = cachedMapForSelection.get(item.getLeft());
-		} else if (MergeViewerSide.RIGHT.equals(item.getSide()) && item.getRight() != null) {
-			itemToBeSelected = cachedMapForSelection.get(item.getRight());
+	private IMergeViewerItem getItemToBeSelected(IMergeViewerItem item) {
+		MergeViewerSide side = item.getSide();
+		Object itemValue = item.getSideValue(side);
+		IMergeViewerItem result;
+		if (cachedMapForSelection == null) {
+			cachedMapForSelection = new HashMap<>();
+			result = null;
+		} else {
+			result = cachedMapForSelection.get(itemValue);
 		}
-		return itemToBeSelected;
+
+		if (result == null) {
+			LinkedList<AbstractContentFunction> contentComputations;
+
+			switch (side) {
+				case LEFT:
+					if (leftContentComputations == null) {
+						leftContentComputations = new LinkedList<>();
+						leftContentComputations.add(new ElementFunction(side, getLeftMergeViewer(),
+								leftContentComputations, cachedMapForSelection));
+					}
+					contentComputations = leftContentComputations;
+					break;
+
+				case RIGHT:
+					if (rightContentComputations == null) {
+						rightContentComputations = new LinkedList<>();
+						rightContentComputations.add(new ElementFunction(side, getRightMergeViewer(),
+								rightContentComputations, cachedMapForSelection));
+					}
+					contentComputations = rightContentComputations;
+					break;
+
+				default:
+					throw new IllegalArgumentException();
+			}
+
+			Collection<Object> containers = getContainers(itemValue);
+			if (!containers.isEmpty()) {
+				// move necessary computations to the front
+				List<AbstractContentFunction> containerComputations = extractComputations(contentComputations,
+						containers);
+				contentComputations.addAll(0, containerComputations);
+			}
+
+			// compute item
+			while (!contentComputations.isEmpty()) {
+				result = contentComputations.removeFirst().apply(itemValue, containers);
+				if (result != null) {
+					break;
+				}
+			}
+		}
+
+		return result;
 	}
 
 	@Override
 	protected void handleDispose(DisposeEvent event) {
 		if (cachedMapForSelection != null) {
-			this.cachedMapForSelection.clear();
-			this.cachedMapForSelection = null;
+			cachedMapForSelection = null;
 		}
+
 		super.handleDispose(event);
+	}
+
+	/**
+	 * Extracts all content functions for the given objects from the computation list.
+	 * 
+	 * @param computations
+	 *            computation list from which functions are extracted.
+	 * @param values
+	 *            values specifying which functions should be extracted.
+	 * @return Non-null list of computations covering the given objects.
+	 */
+	private List<AbstractContentFunction> extractComputations(
+			LinkedList<AbstractContentFunction> computations, Collection<Object> values) {
+		List<AbstractContentFunction> extractedComputations = new ArrayList<>();
+		Iterator<AbstractContentFunction> computationsIterator = computations.iterator();
+		while (computationsIterator.hasNext()) {
+			AbstractContentFunction contentFuction = computationsIterator.next();
+			if (values.contains(contentFuction.getValue())) {
+				computationsIterator.remove();
+				extractedComputations.add(contentFuction);
+			}
+		}
+		return extractedComputations;
+	}
+
+	/**
+	 * Returns all EObject containers for the given value, if the given object is an EObject.
+	 * 
+	 * @param eObject
+	 *            eObject value.
+	 * @return Non-null collection of containers.
+	 */
+	private Collection<Object> getContainers(Object eObject) {
+		Collection<Object> containers;
+		if (eObject instanceof EObject) {
+			containers = new HashSet<>();
+			for (EObject container = ((EObject)eObject).eContainer(); container != null; container = container
+					.eContainer()) {
+				containers.add(container);
+			}
+		} else {
+			containers = Collections.emptySet();
+		}
+		return containers;
+	}
+
+	/**
+	 * A function for computing the items in the content tree induced by an item provider. Instances are
+	 * managed in a {@link #contentComputations} queue and are processed to update the {@linked #selections
+	 * selections} cache.
+	 * 
+	 * @see PapyrusTreeContentMergeViewer#getItemToBeSelected(IMergeViewerItem)
+	 */
+	private abstract static class AbstractContentFunction {
+		/**
+		 * The side for which the computation is being done.
+		 */
+		protected final MergeViewerSide side;
+
+		/**
+		 * The tree content provider which induces the content tree.
+		 */
+		protected final ITreeContentProvider provider;
+
+		/**
+		 * The queue of computations being managed.
+		 * 
+		 * @see PapyrusTreeContentMergeViewer#leftContentComputations
+		 * @see PapyrusTreeContentMergeViewer#rightContentComputations
+		 */
+		protected final LinkedList<AbstractContentFunction> contentComputations;
+
+		/**
+		 * The selections being cached.
+		 * 
+		 * @see PapyrusTreeContentMergeViewer#selections
+		 */
+		protected final Map<Object, IMergeViewerItem> selections;
+
+		/**
+		 * Creates and instance for a given side that induces content based on the given providers and manages
+		 * the queue of content computations, updating the selections.
+		 * 
+		 * @param side
+		 *            the side for which the content is being computed.
+		 * @param provider
+		 *            the provider used to induce content.
+		 * @param contentComputations
+		 *            the queue of computations being managed.
+		 * @param selections
+		 *            the selection cache being managed.
+		 */
+		protected AbstractContentFunction(MergeViewerSide side, ITreeContentProvider provider,
+				LinkedList<AbstractContentFunction> contentComputations,
+				Map<Object, IMergeViewerItem> selections) {
+			this.side = side;
+			this.provider = provider;
+			this.contentComputations = contentComputations;
+			this.selections = selections;
+		}
+
+		/**
+		 * Computes new content and if any of the new content item matches the given value, returns the
+		 * corresponding item from the side viewer. The {@link #contentComputations queue} is updated with
+		 * functions for the new content items. Any new item with a value that matches one of the containers
+		 * is placed at the front of the queue, rather than the back.
+		 * 
+		 * @param matchValue
+		 *            the value to match.
+		 * @param containers
+		 *            the items that are of high priority to process first.
+		 * @return the corresponding side viewer item for the match value, or null.
+		 */
+		public abstract IMergeViewerItem apply(Object matchValue, Collection<?> containers);
+
+		/**
+		 * Returns the value for which content will be computed.
+		 * 
+		 * @return the value for which content will be computed.
+		 */
+		public abstract Object getValue();
+
+		/**
+		 * A base helper method that does the computation needed by {@link #apply(Object, Collection)}.
+		 * 
+		 * @param matchValue
+		 *            the value to be matched.
+		 * @param containers
+		 *            the items that are of high priority to process first.
+		 * @param values
+		 *            the new content items to be processed.
+		 * @param depth
+		 *            the current tree depth of the traversal.
+		 * @return the corresponding side viewer item for the match value, or null.
+		 */
+		protected IMergeViewerItem apply(Object matchValue, Collection<?> containers, Object[] values,
+				int depth) {
+			IMergeViewerItem result = null;
+			for (Object element : values) {
+				if (element instanceof IMergeViewerItem) {
+					final IMergeViewerItem item = (IMergeViewerItem)element;
+					Object sideValue = item.getSideValue(side);
+
+					// If we don't yet have a result, and the new value is equal to the matching value, then
+					// cache it as the result.
+					if (result == null) {
+						if (sideValue != null && sideValue.equals(matchValue)) {
+							result = item;
+						}
+					}
+
+					// Create a new child function for the given item and add it to the front or the back of
+					// the queue depending on whether the high priority containers include the item's side
+					// value. So in general the content is build breadth first, but the subtree of the
+					// containers is processed depth first.
+					ChildFunction childFunction = new ChildFunction(side, provider, item, depth,
+							contentComputations, selections);
+					if (containers.contains(sideValue)) {
+						contentComputations.addFirst(childFunction);
+					} else {
+						contentComputations.addLast(childFunction);
+
+					}
+				}
+			}
+			return result;
+		}
+	}
+
+	/**
+	 * A content function that computes the root elements of a side viewer.
+	 */
+	private static final class ElementFunction extends AbstractContentFunction {
+		/**
+		 * The input object of the side viewer.
+		 */
+		private final Object input;
+
+		/**
+		 * Creates and instance for a given side viewer that induces content based on the viewer's provider
+		 * and manages the queue of content computations, updating the selections.
+		 * 
+		 * @param side
+		 *            the side for which the content is being computed.
+		 * @param viewer
+		 *            the side viewer for which to induce content.
+		 * @param contentComputations
+		 *            the queue of computations being managed.
+		 * @param selections
+		 *            the selection cache being managed.
+		 */
+		private ElementFunction(MergeViewerSide side, TreeMergeViewer viewer,
+				LinkedList<AbstractContentFunction> contentComputations,
+				Map<Object, IMergeViewerItem> selections) {
+			super(side, (ITreeContentProvider)viewer.getContentProvider(), contentComputations, selections);
+			this.input = viewer.getInput();
+		}
+
+		@Override
+		public Object getValue() {
+			return input;
+		}
+
+		@Override
+		public IMergeViewerItem apply(Object matchValue, Collection<?> containers) {
+			return apply(matchValue, containers, provider.getElements(input), 0);
+		}
+	}
+
+	/**
+	 * A content function that computes the child elements of a side viewer.
+	 */
+	private static final class ChildFunction extends AbstractContentFunction {
+
+		/**
+		 * The item for which to induce child content.
+		 */
+		private final IMergeViewerItem item;
+
+		/**
+		 * The depth of the item.
+		 */
+		private final int depth;
+
+		/**
+		 * Creates and instance for a given side viewer's content provider that induces for the given item and
+		 * the given depth and manages the queue of content computations, updating the selections.
+		 * 
+		 * @param side
+		 *            the side for which the content is being computed.
+		 * @param provider
+		 *            the content provider of the side viewer.
+		 * @param item
+		 *            the item for which to induce child content.
+		 * @param depth
+		 *            the depth of the item.
+		 * @param contentComputations
+		 *            the queue of computations being managed.
+		 * @param selections
+		 *            the selection cache being managed.
+		 */
+		private ChildFunction(MergeViewerSide side, ITreeContentProvider provider, IMergeViewerItem item,
+				int depth, LinkedList<AbstractContentFunction> contentComputations,
+				Map<Object, IMergeViewerItem> selections) {
+			super(side, provider, contentComputations, selections);
+			this.item = item;
+			this.depth = depth;
+
+			Object value = item.getSideValue(side);
+			if (value != null) {
+				selections.put(value, item);
+			}
+		}
+
+		@Override
+		public Object getValue() {
+			return item.getSideValue(side);
+		}
+
+		@Override
+		public IMergeViewerItem apply(Object matchValue, Collection<?> containers) {
+			if (depth == MAX_SEARCH_LEVEL) {
+				return null;
+			} else {
+				return apply(matchValue, containers, provider.getChildren(item), depth + 1);
+			}
+		}
 	}
 }
