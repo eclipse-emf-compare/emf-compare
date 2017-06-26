@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2016, 2017 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Stefan Dirix - initial API and implementation
+ *     Martin Fleck - bug 518957
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer.facet;
 
@@ -59,10 +60,24 @@ public class PapyrusFacetContentProviderWrapper extends ItemProviderAdapter impl
 	 *            the {@ResourceSet} for Papyrus Facet.
 	 */
 	public PapyrusFacetContentProviderWrapper(AdapterFactory adapterFactory, ResourceSet resourceSet) {
-		super(adapterFactory);
-		facetContentProvider = new SemanticUMLContentProvider(resourceSet);
-		this.resourceSet = resourceSet;
+		this(adapterFactory, resourceSet, new SemanticUMLContentProvider(resourceSet));
+	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param adapterFactory
+	 *            the {@link AdapterFactory}.
+	 * @param facetContentProvider
+	 *            the content provider to which to delegate.
+	 * @param resourceSet
+	 *            the {@ResourceSet} for Papyrus Facet.
+	 */
+	public PapyrusFacetContentProviderWrapper(AdapterFactory adapterFactory, ResourceSet resourceSet,
+			SemanticUMLContentProvider facetContentProvider) {
+		super(adapterFactory);
+		this.facetContentProvider = facetContentProvider;
+		this.resourceSet = resourceSet;
 	}
 
 	@Override

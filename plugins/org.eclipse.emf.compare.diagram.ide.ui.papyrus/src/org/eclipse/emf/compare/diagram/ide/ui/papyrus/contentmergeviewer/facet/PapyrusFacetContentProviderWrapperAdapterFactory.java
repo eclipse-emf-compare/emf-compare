@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2016, 2017 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,8 +7,12 @@
  * 
  * Contributors:
  *     Stefan Dirix - initial API and implementation
+ *     Martin Fleck - bug 518957
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.papyrus.contentmergeviewer.facet;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -17,6 +21,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.Disposable;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+import org.eclipse.papyrus.uml.tools.providers.SemanticUMLContentProvider;
 import org.eclipse.uml2.uml.edit.providers.UMLItemProviderAdapterFactory;
 
 /**
@@ -30,6 +35,11 @@ public class PapyrusFacetContentProviderWrapperAdapterFactory extends UMLItemPro
 	 * Collects and disposes associated adapters.
 	 */
 	private Disposable disposable = new Disposable();
+
+	/**
+	 * Associates resource sets with their semantic content providers.
+	 */
+	private final Map<ResourceSet, SemanticUMLContentProvider> semanticUMLContentProviders = new HashMap<>();
 
 	/**
 	 * Constructor.
@@ -46,7 +56,13 @@ public class PapyrusFacetContentProviderWrapperAdapterFactory extends UMLItemPro
 	public Adapter createAdapter(Notifier target) {
 		ResourceSet resourceSet = getResourceSet(target);
 		if (resourceSet != null) {
-			return new PapyrusFacetContentProviderWrapper(this, resourceSet);
+			SemanticUMLContentProvider semanticUMLContentProvider = semanticUMLContentProviders
+					.get(resourceSet);
+			if (semanticUMLContentProvider == null) {
+				semanticUMLContentProvider = new SemanticUMLContentProvider(resourceSet);
+				semanticUMLContentProviders.put(resourceSet, semanticUMLContentProvider);
+			}
+			return new PapyrusFacetContentProviderWrapper(this, resourceSet, semanticUMLContentProvider);
 		}
 		return super.createAdapter(target);
 	}
