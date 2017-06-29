@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Philip Langer - integrated model update strategy (bug 457839)
+ *     Martin Fleck - bug 518983
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -48,6 +49,8 @@ import org.eclipse.ui.progress.IDeferredWorkbenchAdapter;
  */
 public abstract class CompareInputAdapter extends AdapterImpl implements ICompareInput, IDisposable, IAdaptable {
 
+	private static final ITypedElement NULL_ELEMENT = AccessorAdapter.adapt(null);
+
 	/**
 	 * Store the listeners for notifications.
 	 */
@@ -66,6 +69,21 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 
 	/** A {@link IModelUpdateStrategyProvider} providing the strategy for updating the underlying model. */
 	private IModelUpdateStrategyProvider modelUpdateStrategyProvider;
+
+	/**
+	 * The cached value for {@link #getAncestor()}.
+	 */
+	private ITypedElement ancestor = NULL_ELEMENT;
+
+	/**
+	 * The cached value for {@link #getLeft()}.
+	 */
+	private ITypedElement left = NULL_ELEMENT;
+
+	/**
+	 * The cached value for (@link {@link #getRight()}.
+	 */
+	private ITypedElement right = NULL_ELEMENT;
 
 	/**
 	 * Simple constructor storing the given {@link AdapterFactory}.
@@ -216,26 +234,27 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getAncestor()
 	 */
 	public ITypedElement getAncestor() {
-		final ITypedElement ret;
-		Notifier notifier = getComparisonObject();
-		boolean isThreeWay = isThreeWay(notifier);
-		if (isThreeWay) {
-			IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
-			if (accessorFactory != null) {
-				org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
-						.createAncestor(getAdapterFactory(), getComparisonObject());
-				if (typedElement != null) {
-					ret = AccessorAdapter.adapt(typedElement);
+		if (ancestor == NULL_ELEMENT) {
+			Notifier notifier = getComparisonObject();
+			boolean isThreeWay = isThreeWay(notifier);
+			if (isThreeWay) {
+				IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
+				if (accessorFactory != null) {
+					org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
+							.createAncestor(getAdapterFactory(), getComparisonObject());
+					if (typedElement != null) {
+						ancestor = AccessorAdapter.adapt(typedElement);
+					} else {
+						ancestor = null;
+					}
 				} else {
-					ret = null;
+					ancestor = null;
 				}
 			} else {
-				ret = null;
+				ancestor = null;
 			}
-		} else {
-			ret = null;
 		}
-		return ret;
+		return ancestor;
 	}
 
 	protected boolean isThreeWay(Notifier notifier) {
@@ -266,20 +285,21 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getLeft()
 	 */
 	public ITypedElement getLeft() {
-		final ITypedElement ret;
-		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
-		if (accessorFactory != null) {
-			org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
-					.createLeft(getAdapterFactory(), getComparisonObject());
-			if (typedElement != null) {
-				ret = AccessorAdapter.adapt(typedElement);
+		if (left == NULL_ELEMENT) {
+			IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
+			if (accessorFactory != null) {
+				org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
+						.createLeft(getAdapterFactory(), getComparisonObject());
+				if (typedElement != null) {
+					left = AccessorAdapter.adapt(typedElement);
+				} else {
+					left = null;
+				}
 			} else {
-				ret = null;
+				left = null;
 			}
-		} else {
-			ret = null;
 		}
-		return ret;
+		return left;
 	}
 
 	/**
@@ -288,20 +308,21 @@ public abstract class CompareInputAdapter extends AdapterImpl implements ICompar
 	 * @see org.eclipse.compare.structuremergeviewer.ICompareInput#getRight()
 	 */
 	public ITypedElement getRight() {
-		final ITypedElement ret;
-		IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
-		if (accessorFactory != null) {
-			org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
-					.createRight(getAdapterFactory(), getComparisonObject());
-			if (typedElement != null) {
-				ret = AccessorAdapter.adapt(typedElement);
+		if (right == NULL_ELEMENT) {
+			IAccessorFactory accessorFactory = getAccessorFactoryForTarget();
+			if (accessorFactory != null) {
+				org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement typedElement = accessorFactory
+						.createRight(getAdapterFactory(), getComparisonObject());
+				if (typedElement != null) {
+					right = AccessorAdapter.adapt(typedElement);
+				} else {
+					right = null;
+				}
 			} else {
-				ret = null;
+				right = null;
 			}
-		} else {
-			ret = null;
 		}
-		return ret;
+		return right;
 	}
 
 	/**
