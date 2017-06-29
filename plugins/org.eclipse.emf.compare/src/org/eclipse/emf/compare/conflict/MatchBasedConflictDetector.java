@@ -60,9 +60,9 @@ public class MatchBasedConflictDetector implements IConflictDetector {
 			if (i % 100 == 0) {
 				monitor.subTask(EMFCompareMessages.getString("DefaultConflictDetector.monitor.detect", //$NON-NLS-1$
 						Integer.valueOf(i + 1), Integer.valueOf(diffCount)));
-			}
-			if (monitor.isCanceled()) {
-				throw new ComparisonCanceledException();
+				if (monitor.isCanceled()) {
+					throw new ComparisonCanceledException();
+				}
 			}
 			final Diff diff = differences.get(i);
 			AbstractConflictSearch<? extends Diff> search = conflictSearchFactory.doSwitch(diff);
