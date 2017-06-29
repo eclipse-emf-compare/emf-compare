@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
@@ -44,8 +45,11 @@ import org.eclipse.emf.compare.ide.ui.internal.treecontentmanager.EMFCompareDefe
 import org.eclipse.emf.compare.ide.ui.internal.treecontentmanager.EMFCompareDeferredTreeContentManagerUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider2;
+import org.eclipse.emf.edit.provider.IViewerNotification;
+import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.eclipse.emf.edit.ui.provider.NotifyChangedToViewerRefresh;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -491,6 +495,53 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 		super.dispose();
 		contentManagerAdapter.removeUpdateCompleteListener(this);
 		listeners.clear();
+	}
+
+	/**
+	 * This implementation specializes the EMF implementation to ensure that if more than 30 notifications
+	 * arrive, the viewer is simply refreshed rather than processing each update separately. This is
+	 * especially important for when undo is invoked in editor and there are many things to be undone.
+	 * <p/>
+	 * {@inheritDoc}
+	 * 
+	 * @see IContentProvider#dispose()
+	 */
+	@Override
+	public void notifyChanged(Notification notification) {
+		if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
+			if (notification instanceof IViewerNotification) {
+				if (viewerRefresh == null) {
+					viewerRefresh = new ViewerRefresh(viewer) {
+						int count = 0;
+
+						@Override
+						public synchronized boolean addNotification(IViewerNotification notification) {
+							if (super.addNotification(notification)) {
+								count = 0;
+								return true;
+							}
+
+							// When there are more than 30 notifications, it's probably cheaper to simply
+							// refresh the overall view.
+							if (count > 30) {
+								super.addNotification(new ViewerNotification(notification, null, true, true));
+							}
+
+							++count;
+							return false;
+						}
+					};
+				}
+
+				if (viewerRefresh.addNotification((IViewerNotification)notification)) {
+					viewer.getControl().getDisplay().asyncExec(viewerRefresh);
+				}
+			} else {
+				NotifyChangedToViewerRefresh.handleNotifyChanged(viewer, notification.getNotifier(),
+						notification.getEventType(), notification.getFeature(), notification.getOldValue(),
+						notification.getNewValue(), notification.getPosition());
+			}
+		}
 	}
 
 	/**
