@@ -485,6 +485,7 @@ public class ModelsResolution extends AbstractResolution {
 				return input != null && input.isPlatformResource();
 			}
 		});
+		Set<URI> bounds = Sets.newLinkedHashSet(urisToResolve);
 		for (URI resolveMe : urisToResolve) {
 			IResource file = ResourceUtil.getResourceFromURI(resolveMe);
 			if (file instanceof IFile && !alreadyLoaded.contains(file)) {
@@ -492,7 +493,14 @@ public class ModelsResolution extends AbstractResolution {
 				if (tspm.isCanceled()) {
 					throw new OperationCanceledException();
 				}
-				traversal.addAll(resolveTraversal((IFile)file, Collections.<URI> emptySet()));
+				bounds.remove(resolveMe);
+				Set<IStorage> storages = resolveTraversal((IFile)file, bounds);
+				for (IStorage storage : storages) {
+					URI uri = ResourceUtil.createURIFor(storage);
+					bounds.add(uri);
+					traversal.add(storage);
+				}
+				bounds.add(resolveMe);
 			}
 		}
 
