@@ -57,6 +57,11 @@ public class StorageURIConverter extends DelegatingURIConverter {
 		return loadedRevisions;
 	}
 
+	@Override
+	public InputStream createInputStream(URI uri) throws IOException {
+		return createInputStream(uri, Maps.newHashMap());
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
