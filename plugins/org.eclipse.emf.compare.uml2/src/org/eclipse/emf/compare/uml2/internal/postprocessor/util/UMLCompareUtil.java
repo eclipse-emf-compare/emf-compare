@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Extension;
 import org.eclipse.uml2.uml.OpaqueAction;
@@ -48,10 +47,10 @@ public final class UMLCompareUtil {
 	 * Retrieves the base element for the specified stereotype application, i.e. the element to which the
 	 * stereotype is applied.
 	 * <p>
-	 * It first calls {@link UMLUtil#getBaseElement(EObject)}. If it returns null, it then tries to find a
-	 * {@link EStructuralFeature} with a name starting with {@link Extension#METACLASS_ROLE_PREFIX}. It
-	 * <em>does not</em> verify if the the given {@code stereotypeApplication}'s eClass is defined as a
-	 * Stereotype within a Profile because it may lead to load the resource of the Profile.
+	 * It first calls {@link UMLUtil#getBaseElement(EObject)}. If it returns null, it then tries to find an
+	 * {@link EReference} with a name starting with {@link Extension#METACLASS_ROLE_PREFIX}. It <em>does
+	 * not</em> verify if the the given {@code stereotypeApplication}'s eClass is defined as a Stereotype
+	 * within a Profile because it may lead to load the resource of the Profile.
 	 * 
 	 * @param stereotypeApplication
 	 *            The stereotype application.
@@ -63,10 +62,9 @@ public final class UMLCompareUtil {
 		}
 
 		Element baseElement = UMLUtil.getBaseElement(stereotypeApplication);
-		final Iterator<EStructuralFeature> features = stereotypeApplication.eClass()
-				.getEAllStructuralFeatures().iterator();
+		final Iterator<EReference> features = stereotypeApplication.eClass().getEAllReferences().iterator();
 		while (features.hasNext() && baseElement == null) {
-			final EStructuralFeature feature = features.next();
+			final EReference feature = features.next();
 			if (feature.getName().startsWith(Extension.METACLASS_ROLE_PREFIX)) {
 				final Object value = stereotypeApplication.eGet(feature);
 				if (value instanceof Element) {
