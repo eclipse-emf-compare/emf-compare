@@ -21,18 +21,15 @@ import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.any;
 import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_ASYNC;
 import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_SYNC;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -112,7 +109,6 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.Merg
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeCompareInputAdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeNodeCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.util.CompareHandlerService;
-import org.eclipse.emf.compare.ide.ui.internal.util.FilteredIterator;
 import org.eclipse.emf.compare.ide.ui.internal.util.JFaceUtil;
 import org.eclipse.emf.compare.ide.ui.internal.util.PlatformElementUtil;
 import org.eclipse.emf.compare.internal.merge.MergeDataImpl;
@@ -226,6 +222,28 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 	}
 
+	private final class TitleBuilderJob extends Job {
+
+		public TitleBuilderJob() {
+			super("EMF Compare Title Builder"); //$NON-NLS-1$
+			setSystem(true);
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			final String title = new TitleBuilder(getCompareConfiguration()).toString();
+			getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
+				public void run() {
+					CTabFolder control = getControl();
+					if (!control.isDisposed()) {
+						((CompareViewerSwitchingPane)control.getParent()).setTitleArgument(title);
+					}
+				}
+			});
+			return Status.OK_STATUS;
+		}
+	}
+
 	/** The width of the tree ruler. */
 	private static final int TREE_RULER_WIDTH = 17;
 
@@ -288,6 +306,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	private JobProgressInfoComposite progressInfoItem;
 
 	private Job inputChangedTask;
+
+	private final Job titleBuilderJob = new TitleBuilderJob();
 
 	private CompareToolBar toolBar;
 
@@ -781,8 +801,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	private void refreshTitle() {
-		// TODO Make sure this is called as little as possible
-		// Or make this asynchronous?
 		if (getControl().isDisposed() || !(getControl().getParent() instanceof CompareViewerSwitchingPane)) {
 			return;
 		}
@@ -791,50 +809,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			return;
 		}
 
-		Set<Diff> allDiffs = getAllDiffs();
-		Set<Diff> visibleDiffs = getVisibleDiffs();
-
-		int visibleDiffCount = visibleDiffs.size();
-		int filteredDiffCount = Sets.difference(allDiffs, visibleDiffs).size();
-		int diffsToMergeCount = Iterables
-				.size(Iterables.filter(visibleDiffs, hasState(DifferenceState.UNRESOLVED)));
-		String titleArgument = EMFCompareIDEUIMessages.getString("EMFCompareStructureMergeViewer.titleDesc", //$NON-NLS-1$
-				diffsToMergeCount, visibleDiffCount, filteredDiffCount);
-
-		((CompareViewerSwitchingPane)getControl().getParent()).setTitleArgument(titleArgument);
-	}
-
-	private Set<Diff> getAllDiffs() {
-		Comparison comparison = getCompareConfiguration().getComparison();
-		return Sets.newHashSet(comparison.getDifferences());
-	}
-
-	private Set<Diff> getVisibleDiffs() {
-		Set<Diff> visibleDiffs = Sets.newHashSet();
-
-		EMFCompareConfiguration configuration = getCompareConfiguration();
-		Comparison comparison = configuration.getComparison();
-		IDifferenceGroupProvider groupProvider = configuration.getStructureMergeViewerGrouper().getProvider();
-		Predicate<? super EObject> filterPredicate = configuration.getStructureMergeViewerFilter()
-				.getAggregatedPredicate();
-		for (IDifferenceGroup group : groupProvider.getGroups(comparison)) {
-			for (TreeNode node : group.getChildren()) {
-				if (filterPredicate.apply(node)) {
-					if (node.getData() instanceof Diff) {
-						visibleDiffs.add((Diff)node.getData());
-					}
-
-					Iterator<TreeNode> nodes = Iterators.filter(
-							new FilteredIterator<EObject>(node.eAllContents(), filterPredicate),
-							TreeNode.class);
-					Iterator<Diff> diffs = Iterators.filter(Iterators.transform(nodes, TREE_NODE_AS_DIFF),
-							Predicates.notNull());
-					Iterators.addAll(visibleDiffs, diffs);
-				}
-			}
-		}
-
-		return visibleDiffs;
+		// Schedule with a short delay, because refreshTitle is often called multiple times quickly and this
+		// way, with a short delay, the job is run only once even in that case.
+		titleBuilderJob.schedule(10L);
 	}
 
 	static EObject getDataOfTreeNodeOfAdapter(Object object) {
@@ -1765,6 +1742,80 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			if (!treeRuler.isDisposed()) {
 				treeRuler.redraw();
 			}
+		}
+	}
+
+	private static class TitleBuilder {
+
+		private final Comparison comparison;
+
+		private final IDifferenceGroupProvider groupProvider;
+
+		private final Predicate<? super EObject> filterPredicate;
+
+		private final Map<Object, Boolean> visited = Maps.newHashMap();
+
+		private int diffsCount;
+
+		private int visibleDiffsCount;
+
+		private int diffsToMergeCount;
+
+		public TitleBuilder(EMFCompareConfiguration configuration) {
+			comparison = configuration.getComparison();
+			groupProvider = configuration.getStructureMergeViewerGrouper().getProvider();
+			filterPredicate = configuration.getStructureMergeViewerFilter().getAggregatedPredicate();
+		}
+
+		void visit(TreeNode node, boolean parentApplies) {
+			boolean applies = parentApplies && filterPredicate.apply(node);
+			EObject data = node.getData();
+			if (data instanceof Diff) {
+				// If we haven't visited it before...
+				Boolean visitedApplies = visited.put(data, Boolean.valueOf(applies));
+				if (visitedApplies == null) {
+					// Count it.
+					++diffsCount;
+				}
+
+				// If it's visible...
+				if (applies) {
+					// If we didn't visit it as visible before...
+					if (!Boolean.TRUE.equals(visitedApplies)) {
+						// Count it as visible.
+						++visibleDiffsCount;
+
+						// And if it's not unresolved, count it has needing to be merged.
+						Diff diff = (Diff)data;
+						if (diff.getState() == DifferenceState.UNRESOLVED) {
+							++diffsToMergeCount;
+						}
+					}
+				} else if (Boolean.TRUE.equals(visitedApplies)) {
+					// If it was previously counted as visible, but here it's not visible, replace the state
+					// to indicate it was visible and was counted as visible before.
+					visited.put(data, Boolean.TRUE);
+				}
+			}
+
+			for (TreeNode childNode : node.getChildren()) {
+				visit(childNode, applies);
+			}
+		}
+
+		@Override
+		public String toString() {
+			for (IDifferenceGroup group : groupProvider.getGroups(comparison)) {
+				for (TreeNode node : group.getChildren()) {
+					visit(node, true);
+				}
+			}
+
+			@SuppressWarnings("boxing")
+			String titleArgument = EMFCompareIDEUIMessages.getString(
+					"EMFCompareStructureMergeViewer.titleDesc", //$NON-NLS-1$
+					diffsToMergeCount, visibleDiffsCount, diffsCount - visibleDiffsCount);
+			return titleArgument;
 		}
 	}
 }
