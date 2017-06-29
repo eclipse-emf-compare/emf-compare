@@ -156,6 +156,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -171,6 +172,8 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -687,6 +690,18 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		};
 		treeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		treeViewer.setUseHashlookup(true);
+
+		treeViewer.getControl().addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				fHandlerService.updatePaneActionHandlers(new Runnable() {
+					public void run() {
+						fHandlerService.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
+						fHandlerService.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
+					}
+				});
+			}
+		});
 
 		dependencyData = new DependencyData(getCompareConfiguration());
 
