@@ -13,6 +13,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.eobject;
 
+import static org.eclipse.emf.compare.EMFCompare.DIAGNOSTIC_SOURCE;
+
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
@@ -33,7 +35,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ComparisonCanceledException;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.match.eobject.EObjectIndex.Side;
@@ -127,8 +128,8 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 		final List<EObject> rightEObjectsNoID = Lists.newArrayList();
 		final List<EObject> originEObjectsNoID = Lists.newArrayList();
 
-		diagnostic = new BasicDiagnostic(Diagnostic.OK, "org.eclipse.emf.common", 0, //$NON-NLS-1$
-				org.eclipse.emf.common.CommonPlugin.INSTANCE.getString("_UI_OK_diagnostic_0"), null); //$NON-NLS-1$
+		diagnostic = new BasicDiagnostic(Diagnostic.OK, DIAGNOSTIC_SOURCE, 0,
+				EMFCompareMessages.getString("IdentifierEObjectMatcher.diagnosticMessage"), null); //$NON-NLS-1$
 
 		// TODO Change API to pass the monitor to matchPerId()
 		final Set<Match> matches = matchPerId(leftEObjects, rightEObjects, originEObjects, leftEObjectsNoID,
@@ -258,8 +259,7 @@ public class IdentifierEObjectMatcher implements IEObjectMatcher {
 			message = EMFCompareMessages.getString("IdentifierEObjectMatcher.duplicateId", //$NON-NLS-1$
 					duplicateID, sideName);
 		}
-		diagnostic
-				.add(new BasicDiagnostic(Diagnostic.WARNING, EMFCompare.DIAGNOSTIC_SOURCE, 0, message, null));
+		diagnostic.add(new BasicDiagnostic(Diagnostic.WARNING, DIAGNOSTIC_SOURCE, 0, message, null));
 	}
 
 	/**

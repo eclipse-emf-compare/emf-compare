@@ -200,7 +200,7 @@ public class UMLPostProcessor implements IPostProcessor {
 		if (currentDiag == null) {
 			comparison.setDiagnostic(new BasicDiagnostic(UMLComparePlugin.PLUGIN_ID, 0, null, new Object[0]));
 		}
-		((BasicDiagnostic)comparison.getDiagnostic()).add(diagnostic);
+		((BasicDiagnostic)comparison.getDiagnostic()).merge(diagnostic);
 	}
 
 	/**

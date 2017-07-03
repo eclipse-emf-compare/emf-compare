@@ -266,6 +266,14 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 		final Comparison comparison = builder.build().compare(scope,
 				BasicMonitor.toMonitor(SubMonitor.convert(subMonitor.newChild(1), 10))); // 50%
 
+		if (comparison.getDiagnostic().getSeverity() == Diagnostic.ERROR) {
+			// an error in the comparison indicates that we can't complete the merge
+			logComparisonError(comparison.getDiagnostic(), mapping);
+			failingMappings.add(mapping); // mark involved resources as conflicting to force manual merge
+			subMonitor.setWorkRemaining(0);
+			return;
+		}
+
 		if (hasRealConflict(comparison)) {
 			failingMappings.add(mapping);
 
@@ -450,6 +458,29 @@ public class EMFResourceMappingMerger implements IResourceMappingMerger {
 				EMFCompareIDEUIPlugin.getDefault().log(e);
 			}
 		}
+	}
+
+	/**
+	 * Logs an error during the comparison that prevented the merge from concluding.
+	 * 
+	 * @param diagnostic
+	 *            The diagnostic error in the comparison.
+	 * @param mapping
+	 *            The failing mapping.
+	 */
+	private void logComparisonError(Diagnostic diagnostic, ResourceMapping mapping) {
+		final IStatus comparisonStatus = BasicDiagnostic.toIStatus(diagnostic);
+		final List<IResource> iResources = getInvolvedIResources(new ResourceMapping[] {mapping });
+		final String message = EMFCompareIDEUIMessages.getString("EMFResourceMappingMerger.failedModelMerge", //$NON-NLS-1$
+				String.valueOf(iResources.size()));
+		final MultiStatus multiStatus = new MultiStatus(EMFCompareIDEUIPlugin.PLUGIN_ID, 0, message, null);
+		for (IResource iResource : iResources) {
+			final Status childStatus = new Status(IStatus.ERROR, EMFCompareIDEUIPlugin.PLUGIN_ID,
+					iResource.getFullPath().toOSString());
+			multiStatus.add(childStatus);
+		}
+		multiStatus.add(comparisonStatus);
+		log(multiStatus);
 	}
 
 	/**

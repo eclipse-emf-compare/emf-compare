@@ -20,6 +20,7 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.utils.IDiagnosable;
 
 /**
@@ -69,7 +70,7 @@ public abstract class AbstractComparisonScope extends AdapterImpl implements ICo
 		this.resourceURIs = Sets.newHashSet();
 		this.nsURIs = Sets.newHashSet();
 		this.allInvolvedResourceURIs = Sets.newHashSet();
-		this.diagnostic = new BasicDiagnostic(Diagnostic.OK, "org.eclipse.emf.compare", 0, null, //$NON-NLS-1$
+		this.diagnostic = new BasicDiagnostic(Diagnostic.OK, EMFCompare.DIAGNOSTIC_SOURCE, 0, null,
 				new Object[] {this, });
 	}
 
