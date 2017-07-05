@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2014, 2017 EclipseSource Muenchen GmbH, Christian W. Damus, and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Philip Langer - initial API and implementation
+ *     Christian W. Damus - bug 519227
  *******************************************************************************/
 package org.eclipse.emf.compare.internal;
 
@@ -90,7 +91,7 @@ public class ThreeWayTextDiff {
 	 * @return The line separator used in string or &quot;\n&quot; as default.
 	 */
 	private String determineLineSeparator(String string) {
-		try (final StringReader stringReader = new StringReader(nullToEmpty(string))) {
+		try (StringReader stringReader = new StringReader(nullToEmpty(string))) {
 			int read = 0;
 			while (read != -1) {
 				read = stringReader.read();
@@ -130,7 +131,7 @@ public class ThreeWayTextDiff {
 		final LinkedList<ThreeWayLineDifference> threeWayDiffs = new LinkedList<ThreeWayLineDifference>();
 		final LinkedList<Diff> leftDiffQueue = new LinkedList<Diff>(leftDiffs.getDifferences());
 		final LinkedList<Diff> rightDiffQueue = new LinkedList<Diff>(rightDiffs.getDifferences());
-		try (final BufferedReader originReader = createBufferedReader(nullToEmpty(origin))) {
+		try (BufferedReader originReader = createBufferedReader(nullToEmpty(origin))) {
 			String originLine;
 			while ((originLine = originReader.readLine()) != null) {
 				final List<Diff> leftRange = collectDifferenceRange(originLine, leftDiffQueue);
@@ -431,7 +432,7 @@ public class ThreeWayTextDiff {
 			LinkedList<Diff> flattenedDifferences = new LinkedList<Diff>();
 			for (Diff diff : differences) {
 				String line;
-				try (final BufferedReader reader = createBufferedReader(diff.text)) {
+				try (BufferedReader reader = createBufferedReader(diff.text)) {
 					while ((line = reader.readLine()) != null) {
 						flattenedDifferences.add(new Diff(diff.operation, line));
 					}
