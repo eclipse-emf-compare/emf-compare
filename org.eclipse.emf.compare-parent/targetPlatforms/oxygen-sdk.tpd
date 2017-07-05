@@ -2,7 +2,7 @@ target "EMF Compare based on Oxygen SDK"
 
 include "fragments/licence.tpd"
 include "fragments/orbit.tpd"
-include "fragments/egit-nightly.tpd"
+include "fragments/egit.tpd"
 include "fragments/perf.tpd"
 
 with source, requirements
