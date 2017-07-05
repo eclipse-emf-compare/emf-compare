@@ -18,8 +18,8 @@
     label="EMFCompare">
   <setupTask
       xsi:type="jdt:JRETask"
-      version="JavaSE-1.6"
-      location="${jre.location-1.6}">
+      version="JavaSE-1.8"
+      location="${jre.location-1.8}">
     <description>Define the JRE needed to compile and run the Java projects of ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -42,8 +42,14 @@
       xsi:type="setup:VariableTask"
       id="compare.target.platform"
       name="compare.target.platform"
-      defaultValue="EMF Compare based on Mars SDK with Logical Model and Papyrus"
+      defaultValue="EMF Compare based on Oxygen SDK"
       label="Target Platform - Compare">
+    <choice
+        value="EMF Compare based on Oxygen SDK"
+        label="Eclipse Oxygen 4.7"/>
+    <choice
+        value="EMF Compare based on Neon SDK"
+        label="Eclipse Neon 4.6"/>
     <choice
         value="EMF Compare based on Mars SDK"
         label="Eclipse Mars 4.5"/>
@@ -74,7 +80,7 @@
     <requirement
         name="edu.umd.cs.findbugs.plugin.eclipse.feature.group"/>
     <requirement
-        name="com.mountainminds.eclemma.feature.feature.group"/>
+        name="org.eclipse.eclemma.feature.feature.group"/>
     <requirement
         name="org.eclipse.mylyn.bugzilla_feature.feature.group"/>
     <requirement
@@ -149,7 +155,7 @@
         name="Core">
       <predicate
           xsi:type="workingsets:ExclusionPredicate"
-          excludedWorkingSet="//@setupTasks.8/@workingSets.6 //@setupTasks.8/@workingSets.1 //@setupTasks.8/@workingSets.2 //@setupTasks.8/@workingSets.3 //@setupTasks.8/@workingSets.4 //@setupTasks.8/@workingSets.7"/>
+          excludedWorkingSet="//@setupTasks.8/@workingSets.8 //@setupTasks.8/@workingSets.1 //@setupTasks.8/@workingSets.2 //@setupTasks.8/@workingSets.3 //@setupTasks.8/@workingSets.4 //@setupTasks.8/@workingSets.9 //@setupTasks.8/@workingSets.5 //@setupTasks.8/@workingSets.6"/>
     </workingSet>
     <workingSet
         name="RCP">
@@ -160,7 +166,7 @@
             pattern=".*compare.rcp.*"/>
         <operand
             xsi:type="workingsets:ExclusionPredicate"
-            excludedWorkingSet="//@setupTasks.8/@workingSets.7"/>
+            excludedWorkingSet="//@setupTasks.8/@workingSets.9"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -172,7 +178,7 @@
             pattern=".*compare.ide.*"/>
         <operand
             xsi:type="workingsets:ExclusionPredicate"
-            excludedWorkingSet="//@setupTasks.8/@workingSets.7"/>
+            excludedWorkingSet="//@setupTasks.8/@workingSets.9"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -184,7 +190,7 @@
             pattern=".*uml.*"/>
         <operand
             xsi:type="workingsets:ExclusionPredicate"
-            excludedWorkingSet="//@setupTasks.8/@workingSets.7"/>
+            excludedWorkingSet="//@setupTasks.8/@workingSets.9 //@setupTasks.8/@workingSets.6"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -196,7 +202,31 @@
             pattern=".*diagram.*"/>
         <operand
             xsi:type="workingsets:ExclusionPredicate"
-            excludedWorkingSet="//@setupTasks.8/@workingSets.7"/>
+            excludedWorkingSet="//@setupTasks.8/@workingSets.9"/>
+      </predicate>
+    </workingSet>
+    <workingSet
+        name="Git">
+      <predicate
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern=".*\.e?git.*"/>
+        <operand
+            xsi:type="workingsets:ExclusionPredicate"
+            excludedWorkingSet="//@setupTasks.8/@workingSets.9"/>
+      </predicate>
+    </workingSet>
+    <workingSet
+        name="Papyrus">
+      <predicate
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern=".*\.papyrus.*"/>
+        <operand
+            xsi:type="workingsets:ExclusionPredicate"
+            excludedWorkingSet="//@setupTasks.8/@workingSets.9"/>
       </predicate>
     </workingSet>
     <workingSet
