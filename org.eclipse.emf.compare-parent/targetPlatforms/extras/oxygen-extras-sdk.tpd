@@ -1,0 +1,23 @@
+target "EMF Compare with extras based on Oxygen SDK"
+
+include "../oxygen-sdk.tpd"
+
+with source, requirements
+
+// Sirius
+
+location "http://download.eclipse.org/sirius/updates/nightly/latest/oxygen" {
+	org.eclipse.sirius lazy
+	org.eclipse.sirius.diagram lazy
+	org.eclipse.sirius.runtime.feature.group lazy
+}
+
+// Papyrus
+
+location "http://download.eclipse.org/releases/oxygen" {
+	org.eclipse.papyrus.sdk.feature.feature.group lazy
+}
+
+location "https://hudson.eclipse.org/papyrus/view/Sysml/job/papyrus-sysml11-oxygen/lastSuccessfulBuild/artifact/org.eclipse.papyrus.sysml11.p2/target/repository" {
+	org.eclipse.papyrus.sysml.feature.feature.group lazy
+}

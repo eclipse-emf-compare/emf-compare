@@ -39,7 +39,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare.ide.ui.tests;bundle-version="4.0.0",
  org.eclipse.emf.compare.uml2.rcp.ui.tests;bundle-version="2.2.0",
  org.eclipse.emf.compare.uml2.ide.tests,
- org.eclipse.emf.compare.ide.ui.tests.framework
+ org.eclipse.emf.compare.ide.ui.tests.framework,
+ org.eclipse.papyrus.sysml;bundle-version="[1.0.2,2.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: %providerName
 Import-Package: com.google.common.base;version="[15.0.0,22.0.0)",

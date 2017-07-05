@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare based on Oxygen SDK" sequenceNumber="1499266963">
+<target name="EMF Compare based on Oxygen SDK" sequenceNumber="1500968636">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -33,31 +33,9 @@
       <unit id="org.eclipse.emf.transaction.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.uml2.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="0.0.0"/>
-      <unit id="org.eclipse.emf.ecoretools.sdk.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.gmf.runtime.diagram.ui" version="0.0.0"/>
       <unit id="org.eclipse.team.svn.feature.group" version="0.0.0"/>
       <repository location="http://download.eclipse.org/releases/oxygen"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.acceleo.feature.group" version="0.0.0"/>
-      <unit id="org.eclipse.acceleo.query.feature.group" version="0.0.0"/>
-      <repository location="http://download.eclipse.org/acceleo/updates/nightly/latest"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.sirius" version="0.0.0"/>
-      <unit id="org.eclipse.sirius.runtime.acceleo.feature.group" version="0.0.0"/>
-      <repository location="http://download.eclipse.org/sirius/updates/nightly/latest/neon"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.obeonetwork.dsl.uml2.runtime.feature.feature.group" version="0.0.0"/>
-      <repository location="http://obeo-umldesigner-nightly.s3-website-eu-west-1.amazonaws.com/master/repository"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="0.0.0"/>
-      <repository location="http://download.eclipse.org/modeling/mdt/papyrus/updates/nightly/oxygen"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.papyrus.sysml.feature.feature.group" version="0.0.0"/>
-      <repository location="https://hudson.eclipse.org/papyrus/view/Sysml/job/papyrus-sysml11-oxygen/lastSuccessfulBuild/artifact/org.eclipse.papyrus.sysml11.p2/target/repository"/>
     </location>
   </locations>
 </target>

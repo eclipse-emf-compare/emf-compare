@@ -8,14 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.uml2.tests.merge.data;
+package org.eclipse.emf.compare.diagram.papyrus.tests.merge.sysml;
 
 import java.io.IOException;
 
-import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
+import org.eclipse.emf.compare.diagram.papyrus.tests.DiagramInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 
-public class DiffInvolvingRefineDiffInputData extends AbstractUMLInputData {
+public class DiffInvolvingRefineDiffInputData extends DiagramInputData {
 
 	public Resource getLeft() throws IOException {
 		return loadFromClassLoader("left.uml"); //$NON-NLS-1$

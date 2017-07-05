@@ -12,8 +12,6 @@ location "http://download.eclipse.org/releases/luna" {
 	org.eclipse.emf.transaction.sdk.feature.group
 	org.eclipse.uml2.feature.group
 	org.eclipse.gmf.runtime.notation.sdk.feature.group
-	org.eclipse.emf.ecoretools.feature.group
-	org.eclipse.papyrus.sdk.feature.feature.group
+	org.eclipse.gmf.runtime.diagram.ui
 	org.eclipse.team.svn.feature.group
-	org.eclipse.pde.junit.runtime
 }

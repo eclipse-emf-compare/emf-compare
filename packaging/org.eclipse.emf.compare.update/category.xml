@@ -30,18 +30,6 @@
    <feature id="org.eclipse.emf.compare.diagram.gmf.source" version="0.0.0">
       <category name="compare_integration"/>
    </feature>
-   <feature id="org.eclipse.emf.compare.diagram.papyrus" version="0.0.0">
-      <category name="compare_integration"/>
-   </feature>
-   <feature id="org.eclipse.emf.compare.diagram.papyrus.source" version="0.0.0">
-      <category name="compare_integration"/>
-   </feature>
-   <feature id="org.eclipse.emf.compare.diagram.sirius" version="0.0.0">
-      <category name="compare_integration"/>
-   </feature>
-   <feature id="org.eclipse.emf.compare.diagram.sirius.source" version="0.0.0">
-      <category name="compare_integration"/>
-   </feature>
    <feature id="org.eclipse.emf.compare.subversive" version="0.0.0">
       <category name="compare_integration"/>
    </feature>

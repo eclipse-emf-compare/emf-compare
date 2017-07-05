@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.diagram.papyrus.tests.groups.PapyrusConflictsGrou
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.AssocMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.EdgeMergeTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.merge.NodeMergeTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.merge.sysml.MergeDiffInvolvingRefineDiffTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.modelextension.ModelExtensionUtilTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.saveparameter.SaveParameterHookIntegrationTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.saveparameter.SaveParameterHookTest;
@@ -56,7 +57,7 @@ import junit.textui.TestRunner;
 		SaveParameterHookTest.class, SaveParameterHookIntegrationTest.class, URIAttachmentTest.class,
 		DiagramTooltipProviderTest.class, PapyrusConflictsGroupProviderTests.class,
 		IgnoreDiFilePostProcessorTest.class, PapyrusContextUtilTest.class,
-		MergeNonConflictingCascadingFilterTest.class })
+		MergeNonConflictingCascadingFilterTest.class, MergeDiffInvolvingRefineDiffTest.class, })
 public class AllTests {
 
 	/**

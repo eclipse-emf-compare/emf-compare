@@ -3,7 +3,7 @@ target "EMF Compare based on Mars SDK"
 include "fragments/licence.tpd"
 include "fragments/orbit.tpd"
 include "fragments/perf.tpd"
-include "fragments/sirius.tpd"
+include "fragments/egit.tpd"
 
 with source, requirements
 
@@ -13,12 +13,6 @@ location "http://download.eclipse.org/releases/mars" {
 	org.eclipse.emf.transaction.sdk.feature.group lazy
 	org.eclipse.uml2.feature.group lazy
 	org.eclipse.gmf.runtime.notation.sdk.feature.group lazy
-	org.eclipse.emf.ecoretools.sdk.feature.group lazy
-	org.eclipse.papyrus.sdk.feature.feature.group lazy
+	org.eclipse.gmf.runtime.diagram.ui lazy
 	org.eclipse.team.svn.feature.group lazy
-	org.eclipse.egit.feature.group lazy
-}
-
-location "http://download.eclipse.org/modeling/mdt/papyrus/updates/releases/mars/" {
-	org.eclipse.papyrus.sysml.feature.feature.group lazy
 }

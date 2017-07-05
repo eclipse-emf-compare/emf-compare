@@ -39,7 +39,6 @@ import org.eclipse.emf.compare.uml2.tests.implications.ImplicationsTransitionTes
 import org.eclipse.emf.compare.uml2.tests.include.AddIncludeTest;
 import org.eclipse.emf.compare.uml2.tests.merge.ExtensionMergeTest;
 import org.eclipse.emf.compare.uml2.tests.merge.InstanceSpecificationClassifiersMergeTest;
-import org.eclipse.emf.compare.uml2.tests.merge.MergeDiffInvolvingRefineDiffTest;
 import org.eclipse.emf.compare.uml2.tests.message.AddMessageTest;
 import org.eclipse.emf.compare.uml2.tests.message.bug507177.AddMessageSubDiffTest;
 import org.eclipse.emf.compare.uml2.tests.multiplicitychanges.MultiplicityElementChangesTest;
@@ -82,10 +81,9 @@ import junit.textui.TestRunner;
 		ImplicationsTransitionTest.class, ImplicationsInterfaceRealizationTest.class,
 		StaticStereotypedElementItemProviderTest.class, DynamicStereotypedElementItemProviderTest.class,
 		OpaqueElementBodyChangeDiffTest.class, OpaqueElementBodyChangeMergeTest.class,
-		DanglingStereotypeApplicationTest.class, MergeDiffInvolvingRefineDiffTest.class,
-		TestNonRegPseudoConflict_484576.class, RemoveStereotypeApplicationPseudoConflictTest.class,
-		MultiplicityElementChangesTest.class, InstanceSpecificationClassifiersMergeTest.class,
-		AddMessageSubDiffTest.class, })
+		DanglingStereotypeApplicationTest.class, TestNonRegPseudoConflict_484576.class,
+		RemoveStereotypeApplicationPseudoConflictTest.class, MultiplicityElementChangesTest.class,
+		InstanceSpecificationClassifiersMergeTest.class, AddMessageSubDiffTest.class, })
 public class AllTests {
 
 	/**

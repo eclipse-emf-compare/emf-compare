@@ -136,7 +136,7 @@ public class SingleRepositoryMinimizer implements IModelMinimizer {
 	 * @return repository or null if no associated repository can be found.
 	 */
 	public static Repository getRepository(IStorage storage) {
-		IFile file = storage.getAdapter(IFile.class);
+		IFile file = (IFile)storage.getAdapter(IFile.class);
 		if (file != null) {
 			return getRepository(file);
 		}

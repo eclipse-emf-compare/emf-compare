@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.uml2.tests.merge;
+package org.eclipse.emf.compare.diagram.papyrus.tests.merge.sysml;
 
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.removedFromReference;
 import static org.junit.Assert.assertEquals;
@@ -24,37 +24,24 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.diagram.papyrus.tests.AbstractTest;
+import org.eclipse.emf.compare.diagram.papyrus.tests.DiagramInputData;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.uml2.internal.merge.UMLMerger;
-import org.eclipse.emf.compare.uml2.tests.AbstractUMLInputData;
-import org.eclipse.emf.compare.uml2.tests.AbstractUMLTest;
-import org.eclipse.emf.compare.uml2.tests.merge.data.DiffInvolvingRefineDiffInputData;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class MergeDiffInvolvingRefineDiffTest extends AbstractUMLTest {
+public class MergeDiffInvolvingRefineDiffTest extends AbstractTest {
 
 	private DiffInvolvingRefineDiffInputData input = new DiffInvolvingRefineDiffInputData();
 
-	@BeforeClass
-	public static void setupClass() {
-		fillRegistries();
-	}
-
-	@AfterClass
-	public static void teardownClass() {
-		resetRegistries();
-	}
-
 	@Override
-	protected AbstractUMLInputData getInput() {
+	protected DiagramInputData getInput() {
 		return input;
 	}
 

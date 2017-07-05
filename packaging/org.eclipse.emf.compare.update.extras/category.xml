@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.eclipse.emf.compare.diagram.papyrus" version="0.0.0">
+      <category name="compare_integration"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.diagram.papyrus.source" version="0.0.0">
+      <category name="compare_integration"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.diagram.sirius" version="0.0.0">
+      <category name="compare_integration"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.diagram.sirius.source" version="0.0.0">
+      <category name="compare_integration"/>
+   </feature>
+   <category-def name="compare_integration" label="EMF Compare tools support">
+      <description>
+         Features to integrate EMF Compare with other tools.
+      </description>
+   </category-def>
+</site>

@@ -5,7 +5,7 @@ include "fragments/orbit.tpd"
 include "fragments/egit-logical-nightly.tpd"
 include "fragments/perf.tpd"
 include "fragments/swtbot.tpd"
-include "fragments/sirius.tpd"
+include "extras/sirius.tpd"
 
 
 with source, requirements

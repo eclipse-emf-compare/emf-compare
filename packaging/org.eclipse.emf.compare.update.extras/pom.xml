@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>emf.compare-parent</artifactId>
+    <groupId>org.eclipse.emf.compare</groupId>
+    <version>3.3.1-SNAPSHOT</version>
+    <relativePath>../../org.eclipse.emf.compare-parent</relativePath>
+  </parent>
+  <artifactId>org.eclipse.emf.compare.update.extras</artifactId>
+  <packaging>eclipse-repository</packaging>
+  <version>3.3.1-SNAPSHOT</version>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-p2-repository-plugin</artifactId>
+        <configuration>
+          <createArtifactRepository>true</createArtifactRepository>
+          <finalName>${project.groupId}.extras-${unqualifiedVersion}.${buildQualifier}</finalName>
+          <compress>true</compress>
+          <repositoryName>EMF Compare Extras ${unqualifiedVersion}.${buildQualifier}</repositoryName>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <outputDirectory>${project.build.directory}</outputDirectory>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+

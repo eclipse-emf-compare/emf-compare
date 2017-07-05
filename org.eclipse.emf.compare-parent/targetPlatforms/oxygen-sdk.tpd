@@ -13,28 +13,6 @@ location "http://download.eclipse.org/releases/oxygen" {
 	org.eclipse.emf.transaction.sdk.feature.group lazy
 	org.eclipse.uml2.feature.group lazy
 	org.eclipse.gmf.runtime.notation.sdk.feature.group lazy
-	org.eclipse.emf.ecoretools.sdk.feature.group lazy
+	org.eclipse.gmf.runtime.diagram.ui lazy
 	org.eclipse.team.svn.feature.group lazy
-}
-
-location "http://download.eclipse.org/acceleo/updates/nightly/latest" {
-	org.eclipse.acceleo.feature.group lazy
-	org.eclipse.acceleo.query.feature.group lazy
-}
-
-location "http://download.eclipse.org/sirius/updates/nightly/latest/neon" {
-	org.eclipse.sirius lazy
-	org.eclipse.sirius.runtime.acceleo.feature.group lazy
-}
-
-location "http://obeo-umldesigner-nightly.s3-website-eu-west-1.amazonaws.com/master/repository" {
-	org.obeonetwork.dsl.uml2.runtime.feature.feature.group lazy
-}
-
-location "http://download.eclipse.org/modeling/mdt/papyrus/updates/nightly/oxygen" {
-	org.eclipse.papyrus.sdk.feature.feature.group lazy
-}
-
-location "https://hudson.eclipse.org/papyrus/view/Sysml/job/papyrus-sysml11-oxygen/lastSuccessfulBuild/artifact/org.eclipse.papyrus.sysml11.p2/target/repository" {
-	org.eclipse.papyrus.sysml.feature.feature.group lazy
 }

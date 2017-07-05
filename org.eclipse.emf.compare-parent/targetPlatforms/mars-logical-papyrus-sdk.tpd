@@ -4,10 +4,10 @@ include "fragments/licence.tpd"
 include "fragments/orbit.tpd"
 include "fragments/egit-logical-nightly.tpd"
 include "fragments/perf.tpd"
-include "fragments/papyrus.tpd"
+include "extras/papyrus.tpd"
 include "fragments/uml2-interim.tpd"
 include "fragments/swtbot.tpd"
-include "fragments/sirius.tpd"
+include "extras/sirius.tpd"
 
 with source, requirements
 
