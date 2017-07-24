@@ -23,7 +23,7 @@
             <include>org/eclipse/emf/compare/ide/ui/tests/suite/GitTests.class</include>
           </includes>
           <useUIHarness>true</useUIHarness>
-          <argLine>-Xmx2048m</argLine>
+          <argLine>-Xmx2048m ${os-jvm-flags}</argLine>
 		</configuration>
 	  </plugin>
     </plugins>
