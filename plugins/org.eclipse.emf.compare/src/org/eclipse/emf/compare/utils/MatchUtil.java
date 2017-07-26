@@ -138,18 +138,21 @@ public final class MatchUtil {
 			DifferenceSource side) {
 		Comparison comparison = match.getComparison();
 		int result = -1;
-		@SuppressWarnings("unchecked")
-		final List<Object> sideValues = (List<Object>)ReferenceUtil
-				.safeEGet(MatchUtil.getMatchedObject(match, side), feature);
-		for (int i = 0; i < sideValues.size(); i++) {
-			final Object sideObject = sideValues.get(i);
-			if (comparison.getEqualityHelper().matchingValues(sideObject, value)) {
-				break;
-			} else if ((hasDiff(match, feature, sideObject) && match.getOrigin() != null)
-					|| hasDeleteDiff(match, feature, sideObject)) {
-				// Do not increment.
-			} else {
-				result++;
+		EObject matchedObject = MatchUtil.getMatchedObject(match, side);
+		if (matchedObject != null) {
+			IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+			boolean hasOrigin = match.getOrigin() != null;
+			@SuppressWarnings("unchecked")
+			final List<Object> sideValues = (List<Object>)ReferenceUtil.safeEGet(matchedObject, feature);
+			for (Object sideObject : sideValues) {
+				if (equalityHelper.matchingValues(sideObject, value)) {
+					break;
+				} else if ((hasOrigin && hasDiff(match, feature, sideObject))
+						|| hasDeleteDiff(match, feature, sideObject)) {
+					// Do not increment.
+				} else {
+					result++;
+				}
 			}
 		}
 		return result;
@@ -183,7 +186,7 @@ public final class MatchUtil {
 			expectedValue = value;
 		}
 		return Iterables.any(match.getDifferences(),
-				and(onFeature(feature.getName()), valueIs(expectedValue), ofKind(DELETE)));
+				and(ofKind(DELETE), onFeature(feature.getName()), valueIs(expectedValue)));
 	}
 
 	/**
@@ -331,7 +334,7 @@ public final class MatchUtil {
 	// public for testing
 	public static boolean featureContains(EObject eObject, EStructuralFeature feature, Object value) {
 		boolean contains = false;
-		
+
 		if (eObject != null && feature != null) {
 			final Object featureValue = safeEGet(eObject, feature);
 			if (feature.isMany()) {

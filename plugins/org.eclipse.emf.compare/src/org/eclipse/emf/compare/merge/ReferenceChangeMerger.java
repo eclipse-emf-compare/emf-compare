@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -673,18 +673,20 @@ public class ReferenceChangeMerger extends AbstractMerger {
 			 */
 			@SuppressWarnings("unchecked")
 			final List<EObject> changedList = (List<EObject>)safeEGet(targetContainer, feature);
-			if (changedList instanceof EList<?>) {
-				if (insertionIndex > changedList.size()) {
-					((EList<EObject>)changedList).move(changedList.size() - 1, newValue);
+			if (changedList.size() > 1) {
+				if (changedList instanceof EList<?>) {
+					if (insertionIndex > changedList.size()) {
+						((EList<EObject>)changedList).move(changedList.size() - 1, newValue);
+					} else {
+						((EList<EObject>)changedList).move(insertionIndex, newValue);
+					}
 				} else {
-					((EList<EObject>)changedList).move(insertionIndex, newValue);
-				}
-			} else {
-				changedList.remove(newValue);
-				if (insertionIndex > changedList.size()) {
-					changedList.add(newValue);
-				} else {
-					changedList.add(insertionIndex, newValue);
+					changedList.remove(newValue);
+					if (insertionIndex > changedList.size()) {
+						changedList.add(newValue);
+					} else {
+						changedList.add(insertionIndex, newValue);
+					}
 				}
 			}
 		}
