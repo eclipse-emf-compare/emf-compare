@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2017 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 521886
  *******************************************************************************/
 package org.eclipse.emf.compare.domain.impl;
 
@@ -15,15 +16,20 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
@@ -43,12 +49,15 @@ import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.provider.EMFCompareEditPlugin;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.change.ChangeDescription;
+import org.eclipse.emf.ecore.change.impl.ChangeDescriptionImpl;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IDisposable;
+import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.AbstractTransactionalCommandStack;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -98,7 +107,34 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 
 		fCommandStack = commandStack;
 
-		fChangeRecorder = new ChangeRecorder();
+		fChangeRecorder = new ChangeRecorder() {
+			@Override
+			protected ChangeDescription createChangeDescription() {
+				return new ChangeDescriptionImpl() {
+					@Override
+					public EList<Adapter> eAdapters() {
+						return new EAdapterList<Adapter>(this) {
+							private static final long serialVersionUID = 1L;
+
+							@Override
+							public boolean add(Adapter object) {
+								return false;
+							}
+
+							@Override
+							public void add(int index, Adapter object) {
+							}
+
+							@Override
+							public boolean addAll(Collection<? extends Adapter> collection) {
+								return false;
+							}
+						};
+					}
+
+				};
+			}
+		};
 		fChangeRecorder.setResolveProxies(false);
 		disposableDomains = new ArrayList<TransactionalEditingDomain>();
 	}
@@ -164,8 +200,7 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 						(BasicCommandStack)rightCommandStack);
 			} else {
 				EMFCompareEditPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING,
-						EMFCompareEditPlugin.PLUGIN_ID,
-						"Command stacks of the editing domain of " //$NON-NLS-1$
+						EMFCompareEditPlugin.PLUGIN_ID, "Command stacks of the editing domain of " //$NON-NLS-1$
 								+ left + " and " //$NON-NLS-1$
 								+ right
 								+ " are not instances of BasicCommandStack, nor AbstractTransactionalCommandStack, therefore, they will not be used as backing command stacks for the current merge session.")); //$NON-NLS-1$
@@ -215,7 +250,16 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 		if (editingDomain == null) {
 			ResourceSet resourceSet = getResourceSet(notifier);
 			if (resourceSet != null) {
-				editingDomain = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
+				TransactionalEditingDomain transactionalEditingDomain = TransactionalEditingDomain.Factory.INSTANCE
+						.createEditingDomain(resourceSet);
+				TransactionalEditingDomain.DefaultOptions options = TransactionUtil.getAdapter(
+						transactionalEditingDomain, TransactionalEditingDomain.DefaultOptions.class);
+				if (options != null) {
+					Map<Object, Object> myOpts = new HashMap<>();
+					myOpts.put(Transaction.OPTION_NO_VALIDATION, Boolean.TRUE);
+					options.setDefaultTransactionOptions(myOpts);
+				}
+				editingDomain = transactionalEditingDomain;
 			}
 		}
 
