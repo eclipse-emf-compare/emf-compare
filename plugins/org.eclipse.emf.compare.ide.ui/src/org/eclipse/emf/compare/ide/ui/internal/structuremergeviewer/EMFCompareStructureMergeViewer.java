@@ -952,8 +952,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		SWTUtil.safeRefresh(this, false, true);
 		getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
 			public void run() {
-				if (navigatable != null && (navigatable.getViewer().getSelection() == null
-						|| navigatable.getViewer().getSelection().isEmpty())) {
+				// Begin computing the content tree cache.
+				navigatable.refresh();
+
+				if (navigatable.getViewer().getSelection() == null
+						|| navigatable.getViewer().getSelection().isEmpty()) {
 					selectFirstDiffOrDisplayLabelViewer(getCompareConfiguration().getComparison());
 				}
 			}
@@ -991,6 +994,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		SWTUtil.safeRefresh(this, false, true);
 		getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
 			public void run() {
+				// Begin computing the content tree cache.
+				navigatable.refresh();
+
 				selectFirstDiffOrDisplayLabelViewer(getCompareConfiguration().getComparison());
 			}
 		});
@@ -1275,6 +1281,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 						// the refresh caused by the initialization of the viewer filters and the group
 						// providers.
 						refreshTitle();
+
+						// Begin computing the content tree cache.
+						navigatable.refresh();
 
 						// Expands the tree viewer to the default expansion level
 						expandTreeToLevel(getDefaultTreeExpansionLevel());

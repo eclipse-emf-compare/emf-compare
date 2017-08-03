@@ -17,21 +17,18 @@ package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType.IN_UI_ASYNC;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Maps;
 
-import java.util.List;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.compare.INavigatable;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.CallbackType;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeNodeCompareInput;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OpenEvent;
@@ -52,9 +49,11 @@ public class Navigatable implements INavigatable {
 
 	protected CallbackType uiSyncCallbackType = IN_UI_ASYNC;
 
-	private Object cachedParent;
+	private TreeVisitor treeVisitor;
 
-	private Object[] cachedChildren;
+	private final Map<Object, Object[]> allChildren = Maps.newHashMap();
+
+	private final Map<Object, Object> allAncestors = Maps.newHashMap();
 
 	public Navigatable(WrappableTreeViewer viewer,
 			EMFCompareStructureMergeViewerContentProvider contentProvider) {
@@ -73,6 +72,15 @@ public class Navigatable implements INavigatable {
 			}
 		});
 		return false;
+	}
+
+	public void refresh() {
+		if (treeVisitor == null) {
+			treeVisitor = new TreeVisitor();
+			contentProvider.runWhenReady(CallbackType.IN_UI_ASYNC, treeVisitor);
+		} else {
+			treeVisitor.reset();
+		}
 	}
 
 	private Object getFirstSelectedItem() {
@@ -360,19 +368,25 @@ public class Navigatable implements INavigatable {
 	}
 
 	/**
-	 * Returns the ancestor of the given item, i.e., its parent.
+	 * Returns the ancestor of the given item, i.e., its parent. Results are cached in {@link #allAncestors}.
 	 * 
 	 * @param item
 	 *            the item for which to get the ancestor.
 	 * @return the ancestor item.
 	 */
 	private Object getAncestor(Object item) {
-		Object ancestor = viewer.getParentElement(item);
-		if (ancestor != null) {
-			return ancestor;
+		Object ancestor = allAncestors.get(item);
+		if (ancestor == null) {
+			ancestor = viewer.getParentElement(item);
+			if (ancestor == null && item != null) {
+				Object input = getInput();
+				if (!item.equals(input)) {
+					ancestor = input;
+				}
+			}
+			allAncestors.put(item, ancestor);
 		}
-		// use difference group hidden by the content provider as parent, if available
-		return getDifferenceGroup(item);
+		return ancestor;
 	}
 
 	/**
@@ -415,25 +429,26 @@ public class Navigatable implements INavigatable {
 	}
 
 	/**
-	 * Return a (possibly empty) array of items which are the children of the input item.
+	 * Return a (possibly empty) array of items which are the children of the input item. Results are
+	 * {@link #allChildren cached}.
 	 * 
 	 * @param input
 	 *            the item for which we to find the children.
 	 * @return direct children of the input item.
 	 */
 	private Object[] getChildren(Object input) {
-		if (input == cachedParent) {
-			return cachedChildren;
+		Object[] children = allChildren.get(input);
+		if (children == null) {
+			children = viewer.getFilteredChildren(input);
+			allChildren.put(input, children);
+			// We can already cache all the ancestors given we know the input in the ancestor of each of these
+			// children. This is also helpful for the case that the content provider doesn't return the
+			// correct parent, although we handle that case in getAncestor too.
+			for (Object child : children) {
+				allAncestors.put(child, input);
+			}
 		}
-
-		cachedParent = input;
-		if (input instanceof IDifferenceGroup) {
-			cachedChildren = getChildren((IDifferenceGroup)input);
-		} else {
-			cachedChildren = viewer.getFilteredChildren(input);
-		}
-
-		return cachedChildren;
+		return children;
 	}
 
 	/**
@@ -495,43 +510,56 @@ public class Navigatable implements INavigatable {
 	}
 
 	/**
-	 * Returns the difference group associated with the given item.
-	 * 
-	 * @param item
-	 *            the item for which we want to get the difference group.
-	 * @return the associated difference group or null.
+	 * Runnable that visits a tree of a content provider iteratively for a specified time period.
+	 * <p>
+	 * This runnable visits the tree of the content provider until a time period is over (see
+	 * {@link #TIMEOUT}). After that, it'll be re-triggered when the content provider is ready again and
+	 * continues visiting elements for the next period of time, again and again, until the entire tree has
+	 * eventually been visited.
+	 * </p>
+	 * <p>
+	 * The goal is to visit the entire tree in the background of the UI thread without interfering with the
+	 * responsiveness of the UI thread in order to cache the entire tree eventually.
+	 * </p>
 	 */
-	private static IDifferenceGroup getDifferenceGroup(Object item) {
-		if (item instanceof TreeNodeCompareInput) {
-			TreeNodeCompareInput treeNodeCompareInput = (TreeNodeCompareInput)item;
-			Notifier target = treeNodeCompareInput.getTarget();
-			IDifferenceGroup differenceGroup = (IDifferenceGroup)EcoreUtil.getExistingAdapter(target,
-					IDifferenceGroup.class);
-			return differenceGroup;
-		}
-		return null;
-	}
+	private class TreeVisitor implements Runnable {
 
-	/**
-	 * Returns the children of the given difference group.
-	 * 
-	 * @param differenceGroup
-	 *            the difference group for which we want to get the children.
-	 * @return a non-null array of children elements.
-	 */
-	private static Object[] getChildren(IDifferenceGroup differenceGroup) {
-		if (differenceGroup == null) {
-			return new Object[0];
+		/** The timeout after we stop visiting the tree. */
+		private final static int TIMEOUT = 200;
+
+		private Iterator<Object> visitor;
+
+		public TreeVisitor() {
+			reset();
 		}
 
-		List<Object> children = Lists.newArrayList();
-		for (TreeNode child : differenceGroup.getChildren()) {
-			for (Adapter adapter : child.eAdapters()) {
-				if (adapter instanceof TreeNodeCompareInput) {
-					children.add(adapter);
+		public void run() {
+			long start = System.currentTimeMillis();
+			int count = 0;
+			while (visitor.hasNext()) {
+				// only check every 256 iterations whether we reached the time-out
+				// ((count & 0xFF)==0) is a very cheap way of testing that
+				if ((++count & 0xFF) == 0 && System.currentTimeMillis() - start > TIMEOUT) {
+					// defer further visiting until the UI thread is available again
+					contentProvider.runWhenReady(CallbackType.IN_UI_ASYNC, this);
+					return;
 				}
+				visitor.next();
 			}
+			visitor = null;
 		}
-		return children.toArray();
+
+		public void reset() {
+			allChildren.clear();
+			allAncestors.clear();
+			visitor = new AbstractTreeIterator<Object>(getFirstItem(), true) {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected Iterator<? extends Object> getChildren(Object item) {
+					return Iterators.forArray(Navigatable.this.getChildren(item));
+				}
+			};
+		}
 	}
 }
