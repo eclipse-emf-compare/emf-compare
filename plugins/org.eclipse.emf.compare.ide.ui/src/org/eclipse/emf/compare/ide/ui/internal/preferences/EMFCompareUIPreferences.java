@@ -76,4 +76,11 @@ public interface EMFCompareUIPreferences {
 	 */
 	String EDITOR_TREE_HIGHLIGHT_RELATED_CHANGES = EMFCompareIDEUIPlugin.PLUGIN_ID
 			+ ".preference.editor.tree.highlight"; //$NON-NLS-1$
+
+	/**
+	 * Preference indicating whether the next unresolved diff should be selected after a merge action. The
+	 * expected values are <code>true</code> or <code>false</code>.
+	 */
+	String SELECT_NEXT_UNRESOLVED_DIFF = EMFCompareIDEUIPlugin.PLUGIN_ID
+			+ ".preference.selectNextUnresolvedDiff"; //$NON-NLS-1$
 }

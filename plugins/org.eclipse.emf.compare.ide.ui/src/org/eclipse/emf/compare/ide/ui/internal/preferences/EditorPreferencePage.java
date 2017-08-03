@@ -15,6 +15,7 @@ import static org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPr
 import static org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences.EDITOR_TREE_AUTO_SELECT_FIRST_CHANGE;
 import static org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences.EDITOR_TREE_HIGHLIGHT_RELATED_CHANGES;
 
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.CompareColorImpl;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -65,6 +66,9 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 
 	/** Editor for preference {@link EMFCompareUIPreferences#EDITOR_TREE_HIGHLIGHT_RELATED_CHANGES}. */
 	protected BooleanFieldEditor treeHighlightRelatedChanges;
+
+	/** Editor for preference {@link EMFCompareUIPreferences#SELECT_NEXT_UNRESOLVED_DIFF}. */
+	private BooleanFieldEditor selectNextUnresolvedDiff;
 
 	public EditorPreferencePage() {
 		super(FieldEditorPreferencePage.GRID);
@@ -165,10 +169,12 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		createAutoExpandTreeLevel(getTreeTab());
 		createAutoSelectFirstChange(getTreeTab());
 		createHighlightRelatedChanges(getTreeTab());
+		createSelectNextUnresolvedDiff(getTreeTab());
 
 		GridLayoutFactory.swtDefaults().numColumns(2).applyTo(getTreeTab());
 		treeAutoSelectFirstChange.fillIntoGrid(getTreeTab(), 2);
 		treeHighlightRelatedChanges.fillIntoGrid(getTreeTab(), 2);
+		selectNextUnresolvedDiff.fillIntoGrid(getTreeTab(), 2);
 	}
 
 	/**
@@ -233,5 +239,21 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 				BooleanFieldEditor.DEFAULT, parent);
 		addField(treeHighlightRelatedChanges);
 		return treeHighlightRelatedChanges;
+	}
+
+	/**
+	 * Creates an editor for the {@link EMFCompareUIPreferences#EDITOR_TREE_HIGHLIGHT_RELATED_CHANGES}
+	 * preference.
+	 * 
+	 * @param parent
+	 *            editor parent
+	 * @return editor
+	 */
+	protected BooleanFieldEditor createSelectNextUnresolvedDiff(Composite parent) {
+		selectNextUnresolvedDiff = new BooleanFieldEditor(EMFCompareUIPreferences.SELECT_NEXT_UNRESOLVED_DIFF,
+				EMFCompareIDEUIMessages.getString("MergePreferencesPage.selectNextUnresolvedDiff"), //$NON-NLS-1$
+				BooleanFieldEditor.DEFAULT, parent);
+		addField(selectNextUnresolvedDiff);
+		return selectNextUnresolvedDiff;
 	}
 }

@@ -32,6 +32,7 @@ import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.Navigatable;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
@@ -230,7 +231,8 @@ public class MergeAction extends BaseSelectionListenerAction {
 				mergerRegistry, mergeRunnable);
 		editingDomain.getCommandStack().execute(mergeCommand);
 
-		if (navigatable != null) {
+		if (navigatable != null && EMFCompareIDEUIPlugin.getDefault().getPreferenceStore()
+				.getBoolean(EMFCompareUIPreferences.SELECT_NEXT_UNRESOLVED_DIFF)) {
 			// navigator is null in MergeAllNonConflictingAction
 			navigatable.selectChange(Navigatable.NEXT_UNRESOLVED_CHANGE);
 		}

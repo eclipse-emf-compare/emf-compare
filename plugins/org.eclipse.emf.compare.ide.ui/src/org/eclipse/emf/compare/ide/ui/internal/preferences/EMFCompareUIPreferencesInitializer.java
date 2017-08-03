@@ -36,5 +36,6 @@ public class EMFCompareUIPreferencesInitializer extends AbstractPreferenceInitia
 		store.setDefault(EMFCompareUIPreferences.EDITOR_TREE_AUTO_EXPAND_LEVEL, 1);
 		store.setDefault(EMFCompareUIPreferences.EDITOR_TREE_AUTO_SELECT_FIRST_CHANGE, true);
 		store.setDefault(EMFCompareUIPreferences.EDITOR_TREE_HIGHLIGHT_RELATED_CHANGES, true);
+		store.setDefault(EMFCompareUIPreferences.SELECT_NEXT_UNRESOLVED_DIFF, true);
 	}
 }
