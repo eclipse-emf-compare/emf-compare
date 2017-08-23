@@ -10,6 +10,6 @@
   </parent>
   <groupId>org.eclipse.emf.compare.features</groupId>
   <artifactId>org.eclipse.emf.compare</artifactId>
-  <version>3.3.1-SNAPSHOT</version>
+  <version>3.3.2-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 </project>

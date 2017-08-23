@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.diagram.gmf"
       label="%featureName"
-      version="3.3.1.qualifier"
+      version="3.3.2.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.emf.compare.diagram"
       license-feature="org.eclipse.license"

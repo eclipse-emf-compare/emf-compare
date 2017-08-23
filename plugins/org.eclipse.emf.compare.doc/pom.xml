@@ -16,7 +16,7 @@
   <parent>
     <artifactId>emf.compare-parent</artifactId>
     <groupId>org.eclipse.emf.compare</groupId>
-    <version>3.3.1-SNAPSHOT</version>
+    <version>3.3.2-SNAPSHOT</version>
      <relativePath>../../org.eclipse.emf.compare-parent</relativePath>
   </parent>
   <groupId>org.eclipse.emf.compare</groupId>
