@@ -213,7 +213,7 @@ A custom match engine can be used for your model comparison needs:
 // for standalone usage
 IMatchEngine.Factory.Registry registry = MatchEngineFactoryRegistryImpl.createStandaloneInstance();
 // for OSGi (IDE, RCP) usage
-// IMatchEngine.Factory.Registry registry = EMFCompareRCPPlugin.getMatchEngineFactoryRegistry();
+// IMatchEngine.Factory.Registry registry = EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry();
 final IMatchEngine customMatchEngine = new MyMatchEngine(...);
 IMatchEngine.Factory engineFactory = new MatchEngineFactoryImpl() {
   public IMatchEngine getMatchEngine() {
@@ -254,7 +254,7 @@ IComparisonFactory comparisonFactory = new DefaultComparisonFactory(new DefaultE
  
 IMatchEngine.Factory.Registry registry = MatchEngineFactoryRegistryImpl.createStandaloneInstance();
 // for OSGi (IDE, RCP) usage
-// IMatchEngine.Factory.Registry registry = EMFCompareRCPPlugin.getMatchEngineFactoryRegistry();
+// IMatchEngine.Factory.Registry registry = EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry();
 final MatchEngineFactoryImpl matchEngineFactory = new MatchEngineFactoryImpl(customIDMatcher, comparisonFactory);
 matchEngineFactory.setRanking(20); // default engine ranking is 10, must be higher to override.
 registry.add(matchEngineFactory);
@@ -270,7 +270,7 @@ There are some cases where you do not want the identifiers of your elements to b
 <source lang="java">
 IMatchEngine.Factory.Registry registry === MatchEngineFactoryRegistryImpl.createStandaloneInstance();
 // for OSGi (IDE, RCP) usage
-// IMatchEngine.Factory.Registry registry === EMFCompareRCPPlugin.getMatchEngineFactoryRegistry();
+// IMatchEngine.Factory.Registry registry === EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry();
 final MatchEngineFactoryImpl matchEngineFactory = new MatchEngineFactoryImpl(UseIdentifiers.NEVER);
 matchEngineFactory.setRanking(20); // default engine ranking is 10, must be higher to override.
 registry.add(matchEngineFactory);
