@@ -8,7 +8,7 @@ include "fragments/perf.tpd"
 with source, requirements
 
 location "http://download.eclipse.org/releases/oxygen" {
-	org.eclipse.platform.sdk lazy
+	org.eclipse.platform.feature.group lazy
 	org.eclipse.emf.sdk.feature.group lazy
 	org.eclipse.emf.transaction.sdk.feature.group lazy
 	org.eclipse.uml2.feature.group lazy
