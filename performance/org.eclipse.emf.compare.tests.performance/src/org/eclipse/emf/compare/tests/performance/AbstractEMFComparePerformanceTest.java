@@ -33,6 +33,10 @@ import java.util.Map.Entry;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.egit.core.Activator;
+import org.eclipse.egit.core.GitCorePreferences;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EPackage;
@@ -124,7 +128,11 @@ public abstract class AbstractEMFComparePerformanceTest {
 			EPackage.Registry.INSTANCE.put(perf.getNsURI(), perf);
 			Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("performance",
 					new XMIResourceFactoryImpl());
+
 		}
+
+		IEclipsePreferences eGitPreferences = InstanceScope.INSTANCE.getNode(Activator.getPluginId());
+		eGitPreferences.putBoolean(GitCorePreferences.core_autoShareProjects, false);
 
 		// Deactivate auto-building
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();

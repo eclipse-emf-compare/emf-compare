@@ -38,8 +38,8 @@ public class EMFComparePerfStats {
 
 	EMFComparePerfStats() {
 		fMemoryBean = ManagementFactory.getMemoryMXBean();
-		elapsedTimeInMatch = new Stopwatch();
-		elapsedTimeInDiff = new Stopwatch();
+		elapsedTimeInMatch = Stopwatch.createUnstarted();
+		elapsedTimeInDiff = Stopwatch.createUnstarted();
 	}
 
 	void beforeMatch() {
@@ -63,7 +63,7 @@ public class EMFComparePerfStats {
 	}
 
 	public long elapsedTimeInMatch(TimeUnit unit) {
-		return elapsedTimeInMatch.elapsedTime(unit);
+		return elapsedTimeInMatch.elapsed(unit);
 	}
 
 	public long usedHeapBeforeMatch(SizeUnit unit) {
@@ -75,7 +75,7 @@ public class EMFComparePerfStats {
 	}
 
 	public long elapsedTimeInDiff(TimeUnit unit) {
-		return elapsedTimeInDiff.elapsedTime(unit);
+		return elapsedTimeInDiff.elapsed(unit);
 	}
 
 	public long usedHeapBeforeDiff(SizeUnit unit) {
