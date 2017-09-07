@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 467191
- *     Philip Langer - bug 462884, 516576
+ *     Philip Langer - bug 462884, 516576, 521948
  *     Stefan Dirix - bugs 473985, 474030
  *     Martin Fleck - bug 497066, 483798, 514767, 514415
  *     Alexandra Buzila - bug 513931
@@ -78,6 +78,7 @@ import org.eclipse.emf.compare.EMFCompare.Builder;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.adapterfactory.context.IContextTester;
+import org.eclipse.emf.compare.command.CommandStackEvent;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
@@ -1074,7 +1075,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		redoAction.update();
 
 		Command mostRecentCommand = ((CommandStack)event.getSource()).getMostRecentCommand();
-		if (mostRecentCommand instanceof ICompareCopyCommand) {
+		if (mostRecentCommand instanceof ICompareCopyCommand && shouldSelectAffectedObject(event)) {
 			// MUST NOT call a setSelection with a list, o.e.compare does not handle it (cf
 			// org.eclipse.compare.CompareEditorInput#getElement(ISelection))
 			Collection<?> affectedObjects = mostRecentCommand.getAffectedObjects();
@@ -1107,9 +1108,15 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				SWTUtil.safeSyncExec(new Runnable() {
 					public void run() {
 						refresh();
-						StructuredSelection selection = new StructuredSelection(adaptedAffectedObject);
+
 						// allows to call CompareToolBar#selectionChanged(SelectionChangedEvent)
-						getViewer().setSelection(selection);
+						// Check first that we won't end up with an empty selection.
+						if (getViewer().doFindItem(adaptedAffectedObject) != null) {
+							StructuredSelection selection = new StructuredSelection(adaptedAffectedObject);
+							getViewer().setSelection(selection);
+						} else {
+							getViewer().setSelection(getViewer().getSelection());
+						}
 					}
 				});
 				// update content viewers with the new selection
@@ -1118,11 +1125,44 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 						navigatable.openSelectedChange();
 					}
 				});
+			} else {
+				SWTUtil.safeSyncExec(new Runnable() {
+					public void run() {
+						refresh();
+						toolBar.selectionChanged(
+								new SelectionChangedEvent(getViewer(), getViewer().getSelection()));
+					}
+				});
 			}
 		} else {
+			SWTUtil.safeSyncExec(new Runnable() {
+				public void run() {
+					refresh();
+					toolBar.selectionChanged(
+							new SelectionChangedEvent(getViewer(), getViewer().getSelection()));
+				}
+			});
+
 			// FIXME, should recompute the difference, something happened outside of this compare editor
 		}
 
+	}
+
+	/**
+	 * Returns whether this event should cause the affective object of the most recent command to be selected.
+	 * 
+	 * @param event
+	 *            an event that might be a {@link CommandStackEvent}.
+	 * @return whether this event should cause the affective object of the most recent command to be selected.
+	 */
+	private boolean shouldSelectAffectedObject(EventObject event) {
+		if (event instanceof CommandStackEvent) {
+			CommandStackEvent commandStackEvent = (CommandStackEvent)event;
+			CommandStackEvent.Operation type = commandStackEvent.getOperation();
+			return type == CommandStackEvent.Operation.UNDO || type == CommandStackEvent.Operation.REDO;
+		} else {
+			return true;
+		}
 	}
 
 	private Iterable<TreeNode> getPath(TreeNode from, TreeNode to) {

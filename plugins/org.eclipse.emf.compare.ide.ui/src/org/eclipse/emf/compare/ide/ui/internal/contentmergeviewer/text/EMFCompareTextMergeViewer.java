@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Alexandra Buzila - Bug 457117
- *     Philip Langer - bug 457839, 516489
+ *     Philip Langer - bug 457839, 516489, 521948
  *     Michael Borkowski - Bug 462863
  *     Martin Fleck - bug 514079
  *******************************************************************************/
@@ -16,12 +16,14 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multimap;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.io.ByteStreams;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 import java.util.EventObject;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -45,6 +47,8 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
+import org.eclipse.emf.compare.command.impl.AbstractCopyCommand;
+import org.eclipse.emf.compare.command.impl.TransactionalDualCompareCommandStack;
 import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
@@ -88,6 +92,8 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	private RedoAction fRedoAction;
 
 	private MergeResolutionManager mergeResolutionManager;
+
+	private DelayedTextChangeRunnable delayedTextChangeRunnable;
 
 	/** The unmirrored content provider. */
 	private EMFCompareTextMergeViewerContentProvider fContentProvider;
@@ -157,24 +163,25 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 			setRightDirty(commandStack.isRightSaveNeeded());
 		}
 
-		IMergeViewerContentProvider contentProvider = (IMergeViewerContentProvider)getContentProvider();
-
-		final String leftValueFromModel = getString(
-				(IStreamContentAccessor)contentProvider.getLeftContent(getInput()));
-		final String rightValueFromModel = getString(
-				(IStreamContentAccessor)contentProvider.getRightContent(getInput()));
-
 		SWTUtil.safeAsyncExec(new Runnable() {
 			public void run() {
-				String leftValueFromWidget = getContents(true, Charsets.UTF_8.name());
-				String rightValueFromWidget = getContents(false, Charsets.UTF_8.name());
-				IEqualityHelper equalityHelper = getCompareConfiguration().getComparison()
-						.getEqualityHelper();
-				if (!equalityHelper.matchingAttributeValues(leftValueFromModel, leftValueFromWidget)
-						|| !equalityHelper.matchingAttributeValues(rightValueFromModel,
-								rightValueFromWidget)) {
-					// only refresh if values are different to avoid select-all of the text.
-					refresh();
+				if (delayedTextChangeRunnable == null) {
+					IMergeViewerContentProvider contentProvider = (IMergeViewerContentProvider)getContentProvider();
+					final String leftValueFromModel = getString(
+							(IStreamContentAccessor)contentProvider.getLeftContent(getInput()));
+					final String rightValueFromModel = getString(
+							(IStreamContentAccessor)contentProvider.getRightContent(getInput()));
+
+					String leftValueFromWidget = getContents(true, Charsets.UTF_8.name());
+					String rightValueFromWidget = getContents(false, Charsets.UTF_8.name());
+					IEqualityHelper equalityHelper = getCompareConfiguration().getComparison()
+							.getEqualityHelper();
+					if (!equalityHelper.matchingAttributeValues(leftValueFromModel, leftValueFromWidget)
+							|| !equalityHelper.matchingAttributeValues(rightValueFromModel,
+									rightValueFromWidget)) {
+						// only refresh if values are different to avoid select-all of the text.
+						refresh();
+					}
 				}
 			}
 		});
@@ -276,6 +283,10 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 			final StyledText textWidget = viewer.getSourceViewer().getTextWidget();
 			textWidget.addFocusListener(new FocusListener() {
 				public void focusLost(FocusEvent e) {
+					if (delayedTextChangeRunnable != null) {
+						delayedTextChangeRunnable.perform();
+					}
+
 					getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), null);
 					getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), null);
 				}
@@ -287,14 +298,11 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 			});
 			viewer.getSourceViewer().addTextListener(new ITextListener() {
 				public void textChanged(TextEvent event) {
-					final Object oldInput = getInput();
-					if (event.getDocumentEvent() != null && isCompareInputAdapterHoldingDiff(oldInput)) {
-						final CompareInputAdapter inputAdapter = (CompareInputAdapter)oldInput;
-						final IModelUpdateStrategy modelUpdateStrategy = inputAdapter
-								.getModelUpdateStrategy();
-						final Diff diff = (Diff)inputAdapter.getComparisonObject();
-						updateModel(diff, modelUpdateStrategy, MergeViewerSide.LEFT);
-						updateModel(diff, modelUpdateStrategy, MergeViewerSide.RIGHT);
+					if (event.getDocumentEvent() != null && isCompareInputAdapterHoldingDiff(getInput())) {
+						if (delayedTextChangeRunnable == null) {
+							delayedTextChangeRunnable = new DelayedTextChangeRunnable(textWidget, 2 * 100);
+						}
+						delayedTextChangeRunnable.schedule();
 					}
 				}
 			});
@@ -328,11 +336,44 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	private void updateModel(Diff diff, IModelUpdateStrategy modelUpdateStrategy, MergeViewerSide side) {
 		if (isEditable(side) && modelUpdateStrategy.canUpdate(diff, side)) {
 			final String newValue = getCurrentValueFromViewer(side);
-			final Command updateCmd = modelUpdateStrategy.getModelUpdateCommand(diff, newValue, side);
-			final RejectAffectedDiffCommand rejectDiffsCmd = new RejectAffectedDiffCommand(diff);
-			final CompoundCommand compoundCmd = createCompoundCompareCommand(side, updateCmd, rejectDiffsCmd);
-			getCompareConfiguration().getEditingDomain().getCommandStack().execute(compoundCmd);
+			EditCommand editCommand = createEditCommand(diff, modelUpdateStrategy, side, newValue);
+
+			ICompareCommandStack commandStack = getCompareConfiguration().getEditingDomain()
+					.getCommandStack();
+			Command mostRecentCommand = commandStack.getMostRecentCommand();
+			if (mostRecentCommand instanceof EditCommand) {
+				EditCommand mostRecentEditCommand = (EditCommand)mostRecentCommand;
+				if (mostRecentEditCommand.getSide() == side && mostRecentEditCommand.getDiff() == diff
+						&& mostRecentEditCommand.getModelUpdateStrategy() == modelUpdateStrategy) {
+					// We are updating exactly the same diff in the same way.
+					boolean oldDeliver = false;
+
+					try {
+						if (commandStack instanceof TransactionalDualCompareCommandStack) {
+							TransactionalDualCompareCommandStack transactionalDualCompareCommandStack = (TransactionalDualCompareCommandStack)commandStack;
+							oldDeliver = transactionalDualCompareCommandStack.isDeliver();
+							transactionalDualCompareCommandStack.setDeliver(false);
+							commandStack.undo();
+							commandStack.execute(editCommand);
+							return;
+						}
+					} finally {
+						if (oldDeliver) {
+							TransactionalDualCompareCommandStack transactionalDualCompareCommandStack = (TransactionalDualCompareCommandStack)commandStack;
+							transactionalDualCompareCommandStack.setDeliver(true);
+						}
+					}
+				}
+			}
+
+			commandStack.execute(editCommand);
 		}
+	}
+
+	private EditCommand createEditCommand(Diff diff, IModelUpdateStrategy modelUpdateStrategy,
+			MergeViewerSide side, String newValue) {
+
+		return new EditCommand(diff, modelUpdateStrategy, side, newValue);
 	}
 
 	/**
@@ -360,23 +401,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		final GetContentRunnable runnable = new GetContentRunnable(isLeft);
 		Display.getDefault().syncExec(runnable);
 		return (String)runnable.getResult();
-	}
-
-	/**
-	 * Creates a compound compare command for the given {@code side} and the given {@code commands}.
-	 * 
-	 * @param side
-	 *            The side on which the compare command is to be executed.
-	 * @param commands
-	 *            The commands to be enclosed in the compound command.
-	 * @return The compound compare command.
-	 */
-	private CompoundCompareCommand createCompoundCompareCommand(MergeViewerSide side, Command... commands) {
-		final CompoundCompareCommand compoundCommand = new CompoundCompareCommand(side);
-		for (Command command : commands) {
-			compoundCommand.append(command);
-		}
-		return compoundCommand;
 	}
 
 	/**
@@ -516,18 +540,38 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 			}
 			return ImmutableSet.of(diff);
 		}
+
+		/**
+		 * Returns the state changes to any diffs that this command produced.
+		 * 
+		 * @return the state changes to any diffs that this command produced.
+		 */
+		public Multimap<DifferenceState, Diff> getChangedDiffs() {
+			return AbstractCopyCommand.getChangedDiffs(getChangeDescription(),
+					Collections.singleton(difference));
+		}
 	}
 
 	/**
-	 * A compound command that also implements the {@link ICompareCopyCommand} to be executable in the context
-	 * of a comparison.
-	 * 
-	 * @author Philip Langer <planger@eclipsesource.com>
+	 * A compound command that updates the value of a feature associated with a diff and rejects the diff
+	 * itself.
 	 */
-	private static class CompoundCompareCommand extends CompoundCommand implements ICompareCopyCommand {
+	public static class EditCommand extends CompoundCommand implements ICompareCopyCommand {
 
 		/** The side on which this command executes. */
 		private MergeViewerSide side;
+
+		/** The diff to process. */
+		private Diff diff;
+
+		/** The strategy to use */
+		private IModelUpdateStrategy modelUpdateStrategy;
+
+		/** The new value for the feature. */
+		private String newValue;
+
+		/** The command for rejecting the diff. */
+		private RejectAffectedDiffCommand rejectDiffsCommand;
 
 		/**
 		 * Creates a new compound command for the given {@code side}.
@@ -535,8 +579,12 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		 * @param side
 		 *            The side on which this command executes.
 		 */
-		public CompoundCompareCommand(MergeViewerSide side) {
+		public EditCommand(Diff diff, IModelUpdateStrategy modelUpdateStrategy, MergeViewerSide side,
+				String newValue) {
+			this.diff = diff;
+			this.modelUpdateStrategy = modelUpdateStrategy;
 			this.side = side;
+			this.newValue = newValue;
 		}
 
 		/**
@@ -544,6 +592,68 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		 */
 		public boolean isLeftToRight() {
 			return !MergeViewerSide.LEFT.equals(side);
+		}
+
+		/**
+		 * Returns the side on which this command operates.
+		 * 
+		 * @return the side on which this command operates.
+		 */
+		public MergeViewerSide getSide() {
+			return side;
+		}
+
+		/**
+		 * Returns the diff on which this command operates.
+		 * 
+		 * @return the diff on which this command operates.
+		 */
+		public Diff getDiff() {
+			return diff;
+		}
+
+		/**
+		 * Returns the update strategy used to make the change to the feature.
+		 * 
+		 * @return
+		 */
+		public IModelUpdateStrategy getModelUpdateStrategy() {
+			return modelUpdateStrategy;
+		}
+
+		/**
+		 * Returns the state changes to any diffs that this command produced.
+		 * 
+		 * @return the state changes to any diffs that this command produced.
+		 */
+		public Multimap<DifferenceState, Diff> getChangedDiffs() {
+			return rejectDiffsCommand.getChangedDiffs();
+		}
+
+		/**
+		 * Creates a new instance of this same command.
+		 * 
+		 * @return a new instance of this same command.
+		 */
+		public EditCommand recreate() {
+			return new EditCommand(diff, modelUpdateStrategy, side, newValue);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		protected boolean prepare() {
+			// Use the strategy to create an update command and add that to the command list.
+			final Command updateCommand = modelUpdateStrategy.getModelUpdateCommand(diff, newValue, side);
+			commandList.add(updateCommand);
+
+			// Create a command to reject the diff and add it to the list.
+			rejectDiffsCommand = new RejectAffectedDiffCommand(diff);
+			commandList.add(rejectDiffsCommand);
+
+			// Prepare as normal.
+			return super.prepare();
 		}
 	}
 
@@ -573,6 +683,89 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 					fContentProvider));
 		} else {
 			setContentProvider(fContentProvider);
+		}
+	}
+
+	/**
+	 * A class for delayed processing of the changes made in the text viewer.
+	 */
+	private class DelayedTextChangeRunnable implements Runnable {
+		/** The control on which this operates. */
+		private Control control;
+
+		/** How long to wait until doing the processing. */
+		private int delay;
+
+		/**
+		 * Whether this runnable has been dispatched via a {@link Display#timerExec(int, Runnable) timer
+		 * exec}.
+		 */
+		private boolean dispatched;
+
+		/** Whether this runnable should be redispatched instead of processed. */
+		private boolean redispatch;
+
+		/**
+		 * Creates an instance operating for the given control with the given delay.
+		 * 
+		 * @param control
+		 *            the control on which this operates.
+		 * @param milliseconds
+		 *            the delay.
+		 */
+		public DelayedTextChangeRunnable(Control control, int milliseconds) {
+			this.control = control;
+			delay = milliseconds;
+		}
+
+		/**
+		 * Do the delayed processing.
+		 */
+		public void perform() {
+			// Mark this runnable so that it will not process again if run() is called later.
+			control = null;
+
+			// Forget about this runnable in the viewer.
+			delayedTextChangeRunnable = null;
+
+			// Update the model.
+			final CompareInputAdapter inputAdapter = (CompareInputAdapter)getInput();
+			final IModelUpdateStrategy modelUpdateStrategy = inputAdapter.getModelUpdateStrategy();
+			final Diff diff = (Diff)inputAdapter.getComparisonObject();
+			updateModel(diff, modelUpdateStrategy, MergeViewerSide.LEFT);
+			updateModel(diff, modelUpdateStrategy, MergeViewerSide.RIGHT);
+		}
+
+		/**
+		 * If the control is still set and isn't disposed, it will either {@link #schedule() schedule} the
+		 * runnable again, if {@link #redispatch} is <code>true</code>, or it will {@link #perform() perform}
+		 * the processing.
+		 */
+		public void run() {
+			if (control != null && !control.isDisposed()) {
+				dispatched = false;
+				if (redispatch) {
+					schedule();
+				} else {
+					perform();
+				}
+			}
+		}
+
+		/**
+		 * Schedules this runnable. If the runnable is already dispatched, it will be marked for
+		 * redispatching. Otherwise, it will {@link Display#timerExec(int, Runnable) dispatch} the runnable,
+		 * marking it as such.
+		 */
+		public void schedule() {
+			if (dispatched) {
+				redispatch = true;
+			} else {
+				dispatched = true;
+				redispatch = false;
+
+				control.getDisplay().timerExec(delay, this);
+			}
 		}
 	}
 }

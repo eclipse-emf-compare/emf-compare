@@ -6,14 +6,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     Philip Langer - initial API and implementation
+ *     Philip Langer - initial API and implementation, bug 521948
  *     Martin Fleck - bug 514415
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
+import static org.eclipse.emf.compare.ConflictKind.REAL;
+
 import com.google.common.base.Predicate;
 
 import org.eclipse.compare.INavigatable;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -21,6 +24,7 @@ import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -34,6 +38,10 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class MergeContainedNonConflictingAction extends AbstractMergeContainedAction {
 
+	@SuppressWarnings("unchecked")
+	private static final Predicate<Diff> NON_CONFLICTING_DIFFS = (Predicate<Diff>)EMFComparePredicates
+			.hasNoDirectOrIndirectConflict(REAL);
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -45,7 +53,7 @@ public class MergeContainedNonConflictingAction extends AbstractMergeContainedAc
 			Predicate<TreeNode> isFiltered) {
 		super(compareConfiguration, mergerRegistry, mode, navigatable);
 		this.isFiltered = isFiltered;
-		updateSelection(selection);
+		setEnabled(updateSelection(selection));
 	}
 
 	@Override
@@ -84,5 +92,10 @@ public class MergeContainedNonConflictingAction extends AbstractMergeContainedAc
 	protected IMergeRunnable createMergeRunnable(MergeMode mode, boolean isLeftEditable,
 			boolean isRightEditable, IDiffRelationshipComputer relationshipComputer) {
 		return new MergeNonConflictingRunnable(isLeftEditable, isRightEditable, mode, relationshipComputer);
+	}
+
+	@Override
+	protected Predicate<Diff> getDiffPredicate() {
+		return NON_CONFLICTING_DIFFS;
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 521948
  *******************************************************************************/
 package org.eclipse.emf.compare.command.impl;
 
@@ -18,7 +19,9 @@ import java.util.EventObject;
 import java.util.List;
 
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.compare.command.CommandStackEvent;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.edit.provider.IDisposable;
@@ -72,7 +75,20 @@ public class TransactionalDualCompareCommandStack implements ICompareCommandStac
 	private final List<CommandStackListener> listeners;
 
 	/** The listener of the wrapped command stacks. */
-	private final CommandStackListener sideCommandStackListener;
+	private final SideCommandStackListener sideCommandStackListener;
+
+	/**
+	 * Whether
+	 * {@link #notifyListeners(CommandStack, org.eclipse.emf.compare.command.CommandStackEvent.Operation)
+	 * notification} is currently {@link #isDeliver() enabled}.
+	 */
+	private boolean deliver = true;
+
+	/**
+	 * Recorders whether {@link #notifyListeners(CommandStack, CommandStackEvent.Operation)
+	 * notifyListeners(commandStack, CommandStack.Event.EXECUTE)} as called while {@link #deliver} is false.
+	 */
+	private boolean deferredExecuteNotification;
 
 	/**
 	 * Creates an instance that delegates to two given {@link AbstractTransactionalCommandStack}.
@@ -86,11 +102,7 @@ public class TransactionalDualCompareCommandStack implements ICompareCommandStac
 			AbstractTransactionalCommandStack rightCommandStack) {
 		this.leftCommandStack = Preconditions.checkNotNull(leftCommandStack);
 		this.rightCommandStack = Preconditions.checkNotNull(rightCommandStack);
-		this.sideCommandStackListener = new CommandStackListener() {
-			public void commandStackChanged(EventObject event) {
-				notifyListeners(event.getSource());
-			}
-		};
+		this.sideCommandStackListener = new SideCommandStackListener();
 		this.leftCommandStack.addCommandStackListener(sideCommandStackListener);
 		this.rightCommandStack.addCommandStackListener(sideCommandStackListener);
 		this.listeners = newArrayList();
@@ -114,10 +126,35 @@ public class TransactionalDualCompareCommandStack implements ICompareCommandStac
 	 * 
 	 * @param source
 	 *            the source of the event.
+	 * @deprecated Override or call {@link #notifyListeners(CommandStack, CommandStackEvent.Operation)
+	 *             instead}.
 	 */
+	@Deprecated
 	protected void notifyListeners(Object source) {
-		for (CommandStackListener commandStackListener : listeners) {
-			commandStackListener.commandStackChanged(new EventObject(source));
+		if (deliver) {
+			for (CommandStackListener commandStackListener : listeners) {
+				commandStackListener.commandStackChanged(new EventObject(source));
+			}
+		}
+	}
+
+	/**
+	 * This is called to ensure that {@link CommandStackListener#commandStackChanged} is called for each
+	 * listener.
+	 * 
+	 * @param commandStack
+	 *            the source of the event.
+	 * @param operation
+	 *            the operation of the event.
+	 */
+	protected void notifyListeners(CommandStack commandStack, CommandStackEvent.Operation operation) {
+		if (deliver) {
+			deferredExecuteNotification = false;
+			for (CommandStackListener commandStackListener : listeners) {
+				commandStackListener.commandStackChanged(new CommandStackEvent(commandStack, operation));
+			}
+		} else if (operation == CommandStackEvent.Operation.EXECUTE) {
+			deferredExecuteNotification = true;
 		}
 	}
 
@@ -129,27 +166,34 @@ public class TransactionalDualCompareCommandStack implements ICompareCommandStac
 	public void execute(Command command) {
 		if (command instanceof ICompareCopyCommand) {
 			if (command.canExecute()) {
-				final ICompareCopyCommand compareCommand = (ICompareCopyCommand)command;
-				final AbstractTransactionalCommandStack commandStack;
-				if (compareCommand.isLeftToRight()) {
-					commandStack = rightCommandStack;
-				} else {
-					commandStack = leftCommandStack;
+				sideCommandStackListener.setIgnoreCommandStackChanged(true);
+				try {
+					final ICompareCopyCommand compareCommand = (ICompareCopyCommand)command;
+					final AbstractTransactionalCommandStack commandStack;
+					if (compareCommand.isLeftToRight()) {
+						commandStack = rightCommandStack;
+					} else {
+						commandStack = leftCommandStack;
+					}
+
+					ExceptionHandler oldExceptionHandler = commandStack.getExceptionHandler();
+					AbstractCompletionHandler completionHandler = new ExecuteCompletionHandler();
+					commandStack.setExceptionHandler(completionHandler);
+
+					commandStack.execute(compareCommand);
+
+					if (!completionHandler.hadException()) {
+						completionHandler.handleSuccessfulCompletion(commandStack);
+					}
+
+					commandStack.setExceptionHandler(oldExceptionHandler);
+
+					notifyListeners(this, CommandStackEvent.Operation.EXECUTE);
+				} finally {
+					sideCommandStackListener.setIgnoreCommandStackChanged(false);
 				}
-
-				ExceptionHandler oldExceptionHandler = commandStack.getExceptionHandler();
-				AbstractCompletionHandler completionHandler = new ExecuteCompletionHandler();
-				commandStack.setExceptionHandler(completionHandler);
-
-				commandStack.execute(compareCommand);
-
-				if (!completionHandler.hadException()) {
-					completionHandler.handleSuccessfulCompletion(commandStack);
-				}
-
-				commandStack.setExceptionHandler(oldExceptionHandler);
-
-				notifyListeners(this);
+			} else if (!deliver) {
+				deferredExecuteNotification = true;
 			}
 		}
 	}
@@ -170,21 +214,26 @@ public class TransactionalDualCompareCommandStack implements ICompareCommandStac
 	 */
 	public void undo() {
 		if (canUndo()) {
-			AbstractTransactionalCommandStack commandStack = commandStackStack.get(top--);
+			sideCommandStackListener.setIgnoreCommandStackChanged(true);
+			try {
+				AbstractTransactionalCommandStack commandStack = commandStackStack.get(top--);
 
-			ExceptionHandler oldExceptionHandler = commandStack.getExceptionHandler();
-			AbstractCompletionHandler completionHandler = new UndoCompletionHandler();
-			commandStack.setExceptionHandler(completionHandler);
+				ExceptionHandler oldExceptionHandler = commandStack.getExceptionHandler();
+				AbstractCompletionHandler completionHandler = new UndoCompletionHandler();
+				commandStack.setExceptionHandler(completionHandler);
 
-			commandStack.undo();
+				commandStack.undo();
 
-			if (!completionHandler.hadException()) {
-				completionHandler.handleSuccessfulCompletion(commandStack);
+				if (!completionHandler.hadException()) {
+					completionHandler.handleSuccessfulCompletion(commandStack);
+				}
+
+				commandStack.setExceptionHandler(oldExceptionHandler);
+
+				notifyListeners(this, CommandStackEvent.Operation.UNDO);
+			} finally {
+				sideCommandStackListener.setIgnoreCommandStackChanged(false);
 			}
-
-			commandStack.setExceptionHandler(oldExceptionHandler);
-
-			notifyListeners(this);
 		}
 	}
 
@@ -246,21 +295,26 @@ public class TransactionalDualCompareCommandStack implements ICompareCommandStac
 	 */
 	public void redo() {
 		if (canRedo()) {
-			AbstractTransactionalCommandStack commandStack = commandStackStack.get(++top);
+			sideCommandStackListener.setIgnoreCommandStackChanged(true);
+			try {
+				AbstractTransactionalCommandStack commandStack = commandStackStack.get(++top);
 
-			ExceptionHandler oldExceptionHandler = commandStack.getExceptionHandler();
-			AbstractCompletionHandler completionHandler = new RedoCompletionHandler();
-			commandStack.setExceptionHandler(completionHandler);
+				ExceptionHandler oldExceptionHandler = commandStack.getExceptionHandler();
+				AbstractCompletionHandler completionHandler = new RedoCompletionHandler();
+				commandStack.setExceptionHandler(completionHandler);
 
-			commandStack.redo();
+				commandStack.redo();
 
-			if (!completionHandler.hadException()) {
-				completionHandler.handleSuccessfulCompletion(commandStack);
+				if (!completionHandler.hadException()) {
+					completionHandler.handleSuccessfulCompletion(commandStack);
+				}
+
+				commandStack.setExceptionHandler(oldExceptionHandler);
+
+				notifyListeners(this, CommandStackEvent.Operation.REDO);
+			} finally {
+				sideCommandStackListener.setIgnoreCommandStackChanged(false);
 			}
-
-			commandStack.setExceptionHandler(oldExceptionHandler);
-
-			notifyListeners(this);
 		}
 	}
 
@@ -275,7 +329,11 @@ public class TransactionalDualCompareCommandStack implements ICompareCommandStac
 		saveIndex = -1;
 		mostRecentCommandStack = null;
 
-		notifyListeners(this);
+		// We should flush the two sides as well.
+		leftCommandStack.flush();
+		rightCommandStack.flush();
+
+		notifyListeners(this, CommandStackEvent.Operation.FLUSH);
 	}
 
 	/**
@@ -330,6 +388,30 @@ public class TransactionalDualCompareCommandStack implements ICompareCommandStac
 	 */
 	public void rightSaveIsDone() {
 		rightCommandStack.saveIsDone();
+	}
+
+	/**
+	 * Returns whether delivery of notifications to {@link #addCommandStackListener(CommandStackListener)
+	 * listeners} is enabled.
+	 * 
+	 * @return whether delivery of notifications is enabled.
+	 */
+	public boolean isDeliver() {
+		return deliver;
+	}
+
+	/**
+	 * Sets whether delivery of notifications to {@link #addCommandStackListener(CommandStackListener)
+	 * listeners} is enabled. When delivery is enabled, the listeners are immediately notified.
+	 * 
+	 * @param deliver
+	 *            whether delivery of notifications is enabled.
+	 */
+	public void setDeliver(boolean deliver) {
+		this.deliver = deliver;
+		if (deliver && deferredExecuteNotification) {
+			notifyListeners(this, CommandStackEvent.Operation.EXECUTE);
+		}
 	}
 
 	/**
@@ -476,6 +558,43 @@ public class TransactionalDualCompareCommandStack implements ICompareCommandStac
 			if (saveIndex >= top) {
 				saveIndex = IS_SAVE_NEEDED_WILL_BE_TRUE;
 			}
+		}
+	}
+
+	/**
+	 * A command stack listener that forwards notification to
+	 * {@link TransactionalDualCompareCommandStack#notifyListeners(CommandStack, CommandStackEvent.Operation)}.
+	 * Forwarding of notifications can be disabled.
+	 */
+	private final class SideCommandStackListener implements CommandStackListener {
+		/**
+		 * Whether forwarding of notifications is disabled.
+		 */
+		private boolean ignoreCommandStackChanged;
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void commandStackChanged(EventObject event) {
+			if (!ignoreCommandStackChanged) {
+				AbstractTransactionalCommandStack commandStack = (AbstractTransactionalCommandStack)event
+						.getSource();
+				// We assume that only executes happen on the side command stacks.
+				if (commandStack.getMostRecentCommand() != null) {
+					new ExecuteCompletionHandler().handleSuccessfulCompletion(commandStack);
+					notifyListeners(commandStack, CommandStackEvent.Operation.EXECUTE);
+				}
+			}
+		}
+
+		/**
+		 * Sets whether command stack changes should be forwarded.
+		 * 
+		 * @param ignoreCommandStackChanged
+		 *            whether command stack changes should be forwarded.
+		 */
+		public void setIgnoreCommandStackChanged(boolean ignoreCommandStackChanged) {
+			this.ignoreCommandStackChanged = ignoreCommandStackChanged;
 		}
 	}
 }

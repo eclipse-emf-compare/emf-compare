@@ -9,7 +9,7 @@
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 462863
  *     Stefan Dirix - bug 473985
- *     Philip Langer - bug 516645
+ *     Philip Langer - bug 516645, 521948
  *     Martin Fleck - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
@@ -423,6 +423,32 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 				SWTUtil.safeRefresh(((Viewer)affectedMergeViewer), true, false);
 			}
 		}
+
+		// Refresh the properties view.
+		SWTUtil.safeAsyncExec(new Runnable() {
+			public void run() {
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				ExtendedPropertySheetPage extendedPropertySheetPage = getExtendedPropertySheetPage(page);
+				if (extendedPropertySheetPage != null) {
+					Control control = extendedPropertySheetPage.getControl();
+					// Check that there isn't currently a cell editor active.
+					// If there is a focus control that isn't the control of the property sheet page...
+					Control focusControl = control.getDisplay().getFocusControl();
+					if (focusControl != null && focusControl != control) {
+						// Check if that focus control is contained by the property sheet page's control.
+						for (Control parent = focusControl.getParent(); parent != null; parent = parent
+								.getParent()) {
+							if (parent == control) {
+								// If it is, then don't refresh the property sheet page
+								// because that will make the cell editor deactivate.
+								return;
+							}
+						}
+					}
+					extendedPropertySheetPage.refresh();
+				}
+			}
+		});
 	}
 
 	/**

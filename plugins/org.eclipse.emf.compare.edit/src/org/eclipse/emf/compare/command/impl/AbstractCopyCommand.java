@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,18 +7,28 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 521948
  *******************************************************************************/
 package org.eclipse.emf.compare.command.impl;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
 import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.change.ChangeDescription;
+import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.edit.command.ChangeCommand;
 
@@ -87,5 +97,57 @@ public abstract class AbstractCopyCommand extends ChangeCommand implements IComp
 	@Override
 	public boolean canExecute() {
 		return super.canExecute() && !differences.isEmpty();
+	}
+
+	/**
+	 * Returns the state changes to any diffs that this command produced.
+	 * 
+	 * @return the state changes to any diffs that this command produced.
+	 */
+	public Multimap<DifferenceState, Diff> getChangedDiffs() {
+		return getChangedDiffs(getChangeDescription(), differences);
+	}
+
+	/**
+	 * Returns the state changes to any relevant diffs modified in the given change description.
+	 * 
+	 * @param changeDescription
+	 *            the change description to process.
+	 * @param relevantDiffs
+	 *            the diffs for which we can state changes in the map.
+	 * @return the state changes to any relevant diffs modified in the given change description.
+	 */
+	public static Multimap<DifferenceState, Diff> getChangedDiffs(ChangeDescription changeDescription,
+			Collection<? extends Diff> relevantDiffs) {
+		Multimap<DifferenceState, Diff> ret = LinkedHashMultimap.create();
+		if (changeDescription != null) {
+			for (Map.Entry<EObject, EList<FeatureChange>> entry : changeDescription.getObjectChanges()) {
+				EObject key = entry.getKey();
+				if (relevantDiffs.contains(key)) {
+					for (FeatureChange featureChange : entry.getValue()) {
+						if (featureChange.getFeature() == ComparePackage.Literals.DIFF__STATE) {
+							Diff diff = (Diff)key;
+							ret.put(diff.getState(), diff);
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		return ret;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void dispose() {
+		ChangeDescription changes = getChangeDescription();
+		if (changes != null) {
+			changes.getObjectsToAttach().clear();
+		}
+
+		super.dispose();
 	}
 }

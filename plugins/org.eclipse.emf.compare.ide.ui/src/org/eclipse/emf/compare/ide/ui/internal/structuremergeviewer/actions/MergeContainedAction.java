@@ -10,15 +10,23 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
+import static org.eclipse.emf.compare.DifferenceSource.LEFT;
+import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.ACCEPT;
+import static org.eclipse.emf.compare.internal.merge.MergeMode.LEFT_TO_RIGHT;
+
 import com.google.common.base.Predicate;
 
 import org.eclipse.compare.INavigatable;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
@@ -38,7 +46,7 @@ public class MergeContainedAction extends AbstractMergeContainedAction {
 			Predicate<TreeNode> isFiltered) {
 		super(compareConfiguration, mergerRegistry, mode, navigatable);
 		this.isFiltered = isFiltered;
-		updateSelection(selection);
+		setEnabled(updateSelection(selection));
 	}
 
 	@Override
@@ -65,5 +73,20 @@ public class MergeContainedAction extends AbstractMergeContainedAction {
 			default:
 				throw new IllegalStateException();
 		}
+	}
+
+	@Override
+	protected Predicate<Diff> getDiffPredicate() {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff input) {
+				final DifferenceSource sourceSide;
+				if (LEFT_TO_RIGHT.equals(getSelectedMode()) || ACCEPT.equals(getSelectedMode())) {
+					sourceSide = LEFT;
+				} else {
+					sourceSide = RIGHT;
+				}
+				return EMFComparePredicates.fromSide(sourceSide).apply(input);
+			}
+		};
 	}
 }

@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
-import static com.google.common.collect.Iterables.any;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasDirectOrIndirectConflict;
 
 import com.google.common.base.Predicate;
 
 import org.eclipse.compare.INavigatable;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -37,6 +38,10 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class MergeContainedConflictingAction extends AbstractMergeContainedAction {
 
+	@SuppressWarnings("unchecked")
+	private static final Predicate<Diff> CONFLICTING_DIFFS = (Predicate<Diff>)EMFComparePredicates
+			.hasDirectOrIndirectConflict(REAL);
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -48,8 +53,7 @@ public class MergeContainedConflictingAction extends AbstractMergeContainedActio
 			Predicate<TreeNode> isFiltered) {
 		super(compareConfiguration, mergerRegistry, mode, navigatable);
 		this.isFiltered = isFiltered;
-		updateSelection(selection);
-		setEnabled(any(getSelectedDifferences(), hasDirectOrIndirectConflict(REAL)));
+		setEnabled(updateSelection(selection));
 	}
 
 	@Override
@@ -93,4 +97,41 @@ public class MergeContainedConflictingAction extends AbstractMergeContainedActio
 		return new MergeConflictingRunnable(isLeftEditable, isRightEditable, mode, relationshipComputer);
 	}
 
+	@Override
+	protected Predicate<Diff> getDiffPredicate() {
+		return CONFLICTING_DIFFS;
+	}
+
+	@Override
+	protected Predicate<Diff> getStatePredicate() {
+		return new Predicate<Diff>() {
+			public boolean apply(Diff diff) {
+				switch (diff.getState()) {
+					case DISCARDED:
+						switch (getSelectedMode()) {
+							case REJECT:
+							case RIGHT_TO_LEFT:
+								return diff.getSource() == DifferenceSource.LEFT;
+							case ACCEPT:
+							case LEFT_TO_RIGHT:
+							default:
+								return diff.getSource() == DifferenceSource.RIGHT;
+						}
+					case MERGED:
+						switch (getSelectedMode()) {
+							case REJECT:
+							case RIGHT_TO_LEFT:
+								return diff.getSource() == DifferenceSource.RIGHT;
+							case ACCEPT:
+							case LEFT_TO_RIGHT:
+							default:
+								return diff.getSource() == DifferenceSource.LEFT;
+						}
+					case UNRESOLVED:
+					default:
+						return true;
+				}
+			}
+		};
+	}
 }

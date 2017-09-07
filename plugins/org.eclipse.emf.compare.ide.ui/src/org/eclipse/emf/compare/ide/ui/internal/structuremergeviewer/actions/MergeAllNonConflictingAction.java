@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2017 Obeo.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,22 +9,33 @@
  *     Obeo - initial API and implementation
  *     Martin Fleck - bug 514079
  *     Martin Fleck - bug 514415
+ *     Philip Langer - bug 521948
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
+
+import static com.google.common.collect.Iterables.addAll;
+import static com.google.common.collect.Iterables.filter;
+import static org.eclipse.emf.compare.ConflictKind.REAL;
+
+import com.google.common.base.Predicate;
+
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.command.ICompareCommandStack;
 import org.eclipse.emf.compare.command.ICompareCopyCommand;
-import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.domain.impl.EMFCompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
-import org.eclipse.emf.compare.internal.domain.IMergeAllNonConflictingRunnable;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -36,7 +47,13 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class MergeAllNonConflictingAction extends MergeAction {
 
+	@SuppressWarnings("unchecked")
+	private static final Predicate<Diff> NON_CONFLICTING_DIFFS = (Predicate<Diff>)EMFComparePredicates
+			.hasNoDirectOrIndirectConflict(REAL);
+
 	private Comparison comparison;
+
+	private List<Diff> differences;
 
 	/**
 	 * Constructor.
@@ -47,11 +64,11 @@ public class MergeAllNonConflictingAction extends MergeAction {
 	public MergeAllNonConflictingAction(IEMFCompareConfiguration compareConfiguration, Comparison comparison,
 			IMerger.Registry mergerRegistry, MergeMode mode) {
 		super(compareConfiguration, mergerRegistry, mode, null);
-		this.comparison = comparison;
+		setComparison(comparison);
 	}
 
 	@Override
-	protected IMergeRunnable createMergeRunnable(MergeMode mode, boolean isLeftEditable,
+	protected MergeNonConflictingRunnable createMergeRunnable(MergeMode mode, boolean isLeftEditable,
 			boolean isRightEditable, IDiffRelationshipComputer relationshipComputer) {
 		return new MergeNonConflictingRunnable(isLeftEditable, isRightEditable, mode, relationshipComputer);
 	}
@@ -86,17 +103,23 @@ public class MergeAllNonConflictingAction extends MergeAction {
 
 	public void setComparison(Comparison comparison) {
 		this.comparison = comparison;
+		if (comparison != null) {
+			differences = comparison.getDifferences();
+		} else {
+			differences = Collections.emptyList();
+		}
 		clearCache();
 		// update the enablement of this action by simulating a selection change.
 		setEnabled(comparison != null);
 	}
 
 	@Override
-	public void run() {
+	protected void execute(ICompareCommandStack commandStack, MergeMode mode, List<Diff> diffs) {
 		if (editingDomain instanceof EMFCompareEditingDomain) {
 			ICompareCopyCommand mergeCommand = ((EMFCompareEditingDomain)editingDomain)
 					.createCopyAllNonConflictingCommand(comparison, isLeftToRight(), mergerRegistry,
-							(IMergeAllNonConflictingRunnable)mergeRunnable);
+							createMergeRunnable(mode, isLeftEditable(), isRightEditable(),
+									getDiffRelationshipComputer()));
 			editingDomain.getCommandStack().execute(mergeCommand);
 		} else {
 			// FIXME remove this once we have pulled "createCopyAllNonConflictingCommand" up as API.
@@ -112,8 +135,15 @@ public class MergeAllNonConflictingAction extends MergeAction {
 	 */
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		// this subclass does not care about the selection change event.
-		return true;
+		addAll(getSelectedDifferences(), getSelectedDifferences(differences));
+		// The action is enabled only there are any selected differences that will change state when this
+		// action is applied.
+		return !getSelectedDifferences().isEmpty();
+	}
+
+	@Override
+	protected Iterable<Diff> getSelectedDifferences(Iterable<Diff> diffs) {
+		return filter(super.getSelectedDifferences(diffs), NON_CONFLICTING_DIFFS);
 	}
 
 }
