@@ -325,7 +325,7 @@ public class ResourceComputationSchedulerTest {
 
 	@Before
 	public void setUp() {
-		scheduler = new ResourceComputationScheduler<String>(10, TimeUnit.MILLISECONDS, null);
+		scheduler = new ResourceComputationScheduler<String>(100, TimeUnit.MILLISECONDS, null);
 	}
 
 	@After

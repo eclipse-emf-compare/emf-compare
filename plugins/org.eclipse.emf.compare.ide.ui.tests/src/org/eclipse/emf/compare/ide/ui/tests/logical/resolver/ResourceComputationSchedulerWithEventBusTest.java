@@ -188,7 +188,7 @@ public class ResourceComputationSchedulerWithEventBusTest extends ResourceComput
 				public Integer call() throws Exception {
 					scheduler.scheduleComputation(tc);
 					// We ask for shutdown before the task can complete
-					// The scheduler is configured to wait only 10ms
+					// The scheduler is configured to wait only 100ms
 					scheduler.demandShutdown();
 
 					return Integer.valueOf(42);
@@ -277,9 +277,9 @@ public class ResourceComputationSchedulerWithEventBusTest extends ResourceComput
 				scheduler.wait();
 			}
 			assertEquals(1, cs.getCallCount());
-			assertTrue(cs.isInterrupted());
-			assertTrue(cs.isFailed());
-			assertFalse(cs.isSuccess());
+			assertTrue(cs.getMessage(), cs.isInterrupted());
+			assertTrue(cs.getMessage(), cs.isFailed());
+			assertFalse(cs.getMessage(), cs.isSuccess());
 			assertEquals("As expected", cs.getMessage());
 		}
 	}
@@ -329,7 +329,7 @@ public class ResourceComputationSchedulerWithEventBusTest extends ResourceComput
 			public Integer call() throws Exception {
 				scheduler.scheduleComputation(tc);
 				// We ask for shutdown before the task can complete
-				// The scheduler is configured to wait 1s while the task only takes 500ms
+				// The scheduler is configured to wait 100ms
 				scheduler.demandShutdown();
 				// This allows the test to make sure that the shutdown has been demanded before
 				// the treatment is over
@@ -347,9 +347,9 @@ public class ResourceComputationSchedulerWithEventBusTest extends ResourceComput
 				scheduler.wait();
 			}
 			assertEquals(1, cs.getCallCount());
-			assertFalse(cs.isInterrupted());
-			assertTrue(cs.isSuccess());
-			assertFalse(cs.isFailed());
+			assertFalse(cs.getMessage(), cs.isInterrupted());
+			assertTrue(cs.getMessage(), cs.isSuccess());
+			assertFalse(cs.getMessage(), cs.isFailed());
 			assertEquals("As expected", cs.getMessage());
 			assertEquals(ShutdownState.FINISH_SUCCESS, cs.getShutdownStatus().getState());
 		}
