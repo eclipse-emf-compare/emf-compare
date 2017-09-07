@@ -30,22 +30,4 @@ import junit.textui.TestRunner;
 @SuiteClasses({ProfileMigrationTest.class })
 public class AllUITests {
 
-	/**
-	 * Standalone launcher for all of compare's tests.
-	 * 
-	 * @generated
-	 */
-	public static void main(final String[] args) {
-		TestRunner.run(suite());
-	}
-
-	/**
-	 * This will return a suite populated with all tests available through this class.
-	 * 
-	 * @generated
-	 */
-	public static Test suite() {
-		return new JUnit4TestAdapter(AllUITests.class);
-	}
-
 }

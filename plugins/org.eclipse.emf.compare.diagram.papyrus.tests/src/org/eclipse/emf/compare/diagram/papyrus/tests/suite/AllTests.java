@@ -28,7 +28,6 @@ import org.eclipse.emf.compare.diagram.papyrus.tests.saveparameter.SaveParameter
 import org.eclipse.emf.compare.diagram.papyrus.tests.saveparameter.SaveParameterHookTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.structuremergeviewer.actions.MergeNonConflictingCascadingFilterTest;
 import org.eclipse.emf.compare.diagram.papyrus.tests.uriattachment.URIAttachmentTest;
-import org.eclipse.emf.compare.tests.suite.CompareTestSuite;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
@@ -41,10 +40,6 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.textui.TestRunner;
 
 /**
  * This test suite allows us to launch all tests for EMF Compare at once.
@@ -59,24 +54,6 @@ import junit.textui.TestRunner;
 		IgnoreDiFilePostProcessorTest.class, PapyrusContextUtilTest.class,
 		MergeNonConflictingCascadingFilterTest.class, MergeDiffInvolvingRefineDiffTest.class, })
 public class AllTests {
-
-	/**
-	 * Standalone launcher for all of compare's tests.
-	 * 
-	 * @generated
-	 */
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	/**
-	 * This will return a suite populated with all tests available through this class.
-	 * 
-	 * @generated
-	 */
-	public static Test suite() {
-		return new JUnit4TestAdapter(CompareTestSuite.class);
-	}
 
 	@BeforeClass
 	public static void fillEMFRegistries() {

@@ -10,14 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ecoretools.tests.suite;
 
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.textui.TestRunner;
-
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.diagram.ide.ecoretools.tests.nodechanges.NodechangesTest;
 import org.eclipse.emf.compare.diagram.internal.extensions.ExtensionsPackage;
-import org.eclipse.emf.compare.tests.suite.CompareTestSuite;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -37,24 +32,6 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({NodechangesTest.class })
 public class AllTests {
-
-	/**
-	 * Standalone launcher for all of compare's tests.
-	 * 
-	 * @generated
-	 */
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	/**
-	 * This will return a suite populated with all tests available through this class.
-	 * 
-	 * @generated
-	 */
-	public static Test suite() {
-		return new JUnit4TestAdapter(CompareTestSuite.class);
-	}
 
 	@BeforeClass
 	public static void fillEMFRegistries() {

@@ -81,10 +81,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.textui.TestRunner;
-
 /**
  * This test suite allows us to launch all tests for EMF Compare at once.
  * 
@@ -112,23 +108,6 @@ import junit.textui.TestRunner;
 		ConflictImplicationsTest_Bug484579.class, PseudoConflictDetectionTest.class, ComplexMergeTest.class,
 		ConflictSearchTest.class, DiffRelationshipComputerTest.class })
 public class AllTests {
-	/**
-	 * Standalone launcher for all of compare's tests.
-	 * 
-	 * @generated
-	 */
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	/**
-	 * This will return a suite populated with all tests available through this class.
-	 * 
-	 * @generated
-	 */
-	public static Test suite() {
-		return new JUnit4TestAdapter(CompareTestSuite.class);
-	}
 
 	@BeforeClass
 	public static void fillEMFRegistries() {

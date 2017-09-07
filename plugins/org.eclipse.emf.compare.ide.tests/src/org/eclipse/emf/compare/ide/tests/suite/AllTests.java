@@ -21,31 +21,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.textui.TestRunner;
-
 @RunWith(Suite.class)
 @SuiteClasses({ResourceUtil_BinaryIdentical2Test.class, ResourceUtil_BinaryIdentical2_ReadLimitTest.class,
 		ResourceUtil_BinaryIdentical3Test.class, ResourceUtil_BinaryIdentical3_ReadLimitTest.class,
 		Bug471045Test.class, Bug507157Test.class })
 public class AllTests {
-	/**
-	 * Launches the test with the given arguments.
-	 * 
-	 * @param args
-	 *            Arguments of the testCase.
-	 */
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	/**
-	 * Creates the {@link junit.framework.TestSuite TestSuite} for all the test.
-	 * 
-	 * @return The test suite containing all the tests
-	 */
-	public static Test suite() {
-		return new JUnit4TestAdapter(AllTests.class);
-	}
 }

@@ -54,10 +54,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.textui.TestRunner;
-
 @RunWith(Suite.class)
 @SuiteClasses({EMFCompareConfigurationTest.class, DependenciesTest.class, MergeActionTest.class,
 		PseudoConflictsMergeActionTest.class, BugsTestSuite.class, NavigatableTest.class,
@@ -72,24 +68,6 @@ import junit.textui.TestRunner;
 		MergeNonConflictingRunnableRefinementTest.class, CachingImplicitDependenciesTest.class,
 		MirroredMergeActionTest.class, EMFModelProviderRegistrationTest.class, })
 public class AllTests {
-	/**
-	 * Launches the test with the given arguments.
-	 * 
-	 * @param args
-	 *            Arguments of the testCase.
-	 */
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	/**
-	 * Creates the {@link junit.framework.TestSuite TestSuite} for all the test.
-	 * 
-	 * @return The test suite containing all the tests
-	 */
-	public static Test suite() {
-		return new JUnit4TestAdapter(AllTests.class);
-	}
 
 	@BeforeClass
 	public static void fillEMFRegistries() {

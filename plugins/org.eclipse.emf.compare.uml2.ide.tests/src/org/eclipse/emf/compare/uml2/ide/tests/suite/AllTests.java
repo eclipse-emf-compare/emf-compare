@@ -10,10 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.ide.tests.suite;
 
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.textui.TestRunner;
-
 import org.eclipse.emf.compare.uml2.ide.tests.profile.ProfileLoadingTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -27,23 +23,5 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ProfileLoadingTest.class })
 public class AllTests {
-
-	/**
-	 * Standalone launcher for all of compare's tests.
-	 * 
-	 * @generated
-	 */
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	/**
-	 * This will return a suite populated with all tests available through this class.
-	 * 
-	 * @generated
-	 */
-	public static Test suite() {
-		return new JUnit4TestAdapter(AllTests.class);
-	}
 
 }

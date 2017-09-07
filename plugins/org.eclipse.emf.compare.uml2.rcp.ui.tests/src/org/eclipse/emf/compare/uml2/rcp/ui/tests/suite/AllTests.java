@@ -19,10 +19,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.textui.TestRunner;
-
 /**
  * This test suite allows us to launch all tests for EMF Compare at once.
  * 
@@ -32,23 +28,5 @@ import junit.textui.TestRunner;
 @SuiteClasses({UMLDifferencesOrderTest.class, DynamicProfileIntegrationDisplayTest.class,
 		StaticProfileIntegrationDisplayTest.class, ConflictsGroupTest.class })
 public class AllTests {
-
-	/**
-	 * Standalone launcher for all of compare's tests.
-	 * 
-	 * @generated
-	 */
-	public static void main(String[] args) {
-		TestRunner.run(suite());
-	}
-
-	/**
-	 * This will return a suite populated with all tests available through this class.
-	 * 
-	 * @generated
-	 */
-	public static Test suite() {
-		return new JUnit4TestAdapter(AllTests.class);
-	}
 
 }
