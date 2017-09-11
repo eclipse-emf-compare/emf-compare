@@ -9,18 +9,21 @@
  *     Obeo - initial API and implementation
  *     Martin Fleck - Consider profile definition changes on origin (bug 495259)
  *     Philip Langer - bug 508665, progress reporting
+ *     Christian W. Damus - bug 522064
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor;
 
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.delete;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isAddOrSetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
+import static org.eclipse.emf.compare.uml2.internal.postprocessor.util.UMLCompareIterables.tryFirst;
+import static org.eclipse.emf.compare.utils.MatchUtil.getOriginObject;
 import static org.eclipse.uml2.uml.UMLPackage.Literals.INSTANCE_SPECIFICATION__CLASSIFIER;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -155,21 +158,28 @@ public class UMLPostProcessor implements IPostProcessor {
 	 */
 	private boolean checkProfileVersion(Comparison comparison, ProfileApplication profileApplication,
 			EAnnotation originAnnot, EAnnotation leftAnnot, EAnnotation rightAnnot) {
-		Collection<URI> originUris = Lists.newArrayList();
+
+		Optional<URI> originURI = Optional.absent();
+		boolean originHasProfileDefinition = false;
 		if (comparison.isThreeWay()) {
-			originUris = getNormalizedURIs(
-					ReferenceUtil.getAsList(originAnnot, EcorePackage.Literals.EANNOTATION__REFERENCES));
+			originURI = tryFirst(getNormalizedURIs(
+					ReferenceUtil.getAsList(originAnnot, EcorePackage.Literals.EANNOTATION__REFERENCES)));
+			originHasProfileDefinition = getOriginObject(comparison, profileApplication) != null;
 		}
-		Collection<URI> leftUris = getNormalizedURIs(
-				ReferenceUtil.getAsList(leftAnnot, EcorePackage.Literals.EANNOTATION__REFERENCES));
-		Collection<URI> rightUris = getNormalizedURIs(
-				ReferenceUtil.getAsList(rightAnnot, EcorePackage.Literals.EANNOTATION__REFERENCES));
+		Optional<URI> leftURI = tryFirst(getNormalizedURIs(
+				ReferenceUtil.getAsList(leftAnnot, EcorePackage.Literals.EANNOTATION__REFERENCES)));
+		Optional<URI> rightURI = tryFirst(getNormalizedURIs(
+				ReferenceUtil.getAsList(rightAnnot, EcorePackage.Literals.EANNOTATION__REFERENCES)));
 
-		boolean notEqualSize = leftUris.size() != rightUris.size()
-				|| (comparison.isThreeWay() && leftUris.size() != originUris.size());
+		// If the origin is absent, is doesn't matter: the profile is newly applied to each
+		// side so any applications of its stereotypes can only be added. But, if the origin
+		// has a static profile definition, then it's an incompatible change: it should have
+		// a dynamic definition annotation, so call it 'missing'
+		boolean missingSomeSide = (leftURI.isPresent() != rightURI.isPresent())
+				|| (!originURI.isPresent() && originHasProfileDefinition);
 
-		if (notEqualSize || !leftUris.containsAll(rightUris)
-				|| (comparison.isThreeWay() && !leftUris.containsAll(originUris))) {
+		if (missingSomeSide || !leftURI.equals(rightURI)
+				|| (originURI.isPresent() && !originURI.equals(leftURI))) {
 			// different uri on one of the sides
 			org.eclipse.uml2.uml.Package impactedPackage = profileApplication.getApplyingPackage();
 			String message;
