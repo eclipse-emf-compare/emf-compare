@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Martin Fleck - bug 512677
+ *     Christian W. Damus - bug 522017
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
@@ -33,7 +34,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -84,7 +86,7 @@ public class ResourceComputationScheduler<T> {
 	 * {@link #currentlyComputing} and {@link #computedKeys} must not be accessed concurrently by two threads
 	 * at once.
 	 */
-	private final ReentrantLock lock;
+	private final ReadWriteLock lock;
 
 	/** Condition to await for all current task threads to terminate. */
 	private final Condition endOfTasks;
@@ -131,8 +133,8 @@ public class ResourceComputationScheduler<T> {
 	 */
 	public ResourceComputationScheduler(int shutdownWaitDuration, TimeUnit shutdownWaitUnit,
 			EventBus eventBus) {
-		this.lock = new ReentrantLock(true);
-		this.endOfTasks = lock.newCondition();
+		this.lock = new ReentrantReadWriteLock(true);
+		this.endOfTasks = lock.writeLock().newCondition();
 		this.currentlyComputing = new HashSet<T>();
 		this.shutdownInProgress = new AtomicBoolean(false);
 		this.shutdownWaitDuration = shutdownWaitDuration;
@@ -366,13 +368,16 @@ public class ResourceComputationScheduler<T> {
 	 */
 	public void computeAll(Iterable<? extends IComputation<T>> computations) {
 		checkNotNull(computations);
-		lock.lock();
-		for (IComputation<T> comp : computations) {
-			if (comp != null) {
-				scheduleComputation(comp);
+
+		try {
+			for (IComputation<T> comp : computations) {
+				if (comp != null) {
+					scheduleComputation(comp);
+				}
 			}
+		} finally {
+			waitForEndOfTasks();
 		}
-		waitForEndOfTasks();
 	}
 
 	/**
@@ -393,7 +398,7 @@ public class ResourceComputationScheduler<T> {
 	 */
 	public boolean scheduleComputation(final IComputation<T> computation) {
 		checkNotNull(computation);
-		lock.lock();
+		lock.writeLock().lock();
 		try {
 			if (computedKeys.add(computation.getKey()) && currentlyComputing.add(computation.getKey())) {
 				ListenableFuture<?> future = computingPool.submit(new Runnable() {
@@ -408,7 +413,7 @@ public class ResourceComputationScheduler<T> {
 			}
 			return false;
 		} finally {
-			lock.unlock();
+			lock.writeLock().unlock();
 		}
 	}
 
@@ -423,13 +428,16 @@ public class ResourceComputationScheduler<T> {
 	 */
 	public void runAll(Iterable<? extends Runnable> runnables) {
 		checkNotNull(runnables);
-		lock.lock();
-		for (Runnable runnable : runnables) {
-			if (runnable != null) {
-				runnable.run();
+
+		try {
+			for (Runnable runnable : runnables) {
+				if (runnable != null) {
+					runnable.run();
+				}
 			}
+		} finally {
+			waitForEndOfTasks();
 		}
-		waitForEndOfTasks();
 	}
 
 	/**
@@ -456,10 +464,15 @@ public class ResourceComputationScheduler<T> {
 	 *         of keys {@link #computedKeys} was last set.
 	 */
 	public ImmutableSet<T> getComputedElements() {
-		if (computedKeys == null) {
-			return ImmutableSet.of();
+		lock.readLock().lock();
+		try {
+			if (computedKeys == null) {
+				return ImmutableSet.of();
+			}
+			return ImmutableSet.copyOf(computedKeys);
+		} finally {
+			lock.readLock().unlock();
 		}
-		return ImmutableSet.copyOf(computedKeys);
 	}
 
 	/**
@@ -471,14 +484,24 @@ public class ResourceComputationScheduler<T> {
 	 * @return true, if a computation of the given key has been run or is still running.
 	 */
 	public boolean isScheduled(T key) {
-		return computedKeys != null && computedKeys.contains(key);
+		lock.readLock().lock();
+		try {
+			return computedKeys != null && computedKeys.contains(key);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	/**
 	 * Clears the set of computed keys.
 	 */
 	public void clearComputedElements() {
-		computedKeys.clear();
+		lock.writeLock().lock();
+		try {
+			computedKeys.clear();
+		} finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 	/**
@@ -488,7 +511,12 @@ public class ResourceComputationScheduler<T> {
 	 *            An iterable over the elements to set as computed, must not be {@code null} but can be empty.
 	 */
 	public void setComputedElements(Iterable<T> elements) {
-		computedKeys = Sets.newLinkedHashSet(elements);
+		lock.writeLock().lock();
+		try {
+			computedKeys = Sets.newLinkedHashSet(elements);
+		} finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 	/**
@@ -530,6 +558,20 @@ public class ResourceComputationScheduler<T> {
 	 * OperationCanceledException is thrown.
 	 */
 	private void waitForEndOfTasks() {
+		lock.readLock().lock();
+
+		try {
+			if (currentlyComputing.isEmpty()) {
+				return;
+			}
+		} finally {
+			lock.readLock().unlock();
+		}
+
+		// Acquire the write lock because we are waiting for writers.
+		// Read locks cannot be upgraded.
+		lock.writeLock().lock();
+
 		try {
 			// TODO Is this test really necessary?
 			// TODO Is this test dangerous (infinite wait)
@@ -541,7 +583,7 @@ public class ResourceComputationScheduler<T> {
 			// FIXME?
 			throw new OperationCanceledException();
 		} finally {
-			lock.unlock();
+			lock.writeLock().unlock();
 		}
 	}
 
@@ -554,14 +596,14 @@ public class ResourceComputationScheduler<T> {
 	 *            the key to remove.
 	 */
 	private void finalizeTask(T key) {
-		lock.lock();
+		lock.writeLock().lock();
 		try {
 			currentlyComputing.remove(key);
 			if (currentlyComputing.isEmpty()) {
-				endOfTasks.signal();
+				endOfTasks.signalAll();
 			}
 		} finally {
-			lock.unlock();
+			lock.writeLock().unlock();
 		}
 	}
 
