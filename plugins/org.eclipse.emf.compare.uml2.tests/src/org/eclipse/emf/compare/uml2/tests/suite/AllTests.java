@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2019 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *     Stefan Dirix - addition of PseudoConflictTest
  *     Martin Fleck - addition of RemoveStereotypeApplicationPseudoConflictTest
  *     Martin Fleck - addition of AddMessageSubDiffTest
+ *     Christian W. Damus - bug 522080
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.tests.suite;
 
@@ -53,6 +54,7 @@ import org.eclipse.emf.compare.uml2.tests.stereotypes.DynamicStereotypeTest;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.DynamicStereotypedElementChangeTests;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.StaticStereotypeTest;
 import org.eclipse.emf.compare.uml2.tests.stereotypes.StaticStereotypedElementChangeTests;
+import org.eclipse.emf.compare.uml2.tests.stereotypes.StereotypeApplicationConflictTests;
 import org.eclipse.emf.compare.uml2.tests.timeConstraint.AddTimeConstraintTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -83,7 +85,8 @@ import junit.textui.TestRunner;
 		OpaqueElementBodyChangeDiffTest.class, OpaqueElementBodyChangeMergeTest.class,
 		DanglingStereotypeApplicationTest.class, TestNonRegPseudoConflict_484576.class,
 		RemoveStereotypeApplicationPseudoConflictTest.class, MultiplicityElementChangesTest.class,
-		InstanceSpecificationClassifiersMergeTest.class, AddMessageSubDiffTest.class, })
+		InstanceSpecificationClassifiersMergeTest.class, AddMessageSubDiffTest.class,
+		StereotypeApplicationConflictTests.class, })
 public class AllTests {
 
 	/**

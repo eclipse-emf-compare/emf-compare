@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Obeo.
+ * Copyright (c) 2016, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Christian W. Damus - bug 522080
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.conflict;
 
@@ -186,7 +187,15 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 		final String changedValue2 = getChangedValue(diff2);
 		final EObject originalContainer = diff1.getMatch().getOrigin();
 		final EAttribute changedAttribute = diff1.getAttribute();
-		final String originalValue = (String)ReferenceUtil.safeEGet(originalContainer, changedAttribute);
+		final String originalValue;
+
+		if (originalContainer == null) {
+			// Owner is added to both sides
+			originalValue = null;
+		} else {
+			originalValue = (String)ReferenceUtil.safeEGet(originalContainer, changedAttribute);
+		}
+
 		return isMergeableText(changedValue1, changedValue2, originalValue);
 	}
 
