@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - check if control is disposed before redraw
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.util;
 
@@ -97,7 +98,9 @@ public final class SWTUtil {
 	public static void safeRedraw(final Control control, boolean async) {
 		Runnable runnable = new Runnable() {
 			public void run() {
-				control.redraw();
+				if (!control.isDisposed()) {
+					control.redraw();
+				}
 			}
 		};
 		if (async) {
