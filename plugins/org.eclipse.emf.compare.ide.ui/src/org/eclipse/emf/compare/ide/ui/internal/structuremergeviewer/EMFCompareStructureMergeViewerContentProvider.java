@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -508,7 +508,8 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 	 */
 	@Override
 	public void notifyChanged(Notification notification) {
-		if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
+		if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()
+				&& viewer.getInput() != null) {
 			if (notification instanceof IViewerNotification) {
 				if (viewerRefresh == null) {
 					viewerRefresh = new ViewerRefresh(viewer) {
