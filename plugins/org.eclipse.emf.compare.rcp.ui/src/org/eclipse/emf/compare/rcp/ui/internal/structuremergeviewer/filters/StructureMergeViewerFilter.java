@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - cache result
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters;
 
@@ -14,6 +15,7 @@ import static com.google.common.base.Predicates.alwaysFalse;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 
 import com.google.common.base.Predicate;
@@ -22,6 +24,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.eventbus.EventBus;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -72,6 +75,9 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	/** The {@link EventBus} associated with this filter. */
 	private final EventBus eventBus;
 
+	/** The cached values for {@link #select(Viewer, Object, Object)}. */
+	private final Map<Object, Boolean> selectedObjects;
+
 	/**
 	 * The predicate used by this StructureMergeViewerFilter.
 	 */
@@ -116,6 +122,7 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 		this.unselectedDifferenceFilters = newLinkedHashSet();
 		this.activeDifferenceFilters = newLinkedHashSet();
 		this.aggregatedPredicate = DEFAULT_PREDICATE;
+		this.selectedObjects = newHashMap();
 	}
 
 	/**
@@ -128,6 +135,11 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if (predicates.isEmpty()) {
 			return true;
+		}
+
+		Boolean cachedResult = selectedObjects.get(element);
+		if (cachedResult != null) {
+			return cachedResult.booleanValue();
 		}
 
 		final boolean result;
@@ -150,6 +162,7 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 			result = true;
 		}
 
+		selectedObjects.put(element, Boolean.valueOf(result));
 		return result;
 	}
 
@@ -167,6 +180,7 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 		changed = unselectedDifferenceFilters.remove(filter) || changed;
 
 		if (changed) {
+			clearCache();
 			aggregatedPredicate = computeAggregatedPredicate();
 			eventBus.post(new DifferenceFilterChange(aggregatedPredicate, selectedDifferenceFilters,
 					unselectedDifferenceFilters));
@@ -181,7 +195,15 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 	 *         unselected state predicates of unselected filters.
 	 */
 	private Predicate<? super EObject> computeAggregatedPredicate() {
+		clearCache();
 		return not(or(predicates));
+	}
+
+	/**
+	 * Clears the cached results.
+	 */
+	private void clearCache() {
+		selectedObjects.clear();
 	}
 
 	/**
@@ -198,6 +220,7 @@ public class StructureMergeViewerFilter extends ViewerFilter {
 		changed |= selectedDifferenceFilters.remove(filter);
 
 		if (changed) {
+			clearCache();
 			aggregatedPredicate = computeAggregatedPredicate();
 			eventBus.post(new DifferenceFilterChange(aggregatedPredicate, selectedDifferenceFilters,
 					unselectedDifferenceFilters));
