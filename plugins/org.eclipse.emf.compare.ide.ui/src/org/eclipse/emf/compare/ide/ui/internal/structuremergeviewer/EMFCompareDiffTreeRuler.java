@@ -187,21 +187,35 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 */
 	private void handlePaintEvent(PaintEvent e) {
 		annotationsData.clear();
-		for (Diff diff : dependencyData.getRequires()) {
-			final Collection<TreeNode> treeNodes = dependencyData.getTreeNodes(diff);
-			for (TreeNodeToVisibleTreeItem treeNodeToVisibleTreeItem : findTreeItems(treeNodes)) {
-				if (!JFaceUtil.isFiltered(fTreeViewer, treeNodeToVisibleTreeItem.getTreeNode(), null)) {
-					createAnnotation(e, treeNodeToVisibleTreeItem, compareColor.getRequiredFillColor(),
-							compareColor.getRequiredStrokeColor());
+
+		int yRuler = getSize().y;
+		boolean isVerticalScrollBarEnabled = isVerticalScrollBarEnabled();
+		Tree tree = fTreeViewer.getTree();
+		if (tree.getItemCount() > 0) {
+			int yMin = Math.abs(tree.getItem(0).getBounds().y);
+			int yMax = getLastVisibleItem().getBounds().y;
+
+			Color requiredFillColor = compareColor.getRequiredFillColor();
+			Color requiredStrokeColor = compareColor.getRequiredStrokeColor();
+			for (Diff diff : dependencyData.getRequires()) {
+				final Collection<TreeNode> treeNodes = dependencyData.getTreeNodes(diff);
+				for (TreeNodeToVisibleTreeItem treeNodeToVisibleTreeItem : findTreeItems(treeNodes)) {
+					if (!JFaceUtil.isFiltered(fTreeViewer, treeNodeToVisibleTreeItem.getTreeNode(), null)) {
+						createAnnotation(e, treeNodeToVisibleTreeItem, requiredFillColor, requiredStrokeColor,
+								yRuler, isVerticalScrollBarEnabled, yMin, yMax);
+					}
 				}
 			}
-		}
-		for (Diff diff : dependencyData.getRejections()) {
-			final Collection<TreeNode> treeNodes = dependencyData.getTreeNodes(diff);
-			for (TreeNodeToVisibleTreeItem treeNodeToVisibleTreeItem : findTreeItems(treeNodes)) {
-				if (!JFaceUtil.isFiltered(fTreeViewer, treeNodeToVisibleTreeItem.getTreeNode(), null)) {
-					createAnnotation(e, treeNodeToVisibleTreeItem, compareColor.getUnmergeableFillColor(),
-							compareColor.getUnmergeableStrokeColor());
+
+			Color unmergeableFillColor = compareColor.getUnmergeableFillColor();
+			Color unmergeableStrokeColor = compareColor.getUnmergeableStrokeColor();
+			for (Diff diff : dependencyData.getRejections()) {
+				final Collection<TreeNode> treeNodes = dependencyData.getTreeNodes(diff);
+				for (TreeNodeToVisibleTreeItem treeNodeToVisibleTreeItem : findTreeItems(treeNodes)) {
+					if (!JFaceUtil.isFiltered(fTreeViewer, treeNodeToVisibleTreeItem.getTreeNode(), null)) {
+						createAnnotation(e, treeNodeToVisibleTreeItem, unmergeableFillColor,
+								unmergeableStrokeColor, yRuler, isVerticalScrollBarEnabled, yMin, yMax);
+					}
 				}
 			}
 		}
@@ -392,17 +406,22 @@ public class EMFCompareDiffTreeRuler extends Canvas {
 	 *            the annotation's fill color.
 	 * @param border
 	 *            the annotation's border color.
+	 * @param yRuler
+	 *            the ruler size's y value
+	 * @param isVerticalScrollBarEnabled
+	 *            whether the vertical scroll bar is enabled.
+	 * @param yMin
+	 *            the minimum y value.
+	 * @param yMax
+	 *            the maximum y value.
 	 */
 	private void createAnnotation(PaintEvent e, TreeNodeToVisibleTreeItem treeNodeToVisibleTreeItem,
-			Color fill, Color border) {
+			Color fill, Color border, int yRuler, boolean isVerticalScrollBarEnabled, int yMin, int yMax) {
 		TreeItem item = getDeepestVisibleTreeItem(treeNodeToVisibleTreeItem.getTreeItem(),
 				treeNodeToVisibleTreeItem.getTreeItem());
 		if (item != null) {
 			int y = item.getBounds().y;
-			int yRuler = getSize().y;
-			if (isVerticalScrollBarEnabled()) {
-				int yMin = Math.abs(item.getParent().getItems()[0].getBounds().y);
-				int yMax = getLastVisibleItem().getBounds().y;
+			if (isVerticalScrollBarEnabled) {
 				int realYMax = yMax + yMin;
 				if (realYMax > 0) {
 					y = (y + yMin) * yRuler / realYMax;
