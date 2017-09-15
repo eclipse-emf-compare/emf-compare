@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,8 +7,12 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - decrease progress monitoring overhead
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.progress;
+
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
@@ -44,6 +48,10 @@ public class JobProgressInfoComposite extends Composite {
 	private ToolItem actionButton;
 
 	private final Job job;
+
+	private final TaskNameUpdater taskNameUpdater = new TaskNameUpdater();
+
+	private final PercentUpdater percentUpdater = new PercentUpdater();
 
 	/**
 	 * @param parent
@@ -127,24 +135,80 @@ public class JobProgressInfoComposite extends Composite {
 	 * @param taskNameLabel
 	 *            the taskNameLabel to set
 	 */
-	public void setTaskName(final String taskName) {
-		SWTUtil.safeAsyncExec(new Runnable() {
-			public void run() {
-				if (!taskNameLabel.isDisposed() && !JobProgressInfoComposite.this.isDisposed()) {
-					taskNameLabel.setText(taskName);
-					layout();
-				}
-			}
-		});
+	public void setTaskName(String taskName) {
+		taskNameUpdater.setTaskName(taskName);
 	}
 
-	public void setPercentDone(final int percent) {
-		SWTUtil.safeAsyncExec(new Runnable() {
-			public void run() {
-				if (!progressBar.isDisposed()) {
-					progressBar.setSelection(percent);
-				}
+	public void setPercentDone(int percent) {
+		percentUpdater.setPercent(percent);
+	}
+
+	/**
+	 * A helper class for updating the {@link JobProgressInfoComposite#taskNameLabel task name label}.
+	 */
+	private class TaskNameUpdater implements Runnable {
+		/**
+		 * An atomic reference to the latest task name.
+		 */
+		final AtomicReference<String> taskName = new AtomicReference<>();
+
+		/**
+		 * Updates the {@link JobProgressInfoComposite#taskNameLabel task name label} on the UI thread.
+		 */
+		public void run() {
+			String newTaskName = taskName.getAndSet(null);
+			if (!taskNameLabel.isDisposed() && !JobProgressInfoComposite.this.isDisposed()) {
+				taskNameLabel.setText(newTaskName);
+				layout();
 			}
-		});
+		}
+
+		/**
+		 * Updates the {@link JobProgressInfoComposite#taskNameLabel task name label}.
+		 * 
+		 * @param taskName
+		 *            the new task name.
+		 */
+		public void setTaskName(String taskName) {
+			String oldTaskName = this.taskName.getAndSet(taskName);
+			if (oldTaskName == null) {
+				SWTUtil.safeAsyncExec(this);
+			}
+		}
+	}
+
+	/**
+	 * A helper class for updating the {@link JobProgressInfoComposite#progressBar progress bar percent}.
+	 */
+	private class PercentUpdater implements Runnable {
+		/**
+		 * An atomic integer for the latest percent.
+		 */
+		final AtomicInteger percent = new AtomicInteger(-1);
+
+		/**
+		 * Updates the {@link JobProgressInfoComposite#progressBar progress bar percent} on the UI thread.
+		 */
+		public void run() {
+			// Consume the percent.
+			int newPercent = this.percent.getAndSet(-1);
+			if (!progressBar.isDisposed()) {
+				progressBar.setSelection(newPercent);
+			}
+		}
+
+		/**
+		 * Updates the {@link JobProgressInfoComposite#progressBar progress bar percent}.
+		 * 
+		 * @param percent
+		 *            the new percent.
+		 */
+		public void setPercent(int percent) {
+			// If the percent hasn't been consumed, dispatch this runnable.
+			int oldPercent = this.percent.getAndSet(percent);
+			if (oldPercent == -1) {
+				SWTUtil.safeAsyncExec(this);
+			}
+		}
 	}
 }
