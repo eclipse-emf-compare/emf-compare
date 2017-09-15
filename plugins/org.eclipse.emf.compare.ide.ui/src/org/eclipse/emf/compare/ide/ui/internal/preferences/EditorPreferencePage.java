@@ -7,12 +7,14 @@
  * 
  * Contributors:
  *      Martin Fleck - initial API and implementation
+ *      Philip Langer - bug 522372
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.preferences;
 
 import static org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages.getString;
 import static org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences.EDITOR_TREE_AUTO_EXPAND_LEVEL;
 import static org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences.EDITOR_TREE_AUTO_SELECT_FIRST_CHANGE;
+import static org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences.EDITOR_TREE_EXPAND_TIMEOUT;
 import static org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences.EDITOR_TREE_HIGHLIGHT_RELATED_CHANGES;
 
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
@@ -63,6 +65,9 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 
 	/** Editor for preference {@link EMFCompareUIPreferences#EDITOR_TREE_AUTO_EXPAND_LEVEL}. */
 	protected IntegerFieldEditor treeAutoExpandLevel;
+
+	/** Editor for preference {@link EMFCompareUIPreferences#EDITOR_TREE_EXPAND_TIMEOUT}. */
+	protected IntegerFieldEditor treeExpandTimeout;
 
 	/** Editor for preference {@link EMFCompareUIPreferences#EDITOR_TREE_HIGHLIGHT_RELATED_CHANGES}. */
 	protected BooleanFieldEditor treeHighlightRelatedChanges;
@@ -167,12 +172,14 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 	 */
 	protected void createTreeTabContent() {
 		createAutoExpandTreeLevel(getTreeTab());
+		createExpandTreeTimeout(getTreeTab());
 		createAutoSelectFirstChange(getTreeTab());
 		createHighlightRelatedChanges(getTreeTab());
 		createSelectNextUnresolvedDiff(getTreeTab());
 
 		GridLayoutFactory.swtDefaults().numColumns(2).applyTo(getTreeTab());
 		treeAutoSelectFirstChange.fillIntoGrid(getTreeTab(), 2);
+		treeExpandTimeout.fillIntoGrid(getTreeTab(), 2);
 		treeHighlightRelatedChanges.fillIntoGrid(getTreeTab(), 2);
 		selectNextUnresolvedDiff.fillIntoGrid(getTreeTab(), 2);
 	}
@@ -207,6 +214,22 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		treeAutoExpandLevel.setValidRange(-1, 999);
 		addField(treeAutoExpandLevel);
 		return treeAutoExpandLevel;
+	}
+
+	/**
+	 * Creates an editor for the {@link EMFCompareUIPreferences#EDITOR_TREE_EXPAND_TIMEOUT} preference.
+	 * 
+	 * @param parent
+	 *            editor parent
+	 * @return editor
+	 */
+	protected IntegerFieldEditor createExpandTreeTimeout(Composite parent) {
+		treeExpandTimeout = new IntegerFieldEditor(EDITOR_TREE_EXPAND_TIMEOUT,
+				getString("EditorPreferencesPage.treeTab.expandTreeTimeout"), //$NON-NLS-1$
+				parent, 3);
+		treeExpandTimeout.setValidRange(1, 999);
+		addField(treeExpandTimeout);
+		return treeExpandTimeout;
 	}
 
 	/**

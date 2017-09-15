@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - bug 508855
+ *     Philip Langer - bug 508855, 522372
  *     Martin Fleck - bug 514767
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.preferences;
@@ -62,6 +62,13 @@ public interface EMFCompareUIPreferences {
 	 */
 	String EDITOR_TREE_AUTO_EXPAND_LEVEL = EMFCompareIDEUIPlugin.PLUGIN_ID
 			+ ".preference.editor.tree.expand.level"; //$NON-NLS-1$
+
+	/**
+	 * Preference key holding the value for the comparison editor to limit the number of seconds spent
+	 * expanding the tree viewer during {@link #EDITOR_TREE_AUTO_EXPAND_LEVEL auto expand} and expand-all.
+	 */
+	String EDITOR_TREE_EXPAND_TIMEOUT = EMFCompareIDEUIPlugin.PLUGIN_ID
+			+ ".preference.editor.tree.expand.timeout"; //$NON-NLS-1$
 
 	/**
 	 * Preference key holding the value for the comparison editor to automatically select the first change in

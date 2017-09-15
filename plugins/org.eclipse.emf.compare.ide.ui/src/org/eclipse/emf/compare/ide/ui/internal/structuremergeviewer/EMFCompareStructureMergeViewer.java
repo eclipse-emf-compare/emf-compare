@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 467191
- *     Philip Langer - bug 462884, 516576, 521948
+ *     Philip Langer - bug 462884, 516576, 521948, 522372
  *     Stefan Dirix - bugs 473985, 474030
  *     Martin Fleck - bug 497066, 483798, 514767, 514415
  *     Alexandra Buzila - bug 513931
@@ -166,6 +166,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.ControlAdapter;
@@ -998,6 +999,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				// Begin computing the content tree cache.
 				navigatable.refresh();
 
+				// Expands the tree viewer to the default expansion level
+				expandTreeToLevel(getDefaultTreeExpansionLevel(), getTreeExpandTimeout());
+
 				selectFirstDiffOrDisplayLabelViewer(getCompareConfiguration().getComparison());
 			}
 		});
@@ -1325,9 +1329,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 						// Begin computing the content tree cache.
 						navigatable.refresh();
 
-						// Expands the tree viewer to the default expansion level
-						expandTreeToLevel(getDefaultTreeExpansionLevel());
-
 						// Selects the first difference once the tree has been filled.
 						selectFirstDiffOrDisplayLabelViewer(comparison);
 					}
@@ -1522,22 +1523,74 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * 
 	 * @return non-negative level, or {@link AbstractTreeViewer#ALL_LEVELS ALL_LEVELS} to expand all levels of
 	 *         the tree
-	 * @see #expandTreeToLevel(int)
+	 * @see #expandTreeToLevel(int, long)
 	 */
 	protected int getDefaultTreeExpansionLevel() {
 		return preferenceStore.getInt(EMFCompareUIPreferences.EDITOR_TREE_AUTO_EXPAND_LEVEL);
 	}
 
 	/**
-	 * Expands the {@link #getViewer() tree viewer} to the given level.
+	 * Returns the timeout limit for the number of seconds spent expanding the tree viewer.
+	 * 
+	 * @return the maximum number of seconds to spend on expanding the tree viewer.
+	 * @see #expandTreeToLevel(int, long)
+	 */
+	protected long getTreeExpandTimeout() {
+		return preferenceStore.getInt(EMFCompareUIPreferences.EDITOR_TREE_EXPAND_TIMEOUT) * 1000L;
+	}
+
+	/**
+	 * Expands the {@link #getViewer() tree viewer} to the given level for at most the given number of
+	 * milliseconds.
 	 * 
 	 * @param level
 	 *            non-negative level, or {@link AbstractTreeViewer#ALL_LEVELS ALL_LEVELS} to expand all levels
 	 *            of the tree
+	 * @param timeout
+	 *            the maximum number of milliseconds to spend on expanding the tree.
 	 * @see TreeViewer#expandToLevel(int)
 	 */
-	protected void expandTreeToLevel(int level) {
-		getViewer().expandToLevel(level);
+	protected void expandTreeToLevel(final int level, final long timeout) {
+		if (level != 0) {
+			BusyIndicator.showWhile(getControl().getDisplay(), new Runnable() {
+				public void run() {
+					// Rather than spend arbitrary amount of time expanding the tree,
+					// we'll spend expanding until the configured timeout.
+					final long start = System.currentTimeMillis();
+					final WrappableTreeViewer viewer = getViewer();
+					final Tree tree = viewer.getTree();
+					tree.setRedraw(false);
+					try {
+						int count;
+						if (level < 0) {
+							count = Integer.MAX_VALUE;
+						} else {
+							count = level;
+						}
+						List<TreeItem> items = Lists.newArrayList(tree.getItems());
+						while (--count >= 0 && !items.isEmpty()) {
+							List<TreeItem> itemsToProcess = items;
+							items = Lists.newArrayList();
+							for (TreeItem treeItem : itemsToProcess) {
+								if (treeItem.getItemCount() > 0) {
+									if (!treeItem.getExpanded()) {
+										viewer.createChildren(treeItem);
+										treeItem.setExpanded(true);
+									}
+									Collections.addAll(items, treeItem.getItems());
+									// if timeout kicks in, we stop expanding
+									if (System.currentTimeMillis() - start > timeout) {
+										break;
+									}
+								}
+							}
+						}
+					} finally {
+						tree.setRedraw(true);
+					}
+				}
+			});
+		}
 	}
 
 	/**
