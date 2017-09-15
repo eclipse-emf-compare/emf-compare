@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - compute differences lazily
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl;
 
@@ -53,7 +54,7 @@ public abstract class AbstractStructuralFeatureAccessor extends AbstractTypedEle
 	private final EStructuralFeature fStructuralFeature;
 
 	/** The list of diff that apply on the structural feature. */
-	private final ImmutableList<Diff> fDifferences;
+	private ImmutableList<Diff> fDifferences;
 
 	/**
 	 * Default constructor.
@@ -71,7 +72,6 @@ public abstract class AbstractStructuralFeatureAccessor extends AbstractTypedEle
 		fSide = side;
 		fOwnerMatch = diff.getMatch();
 		fStructuralFeature = getAffectedFeature(diff);
-		fDifferences = computeDifferences();
 	}
 
 	/**
@@ -133,6 +133,9 @@ public abstract class AbstractStructuralFeatureAccessor extends AbstractTypedEle
 	 * @return the list of diff that apply on the structural feature.
 	 */
 	protected final ImmutableList<Diff> getDifferences() {
+		if (fDifferences == null) {
+			fDifferences = computeDifferences();
+		}
 		return fDifferences;
 	}
 
