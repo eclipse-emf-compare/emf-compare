@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,13 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 522422
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label;
 
 import org.eclipse.compare.CompareUI;
+import org.eclipse.compare.CompareViewerPane;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -50,6 +53,10 @@ public class LabelContentViewer extends Viewer {
 		label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true));
 		control.setData(CompareUI.COMPARE_VIEWER_TITLE, title);
 
+		ToolBarManager toolBarManager = CompareViewerPane.getToolBarManager(parent);
+		if (toolBarManager != null) {
+			toolBarManager.removeAll();
+		}
 	}
 
 	/**
