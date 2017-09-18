@@ -10,6 +10,7 @@
  *     Stefan Dirix - bug 473985
  *     Conor O'Mahony - bug 507465
  *     Martin Fleck - bug 483798
+ *     Philip Langer - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -34,7 +35,6 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.MirrorUtil;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.CollapseAllModelAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.DropDownMergeMenuAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.ExpandAllModelAction;
@@ -68,8 +68,6 @@ import org.eclipse.jface.bindings.TriggerSequence;
 import org.eclipse.jface.bindings.keys.KeyBinding;
 import org.eclipse.jface.bindings.keys.KeySequence;
 import org.eclipse.jface.bindings.keys.ParseException;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -86,7 +84,7 @@ import org.eclipse.ui.menus.IMenuService;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class CompareToolBar implements ISelectionChangedListener, IPropertyChangeListener {
+public class CompareToolBar implements ISelectionChangedListener {
 
 	private static final String COMPARE_EDITOR_SCOPE_ID = "org.eclipse.compare.compareEditorScope"; //$NON-NLS-1$
 
@@ -163,7 +161,6 @@ public class CompareToolBar implements ISelectionChangedListener, IPropertyChang
 			CompareHandlerService handlerService) {
 		if (!this.doOnce) {
 			compareConfiguration.getEventBus().register(this);
-			compareConfiguration.addPropertyChangeListener(this);
 
 			// Add extension point contributions to the structure merge viewer toolbar
 			if (PlatformUI.isWorkbenchRunning()) {
@@ -246,13 +243,11 @@ public class CompareToolBar implements ISelectionChangedListener, IPropertyChang
 				toolbarManager.add(new SaveComparisonModelAction(compareConfiguration));
 			}
 
-			setMirrored(MirrorUtil.isMirrored(compareConfiguration));
 			Arrays.stream(toolbarManager.getItems())
 					.filter(item -> item instanceof ActionContributionItem
 							&& ((ActionContributionItem)item).getAction().getActionDefinitionId() != null)
 					.map(ActionContributionItem.class::cast)
 					.forEach(item -> registerBinding(item, viewer, handlerService));
-
 			toolbarManager.update(true);
 
 			this.doOnce = true;
@@ -469,21 +464,6 @@ public class CompareToolBar implements ISelectionChangedListener, IPropertyChang
 		}
 	}
 
-	public void setMirrored(boolean mirrored) {
-		for (MergeAction action : mergeActions) {
-			action.setMirrored(mirrored);
-		}
-		for (MergeAllNonConflictingAction action : mergeAllNonConflictingActions) {
-			action.setMirrored(mirrored);
-		}
-	}
-
-	public void propertyChange(PropertyChangeEvent event) {
-		if (MirrorUtil.isMirroredProperty(event.getProperty())) {
-			setMirrored(MirrorUtil.isMirrored(compareConfiguration));
-		}
-	}
-
 	private final class ActionWrapper extends Action {
 
 		private final AbstractTreeViewer viewer;
@@ -545,5 +525,4 @@ public class CompareToolBar implements ISelectionChangedListener, IPropertyChang
 		ToolBar toolbar = toolbarManager.getControl();
 		return toolbar != null && toolbar.isEnabled();
 	}
-
 }

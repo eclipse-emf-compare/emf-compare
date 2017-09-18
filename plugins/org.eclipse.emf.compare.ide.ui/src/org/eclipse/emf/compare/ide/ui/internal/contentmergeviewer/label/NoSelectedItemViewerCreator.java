@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 EclipseSource Services GmbH and others.
+ * Copyright (c) 2017, 2018 EclipseSource Services GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,13 @@
  * 
  * Contributors:
  *      Martin Fleck - initial API and implementation
+ *      Philip Langer - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IViewerCreator;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
@@ -29,7 +31,7 @@ public class NoSelectedItemViewerCreator implements IViewerCreator {
 	 *      org.eclipse.compare.CompareConfiguration)
 	 */
 	public Viewer createViewer(final Composite parent, CompareConfiguration config) {
-		return new NoSelectedItemContentViewer(parent);
+		return new NoSelectedItemContentViewer(parent, new EMFCompareConfiguration(config));
 	}
 
 }

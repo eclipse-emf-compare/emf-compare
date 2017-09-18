@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo.
+ * Copyright (c) 2012, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer (EclipseSource) - bug 488618
+ *     Philip Langer (EclipseSource) - bugs 488618, 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
@@ -19,6 +19,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.internal.merge.IMergeData;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.MatchResourceItemProvider;
@@ -26,6 +27,7 @@ import org.eclipse.emf.compare.provider.SafeAdapterFactoryItemDelegator;
 import org.eclipse.emf.compare.provider.utils.ComposedStyledString;
 import org.eclipse.emf.compare.provider.utils.IStyledString;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 
 /**
@@ -92,10 +94,20 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 	@Override
 	public String getText(Object object) {
 		final MatchResource matchResource = (MatchResource)object;
-		final String leftURI = matchResource.getLeftURI();
-		final String rightURI = matchResource.getRightURI();
+		String leftURI = matchResource.getLeftURI();
+		String rightURI = matchResource.getRightURI();
 
-		final String commonBase = getCommonBase(leftURI, rightURI);
+		// If the comparison is mirrored, swap left and right.
+		final IMergeData mergeData = (IMergeData)EcoreUtil.getExistingAdapter(matchResource.getComparison(),
+				IMergeData.class);
+		if (mergeData != null && mergeData.isMirrored()) {
+			String effectiveLeftURI = rightURI;
+			String effectiveRightURI = leftURI;
+			leftURI = effectiveLeftURI;
+			rightURI = effectiveRightURI;
+		}
+
+		String commonBase = getCommonBase(leftURI, rightURI);
 
 		String text = ""; //$NON-NLS-1$
 		if (leftURI != null) {
@@ -109,6 +121,7 @@ public class MatchResourceItemProviderSpec extends MatchResourceItemProvider imp
 				&& ((Comparison)matchResource.eContainer()).isThreeWay()) {
 			final String originURI = matchResource.getOriginURI();
 			if (originURI != null) {
+				commonBase = getCommonBase(commonBase, originURI);
 				text += " (" + originURI.substring(commonBase.length()) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
@@ -64,6 +65,20 @@ public abstract class AbstractMergeViewer extends ContentViewer implements IMerg
 	 */
 	public MergeViewerSide getSide() {
 		return fSide;
+	}
+
+	/**
+	 * Returns the effective side taking into account {@link CompareConfiguration#isMirrored()} to switch left
+	 * and right.
+	 * 
+	 * @param side
+	 * @return the effective side with respect to mirroring.
+	 */
+	protected MergeViewerSide getEffectiveSide() {
+		if (getCompareConfiguration().isMirrored()) {
+			return getSide().opposite();
+		}
+		return getSide();
 	}
 
 	/**

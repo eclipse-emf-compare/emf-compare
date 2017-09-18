@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2015, 2018 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,12 @@
  * 
  * Contributors:
  *     Michael Borkowski - initial API and implementation
+ *     Philip Langer - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label;
 
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -26,8 +28,8 @@ public class OnlyPseudoConflictsContentViewer extends LabelContentViewer {
 	 * @param parent
 	 *            the parent of the control of this viewer.
 	 */
-	public OnlyPseudoConflictsContentViewer(Composite parent) {
+	public OnlyPseudoConflictsContentViewer(Composite parent, EMFCompareConfiguration configuration) {
 		super(parent, EMFCompareIDEUIMessages.getString("only.pseudo.conflicts.viewer.title"), //$NON-NLS-1$
-				EMFCompareIDEUIMessages.getString("only.pseudo.conflicts.viewer.desc")); //$NON-NLS-1$
+				EMFCompareIDEUIMessages.getString("only.pseudo.conflicts.viewer.desc"), configuration); //$NON-NLS-1$
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Obeo.
+ * Copyright (c) 2015, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.tooltip;
 
@@ -86,70 +87,69 @@ public class ResourceAttachmentChangeTooltipProvider extends AbstractTooltipProv
 		EObject right = diff.getMatch().getRight();
 		EObject origin = diff.getMatch().getOrigin();
 
-		String leftUri = ""; //$NON-NLS-1$
-		if (left != null) {
-			leftUri = left.eResource().getURI().toString();
-		}
-
-		String rightUri = ""; //$NON-NLS-1$
-		if (right != null) {
-			rightUri = right.eResource().getURI().toString();
-		}
-
-		String originUri = ""; //$NON-NLS-1$
-		if (origin != null) {
-			originUri = origin.eResource().getURI().toString();
-		}
+		String leftUri = getResourceUri(left);
+		String rightUri = getResourceUri(right);
+		String originUri = getResourceUri(origin);
 
 		String tooltip;
 		String body;
+		boolean mirrored = isMirrored(diff);
+		boolean isLeftToRight = isLeftToRight(diff, mode);
+		String effectiveLeft;
+		String effectiveRight;
 		switch (mode) {
 			case LEFT_TO_RIGHT:
-				if (isFromLeft) {
+				effectiveLeft = getDirectionalValue(mirrored, leftUri, rightUri);
+				if (isFromLeft != mirrored) {
 					body = getString("ContextualTooltip.rac.control.left.leftToRight", value, //$NON-NLS-1$
-							leftUri);
+							effectiveLeft);
 				} else {
 					body = getString("ContextualTooltip.rac.control.right.leftToRight", value, //$NON-NLS-1$
-							leftUri);
+							effectiveLeft);
 				}
 				tooltip = rightChanged(body);
 				break;
 			case RIGHT_TO_LEFT:
-				if (isFromLeft) {
+				effectiveRight = getDirectionalValue(mirrored, rightUri, leftUri);
+				if (isFromLeft != mirrored) {
 					body = getString("ContextualTooltip.rac.control.left.rightToLeft", value, //$NON-NLS-1$
-							rightUri);
+							effectiveRight);
 				} else {
 					body = getString("ContextualTooltip.rac.control.right.rightToLeft", value, //$NON-NLS-1$
-							rightUri);
+							effectiveRight);
 				}
 				tooltip = rightUnchanged(body);
 				break;
 			case ACCEPT:
-				if (isFromLeft) {
-					body = getString("ContextualTooltip.rac.control.left.accept", value, //$NON-NLS-1$
-							leftUri);
-					tooltip = acceptAndUnchanged(body);
+				if (isFromLeft != isLeftToRight != mirrored) {
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.rac.control.left.accept"), //$NON-NLS-1$
+							value, leftUri);
+					tooltip = acceptAndUnchanged(body, isLeftToRight);
 				} else {
-					body = getString("ContextualTooltip.rac.control.right.accept", value, //$NON-NLS-1$
-							rightUri);
-					tooltip = acceptAndChanged(body);
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.rac.control.right.accept"), //$NON-NLS-1$
+							value, rightUri);
+					tooltip = acceptAndChanged(body, isLeftToRight);
 				}
 				break;
 			case REJECT:
-				if (isFromLeft) {
-					if (originUri == null || "".equals(originUri)) { //$NON-NLS-1$
+				if (isFromLeft != isLeftToRight != mirrored) {
+					if (originUri.isEmpty()) {
 						originUri = leftUri;
 					}
-					body = getString("ContextualTooltip.rac.control.left.reject", value, //$NON-NLS-1$
-							originUri);
-					tooltip = rejectAndChanged(body);
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.rac.control.left.reject"), //$NON-NLS-1$
+							value, originUri);
+					tooltip = rejectAndChanged(body, isLeftToRight);
 				} else {
-					if (originUri == null || "".equals(originUri)) { //$NON-NLS-1$
+					if (originUri.isEmpty()) {
 						originUri = rightUri;
 					}
-					body = getString("ContextualTooltip.rac.control.right.reject", value, //$NON-NLS-1$
-							originUri);
-					tooltip = rejectAndUnchanged(body);
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.rac.control.right.reject"), //$NON-NLS-1$
+							value, originUri);
+					tooltip = rejectAndUnchanged(body, isLeftToRight);
 				}
 				break;
 			default:
@@ -181,54 +181,64 @@ public class ResourceAttachmentChangeTooltipProvider extends AbstractTooltipProv
 
 		String tooltip;
 		String body;
+		boolean mirrored = isMirrored(diff);
+		boolean isLeftToRight = isLeftToRight(diff, mode);
+		String effectiveLeft;
+		String effectiveRight;
 		switch (mode) {
 			case LEFT_TO_RIGHT:
-				if (isFromLeft) {
+				effectiveLeft = getDirectionalValue(mirrored, leftUri, rightUri);
+				if (isFromLeft != mirrored) {
 					body = getString("ContextualTooltip.rac.uncontrol.left.leftToRight", value, //$NON-NLS-1$
-							leftUri);
+							effectiveLeft);
 				} else {
 					body = getString("ContextualTooltip.rac.uncontrol.right.leftToRight", value, //$NON-NLS-1$
-							leftUri);
+							effectiveLeft);
 				}
 				tooltip = rightChanged(body);
 				break;
 			case RIGHT_TO_LEFT:
-				if (isFromLeft) {
+				effectiveRight = getDirectionalValue(mirrored, rightUri, leftUri);
+				if (isFromLeft != mirrored) {
 					body = getString("ContextualTooltip.rac.uncontrol.left.rightToLeft", value, //$NON-NLS-1$
-							rightUri);
+							effectiveRight);
 				} else {
 					body = getString("ContextualTooltip.rac.uncontrol.right.rightToLeft", value, //$NON-NLS-1$
-							rightUri);
+							effectiveRight);
 				}
 				tooltip = rightUnchanged(body);
 				break;
 			case ACCEPT:
-				if (isFromLeft) {
-					body = getString("ContextualTooltip.rac.uncontrol.left.accept", value, //$NON-NLS-1$
-							leftUri);
-					tooltip = acceptAndUnchanged(body);
+				if (isFromLeft != isLeftToRight != mirrored) {
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.rac.uncontrol.left.accept"), //$NON-NLS-1$
+							value, leftUri);
+					tooltip = acceptAndUnchanged(body, isLeftToRight);
 				} else {
-					body = getString("ContextualTooltip.rac.uncontrol.right.accept", value, //$NON-NLS-1$
-							rightUri);
-					tooltip = acceptAndChanged(body);
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.rac.uncontrol.right.accept"), //$NON-NLS-1$
+							value, rightUri);
+					tooltip = acceptAndChanged(body, isLeftToRight);
 				}
 				break;
 			case REJECT:
 				String originUri = getResourceUri(origin);
-				if (isFromLeft) {
-					if ("".equals(originUri)) { //$NON-NLS-1$
+				if (isFromLeft != isLeftToRight != mirrored) {
+					if (originUri.isEmpty()) {
 						originUri = rightUri;
 					}
-					body = getString("ContextualTooltip.rac.uncontrol.left.reject", value, //$NON-NLS-1$
-							originUri);
-					tooltip = rejectAndChanged(body);
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.rac.uncontrol.left.reject"), //$NON-NLS-1$
+							value, originUri);
+					tooltip = rejectAndChanged(body, isLeftToRight);
 				} else {
-					if ("".equals(originUri)) { //$NON-NLS-1$
+					if (originUri.isEmpty()) {
 						originUri = leftUri;
 					}
-					body = getString("ContextualTooltip.rac.uncontrol.right.reject", value, //$NON-NLS-1$
-							originUri);
-					tooltip = rejectAndUnchanged(body);
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.rac.uncontrol.right.reject"), //$NON-NLS-1$
+							value, originUri);
+					tooltip = rejectAndUnchanged(body, isLeftToRight);
 				}
 				break;
 			default:

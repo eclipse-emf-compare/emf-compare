@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2017 Obeo and others.
+ * Copyright (c) 2013, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *     Martin Fleck - bug 483798
  *     Martin Fleck - bug 514415
  *     Tobias Ortmayr - bug 516248
+ *     Philip Langer - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.configuration;
 
@@ -90,6 +91,13 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	public static final String DISPLAY_SELECT_UNRESOLVED_DIFF_ACTIONS = EMFCompareIDEUIPlugin.PLUGIN_ID
 			+ ".DISPLAY_SELECT_UNRESOLVED_DIFF_ACTIONS";//$NON-NLS-1$
 
+	/**
+	 * This property name is equivalent to {@link CompareConfiguration#MIRRORED} however we redefine it for
+	 * backwards compatibility.
+	 */
+	@SuppressWarnings("hiding")
+	public static final String MIRRORED = "MIRRORED"; //$NON-NLS-1$
+
 	private final PropertyChangeListener propertyChangeListener;
 
 	private final CompareConfiguration compareConfiguration;
@@ -166,7 +174,7 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	@Override
 	public void dispose() {
 		super.dispose();
-		compareConfiguration.removePropertyChangeListener(propertyChangeListener);
+		disposeSelf();
 		// CompareConfiguration does not clear its properties list...
 		// Lets clean our own mess ourselves
 		// EVENT_BUS must not be set to null
@@ -182,6 +190,16 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		compareConfiguration.setProperty(DISPLAY_FILTERS, null);
 		compareConfiguration.setProperty(DISPLAY_SAVE_ACTION, null);
 		compareConfiguration.setProperty(DISPLAY_SELECT_UNRESOLVED_DIFF_ACTIONS, null);
+	}
+
+	/**
+	 * {@link #dispose()} is only called when the comparison editor is closed, whereas EMFCompareConfiguration
+	 * are created and discarded on each change of the ContentMergeViewer input. This will be called to
+	 * dispose of the specific setup that was made by the EMFCompareConfiguration wrapper to its underlying
+	 * CompareConfiguration.
+	 */
+	public void disposeSelf() {
+		compareConfiguration.removePropertyChangeListener(propertyChangeListener);
 	}
 
 	public boolean getBooleanProperty(String key, boolean dflt) {

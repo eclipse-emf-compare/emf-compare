@@ -19,6 +19,7 @@ import org.eclipse.compare.CompareViewerSwitchingPane;
 import org.eclipse.compare.ISharedDocumentAdapter;
 import org.eclipse.compare.SharedDocumentAdapter;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
+import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.internal.Utilities;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
@@ -36,6 +37,7 @@ import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.MirrorManager;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.CompareInputAdapter;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.ForwardingCompareInput;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
@@ -118,6 +120,12 @@ public class TextFallbackMergeViewer extends TextMergeViewer {
 	private SourceViewer rightViewer;
 
 	/**
+	 * The mirror manager used to control the {@link #setContentProvider(IContentProvider) content provider}
+	 * and when {@link #handlePropertyChangeEvent(PropertyChangeEvent) handling mirror state changes}.
+	 */
+	private MirrorManager mirrorManager;
+
+	/**
 	 * Controls whether {@link #setContentProvider(IContentProvider) content provider changes} are respected
 	 * or ignored.
 	 * 
@@ -171,6 +179,9 @@ public class TextFallbackMergeViewer extends TextMergeViewer {
 
 		// Hook up the command stack listener to the editing domain's command stack.
 		editingDomainChange(null, getCompareConfiguration().getEditingDomain());
+
+		// Create a mirror manager to help manage the mirror state.
+		mirrorManager = new MirrorManager(configuration);
 
 		// Set our content provider, ensuring that it's not ignored during the update.
 		ignoreContentProvideChanges = false;
@@ -435,7 +446,11 @@ public class TextFallbackMergeViewer extends TextMergeViewer {
 	@Override
 	public void setContentProvider(IContentProvider contentProvider) {
 		if (!ignoreContentProvideChanges) {
-			super.setContentProvider(contentProvider);
+			if (mirrorManager != null) {
+				super.setContentProvider(mirrorManager.getContentProvider(contentProvider));
+			} else {
+				super.setContentProvider(contentProvider);
+			}
 		}
 	}
 
@@ -660,9 +675,57 @@ public class TextFallbackMergeViewer extends TextMergeViewer {
 		// Disconnect from the event bus.
 		configuration.getEventBus().unregister(this);
 
+		// Stop using this configuration.
+		configuration.disposeSelf();
+
 		// Clean up the inputs.
 		setOriginalInput(null);
 		setEffectiveInput(null);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * This implementation uses the {@link #mirrorManager mirror manager} to subvert {@code super's} handling
+	 * of mirror state changes so that it can handle the state change in a better way than does the base
+	 * class.
+	 * </p>
+	 * 
+	 * @see TextMergeViewer#handlePropertyChangeEvent(PropertyChangeEvent)
+	 */
+	@Override
+	protected void handlePropertyChangeEvent(PropertyChangeEvent event) {
+		if (mirrorManager != null && mirrorManager.handlePropertyChangeEvent(event)) {
+			// Connect to both left and right document providers so the documents aren't released during
+			// the switching process.
+			Object oldInput = getInput();
+			IMergeViewerContentProvider oldContentProvider = (IMergeViewerContentProvider)getContentProvider();
+			Runnable leftDocumentConnection = connectDocumentProvider(
+					oldContentProvider.getLeftContent(oldInput));
+			Runnable rightDocumentConnection = connectDocumentProvider(
+					oldContentProvider.getRightContent(oldInput));
+			try {
+				ignoreContentProvideChanges = false;
+				setContentProvider(mirrorManager.getContentProvider(oldContentProvider));
+
+				// Update the title image because it may include a directional overlay that has changed.
+				updateTitleImage();
+			} finally {
+				ignoreContentProvideChanges = true;
+				// Disconnect them again.
+				if (leftDocumentConnection != null) {
+					leftDocumentConnection.run();
+				}
+				if (rightDocumentConnection != null) {
+					rightDocumentConnection.run();
+				}
+			}
+
+			// Update the tool items, many of which include directional indication.
+			updateToolItems();
+		} else {
+			super.handlePropertyChangeEvent(event);
+		}
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2017 Obeo and others.
+ * Copyright (c) 2013, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 467191
- *     Philip Langer - bug 462884, 516576, 521948, 522372
+ *     Philip Langer - bug 462884, 516576, 521948, 522372, 514079
  *     Stefan Dirix - bugs 473985, 474030
  *     Martin Fleck - bug 497066, 483798, 514767, 514415
  *     Alexandra Buzila - bug 513931
@@ -91,7 +91,7 @@ import org.eclipse.emf.compare.ide.internal.utils.NotLoadingResourceSet;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.MirrorUtil;
+import org.eclipse.emf.compare.ide.ui.internal.configuration.ForwardingCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoDifferencesCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoSelectedItemCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.label.NoVisibleItemCompareInput;
@@ -379,11 +379,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	private boolean cascadingDifferencesFilterEnabled;
 
-	private IPropertyChangeListener fPreferenceChangeListener;
-
-	private IPreferenceStore fPreferenceStore;
-
 	private boolean inChange;
+
+	private final ForwardingCompareConfiguration.MirroredPropertyChangeListener mirroredPropertyChangeListener;
 
 	/**
 	 * Constructor.
@@ -496,33 +494,18 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				instanceOf(CascadingDifferencesFilter.class));
 		setCascadingDifferencesFilterEnabled(enabled);
 
-		fPreferenceChangeListener = new IPropertyChangeListener() {
+		mirroredPropertyChangeListener = new ForwardingCompareConfiguration.MirroredPropertyChangeListener() {
 			@Override
-			public void propertyChange(PropertyChangeEvent event) {
-				EMFCompareStructureMergeViewer.this.handlePreferenceChangeEvent(event);
+			protected void mirroredPropertyChanged(boolean mirrored) {
+				EMFCompareConfiguration compareConfiguration = getCompareConfiguration();
+				MergeMode mergePreviewMode = compareConfiguration.getMergePreviewMode();
+				if (mergePreviewMode == MergeMode.LEFT_TO_RIGHT
+						|| mergePreviewMode == MergeMode.RIGHT_TO_LEFT) {
+					compareConfiguration.setMergePreviewMode(mergePreviewMode.inverse());
+				}
 			}
 		};
-
-		fPreferenceStore = getCompareConfiguration().getPreferenceStore();
-		if (fPreferenceStore != null) {
-			fPreferenceStore.addPropertyChangeListener(fPreferenceChangeListener);
-		}
-	}
-
-	protected void handlePreferenceChangeEvent(PropertyChangeEvent event) {
-		if (MirrorUtil.isMirroredPreference(event.getProperty())) {
-			MirrorUtil.setMirrored(getCompareConfiguration(),
-					Boolean.parseBoolean(event.getNewValue().toString()));
-			// Since the content merge viewer will only be recreated, we simulate a selection change to
-			// re-create the content merge viewer with correct sides
-			ISelection originalSelection = getSelection();
-
-			setSelection(null);
-			getViewer().handleOpen(null); // parameter not used in super implementation -> null ok
-
-			setSelection(originalSelection);
-			getViewer().handleOpen(null);
-		}
+		getCompareConfiguration().addPropertyChangeListener(mirroredPropertyChangeListener);
 	}
 
 	/**
@@ -1108,6 +1091,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			fHandlerService.dispose();
 		}
 		getCompareConfiguration().getEventBus().unregister(this);
+		getCompareConfiguration().removePropertyChangeListener(mirroredPropertyChangeListener);
 		getViewer().removeTreeListener(fWrappedTreeListener);
 		Object input = getInput();
 		if (input instanceof ICompareInput) {
@@ -1131,13 +1115,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		fDiffRelationshipComputer.invalidate();
 		toolBar.dispose();
 		fColors.dispose();
-
-		if (fPreferenceChangeListener != null) {
-			if (fPreferenceStore != null) {
-				fPreferenceStore.removePropertyChangeListener(fPreferenceChangeListener);
-			}
-			fPreferenceChangeListener = null;
-		}
 		super.handleDispose(event);
 	}
 
@@ -1587,8 +1564,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		// org.eclipse.team.internal.ui.mapping.ResourceCompareInputChangeNotifier$CompareInputLabelProvider
 		// who doesn't check a cast in its getAncestorLabel(), getLeftLabel() and getRightLabel() methods,
 		// we can't allow to add side label provider in case of an input of type ResourceDiffCompareInput.
+		EMFCompareConfiguration compareConfiguration = getCompareConfiguration();
 		if (!(input instanceof ResourceDiffCompareInput)) {
-			ICompareInputLabelProvider labelProvider = getCompareConfiguration().getLabelProvider();
+			ICompareInputLabelProvider labelProvider = compareConfiguration.getLabelProvider();
 			SideLabelProvider sideLabelProvider = new SideLabelProvider(labelProvider.getAncestorLabel(input),
 					labelProvider.getLeftLabel(input), labelProvider.getRightLabel(input),
 					labelProvider.getAncestorImage(input), labelProvider.getLeftImage(input),
@@ -1599,8 +1577,20 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		new MatchOfContainmentReferenceChangeProcessor().execute(compareResult);
 
 		// Add a MergeData to handle status decorations on Diffs
-		MergeDataImpl mergeData = new MergeDataImpl(getCompareConfiguration().isLeftEditable(),
-				getCompareConfiguration().isRightEditable());
+		final MergeDataImpl mergeData = new MergeDataImpl(compareConfiguration.isLeftEditable(),
+				compareConfiguration.isRightEditable(), compareConfiguration.isMirrored());
+		compareConfiguration.addPropertyChangeListener(
+				new ForwardingCompareConfiguration.MirroredPropertyChangeListener() {
+					@Override
+					protected void mirroredPropertyChanged(boolean mirrored) {
+						mergeData.setMirrored(mirrored);
+						WrappableTreeViewer viewer = getViewer();
+						viewer.refresh();
+
+						// So that tool bar actions can update.
+						viewer.fireSelectionChanged(new SelectionChangedEvent(viewer, viewer.getSelection()));
+					}
+				});
 		compareResult.eAdapters().add(mergeData);
 	}
 

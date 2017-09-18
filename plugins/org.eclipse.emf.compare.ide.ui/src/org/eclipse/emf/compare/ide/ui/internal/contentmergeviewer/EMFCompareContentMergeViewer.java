@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2017 Obeo and others.
+ * Copyright (c) 2012, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 462863
  *     Stefan Dirix - bug 473985
- *     Philip Langer - bug 516645, 521948, 527567
+ *     Philip Langer - bug 516645, 521948, 527567, 514079
  *     Martin Fleck - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.CompareViewerSwitchingPane;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.internal.CompareHandlerService;
 import org.eclipse.core.runtime.IAdaptable;
@@ -64,11 +66,12 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -139,7 +142,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 	private MergeResolutionManager mergeResolutionManager;
 
-	private Boolean fIsMirrored;
+	private IPropertyChangeListener propertyChangeListener;
+
+	private MirrorManager mirrorManager;
 
 	/**
 	 * @param style
@@ -164,6 +169,25 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 
 		mergeResolutionManager = new MergeResolutionManager(
 				EMFCompareIDEUIPlugin.getDefault().getMergeResolutionListenerRegistry());
+
+		propertyChangeListener = new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				handlePropertyChangeEvent(event);
+			}
+		};
+
+		getCompareConfiguration().getPreferenceStore().addPropertyChangeListener(propertyChangeListener);
+
+		mirrorManager = new MirrorManager(cc);
+	}
+
+	@Override
+	public void setContentProvider(IContentProvider contentProvider) {
+		if (mirrorManager != null) {
+			super.setContentProvider(mirrorManager.getContentProvider(contentProvider));
+		} else {
+			super.setContentProvider(contentProvider);
+		}
 	}
 
 	@Subscribe
@@ -316,10 +340,10 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		fAncestor = createMergeViewer(composite, MergeViewerSide.ANCESTOR);
 		fAncestor.addSelectionChangedListener(this);
 
-		fLeft = createMergeViewer(composite, MergeViewerSide.LEFT);
+		fLeft = createMergeViewer(composite, getEffectiveSide(MergeViewerSide.LEFT));
 		fLeft.addSelectionChangedListener(this);
 
-		fRight = createMergeViewer(composite, MergeViewerSide.RIGHT);
+		fRight = createMergeViewer(composite, getEffectiveSide(MergeViewerSide.RIGHT));
 		fRight.addSelectionChangedListener(this);
 
 		final ITheme currentTheme = getCurrentTheme();
@@ -337,6 +361,20 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 				// Do nothing.
 			}
 		});
+	}
+
+	/**
+	 * Returns the effective side taking into account {@link CompareConfiguration#isMirrored()} to switch left
+	 * and right.
+	 * 
+	 * @param side
+	 * @return the effective side with respect to mirroring.
+	 */
+	protected MergeViewerSide getEffectiveSide(MergeViewerSide side) {
+		if (side != null && getCompareConfiguration().isMirrored()) {
+			return side.opposite();
+		}
+		return side;
 	}
 
 	/**
@@ -364,12 +402,6 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		getHandlerService().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
 		getHandlerService().setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 
-		// switch left and right view action, may be null -> set the initial toggle state of the button
-		Action switchLeftAndRightAction = MirrorUtil.getAction(this);
-		if (switchLeftAndRightAction != null) {
-			switchLeftAndRightAction.setChecked(isMirrored());
-		}
-
 		IContributionItem[] items = toolBarManager.getItems();
 		for (IContributionItem iContributionItem : items) {
 			if (iContributionItem instanceof ActionContributionItem) {
@@ -388,6 +420,12 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 			IServiceLocator workbench = PlatformUI.getWorkbench();
 			final IMenuService menuService = (IMenuService)workbench.getService(IMenuService.class);
 			if (menuService != null) {
+
+				// This is kind of a hack, but the code below will materialize all the SWT tool items and
+				// unless the check state is set on the actions, the right style of tool item won't be
+				// created.
+				updateToolItems();
+
 				menuService.populateContributionManager(toolBarManager,
 						"toolbar:org.eclipse.emf.compare.contentmergeviewer.toolbar"); //$NON-NLS-1$
 				toolBarManager.getControl().addDisposeListener(new DisposeListener() {
@@ -469,9 +507,11 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		final Collection<?> affectedObjects = command.getAffectedObjects();
 		if (affectedObjects != null && !affectedObjects.isEmpty()) {
 			Object firstAffectedObject = affectedObjects.iterator().next();
-			if (firstAffectedObject.equals(getElement(leftSelection, MergeViewerSide.LEFT))) {
+			if (firstAffectedObject
+					.equals(getElement(leftSelection, getEffectiveSide(MergeViewerSide.LEFT)))) {
 				viewer = leftMergeViewer;
-			} else if (firstAffectedObject.equals(getElement(leftSelection, MergeViewerSide.RIGHT))) {
+			} else if (firstAffectedObject
+					.equals(getElement(leftSelection, getEffectiveSide(MergeViewerSide.RIGHT)))) {
 				viewer = this.getRightMergeViewer();
 			} else if (firstAffectedObject.equals(getElement(leftSelection, MergeViewerSide.ANCESTOR))) {
 				viewer = this.getAncestorMergeViewer();
@@ -826,8 +866,11 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
-		editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
-		getCompareConfiguration().getEventBus().unregister(this);
+		EMFCompareConfiguration compareConfiguration = getCompareConfiguration();
+		editingDomainChange(compareConfiguration.getEditingDomain(), null);
+		compareConfiguration.getEventBus().unregister(this);
+		compareConfiguration.getPreferenceStore().removePropertyChangeListener(propertyChangeListener);
+		compareConfiguration.disposeSelf();
 		differenceGroupProvider = null;
 		undoAction = null;
 		redoAction = null;
@@ -863,64 +906,37 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 	}
 
 	/**
-	 * Queries the compare configuration whether the left and right side of the viewer should be mirrored.
-	 * 
-	 * @return true if the left and right side of the viewer should be mirrored, false otherwise
+	 * {@inheritDoc}
+	 * <p>
+	 * This override uses a {@link MirrorManager} to intercept switches to the swap preference for controlling
+	 * the mirror mode. When that preference property changes, {@link #handleMirroredChanged()} is called.
+	 * </p>
 	 */
-	protected boolean isMirrored() {
-		return MirrorUtil.isMirrored(getCompareConfiguration());
-	}
-
-	/**
-	 * Returns the correctly mirrored side for this viewer based on the current {@link #isMirrored() mirrored
-	 * state}. If this viewer is not mirrored, the side is returned as is, otherwise its opposite site is
-	 * returned.
-	 * 
-	 * @param side
-	 *            merge viewer side
-	 * @return side to be used based on the current mirror state.
-	 */
-	protected MergeViewerSide computeSide(MergeViewerSide side) {
-		if (isMirrored()) {
-			return side.opposite();
-		}
-		return side;
-	}
-
-	/**
-	 * Returns the content provider that should be used when this viewer is NOT {@link #isMirrored()
-	 * mirrored}.
-	 * 
-	 * @return unmirrored content provider
-	 */
-	protected abstract IContentProvider getUnmirroredContentProvider();
-
-	/**
-	 * Returns the content provider that should be used when this viewer is {@link #isMirrored() mirrored}.
-	 * 
-	 * @return mirrored content provider
-	 */
-	protected abstract IContentProvider getMirroredContentProvider();
-
-	/**
-	 * Sets the viewers {@link #isMirrored() mirrored} state and triggers an {@link #updateMirrored(boolean)
-	 * update}, if necessary.
-	 */
-	protected void setMirrored(boolean isMirrored) {
-		if (fIsMirrored == null || fIsMirrored.booleanValue() != isMirrored) {
-			fIsMirrored = Boolean.valueOf(isMirrored);
-			updateMirrored(isMirrored);
-		}
-	}
-
-	/**
-	 * Updates the viewer based on its {@link #isMirrored() mirrored} state.
-	 */
-	protected void updateMirrored(boolean isMirrored) {
-		if (isMirrored) {
-			setContentProvider(getMirroredContentProvider());
+	@Override
+	protected void handlePropertyChangeEvent(PropertyChangeEvent event) {
+		if (mirrorManager != null && mirrorManager.handlePropertyChangeEvent(event)) {
+			handleMirroredChanged();
 		} else {
-			setContentProvider(getUnmirroredContentProvider());
+			super.handlePropertyChangeEvent(event);
+		}
+	}
+
+	/**
+	 * This does the processing
+	 */
+	protected void handleMirroredChanged() {
+		Composite parent = getControl().getParent();
+		if (parent instanceof CompareViewerSwitchingPane) {
+			// Disable painting during the switching to avoid flicker of the toolbar and other controls.
+			parent.setRedraw(false);
+			try {
+				CompareViewerSwitchingPane switchingPane = (CompareViewerSwitchingPane)parent;
+				Object input = switchingPane.getInput();
+				switchingPane.setInput(null);
+				switchingPane.setInput(input);
+			} finally {
+				parent.setRedraw(true);
+			}
 		}
 	}
 }

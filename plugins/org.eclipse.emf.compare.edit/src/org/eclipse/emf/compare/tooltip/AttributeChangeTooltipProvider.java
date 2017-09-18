@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Obeo.
+ * Copyright (c) 2015, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.tooltip;
 
@@ -95,7 +96,11 @@ public class AttributeChangeTooltipProvider extends AbstractTooltipProvider<Attr
 		if (changedContainer == null) {
 			return null;
 		}
-		return String.valueOf(safeEGet(changedContainer, attribute));
+		Object value = safeEGet(changedContainer, attribute);
+		if (value == null) {
+			return null;
+		}
+		return value.toString();
 	}
 
 	/**
@@ -131,9 +136,11 @@ public class AttributeChangeTooltipProvider extends AbstractTooltipProvider<Attr
 
 		String tooltip;
 		String body;
+		boolean mirrored = isMirrored(diff);
+		boolean isLeftToRight = isLeftToRight(diff, mode);
 		switch (mode) {
 			case LEFT_TO_RIGHT:
-				if (isFromLeft) {
+				if (isFromLeft != mirrored) {
 					body = getString("ContextualTooltip.add.attribute.left.leftToRight", value, //$NON-NLS-1$
 							containerValue);
 				} else {
@@ -143,7 +150,7 @@ public class AttributeChangeTooltipProvider extends AbstractTooltipProvider<Attr
 				tooltip = rightChanged(body);
 				break;
 			case RIGHT_TO_LEFT:
-				if (isFromLeft) {
+				if (isFromLeft != mirrored) {
 					body = getString("ContextualTooltip.add.attribute.left.rightToLeft", value, //$NON-NLS-1$
 							containerValue);
 				} else {
@@ -153,25 +160,29 @@ public class AttributeChangeTooltipProvider extends AbstractTooltipProvider<Attr
 				tooltip = rightUnchanged(body);
 				break;
 			case ACCEPT:
-				if (isFromLeft) {
-					body = getString("ContextualTooltip.add.attribute.left.accept", value, //$NON-NLS-1$
-							containerValue);
-					tooltip = acceptAndUnchanged(body);
+				if (isFromLeft != isLeftToRight != mirrored) {
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.add.attribute.left.accept"), //$NON-NLS-1$
+							value, containerValue);
+					tooltip = acceptAndUnchanged(body, isLeftToRight);
 				} else {
-					body = getString("ContextualTooltip.add.attribute.right.accept", value, //$NON-NLS-1$
-							containerValue);
-					tooltip = acceptAndChanged(body);
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.add.attribute.right.accept"), //$NON-NLS-1$
+							value, containerValue);
+					tooltip = acceptAndChanged(body, isLeftToRight);
 				}
 				break;
 			case REJECT:
-				if (isFromLeft) {
-					body = getString("ContextualTooltip.add.attribute.left.reject", value, //$NON-NLS-1$
-							containerValue);
-					tooltip = rejectAndChanged(body);
+				if (isFromLeft != isLeftToRight != mirrored) {
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.add.attribute.left.reject"), //$NON-NLS-1$
+							value, containerValue);
+					tooltip = rejectAndChanged(body, isLeftToRight);
 				} else {
-					body = getString("ContextualTooltip.add.attribute.right.reject", value, //$NON-NLS-1$
-							containerValue);
-					tooltip = rejectAndUnchanged(body);
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.add.attribute.right.reject"), //$NON-NLS-1$
+							value, containerValue);
+					tooltip = rejectAndUnchanged(body, isLeftToRight);
 				}
 				break;
 			default:

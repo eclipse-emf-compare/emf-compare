@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2017 Obeo and others.
+ * Copyright (c) 2012, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bugs 487595, 510442
  *     Martin Fleck - bug 483798
- *     Philip Langer - bug 527567
+ *     Philip Langer - bugs 527567, 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree;
 
@@ -19,8 +19,10 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -44,6 +46,7 @@ import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.TreeMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
+import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.provider.IMergeViewerItemProviderConfiguration;
@@ -54,7 +57,6 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -87,14 +89,7 @@ public class TreeContentMergeViewer extends AbstractTreeContentMergeViewer {
 
 	private AtomicBoolean fSyncExpandedState;
 
-	/** The unmirrored content provider of this merge viewer. */
-	protected TreeContentMergeViewerContentProvider fContentProvider;
-
-	/** Label provider remembered for swapping sides in the viewer. */
-	protected IBaseLabelProvider fLeftLabelProvider, fRightLabelProvider;
-
-	/** Content provider remembered for swapping sides in the viewer. */
-	protected IContentProvider fLeftContentProvider, fRightContentProvider;
+	private Collection<Diff> moveDifferences;
 
 	/**
 	 * Creates a new {@link TreeContentMergeViewer} by calling the super constructor with the given
@@ -129,12 +124,7 @@ public class TreeContentMergeViewer extends AbstractTreeContentMergeViewer {
 		fSyncExpandedState = new AtomicBoolean();
 
 		buildControl(parent);
-		fContentProvider = new TreeContentMergeViewerContentProvider(config);
-		fLeftContentProvider = getLeftMergeViewer().getContentProvider();
-		fRightContentProvider = getRightMergeViewer().getContentProvider();
-		fLeftLabelProvider = getLeftMergeViewer().getLabelProvider();
-		fRightLabelProvider = getRightMergeViewer().getLabelProvider();
-		setMirrored(isMirrored());
+		setContentProvider(new TreeContentMergeViewerContentProvider(config));
 	}
 
 	protected ComposedAdapterFactory getAdapterFactory() {
@@ -283,12 +273,18 @@ public class TreeContentMergeViewer extends AbstractTreeContentMergeViewer {
 			} else if (parent instanceof EObject) {
 				Match match = comparison.getMatch((EObject)parent);
 				if (match != null) {
-					// We get all move differencies in order to detect the move of an element with an original
+					// We get all move differences in order to detect the move of an element with an original
 					// position outside the actual match of the diff. We have to do that since move
-					// differencies are registered only under one container (left or right depending on the
+					// differences are registered only under one container (left or right depending on the
 					// situation)
-					for (Diff referenceChange : filter(comparison.getDifferences(),
-							and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE)))) {
+					// This is relatively expensive, so cache the result once for sharing across all the
+					// listeners.
+					if (moveDifferences == null) {
+						moveDifferences = Lists.newArrayList(filter(comparison.getDifferences(),
+								and(instanceOf(ReferenceChange.class), ofKind(DifferenceKind.MOVE))));
+					}
+
+					for (Diff referenceChange : moveDifferences) {
 						Match matchOfValue = comparison
 								.getMatch(((ReferenceChange)referenceChange).getValue());
 						if (matchOfValue != null) {
@@ -336,7 +332,7 @@ public class TreeContentMergeViewer extends AbstractTreeContentMergeViewer {
 					}
 				}
 			} finally {
-				getCenterControl().redraw();
+				SWTUtil.safeRedraw(getCenterControl(), true);
 				fSyncExpandedState.set(false);
 			}
 		}
@@ -389,29 +385,4 @@ public class TreeContentMergeViewer extends AbstractTreeContentMergeViewer {
 
 	}
 
-	@Override
-	protected IContentProvider getUnmirroredContentProvider() {
-		return fContentProvider;
-	}
-
-	@Override
-	protected IContentProvider getMirroredContentProvider() {
-		return new MirroredTreeContentMergeViewerContentProvider(getCompareConfiguration(), fContentProvider);
-	}
-
-	@Override
-	protected void updateMirrored(boolean isMirrored) {
-		if (isMirrored) {
-			getLeftMergeViewer().setContentProvider(fRightContentProvider);
-			getLeftMergeViewer().setLabelProvider(fRightLabelProvider);
-			getRightMergeViewer().setContentProvider(fLeftContentProvider);
-			getRightMergeViewer().setLabelProvider(fLeftLabelProvider);
-		} else {
-			getLeftMergeViewer().setContentProvider(fLeftContentProvider);
-			getLeftMergeViewer().setLabelProvider(fLeftLabelProvider);
-			getRightMergeViewer().setContentProvider(fRightContentProvider);
-			getRightMergeViewer().setLabelProvider(fRightLabelProvider);
-		}
-		super.updateMirrored(isMirrored);
-	}
 }

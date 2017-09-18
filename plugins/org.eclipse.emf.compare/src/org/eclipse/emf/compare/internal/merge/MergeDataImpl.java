@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 527567
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.merge;
 
@@ -26,6 +27,9 @@ public class MergeDataImpl extends AdapterImpl implements IMergeData {
 	/** Right side is editable. */
 	private boolean rightEditable;
 
+	/** Left and right sides are swapped, i.e., mirrored. */
+	private boolean mirrored;
+
 	/**
 	 * Constructor.
 	 * 
@@ -35,8 +39,23 @@ public class MergeDataImpl extends AdapterImpl implements IMergeData {
 	 *            Right side editable.
 	 */
 	public MergeDataImpl(boolean leftEditable, boolean rightEditable) {
+		this(leftEditable, rightEditable, false);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param leftEditable
+	 *            Left side editable.
+	 * @param rightEditable
+	 *            Right side editable.
+	 * @param mirrored
+	 *            Left and right side are swapped, i.e., mirrored.
+	 */
+	public MergeDataImpl(boolean leftEditable, boolean rightEditable, boolean mirrored) {
 		this.leftEditable = leftEditable;
 		this.rightEditable = rightEditable;
+		this.mirrored = mirrored;
 	}
 
 	/**
@@ -80,4 +99,21 @@ public class MergeDataImpl extends AdapterImpl implements IMergeData {
 		this.rightEditable = rightEditable;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.merge.IMergeData#isMirrored()
+	 */
+	public boolean isMirrored() {
+		return mirrored;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.internal.merge.IMergeData#setMirrored(boolean)
+	 */
+	public void setMirrored(boolean mirrored) {
+		this.mirrored = mirrored;
+	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Obeo.
+ * Copyright (c) 2015, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.tooltip;
 
@@ -42,7 +43,8 @@ public class ResourceLocationChangeTooltipProvider extends AbstractTooltipProvid
 	public String getTooltip(MergeMode mode) throws IllegalArgumentException {
 		String tooltip = ""; //$NON-NLS-1$
 		ResourceLocationChange diff = (ResourceLocationChange)target;
-		if (diff.getKind().equals(DifferenceKind.CHANGE) || diff.getKind().equals(DifferenceKind.MOVE)) {
+		DifferenceKind kind = diff.getKind();
+		if (kind == DifferenceKind.CHANGE || kind == DifferenceKind.MOVE) {
 			tooltip = setResourceLocationChangeTooltip(mode, diff, isFromLeft(diff));
 		} else {
 			throw new IllegalArgumentException();

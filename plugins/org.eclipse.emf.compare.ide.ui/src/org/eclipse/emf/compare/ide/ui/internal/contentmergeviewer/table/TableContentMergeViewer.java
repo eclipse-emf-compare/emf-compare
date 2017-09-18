@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2017 Obeo and others.
+ * Copyright (c) 2012, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Martin Fleck - bug 483798
- *     Philip Langer - bug 527567
+ *     Philip Langer - bug 527567, 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 
@@ -45,8 +45,6 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -81,12 +79,6 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 
 	private double[] fBasicCenterCurve;
 
-	private TableContentMergeViewerContentProvider fContentProvider;
-
-	private IBaseLabelProvider fLeftLabelProvider;
-
-	private IBaseLabelProvider fRightLabelProvider;
-
 	/**
 	 * Call the super constructor.
 	 * 
@@ -104,10 +96,7 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 		fAdapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 
 		buildControl(parent);
-		fContentProvider = new TableContentMergeViewerContentProvider(config);
-		fLeftLabelProvider = getLeftMergeViewer().getLabelProvider();
-		fRightLabelProvider = getRightMergeViewer().getLabelProvider();
-		setMirrored(isMirrored());
+		setContentProvider(new TableContentMergeViewerContentProvider(config));
 	}
 
 	/**
@@ -393,28 +382,5 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 			double r = i / width;
 			fBasicCenterCurve[i] = Math.cos(Math.PI * r);
 		}
-	}
-
-	@Override
-	protected IContentProvider getUnmirroredContentProvider() {
-		return fContentProvider;
-	}
-
-	@Override
-	protected IContentProvider getMirroredContentProvider() {
-		return new MirroredTableContentMergeViewerContentProvider(getCompareConfiguration(),
-				fContentProvider);
-	}
-
-	@Override
-	protected void updateMirrored(boolean isMirrored) {
-		if (isMirrored) {
-			getLeftMergeViewer().setLabelProvider(fRightLabelProvider);
-			getRightMergeViewer().setLabelProvider(fLeftLabelProvider);
-		} else {
-			getLeftMergeViewer().setLabelProvider(fLeftLabelProvider);
-			getRightMergeViewer().setLabelProvider(fRightLabelProvider);
-		}
-		super.updateMirrored(isMirrored);
 	}
 }

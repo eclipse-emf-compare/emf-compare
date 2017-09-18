@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2017 Obeo and others.
+ * Copyright (c) 2012, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,9 +8,8 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Alexandra Buzila - Bug 457117
- *     Philip Langer - bug 457839, 516489, 521948
+ *     Philip Langer - bug 457839, 516489, 521948, 514079
  *     Michael Borkowski - Bug 462863
- *     Martin Fleck - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.text;
 
@@ -53,7 +52,7 @@ import org.eclipse.emf.compare.domain.ICompareEditingDomain;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewerResourceBundle;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.MirrorUtil;
+import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.MirrorManager;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.DynamicObject;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.RedoAction;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.util.UndoAction;
@@ -69,6 +68,8 @@ import org.eclipse.emf.edit.command.ChangeCommand;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.FocusEvent;
@@ -95,10 +96,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 
 	private DelayedTextChangeRunnable delayedTextChangeRunnable;
 
-	/** The unmirrored content provider. */
-	private EMFCompareTextMergeViewerContentProvider fContentProvider;
-
-	private Boolean fIsMirrored;
+	private MirrorManager mirrorManager;
 
 	/**
 	 * @param parent
@@ -106,15 +104,25 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	 */
 	public EMFCompareTextMergeViewer(Composite parent, EMFCompareConfiguration configuration) {
 		super(parent, configuration);
-		setContentProvider(new EMFCompareTextMergeViewerContentProvider(configuration));
-		fContentProvider = new EMFCompareTextMergeViewerContentProvider(configuration);
-		setMirrored(MirrorUtil.isMirrored(getCompareConfiguration()));
+
 		editingDomainChange(null, configuration.getEditingDomain());
 
 		configuration.getEventBus().register(this);
 
 		mergeResolutionManager = new MergeResolutionManager(
 				EMFCompareIDEUIPlugin.getDefault().getMergeResolutionListenerRegistry());
+
+		mirrorManager = new MirrorManager(configuration);
+		setContentProvider(new EMFCompareTextMergeViewerContentProvider(configuration));
+	}
+
+	@Override
+	public void setContentProvider(IContentProvider contentProvider) {
+		if (mirrorManager != null) {
+			super.setContentProvider(mirrorManager.getContentProvider(contentProvider));
+		} else {
+			super.setContentProvider(contentProvider);
+		}
 	}
 
 	/**
@@ -397,7 +405,10 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	 * @return The content of the viewer on the given {@code side}.
 	 */
 	private String getCurrentValueFromViewer(MergeViewerSide side) {
-		final boolean isLeft = MergeViewerSide.LEFT.equals(side);
+		boolean isLeft = MergeViewerSide.LEFT == side;
+		if (getCompareConfiguration().isMirrored()) {
+			isLeft = MergeViewerSide.RIGHT == side;
+		}
 		final GetContentRunnable runnable = new GetContentRunnable(isLeft);
 		Display.getDefault().syncExec(runnable);
 		return (String)runnable.getResult();
@@ -468,14 +479,25 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
-		getCompareConfiguration().getEventBus().unregister(this);
-
-		editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
+		EMFCompareConfiguration compareConfiguration = getCompareConfiguration();
+		compareConfiguration.getEventBus().unregister(this);
+		editingDomainChange(compareConfiguration.getEditingDomain(), null);
+		compareConfiguration.disposeSelf();
 
 		fRedoAction = null;
 		fUndoAction = null;
 
 		super.handleDispose(event);
+	}
+
+	@Override
+	protected void handlePropertyChangeEvent(PropertyChangeEvent event) {
+		if (mirrorManager != null && mirrorManager.handlePropertyChangeEvent(event)) {
+			setContentProvider(mirrorManager.getContentProvider(getContentProvider()));
+			updateToolItems();
+		} else {
+			super.handlePropertyChangeEvent(event);
+		}
 	}
 
 	/**
@@ -657,29 +679,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 	protected void flushContent(Object oldInput, IProgressMonitor monitor) {
 		super.flushContent(oldInput, monitor);
 		mergeResolutionManager.handleFlush(oldInput);
-	}
-
-	/**
-	 * Sets the viewers {@link #isMirrored() mirrored} state and triggers an {@link #updateMirrored(boolean)
-	 * update}, if necessary.
-	 */
-	protected void setMirrored(boolean isMirrored) {
-		if (fIsMirrored == null || fIsMirrored.booleanValue() != isMirrored) {
-			fIsMirrored = Boolean.valueOf(isMirrored);
-			updateMirrored(isMirrored);
-		}
-	}
-
-	/**
-	 * Updates the viewer based on its {@link #isMirrored() mirrored} state.
-	 */
-	protected void updateMirrored(boolean isMirrored) {
-		if (isMirrored) {
-			setContentProvider(new MirroredEMFCompareTextMergeViewerContentProvider(getCompareConfiguration(),
-					fContentProvider));
-		} else {
-			setContentProvider(fContentProvider);
-		}
 	}
 
 	/**

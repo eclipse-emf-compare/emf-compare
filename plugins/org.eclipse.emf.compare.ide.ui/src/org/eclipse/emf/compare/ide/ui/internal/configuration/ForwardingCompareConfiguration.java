@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.configuration;
 
@@ -247,7 +248,22 @@ public abstract class ForwardingCompareConfiguration extends CompareConfiguratio
 	 */
 	// @Override -- remove annotation for backwards-compatibility
 	public boolean isMirrored() {
-		Object property = getProperty("MIRRORED"); //$NON-NLS-1$
+		Object property = getProperty(EMFCompareConfiguration.MIRRORED);
 		return property instanceof Boolean && ((Boolean)property).booleanValue();
+	}
+
+	/**
+	 * A property change listener that listens specifically for the property indicating that compare
+	 * configuration's {@link ForwardingCompareConfiguration#isMirrored()isMirrored} value has changed.
+	 */
+	public abstract static class MirroredPropertyChangeListener implements IPropertyChangeListener {
+		public void propertyChange(PropertyChangeEvent event) {
+			if (EMFCompareConfiguration.MIRRORED.equals(event.getProperty())) {
+				Object newValue = event.getNewValue();
+				mirroredPropertyChanged(Boolean.TRUE.equals(newValue));
+			}
+		}
+
+		protected abstract void mirroredPropertyChanged(boolean mirrored);
 	}
 }

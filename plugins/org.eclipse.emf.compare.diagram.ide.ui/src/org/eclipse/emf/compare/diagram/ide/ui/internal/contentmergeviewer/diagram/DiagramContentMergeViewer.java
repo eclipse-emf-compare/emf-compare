@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Philip Langer - adaptation for refactoring regarding SizeChange
+ *     Philip Langer - adaptation for refactoring regarding SizeChange, bug 514079
  *     Simon Delisle - bug 511047
  *     Camille Letavernier - bug 529882
  *******************************************************************************/
@@ -64,7 +64,6 @@ import org.eclipse.emf.compare.diagram.internal.extensions.Hide;
 import org.eclipse.emf.compare.diagram.internal.extensions.Show;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
-import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.MirroredTreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.TreeContentMergeViewerContentProvider;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer;
@@ -89,7 +88,6 @@ import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
@@ -555,8 +553,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer impl
 		 */
 		protected IFigure getLayer(View referenceView, MergeViewerSide side) {
 			Diagram referenceDiagram = referenceView.getDiagram();
-			MergeViewerSide matchSide = computeSide(side);
-			Diagram targetDiagram = (Diagram)getMatchView(referenceDiagram, matchSide);
+			Diagram targetDiagram = (Diagram)getMatchView(referenceDiagram, getEffectiveSide(side));
 			DiagramMergeViewer targetViewer = getViewer(side);
 			EditPart editPart = targetViewer.getEditPart(targetDiagram);
 			if (editPart != null) {
@@ -1018,8 +1015,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer impl
 		 */
 		private Phantom createPhantom(Diff diff, View referenceView, IFigure referenceFigure,
 				MergeViewerSide side) {
-			MergeViewerSide targetSide = computeSide(side);
-			IFigure targetLayer = getLayer(referenceView, targetSide);
+			IFigure targetLayer = getLayer(referenceView, side);
 			if (targetLayer != null) {
 				MergeViewerSide referenceSide = getSide(referenceView);
 
@@ -1748,12 +1744,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer impl
 	/** The current "opened" difference. */
 	private Diff fCurrentSelectedDiff;
 
-	/** Flag to indicate that the decorators should be refreshed. */
-	private boolean fRefreshDecorators;
-
-	/** The unmirrored content provider of this merge viewer. */
-	private TreeContentMergeViewerContentProvider fContentProvider;
-
 	/** Flag to store whether this viewer synchronizes the zoom level of all diagrams. */
 	private boolean isSynchronizingZoom;
 
@@ -1777,8 +1767,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer impl
 	public DiagramContentMergeViewer(Composite parent, EMFCompareConfiguration config) {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
 		buildControl(parent);
-		fContentProvider = new TreeContentMergeViewerContentProvider(config);
-		setMirrored(isMirrored());
+		setContentProvider(new TreeContentMergeViewerContentProvider(config));
 	}
 
 	/**
@@ -1877,12 +1866,11 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer impl
 
 				Diff diff = input.getDiff(); // equivalent to getInput().getTarget()
 
-				if (!isInTerminalState(diff) && (diff != fCurrentSelectedDiff || fRefreshDecorators)) {
+				if (!isInTerminalState(diff) && diff != fCurrentSelectedDiff) {
 					fDecoratorsManager.revealDecorators(diff);
 				}
 
 				fCurrentSelectedDiff = diff;
-				fRefreshDecorators = false;
 			} else {
 				fCurrentSelectedDiff = null;
 			}
@@ -2060,7 +2048,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer impl
 		} else if (match.getOrigin() == view) {
 			result = MergeViewerSide.ANCESTOR;
 		}
-		return computeSide(result);
+		return getEffectiveSide(result);
 	}
 
 	/**
@@ -2101,22 +2089,6 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer impl
 			default:
 		}
 		return result;
-	}
-
-	@Override
-	protected void updateMirrored(boolean isMirrored) {
-		fRefreshDecorators = true;
-		super.updateMirrored(isMirrored);
-	}
-
-	@Override
-	protected IContentProvider getUnmirroredContentProvider() {
-		return fContentProvider;
-	}
-
-	@Override
-	protected IContentProvider getMirroredContentProvider() {
-		return new MirroredTreeContentMergeViewerContentProvider(getCompareConfiguration(), fContentProvider);
 	}
 
 }

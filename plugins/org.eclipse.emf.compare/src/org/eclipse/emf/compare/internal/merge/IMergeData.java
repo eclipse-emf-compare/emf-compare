@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 527567
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.merge;
 
@@ -50,4 +51,18 @@ public interface IMergeData extends Adapter {
 	 */
 	void setRightEditable(boolean rightEditable);
 
+	/**
+	 * Returns whether the left and right sides are swapped, i.e., mirrored.
+	 * 
+	 * @return true if the left and right sides are swapped, i.e., mirrored, false otherwise.
+	 */
+	boolean isMirrored();
+
+	/**
+	 * Sets whether the left and right sides are swapped, i.e., mirrored.
+	 * 
+	 * @param mirrored
+	 *            whether the left and right sides are swapped, i.e., mirrored, false otherwise.
+	 */
+	void setMirrored(boolean mirrored);
 }

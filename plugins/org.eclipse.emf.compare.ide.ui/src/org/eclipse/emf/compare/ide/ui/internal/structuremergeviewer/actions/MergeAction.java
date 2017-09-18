@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2017 Obeo and others.
+ * Copyright (c) 2013, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 462237
  *     Martin Fleck - bug 483798
- *     Philip Langer - bugs 521948, 527567
+ *     Philip Langer - bugs 521948, 527567, 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
@@ -128,8 +128,6 @@ public class MergeAction extends BaseSelectionListenerAction {
 
 	private IEMFCompareConfiguration compareConfiguration;
 
-	private boolean isMirrored;
-
 	/**
 	 * Constructor.
 	 * 
@@ -216,18 +214,23 @@ public class MergeAction extends BaseSelectionListenerAction {
 	protected void contextualizeTooltip() {
 		if (this.selectedDifferences.size() > 1) {
 			// multiple selection
-			setMultipleTooltip(this.selectedMode);
+			setMultipleTooltip(selectedMode);
 		} else if (this.selectedDifferences.isEmpty()) {
 			// no selection
-			initToolTipAndImage(this.selectedMode);
+			initToolTipAndImage(selectedMode);
 		} else {
 			Diff diff = this.selectedDifferences.get(0);
-			Object adapter = adapterFactory.adapt(diff, ITooltipLabelProvider.class);
-			if (adapter instanceof ITooltipLabelProvider) {
-				String tooltip = ((ITooltipLabelProvider)adapter).getTooltip(this.selectedMode);
-				setToolTipText(tooltip);
+			// Only if the diff is unresolved will the current value of the model be meaningful.
+			if (diff.getState() == DifferenceState.UNRESOLVED) {
+				Object adapter = adapterFactory.adapt(diff, ITooltipLabelProvider.class);
+				if (adapter instanceof ITooltipLabelProvider) {
+					String tooltip = ((ITooltipLabelProvider)adapter).getTooltip(selectedMode);
+					setToolTipText(tooltip);
+				} else {
+					initToolTipAndImage(selectedMode);
+				}
 			} else {
-				initToolTipAndImage(this.selectedMode);
+				initToolTipAndImage(selectedMode);
 			}
 		}
 	}
@@ -668,18 +671,6 @@ public class MergeAction extends BaseSelectionListenerAction {
 	}
 
 	/**
-	 * Refreshes the merge action by re-creating the necessary elements based on the current compare
-	 * configuration.
-	 */
-	public void setMirrored(boolean mirrored) {
-		if (selectedMode == ACCEPT || selectedMode == REJECT) {
-			return;
-		}
-
-		this.isMirrored = mirrored;
-	}
-
-	/**
 	 * @return the leftToRight
 	 */
 	protected final boolean isLeftToRight() {
@@ -716,6 +707,6 @@ public class MergeAction extends BaseSelectionListenerAction {
 	}
 
 	protected boolean isMirrored() {
-		return isMirrored;
+		return compareConfiguration.isMirrored();
 	}
 }

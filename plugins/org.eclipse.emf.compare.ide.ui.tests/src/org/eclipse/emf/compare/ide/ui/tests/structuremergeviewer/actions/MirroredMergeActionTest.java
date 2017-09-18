@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 EclipseSource Services GmbH and others.
+ * Copyright (c) 2017, 2018 EclipseSource Services GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *      Tobias Ortmayr - initial API and implementation
+ *      Philip Langer - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions;
 
@@ -90,9 +91,8 @@ public class MirroredMergeActionTest {
 		IComparisonScope scope = new DefaultComparisonScope(leftResource, rightResource, originResource);
 		Comparison comparision = EMFCompare.builder().build().compare(scope);
 
-		// create merge action and set the mirror state to true
+		// create merge action
 		final MockMergeAction mergeAction = new MockMergeAction(emfCC, mergerRegistry, actionMergeMode, null);
-		mergeAction.setMirrored(true);
 
 		// get the first left difference from the comparison, ensure that its unresolved and invoke the
 		// action.
@@ -122,9 +122,8 @@ public class MirroredMergeActionTest {
 		IComparisonScope scope = new DefaultComparisonScope(leftResource, rightResource, originResource);
 		Comparison comparision = EMFCompare.builder().build().compare(scope);
 
-		// create merge action and set the mirror state to true
+		// create merge action
 		final MockMergeAction mergeAction = new MockMergeAction(emfCC, mergerRegistry, actionMergeMode, null);
-		mergeAction.setMirrored(true);
 
 		// get the first left difference from the comparison, ensure that its unresolved and invoke the
 		// action.
@@ -146,7 +145,6 @@ public class MirroredMergeActionTest {
 
 		final MergeAllNonConflictingAction mergeAcion = new MergeAllNonConflictingAction(emfCC, comparison,
 				mergerRegistry, actionMergeMode);
-		mergeAcion.setMirrored(true);
 
 		// get amount of unresolved left & right diffs
 		int leftDiffAmount = size(filter(comparison.getDifferences(),
@@ -173,7 +171,6 @@ public class MirroredMergeActionTest {
 
 		final MergeAllNonConflictingAction mergeAcion = new MergeAllNonConflictingAction(emfCC, comparison,
 				mergerRegistry, actionMergeMode);
-		mergeAcion.setMirrored(true);
 
 		// get amount of unresolved left & right diffs
 		int leftDiffAmount = size(filter(comparison.getDifferences(),
@@ -240,6 +237,7 @@ public class MirroredMergeActionTest {
 
 	private IEMFCompareConfiguration createConfiguration(boolean leftEditable, boolean rightEditable) {
 		CompareConfiguration cc = new CompareConfiguration();
+		cc.setProperty(EMFCompareConfiguration.MIRRORED, Boolean.TRUE);
 		cc.setLeftEditable(leftEditable);
 		cc.setRightEditable(rightEditable);
 		EMFCompareConfiguration emfCC = new EMFCompareConfiguration(cc);

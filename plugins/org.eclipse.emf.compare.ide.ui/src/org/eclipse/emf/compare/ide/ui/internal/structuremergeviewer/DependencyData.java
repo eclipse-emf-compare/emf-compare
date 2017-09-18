@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2017 Obeo and others.
+ * Copyright (c) 2013, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Martin Fleck - bug 514767
  *     Martin Fleck - bug 514415
+ *     Philip Langer - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -84,6 +85,10 @@ public class DependencyData {
 			Iterable<Diff> selectedDiffs = filter(getSelectedComparisonObjects(selection), Diff.class);
 
 			MergeMode mergePreviewMode = compareConfiguration.getMergePreviewMode();
+			if (compareConfiguration.isMirrored() && (mergePreviewMode == MergeMode.LEFT_TO_RIGHT
+					|| mergePreviewMode == MergeMode.RIGHT_TO_LEFT)) {
+				mergePreviewMode = mergePreviewMode.inverse();
+			}
 
 			requires = newHashSet();
 			rejectedDiffs = newHashSet();

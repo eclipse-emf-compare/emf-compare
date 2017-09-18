@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo.
+ * Copyright (c) 2012, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.provider.spec;
 
@@ -166,7 +167,9 @@ public class OverlayImageProvider {
 	 */
 	private String getThreeWayOverlay(final Diff diff) {
 		DifferenceKind diffKind = diff.getKind();
-		DifferenceSource source = diff.getSource();
+		Comparison comp = ComparisonUtil.getComparison(diff);
+		IMergeData mergeData = (IMergeData)EcoreUtil.getExistingAdapter(comp, IMergeData.class);
+		DifferenceSource source = getEffectiveSource(diff, mergeData);
 		StringBuilder path = new StringBuilder();
 		if (hasDirectOrIndirectConflict(REAL).apply(diff)) {
 			// The diff or one of its refining diffs are in a pseudo conflict
@@ -221,10 +224,10 @@ public class OverlayImageProvider {
 	 */
 	// @CHECKSTYLE:OFF
 	private String getDiscardedOverlay(Diff diff) {
-		DifferenceSource source = diff.getSource();
 		Comparison comp = ComparisonUtil.getComparison(diff);
 		IMergeData mergeData = (IMergeData)EcoreUtil.getExistingAdapter(comp, IMergeData.class);
 		if (mergeData != null) {
+			DifferenceSource source = getEffectiveSource(diff, mergeData);
 			switch (source) {
 				case LEFT:
 					if (mergeData.isLeftEditable() && mergeData.isRightEditable()) {
@@ -256,10 +259,10 @@ public class OverlayImageProvider {
 	 */
 	// @CHECKSTYLE:OFF
 	private String getMergedOverlay(Diff diff) {
-		DifferenceSource source = diff.getSource();
 		Comparison comp = ComparisonUtil.getComparison(diff);
 		IMergeData mergeData = (IMergeData)EcoreUtil.getExistingAdapter(comp, IMergeData.class);
 		if (mergeData != null) {
+			DifferenceSource source = getEffectiveSource(diff, mergeData);
 			switch (source) {
 				case LEFT:
 					if (mergeData.isLeftEditable() && mergeData.isRightEditable()) {
@@ -317,6 +320,30 @@ public class OverlayImageProvider {
 	 */
 	private String getImageOverlay() {
 		return "full/ovr16/match_ov"; //$NON-NLS-1$
+	}
+
+	/**
+	 * The source that's effective based on the {@link IMergeData#isMirrored() mirroring} state.
+	 * 
+	 * @param diff
+	 *            the diff for which we want the effective source.
+	 * @param mergeData
+	 *            the merge data that provides the mirroring state.
+	 * @return the source that's effective based on the mirror state.
+	 */
+	private DifferenceSource getEffectiveSource(Diff diff, IMergeData mergeData) {
+		DifferenceSource source = diff.getSource();
+		if (mergeData != null && mergeData.isMirrored()) {
+			switch (source) {
+				case LEFT:
+					return DifferenceSource.RIGHT;
+				case RIGHT:
+					return DifferenceSource.LEFT;
+				default:
+					throw new IllegalStateException();
+			}
+		}
+		return source;
 	}
 
 	/**

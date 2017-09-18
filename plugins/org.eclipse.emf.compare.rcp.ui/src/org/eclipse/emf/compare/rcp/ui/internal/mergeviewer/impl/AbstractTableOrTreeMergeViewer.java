@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2017 Obeo and others.
+ * Copyright (c) 2012, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
-<<<<<<< master
- *     Philip Langer - bug 527858
-=======
- *     Philip Langer - bug 527567
->>>>>>> dde9ebc [527567] Generalize the table and tree merge viewer framework
+ *     Philip Langer - bug 527858, 514079, 527567
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
@@ -198,7 +194,7 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 			g.setLineStyle(SWT.LINE_SOLID);
 		}
 
-		switch (getSide()) {
+		switch (getEffectiveSide()) {
 			case LEFT:
 				drawLineFromBoxToCenter(itemWrapper, bounds, g);
 				break;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.tooltip;
 
@@ -137,22 +138,30 @@ public class ReferenceChangeTooltipProvider extends AbstractTooltipProvider<Refe
 	 */
 	private boolean isContainerMove(boolean isFromLeft, EObject origin, EObject right, EObject left) {
 		boolean isContainerMove = false;
-		if (isFromLeft) {
-			if (left != null && origin != null) {
-				// if the label of the container of an element is different of the label of its ancestor
-				// or if the containing feature between an element and its container are different
-				// We consider that it is a container move
-				if (!getLabelFromObject(left.eContainer()).equals(getLabelFromObject(origin.eContainer()))
-						|| left.eContainingFeature() != origin.eContainingFeature()) {
+		if (origin == null) {
+			if (left != null && right != null) {
+				if (left.eContainingFeature() != right.eContainingFeature()
+						|| !getLabelFromObject(left.eContainer())
+								.equals(getLabelFromObject(right.eContainer()))) {
 					isContainerMove = true;
 				}
 			}
-		} else {
-			if (right != null && origin != null) {
-				if (!getLabelFromObject(right.eContainer()).equals(getLabelFromObject(origin.eContainer()))
-						|| right.eContainingFeature() != origin.eContainingFeature()) {
+		} else if (isFromLeft) {
+			if (left != null) {
+				// if the label of the container of an element is different of the label of its ancestor
+				// or if the containing feature between an element and its container are different
+				// We consider that it is a container move
+				if (left.eContainingFeature() != origin.eContainingFeature()
+						|| !getLabelFromObject(left.eContainer())
+								.equals(getLabelFromObject(origin.eContainer()))) {
 					isContainerMove = true;
 				}
+			}
+		} else if (right != null) {
+			if (right.eContainingFeature() != origin.eContainingFeature()
+					|| !getLabelFromObject(right.eContainer())
+							.equals(getLabelFromObject(origin.eContainer()))) {
+				isContainerMove = true;
 			}
 		}
 		return isContainerMove;
@@ -175,69 +184,95 @@ public class ReferenceChangeTooltipProvider extends AbstractTooltipProvider<Refe
 	 *            The modified element in the left model
 	 * @return the tooltip
 	 */
+	@SuppressWarnings("nls")
 	private String setMoveContainerTooltip(MergeMode mode, ReferenceChange diff, boolean isFromLeft,
 			EObject left, EObject right, EObject ancestor) {
 		String value = getLabel(diff);
-		String leftContainerValue = ""; //$NON-NLS-1$
+		String leftContainerValue = "";
 		if (left != null) {
 			leftContainerValue = getLabelFromObject(left.eContainer());
 		}
 
-		String rightContainerValue = ""; //$NON-NLS-1$
+		String rightContainerValue = "";
 		if (right != null) {
 			rightContainerValue = getLabelFromObject(right.eContainer());
 		}
 
-		String ancestorContainerValue;
-		if (diff.getMatch().getComparison().isThreeWay() && ancestor != null) {
-			ancestorContainerValue = getLabelFromObject(ancestor.eContainer());
-		} else {
-			ancestorContainerValue = rightContainerValue;
-		}
-
 		String tooltip;
 		String body;
+		boolean mirrored = isMirrored(diff);
+		boolean isLeftToRight = isLeftToRight(diff, mode);
+		String effectiveLeft;
+		String effectiveRight;
+
 		switch (mode) {
 			case LEFT_TO_RIGHT:
-				if (isFromLeft) {
-					body = getString("ContextualTooltip.move.container.left.leftToRight", value, //$NON-NLS-1$
-							leftContainerValue, rightContainerValue);
-				} else {
-					body = getString("ContextualTooltip.move.container.right.leftToRight", value, //$NON-NLS-1$
-							leftContainerValue, rightContainerValue);
-				}
-				tooltip = rightChanged(body);
-				break;
 			case RIGHT_TO_LEFT:
-				if (isFromLeft) {
-					body = getString("ContextualTooltip.move.container.left.rightToLeft", value, //$NON-NLS-1$
-							rightContainerValue, leftContainerValue);
+				String key = "ContextualTooltip.move.container.";
+				boolean isLeftToRightMode = mode == MergeMode.LEFT_TO_RIGHT;
+				effectiveLeft = getDirectionalValue(mirrored == isLeftToRightMode, leftContainerValue,
+						rightContainerValue);
+				effectiveRight = getDirectionalValue(mirrored == isLeftToRightMode, rightContainerValue,
+						leftContainerValue);
+				if (isFromLeft != mirrored) {
+					if (isLeftToRightMode) {
+						key += "left.leftToRight";
+					} else {
+						key += "left.rightToLeft";
+					}
 				} else {
-					body = getString("ContextualTooltip.move.container.right.rightToLeft", value, //$NON-NLS-1$
-							rightContainerValue, leftContainerValue);
+					if (isLeftToRightMode) {
+						key += "right.leftToRight";
+					} else {
+						key += "right.rightToLeft";
+					}
 				}
-				tooltip = rightUnchanged(body);
+				body = getString(key, value, effectiveLeft, effectiveRight);
+				if (isLeftToRightMode) {
+					tooltip = rightChanged(body);
+				} else {
+					tooltip = rightUnchanged(body);
+				}
 				break;
 			case ACCEPT:
-				if (isFromLeft) {
-					body = getString("ContextualTooltip.move.container.left.accept", value, //$NON-NLS-1$
-							leftContainerValue);
-					tooltip = acceptAndUnchanged(body);
+				effectiveLeft = getDirectionalValue(isLeftToRight == mirrored, leftContainerValue,
+						rightContainerValue);
+				effectiveRight = getDirectionalValue(isLeftToRight == mirrored, rightContainerValue,
+						leftContainerValue);
+				if (isFromLeft != isLeftToRight != mirrored) {
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.move.container.left.accept"),
+							value, effectiveRight);
+					tooltip = acceptAndUnchanged(body, isLeftToRight);
 				} else {
-					body = getString("ContextualTooltip.move.container.right.accept", value, //$NON-NLS-1$
-							rightContainerValue, leftContainerValue);
-					tooltip = acceptAndChanged(body);
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.move.container.right.accept"),
+							value, effectiveLeft, effectiveRight);
+					tooltip = acceptAndChanged(body, isLeftToRight);
 				}
 				break;
 			case REJECT:
-				if (isFromLeft) {
-					body = getString("ContextualTooltip.move.container.left.reject", value, //$NON-NLS-1$
-							ancestorContainerValue, leftContainerValue);
-					tooltip = rejectAndChanged(body);
+				effectiveLeft = getDirectionalValue(isLeftToRight == mirrored, leftContainerValue,
+						rightContainerValue);
+				effectiveRight = getDirectionalValue(isLeftToRight == mirrored, rightContainerValue,
+						leftContainerValue);
+				if (isFromLeft != isLeftToRight != mirrored) {
+					String previousValue = null;
+					if (diff.getMatch().getComparison().isThreeWay() && ancestor != null) {
+						previousValue = getLabelFromObject(ancestor.eContainer());
+					} else {
+						previousValue = effectiveLeft;
+					}
+
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.move.container.left.reject"),
+							value, previousValue, effectiveRight);
+					tooltip = rejectAndChanged(body, isLeftToRight);
 				} else {
-					body = getString("ContextualTooltip.move.container.right.reject", value, //$NON-NLS-1$
-							leftContainerValue);
-					tooltip = rejectAndUnchanged(body);
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.move.container.right.reject"),
+							value, effectiveRight);
+					tooltip = rejectAndUnchanged(body, isLeftToRight);
 				}
 				break;
 			default:
@@ -263,9 +298,11 @@ public class ReferenceChangeTooltipProvider extends AbstractTooltipProvider<Refe
 		String tooltip;
 		String body;
 
+		boolean mirrored = isMirrored(diff);
+		boolean isLeftToRight = isLeftToRight(diff, mode);
 		switch (mode) {
 			case LEFT_TO_RIGHT:
-				if (isFromLeft) {
+				if (isFromLeft != mirrored) {
 					body = getString("ContextualTooltip.delete.containment.left.leftToRight", value, //$NON-NLS-1$
 							containerValue);
 				} else {
@@ -275,7 +312,7 @@ public class ReferenceChangeTooltipProvider extends AbstractTooltipProvider<Refe
 				tooltip = rightChanged(body);
 				break;
 			case RIGHT_TO_LEFT:
-				if (isFromLeft) {
+				if (isFromLeft != mirrored) {
 					body = getString("ContextualTooltip.delete.containment.left.rightToLeft", value, //$NON-NLS-1$
 							containerValue);
 				} else {
@@ -285,25 +322,33 @@ public class ReferenceChangeTooltipProvider extends AbstractTooltipProvider<Refe
 				tooltip = rightUnchanged(body);
 				break;
 			case ACCEPT:
-				if (isFromLeft) {
-					body = getString("ContextualTooltip.delete.containment.left.accept", value, //$NON-NLS-1$
-							containerValue);
-					tooltip = acceptAndUnchanged(body);
+				if (isFromLeft != isLeftToRight != mirrored) {
+					body = getString(
+							getDirectionalKey(isLeftToRight,
+									"ContextualTooltip.delete.containment.left.accept"), //$NON-NLS-1$
+							value, containerValue);
+					tooltip = acceptAndUnchanged(body, isLeftToRight);
 				} else {
-					body = getString("ContextualTooltip.delete.containment.right.accept", value, //$NON-NLS-1$
-							containerValue);
-					tooltip = acceptAndChanged(body);
+					body = getString(
+							getDirectionalKey(isLeftToRight,
+									"ContextualTooltip.delete.containment.right.accept"), //$NON-NLS-1$
+							value, containerValue);
+					tooltip = acceptAndChanged(body, isLeftToRight);
 				}
 				break;
 			case REJECT:
-				if (isFromLeft) {
-					body = getString("ContextualTooltip.delete.containment.left.reject", value, //$NON-NLS-1$
-							containerValue);
-					tooltip = rejectAndChanged(body);
+				if (isFromLeft != isLeftToRight != mirrored) {
+					body = getString(
+							getDirectionalKey(isLeftToRight,
+									"ContextualTooltip.delete.containment.left.reject"), //$NON-NLS-1$
+							value, containerValue);
+					tooltip = rejectAndChanged(body, isLeftToRight);
 				} else {
-					body = getString("ContextualTooltip.delete.containment.right.reject", value, //$NON-NLS-1$
-							containerValue);
-					tooltip = rejectAndUnchanged(body);
+					body = getString(
+							getDirectionalKey(isLeftToRight,
+									"ContextualTooltip.delete.containment.right.reject"), //$NON-NLS-1$
+							value, containerValue);
+					tooltip = rejectAndUnchanged(body, isLeftToRight);
 				}
 				break;
 			default:
@@ -329,9 +374,11 @@ public class ReferenceChangeTooltipProvider extends AbstractTooltipProvider<Refe
 
 		String tooltip;
 		String body;
+		boolean mirrored = isMirrored(diff);
+		boolean isLeftToRight = isLeftToRight(diff, mode);
 		switch (mode) {
 			case LEFT_TO_RIGHT:
-				if (isFromLeft) {
+				if (isFromLeft != mirrored) {
 					body = getString("ContextualTooltip.add.containment.left.leftToRight", value, //$NON-NLS-1$
 							containerValue);
 				} else {
@@ -341,7 +388,7 @@ public class ReferenceChangeTooltipProvider extends AbstractTooltipProvider<Refe
 				tooltip = rightChanged(body);
 				break;
 			case RIGHT_TO_LEFT:
-				if (isFromLeft) {
+				if (isFromLeft != mirrored) {
 					body = getString("ContextualTooltip.add.containment.left.rightToLeft", value, //$NON-NLS-1$
 							containerValue);
 				} else {
@@ -351,25 +398,31 @@ public class ReferenceChangeTooltipProvider extends AbstractTooltipProvider<Refe
 				tooltip = rightUnchanged(body);
 				break;
 			case ACCEPT:
-				if (isFromLeft) {
-					body = getString("ContextualTooltip.add.containment.left.accept", value, //$NON-NLS-1$
-							containerValue);
-					tooltip = acceptAndUnchanged(body);
+				if (isFromLeft != isLeftToRight != mirrored) {
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.add.containment.left.accept"), //$NON-NLS-1$
+							value, containerValue);
+					tooltip = acceptAndUnchanged(body, isLeftToRight);
 				} else {
-					body = getString("ContextualTooltip.add.containment.right.accept", value, //$NON-NLS-1$
-							containerValue);
-					tooltip = acceptAndChanged(body);
+					body = getString(
+							getDirectionalKey(isLeftToRight,
+									"ContextualTooltip.add.containment.right.accept"), //$NON-NLS-1$
+							value, containerValue);
+					tooltip = acceptAndChanged(body, isLeftToRight);
 				}
 				break;
 			case REJECT:
-				if (isFromLeft) {
-					body = getString("ContextualTooltip.add.containment.left.reject", value, //$NON-NLS-1$
-							containerValue);
-					tooltip = rejectAndChanged(body);
+				if (isFromLeft != isLeftToRight != mirrored) {
+					body = getString(
+							getDirectionalKey(isLeftToRight, "ContextualTooltip.add.containment.left.reject"), //$NON-NLS-1$
+							value, containerValue);
+					tooltip = rejectAndChanged(body, isLeftToRight);
 				} else {
-					body = getString("ContextualTooltip.add.containment.right.reject", value, //$NON-NLS-1$
-							containerValue);
-					tooltip = rejectAndUnchanged(body);
+					body = getString(
+							getDirectionalKey(isLeftToRight,
+									"ContextualTooltip.add.containment.right.reject"), //$NON-NLS-1$
+							value, containerValue);
+					tooltip = rejectAndUnchanged(body, isLeftToRight);
 				}
 				break;
 			default:
