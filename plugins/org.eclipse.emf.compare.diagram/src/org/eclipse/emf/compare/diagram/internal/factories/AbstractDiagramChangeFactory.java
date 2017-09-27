@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Obeo.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Christian W. Damus - bug 525286
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.internal.factories;
 
@@ -147,8 +148,12 @@ public abstract class AbstractDiagramChangeFactory extends AbstractChangeFactory
 		if (result == null) {
 			result = match.getRight();
 		}
-		if (!(result instanceof View
-				&& ReferenceUtil.safeEGet(result, NotationPackage.Literals.VIEW__ELEMENT) != null)
+
+		// Be careful: a view can have the element explicitly set to null, which means that
+		// it is a free-standing shape. This happens, for example, with GeoShapes and
+		// certain views in Papyrus diagrams (such as applied-stereotype comments). These
+		// explicitly nulls do not indicate inheritance of semantic element from the parent
+		if (!(result instanceof View && result.eIsSet(NotationPackage.Literals.VIEW__ELEMENT))
 				&& match.eContainer() instanceof Match) {
 			result = getViewContainer((Match)match.eContainer());
 		}
