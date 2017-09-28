@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="EMF Compare with extras based on Oxygen SDK" sequenceNumber="1504559326">
+<target name="EMF Compare with extras based on Oxygen SDK" sequenceNumber="1506587845">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -45,8 +45,8 @@
       <repository location="http://download.eclipse.org/releases/oxygen"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.papyrus.sysml.feature.feature.group" version="0.0.0"/>
-      <repository location="https://hudson.eclipse.org/papyrus/view/Sysml/job/papyrus-sysml11-oxygen/lastSuccessfulBuild/artifact/org.eclipse.papyrus.sysml11.p2/target/repository"/>
+      <unit id="org.eclipse.papyrus.sysml14" version="0.0.0"/>
+      <repository id="sysml" location="http://download.eclipse.org/modeling/mdt/papyrus/components/sysml14"/>
     </location>
   </locations>
 </target>
