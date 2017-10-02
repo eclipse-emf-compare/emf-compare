@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Christian W. Damus - bug 525473
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram;
 
@@ -30,6 +31,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.MouseWheelZoomHandler;
+import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.SelectionManager;
 import org.eclipse.gef.ui.parts.DomainEventDispatcher;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
@@ -193,6 +195,13 @@ class DiagramMergeViewer extends AbstractGraphicalMergeViewer {
 			if (diagram != null) {
 				TransactionalEditingDomain domain = getEditingDomain(diagram);
 				if (domain != null && currentDiag != diagram) {
+					RootEditPart oldRoot = fGraphicalViewer.getRootEditPart();
+					if (oldRoot != null) {
+						oldRoot.deactivate();
+						fGraphicalViewer.getEditPartRegistry().clear();
+						fGraphicalViewer.getVisualPartMap().clear();
+					}
+
 					DiagramRootEditPart rootEditPart = new DiagramRootEditPart(diagram.getMeasurementUnit());
 					// rootEditPart.getZoomManager().setZoomAnimationStyle(ZoomManager.ANIMATE_NEVER);
 					// rootEditPart.getZoomManager().setZoom(ZOOM_FACTOR);
