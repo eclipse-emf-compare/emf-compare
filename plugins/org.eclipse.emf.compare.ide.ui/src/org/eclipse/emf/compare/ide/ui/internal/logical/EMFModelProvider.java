@@ -528,7 +528,7 @@ public class EMFModelProvider extends ModelProvider {
 		if (modelA.getOriginTraversal() != null) {
 			origin.addAll(modelA.getOriginTraversal().getStorages());
 			if (modelB != null && modelB.getOriginTraversal() != null) {
-				right.addAll(modelB.getOriginTraversal().getStorages());
+				origin.addAll(modelB.getOriginTraversal().getStorages());
 			}
 			originTraversal = new StorageTraversal(origin);
 		}
