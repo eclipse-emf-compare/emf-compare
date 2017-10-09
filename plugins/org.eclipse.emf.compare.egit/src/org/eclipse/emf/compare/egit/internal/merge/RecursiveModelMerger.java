@@ -37,6 +37,7 @@ import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.emf.compare.egit.internal.storage.AbstractGitResourceVariant;
 import org.eclipse.emf.compare.egit.internal.storage.TreeParserResourceVariant;
 import org.eclipse.emf.compare.egit.internal.wrapper.JGitProgressMonitorWrapper;
+import org.eclipse.jgit.attributes.Attributes;
 import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.dircache.DirCacheBuildIterator;
 import org.eclipse.jgit.dircache.DirCacheBuilder;
@@ -254,7 +255,7 @@ public class RecursiveModelMerger extends RecursiveMerger {
 				treeWalk.getTree(T_THEIRS, CanonicalTreeParser.class),
 				treeWalk.getTree(T_INDEX, DirCacheBuildIterator.class),
 				hasWorkingTreeIterator ? treeWalk.getTree(T_FILE, WorkingTreeIterator.class) : null,
-				ignoreConflicts);
+				ignoreConflicts, new Attributes());
 	}
 
 	/**
@@ -466,8 +467,7 @@ public class RecursiveModelMerger extends RecursiveMerger {
 						merger.makeInSync.remove(filePath);
 					}
 					merger.unmergedPaths.add(filePath);
-					merger.mergeResults.put(filePath,
-							new MergeResult<>(Collections.<RawText> emptyList()));
+					merger.mergeResults.put(filePath, new MergeResult<>(Collections.<RawText> emptyList()));
 					final TreeParserResourceVariant baseVariant = (TreeParserResourceVariant)subscriber
 							.getBaseTree().getResourceVariant(handledFile);
 					final TreeParserResourceVariant ourVariant = (TreeParserResourceVariant)subscriber
