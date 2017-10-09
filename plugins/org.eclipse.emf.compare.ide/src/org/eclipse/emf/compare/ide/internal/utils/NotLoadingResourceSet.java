@@ -289,7 +289,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 		// That lookup can be expensive for a resource set with hundreds of resources.
 		Map<URI, Resource> uriToResource = getURIResourceMap();
 		final Resource cached = uriToResource.get(uri);
-		if (cached != null || uriToResource.containsKey(uri)) {
+		if (cached != null || (!allowResourceLoad && uriToResource.containsKey(uri))) {
 			return cached;
 		}
 
