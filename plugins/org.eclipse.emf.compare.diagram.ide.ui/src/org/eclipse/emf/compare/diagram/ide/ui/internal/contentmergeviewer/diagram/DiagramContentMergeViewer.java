@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2016 Obeo and others.
+ * Copyright (c) 2013, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Obeo - initial API and implementation
  *     Philip Langer - adaptation for refactoring regarding SizeChange
  *     Simon Delisle - bug 511047
+ *     Camille Letavernier - bug 529882
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram;
 
@@ -74,18 +75,26 @@ import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
+import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editparts.LayerManager;
+import org.eclipse.gef.editparts.ZoomListener;
+import org.eclipse.gef.editparts.ZoomManager;
+import org.eclipse.gef.ui.actions.ZoomComboContributionItem;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListItemEditPart;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IPartService;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Specialized {@link org.eclipse.compare.contentmergeviewer.ContentMergeViewer} that uses
@@ -94,7 +103,7 @@ import org.eclipse.swt.widgets.Composite;
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
 @SuppressWarnings("restriction")
-public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
+public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer implements ZoomListener {
 
 	/**
 	 * Interface for the management of decorators.
@@ -1745,6 +1754,12 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 	/** The unmirrored content provider of this merge viewer. */
 	private TreeContentMergeViewerContentProvider fContentProvider;
 
+	/** Flag to store whether this viewer synchronizes the zoom level of all diagrams. */
+	private boolean isSynchronizingZoom;
+
+	/** The contribution item to set the zoom level. */
+	private ZoomComboContributionItem zoomItem;
+
 	/**
 	 * Creates a new {@link DiagramContentMergeViewer} by calling the super constructor with the given
 	 * parameters.
@@ -1875,6 +1890,85 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer {
 
 		updateToolItems();
 
+		if (left != null && right != null) {
+			addZoomListener(getAncestorMergeViewer(), this);
+			addZoomListener(getLeftMergeViewer(), this);
+			addZoomListener(getRightMergeViewer(), this);
+		}
+		if (left != null && zoomItem != null) {
+			zoomItem.setZoomManager(getZoomManager(getLeftMergeViewer()));
+		}
+	}
+
+	/**
+	 * Adds the specified <code>zoomListener</code> to the zoom manager of the specified <code>viewer</code>.
+	 * 
+	 * @param viewer
+	 *            The viewer to which the zoom listener should be added.
+	 * @param zoomListener
+	 *            The zoom listener to be added.
+	 */
+	private void addZoomListener(DiagramMergeViewer viewer, ZoomListener zoomListener) {
+		final ZoomManager zoomManager = getZoomManager(viewer);
+		if (zoomManager != null) {
+			zoomManager.addZoomListener(zoomListener);
+		}
+	}
+
+	/**
+	 * Sets the specified <code>zoom</code> level to the zoom manager of the specified <code>viewer</code>.
+	 * 
+	 * @param viewer
+	 *            The viewer in which the zoom level should be set.
+	 * @param zoom
+	 *            The zoom level to set.
+	 */
+	private void setZoom(DiagramMergeViewer viewer, double zoom) {
+		final ZoomManager zoomManager = getZoomManager(viewer);
+		if (zoomManager != null) {
+			zoomManager.setZoom(zoom);
+		}
+	}
+
+	/**
+	 * Obtains the zoom manager from the specified diagram merge <code>viewer</code>.
+	 * 
+	 * @param viewer
+	 *            The viewer to get the zoom manager from.
+	 * @return The zoom manager or <code>null</code> if it couldn't be obtained.
+	 */
+	private ZoomManager getZoomManager(DiagramMergeViewer viewer) {
+		final RootEditPart rootEditPart = viewer.getGraphicalViewer().getRootEditPart();
+		if (rootEditPart instanceof DiagramRootEditPart) {
+			return ((DiagramRootEditPart)rootEditPart).getZoomManager();
+		}
+		return null;
+	}
+
+	@Override
+	protected void createToolItems(ToolBarManager toolBarManager) {
+		super.createToolItems(toolBarManager);
+		IPartService partService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService();
+		zoomItem = new ZoomComboContributionItem(partService);
+		toolBarManager.insert(0, zoomItem);
+	}
+
+	/**
+	 * {@inheritDoc} When the zoom on any of the sides changes, the same zoom level is applied to other sides.
+	 */
+	@Override
+	public void zoomChanged(double zoom) {
+		if (isSynchronizingZoom) {
+			return;
+		}
+		isSynchronizingZoom = true;
+		try {
+			setZoom(getAncestorMergeViewer(), zoom);
+			setZoom(getLeftMergeViewer(), zoom);
+			setZoom(getRightMergeViewer(), zoom);
+		} finally {
+			isSynchronizingZoom = false;
+		}
 	}
 
 	/**
