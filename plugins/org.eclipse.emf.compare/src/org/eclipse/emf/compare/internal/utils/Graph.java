@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2016 Obeo and others.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Sets;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -825,6 +826,21 @@ public class Graph<E> implements IGraph<E> {
 		private static final long serialVersionUID = -4476850344598138970L;
 
 		/**
+		 * Objects we've visited and don't want to visit again.
+		 */
+		private final Set<Object> set = Sets.newHashSet();
+
+		/**
+		 * A predicate that keeps track of objects we've visited, returning true only the first time for each
+		 * object.
+		 */
+		private final Predicate<Object> predicate = new Predicate<Object>() {
+			public boolean apply(Object input) {
+				return set.add(input);
+			}
+		};
+
+		/**
 		 * Construct an iterator given the root (well, "leaf") of its tree.
 		 * 
 		 * @param start
@@ -842,7 +858,7 @@ public class Graph<E> implements IGraph<E> {
 		@SuppressWarnings("unchecked")
 		@Override
 		protected Iterator<? extends Node<P>> getChildren(Object obj) {
-			return ((Node<P>)obj).getParents().iterator();
+			return Iterables.filter(((Node<P>)obj).getParents(), predicate).iterator();
 		}
 	}
 
