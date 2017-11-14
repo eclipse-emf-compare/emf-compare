@@ -472,7 +472,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		if (!monitor.isCanceled()) {
 			SWTUtil.safeSyncExec(new Runnable() {
 				public void run() {
-					toolBar.initToolbar(getViewer(), navigatable);
+					toolBar.initToolbar(getViewer(), navigatable, fHandlerService);
 					toolBar.setEnabled(false);
 				}
 			});

@@ -40,7 +40,6 @@ public class SelectDiffAction extends Action {
 		this.navigatable = navigatable;
 		this.changeFlag = changeFlag;
 		initToolTipAndImage();
-		activateActionHandler();
 	}
 
 	protected void initToolTipAndImage() {
@@ -49,11 +48,13 @@ public class SelectDiffAction extends Action {
 				setToolTipText(EMFCompareIDEUIMessages.getString("previous.diff.tooltip")); //$NON-NLS-1$
 				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
 						"icons/full/toolb16/prev_diff.gif")); //$NON-NLS-1$
+				setActionDefinitionId("org.eclipse.compare.selectPreviousChange"); //$NON-NLS-1$
 				break;
 			case INavigatable.NEXT_CHANGE:
 				setToolTipText(EMFCompareIDEUIMessages.getString("next.diff.tooltip")); //$NON-NLS-1$
 				setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
 						"icons/full/toolb16/next_diff.gif")); //$NON-NLS-1$
+				setActionDefinitionId("org.eclipse.compare.selectNextChange"); //$NON-NLS-1$
 				break;
 
 			case Navigatable.PREVIOUS_UNRESOLVED_CHANGE:
