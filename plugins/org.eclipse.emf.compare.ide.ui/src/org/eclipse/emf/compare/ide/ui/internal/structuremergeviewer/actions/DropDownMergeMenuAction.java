@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Obeo.
+ * Copyright (c) 2013, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,7 +45,7 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 	private Menu fMenu;
 
 	/** The accept menu item. */
-	private final List<Action> actions;
+	private final List<DropDownAction> actions;
 
 	/**
 	 * Constructor.
@@ -57,10 +57,22 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 		this.configuration = configuration;
 		actions = newArrayList();
 
+		MergeMode currentPreviewMode = configuration.getMergePreviewMode();
 		for (MergeMode mergePreviewMode : previewModes) {
-			actions.add(new DropDownAction(configuration, mergePreviewMode));
+			DropDownAction action = new DropDownAction(configuration, mergePreviewMode);
+			actions.add(action);
+			if (mergePreviewMode == currentPreviewMode) {
+				action.setChecked(true);
+			}
 		}
-		setTextAndImage(this, configuration.getMergePreviewMode());
+
+		DropDownAction action = new DropDownAction(configuration, null);
+		actions.add(action);
+		if (currentPreviewMode == null) {
+			action.setChecked(true);
+		}
+
+		setTextAndImage(this, currentPreviewMode);
 
 		setMenuCreator(this);
 		configuration.getEventBus().register(this);
@@ -68,7 +80,11 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 
 	@Subscribe
 	public void mergePreviewModeChange(IMergePreviewModeChange event) {
-		setTextAndImage(this, event.getNewValue());
+		MergeMode mergeMode = event.getNewValue();
+		for (DropDownAction dropDownAction : actions) {
+			dropDownAction.setChecked(mergeMode == dropDownAction.getMergeMode());
+		}
+		setTextAndImage(this, mergeMode);
 	}
 
 	/**
@@ -79,7 +95,11 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 	@Override
 	public void run() {
 		MergeMode mergeWay = configuration.getMergePreviewMode();
-		configuration.setMergePreviewMode(mergeWay.inverse());
+		if (mergeWay == null) {
+			actions.get(0).run();
+		} else {
+			configuration.setMergePreviewMode(mergeWay.inverse());
+		}
 	}
 
 	/**
@@ -135,33 +155,42 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 	}
 
 	static void setTextAndImage(IAction action, MergeMode mergeMode) {
-		switch (mergeMode) {
-			case LEFT_TO_RIGHT:
-				action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/left_to_right.gif")); //$NON-NLS-1$
-				action.setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.left.to.right.text")); //$NON-NLS-1$
-				action.setText(EMFCompareIDEUIMessages.getString("dropdown.left.to.right.text")); //$NON-NLS-1$
-				break;
-			case RIGHT_TO_LEFT:
-				action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/right_to_left.gif")); //$NON-NLS-1$
-				action.setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.right.to.left.text")); //$NON-NLS-1$
-				action.setText(EMFCompareIDEUIMessages.getString("dropdown.right.to.left.text")); //$NON-NLS-1$
-				break;
-			case ACCEPT:
-				action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/accept.gif")); //$NON-NLS-1$
-				action.setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.accept.text")); //$NON-NLS-1$
-				action.setText(EMFCompareIDEUIMessages.getString("dropdown.accept.text")); //$NON-NLS-1$
-				break;
-			case REJECT:
-				action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-						EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/reject.gif")); //$NON-NLS-1$
-				action.setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.reject.text")); //$NON-NLS-1$
-				action.setText(EMFCompareIDEUIMessages.getString("dropdown.reject.text")); //$NON-NLS-1$
-				break;
-			default:
-				throw new IllegalStateException();
+		if (mergeMode == null) {
+			action.setImageDescriptor(
+					AbstractUIPlugin.imageDescriptorFromPlugin(EMFCompareIDEUIPlugin.PLUGIN_ID,
+							"icons/full/toolb16/disabled_highlight_related_changes.gif")); //$NON-NLS-1$
+			action.setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.disabled")); //$NON-NLS-1$
+			action.setText(EMFCompareIDEUIMessages.getString("dropdown.disabled")); //$NON-NLS-1$
+
+		} else {
+			switch (mergeMode) {
+				case LEFT_TO_RIGHT:
+					action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+							EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/left_to_right.gif")); //$NON-NLS-1$
+					action.setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.left.to.right.text")); //$NON-NLS-1$
+					action.setText(EMFCompareIDEUIMessages.getString("dropdown.left.to.right.text")); //$NON-NLS-1$
+					break;
+				case RIGHT_TO_LEFT:
+					action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+							EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/right_to_left.gif")); //$NON-NLS-1$
+					action.setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.right.to.left.text")); //$NON-NLS-1$
+					action.setText(EMFCompareIDEUIMessages.getString("dropdown.right.to.left.text")); //$NON-NLS-1$
+					break;
+				case ACCEPT:
+					action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+							EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/accept.gif")); //$NON-NLS-1$
+					action.setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.accept.text")); //$NON-NLS-1$
+					action.setText(EMFCompareIDEUIMessages.getString("dropdown.accept.text")); //$NON-NLS-1$
+					break;
+				case REJECT:
+					action.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
+							EMFCompareIDEUIPlugin.PLUGIN_ID, "icons/full/toolb16/reject.gif")); //$NON-NLS-1$
+					action.setToolTipText(EMFCompareIDEUIMessages.getString("dropdown.reject.text")); //$NON-NLS-1$
+					action.setText(EMFCompareIDEUIMessages.getString("dropdown.reject.text")); //$NON-NLS-1$
+					break;
+				default:
+					throw new IllegalStateException();
+			}
 		}
 	}
 
@@ -179,9 +208,14 @@ public class DropDownMergeMenuAction extends Action implements IMenuCreator {
 		 *            The compare configuration object.
 		 */
 		public DropDownAction(IEMFCompareConfiguration configuration, MergeMode mergeMode) {
+			super("", IAction.AS_RADIO_BUTTON); //$NON-NLS-1$
 			this.configuration = configuration;
 			this.mergeMode = mergeMode;
 			setTextAndImage(this, mergeMode);
+		}
+
+		public MergeMode getMergeMode() {
+			return mergeMode;
 		}
 
 		/**

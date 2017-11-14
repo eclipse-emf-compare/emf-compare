@@ -14,7 +14,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.configuration;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 
@@ -105,14 +104,6 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	}
 
 	private void setDefaultValues() {
-		if (getProperty(PREVIEW_MERGE_MODE) == null) {
-			if (isLeftEditable() && isRightEditable()) {
-				setProperty(PREVIEW_MERGE_MODE, MergeMode.RIGHT_TO_LEFT);
-			} else {
-				setProperty(PREVIEW_MERGE_MODE, MergeMode.ACCEPT);
-			}
-		}
-
 		EventBus eventBus = new EventBus();
 		if (getProperty(SMV_FILTERS) == null) {
 			setProperty(SMV_FILTERS, new StructureMergeViewerFilter(eventBus));
@@ -308,7 +299,6 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	}
 
 	public void setMergePreviewMode(MergeMode previewMergeMode) {
-		Preconditions.checkNotNull(previewMergeMode);
 		MergeMode oldValue = getMergePreviewMode();
 		setProperty(PREVIEW_MERGE_MODE, previewMergeMode);
 		getEventBus().post(new MergePreviewModeChange(oldValue, previewMergeMode));

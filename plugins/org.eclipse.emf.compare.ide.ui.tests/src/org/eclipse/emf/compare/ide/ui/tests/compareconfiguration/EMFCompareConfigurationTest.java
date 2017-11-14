@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Obeo.
+ * Copyright (c) 2014, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,10 +12,12 @@ package org.eclipse.emf.compare.ide.ui.tests.compareconfiguration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.junit.Test;
 
 @SuppressWarnings({"restriction", "nls" })
@@ -27,10 +29,15 @@ public class EMFCompareConfigurationTest {
 		cc.setLeftEditable(true);
 		cc.setRightEditable(true);
 		EMFCompareConfiguration emfCC = new EMFCompareConfiguration(cc);
-		// From now, the following properties are not null:
-		// PREVIEW_MERGE_MODE, SMV_FILTERS, SMV_GROUP_PROVIDERS, EVENT_BUS.
+		// This property is null until it's been configured.
 		Object preview_mode = emfCC.getProperty(EMFCompareIDEUIPlugin.PLUGIN_ID + ".PREVIEW_MERGE_MODE");
-		assertNotNull(preview_mode);
+		assertNull(preview_mode);
+		// Configure it and then it should have that value.
+		emfCC.setMergePreviewMode(MergeMode.ACCEPT);
+		preview_mode = emfCC.getProperty(EMFCompareIDEUIPlugin.PLUGIN_ID + ".PREVIEW_MERGE_MODE");
+		assertEquals(MergeMode.ACCEPT, preview_mode);
+		// From now, the following properties are not null:
+		// SMV_FILTERS, SMV_GROUP_PROVIDERS, EVENT_BUS.
 		Object smv_filters = emfCC.getProperty(EMFCompareIDEUIPlugin.PLUGIN_ID + ".SMV_FILTERS");
 		assertNotNull(smv_filters);
 		Object smv_group_providers = emfCC

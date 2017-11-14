@@ -950,7 +950,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		if (!inChange) {
 			SWTUtil.safeAsyncExec(new Runnable() {
 				public void run() {
-					updateHighlightRelatedChanges(getSelection());
+					if (getCompareConfiguration().getMergePreviewMode() == null) {
+						clearHighlightRelatedChanges();
+					} else {
+						updateHighlightRelatedChanges(getSelection());
+					}
 				}
 			});
 		}
@@ -1228,10 +1232,14 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		compareConfiguration.setLeftEditable(input.isLeftEditable());
 		compareConfiguration.setRightEditable(input.isRightEditable());
 
-		if (input.isLeftEditable() && input.isRightEditable()) {
-			compareConfiguration.setMergePreviewMode(MergeMode.RIGHT_TO_LEFT);
+		if (isHighlightRelatedChanges()) {
+			if (input.isLeftEditable() && input.isRightEditable()) {
+				compareConfiguration.setMergePreviewMode(MergeMode.RIGHT_TO_LEFT);
+			} else {
+				compareConfiguration.setMergePreviewMode(MergeMode.ACCEPT);
+			}
 		} else {
-			compareConfiguration.setMergePreviewMode(MergeMode.ACCEPT);
+			compareConfiguration.setMergePreviewMode(null);
 		}
 
 		// setup defaults
@@ -1418,10 +1426,14 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				compareConfiguration.setLeftEditable(leftEditable);
 				compareConfiguration.setRightEditable(rightEditable);
 
-				if (leftEditable && rightEditable) {
-					compareConfiguration.setMergePreviewMode(MergeMode.RIGHT_TO_LEFT);
+				if (isHighlightRelatedChanges()) {
+					if (leftEditable && rightEditable) {
+						compareConfiguration.setMergePreviewMode(MergeMode.RIGHT_TO_LEFT);
+					} else {
+						compareConfiguration.setMergePreviewMode(MergeMode.ACCEPT);
+					}
 				} else {
-					compareConfiguration.setMergePreviewMode(MergeMode.ACCEPT);
+					compareConfiguration.setMergePreviewMode(null);
 				}
 
 				final BasicDiagnostic diagnostic = new BasicDiagnostic(Diagnostic.OK,
@@ -1636,11 +1648,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 *            selection
 	 */
 	protected void updateHighlightRelatedChanges(ISelection selection) {
-		if (!isHighlightRelatedChanges()) {
-			return;
+		if (getCompareConfiguration().getMergePreviewMode() != null) {
+			dependencyData.updateDependencies(selection,
+					EMFCompareRCPPlugin.getDefault().getMergerRegistry());
+			internalRedraw();
 		}
-		dependencyData.updateDependencies(selection, EMFCompareRCPPlugin.getDefault().getMergerRegistry());
-		internalRedraw();
 	}
 
 	/**
@@ -1989,10 +2001,17 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	protected void handlePreferenceChangedEvent(PropertyChangeEvent event) {
 		if (event.getProperty() == EMFCompareUIPreferences.EDITOR_TREE_HIGHLIGHT_RELATED_CHANGES) {
 			boolean highlightRelatedChanges = Boolean.parseBoolean(event.getNewValue().toString());
+			EMFCompareConfiguration compareConfiguration = getCompareConfiguration();
 			if (highlightRelatedChanges) {
-				updateHighlightRelatedChanges(getSelection());
+				if (compareConfiguration.getMergePreviewMode() == null) {
+					if (compareConfiguration.isLeftEditable() && compareConfiguration.isRightEditable()) {
+						compareConfiguration.setMergePreviewMode(MergeMode.RIGHT_TO_LEFT);
+					} else {
+						compareConfiguration.setMergePreviewMode(MergeMode.ACCEPT);
+					}
+				}
 			} else {
-				clearHighlightRelatedChanges();
+				compareConfiguration.setMergePreviewMode(null);
 			}
 		}
 	}
