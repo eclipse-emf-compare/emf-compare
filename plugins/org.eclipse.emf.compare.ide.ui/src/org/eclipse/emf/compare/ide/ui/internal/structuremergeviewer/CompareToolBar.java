@@ -536,4 +536,14 @@ public class CompareToolBar implements ISelectionChangedListener, IPropertyChang
 		}
 	}
 
+	/**
+	 * Returns whether the toolbar is currently enabled.
+	 * 
+	 * @return whether the toolbar is currently enabled.
+	 */
+	public boolean isEnabled() {
+		ToolBar toolbar = toolbarManager.getControl();
+		return toolbar != null && toolbar.isEnabled();
+	}
+
 }

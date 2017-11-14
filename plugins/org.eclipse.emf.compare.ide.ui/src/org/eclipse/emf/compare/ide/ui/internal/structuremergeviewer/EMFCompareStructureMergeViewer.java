@@ -329,6 +329,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	private IPreferenceStore fPreferenceStore;
 
+	private boolean inChange;
+
 	/**
 	 * Constructor.
 	 * 
@@ -404,14 +406,20 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		toolbarUpdaterContentProviderListener = new FetchListener() {
 
+			private boolean enabled;
+
 			@Override
 			public void startFetching() {
+				enabled = toolBar.isEnabled();
 				toolBar.setEnabled(false);
 			}
 
 			@Override
 			public void doneFetching() {
-				toolBar.setEnabled(true);
+				// Only try to enable the toolbar if it was enabled and is not currently enabled.
+				if (enabled && !toolBar.isEnabled()) {
+					toolBar.setEnabled(true);
+				}
 			}
 		};
 
@@ -939,11 +947,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	@Subscribe
 	public void mergePreviewModeChange(@SuppressWarnings("unused") IMergePreviewModeChange event) {
-		SWTUtil.safeAsyncExec(new Runnable() {
-			public void run() {
-				updateHighlightRelatedChanges(getSelection());
-			}
-		});
+		if (!inChange) {
+			SWTUtil.safeAsyncExec(new Runnable() {
+				public void run() {
+					updateHighlightRelatedChanges(getSelection());
+				}
+			});
+		}
 	}
 
 	@Subscribe
@@ -951,18 +961,19 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		final boolean enabled = any(event.getSelectedDifferenceFilters(),
 				instanceOf(CascadingDifferencesFilter.class));
 		setCascadingDifferencesFilterEnabled(enabled);
-		SWTUtil.safeRefresh(this, false, true);
-		getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
-			public void run() {
-				// Begin computing the content tree cache.
-				navigatable.refresh();
+		if (!inChange) {
+			SWTUtil.safeRefresh(this, false, true);
+			getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
+				public void run() {
+					// Begin computing the content tree cache.
+					navigatable.refresh();
 
-				if (navigatable.getViewer().getSelection() == null
-						|| navigatable.getViewer().getSelection().isEmpty()) {
-					selectFirstDiffOrDisplayLabelViewer(getCompareConfiguration().getComparison());
+					if (getViewer().getSelection().isEmpty()) {
+						selectFirstDiffOrDisplayLabelViewer(getCompareConfiguration().getComparison());
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	/**
@@ -993,18 +1004,20 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	@Subscribe
 	public void handleDifferenceGroupProviderChange(
 			@SuppressWarnings("unused") IDifferenceGroupProviderChange event) {
-		SWTUtil.safeRefresh(this, false, true);
-		getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
-			public void run() {
-				// Begin computing the content tree cache.
-				navigatable.refresh();
+		if (!inChange) {
+			SWTUtil.safeRefresh(this, false, true);
+			getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
+				public void run() {
+					// Begin computing the content tree cache.
+					navigatable.refresh();
 
-				// Expands the tree viewer to the default expansion level
-				expandTreeToLevel(getDefaultTreeExpansionLevel(), getTreeExpandTimeout());
+					// Expands the tree viewer to the default expansion level
+					expandTreeToLevel(getDefaultTreeExpansionLevel(), getTreeExpandTimeout());
 
-				selectFirstDiffOrDisplayLabelViewer(getCompareConfiguration().getComparison());
-			}
-		});
+					selectFirstDiffOrDisplayLabelViewer(getCompareConfiguration().getComparison());
+				}
+			});
+		}
 	}
 
 	/**
@@ -1310,13 +1323,14 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			config.setComparisonAndScope(comparison, scope);
 
 			SWTUtil.safeAsyncExec(new Runnable() {
-
 				public void run() {
 					if (!getControl().isDisposed()) {
 						updateLayout(false, true);
 					}
 				}
 			});
+
+			SWTUtil.safeRefresh(this, false, true);
 
 			getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
 				public void run() {
@@ -1325,6 +1339,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 						// the refresh caused by the initialization of the viewer filters and the group
 						// providers.
 						refreshTitle();
+
+						getViewer().getControl().setFocus();
+
+						// Expands the tree viewer to the default expansion level
+						expandTreeToLevel(getDefaultTreeExpansionLevel(), getTreeExpandTimeout());
 
 						// Begin computing the content tree cache.
 						navigatable.refresh();
@@ -1354,6 +1373,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	void compareInputChanged(final ICompareInput input, IProgressMonitor monitor) {
+		inChange = true;
 		if (input != null && !monitor.isCanceled()) {
 			if (input instanceof CompareInputAdapter) {
 				resourceSetShouldBeDisposed = false;
@@ -1433,9 +1453,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 				EMFCompareBuilderConfigurator.createDefault().configure(comparisonBuilder);
 
-				SubMonitor subMonitorChild = SubMonitor.convert(subMonitor.newChild(15), 10);
+				SubMonitor subMonitorChild = SubMonitor.convert(subMonitor.newChild(14), 10);
 				final Comparison compareResult = comparisonBuilder.build().compare(scope,
 						BasicMonitor.toMonitor(subMonitorChild));
+
+				SubMonitor finalSubMonitorChild = subMonitor.newChild(1);
+				finalSubMonitorChild.subTask("Updating view..."); //$NON-NLS-1$
 
 				hookAdapters(input, compareResult);
 
@@ -1470,6 +1493,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				}
 
 				initToolbar(monitor);
+				finalSubMonitorChild.worked(1);
 				compareInputChanged(scope, compareResult, monitor);
 			}
 			// Protect compare actions from over-enthusiast users
@@ -1477,6 +1501,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		} else {
 			compareInputChangedToNull();
 		}
+		inChange = false;
 	}
 
 	/**
@@ -1651,6 +1676,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				}
 			} else if (!isSelectFirstChange()) {
 				navigatable.fireOpen(new NoSelectedItemCompareInput(compareInput));
+				WrappableTreeViewer viewer = getViewer();
+				if (viewer.getSelection().isEmpty()) {
+					Object[] filteredChildren = viewer.getFilteredChildren(viewer.getInput());
+					if (filteredChildren.length != 0) {
+						viewer.setSelection(new StructuredSelection(filteredChildren[0]));
+					}
+				}
 			} else {
 				navigatable.selectChange(INavigatable.FIRST_CHANGE);
 			}
@@ -1845,7 +1877,14 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				int lastEditorPage = getPageCount() - 1;
 				setActivePage(lastEditorPage);
 				updateLayout(false, true);
+				getItemControl(lastEditorPage).setFocus();
+				return;
 			}
+		}
+
+		if (getPageCount() > 0) {
+			setActivePage(0);
+			getItemControl(0).setFocus();
 		}
 	}
 
@@ -1915,6 +1954,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 */
 	@Override
 	protected void internalRefresh(Object element) {
+		if (element == null) {
+			return;
+		}
+
 		// Postpones the refresh if the content provider is in pending mode
 		getContentProvider().runWhenReady(IN_UI_SYNC, new Runnable() {
 
@@ -1935,7 +1978,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				refreshTitle();
 			}
 		});
-
 	}
 
 	/**
