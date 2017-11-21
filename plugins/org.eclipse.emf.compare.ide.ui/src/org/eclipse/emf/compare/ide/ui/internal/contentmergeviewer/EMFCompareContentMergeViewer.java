@@ -104,6 +104,7 @@ import org.eclipse.ui.views.properties.PropertySheet;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
+@SuppressWarnings("restriction")
 public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer implements ISelectionChangedListener, ICompareColor.Provider, IAdaptable, CommandStackListener {
 
 	private static final String HANDLER_SERVICE = "fHandlerService"; //$NON-NLS-1$

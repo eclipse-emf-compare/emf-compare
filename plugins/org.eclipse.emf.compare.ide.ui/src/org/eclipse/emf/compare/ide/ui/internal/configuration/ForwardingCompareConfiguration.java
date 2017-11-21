@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Obeo.
+ * Copyright (c) 2013, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -239,5 +239,15 @@ public abstract class ForwardingCompareConfiguration extends CompareConfiguratio
 			return isLeftEditable();
 		}
 		return isRightEditable();
+	}
+
+	/**
+	 * {@inheritDoc} For backward compatibility, we override this to have the same implementation behavior as
+	 * Eclipse Compare 3.7.
+	 */
+	// @Override -- remove annotation for backwards-compatibility
+	public boolean isMirrored() {
+		Object property = getProperty("MIRRORED"); //$NON-NLS-1$
+		return property instanceof Boolean && ((Boolean)property).booleanValue();
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 508526
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl;
 
@@ -77,7 +78,7 @@ public class ResourceStreamAccessorImpl extends AbstractTypedElementAdapter impl
 	 * @see org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement#getType()
 	 */
 	public String getType() {
-		return TEXT_TYPE;
+		return "org.eclipse.emf.compare.rcp.ui.fallbackText"; //$NON-NLS-1$
 	}
 
 	/**

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 464904
- *     Philip Langer - bug 516508
+ *     Philip Langer - bug 516508, 508526
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.internal.utils;
 
@@ -35,7 +35,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,7 +52,7 @@ import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
 import org.eclipse.emf.compare.ide.hook.IResourceSetHook;
 import org.eclipse.emf.compare.ide.internal.EMFCompareIDEMessages;
 import org.eclipse.emf.compare.ide.internal.hook.ResourceSetHookRegistry;
-import org.eclipse.emf.compare.ide.utils.IStoragePathAdapterProvider;
+import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.policy.ILoadOnDemandPolicy;
@@ -250,6 +249,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	 *             Exception raised if there is an error with the {@link IStorage}.
 	 */
 	private void loadFromStorage(Resource resource, IStorage storage) throws IOException {
+		ResourceUtil.setAssociatedStorage(resource, storage);
 		try (InputStream stream = storage.getContents()) {
 			resource.load(stream, getLoadOptions());
 		} catch (CoreException | WrappedException e) {
@@ -425,14 +425,6 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 		getURIResourceMap().put(uri, loaded);
 		try {
 			loadFromStorage(loaded, storage);
-			final String fullPath = storage.getFullPath().toString();
-			boolean isLocal = storage instanceof IFile;
-			if (storage instanceof IStoragePathAdapterProvider) {
-				loaded.eAdapters().add(
-						((IStoragePathAdapterProvider)storage).createStoragePathAdapter(fullPath, isLocal));
-			} else {
-				loaded.eAdapters().add(new StoragePathAdapter(fullPath, isLocal));
-			}
 			monitor.worked(1);
 		} catch (IOException e) {
 			logLoadingFromStorageFailed(loaded, storage, e);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 467677
- *     Philip Langer - optimize use of StorageTraversal.getStorages()
+ *     Philip Langer - optimize use of StorageTraversal.getStorages(), 508526
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.utils;
 
@@ -42,9 +42,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
+import org.eclipse.emf.compare.ide.internal.utils.StoragePathAdapter;
 import org.eclipse.emf.compare.ide.internal.utils.URIStorage;
 import org.eclipse.emf.compare.merge.ResourceChangeAdapter;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -108,6 +111,7 @@ public final class ResourceUtil {
 		final URI uri = createURIFor(storage);
 		try {
 			Resource resource = resourceSet.createResource(uri);
+			setAssociatedStorage(resource, storage);
 			try (InputStream stream = storage.getContents()) {
 				resource.load(stream, options);
 			}
@@ -116,6 +120,76 @@ public final class ResourceUtil {
 			// return null
 		}
 		return null;
+	}
+
+	/**
+	 * Returns the storage {@link #setAssociatedStorage(Resource, IStorage) associated} with the resource.
+	 * 
+	 * @param resource
+	 *            the resource.
+	 * @return the associated storage or <code>null</code> if there isn't one.
+	 * @see #setAssociatedStorage(Resource, IStorage)
+	 */
+	public static IStorage getAssociatedStorage(Resource resource) {
+		StorageProvider storageProvider = (StorageProvider)EcoreUtil.getExistingAdapter(resource,
+				StorageProvider.class);
+		if (storageProvider != null) {
+			return storageProvider.getStorage();
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Associates the storage with the resource such that {@link #getAssociatedStorage(Resource)} will return
+	 * this storage for the resource.
+	 * 
+	 * @param resource
+	 *            the resource.
+	 * @param storage
+	 *            the associated storage.
+	 */
+	public static void setAssociatedStorage(Resource resource, IStorage storage) {
+		final String fullPath = storage.getFullPath().toString();
+		boolean isLocal = storage instanceof IFile;
+		EList<Adapter> eAdapters = resource.eAdapters();
+		if (storage instanceof IStoragePathAdapterProvider) {
+			eAdapters.add(((IStoragePathAdapterProvider)storage).createStoragePathAdapter(fullPath, isLocal));
+		} else {
+			eAdapters.add(new StoragePathAdapter(fullPath, isLocal));
+		}
+		eAdapters.add(new StorageProvider(storage));
+	}
+
+	/**
+	 * Used by {@link ResourceUtil#getAssociatedStorage(Resource)} and
+	 * {@link ResourceUtil#setAssociatedStorage(Resource, IStorage)} to map a resource to its associated
+	 * storage.
+	 */
+	private static final class StorageProvider extends AdapterImpl {
+		/**
+		 * The storage.
+		 */
+		private final IStorage storage;
+
+		/**
+		 * Creates an instance for the storage.
+		 * 
+		 * @param storage
+		 *            the storage.
+		 */
+		StorageProvider(IStorage storage) {
+			this.storage = storage;
+		}
+
+		@Override
+		public boolean isAdapterForType(Object type) {
+			return type == StorageProvider.class;
+		}
+
+		public IStorage getStorage() {
+			return storage;
+		}
 	}
 
 	/**
