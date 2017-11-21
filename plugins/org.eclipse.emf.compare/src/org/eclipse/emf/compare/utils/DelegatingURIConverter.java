@@ -60,32 +60,12 @@ public class DelegatingURIConverter extends ExtensibleURIConverterImpl {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.ecore.resource.URIConverter#createInputStream(org.eclipse.emf.common.util.URI)
-	 */
-	@Override
-	public InputStream createInputStream(URI uri) throws IOException {
-		return delegate.createInputStream(uri);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.emf.ecore.resource.URIConverter#createInputStream(org.eclipse.emf.common.util.URI,
 	 *      java.util.Map)
 	 */
 	@Override
 	public InputStream createInputStream(URI uri, Map<?, ?> options) throws IOException {
 		return delegate.createInputStream(uri, options);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.ecore.resource.URIConverter#createOutputStream(org.eclipse.emf.common.util.URI)
-	 */
-	@Override
-	public OutputStream createOutputStream(URI uri) throws IOException {
-		return delegate.createOutputStream(uri);
 	}
 
 	/**
