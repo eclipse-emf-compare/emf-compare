@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 527567
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
@@ -135,6 +136,15 @@ public abstract class AbstractTableOrTreeItemWrapper {
 	public abstract int getParentItemHeight();
 
 	/**
+	 * Returns whether the receiver can be expanded to show children.
+	 * 
+	 * @return whether the receiver can be expanded to show children.
+	 */
+	public boolean isExpandable() {
+		return false;
+	}
+
+	/**
 	 * Returns the data associated to the Item.
 	 * 
 	 * @return the data associated to the Item.
@@ -234,6 +244,16 @@ public abstract class AbstractTableOrTreeItemWrapper {
 		@Override
 		public int getParentItemHeight() {
 			return fItem.getParent().getItemHeight();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractTableOrTreeItemWrapper#isExpandable()
+		 */
+		@Override
+		public boolean isExpandable() {
+			return fItem.getItemCount() > 0;
 		}
 
 		/**

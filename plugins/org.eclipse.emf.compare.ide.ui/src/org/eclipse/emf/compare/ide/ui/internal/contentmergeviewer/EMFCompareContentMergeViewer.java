@@ -9,7 +9,7 @@
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 462863
  *     Stefan Dirix - bug 473985
- *     Philip Langer - bug 516645, 521948
+ *     Philip Langer - bug 516645, 521948, 527567
  *     Martin Fleck - bug 514079
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
@@ -413,7 +414,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		}
 
 		final Command mostRecentCommand = ((CommandStack)event.getSource()).getMostRecentCommand();
-		if (mostRecentCommand instanceof ICompareCopyCommand) {
+		if (mostRecentCommand instanceof ICompareCopyCommand
+				|| mostRecentCommand instanceof CompoundCommand && ((CompoundCommand)mostRecentCommand)
+						.getCommandList().get(0) instanceof ICompareCopyCommand) {
 			SWTUtil.safeRefresh(this, true, false);
 		} else if (mostRecentCommand != null) {
 			// Model has changed, but not by EMFCompare. Typical case is update from properties view.
@@ -550,6 +553,15 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		fRight.getControl().setBounds(x + width1 + centerWidth, y, width2, height);
 	}
 
+	/**
+	 * Creates the merge viewer for the given parent and the given side.
+	 * 
+	 * @param parent
+	 *            composite in which to create the merge viewer.
+	 * @param side
+	 *            the side of the new viewer.
+	 * @return a new merge viewer.
+	 */
 	protected abstract IMergeViewer createMergeViewer(Composite parent, MergeViewerSide side);
 
 	@Override

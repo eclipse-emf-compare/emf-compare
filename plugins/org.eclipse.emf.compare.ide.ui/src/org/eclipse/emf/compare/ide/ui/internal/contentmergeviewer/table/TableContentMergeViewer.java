@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Martin Fleck - bug 483798
+ *     Philip Langer - bug 527567
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.table;
 
@@ -26,6 +27,8 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.adapterfactory.context.IContextTester;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAction;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.ICompareAccessor;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl.AbstractMergeViewer;
@@ -40,11 +43,13 @@ import org.eclipse.emf.edit.provider.IItemFontProvider;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.MouseEvent;
@@ -164,7 +169,14 @@ public class TableContentMergeViewer extends EMFCompareContentMergeViewer {
 	 */
 	@Override
 	protected AbstractMergeViewer createMergeViewer(Composite parent, final MergeViewerSide side) {
-		TableMergeViewer ret = new TableMergeViewer(parent, side, this, getCompareConfiguration());
+		TableMergeViewer ret = new TableMergeViewer(parent, side, this, getCompareConfiguration()) {
+			@Override
+			protected IAction createAction(MergeMode mode, Diff diff) {
+				return new MergeAction(getCompareConfiguration(),
+						EMFCompareRCPPlugin.getDefault().getMergerRegistry(), mode, null,
+						new StructuredSelection(diff));
+			}
+		};
 		ret.getStructuredViewer().getTable().getVerticalBar().setVisible(false);
 
 		ret.setContentProvider(new ArrayContentProvider() {

@@ -9,13 +9,14 @@
  *     Obeo - initial API and implementation
  *     Michael Borkowski - bug 462237
  *     Martin Fleck - bug 483798
- *     Philip Langer - bug 521948
+ *     Philip Langer - bugs 521948, 527567
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
 import static com.google.common.collect.Iterables.addAll;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.eclipse.emf.compare.DifferenceSource.LEFT;
@@ -590,6 +591,9 @@ public class MergeAction extends BaseSelectionListenerAction {
 		Iterable<TreeNode> selectedTreeNode = filter(selectedNotifiers, TreeNode.class);
 		Iterable<EObject> selectedEObjects = transform(selectedTreeNode, IDifferenceGroup.TREE_NODE_DATA);
 		Iterable<Diff> diffs = filter(selectedEObjects, Diff.class);
+		if (isEmpty(diffs)) {
+			diffs = filter(selectedObjects, Diff.class);
+		}
 		return getSelectedDifferences(diffs);
 	}
 

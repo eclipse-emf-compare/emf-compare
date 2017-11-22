@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 527567
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
@@ -74,9 +75,20 @@ public class TreeMergeViewer extends AbstractTableOrTreeMergeViewer {
 		layout.marginHeight = 0;
 		composite.setLayout(layout);
 
-		fTreeViewer = new TreeViewer(composite);
+		fTreeViewer = createTreeViewer(composite);
 		fTreeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		return composite;
+	}
+
+	/**
+	 * Creates a new tree viewer.
+	 * 
+	 * @param parent
+	 *            the parent of the new tree viewer.
+	 * @return a new tree viewer.
+	 */
+	protected TreeViewer createTreeViewer(Composite parent) {
+		return new TreeViewer(parent);
 	}
 
 	/**
@@ -101,6 +113,7 @@ public class TreeMergeViewer extends AbstractTableOrTreeMergeViewer {
 		getStructuredViewer().setExpandedState(elementOrTreePath, expanded);
 	}
 
+	@Override
 	protected void hookDispose() {
 		fInput = null;
 		fTreeViewer = null;

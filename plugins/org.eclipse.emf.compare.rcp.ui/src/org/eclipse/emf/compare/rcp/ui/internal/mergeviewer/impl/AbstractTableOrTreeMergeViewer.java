@@ -7,7 +7,11 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+<<<<<<< master
  *     Philip Langer - bug 527858
+=======
+ *     Philip Langer - bug 527567
+>>>>>>> dde9ebc [527567] Generalize the table and tree merge viewer framework
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.impl;
 
@@ -23,7 +27,6 @@ import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
 import org.eclipse.jface.viewers.IElementComparer;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.graphics.Color;
@@ -119,16 +122,17 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 		Image image = itemWrapper.getImage(event.index);
 		/* center column 1 vertically */
 
+		int cellGap = TEXT_GAP;
+		if (event.index == 0) {
+			cellGap = 0;
+		}
 		Point size = event.gc.textExtent(text);
 		int yOffset = Math.max(0, (event.height - size.y) / 2);
-		int xOffset = event.x;
 		if (image != null) {
 			int imageYOffset = Math.max(0, (event.height - image.getBounds().height) / 2);
-			event.gc.drawImage(image, event.x + IMAGE_GAP, event.y + imageYOffset);
-			xOffset += IMAGE_GAP + image.getBounds().width;
+			event.gc.drawImage(image, event.x + cellGap, event.y + imageYOffset);
 		}
-		event.gc.drawText(text, xOffset + TEXT_GAP, event.y + yOffset, true);
-		event.width += 2;
+		event.gc.drawText(text, itemWrapper.getTextBounds(event.index).x + cellGap, event.y + yOffset, true);
 	}
 
 	/**
@@ -159,6 +163,10 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 				}
 			}
 		}
+
+		// Avoid drawing the ugly focus box on tables.
+		// It looks especially bad for our own painted items.
+		event.detail &= ~SWT.FOCUSED;
 	}
 
 	/**
@@ -225,17 +233,11 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 			GC g) {
 		AbstractTableOrTreeItemWrapper parent = itemWrapper.getParentItem();
 		final int xOffset;
-		if (getContentProvider() instanceof ITreeContentProvider) {
-			final boolean hasChildren = ((ITreeContentProvider)getContentProvider())
-					.hasChildren(itemWrapper.getData());
-			if (hasChildren) {
-				if (parent != null) {
-					xOffset = parent.getImageBounds(0).x;
-				} else {
-					xOffset = 0;
-				}
+		if (itemWrapper.isExpandable()) {
+			if (parent != null) {
+				xOffset = parent.getImageBounds(0).x;
 			} else {
-				xOffset = boxBounds.x;
+				xOffset = 0;
 			}
 		} else {
 			xOffset = boxBounds.x;
@@ -267,7 +269,11 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 		from.y = itemBounds.y + (itemBounds.height / 2);
 		Point to = new Point(0, from.y);
 		to.x = clientArea.x + clientArea.width;
-		g.drawLine(from.x, from.y, to.x, to.y);
+		// We expect the to.x to be to the right so we need this guard because otherwise the line may be drawn
+		// on top of the hover information when the box is clipped.
+		if (from.x < to.x) {
+			g.drawLine(from.x, from.y, to.x, to.y);
+		}
 	}
 
 	/**
@@ -327,16 +333,55 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 		Scrollable tree = itemWrapper.getParent();
 		Rectangle treeBounds = tree.getClientArea();
 		Rectangle itemBounds = itemWrapper.getBounds();
-		Rectangle imageBounds = itemWrapper.getImageBounds(0);
+
+		// Compute the left and right points of all columns based on images and text being present so that the
+		// box only bounds what's visibly present.
+		int columnCount = itemWrapper.getParentColumnCount();
+		int limit = Math.max(1, columnCount);
+		int left = -1;
+		int right = -1;
+		for (int i = 0; i < limit; ++i) {
+			Image image = itemWrapper.getImage(i);
+			if (image != null) {
+				Rectangle imageBounds = itemWrapper.getImageBounds(i);
+				if (left == -1) {
+					left = imageBounds.x - TEXT_GAP;
+					if (i > 0) {
+						left += TEXT_GAP;
+					}
+				}
+				right = imageBounds.x + imageBounds.width + TEXT_GAP;
+				if (i > 0) {
+					right += TEXT_GAP;
+				}
+			}
+
+			String text = itemWrapper.getText(i);
+			if (!text.isEmpty()) {
+				Rectangle textBounds = itemWrapper.getTextBounds(i);
+				if (left == -1) {
+					left = textBounds.x - TEXT_GAP;
+					if (i > 0) {
+						left += TEXT_GAP;
+					}
+				}
+				int textWidth = event.gc.textExtent(text).x;
+				right = textBounds.x + textWidth + TEXT_GAP;
+				if (i > 0) {
+					right += TEXT_GAP;
+				}
+			}
+		}
 
 		Rectangle fill = new Rectangle(0, 0, 0, 0);
-		fill.x = itemBounds.x - imageBounds.width;
+		fill.x = left;
 		fill.y = itemBounds.y;
 		if (!"cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			fill.y += 1;
 		}
 		// +x to add the icon and the expand "+" if we are in a tree
-		fill.width = itemBounds.width + imageBounds.width + DELTA_IMAGE_GAP;
+		// fill.width = itemBounds.width + imageBounds.width + DELTA_IMAGE_GAP;
+		fill.width = right - left;
 		fill.height = itemBounds.height - 1;
 		if (!"cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			fill.height -= 3;
@@ -345,7 +390,6 @@ public abstract class AbstractTableOrTreeMergeViewer extends AbstractStructuredM
 		final GC g = event.gc;
 		// If you wish to paint the selection beyond the end of last column, you must change the clipping
 		// region.
-		int columnCount = itemWrapper.getParentColumnCount();
 		if (event.index == columnCount - 1 || columnCount == 0) {
 			int width = treeBounds.x + treeBounds.width - event.x;
 			if (width > 0) {
