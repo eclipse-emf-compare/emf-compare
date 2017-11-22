@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,25 +7,20 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - bug 527567
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.internal.matchs.provider.spec;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.diagram.internal.extensions.provider.ExtensionsEditPlugin;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
-import org.eclipse.emf.edit.provider.IItemPropertySource;
-import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
-import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
 /**
  * This is the specific item provider adapter for a {@link org.eclipse.gmf.runtime.notation.View} object.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-public class StyleItemProviderSpec extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class StyleItemProviderSpec extends BaseItemProviderDecorator {
 
 	/**
 	 * This constructs an instance from a factory and a notifier.
@@ -54,7 +49,6 @@ public class StyleItemProviderSpec extends ItemProviderAdapter implements IEditi
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, ExtensionsEditPlugin.INSTANCE.getImage("full/obj16/Style"));
+		return overlayImage(object, ExtensionsEditPlugin.INSTANCE.getImage("full/obj16/Style")); //$NON-NLS-1$
 	}
-
 }
