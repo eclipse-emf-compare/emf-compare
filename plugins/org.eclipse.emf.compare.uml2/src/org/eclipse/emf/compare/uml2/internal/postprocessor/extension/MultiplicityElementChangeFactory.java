@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 EclipseSource Muenchen GmbH and others.
+ * Copyright (c) 2016, 2017 EclipseSource Muenchen GmbH and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Alexandra Buzila - initial API and implementation
+ *     Martin Fleck - bug 519021
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.internal.postprocessor.extension;
 
@@ -28,6 +29,7 @@ import org.eclipse.emf.compare.uml2.internal.MultiplicityElementChange;
 import org.eclipse.emf.compare.uml2.internal.UMLCompareFactory;
 import org.eclipse.emf.compare.uml2.internal.postprocessor.AbstractUMLChangeFactory;
 import org.eclipse.emf.compare.utils.MatchUtil;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -61,14 +63,18 @@ public class MultiplicityElementChangeFactory extends AbstractUMLChangeFactory {
 	private boolean isChangeOfMultiplicityElement(Diff input) {
 		if (input instanceof ReferenceChange) {
 			EReference reference = ((ReferenceChange)input).getReference();
-			return reference == UMLPackage.eINSTANCE.getMultiplicityElement_LowerValue()
-					|| reference == UMLPackage.eINSTANCE.getMultiplicityElement_UpperValue();
+			return reference == UMLPackage.Literals.MULTIPLICITY_ELEMENT__LOWER_VALUE
+					|| reference == UMLPackage.Literals.MULTIPLICITY_ELEMENT__UPPER_VALUE;
 		} else if (input instanceof AttributeChange) {
-			EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
-			if (container instanceof LiteralInteger || container instanceof LiteralUnlimitedNatural) {
-				EStructuralFeature eContainingFeature = container.eContainingFeature();
-				return eContainingFeature == UMLPackage.eINSTANCE.getMultiplicityElement_LowerValue()
-						|| eContainingFeature == UMLPackage.eINSTANCE.getMultiplicityElement_UpperValue();
+			EAttribute attribute = ((AttributeChange)input).getAttribute();
+			if (attribute == UMLPackage.Literals.LITERAL_INTEGER__VALUE
+					|| attribute == UMLPackage.Literals.LITERAL_UNLIMITED_NATURAL__VALUE) {
+				EObject container = MatchUtil.getContainer(input.getMatch().getComparison(), input);
+				if (container instanceof LiteralInteger || container instanceof LiteralUnlimitedNatural) {
+					EStructuralFeature eContainingFeature = container.eContainingFeature();
+					return eContainingFeature == UMLPackage.Literals.MULTIPLICITY_ELEMENT__LOWER_VALUE
+							|| eContainingFeature == UMLPackage.Literals.MULTIPLICITY_ELEMENT__UPPER_VALUE;
+				}
 			}
 		}
 		return false;
