@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *      Martin Fleck - initial API and implementation
+ *      Philip Langer - bug 527858
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.tests.mergeviewer;
 
@@ -450,6 +451,43 @@ public class TableOrTreeMergeViewerElementComparerTest {
 	 * ----------+------------+------------+
 	 * Diff      | aDiff      | bDiff      |
 	 * ----------+------------+------------+
+	 * Conflict  | a REAL     | b REAL     |
+	 * ----------+------------+------------+
+	 * 
+	 * Expected: Not Equal (diffs not equal)
+	 * </pre>
+	 */
+	@Test
+	public void testAllEqualExceptDiffWithDifferentConflict() {
+		Conflict aPseudoConflict = createConflict(ConflictKind.REAL);
+		Conflict bPseudoConflict = createConflict(ConflictKind.REAL);
+
+		Diff aDiff = createDiff(aPseudoConflict);
+		IMergeViewerItem leftItem = createItem(LEFT, aDiff, "Left", "Right", "Ancestor");
+
+		Diff bDiff = createDiff(bPseudoConflict);
+		IMergeViewerItem rightItem = createItem(RIGHT, bDiff, "Left", "Right", "Ancestor");
+
+		assertEquals(leftItem, rightItem, false);
+	}
+
+	/**
+	 * <p>
+	 * Requirement: If there is no special handling, we compare everything (left, right, ancestor, diff).
+	 * </p>
+	 * Tests the equality of two items using the following setup:
+	 * 
+	 * <pre>
+	 *           |   Item A   |  Item B    |
+	 * ----------+------------+------------+
+	 * Left      |          Equal          |
+	 * ----------+------------+------------+
+	 * Right     |          Equal          |
+	 * ----------+------------+------------+
+	 * Ancestor  |          Equal          |
+	 * ----------+------------+------------+
+	 * Diff      | aDiff      | bDiff      |
+	 * ----------+------------+------------+
 	 * Conflict  |        Equal REAL       |
 	 * ----------+------------+------------+
 	 * 
@@ -457,16 +495,16 @@ public class TableOrTreeMergeViewerElementComparerTest {
 	 * </pre>
 	 */
 	@Test
-	public void testAllEqualExceptDiff() {
-		Conflict pseudoConflict = createConflict(ConflictKind.REAL);
+	public void testAllEqualIncludingDiffWithSameConflict() {
+		Conflict conflict = createConflict(ConflictKind.REAL);
 
-		Diff aDiff = createDiff(pseudoConflict);
+		Diff aDiff = createDiff(conflict);
 		IMergeViewerItem leftItem = createItem(LEFT, aDiff, "Left", "Right", "Ancestor");
 
-		Diff bDiff = createDiff(pseudoConflict);
+		Diff bDiff = createDiff(conflict);
 		IMergeViewerItem rightItem = createItem(RIGHT, bDiff, "Left", "Right", "Ancestor");
 
-		assertEquals(leftItem, rightItem, false);
+		assertEquals(leftItem, rightItem, true);
 	}
 
 	/**
