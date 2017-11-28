@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *      Alexandra Buzila, Stefan Dirix - initial API and implementation
+ *      Philip Langer - bug 527864
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.tree.provider;
 
@@ -47,6 +48,7 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.graph.IGraphView;
@@ -817,7 +819,7 @@ public class TreeMergeViewerItemContentProvider implements IMergeViewerItemConte
 	 *         {@code false} otherwise.
 	 */
 	private boolean isInsertOnBothSides(Diff diff, Match match) {
-		return isInTerminalState(diff)
+		return diff.getState() == DifferenceState.MERGED
 				&& (match == null || (match.getLeft() == null && match.getRight() == null));
 	}
 
@@ -861,7 +863,7 @@ public class TreeMergeViewerItemContentProvider implements IMergeViewerItemConte
 	 *         otherwise.
 	 */
 	private boolean isAddOnOppositeSide(Diff diff, MergeViewerSide side) {
-		if (!isInTerminalState(diff) && diff.getKind() == DifferenceKind.ADD) {
+		if (diff.getState() != DifferenceState.MERGED && diff.getKind() == DifferenceKind.ADD) {
 			DifferenceSource source = diff.getSource();
 			return (source == DifferenceSource.LEFT && side == MergeViewerSide.RIGHT)
 					|| (source == DifferenceSource.RIGHT && side == MergeViewerSide.LEFT);
@@ -880,7 +882,7 @@ public class TreeMergeViewerItemContentProvider implements IMergeViewerItemConte
 	 *         otherwise.
 	 */
 	private boolean isDeleteOnSameSide(Diff diff, MergeViewerSide side) {
-		if (!isInTerminalState(diff) && diff.getKind() == DifferenceKind.DELETE) {
+		if (diff.getState() != DifferenceState.DISCARDED && diff.getKind() == DifferenceKind.DELETE) {
 			DifferenceSource source = diff.getSource();
 			return (source == DifferenceSource.LEFT && side == MergeViewerSide.LEFT)
 					|| (source == DifferenceSource.RIGHT && side == MergeViewerSide.RIGHT);
