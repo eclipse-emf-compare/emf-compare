@@ -48,6 +48,8 @@ import java.util.regex.Pattern;
 @SuppressWarnings("all")
 public class diff_match_patch {
 
+	private static final Pattern PATCH_HEADER = Pattern.compile("^@@ -(\\d+),?(\\d*) \\+(\\d+),?(\\d*) @@$");
+
 	// Defaults.
 	// Set these on your diff_match_patch instance to override the defaults.
 
@@ -1056,9 +1058,9 @@ public class diff_match_patch {
 	}
 
 	// Define some regex patterns for matching boundaries.
-	private Pattern BLANKLINEEND = Pattern.compile("\\n\\r?\\n\\Z", Pattern.DOTALL);
+	private static final Pattern BLANKLINEEND = Pattern.compile("\\n\\r?\\n\\Z", Pattern.DOTALL);
 
-	private Pattern BLANKLINESTART = Pattern.compile("\\A\\r?\\n\\r?\\n", Pattern.DOTALL);
+	private static final Pattern BLANKLINESTART = Pattern.compile("\\A\\r?\\n\\r?\\n", Pattern.DOTALL);
 
 	/**
 	 * Reduce the number of edits by eliminating operationally trivial equalities.
@@ -2262,12 +2264,11 @@ public class diff_match_patch {
 		List<String> textList = Arrays.asList(textline.split("\n"));
 		LinkedList<String> text = new LinkedList<String>(textList);
 		Patch patch;
-		Pattern patchHeader = Pattern.compile("^@@ -(\\d+),?(\\d*) \\+(\\d+),?(\\d*) @@$");
 		Matcher m;
 		char sign;
 		String line;
 		while (!text.isEmpty()) {
-			m = patchHeader.matcher(text.getFirst());
+			m = PATCH_HEADER.matcher(text.getFirst());
 			if (!m.matches()) {
 				throw new IllegalArgumentException("Invalid patch string: " + text.getFirst());
 			}

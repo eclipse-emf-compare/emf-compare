@@ -18,9 +18,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.Collections;
 import java.util.Iterator;
@@ -335,8 +333,7 @@ public class ThreeWayTextDiff {
 	 * @return The created reader.
 	 */
 	private BufferedReader createBufferedReader(String string) {
-		final ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes());
-		return new BufferedReader(new InputStreamReader(inputStream));
+		return new BufferedReader(new StringReader(string));
 	}
 
 	/**
