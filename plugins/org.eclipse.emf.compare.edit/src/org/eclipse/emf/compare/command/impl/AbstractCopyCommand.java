@@ -17,10 +17,10 @@ import com.google.common.collect.Multimap;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
@@ -121,12 +121,12 @@ public abstract class AbstractCopyCommand extends ChangeCommand implements IComp
 			Collection<? extends Diff> relevantDiffs) {
 		Multimap<DifferenceState, Diff> ret = LinkedHashMultimap.create();
 		if (changeDescription != null) {
-			for (Map.Entry<EObject, EList<FeatureChange>> entry : changeDescription.getObjectChanges()) {
-				EObject key = entry.getKey();
-				if (relevantDiffs.contains(key)) {
-					for (FeatureChange featureChange : entry.getValue()) {
+			EMap<EObject, EList<FeatureChange>> objectChanges = changeDescription.getObjectChanges();
+			for (Diff diff : relevantDiffs) {
+				EList<FeatureChange> featureChanges = objectChanges.get(diff);
+				if (featureChanges != null) {
+					for (FeatureChange featureChange : featureChanges) {
 						if (featureChange.getFeature() == ComparePackage.Literals.DIFF__STATE) {
-							Diff diff = (Diff)key;
 							ret.put(diff.getState(), diff);
 							break;
 						}
