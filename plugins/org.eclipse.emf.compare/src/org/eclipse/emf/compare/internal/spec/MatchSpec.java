@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.impl.MatchImpl;
 import org.eclipse.emf.compare.internal.SubMatchIterable;
+import org.eclipse.emf.compare.utils.EqualityHelper;
 import org.eclipse.emf.compare.utils.Objects;
 import org.eclipse.emf.ecore.EObject;
 
@@ -85,6 +86,19 @@ public class MatchSpec extends MatchImpl {
 	public Iterable<Diff> getAllDifferences() {
 		final Iterable<Diff> allSubDifferences = concat(transform(getAllSubmatches(), DIFFERENCES));
 		return concat(getDifferences(), allSubDifferences);
+	}
+
+	/**
+	 * Returns whether the given object is the same object as the {@link #left}, {@link #right}, or
+	 * {@link #origin}. It is used by {@link EqualityHelper#matchingValues(Object, Object)} and
+	 * {@link EqualityHelper#matchingValues(EObject, EObject)}.
+	 * 
+	 * @param object
+	 *            the object in question
+	 * @return whether the given object is the same object as the left, right, or origin.
+	 */
+	public boolean matches(Object object) {
+		return object == left || object == right || object == origin;
 	}
 
 	/**

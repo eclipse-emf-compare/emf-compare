@@ -18,14 +18,15 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Array;
 import java.util.concurrent.ExecutionException;
 
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.internal.spec.MatchSpec;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -42,14 +43,11 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	/** A cache keeping track of the URIs for EObjects. */
 	private final LoadingCache<EObject, URI> uriCache;
 
-	/**
-	 * {@link #matchingEObjects(EObject, EObject)} is called _a lot_ of successive times with the same first
-	 * parameter... we use this as a poor man's cache.
-	 */
-	private WeakReference<EObject> lastMatchedEObject;
+	/** The cached {@link #getTarget() target}. */
+	private Comparison comparision;
 
-	/** See #lastMatchedEObject. */
-	private WeakReference<Match> lastMatch;
+	/** The record of the most recently used {@link #matchingEObjects(EObject, EObject) match}. */
+	private MatchSpec eObjectMatch;
 
 	/**
 	 * Creates a new EqualityHelper.
@@ -79,7 +77,18 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 */
 	@Override
 	public Comparison getTarget() {
-		return (Comparison)super.getTarget();
+		return comparision;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#setTarget(Notifier)
+	 */
+	@Override
+	public void setTarget(Notifier newTarget) {
+		comparision = (Comparison)newTarget;
+		super.setTarget(newTarget);
 	}
 
 	/**
@@ -116,6 +125,9 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 */
 	public boolean matchingValues(Object object1, Object object2) {
 		final boolean equal;
+		// This method is generally called O(n^2) times so for large samples it accounts for as much of 15% of
+		// the time spent merging. Anything we can do to make this method faster will have a significant
+		// performance impact.
 		if (object1 == object2) {
 			equal = true;
 		} else if (object1 == null) {
@@ -124,29 +136,42 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 		} else if (object2 == null) {
 			// Special case, consider that the empty String is equal to null (unset attributes)
 			equal = "".equals(object1); //$NON-NLS-1$
-		} else if (object1 instanceof EObject) {
-			if (object2 instanceof EObject) {
-				equal = matchingEObjects((EObject)object1, (EObject)object2);
-			} else {
-				equal = false;
-			}
-		} else if (object1 instanceof String || object1 instanceof Integer || object1 instanceof Boolean) {
-			// primitives and String are much more common than arrays... and isArray() is expensive.
-			equal = object1.equals(object2);
-		} else if (object1.getClass().isArray() && object2.getClass().isArray()) {
-			// [299641] compare arrays by their content instead of instance equality
-			equal = matchingArrays(object1, object2);
-		} else if (object1 instanceof FeatureMap.Entry && object2 instanceof FeatureMap.Entry) {
-			FeatureMap.Entry featureMapEntry1 = (FeatureMap.Entry)object1;
-			EStructuralFeature key1 = featureMapEntry1.getEStructuralFeature();
-			FeatureMap.Entry featureMapEntry2 = (FeatureMap.Entry)object2;
-			EStructuralFeature key2 = featureMapEntry2.getEStructuralFeature();
-			Object value1 = featureMapEntry1.getValue();
-			Object value2 = featureMapEntry2.getValue();
-
-			equal = key1.equals(key2) && matchingValues(value1, value2);
 		} else {
-			equal = object1.equals(object2);
+			// Here we use cached information about the most recently used Match for matching two EObjects.
+			// We can use that information cheaply (only == tests are involved) at the very start of
+			// the matching, to avoid the cost instanceof checking and casting, which can account for as much
+			// as 1/3 of the overall cost.
+			MatchSpec currentEObjectMatch = eObjectMatch;
+			if (currentEObjectMatch != null && currentEObjectMatch.matches(object1)) {
+				equal = currentEObjectMatch.matches(object2);
+			} else if (object1 instanceof EObject) {
+				if (object2 instanceof EObject) {
+					equal = matchingEObjects((EObject)object1, (EObject)object2);
+				} else {
+					equal = false;
+				}
+			} else if (object1 instanceof String || object1 instanceof Integer
+					|| object1 instanceof Boolean) {
+				// primitives and String are much more common than arrays... and isArray() is expensive.
+				equal = object1.equals(object2);
+			} else if (object1.getClass().isArray() && object2.getClass().isArray()) {
+				// [299641] compare arrays by their content instead of instance equality
+				equal = matchingArrays(object1, object2);
+			} else if (object1 instanceof FeatureMap.Entry && object2 instanceof FeatureMap.Entry) {
+				FeatureMap.Entry featureMapEntry1 = (FeatureMap.Entry)object1;
+				EStructuralFeature key1 = featureMapEntry1.getEStructuralFeature();
+				FeatureMap.Entry featureMapEntry2 = (FeatureMap.Entry)object2;
+				EStructuralFeature key2 = featureMapEntry2.getEStructuralFeature();
+				if (key1.equals(key2)) {
+					Object value1 = featureMapEntry1.getValue();
+					Object value2 = featureMapEntry2.getValue();
+					equal = matchingValues(value1, value2);
+				} else {
+					equal = false;
+				}
+			} else {
+				equal = object1.equals(object2);
+			}
 		}
 		return equal;
 	}
@@ -163,50 +188,28 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 *         otherwise.
 	 */
 	protected boolean matchingEObjects(EObject object1, EObject object2) {
-		final Match match = getMatch(object1);
-
-		final boolean equal;
-		// Match could be null if the value is out of the scope
+		final boolean matching;
+		MatchSpec match = (MatchSpec)getMatch(object1);
 		if (match != null) {
-			equal = match.getLeft() == object2 || match.getRight() == object2 || match.getOrigin() == object2;
-			// use getTarget().getMatch() to avoid invalidating the cache here
-		} else if (getTarget().getMatch(object2) != null) {
-			equal = false;
-		} else if (object1.eClass() != object2.eClass()) {
-			equal = false;
+			eObjectMatch = match;
+			matching = match.matches(object2);
+		} else if (getTarget().getMatch(object2) != null || object1.eClass() != object2.eClass()) {
+			matching = false;
 		} else {
-			equal = matchingURIs(object1, object2);
+			matching = matchingURIs(object1, object2);
 		}
-
-		return equal;
+		return matching;
 	}
 
 	/**
-	 * Retrieves the match of the given EObject. This will cache the latest access so as to avoid a hashmap
-	 * lookup in the comparison's inverse cross referencer. This is most useful when computing the LCS of two
-	 * sequences, where we call {@link #matchingEObjects(EObject, EObject)} over and over with the same first
-	 * object.
+	 * Returns the match of this EObject if any, <code>null</code> otherwise.
 	 * 
 	 * @param o
 	 *            The object for which we need the associated Match.
 	 * @return Match of this EObject if any, <code>null</code> otherwise.
 	 */
 	protected Match getMatch(EObject o) {
-		final Match match;
-		if (lastMatchedEObject != null && lastMatchedEObject.get() == o) {
-			Match temp = lastMatch.get();
-			if (temp != null) {
-				match = temp;
-			} else {
-				match = getTarget().getMatch(o);
-				lastMatch = new WeakReference<Match>(match);
-			}
-		} else {
-			match = getTarget().getMatch(o);
-			lastMatchedEObject = new WeakReference<EObject>(o);
-			lastMatch = new WeakReference<Match>(match);
-		}
-		return match;
+		return getTarget().getMatch(o);
 	}
 
 	/**
