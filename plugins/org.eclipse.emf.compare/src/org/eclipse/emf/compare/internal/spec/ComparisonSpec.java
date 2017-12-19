@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Obeo.
+ * Copyright (c) 2012, 2017 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,22 +7,20 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - performance improvements
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.spec;
-
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterators.addAll;
-import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.emf.common.util.AbstractEList;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.UniqueEList;
@@ -55,27 +53,44 @@ public class ComparisonSpec extends ComparisonImpl {
 	private DiffCrossReferencer diffCrossReferencer;
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.impl.ComparisonImpl#getDifferences()
+	 * The cached value for {@link #getDifferences()}, cleared when the {@link #diffCrossReferencer} detects
+	 * structural changes.
 	 */
+	private EList<Diff> differences;
+
 	@Override
 	public EList<Diff> getDifferences() {
-		final Iterator<Diff> diffIterator = Iterators.filter(eAllContents(), Diff.class);
+		if (differences == null) {
+			final Iterator<Diff> diffIterator = Iterators.filter(eAllContents(), Diff.class);
 
-		final EList<Diff> allDifferences = new BasicEList<Diff>();
-		while (diffIterator.hasNext()) {
-			((AbstractEList<Diff>)allDifferences).addUnique(diffIterator.next());
+			final BasicEList<Diff> allDifferences = new BasicEList<Diff>() {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected void didChange() {
+					if (differences == this) {
+						differences = null;
+					}
+					super.didChange();
+				}
+			};
+
+			while (diffIterator.hasNext()) {
+				allDifferences.addUnique(diffIterator.next());
+			}
+
+			// The diff cross referencer is used to flush the cached value of the differences, so we should
+			// only cache the value once the cross referencer has been created.
+			if (diffCrossReferencer == null) {
+				return allDifferences;
+			}
+
+			differences = allDifferences;
 		}
 
-		return allDifferences;
+		return differences;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.impl.ComparisonImpl#getDifferences(org.eclipse.emf.ecore.EObject)
-	 */
 	@Override
 	public EList<Diff> getDifferences(EObject element) {
 		if (element == null) {
@@ -83,7 +98,19 @@ public class ComparisonSpec extends ComparisonImpl {
 		}
 
 		if (diffCrossReferencer == null) {
-			diffCrossReferencer = new DiffCrossReferencer();
+			diffCrossReferencer = new DiffCrossReferencer() {
+				@Override
+				protected void addAdapter(Notifier notifier) {
+					differences = null;
+					super.addAdapter(notifier);
+				}
+
+				@Override
+				protected void removeAdapter(Notifier notifier) {
+					differences = null;
+					super.removeAdapter(notifier);
+				}
+			};
 			eAdapters().add(diffCrossReferencer);
 		}
 
@@ -119,11 +146,13 @@ public class ComparisonSpec extends ComparisonImpl {
 			final Collection<EStructuralFeature.Setting> settings = matchCrossReferencer
 					.getNonNavigableInverseReferences(element, false);
 
-			Iterator<Setting> settingsIterator = settings.iterator();
-			if (settingsIterator.hasNext()) {
-				// cast to Match without testing
-				// the matchCrossReferencer will only return Match from #getNonNavigableInverseReferences
-				return (Match)settingsIterator.next().getEObject();
+			if (!settings.isEmpty()) {
+				// Cast to List and Match without testing.
+				// The matchCrossReferencer will only return a List of Settings for Matches
+				// #getNonNavigableInverseReferences
+				// This method is in the general case called O(n^2) times, so small performance improvements
+				// (iterator overhead) here have a big overall impact.
+				return (Match)((List<Setting>)settings).get(0).getEObject();
 			}
 		}
 
@@ -146,19 +175,35 @@ public class ComparisonSpec extends ComparisonImpl {
 		final Collection<EStructuralFeature.Setting> originInverseReference = safGetNonNavigableInverseReferences(
 				match.getOrigin(), diffCrossReferencer);
 
-		// creates a list eagerly as we have to know the size beforehand and we will iterate on it later.
-		List<ResourceAttachmentChange> resourceAttachmentChanges = newArrayList(
-				filter(match.getDifferences(), ResourceAttachmentChange.class));
+		int maxExpectedSize = leftInverseReference.size() + rightInverseReference.size()
+				+ originInverseReference.size();
 
-		final int maxExpectedSize = leftInverseReference.size() + rightInverseReference.size()
-				+ originInverseReference.size() + resourceAttachmentChanges.size();
+		// Because this method, in the most general case, is called O(n^2) times, we process the diffs in
+		// this very low-level way to ensure optimal performance, i.e., we avoid all iterator and casting
+		// overhead.
+		List<Diff> resourceAttachmentChanges = null;
+		Diff[] diffs = (Diff[])((BasicEList<Diff>)match.getDifferences()).data();
+		if (diffs != null) {
+			for (Diff diff : diffs) {
+				if (diff instanceof ResourceAttachmentChange) {
+					if (resourceAttachmentChanges == null) {
+						resourceAttachmentChanges = Lists.newArrayList();
+					}
+					++maxExpectedSize;
+					resourceAttachmentChanges.add(diff);
+				}
+			}
+		}
+
 		EList<Diff> result = new UniqueEList.FastCompare<Diff>(maxExpectedSize);
 
 		addSettingEObjectsTo(result, leftInverseReference);
 		addSettingEObjectsTo(result, rightInverseReference);
 		addSettingEObjectsTo(result, originInverseReference);
 
-		addAll(result, resourceAttachmentChanges.iterator());
+		if (resourceAttachmentChanges != null) {
+			result.addAll(resourceAttachmentChanges);
+		}
 
 		return result;
 	}
@@ -178,10 +223,12 @@ public class ComparisonSpec extends ComparisonImpl {
 	 */
 	private static void addSettingEObjectsTo(List<Diff> addTo,
 			final Collection<EStructuralFeature.Setting> settings) {
+		// No need to cast the added values to Diff because the diffCrossReferencer will only return Diff from
+		// #getNonNavigableInverseReferences
+		@SuppressWarnings("unchecked")
+		List<Object> uncheckedAddTo = (List<Object>)(List<?>)addTo;
 		for (EStructuralFeature.Setting setting : settings) {
-			// cast to Diff without testing
-			// the diffCrossReferencer will only return Diff from #getNonNavigableInverseReferences
-			addTo.add((Diff)setting.getEObject());
+			uncheckedAddTo.add(setting.getEObject());
 		}
 	}
 
