@@ -795,6 +795,9 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		if (fAdapterFactoryContentProvider != null) {
 			fAdapterFactoryContentProvider.setAdapterFactory(null);
 		}
+		if (fColors != null) {
+			fColors.dispose();
+		}
 		super.handleDispose(event);
 	}
 
