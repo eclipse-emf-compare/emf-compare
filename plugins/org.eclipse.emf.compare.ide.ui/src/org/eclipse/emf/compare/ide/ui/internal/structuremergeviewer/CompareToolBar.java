@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2016 Obeo and others.
+ * Copyright (c) 2013, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,6 +45,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.actions.Grou
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
+import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -80,6 +81,11 @@ public class CompareToolBar implements ISelectionChangedListener, IPropertyChang
 	 * Allows us to know if the {@link #initToolbar(AbstractTreeViewer, INavigatable)} step has been executed.
 	 */
 	private boolean doOnce;
+
+	/**
+	 * {@link IMenuCreator} that needs to be disposed
+	 */
+	private DropDownMergeMenuAction dropDownMergeMenuAction;
 
 	/**
 	 * 
@@ -142,7 +148,9 @@ public class CompareToolBar implements ISelectionChangedListener, IPropertyChang
 			}
 
 			if (rightEditable || leftEditable) {
-				toolbarManager.add(new DropDownMergeMenuAction(compareConfiguration, modes));
+				// Keep a reference to be able to dispose it
+				this.dropDownMergeMenuAction = new DropDownMergeMenuAction(compareConfiguration, modes);
+				toolbarManager.add(dropDownMergeMenuAction);
 				for (MergeMode mode : modes) {
 					toolbarManager.add(createMergeAction(mode, compareConfiguration, nav));
 				}
@@ -202,6 +210,13 @@ public class CompareToolBar implements ISelectionChangedListener, IPropertyChang
 	}
 
 	public void dispose() {
+		// We need to explicitly dispose this IMenuCreator because the items in the toolbar are never
+		// disposed. They are simply removed. See
+		// org.eclipse.compare.CompareViewerPane.clearToolBar(Composite).
+		if (dropDownMergeMenuAction != null) {
+			dropDownMergeMenuAction.dispose();
+			dropDownMergeMenuAction = null;
+		}
 		toolbarManager.removeAll();
 		if (doOnce) {
 			// doOnce makes sure we have been registered with the eventBus
