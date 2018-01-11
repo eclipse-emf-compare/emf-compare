@@ -23,6 +23,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -37,6 +38,9 @@ import org.eclipse.egit.core.GitCorePreferences;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diagram.papyrus.tests.egit.fixture.GitTestRepository;
 import org.eclipse.emf.compare.diagram.papyrus.tests.egit.fixture.MockSystemReader;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
+import org.eclipse.emf.compare.ide.logical.IModelInclusionTester;
+import org.eclipse.emf.compare.ide.logical.ModelInclusionTesterRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.logical.EMFModelProvider;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope;
@@ -73,7 +77,7 @@ import com.google.common.collect.ImmutableList.Builder;
  * 
  * @author Philip Langer <planger@eclipsesource.com>
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({"nls", "unused", "restriction" })
 public abstract class AbstractGitMergeTestCase {
 
 	protected static final String DEFAULT_PROJECT = "Project1";
@@ -87,6 +91,7 @@ public abstract class AbstractGitMergeTestCase {
 	protected static final String BRANCH_RIGHT = Constants.R_HEADS + "branch_right";
 
 	private static final Predicate<File> IS_EXISTING_FILE = new Predicate<File>() {
+		@Override
 		public boolean apply(File input) {
 			return input != null && input.exists() && input.isFile();
 		}
@@ -254,6 +259,25 @@ public abstract class AbstractGitMergeTestCase {
 		return builder.build();
 	}
 
+	@Before
+	public void setupModelInclusionTesterRegistry() {
+		EMFCompareIDEPlugin idePlugin = EMFCompareIDEPlugin.getDefault();
+		ModelInclusionTesterRegistry registry = idePlugin.getModelInclusionTesterRegistry();
+		registry.clear();
+		addFileExtensionTester(registry, "di");
+		addFileExtensionTester(registry, "uml");
+		addFileExtensionTester(registry, "notation");
+	}
+
+	private void addFileExtensionTester(ModelInclusionTesterRegistry registry, final String key) {
+		registry.add(key, new IModelInclusionTester() {
+			@Override
+			public boolean shouldInclude(IFile file) {
+				return key.equals(file.getFileExtension());
+			}
+		});
+	}
+
 	/**
 	 * Tests merging branch <em>left</em> into checked-out branch <em>right</em> and validates the result
 	 * based on {@link #validateResult()}.
@@ -346,6 +370,7 @@ public abstract class AbstractGitMergeTestCase {
 
 	private Function<File, URI> toUri(String string) {
 		return new Function<File, URI>() {
+			@Override
 			public URI apply(File input) {
 				return URI.createPlatformResourceURI(repository.getRepoRelativePath(input), true);
 			}
@@ -354,6 +379,7 @@ public abstract class AbstractGitMergeTestCase {
 
 	private Predicate<File> getFileOfInterestFilter() {
 		return new Predicate<File>() {
+			@Override
 			public boolean apply(File input) {
 				return !input.getAbsolutePath().startsWith(gitDir.getAbsolutePath()) && shouldValidate(input);
 			}

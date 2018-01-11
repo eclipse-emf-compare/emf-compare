@@ -367,6 +367,16 @@
       </handler>
    </extension>
    <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.eclipse.emf.compare.ide.ui.internal.logical.EMFModelResourceTester"
+            id="org.eclipse.emf.compare.ide.ui.logical"
+            namespace="org.eclipse.emf.compare.ide.ui.logical"
+            properties="isModelResource"
+            type="org.eclipse.core.resources.IFile">
+      </propertyTester>
+   </extension>
+   <extension
          id="org.eclipse.emf.compare.model.provider"
          name="EMF Compare"
          point="org.eclipse.core.resources.modelProviders">
@@ -389,55 +399,9 @@
                <adapt
                      type="org.eclipse.core.resources.IFile">
                </adapt>
-               <or>
-                  <test
-                        args="kindOf"
-                        property="org.eclipse.core.resources.contentTypeId"
-                        value="org.eclipse.emf.ecore">
-                  </test>
-                  <test
-                        args="kindOf"
-                        property="org.eclipse.core.resources.contentTypeId"
-                        value="org.eclipse.emf.ecore.xmi">
-                  </test>
-                  <test
-                        args="kindOf"
-                        property="org.eclipse.core.resources.contentTypeId"
-                        value="org.eclipse.emf.compare.content.type">
-                  </test>
-                  <test
-                        property="org.eclipse.core.resources.extension"
-                        value="ecore">
-                  </test>
-                  <test
-                        property="org.eclipse.core.resources.extension"
-                        value="notation">
-                  </test>
-                  <test
-                        property="org.eclipse.core.resources.extension"
-                        value="uml">
-                  </test>
-                  <test
-                        property="org.eclipse.core.resources.extension"
-                        value="di">
-                  </test>
-                  <test
-                        property="org.eclipse.core.resources.extension"
-                        value="sash">
-                  </test>
-                  <test
-                        property="org.eclipse.core.resources.extension"
-                        value="xmi">
-                  </test>
-                  <test
-                         property="org.eclipse.core.resources.extension"
-                         value="properties">
-                   </test>
-                   <test
-                         property="org.eclipse.core.resources.extension"
-                         value="internationalization">
-                   </test>
-               </or>
+               <test
+                     property="org.eclipse.emf.compare.ide.ui.logical.isModelResource">
+               </test>
             </and>
          </or>
       </enablement>
@@ -586,5 +550,23 @@
       <modelMinimizer
             class="org.eclipse.emf.compare.ide.ui.internal.logical.IdenticalResourceMinimizer">
       </modelMinimizer>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.ide.modelInclusionTester">
+      <fileExtensionModelInclusionTester
+            fileExtension="ecore">
+      </fileExtensionModelInclusionTester>
+      <fileExtensionModelInclusionTester
+            fileExtension="xmi">
+      </fileExtensionModelInclusionTester>
+      <contentTypeModelInclusionTester
+            contentType="org.eclipse.emf.ecore">
+      </contentTypeModelInclusionTester>
+      <contentTypeModelInclusionTester
+            contentType="org.eclipse.emf.ecore.xmi">
+      </contentTypeModelInclusionTester>
+      <contentTypeModelInclusionTester
+            contentType="org.eclipse.emf.compare.content.type">
+      </contentTypeModelInclusionTester>
    </extension>
 </plugin>

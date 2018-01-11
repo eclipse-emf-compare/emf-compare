@@ -57,4 +57,10 @@
             label="Text Compare">
       </viewer>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.ide.modelInclusionTester">
+      <fileExtensionModelInclusionTester
+            fileExtension="notation">
+      </fileExtensionModelInclusionTester>
+   </extension>
 </plugin>

@@ -119,6 +119,9 @@ public class GitTestCaseJUnitBlock extends AbstractCompareTestCaseJUnitBlock {
 						input.value());
 			}
 		}
+
+		result = withBefores(method, testObject, result);
+		result = withAfters(method, testObject, result);
 		return result;
 	}
 

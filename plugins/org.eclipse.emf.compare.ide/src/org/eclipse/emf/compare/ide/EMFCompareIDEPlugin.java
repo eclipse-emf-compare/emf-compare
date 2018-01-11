@@ -17,6 +17,9 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.compare.ide.internal.hook.ResourceSetHookRegistry;
 import org.eclipse.emf.compare.ide.internal.hook.ResourceSetHookRegistryListener;
+import org.eclipse.emf.compare.ide.internal.logical.ModelInclusionTesterRegistryListener;
+import org.eclipse.emf.compare.ide.logical.IModelInclusionTester;
+import org.eclipse.emf.compare.ide.logical.ModelInclusionTesterRegistry;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -37,6 +40,12 @@ public class EMFCompareIDEPlugin extends Plugin {
 	/** The registry listener that will fill the {@link ResourceSetHookRegistry}. */
 	private ResourceSetHookRegistryListener resourceSetHookRegistryListener;
 
+	/** Registry of {@link IModelInclusionTester model inclusion testers}. */
+	private ModelInclusionTesterRegistry modelInclusionTesterRegistry;
+
+	/** The registry listener that will fill the {@link modelInclusionTesterRegistry}. */
+	private ModelInclusionTesterRegistryListener modelInclusionTesterRegistryListener;
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -50,7 +59,7 @@ public class EMFCompareIDEPlugin extends Plugin {
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
 		setUpResourceSetHookRegistry(registry);
-
+		setUpModelInclusionTesterRegistry(registry);
 	}
 
 	/**
@@ -65,6 +74,7 @@ public class EMFCompareIDEPlugin extends Plugin {
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
 		discardResourceSetHookRegistry(registry);
+		discardModelInclusionTesterRegistry(registry);
 
 		super.stop(context);
 	}
@@ -141,6 +151,47 @@ public class EMFCompareIDEPlugin extends Plugin {
 		registry.removeListener(resourceSetHookRegistryListener);
 		resourceSetHookRegistryListener = null;
 		resourceSetHookRegistry = null;
+	}
+
+	/**
+	 * Returns the ModelInclusionTesterRegistry.
+	 * <p>
+	 * It contains all hooks registered against the ResourceSetHook extension point.
+	 * </p>
+	 * 
+	 * @return {@link ResourceSetHookRegistry}.
+	 * @since 3.4.2
+	 */
+	public ModelInclusionTesterRegistry getModelInclusionTesterRegistry() {
+		return modelInclusionTesterRegistry;
+	}
+
+	/**
+	 * Sets up the model inclusion tester registry.
+	 * 
+	 * @param registry
+	 *            {@link IExtensionRegistry} to listen in order to fill the registry
+	 */
+	private void setUpModelInclusionTesterRegistry(IExtensionRegistry registry) {
+		modelInclusionTesterRegistry = new ModelInclusionTesterRegistry();
+		modelInclusionTesterRegistryListener = new ModelInclusionTesterRegistryListener(getLog(),
+				modelInclusionTesterRegistry);
+		registry.addListener(modelInclusionTesterRegistryListener,
+				PLUGIN_ID + '.' + ModelInclusionTesterRegistryListener.EXT_ID);
+		modelInclusionTesterRegistryListener.readRegistry(registry);
+
+	}
+
+	/**
+	 * Discards the model inclusion tester registry.
+	 * 
+	 * @param registry
+	 *            IExtensionRegistry to remove listener
+	 */
+	private void discardModelInclusionTesterRegistry(IExtensionRegistry registry) {
+		registry.removeListener(modelInclusionTesterRegistryListener);
+		modelInclusionTesterRegistryListener = null;
+		modelInclusionTesterRegistry = null;
 	}
 
 }

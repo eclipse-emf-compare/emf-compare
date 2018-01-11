@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.emf.compare.ide" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.eclipse.emf.compare.ide" id="modelInclusionTester" name="Model Inclusion Tester"/>
+      </appinfo>
+      <documentation>
+         A model inclusion tester specifies whether EMF Compare&apos;s model provider should be enabled for certain files or not. If a model inclusion tester includes a file, the file is considered as EMF model and in further consequence is handled by EMF Compare when comparing and merging it. Files can be included by extenders of this extension point based on a file content type or file extension, or they specify an IModelTester implementation that determines whether a file shall be included.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <choice>
+               <element ref="dynamicModelInclusionTester"/>
+               <element ref="fileExtensionModelInclusionTester"/>
+               <element ref="contentTypeModelInclusionTester"/>
+            </choice>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="dynamicModelInclusionTester">
+      <annotation>
+         <documentation>
+            A dynamic model inclusion tester registers an implementation of IModelInclusionTester that is used to determine whether or not a file shall be included.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="dynamicTester" type="string">
+            <annotation>
+               <documentation>
+                  Specifies the implementation of IModelInclusionTester.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.ide.logical.IModelInclusionTester"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="fileExtensionModelInclusionTester">
+      <annotation>
+         <documentation>
+            A file extension model inclusion tester registers a file extension that is used to determine whether or not a file shall be included.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="fileExtension" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Specifies the file extension to be included.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="contentTypeModelInclusionTester">
+      <annotation>
+         <documentation>
+            A content type model inclusion tester registers a content type that is used to determine whether or not a file shall be included.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="contentType" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Specifies the file content type to be included.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         3.4.2
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         &lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.emf.compare.ide.modelInclusionTester&quot;&gt;
+   &lt;fileExtensionModelInclusionTester
+         fileExtension=&quot;ecore&quot;&gt;
+   &lt;/fileExtensionModelInclusionTester&gt;
+   &lt;fileExtensionModelInclusionTester
+         fileExtension=&quot;xmi&quot;&gt;
+   &lt;/fileExtensionModelInclusionTester&gt;
+   &lt;contentTypeModelInclusionTester
+         contentType=&quot;org.eclipse.emf.ecore&quot;&gt;
+   &lt;/contentTypeModelInclusionTester&gt;
+   &lt;contentTypeModelInclusionTester
+         contentType=&quot;org.eclipse.emf.ecore.xmi&quot;&gt;
+   &lt;/contentTypeModelInclusionTester&gt;
+   &lt;contentTypeModelInclusionTester
+         contentType=&quot;org.eclipse.emf.compare.content.type&quot;&gt;
+   &lt;/contentTypeModelInclusionTester&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+      </documentation>
+   </annotation>
+
+
+
+
+</schema>

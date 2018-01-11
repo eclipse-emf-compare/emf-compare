@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.internal.resources.mapping.ModelProviderManager;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -28,10 +29,14 @@ import org.eclipse.core.resources.mapping.IModelProviderDescriptor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
+import org.eclipse.emf.compare.ide.logical.IModelInclusionTester;
+import org.eclipse.emf.compare.ide.logical.ModelInclusionTesterRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.logical.EMFModelProvider;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.DefaultImplicitDependencies;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -63,6 +68,27 @@ public class EMFModelProviderRegistrationTest {
 			return true;
 		}
 	};
+
+	/**
+	 * This method installs a mock model inclusion tester to be independent of the ones that are registered in
+	 * the platform.
+	 */
+	@Before
+	public void prepareModelInclusionTesterRegistry() {
+		ModelInclusionTesterRegistry registry = EMFCompareIDEPlugin.getDefault()
+				.getModelInclusionTesterRegistry();
+		registry.clear();
+		registry.add("mock", new IModelInclusionTester() {
+			public boolean shouldInclude(IFile file) {
+				return file != null && ("ecore".equals(file.getFileExtension())
+						|| "xmi".equals(file.getFileExtension()) || "uml".equals(file.getFileExtension())
+						|| "notation".equals(file.getFileExtension()) || "di".equals(file.getFileExtension())
+						|| "sash".equals(file.getFileExtension())
+						|| "internationalization".equals(file.getFileExtension())
+						|| "properties".equals(file.getFileExtension()));
+			}
+		});
+	}
 
 	/**
 	 * Tests that the {@link EMFModelProvider} supports the expected file extensions and their dependencies.

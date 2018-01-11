@@ -19,8 +19,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.ide.EMFCompareIDEPlugin;
+import org.eclipse.emf.compare.ide.logical.IModelInclusionTester;
+import org.eclipse.emf.compare.ide.logical.ModelInclusionTesterRegistry;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitMergeStrategyID;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestRunner;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestSupport;
@@ -29,12 +33,30 @@ import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMerge;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMergeStrategy;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.lib.Repository;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 
 @RunWith(GitTestRunner.class)
 @GitMergeStrategy(GitMergeStrategyID.MODEL_ADDITIVE)
 @SuppressWarnings({"nls", "unused" })
 public class AdditiveMergeTests {
+
+	@Before
+	public void setupModelInclusionTesterRegistry() {
+		EMFCompareIDEPlugin idePlugin = EMFCompareIDEPlugin.getDefault();
+		ModelInclusionTesterRegistry registry = idePlugin.getModelInclusionTesterRegistry();
+		registry.clear();
+		addFileExtensionTester(registry, "ecore");
+		addFileExtensionTester(registry, "uml");
+	}
+
+	private void addFileExtensionTester(ModelInclusionTesterRegistry registry, final String key) {
+		registry.add(key, new IModelInclusionTester() {
+			public boolean shouldInclude(IFile file) {
+				return key.equals(file.getFileExtension());
+			}
+		});
+	}
 
 	@GitMerge(local = "branch1", remote = "branch2")
 	@GitInput("data/additive/ecore.zip")

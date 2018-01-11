@@ -104,4 +104,16 @@
             ranking="10">
       </contentCustomization>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.ide.modelInclusionTester">
+      <fileExtensionModelInclusionTester
+            fileExtension="di">
+      </fileExtensionModelInclusionTester>
+      <fileExtensionModelInclusionTester
+            fileExtension="sash">
+      </fileExtensionModelInclusionTester>
+      <dynamicModelInclusionTester
+            dynamicTester="org.eclipse.emf.compare.diagram.ide.ui.papyrus.internal.logical.InternationalizationFileInclusionTester">
+      </dynamicModelInclusionTester>
+   </extension>
 </plugin>
