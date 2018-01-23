@@ -19,18 +19,22 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -63,6 +67,14 @@ public final class DiffUtil {
 	 * </p>
 	 */
 	private static final double SIMILAR = Double.longBitsToDouble(0x3fefffffffffffffL);
+
+	/**
+	 * {@#computeIgnoredElements(Comparison, IEqualityHelper, List, Diff, boolean) Computing ignored elements}
+	 * is an O(n^2) algorithm, so we need to make the operation as efficient as possible to avoid the very bad
+	 * impact of scaling. This field keeps a cache of information used while computing the ignored elements.
+	 */
+	private static WeakReference<IgnoredElementsEntry> ignoredElementsEntry = new WeakReference<DiffUtil.IgnoredElementsEntry>(
+			null);
 
 	/** This utility class does not need to be instantiated. */
 	private DiffUtil() {
@@ -281,20 +293,26 @@ public final class DiffUtil {
 	 */
 	public static <E> List<E> longestCommonSubsequence(Comparison comparison, Iterable<E> ignoredElements,
 			List<E> sequence1, List<E> sequence2) {
+		IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+
 		final List<E> copy1 = Lists.newArrayList(sequence1);
 		final List<E> copy2 = Lists.newArrayList(sequence2);
 
+		Object[] ignoredElementsArray = Iterables.toArray(ignoredElements, Object.class);
+
 		// Reduce sets
-		final List<E> prefix = trimPrefix(comparison, ignoredElements, copy1, copy2);
-		final List<E> suffix = trimSuffix(comparison, ignoredElements, copy1, copy2);
+		final List<E> prefix = trimPrefix(comparison, equalityHelper, ignoredElementsArray, copy1, copy2);
+		final List<E> suffix = trimSuffix(comparison, equalityHelper, ignoredElementsArray, copy1, copy2);
 
 		final List<E> subLCS;
 		// FIXME extract an interface for the LCS and properly separate these two differently typed
 		// implementations.
 		if (copy1.size() > Short.MAX_VALUE || copy2.size() > Short.MAX_VALUE) {
-			subLCS = intLongestCommonSubsequence(comparison, ignoredElements, copy1, copy2);
+			subLCS = intLongestCommonSubsequence(comparison, equalityHelper, ignoredElementsArray, copy1,
+					copy2);
 		} else {
-			subLCS = shortLongestCommonSubsequence(comparison, ignoredElements, copy1, copy2);
+			subLCS = shortLongestCommonSubsequence(comparison, equalityHelper, ignoredElementsArray, copy1,
+					copy2);
 		}
 
 		final List<E> lcs = new ArrayList<E>(prefix.size() + subLCS.size() + suffix.size());
@@ -356,6 +374,8 @@ public final class DiffUtil {
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param equalityHelper
+	 *            This will be used to check for equality of values in the sequences and the ignored elements.
 	 * @param ignoredElements
 	 *            Specifies elements that should be excluded from the subsequences.
 	 * @param sequence1
@@ -368,9 +388,8 @@ public final class DiffUtil {
 	 *         {@code sequence1} and {@code sequence2} will have been trimmed of their prefix when this
 	 *         returns.
 	 */
-	private static <E> List<E> trimPrefix(Comparison comparison, Iterable<E> ignoredElements,
-			List<E> sequence1, List<E> sequence2) {
-		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+	private static <E> List<E> trimPrefix(Comparison comparison, IEqualityHelper equalityHelper,
+			Object[] ignoredElements, List<E> sequence1, List<E> sequence2) {
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
 
@@ -414,6 +433,8 @@ public final class DiffUtil {
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param equalityHelper
+	 *            The equality helper to use for this computation.
 	 * @param ignoredElements
 	 *            Specifies elements that should be excluded from the subsequences.
 	 * @param sequence1
@@ -426,9 +447,8 @@ public final class DiffUtil {
 	 *         {@code sequence1} and {@code sequence2} will have been trimmed of their suffix when this
 	 *         returns.
 	 */
-	private static <E> List<E> trimSuffix(Comparison comparison, Iterable<E> ignoredElements,
-			List<E> sequence1, List<E> sequence2) {
-		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+	private static <E> List<E> trimSuffix(Comparison comparison, IEqualityHelper equalityHelper,
+			Object[] ignoredElements, List<E> sequence1, List<E> sequence2) {
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
 
@@ -473,17 +493,13 @@ public final class DiffUtil {
 	 *            The sequence which elements we need to compare with {@code element}.
 	 * @param element
 	 *            The element we are seeking in {@code sequence}.
-	 * @param <E>
-	 *            Type of the sequence content.
 	 * @return {@code true} if the given {@code sequence} contains an element matching {@code element},
 	 *         {@code false} otherwise.
 	 * @see IEqualityHelper#matchingValues(Comparison, Object, Object)
 	 */
-	private static <E> boolean contains(IEqualityHelper equalityHelper, Iterable<E> sequence, E element) {
-		final Iterator<E> iterator = sequence.iterator();
-		while (iterator.hasNext()) {
-			E candidate = iterator.next();
-			if (equalityHelper.matchingValues(candidate, element)) {
+	private static boolean contains(IEqualityHelper equalityHelper, Object[] sequence, Object element) {
+		for (Object candidate : sequence) {
+			if (equalityHelper.matchingValues(element, candidate)) {
 				return true;
 			}
 		}
@@ -496,6 +512,8 @@ public final class DiffUtil {
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param equalityHelper
+	 *            The equality helper to use for this computation.
 	 * @param ignoredElements
 	 *            Specifies elements that should be excluded from the subsequences.
 	 * @param sequence1
@@ -508,8 +526,7 @@ public final class DiffUtil {
 	 *         sequences.
 	 */
 	private static <E> List<E> shortLongestCommonSubsequence(Comparison comparison,
-			Iterable<E> ignoredElements, List<E> sequence1, List<E> sequence2) {
-		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+			IEqualityHelper equalityHelper, Object[] ignoredElements, List<E> sequence1, List<E> sequence2) {
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
 
@@ -566,6 +583,8 @@ public final class DiffUtil {
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param equalityHelper
+	 *            The equality helper to use for this computation.
 	 * @param ignoredElements
 	 *            Specifies elements that should be excluded from the subsequences.
 	 * @param sequence1
@@ -577,9 +596,8 @@ public final class DiffUtil {
 	 * @return The LCS of the two given sequences. Will never be the same instance as one of the input
 	 *         sequences.
 	 */
-	private static <E> List<E> intLongestCommonSubsequence(Comparison comparison, Iterable<E> ignoredElements,
-			List<E> sequence1, List<E> sequence2) {
-		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+	private static <E> List<E> intLongestCommonSubsequence(Comparison comparison,
+			IEqualityHelper equalityHelper, Object[] ignoredElements, List<E> sequence1, List<E> sequence2) {
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
 
@@ -683,9 +701,10 @@ public final class DiffUtil {
 
 		E firstLCS = null;
 		E lastLCS = null;
-		if (lcs.size() > 0) {
+		int lcsSize = lcs.size();
+		if (lcsSize > 0) {
 			firstLCS = lcs.get(0);
-			lastLCS = lcs.listIterator(lcs.size()).previous();
+			lastLCS = lcs.get(lcsSize - 1);
 		}
 
 		final int noLCS = -2;
@@ -713,7 +732,7 @@ public final class DiffUtil {
 		sourceIterator = source.listIterator(sourceSize);
 		for (int i = sourceSize - 1; sourceIterator.hasPrevious() && lastLCSIndex == -1; i--) {
 			final E sourceElement = sourceIterator.previous();
-			if (lastLCSIndex == -1 && equalityHelper.matchingValues(sourceElement, lastLCS)) {
+			if (lastLCSIndex == -1 && equalityHelper.matchingValues(lastLCS, sourceElement)) {
 				lastLCSIndex = i;
 			}
 		}
@@ -794,7 +813,7 @@ public final class DiffUtil {
 			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
 				final E targetElement = target.get(i);
 
-				if (equalityHelper.matchingValues(targetElement, subsequenceStart)) {
+				if (equalityHelper.matchingValues(subsequenceStart, targetElement)) {
 					if (duplicatesToGo > 0) {
 						duplicatesToGo--;
 					} else {
@@ -831,7 +850,7 @@ public final class DiffUtil {
 		 */
 		for (int i = target.size() - 1; i >= 0 && insertionIndex == -1; i--) {
 			final E targetElement = target.get(i);
-			if (equalityHelper.matchingValues(targetElement, lastLCS)) {
+			if (equalityHelper.matchingValues(lastLCS, targetElement)) {
 				// We've reached the last element of the LCS in target. insert after it.
 				insertionIndex = i + 1;
 			}
@@ -863,7 +882,7 @@ public final class DiffUtil {
 		for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
 			final E targetElement = target.get(i);
 
-			if (equalityHelper.matchingValues(targetElement, firstLCS)) {
+			if (equalityHelper.matchingValues(firstLCS, targetElement)) {
 				// We've reached the first element from the LCS in target. Insert here
 				insertionIndex = i;
 			}
@@ -943,10 +962,15 @@ public final class DiffUtil {
 		final List<Object> targetList = getTargetList(comparison, diff, rightToLeft);
 		final Object changedValue = getChangedValue(diff);
 
-		Iterable<Object> ignoredElements = computeIgnoredElements(targetList, diff, rightToLeft);
-		ignoredElements = Iterables.concat(ignoredElements, Collections.singleton(changedValue));
-		// We know we'll have to iterate quite a number of times on this one.
-		ignoredElements = Lists.newArrayList(ignoredElements);
+		// We rely on the implementation details, i.e., that this computes a modifiable set, except for the
+		// empty set.
+		Set<Object> ignoredElements = computeIgnoredElements(comparison, comparison.getEqualityHelper(),
+				targetList, diff, rightToLeft);
+		if (ignoredElements.isEmpty()) {
+			ignoredElements = Collections.singleton(changedValue);
+		} else {
+			ignoredElements.add(changedValue);
+		}
 
 		return DiffUtil.findInsertionIndex(comparison, ignoredElements, sourceList, targetList, changedValue);
 	}
@@ -1074,11 +1098,10 @@ public final class DiffUtil {
 
 		final Match match = diff.getMatch();
 
-		if (ComparisonUtil.isFeatureMapContainment(diff) && diff.getKind() == DifferenceKind.MOVE) {
+		if (diff.getKind() == DifferenceKind.MOVE && ComparisonUtil.isFeatureMapContainment(diff)) {
 			targetContainer = ComparisonUtil.moveElementGetExpectedContainer(comparison,
 					(FeatureMapChange)diff, rightToLeft);
 		} else if (isContainmentReferenceMove(diff)) {
-			final Match targetContainerMatch;
 
 			// The value can only be an EObject, and its match cannot be null.
 			// If any of these two assumptions is wrong, something went horribly awry beforehand.
@@ -1086,14 +1109,18 @@ public final class DiffUtil {
 			final Match valueMatch = comparison.getMatch((EObject)value);
 
 			// If it exists, use the source side's container as reference
-			if (rightToLeft && valueMatch.getRight() != null) {
-				targetContainerMatch = comparison.getMatch(valueMatch.getRight().eContainer());
-			} else if (!rightToLeft && valueMatch.getLeft() != null) {
-				targetContainerMatch = comparison.getMatch(valueMatch.getLeft().eContainer());
+			EObject target;
+			if (rightToLeft) {
+				target = valueMatch.getRight();
 			} else {
-				// Otherwise, the value we're moving on one side has been removed from its source side.
-				targetContainerMatch = comparison.getMatch(valueMatch.getOrigin().eContainer());
+				target = valueMatch.getLeft();
 			}
+			if (target == null) {
+				target = valueMatch.getOrigin();
+			}
+
+			final Match targetContainerMatch = comparison.getMatch(target.eContainer());
+
 			if (rightToLeft) {
 				targetContainer = targetContainerMatch.getLeft();
 			} else {
@@ -1127,16 +1154,16 @@ public final class DiffUtil {
 			boolean rightToLeft) {
 		final EStructuralFeature targetFeature;
 
-		final EStructuralFeature diffFeature = getChangedFeature(diff);
-		final Object diffValue = getChangedValue(diff);
-
-		if (isContainmentReferenceMove(diff) && isTargetOnTheRight(diff, rightToLeft)) {
+		EStructuralFeature changedFeature = getChangedFeature(diff);
+		if (diff.getKind() == DifferenceKind.MOVE && isTargetOnTheRight(diff, rightToLeft)
+				&& isContainmentReference(changedFeature)) {
+			final Object diffValue = getChangedValue(diff);
 			final Match valueMatch = comparison.getMatch((EObject)diffValue);
 			final EObject expectedValue = ComparisonUtil.getExpectedSide(valueMatch, diff.getSource(),
 					rightToLeft);
 			targetFeature = expectedValue.eContainingFeature();
 		} else {
-			targetFeature = diffFeature;
+			targetFeature = changedFeature;
 		}
 
 		return targetFeature;
@@ -1153,7 +1180,7 @@ public final class DiffUtil {
 	 */
 	private static boolean isContainmentReferenceMove(Diff diff) {
 		final EStructuralFeature diffFeature = getChangedFeature(diff);
-		return isContainmentReference(diffFeature) && diff.getKind() == DifferenceKind.MOVE;
+		return diff.getKind() == DifferenceKind.MOVE && isContainmentReference(diffFeature);
 	}
 
 	/**
@@ -1182,16 +1209,27 @@ public final class DiffUtil {
 	 * @return <code>true</code> if the target is on the right side, <code>false</code> otherwise.
 	 */
 	private static boolean isTargetOnTheRight(Diff diff, boolean rightToLeft) {
-		return (rightToLeft && DifferenceSource.LEFT == diff.getSource())
-				|| (!rightToLeft && DifferenceSource.RIGHT == diff.getSource());
+		DifferenceSource source = diff.getSource();
+		if (rightToLeft) {
+			return source == DifferenceSource.LEFT;
+		} else {
+			return source == DifferenceSource.RIGHT;
+
+		}
 	}
 
 	/**
 	 * When computing the insertion index of an element in a list, we need to ignore all elements present in
-	 * that list that feature unresolved Diffs on the same feature.
+	 * that list that feature unresolved Diffs on the same feature. This algorithm is expensive and because
+	 * this method is generally called O{n^2} times we must take steps to optimize it. The caller assumes that
+	 * a non-empty returned set is modifiable.
 	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param equalityHelper
+	 *            This will be used to check for equality of values.
 	 * @param candidates
-	 *            The sequence in which we need to compute an insertion index.
+	 *            The list in which we need to compute an insertion index.
 	 * @param diff
 	 *            The diff we are computing an insertion index for.
 	 * @param <E>
@@ -1202,22 +1240,45 @@ public final class DiffUtil {
 	 * @return The list of elements that should be ignored when computing the insertion index for a new
 	 *         element in {@code candidates}.
 	 */
-	private static <E> Iterable<E> computeIgnoredElements(Iterable<E> candidates, final Diff diff,
-			boolean rightToLeft) {
-		final Match match = diff.getMatch();
-		final Iterable<? extends Diff> filteredCandidates = Lists.newArrayList(match.getDifferences());
+	private static <E> Set<E> computeIgnoredElements(Comparison comparison, IEqualityHelper equalityHelper,
+			List<E> candidates, final Diff diff, boolean rightToLeft) {
+		// There is no point doing any computations if the candidates list is empty.
+		if (!candidates.isEmpty()) {
+			return Collections.emptySet();
+		}
+
+		// We only use this if the candidates list contains EObjects.
+		IgnoredElementsEntry currentIgnoredElementsEntry = null;
+
+		// We only use this if the candidates list does not contain EObjects.
+		Iterable<? extends Diff> filteredCandidates = null;
 
 		final Set<E> ignored = Sets.newLinkedHashSet();
+		UnresolvedDiffMatching predicate = new UnresolvedDiffMatching(comparison, equalityHelper, diff,
+				rightToLeft);
 		for (E candidate : candidates) {
+			predicate.setReferenceValue(candidate);
 			if (candidate instanceof EObject) {
-				final Iterable<? extends Diff> differences = match.getComparison()
-						.getDifferences((EObject)candidate);
-				if (Iterables.any(differences, new UnresolvedDiffMatching(diff, candidate, rightToLeft))) {
+				if (currentIgnoredElementsEntry == null) {
+					currentIgnoredElementsEntry = ignoredElementsEntry.get();
+					if (currentIgnoredElementsEntry == null
+							|| !currentIgnoredElementsEntry.appliesTo(candidates)) {
+						currentIgnoredElementsEntry = new IgnoredElementsEntry(comparison, candidates);
+						ignoredElementsEntry = new WeakReference<IgnoredElementsEntry>(
+								currentIgnoredElementsEntry);
+					}
+				}
+
+				List<Diff> differences = currentIgnoredElementsEntry.getDifferences(candidate);
+				if (Iterables.any(differences, predicate)) {
 					ignored.add(candidate);
 				}
 			} else {
-				if (Iterables.any(filteredCandidates,
-						new UnresolvedDiffMatching(diff, candidate, rightToLeft))) {
+				if (filteredCandidates == null) {
+					Match match = diff.getMatch();
+					filteredCandidates = Lists.newArrayList(match.getDifferences());
+				}
+				if (Iterables.any(filteredCandidates, predicate)) {
 					ignored.add(candidate);
 				}
 			}
@@ -1232,11 +1293,15 @@ public final class DiffUtil {
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private static class UnresolvedDiffMatching implements Predicate<Diff> {
-		/** Diff to compare against. */
-		private final Diff referenceDiff;
 
 		/** The value changed by {@link #referenceDiff} to compare against. */
-		private final Object referenceValue;
+		private Object referenceValue;
+
+		/** The target feature of the referenceDiff. */
+		private final EStructuralFeature referenceFeature;
+
+		/** The target container of the reference diff. */
+		private final EObject referenceContainer;
 
 		/** The comparison of the {@link #referenceDiff diff's} {@link Diff#getMatch() match}. */
 		private final Comparison comparison;
@@ -1252,32 +1317,33 @@ public final class DiffUtil {
 		 * feature and container of the given {@code diff} and that affect the same value as the given
 		 * {@code value}.
 		 * 
+		 * @param comparison
+		 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+		 * @param equalityHelper
+		 *            This will be used to check for equality of values.
 		 * @param diff
 		 *            to compare against this diff's target feature and container.
-		 * @param value
-		 *            to compare against this value.
 		 * @param rightToLeft
 		 *            the direction of the merging, which is used to obtain the diff's target feature and
 		 *            container.
 		 */
-		UnresolvedDiffMatching(Diff diff, Object value, boolean rightToLeft) {
-			this.referenceDiff = diff;
-			this.referenceValue = value;
-			this.comparison = ComparisonUtil.getComparison(diff);
-			this.equalityHelper = getEqualityHelper(diff);
+		UnresolvedDiffMatching(Comparison comparison, IEqualityHelper equalityHelper, Diff diff,
+				boolean rightToLeft) {
+			this.comparison = comparison;
+			this.equalityHelper = equalityHelper;
 			this.rightToLeft = rightToLeft;
+			this.referenceFeature = getTargetFeature(comparison, diff, rightToLeft);
+			this.referenceContainer = getTargetContainer(comparison, diff, rightToLeft);
 		}
 
 		/**
-		 * Returns the {@link IEqualityHelper} of the given {@code diff}'s {@link #getComparison(Diff)
-		 * comparison} element.
+		 * Updates that predicate based on the given reference value.
 		 * 
-		 * @param diff
-		 *            the diff element to get its comparison's equality helper.
-		 * @return the {@link Comparison} of {@code diff}.
+		 * @param referenceValue
+		 *            the new current reference value.
 		 */
-		private static IEqualityHelper getEqualityHelper(Diff diff) {
-			return ComparisonUtil.getComparison(diff).getEqualityHelper();
+		public void setReferenceValue(Object referenceValue) {
+			this.referenceValue = referenceValue;
 		}
 
 		/**
@@ -1286,9 +1352,9 @@ public final class DiffUtil {
 		 * @see com.google.common.base.Predicate#apply(java.lang.Object)
 		 */
 		public boolean apply(Diff input) {
-			return isUnresolved(input) && matchesTarget(input) && matchesValue(input)
 			// Probably ADDs in conflict with an ADD at a different index should also be ignored
-					&& input.getKind() == DifferenceKind.MOVE;
+			return input.getKind() == DifferenceKind.MOVE && isUnresolved(input) && matchesTarget(input)
+					&& matchesValue(input);
 		}
 
 		/**
@@ -1326,9 +1392,8 @@ public final class DiffUtil {
 		 * @return <code>true</code> if it matches the target feature, <code>false</code> otherwise.
 		 */
 		private boolean matchesTargetFeature(Diff input) {
-			final EStructuralFeature refFeature = getTargetFeature(comparison, referenceDiff, rightToLeft);
 			final EStructuralFeature inputFeature = getTargetFeature(comparison, input, rightToLeft);
-			return refFeature == inputFeature;
+			return referenceFeature == inputFeature;
 		}
 
 		/**
@@ -1340,9 +1405,8 @@ public final class DiffUtil {
 		 * @return <code>true</code> if it matches the target container, <code>false</code> otherwise.
 		 */
 		private boolean matchesTargetContainer(Diff input) {
-			final EObject refContainer = getTargetContainer(comparison, referenceDiff, rightToLeft);
 			final EObject inputContainer = getTargetContainer(comparison, input, rightToLeft);
-			return refContainer == inputContainer;
+			return referenceContainer == inputContainer;
 		}
 
 		/**
@@ -1367,6 +1431,92 @@ public final class DiffUtil {
 				matchesValue = false;
 			}
 			return matchesValue;
+		}
+	}
+
+	/**
+	 * A cache for mapping objects to their differences. The method
+	 * {@link DiffUtil#computeIgnoredElements(Comparison, IEqualityHelper, List, Diff, boolean)
+	 * computeIgnoredElements}, is often called repeatedly for the same list of candidates. Without some
+	 * careful optimization, that method consumes 30% of the overall time to merge a large number of
+	 * differences.
+	 */
+	private static class IgnoredElementsEntry {
+		/**
+		 * The comparison.
+		 */
+		private final Comparison comparison;
+
+		/**
+		 * The underlying {@link BasicEList#data() data} array of the candidates list.
+		 */
+		private final Object[] data;
+
+		/**
+		 * A map from object to its associated differences. The keys are generally EObject, but we make it
+		 * Object so that we don't need to do a cast to do a lookup.
+		 */
+		private final Map<Object, EList<Diff>> allDifferences;
+
+		/**
+		 * Creates instance given the comparison and the list of candidates. Only if the candidates list is a
+		 * {@link BasicEList} will we cache any information about the differences of the candidates.
+		 * 
+		 * @param comparison
+		 *            the comparison.
+		 * @param candidates
+		 *            the list of candidates.
+		 */
+		protected IgnoredElementsEntry(Comparison comparison, List<?> candidates) {
+			this.comparison = comparison;
+			if (candidates instanceof BasicEList<?>) {
+				data = ((BasicEList<?>)candidates).data();
+				allDifferences = Maps.newHashMap();
+			} else {
+				data = null;
+				allDifferences = null;
+			}
+		}
+
+		/**
+		 * Returns whether this entry is an entry for the given list of candidates. In particular, it returns
+		 * {@code true} if the the candidates list is a {@link BasicEList} with {@link BasicEList#data() data}
+		 * that is {@code ==} to this entry's {@link #data}.
+		 * 
+		 * @param candidates
+		 *            the list in question.
+		 * @return whether this entry is an entry for the given list of candidates.
+		 */
+		public boolean appliesTo(List<?> candidates) {
+			if (candidates instanceof BasicEList<?>) {
+				return this.data == ((BasicEList<?>)candidates).data();
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Returns the {@link Comparison#getDifferences(EObject) differences} for the given object. This
+		 * implementation will use {@link #allDifferences the cache}, if available. The caller must ensure
+		 * that the cache is {@link #appliesTo(List) applicable} before calling this method.
+		 * 
+		 * @param object
+		 *            the object, which must be an {@link EObject}.
+		 * @return the differences for the given object.
+		 */
+		public List<Diff> getDifferences(Object object) {
+			if (allDifferences == null) {
+				return comparison.getDifferences((EObject)object);
+			} else {
+				EList<Diff> differences = allDifferences.get(object);
+				if (differences == null) {
+					differences = comparison.getDifferences((EObject)object);
+					allDifferences.put(object, differences);
+				} else {
+					differences.size();
+				}
+				return differences;
+			}
 		}
 	}
 }
