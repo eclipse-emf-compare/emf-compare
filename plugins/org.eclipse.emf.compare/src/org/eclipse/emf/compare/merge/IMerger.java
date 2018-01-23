@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo and others.
+ * Copyright (c) 2012, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,14 +19,12 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Diff;
@@ -191,13 +189,13 @@ public interface IMerger {
 		/**
 		 * Map which references the registered mergers per their class name.
 		 */
-		private final Map<String, IMerger> map;
+		private final List<IMerger> registeredMergers;
 
 		/**
 		 * Constructor.
 		 */
 		public RegistryImpl() {
-			map = new ConcurrentHashMap<String, IMerger>();
+			registeredMergers = new CopyOnWriteArrayList<>();
 		}
 
 		/**
@@ -273,8 +271,28 @@ public interface IMerger {
 		 */
 		public IMerger add(IMerger merger) {
 			Preconditions.checkNotNull(merger);
+			IMerger result = null;
 			merger.setRegistry(this);
-			return map.put(merger.getClass().getName(), merger);
+			final String mergerClassName = merger.getClass().getName();
+			for (IMerger registeredMerger : registeredMergers) {
+				String registeredMergerClassName = registeredMerger.getClass().getName();
+				if (registeredMergerClassName.equals(mergerClassName)) {
+					result = registeredMerger;
+					registeredMergers.remove(result);
+					break;
+				}
+			}
+
+			registeredMergers.add(merger);
+
+			Collections.sort(registeredMergers, new Comparator<IMerger>() {
+				public int compare(IMerger o1, IMerger o2) {
+					// Sort from largest to smallest
+					return o2.getRanking() - o1.getRanking();
+				}
+			});
+
+			return result;
 		}
 
 		/**
@@ -283,11 +301,15 @@ public interface IMerger {
 		 * @see org.eclipse.emf.compare.merge.IMerger.Registry#remove(java.lang.String)
 		 */
 		public IMerger remove(String className) {
-			IMerger previous = map.remove(className);
-			if (previous != null) {
-				previous.setRegistry(null);
+			for (IMerger registeredMerger : registeredMergers) {
+				String registeredMergerClassName = registeredMerger.getClass().getName();
+				if (registeredMergerClassName.equals(className)) {
+					registeredMerger.setRegistry(null);
+					registeredMergers.remove(registeredMerger);
+					return registeredMerger;
+				}
 			}
-			return previous;
+			return null;
 		}
 
 		/**
@@ -296,7 +318,10 @@ public interface IMerger {
 		 * @see org.eclipse.emf.compare.merge.IMerger.Registry#clear()
 		 */
 		public void clear() {
-			map.clear();
+			for (IMerger registeredMerger : registeredMergers) {
+				registeredMerger.setRegistry(null);
+			}
+			registeredMergers.clear();
 		}
 
 		/**
@@ -324,14 +349,7 @@ public interface IMerger {
 		 * @since 3.3
 		 */
 		public Iterator<IMerger> getMergersByRankDescending(Diff diff, final IMergeCriterion criterion) {
-			List<IMerger> mergers = new ArrayList<IMerger>(getMergers(diff));
-			Collections.sort(mergers, new Comparator<IMerger>() {
-				public int compare(IMerger o1, IMerger o2) {
-					// Sort from largest to smallest
-					return o2.getRanking() - o1.getRanking();
-				}
-			});
-			return Iterators.filter(mergers.iterator(), new Predicate<IMerger>() {
+			return Iterators.filter(basicGetMergers(diff).iterator(), new Predicate<IMerger>() {
 				public boolean apply(IMerger input) {
 					if (input instanceof IMergeCriterionAware) {
 						if (((IMergeCriterionAware)input).apply(criterion)) {
@@ -350,15 +368,25 @@ public interface IMerger {
 		 * @see org.eclipse.emf.compare.merge.IMerger.Registry#getMergers(org.eclipse.emf.compare.Diff)
 		 */
 		public Collection<IMerger> getMergers(Diff target) {
+			return newArrayList(basicGetMergers(target));
+		}
+
+		/**
+		 * Returns the sorted mergers (by rank descending) applicable for the target diff.
+		 * 
+		 * @param target
+		 *            the target diff.
+		 * @return the sorted mergers applicable for the target diff.
+		 */
+		private Iterable<IMerger> basicGetMergers(Diff target) {
 			final Predicate<IMerger> mergerFor;
 			if (target == null) {
 				mergerFor = Predicates.alwaysTrue();
 			} else {
 				mergerFor = isMergerFor(target);
 			}
-			Iterable<IMerger> mergers = filter(map.values(), mergerFor);
-			List<IMerger> ret = newArrayList(mergers);
-			return ret;
+			Iterable<IMerger> mergers = filter(registeredMergers, mergerFor);
+			return mergers;
 		}
 	}
 }
