@@ -29,13 +29,12 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -59,6 +58,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.ExtendedMetaData;
 import org.eclipse.emf.ecore.util.FeatureMap;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * This utility class provides common methods for navigation over and querying of the Comparison model.
@@ -72,7 +72,7 @@ public final class ComparisonUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	private static final Predicate<Diff> CASCADING_DIFF = not(
-			or(hasConflict(REAL), instanceOf(ResourceAttachmentChange.class), ofKind(MOVE)));
+			or(ofKind(MOVE), instanceOf(ResourceAttachmentChange.class), hasConflict(REAL)));
 
 	/** Hides default constructor. */
 	private ComparisonUtil() {
@@ -368,25 +368,23 @@ public final class ComparisonUtil {
 			final boolean firstLevelOnly, final LinkedHashSet<Diff> processedDiffs) {
 		return new Function<Diff, Iterable<Diff>>() {
 			public Iterable<Diff> apply(Diff diff) {
-				if (diff instanceof ReferenceChange) {
-					Match matchOfValue = diff.getMatch().getComparison()
-							.getMatch(((ReferenceChange)diff).getValue());
-					if (((ReferenceChange)diff).getReference().isContainment()) {
-						final Iterable<Diff> subDiffs;
-						// if the diff is a Move diff, we don't want its children.
-						if (ofKind(MOVE).apply(diff)) {
-							subDiffs = ImmutableList.of();
-						} else if (matchOfValue != null && !firstLevelOnly) {
-							subDiffs = filter(matchOfValue.getAllDifferences(), CASCADING_DIFF);
-						} else if (matchOfValue != null && firstLevelOnly) {
-							subDiffs = filter(matchOfValue.getDifferences(), CASCADING_DIFF);
-						} else {
-							subDiffs = ImmutableList.of();
+				if (diff.getKind() != MOVE && diff instanceof ReferenceChange) {
+					final ReferenceChange referenceChange = (ReferenceChange)diff;
+					if (referenceChange.getReference().isContainment()) {
+						Match matchOfValue = diff.getMatch().getComparison()
+								.getMatch(referenceChange.getValue());
+						if (matchOfValue != null) {
+							final Iterable<Diff> subDiffs;
+							if (!firstLevelOnly) {
+								subDiffs = filter(matchOfValue.getAllDifferences(), CASCADING_DIFF);
+							} else {
+								subDiffs = filter(matchOfValue.getDifferences(), CASCADING_DIFF);
+							}
+							addAll(processedDiffs, subDiffs);
+							final Iterable<Diff> associatedDiffs = getAssociatedDiffs(diff, subDiffs,
+									processedDiffs, leftToRight, firstLevelOnly);
+							return ImmutableSet.copyOf(concat(subDiffs, associatedDiffs));
 						}
-						addAll(processedDiffs, subDiffs);
-						final Iterable<Diff> associatedDiffs = getAssociatedDiffs(diff, subDiffs,
-								processedDiffs, leftToRight, firstLevelOnly);
-						return ImmutableSet.copyOf(concat(subDiffs, associatedDiffs));
 					}
 				}
 				return ImmutableSet.of();
@@ -429,28 +427,33 @@ public final class ComparisonUtil {
 			LinkedHashSet<Diff> processedDiffs, boolean leftToRight, boolean firstLevelOnly) {
 		Collection<Diff> associatedDiffs = new LinkedHashSet<Diff>();
 		for (Diff diff : subDiffs) {
-			final Collection<Diff> reqs = new LinkedHashSet<Diff>();
+			List<Diff> reqs;
+			DifferenceSource source = diff.getSource();
 			if (leftToRight) {
-				if (diff.getSource() == DifferenceSource.LEFT) {
-					reqs.addAll(diff.getRequires());
+				if (source == DifferenceSource.LEFT) {
+					reqs = diff.getRequires();
 				} else {
-					reqs.addAll(diff.getRequiredBy());
+					reqs = diff.getRequiredBy();
 				}
 			} else {
-				if (diff.getSource() == DifferenceSource.LEFT) {
-					reqs.addAll(diff.getRequiredBy());
+				if (source == DifferenceSource.LEFT) {
+					reqs = diff.getRequiredBy();
 				} else {
-					reqs.addAll(diff.getRequires());
+					reqs = diff.getRequires();
 				}
 			}
-			reqs.remove(diffRoot);
+
+			reqs = ((InternalEList<Diff>)reqs).basicList();
 			associatedDiffs.addAll(reqs);
-			associatedDiffs.addAll(diff.getRefines());
+			associatedDiffs.remove(diffRoot);
+
+			associatedDiffs.addAll(((InternalEList<Diff>)diff.getRefines()).basicList());
+
+			Function<Diff, Iterable<Diff>> subDiffsFunction = getSubDiffs(leftToRight, firstLevelOnly,
+					processedDiffs);
 			for (Diff req : reqs) {
-				if (!Iterables.contains(subDiffs, req) && !processedDiffs.contains(req)) {
-					processedDiffs.add(req);
-					addAll(associatedDiffs,
-							getSubDiffs(leftToRight, firstLevelOnly, processedDiffs).apply(req));
+				if (req != diffRoot && processedDiffs.add(req)) {
+					addAll(associatedDiffs, subDiffsFunction.apply(req));
 				}
 			}
 		}
@@ -537,23 +540,18 @@ public final class ComparisonUtil {
 	 *         given {@link DifferenceSource} and {@code MergeDirection}.
 	 */
 	public static EObject getExpectedSide(Match match, DifferenceSource source, boolean mergeRightToLeft) {
-		final EObject result;
+		EObject result = null;
 		// Bug 458818: prevent NPE if match is null
 		if (match != null) {
-			final boolean undoingLeft = mergeRightToLeft && source == DifferenceSource.LEFT;
-			final boolean undoingRight = !mergeRightToLeft && source == DifferenceSource.RIGHT;
-
 			final Comparison comparison = match.getComparison();
-
-			if (comparison.isThreeWay() && (undoingLeft || undoingRight) && match.getOrigin() != null) {
+			if (comparison.isThreeWay() && mergeRightToLeft == (source == DifferenceSource.LEFT)
+					&& match.getOrigin() != null) {
 				result = match.getOrigin();
 			} else if (mergeRightToLeft) {
 				result = match.getRight();
 			} else {
 				result = match.getLeft();
 			}
-		} else {
-			result = null;
 		}
 		return result;
 	}
