@@ -16,6 +16,7 @@ import static org.eclipse.emf.compare.DifferenceState.MERGED;
 import static org.eclipse.emf.compare.merge.AbstractMerger.isAccepting;
 import static org.eclipse.emf.compare.merge.AbstractMerger.isInTerminalState;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
 import java.util.Collection;
@@ -23,6 +24,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.DiffRelationshipComputer;
@@ -30,6 +32,7 @@ import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
+import org.eclipse.emf.compare.utils.EMFComparePredicates;
 
 /**
  * Provides inheritable default behavior for the merge runnables.
@@ -37,6 +40,9 @@ import org.eclipse.emf.compare.merge.IMerger.Registry;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public abstract class AbstractMergeRunnable {
+
+	private static final Predicate<? super Diff> HAS_UNRESOLVED_STATE = EMFComparePredicates
+			.hasState(DifferenceState.UNRESOLVED);
 
 	/** Tells us whether the left side of the comparison we're operating on is editable. */
 	private final boolean isLeftEditable;
@@ -135,19 +141,30 @@ public abstract class AbstractMergeRunnable {
 		}
 		IDiffRelationshipComputer computer = getDiffRelationshipComputer(mergerRegistry);
 		if (isAccepting(diff, mergeRightToLeft)) {
-			final Set<Diff> implied = computer.getAllResultingMerges(diff, mergeRightToLeft);
-			final Set<Diff> rejections = computer.getAllResultingRejections(diff, mergeRightToLeft);
+			final Set<Diff> implied = computer.getAllResultingMerges(diff, mergeRightToLeft,
+					HAS_UNRESOLVED_STATE);
+			final Set<Diff> rejections = computer.getAllResultingRejections(diff, mergeRightToLeft,
+					HAS_UNRESOLVED_STATE);
 			for (Diff impliedDiff : Sets.difference(implied, rejections)) {
-				impliedDiff.setState(MERGED);
+				setState(impliedDiff, MERGED);
 			}
 			for (Diff impliedRejection : rejections) {
-				impliedRejection.setState(DISCARDED);
+				setState(impliedRejection, DISCARDED);
 			}
 		} else {
-			final Set<Diff> implied = computer.getAllResultingMerges(diff, mergeRightToLeft);
+			final Set<Diff> implied = computer.getAllResultingMerges(diff, mergeRightToLeft,
+					HAS_UNRESOLVED_STATE);
 			for (Diff impliedDiff : implied) {
-				impliedDiff.setState(DISCARDED);
+				setState(impliedDiff, DISCARDED);
 			}
+		}
+	}
+
+	private void setState(Diff diff, DifferenceState state) {
+		// Check the current state first, because changing the state sends notifications and that's relatively
+		// expensive when the state does not actually change.
+		if (diff.getState() != state) {
+			diff.setState(state);
 		}
 	}
 
@@ -160,4 +177,5 @@ public abstract class AbstractMergeRunnable {
 			merger.copyAllRightToLeft(differences, new BasicMonitor());
 		}
 	}
+
 }

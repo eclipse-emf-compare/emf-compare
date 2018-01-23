@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
+import com.google.common.base.Predicate;
+
 import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
@@ -89,6 +91,33 @@ public interface IDiffRelationshipComputer {
 	Set<Diff> getAllResultingMerges(Diff diff, boolean rightToLeft);
 
 	/**
+	 * Retrieves the set of all diffs related to the given <code>diff</code> when merging in the given
+	 * direction.
+	 * <p>
+	 * This is expected to return the set of all differences that will be need to merged along when a user
+	 * wishes to merge <code>diff</code>, either because they are required by it or because they are implied
+	 * by it one way or another.
+	 * </p>
+	 * <p>
+	 * Note that <code>diff</code> will be included in the returned set.
+	 * </p>
+	 * <p>
+	 * Also note that the resulting merges will contain the resulting rejections (diffs from the other side
+	 * that will be rejected)
+	 * </p>
+	 * 
+	 * @param diff
+	 *            The difference for which we seek all related ones.
+	 * @param rightToLeft
+	 *            The direction in which we're considering a merge.
+	 * @param filter
+	 *            The filter to control which diffs are visted when collecting the result.
+	 * @return A non-null set of all diffs related to the given <code>diff</code> when merging in the given
+	 *         direction.
+	 */
+	Set<Diff> getAllResultingMerges(Diff diff, boolean rightToLeft, Predicate<? super Diff> filter);
+
+	/**
 	 * Retrieves the set of all diffs that will be rejected if the given <code>diff</code> is merged, either
 	 * because of unresolveable conflicts or because of unreachable requirements.
 	 * 
@@ -100,6 +129,21 @@ public interface IDiffRelationshipComputer {
 	 *         the given direction.
 	 */
 	Set<Diff> getAllResultingRejections(Diff diff, boolean mergeRightToLeft);
+
+	/**
+	 * Retrieves the set of all diffs that will be rejected if the given <code>diff</code> is merged, either
+	 * because of unresolveable conflicts or because of unreachable requirements.
+	 * 
+	 * @param diff
+	 *            The difference for which we seek all opposite ones.
+	 * @param mergeRightToLeft
+	 *            The direction in which we're considering a merge.
+	 * @param filter
+	 *            The filter to control which diffs are visted when collecting the result.
+	 * @return A non-null set of all diffs that will be rejected if the given <code>diff</code> is merged in
+	 *         the given direction.
+	 */
+	Set<Diff> getAllResultingRejections(Diff diff, boolean mergeRightToLeft, Predicate<? super Diff> filter);
 
 	/**
 	 * Returns the merger registry used for calculating the diff relationships.

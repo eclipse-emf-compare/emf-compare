@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.merge;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,16 +19,14 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 
 /**
- * A computer implementation to cache the relationship of diffs.
+ * A computer implementation to cache the relationship of diffs. Note that the "all" relationships are not
+ * cached because they would O(n^2) memory in the general case.
  * 
  * @since 3.5
  * @author Martin Fleck <mfleck@eclipsesource.com>
  * @see IMerger2
  */
-public class CachingDiffRelationshipComputer implements IDiffRelationshipComputer {
-
-	/** A computer instance to calculate the relationships between diffs. */
-	protected IDiffRelationshipComputer computer;
+public class CachingDiffRelationshipComputer extends DiffRelationshipComputer {
 
 	/** Direct merge dependencies: right to left. */
 	protected Map<Diff, Set<Diff>> directMergeDependenciesR2L = new ConcurrentHashMap<>();
@@ -46,18 +45,6 @@ public class CachingDiffRelationshipComputer implements IDiffRelationshipCompute
 
 	/** Direct resulting rejections: left to right. */
 	protected Map<Diff, Set<Diff>> directResultingRejectionsL2R = new ConcurrentHashMap<>();
-
-	/** All resulting merges: right to left. */
-	protected Map<Diff, Set<Diff>> allResultingMergesR2L = new ConcurrentHashMap<>();
-
-	/** All resulting merges: left to right. */
-	protected Map<Diff, Set<Diff>> allResultingMergesL2R = new ConcurrentHashMap<>();
-
-	/** All resulting rejections: right to left. */
-	protected Map<Diff, Set<Diff>> allResultingRejectionsR2L = new ConcurrentHashMap<>();
-
-	/** All resulting rejections: left to right. */
-	protected Map<Diff, Set<Diff>> allResultingRejectionsL2R = new ConcurrentHashMap<>();
 
 	/**
 	 * Creates a new computer with the given registry.
@@ -79,67 +66,29 @@ public class CachingDiffRelationshipComputer implements IDiffRelationshipCompute
 	 *            if no special criterion should be set.
 	 */
 	public CachingDiffRelationshipComputer(IMerger.Registry registry, IMergeCriterion criterion) {
-		this(new DiffRelationshipComputer(registry, criterion));
-	}
-
-	/**
-	 * Creates a new computer by wrapping the given instance. Any computing calls are delegated to this
-	 * instance and cached.
-	 * 
-	 * @param computer
-	 *            computer instance used for calculating diff relationships.
-	 */
-	public CachingDiffRelationshipComputer(IDiffRelationshipComputer computer) {
-		this.computer = computer;
-	}
-
-	/**
-	 * Returns the internal computer instance used to compute the diff relationships.
-	 * 
-	 * @return internal computer instance.
-	 */
-	protected IDiffRelationshipComputer getComputer() {
-		return computer;
-	}
-
-	@Override
-	public Registry getMergerRegistry() {
-		return getComputer().getMergerRegistry();
+		super(registry, criterion);
 	}
 
 	/**
 	 * {@inheritDoc} WARNING: Setting the merger registry invalidates previously cached results, if another
 	 * registry was set previously!
 	 */
+	@Override
 	public void setMergerRegistry(Registry mergerRegistry) {
 		if (getMergerRegistry() != mergerRegistry) {
-			getComputer().setMergerRegistry(mergerRegistry);
+			super.setMergerRegistry(mergerRegistry);
 			invalidate();
 		}
-	}
-
-	@Override
-	public IMergeCriterion getMergeCriterion() {
-		return getComputer().getMergeCriterion();
-	}
-
-	@Override
-	public IMerger2 getMerger(Diff diff) {
-		return getComputer().getMerger(diff);
-	}
-
-	@Override
-	public boolean hasMerger(Diff diff) {
-		return getComputer().hasMerger(diff);
 	}
 
 	/**
 	 * {@inheritDoc} WARNING: Setting the merge criterion invalidates previously cached results, if another
 	 * criterion was set previously.
 	 */
+	@Override
 	public void setMergeCriterion(IMergeCriterion mergeCriterion) {
 		if (getMergeCriterion() != mergeCriterion) {
-			getComputer().setMergeCriterion(mergeCriterion);
+			super.setMergeCriterion(mergeCriterion);
 			invalidate();
 		}
 	}
@@ -190,7 +139,7 @@ public class CachingDiffRelationshipComputer implements IDiffRelationshipCompute
 	 * @return a non-null set of direct merge dependencies
 	 */
 	protected Set<Diff> computeDirectMergeDependencies(Diff diff, boolean mergeRightToLeft) {
-		return getComputer().getDirectMergeDependencies(diff, mergeRightToLeft);
+		return super.getDirectMergeDependencies(diff, mergeRightToLeft);
 	}
 
 	/**
@@ -209,7 +158,7 @@ public class CachingDiffRelationshipComputer implements IDiffRelationshipCompute
 		Set<Diff> directMergeDependencies = getCachedDirectMergeDependencies(diff, mergeRightToLeft);
 		if (directMergeDependencies == null) {
 			directMergeDependencies = computeDirectMergeDependencies(diff, mergeRightToLeft);
-			setCachedDirectMergeDependencies(diff, mergeRightToLeft, directMergeDependencies);
+			setCachedDirectMergeDependencies(diff, mergeRightToLeft, asEmptySet(directMergeDependencies));
 		}
 		return directMergeDependencies;
 	}
@@ -260,7 +209,7 @@ public class CachingDiffRelationshipComputer implements IDiffRelationshipCompute
 	 * @return a non-null set of all resulting merges
 	 */
 	protected Set<Diff> computeDirectResultingMerges(Diff diff, boolean mergeRightToLeft) {
-		return getComputer().getDirectResultingMerges(diff, mergeRightToLeft);
+		return super.getDirectResultingMerges(diff, mergeRightToLeft);
 	}
 
 	/**
@@ -279,7 +228,7 @@ public class CachingDiffRelationshipComputer implements IDiffRelationshipCompute
 		Set<Diff> directResultingMerges = getCachedDirectResultingMerges(diff, mergeRightToLeft);
 		if (directResultingMerges == null) {
 			directResultingMerges = computeDirectResultingMerges(diff, mergeRightToLeft);
-			setCachedDirectResultingMerges(diff, mergeRightToLeft, directResultingMerges);
+			setCachedDirectResultingMerges(diff, mergeRightToLeft, asEmptySet(directResultingMerges));
 		}
 		return directResultingMerges;
 	}
@@ -330,7 +279,7 @@ public class CachingDiffRelationshipComputer implements IDiffRelationshipCompute
 	 * @return a non-null set of direct resulting rejections
 	 */
 	protected Set<Diff> computeDirectResultingRejections(Diff diff, boolean mergeRightToLeft) {
-		return getComputer().getDirectResultingRejections(diff, mergeRightToLeft);
+		return super.getDirectResultingRejections(diff, mergeRightToLeft);
 	}
 
 	@Override
@@ -338,170 +287,43 @@ public class CachingDiffRelationshipComputer implements IDiffRelationshipCompute
 		Set<Diff> directResultingRejections = getCachedDirectResultingRejections(diff, mergeRightToLeft);
 		if (directResultingRejections == null) {
 			directResultingRejections = computeDirectResultingRejections(diff, mergeRightToLeft);
-			setCachedDirectResultingRejections(diff, mergeRightToLeft, directResultingRejections);
+			setCachedDirectResultingRejections(diff, mergeRightToLeft, asEmptySet(directResultingRejections));
 		}
 		return directResultingRejections;
 	}
 
 	/**
-	 * Caches the given all resulting rejections.
-	 * 
-	 * @param diff
-	 *            diff
-	 * @param mergeRightToLeft
-	 *            merge direction
-	 * @param allResultingRejections
-	 *            all resulting rejections
-	 */
-	protected void setCachedAllResultingRejections(Diff diff, boolean mergeRightToLeft,
-			Set<Diff> allResultingRejections) {
-		if (mergeRightToLeft) {
-			allResultingRejectionsR2L.put(diff, allResultingRejections);
-		} else {
-			allResultingRejectionsL2R.put(diff, allResultingRejections);
-		}
-	}
-
-	/**
-	 * Returns the cached all resulting rejections.
-	 * 
-	 * @param diff
-	 *            diff
-	 * @param mergeRightToLeft
-	 *            merge direction
-	 * @return cached all resulting rejections
-	 */
-	protected Set<Diff> getCachedAllResultingRejections(Diff diff, boolean mergeRightToLeft) {
-		if (mergeRightToLeft) {
-			return allResultingRejectionsR2L.get(diff);
-		} else {
-			return allResultingRejectionsL2R.get(diff);
-		}
-	}
-
-	/**
-	 * Computes all resulting rejections for the given diff.
-	 * 
-	 * @param diff
-	 *            diff
-	 * @param mergeRightToLeft
-	 *            merge direction
-	 * @return a non-null set of all resulting rejections
-	 */
-	protected Set<Diff> computeAllResultingRejections(Diff diff, boolean mergeRightToLeft) {
-		return getComputer().getAllResultingRejections(diff, mergeRightToLeft);
-	}
-
-	@Override
-	public Set<Diff> getAllResultingRejections(Diff diff, boolean mergeRightToLeft) {
-		Set<Diff> allResultingRejections = getCachedAllResultingRejections(diff, mergeRightToLeft);
-		if (allResultingRejections == null) {
-			allResultingRejections = computeAllResultingRejections(diff, mergeRightToLeft);
-			setCachedAllResultingRejections(diff, mergeRightToLeft, allResultingRejections);
-		}
-		return allResultingRejections;
-	}
-
-	/**
-	 * Caches the given all resulting merges.
-	 * 
-	 * @param diff
-	 *            diff
-	 * @param mergeRightToLeft
-	 *            merge direction
-	 * @param allResultingMerges
-	 *            all resulting merges
-	 */
-	protected void setCachedAllResultingMerges(Diff diff, boolean mergeRightToLeft,
-			Set<Diff> allResultingMerges) {
-		if (mergeRightToLeft) {
-			allResultingMergesR2L.put(diff, allResultingMerges);
-		} else {
-			allResultingMergesL2R.put(diff, allResultingMerges);
-		}
-	}
-
-	/**
-	 * Returns the cached all resulting merges.
-	 * 
-	 * @param diff
-	 *            diff
-	 * @param mergeRightToLeft
-	 *            merge direction
-	 * @return cached all resulting merges
-	 */
-	protected Set<Diff> getCachedAllResultingMerges(Diff diff, boolean mergeRightToLeft) {
-		if (mergeRightToLeft) {
-			return allResultingMergesR2L.get(diff);
-		} else {
-			return allResultingMergesL2R.get(diff);
-		}
-	}
-
-	/**
-	 * Computes all resulting merges for the given diff.
-	 * 
-	 * @param diff
-	 *            diff
-	 * @param mergeRightToLeft
-	 *            merge direction
-	 * @return a non-null set of all resulting merges
-	 */
-	protected Set<Diff> computeAllResultingMerges(Diff diff, boolean mergeRightToLeft) {
-		return getComputer().getAllResultingMerges(diff, mergeRightToLeft);
-	}
-
-	/**
-	 * Returns the cached direct resulting merges, if present. Otherwise, the direct resulting merges are
-	 * retrieved and cached using the given merger.
-	 * 
-	 * @param diff
-	 *            diff
-	 * @param mergeRightToLeft
-	 *            merge direction
-	 * @return cached direct resulting merges
-	 * @see IMerger2#getDirectResultingMerges(Diff, boolean)
-	 */
-	@Override
-	public Set<Diff> getAllResultingMerges(Diff diff, boolean mergeRightToLeft) {
-		Set<Diff> allResultingMerges = getCachedAllResultingMerges(diff, mergeRightToLeft);
-		if (allResultingMerges == null) {
-			allResultingMerges = computeAllResultingMerges(diff, mergeRightToLeft);
-			setCachedAllResultingMerges(diff, mergeRightToLeft, allResultingMerges);
-		}
-		return allResultingMerges;
-	}
-
-	/**
-	 * Invalidates the cache for the given diff, so that relationships will be re-calculated for this diff the
-	 * next time a respective method is called.
-	 * 
-	 * @param diff
-	 *            diff for which the cache should be invalidated.
-	 */
-	public void invalidate(Diff diff) {
-		directMergeDependenciesR2L.remove(diff);
-		directMergeDependenciesL2R.remove(diff);
-		directResultingRejectionsR2L.remove(diff);
-		directResultingRejectionsL2R.remove(diff);
-		directResultingMergesR2L.remove(diff);
-		directResultingMergesL2R.remove(diff);
-		allResultingMergesL2R.remove(diff);
-		allResultingMergesR2L.remove(diff);
-		allResultingRejectionsL2R.remove(diff);
-		allResultingRejectionsR2L.remove(diff);
-	}
-
-	/**
-	 * Invalidates the cache for all given diffs, so that relationships will be re-calculated for each diff
-	 * the next time a respective method is called.
+	 * Returns the argument or the empty set if the argument is empty.
 	 * 
 	 * @param diffs
-	 *            diffs for which the cache should be invalidated.
+	 *            the diffs to transform.
+	 * @return the diffs or the empty set.
 	 */
-	public void invalidate(Iterable<Diff> diffs) {
-		for (Diff diff : diffs) {
-			invalidate(diff);
+	private Set<Diff> asEmptySet(Set<Diff> diffs) {
+		if (diffs.isEmpty()) {
+			return Collections.emptySet();
+		} else {
+			return diffs;
+		}
+	}
+
+	/**
+	 * Computes the cached relationships for the give diff.
+	 * 
+	 * @param diff
+	 *            the diff for which to cmpute the cached relationship.
+	 */
+	public void computeCache(Diff diff) {
+		IMerger2 merger = getMerger(diff);
+		if (merger != null) {
+			directMergeDependenciesR2L.put(diff, asEmptySet(merger.getDirectMergeDependencies(diff, true)));
+			directMergeDependenciesL2R.put(diff, asEmptySet(merger.getDirectMergeDependencies(diff, false)));
+			directResultingRejectionsR2L.put(diff,
+					asEmptySet(merger.getDirectResultingRejections(diff, true)));
+			directResultingRejectionsL2R.put(diff,
+					asEmptySet(merger.getDirectResultingRejections(diff, false)));
+			directResultingMergesR2L.put(diff, asEmptySet(merger.getDirectResultingMerges(diff, true)));
+			directResultingMergesL2R.put(diff, asEmptySet(merger.getDirectResultingMerges(diff, false)));
 		}
 	}
 
@@ -516,9 +338,5 @@ public class CachingDiffRelationshipComputer implements IDiffRelationshipCompute
 		directResultingRejectionsL2R.clear();
 		directResultingMergesR2L.clear();
 		directResultingMergesL2R.clear();
-		allResultingMergesL2R.clear();
-		allResultingMergesR2L.clear();
-		allResultingRejectionsL2R.clear();
-		allResultingRejectionsR2L.clear();
 	}
 }

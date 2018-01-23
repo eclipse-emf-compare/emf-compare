@@ -29,6 +29,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +40,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.CompareViewerPane;
@@ -248,6 +252,54 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 	}
 
+	private final class DiffRelationshipComputerJob extends Job {
+		public DiffRelationshipComputerJob() {
+			super("EMF Compare Diff Relationship Computer"); //$NON-NLS-1$
+			setSystem(true);
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			Comparison comparison = getCompareConfiguration().getComparison();
+			if (comparison != null) {
+				fDiffRelationshipComputer.invalidate();
+
+				int availableProcessors = Runtime.getRuntime().availableProcessors();
+				ThreadFactory computingThreadFactory = new ThreadFactoryBuilder()
+						.setNameFormat("EMFCompareDiffRelationshipComputer--%d") //$NON-NLS-1$
+						.build();
+
+				ExecutorService pool = Executors.newFixedThreadPool(availableProcessors,
+						computingThreadFactory);
+
+				List<Diff> differences = comparison.getDifferences();
+				for (final Diff diff : differences) {
+					pool.submit(new Runnable() {
+						public void run() {
+							fDiffRelationshipComputer.computeCache(diff);
+						}
+					});
+				}
+
+				pool.shutdown();
+
+				while (!pool.isTerminated()) {
+					if (monitor.isCanceled()) {
+						pool.shutdownNow();
+					}
+
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+				}
+			}
+
+			return Status.OK_STATUS;
+		}
+	}
+
 	/** The width of the tree ruler. */
 	private static final int TREE_RULER_WIDTH = 17;
 
@@ -269,6 +321,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	/** The diff relationship computer. */
 	private CachingDiffRelationshipComputer fDiffRelationshipComputer;
+
+	private final Job diffRelationshipComputer = new DiffRelationshipComputerJob();
 
 	/** The tree ruler associated with this viewer. */
 	private EMFCompareDiffTreeRuler treeRuler;
@@ -1073,6 +1127,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		compareInputChanged((ICompareInput)null);
 		treeRuler.handleDispose();
 		fAdapterFactory.dispose();
+		diffRelationshipComputer.cancel();
 		fDiffRelationshipComputer.invalidate();
 		toolBar.dispose();
 		fColors.dispose();
@@ -1285,7 +1340,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 			// clear cache for new comparison
 			if (fDiffRelationshipComputer != null) {
-				fDiffRelationshipComputer.invalidate();
+				diffRelationshipComputer.cancel();
 			}
 
 			// propagate new adapter factory
@@ -1372,6 +1427,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					});
 				}
 			});
+
+			if (fDiffRelationshipComputer != null) {
+				diffRelationshipComputer.schedule();
+			}
 
 			// Disposing this at the start of this method would meet frequent CME
 			if (oldAdapterFactory != null) {

@@ -16,12 +16,21 @@ import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.sameSideAs;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.compare.Conflict;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.merge.IMerger.Registry2;
@@ -34,6 +43,8 @@ import org.eclipse.emf.compare.merge.IMerger.Registry2;
  * @see IMerger2
  */
 public class DiffRelationshipComputer implements IDiffRelationshipComputer {
+	/** A predicate for filtering diffs that are pseudo conflicts. */
+	private static final Predicate<? super Diff> NOT_HAS_PSEUDO_CONFLICT = not(hasConflict(PSEUDO));
 
 	/** Merger registry used to retrieve the correct merger. */
 	protected Registry registry;
@@ -100,11 +111,12 @@ public class DiffRelationshipComputer implements IDiffRelationshipComputer {
 
 	@Override
 	public IMerger2 getMerger(Diff diff) {
-		if (getMergerRegistry2() == null) {
+		final Registry2 mergeRegistry2 = getMergerRegistry2();
+		if (mergeRegistry2 == null) {
 			return null;
 		}
 
-		DelegatingMerger mergerDelegate = AbstractMerger.getMergerDelegate(diff, getMergerRegistry2(),
+		DelegatingMerger mergerDelegate = AbstractMerger.getMergerDelegate(diff, mergeRegistry2,
 				getMergeCriterion());
 		IMerger merger = mergerDelegate.getMerger();
 		if (!(merger instanceof IMerger2)) {
@@ -125,7 +137,7 @@ public class DiffRelationshipComputer implements IDiffRelationshipComputer {
 		if (merger != null) {
 			return merger.getDirectMergeDependencies(diff, mergeRightToLeft);
 		}
-		return Sets.newHashSet();
+		return Collections.emptySet();
 	}
 
 	@Override
@@ -134,7 +146,7 @@ public class DiffRelationshipComputer implements IDiffRelationshipComputer {
 		if (merger != null) {
 			return merger.getDirectResultingMerges(diff, mergeRightToLeft);
 		}
-		return Sets.newHashSet();
+		return Collections.emptySet();
 	}
 
 	@Override
@@ -143,37 +155,43 @@ public class DiffRelationshipComputer implements IDiffRelationshipComputer {
 		if (merger != null) {
 			return merger.getDirectResultingRejections(diff, mergeRightToLeft);
 		} else {
-			return Sets.newHashSet();
+			return Collections.emptySet();
 		}
 	}
 
 	@Override
 	public Set<Diff> getAllResultingMerges(Diff diff, boolean rightToLeft) {
+		return getAllResultingMerges(diff, rightToLeft, Predicates.alwaysTrue());
+	}
+
+	@Override
+	public Set<Diff> getAllResultingMerges(Diff diff, boolean rightToLeft, Predicate<? super Diff> filter) {
 		final Set<Diff> resultingMerges = new LinkedHashSet<Diff>();
 		resultingMerges.add(diff);
 
-		Set<Diff> relations = internalGetAllResultingMerges(diff, rightToLeft);
-		// We don't want to take in account pseudo conflicts since there is nothing to do with them
-		// and their dependencies may cause incorrect merge dependencies computation.
-		Set<Diff> difference = Sets.filter(Sets.difference(relations, resultingMerges),
-				not(hasConflict(PSEUDO)));
-		while (!difference.isEmpty()) {
-			final Set<Diff> newRelations = new LinkedHashSet<Diff>(difference);
-			resultingMerges.addAll(newRelations);
-			relations = new LinkedHashSet<Diff>();
-			for (Diff newRelation : newRelations) {
-				Set<Diff> internalResultingMerges = internalGetAllResultingMerges(newRelation, rightToLeft);
-				// We don't want to take in account pseudo conflicts since there is nothing to do with them
-				// and there dependencies may cause incorrect merge dependencies computation.
-				relations.addAll(Sets.filter(internalResultingMerges, not(hasConflict(PSEUDO))));
+		Iterator<Diff> relations = internalGetAllResultingMerges(diff, rightToLeft).iterator();
+		do {
+			List<Iterator<Diff>> newRelations = Lists.newArrayList();
+			while (relations.hasNext()) {
+				Diff relatedDiff = relations.next();
+				if (filter.apply(relatedDiff)) {
+					Conflict conflict = relatedDiff.getConflict();
+					if ((conflict == null || conflict.getKind() != ConflictKind.PSEUDO)
+							&& resultingMerges.add(relatedDiff)) {
+						Set<Diff> internalResultingMerges = internalGetAllResultingMerges(relatedDiff,
+								rightToLeft);
+						newRelations.add(internalResultingMerges.iterator());
+					}
+				}
 			}
-			difference = Sets.difference(relations, resultingMerges);
-		}
+			relations = Iterators.concat(newRelations.iterator());
+		} while (relations.hasNext());
 
 		// If a pseudo conflict is directly selected, we want to display other diffs of the pseudo conflict as
 		// resulting merge for the user
-		if (diff.getConflict() != null && diff.getConflict().getKind() == PSEUDO) {
-			resultingMerges.addAll(diff.getConflict().getDifferences());
+		Conflict conflict = diff.getConflict();
+		if (conflict != null && conflict.getKind() == PSEUDO) {
+			resultingMerges.addAll(conflict.getDifferences());
 		}
 
 		return resultingMerges;
@@ -192,42 +210,57 @@ public class DiffRelationshipComputer implements IDiffRelationshipComputer {
 	protected Set<Diff> internalGetAllResultingMerges(Diff diff, boolean rightToLeft) {
 		final Set<Diff> directParents = getDirectMergeDependencies(diff, rightToLeft);
 		final Set<Diff> directImplications = getDirectResultingMerges(diff, rightToLeft);
-		final SetView<Diff> directRelated = Sets.union(directParents, directImplications);
-		return directRelated;
+		if (directParents.isEmpty()) {
+			return directImplications;
+		} else if (directImplications.isEmpty()) {
+			return directParents;
+		} else {
+			final SetView<Diff> directRelated = Sets.union(directParents, directImplications);
+			return directRelated;
+		}
 	}
 
 	@Override
 	public Set<Diff> getAllResultingRejections(Diff diff, boolean mergeRightToLeft) {
+		return getAllResultingRejections(diff, mergeRightToLeft, Predicates.alwaysTrue());
+	}
+
+	@Override
+	public Set<Diff> getAllResultingRejections(Diff diff, boolean mergeRightToLeft,
+			Predicate<? super Diff> filter) {
 		final Set<Diff> resultingRejections = new LinkedHashSet<Diff>();
-		final Set<Diff> allResultingMerges = getAllResultingMerges(diff, mergeRightToLeft);
-		resultingRejections.addAll(
-				Sets.filter(allResultingMerges, and(not(hasConflict(PSEUDO)), not(sameSideAs(diff)))));
+		final Set<Diff> allResultingMerges = getAllResultingMerges(diff, mergeRightToLeft, filter);
+		Predicate<Diff> predicate = and(NOT_HAS_PSEUDO_CONFLICT, not(sameSideAs(diff)));
+		resultingRejections.addAll(Sets.filter(allResultingMerges, predicate));
 		// Only search rejections caused by diffs on the same side
 		for (Diff resulting : Sets.filter(allResultingMerges, sameSideAs(diff))) {
-			Set<Diff> rejections = getDirectResultingRejections(resulting, mergeRightToLeft);
-			// We don't want to take in account pseudo conflicts since there is nothing to do with them
-			// and their dependencies may cause incorrect merge dependencies computation.
-			Set<Diff> difference = Sets.filter(rejections, not(hasConflict(PSEUDO)));
-			while (!difference.isEmpty()) {
-				final Set<Diff> newRejections = new LinkedHashSet<Diff>(difference);
-				resultingRejections.addAll(newRejections);
-				rejections = new LinkedHashSet<Diff>();
-				for (Diff rejected : newRejections) {
-					Set<Diff> directMergeDependencies = getDirectMergeDependencies(rejected,
-							mergeRightToLeft);
-					// We don't want to take in account pseudo conflicts since there is nothing to do with
-					// them and their dependencies may cause incorrect merge dependencies computation.
-					// We also don't want to consider diffs on the same side for rejections
-					rejections.addAll(Sets.filter(directMergeDependencies,
-							and(not(hasConflict(PSEUDO)), not(sameSideAs(diff)))));
-					Set<Diff> directResultingMerges = getDirectResultingMerges(rejected, mergeRightToLeft);
-					rejections.addAll(Sets.filter(directResultingMerges,
-							and(not(hasConflict(PSEUDO)), not(sameSideAs(diff)))));
+			if (filter.apply(resulting)) {
+				Set<Diff> rejections = getDirectResultingRejections(resulting, mergeRightToLeft);
+				// We don't want to take in account pseudo conflicts since there is nothing to do with them
+				// and their dependencies may cause incorrect merge dependencies computation.
+				Set<Diff> difference = Sets.filter(rejections, NOT_HAS_PSEUDO_CONFLICT);
+				while (!difference.isEmpty()) {
+					final Set<Diff> newRejections = new LinkedHashSet<Diff>(difference);
+					resultingRejections.addAll(newRejections);
+					rejections = new LinkedHashSet<Diff>();
+					for (Diff rejected : newRejections) {
+						if (filter.apply(rejected)) {
+							Set<Diff> directMergeDependencies = getDirectMergeDependencies(rejected,
+									mergeRightToLeft);
+							// We don't want to take in account pseudo conflicts since there is nothing to do
+							// with
+							// them and their dependencies may cause incorrect merge dependencies computation.
+							// We also don't want to consider diffs on the same side for rejections
+							rejections.addAll(Sets.filter(directMergeDependencies, predicate));
+							Set<Diff> directResultingMerges = getDirectResultingMerges(rejected,
+									mergeRightToLeft);
+							rejections.addAll(Sets.filter(directResultingMerges, predicate));
+						}
+					}
+					difference = Sets.difference(rejections, resultingRejections);
 				}
-				difference = Sets.difference(rejections, resultingRejections);
 			}
 		}
 		return resultingRejections;
 	}
-
 }
