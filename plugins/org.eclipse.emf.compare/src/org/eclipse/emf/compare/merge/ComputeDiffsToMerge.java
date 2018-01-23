@@ -56,6 +56,11 @@ public class ComputeDiffsToMerge {
 	 */
 	private Set<Diff> result = new LinkedHashSet<Diff>();
 
+	/**
+	 * The overall ordered set of diffs to merge as returned by {@link #getAllDiffsToMerge(Iterable)}.
+	 */
+	private Set<Diff> globalResult;
+
 	/** The unordered set of all diffs used to avoid infinite loops. */
 	private Set<Diff> computing = new HashSet<Diff>();
 
@@ -122,6 +127,38 @@ public class ComputeDiffsToMerge {
 	}
 
 	/**
+	 * Compute the ordered set of diffs to merge for the given diffs.
+	 * 
+	 * @param diffs
+	 *            The diffs to merge, along with its required diffs and its consequent diffs.
+	 * @return An ordered Set that contains all the diffs to merge, in the correct order based on required
+	 *         diffs and consequent diffs.
+	 */
+	public Set<Diff> getAllDiffsToMerge(Iterable<? extends Diff> diffs) {
+		try {
+			globalResult = Sets.newLinkedHashSet();
+			Set<Diff> globalIgnoredDiffs = Sets.newHashSet();
+			Set<Diff> diffPath = Sets.newLinkedHashSet();
+			for (Diff diff : diffs) {
+				if (!globalIgnoredDiffs.contains(diff) && !globalResult.contains(diff)) {
+					try {
+						result.clear();
+						computing.clear();
+						diffPath.clear();
+						addDiffs(Collections.singleton(diff), diffPath);
+						globalResult.addAll(result);
+					} catch (MergeBlockedByConflictException ex) {
+						globalIgnoredDiffs.addAll(ex.getConflictingDiffs());
+					}
+				}
+			}
+			return globalResult;
+		} finally {
+			globalResult = null;
+		}
+	}
+
+	/**
 	 * Compute the ordered set of diffs to merge for the given diff.
 	 * 
 	 * @param diff
@@ -162,7 +199,7 @@ public class ComputeDiffsToMerge {
 		for (Diff diff : diffs) {
 			addDiff(diff, consequences, diffPath);
 		}
-		addDiffs(Sets.difference(consequences, result), diffPath);
+		addDiffs(consequences, diffPath);
 	}
 
 	/**
@@ -177,26 +214,30 @@ public class ComputeDiffsToMerge {
 	 *            The path that lead to the diff to add
 	 */
 	protected void addDiff(Diff diff, Set<Diff> consequences, Set<Diff> diffPath) {
-		if (!result.contains(diff) && computing.add(diff)) {
-			diffPath.add(diff);
-			Conflict conflict = diff.getConflict();
-			if (conflictChecker != null && conflict != null && !conflictChecker.apply(conflict)
-					&& diff.getConflict().getKind() == REAL) {
-				throw new MergeBlockedByConflictException(diffPath);
+		if (!result.contains(diff) && (globalResult == null || !globalResult.contains(diff))
+				&& computing.add(diff)) {
+			boolean addedToPath = diffPath.add(diff);
+			if (conflictChecker != null) {
+				Conflict conflict = diff.getConflict();
+				if (conflict != null && conflict.getKind() == REAL && !conflictChecker.apply(conflict)) {
+					throw new MergeBlockedByConflictException(diffPath);
+				}
 			}
 
-			if (relationshipComputer.hasMerger(diff)) {
-				Set<Diff> dependencies = relationshipComputer.getDirectMergeDependencies(diff, rightToLeft);
-				for (Diff required : dependencies) {
-					addDiff(required, consequences, Sets.newLinkedHashSet(diffPath));
-				}
+			Set<Diff> dependencies = relationshipComputer.getDirectMergeDependencies(diff, rightToLeft);
+			for (Diff required : dependencies) {
+				addDiff(required, consequences, diffPath);
+			}
 
-				result.add(diff);
-				computing.remove(diff);
+			result.add(diff);
+			computing.remove(diff);
 
-				consequences.addAll(relationshipComputer.getDirectResultingMerges(diff, rightToLeft));
-			} else {
-				result.add(diff);
+			final Set<Diff> directResultingMerges = relationshipComputer.getDirectResultingMerges(diff,
+					rightToLeft);
+			consequences.addAll(directResultingMerges);
+
+			if (addedToPath) {
+				diffPath.remove(diff);
 			}
 		}
 	}

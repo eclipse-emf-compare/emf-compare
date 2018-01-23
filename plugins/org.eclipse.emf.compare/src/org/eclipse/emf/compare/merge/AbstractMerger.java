@@ -36,6 +36,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -45,6 +46,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
@@ -61,6 +63,7 @@ import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.util.EObjectEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -79,6 +82,16 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 
 	/** The logger. */
 	private static final Logger LOGGER = Logger.getLogger(AbstractMerger.class);
+
+	/** A predicate for diffs with an unresolved state. */
+	private static final Predicate<? super Diff> HAS_UNRESOLVED_STATE = EMFComparePredicates
+			.hasState(UNRESOLVED);
+
+	/**
+	 * The cached result for
+	 * {@link #getMergerDelegate(Diff, org.eclipse.emf.compare.merge.IMerger.Registry2, IMergeCriterion)}.
+	 */
+	private static WeakReference<CachedMergerDelegate> cachedMergerDelegateReference;
 
 	/**
 	 * The map of all merge options that this merger should be aware of.
@@ -195,7 +208,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	public Set<Diff> getDirectMergeDependencies(Diff diff, boolean mergeRightToLeft) {
 		long start = System.currentTimeMillis();
 
-		final Set<Diff> dependencies = new LinkedHashSet<Diff>();
+		final Set<Diff> dependencies = new LazyLinkedHashSet<Diff>();
 		if (isAccepting(diff, mergeRightToLeft)) {
 			dependencies.addAll(diff.getRequires());
 			dependencies.addAll(diff.getImpliedBy());
@@ -230,7 +243,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	public Set<Diff> getDirectResultingMerges(Diff target, boolean mergeRightToLeft) {
 		long start = System.currentTimeMillis();
 
-		final Set<Diff> resulting = new LinkedHashSet<Diff>();
+		final Set<Diff> resulting = new LazyLinkedHashSet<Diff>();
 		resulting.addAll(getImpliedMerges(target, mergeRightToLeft));
 		resulting.addAll(getLogicallyResultingMerges(target, mergeRightToLeft));
 
@@ -243,7 +256,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 		}
 
 		return resulting;
-
 	}
 
 	/**
@@ -348,12 +360,12 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	public Set<Diff> getDirectResultingRejections(Diff target, boolean rightToLeft) {
 		long start = System.currentTimeMillis();
 
-		final Set<Diff> directlyImpliedRejections = new LinkedHashSet<Diff>();
+		final Set<Diff> directlyImpliedRejections = new LazyLinkedHashSet<Diff>();
 		final Conflict conflict = target.getConflict();
 		if (conflict != null && conflict.getKind() == ConflictKind.REAL) {
 			if (isAccepting(target, rightToLeft)) {
-				Iterables.addAll(directlyImpliedRejections,
-						Iterables.filter(conflict.getDifferences(), not(sameSideAs(target))));
+				directlyImpliedRejections.addAll(conflict.getDifferences());
+				return Sets.filter(directlyImpliedRejections, not(sameSideAs(target)));
 			}
 		}
 
@@ -612,10 +624,14 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 *         one-to-one reference, {@code false} otherwise.
 	 */
 	private boolean isOneToOneAndChange(ReferenceChange diff) {
-		final boolean oppositeReferenceExists = diff.getReference() != null
-				&& diff.getReference().getEOpposite() != null;
-		return diff.getKind() == DifferenceKind.CHANGE && oppositeReferenceExists
-				&& !diff.getReference().isMany() && !diff.getReference().getEOpposite().isMany();
+		if (diff.getKind() == DifferenceKind.CHANGE) {
+			EReference reference = diff.getReference();
+			if (reference != null && !reference.isMany()) {
+				EReference eOpposite = reference.getEOpposite();
+				return eOpposite != null && !eOpposite.isMany();
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -635,7 +651,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	protected Set<Diff> getLogicallyResultingMerges(Diff diff, boolean mergeRightToLeft) {
 		long start = System.currentTimeMillis();
 
-		final Set<Diff> resulting = new LinkedHashSet<Diff>();
+		final Set<Diff> resulting = new LazyLinkedHashSet<Diff>();
 
 		// we need to add the implication side that actually needs merging
 		if (isAccepting(diff, mergeRightToLeft)) {
@@ -649,9 +665,9 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 
 		// any logically linked sub diffs should be merged as well
 		if (isHandleSubDiffs()) {
-			Set<Diff> subDiffs = Sets
-					.newLinkedHashSet(ComparisonUtil.getDirectSubDiffs(!mergeRightToLeft).apply(diff));
-			resulting.addAll(subDiffs);
+			final Iterable<Diff> directSubDiffs = ComparisonUtil.getDirectSubDiffs(!mergeRightToLeft)
+					.apply(diff);
+			Iterables.addAll(resulting, directSubDiffs);
 		}
 
 		if (LOGGER.isDebugEnabled()) {
@@ -680,7 +696,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 */
 	protected Set<Diff> getImpliedMerges(Diff target, boolean mergeRightToLeft) {
 		long start = System.currentTimeMillis();
-		final Set<Diff> impliedMerges = new LinkedHashSet<Diff>();
+		final Set<Diff> impliedMerges = new LazyLinkedHashSet<Diff>();
 
 		if (isAccepting(target, mergeRightToLeft)) {
 			impliedMerges.addAll(target.getImplies());
@@ -701,13 +717,18 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 		// If a diff refines another, we have to check if the "macro" diff has to be merged with it. It is the
 		// case when the unresolved diffs that refine the "macro" diff are all contained by the set
 		// (target + resulting) (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=458961)
-		for (Diff refine : target.getRefines()) {
-			Set<Diff> tmp = Sets.newHashSet(impliedMerges);
-			tmp.add(target);
-			Collection<Diff> unresolvedRefinedDiffs = Collections2.filter(refine.getRefinedBy(),
-					EMFComparePredicates.hasState(UNRESOLVED));
-			if (tmp.containsAll(unresolvedRefinedDiffs)) {
-				impliedMerges.add(refine);
+		EList<Diff> refines = target.getRefines();
+		if (!refines.isEmpty()) {
+			Set<Diff> impliedMergesWithTarget = Sets.newHashSet(impliedMerges);
+			impliedMergesWithTarget.add(target);
+			for (Diff refine : refines) {
+				Collection<Diff> unresolvedRefinedDiffs = Collections2.filter(refine.getRefinedBy(),
+						HAS_UNRESOLVED_STATE);
+				if (impliedMergesWithTarget.containsAll(unresolvedRefinedDiffs)) {
+					if (impliedMerges.add(refine)) {
+						impliedMergesWithTarget.add(refine);
+					}
+				}
 			}
 		}
 
@@ -885,12 +906,27 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 */
 	public static DelegatingMerger getMergerDelegate(Diff diff, Registry2 registry,
 			IMergeCriterion criterion) {
+
+		// First check if we have a cached result...
+		if (cachedMergerDelegateReference != null) {
+			CachedMergerDelegate cachedMergerDelegate = cachedMergerDelegateReference.get();
+			if (cachedMergerDelegate != null && cachedMergerDelegate.matches(diff, registry, criterion)) {
+				return cachedMergerDelegate.delegatingMerger;
+			}
+		}
+
 		Iterator<IMerger> it = registry.getMergersByRankDescending(diff, criterion);
 		if (!it.hasNext()) {
 			throw new IllegalStateException("No merger found for diff " + diff.getClass().getSimpleName()); //$NON-NLS-1$
 		}
 		IMerger merger = it.next();
-		return new DelegatingMerger(merger, criterion);
+		final DelegatingMerger delegatingMerger = new DelegatingMerger(merger, criterion);
+
+		// Cache the result.
+		cachedMergerDelegateReference = new WeakReference<AbstractMerger.CachedMergerDelegate>(
+				new CachedMergerDelegate(diff, registry, criterion, delegatingMerger));
+
+		return delegatingMerger;
 	}
 
 	/**
@@ -1192,4 +1228,308 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 		}
 	}
 
+	/**
+	 * Cache the result for {@link AbstractMerger#getMergerDelegate(Diff)}.
+	 */
+	private static final class CachedMergerDelegate {
+		/**
+		 * The previously used diff.
+		 */
+		private final Diff diff;
+
+		/**
+		 * The previously used registry.
+		 */
+		private final Registry2 registry;
+
+		/**
+		 * The previously used criterion.
+		 */
+		private final IMergeCriterion criterion;
+
+		/**
+		 * The previous result.
+		 */
+		private final DelegatingMerger delegatingMerger;
+
+		/**
+		 * Creates an instance for the result.
+		 * 
+		 * @param diff
+		 *            the diff.
+		 * @param registry
+		 *            the registry.
+		 * @param criterion
+		 *            the criterion.
+		 * @param delegatingMerger
+		 *            the resulting merger.
+		 */
+		private CachedMergerDelegate(Diff diff, Registry2 registry, IMergeCriterion criterion,
+				DelegatingMerger delegatingMerger) {
+			this.diff = diff;
+			this.registry = registry;
+			this.criterion = criterion;
+			this.delegatingMerger = delegatingMerger;
+		}
+
+		/**
+		 * Returns whether this cached merger delegate matches the given diff, registry, and criteria.
+		 * 
+		 * @param otherDiff
+		 *            the diff.
+		 * @param otherRegistry
+		 *            the registry.
+		 * @param otherCritereon
+		 *            the criterion.
+		 * @return whether this cached merger delegate matches the given diff, registry, and criteria.
+		 */
+		public boolean matches(Diff otherDiff, Registry2 otherRegistry, IMergeCriterion otherCritereon) {
+			return this.diff == otherDiff && this.registry == otherRegistry
+					&& this.criterion == otherCritereon;
+		}
+	}
+
+	/**
+	 * A lazy linked hash set.
+	 * <p>
+	 * This set implementation specializes {@link #addAll(Collection)} to recognize special types of
+	 * collections which it caches in {@link #delegate}, setting {@link #set} to {@code true}, if the delegate
+	 * is set. Other methods can the delegate to the {@link #delegate}, until it is necessary to
+	 * {@link #collapse()} the delegate creating an actual initialized {@link LinkedHashSet}.
+	 * </p>
+	 *
+	 * @param <E>
+	 *            the type the elements of the set.
+	 */
+	private static class LazyLinkedHashSet<E extends EObject> extends LinkedHashSet<E> {
+		/**
+		 * It's unlikely this value will ever be serialized.
+		 */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * The delegate collection that may be lazily {@link #collapse() collapsed} into the base
+		 * {@link LinkedHashSet}.
+		 */
+		private transient Collection<? extends E> delegate;
+
+		/**
+		 * Whether or not the {@link #delegate} is itself a {@link Set}.
+		 */
+		private transient boolean set;
+
+		/**
+		 * Creates an empty new instance.
+		 */
+		protected LazyLinkedHashSet() {
+		}
+
+		/**
+		 * Adds the {@link #delegate} to the base {@link LinkedHashSet} if it's not {@code null}, and clears
+		 * the {@link #delegate}.
+		 */
+		private void collapse() {
+			if (delegate != null) {
+				for (E e : delegate) {
+					super.add(e);
+				}
+				delegate = null;
+				set = false;
+			}
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * This implementation returns an iterator over the {@link #delegate} instead of the
+		 * {@link LinkedHashSet}, if the delegate is not {@code null}. If {@link Iterator#remove()} is called,
+		 * it {@link #collapse() collapses} the delegate, and removes the element from the collapsed
+		 * {@link LinkedHashSet}.
+		 * </p>
+		 */
+		@Override
+		public Iterator<E> iterator() {
+			if (delegate != null) {
+				final Iterator<? extends E> iterator;
+				if (set) {
+					iterator = delegate.iterator();
+				} else {
+					iterator = ((InternalEList<? extends E>)delegate).basicIterator();
+				}
+				return new Iterator<E>() {
+					private E e;
+
+					public boolean hasNext() {
+						return iterator.hasNext();
+					}
+
+					public E next() {
+						// Remember the element in case remove is called.
+						e = iterator.next();
+						return e;
+					}
+
+					public void remove() {
+						collapse();
+						LazyLinkedHashSet.super.remove(e);
+					}
+				};
+			} else {
+				return super.iterator();
+			}
+		}
+
+		@Override
+		public int size() {
+			if (delegate != null) {
+				return delegate.size();
+			} else {
+				return super.size();
+			}
+		}
+
+		@Override
+		public boolean isEmpty() {
+			if (delegate != null) {
+				return false;
+			} else {
+				return super.isEmpty();
+			}
+		}
+
+		@Override
+		public boolean contains(Object o) {
+			if (set) {
+				return delegate.contains(o);
+			} else if (delegate != null && delegate.size() < 4) {
+				return ((InternalEList<?>)delegate).basicContains(o);
+			} else {
+				collapse();
+				return super.contains(o);
+			}
+		}
+
+		@Override
+		public boolean containsAll(Collection<?> c) {
+			if (set) {
+				return delegate.containsAll(c);
+			} else if (delegate != null && delegate.size() < 4) {
+				return ((InternalEList<?>)delegate).basicContainsAll(c);
+			} else {
+				collapse();
+				return super.containsAll(c);
+			}
+		}
+
+		@Override
+		public boolean add(E e) {
+			collapse();
+			return super.add(e);
+		}
+
+		@Override
+		public boolean remove(Object o) {
+			collapse();
+			return super.remove(o);
+		}
+
+		@Override
+		public void clear() {
+			delegate = null;
+			set = false;
+			super.clear();
+		}
+
+		@Override
+		public boolean removeAll(Collection<?> c) {
+			collapse();
+			return super.removeAll(c);
+		}
+
+		@Override
+		public Object[] toArray() {
+			if (delegate != null) {
+				return delegate.toArray();
+			} else {
+				return super.toArray();
+			}
+		}
+
+		@Override
+		public <T> T[] toArray(T[] a) {
+			if (delegate != null) {
+				return delegate.toArray(a);
+			} else {
+				return super.toArray(a);
+			}
+		}
+
+		@Override
+		public boolean addAll(Collection<? extends E> c) {
+			// If the collection is empty...
+			if (c.isEmpty()) {
+				// There is nothing to add.
+				return false;
+			} else if (isEmpty()) {
+				// If this is still empty, we can still lazily consume special types of collections.
+				if (c instanceof EObjectEList) {
+					// If the collection is an EObjectEList, then the elements are necessarily unique so the
+					// collection can be directly used as a set.
+					delegate = c;
+				} else if (c instanceof LazyLinkedHashSet<?>) {
+					// If the collection is a lazy linked hash set that has a delegate...
+					LazyLinkedHashSet<? extends E> other = (LazyLinkedHashSet<? extends E>)c;
+					if (other.delegate != null) {
+						// We can unwrap it and directly use the delegate.
+						delegate = other.delegate;
+						set = other.set;
+					} else {
+						// Otherwise we can use that set as the delegate.
+						delegate = c;
+						set = true;
+					}
+				} else if (c instanceof Set) {
+					// If the collection is a set, we can use that set as the delegate.
+					delegate = c;
+					set = true;
+				} else {
+					super.addAll(c);
+				}
+				return true;
+			} else {
+				collapse();
+				return super.addAll(c);
+			}
+		}
+
+		@Override
+		public boolean retainAll(Collection<?> c) {
+			collapse();
+			return super.retainAll(c);
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			collapse();
+			return super.equals(o);
+		}
+
+		@Override
+		public int hashCode() {
+			if (delegate != null) {
+				return delegate.hashCode();
+			} else {
+				return super.hashCode();
+			}
+		}
+
+		@Override
+		public String toString() {
+			if (delegate != null) {
+				return delegate.toString();
+			} else {
+				return super.toString();
+			}
+		}
+	}
 }

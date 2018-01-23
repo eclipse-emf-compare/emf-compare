@@ -18,14 +18,22 @@ import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
 import static org.eclipse.emf.compare.DifferenceState.DISCARDED;
 import static org.eclipse.emf.compare.merge.IMergeCriterion.NONE;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * This specific implementation of {@link AbstractMerger} will be used to merge real conflicts.
@@ -41,7 +49,8 @@ public class ConflictMerger extends AbstractMerger {
 	 * @see org.eclipse.emf.compare.merge.IMerger#isMergerFor(org.eclipse.emf.compare.Diff)
 	 */
 	public boolean isMergerFor(Diff target) {
-		return target.getConflict() != null && target.getConflict().getKind() == REAL;
+		final Conflict conflict = target.getConflict();
+		return conflict != null && conflict.getKind() == REAL;
 	}
 
 	@Override
@@ -64,9 +73,10 @@ public class ConflictMerger extends AbstractMerger {
 		if (target.getSource() == LEFT) {
 			// Call the appropriate merger for each conflicted diff
 			Conflict conflict = target.getConflict();
-			for (Diff conflictedDiff : conflict.getDifferences()) {
+			Predicate<Diff> conflictVsMoveAndDelete = isConflictVsMoveAndDelete(target, MOVE, DELETE);
+			for (Diff conflictedDiff : getDifferences(conflict)) {
 				if (conflictedDiff.getSource() == RIGHT) {
-					if (isConflictVsMoveAndDelete(target, conflictedDiff, true)) {
+					if (conflictVsMoveAndDelete.apply(conflictedDiff)) {
 						conflictedDiff.setState(DISCARDED);
 					} else {
 						mergeConflictedDiff(conflictedDiff, true, monitor);
@@ -95,9 +105,10 @@ public class ConflictMerger extends AbstractMerger {
 		if (target.getSource() == RIGHT) {
 			// Call the appropriate merger for each conflicted diff
 			Conflict conflict = target.getConflict();
-			for (Diff conflictedDiff : conflict.getDifferences()) {
+			Predicate<Diff> conflictVsMoveAndDelete = isConflictVsMoveAndDelete(target, MOVE, DELETE);
+			for (Diff conflictedDiff : getDifferences(conflict)) {
 				if (conflictedDiff.getSource() == LEFT) {
-					if (isConflictVsMoveAndDelete(target, conflictedDiff, false)) {
+					if (conflictVsMoveAndDelete.apply(conflictedDiff)) {
 						conflictedDiff.setState(DISCARDED);
 					} else {
 						mergeConflictedDiff(conflictedDiff, false, monitor);
@@ -113,13 +124,14 @@ public class ConflictMerger extends AbstractMerger {
 	@Override
 	public Set<Diff> getDirectMergeDependencies(Diff diff, boolean rightToLeft) {
 		Set<Diff> result = super.getDirectMergeDependencies(diff, rightToLeft);
-		// Add each conflicting diff from the other side
-		Conflict conflict = diff.getConflict();
 		if (AbstractMerger.isAccepting(diff, rightToLeft)) {
-			for (Diff conflictingDiff : conflict.getDifferences()) {
-				if (conflictingDiff.getSource() != diff.getSource()
-						&& !isConflictVsMoveAndDelete(conflictingDiff, diff, !rightToLeft)
-						&& conflictingDiff.getKind() != MOVE) {
+			Conflict conflict = diff.getConflict();
+			DifferenceSource source = diff.getSource();
+			Predicate<Diff> conflictVsMoveAndDelete = isConflictVsMoveAndDelete(diff, DELETE, MOVE);
+			// Add each conflicting diff from the other side
+			for (Diff conflictingDiff : getDifferences(conflict)) {
+				if (conflictingDiff.getSource() != source && conflictingDiff.getKind() != MOVE
+						&& !conflictVsMoveAndDelete.apply(conflictingDiff)) {
 					result.add(conflictingDiff);
 				}
 			}
@@ -131,12 +143,13 @@ public class ConflictMerger extends AbstractMerger {
 	public Set<Diff> getDirectResultingMerges(Diff diff, boolean rightToLeft) {
 		Set<Diff> result = super.getDirectResultingMerges(diff, rightToLeft);
 
-		Conflict conflict = diff.getConflict();
 		if (AbstractMerger.isAccepting(diff, rightToLeft)) {
-			for (Diff conflictingDiff : conflict.getDifferences()) {
-				if (conflictingDiff.getSource() != diff.getSource()
-						&& (isConflictVsMoveAndDelete(conflictingDiff, diff, !rightToLeft)
-								|| conflictingDiff.getKind() != MOVE)) {
+			Conflict conflict = diff.getConflict();
+			DifferenceSource source = diff.getSource();
+			Predicate<Diff> conflictVsMoveAndDelete = isConflictVsMoveAndDelete(diff, DELETE, MOVE);
+			for (Diff conflictingDiff : getDifferences(conflict)) {
+				if (conflictingDiff.getSource() != source && (conflictingDiff.getKind() != MOVE
+						|| conflictVsMoveAndDelete.apply(conflictingDiff))) {
 					result.add(conflictingDiff);
 				}
 			}
@@ -145,33 +158,53 @@ public class ConflictMerger extends AbstractMerger {
 	}
 
 	/**
-	 * Detect if the two given diff are diffs on the same object with one move and one delete. The move diff
-	 * must be the one selected by the user for merging.
+	 * Returns the unresolving basic list for the {@link Conflict#getDifferences() conflict's differences}.
 	 * 
-	 * @param target
-	 *            The diff selected for merge by the user
-	 * @param conflictedDiff
-	 *            Another diff of the conflict
-	 * @param leftToRight
-	 *            The direction of the merge
-	 * @return <code>true</code> if the diff selected by the user is a move and is conflicting with a delete
-	 *         of the same element
+	 * @param conflict
+	 *            the conflict.
+	 * @return the unresolving basic list for the conflict's differences.
 	 */
-	private boolean isConflictVsMoveAndDelete(Diff target, Diff conflictedDiff, boolean leftToRight) {
-		boolean result = false;
-		if (target.getConflict() != null && target.getConflict().getKind() == REAL) {
-			if (target instanceof ReferenceChange && target.getKind() == MOVE) {
-				ReferenceChange moveDiff = (ReferenceChange)target;
-				if (conflictedDiff instanceof ReferenceChange && conflictedDiff.getKind() == DELETE) {
-					ReferenceChange deleteDiff = (ReferenceChange)conflictedDiff;
-					IEqualityHelper equalityHelper = target.getMatch().getComparison().getEqualityHelper();
-					result = equalityHelper.matchingAttributeValues(moveDiff.getValue(),
-							deleteDiff.getValue());
-				}
-			}
-		}
+	private List<Diff> getDifferences(Conflict conflict) {
+		return ((InternalEList<Diff>)conflict.getDifferences()).basicList();
+	}
 
-		return result;
+	/**
+	 * A predicate to test if the given diff and the predicate's diff are diffs on the same object with one
+	 * move and one delete. The move diff must be the one selected by the user for merging.
+	 * 
+	 * @param diff
+	 *            the given diff.
+	 * @param diffKind
+	 *            the kind of the given diff.
+	 * @param otherDiffKind
+	 *            the kind of the predicate's diff.
+	 * @return A predicate to test if the given diff and the predicate's diff are diffs on the same object
+	 *         with one move and one delete.
+	 */
+	private Predicate<Diff> isConflictVsMoveAndDelete(final Diff diff, DifferenceKind diffKind,
+			final DifferenceKind otherDiffKind) {
+		if (diff.getKind() == diffKind && diff instanceof ReferenceChange) {
+			return new Predicate<Diff>() {
+				private EObject targetValue;
+
+				private IEqualityHelper equalityHelper;
+
+				public boolean apply(Diff input) {
+					if (input.getKind() == otherDiffKind && input instanceof ReferenceChange) {
+						if (equalityHelper == null) {
+							equalityHelper = diff.getMatch().getComparison().getEqualityHelper();
+							targetValue = ((ReferenceChange)diff).getValue();
+						}
+						return equalityHelper.matchingValues(targetValue,
+								((ReferenceChange)input).getValue());
+					} else {
+						return false;
+					}
+				}
+			};
+		} else {
+			return Predicates.alwaysFalse();
+		}
 	}
 
 	/**

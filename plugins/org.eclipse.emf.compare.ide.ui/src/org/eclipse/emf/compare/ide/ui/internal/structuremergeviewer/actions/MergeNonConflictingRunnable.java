@@ -17,7 +17,6 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Predicates.alwaysFalse;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.newHashSet;
 import static org.eclipse.emf.compare.DifferenceSource.LEFT;
 import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
 import static org.eclipse.emf.compare.internal.merge.MergeMode.ACCEPT;
@@ -37,7 +36,6 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -57,7 +55,6 @@ import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
-import org.eclipse.emf.compare.merge.MergeBlockedByConflictException;
 
 /**
  * Implements the "merge non-conflicting" and "merge all non-conflicting" action.
@@ -242,28 +239,19 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 				getDiffRelationshipComputer(mergerRegistry)).failOnRealConflictUnless(alwaysFalse());
 
 		final Predicate<? super Diff> filter;
-		if (getMergeMode() == RIGHT_TO_LEFT) {
+		MergeMode mode = getMergeMode();
+		if (mode == RIGHT_TO_LEFT) {
 			filter = fromSide(RIGHT);
-		} else if (getMergeMode() == LEFT_TO_RIGHT) {
+		} else if (mode == LEFT_TO_RIGHT) {
 			filter = fromSide(LEFT);
 		} else {
 			filter = Predicates.alwaysTrue();
 		}
-		Set<Diff> conflictingDiffs = newHashSet();
-		for (Diff diff : Iterables.filter(differences, filter)) {
-			if (!conflictingDiffs.contains(diff)) {
-				try {
-					Set<Diff> diffsToMerge = computer.getAllDiffsToMerge(diff);
-					for (Diff toMerge : diffsToMerge) {
-						doMergeDiffWithConflicts(leftToRight, mergerRegistry, affectedDiffs, emfMonitor,
-								toMerge);
-					}
-				} catch (MergeBlockedByConflictException e) {
-					conflictingDiffs.addAll(e.getConflictingDiffs());
-				}
-			}
-		}
 
+		for (Diff diff : computer.getAllDiffsToMerge(Iterables.filter(differences, filter))) {
+			doMergeDiffWithConflicts(leftToRight, mergerRegistry, affectedDiffs, emfMonitor, diff);
+
+		}
 		return affectedDiffs;
 	}
 
@@ -279,14 +267,15 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 								+ diff.hashCode() + ": " + merger.getClass().getSimpleName()); //$NON-NLS-1$
 			}
 
-			if (getMergeMode() == LEFT_TO_RIGHT) {
+			MergeMode mergeMode = getMergeMode();
+			if (mergeMode == LEFT_TO_RIGHT) {
 				merger.copyLeftToRight(diff, emfMonitor);
-			} else if (getMergeMode() == RIGHT_TO_LEFT) {
+			} else if (mergeMode == RIGHT_TO_LEFT) {
 				merger.copyRightToLeft(diff, emfMonitor);
-			} else if (getMergeMode() == ACCEPT || getMergeMode() == REJECT) {
+			} else if (mergeMode == ACCEPT || mergeMode == REJECT) {
 				MergeOperation mergeAction = getMergeOperation(diff);
 				if (mergeAction == MARK_AS_MERGE) {
-					markAsMerged(diff, getMergeMode(), leftToRight, mergerRegistry);
+					markAsMerged(diff, mergeMode, leftToRight, mergerRegistry);
 				} else {
 					if (isLeftEditable() && !leftToRight) {
 						merger.copyRightToLeft(diff, emfMonitor);
