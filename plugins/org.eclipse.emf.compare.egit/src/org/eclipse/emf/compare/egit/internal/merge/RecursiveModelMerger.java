@@ -250,12 +250,13 @@ public class RecursiveModelMerger extends RecursiveMerger {
 	private boolean fallBackToDefaultMerge(TreeWalk treeWalk, boolean ignoreConflicts)
 			throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException {
 		boolean hasWorkingTreeIterator = tw.getTreeCount() > T_FILE;
+		boolean hasAttributeNodeProvider = treeWalk.getAttributesNodeProvider() != null;
 		return processEntry(treeWalk.getTree(T_BASE, CanonicalTreeParser.class),
 				treeWalk.getTree(T_OURS, CanonicalTreeParser.class),
 				treeWalk.getTree(T_THEIRS, CanonicalTreeParser.class),
 				treeWalk.getTree(T_INDEX, DirCacheBuildIterator.class),
 				hasWorkingTreeIterator ? treeWalk.getTree(T_FILE, WorkingTreeIterator.class) : null,
-				ignoreConflicts, new Attributes());
+				ignoreConflicts, hasAttributeNodeProvider ? treeWalk.getAttributes() : new Attributes());
 	}
 
 	/**
