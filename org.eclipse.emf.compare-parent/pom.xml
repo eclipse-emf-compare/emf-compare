@@ -473,21 +473,13 @@
       </build>
     </profile>
     <!--
-        The "extras" profiles can be used to build the supports for external tools such as Sirius and Papyrus.
+        The "extras" profiles can be used to build the supports for external tools such as Sirius.
         You will need to activate both the "extra-modules" profile and one of the "<platform_name>-extras" profiles.
     -->
     <profile>
       <id>extra-modules</id>
       <modules>
         <module>../packaging/org.eclipse.emf.compare.update.extras</module>
-        
-        <module>../packaging/org.eclipse.emf.compare.diagram.papyrus-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests.git</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.papyrus</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2.papyrus</module>
-        <module>../plugins/org.eclipse.emf.compare.uml2.edit.papyrus</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.papyrus</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.papyrus.tests</module>
         
         <module>../packaging/org.eclipse.emf.compare.diagram.sirius-feature</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.sirius</module>

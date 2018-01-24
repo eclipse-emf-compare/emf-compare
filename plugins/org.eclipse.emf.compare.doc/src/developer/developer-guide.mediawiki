@@ -31,7 +31,7 @@ The Model resolving phase itself can be further decomposed in its own two distin
 
 EMF Compare is built on top of the Eclipse platform. We depend on the Eclipse Modeling Framework (EMF), the Eclipse Compare framework and, finally, Eclipse Team, the framework upon which the repository providers (EGit, CVS, Subversive...) are built.
 
-The EMF Compare extensions target specific extensions of the modeling framework: UML, the Graphical Modeling Framework (and its own extensions, papyrus, ecoretools, ...).
+The EMF Compare extensions target specific extensions of the modeling framework: UML, the Graphical Modeling Framework (and its own extensions, ecoretools, ...).
 
 Whilst we are built atop bricks that are tightly coupled with the eclipse platform, it should be noted that the core of EMF Compare can be run in a standalone application with no runtime dependencies towards Eclipse; as can EMF itself.
 

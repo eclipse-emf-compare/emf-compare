@@ -19,4 +19,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor;x-internal:=true,
  org.eclipse.emf.compare.uml2.rcp.ui.internal.accessor.factory;x-internal:=true,
- org.eclipse.emf.compare.uml2.rcp.ui.internal.structuremergeviewer.filters;x-friends:="org.eclipse.emf.compare.diagram.papyrus.tests,org.eclipse.emf.compare.uml2.rcp.ui.tests"
+ org.eclipse.emf.compare.uml2.rcp.ui.internal.structuremergeviewer.filters;x-friends:="org.eclipse.emf.compare.uml2.rcp.ui.tests"

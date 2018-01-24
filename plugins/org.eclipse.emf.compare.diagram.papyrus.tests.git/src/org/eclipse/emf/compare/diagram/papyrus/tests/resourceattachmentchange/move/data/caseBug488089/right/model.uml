@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_rgwuYAJyEeaTnZrqlDPR7g" name="RootElement">
-  <packagedElement xmi:type="uml:Package" xmi:id="_wMbkkAJ4EeaTnZrqlDPR7g" name="model2">
-    <packagedElement xmi:type="uml:Component" xmi:id="_6RzSEAJ4EeaTnZrqlDPR7g" name="ComponentModel2"/>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Package" xmi:id="_wvhqkAJ4EeaTnZrqlDPR7g" name="model3">
-    <packagedElement xmi:type="uml:Component" xmi:id="_AIyTkAJ5EeaTnZrqlDPR7g" name="ComponentModel3"/>
-  </packagedElement>
-</uml:Model>

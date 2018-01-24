@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_qK6oQALfEeaaELR1VeNn7g" name="RootElement">
-  <packagedElement xmi:type="uml:Package" xmi:id="_sapPMALfEeaaELR1VeNn7g" name="Wired">
-    <packagedElement xmi:type="uml:Class" xmi:id="_5lcckALfEeaaELR1VeNn7g" name="Switch1"/>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Model" xmi:id="_tXD0IALfEeaaELR1VeNn7g" name="Wave">
-    <packagedElement xmi:type="uml:Class" xmi:id="_7M0DAALfEeaaELR1VeNn7g" name="aerial1"/>
-  </packagedElement>
-</uml:Model>

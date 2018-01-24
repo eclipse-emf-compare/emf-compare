@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_7gwU0GKQEeWsb-Zc-wV-ug" name="model">
-  <packagedElement xmi:type="uml:Class" xmi:id="_8oQvcGKQEeWsb-Zc-wV-ug" name="Class1">
-    <ownedAttribute xmi:type="uml:Property" xmi:id="_sCI1QGKREeWsb-Zc-wV-ug" name="att1" type="_q0YBoGKREeWsb-Zc-wV-ug"/>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Class" xmi:id="_q0YBoGKREeWsb-Zc-wV-ug" name="Class2"/>
-</uml:Model>

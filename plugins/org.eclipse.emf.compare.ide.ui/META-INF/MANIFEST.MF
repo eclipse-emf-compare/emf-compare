@@ -24,7 +24,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Export-Package: org.eclipse.emf.compare.ide.ui.dependency;x-friends:="org.eclipse.emf.compare.diagram.ide.ui.papyrus",
+Export-Package: org.eclipse.emf.compare.ide.ui.dependency,
  org.eclipse.emf.compare.ide.ui.internal;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.configuration;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;x-internal:=true,
@@ -41,7 +41,7 @@ Export-Package: org.eclipse.emf.compare.ide.ui.dependency;x-friends:="org.eclips
  org.eclipse.emf.compare.ide.ui.internal.logical;x-friends:="org.eclipse.emf.compare.ide.ui.tests,org.eclipse.emf.compare.uml2.ide.ui.tests",
  org.eclipse.emf.compare.ide.ui.internal.logical.resolver;x-friends:="org.eclipse.emf.compare.ide.ui.tests",
  org.eclipse.emf.compare.ide.ui.internal.logical.resolver.registry;x-friends:="org.eclipse.emf.compare.ide.ui.tests",
- org.eclipse.emf.compare.ide.ui.internal.logical.view;x-friends:="org.eclipse.emf.compare.diagram.ide.ui.papyrus",
+ org.eclipse.emf.compare.ide.ui.internal.logical.view,
  org.eclipse.emf.compare.ide.ui.internal.logical.view.registry;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.mergeresolution;x-internal:=true,
  org.eclipse.emf.compare.ide.ui.internal.preferences;x-internal:=true,

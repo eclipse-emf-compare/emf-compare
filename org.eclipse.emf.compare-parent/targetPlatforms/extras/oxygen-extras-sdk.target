@@ -34,7 +34,6 @@
       <repository location="http://download.eclipse.org/sirius/updates/nightly/latest/oxygen"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.platform.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.transaction.sdk.feature.group" version="0.0.0"/>
@@ -43,10 +42,6 @@
       <unit id="org.eclipse.gmf.runtime.diagram.ui" version="0.0.0"/>
       <unit id="org.eclipse.team.svn.feature.group" version="0.0.0"/>
       <repository location="http://download.eclipse.org/releases/oxygen"/>
-    </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.papyrus.sysml14" version="0.0.0"/>
-      <repository id="sysml" location="http://download.eclipse.org/modeling/mdt/papyrus/components/sysml14"/>
     </location>
   </locations>
 </target>
