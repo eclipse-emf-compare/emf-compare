@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Obeo.
+ * Copyright (c) 2012, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Philip Langer - add caching
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.contentmergeviewer.accessor.impl;
 
@@ -18,9 +19,11 @@ import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.AttributeChange;
@@ -44,6 +47,11 @@ import org.eclipse.emf.ecore.EObject;
  * @since 4.0
  */
 public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeatureAccessor {
+
+	/**
+	 * A cache used by {@link #getDiffWithValue(Object)}.
+	 */
+	Map<Object, Diff> valueDiffs;
 
 	/**
 	 * Default constructor.
@@ -197,15 +205,15 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 	 * @return the Diff corresponding to the given object.
 	 */
 	private Diff getDiffWithValue(Object value) {
-		Diff ret = null;
-		for (Diff diff : getDifferences()) {
-			Object valueOfDiff = getValueFromDiff(diff, getSide());
-			if (valueOfDiff == value) {
-				ret = diff;
-				break;
+		if (valueDiffs == null) {
+			valueDiffs = Maps.newIdentityHashMap();
+			for (Diff diff : getDifferences()) {
+				Object valueOfDiff = getValueFromDiff(diff, getSide());
+				valueDiffs.put(valueOfDiff, diff);
 			}
 		}
-		return ret;
+
+		return valueDiffs.get(value);
 	}
 
 	/**
