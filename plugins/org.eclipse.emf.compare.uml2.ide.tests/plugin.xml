@@ -22,12 +22,5 @@
             target="platform:/plugin/org.eclipse.emf.compare.uml2.ide.tests/src/org/eclipse/emf/compare/uml2/ide/tests/profile/data/loading/">
       </mapping>
    </extension>
-   <extension
-         point="org.eclipse.papyrus.uml.extensionpoints.UMLProfile">
-      <profile
-            name="ProfileLoadingTest"
-            path="pathmap://ProfileLoadingTest/model.profile.uml">
-      </profile>
-   </extension>
  
 </plugin>
