@@ -36,12 +36,6 @@
    <feature id="org.eclipse.emf.compare.diagram.gmf.source" version="0.0.0">
       <category name="compare_integration"/>
    </feature>
-   <feature id="org.eclipse.emf.compare.subversive" version="0.0.0">
-      <category name="compare_integration"/>
-   </feature>
-   <feature id="org.eclipse.emf.compare.subversive.source" version="0.0.0">
-      <category name="compare_integration"/>
-   </feature>
    <feature id="org.eclipse.emf.compare.egit" version="0.0.0">
       <category name="compare_integration"/>
    </feature>

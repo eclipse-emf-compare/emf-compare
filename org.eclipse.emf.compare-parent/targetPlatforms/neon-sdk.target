@@ -34,7 +34,6 @@
       <unit id="org.eclipse.uml2.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.gmf.runtime.diagram.ui" version="0.0.0"/>
-      <unit id="org.eclipse.team.svn.feature.group" version="0.0.0"/>
       <repository location="http://download.eclipse.org/releases/neon"/>
     </location>
   </locations>

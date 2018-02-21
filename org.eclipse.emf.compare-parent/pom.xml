@@ -105,9 +105,6 @@
     <module>../plugins/org.eclipse.emf.compare.egit</module>
     <module>../plugins/org.eclipse.emf.compare.egit.ui</module>
     
-    <module>../packaging/org.eclipse.emf.compare.subversive-feature</module>
-    <module>../plugins/org.eclipse.emf.compare.subversive</module>
-    
     <module>../packaging/org.eclipse.emf.compare.uml2-feature</module>
     <module>../plugins/org.eclipse.emf.compare.uml2</module>
     <module>../plugins/org.eclipse.emf.compare.uml2.edit</module>
