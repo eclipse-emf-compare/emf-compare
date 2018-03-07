@@ -19,8 +19,8 @@ Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.eclipse.emf.compare.diagram.ide.ui.internal;x-internal:=true,
- org.eclipse.emf.compare.diagram.ide.ui.internal.accessor;x-internal:=true,
- org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory;x-internal:=true,
+ org.eclipse.emf.compare.diagram.ide.ui.internal.accessor;x-friends:="org.eclipse.emf.compare.diagram.ide.ui.sirius",
+ org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory;x-friends:="org.eclipse.emf.compare.diagram.ide.ui.sirius",
  org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram;x-internal:=true,
  org.eclipse.emf.compare.diagram.ide.ui.internal.preferences;x-internal:=true,
  org.eclipse.emf.compare.diagram.ide.ui.internal.structuremergeviewer.filters

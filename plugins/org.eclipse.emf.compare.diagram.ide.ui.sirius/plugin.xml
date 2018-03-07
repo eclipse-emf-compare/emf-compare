@@ -29,4 +29,30 @@
            label="Sirius technical elements">
      </filter>
   </extension>
+   <extension
+         point="org.eclipse.emf.compare.rcp.ui.accessorFactory">
+      <factory
+            class="org.eclipse.emf.compare.diagram.ide.ui.sirius.internal.SiriusDiffAccessorFactory"
+            ranking="45">
+      </factory>
+      <factory
+            class="org.eclipse.emf.compare.diagram.ide.ui.sirius.internal.SiriusMatchAccessorFactory"
+            ranking="45">
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.compare.contentMergeViewers">
+      <viewer
+            class="org.eclipse.emf.compare.diagram.ide.ui.sirius.internal.SiriusContentMergeViewerCreator"
+            extensions="siriuscompare_diff, siriuscompare_match"
+            id="org.eclipse.emf.compare.diagram.ide.ui.sirius.contentviewer"
+            label="Model Compare (Sirius)">
+      </viewer>
+      <viewer
+            class="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.TextFallbackCompareViewerCreator"
+            extensions="siriuscompare_diff, siriuscompare_match"
+            id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.TextFallbackCompareViewer"
+            label="Text Compare">
+      </viewer>
+   </extension>
 </plugin>

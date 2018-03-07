@@ -27,7 +27,8 @@ Export-Package: org.eclipse.emf.compare.diagram.internal;
    org.eclipse.emf.compare.diagram.edit,
    org.eclipse.emf.compare.diagram.ide.ecoretools.tests,
    org.eclipse.emf.compare.diagram.ide.ui,
-   org.eclipse.emf.compare.diagram.ide.ui.ecoretools",
+   org.eclipse.emf.compare.diagram.ide.ui.ecoretools,
+   org.eclipse.emf.compare.diagram.ide.ui.sirius",
  org.eclipse.emf.compare.diagram.internal.extensions.impl;
   x-friends:="org.eclipse.emf.compare.diagram.ecoretools.tests,
    org.eclipse.emf.compare.diagram.edit,
