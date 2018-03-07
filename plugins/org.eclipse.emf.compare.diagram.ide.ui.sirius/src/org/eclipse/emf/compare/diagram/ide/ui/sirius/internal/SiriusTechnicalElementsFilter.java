@@ -18,6 +18,8 @@ import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.AbstractDifferenceFilter;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -36,15 +38,32 @@ public class SiriusTechnicalElementsFilter extends AbstractDifferenceFilter {
 	/**
 	 * The predicate use by this filter when it is selected.
 	 */
-	private static final Predicate<? super EObject> PREDICATE_WHEN_SELECTED = new Predicate<EObject>() {
-		public boolean apply(EObject input) {
-			if (input instanceof TreeNode) {
-				EObject data = ((TreeNode)input).getData();
-				Set<EObject> affectedElements = Sets.newLinkedHashSet();
-				if (data instanceof Diff) {
-					affectedElements = affectedEObjects((Diff)data);
-				}
-				return Iterables.any(affectedElements, new Predicate<EObject>() {
+	private static final Predicate<? super EObject> PREDICATE_WHEN_SELECTED = new TechnicalSiriusDetail<EObject>();
+
+	@Override
+	public Predicate<? super EObject> getPredicateWhenSelected() {
+		return PREDICATE_WHEN_SELECTED;
+	}
+
+	private static class TechnicalSiriusDetail<T> implements Predicate<T> {
+		public boolean apply(Object input) {
+			if (!(input instanceof TreeNode) || !(((TreeNode)input).getData() instanceof Diff)) {
+				return false;
+			}
+
+			boolean applies = false;
+			Diff data = (Diff)((TreeNode)input).getData();
+			Set<EObject> affectedElements = affectedEObjects(data);
+
+			if (data instanceof ReferenceChange && ((ReferenceChange)data).getReference().isContainment()) {
+				// The containment diffs are important for user understanding (diagram added, ...)
+				// We'll leave these unfiltered
+				applies = false;
+			} else if (data instanceof ResourceAttachmentChange) {
+				// Same as above, RACs are important for the comprehension
+				applies = false;
+			} else {
+				applies = Iterables.any(affectedElements, new Predicate<EObject>() {
 					public boolean apply(EObject element) {
 						EClass eClass = element.eClass();
 						return eClass != null && (eClass.getEPackage() == ViewpointPackage.eINSTANCE
@@ -52,53 +71,48 @@ public class SiriusTechnicalElementsFilter extends AbstractDifferenceFilter {
 					}
 				});
 			}
-			return false;
+			return applies;
 		}
-	};
 
-	@Override
-	public Predicate<? super EObject> getPredicateWhenSelected() {
-		return PREDICATE_WHEN_SELECTED;
-	}
+		/**
+		 * return a set containing all the compared EObject affected by the diff being from the left, right or
+		 * ancestor version.
+		 * 
+		 * @param diff
+		 *            any difference.
+		 * @return a set containing all the known EObject affected by the diff being from the left, right or
+		 *         ancestor version.
+		 */
+		private static Set<EObject> affectedEObjects(Diff diff) {
+			Match match = diff.getMatch();
+			if (match != null) {
+				return matchedEObjects(match);
+			}
+			return Sets.newLinkedHashSet();
+		}
 
-	/**
-	 * return a set containing all the compared EObject affected by the diff being from the left, right or
-	 * ancestor version.
-	 * 
-	 * @param diff
-	 *            any difference.
-	 * @return a set containing all the known EObject affected by the diff being from the left, right or
-	 *         ancestor version.
-	 */
-	private static Set<EObject> affectedEObjects(Diff diff) {
-		Match match = diff.getMatch();
-		if (match != null) {
-			return matchedEObjects(match);
+		/**
+		 * return a set containing all the known EObject affected by the match being from the left, right or
+		 * ancestor version.
+		 * 
+		 * @param match
+		 *            any match..
+		 * @return a set containing all the known EObject affected by the match being from the left, right or
+		 *         ancestor version.
+		 */
+		private static Set<EObject> matchedEObjects(Match match) {
+			Set<EObject> affectedEObjects = Sets.newLinkedHashSet();
+			if (match.getLeft() != null) {
+				affectedEObjects.add(match.getLeft());
+			}
+			if (match.getRight() != null) {
+				affectedEObjects.add(match.getRight());
+			}
+			if (match.getOrigin() != null) {
+				affectedEObjects.add(match.getOrigin());
+			}
+			return affectedEObjects;
 		}
-		return Sets.newLinkedHashSet();
-	}
-
-	/**
-	 * return a set containing all the known EObject affected by the match being from the left, right or
-	 * ancestor version.
-	 * 
-	 * @param match
-	 *            any match..
-	 * @return a set containing all the known EObject affected by the match being from the left, right or
-	 *         ancestor version.
-	 */
-	private static Set<EObject> matchedEObjects(Match match) {
-		Set<EObject> affectedEObjects = Sets.newLinkedHashSet();
-		if (match.getLeft() != null) {
-			affectedEObjects.add(match.getLeft());
-		}
-		if (match.getRight() != null) {
-			affectedEObjects.add(match.getRight());
-		}
-		if (match.getOrigin() != null) {
-			affectedEObjects.add(match.getOrigin());
-		}
-		return affectedEObjects;
 	}
 
 }
