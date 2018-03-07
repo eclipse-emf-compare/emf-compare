@@ -102,7 +102,7 @@ public class RemoteMappingContextStorageAccessor implements IStorageProviderAcce
 	/** {@inheritDoc} */
 	public boolean isInSync(IResource resource) throws CoreException {
 		final IProgressMonitor monitor = new NullProgressMonitor();
-		return context.hasLocalChange(resource, monitor) || context.hasRemoteChange(resource, monitor);
+		return !context.hasLocalChange(resource, monitor) && !context.hasRemoteChange(resource, monitor);
 	}
 
 	/** {@inheritDoc} */

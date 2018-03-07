@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
@@ -186,26 +187,40 @@ public final class RevisionedURIConverter extends StorageURIConverter {
 	 * @return The opened input stream. May be <code>null</code> if we failed to open it.
 	 */
 	private InputStream openRevisionStream(IResource targetFile) {
+		InputStream stream = null;
 		if (storageAccessor == null) {
 			// FIXME can this happen? does it matter? Fall back to local content for now.
 		} else {
 			try {
 				final IStorageProvider provider = storageAccessor.getStorageProvider(targetFile, side);
+				IStorage storage = null;
 
 				if (provider != null) {
-					final IStorage storage = provider.getStorage(new NullProgressMonitor());
+					storage = provider.getStorage(new NullProgressMonitor());
+					// If we can't get a storage from this provider, but the target is "in-sync",
+					// then we can use the local data as fall back. see bug #532069.
+					if (storage == null && targetFile instanceof IFile
+							&& storageAccessor.isInSync(targetFile)) {
+						storage = (IFile)targetFile;
+					}
 					if (storage != null
 							&& (!(storage instanceof IResource) || ((IResource)storage).exists())) {
 						getLoadedRevisions().add(storage);
-						return storage.getContents();
+						stream = storage.getContents();
 					}
+				} else if (targetFile instanceof IFile && targetFile.isAccessible()
+						&& storageAccessor.isInSync(targetFile)) {
+					// If we couldn't get a provider, but the target is "in-sync",
+					// then we can use the local data as fall back. see bug #532069.
+					getLoadedRevisions().add((IFile)targetFile);
+					stream = ((IFile)targetFile).getContents();
 				}
 			} catch (CoreException e) {
 				logError(e);
 			}
 		}
 
-		return null;
+		return stream;
 	}
 
 	/**
