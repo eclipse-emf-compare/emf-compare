@@ -81,11 +81,17 @@ public final class AccessorAdapter implements ITypedElement, IStreamContentAcces
 	 * @see org.eclipse.compare.ITypedElement#getName()
 	 */
 	public String getName() {
+		String name = null;
 		if (target instanceof org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement) {
-			return ((org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement)target)
+			name = ((org.eclipse.emf.compare.rcp.ui.contentmergeviewer.accessor.legacy.ITypedElement)target)
 					.getName();
 		}
-		return null;
+		// #532158 : This is used by CompareUIPlugin to find a content type for this element, but it makes the
+		// assumption that ITypedElement.getName() cannot return null.
+		if (name == null) {
+			return ""; //$NON-NLS-1$
+		}
+		return name;
 	}
 
 	/**
