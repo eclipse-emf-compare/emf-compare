@@ -404,13 +404,8 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		final ResourceMapping[] mappings = allModelMappings
 				.toArray(new ResourceMapping[allModelMappings.size()]);
 
-		final ISynchronizationScopeManager manager = new SubscriberScopeManager(subscriber.getName(),
-				mappings, subscriber, mappingContext, true) {
-			@Override
-			public ISchedulingRule getSchedulingRule() {
-				return RuleUtil.getRule(repository);
-			}
-		};
+		final ISynchronizationScopeManager manager = new InternalSubscriberScopeManager(subscriber.getName(),
+				mappings, subscriber, mappingContext, true, repository);
 		manager.initialize(new NullProgressMonitor());
 
 		final ISynchronizationContext context = new GitSynchronizationContext(subscriber, manager);
@@ -734,11 +729,27 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		protected void makeInSync(IDiff diff, IProgressMonitor monitor) throws CoreException {
 			// Won't be used as a merging context
 		}
+
+		@Override
+		public void dispose() {
+			super.dispose();
+		}
 	}
 
-	@Override
-	protected void flushViewers(IProgressMonitor monitor) {
-		super.flushViewers(monitor);
+	private static final class InternalSubscriberScopeManager extends SubscriberScopeManager {
+		private final Repository repository;
+
+		public InternalSubscriberScopeManager(String name, ResourceMapping[] inputMappings,
+				Subscriber subscriber, RemoteResourceMappingContext context, boolean consultModels,
+				Repository repository) {
+			super(name, inputMappings, subscriber, context, consultModels);
+			this.repository = repository;
+		}
+
+		@Override
+		public ISchedulingRule getSchedulingRule() {
+			return RuleUtil.getRule(repository);
+		}
 	}
 }
 // CHECKSTYLE:ON
