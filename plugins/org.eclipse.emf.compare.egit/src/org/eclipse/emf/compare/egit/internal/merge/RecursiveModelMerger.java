@@ -388,8 +388,9 @@ public class RecursiveModelMerger extends RecursiveMerger {
 
 		private boolean run(IProgressMonitor monitor) throws CorruptObjectException, IOException {
 			SubMonitor progress = SubMonitor.convert(monitor, 1);
+			IMergeContext mergeContext = null;
 			try {
-				final IMergeContext mergeContext = prepareMergeContext();
+				mergeContext = prepareMergeContext();
 				final IStatus status = modelMerger.merge(mergeContext, progress.newChild(1));
 				registerHandledFiles(mergeContext, status);
 			} catch (CoreException e) {
@@ -402,6 +403,10 @@ public class RecursiveModelMerger extends RecursiveMerger {
 				Activator.logError(message, e);
 				merger.cleanUp();
 				return false;
+			} finally {
+				if (mergeContext != null) {
+					mergeContext.dispose();
+				}
 			}
 			return true;
 		}

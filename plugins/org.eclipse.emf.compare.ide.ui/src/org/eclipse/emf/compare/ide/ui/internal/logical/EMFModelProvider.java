@@ -266,8 +266,6 @@ public class EMFModelProvider extends ModelProvider {
 			IProgressMonitor monitor) throws CoreException, InterruptedException {
 		SynchronizationModel syncModel;
 		synchronized(contextToResourceMappingCache) {
-			removeEmptyCacheEntries();
-
 			final Cache<IResource, SynchronizationModel> resourceMappingCache = contextToResourceMappingCache
 					.getUnchecked(context);
 			if (LOGGER.isDebugEnabled()) {
@@ -293,6 +291,8 @@ public class EMFModelProvider extends ModelProvider {
 			} else if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Cache FOUND entry for " + file); //$NON-NLS-1$
 			}
+
+			removeEmptyCacheEntries();
 		}
 		return syncModel;
 	}
@@ -306,6 +306,7 @@ public class EMFModelProvider extends ModelProvider {
 				.asMap().entrySet().iterator();
 		while (entries.hasNext()) {
 			Map.Entry<ResourceMappingContext, Cache<IResource, SynchronizationModel>> entry = entries.next();
+			entry.getValue().cleanUp();
 			if (entry.getValue().size() == 0) {
 				entries.remove();
 			}
