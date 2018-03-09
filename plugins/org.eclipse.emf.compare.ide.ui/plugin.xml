@@ -556,9 +556,6 @@
       <fileExtensionModelInclusionTester
             fileExtension="ecore">
       </fileExtensionModelInclusionTester>
-      <fileExtensionModelInclusionTester
-            fileExtension="xmi">
-      </fileExtensionModelInclusionTester>
       <contentTypeModelInclusionTester
             contentType="org.eclipse.emf.ecore">
       </contentTypeModelInclusionTester>
