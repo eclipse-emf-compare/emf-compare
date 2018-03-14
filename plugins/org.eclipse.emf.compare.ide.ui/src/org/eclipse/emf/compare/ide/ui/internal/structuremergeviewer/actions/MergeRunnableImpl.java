@@ -15,16 +15,12 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.base.Preconditions;
 
-import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.domain.IMergeRunnable;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.merge.MergeOperation;
-import org.eclipse.emf.compare.merge.BatchMerger;
-import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 
@@ -68,16 +64,6 @@ public final class MergeRunnableImpl extends AbstractMergeRunnable implements IM
 			markAllAsMerged(diffToMarkAsMerged, getMergeMode(), mergerRegistry);
 		} else {
 			throw new IllegalStateException();
-		}
-	}
-
-	private void mergeAll(Collection<? extends Diff> differences, boolean leftToRight,
-			Registry mergerRegistry) {
-		final IBatchMerger merger = new BatchMerger(getDiffRelationshipComputer(mergerRegistry));
-		if (leftToRight) {
-			merger.copyAllLeftToRight(differences, new BasicMonitor());
-		} else {
-			merger.copyAllRightToLeft(differences, new BasicMonitor());
 		}
 	}
 }

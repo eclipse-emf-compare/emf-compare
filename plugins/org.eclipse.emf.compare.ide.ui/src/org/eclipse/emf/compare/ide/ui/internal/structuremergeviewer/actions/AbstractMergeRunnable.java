@@ -21,9 +21,12 @@ import com.google.common.collect.Sets;
 import java.util.Collection;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.DiffRelationshipComputer;
+import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
@@ -145,6 +148,16 @@ public abstract class AbstractMergeRunnable {
 			for (Diff impliedDiff : implied) {
 				impliedDiff.setState(DISCARDED);
 			}
+		}
+	}
+
+	protected void mergeAll(Collection<? extends Diff> differences, boolean leftToRight,
+			Registry mergerRegistry) {
+		final IBatchMerger merger = new BatchMerger(getDiffRelationshipComputer(mergerRegistry));
+		if (leftToRight) {
+			merger.copyAllLeftToRight(differences, new BasicMonitor());
+		} else {
+			merger.copyAllRightToLeft(differences, new BasicMonitor());
 		}
 	}
 }

@@ -103,6 +103,7 @@ import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressInfoComposite
 import org.eclipse.emf.compare.ide.ui.internal.progress.JobProgressMonitorWrapper;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCompareStructureMergeViewerContentProvider.FetchListener;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeContainedAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeContainedConflictingAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeContainedNonConflictingAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeCompareInputAdapterFactory;
@@ -148,6 +149,7 @@ import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -520,30 +522,117 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			modes = EnumSet.of(MergeMode.ACCEPT, MergeMode.REJECT);
 		}
 		if (rightEditable || leftEditable) {
-			for (MergeMode mode : modes) {
-				IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
-				if (isOneDiffSelected()) {
-					MergeAction mergeAction = new MergeAction(getCompareConfiguration(), mergerRegistry, mode,
-							navigatable, (IStructuredSelection)getSelection());
-					manager.add(mergeAction);
-				} else if (isOneMatchOrResourceMatchSelected()) {
-					final Predicate<TreeNode> filterPredicate = new Predicate<TreeNode>() {
-						public boolean apply(TreeNode input) {
-							return input != null
-									&& JFaceUtil.isFiltered(getViewer(), input, input.getParent());
-						}
-					};
-					MergeContainedNonConflictingAction mergeAction = new MergeContainedNonConflictingAction(
-							getCompareConfiguration(), mergerRegistry, mode, navigatable,
-							(IStructuredSelection)getSelection(), filterPredicate);
-					manager.add(mergeAction);
+			IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
+			if (isOneDiffSelected()) {
+				addSingleDiffMergeActions(manager, modes, mergerRegistry);
+			} else if (isOneMatchOrResourceMatchSelected()) {
+				addMergeNonConflictingActions(manager, modes, mergerRegistry);
+				manager.add(new Separator());
+				addMergeConflictingActions(manager, modes, mergerRegistry);
 
-					MergeContainedConflictingAction mergeConflictingAction = new MergeContainedConflictingAction(
-							getCompareConfiguration(), mergerRegistry, mode, navigatable,
-							(IStructuredSelection)getSelection(), filterPredicate);
-					manager.add(mergeConflictingAction);
+				if (leftEditable && !rightEditable) {
+					manager.add(new Separator());
+					addMergeAllActions(manager, modes, mergerRegistry);
 				}
 			}
+		}
+	}
+
+	/**
+	 * This will add the merge actions targeting a single selected difference to the given menu manager.
+	 * 
+	 * @param manager
+	 *            The menu manager in which we'll be adding actions.
+	 * @param modes
+	 *            The current merge modes.
+	 * @param mergerRegistry
+	 *            The merger registry the new actions need to use.
+	 */
+	private void addSingleDiffMergeActions(IMenuManager manager, EnumSet<MergeMode> modes,
+			IMerger.Registry mergerRegistry) {
+		for (MergeMode mode : modes) {
+			MergeAction mergeAction = new MergeAction(getCompareConfiguration(), mergerRegistry, mode,
+					navigatable, (IStructuredSelection)getSelection());
+			manager.add(mergeAction);
+		}
+	}
+
+	/**
+	 * This will add the "merge all non-conflicting" actions to the given menu manager. These actions are
+	 * meant to allow a user to merge all non-conflicting diffs under the given selection at once, leaving
+	 * only conflicts untouched.
+	 * 
+	 * @param manager
+	 *            The menu manager in which we'll be adding actions.
+	 * @param modes
+	 *            The current merge modes.
+	 * @param mergerRegistry
+	 *            The merger registry the new actions need to use.
+	 */
+	private void addMergeNonConflictingActions(IMenuManager manager, EnumSet<MergeMode> modes,
+			IMerger.Registry mergerRegistry) {
+		final Predicate<TreeNode> filterPredicate = new Predicate<TreeNode>() {
+			public boolean apply(TreeNode input) {
+				return input != null && JFaceUtil.isFiltered(getViewer(), input, input.getParent());
+			}
+		};
+		for (MergeMode mode : modes) {
+			MergeContainedNonConflictingAction mergeAction = new MergeContainedNonConflictingAction(
+					getCompareConfiguration(), mergerRegistry, mode, navigatable,
+					(IStructuredSelection)getSelection(), filterPredicate);
+			manager.add(mergeAction);
+		}
+	}
+
+	/**
+	 * This will add the "merge non-conflicting" actions to the given menu manager. These actions are meant to
+	 * allow a user to merge all conflicting diffs under the given selection at once, leaving non-conflicting
+	 * diffs untouched.
+	 * 
+	 * @param manager
+	 *            The menu manager in which we'll be adding actions.
+	 * @param modes
+	 *            The current merge modes.
+	 * @param mergerRegistry
+	 *            The merger registry the new actions need to use.
+	 */
+	private void addMergeConflictingActions(IMenuManager manager, EnumSet<MergeMode> modes,
+			IMerger.Registry mergerRegistry) {
+		final Predicate<TreeNode> filterPredicate = new Predicate<TreeNode>() {
+			public boolean apply(TreeNode input) {
+				return input != null && JFaceUtil.isFiltered(getViewer(), input, input.getParent());
+			}
+		};
+		for (MergeMode mode : modes) {
+			MergeContainedConflictingAction mergeAction = new MergeContainedConflictingAction(
+					getCompareConfiguration(), mergerRegistry, mode, navigatable,
+					(IStructuredSelection)getSelection(), filterPredicate);
+			manager.add(mergeAction);
+		}
+	}
+
+	/**
+	 * This will add actions to the given menu manager that will allow a user to merge everything at once in a
+	 * given direction, effectively taking the left- or right-side contents as the new left.
+	 * 
+	 * @param manager
+	 *            The menu manager in which we'll be adding actions.
+	 * @param modes
+	 *            The current merge modes.
+	 * @param mergerRegistry
+	 *            The merger registry the new actions need to use.
+	 */
+	private void addMergeAllActions(IMenuManager manager, EnumSet<MergeMode> modes,
+			IMerger.Registry mergerRegistry) {
+		final Predicate<TreeNode> filterPredicate = new Predicate<TreeNode>() {
+			public boolean apply(TreeNode input) {
+				return input != null && JFaceUtil.isFiltered(getViewer(), input, input.getParent());
+			}
+		};
+		for (MergeMode mode : modes) {
+			MergeContainedAction mergeAllAction = new MergeContainedAction(getCompareConfiguration(),
+					mergerRegistry, mode, navigatable, (IStructuredSelection)getSelection(), filterPredicate);
+			manager.add(mergeAllAction);
 		}
 	}
 
