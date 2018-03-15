@@ -106,6 +106,7 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.Merg
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeContainedAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeContainedConflictingAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeContainedNonConflictingAction;
+import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.RevealConflictingDiffsAction;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeCompareInputAdapterFactory;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.provider.TreeNodeCompareInput;
 import org.eclipse.emf.compare.ide.ui.internal.util.CompareHandlerService;
@@ -521,9 +522,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		} else {
 			modes = EnumSet.of(MergeMode.ACCEPT, MergeMode.REJECT);
 		}
+
+		boolean singleDiffSelected = isOneDiffSelected();
 		if (rightEditable || leftEditable) {
 			IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
-			if (isOneDiffSelected()) {
+			if (singleDiffSelected) {
 				addSingleDiffMergeActions(manager, modes, mergerRegistry);
 			} else if (isOneMatchOrResourceMatchSelected()) {
 				addMergeNonConflictingActions(manager, modes, mergerRegistry);
@@ -533,6 +536,18 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				if (leftEditable && !rightEditable) {
 					manager.add(new Separator());
 					addMergeAllActions(manager, modes, mergerRegistry);
+				}
+			}
+		}
+		if (singleDiffSelected && getCompareConfiguration().getComparison().isThreeWay()) {
+			final ISelection selection = getSelection();
+			if (selection instanceof IStructuredSelection && ((IStructuredSelection)selection).size() == 1) {
+				Object element = ((IStructuredSelection)selection).getFirstElement();
+				Object selectedData = getDataOfTreeNodeOfAdapter(element);
+				if (selectedData instanceof Diff && ((Diff)selectedData).getConflict() != null) {
+					manager.add(new Separator());
+					manager.add(new RevealConflictingDiffsAction(this, (Diff)selectedData,
+							getCompareConfiguration()));
 				}
 			}
 		}
