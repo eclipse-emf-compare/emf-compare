@@ -106,5 +106,10 @@ public abstract class AbstractCompareECrossReferencerAdapter extends ECrossRefer
 				break;
 		}
 	}
+
+	@Override
+	protected boolean resolve() {
+		return false;
+	}
 }
 // CHECKSTYLE:ON

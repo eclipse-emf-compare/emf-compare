@@ -138,7 +138,6 @@ public class ReferenceChangeSpec extends ReferenceChangeImpl {
 				eNotify(new ENotificationImpl(this, Notification.UNSET, ComparePackage.DIFF__MATCH, oldMatch,
 						newMatch));
 			}
-
 		}
 	}
 }

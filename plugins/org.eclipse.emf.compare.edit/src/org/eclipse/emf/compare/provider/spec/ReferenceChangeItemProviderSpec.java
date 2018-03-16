@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.internal.EMFCompareEditMessages;
+import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
@@ -36,6 +37,7 @@ import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
 
@@ -46,6 +48,9 @@ import org.eclipse.emf.edit.provider.IItemFontProvider;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider implements IItemStyledLabelProvider, IItemDescriptionProvider, ISemanticObjectLabelProvider {
+
+	/** If the value of this reference change is an unresolved proxy, will prefix its URI with this. */
+	private static final String PROXY_PREFIX = "proxy : "; //$NON-NLS-1$
 
 	/** The elide length. */
 	private static final int ELIDE_LENGTH = 50;
@@ -187,10 +192,17 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 	 */
 	protected String getValueText(final ReferenceChange refChange) {
 		EObject refChangeValue = refChange.getValue();
+		if (refChangeValue.eIsProxy()) {
+			// Bug 532484 - EMF doesn't know how to resolve the diff values
+			// so we need to give it a little hand.
+			EObject resolutionScope = getValueResolutionScope(refChange);
+			refChangeValue = EcoreUtil.resolve(refChangeValue, resolutionScope);
+		}
+
 		String value = itemDelegator.getText(refChangeValue);
 		if (isNullOrEmpty(value)) {
 			if (refChangeValue.eIsProxy()) {
-				value = "proxy : " + ((InternalEObject)refChangeValue).eProxyURI().toString(); //$NON-NLS-1$
+				value = PROXY_PREFIX + ((InternalEObject)refChangeValue).eProxyURI().toString();
 			} else {
 				value = "<null>"; //$NON-NLS-1$
 			}
@@ -261,7 +273,7 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 			}
 		}
 		final EObject refChangeValue = refChange.getValue();
-		if (refChangeValue.eIsProxy()) {
+		if (refChangeValue.eIsProxy() && valueText.startsWith(PROXY_PREFIX)) {
 			Style italic = Style.builder().setFont(IItemFontProvider.ITALIC_FONT).build();
 			ret.append(valueText, italic);
 		} else {
@@ -366,5 +378,45 @@ public class ReferenceChangeItemProviderSpec extends ReferenceChangeItemProvider
 		}
 
 		return ret;
+	}
+
+	/**
+	 * Returns the scope for the resolution of the "value" reference for this change.
+	 * 
+	 * @return The scope for the resolution of the "value" reference for this change.
+	 */
+	private EObject getValueResolutionScope(ReferenceChange change) {
+		final Match containingMatch = change.getMatch();
+		final boolean isDeleteOrUnset = ComparisonUtil.isDeleteOrUnsetDiff(change);
+		final boolean useOrigin = containingMatch.getComparison().isThreeWay();
+
+		final EObject scope;
+		switch (change.getSource()) {
+			case RIGHT:
+				if (isDeleteOrUnset) {
+					if (useOrigin) {
+						scope = containingMatch.getOrigin();
+					} else {
+						scope = containingMatch.getLeft();
+					}
+				} else {
+					scope = containingMatch.getRight();
+				}
+				break;
+			case LEFT:
+				// fall through
+			default:
+				if (isDeleteOrUnset) {
+					if (useOrigin) {
+						scope = containingMatch.getOrigin();
+					} else {
+						scope = containingMatch.getRight();
+					}
+				} else {
+					scope = containingMatch.getLeft();
+				}
+				break;
+		}
+		return scope;
 	}
 }
