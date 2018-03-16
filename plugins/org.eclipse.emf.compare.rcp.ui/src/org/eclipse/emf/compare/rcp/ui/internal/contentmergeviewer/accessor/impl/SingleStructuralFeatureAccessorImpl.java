@@ -77,7 +77,7 @@ public class SingleStructuralFeatureAccessorImpl extends AbstractStructuralFeatu
 		Object value = null;
 		EObject eObject = getEObject(side);
 		if (eObject != null) {
-			value = ReferenceUtil.safeEGet(eObject, getStructuralFeature());
+			value = ReferenceUtil.safeResolvingEGet(eObject, getStructuralFeature());
 		}
 		return value;
 	}

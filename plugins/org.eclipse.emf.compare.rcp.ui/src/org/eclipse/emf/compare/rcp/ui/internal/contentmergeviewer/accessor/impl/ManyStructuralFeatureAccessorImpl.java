@@ -290,7 +290,7 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 	 */
 	protected List<?> getFeatureValues(MergeViewerSide side) {
 		final EObject eObject = getEObject(side);
-		return ReferenceUtil.getAsList(eObject, getStructuralFeature());
+		return ReferenceUtil.getAsListResolving(eObject, getStructuralFeature());
 	}
 
 	/**
