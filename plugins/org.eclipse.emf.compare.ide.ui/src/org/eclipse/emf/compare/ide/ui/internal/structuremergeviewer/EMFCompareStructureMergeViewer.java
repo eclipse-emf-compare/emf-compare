@@ -1190,6 +1190,16 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		// Bug 458802: NPE when synchronizing SMV & CMV if comparison is empty
 		hookAdapters(input, comparison);
 
+		if (comparisonScope.getLeft() instanceof NotLoadingResourceSet) {
+			((NotLoadingResourceSet)comparisonScope.getLeft()).setAllowResourceLoad(true);
+		}
+		if (comparisonScope.getRight() instanceof NotLoadingResourceSet) {
+			((NotLoadingResourceSet)comparisonScope.getRight()).setAllowResourceLoad(true);
+		}
+		if (comparisonScope.getOrigin() instanceof NotLoadingResourceSet) {
+			((NotLoadingResourceSet)comparisonScope.getOrigin()).setAllowResourceLoad(true);
+		}
+
 		compareInputChanged(input.getComparisonScope(), comparison, monitor);
 	}
 
