@@ -124,7 +124,7 @@ public class SiriusDiffPostProcessor implements IPostProcessor {
 						if (actualMappingChange.getReference() == DiagramPackage.eINSTANCE
 								.getDNode_ActualMapping()
 								&& fromSide(referenceChange.getSource()).apply(actualMappingChange)) {
-							referenceChange.getRequires().add(actualMappingChange);
+							referenceChange.getImplies().add(actualMappingChange);
 						}
 					}
 				}
