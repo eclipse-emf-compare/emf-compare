@@ -13,7 +13,8 @@ package org.eclipse.emf.compare.ide.internal.logical;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
 
 /**
  * A model inclusion tester based on a {@link IFile file's} content type.
@@ -23,7 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 public class ContentTypeModelInclusionTester extends AbstractModelInclusionTester {
 
 	/** The content type this tester tests against. */
-	private String contentType;
+	private IContentType contentType;
 
 	/**
 	 * Creates a tester for the given <code>contentType</code>.
@@ -35,7 +36,8 @@ public class ContentTypeModelInclusionTester extends AbstractModelInclusionTeste
 	 */
 	public ContentTypeModelInclusionTester(String contentType, String key) {
 		super(key);
-		this.contentType = checkNotNull(contentType);
+		IContentType aContentType = Platform.getContentTypeManager().getContentType(contentType);
+		this.contentType = checkNotNull(aContentType);
 	}
 
 	/**
@@ -46,14 +48,15 @@ public class ContentTypeModelInclusionTester extends AbstractModelInclusionTeste
 	 * @return <code>true</code> if it should be included, <code>false</code> otherwise.
 	 */
 	public boolean shouldInclude(IFile file) {
-		try {
-			return file != null && file.getContentDescription() != null
-					&& file.getContentDescription().getContentType() != null
-					&& contentType.equals(file.getContentDescription().getContentType().getId());
-		} catch (CoreException e) {
-			// can't access content type of specified file -- we'll ignore that
-			return false;
+		if (file != null) {
+			for (IContentType fileContentType : Platform.getContentTypeManager()
+					.findContentTypesFor(file.getFullPath().toString())) {
+				if (fileContentType != null && fileContentType.isKindOf(contentType)) {
+					return true;
+				}
+			}
 		}
+		return false;
 	}
 
 }
