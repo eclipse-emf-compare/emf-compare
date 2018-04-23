@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2017 Obeo and others.
+ * Copyright (c) 2012, 2018 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -440,6 +440,7 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 		parserPool.addProxyListener(this);
 		loadOptions.put(XMLResource.OPTION_USE_PARSER_POOL, parserPool);
 		loadOptions.put(XMLResource.OPTION_USE_DEPRECATED_METHODS, Boolean.FALSE);
+		loadOptions.put(XTEXT_SCOPING_LIVE_SCOPE_OPTION, Boolean.TRUE);
 		return loadOptions;
 	}
 
