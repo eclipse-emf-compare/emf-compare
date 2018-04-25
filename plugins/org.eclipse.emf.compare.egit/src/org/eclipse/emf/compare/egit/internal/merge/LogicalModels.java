@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2015, Obeo.
+ * Copyright (C) 2015, 2018 Obeo.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,11 +8,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.egit.internal.merge;
 
-//CHECKSTYLE:OFF
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -40,18 +38,11 @@ import org.eclipse.egit.core.Activator;
  */
 @SuppressWarnings("restriction")
 public final class LogicalModels {
-	/**
-	 * These model providers are active on most (for the first, "all") files. They provide a default merger
-	 * that does not actually take care of model merging and are actually not defining a "larger model" : they
-	 * only provide single-resource traversals. Since we are not interested in these defaults, we'll ignore
-	 * them for all "model" lookup.
-	 */
-	private static final Set<String> ignoredModelDescriptors = new HashSet<String>(
-			Arrays.asList("org.eclipse.core.resources.modelProvider", //$NON-NLS-1$
-					"org.eclipse.jdt.ui.modelProvider", //$NON-NLS-1$
-					"org.eclipse.egit.ui.changeSetModel")); //$NON-NLS-1$
+	/** ID of the EMFModelProvider. */
+	private static final String EMF_MODEL_PROVIDER_ID = "org.eclipse.emf.compare.model.provider"; //$NON-NLS-1$
 
-	private Map<IResource, Set<IResource>> models = new HashMap<IResource, Set<IResource>>();
+	/** Cache of the discovered models. */
+	private Map<IResource, Set<IResource>> models = new HashMap<>();
 
 	/**
 	 * Iterate over the resources in the given set to discover and cache the logical model of each.
@@ -104,13 +95,13 @@ public final class LogicalModels {
 	 * @return the model which this resource is a part of.
 	 */
 	public static Set<IResource> discoverModel(IResource resource, ResourceMappingContext mappingContext) {
-		final Set<IResource> model = new LinkedHashSet<IResource>();
+		final Set<IResource> model = new LinkedHashSet<>();
 
-		Set<IResource> newResources = new LinkedHashSet<IResource>();
+		Set<IResource> newResources = new LinkedHashSet<>();
 		newResources.add(resource);
 		do {
 			final Set<IResource> temp = newResources;
-			newResources = new LinkedHashSet<IResource>();
+			newResources = new LinkedHashSet<>();
 			for (IResource res : temp) {
 				final Set<ResourceMapping> mappings = getResourceMappings(Collections.singleton(res),
 						mappingContext);
@@ -142,26 +133,19 @@ public final class LogicalModels {
 			return null;
 		}
 		final IResource[] modelArray = model.toArray(new IResource[model.size()]);
-		final IModelProviderDescriptor[] descriptors = ModelProvider.getModelProviderDescriptors();
 
-		// FIXME: Only care about EMFCompare model provider, dismiss all others?
-		for (int i = 0; i < descriptors.length; i++) {
-			final IModelProviderDescriptor descriptor = descriptors[i];
-			if (ignoredModelDescriptors.contains(descriptor.getId())) {
-				continue;
-			}
+		final IModelProviderDescriptor descriptor = getEMFModelProvider();
+		if (descriptor != null) {
 			final IResource[] matchingResources = descriptor.getMatchingResources(modelArray);
 			if (matchingResources.length == modelArray.length) {
 				final ModelProvider provider = descriptor.getModelProvider();
 				T adapter = (T)provider.getAdapter(adapterClass);
 				if (adapter != null) {
-					// The first merger is used (arbitrary decision)
 					return adapter;
 				}
-			} else {
-				// This provider does not match the whole target model
 			}
 		}
+
 		return null;
 	}
 
@@ -172,15 +156,11 @@ public final class LogicalModels {
 	 */
 	public static Set<ResourceMapping> getResourceMappings(Set<IResource> model,
 			ResourceMappingContext mappingContext) {
-		final Set<ResourceMapping> allMappings = new LinkedHashSet<ResourceMapping>();
+		final Set<ResourceMapping> allMappings = new LinkedHashSet<>();
 		final IResource[] modelArray = model.toArray(new IResource[model.size()]);
-		final IModelProviderDescriptor[] descriptors = ModelProvider.getModelProviderDescriptors();
 
-		for (IModelProviderDescriptor descriptor : descriptors) {
-			if (ignoredModelDescriptors.contains(descriptor.getId())) {
-				continue;
-			}
-
+		final IModelProviderDescriptor descriptor = getEMFModelProvider();
+		if (descriptor != null) {
 			try {
 				final IResource[] matchingResources = descriptor.getMatchingResources(modelArray);
 				if (matchingResources.length > 0) {
@@ -197,9 +177,18 @@ public final class LogicalModels {
 		return allMappings;
 	}
 
+	/**
+	 * Return the ModelProvider to be used
+	 * 
+	 * @return EMFModelProvider's descriptor
+	 */
+	private static IModelProviderDescriptor getEMFModelProvider() {
+		return ModelProvider.getModelProviderDescriptor(EMF_MODEL_PROVIDER_ID);
+	}
+
 	private static Set<IResource> collectResources(Set<ResourceMapping> mappings,
 			ResourceMappingContext mappingContext) {
-		final Set<IResource> resources = new LinkedHashSet<IResource>();
+		final Set<IResource> resources = new LinkedHashSet<>();
 		for (ResourceMapping mapping : mappings) {
 			try {
 				final ResourceTraversal[] traversals = mapping.getTraversals(mappingContext,
@@ -214,4 +203,3 @@ public final class LogicalModels {
 		return resources;
 	}
 }
-// CHECKSTYLE:ON
