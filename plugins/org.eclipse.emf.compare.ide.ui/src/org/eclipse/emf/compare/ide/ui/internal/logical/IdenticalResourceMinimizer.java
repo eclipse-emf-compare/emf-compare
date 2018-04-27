@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2017 Obeo.
+ * Copyright (c) 2013, 2018 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,13 +18,17 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.Resource.Factory;
 
 /**
  * Instances of this class will be used by EMF Compare to minimize the scope to parts of a logical model that
@@ -39,6 +43,8 @@ import org.eclipse.emf.compare.ide.utils.StorageTraversal;
  */
 public class IdenticalResourceMinimizer implements IModelMinimizer {
 
+	private static final String XTEXT_PACKAGE_PREFIX = "org.eclipse.xtext."; //$NON-NLS-1$
+
 	/**
 	 * {@inheritDoc} Specifically, we'll remove all resources that can be seen as binary identical (we match
 	 * resources through exact equality of their names).
@@ -47,66 +53,73 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void minimize(SynchronizationModel syncModel, IProgressMonitor monitor) {
-		SubMonitor progess = SubMonitor.convert(monitor, 100);
-		progess.subTask(EMFCompareIDEUIMessages.getString("EMFSynchronizationModel.minimizing")); //$NON-NLS-1$
+		if (containsXtextResource(syncModel)) {
+			// If the model contains at least one Xtext resource we do not want to remove resources which are
+			// binary identical
+			return;
+		} else {
 
-		final StorageTraversal leftTraversal = syncModel.getLeftTraversal();
-		final StorageTraversal rightTraversal = syncModel.getRightTraversal();
-		final StorageTraversal originTraversal = syncModel.getOriginTraversal();
+			SubMonitor progess = SubMonitor.convert(monitor, 100);
+			progess.subTask(EMFCompareIDEUIMessages.getString("EMFSynchronizationModel.minimizing")); //$NON-NLS-1$
 
-		// StorageTraversal.getStorages() already creates a mutable copy. To change the underlying set, we
-		// need to use StorageTraversal.removeStorage().
-		final Set<? extends IStorage> leftCopy = leftTraversal.getStorages();
-		final Set<? extends IStorage> rightCopy = rightTraversal.getStorages();
-		final Set<? extends IStorage> originCopy = originTraversal.getStorages();
+			final StorageTraversal leftTraversal = syncModel.getLeftTraversal();
+			final StorageTraversal rightTraversal = syncModel.getRightTraversal();
+			final StorageTraversal originTraversal = syncModel.getOriginTraversal();
 
-		final boolean threeWay = !originCopy.isEmpty();
+			// StorageTraversal.getStorages() already creates a mutable copy. To change the underlying set, we
+			// need to use StorageTraversal.removeStorage().
+			final Set<? extends IStorage> leftCopy = leftTraversal.getStorages();
+			final Set<? extends IStorage> rightCopy = rightTraversal.getStorages();
+			final Set<? extends IStorage> originCopy = originTraversal.getStorages();
 
-		SubMonitor subMonitor = progess.newChild(98).setWorkRemaining(leftCopy.size());
-		for (IStorage left : leftCopy) {
-			final IStorage right = removeLikeNamedStorageFrom(left, rightCopy);
-			if (right != null && threeWay) {
-				final IStorage origin = removeLikeNamedStorageFrom(left, originCopy);
-				if (origin != null && equals(left, right, origin)) {
+			final boolean threeWay = !originCopy.isEmpty();
+
+			SubMonitor subMonitor = progess.newChild(98).setWorkRemaining(leftCopy.size());
+			for (IStorage left : leftCopy) {
+				final IStorage right = removeLikeNamedStorageFrom(left, rightCopy);
+				if (right != null && threeWay) {
+					final IStorage origin = removeLikeNamedStorageFrom(left, originCopy);
+					if (origin != null && equals(left, right, origin)) {
+						leftTraversal.removeStorage(left);
+						rightTraversal.removeStorage(right);
+						originTraversal.removeStorage(origin);
+					}
+				} else if (right != null && equals(left, right)) {
 					leftTraversal.removeStorage(left);
 					rightTraversal.removeStorage(right);
+				} else if (right == null && isIgnoredStorage(left)) {
+					/*
+					 * Left has no match in right and is in plugins, so remove it from the scope. Otherwise,
+					 * we would unnecessarily include added models that should be ignored.
+					 */
+					leftTraversal.removeStorage(left);
+				}
+				subMonitor.worked(1);
+			}
+
+			subMonitor = progess.newChild(1).setWorkRemaining(rightCopy.size());
+			for (IStorage right : rightCopy) {
+				final IStorage origin = removeLikeNamedStorageFrom(right, originCopy);
+				if (origin != null) {
+					// we had a match in the origin, leave this file in scope (it's been removed from left)
+				} else if (isIgnoredStorage(right)) {
+					/*
+					 * This has no match and is in plugins. We would detect an insane number of false
+					 * positives on it (every element "removed"), so remove it from the scope.
+					 */
+					rightTraversal.removeStorage(right);
+				}
+				subMonitor.worked(1);
+			}
+
+			subMonitor = progess.newChild(1).setWorkRemaining(rightCopy.size());
+			for (IStorage origin : originCopy) {
+				// These have no match on left and right.
+				if (isIgnoredStorage(origin)) {
 					originTraversal.removeStorage(origin);
 				}
-			} else if (right != null && equals(left, right)) {
-				leftTraversal.removeStorage(left);
-				rightTraversal.removeStorage(right);
-			} else if (right == null && isIgnoredStorage(left)) {
-				/*
-				 * Left has no match in right and is in plugins, so remove it from the scope. Otherwise, we
-				 * would unnecessarily include added models that should be ignored.
-				 */
-				leftTraversal.removeStorage(left);
+				subMonitor.worked(1);
 			}
-			subMonitor.worked(1);
-		}
-
-		subMonitor = progess.newChild(1).setWorkRemaining(rightCopy.size());
-		for (IStorage right : rightCopy) {
-			final IStorage origin = removeLikeNamedStorageFrom(right, originCopy);
-			if (origin != null) {
-				// we had a match in the origin, leave this file in scope (it's been removed from left)
-			} else if (isIgnoredStorage(right)) {
-				/*
-				 * This has no match and is in plugins. We would detect an insane number of false positives on
-				 * it (every element "removed"), so remove it from the scope.
-				 */
-				rightTraversal.removeStorage(right);
-			}
-			subMonitor.worked(1);
-		}
-
-		subMonitor = progess.newChild(1).setWorkRemaining(rightCopy.size());
-		for (IStorage origin : originCopy) {
-			// These have no match on left and right.
-			if (isIgnoredStorage(origin)) {
-				originTraversal.removeStorage(origin);
-			}
-			subMonitor.worked(1);
 		}
 	}
 
@@ -195,5 +208,34 @@ public class IdenticalResourceMinimizer implements IModelMinimizer {
 	 */
 	private boolean isIgnoredStorage(IStorage storage) {
 		return storage.getFullPath().toString().startsWith("platform:/plugin"); //$NON-NLS-1$
+	}
+
+	/**
+	 * Tests whether the synchronization model contains at least one Xtext resource
+	 * 
+	 * @param syncModel
+	 * @return
+	 */
+	private boolean containsXtextResource(SynchronizationModel syncModel) {
+		for (IResource resource : syncModel.getAllInvolvedResources()) {
+			if (isXtextResource(resource)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Tests whether a resource is using the Xtext framework. The test is done by looking at the corresponding
+	 * resource factory
+	 * 
+	 * @param resource
+	 *            The resource we need to test
+	 * @return <code>true</code> if this resource uses Xtext
+	 */
+	private boolean isXtextResource(IResource resource) {
+		URI uri = URI.createPlatformResourceURI(resource.getFullPath().toString(), true);
+		Factory factory = Resource.Factory.Registry.INSTANCE.getFactory(uri);
+		return factory != null && factory.getClass().getName().startsWith(XTEXT_PACKAGE_PREFIX);
 	}
 }
