@@ -309,8 +309,13 @@ public class RecursiveModelMerger extends RecursiveMerger {
 	private void indexModelMergedFiles()
 			throws CorruptObjectException, MissingObjectException, IncorrectObjectTypeException, IOException {
 		try (TreeWalk syncingTreeWalk = new TreeWalk(getRepository())) {
-			syncingTreeWalk.addTree(new DirCacheIterator(dircache));
-			syncingTreeWalk.addTree(new FileTreeIterator(getRepository()));
+			int dirCacheIndex = syncingTreeWalk.addTree(new DirCacheIterator(dircache));
+
+			// Setting the DirCacheIterator is required to be able to handle properly Git attributes
+			FileTreeIterator aWorkingTreeIterator = new FileTreeIterator(getRepository());
+			syncingTreeWalk.addTree(aWorkingTreeIterator);
+			aWorkingTreeIterator.setDirCacheIterator(syncingTreeWalk, dirCacheIndex);
+
 			syncingTreeWalk.setRecursive(true);
 			syncingTreeWalk.setFilter(PathFilterGroup.createFromStrings(makeInSync));
 			String lastAdded = null;
