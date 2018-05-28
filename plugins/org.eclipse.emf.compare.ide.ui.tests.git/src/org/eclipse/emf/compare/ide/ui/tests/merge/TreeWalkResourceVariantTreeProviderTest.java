@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.egit.internal.merge.TreeWalkResourceVariantTreePr
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.NameConflictTreeWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.team.core.variants.IResourceVariant;
@@ -57,11 +58,17 @@ public class TreeWalkResourceVariantTreeProviderTest extends VariantsTestCase {
 			RevTree sourceTree = walk.parseTree(repo.resolve(MASTER));
 			RevTree remoteTree = walk.parseTree(repo.resolve(BRANCH));
 			TreeWalk treeWalk = new NameConflictTreeWalk(repo);
-			treeWalk.addTree(baseTree);
+			int baseTreeIndex = treeWalk.addTree(baseTree);
 			treeWalk.addTree(sourceTree);
 			treeWalk.addTree(remoteTree);
-			TreeWalkResourceVariantTreeProvider treeProvider = new TreeWalkResourceVariantTreeProvider(repo,
-					treeWalk, 0, 1, 2);
+			TreeWalkResourceVariantTreeProvider treeProvider = new TreeWalkResourceVariantTreeProvider.Builder()//
+					.setaBaseTree(treeWalk.getTree(baseTreeIndex, AbstractTreeIterator.class))//
+					.setDircache(repo.readDirCache())//
+					.setHeadTree(sourceTree)//
+					.setMergeTree(remoteTree)//
+					.setRepository(repo)//
+					.setReader(repo.newObjectReader())//
+					.build();
 
 			assertEquals(1, treeProvider.getRoots().size());
 			assertTrue(treeProvider.getRoots().contains(iProject));

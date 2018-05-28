@@ -52,6 +52,8 @@ import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.merge.MergeResult;
 import org.eclipse.jgit.merge.RecursiveMerger;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.FileTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
@@ -105,6 +107,12 @@ public class RecursiveModelMerger extends RecursiveMerger {
 	 */
 	private final Set<String> handledPaths = new HashSet<>();
 
+	private AbstractTreeIterator aBaseTree;
+
+	private RevTree aHeadTree;
+
+	private RevTree aMergeTree;
+
 	/**
 	 * Default recursive model merger.
 	 *
@@ -116,12 +124,30 @@ public class RecursiveModelMerger extends RecursiveMerger {
 	}
 
 	@Override
+	protected boolean mergeTrees(AbstractTreeIterator baseTree, RevTree headTree, RevTree mergeTree,
+			boolean ignoreConflicts) throws IOException {
+		// We need to keep track on all version to be merged to be able to build a new TreeWalk in
+		// #mergeTreeWalk
+		this.aBaseTree = baseTree;
+		this.aHeadTree = headTree;
+		this.aMergeTree = mergeTree;
+		return super.mergeTrees(baseTree, headTree, mergeTree, ignoreConflicts);
+	}
+
+	@Override
 	protected boolean mergeTreeWalk(TreeWalk treeWalk, boolean ignoreConflicts) throws IOException {
 		if (LOGGER.isInfoEnabled()) {
 			LOGGER.info("STARTING Recursive model merge."); //$NON-NLS-1$
 		}
-		final TreeWalkResourceVariantTreeProvider variantTreeProvider = new TreeWalkResourceVariantTreeProvider(
-				getRepository(), treeWalk, T_BASE, T_OURS, T_THEIRS);
+		final TreeWalkResourceVariantTreeProvider variantTreeProvider = new TreeWalkResourceVariantTreeProvider.Builder()//
+				.setRepository(getRepository())//
+				.setaBaseTree(aBaseTree)//
+				.setHeadTree(aHeadTree)//
+				.setMergeTree(aMergeTree)//
+				.setDircache(dircache) //
+				.setReader(reader) //
+				.build();
+
 		final GitResourceVariantTreeSubscriber subscriber = new GitResourceVariantTreeSubscriber(
 				variantTreeProvider);
 		final RemoteResourceMappingContext remoteMappingContext = new SubscriberResourceMappingContext(

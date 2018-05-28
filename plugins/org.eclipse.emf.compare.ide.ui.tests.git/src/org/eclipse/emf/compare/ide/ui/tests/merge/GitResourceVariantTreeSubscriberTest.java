@@ -25,6 +25,7 @@ import org.eclipse.emf.compare.egit.internal.merge.GitResourceVariantTreeSubscri
 import org.eclipse.emf.compare.egit.internal.merge.TreeWalkResourceVariantTreeProvider;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.NameConflictTreeWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.team.core.diff.IDiff;
@@ -249,10 +250,17 @@ public class GitResourceVariantTreeSubscriberTest extends VariantsTestCase {
 			RevTree sourceTree = walk.parseTree(repo.resolve(MASTER));
 			RevTree remoteTree = walk.parseTree(repo.resolve(BRANCH));
 			TreeWalk treeWalk = new NameConflictTreeWalk(repo);
-			treeWalk.addTree(baseTree);
+			int baseTreeIteratorIndex = treeWalk.addTree(baseTree);
 			treeWalk.addTree(sourceTree);
 			treeWalk.addTree(remoteTree);
-			return new TreeWalkResourceVariantTreeProvider(repo, treeWalk, 0, 1, 2);
+			return new TreeWalkResourceVariantTreeProvider.Builder()//
+					.setRepository(repo)//
+					.setaBaseTree(treeWalk.getTree(baseTreeIteratorIndex, AbstractTreeIterator.class))//
+					.setHeadTree(sourceTree)//
+					.setMergeTree(remoteTree)//
+					.setDircache(repo.readDirCache())//
+					.setReader(repo.newObjectReader())//
+					.build();
 		} finally {
 			walk.close();
 		}
@@ -279,10 +287,17 @@ public class GitResourceVariantTreeSubscriberTest extends VariantsTestCase {
 			RevTree sourceTree = walk.parseTree(repo.resolve(MASTER));
 			RevTree remoteTree = walk.parseTree(repo.resolve(BRANCH));
 			TreeWalk treeWalk = new NameConflictTreeWalk(repo);
-			treeWalk.addTree(baseTree);
+			int baseTreeIteratorIndex = treeWalk.addTree(baseTree);
 			treeWalk.addTree(sourceTree);
 			treeWalk.addTree(remoteTree);
-			return new TreeWalkResourceVariantTreeProvider(repo, treeWalk, 0, 1, 2);
+			return new TreeWalkResourceVariantTreeProvider.Builder()//
+					.setRepository(repo)//
+					.setaBaseTree(treeWalk.getTree(baseTreeIteratorIndex, AbstractTreeIterator.class))//
+					.setHeadTree(sourceTree)//
+					.setMergeTree(remoteTree)//
+					.setDircache(repo.readDirCache())//
+					.setReader(repo.newObjectReader())//
+					.build();
 		} finally {
 			walk.close();
 		}
@@ -314,10 +329,17 @@ public class GitResourceVariantTreeSubscriberTest extends VariantsTestCase {
 			RevTree sourceTree = walk.parseTree(repo.resolve(MASTER));
 			RevTree remoteTree = walk.parseTree(repo.resolve(BRANCH));
 			TreeWalk treeWalk = new NameConflictTreeWalk(repo);
-			treeWalk.addTree(baseTree);
+			int baseTreeIteratorIndex = treeWalk.addTree(baseTree);
 			treeWalk.addTree(sourceTree);
 			treeWalk.addTree(remoteTree);
-			return new TreeWalkResourceVariantTreeProvider(repo, treeWalk, 0, 1, 2);
+			return new TreeWalkResourceVariantTreeProvider.Builder()//
+					.setRepository(repo)//
+					.setaBaseTree(treeWalk.getTree(baseTreeIteratorIndex, AbstractTreeIterator.class))//
+					.setHeadTree(sourceTree)//
+					.setMergeTree(remoteTree)//
+					.setDircache(repo.readDirCache())//
+					.setReader(repo.newObjectReader())//
+					.build();
 		} finally {
 			walk.close();
 		}
