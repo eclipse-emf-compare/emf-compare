@@ -59,6 +59,7 @@ import org.eclipse.jgit.treewalk.FileTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.WorkingTreeIterator;
 import org.eclipse.jgit.treewalk.filter.PathFilterGroup;
+import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
@@ -175,6 +176,18 @@ public class RecursiveModelMerger extends RecursiveMerger {
 			throw new OperationCanceledException();
 		}
 
+		// The treewalk might decide to handle files with no differences by itself instead of leaving that
+		// decision to us (id treewalk.getFilter() is "AnyDiff", then it'll skip over the "in-sync" files
+		// while adding them to the dircache at the same time). In such a case, we need to prevent ModelMerge
+		// from adding the "unchanged" files (which require no merging) in the DirCacheBuilder, otherwise
+		// we'll end up with "duplicate stage not allowed" exceptions at the end of merge operations
+		// (dirCache.finish()).
+		// see also bug #535200
+		boolean handleUnchangedFiles = true;
+		if (treeWalk.getFilter() == TreeFilter.ANY_DIFF) {
+			handleUnchangedFiles = false;
+		}
+
 		// We are done with the setup. We can now iterate over the tree walk and
 		// either delegate to the logical model's merger if any or fall back to
 		// standard git merging. Basically, any file that is not a part of a
@@ -233,7 +246,7 @@ public class RecursiveModelMerger extends RecursiveMerger {
 				enterSubtree = true;
 
 				boolean success = new ModelMerge(this, subscriber, remoteMappingContext, path, logicalModel,
-						modelMerger).run(new JGitProgressMonitorWrapper(monitor));
+						modelMerger, handleUnchangedFiles).run(new JGitProgressMonitorWrapper(monitor));
 				if (!success) {
 					if (LOGGER.isInfoEnabled()) {
 						LOGGER.info("FAILED - Recursive model merge."); //$NON-NLS-1$
@@ -401,15 +414,18 @@ public class RecursiveModelMerger extends RecursiveMerger {
 
 		private final IResourceMappingMerger modelMerger;
 
+		private final boolean handleUnchangedFiles;
+
 		public ModelMerge(RecursiveModelMerger merger, GitResourceVariantTreeSubscriber subscriber,
 				RemoteResourceMappingContext remoteMappingContext, String path, Set<IResource> logicalModel,
-				IResourceMappingMerger modelMerger) {
+				IResourceMappingMerger modelMerger, boolean handleUnchangedFiles) {
 			this.merger = merger;
 			this.subscriber = subscriber;
 			this.remoteMappingContext = remoteMappingContext;
 			this.path = path;
 			this.logicalModel = logicalModel;
 			this.modelMerger = modelMerger;
+			this.handleUnchangedFiles = handleUnchangedFiles;
 		}
 
 		private boolean run(IProgressMonitor monitor) throws CorruptObjectException, IOException {
@@ -488,9 +504,11 @@ public class RecursiveModelMerger extends RecursiveMerger {
 				if (mergeContext.getDiffTree().getDiff(handledFile) == null) {
 					// If no diff, the model merger does... nothing
 					// Make sure this file will be added to the index.
-					merger.registerMergedPath(filePath);
-					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("Merged non-modified file: " + filePath); //$NON-NLS-1$
+					if (handleUnchangedFiles) {
+						merger.registerMergedPath(filePath);
+						if (LOGGER.isDebugEnabled()) {
+							LOGGER.debug("Merged non-modified file: " + filePath); //$NON-NLS-1$
+						}
 					}
 				} else if (filePath != null && status.getSeverity() != IStatus.OK) {
 					if (merger.makeInSync.contains(filePath)) {
