@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.git.framework.internal.statements;
 
+import static org.junit.Assert.fail;
+
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.egit.core.Activator;
@@ -19,6 +21,7 @@ import org.eclipse.emf.compare.ide.ui.tests.framework.EMFCompareTestConfiguratio
 import org.eclipse.emf.compare.ide.ui.tests.framework.ResolutionStrategyID;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitMergeStrategyID;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestSupport;
+import org.junit.Test.None;
 import org.junit.runners.model.FrameworkMethod;
 
 /**
@@ -71,6 +74,7 @@ public abstract class AbstractGitOperationStatement extends AbstractGitStatement
 		setEMFComparePreferences();
 		String from = InternalGitTestSupport.normalizeBranch(getCheckoutedBranch());
 		String to = InternalGitTestSupport.normalizeBranch(getOtherBranch());
+		Class<? extends Throwable> expected = getExpectedException();
 
 		GitTestSupport gitTestsSupport = new GitTestSupport();
 		try {
@@ -79,6 +83,15 @@ public abstract class AbstractGitOperationStatement extends AbstractGitStatement
 			callGitOperation(gitTestsSupport, from, to);
 			Object[] parameters = createParameters(test.getMethod(), gitTestsSupport);
 			test.invokeExplosively(testObject, parameters);
+			if (expected != None.class) {
+				fail("Expected exception : " + expected.getName()); //$NON-NLS-1$
+			}
+		} catch (Throwable e) {
+			if (expected.isAssignableFrom(e.getClass())) {
+				// success
+			} else {
+				throw e;
+			}
 		} finally {
 			restoreEMFComparePreferences();
 			gitTestsSupport.tearDown();
@@ -100,6 +113,15 @@ public abstract class AbstractGitOperationStatement extends AbstractGitStatement
 	 * @return the remote branch
 	 */
 	protected abstract String getOtherBranch();
+
+	/**
+	 * Returns the exception that is expected to be thrown by this test.
+	 * 
+	 * @return The exception that is expected to be thrown by this test.
+	 */
+	protected Class<? extends Throwable> getExpectedException() {
+		return None.class;
+	}
 
 	/**
 	 * Call the Git operation used in for the test. This method have to be sub-classed by clients to call the

@@ -17,6 +17,7 @@ import org.eclipse.emf.compare.ide.ui.tests.merge.AdditiveMergeTests;
 import org.eclipse.emf.compare.ide.ui.tests.merge.DirCacheResourceVariantTreeProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.EMFResourceMappingMergerPreMergeTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.GitResourceVariantTreeSubscriberTest;
+import org.eclipse.emf.compare.ide.ui.tests.merge.MultipleAncestorsTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.ResourceVariantTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.TreeWalkResourceVariantTreeProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.unit.GitLogicalModelTest;
@@ -57,7 +58,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		// StrategyRecursiveModelTest.class,
 		// StrategyRecursiveModelWithDeepProjectTest.class,
 		ThreadedModelResolverResolutionTest.class, TreeWalkResourceVariantTreeProviderTest.class,
-		EMFResourceMappingMergerPreMergeTest.class })
+		EMFResourceMappingMergerPreMergeTest.class, MultipleAncestorsTest.class, })
 public class GitTests {
 
 	@BeforeClass

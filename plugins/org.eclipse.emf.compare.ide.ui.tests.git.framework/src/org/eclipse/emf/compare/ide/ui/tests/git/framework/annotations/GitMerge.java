@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.ide.ui.tests.git.framework.GitTestSupport;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.lib.Repository;
+import org.junit.Test.None;
 
 /**
  * Annotation used to test the merge of models.
@@ -79,5 +80,13 @@ public @interface GitMerge {
 	 * @return the remote branch
 	 */
 	String remote();
+
+	/**
+	 * Optionally specify an exception that is expected to be thrown by the test. The test will fail if this
+	 * exception is not thrown.
+	 * 
+	 * @return The expected exception thrown by this test.
+	 */
+	Class<? extends Throwable> expected() default None.class;
 
 }

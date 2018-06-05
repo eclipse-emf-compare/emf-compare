@@ -63,4 +63,10 @@ public class GitMergeStatement extends AbstractGitOperationStatement {
 		return merge.remote();
 	}
 
+	@Override
+	protected Class<? extends Throwable> getExpectedException() {
+		GitMerge merge = test.getAnnotation(GitMerge.class);
+		return merge.expected();
+	}
+
 }
