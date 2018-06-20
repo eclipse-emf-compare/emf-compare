@@ -23,6 +23,7 @@
    <extension-point id="conflictsDetector" name="Conflicts Detector" schema="schema/conflictsDetector.exsd"/>
    <extension-point id="reqEngine" name="Requirements Engine" schema="schema/reqEngine.exsd"/>
    <extension-point id="weightProvider" name="Weight Provider" schema="schema/weightProvider.exsd"/>
+   <extension-point id="equalityHelperExtensionProvider" name="Equality Helper Extension Provider" schema="schema/equalityHelperExtensionProvider.exsd"/>
    
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package

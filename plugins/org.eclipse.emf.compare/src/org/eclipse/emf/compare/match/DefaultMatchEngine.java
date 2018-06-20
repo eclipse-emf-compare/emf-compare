@@ -32,6 +32,8 @@ import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.match.eobject.CachingDistance;
 import org.eclipse.emf.compare.match.eobject.EditionDistance;
+import org.eclipse.emf.compare.match.eobject.EqualityHelperExtensionProvider;
+import org.eclipse.emf.compare.match.eobject.EqualityHelperExtensionProviderDescriptorRegistryImpl;
 import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
 import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
@@ -415,7 +417,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * @return a new {@link DefaultMatchEngine} instance.
 	 */
 	public static IMatchEngine create(UseIdentifiers useIDs) {
-		return create(useIDs, WeightProviderDescriptorRegistryImpl.createStandaloneInstance());
+		return create(useIDs, WeightProviderDescriptorRegistryImpl.createStandaloneInstance(),
+				EqualityHelperExtensionProviderDescriptorRegistryImpl.createStandaloneInstance(), null);
 	}
 
 	/**
@@ -430,7 +433,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 */
 	public static IMatchEngine create(UseIdentifiers useIDs,
 			WeightProvider.Descriptor.Registry weightProviderRegistry) {
-		return create(useIDs, weightProviderRegistry, null);
+		return create(useIDs, weightProviderRegistry,
+				EqualityHelperExtensionProviderDescriptorRegistryImpl.createStandaloneInstance(), null);
 	}
 
 	/**
@@ -448,9 +452,32 @@ public class DefaultMatchEngine implements IMatchEngine {
 	public static IMatchEngine create(UseIdentifiers useIDs,
 			WeightProvider.Descriptor.Registry weightProviderRegistry,
 			Collection<IResourceMatchingStrategy> strategies) {
+		return create(useIDs, weightProviderRegistry,
+				EqualityHelperExtensionProviderDescriptorRegistryImpl.createStandaloneInstance(), strategies);
+	}
+
+	/**
+	 * Helper creator method that instantiate a {@link DefaultMatchEngine} that will use identifiers as
+	 * specified by the given {@code useIDs} enumeration.
+	 * 
+	 * @param useIDs
+	 *            the kinds of matcher to use.
+	 * @param weightProviderRegistry
+	 *            the match engine needs a WeightProvider in case of this match engine do not use identifiers.
+	 * @param equalityHelperExtensionProviderRegistry
+	 *            the match engine may need a Equality Helper Extension
+	 * @param strategies
+	 *            the matching strategies you want to use for the match step.
+	 * @return a new {@link DefaultMatchEngine} instance.
+	 */
+	public static IMatchEngine create(UseIdentifiers useIDs,
+			WeightProvider.Descriptor.Registry weightProviderRegistry,
+			EqualityHelperExtensionProvider.Descriptor.Registry equalityHelperExtensionProviderRegistry,
+			Collection<IResourceMatchingStrategy> strategies) {
 		final IComparisonFactory comparisonFactory = new DefaultComparisonFactory(
 				new DefaultEqualityHelperFactory());
-		final IEObjectMatcher eObjectMatcher = createDefaultEObjectMatcher(useIDs, weightProviderRegistry);
+		final IEObjectMatcher eObjectMatcher = createDefaultEObjectMatcher(useIDs, weightProviderRegistry,
+				equalityHelperExtensionProviderRegistry);
 
 		final IResourceMatcher resourceMatcher;
 		if (strategies == null || strategies.isEmpty()) {
@@ -474,7 +501,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 */
 	public static IEObjectMatcher createDefaultEObjectMatcher(UseIdentifiers useIDs) {
 		return createDefaultEObjectMatcher(useIDs,
-				WeightProviderDescriptorRegistryImpl.createStandaloneInstance());
+				WeightProviderDescriptorRegistryImpl.createStandaloneInstance(),
+				EqualityHelperExtensionProviderDescriptorRegistryImpl.createStandaloneInstance());
 	}
 
 	/**
@@ -489,8 +517,28 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 */
 	public static IEObjectMatcher createDefaultEObjectMatcher(UseIdentifiers useIDs,
 			WeightProvider.Descriptor.Registry weightProviderRegistry) {
+		return createDefaultEObjectMatcher(useIDs, weightProviderRegistry,
+				EqualityHelperExtensionProviderDescriptorRegistryImpl.createStandaloneInstance());
+	}
+
+	/**
+	 * Creates and configures an {@link IEObjectMatcher} with the strategy given by {@code useIDs}. The
+	 * {@code cache} will be used to cache some expensive computation (should better a LoadingCache).
+	 * 
+	 * @param useIDs
+	 *            which strategy the return IEObjectMatcher must follow.
+	 * @param weightProviderRegistry
+	 *            the match engine needs a WeightProvider in case of this match engine do not use identifiers.
+	 * @param equalityHelperExtensionProviderRegistry
+	 *            the match engine may need a Equality helper extension.
+	 * @return a new IEObjectMatcher.
+	 */
+	public static IEObjectMatcher createDefaultEObjectMatcher(UseIdentifiers useIDs,
+			WeightProvider.Descriptor.Registry weightProviderRegistry,
+			EqualityHelperExtensionProvider.Descriptor.Registry equalityHelperExtensionProviderRegistry) {
 		final IEObjectMatcher matcher;
-		final EditionDistance editionDistance = new EditionDistance(weightProviderRegistry);
+		final EditionDistance editionDistance = new EditionDistance(weightProviderRegistry,
+				equalityHelperExtensionProviderRegistry);
 		final CachingDistance cachedDistance = new CachingDistance(editionDistance);
 		switch (useIDs) {
 			case NEVER:

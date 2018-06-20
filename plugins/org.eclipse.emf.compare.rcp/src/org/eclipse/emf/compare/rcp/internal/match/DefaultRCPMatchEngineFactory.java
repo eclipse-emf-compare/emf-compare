@@ -68,7 +68,8 @@ public class DefaultRCPMatchEngineFactory implements IMatchEngine.Factory {
 	public IMatchEngine getMatchEngine() {
 		final UseIdentifiers useUdentifier = getUseIdentifierValue();
 		return DefaultMatchEngine.create(useUdentifier,
-				EMFCompareRCPPlugin.getDefault().getWeightProviderRegistry());
+				EMFCompareRCPPlugin.getDefault().getWeightProviderRegistry(),
+				EMFCompareRCPPlugin.getDefault().getEqualityHelperExtensionProviderRegistry(), null);
 	}
 
 	/**

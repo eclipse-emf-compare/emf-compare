@@ -57,6 +57,8 @@ import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescr
 import org.eclipse.emf.compare.internal.adapterfactory.RankedAdapterFactoryDescriptorRegistryImpl;
 import org.eclipse.emf.compare.internal.utils.Graph;
 import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.match.eobject.EqualityHelperExtensionProvider;
+import org.eclipse.emf.compare.match.eobject.EqualityHelperExtensionProviderDescriptorRegistryImpl;
 import org.eclipse.emf.compare.match.eobject.WeightProvider;
 import org.eclipse.emf.compare.match.eobject.WeightProviderDescriptorRegistryImpl;
 import org.eclipse.emf.compare.merge.IMerger;
@@ -69,6 +71,7 @@ import org.eclipse.emf.compare.rcp.internal.adapterfactory.AdapterFactoryDescrip
 import org.eclipse.emf.compare.rcp.internal.extension.IItemRegistry;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.DescriptorRegistryEventListener;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.ItemRegistry;
+import org.eclipse.emf.compare.rcp.internal.match.EqualityHelperExtensionProviderDescriptorRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.match.MatchEngineFactoryRegistryListener;
 import org.eclipse.emf.compare.rcp.internal.match.MatchEngineFactoryRegistryWrapper;
 import org.eclipse.emf.compare.rcp.internal.match.WeightProviderDescriptorRegistryListener;
@@ -111,6 +114,9 @@ public class EMFCompareRCPPlugin extends Plugin {
 	/** The id of the weight provider extension point. */
 	public static final String WEIGHT_PROVIDER_PPID = "weightProvider"; //$NON-NLS-1$
 
+	/** The id of the equality helper extension provider extension point. */
+	public static final String EQUALITY_HELPER_EXTENSION_PROVIDER_PPID = "equalityHelperExtensionProvider"; //$NON-NLS-1$
+
 	/** The id of the load on demand policy extension point. */
 	public static final String LOAD_ON_DEMAND_POLICY_PPID = "loadOnDemandPolicy"; //$NON-NLS-1$
 
@@ -151,6 +157,9 @@ public class EMFCompareRCPPlugin extends Plugin {
 
 	/** The registry that will hold references to all weight providers. */
 	private WeightProvider.Descriptor.Registry weightProviderRegistry;
+
+	/** The registry that will hold references to all equality helper extension providers. */
+	private EqualityHelperExtensionProvider.Descriptor.Registry equalityHelperExtensionProviderRegistry;
 
 	/** The registry listener that will be used to react to merger changes. */
 	private AbstractRegistryEventListener mergerRegistryListener;
@@ -203,6 +212,9 @@ public class EMFCompareRCPPlugin extends Plugin {
 	/** The registry listener that will be used to react to weight provider changes. */
 	private WeightProviderDescriptorRegistryListener weightProviderListener;
 
+	/** The registry listener that will be used to react to equality helper extension provider changes. */
+	private EqualityHelperExtensionProviderDescriptorRegistryListener equalityHelperExtensionProviderListener;
+
 	/** Will listen to preference changes and update log4j configuration accordingly. */
 	private LoggingPreferenceChangeListener preferenceChangeListener;
 
@@ -241,6 +253,8 @@ public class EMFCompareRCPPlugin extends Plugin {
 		setUpReqEngineRegistry(registry);
 
 		setUpConflictDetectorRegistry(registry);
+
+		setUpEqualityHelperExtensionProviderRegistry(registry);
 
 		initLogging();
 	}
@@ -392,6 +406,21 @@ public class EMFCompareRCPPlugin extends Plugin {
 				getLog(), weightProviderRegistry);
 		registry.addListener(weightProviderListener);
 		weightProviderListener.readRegistry(registry);
+	}
+
+	/**
+	 * Set the Matching And Distance Provider Registry.
+	 * 
+	 * @param registry
+	 *            {@link IExtensionRegistry} to listen in order to fill the registry
+	 */
+	private void setUpEqualityHelperExtensionProviderRegistry(final IExtensionRegistry registry) {
+		equalityHelperExtensionProviderRegistry = new EqualityHelperExtensionProviderDescriptorRegistryImpl();
+		equalityHelperExtensionProviderListener = new EqualityHelperExtensionProviderDescriptorRegistryListener(
+				PLUGIN_ID, EQUALITY_HELPER_EXTENSION_PROVIDER_PPID, getLog(),
+				equalityHelperExtensionProviderRegistry);
+		registry.addListener(equalityHelperExtensionProviderListener);
+		equalityHelperExtensionProviderListener.readRegistry(registry);
 	}
 
 	/*
@@ -686,6 +715,15 @@ public class EMFCompareRCPPlugin extends Plugin {
 	 */
 	public WeightProvider.Descriptor.Registry getWeightProviderRegistry() {
 		return weightProviderRegistry;
+	}
+
+	/**
+	 * Returns the registry of equality helper extension providers.
+	 * 
+	 * @return the registry of equality helper extension providers
+	 */
+	public EqualityHelperExtensionProvider.Descriptor.Registry getEqualityHelperExtensionProviderRegistry() {
+		return equalityHelperExtensionProviderRegistry;
 	}
 
 	/**

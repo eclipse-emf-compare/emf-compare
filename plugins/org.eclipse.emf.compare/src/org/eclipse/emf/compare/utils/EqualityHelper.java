@@ -28,6 +28,10 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.internal.spec.MatchSpec;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
+import org.eclipse.emf.compare.match.eobject.EqualityHelperExtensionProvider;
+import org.eclipse.emf.compare.match.eobject.EqualityHelperExtensionProvider.Descriptor.Registry;
+import org.eclipse.emf.compare.match.eobject.EqualityHelperExtensionProvider.SpecificMatch;
+import org.eclipse.emf.compare.match.eobject.EqualityHelperExtensionProviderDescriptorRegistryImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -49,6 +53,9 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	/** The record of the most recently used {@link #matchingEObjects(EObject, EObject) match}. */
 	private MatchSpec eObjectMatch;
 
+	/** Registry of equality helper extension computations provider. */
+	private EqualityHelperExtensionProvider.Descriptor.Registry equalityHelperExtensionProviderRegistry = null;
+
 	/**
 	 * Creates a new EqualityHelper.
 	 * 
@@ -68,6 +75,20 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	 */
 	public EqualityHelper(LoadingCache<EObject, URI> uriCache) {
 		this.uriCache = uriCache;
+	}
+
+	/**
+	 * Creates a new EqualityHelper with the given cache and registry
+	 * 
+	 * @param uriCache
+	 *            the cache to be used for {@link EcoreUtil#getURI(EObject)} calls.
+	 * @param equalityHelperExtensionProviderRegistry
+	 *            Registry ofequality helper extension provider
+	 */
+	public EqualityHelper(LoadingCache<EObject, URI> uriCache,
+			EqualityHelperExtensionProvider.Descriptor.Registry equalityHelperExtensionProviderRegistry) {
+		this.uriCache = uriCache;
+		this.equalityHelperExtensionProviderRegistry = equalityHelperExtensionProviderRegistry;
 	}
 
 	/**
@@ -190,6 +211,37 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	protected boolean matchingEObjects(EObject object1, EObject object2) {
 		final boolean matching;
 		MatchSpec match = (MatchSpec)getMatch(object1);
+
+		if (match != null) {
+			if (match.getLeft() == object2 || match.getRight() == object2 || match.getOrigin() == object2) {
+				return true;
+			}
+		}
+
+		// Call to specific matcher if one was provided
+		if (equalityHelperExtensionProviderRegistry != null && object1 != null && object2 != null) {
+			EqualityHelperExtensionProvider equalityHelperExtensionProvider = equalityHelperExtensionProviderRegistry
+					.getHighestRankingEqualityHelperExtensionProvider(object1.eClass().getEPackage());
+
+			if (equalityHelperExtensionProvider != null) {
+				SpecificMatch specificMatch = equalityHelperExtensionProvider.matchingEObjects(object1,
+						object2, this);
+				if (specificMatch != null) {
+					switch (specificMatch) {
+						case MATCH:
+							return true;
+						case UNMATCH:
+							return false;
+						case UNKNOWN:
+							// Fall through
+						default:
+							break;
+					}
+				}
+			}
+		}
+
+		// Match could be null if the value is out of the scope
 		if (match != null) {
 			eObjectMatch = match;
 			matching = match.matches(object2);

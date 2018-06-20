@@ -70,7 +70,9 @@ public class EGitMatchEngineFactory extends DefaultRCPMatchEngineFactory {
 		final Collection<IResourceMatchingStrategy> strategies = Sets.newLinkedHashSet();
 		strategies.add(new LocationMatchingStrategy());
 		return DefaultMatchEngine.create(useUdentifier,
-				EMFCompareRCPPlugin.getDefault().getWeightProviderRegistry(), strategies);
+				EMFCompareRCPPlugin.getDefault().getWeightProviderRegistry(),
+				EMFCompareRCPPlugin.getDefault().getEqualityHelperExtensionProviderRegistry(),
+				strategies);
 	}
 
 	/**

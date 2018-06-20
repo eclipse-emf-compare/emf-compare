@@ -95,23 +95,40 @@ public class EditionDistance implements DistanceFunction {
 	 * {@link WeightProviderDescriptorRegistryImpl#createStandaloneInstance()}.
 	 */
 	public EditionDistance() {
-		this(WeightProviderDescriptorRegistryImpl.createStandaloneInstance());
+		this(WeightProviderDescriptorRegistryImpl.createStandaloneInstance(),
+				EqualityHelperExtensionProviderDescriptorRegistryImpl.createStandaloneInstance());
 	}
 
 	/**
 	 * Instantiate a new Edition Distance.
 	 * 
-	 * @param registry
+	 * @param weightProviderRegistry
 	 *            The registry of weight providers to use in this Edition Distance.
 	 */
-	public EditionDistance(WeightProvider.Descriptor.Registry registry) {
-		weightProviderRegistry = registry;
+
+	public EditionDistance(WeightProvider.Descriptor.Registry weightProviderRegistry) {
+		this(weightProviderRegistry,
+				EqualityHelperExtensionProviderDescriptorRegistryImpl.createStandaloneInstance());
+	}
+
+	/**
+	 * Instantiate a new Edition Distance.
+	 * 
+	 * @param weightProviderRegistry
+	 *            The registry of weight providers to use in this Edition Distance.
+	 * @param equalityHelperExtensionProviderRegistry
+	 *            The registry of equality helper extension providers to use in this Edition Distance.
+	 */
+
+	public EditionDistance(WeightProvider.Descriptor.Registry weightProviderRegistry,
+			final EqualityHelperExtensionProvider.Descriptor.Registry equalityHelperExtensionProviderRegistry) {
+		this.weightProviderRegistry = weightProviderRegistry;
 
 		IEqualityHelperFactory fakeEqualityHelperFactory = new DefaultEqualityHelperFactory() {
 			@Override
 			public IEqualityHelper createEqualityHelper() {
 				final LoadingCache<EObject, URI> cache = EqualityHelper.createDefaultCache(getCacheBuilder());
-				return new EqualityHelper(cache) {
+				return new EqualityHelper(cache, equalityHelperExtensionProviderRegistry) {
 					@Override
 					protected boolean matchingURIs(EObject object1, EObject object2) {
 						/*

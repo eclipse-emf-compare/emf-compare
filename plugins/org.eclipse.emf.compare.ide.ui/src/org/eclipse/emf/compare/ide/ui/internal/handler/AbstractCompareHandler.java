@@ -176,7 +176,8 @@ public abstract class AbstractCompareHandler extends AbstractHandler {
 		public MatchEObjectEngine() {
 			// never use id in EObjects comparison
 			super(DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER,
-					EMFCompareRCPPlugin.getDefault().getWeightProviderRegistry()),
+						EMFCompareRCPPlugin.getDefault().getWeightProviderRegistry(),
+						EMFCompareRCPPlugin.getDefault().getEqualityHelperExtensionProviderRegistry()),
 					new DefaultComparisonFactory(new DefaultEqualityHelperFactory()));
 		}
 
