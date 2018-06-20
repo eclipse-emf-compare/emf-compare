@@ -146,18 +146,7 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 		String result = ""; //$NON-NLS-1$
 		EObject container = input.eContainer();
 		if (container != null) {
-			if (underMatch.isPresent()) {
-				/*
-				 * If we have a match for the container, we want to make sure the fragment is going to be the
-				 * same.
-				 */
-				Match m = underMatch.get().getMatch(container);
-				if (m == null) {
-					result = retrieveFragment(input);
-				}
-			} else {
 				result = retrieveFragment(input);
-			}
 		} else {
 			result = "0"; //$NON-NLS-1$
 		}
