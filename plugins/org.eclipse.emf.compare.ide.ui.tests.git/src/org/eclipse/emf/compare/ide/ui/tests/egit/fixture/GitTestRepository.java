@@ -447,7 +447,7 @@ public class GitTestRepository {
 	public void createBranch(String refName, String newRefName) throws IOException {
 		RefUpdate updateRef;
 		updateRef = repository.updateRef(newRefName);
-		Ref startRef = repository.getRef(refName);
+		Ref startRef = repository.findRef(refName);
 		ObjectId startAt = repository.resolve(refName);
 		String startBranch;
 		if (startRef != null) {
@@ -522,7 +522,7 @@ public class GitTestRepository {
 	 *            Name of a commit to rebase the current HEAD on.
 	 */
 	public void rebaseLogical(String refName) throws CoreException, IOException {
-		new RebaseOperation(repository, repository.getRef(refName)).execute(null);
+		new RebaseOperation(repository, repository.findRef(refName)).execute(null);
 	}
 
 	/**
