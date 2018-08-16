@@ -3,6 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.ide.ui.tests.git.framework
 Bundle-Version: 1.0.2.qualifier
+Bundle-Localization: plugin
 Bundle-Activator: org.eclipse.emf.compare.ide.ui.tests.git.framework.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.workbench;bundle-version="[3.4.0,4.0.0)",

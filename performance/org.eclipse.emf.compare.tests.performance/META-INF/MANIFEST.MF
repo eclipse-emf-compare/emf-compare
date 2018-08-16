@@ -1,9 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: EMFCompare Performance Tests
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.tests.performance
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Eclipse Modeling
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
