@@ -475,10 +475,6 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		fRedoAction = null;
 		fUndoAction = null;
 
-		// Remove all references to the inputs (avoid short-term leak of the resource sets retained via
-		// references to org.eclipse.compare.contentmergeviewer.TextMergeViewer$ContributorInfo.)
-		updateContent(null, null, null);
-
 		super.handleDispose(event);
 	}
 
