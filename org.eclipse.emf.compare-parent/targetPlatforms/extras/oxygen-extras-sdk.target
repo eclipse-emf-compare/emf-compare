@@ -31,7 +31,7 @@
       <unit id="org.eclipse.sirius" version="0.0.0"/>
       <unit id="org.eclipse.sirius.diagram" version="0.0.0"/>
       <unit id="org.eclipse.sirius.runtime.feature.group" version="0.0.0"/>
-      <repository location="http://download.eclipse.org/sirius/updates/nightly/latest/oxygen"/>
+      <repository location="http://download.eclipse.org/sirius/updates/releases/6.1.1/oxygen"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.platform.feature.group" version="0.0.0"/>
