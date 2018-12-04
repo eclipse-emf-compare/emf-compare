@@ -27,6 +27,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jgit.api.Status;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 /**
@@ -80,10 +81,12 @@ public class EMFResourceMappingMergerPreMergeTest {
 	 * @param projects
 	 *            list of involved projects
 	 */
+	@Ignore
 	@GitInput("data/premerge/bug_preMergeWithConflict.zip")
 	@GitMerge(local = "renameClassA", remote = "renameClassA_addOtherModel")
 	public void testPreMergeWithConflictL2R(Status status, List<IProject> projects) {
 		IProject project = assertSingleProject(projects);
+		System.err.println(project.getLocation());
 		assertFilesExist(project, "model.uml", "model.notation", "model.di", "otherModel.uml",
 				"otherModel.notation", "otherModel.di");
 		assertFilesConflict(status, "PreMergeWithConflict/model.uml");
@@ -110,6 +113,7 @@ public class EMFResourceMappingMergerPreMergeTest {
 	 * @param projects
 	 *            list of involved projects
 	 */
+	@Ignore
 	@GitInput("data/premerge/bug_preMergeWithConflict.zip")
 	@GitMerge(local = "renameClassA_addOtherModel", remote = "renameClassA")
 	public void testPreMergeWithConflictR2L(Status status, List<IProject> projects) {

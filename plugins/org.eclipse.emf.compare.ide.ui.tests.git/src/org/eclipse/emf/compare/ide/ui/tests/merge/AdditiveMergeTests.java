@@ -34,6 +34,7 @@ import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMergeSt
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 @RunWith(GitTestRunner.class)
@@ -58,6 +59,7 @@ public class AdditiveMergeTests {
 		});
 	}
 
+	@Ignore
 	@GitMerge(local = "branch1", remote = "branch2")
 	@GitInput("data/additive/ecore.zip")
 	public void testAdditiveMergeEcore1(Status status, Repository repository, List<IProject> projects,
@@ -71,6 +73,7 @@ public class AdditiveMergeTests {
 				or(hasDirectOrIndirectConflict(PSEUDO), isInRealAddAddConflict())));
 	}
 
+	@Ignore
 	@GitMerge(local = "branch2", remote = "branch1")
 	@GitInput("data/additive/ecore.zip")
 	public void testAdditiveMergeEcore2(Status status, Repository repository, List<IProject> projects,
@@ -84,6 +87,7 @@ public class AdditiveMergeTests {
 				or(hasDirectOrIndirectConflict(PSEUDO), isInRealAddAddConflict())));
 	}
 
+	@Ignore
 	@GitMerge(local = "branch1", remote = "branch2")
 	@GitInput("data/additive/uml.zip")
 	public void testAdditiveMergeUml1(Status status, Repository repository, List<IProject> projects,
@@ -97,6 +101,7 @@ public class AdditiveMergeTests {
 				or(hasDirectOrIndirectConflict(PSEUDO), isInRealAddAddConflict())));
 	}
 
+	@Ignore
 	@GitMerge(local = "branch2", remote = "branch1")
 	@GitInput("data/additive/uml.zip")
 	public void testAdditiveMergeUml2(Status status, Repository repository, List<IProject> projects,

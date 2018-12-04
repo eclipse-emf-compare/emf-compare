@@ -11,6 +11,7 @@ import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitInput;
 import org.eclipse.emf.compare.ide.ui.tests.git.framework.annotations.GitMerge;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 @RunWith(GitTestRunner.class)
@@ -26,6 +27,7 @@ public class MultipleAncestorsTest {
 	 * multiple ancestors for the merges.
 	 * </p>
 	 */
+	@Ignore
 	@GitInput("data/multipleancestors/complex.merge.zip")
 	@GitMerge(local = "assemblage", remote = "arthur")
 	public void testComplexMerge(Status status, List<IProject> projects) {
@@ -43,6 +45,7 @@ public class MultipleAncestorsTest {
 	 * should just finish correctly.
 	 * </p>
 	 */
+	@Ignore
 	@GitInput("data/multipleancestors/library.binaryecore.multiple.ancestors.conflicts.zip")
 	@GitMerge(local = "master", remote = "Stephane")
 	public void testLibraryTextualConflicts(Status status, List<IProject> projects) {
@@ -77,6 +80,7 @@ public class MultipleAncestorsTest {
 	 * other. This merge will go correctly.
 	 * </p>
 	 */
+	@Ignore
 	@GitInput("data/multipleancestors/library.binaryecore.multiple.ancestors.no.conflict.different.files.zip")
 	@GitMerge(local = "master", remote = "Stephane")
 	public void testLibraryNoConflicts(Status status, List<IProject> projects) {
