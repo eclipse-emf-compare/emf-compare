@@ -432,7 +432,9 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 			}
 			ObjectId mergeHead = repository.resolve(target);
 			if (mergeHead == null) {
-				throw new IOException(NLS.bind(UIText.ValidationUtils_CanNotResolveRefMessage, target));
+				throw new IOException(NLS.bind(
+						EMFCompareEGitUIMessages.getString("ValidationUtils_CanNotResolveRefMessage"), //$NON-NLS-1$
+						target));
 			}
 			return revWalk.parseCommit(mergeHead);
 		} catch (IOException e) {
@@ -444,8 +446,9 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		try {
 			ObjectId head = repository.resolve(Constants.HEAD);
 			if (head == null) {
-				throw new IOException(
-						NLS.bind(UIText.ValidationUtils_CanNotResolveRefMessage, Constants.HEAD));
+				throw new IOException(NLS.bind(
+						EMFCompareEGitUIMessages.getString("ValidationUtils_CanNotResolveRefMessage"), //$NON-NLS-1$
+						Constants.HEAD));
 			}
 			return revWalk.parseCommit(head);
 		} catch (IOException e) {

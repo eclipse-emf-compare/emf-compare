@@ -423,7 +423,7 @@ public class GitTestSupport extends InternalGitTestSupport {
 		reset.execute(null);
 		BranchOperation op = new BranchOperation(getRepository(), normalizeBranch(refName));
 		op.execute(null);
-		CheckoutResult result = op.getResult();
+		CheckoutResult result = op.getResult(repository);
 		if (result.getStatus() != CheckoutResult.Status.OK) {
 			throw new IllegalStateException("Unable to checkout branch " + refName + " result:" + result); //$NON-NLS-1$ //$NON-NLS-2$
 		}
