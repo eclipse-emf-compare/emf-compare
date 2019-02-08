@@ -1249,8 +1249,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 	}
 
-	void compareInputChanged(CompareInputAdapter input, IProgressMonitor monitor) {
-		compareInputChanged(null, (Comparison)input.getComparisonObject(), monitor);
+	void compareInputChanged(Comparison input, IProgressMonitor monitor) {
+		compareInputChanged(null, input, monitor);
 	}
 
 	void compareInputChanged(ComparisonScopeInput input, IProgressMonitor monitor) {
@@ -1274,12 +1274,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			compareConfiguration.setMergePreviewMode(null);
 		}
 
-		// setup defaults
-		if (compareConfiguration.getEditingDomain() == null) {
-			ICompareEditingDomain domain = EMFCompareEditingDomain.create(comparisonScope.getLeft(),
-					comparisonScope.getRight(), comparisonScope.getOrigin());
-			compareConfiguration.setEditingDomain(domain);
-		}
 		if (comparator == null) {
 			Builder builder = EMFCompare.builder();
 			EMFCompareBuilderConfigurator.createDefault().configure(builder);
@@ -1310,6 +1304,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			final IProgressMonitor monitor) {
 		if (!getControl().isDisposed() && !monitor.isCanceled()) { // guard against disposal
 			final EMFCompareConfiguration config = getCompareConfiguration();
+
+			// setup defaults
+			if (config.getEditingDomain() == null) {
+				ICompareEditingDomain domain = EMFCompareEditingDomain.create(scope.getLeft(),
+						scope.getRight(), scope.getOrigin());
+				config.setEditingDomain(domain);
+			}
 
 			ComposedAdapterFactory oldAdapterFactory = fAdapterFactory;
 			// re-initialize adapter factory due to new comparison
@@ -1421,11 +1422,17 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		if (input != null && !monitor.isCanceled()) {
 			if (input instanceof CompareInputAdapter) {
 				resourceSetShouldBeDisposed = false;
-				compareInputChanged((CompareInputAdapter)input, monitor);
+				CompareInputAdapter adapter = (CompareInputAdapter)input;
+				compareInputChanged((Comparison)adapter.getComparisonObject(), monitor);
 				initToolbar(monitor);
 			} else if (input instanceof ComparisonScopeInput) {
 				resourceSetShouldBeDisposed = false;
 				compareInputChanged((ComparisonScopeInput)input, monitor);
+				initToolbar(monitor);
+			} else if (input instanceof IComparisonProvider) {
+				resourceSetShouldBeDisposed = false;
+				compareInputChanged(((IComparisonProvider)input).getComparisonScope(monitor),
+						((IComparisonProvider)input).getComparison(monitor), monitor);
 				initToolbar(monitor);
 			} else {
 				resourceSetShouldBeDisposed = true;
