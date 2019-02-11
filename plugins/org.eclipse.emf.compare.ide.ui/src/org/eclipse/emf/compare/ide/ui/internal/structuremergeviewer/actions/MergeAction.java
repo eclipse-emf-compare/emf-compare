@@ -33,7 +33,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Streams;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -485,7 +484,7 @@ public class MergeAction extends BaseSelectionListenerAction {
 				if (mode == ACCEPT || mode == REJECT) {
 					redoDiffs(diffsToMerge, diffsToDiscard, ACCEPT, REJECT);
 				} else {
-					List<Diff> diffsToBeCopiedLTR = Streams
+					List<Diff> diffsToBeCopiedLTR = Stream
 							.concat(diffsToMerge.stream().filter(fromSource(LEFT)),
 									diffsToDiscard.stream().filter(fromSource(RIGHT)))
 							.collect(Collectors.toList());
