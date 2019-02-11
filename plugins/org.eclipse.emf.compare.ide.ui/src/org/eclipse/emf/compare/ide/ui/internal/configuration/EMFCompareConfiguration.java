@@ -167,17 +167,62 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * {@inheritDoc}.
+	 * <p>
+	 * The lifecycle of the EMFCompareConfiguration (ECC) does not follow the lifecycle of its delegate
+	 * CompareConfiguration (CC). CC are created once per comparison editor instance. The comparison editor
+	 * lives from the moment the user starts a comparison to the moment the user closes the editor.
+	 * In-between, the user will be able to switch from one content merge viewer (CMV) to another by changing
+	 * his selection in the structure merge viewer (SMW). For example, selecting an EObject in the SMV will
+	 * show tree representations of these EObject in the CMV, whilst selecting a text attribute in the SMW
+	 * will switch the CMV representation to textual viewers. When switching CMV, the ECC needs a partial
+	 * dispose in order to change its installed listeners (this will also happen when mirroring the
+	 * comparison). Furthermore, the user will be able to switch the whole comparison from one file to another
+	 * if he has selected multiple files for comparison (for example, by comparing in a compare dialog). When
+	 * switching from one file to another, the whole EMF Compare comparison needs to change, and thus we need
+	 * to dispose of the ECC, but the CC cannot be disposed at that time since its own lifecycle hasn't come
+	 * to an end.
+	 * </p>
+	 * <p>
+	 * Because of this, there are three separate 'dispose' methods on an ECC. First is the inherited
+	 * {@link #dispose()} which will dispose of this whole ECC after disposing its delegate CC. Second is
+	 * {@link #disposeListeners()} which will only undertake a partial clean up of this ECC : listeners of the
+	 * ECC are disposed, but not the Comparison itself, nor the delegate CC. Finally,
+	 * {@link #disposeComparison()} will discard both the listeners and Comparison, but not the delegate CC.
+	 * </p>
 	 * 
 	 * @see org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration#dispose()
 	 */
 	@Override
 	public void dispose() {
 		super.dispose();
-		disposeSelf();
+		disposeListeners();
 		// CompareConfiguration does not clear its properties list...
 		// Lets clean our own mess ourselves
 		// EVENT_BUS must not be set to null
+		disposeComparison();
+	}
+
+	/**
+	 * {@link #dispose()} is only called when the comparison editor is closed, whereas EMFCompareConfiguration
+	 * are created and discarded on each change of the ContentMergeViewer input. This will be called to
+	 * dispose of the specific setup that was made by the EMFCompareConfiguration wrapper to its underlying
+	 * CompareConfiguration. See documentation of {@link #dispose()}.
+	 * 
+	 * @see #dispose()
+	 */
+	public void disposeListeners() {
+		compareConfiguration.removePropertyChangeListener(propertyChangeListener);
+	}
+
+	/**
+	 * {@link #dispose()} is only called when the comparison editor is closed, whereas EMFCompareComparison
+	 * follows its own separate lifecycle. See documentation of {@link #dispose()}.
+	 * 
+	 * @see #dispose()
+	 */
+	public void disposeComparison() {
+		disposeListeners();
 		compareConfiguration.setProperty(COMPARISON_SCOPE, null);
 		compareConfiguration.setProperty(COMPARE_RESULT, null);
 		compareConfiguration.setProperty(SMV_FILTERS, null);
@@ -190,16 +235,6 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		compareConfiguration.setProperty(DISPLAY_FILTERS, null);
 		compareConfiguration.setProperty(DISPLAY_SAVE_ACTION, null);
 		compareConfiguration.setProperty(DISPLAY_SELECT_UNRESOLVED_DIFF_ACTIONS, null);
-	}
-
-	/**
-	 * {@link #dispose()} is only called when the comparison editor is closed, whereas EMFCompareConfiguration
-	 * are created and discarded on each change of the ContentMergeViewer input. This will be called to
-	 * dispose of the specific setup that was made by the EMFCompareConfiguration wrapper to its underlying
-	 * CompareConfiguration.
-	 */
-	public void disposeSelf() {
-		compareConfiguration.removePropertyChangeListener(propertyChangeListener);
 	}
 
 	public boolean getBooleanProperty(String key, boolean dflt) {

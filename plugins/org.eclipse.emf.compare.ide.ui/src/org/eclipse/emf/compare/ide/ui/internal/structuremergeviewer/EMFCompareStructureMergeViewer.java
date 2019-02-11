@@ -1839,7 +1839,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 
 		if (getCompareConfiguration() != null) {
-			getCompareConfiguration().dispose();
+			getCompareConfiguration().disposeComparison();
 		}
 		getViewer().setInput(null);
 	}

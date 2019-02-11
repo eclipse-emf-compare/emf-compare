@@ -482,7 +482,7 @@ public class EMFCompareTextMergeViewer extends TextMergeViewer implements Comman
 		EMFCompareConfiguration compareConfiguration = getCompareConfiguration();
 		compareConfiguration.getEventBus().unregister(this);
 		editingDomainChange(compareConfiguration.getEditingDomain(), null);
-		compareConfiguration.disposeSelf();
+		compareConfiguration.disposeListeners();
 
 		fRedoAction = null;
 		fUndoAction = null;

@@ -676,7 +676,7 @@ public class TextFallbackMergeViewer extends TextMergeViewer {
 		configuration.getEventBus().unregister(this);
 
 		// Stop using this configuration.
-		configuration.disposeSelf();
+		configuration.disposeListeners();
 
 		// Clean up the inputs.
 		setOriginalInput(null);

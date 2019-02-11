@@ -870,7 +870,7 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 		editingDomainChange(compareConfiguration.getEditingDomain(), null);
 		compareConfiguration.getEventBus().unregister(this);
 		compareConfiguration.getPreferenceStore().removePropertyChangeListener(propertyChangeListener);
-		compareConfiguration.disposeSelf();
+		compareConfiguration.disposeListeners();
 		differenceGroupProvider = null;
 		undoAction = null;
 		redoAction = null;

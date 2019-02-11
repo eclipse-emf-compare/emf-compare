@@ -206,7 +206,7 @@ public class LabelContentViewer extends Viewer implements IPropertyChangeNotifie
 
 	protected void handleDisposed() {
 		configuration.getEventBus().unregister(this);
-		configuration.disposeSelf();
+		configuration.disposeListeners();
 		editingDomainChange(configuration.getEditingDomain(), null);
 	}
 }
