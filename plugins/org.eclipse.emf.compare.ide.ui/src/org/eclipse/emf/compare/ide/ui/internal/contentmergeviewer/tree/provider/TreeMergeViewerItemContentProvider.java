@@ -29,7 +29,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -38,9 +37,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
@@ -431,14 +431,10 @@ public class TreeMergeViewerItemContentProvider implements IMergeViewerItemConte
 	 * @return An {@link Iterable} over all collected Differences.
 	 */
 	private List<Diff> collectDifferences(Comparison comparison, Iterable<Object> objects) {
-		Iterable<Diff> differences = ImmutableList.of();
-		for (Object object : objects) {
-			if (EObject.class.isInstance(object)) {
-				EList<Diff> objectDifferences = comparison.getDifferences(EObject.class.cast(object));
-				differences = Iterables.concat(differences, objectDifferences);
-			}
-		}
-		return Lists.newArrayList(differences);
+		List<Diff> differences = StreamSupport.stream(objects.spliterator(), false)
+				.filter(EObject.class::isInstance).map(EObject.class::cast)
+				.flatMap(eobject -> comparison.getDifferences(eobject).stream()).collect(Collectors.toList());
+		return differences;
 	}
 
 	/**
