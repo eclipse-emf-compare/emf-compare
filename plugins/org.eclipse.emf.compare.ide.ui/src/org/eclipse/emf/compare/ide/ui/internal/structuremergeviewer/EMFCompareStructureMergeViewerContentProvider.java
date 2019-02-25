@@ -370,7 +370,7 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 	 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#hasChildren(Object object)
 	 */
 	@Override
-	public final boolean hasChildren(Object element) {
+	public boolean hasChildren(Object element) {
 		final boolean ret;
 		if (element instanceof CompareInputAdapter) {
 			ret = super.hasChildren(((Adapter)element).getTarget());
@@ -388,7 +388,7 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 	 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#getChildren(java.lang.Object)
 	 */
 	@Override
-	public final Object[] getChildren(Object element) {
+	public Object[] getChildren(Object element) {
 		Object[] children;
 		if (element instanceof CompareInputAdapter) {
 			children = getCompareInputAdapterChildren((CompareInputAdapter)element);

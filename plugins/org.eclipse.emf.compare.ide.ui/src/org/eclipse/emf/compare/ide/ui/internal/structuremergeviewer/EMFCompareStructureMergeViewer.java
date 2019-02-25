@@ -902,6 +902,15 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	}
 
 	/**
+	 * Returns the tree viewer.
+	 * 
+	 * @return the tree viewer
+	 */
+	public TreeViewer getTreeViewer() {
+		return getViewer();
+	}
+
+	/**
 	 * Determines the current used theme.
 	 * 
 	 * @return The currently used theme if available, {@code null} otherwise.

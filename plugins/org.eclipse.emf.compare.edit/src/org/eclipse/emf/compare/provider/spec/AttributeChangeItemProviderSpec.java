@@ -115,9 +115,21 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 	 * @return a nice text from the the given {@link AttributeChange}.
 	 */
 	protected String getValueText(final AttributeChange attChange) {
+		return getValueText(attChange.getValue(), attChange.getAttribute());
+	}
+
+	/**
+	 * Converts to text the given {@link Attribute} & value.
+	 * 
+	 * @param attValue
+	 *            the value
+	 * @param attribute
+	 *            the related attribute
+	 * @return a nice text from the the given {@link Attribute} & value.
+	 */
+	protected String getValueText(Object attValue, EAttribute attribute) {
 		String value;
-		Object attValue = attChange.getValue();
-		if (FeatureMapUtil.isFeatureMap(attChange.getAttribute())) {
+		if (FeatureMapUtil.isFeatureMap(attribute)) {
 			FeatureMap.Entry entry = (FeatureMap.Entry)attValue;
 			EStructuralFeature entryFeature = entry.getEStructuralFeature();
 			if (entryFeature instanceof EAttribute) {
@@ -126,7 +138,7 @@ public class AttributeChangeItemProviderSpec extends AttributeChangeItemProvider
 				value = itemDelegator.getText(entry.getValue());
 			}
 		} else {
-			value = EcoreUtil.convertToString(attChange.getAttribute().getEAttributeType(), attValue);
+			value = EcoreUtil.convertToString(attribute.getEAttributeType(), attValue);
 		}
 
 		if (isNullOrEmpty(value)) {
