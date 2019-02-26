@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
+import org.eclipse.compare.IResourceProvider;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.compare.structuremergeviewer.Differencer;
@@ -51,7 +52,6 @@ import org.eclipse.egit.core.internal.indexdiff.IndexDiffCacheEntry;
 import org.eclipse.egit.core.internal.indexdiff.IndexDiffData;
 import org.eclipse.egit.core.internal.job.RuleUtil;
 import org.eclipse.egit.core.internal.storage.GitFileRevision;
-import org.eclipse.egit.core.internal.storage.WorkingTreeFileRevision;
 import org.eclipse.egit.core.internal.util.ResourceUtil;
 import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.egit.ui.Activator;
@@ -60,9 +60,9 @@ import org.eclipse.egit.ui.internal.UIText;
 import org.eclipse.egit.ui.internal.revision.EditableRevision;
 import org.eclipse.egit.ui.internal.revision.FileRevisionTypedElement;
 import org.eclipse.egit.ui.internal.revision.GitCompareFileRevisionEditorInput.EmptyTypedElement;
-import org.eclipse.egit.ui.internal.revision.LocalFileRevision;
 import org.eclipse.egit.ui.internal.revision.LocationEditableRevision;
 import org.eclipse.egit.ui.internal.revision.ResourceEditableRevision;
+import org.eclipse.egit.ui.internal.synchronize.compare.LocalNonWorkspaceTypedElement;
 import org.eclipse.emf.compare.egit.internal.merge.DirCacheResourceVariantTreeProvider;
 import org.eclipse.emf.compare.egit.internal.merge.GitResourceVariantTreeProvider;
 import org.eclipse.emf.compare.egit.internal.merge.GitResourceVariantTreeSubscriber;
@@ -101,6 +101,7 @@ import org.eclipse.team.core.subscribers.SubscriberMergeContext;
 import org.eclipse.team.core.subscribers.SubscriberResourceMappingContext;
 import org.eclipse.team.core.subscribers.SubscriberScopeManager;
 import org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter;
+import org.eclipse.team.ui.synchronize.SaveableCompareEditorInput;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE.SharedImages;
@@ -147,9 +148,9 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 			if (selectedEdition instanceof DiffNode) {
 				DiffNode diffNode = (DiffNode)selectedEdition;
 				ITypedElement element = diffNode.getLeft();
-				if (element instanceof ResourceEditableRevision) {
-					ResourceEditableRevision resourceRevision = (ResourceEditableRevision)element;
-					return resourceRevision.getFile();
+				if (element instanceof IResourceProvider) {
+					IResource resource = ((IResourceProvider)element).getResource();
+					return resource;
 				}
 			}
 		}
@@ -590,39 +591,41 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 					continue;
 				}
 
+				ITypedElement left;
 				IFileRevision rev;
 				// if the file is not conflicting (as it was auto-merged)
 				// we will show the auto-merged (local) version
 
 				Path repositoryPath = new Path(repository.getWorkTree().getAbsolutePath());
 				IPath location = repositoryPath.append(fit.getEntryPathString());
+				assert location != null;
+
 				IFile file = ResourceUtil.getFileForLocation(location, false);
 				if (!conflicting || useWorkspace) {
 					if (file != null) {
-						rev = new LocalFileRevision(file);
+						left = SaveableCompareEditorInput.createFileElement(file);
 					} else {
-						rev = new WorkingTreeFileRevision(location.toFile());
+						left = new LocalNonWorkspaceTypedElement(repository, location);
 					}
 				} else {
 					rev = GitFileRevision.inIndex(repository, gitPath, DirCacheEntry.STAGE_2);
-				}
 
-				IRunnableContext runnableContext = getContainer();
-				if (runnableContext == null) {
-					runnableContext = PlatformUI.getWorkbench().getProgressService();
-				}
-
-				EditableRevision leftEditable;
-				if (file != null) {
-					leftEditable = new ResourceEditableRevision(rev, file, runnableContext);
-				} else {
-					leftEditable = new LocationEditableRevision(rev, location, runnableContext);
-				}
-				// make sure we don't need a round trip later
-				try {
-					leftEditable.cacheContents(monitor);
-				} catch (CoreException e) {
-					throw new IOException(e.getMessage());
+					IRunnableContext runnableContext = getContainer();
+					if (runnableContext == null) {
+						runnableContext = PlatformUI.getWorkbench().getProgressService();
+						assert runnableContext != null;
+					}
+					if (file != null) {
+						left = new ResourceEditableRevision(rev, file, runnableContext);
+					} else {
+						left = new LocationEditableRevision(rev, location, runnableContext);
+					}
+					// make sure we don't need a round trip later
+					try {
+						((EditableRevision)left).cacheContents(monitor);
+					} catch (CoreException e) {
+						throw new IOException(e.getMessage());
+					}
 				}
 
 				int kind = Differencer.NO_CHANGE;
@@ -634,19 +637,17 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 
 				IDiffContainer fileParent = getFileParent(result, repositoryPath, file, location);
 
-				ITypedElement anc;
+				ITypedElement ancestor = null;
 				if (ancestorCommit != null) {
-					anc = CompareUtils.getFileRevisionTypedElement(gitPath, ancestorCommit, repository);
-				} else {
-					anc = null;
+					ancestor = CompareUtils.getFileRevisionTypedElement(gitPath, ancestorCommit, repository);
 				}
 				// we get an ugly black icon if we have an EmptyTypedElement
 				// instead of null
-				if (anc instanceof EmptyTypedElement) {
-					anc = null;
+				if (ancestor instanceof EmptyTypedElement) {
+					ancestor = null;
 				}
 				// create the node as child
-				new DiffNode(fileParent, kind, anc, leftEditable, right);
+				new DiffNode(fileParent, kind, ancestor, left, right);
 			}
 			return result;
 		}
