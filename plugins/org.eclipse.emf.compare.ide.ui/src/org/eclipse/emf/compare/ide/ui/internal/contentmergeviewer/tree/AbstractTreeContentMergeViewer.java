@@ -86,7 +86,7 @@ public abstract class AbstractTreeContentMergeViewer extends EMFCompareContentMe
 	 */
 	// see createMergeViewer() to see it is safe
 	@Override
-	protected TreeMergeViewer getAncestorMergeViewer() {
+	public TreeMergeViewer getAncestorMergeViewer() {
 		return (TreeMergeViewer)super.getAncestorMergeViewer();
 	}
 
@@ -97,7 +97,7 @@ public abstract class AbstractTreeContentMergeViewer extends EMFCompareContentMe
 	 */
 	// see createMergeViewer() to see it is safe
 	@Override
-	protected TreeMergeViewer getLeftMergeViewer() {
+	public TreeMergeViewer getLeftMergeViewer() {
 		return (TreeMergeViewer)super.getLeftMergeViewer();
 	}
 
@@ -108,7 +108,7 @@ public abstract class AbstractTreeContentMergeViewer extends EMFCompareContentMe
 	 */
 	// see createMergeViewer() to see it is safe
 	@Override
-	protected TreeMergeViewer getRightMergeViewer() {
+	public TreeMergeViewer getRightMergeViewer() {
 		return (TreeMergeViewer)super.getRightMergeViewer();
 	}
 
