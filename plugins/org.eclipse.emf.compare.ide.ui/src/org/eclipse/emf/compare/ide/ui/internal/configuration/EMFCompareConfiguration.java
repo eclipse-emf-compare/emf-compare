@@ -200,7 +200,9 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		// CompareConfiguration does not clear its properties list...
 		// Lets clean our own mess ourselves
 		// EVENT_BUS must not be set to null
+		Comparison comparison = getComparison();
 		disposeComparison();
+		comparison.eAdapters().clear();
 	}
 
 	/**
@@ -216,7 +218,7 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 	}
 
 	/**
-	 * {@link #dispose()} is only called when the comparison editor is closed, whereas EMFCompareComparison
+	 * {@link #dispose()} is only called when the comparison editor is closed, whereas EMFCompareConfiguration
 	 * follows its own separate lifecycle. See documentation of {@link #dispose()}.
 	 * 
 	 * @see #dispose()

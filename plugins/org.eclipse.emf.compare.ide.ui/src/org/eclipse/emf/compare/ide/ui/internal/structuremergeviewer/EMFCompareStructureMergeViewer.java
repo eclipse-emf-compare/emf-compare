@@ -1827,7 +1827,6 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					}
 				}
 			}
-			comparison.eAdapters().clear();
 		}
 
 		editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
