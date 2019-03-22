@@ -1440,8 +1440,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				initToolbar(monitor);
 			} else if (input instanceof IComparisonProvider) {
 				resourceSetShouldBeDisposed = false;
-				compareInputChanged(((IComparisonProvider)input).getComparisonScope(monitor),
-						((IComparisonProvider)input).getComparison(monitor), monitor);
+				Comparison comparison = ((IComparisonProvider)input).getComparison(monitor);
+				compareInputChanged(((IComparisonProvider)input).getComparisonScope(monitor), comparison,
+						monitor);
+				hookAdapters(input, comparison);
 				initToolbar(monitor);
 			} else {
 				resourceSetShouldBeDisposed = true;
@@ -1575,6 +1577,20 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * @param compareResult
 	 */
 	private void hookAdapters(final ICompareInput input, final Comparison compareResult) {
+		// It is now possible for users to provide a pre-computed comparison to the compare editor and re-use
+		// that comparison across multiple SMV. We need to cleanup previous hooks.
+		Iterator<Adapter> adapterIt = compareResult.eAdapters().iterator();
+		while (adapterIt.hasNext()) {
+			Adapter adapter = adapterIt.next();
+			if (adapter instanceof ForwardingCompareInputAdapter) {
+				adapterIt.remove();
+			} else if (adapter instanceof SideLabelProvider) {
+				adapterIt.remove();
+			} else if (adapter instanceof MergeDataImpl) {
+				adapterIt.remove();
+			}
+		}
+
 		compareResult.eAdapters().add(new ForwardingCompareInputAdapter(input));
 		// Thanks to
 		// org.eclipse.team.internal.ui.mapping.ResourceCompareInputChangeNotifier$CompareInputLabelProvider
