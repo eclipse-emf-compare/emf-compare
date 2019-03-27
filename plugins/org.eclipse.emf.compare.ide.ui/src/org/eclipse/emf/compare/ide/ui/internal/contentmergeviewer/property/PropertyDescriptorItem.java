@@ -146,11 +146,16 @@ class PropertyDescriptorItem extends PropertyItem {
 						int insertionIndex = DiffUtil.findInsertionIndex(comparison, diff,
 								getSide() == MergeViewerSide.LEFT);
 
-						// Correct the index based on how many placeholders are already
-						// earlier in the list of children.
-						List<PropertyItem> subList = propertyItems.subList(0, insertionIndex);
-						final int count = size(filter(subList, IMergeViewerItem.IS_INSERTION_POINT));
-						int index = Math.min(insertionIndex + count, propertyItems.size());
+						int index;
+						if (propertyItems.size() > 0) {
+							// Correct the index based on how many placeholders are already
+							// earlier in the list of children.
+							List<PropertyItem> subList = propertyItems.subList(0, insertionIndex);
+							final int count = size(filter(subList, IMergeViewerItem.IS_INSERTION_POINT));
+							index = Math.min(insertionIndex + count, propertyItems.size());
+						} else {
+						    index = 0;
+						}
 
 						// Create the placeholder and insert it at the appropriate
 						// place in the list.
