@@ -149,7 +149,7 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 		if (this.registry != null && registry != null) {
 			throw new IllegalStateException("The registry has to be set only once."); //$NON-NLS-1$
 		}
-		if (!(registry instanceof Registry2)) {
+		if (registry != null && !(registry instanceof Registry2)) {
 			throw new IllegalArgumentException("The registry must implement Registry2"); //$NON-NLS-1$
 		}
 		this.registry = (Registry2)registry;
