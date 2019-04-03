@@ -18,7 +18,9 @@ import com.google.common.collect.Lists;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicEList;
@@ -195,40 +197,39 @@ public class ComparisonSpec extends ComparisonImpl {
 			}
 		}
 
-		EList<Diff> result = new UniqueEList.FastCompare<Diff>(maxExpectedSize);
+		// Double the size of the set to prevent rehashing as much as possible
+		Set<Diff> intermediate = new LinkedHashSet<>(maxExpectedSize * 2);
 
-		addSettingEObjectsTo(result, leftInverseReference);
-		addSettingEObjectsTo(result, rightInverseReference);
-		addSettingEObjectsTo(result, originInverseReference);
+		addSettingEObjectsTo(intermediate, leftInverseReference);
+		addSettingEObjectsTo(intermediate, rightInverseReference);
+		addSettingEObjectsTo(intermediate, originInverseReference);
 
 		if (resourceAttachmentChanges != null) {
-			result.addAll(resourceAttachmentChanges);
+			intermediate.addAll(resourceAttachmentChanges);
 		}
 
+		UniqueEList<Diff> result = new UniqueEList.FastCompare<Diff>(maxExpectedSize);
+		result.addAllUnique(intermediate);
 		return result;
 	}
 
 	/**
-	 * Iterates on the given {@code settings} and retrieve the asociated EObject before adding it to
-	 * {@code addTo} List.
+	 * Iterates on the given {@code settings} and retrieve the associated EObject before adding it to the
+	 * {@code addTo} Set.
 	 * <p>
-	 * It <b>modifies</b> the {@code addTo} {@link List} and <b>expect</b> the settings to all be from
+	 * It <b>modifies</b> the {@code addTo} {@link Set} and <b>expect</b> the settings to all be from
 	 * {@link Diff}. This method only reason to exists is to factorize a loop and <em>should not</em> be used
-	 * outside {@link #getInverseReferences(Match)}.
+	 * outside of {@link #getInverseReferences(Match)}.
 	 * 
 	 * @param addTo
-	 *            the list to which {@link Setting}'s {@link EObject} will be added.
+	 *            the set to which {@link Setting}'s {@link EObject} will be added.
 	 * @param settings
 	 *            the list of {@link Setting} to iterate on.
 	 */
-	private static void addSettingEObjectsTo(List<Diff> addTo,
+	private static void addSettingEObjectsTo(Set<Diff> addTo,
 			final Collection<EStructuralFeature.Setting> settings) {
-		// No need to cast the added values to Diff because the diffCrossReferencer will only return Diff from
-		// #getNonNavigableInverseReferences
-		@SuppressWarnings("unchecked")
-		List<Object> uncheckedAddTo = (List<Object>)(List<?>)addTo;
 		for (EStructuralFeature.Setting setting : settings) {
-			uncheckedAddTo.add(setting.getEObject());
+			addTo.add((Diff)setting.getEObject());
 		}
 	}
 

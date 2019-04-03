@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.req;
 
-import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Iterables.filter;
@@ -22,16 +21,22 @@ import static org.eclipse.emf.compare.DifferenceKind.MOVE;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isAddOrSetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isFeatureMapContainment;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
@@ -44,11 +49,12 @@ import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
-import org.eclipse.emf.compare.utils.EMFComparePredicates;
+import org.eclipse.emf.compare.internal.DiffCrossReferencer;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
@@ -65,6 +71,15 @@ public class DefaultReqEngine implements IReqEngine {
 
 	/** The logger. */
 	private static final Logger LOGGER = Logger.getLogger(DefaultReqEngine.class);
+
+	/**
+	 * We'll be computing the list of differences related to a given EObject
+	 * ({@link #getDifferenceOnGivenObject(Comparison, EObject, DifferenceSource, DifferenceKind)}) a lot of
+	 * times in short succession. This short-lived cache will allow us to avoid the cost of creating the Set
+	 * anew at every call.
+	 */
+	private final Cache<CacheKey, Set<Diff>> cachedDifferences = CacheBuilder.newBuilder()
+			.expireAfterAccess(30L, TimeUnit.SECONDS).initialCapacity(200).build();
 
 	/**
 	 * {@inheritDoc}
@@ -99,9 +114,6 @@ public class DefaultReqEngine implements IReqEngine {
 	 */
 	protected void checkForRequiredDifferences(Comparison comparison, Diff difference) {
 
-		Set<Diff> requiredDifferences = new LinkedHashSet<Diff>();
-		Set<Diff> requiredByDifferences = new LinkedHashSet<Diff>();
-
 		Match match = difference.getMatch();
 		EObject value = getValue(comparison, difference);
 		DifferenceKind kind = difference.getKind();
@@ -111,47 +123,50 @@ public class DefaultReqEngine implements IReqEngine {
 			boolean isDeletion = !isAddition && isDeleteOrUnsetDiff(difference);
 
 			if (isAddition && isDeleteOrAddResourceAttachmentChange(comparison, difference)) {
-				requiredDifferences.addAll(getDiffsThatShouldDependOn((ResourceAttachmentChange)difference));
+				difference.getRequires()
+						.addAll(getDiffsThatShouldDependOn((ResourceAttachmentChange)difference));
 				// ADD object
 			} else if (isAddition && isReferenceContainment(difference)) {
 				// if (isAddition && isReferenceContainment(difference)) {
 
 				// -> requires ADD on the container of the object
-				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value.eContainer(),
+				difference.getRequires().addAll(getDifferenceOnGivenObject(comparison, value.eContainer(),
 						difference.getSource(), ADD));
 
 				// -> requires DELETE of the origin value on the same containment mono-valued reference
-				requiredDifferences.addAll(getDELOriginValueOnContainmentRefSingle(comparison, difference));
+				difference.getRequires()
+						.addAll(getDELOriginValueOnContainmentRefSingle(comparison, difference));
 
 				// ADD reference
 			} else if (isAddition && !isFeatureMapContainment(difference)) {
 
 				// -> requires ADD of the value of the reference (target object)
-				requiredDifferences
+				difference.getRequires()
 						.addAll(getDifferenceOnGivenObject(comparison, value, difference.getSource(), ADD));
 
 				// -> requires ADD of the object containing the reference
 				final EObject container = MatchUtil.getContainer(comparison, difference);
 				if (container != null) {
-					requiredDifferences.addAll(
+					difference.getRequires().addAll(
 							getDifferenceOnGivenObject(comparison, container, difference.getSource(), ADD));
 				}
-				requiredDifferences.addAll(Collections2.filter(match.getDifferences(),
-						and(instanceOf(ResourceAttachmentChange.class), ofKind(ADD))));
+				match.getDifferences().stream().filter(diff -> diff instanceof ResourceAttachmentChange
+						&& diff.getKind() == DifferenceKind.ADD && diff.getSource() == difference.getSource())
+						.forEach(difference.getRequires()::add);
 
 			} else if (isDeletion && isDeleteOrAddResourceAttachmentChange(comparison, difference)) {
-				requiredByDifferences
+				difference.getRequiredBy()
 						.addAll(getDiffsThatShouldDependOn((ResourceAttachmentChange)difference));
 				// DELETE object
 			} else if (isDeletion && isReferenceContainment(difference)) {
 
 				// -> requires DELETE of the outgoing references and contained objects
-				requiredDifferences.addAll(getDELOutgoingReferences(comparison, difference));
-				requiredDifferences.addAll(getDifferenceOnGivenObject(comparison, value.eContents(),
+				difference.getRequires().addAll(getDELOutgoingReferences(comparison, difference));
+				difference.getRequires().addAll(getDifferenceOnGivenObject(comparison, value.eContents(),
 						difference.getSource(), DELETE));
 
 				// -> requires MOVE of contained objects
-				requiredDifferences.addAll(getMOVEContainedObjects(comparison, difference));
+				difference.getRequires().addAll(getMOVEContainedObjects(comparison, difference));
 
 				// The DELETE or CHANGE of incoming references are handled in the DELETE reference and CHANGE
 				// reference cases.
@@ -160,7 +175,7 @@ public class DefaultReqEngine implements IReqEngine {
 			} else if (isDeletion && !isFeatureMapContainment(difference)) {
 
 				// -> is required by DELETE of the target object
-				requiredByDifferences.addAll(
+				difference.getRequiredBy().addAll(
 						getDifferenceOnGivenObject(comparison, value, difference.getSource(), DELETE));
 
 				// MOVE object
@@ -169,11 +184,11 @@ public class DefaultReqEngine implements IReqEngine {
 				EObject container = value.eContainer();
 
 				// -> requires ADD on the container of the object
-				requiredDifferences.addAll(
+				difference.getRequires().addAll(
 						getDifferenceOnGivenObject(comparison, container, difference.getSource(), ADD));
 
 				// -> requires MOVE of the container of the object
-				requiredDifferences.addAll(
+				difference.getRequires().addAll(
 						getDifferenceOnGivenObject(comparison, container, difference.getSource(), MOVE));
 
 				// CHANGE reference
@@ -181,19 +196,14 @@ public class DefaultReqEngine implements IReqEngine {
 					&& !(difference instanceof FeatureMapChange)) {
 
 				// -> is required by DELETE of the origin target object
-				requiredByDifferences.addAll(getDifferenceOnGivenObject(comparison,
-						MatchUtil.getOriginValue(comparison, (ReferenceChange)difference),
-						difference.getSource(), DELETE));
+				EObject originValue = MatchUtil.getOriginValue(comparison, (ReferenceChange)difference);
+				difference.getRequiredBy().addAll(
+						getDifferenceOnGivenObject(comparison, originValue, difference.getSource(), DELETE));
 
 				// -> requires ADD of the value of the reference (target object) if required
-				requiredDifferences
+				difference.getRequires()
 						.addAll(getDifferenceOnGivenObject(comparison, value, difference.getSource(), ADD));
 			}
-
-			difference.getRequires().addAll(Collections2.filter(requiredDifferences,
-					EMFComparePredicates.fromSide(difference.getSource())));
-			difference.getRequiredBy().addAll(Collections2.filter(requiredByDifferences,
-					EMFComparePredicates.fromSide(difference.getSource())));
 		}
 
 	}
@@ -234,8 +244,8 @@ public class DefaultReqEngine implements IReqEngine {
 	 *            The given difference
 	 * @return a list of dependencies
 	 */
-	private Set<ReferenceChange> getDiffsThatShouldDependOn(ResourceAttachmentChange diff) {
-		Set<ReferenceChange> result = new LinkedHashSet<ReferenceChange>();
+	private Set<Diff> getDiffsThatShouldDependOn(ResourceAttachmentChange diff) {
+		Set<Diff> result = new LinkedHashSet<Diff>();
 		Comparison comparison = diff.getMatch().getComparison();
 		EObject container = MatchUtil.getContainer(comparison, diff);
 		for (ReferenceChange rc : filter(comparison.getDifferences(container), ReferenceChange.class)) {
@@ -291,12 +301,7 @@ public class DefaultReqEngine implements IReqEngine {
 	 */
 	private Set<Diff> getDifferenceOnGivenObject(Comparison comparison, EObject object,
 			DifferenceSource source, DifferenceKind kind) {
-		final Set<Diff> result = new LinkedHashSet<Diff>();
-		for (Diff diff : filter(comparison.getDifferences(object),
-				isRequiredContainmentChange(object, source, kind))) {
-			result.add(diff);
-		}
-		return result;
+		return getDifferences(comparison, object, source, kind);
 	}
 
 	/**
@@ -312,24 +317,23 @@ public class DefaultReqEngine implements IReqEngine {
 	 *            The kind of difference we seek.
 	 * @return The created predicate.
 	 */
-	private Predicate<? super Diff> isRequiredContainmentChange(final EObject object,
-			final DifferenceSource source, final DifferenceKind kind) {
+	private Predicate<Diff> isRequiredContainmentChange(EObject eObject, DifferenceSource source,
+			DifferenceKind kind) {
 		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				if (input == null || input.getKind() != kind || input.getSource() != source) {
-					return false;
-				}
-
+			public boolean test(Diff diff) {
 				boolean result = false;
-				if (input instanceof ReferenceChange
-						&& ((ReferenceChange)input).getReference().isContainment()) {
-					result = true;
-				} else if (input instanceof ResourceAttachmentChange && object.eContainer() == null) {
-					result = true;
+				if (diff.getKind() == kind && diff.getSource() == source) {
+					if (diff instanceof ReferenceChange
+							&& ((ReferenceChange)diff).getReference().isContainment()) {
+						result = true;
+					} else if (diff instanceof ResourceAttachmentChange && eObject.eContainer() == null) {
+						result = true;
+					}
 				}
 				return result;
 			}
 		};
+
 	}
 
 	/**
@@ -459,6 +463,132 @@ public class DefaultReqEngine implements IReqEngine {
 			}
 		}
 		return value;
+	}
+
+	/**
+	 * This reproduces the same behavior as {@link Comparison#getDifferences(EObject)}, avoiding the overhead
+	 * of EList iteration and filtering the differences as deep down as possible to limit the iteration counts
+	 * and intermediate collections.
+	 * 
+	 * @param comparison
+	 *            The comparison from which to list differences.
+	 * @param element
+	 *            The EObject for which we seek all related differences.
+	 * @param source
+	 *            Only list differences with this source.
+	 * @param kind
+	 *            Only list differences with this kind.
+	 * @return The filtered list of differences related to the given object.
+	 */
+	private Set<Diff> getDifferences(Comparison comparison, EObject element, DifferenceSource source,
+			DifferenceKind kind) {
+		if (element == null) {
+			return new LinkedHashSet<>();
+		}
+		DiffCrossReferencer crossReferencer = getCrossReferencer(comparison);
+		if (crossReferencer == null) {
+			comparison.getDifferences(element);
+		}
+
+		CacheKey key = new CacheKey(element, source, kind);
+		Set<Diff> cached = cachedDifferences.getIfPresent(key);
+		if (cached != null) {
+			return cached;
+		}
+
+		crossReferencer = getCrossReferencer(comparison);
+
+		final Set<Diff> result;
+		final Match match = comparison.getMatch(element);
+		if (match != null) {
+			result = getDifferences(crossReferencer, match,
+					isRequiredContainmentChange(element, source, kind));
+		} else {
+			final Collection<EStructuralFeature.Setting> settings = crossReferencer
+					.getNonNavigableInverseReferences(element, false);
+			result = new LinkedHashSet<Diff>(settings.size());
+			settings.stream().map(setting -> (Diff)setting.getEObject())
+					.filter(isRequiredContainmentChange(element, source, kind)).forEach(result::add);
+		}
+		cachedDifferences.put(key, result);
+		return result;
+	}
+
+	private DiffCrossReferencer getCrossReferencer(Comparison comparison) {
+		DiffCrossReferencer crossReferencer = null;
+		for (Adapter adapter : comparison.eAdapters()) {
+			if (adapter instanceof DiffCrossReferencer) {
+				crossReferencer = (DiffCrossReferencer)adapter;
+			}
+		}
+		return crossReferencer;
+	}
+
+	private Set<Diff> getDifferences(DiffCrossReferencer crossReferencer, Match match,
+			Predicate<Diff> predicate) {
+		final Collection<EStructuralFeature.Setting> leftInverseReference = safeGetInverseReferences(
+				crossReferencer, match.getLeft());
+		final Collection<EStructuralFeature.Setting> rightInverseReference = safeGetInverseReferences(
+				crossReferencer, match.getRight());
+		final Collection<EStructuralFeature.Setting> originInverseReference = safeGetInverseReferences(
+				crossReferencer, match.getOrigin());
+
+		int maxExpectedSize = leftInverseReference.size() + rightInverseReference.size()
+				+ originInverseReference.size();
+		Stream<Diff> racs = match.getDifferences().stream()
+				.filter(diff -> diff instanceof ResourceAttachmentChange).filter(predicate);
+
+		// Double the max expected size to avoid rehashing as much as possible
+		Set<Diff> result = new LinkedHashSet<Diff>(maxExpectedSize * 2);
+
+		leftInverseReference.stream().map(setting -> (Diff)setting.getEObject()).filter(predicate)
+				.forEach(result::add);
+		rightInverseReference.stream().map(setting -> (Diff)setting.getEObject()).filter(predicate)
+				.forEach(result::add);
+		originInverseReference.stream().map(setting -> (Diff)setting.getEObject()).filter(predicate)
+				.forEach(result::add);
+		racs.forEach(result::add);
+
+		return result;
+	}
+
+	private Collection<EStructuralFeature.Setting> safeGetInverseReferences(
+			DiffCrossReferencer crossReferencer, EObject object) {
+		Collection<EStructuralFeature.Setting> crossRefs;
+		if (object != null) {
+			crossRefs = crossReferencer.getNonNavigableInverseReferences(object, false);
+		} else {
+			crossRefs = Collections.emptySet();
+		}
+		return crossRefs;
+	}
+
+	private static class CacheKey {
+		private final EObject element;
+
+		private final DifferenceSource source;
+
+		private final DifferenceKind kind;
+
+		public CacheKey(EObject element, DifferenceSource source, DifferenceKind kind) {
+			this.element = element;
+			this.source = source;
+			this.kind = kind;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof CacheKey) {
+				return this.element == ((CacheKey)obj).element && this.source == ((CacheKey)obj).source
+						&& this.kind == ((CacheKey)obj).kind;
+			}
+			return false;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(element, source, kind);
+		}
 	}
 
 }
