@@ -113,7 +113,7 @@ public class UMLTooltipProviderTest extends AbstractUMLTest {
 		editingDomain = EMFCompareEditingDomain.create(left, right, origin);
 
 		DefaultComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = emfCompare.compare(scope);
+		Comparison comparison = getCompare().compare(scope);
 
 		EList<Diff> differences = comparison.getDifferences();
 		assertNotEquals(0, differences.size());

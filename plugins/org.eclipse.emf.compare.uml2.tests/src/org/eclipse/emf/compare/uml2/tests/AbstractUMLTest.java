@@ -80,8 +80,6 @@ import org.junit.Before;
 @SuppressWarnings({"nls", "restriction" })
 public abstract class AbstractUMLTest {
 
-	protected EMFCompare emfCompare;
-
 	private IMerger.Registry mergerRegistry;
 
 	/** Cached cascading options before the last time the filter was enabled or disabled. */
@@ -121,12 +119,8 @@ public abstract class AbstractUMLTest {
 
 	@Before
 	public void before() {
-		Builder builder = EMFCompare.builder();
 		// post-processor and merger registry is not filled in runtime (org.eclipse.emf.compare.rcp not
 		// loaded)
-		final IPostProcessor.Descriptor.Registry<String> postProcessorRegistry = new PostProcessorDescriptorRegistryImpl<String>();
-		registerPostProcessors(postProcessorRegistry);
-		builder.setPostProcessorRegistry(postProcessorRegistry);
 		mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
 		final IMerger umlMerger = new UMLMerger();
 		final IMerger umlReferenceChangeMerger = new UMLReferenceChangeMerger();
@@ -137,7 +131,6 @@ public abstract class AbstractUMLTest {
 		mergerRegistry.add(umlMerger);
 		mergerRegistry.add(umlReferenceChangeMerger);
 		mergerRegistry.add(opaqueElementBodyChangeMerger);
-		emfCompare = builder.build();
 	}
 
 	/**
@@ -170,7 +163,11 @@ public abstract class AbstractUMLTest {
 	}
 
 	protected EMFCompare getCompare() {
-		return emfCompare;
+		Builder builder = EMFCompare.builder();
+		final IPostProcessor.Descriptor.Registry<String> postProcessorRegistry = new PostProcessorDescriptorRegistryImpl<String>();
+		registerPostProcessors(postProcessorRegistry);
+		builder.setPostProcessorRegistry(postProcessorRegistry);
+		return builder.build();
 	}
 
 	protected Comparison compare(Notifier left, Notifier right) {
