@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.match;
 
+import java.util.Iterator;
+
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
@@ -24,13 +27,6 @@ import org.eclipse.emf.compare.utils.EMFComparePredicates;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
 public class MatchOfContainmentReferenceChangeProcessor {
-
-	/**
-	 * Constructor.
-	 */
-	public MatchOfContainmentReferenceChangeProcessor() {
-	}
-
 	/**
 	 * Check for the given {@link Comparison}, if {@link Match}es are related to a containment
 	 * ReferenceChange. If it is add a {@link MatchOfContainmentReferenceChangeAdapter} to these
@@ -43,7 +39,17 @@ public class MatchOfContainmentReferenceChangeProcessor {
 		for (Diff diff : comp.getDifferences()) {
 			if (EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE.apply(diff)) {
 				Match match = comp.getMatch(((ReferenceChange)diff).getValue());
-				match.eAdapters().add(new MatchOfContainmentReferenceChangeAdapter((ReferenceChange)diff));
+				boolean hasAdapter = false;
+				Iterator<Adapter> adapters = match.eAdapters().iterator();
+				while (!hasAdapter && adapters.hasNext()) {
+					Adapter next = adapters.next();
+					hasAdapter = next instanceof MatchOfContainmentReferenceChangeAdapter
+							&& ((MatchOfContainmentReferenceChangeAdapter)next).getReferenceChange() == diff;
+				}
+				if (!hasAdapter) {
+					match.eAdapters()
+							.add(new MatchOfContainmentReferenceChangeAdapter((ReferenceChange)diff));
+				}
 			}
 		}
 	}
