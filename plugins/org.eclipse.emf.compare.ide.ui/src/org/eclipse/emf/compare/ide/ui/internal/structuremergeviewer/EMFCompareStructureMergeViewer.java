@@ -159,6 +159,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -353,6 +354,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	private ISelectionChangedListener selectionChangeListener;
 
+	private List<ISelectionChangedListener> selectionChangeListeners;
+
 	/** The current selection. */
 	protected ISelection currentSelection;
 
@@ -420,6 +423,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		getViewer().addSelectionChangedListener(toolBar);
 
 		createContextMenu();
+
+		selectionChangeListeners = new ArrayList<ISelectionChangedListener>();
 
 		selectionChangeListener = new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -2093,6 +2098,52 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			} else {
 				compareConfiguration.setMergePreviewMode(null);
 			}
+		}
+	}
+
+	@Override
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
+		selectionChangeListeners.add(listener);
+	}
+
+	@Override
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+		selectionChangeListeners.remove(listener);
+	}
+
+	@Override
+	protected void fireSelectionChanged(SelectionChangedEvent event) {
+		/*
+		 * Platform/compare does not support multiple selections in the structure viewer. When the user
+		 * selects multiple differences, org.eclipse.compare.CompareEditorInput#getElement(ISelection)) will
+		 * return a null selection, causing the CompareViewerSwitchingPane to dispose of the currently shown
+		 * ContentMergeViewer. Unfortunately, the dirty state of the CompareEditorInput is _only_ managed
+		 * through the CMV: ContentMergeViewer.setLeftDirty will notify the CompareEditorInput that it needs
+		 * to update the dirty state... Only if a CMV is currently shown. In short, if a user selects multiple
+		 * differences and merges them, the CompareEditorInput will never know that it is dirty and needs a
+		 * save.
+		 */
+		ISelection selection = event.getSelection();
+		final SelectionChangedEvent compareEvent;
+		if (!selection.isEmpty() && selection instanceof IStructuredSelection
+				&& ((IStructuredSelection)selection).size() != 1) {
+			ISelection modifiedSelection = new StructuredSelection(
+					((IStructuredSelection)selection).getFirstElement());
+			compareEvent = new SelectionChangedEvent(event.getSelectionProvider(), modifiedSelection);
+		} else {
+			compareEvent = event;
+		}
+		for (ISelectionChangedListener listener : selectionChangeListeners) {
+			SafeRunnable.run(new SafeRunnable() {
+				@Override
+				public void run() {
+					if (listener instanceof CompareViewerSwitchingPane) {
+						listener.selectionChanged(compareEvent);
+					} else {
+						listener.selectionChanged(event);
+					}
+				}
+			});
 		}
 	}
 
