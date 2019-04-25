@@ -448,7 +448,7 @@ public class TreeMergeViewerItemContentProvider implements IMergeViewerItemConte
 	 */
 	private List<Diff> collectDifferences(Comparison comparison, Iterable<Object> objects) {
 		List<Diff> differences = StreamSupport.stream(objects.spliterator(), false)
-				.filter(EObject.class::isInstance).map(EObject.class::cast)
+				.filter(EObject.class::isInstance).map(EObject.class::cast).distinct()
 				.flatMap(eobject -> comparison.getDifferences(eobject).stream()).collect(Collectors.toList());
 		return differences;
 	}
