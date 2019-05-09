@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2016 Obeo and others.
+ * Copyright (c) 2013, 2019 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Stefan Dirix - bug 473985
+ *     Christian W. Damus - bug 547139
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
@@ -56,7 +57,9 @@ import org.eclipse.ui.statushandlers.StatusManager;
 public class SaveComparisonModelAction extends Action {
 
 	/** The dialog buttons. */
-	private static final ImmutableList<String> DIALOG_BUTTON_LABELS = ImmutableList.of("Replace", "Cancel");
+	private static final ImmutableList<String> DIALOG_BUTTON_LABELS = ImmutableList.of(
+			EMFCompareIDEUIMessages.getString("save.model.replace"), //$NON-NLS-1$
+			EMFCompareIDEUIMessages.getString("save.model.cancel")); //$NON-NLS-1$
 
 	/** The compare configuration object used to get the compare model. */
 	private IEMFCompareConfiguration configuration;
@@ -88,13 +91,14 @@ public class SaveComparisonModelAction extends Action {
 		if (filePath != null) {
 			File file = new File(filePath);
 			if (file.exists()) {
-				MessageDialog messageDialog = new MessageDialog(parent, "File already exists", null,
-						"File \"" + file.toString()
-								+ "\" already exists. Do you want to replace the existing one?",
+				MessageDialog messageDialog = new MessageDialog(parent,
+						EMFCompareIDEUIMessages.getString("save.model.fileExistsTitle"), null, //$NON-NLS-1$
+						EMFCompareIDEUIMessages.getString("save.model.fileExistsMsg", file), //$NON-NLS-1$
 						MessageDialog.WARNING,
 						DIALOG_BUTTON_LABELS.toArray(new String[DIALOG_BUTTON_LABELS.size()]), 1);
 				int open = messageDialog.open();
-				if (open == DIALOG_BUTTON_LABELS.indexOf("Replace")) {
+				if (open == DIALOG_BUTTON_LABELS
+						.indexOf(EMFCompareIDEUIMessages.getString("save.model.replace"))) { //$NON-NLS-1$
 					saveComparison(file);
 					refreshLocation(filePath);
 				} // else do nothing

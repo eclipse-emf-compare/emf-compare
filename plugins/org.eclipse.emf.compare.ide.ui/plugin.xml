@@ -126,7 +126,7 @@
             org.eclipse.emf.compare.rcp.ui.eNoVisibleItem,
             org.eclipse.emf.compare.rcp.ui.eOnlyPseudoConflicts"
             id="org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.property.PropertyContentMergeViewerCreator"
-            label="Properties Compare">
+            label="%propertiesCompare.label">
       </viewer>
       <contentTypeBinding
             contentTypeId="org.eclipse.emf.ecore.xmi"
@@ -149,7 +149,7 @@
          point="org.eclipse.ui.views">
       <category
             id="org.eclipse.emf.compare.category"
-            name="EMF Compare">
+            name="%category.name">
       </category>
       <view
             allowMultiple="false"
@@ -157,7 +157,7 @@
             class="org.eclipse.emf.compare.ide.ui.internal.logical.view.LogicalModelView"
             icon="icons/full/eobj16/emfcompare-icon.gif"
             id="org.eclipse.emf.compare.ide.ui.logicalmodel.view"
-            name="Logical Model View"
+            name="%logicalModelView.name"
             restorable="true">
       </view>
    </extension>
@@ -288,16 +288,16 @@
       <command
             categoryId="org.eclipse.compare.ui.category.compare"
             id="org.eclipse.emf.compare.ide.ui.compareInDialog"
-            name="Compare in Dialog">
+            name="%compareInDialog.name">
       </command>
       <command
             categoryId="org.eclipse.compare.ui.category.compare"
             id="org.eclipse.emf.compare.ide.ui.compareInEditor"
-            name="Compare in new Editor">
+            name="%compareInEditor.name">
       </command>
       <command
             id="org.eclipse.team.ui.compareWithEachOther"
-            name="Each Other">
+            name="%compareEachOther.name">
       </command>
    </extension>
    <extension
@@ -393,7 +393,7 @@
    </extension>
    <extension
          id="org.eclipse.emf.compare.model.provider"
-         name="EMF Compare"
+         name="%modelprovider.name"
          point="org.eclipse.core.resources.modelProviders">
       <modelProvider
             class="org.eclipse.emf.compare.ide.ui.internal.logical.EMFModelProvider">
@@ -439,19 +439,19 @@
             category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
             class="org.eclipse.emf.compare.ide.ui.internal.preferences.ModelResolutionPreferencePage"
             id="org.eclipse.emf.compare.ide.ui.preferencepage.resolvers"
-            name="Resolution Strategy">
+            name="%page.resolutionStrategy.name">
       </page>
       <page
             category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
             class="org.eclipse.emf.compare.ide.ui.internal.preferences.MergePreferencesPage"
             id="org.eclipse.emf.compare.ide.ui.preferencepage.merge"
-            name="Merge">
+            name="%page.merge.name">
       </page>
       <page
             category="org.eclipse.emf.compare.rcp.ui.preferencePage.global"
             class="org.eclipse.emf.compare.ide.ui.internal.preferences.EditorPreferencePage"
             id="org.eclipse.emf.compare.ide.ui.preferencepage.editor"
-            name="Editor">
+            name="%page.editor.name">
       </page>
    </extension>
    <extension
@@ -526,15 +526,15 @@
          point="org.eclipse.ui.commands">
       <command
             id="org.eclipse.emf.compare.ide.ui.emfComparisonSourceCompareCommand"
-            name="Compare EMFComparisonSource">
+            name="%command.comparisonSource.name">
       </command>
       <command
             id="org.eclipse.emf.compare.ide.ui.selectNextUnresolvedDiff"
-            name="SelectNextUnresolvedDiff">
+            name="%command.nextUnresolved.name">
       </command>
       <command
             id="org.eclipse.emf.compare.ide.ui.selectPreviousUnresolvedDiff"
-            name="SelectPreviousUnresolvedDiff">
+            name="%command.prevUnresolved.name">
       </command>
    </extension>
    <extension

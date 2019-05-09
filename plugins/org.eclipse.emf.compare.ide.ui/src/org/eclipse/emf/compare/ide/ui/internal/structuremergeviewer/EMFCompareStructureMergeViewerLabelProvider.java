@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Obeo.
+ * Copyright (c) 2012, 2019 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,14 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Christian W. Damus - bug 547139
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIMessages;
 import org.eclipse.emf.compare.ide.ui.internal.util.StyledStringConverter;
 import org.eclipse.emf.compare.provider.EMFCompareEditPlugin;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
@@ -141,7 +143,8 @@ public class EMFCompareStructureMergeViewerLabelProvider extends AdapterFactoryL
 		} else if (element instanceof ICompareInput) {
 			ret = getStyledTextFromObject(((ICompareInput)element).getName());
 		} else if (element instanceof PendingUpdateAdapter) {
-			ret = new StyledString("Please wait while computing the element to display...");
+			ret = new StyledString(EMFCompareIDEUIMessages
+					.getString("EMFCompareStructureMergeViewerLabelProvider.pleaseWait")); //$NON-NLS-1$
 		} else {
 			ret = getStyledTextFromObject(element);
 		}

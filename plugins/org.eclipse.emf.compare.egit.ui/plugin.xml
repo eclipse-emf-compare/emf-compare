@@ -28,7 +28,7 @@
                class="org.eclipse.emf.compare.egit.ui.internal.actions.ModelMergeToolAction"
                icon="icons/obj16/modelmergetool.png"
                id="org.eclipse.emf.compare.egit.ui.internal.actions.ModelMergeTool"
-               label="Model Merge Tool (with EMFCompare)"
+               label="%modelMergeTool.label"
                menubarPath="team.main/group4">
          </action>
       </objectContribution>
