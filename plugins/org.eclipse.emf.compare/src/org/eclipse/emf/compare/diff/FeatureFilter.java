@@ -27,7 +27,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 
 /**
- * {@link FeatureFilter}s will be used by the default implemention of a diff engine in order to determine
+ * {@link FeatureFilter}s will be used by the default implementation of a diff engine in order to determine
  * which features it is to check for differences. Any feature that is not returned by this filter will be
  * ignored by the diff engine.
  * 

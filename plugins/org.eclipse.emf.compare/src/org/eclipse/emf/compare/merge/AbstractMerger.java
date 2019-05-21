@@ -1198,8 +1198,8 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 
 	/**
 	 * Adds the given {@code value} into the given {@code list} at the given {@code index}. An {@code index}
-	 * under than zero or above the list's size will mean that the value should be appended at the end of the
-	 * list.
+	 * lower than zero or greater than the list's size will mean that the value should be appended at the end
+	 * of the list.
 	 * 
 	 * @param list
 	 *            The list into which {@code value} should be added.
