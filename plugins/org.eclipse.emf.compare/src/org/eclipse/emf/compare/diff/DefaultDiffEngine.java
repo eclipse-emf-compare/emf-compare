@@ -16,6 +16,7 @@ import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEGet;
 
 import com.google.common.base.Optional;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -257,10 +258,101 @@ public class DefaultDiffEngine implements IDiffEngine {
 	}
 
 	/**
+	 * Delegates the computation of Differences for a given containment reference according to the type of
+	 * comparison (two- or three-way), and whether we need to take ordering changes into account.
+	 * 
+	 * @param match
+	 *            The match which sides we need to check for potential differences.
+	 * @param reference
+	 *            The reference whose values are currently being checked for differences.
+	 * @param checkOrdering
+	 *            Whether we need to detect ordering changes or ignore them.
+	 */
+	protected void computeContainmentDifferences(Match match, EReference reference, boolean checkOrdering) {
+		Comparison comparison = match.getComparison();
+
+		if (checkOrdering) {
+			if (comparison.isThreeWay()) {
+				computeContainmentDifferencesThreeWay(match, reference, checkOrdering);
+			} else {
+				computeContainmentDifferencesTwoWay(match, reference, checkOrdering);
+			}
+		} else {
+			List<Object> leftValues = getAsList(match.getLeft(), reference);
+			List<Object> rightValues = getAsList(match.getRight(), reference);
+			if (comparison.isThreeWay()) {
+				createContainmentDifferencesNoOrdering(match, reference, leftValues, DifferenceSource.LEFT);
+				createContainmentDifferencesNoOrdering(match, reference, rightValues, DifferenceSource.RIGHT);
+
+				List<Object> originValues = getAsList(match.getOrigin(), reference);
+				for (Object value : originValues) {
+					Match valueMatch = comparison.getMatch((EObject)value);
+					if (valueMatch.getLeft() == null) {
+						featureChange(match, reference, value, DifferenceKind.DELETE, DifferenceSource.LEFT);
+					}
+					if (valueMatch.getRight() == null) {
+						featureChange(match, reference, value, DifferenceKind.DELETE, DifferenceSource.RIGHT);
+					}
+				}
+			} else {
+				createContainmentDifferencesNoOrdering(match, reference, leftValues, DifferenceSource.LEFT);
+
+				for (Object value : rightValues) {
+					Match valueMatch = comparison.getMatch((EObject)value);
+					if (valueMatch.getLeft() == null) {
+						featureChange(match, reference, value, DifferenceKind.DELETE, DifferenceSource.LEFT);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Delegates the computation of Differences for a given muti-valued feature according to the type of
+	 * comparison (two- or three-way), and whether we need to take ordering changes into account.
+	 * 
+	 * @param match
+	 *            The match which sides we need to check for potential differences.
+	 * @param feature
+	 *            The feature whose values are currently being checked for differences.
+	 * @param checkOrdering
+	 *            Whether we need to detect ordering changes or ignore them.
+	 */
+	protected void computeMultiValuedFeatureDifferences(Match match, EStructuralFeature feature,
+			boolean checkOrdering) {
+		Comparison comparison = match.getComparison();
+
+		if (checkOrdering) {
+			if (comparison.isThreeWay()) {
+				computeMultiValuedFeatureDifferencesThreeWay(match, feature, checkOrdering);
+			} else {
+				computeMultiValuedFeatureDifferencesTwoWay(match, feature, checkOrdering);
+			}
+		} else {
+			List<Object> leftValues = getAsList(match.getLeft(), feature);
+			List<Object> rightValues = getAsList(match.getRight(), feature);
+			if (comparison.isThreeWay()) {
+				List<Object> originValues = getAsList(match.getOrigin(), feature);
+				createMultiValuedFeatureDifferencesNoOrdering(match, feature, leftValues, originValues,
+						DifferenceSource.LEFT);
+				createMultiValuedFeatureDifferencesNoOrdering(match, feature, rightValues, originValues,
+						DifferenceSource.RIGHT);
+			} else {
+				createMultiValuedFeatureDifferencesNoOrdering(match, feature, leftValues, rightValues,
+						DifferenceSource.LEFT);
+			}
+		}
+	}
+
+	/**
 	 * Computes the difference between the sides of the given {@code match} for the given containment
 	 * {@code reference}.
 	 * <p>
 	 * This is only meant for three-way comparisons.
+	 * </p>
+	 * <p>
+	 * <b>Note</b> that this is no longer used for references which ordering is not considered, so
+	 * {@code checkOrdering} will always be <code>true</code> .
 	 * </p>
 	 * 
 	 * @param match
@@ -308,6 +400,59 @@ public class DefaultDiffEngine implements IDiffEngine {
 				if (candidateMatch.getRight() == null) {
 					featureChange(match, reference, diffCandidate, DifferenceKind.DELETE,
 							DifferenceSource.RIGHT);
+				}
+			}
+		}
+	}
+
+	/**
+	 * This will iterate over the given list of values from a containment reference and create the differences
+	 * that can be detected from it.
+	 * <p>
+	 * Ordering changes will not be considered at all from this method. Values that exist in both the given
+	 * list of elements and the origin (either ancestor or right side for two-way comparisons), will only have
+	 * a Diff if their container or containing reference has changed. If they are still in the same container
+	 * and reference, then even if they are not in the same position, we will not try and detect an ordering
+	 * change.
+	 * </p>
+	 * 
+	 * @param match
+	 *            The match which sides we need to check for potential differences.
+	 * @param reference
+	 *            The containment reference which values are to be checked.
+	 * @param sideValues
+	 *            Value of that <code>reference</code> on the given <code>side</code>.
+	 * @param side
+	 *            The side currently being compared.
+	 */
+	protected void createContainmentDifferencesNoOrdering(Match match, EReference reference,
+			List<Object> sideValues, DifferenceSource side) {
+		Comparison comparison = match.getComparison();
+		IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+
+		int sizeSide = sideValues.size();
+
+		int currentSide = 0;
+		while (currentSide < sizeSide) {
+			EObject sideValue = (EObject)sideValues.get(currentSide++);
+			Match candidateMatch = comparison.getMatch(sideValue);
+
+			EObject originValue;
+			if (comparison.isThreeWay()) {
+				originValue = candidateMatch.getOrigin();
+			} else {
+				originValue = candidateMatch.getRight();
+			}
+
+			if (matchingContainment(equalityHelper, sideValue, originValue)) {
+				// Object present in both sides, in the same container and same containment feature.
+				// We don't care about ordering so there is no change here.
+			} else {
+				// Object has either changed container or isn't present in the origin
+				if (originValue != null) {
+					featureChange(match, reference, sideValue, DifferenceKind.MOVE, side);
+				} else {
+					featureChange(match, reference, sideValue, DifferenceKind.ADD, side);
 				}
 			}
 		}
@@ -464,6 +609,10 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * <p>
 	 * This is only meant for two-way comparisons.
 	 * </p>
+	 * <p>
+	 * <b>Note</b> that this is no longer used for references which ordering is not considered, so
+	 * {@code checkOrdering} will always be <code>true</code> .
+	 * </p>
 	 * 
 	 * @param match
 	 *            The match which sides we need to check for potential differences.
@@ -522,7 +671,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 			shortcut = match.getLeft() == null || match.getRight() == null;
 		}
 
-		// Do not shortcut when manyvalued FeatureMaps are affected to keep their ordering intact
+		// Do not shortcut when multi-valued FeatureMaps are affected to keep their ordering intact
 		if (shortcut && FeatureMapUtil.isFeatureMap(attribute)) {
 			final EObject owner = getOwner(match);
 			if (owner != null && FeatureMapUtil.isMany(owner, attribute)) {
@@ -579,17 +728,9 @@ public class DefaultDiffEngine implements IDiffEngine {
 		final Comparison comparison = match.getComparison();
 
 		if (reference.isContainment()) {
-			if (comparison.isThreeWay()) {
-				computeContainmentDifferencesThreeWay(match, reference, checkOrdering);
-			} else {
-				computeContainmentDifferencesTwoWay(match, reference, checkOrdering);
-			}
+			computeContainmentDifferences(match, reference, checkOrdering);
 		} else if (reference.isMany()) {
-			if (comparison.isThreeWay()) {
-				computeMultiValuedFeatureDifferencesThreeWay(match, reference, checkOrdering);
-			} else {
-				computeMultiValuedFeatureDifferencesTwoWay(match, reference, checkOrdering);
-			}
+			computeMultiValuedFeatureDifferences(match, reference, checkOrdering);
 		} else {
 			if (comparison.isThreeWay()) {
 				computeSingleValuedReferenceDifferencesThreeWay(match, reference);
@@ -607,6 +748,10 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * </p>
 	 * <p>
 	 * This is only meant for three-way comparisons.
+	 * </p>
+	 * <p>
+	 * <b>Note</b> that this is no longer used for features which ordering is not considered, so
+	 * {@code checkOrdering} will always be <code>true</code> .
 	 * </p>
 	 * 
 	 * @param match
@@ -718,6 +863,87 @@ public class DefaultDiffEngine implements IDiffEngine {
 	}
 
 	/**
+	 * This will iterate over the given list of values from a multi-valued feature and create the differences
+	 * that can be detected from it.
+	 * <p>
+	 * Ordering changes will not be considered at all from this method. Values that exist in both the given
+	 * list of elements and the origin (either ancestor or right side for two-way comparisons), will never
+	 * have a Diff even if they are not at the same index in the list of their respective side.
+	 * </p>
+	 * 
+	 * @param match
+	 *            The match which sides we need to check for potential differences.
+	 * @param feature
+	 *            The feature which values are to be checked. Cannot be a containment reference.
+	 * @param sideValues
+	 *            Value of that <code>reference</code> on the given <code>side</code>.
+	 * @param originValues
+	 *            Value of that <code>reference</code> on the origin side. Could be the common ancestor or the
+	 *            right side in case of two-way comparisons.
+	 * @param side
+	 *            The side currently being compared.
+	 */
+	protected void createMultiValuedFeatureDifferencesNoOrdering(Match match, EStructuralFeature feature,
+			List<Object> sideValues, List<Object> originValues, DifferenceSource side) {
+		Comparison comparison = match.getComparison();
+		IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+
+		List<Object> originCopy = new ArrayList<>(originValues);
+
+		int sizeSide = sideValues.size();
+		int currentSide = 0;
+		while (currentSide < sizeSide) {
+			Object sideValue = sideValues.get(currentSide++);
+
+			int currentOrigin = 0;
+			int sizeOrigin = originCopy.size();
+
+			boolean matching = false;
+			while (currentOrigin < sizeOrigin && !matching) {
+				Object originValue = originCopy.get(currentOrigin);
+				if (equalityHelper.matchingValues(sideValue, originValue)) {
+					originCopy.remove(currentOrigin);
+					matching = true;
+				}
+				currentOrigin++;
+			}
+
+			if (!matching) {
+				// This object is in the side checked, but not in the origin
+				if (FeatureMapUtil.isFeatureMap(feature) && sideValue instanceof FeatureMap.Entry) {
+					// A value of a FeatureMap changed its key
+					if (isFeatureMapEntryKeyChange(equalityHelper, (FeatureMap.Entry)sideValue,
+							originValues)) {
+						featureChange(match, feature, sideValue, DifferenceKind.CHANGE, side);
+					} else if (isFeatureMapValueMove(comparison, (FeatureMap.Entry)sideValue, side)) {
+						featureChange(match, feature, sideValue, DifferenceKind.MOVE, side);
+					} else {
+						featureChange(match, feature, sideValue, DifferenceKind.ADD, side);
+					}
+				} else {
+					featureChange(match, feature, sideValue, DifferenceKind.ADD, side);
+				}
+			}
+		}
+
+		// Objects that are still present in "originCopy" now have been deleted from the current side.
+		// We want all reference changes, but if the current side has been deleted, we do not want to have
+		// attribute changes under this deletion.
+		boolean sideDeleted;
+		if (side == DifferenceSource.LEFT) {
+			sideDeleted = match.getLeft() == null;
+		} else {
+			sideDeleted = match.getRight() == null;
+		}
+		for (Object originValue : originCopy) {
+			if ((feature instanceof EReference || !sideDeleted)
+					&& !isFeatureMapChangeOrMove(comparison, feature, originValue, sideValues, side)) {
+				featureChange(match, feature, originValue, DifferenceKind.DELETE, side);
+			}
+		}
+	}
+
+	/**
 	 * Computes the difference between the sides of the given {@code match} for the given multi-valued
 	 * {@code feature}.
 	 * <p>
@@ -725,6 +951,10 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * </p>
 	 * <p>
 	 * This is only meant for two-way comparisons.
+	 * </p>
+	 * <p>
+	 * <b>Note</b> that this is no longer used for features which ordering is not considered, so
+	 * {@code checkOrdering} will always be <code>true</code> .
 	 * </p>
 	 * 
 	 * @param match
