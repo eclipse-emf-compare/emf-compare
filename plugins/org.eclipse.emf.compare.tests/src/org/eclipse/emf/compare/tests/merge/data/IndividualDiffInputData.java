@@ -820,4 +820,16 @@ public class IndividualDiffInputData extends AbstractInputData {
 	public Resource getMoveConflictAndPseudoConflictImplicationsRight() throws IOException {
 		return loadFromClassLoader("dependencies/bug_484579/right.uml");
 	}
+
+	public Resource getDanglingPostMergeAncestor() throws IOException {
+		return loadFromClassLoader("danglingpostmerge/origin.nodes");
+	}
+
+	public Resource getDanglingPostMergeLeft() throws IOException {
+		return loadFromClassLoader("danglingpostmerge/left.nodes");
+	}
+
+	public Resource getDanglingPostMergeRight() throws IOException {
+		return loadFromClassLoader("danglingpostmerge/right.nodes");
+	}
 }
