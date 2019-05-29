@@ -132,6 +132,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.IColorChangeEvent;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.CascadingDifferencesFilter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.StructureMergeViewerGrouper;
+import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.GroupItemProviderAdapter;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.TreeItemProviderAdapterFactorySpec;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.match.MatchOfContainmentReferenceChangeProcessor;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
@@ -580,7 +581,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 			if (singleDiffSelected) {
 				addSingleDiffMergeActions(manager, modes, mergerRegistry);
-			} else if (isOneMatchOrResourceMatchSelected()) {
+			} else if (isOneMatchOrResourceMatchSelected() || isOneGroupSelected()) {
 				addMergeNonConflictingActions(manager, modes, mergerRegistry);
 				manager.add(new Separator());
 				addMergeConflictingActions(manager, modes, mergerRegistry);
@@ -710,7 +711,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * @return true if the item selected is mergeable, false otherwise.
 	 */
 	private boolean isOneMergeableItemSelected() {
-		return isOneDiffSelected() || isOneMatchOrResourceMatchSelected();
+		return isOneDiffSelected() || isOneMatchOrResourceMatchSelected() || isOneGroupSelected();
 	}
 
 	/**
@@ -757,6 +758,20 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 */
 	private boolean isMatchOrMatchResource(EObject eObject) {
 		return eObject instanceof Match || eObject instanceof MatchResource;
+	}
+
+	/**
+	 * Checks if there is currently a single selected item in the viewer, and that item is a group.
+	 * 
+	 * @return <code>true</code> if the single selected item in this viewer is a group.
+	 */
+	private boolean isOneGroupSelected() {
+		ISelection selection = getSelection();
+		if (selection instanceof IStructuredSelection && ((IStructuredSelection)selection).size() == 1) {
+			Object element = ((IStructuredSelection)selection).getFirstElement();
+			return element instanceof GroupItemProviderAdapter;
+		}
+		return false;
 	}
 
 	/**
