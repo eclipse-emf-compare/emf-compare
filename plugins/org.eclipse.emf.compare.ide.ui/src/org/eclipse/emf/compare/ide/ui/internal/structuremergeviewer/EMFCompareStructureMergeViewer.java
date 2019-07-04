@@ -564,7 +564,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 *            the context menu to fill.
 	 */
 	private void fillContextMenu(IMenuManager manager) {
-		if (!isOneMergeableItemSelected()) {
+		if (!isMergeableItemSelected()) {
 			return;
 		}
 		boolean leftEditable = getCompareConfiguration().isLeftEditable();
@@ -576,10 +576,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			modes = EnumSet.of(MergeMode.ACCEPT, MergeMode.REJECT);
 		}
 
-		boolean singleDiffSelected = isOneDiffSelected();
 		if (rightEditable || leftEditable) {
 			IMerger.Registry mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
-			if (singleDiffSelected) {
+			if (isDiffSelected()) {
 				addSingleDiffMergeActions(manager, modes, mergerRegistry);
 			} else if (isOneMatchOrResourceMatchSelected() || isOneGroupSelected()) {
 				addMergeNonConflictingActions(manager, modes, mergerRegistry);
@@ -592,7 +591,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				}
 			}
 		}
-		if (singleDiffSelected && getCompareConfiguration().getComparison().isThreeWay()) {
+		if (isOneDiffSelected() && getCompareConfiguration().getComparison().isThreeWay()) {
 			final ISelection selection = getSelection();
 			if (selection instanceof IStructuredSelection && ((IStructuredSelection)selection).size() == 1) {
 				Object element = ((IStructuredSelection)selection).getFirstElement();
@@ -710,15 +709,15 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * 
 	 * @return true if the item selected is mergeable, false otherwise.
 	 */
-	private boolean isOneMergeableItemSelected() {
-		return isOneDiffSelected() || isOneMatchOrResourceMatchSelected() || isOneGroupSelected();
+	private boolean isMergeableItemSelected() {
+		return isDiffSelected() || isOneMatchOrResourceMatchSelected() || isOneGroupSelected();
 	}
 
 	/**
-	 * Specifies whether the a {@link Match} or a {@link MatchResource} is currently selected in this viewer.
+	 * Specifies whether a single {@link Diff} is currently selected in this viewer.
 	 * 
-	 * @return <code>true</code> if an instance of a {@link Match} or a {@link MatchResource} is selected,
-	 *         <code>false</code> otherwise.
+	 * @return <code>true</code> if a single instance of a {@link Diff} is selected, <code>false</code>
+	 *         otherwise.
 	 */
 	private boolean isOneDiffSelected() {
 		final ISelection selection = getSelection();
@@ -729,6 +728,23 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Specifies whether anything but {@link Diff} are currently selected in this viewer.
+	 * 
+	 * @return <code>true</code> if only instances of {@link Diff} are selected, <code>false</code> otherwise.
+	 */
+	private boolean isDiffSelected() {
+		final ISelection selection = getSelection();
+		if (selection instanceof IStructuredSelection && ((IStructuredSelection)selection).size() > 1) {
+			for (Object element : ((IStructuredSelection)selection).toList()) {
+				if (!(getDataOfTreeNodeOfAdapter(element) instanceof Diff)) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -1209,6 +1225,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				});
 			} else {
 				SWTUtil.safeSyncExec(new Runnable() {
+
 					public void run() {
 						refresh();
 						toolBar.selectionChanged(
@@ -1384,6 +1401,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			// StructureMergeViewerGrouper.
 			if (!monitor.isCanceled()) {
 				SWTUtil.safeSyncExec(new Runnable() {
+
 					public void run() {
 						getViewer().setInput(input);
 					}
@@ -1444,6 +1462,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				oldAdapterFactory.dispose();
 			}
 		}
+
 	}
 
 	void compareInputChanged(final ICompareInput input, IProgressMonitor monitor) {
