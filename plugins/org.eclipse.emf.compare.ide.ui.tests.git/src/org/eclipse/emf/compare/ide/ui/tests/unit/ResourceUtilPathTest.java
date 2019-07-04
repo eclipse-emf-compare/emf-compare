@@ -41,7 +41,10 @@ public class ResourceUtilPathTest extends AbstractURITest {
 		// But it doesn't start with it (repository name is the first segment)
 		assertFalse(storagePath.startsWith(iFile1.getFullPath().toOSString()));
 		// And it contains the commit's id at the end
-		assertTrue(storagePath.endsWith(origin.getId().abbreviate(6).name()));
+		assertTrue(
+				storagePath + " does not end with the expected abbreviated commit id: "
+						+ origin.getId().abbreviate(7) + " - full id was " + origin.getId(),
+				storagePath.endsWith(origin.getId().abbreviate(7).name()));
 
 		// while we want an actually useable path
 		String fixedPath = ResourceUtil.getFixedPath(storage).toOSString();
@@ -53,7 +56,10 @@ public class ResourceUtilPathTest extends AbstractURITest {
 		storagePath = storage.getFullPath().toOSString();
 		assertTrue(storagePath.contains(workspaceRelativePath));
 		assertFalse(storagePath.startsWith(iFile1.getFullPath().toOSString()));
-		assertTrue(storagePath.endsWith(branchTip.getId().abbreviate(6).name()));
+		assertTrue(
+				storagePath + " does not end with the expected abbreviated commit id: "
+						+ branchTip.getId().abbreviate(7) + " - full id was " + branchTip.getId(),
+				storagePath.endsWith(branchTip.getId().abbreviate(7).name()));
 
 		fixedPath = ResourceUtil.getFixedPath(storage).toOSString();
 		assertEquals(workspaceRelativePath, fixedPath);
@@ -64,7 +70,10 @@ public class ResourceUtilPathTest extends AbstractURITest {
 		storagePath = storage.getFullPath().toOSString();
 		assertTrue(storagePath.contains(workspaceRelativePath));
 		assertFalse(storagePath.startsWith(iFile1.getFullPath().toOSString()));
-		assertTrue(storagePath.endsWith(masterTip.getId().abbreviate(6).name()));
+		assertTrue(
+				storagePath + " does not end with the expected abbreviated commit id: "
+						+ masterTip.getId().abbreviate(7) + " - full id was " + masterTip.getId(),
+				storagePath.endsWith(masterTip.getId().abbreviate(7).name()));
 
 		fixedPath = ResourceUtil.getFixedPath(storage).toOSString();
 		assertEquals(workspaceRelativePath, fixedPath);
@@ -93,7 +102,10 @@ public class ResourceUtilPathTest extends AbstractURITest {
 		// But it doesn't start with it (repository name is the first segment)
 		assertFalse(storagePath.startsWith(iFile1.getFullPath().toOSString()));
 		// And it contains the commit's id at the end
-		assertTrue(storagePath.endsWith(origin.getId().abbreviate(6).name()));
+		assertTrue(
+				storagePath + " does not end with the expected abbreviated commit id: "
+						+ origin.getId().abbreviate(7) + " - full id was " + origin.getId(),
+				storagePath.endsWith(origin.getId().abbreviate(7).name()));
 
 		// while we want an actually useable path
 		String fixedPath = ResourceUtil.getFixedPath(storage).toOSString();
@@ -105,7 +117,10 @@ public class ResourceUtilPathTest extends AbstractURITest {
 		storagePath = storage.getFullPath().toOSString();
 		assertTrue(storagePath.contains(workspaceRelativePath));
 		assertFalse(storagePath.startsWith(iFile1.getFullPath().toOSString()));
-		assertTrue(storagePath.endsWith(branchTip.getId().abbreviate(6).name()));
+		assertTrue(
+				storagePath + " does not end with the expected abbreviated commit id: "
+						+ branchTip.getId().abbreviate(7) + " - full id was " + branchTip.getId(),
+				storagePath.endsWith(branchTip.getId().abbreviate(7).name()));
 
 		fixedPath = ResourceUtil.getFixedPath(storage).toOSString();
 		assertEquals(workspaceRelativePath, fixedPath);
@@ -116,7 +131,10 @@ public class ResourceUtilPathTest extends AbstractURITest {
 		storagePath = storage.getFullPath().toOSString();
 		assertTrue(storagePath.contains(workspaceRelativePath));
 		assertFalse(storagePath.startsWith(iFile1.getFullPath().toOSString()));
-		assertTrue(storagePath.endsWith(masterTip.getId().abbreviate(6).name()));
+		assertTrue(
+				storagePath + " does not end with the expected abbreviated commit id: "
+						+ masterTip.getId().abbreviate(7) + " - full id was " + masterTip.getId(),
+				storagePath.endsWith(masterTip.getId().abbreviate(7).name()));
 
 		fixedPath = ResourceUtil.getFixedPath(storage).toOSString();
 		assertEquals(workspaceRelativePath, fixedPath);
