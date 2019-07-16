@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.eclipse.compare.ITypedElement;
@@ -34,8 +35,8 @@ import org.eclipse.team.internal.ui.mapping.CompareInputChangeNotifier;
 import org.eclipse.team.internal.ui.synchronize.LocalResourceTypedElement;
 
 /**
- * A highly specialized implementation of a compare input that uses {@link TextFallbackCompareInputData text input
- * data} to manage the information about the ancestor, left, and right.
+ * A highly specialized implementation of a compare input that uses {@link TextFallbackCompareInputData text
+ * input data} to manage the information about the ancestor, left, and right.
  */
 @SuppressWarnings("restriction")
 public final class TextFallbackCompareInput extends AbstractCompareInput {
@@ -88,10 +89,14 @@ public final class TextFallbackCompareInput extends AbstractCompareInput {
 	 * @param showPreview
 	 *            whether this is input for preview mode.
 	 */
-	public TextFallbackCompareInput(int kind, TextFallbackCompareInputData textInputData, boolean showPreview) {
-		super(kind, getElement(textInputData.getOriginTypedElement(), textInputData.getOriginResource(), showPreview),
+	public TextFallbackCompareInput(int kind, TextFallbackCompareInputData textInputData,
+			boolean showPreview) {
+		super(kind,
+				getElement(textInputData.getOriginTypedElement(), textInputData.getOriginResource(),
+						showPreview),
 				getElement(textInputData.getLeftTypedElement(), textInputData.getLeftResource(), showPreview),
-				getElement(textInputData.getRightTypedElement(), textInputData.getRightResource(), showPreview));
+				getElement(textInputData.getRightTypedElement(), textInputData.getRightResource(),
+						showPreview));
 		this.textInputData = textInputData;
 	}
 
@@ -198,7 +203,7 @@ public final class TextFallbackCompareInput extends AbstractCompareInput {
 		public InputStream getContents() throws CoreException {
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			try {
-				xmlResource.save(byteArrayOutputStream, null);
+				xmlResource.save(byteArrayOutputStream, new LinkedHashMap<>());
 			} catch (IOException e) {
 				EMFCompareIDEUIPlugin.getDefault().log(e);
 			}

@@ -15,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedHashMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -89,7 +90,7 @@ public class ResourceStreamAccessorImpl extends AbstractTypedElementAdapter impl
 	public InputStream getContents() throws CoreException {
 		ByteArrayOutputStream os = new ByteArrayOutputStream(INPUT_STREAM_DEFAULT_SIZE);
 		try {
-			fResource.save(os, null);
+			fResource.save(os, new LinkedHashMap<>());
 		} catch (IOException e) {
 			EMFCompareRCPUIPlugin.getDefault().log(e);
 		}
