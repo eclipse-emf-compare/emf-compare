@@ -16,7 +16,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +25,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
-import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicMonitor;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.command.ICompareCommandStack;
@@ -49,8 +46,6 @@ import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.provider.EMFCompareEditPlugin;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.change.ChangeDescription;
-import org.eclipse.emf.ecore.change.impl.ChangeDescriptionImpl;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -107,34 +102,7 @@ public class EMFCompareEditingDomain implements ICompareEditingDomain, IDisposab
 
 		fCommandStack = commandStack;
 
-		fChangeRecorder = new ChangeRecorder() {
-			@Override
-			protected ChangeDescription createChangeDescription() {
-				return new ChangeDescriptionImpl() {
-					@Override
-					public EList<Adapter> eAdapters() {
-						return new EAdapterList<Adapter>(this) {
-							private static final long serialVersionUID = 1L;
-
-							@Override
-							public boolean add(Adapter object) {
-								return false;
-							}
-
-							@Override
-							public void add(int index, Adapter object) {
-							}
-
-							@Override
-							public boolean addAll(Collection<? extends Adapter> collection) {
-								return false;
-							}
-						};
-					}
-
-				};
-			}
-		};
+		fChangeRecorder = new EMFCompareChangeRecorder();
 		fChangeRecorder.setResolveProxies(false);
 		disposableDomains = new ArrayList<TransactionalEditingDomain>();
 	}
