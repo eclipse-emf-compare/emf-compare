@@ -394,6 +394,12 @@ public class UMLPostProcessor implements IPostProcessor {
 	 *            The reference change.
 	 */
 	private void fillImplicationsWithUMLSubsets(ReferenceChange diff) {
+		boolean isAddOrSet = isAddOrSetDiff(diff);
+		boolean isDeleteOrUnset = isDeleteOrUnsetDiff(diff);
+		if (!isAddOrSet && !isDeleteOrUnset) {
+			return;
+		}
+
 		EReference reference = diff.getReference();
 		// ADD implies ADD on non union supersets
 		// DELETE is implied by DEL on non union supersets
@@ -405,9 +411,9 @@ public class UMLPostProcessor implements IPostProcessor {
 						&& ((ReferenceChange)superSetDiff).getReference() == superSet
 						&& ((ReferenceChange)superSetDiff).getValue() == diff.getValue()
 						&& superSetDiff.getMatch() == diff.getMatch()) {
-					if (isAddOrSetDiff(diff) && isAddOrSetDiff(superSetDiff)) {
+					if (isAddOrSet && isAddOrSetDiff(superSetDiff)) {
 						diff.getImplies().add(superSetDiff);
-					} else if (isDeleteOrUnsetDiff(diff) && isDeleteOrUnsetDiff(superSetDiff)) {
+					} else if (isDeleteOrUnset && isDeleteOrUnsetDiff(superSetDiff)) {
 						diff.getImpliedBy().add(superSetDiff);
 					}
 				}
@@ -427,9 +433,9 @@ public class UMLPostProcessor implements IPostProcessor {
 							&& superSetDiff.getSource() == diff.getSource()
 							&& ((ReferenceChange)superSetDiff).getReference() == superSet
 							&& superSetDiff.getMatch() == comparison.getMatch(diff.getValue())) {
-						if (isAddOrSetDiff(diff) && isAddOrSetDiff(superSetDiff)) {
+						if (isAddOrSet && isAddOrSetDiff(superSetDiff)) {
 							diff.getImplies().add(superSetDiff);
-						} else if (isDeleteOrUnsetDiff(diff) && isDeleteOrUnsetDiff(superSetDiff)) {
+						} else if (isDeleteOrUnset && isDeleteOrUnsetDiff(superSetDiff)) {
 							diff.getImpliedBy().add(superSetDiff);
 						}
 					}
