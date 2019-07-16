@@ -252,7 +252,15 @@ public class CompareToolBar implements ISelectionChangedListener {
 
 			this.doOnce = true;
 		}
+	}
 
+	/**
+	 * Returns the toolbar manager for this tool bar.
+	 * 
+	 * @return the {@link ToolBarManager}.
+	 */
+	public ToolBarManager getToolBarManager() {
+		return toolbarManager;
 	}
 
 	private void registerCompareBindings() {

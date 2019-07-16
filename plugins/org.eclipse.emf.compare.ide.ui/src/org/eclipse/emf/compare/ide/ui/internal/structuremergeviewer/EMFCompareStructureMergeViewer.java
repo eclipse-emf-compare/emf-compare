@@ -157,6 +157,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -419,9 +420,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		navigatable = new Navigatable(getViewer(), getContentProvider());
 
-		toolBar = new CompareToolBar(CompareViewerPane.getToolBarManager(parent), structureMergeViewerGrouper,
-				structureMergeViewerFilter, getCompareConfiguration());
-		getViewer().addSelectionChangedListener(toolBar);
+		toolBar = createToolBar(CompareViewerPane.getToolBarManager(parent));
+		getViewer().addSelectionChangedListener(getToolBar());
 
 		createContextMenu();
 
@@ -468,15 +468,15 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 			@Override
 			public void startFetching() {
-				enabled = toolBar.isEnabled();
-				toolBar.setEnabled(false);
+				enabled = getToolBar().isEnabled();
+				getToolBar().setEnabled(false);
 			}
 
 			@Override
 			public void doneFetching() {
 				// Only try to enable the toolbar if it was enabled and is not currently enabled.
-				if (enabled && !toolBar.isEnabled()) {
-					toolBar.setEnabled(true);
+				if (enabled && !getToolBar().isEnabled()) {
+					getToolBar().setEnabled(true);
 				}
 			}
 		};
@@ -514,30 +514,53 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		getCompareConfiguration().addPropertyChangeListener(mirroredPropertyChangeListener);
 	}
 
+	protected CompareToolBar createToolBar(ToolBarManager manager) {
+		return new CompareToolBar(manager, getCompareConfiguration().getStructureMergeViewerGrouper(),
+				getCompareConfiguration().getStructureMergeViewerFilter(), getCompareConfiguration());
+	}
+
 	/**
 	 * The tool bar must be init after we know the editable state of left and right input.
 	 * 
 	 * @see #compareInputChanged(ICompareInput, IProgressMonitor)
 	 */
-	private void initToolbar(IProgressMonitor monitor) {
+	protected void initToolbar(IProgressMonitor monitor) {
 		if (!monitor.isCanceled()) {
 			SWTUtil.safeSyncExec(new Runnable() {
 				public void run() {
-					toolBar.initToolbar(getViewer(), navigatable, fHandlerService);
-					toolBar.setEnabled(false);
+					getToolBar().initToolbar(getViewer(), getNavigatable(), fHandlerService);
+					getToolBar().setEnabled(false);
 				}
 			});
 		}
 	}
 
-	private void enableToolbar(IProgressMonitor monitor) {
+	protected void enableToolbar(IProgressMonitor monitor) {
 		if (!monitor.isCanceled()) {
 			SWTUtil.safeSyncExec(new Runnable() {
 				public void run() {
-					toolBar.setEnabled(true);
+					getToolBar().setEnabled(true);
 				}
 			});
 		}
+	}
+
+	/**
+	 * Returns the toolbar for this Structure merge viewer.
+	 * 
+	 * @return The {@link CompareToolBar}.
+	 */
+	protected CompareToolBar getToolBar() {
+		return toolBar;
+	}
+
+	/**
+	 * Returns the {@link Navigatable} for this structure merge viewer.
+	 * 
+	 * @return The {@link Navigatable}.
+	 */
+	protected Navigatable getNavigatable() {
+		return navigatable;
 	}
 
 	/**
@@ -619,7 +642,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			IMerger.Registry mergerRegistry) {
 		for (MergeMode mode : modes) {
 			MergeAction mergeAction = new MergeAction(getCompareConfiguration(), mergerRegistry, mode,
-					navigatable, (IStructuredSelection)getSelection());
+					getNavigatable(), (IStructuredSelection)getSelection());
 			manager.add(mergeAction);
 		}
 	}
@@ -645,7 +668,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		};
 		for (MergeMode mode : modes) {
 			MergeContainedNonConflictingAction mergeAction = new MergeContainedNonConflictingAction(
-					getCompareConfiguration(), mergerRegistry, mode, navigatable,
+					getCompareConfiguration(), mergerRegistry, mode, getNavigatable(),
 					(IStructuredSelection)getSelection(), filterPredicate);
 			manager.add(mergeAction);
 		}
@@ -672,7 +695,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		};
 		for (MergeMode mode : modes) {
 			MergeContainedConflictingAction mergeAction = new MergeContainedConflictingAction(
-					getCompareConfiguration(), mergerRegistry, mode, navigatable,
+					getCompareConfiguration(), mergerRegistry, mode, getNavigatable(),
 					(IStructuredSelection)getSelection(), filterPredicate);
 			manager.add(mergeAction);
 		}
@@ -698,7 +721,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		};
 		for (MergeMode mode : modes) {
 			MergeContainedAction mergeAllAction = new MergeContainedAction(getCompareConfiguration(),
-					mergerRegistry, mode, navigatable, (IStructuredSelection)getSelection(), filterPredicate);
+					mergerRegistry, mode, getNavigatable(), (IStructuredSelection)getSelection(),
+					filterPredicate);
 			manager.add(mergeAllAction);
 		}
 	}
@@ -1052,7 +1076,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
 				public void run() {
 					// Begin computing the content tree cache.
-					navigatable.refresh();
+					getNavigatable().refresh();
 
 					if (getViewer().getSelection().isEmpty()) {
 						selectFirstDiffOrDisplayLabelViewer(getCompareConfiguration().getComparison());
@@ -1095,7 +1119,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
 				public void run() {
 					// Begin computing the content tree cache.
-					navigatable.refresh();
+					getNavigatable().refresh();
 
 					// Expands the tree viewer to the default expansion level
 					expandTreeToLevel(getDefaultTreeExpansionLevel(), getTreeExpandTimeout());
@@ -1116,7 +1140,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		if (oldInput instanceof ICompareInput) {
 			ICompareInput old = (ICompareInput)oldInput;
 			old.removeCompareInputChangeListener(fCompareInputChangeListener);
-			toolBar.dispose();
+			getToolBar().dispose();
 		}
 		if (input instanceof ICompareInput) {
 			ICompareInput ci = (ICompareInput)input;
@@ -1144,7 +1168,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			ci.removeCompareInputChangeListener(fCompareInputChangeListener);
 		}
 		removeSelectionChangedListener(selectionChangeListener);
-		getViewer().removeSelectionChangedListener(toolBar);
+		getViewer().removeSelectionChangedListener(getToolBar());
 		getViewer().getTree().removeListener(SWT.EraseItem, fEraseItemListener);
 		if (preferenceChangeListener != null) {
 			preferenceStore.removePropertyChangeListener(preferenceChangeListener);
@@ -1158,7 +1182,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		fAdapterFactory.dispose();
 		diffRelationshipComputer.cancel();
 		fDiffRelationshipComputer.invalidate();
-		toolBar.dispose();
+		getToolBar().dispose();
 		fColors.dispose();
 		super.handleDispose(event);
 	}
@@ -1220,7 +1244,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				// update content viewers with the new selection
 				SWTUtil.safeAsyncExec(new Runnable() {
 					public void run() {
-						navigatable.openSelectedChange();
+						getNavigatable().openSelectedChange();
 					}
 				});
 			} else {
@@ -1228,7 +1252,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 					public void run() {
 						refresh();
-						toolBar.selectionChanged(
+						getToolBar().selectionChanged(
 								new SelectionChangedEvent(getViewer(), getViewer().getSelection()));
 					}
 				});
@@ -1237,7 +1261,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			SWTUtil.safeSyncExec(new Runnable() {
 				public void run() {
 					refresh();
-					toolBar.selectionChanged(
+					getToolBar().selectionChanged(
 							new SelectionChangedEvent(getViewer(), getViewer().getSelection()));
 				}
 			});
@@ -1282,7 +1306,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	/**
 	 * Triggered by fCompareInputChangeListener and {@link #inputChanged(Object, Object)}.
 	 */
-	void compareInputChanged(ICompareInput input) {
+	protected void compareInputChanged(ICompareInput input) {
 		if (input == null) {
 			// When closing, we don't need a progress monitor to handle the input change
 			compareInputChanged((ICompareInput)null, new NullProgressMonitor());
@@ -1295,11 +1319,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 	}
 
-	void compareInputChanged(Comparison input, IProgressMonitor monitor) {
+	protected void compareInputChanged(Comparison input, IProgressMonitor monitor) {
 		compareInputChanged(null, input, monitor);
 	}
 
-	void compareInputChanged(ComparisonScopeInput input, IProgressMonitor monitor) {
+	protected void compareInputChanged(ComparisonScopeInput input, IProgressMonitor monitor) {
 		if (monitor.isCanceled()) {
 			return;
 		}
@@ -1346,7 +1370,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		compareInputChanged(input.getComparisonScope(), comparison, monitor);
 	}
 
-	void compareInputChanged(final IComparisonScope scope, final Comparison comparison,
+	protected void compareInputChanged(final IComparisonScope scope, final Comparison comparison,
 			final IProgressMonitor monitor) {
 		if (!getControl().isDisposed() && !monitor.isCanceled()) { // guard against disposal
 			final EMFCompareConfiguration config = getCompareConfiguration();
@@ -1434,7 +1458,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 						expandTreeToLevel(getDefaultTreeExpansionLevel(), getTreeExpandTimeout());
 
 						// Begin computing the content tree cache.
-						navigatable.refresh();
+						getNavigatable().refresh();
 
 						// Selects the first difference once the tree has been filled.
 						selectFirstDiffOrDisplayLabelViewer(comparison);
@@ -1465,7 +1489,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	}
 
-	void compareInputChanged(final ICompareInput input, IProgressMonitor monitor) {
+	protected void compareInputChanged(final ICompareInput input, IProgressMonitor monitor) {
 		inChange = true;
 		if (input != null && !monitor.isCanceled()) {
 			if (input instanceof CompareInputAdapter) {
@@ -1615,7 +1639,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * @param input
 	 * @param compareResult
 	 */
-	private void hookAdapters(final ICompareInput input, final Comparison compareResult) {
+	protected void hookAdapters(final ICompareInput input, final Comparison compareResult) {
 		// It is now possible for users to provide a pre-computed comparison to the compare editor and re-use
 		// that comparison across multiple SMV. We need to cleanup previous hooks.
 		Iterator<Adapter> adapterIt = compareResult.eAdapters().iterator();
@@ -1790,7 +1814,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * @param comparison
 	 *            the comparison used to know if there are differences.
 	 */
-	private void selectFirstDiffOrDisplayLabelViewer(final Comparison comparison) {
+	protected void selectFirstDiffOrDisplayLabelViewer(final Comparison comparison) {
 		if (comparison != null) {
 			ICompareInput compareInput = (ICompareInput)EcoreUtil.getAdapter(comparison.eAdapters(),
 					ICompareInput.class);
@@ -1799,15 +1823,15 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			}
 			List<Diff> differences = comparison.getDifferences();
 			if (differences.isEmpty()) {
-				navigatable.fireOpen(new NoDifferencesCompareInput(compareInput));
-			} else if (!navigatable.hasChange(INavigatable.FIRST_CHANGE)) {
+				getNavigatable().fireOpen(new NoDifferencesCompareInput(compareInput));
+			} else if (!getNavigatable().hasChange(INavigatable.FIRST_CHANGE)) {
 				if (hasOnlyPseudoConflicts(differences)) {
-					navigatable.fireOpen(new OnlyPseudoConflictsCompareInput(compareInput));
+					getNavigatable().fireOpen(new OnlyPseudoConflictsCompareInput(compareInput));
 				} else {
-					navigatable.fireOpen(new NoVisibleItemCompareInput(compareInput));
+					getNavigatable().fireOpen(new NoVisibleItemCompareInput(compareInput));
 				}
 			} else if (!isSelectFirstChange()) {
-				navigatable.fireOpen(new NoSelectedItemCompareInput(compareInput));
+				getNavigatable().fireOpen(new NoSelectedItemCompareInput(compareInput));
 				WrappableTreeViewer viewer = getViewer();
 				if (viewer.getSelection().isEmpty()) {
 					Object[] filteredChildren = viewer.getFilteredChildren(viewer.getInput());
@@ -1816,7 +1840,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					}
 				}
 			} else {
-				navigatable.selectChange(INavigatable.FIRST_CHANGE);
+				getNavigatable().selectChange(INavigatable.FIRST_CHANGE);
 			}
 		}
 	}
