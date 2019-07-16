@@ -761,14 +761,14 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 */
 	private boolean isDiffSelected() {
 		final ISelection selection = getSelection();
-		if (selection instanceof IStructuredSelection && ((IStructuredSelection)selection).size() > 1) {
+		if (selection instanceof IStructuredSelection && ((IStructuredSelection)selection).size() > 0) {
 			for (Object element : ((IStructuredSelection)selection).toList()) {
 				if (!(getDataOfTreeNodeOfAdapter(element) instanceof Diff)) {
 					return false;
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 	/**
