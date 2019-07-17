@@ -8,7 +8,7 @@
  * Contributors:
  *     Stefan Dirix - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.diff.data;
+package org.eclipse.emf.compare.tests.diff.data.featuremapmove;
 
 import java.io.IOException;
 
@@ -18,10 +18,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 @SuppressWarnings("nls")
 public class FeatureMapMoveDiffInputData extends AbstractInputData {
 	public Resource getFeatureMapMoveLeft() throws IOException {
-		return loadFromClassLoader("featuremapmove/left.nodes");
+		return loadFromClassLoader("left.nodes");
 	}
 
 	public Resource getFeatureMapMoveRight() throws IOException {
-		return loadFromClassLoader("featuremapmove/right.nodes");
+		return loadFromClassLoader("right.nodes");
 	}
 }

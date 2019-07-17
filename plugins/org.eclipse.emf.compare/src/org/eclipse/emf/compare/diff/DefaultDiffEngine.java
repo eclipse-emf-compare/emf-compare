@@ -1242,9 +1242,10 @@ public class DefaultDiffEngine implements IDiffEngine {
 				final boolean matchingLO = helper.matchingValues(leftValue, originValue);
 
 				// if !matchingLO, the same change has been made on both side. This is actually a
-				// pseudo-conflict. It can be either a set or unset diff according to the value of origin.
-				if (!matchingLO && isNullOrEmptyString(originValue)) {
-					// The same value has been SET on both sides
+				// pseudo-conflict.
+				if (!matchingLO && !isNullOrEmptyString(leftValue)) {
+					// The same value has been SET or CHANGED on both sides
+					// (depending on whether origin is null or not)
 					getDiffProcessor().attributeChange(match, attribute, leftValue, DifferenceKind.CHANGE,
 							DifferenceSource.LEFT);
 					getDiffProcessor().attributeChange(match, attribute, rightValue, DifferenceKind.CHANGE,

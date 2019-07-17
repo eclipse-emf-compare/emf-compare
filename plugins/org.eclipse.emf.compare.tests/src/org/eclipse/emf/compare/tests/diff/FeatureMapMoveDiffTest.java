@@ -26,7 +26,7 @@ import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.tests.diff.data.FeatureMapMoveDiffInputData;
+import org.eclipse.emf.compare.tests.diff.data.featuremapmove.FeatureMapMoveDiffInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 

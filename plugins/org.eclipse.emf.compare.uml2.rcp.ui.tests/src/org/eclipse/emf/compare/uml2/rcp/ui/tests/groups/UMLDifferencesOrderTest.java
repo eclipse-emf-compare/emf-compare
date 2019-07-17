@@ -91,7 +91,7 @@ public class UMLDifferencesOrderTest extends AbstractDifferenceOrderTest {
 	 * 
 	 * @throws IOException
 	 */
-	@Ignore("Refining diffs are displayed insinde refined diffs in an order that's not stable.")
+	@Ignore("Refining diffs are displayed inside refined diffs in an order that's not stable.")
 	@Test
 	public void testDiffOrder() throws IOException {
 		UMLRefinedElementsFilter umlRefineFilter = new UMLRefinedElementsFilter();
