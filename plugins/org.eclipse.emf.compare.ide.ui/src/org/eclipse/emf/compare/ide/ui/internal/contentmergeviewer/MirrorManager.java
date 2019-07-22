@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 EclipseSource and others.
+ * Copyright (c) 2018, 2019 EclipseSource, Christian W. Damus, and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Philip Langer - initial API and implementation
+ *     Christian W. Damus - bug 549463
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer;
 
@@ -136,12 +137,12 @@ public class MirrorManager {
 
 		@Override
 		public void saveRightContent(Object input, byte[] bytes) {
-			delegate.saveLeftContent(input, bytes);
+			delegate.saveRightContent(input, bytes);
 		}
 
 		@Override
 		public void saveLeftContent(Object input, byte[] bytes) {
-			delegate.saveRightContent(input, bytes);
+			delegate.saveLeftContent(input, bytes);
 		}
 
 		@Override
