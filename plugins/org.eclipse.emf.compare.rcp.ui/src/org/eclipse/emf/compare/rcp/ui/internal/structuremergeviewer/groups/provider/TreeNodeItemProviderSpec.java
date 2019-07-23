@@ -114,6 +114,9 @@ public class TreeNodeItemProviderSpec extends TreeNodeItemProvider implements II
 		if (data instanceof Comparison) {
 			IDifferenceGroupProvider groupProvider = (IDifferenceGroupProvider)EcoreUtil
 					.getExistingAdapter(treeNode, IDifferenceGroupProvider.class);
+			if (groupProvider == null) {
+				return ImmutableList.of();
+			}
 			Comparison comparison = (Comparison)data;
 			Collection<? extends IDifferenceGroup> groups = groupProvider.getGroups(comparison);
 			if (groups.isEmpty()) {
