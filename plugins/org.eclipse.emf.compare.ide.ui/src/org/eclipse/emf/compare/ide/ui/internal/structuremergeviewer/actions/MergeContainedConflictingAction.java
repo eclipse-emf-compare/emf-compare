@@ -11,8 +11,9 @@
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
 import static org.eclipse.emf.compare.ConflictKind.REAL;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.guavaToJava;
 
-import com.google.common.base.Predicate;
+import java.util.function.Predicate;
 
 import org.eclipse.compare.INavigatable;
 import org.eclipse.emf.compare.Diff;
@@ -37,10 +38,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * @since 4.5
  */
 public class MergeContainedConflictingAction extends AbstractMergeContainedAction {
-
-	@SuppressWarnings("unchecked")
-	private static final Predicate<Diff> CONFLICTING_DIFFS = (Predicate<Diff>)EMFComparePredicates
-			.hasDirectOrIndirectConflict(REAL);
 
 	/**
 	 * {@inheritDoc}
@@ -97,15 +94,16 @@ public class MergeContainedConflictingAction extends AbstractMergeContainedActio
 		return new MergeConflictingRunnable(isLeftEditable, isRightEditable, mode, relationshipComputer);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Predicate<Diff> getDiffPredicate() {
-		return CONFLICTING_DIFFS;
+		return (Predicate<Diff>)guavaToJava(EMFComparePredicates.hasDirectOrIndirectConflict(REAL));
 	}
 
 	@Override
 	protected Predicate<Diff> getStatePredicate() {
 		return new Predicate<Diff>() {
-			public boolean apply(Diff diff) {
+			public boolean test(Diff diff) {
 				switch (diff.getState()) {
 					case DISCARDED:
 						switch (getSelectedMode()) {

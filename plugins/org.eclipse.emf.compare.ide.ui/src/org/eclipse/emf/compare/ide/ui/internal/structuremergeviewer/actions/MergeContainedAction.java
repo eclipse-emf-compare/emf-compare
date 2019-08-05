@@ -15,7 +15,7 @@ import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
 import static org.eclipse.emf.compare.internal.merge.MergeMode.ACCEPT;
 import static org.eclipse.emf.compare.internal.merge.MergeMode.LEFT_TO_RIGHT;
 
-import com.google.common.base.Predicate;
+import java.util.function.Predicate;
 
 import org.eclipse.compare.INavigatable;
 import org.eclipse.emf.compare.Diff;
@@ -78,7 +78,7 @@ public class MergeContainedAction extends AbstractMergeContainedAction {
 	@Override
 	protected Predicate<Diff> getDiffPredicate() {
 		return new Predicate<Diff>() {
-			public boolean apply(Diff input) {
+			public boolean test(Diff input) {
 				final DifferenceSource sourceSide;
 				if (LEFT_TO_RIGHT.equals(getSelectedMode()) || ACCEPT.equals(getSelectedMode())) {
 					sourceSide = LEFT;

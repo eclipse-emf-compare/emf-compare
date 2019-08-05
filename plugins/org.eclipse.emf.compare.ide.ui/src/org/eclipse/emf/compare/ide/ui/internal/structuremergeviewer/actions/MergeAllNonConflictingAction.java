@@ -13,14 +13,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
-import static com.google.common.collect.Iterables.addAll;
-import static com.google.common.collect.Iterables.filter;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
-
-import com.google.common.base.Predicate;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.guavaToJava;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -46,10 +45,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * @since 3.0
  */
 public class MergeAllNonConflictingAction extends MergeAction {
-
-	@SuppressWarnings("unchecked")
-	private static final Predicate<Diff> NON_CONFLICTING_DIFFS = (Predicate<Diff>)EMFComparePredicates
-			.hasNoDirectOrIndirectConflict(REAL);
 
 	private Comparison comparison;
 
@@ -135,15 +130,17 @@ public class MergeAllNonConflictingAction extends MergeAction {
 	 */
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		addAll(getSelectedDifferences(), getSelectedDifferences(differences));
-		// The action is enabled only there are any selected differences that will change state when this
+		getSelectedDifferences().addAll(getSelectedDifferences(differences.stream()));
+		// The action is enabled only if there are any selected differences that will change state when this
 		// action is applied.
 		return !getSelectedDifferences().isEmpty();
 	}
 
 	@Override
-	protected Iterable<Diff> getSelectedDifferences(Iterable<Diff> diffs) {
-		return filter(super.getSelectedDifferences(diffs), NON_CONFLICTING_DIFFS);
+	protected List<Diff> getSelectedDifferences(Stream<Diff> diffs) {
+		return super.getSelectedDifferences(diffs).stream()
+				.filter(guavaToJava(EMFComparePredicates.hasNoDirectOrIndirectConflict(REAL)))
+				.collect(Collectors.toList());
 	}
 
 }

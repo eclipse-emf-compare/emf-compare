@@ -1280,6 +1280,23 @@ public final class EMFComparePredicates {
 	}
 
 	/**
+	 * Guava predicates and functions are only aligned in recent versions of Guava. This is necessary to
+	 * maintain compatibility with guava 15 and can be removed as soon as we drop compatibility with older
+	 * guava versions.
+	 * 
+	 * @param guava
+	 *            The guava predicate.
+	 * @return The java predicate.
+	 */
+	public static <T> java.util.function.Predicate<T> guavaToJava(Predicate<T> guava) {
+		return new java.util.function.Predicate<T>() {
+			public boolean test(T input) {
+				return guava.apply(input);
+			}
+		};
+	}
+
+	/**
 	 * This particular predicate will be used to check that a given Diff corresponds to a ReferenceChange on a
 	 * given reference, with known "original" and "changed" values.
 	 * 

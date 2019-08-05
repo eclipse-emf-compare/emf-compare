@@ -10,28 +10,20 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
-import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.transform;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.Lists;
-
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.compare.INavigatable;
 import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.groups.provider.GroupItemProviderAdapter;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -47,18 +39,17 @@ public abstract class AbstractMergeContainedAction extends MergeAction {
 	/**
 	 * Function for transforming a tree node into all non-filtered leaf differences.
 	 */
-	private static Function<TreeNode, Iterable<Diff>> treeNodesToLeafDiffs(
+	private static Function<TreeNode, Stream<Diff>> treeNodesToLeafDiffs(
 			final Predicate<TreeNode> isFiltered) {
-		return new Function<TreeNode, Iterable<Diff>>() {
-			public Iterable<Diff> apply(TreeNode input) {
+		return new Function<TreeNode, Stream<Diff>>() {
+			public Stream<Diff> apply(TreeNode input) {
 				final TreeIterator<EObject> allContents = input.eAllContents();
-				final Builder<Diff> builder = new ImmutableList.Builder<Diff>();
+				final Stream.Builder<Diff> builder = Stream.builder();
 				while (allContents.hasNext()) {
 					final EObject eObject = allContents.next();
-					if (eObject instanceof TreeNode) {
-						final TreeNode treeNode = (TreeNode)eObject;
-						final EObject data = IDifferenceGroup.TREE_NODE_DATA.apply(treeNode);
-						if (data instanceof Diff && !isFiltered.apply(treeNode)) {
+					if (eObject instanceof TreeNode && !isFiltered.test((TreeNode)eObject)) {
+						final EObject data = ((TreeNode)eObject).getData();
+						if (data instanceof Diff) {
 							builder.add((Diff)data);
 						}
 					}
@@ -101,22 +92,21 @@ public abstract class AbstractMergeContainedAction extends MergeAction {
 	}
 
 	@Override
-	protected Iterable<Diff> getSelectedDifferences(IStructuredSelection selection) {
-		final List<?> selectedObjects = selection.toList();
+	protected List<Diff> getSelectedDifferences(IStructuredSelection selection) {
 		Object firstElement = selection.getFirstElement();
-		if (selection.getFirstElement() instanceof GroupItemProviderAdapter) {
-			final List<Object> effectiveSelectedObjects = Lists.newArrayList();
-			effectiveSelectedObjects
-					.addAll(((GroupItemProviderAdapter)firstElement).getChildren(firstElement));
-			final Iterable<TreeNode> selectedTreeNodes = filter(effectiveSelectedObjects, TreeNode.class);
-			Iterable<Diff> diffs = concat(transform(selectedTreeNodes, treeNodesToLeafDiffs(isFiltered)));
-			return filter(getSelectedDifferences(diffs), getDiffPredicate());
+		if (firstElement instanceof GroupItemProviderAdapter) {
+			Stream<Diff> diffs = ((GroupItemProviderAdapter)firstElement).getChildren(firstElement).stream()
+					.filter(TreeNode.class::isInstance).map(TreeNode.class::cast)
+					.flatMap(treeNodesToLeafDiffs(isFiltered));
+			return getSelectedDifferences(diffs).stream().filter(getDiffPredicate())
+					.collect(Collectors.toList());
 		} else {
-			final Iterable<Adapter> selectedAdapters = filter(selectedObjects, Adapter.class);
-			final Iterable<Notifier> selectedNotifiers = transform(selectedAdapters, ADAPTER__TARGET);
-			final Iterable<TreeNode> selectedTreeNodes = filter(selectedNotifiers, TreeNode.class);
-			Iterable<Diff> diffs = concat(transform(selectedTreeNodes, treeNodesToLeafDiffs(isFiltered)));
-			return filter(getSelectedDifferences(diffs), getDiffPredicate());
+			final List<?> selectedObjects = selection.toList();
+			Stream<Diff> diffs = selectedObjects.stream().filter(Adapter.class::isInstance)
+					.map(adapter -> ((Adapter)adapter).getTarget()).filter(TreeNode.class::isInstance)
+					.map(TreeNode.class::cast).flatMap(treeNodesToLeafDiffs(isFiltered));
+			return getSelectedDifferences(diffs).stream().filter(getDiffPredicate())
+					.collect(Collectors.toList());
 		}
 	}
 

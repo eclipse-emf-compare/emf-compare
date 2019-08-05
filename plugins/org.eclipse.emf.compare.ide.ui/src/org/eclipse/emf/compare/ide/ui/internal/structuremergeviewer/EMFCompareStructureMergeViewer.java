@@ -22,7 +22,6 @@ import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCo
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
@@ -43,6 +42,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.function.Predicate;
 
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.CompareViewerPane;
@@ -662,7 +662,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	private void addMergeNonConflictingActions(IMenuManager manager, EnumSet<MergeMode> modes,
 			IMerger.Registry mergerRegistry) {
 		final Predicate<TreeNode> filterPredicate = new Predicate<TreeNode>() {
-			public boolean apply(TreeNode input) {
+			public boolean test(TreeNode input) {
 				return input != null && JFaceUtil.isFiltered(getViewer(), input, input.getParent());
 			}
 		};
@@ -689,7 +689,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	private void addMergeConflictingActions(IMenuManager manager, EnumSet<MergeMode> modes,
 			IMerger.Registry mergerRegistry) {
 		final Predicate<TreeNode> filterPredicate = new Predicate<TreeNode>() {
-			public boolean apply(TreeNode input) {
+			public boolean test(TreeNode input) {
 				return input != null && JFaceUtil.isFiltered(getViewer(), input, input.getParent());
 			}
 		};
@@ -715,7 +715,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	private void addMergeAllActions(IMenuManager manager, EnumSet<MergeMode> modes,
 			IMerger.Registry mergerRegistry) {
 		final Predicate<TreeNode> filterPredicate = new Predicate<TreeNode>() {
-			public boolean apply(TreeNode input) {
+			public boolean test(TreeNode input) {
 				return input != null && JFaceUtil.isFiltered(getViewer(), input, input.getParent());
 			}
 		};
@@ -2245,11 +2245,12 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		public TitleBuilder(EMFCompareConfiguration configuration) {
 			comparison = configuration.getComparison();
 			groupProvider = configuration.getStructureMergeViewerGrouper().getProvider();
-			filterPredicate = configuration.getStructureMergeViewerFilter().getAggregatedPredicate();
+			filterPredicate = EMFComparePredicates
+					.guavaToJava(configuration.getStructureMergeViewerFilter().getAggregatedPredicate());
 		}
 
 		void visit(TreeNode node, boolean parentApplies) {
-			boolean applies = parentApplies && filterPredicate.apply(node);
+			boolean applies = parentApplies && filterPredicate.test(node);
 			EObject data = node.getData();
 			if (data instanceof Diff) {
 				// If we haven't visited it before...

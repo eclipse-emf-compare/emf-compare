@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.INavigatable;
@@ -264,9 +265,10 @@ public class MirroredMergeActionTest {
 		}
 
 		@Override
-		protected Iterable<Diff> getSelectedDifferences(IStructuredSelection selection) {
+		protected List<Diff> getSelectedDifferences(IStructuredSelection selection) {
 			List<?> selectedObjects = selection.toList();
-			return filter(selectedObjects, Diff.class);
+			return selectedObjects.stream().filter(Diff.class::isInstance).map(Diff.class::cast)
+					.collect(Collectors.toList());
 		}
 	}
 

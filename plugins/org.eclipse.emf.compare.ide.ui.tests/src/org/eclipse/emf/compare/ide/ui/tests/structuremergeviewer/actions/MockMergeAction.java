@@ -8,10 +8,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.transform;
-
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.compare.INavigatable;
 import org.eclipse.emf.compare.Diff;
@@ -19,8 +17,6 @@ import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.Merg
 import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
@@ -46,10 +42,10 @@ public class MockMergeAction extends MergeAction {
 	}
 
 	@Override
-	protected Iterable<Diff> getSelectedDifferences(IStructuredSelection selection) {
+	protected List<Diff> getSelectedDifferences(IStructuredSelection selection) {
 		List<?> selectedObjects = selection.toList();
-		Iterable<TreeNode> selectedTreeNode = filter(selectedObjects, TreeNode.class);
-		Iterable<EObject> selectedEObjects = transform(selectedTreeNode, IDifferenceGroup.TREE_NODE_DATA);
-		return filter(selectedEObjects, Diff.class);
+		return selectedObjects.stream().filter(TreeNode.class::isInstance)
+				.map(node -> ((TreeNode)node).getData()).filter(Diff.class::isInstance).map(Diff.class::cast)
+				.collect(Collectors.toList());
 	}
 }

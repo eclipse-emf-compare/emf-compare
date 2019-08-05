@@ -13,11 +13,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions;
 
-import static com.google.common.collect.Iterables.addAll;
-import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.isEmpty;
-import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.eclipse.emf.compare.DifferenceSource.LEFT;
 import static org.eclipse.emf.compare.DifferenceSource.RIGHT;
@@ -28,18 +23,17 @@ import static org.eclipse.emf.compare.internal.merge.MergeMode.LEFT_TO_RIGHT;
 import static org.eclipse.emf.compare.internal.merge.MergeMode.REJECT;
 import static org.eclipse.emf.compare.internal.merge.MergeMode.RIGHT_TO_LEFT;
 
-import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -48,7 +42,6 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
@@ -70,8 +63,6 @@ import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.provider.ITooltipLabelProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.IEMFCompareConfiguration;
-import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroup;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -86,24 +77,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * @since 3.0
  */
 public class MergeAction extends BaseSelectionListenerAction {
-
-	private static final Predicate<Diff> IS_IN_TERMINAL_STATE = new Predicate<Diff>() {
-		public boolean apply(Diff diff) {
-			return AbstractMerger.isInTerminalState(diff);
-		}
-	};
-
-	private static final Predicate<Diff> IS_NOT_IN_TERMINAL_STATE = new Predicate<Diff>() {
-		public boolean apply(Diff diff) {
-			return !AbstractMerger.isInTerminalState(diff);
-		}
-	};
-
-	protected static final Function<? super Adapter, ? extends Notifier> ADAPTER__TARGET = new Function<Adapter, Notifier>() {
-		public Notifier apply(Adapter adapter) {
-			return adapter.getTarget();
-		}
-	};
 
 	protected final Registry mergerRegistry;
 
@@ -282,7 +255,8 @@ public class MergeAction extends BaseSelectionListenerAction {
 				// If selected diffs are still in the terminal state we seem to be unable to process them.
 				// This should really never happen, but if some command doesn't support undo, it's possible to
 				// get in this situation.
-				if (any(selectedDifferences, IS_IN_TERMINAL_STATE)) {
+
+				if (selectedDifferences.stream().anyMatch(AbstractMerger::isInTerminalState)) {
 					managedCmdStack.restoreCommandStack();
 					return;
 				}
@@ -347,7 +321,7 @@ public class MergeAction extends BaseSelectionListenerAction {
 	 */
 	private class ManagedCommandStack {
 
-		private List<Multimap<DifferenceState, Diff>> diffChangesList = Lists.newArrayList();
+		private List<Multimap<DifferenceState, Diff>> diffChangesList = new ArrayList<>();
 
 		private Map<Multimap<DifferenceState, Diff>, EditCommand> editCommands = new IdentityHashMap<Multimap<DifferenceState, Diff>, EditCommand>();
 
@@ -403,7 +377,7 @@ public class MergeAction extends BaseSelectionListenerAction {
 		}
 
 		public void undoUntilDiffsAreInTerminalState(List<Diff> diffs) {
-			while (commandStack.canUndo() && any(diffs, IS_IN_TERMINAL_STATE)) {
+			while (commandStack.canUndo() && diffs.stream().anyMatch(AbstractMerger::isInTerminalState)) {
 				Command undoCommand = commandStack.getUndoCommand();
 
 				// Keep track of undone changes
@@ -478,8 +452,8 @@ public class MergeAction extends BaseSelectionListenerAction {
 			if (!diffsToRestore.values().isEmpty()) {
 				undoIfNotUndoneYet();
 
-				List<Diff> diffsToMerge = Lists.newArrayList(diffsToRestore.get(MERGED));
-				List<Diff> diffsToDiscard = Lists.newArrayList(diffsToRestore.get(DISCARDED));
+				List<Diff> diffsToMerge = new ArrayList<>(diffsToRestore.get(MERGED));
+				List<Diff> diffsToDiscard = new ArrayList<>(diffsToRestore.get(DISCARDED));
 
 				if (mode == ACCEPT || mode == REJECT) {
 					redoDiffs(diffsToMerge, diffsToDiscard, ACCEPT, REJECT);
@@ -567,13 +541,14 @@ public class MergeAction extends BaseSelectionListenerAction {
 	 */
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		addAll(selectedDifferences, getSelectedDifferences(selection));
+		getSelectedDifferences().addAll(getSelectedDifferences(selection));
 		if (this.adapterFactory != null) {
 			contextualizeTooltip();
 		}
 		// The action is enabled only if all the elements in the selection are diffs that will change state
 		// when this action is applied.
-		return !selectedDifferences.isEmpty() && selection.toList().size() == selectedDifferences.size();
+		return !getSelectedDifferences().isEmpty()
+				&& selection.toList().size() == getSelectedDifferences().size();
 	}
 
 	/**
@@ -586,22 +561,17 @@ public class MergeAction extends BaseSelectionListenerAction {
 		selectedDifferences.clear();
 	}
 
-	protected Iterable<Diff> getSelectedDifferences(IStructuredSelection selection) {
+	protected List<Diff> getSelectedDifferences(IStructuredSelection selection) {
 		List<?> selectedObjects = selection.toList();
-		Iterable<Adapter> selectedAdapters = filter(selectedObjects, Adapter.class);
-		Iterable<Notifier> selectedNotifiers = transform(selectedAdapters, ADAPTER__TARGET);
-		Iterable<TreeNode> selectedTreeNode = filter(selectedNotifiers, TreeNode.class);
-		Iterable<EObject> selectedEObjects = transform(selectedTreeNode, IDifferenceGroup.TREE_NODE_DATA);
-		Iterable<Diff> diffs = filter(selectedEObjects, Diff.class);
-		if (isEmpty(diffs)) {
-			diffs = filter(selectedObjects, Diff.class);
-		}
-		return getSelectedDifferences(diffs);
+		Stream<Diff> selectedDiffs = selectedObjects.stream().filter(Adapter.class::isInstance)
+				.map(adapter -> ((Adapter)adapter).getTarget()).filter(TreeNode.class::isInstance)
+				.map(node -> ((TreeNode)node).getData()).filter(Diff.class::isInstance).map(Diff.class::cast);
+		return getSelectedDifferences(selectedDiffs);
 	}
 
 	protected Predicate<Diff> getStatePredicate() {
 		return new Predicate<Diff>() {
-			public boolean apply(Diff diff) {
+			public boolean test(Diff diff) {
 				switch (diff.getState()) {
 					case DISCARDED:
 						switch (getSelectedMode()) {
@@ -633,18 +603,18 @@ public class MergeAction extends BaseSelectionListenerAction {
 		};
 	}
 
-	protected Iterable<Diff> getSelectedDifferences(Iterable<Diff> diffs) {
+	protected List<Diff> getSelectedDifferences(Stream<Diff> diffs) {
 		ICompareCommandStack commandStack = editingDomain.getCommandStack();
 
 		// We can only re-process diffs in the terminal state if we have a command stack that supports
 		// suspending the delivery of notifications. So filter out diffs that are already in the terminal
 		// state.
 		if (!(commandStack instanceof TransactionalDualCompareCommandStack)) {
-			return filter(diffs, IS_NOT_IN_TERMINAL_STATE);
+			return diffs.filter(diff -> !AbstractMerger.isInTerminalState(diff)).collect(Collectors.toList());
 		}
 
 		// Filter out diffs whose state would not be changed by this actions's selected mode.
-		return filter(diffs, getStatePredicate());
+		return diffs.filter(getStatePredicate()).collect(Collectors.toList());
 	}
 
 	/**
@@ -681,7 +651,7 @@ public class MergeAction extends BaseSelectionListenerAction {
 	 * 
 	 * @return The cached selected differences.
 	 */
-	public List<Diff> getSelectedDifferences() {
+	protected List<Diff> getSelectedDifferences() {
 		return selectedDifferences;
 	}
 
