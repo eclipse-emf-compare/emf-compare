@@ -20,6 +20,9 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -41,7 +44,12 @@ import org.eclipse.emf.compare.ide.ui.internal.treecontentmanager.EMFCompareDefe
 import org.eclipse.emf.compare.ide.ui.internal.treecontentmanager.EMFCompareDeferredTreeContentManagerUtil;
 import org.eclipse.emf.compare.rcp.ui.internal.util.SWTUtil;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.groups.IDifferenceGroupProvider2;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.FeatureMap;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IViewerNotification;
+import org.eclipse.emf.edit.provider.IWrapperItemProvider;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.eclipse.emf.edit.tree.TreeNode;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
@@ -49,6 +57,12 @@ import org.eclipse.emf.edit.ui.provider.NotifyChangedToViewerRefresh;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.progress.DeferredTreeContentManager;
 import org.eclipse.ui.progress.IDeferredWorkbenchAdapter;
 import org.eclipse.ui.progress.IElementCollector;
@@ -513,26 +527,7 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 				&& viewer.getInput() != null) {
 			if (notification instanceof IViewerNotification) {
 				if (viewerRefresh == null) {
-					viewerRefresh = new ViewerRefresh(viewer) {
-						int count = 0;
-
-						@Override
-						public synchronized boolean addNotification(IViewerNotification notification) {
-							if (super.addNotification(notification)) {
-								count = 0;
-								return true;
-							}
-
-							// When there are more than 30 notifications, it's probably cheaper to simply
-							// refresh the overall view.
-							if (count > 30) {
-								super.addNotification(new ViewerNotification(notification, null, true, true));
-							}
-
-							++count;
-							return false;
-						}
-					};
+					viewerRefresh = new EMFCompareViewerRefresh(viewer);
 				}
 
 				if (viewerRefresh.addNotification((IViewerNotification)notification)) {
@@ -639,6 +634,142 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 	 */
 	public void sleeping(IJobChangeEvent event) {
 		// Nothing to do
+	}
+
+	/**
+	 * This custom implementation of a ViewerRefresh intends to suppress the thousands of
+	 * NoSuchMethodExceptions thrown by the regular implementation when it calls
+	 * {@link AdapterFactoryEditingDomain#isStale(Object)}.
+	 */
+	private static class EMFCompareViewerRefresh extends ViewerRefresh {
+		int count = 0;
+
+		final Viewer targetViewer;
+
+		public EMFCompareViewerRefresh(Viewer viewer) {
+			super(viewer);
+			targetViewer = viewer;
+		}
+
+		/**
+		 * Copy/paste of the super implementation except for the
+		 * {@link AdapterFactoryEditingDomain#isStale(Object)} calls which are replaced with calls to
+		 * {@link #isStale(Object)}.
+		 */
+		@Override
+		protected void refresh(IViewerNotification notification) {
+			Object element = notification.getElement();
+
+			if (targetViewer instanceof StructuredViewer) {
+				StructuredViewer structuredViewer = (StructuredViewer)targetViewer;
+
+				ISelection selection = structuredViewer.getSelection();
+				boolean isStaleSelection = isStale(selection);
+				if (isStaleSelection) {
+					targetViewer.setSelection(StructuredSelection.EMPTY);
+				}
+
+				AbstractTreeViewer treeViewer = structuredViewer instanceof AbstractTreeViewer
+						? (AbstractTreeViewer)structuredViewer
+						: null;
+				List<Object> expandedElements = treeViewer == null ? Collections.emptyList()
+						: Arrays.asList(treeViewer.getExpandedElements());
+				boolean isStaleExpandedElements = isStale(expandedElements);
+
+				if (element != null) {
+					if (notification.isContentRefresh()) {
+						structuredViewer.refresh(element, notification.isLabelUpdate());
+					} else if (notification.isLabelUpdate()) {
+						structuredViewer.update(element, null);
+					}
+				} else {
+					structuredViewer.refresh(notification.isLabelUpdate());
+				}
+
+				if (isStaleSelection || isStaleExpandedElements) {
+					Object object = structuredViewer.getInput();
+					EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(object);
+					if (editingDomain == null) {
+						for (Object child : ((IStructuredContentProvider)structuredViewer
+								.getContentProvider()).getElements(object)) {
+							editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(child);
+							if (editingDomain != null) {
+								break;
+							}
+						}
+					}
+					if (editingDomain instanceof AdapterFactoryEditingDomain) {
+						AdapterFactoryEditingDomain adapterFactoryEditingDomain = (AdapterFactoryEditingDomain)editingDomain;
+						if (treeViewer != null && isStaleExpandedElements) {
+							treeViewer.setExpandedElements(
+									adapterFactoryEditingDomain.resolve(expandedElements).toArray());
+						}
+						if (isStaleSelection) {
+							structuredViewer
+									.setSelection(
+											new StructuredSelection(adapterFactoryEditingDomain
+													.resolve(((IStructuredSelection)selection).toList())),
+											true);
+						}
+					}
+				}
+			} else {
+				targetViewer.refresh();
+			}
+		}
+
+		/**
+		 * Copy/paste of {@link AdapterFactoryEditingDomain#isStale(Object)} but prevents exceptions from
+		 * being thrown.
+		 */
+		private boolean isStale(Object object) {
+			if (object instanceof IWrapperItemProvider) {
+				IWrapperItemProvider wrapper = (IWrapperItemProvider)object;
+				return isStale(wrapper.getValue()) || isStale(wrapper.getOwner());
+			} else if (object instanceof Collection<?>) {
+				for (Object item : (Collection<?>)object) {
+					if (isStale(item)) {
+						return true;
+					}
+				}
+				return false;
+			} else if (object instanceof Object[]) {
+				for (Object item : (Object[])object) {
+					if (isStale(item)) {
+						return true;
+					}
+				}
+				return false;
+			} else if (object instanceof EObject) {
+				EObject eObject = (EObject)object;
+				return eObject.eIsProxy() && eObject.eAdapters().isEmpty();
+			} else if (object instanceof FeatureMap.Entry) {
+				return isStale(((FeatureMap.Entry)object).getValue());
+			} else if (object == null) {
+				return false;
+			} else if (object instanceof IStructuredSelection) {
+				return isStale(((IStructuredSelection)object).toArray());
+			} else {
+				return false;
+			}
+		}
+
+		@Override
+		public synchronized boolean addNotification(IViewerNotification notification) {
+			if (super.addNotification(notification)) {
+				count = 0;
+				return true;
+			}
+
+			// When there are more than 30 notifications, it's probably cheaper to simply
+			// refresh the overall view.
+			if (count > 30) {
+				super.addNotification(new ViewerNotification(notification, null, true, true));
+			}
+
+			++count;
+			return false;
+		}
 	}
 
 }
