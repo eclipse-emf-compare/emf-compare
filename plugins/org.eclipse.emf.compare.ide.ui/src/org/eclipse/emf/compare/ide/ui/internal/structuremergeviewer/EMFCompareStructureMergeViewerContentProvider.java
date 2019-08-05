@@ -13,17 +13,13 @@
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
 import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.collect.Iterables.toArray;
-import static com.google.common.collect.Iterables.transform;
 
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -398,19 +394,24 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 			children = super.getChildren(element);
 		}
 
-		final Object[] compareInputChildren;
 		// Avoid NPE.
 		if (children == null) {
 			children = new Object[] {};
 		}
-		// Do not adapt if it's a pending updater
-		if (!Iterables.all(Arrays.asList(children), Predicates.instanceOf(PendingUpdateAdapter.class))) {
-			Iterable<?> compareInputs = adapt(children, getAdapterFactory(), ICompareInput.class);
-			compareInputChildren = toArray(compareInputs, Object.class);
-		} else {
-			compareInputChildren = children;
+		// Only adapt if the children are not PendingUpdateAdapters
+		Object[] result = new Object[children.length];
+		for (int i = 0; i < result.length; i++) {
+			Object child = children[i];
+			if (child instanceof PendingUpdateAdapter) {
+				result[i] = child;
+			} else {
+				result[i] = adapterFactory.adapt(child, ICompareInput.class);
+				if (result[i] == null) {
+					result[i] = child;
+				}
+			}
 		}
-		return compareInputChildren;
+		return result;
 	}
 
 	/**
@@ -543,53 +544,6 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 						notification.getNewValue(), notification.getPosition());
 			}
 		}
-	}
-
-	/**
-	 * Adapts each elements of the the given <code>iterable</code> to the given <code>type</code> by using the
-	 * given <code>adapterFactory</code>.
-	 * 
-	 * @param <T>
-	 *            the type of returned elements.
-	 * @param iterable
-	 *            the iterable to transform.
-	 * @param adapterFactory
-	 *            the {@link AdapterFactory} used to adapt elements.
-	 * @param type
-	 *            the target type of adapted elements.
-	 * @return an iterable with element of type <code>type</code>.
-	 */
-	private static Iterable<?> adapt(Iterable<?> iterable, final AdapterFactory adapterFactory,
-			final Class<?> type) {
-		Function<Object, Object> adaptFunction = new Function<Object, Object>() {
-			public Object apply(Object input) {
-				Object ret = adapterFactory.adapt(input, type);
-				if (ret == null) {
-					return input;
-				}
-				return ret;
-			}
-		};
-		return transform(iterable, adaptFunction);
-	}
-
-	/**
-	 * Adapts each elements of the the given <code>array</code> to the given <code>type</code> by using the
-	 * given <code>adapterFactory</code>.
-	 * 
-	 * @param <T>
-	 *            the type of returned elements.
-	 * @param iterable
-	 *            the array to transform.
-	 * @param adapterFactory
-	 *            the {@link AdapterFactory} used to adapt elements.
-	 * @param type
-	 *            the target type of adapted elements
-	 * @return an iterable with element of type <code>type</code>.
-	 */
-	private static Iterable<?> adapt(Object[] iterable, final AdapterFactory adapterFactory,
-			final Class<?> type) {
-		return adapt(Arrays.asList(iterable), adapterFactory, type);
 	}
 
 	/**
