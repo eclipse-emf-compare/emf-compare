@@ -399,6 +399,21 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 	 */
 	@Override
 	public Object[] getChildren(Object element) {
+		Object[] rawChildren = getRawChildren(element);
+
+		// Adapt all children that are not PendingUpdateAdapters into ICompareInput elements
+		return adaptElementsToCompareInput(rawChildren);
+	}
+
+	/**
+	 * Returns the raw list of children for the given element. This array will not be useable by the EMF
+	 * Compare viewers without prior going through {@link #adaptElementsToCompareInput(Object[])}.
+	 * 
+	 * @param element
+	 *            The element which children we need.
+	 * @return The children of this element.
+	 */
+	protected Object[] getRawChildren(Object element) {
 		Object[] children;
 		if (element instanceof CompareInputAdapter) {
 			children = getCompareInputAdapterChildren((CompareInputAdapter)element);
@@ -412,10 +427,21 @@ public class EMFCompareStructureMergeViewerContentProvider extends AdapterFactor
 		if (children == null) {
 			children = new Object[] {};
 		}
-		// Only adapt if the children are not PendingUpdateAdapters
-		Object[] result = new Object[children.length];
+		return children;
+	}
+
+	/**
+	 * Adapt all of the given elements that are not instances of {@link PendingUpdateAdapter} into
+	 * {@link ICompareInput} for the emf compare viewers when possible.
+	 * 
+	 * @param elements
+	 *            The elements to adapt.
+	 * @return The array of adapted elements.
+	 */
+	protected Object[] adaptElementsToCompareInput(Object[] elements) {
+		Object[] result = new Object[elements.length];
 		for (int i = 0; i < result.length; i++) {
-			Object child = children[i];
+			Object child = elements[i];
 			if (child instanceof PendingUpdateAdapter) {
 				result[i] = child;
 			} else {
