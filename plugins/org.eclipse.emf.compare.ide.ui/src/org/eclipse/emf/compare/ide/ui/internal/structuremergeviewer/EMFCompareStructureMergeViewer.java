@@ -767,6 +767,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 					return false;
 				}
 			}
+			// all selected objects are differences
+			return true;
 		}
 		return false;
 	}
