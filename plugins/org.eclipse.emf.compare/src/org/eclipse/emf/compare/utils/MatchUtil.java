@@ -147,8 +147,13 @@ public final class MatchUtil {
 			for (Object sideObject : sideValues) {
 				if (equalityHelper.matchingValues(sideObject, value)) {
 					break;
-				} else if ((hasOrigin && hasDiff(match, feature, sideObject))
-						|| hasDeleteDiff(match, feature, sideObject)) {
+				} else if (hasOrigin) {
+					if (!hasDiff(match, feature, sideObject)) {
+						result++;
+					} else {
+						// Do not increment.
+					}
+				} else if (hasDeleteDiff(match, feature, sideObject)) {
 					// Do not increment.
 				} else {
 					result++;
@@ -185,8 +190,17 @@ public final class MatchUtil {
 		} else {
 			expectedValue = value;
 		}
-		return Iterables.any(match.getDifferences(),
-				and(ofKind(DELETE), onFeature(feature.getName()), valueIs(expectedValue)));
+
+		if (feature instanceof EReference && expectedValue instanceof EObject) {
+			List<Diff> valueDiffs = comparison.getDifferences((EObject)expectedValue);
+			return valueDiffs.stream().filter(
+					diff -> diff instanceof ReferenceChange && diff.getKind() == DifferenceKind.DELETE)
+					.anyMatch(diff -> matchingReferenceChange((ReferenceChange)diff, match,
+							(EReference)feature));
+		} else {
+			return match.getDifferences().stream().anyMatch(EMFComparePredicates
+					.guavaToJava(and(ofKind(DELETE), onFeature(feature.getName()), valueIs(expectedValue))));
+		}
 	}
 
 	/**
@@ -203,7 +217,23 @@ public final class MatchUtil {
 	 * @since 3.4
 	 */
 	public static boolean hasDiff(Match match, EStructuralFeature feature, Object value) {
-		return Iterables.any(match.getDifferences(), and(onFeature(feature.getName()), valueIs(value)));
+		if (feature instanceof EReference && value instanceof EObject) {
+			Comparison comparison = match.getComparison();
+			List<Diff> valueDiffs = comparison.getDifferences((EObject)value);
+			return valueDiffs.stream().filter(diff -> diff instanceof ReferenceChange).anyMatch(
+					diff -> matchingReferenceChange((ReferenceChange)diff, match, (EReference)feature));
+		} else {
+			return match.getDifferences().stream().anyMatch(
+					EMFComparePredicates.guavaToJava(and(onFeature(feature.getName()), valueIs(value))));
+		}
+	}
+
+	private static boolean matchingReferenceChange(ReferenceChange change, Match expectedMatch,
+			EReference expectedReference) {
+		if (change.getMatch() == expectedMatch) {
+			return change.getReference().getName().equals(expectedReference.getName());
+		}
+		return false;
 	}
 
 	/**
