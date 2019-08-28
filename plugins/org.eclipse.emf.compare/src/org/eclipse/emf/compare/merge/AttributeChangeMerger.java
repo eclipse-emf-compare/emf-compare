@@ -257,7 +257,7 @@ public class AttributeChangeMerger extends AbstractMerger {
 			}
 
 			if (targetList instanceof EList<?>) {
-				if (insertionIndex < 0 || insertionIndex > targetList.size()) {
+				if (insertionIndex < 0 || insertionIndex >= targetList.size()) {
 					((EList<Object>)targetList).move(targetList.size() - 1, expectedValue);
 				} else {
 					((EList<Object>)targetList).move(insertionIndex, expectedValue);

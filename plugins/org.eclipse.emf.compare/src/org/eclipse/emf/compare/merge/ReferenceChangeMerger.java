@@ -284,14 +284,14 @@ public class ReferenceChangeMerger extends AbstractMerger {
 					targetList.add(insertionIndex, expectedValue);
 				}
 			} else if (targetList instanceof EList<?>) {
-				if (insertionIndex < 0 || insertionIndex > targetList.size()) {
+				if (insertionIndex < 0 || insertionIndex >= targetList.size()) {
 					((EList<EObject>)targetList).move(targetList.size() - 1, expectedValue);
 				} else {
 					((EList<EObject>)targetList).move(insertionIndex, expectedValue);
 				}
 			} else {
 				targetList.remove(expectedValue);
-				if (insertionIndex < 0 || insertionIndex > targetList.size()) {
+				if (insertionIndex < 0 || insertionIndex >= targetList.size()) {
 					targetList.add(expectedValue);
 				} else {
 					targetList.add(insertionIndex, expectedValue);

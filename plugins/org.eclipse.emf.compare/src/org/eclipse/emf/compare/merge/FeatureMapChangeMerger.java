@@ -517,13 +517,13 @@ public class FeatureMapChangeMerger extends AbstractMerger {
 			}
 
 			if (currentIndex == -1) {
-				if (insertionIndex < 0 || insertionIndex > targetList.size()) {
+				if (insertionIndex < 0 || insertionIndex >= targetList.size()) {
 					((BasicFeatureMap)(Object)targetList).addUnique(expectedValue);
 				} else {
 					((BasicFeatureMap)(Object)targetList).addUnique(insertionIndex, expectedValue);
 				}
 			} else {
-				if (insertionIndex < 0 || insertionIndex > targetList.size()) {
+				if (insertionIndex < 0 || insertionIndex >= targetList.size()) {
 					((BasicFeatureMap)(Object)targetList).move(targetList.size() - 1, expectedValue);
 				} else {
 					((BasicFeatureMap)(Object)targetList).move(insertionIndex, expectedValue);
