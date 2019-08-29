@@ -77,6 +77,7 @@ public class NodesFactoryImpl extends EFactoryImpl implements NodesFactory {
 			case NodesPackage.NODE_SINGLE_VALUE_CONTAINMENT: return createNodeSingleValueContainment();
 			case NodesPackage.NODE_SINGLE_VALUE_ATTRIBUTE: return createNodeSingleValueAttribute();
 			case NodesPackage.NODE_MULTI_VALUED_ATTRIBUTE: return createNodeMultiValuedAttribute();
+			case NodesPackage.NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE: return createNodeMultiValuedNonUniqueAttribute();
 			case NodesPackage.NODE_SINGLE_VALUE_REFERENCE: return createNodeSingleValueReference();
 			case NodesPackage.NODE_MULTI_VALUE_REFERENCE: return createNodeMultiValueReference();
 			case NodesPackage.NODE_OPPOSITE_REF_ONE_TO_ONE: return createNodeOppositeRefOneToOne();
@@ -170,6 +171,16 @@ public class NodesFactoryImpl extends EFactoryImpl implements NodesFactory {
 	public NodeMultiValuedAttribute createNodeMultiValuedAttribute() {
 		NodeMultiValuedAttributeImpl nodeMultiValuedAttribute = new NodeMultiValuedAttributeImpl();
 		return nodeMultiValuedAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NodeMultiValuedNonUniqueAttribute createNodeMultiValuedNonUniqueAttribute() {
+		NodeMultiValuedNonUniqueAttributeImpl nodeMultiValuedNonUniqueAttribute = new NodeMultiValuedNonUniqueAttributeImpl();
+		return nodeMultiValuedNonUniqueAttribute;
 	}
 
 	/**

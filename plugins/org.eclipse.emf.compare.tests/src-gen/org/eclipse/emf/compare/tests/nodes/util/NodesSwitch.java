@@ -132,6 +132,13 @@ public class NodesSwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case NodesPackage.NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE: {
+				NodeMultiValuedNonUniqueAttribute nodeMultiValuedNonUniqueAttribute = (NodeMultiValuedNonUniqueAttribute)theEObject;
+				T result = caseNodeMultiValuedNonUniqueAttribute(nodeMultiValuedNonUniqueAttribute);
+				if (result == null) result = caseNode(nodeMultiValuedNonUniqueAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case NodesPackage.NODE_SINGLE_VALUE_REFERENCE: {
 				NodeSingleValueReference nodeSingleValueReference = (NodeSingleValueReference)theEObject;
 				T result = caseNodeSingleValueReference(nodeSingleValueReference);
@@ -278,6 +285,21 @@ public class NodesSwitch<T> {
 	 * @generated
 	 */
 	public T caseNodeMultiValuedAttribute(NodeMultiValuedAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Node Multi Valued Non Unique Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Node Multi Valued Non Unique Attribute</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNodeMultiValuedNonUniqueAttribute(NodeMultiValuedNonUniqueAttribute object) {
 		return null;
 	}
 

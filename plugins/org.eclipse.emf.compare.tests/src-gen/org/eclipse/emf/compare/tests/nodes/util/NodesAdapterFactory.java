@@ -103,6 +103,10 @@ public class NodesAdapterFactory extends AdapterFactoryImpl {
 				return createNodeMultiValuedAttributeAdapter();
 			}
 			@Override
+			public Adapter caseNodeMultiValuedNonUniqueAttribute(NodeMultiValuedNonUniqueAttribute object) {
+				return createNodeMultiValuedNonUniqueAttributeAdapter();
+			}
+			@Override
 			public Adapter caseNodeSingleValueReference(NodeSingleValueReference object) {
 				return createNodeSingleValueReferenceAdapter();
 			}
@@ -229,6 +233,20 @@ public class NodesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createNodeMultiValuedAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.tests.nodes.NodeMultiValuedNonUniqueAttribute <em>Node Multi Valued Non Unique Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeMultiValuedNonUniqueAttribute
+	 * @generated
+	 */
+	public Adapter createNodeMultiValuedNonUniqueAttributeAdapter() {
 		return null;
 	}
 

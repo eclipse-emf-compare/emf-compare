@@ -19,11 +19,11 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany#getSource <em>Source</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany#getDestination <em>Destination</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.emf.compare.tests.nodes.NodesPackage#getNodeOppositeRefManyToMany()
  * @model

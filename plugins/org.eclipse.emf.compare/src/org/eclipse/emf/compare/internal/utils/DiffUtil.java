@@ -27,6 +27,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -298,20 +299,21 @@ public final class DiffUtil {
 		final List<E> copy1 = Lists.newArrayList(sequence1);
 		final List<E> copy2 = Lists.newArrayList(sequence2);
 
-		Object[] ignoredElementsArray = Iterables.toArray(ignoredElements, Object.class);
+		List<Object> ignoredElementsList = new ArrayList<>();
+		ignoredElements.forEach(ignoredElementsList::add);
 
 		// Reduce sets
-		final List<E> prefix = trimPrefix(comparison, equalityHelper, ignoredElementsArray, copy1, copy2);
-		final List<E> suffix = trimSuffix(comparison, equalityHelper, ignoredElementsArray, copy1, copy2);
+		final List<E> prefix = trimPrefix(comparison, equalityHelper, ignoredElementsList, copy1, copy2);
+		final List<E> suffix = trimSuffix(comparison, equalityHelper, ignoredElementsList, copy1, copy2);
 
 		final List<E> subLCS;
 		// FIXME extract an interface for the LCS and properly separate these two differently typed
 		// implementations.
 		if (copy1.size() > Short.MAX_VALUE || copy2.size() > Short.MAX_VALUE) {
-			subLCS = intLongestCommonSubsequence(comparison, equalityHelper, ignoredElementsArray, copy1,
+			subLCS = intLongestCommonSubsequence(comparison, equalityHelper, ignoredElementsList, copy1,
 					copy2);
 		} else {
-			subLCS = shortLongestCommonSubsequence(comparison, equalityHelper, ignoredElementsArray, copy1,
+			subLCS = shortLongestCommonSubsequence(comparison, equalityHelper, ignoredElementsList, copy1,
 					copy2);
 		}
 
@@ -389,9 +391,12 @@ public final class DiffUtil {
 	 *         returns.
 	 */
 	private static <E> List<E> trimPrefix(Comparison comparison, IEqualityHelper equalityHelper,
-			Object[] ignoredElements, List<E> sequence1, List<E> sequence2) {
+			List<Object> ignoredElements, List<E> sequence1, List<E> sequence2) {
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
+
+		List<Object> ignoredElements1 = new ArrayList<>(ignoredElements);
+		List<Object> ignoredElements2 = new ArrayList<>(ignoredElements);
 
 		final List<E> prefix = Lists.newArrayList();
 		int start1 = 1;
@@ -405,15 +410,17 @@ public final class DiffUtil {
 				start1++;
 				start2++;
 			} else {
-				boolean ignore1 = contains(equalityHelper, ignoredElements, first);
-				boolean ignore2 = contains(equalityHelper, ignoredElements, second);
-				if (ignore1) {
+				int ignore1 = indexOf(equalityHelper, ignoredElements1, first);
+				if (ignore1 != -1) {
+					ignoredElements1.remove(ignore1);
 					start1++;
 				}
-				if (ignore2) {
+				int ignore2 = indexOf(equalityHelper, ignoredElements2, second);
+				if (ignore2 != -1) {
+					ignoredElements2.remove(ignore2);
 					start2++;
 				}
-				if (!ignore1 && !ignore2) {
+				if (ignore1 == -1 && ignore2 == -1) {
 					matching = false;
 				}
 			}
@@ -448,9 +455,12 @@ public final class DiffUtil {
 	 *         returns.
 	 */
 	private static <E> List<E> trimSuffix(Comparison comparison, IEqualityHelper equalityHelper,
-			Object[] ignoredElements, List<E> sequence1, List<E> sequence2) {
+			List<Object> ignoredElements, List<E> sequence1, List<E> sequence2) {
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
+
+		List<Object> ignoredElements1 = new ArrayList<>(ignoredElements);
+		List<Object> ignoredElements2 = new ArrayList<>(ignoredElements);
 
 		final List<E> suffix = Lists.newArrayList();
 		int end1 = size1;
@@ -464,15 +474,17 @@ public final class DiffUtil {
 				end1--;
 				end2--;
 			} else {
-				boolean ignore1 = contains(equalityHelper, ignoredElements, first);
-				boolean ignore2 = contains(equalityHelper, ignoredElements, second);
-				if (ignore1) {
+				int ignore1 = indexOf(equalityHelper, ignoredElements1, first);
+				if (ignore1 != -1) {
+					ignoredElements1.remove(ignore1);
 					end1--;
 				}
-				if (ignore2) {
+				int ignore2 = indexOf(equalityHelper, ignoredElements2, second);
+				if (ignore2 != -1) {
+					ignoredElements2.remove(ignore2);
 					end2--;
 				}
-				if (!ignore1 && !ignore2) {
+				if (ignore1 == -1 && ignore2 == -1) {
 					matching = false;
 				}
 			}
@@ -493,17 +505,16 @@ public final class DiffUtil {
 	 *            The sequence which elements we need to compare with {@code element}.
 	 * @param element
 	 *            The element we are seeking in {@code sequence}.
-	 * @return {@code true} if the given {@code sequence} contains an element matching {@code element},
-	 *         {@code false} otherwise.
+	 * @return index of the given {@code element} in {@code sequence} if any, {@code -1} otherwise.
 	 * @see IEqualityHelper#matchingValues(Comparison, Object, Object)
 	 */
-	private static boolean contains(IEqualityHelper equalityHelper, Object[] sequence, Object element) {
-		for (Object candidate : sequence) {
-			if (equalityHelper.matchingValues(element, candidate)) {
-				return true;
+	private static int indexOf(IEqualityHelper equalityHelper, List<Object> sequence, Object element) {
+		for (int i = 0; i < sequence.size(); i++) {
+			if (equalityHelper.matchingValues(element, sequence.get(i))) {
+				return i;
 			}
 		}
-		return false;
+		return -1;
 	}
 
 	/**
@@ -526,7 +537,8 @@ public final class DiffUtil {
 	 *         sequences.
 	 */
 	private static <E> List<E> shortLongestCommonSubsequence(Comparison comparison,
-			IEqualityHelper equalityHelper, Object[] ignoredElements, List<E> sequence1, List<E> sequence2) {
+			IEqualityHelper equalityHelper, List<Object> ignoredElements, List<E> sequence1,
+			List<E> sequence2) {
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
 
@@ -545,7 +557,7 @@ public final class DiffUtil {
 				} else {
 					final E second = sequence2.get(j - 1);
 					if (equalityHelper.matchingValues(first, second)
-							&& !contains(equalityHelper, ignoredElements, second)) {
+							&& indexOf(equalityHelper, ignoredElements, second) == -1) {
 						matrix[i][j] = (short)(1 + current);
 					} else {
 						matrix[i][j] = nextIfNoMatch;
@@ -597,7 +609,8 @@ public final class DiffUtil {
 	 *         sequences.
 	 */
 	private static <E> List<E> intLongestCommonSubsequence(Comparison comparison,
-			IEqualityHelper equalityHelper, Object[] ignoredElements, List<E> sequence1, List<E> sequence2) {
+			IEqualityHelper equalityHelper, List<Object> ignoredElements, List<E> sequence1,
+			List<E> sequence2) {
 		final int size1 = sequence1.size();
 		final int size2 = sequence2.size();
 
@@ -616,7 +629,7 @@ public final class DiffUtil {
 				} else {
 					final E second = sequence2.get(j - 1);
 					if (equalityHelper.matchingValues(first, second)
-							&& !contains(equalityHelper, ignoredElements, second)) {
+							&& indexOf(equalityHelper, ignoredElements, second) == -1) {
 						matrix[i][j] = 1 + current;
 					} else {
 						matrix[i][j] = nextIfNoMatch;
@@ -718,13 +731,28 @@ public final class DiffUtil {
 		}
 
 		ListIterator<E> sourceIterator = source.listIterator();
+		Iterator<E> lcsIterator = lcs.iterator();
+		E currentLCS = null;
+		if (lcsIterator.hasNext()) {
+			currentLCS = lcsIterator.next();
+		}
 		for (int i = 0; sourceIterator.hasNext() && (currentIndex == -1 || firstLCSIndex == -1); i++) {
 			final E sourceElement = sourceIterator.next();
-			if (currentIndex == -1 && equalityHelper.matchingValues(sourceElement, newElement)) {
-				currentIndex = i;
+			if (currentLCS != null && equalityHelper.matchingValues(sourceElement, currentLCS)) {
+				if (firstLCSIndex == -1) {
+					firstLCSIndex = i;
+				}
+				if (lcsIterator.hasNext()) {
+					currentLCS = lcsIterator.next();
+				} else {
+					currentLCS = null;
+				}
+				// If this is a part of the LCS, it cannot be the current element (might be duplicates, so we
+				// have to <continue> here)
+				continue;
 			}
-			if (firstLCSIndex == -1 && equalityHelper.matchingValues(sourceElement, firstLCS)) {
-				firstLCSIndex = i;
+			if (equalityHelper.matchingValues(sourceElement, newElement)) {
+				currentIndex = i;
 			}
 		}
 		// The list may contain duplicates, use a reverse iteration to find the last from LCS.
@@ -761,8 +789,93 @@ public final class DiffUtil {
 	}
 
 	/**
+	 * This will try and determine the index at which a given element from the {@code source} list should be
+	 * inserted in the {@code target} list.
+	 * <p>
+	 * The expected insertion index will always be relative to the Longest Common Subsequence (LCS) between
+	 * the two given lists.
+	 * </p>
+	 * 
+	 * @param comparison
+	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
+	 * @param source
+	 *            The List from which one element has to be added to the {@code target} list.
+	 * @param target
+	 *            The List into which one element from {@code source} has to be added.
+	 * @param lcs
+	 *            The precomputed LCS between these two lists.
+	 * @param currentIndexInSource
+	 *            The current index (in source) of the element we want to insert in target.
+	 * @param <E>
+	 *            Type of the sequences content.
+	 * @return The index at which {@code newElement} should be inserted in {@code target}.
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
+	public static <E> int findInsertionIndexForElementAt(Comparison comparison, List<E> source,
+			List<E> target, List<E> lcs, int currentIndexInSource) {
+		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+
+		E firstLCS = null;
+		E lastLCS = null;
+		int lcsSize = lcs.size();
+		if (lcsSize > 0) {
+			firstLCS = lcs.get(0);
+			lastLCS = lcs.get(lcsSize - 1);
+		}
+
+		final int noLCS = -2;
+		int firstLCSIndex = -1;
+		int lastLCSIndex = -1;
+		if (firstLCS == null) {
+			// We have no LCS
+			firstLCSIndex = noLCS;
+			lastLCSIndex = noLCS;
+		}
+
+		ListIterator<E> sourceIterator = source.listIterator();
+		for (int i = 0; sourceIterator.hasNext() && firstLCSIndex == -1; i++) {
+			final E sourceElement = sourceIterator.next();
+			if (firstLCSIndex == -1 && equalityHelper.matchingValues(sourceElement, firstLCS)) {
+				firstLCSIndex = i;
+			}
+		}
+		// The list may contain duplicates, use a reverse iteration to find the last from LCS.
+		final int sourceSize = source.size();
+		sourceIterator = source.listIterator(sourceSize);
+		for (int i = sourceSize - 1; sourceIterator.hasPrevious() && lastLCSIndex == -1; i--) {
+			final E sourceElement = sourceIterator.previous();
+			if (lastLCSIndex == -1 && equalityHelper.matchingValues(lastLCS, sourceElement)) {
+				lastLCSIndex = i;
+			}
+		}
+
+		int insertionIndex = -1;
+		if (firstLCSIndex == noLCS) {
+			// We have no LCS. The two lists have no element in common. Insert at the very end of the target.
+			insertionIndex = target.size();
+		} else if (currentIndexInSource < firstLCSIndex) {
+			// The object we are to insert is before the LCS in source.
+			insertionIndex = insertBeforeLCS(target, equalityHelper, firstLCS);
+		} else if (currentIndexInSource > lastLCSIndex) {
+			// The object we are to insert is after the LCS in source.
+			insertionIndex = findInsertionIndexAfterLCS(target, equalityHelper, lastLCS);
+		} else {
+			// Our object is in-between two elements A and B of the LCS in source
+			insertionIndex = findInsertionIndexWithinLCS(source, target, equalityHelper, lcs,
+					currentIndexInSource);
+		}
+
+		// We somehow failed to determine the insertion index. Insert at the very end.
+		if (insertionIndex == -1) {
+			insertionIndex = target.size();
+		}
+
+		return insertionIndex;
+	}
+
+	/**
 	 * This will be called to try and find the insertion index for an element that is located in-between two
-	 * elements of the LCS between {@code source} and {@code target}.
+	 * elements A and B of the LCS between {@code source} and {@code target}.
 	 * 
 	 * @param source
 	 *            The List from which one element has to be added to the {@code target} list.
@@ -1240,7 +1353,7 @@ public final class DiffUtil {
 	 * @return The list of elements that should be ignored when computing the insertion index for a new
 	 *         element in {@code candidates}.
 	 */
-	private static <E> Set<E> computeIgnoredElements(Comparison comparison, IEqualityHelper equalityHelper,
+	public static <E> Set<E> computeIgnoredElements(Comparison comparison, IEqualityHelper equalityHelper,
 			List<E> candidates, final Diff diff, boolean rightToLeft) {
 		// There is no point doing any computations if the candidates list is empty.
 		if (!candidates.isEmpty()) {

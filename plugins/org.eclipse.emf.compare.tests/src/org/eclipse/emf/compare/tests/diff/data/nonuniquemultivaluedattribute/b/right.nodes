@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes:NodeMultiValuedNonUniqueAttribute xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" xmi:id="_Y7T9MMQPEemKOdaA3QMhmg" name="root">
+  <multiValuedAttribute>a</multiValuedAttribute>
+  <multiValuedAttribute>b</multiValuedAttribute>
+  <multiValuedAttribute>a</multiValuedAttribute>
+  <multiValuedAttribute>a</multiValuedAttribute>
+  <multiValuedAttribute>a</multiValuedAttribute>
+  <multiValuedAttribute>c</multiValuedAttribute>
+  <multiValuedAttribute>a</multiValuedAttribute>
+  <multiValuedAttribute>d</multiValuedAttribute>
+  <multiValuedAttribute>a</multiValuedAttribute>
+</nodes:NodeMultiValuedNonUniqueAttribute>

@@ -24,11 +24,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefOneToOneImpl#getSource <em>Source</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefOneToOneImpl#getDestination <em>Destination</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

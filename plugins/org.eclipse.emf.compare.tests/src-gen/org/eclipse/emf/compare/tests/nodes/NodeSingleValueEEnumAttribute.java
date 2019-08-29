@@ -18,10 +18,10 @@ package org.eclipse.emf.compare.tests.nodes;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.NodeSingleValueEEnumAttribute#getSinglevalueEEnumAttribute <em>Singlevalue EEnum Attribute</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.emf.compare.tests.nodes.NodesPackage#getNodeSingleValueEEnumAttribute()
  * @model

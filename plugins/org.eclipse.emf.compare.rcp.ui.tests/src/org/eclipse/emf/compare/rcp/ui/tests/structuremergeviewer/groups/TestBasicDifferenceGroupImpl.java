@@ -286,13 +286,13 @@ public class TestBasicDifferenceGroupImpl extends AbstractTestTreeNodeItemProvid
 		childNode = node.getChildren().get(0);
 		checkText(childNode, "Periodical -> Item [eClassifiers delete]");
 		assertEquals(0, childNode.getChildren().size());
-		// eSuperTypes add
-		childNode = node.getChildren().get(1);
-		checkText(childNode, "TitledItem [eSuperTypes add]");
-		assertEquals(0, childNode.getChildren().size());
 		// eSuperTypes delete
-		childNode = node.getChildren().get(2);
+		childNode = node.getChildren().get(1);
 		checkText(childNode, "Item [eSuperTypes delete]");
+		assertEquals(0, childNode.getChildren().size());
+		// eSuperTypes add
+		childNode = node.getChildren().get(2);
+		checkText(childNode, "TitledItem [eSuperTypes add]");
 		assertEquals(0, childNode.getChildren().size());
 
 		// Periodical.issuesPerYear

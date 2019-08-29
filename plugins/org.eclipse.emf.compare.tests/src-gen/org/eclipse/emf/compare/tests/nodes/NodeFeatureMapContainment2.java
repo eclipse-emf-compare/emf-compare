@@ -19,12 +19,12 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2#getMap2 <em>Map2</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2#getMultiple <em>Multiple</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment2#getSingle <em>Single</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.emf.compare.tests.nodes.NodesPackage#getNodeFeatureMapContainment2()
  * @model

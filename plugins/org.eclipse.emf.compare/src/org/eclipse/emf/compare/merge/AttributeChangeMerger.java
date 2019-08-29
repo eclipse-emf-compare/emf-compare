@@ -15,7 +15,11 @@ import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEGet;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.safeEIsSet;
 import static org.eclipse.emf.compare.utils.ReferenceUtil.safeESet;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.AttributeChange;
@@ -25,6 +29,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.internal.ThreeWayTextDiff;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.compare.utils.IEqualityHelper;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
@@ -190,15 +195,72 @@ public class AttributeChangeMerger extends AbstractMerger {
 			final EStructuralFeature attribute = diff.getAttribute();
 			// We have the container, attribute and value to remove.
 			if (attribute.isMany()) {
-				/*
-				 * TODO if the same value appears twice, should we try and find the one that has actually been
-				 * deleted? Will it happen that often? For now, remove the first occurence we find.
-				 */
-				final List<Object> targetList = (List<Object>)safeEGet(currentContainer, attribute);
-				targetList.remove(expectedValue);
+				if (attribute.isUnique()) {
+					final List<Object> targetList = (List<Object>)safeEGet(currentContainer, attribute);
+					targetList.remove(expectedValue);
+				} else {
+					removeNonUniqueFromTarget(diff, rightToLeft);
+				}
 			} else {
 				currentContainer.eUnset(attribute);
 			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void removeNonUniqueFromTarget(AttributeChange diff, boolean rightToLeft) {
+		Comparison comparison = diff.getMatch().getComparison();
+		IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+		EAttribute attribute = diff.getAttribute();
+
+		EObject sourceContainer;
+		EObject targetContainer;
+		if (rightToLeft) {
+			sourceContainer = diff.getMatch().getRight();
+			targetContainer = diff.getMatch().getLeft();
+		} else {
+			sourceContainer = diff.getMatch().getLeft();
+			targetContainer = diff.getMatch().getRight();
+		}
+
+		List<Object> sourceList = (List<Object>)safeEGet(sourceContainer, attribute);
+		List<Object> targetList = (List<Object>)safeEGet(targetContainer, attribute);
+		Object valueToRemove = diff.getValue();
+
+		List<Object> lcs = DiffUtil.longestCommonSubsequence(comparison, sourceList, targetList);
+
+		// The current index, in the target list, of that value
+		int currentIndexInTarget = -1;
+		Iterator<Object> lcsIteratorForTargetLookup = lcs.iterator();
+		Object currentLCS = null;
+		if (lcsIteratorForTargetLookup.hasNext()) {
+			currentLCS = lcsIteratorForTargetLookup.next();
+		}
+		for (int j = 0; j < targetList.size() && currentIndexInTarget == -1; j++) {
+			if (currentLCS == null) {
+				// we've iterated on our whole LCS.
+				// first instance of our target is the one to move.
+				if (equalityHelper.matchingAttributeValues(targetList.get(j), valueToRemove)) {
+					currentIndexInTarget = j;
+				}
+			} else if (equalityHelper.matchingAttributeValues(targetList.get(j), currentLCS)) {
+				// this matches our current lcs item. continue to next one if any
+				if (lcsIteratorForTargetLookup.hasNext()) {
+					currentLCS = lcsIteratorForTargetLookup.next();
+				} else {
+					currentLCS = null;
+				}
+			} else {
+				// This item is not in our LCS. Is it the one we're looking for?
+				if (equalityHelper.matchingAttributeValues(targetList.get(j), valueToRemove)) {
+					currentIndexInTarget = j;
+				}
+			}
+		}
+		// value might not exist in target list if it has already been removed or if this was a pseudo
+		// conflict deletion
+		if (currentIndexInTarget >= 0) {
+			targetList.remove(currentIndexInTarget);
 		}
 	}
 
@@ -239,40 +301,159 @@ public class AttributeChangeMerger extends AbstractMerger {
 	 * @param rightToLeft
 	 *            Whether we should move the value in the left or right side.
 	 */
-	@SuppressWarnings("unchecked")
 	protected void doMove(AttributeChange diff, Comparison comparison, EObject expectedContainer,
 			Object expectedValue, boolean rightToLeft) {
 		final EStructuralFeature attribute = diff.getAttribute();
 		if (attribute.isMany()) {
-			// Element to move cannot be part of the LCS... or there would not be a MOVE diff
-			int insertionIndex = findInsertionIndex(comparison, diff, rightToLeft);
-			/*
-			 * However, it could still have been located "before" its new index, in which case we need to take
-			 * it into account.
-			 */
-			final List<Object> targetList = (List<Object>)safeEGet(expectedContainer, attribute);
-			final int currentIndex = targetList.indexOf(expectedValue);
-			if (insertionIndex > currentIndex) {
-				insertionIndex--;
-			}
-
-			if (targetList instanceof EList<?>) {
-				if (insertionIndex < 0 || insertionIndex >= targetList.size()) {
-					((EList<Object>)targetList).move(targetList.size() - 1, expectedValue);
-				} else {
-					((EList<Object>)targetList).move(insertionIndex, expectedValue);
-				}
+			if (!attribute.isUnique()) {
+				doMoveNonUniqueAttribute(diff, comparison, rightToLeft);
 			} else {
-				targetList.remove(expectedValue);
-				if (insertionIndex < 0 || insertionIndex > targetList.size()) {
-					targetList.add(expectedValue);
-				} else {
-					targetList.add(insertionIndex, expectedValue);
-				}
+				doMoveUniqueAttribute(diff, comparison, expectedContainer, expectedValue, rightToLeft);
 			}
 		} else {
 			// This will never happen with the default diff engine, but may still be done from extenders
 			safeESet(expectedContainer, attribute, expectedValue);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void doMoveUniqueAttribute(AttributeChange diff, Comparison comparison, EObject expectedContainer,
+			Object expectedValue, boolean rightToLeft) {
+		final EStructuralFeature attribute = diff.getAttribute();
+
+		// Element to move cannot be part of the LCS... or there would not be a MOVE diff
+		int insertionIndex = findInsertionIndex(comparison, diff, rightToLeft);
+		/*
+		 * However, it could still have been located "before" its new index, in which case we need to take it
+		 * into account.
+		 */
+		final List<Object> targetList = (List<Object>)safeEGet(expectedContainer, attribute);
+		final int currentIndex = targetList.indexOf(expectedValue);
+		if (insertionIndex > currentIndex) {
+			insertionIndex--;
+		}
+
+		if (targetList instanceof EList<?>) {
+			if (insertionIndex < 0 || insertionIndex >= targetList.size()) {
+				((EList<Object>)targetList).move(targetList.size() - 1, expectedValue);
+			} else {
+				((EList<Object>)targetList).move(insertionIndex, expectedValue);
+			}
+		} else {
+			targetList.remove(expectedValue);
+			if (insertionIndex < 0 || insertionIndex > targetList.size()) {
+				targetList.add(expectedValue);
+			} else {
+				targetList.add(insertionIndex, expectedValue);
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void doMoveNonUniqueAttribute(AttributeChange diff, Comparison comparison, boolean rightToLeft) {
+		IEqualityHelper equalityHelper = comparison.getEqualityHelper();
+		EAttribute attribute = diff.getAttribute();
+
+		EObject sourceContainer;
+		EObject targetContainer;
+		if (rightToLeft) {
+			sourceContainer = diff.getMatch().getRight();
+			targetContainer = diff.getMatch().getLeft();
+		} else {
+			sourceContainer = diff.getMatch().getLeft();
+			targetContainer = diff.getMatch().getRight();
+		}
+
+		List<Object> sourceList = (List<Object>)safeEGet(sourceContainer, attribute);
+		List<Object> targetList = (List<Object>)safeEGet(targetContainer, attribute);
+		// copy this one : we'll have to modify target while iterating over this view
+		List<Object> copyTarget = new ArrayList<>(targetList);
+		Object valueToMove = diff.getValue();
+
+		Set<Object> ignoredElements = DiffUtil.computeIgnoredElements(comparison, equalityHelper, targetList,
+				diff, rightToLeft);
+		if (ignoredElements.isEmpty()) {
+			ignoredElements = Collections.singleton(valueToMove);
+		} else {
+			ignoredElements.add(valueToMove);
+		}
+		List<Object> lcs = DiffUtil.longestCommonSubsequence(comparison, ignoredElements, sourceList,
+				copyTarget);
+
+		// We need to find the current index, in the source list, of the value to move
+		int currentIndexInSource = -1;
+		Iterator<Object> lcsIteratorForSourceLookup = lcs.iterator();
+		Object currentLCS = null;
+		if (lcsIteratorForSourceLookup.hasNext()) {
+			currentLCS = lcsIteratorForSourceLookup.next();
+		}
+		for (int j = 0; j < sourceList.size() && currentIndexInSource == -1; j++) {
+			if (currentLCS == null) {
+				// we've iterated on our whole LCS.
+				// first instance of our target is the one to move.
+				if (equalityHelper.matchingAttributeValues(sourceList.get(j), valueToMove)) {
+					currentIndexInSource = j;
+				}
+			} else if (equalityHelper.matchingAttributeValues(sourceList.get(j), currentLCS)) {
+				// this matches our current lcs item. continue to next one if any
+				if (lcsIteratorForSourceLookup.hasNext()) {
+					currentLCS = lcsIteratorForSourceLookup.next();
+				} else {
+					currentLCS = null;
+				}
+			} else {
+				// This item is not in our LCS. Is it the one we're looking for?
+				if (equalityHelper.matchingAttributeValues(sourceList.get(j), valueToMove)) {
+					currentIndexInSource = j;
+				}
+			}
+		}
+		// The current index, in the target list, of that value
+		int currentIndexInTarget = -1;
+		Iterator<Object> lcsIteratorForTargetLookup = lcs.iterator();
+		currentLCS = null;
+		if (lcsIteratorForTargetLookup.hasNext()) {
+			currentLCS = lcsIteratorForTargetLookup.next();
+		}
+		for (int j = 0; j < targetList.size() && currentIndexInTarget == -1; j++) {
+			if (currentLCS == null) {
+				// we've iterated on our whole LCS.
+				// first instance of our target is the one to move.
+				if (equalityHelper.matchingAttributeValues(targetList.get(j), valueToMove)) {
+					currentIndexInTarget = j;
+				}
+			} else if (equalityHelper.matchingAttributeValues(targetList.get(j), currentLCS)) {
+				// this matches our current lcs item. continue to next one if any
+				if (lcsIteratorForTargetLookup.hasNext()) {
+					currentLCS = lcsIteratorForTargetLookup.next();
+				} else {
+					currentLCS = null;
+				}
+			} else {
+				// This item is not in our LCS. Is it the one we're looking for?
+				if (equalityHelper.matchingAttributeValues(targetList.get(j), valueToMove)) {
+					currentIndexInTarget = j;
+				}
+			}
+		}
+
+		// Then the index, in the target, at which this value needs to be moved
+		int insertionIndex = DiffUtil.findInsertionIndexForElementAt(comparison, sourceList, copyTarget, lcs,
+				currentIndexInSource);
+
+		if (targetList instanceof EList<?>) {
+			if (insertionIndex < 0 || insertionIndex >= targetList.size()) {
+				((EList<Object>)targetList).move(targetList.size() - 1, currentIndexInTarget);
+			} else {
+				((EList<Object>)targetList).move(insertionIndex, currentIndexInTarget);
+			}
+		} else {
+			targetList.remove(currentIndexInTarget);
+			if (insertionIndex < 0 || insertionIndex > targetList.size()) {
+				targetList.add(valueToMove);
+			} else {
+				targetList.add(insertionIndex, valueToMove);
+			}
 		}
 	}
 

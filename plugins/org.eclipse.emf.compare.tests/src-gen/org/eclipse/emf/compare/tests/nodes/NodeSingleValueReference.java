@@ -18,10 +18,10 @@ package org.eclipse.emf.compare.tests.nodes;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.NodeSingleValueReference#getSingleValuedReference <em>Single Valued Reference</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.emf.compare.tests.nodes.NodesPackage#getNodeSingleValueReference()
  * @model

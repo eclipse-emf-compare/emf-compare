@@ -24,10 +24,10 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.impl.NodeMultiValuedAttributeImpl#getMultiValuedAttribute <em>Multi Valued Attribute</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

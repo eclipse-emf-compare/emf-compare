@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes:NodeMultiValuedNonUniqueAttribute xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" xmi:id="_Y7T9MMQPEemKOdaA3QMhmg" name="root">
+  <multiValuedAttribute>0.0</multiValuedAttribute>
+  <multiValuedAttribute>3.03030303E-4</multiValuedAttribute>
+  <multiValuedAttribute>0.0</multiValuedAttribute>
+  <multiValuedAttribute>0.0</multiValuedAttribute>
+  <multiValuedAttribute>0.0</multiValuedAttribute>
+</nodes:NodeMultiValuedNonUniqueAttribute>

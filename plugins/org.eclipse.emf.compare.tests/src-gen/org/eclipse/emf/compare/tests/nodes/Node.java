@@ -20,11 +20,11 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.Node#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.Node#getContainmentRef1 <em>Containment Ref1</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.emf.compare.tests.nodes.NodesPackage#getNode()
  * @model

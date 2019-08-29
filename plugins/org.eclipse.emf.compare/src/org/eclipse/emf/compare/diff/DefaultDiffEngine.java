@@ -86,27 +86,29 @@ public class DefaultDiffEngine implements IDiffEngine {
 	}
 
 	/**
-	 * Checks whether the given {@code iterable} contains the given {@code element} according to the semantics
-	 * of {@link IEqualityHelper#matchingValues(Comparison, Object, Object)}.
+	 * Checks whether the given {@code list} contains the given {@code element} according to the semantics of
+	 * {@link IEqualityHelper#matchingValues(Comparison, Object, Object)} and returns the index at which it is
+	 * positioned if applicable.
 	 * 
 	 * @param comparison
 	 *            This will be used in order to retrieve the Match for EObjects when comparing them.
-	 * @param iterable
-	 *            Iterable which content we are to check.
+	 * @param list
+	 *            List which content we are to check.
 	 * @param element
-	 *            The element we expect to be contained in {@code  iterable}.
+	 *            The element we expect to be contained in {@code list}.
 	 * @param <E>
 	 *            Type of the input iterable's content.
-	 * @return {@code true} if the given {@code iterable} contains {@code element}, {@code false} otherwise.
+	 * @return The index at which the given {@code list} contains {@code element}, {@code -1} otherwise.
 	 */
-	protected <E> boolean contains(Comparison comparison, Iterable<E> iterable, E element) {
+	protected <E> int indexOf(Comparison comparison, List<E> list, E element) {
 		final IEqualityHelper equality = comparison.getEqualityHelper();
-		for (E candidate : iterable) {
+		for (int i = 0; i < list.size(); i++) {
+			E candidate = list.get(i);
 			if (equality.matchingValues(candidate, element)) {
-				return true;
+				return i;
 			}
 		}
-		return false;
+		return -1;
 	}
 
 	/**
@@ -779,6 +781,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 
 		// Any value that is _not_ in the LCS has changed.
 
+		List<Object> originWithNoLCS = trimLCS(originValues, lcsOriginLeft, equality);
 		int lcsCursor = 0;
 		Optional<Object> lcsCurrent = getIfPresent(lcsOriginLeft, lcsCursor);
 		for (Object diffCandidate : leftValues) {
@@ -789,12 +792,15 @@ public class DefaultDiffEngine implements IDiffEngine {
 				continue;
 			}
 
-			if (contains(comparison, originValues, diffCandidate)) {
+			int index = indexOf(comparison, originWithNoLCS, diffCandidate);
+			if (index >= 0) {
+				originWithNoLCS.remove(index);
 				if (checkOrdering) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
 				}
 			} else if (FeatureMapUtil.isFeatureMap(feature) && diffCandidate instanceof FeatureMap.Entry) {
-				// A value of a FeatureMap changed his key
+				// A value of a FeatureMap changed its key
+				// TODO Could feature map have duplicate entries and require the same "!isUnique" treatment?
 				if (isFeatureMapEntryKeyChange(equality, (FeatureMap.Entry)diffCandidate, originValues)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.CHANGE,
 							DifferenceSource.LEFT);
@@ -809,6 +815,23 @@ public class DefaultDiffEngine implements IDiffEngine {
 			}
 		}
 
+		// A Value that is not in the left but present in the origin has been deleted
+		List<Object> leftWithNoLCS = trimLCS(leftValues, lcsOriginLeft, equality);
+		for (Object diffCandidate : originWithNoLCS) {
+			int indexLeft = indexOf(comparison, leftWithNoLCS, diffCandidate);
+			if (indexLeft == -1) {
+				if ((feature instanceof EReference || match.getLeft() != null)
+						&& !isFeatureMapChangeOrMove(comparison, feature, diffCandidate, leftValues,
+								DifferenceSource.LEFT)) {
+					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE,
+							DifferenceSource.LEFT);
+				}
+			} else if (!feature.isUnique()) {
+				leftWithNoLCS.remove(indexLeft);
+			}
+		}
+
+		originWithNoLCS = trimLCS(originValues, lcsOriginRight, equality);
 		lcsCursor = 0;
 		lcsCurrent = getIfPresent(lcsOriginRight, lcsCursor);
 		for (Object diffCandidate : rightValues) {
@@ -819,12 +842,14 @@ public class DefaultDiffEngine implements IDiffEngine {
 				continue;
 			}
 
-			if (contains(comparison, originValues, diffCandidate)) {
+			int index = indexOf(comparison, originWithNoLCS, diffCandidate);
+			if (index >= 0) {
+				originWithNoLCS.remove(index);
 				if (checkOrdering) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.RIGHT);
 				}
 			} else if (FeatureMapUtil.isFeatureMap(feature) && diffCandidate instanceof FeatureMap.Entry) {
-				// A value of a FeatureMap changed his key
+				// A value of a FeatureMap changed its key
 				if (isFeatureMapEntryKeyChange(equality, (FeatureMap.Entry)diffCandidate, originValues)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.CHANGE,
 							DifferenceSource.RIGHT);
@@ -839,25 +864,19 @@ public class DefaultDiffEngine implements IDiffEngine {
 			}
 		}
 
-		// Removed from either side
-		for (Object diffCandidate : originValues) {
-			// A value that is in the origin but not in one of the side has been deleted.
-			// However, we do not want attribute changes on removed elements.
-			if (!contains(comparison, leftValues, diffCandidate)) {
-				if ((feature instanceof EReference || match.getLeft() != null)
-						&& !isFeatureMapChangeOrMove(comparison, feature, diffCandidate, leftValues,
-								DifferenceSource.LEFT)) {
-					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE,
-							DifferenceSource.LEFT);
-				}
-			}
-			if (!contains(comparison, rightValues, diffCandidate)) {
+		// A Value that is not in the right but present in the origin has been deleted
+		List<Object> rightWithNoLCS = trimLCS(rightValues, lcsOriginRight, equality);
+		for (Object diffCandidate : originWithNoLCS) {
+			int indexRight = indexOf(comparison, rightWithNoLCS, diffCandidate);
+			if (indexRight == -1) {
 				if ((feature instanceof EReference || match.getRight() != null)
 						&& !isFeatureMapChangeOrMove(comparison, feature, diffCandidate, rightValues,
 								DifferenceSource.RIGHT)) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE,
 							DifferenceSource.RIGHT);
 				}
+			} else if (!feature.isUnique()) {
+				rightWithNoLCS.remove(indexRight);
 			}
 		}
 	}
@@ -976,6 +995,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 
 		final List<Object> lcs = DiffUtil.longestCommonSubsequence(comparison, rightValues, leftValues);
 
+		List<Object> rightWithNoLCS = trimLCS(rightValues, lcs, equality);
 		int lcsCursor = 0;
 		Optional<Object> lcsCurrent = getIfPresent(lcs, lcsCursor);
 		for (Object diffCandidate : leftValues) {
@@ -986,7 +1006,9 @@ public class DefaultDiffEngine implements IDiffEngine {
 				continue;
 			}
 
-			if (contains(comparison, rightValues, diffCandidate)) {
+			int index = indexOf(comparison, rightWithNoLCS, diffCandidate);
+			if (index >= 0) {
+				rightWithNoLCS.remove(index);
 				if (checkOrdering) {
 					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
 				}
@@ -1006,23 +1028,44 @@ public class DefaultDiffEngine implements IDiffEngine {
 			}
 		}
 
-		for (Object diffCandidate : rightValues) {
-
-			if (contains(comparison, leftValues, diffCandidate)) {
-				// skip elements which were already looked at earlier
-				continue;
-			}
-
-			// A value that is in the right but not in the left has been deleted or moved.
-			if (isFeatureMapMoveFromNonFeatureMapContainment(comparison, feature, diffCandidate, leftValues,
-					DifferenceSource.LEFT)) {
-				// add move change if the move originates from a non-feature-map containment.
-				featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
-			} else if (!isFeatureMapChangeOrMove(comparison, feature, diffCandidate, leftValues,
-					DifferenceSource.LEFT)) {
-				featureChange(match, feature, diffCandidate, DifferenceKind.DELETE, DifferenceSource.LEFT);
+		List<Object> leftWithNoLCS = trimLCS(leftValues, lcs, equality);
+		for (Object diffCandidate : rightWithNoLCS) {
+			int index = indexOf(comparison, leftWithNoLCS, diffCandidate);
+			if (index == -1) {
+				// A value that is in the right but not in the left has been deleted or moved.
+				if (isFeatureMapMoveFromNonFeatureMapContainment(comparison, feature, diffCandidate,
+						leftValues, DifferenceSource.LEFT)) {
+					// add move change if the move originates from a non-feature-map containment.
+					featureChange(match, feature, diffCandidate, DifferenceKind.MOVE, DifferenceSource.LEFT);
+				} else if (!isFeatureMapChangeOrMove(comparison, feature, diffCandidate, leftValues,
+						DifferenceSource.LEFT)) {
+					featureChange(match, feature, diffCandidate, DifferenceKind.DELETE,
+							DifferenceSource.LEFT);
+				}
+			} else if (!feature.isUnique()) {
+				leftWithNoLCS.remove(index);
 			}
 		}
+	}
+
+	private List<Object> trimLCS(List<Object> source, List<Object> lcs, IEqualityHelper equalityHelper) {
+		List<Object> result = new ArrayList<>();
+		Iterator<Object> sourceIterator = source.iterator();
+		int lcsCursor = 0;
+		Optional<Object> lcsCurrent = getIfPresent(lcs, lcsCursor);
+		while (sourceIterator.hasNext() && lcsCurrent.isPresent()) {
+			Object current = sourceIterator.next();
+			if (equalityHelper.matchingValues(current, lcsCurrent.get())) {
+				lcsCursor++;
+				lcsCurrent = getIfPresent(lcs, lcsCursor);
+			} else {
+				result.add(current);
+			}
+		}
+		while (sourceIterator.hasNext()) {
+			result.add(sourceIterator.next());
+		}
+		return result;
 	}
 
 	/**

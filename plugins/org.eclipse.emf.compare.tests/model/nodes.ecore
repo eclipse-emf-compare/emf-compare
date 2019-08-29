@@ -26,6 +26,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiValuedAttribute" upperBound="-1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NodeMultiValuedNonUniqueAttribute" eSuperTypes="#//Node">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiValuedAttribute" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NodeSingleValueReference" eSuperTypes="#//Node">
     <eStructuralFeatures xsi:type="ecore:EReference" name="singleValuedReference"
         eType="#//Node"/>

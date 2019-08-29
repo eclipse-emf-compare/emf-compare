@@ -8,6 +8,11 @@
   <genPackages prefix="Nodes" basePackage="org.eclipse.emf.compare.tests" resource="XMI"
       disposableProviderFactory="true" contentTypeIdentifier="org.eclipse.emf.compare.test.nodes.contenttype"
       ecorePackage="nodes.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="nodes.ecore#//NodeEnum">
+      <genEnumLiterals ecoreEnumLiteral="nodes.ecore#//NodeEnum/A"/>
+      <genEnumLiterals ecoreEnumLiteral="nodes.ecore#//NodeEnum/B"/>
+      <genEnumLiterals ecoreEnumLiteral="nodes.ecore#//NodeEnum/C"/>
+    </genEnums>
     <genClasses ecoreClass="nodes.ecore#//Node">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nodes.ecore#//Node/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference nodes.ecore#//Node/containmentRef1"/>
@@ -24,6 +29,9 @@
     </genClasses>
     <genClasses ecoreClass="nodes.ecore#//NodeMultiValuedAttribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nodes.ecore#//NodeMultiValuedAttribute/multiValuedAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="nodes.ecore#//NodeMultiValuedNonUniqueAttribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nodes.ecore#//NodeMultiValuedNonUniqueAttribute/multiValuedAttribute"/>
     </genClasses>
     <genClasses ecoreClass="nodes.ecore#//NodeSingleValueReference">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeSingleValueReference/singleValuedReference"/>
@@ -57,6 +65,12 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute nodes.ecore#//NodeFeatureMapContainment2/map2"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeFeatureMapContainment2/multiple"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference nodes.ecore#//NodeFeatureMapContainment2/single"/>
+    </genClasses>
+    <genClasses ecoreClass="nodes.ecore#//NodeSingleValueEEnumAttribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nodes.ecore#//NodeSingleValueEEnumAttribute/singlevalueEEnumAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="nodes.ecore#//NodeMultiValueEEnumAttribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nodes.ecore#//NodeMultiValueEEnumAttribute/multiValueEEnumAttribute"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

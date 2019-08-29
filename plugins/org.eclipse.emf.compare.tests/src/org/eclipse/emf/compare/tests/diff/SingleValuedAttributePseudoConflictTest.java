@@ -42,7 +42,7 @@ public class SingleValuedAttributePseudoConflictTest {
 		Resource right = input.getSingleValueAttributePseudoConflictRight();
 		Resource origin = input.getSingleValueAttributePseudoConflictOrigin();
 
-		IComparisonScope scope = new DefaultComparisonScope(right, left, origin);
+		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
 		Comparison comparison = EMFCompare.builder().build().compare(scope);
 
 		// There are only two differences

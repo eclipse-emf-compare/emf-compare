@@ -13,28 +13,28 @@ package org.eclipse.emf.compare.tests.nodes.impl;
 import java.util.Collection;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.tests.nodes.Node;
-import org.eclipse.emf.compare.tests.nodes.NodeMultiValueReference;
+
+import org.eclipse.emf.compare.tests.nodes.NodeMultiValuedNonUniqueAttribute;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
+
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+
+import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Node Multi Value Reference</b></em>'.
+ * An implementation of the model object '<em><b>Node Multi Valued Non Unique Attribute</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.tests.nodes.impl.NodeMultiValueReferenceImpl#getMultiValuedReference <em>Multi Valued Reference</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.tests.nodes.impl.NodeMultiValuedNonUniqueAttributeImpl#getMultiValuedAttribute <em>Multi Valued Attribute</em>}</li>
  * </ul>
  *
  * @generated
  */
-//Generated code, suppressing all warnings
-@SuppressWarnings("all")
-public class NodeMultiValueReferenceImpl extends NodeImpl implements NodeMultiValueReference {
+public class NodeMultiValuedNonUniqueAttributeImpl extends NodeImpl implements NodeMultiValuedNonUniqueAttribute {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -43,21 +43,21 @@ public class NodeMultiValueReferenceImpl extends NodeImpl implements NodeMultiVa
 	public static final String copyright = "Copyright (c) 2011, 2012 Obeo.\r\nAll rights reserved. This program and the accompanying materials\r\nare made available under the terms of the Eclipse Public License v1.0\r\nwhich accompanies this distribution, and is available at\r\nhttp://www.eclipse.org/legal/epl-v10.html\r\n\r\nContributors:\r\n    Obeo - initial API and implementation"; //$NON-NLS-1$
 
 	/**
-	 * The cached value of the '{@link #getMultiValuedReference() <em>Multi Valued Reference</em>}' reference list.
+	 * The cached value of the '{@link #getMultiValuedAttribute() <em>Multi Valued Attribute</em>}' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getMultiValuedReference()
+	 * @see #getMultiValuedAttribute()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Node> multiValuedReference;
+	protected EList<String> multiValuedAttribute;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected NodeMultiValueReferenceImpl() {
+	protected NodeMultiValuedNonUniqueAttributeImpl() {
 		super();
 	}
 
@@ -68,7 +68,7 @@ public class NodeMultiValueReferenceImpl extends NodeImpl implements NodeMultiVa
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return NodesPackage.Literals.NODE_MULTI_VALUE_REFERENCE;
+		return NodesPackage.Literals.NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE;
 	}
 
 	/**
@@ -76,11 +76,11 @@ public class NodeMultiValueReferenceImpl extends NodeImpl implements NodeMultiVa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Node> getMultiValuedReference() {
-		if (multiValuedReference == null) {
-			multiValuedReference = new EObjectResolvingEList<Node>(Node.class, this, NodesPackage.NODE_MULTI_VALUE_REFERENCE__MULTI_VALUED_REFERENCE);
+	public EList<String> getMultiValuedAttribute() {
+		if (multiValuedAttribute == null) {
+			multiValuedAttribute = new EDataTypeEList<String>(String.class, this, NodesPackage.NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE__MULTI_VALUED_ATTRIBUTE);
 		}
-		return multiValuedReference;
+		return multiValuedAttribute;
 	}
 
 	/**
@@ -91,8 +91,8 @@ public class NodeMultiValueReferenceImpl extends NodeImpl implements NodeMultiVa
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case NodesPackage.NODE_MULTI_VALUE_REFERENCE__MULTI_VALUED_REFERENCE:
-				return getMultiValuedReference();
+			case NodesPackage.NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE__MULTI_VALUED_ATTRIBUTE:
+				return getMultiValuedAttribute();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -106,9 +106,9 @@ public class NodeMultiValueReferenceImpl extends NodeImpl implements NodeMultiVa
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case NodesPackage.NODE_MULTI_VALUE_REFERENCE__MULTI_VALUED_REFERENCE:
-				getMultiValuedReference().clear();
-				getMultiValuedReference().addAll((Collection<? extends Node>)newValue);
+			case NodesPackage.NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE__MULTI_VALUED_ATTRIBUTE:
+				getMultiValuedAttribute().clear();
+				getMultiValuedAttribute().addAll((Collection<? extends String>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -122,8 +122,8 @@ public class NodeMultiValueReferenceImpl extends NodeImpl implements NodeMultiVa
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case NodesPackage.NODE_MULTI_VALUE_REFERENCE__MULTI_VALUED_REFERENCE:
-				getMultiValuedReference().clear();
+			case NodesPackage.NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE__MULTI_VALUED_ATTRIBUTE:
+				getMultiValuedAttribute().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -137,10 +137,26 @@ public class NodeMultiValueReferenceImpl extends NodeImpl implements NodeMultiVa
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case NodesPackage.NODE_MULTI_VALUE_REFERENCE__MULTI_VALUED_REFERENCE:
-				return multiValuedReference != null && !multiValuedReference.isEmpty();
+			case NodesPackage.NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE__MULTI_VALUED_ATTRIBUTE:
+				return multiValuedAttribute != null && !multiValuedAttribute.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //NodeMultiValueReferenceImpl
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (multiValuedAttribute: "); //$NON-NLS-1$
+		result.append(multiValuedAttribute);
+		result.append(')');
+		return result.toString();
+	}
+
+} //NodeMultiValuedNonUniqueAttributeImpl

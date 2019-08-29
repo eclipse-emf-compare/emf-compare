@@ -29,12 +29,12 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <em><b>Node Feature Map Containment2</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.impl.NodeFeatureMapContainment2Impl#getMap2 <em>Map2</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.impl.NodeFeatureMapContainment2Impl#getMultiple <em>Multiple</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.impl.NodeFeatureMapContainment2Impl#getSingle <em>Single</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

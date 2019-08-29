@@ -29,11 +29,11 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefOneToManyImpl#getSource <em>Source</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.impl.NodeOppositeRefOneToManyImpl#getDestination <em>Destination</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

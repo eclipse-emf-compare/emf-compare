@@ -464,16 +464,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
 
 		for (Diff candidate : refinedCandidates) {
-			final Object candidateValue;
-			if (candidate instanceof ReferenceChange) {
-				candidateValue = ((ReferenceChange)candidate).getValue();
-			} else if (candidate instanceof AttributeChange) {
-				candidateValue = ((AttributeChange)candidate).getValue();
-			} else if (candidate instanceof FeatureMapChange) {
-				candidateValue = ((FeatureMap.Entry)((FeatureMapChange)candidate).getValue()).getValue();
-			} else {
-				candidateValue = null;
-			}
+			final Object candidateValue = getDiffValue(candidate);
 
 			if (diff.getMatch() == candidate.getMatch()) {
 				if (equalityHelper.matchingValues(changedValue, candidateValue)) {
@@ -655,16 +646,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 		});
 
 		for (Diff candidate : refinedCandidates) {
-			final Object candidateValue;
-			if (candidate instanceof ReferenceChange) {
-				candidateValue = ((ReferenceChange)candidate).getValue();
-			} else if (candidate instanceof AttributeChange) {
-				candidateValue = ((AttributeChange)candidate).getValue();
-			} else if (candidate instanceof FeatureMapChange) {
-				candidateValue = ((FeatureMap.Entry)((FeatureMapChange)candidate).getValue()).getValue();
-			} else {
-				candidateValue = null;
-			}
+			final Object candidateValue = getDiffValue(candidate);
 
 			if (diff.getMatch() == candidate.getMatch()
 					&& comparison.getEqualityHelper().matchingValues(changedValue, candidateValue)) {
@@ -732,16 +714,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 		});
 
 		for (Diff candidate : refinedCandidates) {
-			final Object movedValue;
-			if (candidate instanceof ReferenceChange) {
-				movedValue = ((ReferenceChange)candidate).getValue();
-			} else if (candidate instanceof AttributeChange) {
-				movedValue = ((AttributeChange)candidate).getValue();
-			} else if (candidate instanceof FeatureMapChange) {
-				movedValue = ((FeatureMap.Entry)((FeatureMapChange)candidate).getValue()).getValue();
-			} else {
-				movedValue = null;
-			}
+			final Object movedValue = getDiffValue(candidate);
 
 			if (comparison.getEqualityHelper().matchingValues(deletedValue, movedValue)) {
 				if (candidate.getKind() == DifferenceKind.MOVE) {
@@ -808,17 +781,15 @@ public class DefaultConflictDetector implements IConflictDetector {
 		});
 
 		for (Diff candidate : refinedCandidates) {
-			final Object candidateValue;
-			if (candidate instanceof ReferenceChange) {
-				candidateValue = ((ReferenceChange)candidate).getValue();
-			} else if (candidate instanceof AttributeChange) {
-				candidateValue = ((AttributeChange)candidate).getValue();
-			} else if (candidate instanceof FeatureMapChange) {
-				candidateValue = ((FeatureMap.Entry)((FeatureMapChange)candidate).getValue()).getValue();
-			} else {
-				candidateValue = null;
-			}
-			// No diff on non unique features : multiple same values can coexist
+			final Object candidateValue = getDiffValue(candidate);
+			/*
+			 * multiple same values can coexist on non-unique features, so we won't detect real conflicts in
+			 * such cases. However, if a value is not present in the origin but added in both left and right,
+			 * we'll consider it a pseudo conflict to avoid "noise" for the user. If the same value has been
+			 * added multiple times on the side(s), we'll only detect pseudo conflict on pairs of additions
+			 * and none if there is no longer a pair (i.e. the same value has been added one more times on one
+			 * side than in the other).
+			 */
 			if (feature.isUnique()
 					&& comparison.getEqualityHelper().matchingValues(addedValue, candidateValue)) {
 				// This is a conflict. Is it real?
@@ -840,8 +811,51 @@ public class DefaultConflictDetector implements IConflictDetector {
 				} else {
 					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 				}
+			} else if (!feature.isUnique()) {
+				if (comparison.getEqualityHelper().matchingValues(addedValue, candidateValue)) {
+					// potential pseudo-conflict
+					// Is this candidate already paired in a pseudo conflict?
+					if (candidate.getConflict() != null
+							&& candidate.getConflict().getKind() == ConflictKind.PSEUDO) {
+						if (candidate.getConflict().getDifferences().stream()
+								.anyMatch(conflictingWith -> matchingConflictingDiff(comparison, diff,
+										conflictingWith))) {
+							// continue to next candidate
+							continue;
+						}
+					}
+					// Even if these two values haven't been added at the same index on both side, we'll
+					// consider it a pseudo-conflict.
+					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
+				}
 			}
 		}
+	}
+
+	private static boolean matchingConflictingDiff(Comparison comparison, Diff reference, Diff candidate) {
+		if (reference == candidate) {
+			return true;
+		}
+		if (reference.getMatch() == candidate.getMatch() && reference.getKind() == candidate.getKind()) {
+			Object referenceValue = getDiffValue(reference);
+			Object candidateValue = getDiffValue(candidate);
+			return comparison.getEqualityHelper().matchingValues(referenceValue, candidateValue);
+		}
+		return false;
+	}
+
+	private static Object getDiffValue(Diff diff) {
+		Object value;
+		if (diff instanceof ReferenceChange) {
+			value = ((ReferenceChange)diff).getValue();
+		} else if (diff instanceof AttributeChange) {
+			value = ((AttributeChange)diff).getValue();
+		} else if (diff instanceof FeatureMapChange) {
+			value = ((FeatureMap.Entry)((FeatureMapChange)diff).getValue()).getValue();
+		} else {
+			value = null;
+		}
+		return value;
 	}
 
 	/**

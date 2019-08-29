@@ -28,6 +28,8 @@ import org.eclipse.emf.compare.tests.diff.DiffUtilTest;
 import org.eclipse.emf.compare.tests.diff.FeatureFilterTest;
 import org.eclipse.emf.compare.tests.diff.FeatureMapMoveDiffTest;
 import org.eclipse.emf.compare.tests.diff.LCSPerformanceTest;
+import org.eclipse.emf.compare.tests.diff.NonUniqueMultiValuedAttributeTest;
+import org.eclipse.emf.compare.tests.diff.SingleValuedAttributePseudoConflictTest;
 import org.eclipse.emf.compare.tests.diff.ThreeWayTextDiffTest;
 import org.eclipse.emf.compare.tests.diff.URIDistanceTest;
 import org.eclipse.emf.compare.tests.edit.AllEditTests;
@@ -106,7 +108,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		RankedAdapterFactoryRegistryTest.class, ComparisonScopeAdapterTest.class,
 		EMFComparePredicatesTest.class, ImplicationsMergeTest.class, GraphTest.class,
 		ConflictImplicationsTest_Bug484579.class, PseudoConflictDetectionTest.class, ComplexMergeTest.class,
-		ConflictSearchTest.class, DiffRelationshipComputerTest.class })
+		ConflictSearchTest.class, DiffRelationshipComputerTest.class,
+		SingleValuedAttributePseudoConflictTest.class, NonUniqueMultiValuedAttributeTest.class, })
 public class AllTests {
 
 	@BeforeClass

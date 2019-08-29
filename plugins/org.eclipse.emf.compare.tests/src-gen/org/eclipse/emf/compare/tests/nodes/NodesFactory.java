@@ -82,6 +82,15 @@ public interface NodesFactory extends EFactory {
 	NodeMultiValuedAttribute createNodeMultiValuedAttribute();
 
 	/**
+	 * Returns a new object of class '<em>Node Multi Valued Non Unique Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Node Multi Valued Non Unique Attribute</em>'.
+	 * @generated
+	 */
+	NodeMultiValuedNonUniqueAttribute createNodeMultiValuedNonUniqueAttribute();
+
+	/**
 	 * Returns a new object of class '<em>Node Single Value Reference</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

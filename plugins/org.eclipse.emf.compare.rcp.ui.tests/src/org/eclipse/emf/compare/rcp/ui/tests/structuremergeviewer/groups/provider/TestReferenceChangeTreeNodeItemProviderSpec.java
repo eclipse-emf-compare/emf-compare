@@ -273,13 +273,13 @@ public class TestReferenceChangeTreeNodeItemProviderSpec extends AbstractTestTre
 		checkNoChild(node0);
 		assertNotNull(((Diff)node0.getData()).getConflict());
 		TreeNode node1 = periodicalChildren.get(1);
-		checkRefChange(node1, RIGHT, ADD, "eSuperTypes");
+		checkRefChange(node1, LEFT, DELETE, "eSuperTypes");
 		checkNoChild(node1);
-		assertNotNull(((Diff)node1.getData()).getConflict());
-		assertSame(((Diff)node0.getData()).getConflict(), ((Diff)node1.getData()).getConflict());
 		TreeNode node2 = periodicalChildren.get(2);
-		checkRefChange(node2, LEFT, DELETE, "eSuperTypes");
+		checkRefChange(node2, RIGHT, ADD, "eSuperTypes");
 		checkNoChild(node2);
+		assertNotNull(((Diff)node2.getData()).getConflict());
+		assertSame(((Diff)node0.getData()).getConflict(), ((Diff)node2.getData()).getConflict());
 
 		TreeNode node3 = periodicalChildren.get(3);
 		assertTrue(node3 instanceof MatchNode);

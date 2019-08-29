@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.tests.nodes.NodeFeatureMapNonContainment;
 import org.eclipse.emf.compare.tests.nodes.NodeMultiValueEEnumAttribute;
 import org.eclipse.emf.compare.tests.nodes.NodeMultiValueReference;
 import org.eclipse.emf.compare.tests.nodes.NodeMultiValuedAttribute;
+import org.eclipse.emf.compare.tests.nodes.NodeMultiValuedNonUniqueAttribute;
 import org.eclipse.emf.compare.tests.nodes.NodeMultipleContainment;
 import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefManyToMany;
 import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany;
@@ -85,6 +86,13 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	 * @generated
 	 */
 	private EClass nodeMultiValuedAttributeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass nodeMultiValuedNonUniqueAttributeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -330,6 +338,24 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 	 */
 	public EAttribute getNodeMultiValuedAttribute_MultiValuedAttribute() {
 		return (EAttribute)nodeMultiValuedAttributeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getNodeMultiValuedNonUniqueAttribute() {
+		return nodeMultiValuedNonUniqueAttributeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getNodeMultiValuedNonUniqueAttribute_MultiValuedAttribute() {
+		return (EAttribute)nodeMultiValuedNonUniqueAttributeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -647,6 +673,9 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 		nodeMultiValuedAttributeEClass = createEClass(NODE_MULTI_VALUED_ATTRIBUTE);
 		createEAttribute(nodeMultiValuedAttributeEClass, NODE_MULTI_VALUED_ATTRIBUTE__MULTI_VALUED_ATTRIBUTE);
 
+		nodeMultiValuedNonUniqueAttributeEClass = createEClass(NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE);
+		createEAttribute(nodeMultiValuedNonUniqueAttributeEClass, NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE__MULTI_VALUED_ATTRIBUTE);
+
 		nodeSingleValueReferenceEClass = createEClass(NODE_SINGLE_VALUE_REFERENCE);
 		createEReference(nodeSingleValueReferenceEClass, NODE_SINGLE_VALUE_REFERENCE__SINGLE_VALUED_REFERENCE);
 
@@ -722,6 +751,7 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 		nodeSingleValueContainmentEClass.getESuperTypes().add(this.getNode());
 		nodeSingleValueAttributeEClass.getESuperTypes().add(this.getNode());
 		nodeMultiValuedAttributeEClass.getESuperTypes().add(this.getNode());
+		nodeMultiValuedNonUniqueAttributeEClass.getESuperTypes().add(this.getNode());
 		nodeSingleValueReferenceEClass.getESuperTypes().add(this.getNode());
 		nodeMultiValueReferenceEClass.getESuperTypes().add(this.getNode());
 		nodeOppositeRefOneToOneEClass.getESuperTypes().add(this.getNode());
@@ -750,6 +780,9 @@ public class NodesPackageImpl extends EPackageImpl implements NodesPackage {
 
 		initEClass(nodeMultiValuedAttributeEClass, NodeMultiValuedAttribute.class, "NodeMultiValuedAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getNodeMultiValuedAttribute_MultiValuedAttribute(), ecorePackage.getEString(), "multiValuedAttribute", null, 0, -1, NodeMultiValuedAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(nodeMultiValuedNonUniqueAttributeEClass, NodeMultiValuedNonUniqueAttribute.class, "NodeMultiValuedNonUniqueAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getNodeMultiValuedNonUniqueAttribute_MultiValuedAttribute(), ecorePackage.getEString(), "multiValuedAttribute", null, 0, -1, NodeMultiValuedNonUniqueAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(nodeSingleValueReferenceEClass, NodeSingleValueReference.class, "NodeSingleValueReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(getNodeSingleValueReference_SingleValuedReference(), this.getNode(), null, "singleValuedReference", null, 0, 1, NodeSingleValueReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$

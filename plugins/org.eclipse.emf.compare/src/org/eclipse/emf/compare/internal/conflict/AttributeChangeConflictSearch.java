@@ -28,6 +28,7 @@ import com.google.common.collect.Iterables;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.ecore.EAttribute;
@@ -64,12 +65,14 @@ public class AttributeChangeConflictSearch {
 		@Override
 		public void detectConflicts() {
 			EAttribute feature = diff.getAttribute();
-			// Only unique features can conflict
+			// Only unique features can have real conflicts
+			Object value = diff.getValue();
+			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
+			Iterable<Diff> conflictCandidates = Iterables.filter(diffsInSameMatch,
+					and(possiblyConflictingWith(diff), instanceOf(AttributeChange.class), onFeature(feature),
+							ofKind(ADD)));
 			if (feature.isUnique()) {
-				Object value = diff.getValue();
-				EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-				for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-						instanceOf(AttributeChange.class), onFeature(feature), ofKind(ADD)))) {
+				for (Diff candidate : conflictCandidates) {
 					Object candidateValue = ((AttributeChange)candidate).getValue();
 					if (comparison.getEqualityHelper().matchingValues(value, candidateValue)) {
 						// This is a conflict. Is it real?
@@ -80,7 +83,48 @@ public class AttributeChangeConflictSearch {
 						}
 					}
 				}
+			} else {
+				/*
+				 * multiple same values can coexist on non-unique features, so we won't detect real conflicts
+				 * in such cases. However, if a value is not present in the origin but added in both left and
+				 * right, we'll consider it a pseudo conflict to avoid "noise" for the user. If the same value
+				 * has been added multiple times on the side(s), we'll only detect pseudo conflict on pairs of
+				 * additions and none if there is no longer a pair (i.e. the same value has been added one
+				 * more times on one side than in the other).
+				 */
+				for (Diff candidate : conflictCandidates) {
+					Object candidateValue = ((AttributeChange)candidate).getValue();
+					if (comparison.getEqualityHelper().matchingValues(value, candidateValue)) {
+						// potential pseudo-conflict
+						// is this candidate already paired in a conflict?
+						if (candidate.getConflict() != null
+								&& candidate.getConflict().getKind() == ConflictKind.PSEUDO) {
+							if (candidate.getConflict().getDifferences().stream()
+									.filter(AttributeChange.class::isInstance)
+									.anyMatch(conflictingWith -> matchingConflictingDiff(diff,
+											(AttributeChange)conflictingWith))) {
+								// continue to next candidate
+								continue;
+							}
+						}
+						conflict(candidate, PSEUDO);
+						// break the loop to prevent further matching add conflicts
+						break;
+					}
+				}
 			}
+		}
+
+		private boolean matchingConflictingDiff(AttributeChange reference, AttributeChange candidate) {
+			if (reference == candidate) {
+				return false;
+			}
+			if (reference.getMatch() == candidate.getMatch() && reference.getKind() == candidate.getKind()) {
+				Object referenceValue = reference.getValue();
+				Object candidateValue = candidate.getValue();
+				return comparison.getEqualityHelper().matchingValues(referenceValue, candidateValue);
+			}
+			return false;
 		}
 	}
 

@@ -310,6 +310,52 @@ public interface NodesPackage extends EPackage {
 	int NODE_MULTI_VALUED_ATTRIBUTE_FEATURE_COUNT = NODE_FEATURE_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeMultiValuedNonUniqueAttributeImpl <em>Node Multi Valued Non Unique Attribute</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodeMultiValuedNonUniqueAttributeImpl
+	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeMultiValuedNonUniqueAttribute()
+	 * @generated
+	 */
+	int NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE = 5;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE__NAME = NODE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Containment Ref1</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE__CONTAINMENT_REF1 = NODE__CONTAINMENT_REF1;
+
+	/**
+	 * The feature id for the '<em><b>Multi Valued Attribute</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE__MULTI_VALUED_ATTRIBUTE = NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Node Multi Valued Non Unique Attribute</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE_FEATURE_COUNT = NODE_FEATURE_COUNT + 1;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeSingleValueReferenceImpl <em>Node Single Value Reference</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -317,7 +363,7 @@ public interface NodesPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeSingleValueReference()
 	 * @generated
 	 */
-	int NODE_SINGLE_VALUE_REFERENCE = 5;
+	int NODE_SINGLE_VALUE_REFERENCE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -363,7 +409,7 @@ public interface NodesPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeMultiValueReference()
 	 * @generated
 	 */
-	int NODE_MULTI_VALUE_REFERENCE = 6;
+	int NODE_MULTI_VALUE_REFERENCE = 7;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -409,7 +455,7 @@ public interface NodesPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeOppositeRefOneToOne()
 	 * @generated
 	 */
-	int NODE_OPPOSITE_REF_ONE_TO_ONE = 7;
+	int NODE_OPPOSITE_REF_ONE_TO_ONE = 8;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -464,7 +510,7 @@ public interface NodesPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeOppositeRefOneToMany()
 	 * @generated
 	 */
-	int NODE_OPPOSITE_REF_ONE_TO_MANY = 8;
+	int NODE_OPPOSITE_REF_ONE_TO_MANY = 9;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -519,7 +565,7 @@ public interface NodesPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeOppositeRefManyToMany()
 	 * @generated
 	 */
-	int NODE_OPPOSITE_REF_MANY_TO_MANY = 9;
+	int NODE_OPPOSITE_REF_MANY_TO_MANY = 10;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -574,7 +620,7 @@ public interface NodesPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeFeatureMapContainment()
 	 * @generated
 	 */
-	int NODE_FEATURE_MAP_CONTAINMENT = 10;
+	int NODE_FEATURE_MAP_CONTAINMENT = 11;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -638,7 +684,7 @@ public interface NodesPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeFeatureMapNonContainment()
 	 * @generated
 	 */
-	int NODE_FEATURE_MAP_NON_CONTAINMENT = 11;
+	int NODE_FEATURE_MAP_NON_CONTAINMENT = 12;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -702,7 +748,7 @@ public interface NodesPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeFeatureMapContainment2()
 	 * @generated
 	 */
-	int NODE_FEATURE_MAP_CONTAINMENT2 = 12;
+	int NODE_FEATURE_MAP_CONTAINMENT2 = 13;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -767,7 +813,7 @@ public interface NodesPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeSingleValueEEnumAttribute()
 	 * @generated
 	 */
-	int NODE_SINGLE_VALUE_EENUM_ATTRIBUTE = 13;
+	int NODE_SINGLE_VALUE_EENUM_ATTRIBUTE = 14;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -813,7 +859,7 @@ public interface NodesPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeMultiValueEEnumAttribute()
 	 * @generated
 	 */
-	int NODE_MULTI_VALUE_EENUM_ATTRIBUTE = 14;
+	int NODE_MULTI_VALUE_EENUM_ATTRIBUTE = 15;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -859,7 +905,7 @@ public interface NodesPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeEnum()
 	 * @generated
 	 */
-	int NODE_ENUM = 15;
+	int NODE_ENUM = 16;
 
 
 	/**
@@ -988,6 +1034,27 @@ public interface NodesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getNodeMultiValuedAttribute_MultiValuedAttribute();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.tests.nodes.NodeMultiValuedNonUniqueAttribute <em>Node Multi Valued Non Unique Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Node Multi Valued Non Unique Attribute</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeMultiValuedNonUniqueAttribute
+	 * @generated
+	 */
+	EClass getNodeMultiValuedNonUniqueAttribute();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.emf.compare.tests.nodes.NodeMultiValuedNonUniqueAttribute#getMultiValuedAttribute <em>Multi Valued Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Multi Valued Attribute</em>'.
+	 * @see org.eclipse.emf.compare.tests.nodes.NodeMultiValuedNonUniqueAttribute#getMultiValuedAttribute()
+	 * @see #getNodeMultiValuedNonUniqueAttribute()
+	 * @generated
+	 */
+	EAttribute getNodeMultiValuedNonUniqueAttribute_MultiValuedAttribute();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.tests.nodes.NodeSingleValueReference <em>Node Single Value Reference</em>}'.
@@ -1435,6 +1502,24 @@ public interface NodesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute NODE_MULTI_VALUED_ATTRIBUTE__MULTI_VALUED_ATTRIBUTE = eINSTANCE.getNodeMultiValuedAttribute_MultiValuedAttribute();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeMultiValuedNonUniqueAttributeImpl <em>Node Multi Valued Non Unique Attribute</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodeMultiValuedNonUniqueAttributeImpl
+		 * @see org.eclipse.emf.compare.tests.nodes.impl.NodesPackageImpl#getNodeMultiValuedNonUniqueAttribute()
+		 * @generated
+		 */
+		EClass NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE = eINSTANCE.getNodeMultiValuedNonUniqueAttribute();
+
+		/**
+		 * The meta object literal for the '<em><b>Multi Valued Attribute</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NODE_MULTI_VALUED_NON_UNIQUE_ATTRIBUTE__MULTI_VALUED_ATTRIBUTE = eINSTANCE.getNodeMultiValuedNonUniqueAttribute_MultiValuedAttribute();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.tests.nodes.impl.NodeSingleValueReferenceImpl <em>Node Single Value Reference</em>}' class.

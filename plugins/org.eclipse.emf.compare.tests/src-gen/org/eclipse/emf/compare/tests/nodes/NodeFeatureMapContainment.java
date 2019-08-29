@@ -20,12 +20,12 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment#getMap <em>Map</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment#getFirstKey <em>First Key</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.NodeFeatureMapContainment#getSecondKey <em>Second Key</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.emf.compare.tests.nodes.NodesPackage#getNodeFeatureMapContainment()
  * @model

@@ -29,12 +29,12 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.impl.NodeFeatureMapContainmentImpl#getMap <em>Map</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.impl.NodeFeatureMapContainmentImpl#getFirstKey <em>First Key</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.impl.NodeFeatureMapContainmentImpl#getSecondKey <em>Second Key</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

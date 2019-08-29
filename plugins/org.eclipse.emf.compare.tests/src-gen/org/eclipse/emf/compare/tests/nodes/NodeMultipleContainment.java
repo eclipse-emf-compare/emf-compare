@@ -19,11 +19,11 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.NodeMultipleContainment#getContainmentRef2 <em>Containment Ref2</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.tests.nodes.NodeMultipleContainment#getContainmentRef3 <em>Containment Ref3</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.emf.compare.tests.nodes.NodesPackage#getNodeMultipleContainment()
  * @model
