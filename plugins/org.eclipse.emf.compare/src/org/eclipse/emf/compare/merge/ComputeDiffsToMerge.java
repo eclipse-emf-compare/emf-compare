@@ -12,7 +12,6 @@
 package org.eclipse.emf.compare.merge;
 
 import static org.eclipse.emf.compare.ConflictKind.REAL;
-import static org.eclipse.emf.compare.merge.IMergeCriterion.NONE;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
@@ -25,6 +24,7 @@ import java.util.Set;
 
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.internal.merge.MergeMode;
 
 /**
  * This class computes the diffs to merge for a given diff in the correct order, taking into account the
@@ -32,7 +32,7 @@ import org.eclipse.emf.compare.Diff;
  * <dl>
  * <dt>Required diffs</dt>
  * <dd>These are the diffs that need to be merged (from a structural point of view) before a given diff for
- * this diff to be mergeabl by th merger.</dd>
+ * this diff to be mergeable by the merger.</dd>
  * <dt>Consequent diffs</dt>
  * <dd>These are all the diffs that, for some reason, the merger considers necessary to merge along with a
  * given diff, but which need not be merged before this diff for the merger to be able to merge it. This is
@@ -47,9 +47,21 @@ import org.eclipse.emf.compare.Diff;
 public class ComputeDiffsToMerge {
 
 	/**
-	 * The direction of the merge, <code>true</code> for right to left.
+	 * If this is not acting on a MergeMode (i.e. direction is on a diff-by-diff basis), this will define the
+	 * global direction of the merge.
 	 */
 	private final boolean rightToLeft;
+
+	/**
+	 * The current merging mode.
+	 */
+	private final MergeMode mergeMode;
+
+	/** Tells us whether the left side of the comparison we're operating on is editable. */
+	private final boolean isLeftEditable;
+
+	/** Tells us whether the right side of the comparison we're operating on is editable. */
+	private final boolean isRightEditable;
 
 	/**
 	 * The ordered set of diffs to merge.
@@ -76,39 +88,50 @@ public class ComputeDiffsToMerge {
 	/**
 	 * Constructor.
 	 * 
-	 * @param rightToLeft
-	 *            The merge direction
-	 * @param registry
-	 *            The Registry to use.
+	 * @param mergeMode
+	 *            The kind of merging we're about to implement.
+	 * @param isLeftEditable
+	 *            Whether the left side of the comparison we're operating on is editable.
+	 * @param isRightEditable
+	 *            Whether the right side of the comparison we're operating on is editable.
+	 * @param relationshipComputer
+	 *            The relationship computer used to calculate dependencies and requirements of diffs.
 	 */
-	public ComputeDiffsToMerge(boolean rightToLeft, IMerger.Registry2 registry) {
-		this(rightToLeft, new DiffRelationshipComputer(registry, NONE));
+	public ComputeDiffsToMerge(MergeMode mergeMode, boolean isLeftEditable, boolean isRightEditable,
+			IDiffRelationshipComputer relationshipComputer) {
+		this(true, mergeMode, isLeftEditable, isRightEditable, relationshipComputer);
 	}
 
 	/**
-	 * Constructor.
+	 * Constructor if there is no merge mode for this action.
 	 * 
 	 * @param rightToLeft
-	 *            The merge direction
-	 * @param registry
-	 *            The Registry to use.
-	 * @param criterion
-	 *            The merge criterion, must not be <code>null</code>
-	 */
-	public ComputeDiffsToMerge(boolean rightToLeft, IMerger.Registry2 registry, IMergeCriterion criterion) {
-		this(rightToLeft, new DiffRelationshipComputer(registry, criterion));
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param rightToLeft
-	 *            The merge direction
+	 *            Direction of the merge.
 	 * @param relationshipComputer
 	 *            The relationship computer used to calculate dependencies and requirements of diffs.
 	 */
 	public ComputeDiffsToMerge(boolean rightToLeft, IDiffRelationshipComputer relationshipComputer) {
+		this(rightToLeft, null, true, true, relationshipComputer);
+	}
+
+	/**
+	 * @param rightToLeft
+	 *            Direction of the merge. Ignored if {@link MergeMode} is not null.
+	 * @param mergeMode
+	 *            The kind of merging we're about to implement.
+	 * @param isLeftEditable
+	 *            Whether the left side of the comparison we're operating on is editable.
+	 * @param isRightEditable
+	 *            Whether the right side of the comparison we're operating on is editable.
+	 * @param relationshipComputer
+	 *            The relationship computer used to calculate dependencies and requirements of diffs.
+	 */
+	private ComputeDiffsToMerge(boolean rightToLeft, MergeMode mergeMode, boolean isLeftEditable,
+			boolean isRightEditable, IDiffRelationshipComputer relationshipComputer) {
 		this.rightToLeft = rightToLeft;
+		this.mergeMode = mergeMode;
+		this.isLeftEditable = isLeftEditable;
+		this.isRightEditable = isRightEditable;
 		this.relationshipComputer = relationshipComputer;
 	}
 
@@ -224,7 +247,11 @@ public class ComputeDiffsToMerge {
 				}
 			}
 
-			Set<Diff> dependencies = relationshipComputer.getDirectMergeDependencies(diff, rightToLeft);
+			boolean mergeRightToLeft = rightToLeft;
+			if (mergeMode != null) {
+				mergeRightToLeft = !mergeMode.isLeftToRight(diff, isLeftEditable, isRightEditable);
+			}
+			Set<Diff> dependencies = relationshipComputer.getDirectMergeDependencies(diff, mergeRightToLeft);
 			for (Diff required : dependencies) {
 				addDiff(required, consequences, diffPath);
 			}
@@ -233,7 +260,7 @@ public class ComputeDiffsToMerge {
 			computing.remove(diff);
 
 			final Set<Diff> directResultingMerges = relationshipComputer.getDirectResultingMerges(diff,
-					rightToLeft);
+					mergeRightToLeft);
 			consequences.addAll(directResultingMerges);
 
 			if (addedToPath) {

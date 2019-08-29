@@ -15,6 +15,7 @@ import static com.google.common.base.Predicates.alwaysTrue;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.DifferenceSource.LEFT;
 import static org.eclipse.emf.compare.merge.AbstractMerger.isInTerminalState;
+import static org.eclipse.emf.compare.merge.IMergeCriterion.NONE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 
 import com.google.common.collect.Sets;
@@ -35,6 +36,7 @@ import org.eclipse.emf.compare.internal.merge.MergeMode;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.merge.ComputeDiffsToMerge;
+import org.eclipse.emf.compare.merge.DiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
@@ -114,7 +116,8 @@ public class MergeConflictingRunnable extends AbstractMergeRunnable implements I
 		}
 
 		final List<Diff> affectedDiffs = new ArrayList<Diff>();
-		final ComputeDiffsToMerge computer = new ComputeDiffsToMerge(!leftToRight, registry);
+		final ComputeDiffsToMerge computer = new ComputeDiffsToMerge(getMergeMode(), isLeftEditable(),
+				isRightEditable(), new DiffRelationshipComputer(registry, NONE));
 		computer.failOnRealConflictUnless(alwaysTrue());
 
 		conflictingDiffs.add(diff);

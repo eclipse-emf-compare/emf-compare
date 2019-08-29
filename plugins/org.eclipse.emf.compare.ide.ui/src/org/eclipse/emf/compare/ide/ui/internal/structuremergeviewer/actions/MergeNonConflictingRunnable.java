@@ -235,8 +235,9 @@ public class MergeNonConflictingRunnable extends AbstractMergeRunnable implement
 			Registry mergerRegistry) {
 		final List<Diff> affectedDiffs = new ArrayList<Diff>();
 		final Monitor emfMonitor = new BasicMonitor();
-		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(!leftToRight,
-				getDiffRelationshipComputer(mergerRegistry)).failOnRealConflictUnless(alwaysFalse());
+		ComputeDiffsToMerge computer = new ComputeDiffsToMerge(getMergeMode(), isLeftEditable(),
+				isRightEditable(), getDiffRelationshipComputer(mergerRegistry))
+						.failOnRealConflictUnless(alwaysFalse());
 
 		final Predicate<? super Diff> filter;
 		MergeMode mode = getMergeMode();
