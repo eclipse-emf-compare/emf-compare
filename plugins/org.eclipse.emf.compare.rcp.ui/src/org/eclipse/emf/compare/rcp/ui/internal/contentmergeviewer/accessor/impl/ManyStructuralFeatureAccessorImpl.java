@@ -33,6 +33,7 @@ import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
@@ -77,7 +78,8 @@ public class ManyStructuralFeatureAccessorImpl extends AbstractStructuralFeature
 		List<?> list = getFeatureValues(getSide());
 		ret = createMergeViewerItemFrom(list);
 
-		if (getSide() != MergeViewerSide.ANCESTOR) {
+		if (getSide() != MergeViewerSide.ANCESTOR
+				&& list.size() < EMFCompareConstants.LIST_SIZE_INSERTION_POINT_THRESHOLD) {
 			ret = createInsertionPoints(ret);
 		}
 

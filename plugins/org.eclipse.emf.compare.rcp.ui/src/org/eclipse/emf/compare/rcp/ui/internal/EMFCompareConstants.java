@@ -27,4 +27,15 @@ public final class EMFCompareConstants {
 
 	public static final String NODE_TYPE__EMF_EOBJECT = "NODE_TYPE__EMF_EOBJECT"; //$NON-NLS-1$
 
+	/**
+	 * If the list on any one of the sides we're trying to display in the UI contains more elements than the
+	 * given threshold, don't try and compute the insertion index for differences merging. On the one hand,
+	 * showing insertion points in lists with so many elements wouldn't really be human readable, on the other
+	 * hand, trying to compute insertion indices for too large lists will easily result in OutOfMemoryErrors.
+	 * For example, if the left and right sides contain 60000 elements, we'll end up trying to instantiate an
+	 * array with the following signature: "int[60000][60000]" to compute the LCS (see DiffUtils). Such an
+	 * array would cost 13GB of memory as a conservative estimate.
+	 */
+	public static final short LIST_SIZE_INSERTION_POINT_THRESHOLD = 10000;
+
 }

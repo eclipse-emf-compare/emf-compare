@@ -31,6 +31,7 @@ import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.item.IMergeViewerItem;
@@ -119,7 +120,7 @@ class PropertyDescriptorItem extends PropertyItem {
 					getSide()));
 		}
 
-		if (haveDiffs()) {
+		if (haveDiffs() && listValue.size() < EMFCompareConstants.LIST_SIZE_INSERTION_POINT_THRESHOLD) {
 			createPlaceholders(propertyItems);
 		}
 	}
@@ -154,7 +155,7 @@ class PropertyDescriptorItem extends PropertyItem {
 							final int count = size(filter(subList, IMergeViewerItem.IS_INSERTION_POINT));
 							index = Math.min(insertionIndex + count, propertyItems.size());
 						} else {
-						    index = 0;
+							index = 0;
 						}
 
 						// Create the placeholder and insert it at the appropriate

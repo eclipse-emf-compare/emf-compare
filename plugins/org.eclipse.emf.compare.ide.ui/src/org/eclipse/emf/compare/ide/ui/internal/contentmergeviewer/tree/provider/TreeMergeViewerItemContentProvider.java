@@ -54,6 +54,7 @@ import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.graph.IGraphView;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.match.impl.NotLoadedFragmentMatch;
+import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareConstants;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.ResourceAttachmentChangeMergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.internal.util.MergeViewerUtil;
@@ -79,17 +80,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * @author Stefan Dirix
  */
 public class TreeMergeViewerItemContentProvider implements IMergeViewerItemContentProvider {
-
-	/**
-	 * If the list on any one of the sides contains more elements than the given threshold, don't try and
-	 * compute the insertion index for differences merging. On the one hand, showing insertion points in lists
-	 * with so many elements wouldn't reallybe human readable, on the other hand, trying to compute insertion
-	 * indices for too large lists will easily result in OutOfMemoryErrors. For example, if the left and right
-	 * sides contain 60000 elements, we'll end up trying to instantiate an array with the following signature:
-	 * "int[60000][60000]" to compute the LCS (see DiffUtils). Such an array would cost 13GB of memory as a
-	 * conservative estimate.
-	 */
-	private static final short LIST_SIZE_INSERTION_POINT_THRESHOLD = 10000;
 
 	/**
 	 * {@inheritDoc}
@@ -311,8 +301,8 @@ public class TreeMergeViewerItemContentProvider implements IMergeViewerItemConte
 		List<Object> ancestorContent = getChildrenFromContentProvider(
 				getSideValue(parent, MergeViewerSide.ANCESTOR), adapterFactory);
 
-		if (sideContent.size() > LIST_SIZE_INSERTION_POINT_THRESHOLD
-				&& oppositeContent.size() > LIST_SIZE_INSERTION_POINT_THRESHOLD) {
+		if (sideContent.size() > EMFCompareConstants.LIST_SIZE_INSERTION_POINT_THRESHOLD
+				&& oppositeContent.size() > EMFCompareConstants.LIST_SIZE_INSERTION_POINT_THRESHOLD) {
 			return new ArrayList<IMergeViewerItem>(values);
 		}
 
