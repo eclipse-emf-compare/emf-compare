@@ -42,6 +42,8 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.diff.FeatureFilter;
+import org.eclipse.emf.compare.internal.FeatureFilterAdapter;
 import org.eclipse.emf.compare.internal.ThreeWayTextDiff;
 import org.eclipse.emf.compare.internal.conflict.DiffTreeIterator;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
@@ -277,9 +279,19 @@ public class DefaultConflictDetector implements IConflictDetector {
 			} else if (diff.getMatch() == candidate.getMatch()
 					&& diff.getReference() == candidate.getReference()) {
 				// Same value added in the same container/reference couple
-				if (!diffIsDelete && !candidateIsDelete && matchingIndices(diff.getMatch(),
-						diff.getReference(), diff.getValue(), candidate.getValue())) {
-					kind = ConflictKind.PSEUDO;
+				if (!diffIsDelete && !candidateIsDelete) {
+					FeatureFilter featureFilter = getFeatureFilter(comparison);
+					if (featureFilter == null || featureFilter.checkForOrderingChanges(diff.getReference())) {
+						if (matchingIndices(diff.getMatch(), diff.getReference(), diff.getValue(),
+								candidate.getValue())) {
+							kind = ConflictKind.PSEUDO;
+						} else {
+						    // real conflict
+						}
+					} else {
+						// order is irrelevant so this is not a real conflict
+						kind = ConflictKind.PSEUDO;
+					}
 				}
 			}
 			conflictOn(comparison, diff, candidate, kind);
@@ -295,6 +307,14 @@ public class DefaultConflictDetector implements IConflictDetector {
 				conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 			}
 		}
+	}
+
+	private FeatureFilter getFeatureFilter(Comparison comparison) {
+		Object adapter = EcoreUtil.getExistingAdapter(comparison, FeatureFilterAdapter.class);
+		if (adapter instanceof FeatureFilterAdapter) {
+			return ((FeatureFilterAdapter)adapter).getFeatureFilter();
+		}
+		return null;
 	}
 
 	/**
@@ -806,10 +826,18 @@ public class DefaultConflictDetector implements IConflictDetector {
 																// same value can appear twice.
 						conflictOn(comparison, diff, candidate, ConflictKind.REAL);
 					}
-				} else if (matchingIndices(diff.getMatch(), feature, addedValue, candidateValue)) {
-					conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
 				} else {
-					conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+					FeatureFilter featureFilter = getFeatureFilter(comparison);
+					if (featureFilter == null || featureFilter.checkForOrderingChanges(feature)) {
+						if (matchingIndices(diff.getMatch(), feature, addedValue, candidateValue)) {
+							conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
+						} else {
+							conflictOn(comparison, diff, candidate, ConflictKind.REAL);
+						}
+					} else {
+						// order is irrelevant so this is not a real conflict
+						conflictOn(comparison, diff, candidate, ConflictKind.PSEUDO);
+					}
 				}
 			} else if (!feature.isUnique()) {
 				if (comparison.getEqualityHelper().matchingValues(addedValue, candidateValue)) {

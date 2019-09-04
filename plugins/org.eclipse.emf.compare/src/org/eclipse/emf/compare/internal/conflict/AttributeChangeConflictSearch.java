@@ -31,6 +31,7 @@ import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.diff.FeatureFilter;
 import org.eclipse.emf.ecore.EAttribute;
 
 /**
@@ -76,10 +77,15 @@ public class AttributeChangeConflictSearch {
 					Object candidateValue = ((AttributeChange)candidate).getValue();
 					if (comparison.getEqualityHelper().matchingValues(value, candidateValue)) {
 						// This is a conflict. Is it real?
-						if (matchingIndices(diff.getMatch(), feature, value, candidateValue)) {
-							conflict(candidate, PSEUDO);
+						FeatureFilter featureFilter = getFeatureFilter(comparison);
+						if (featureFilter == null || featureFilter.checkForOrderingChanges(feature)) {
+							if (matchingIndices(diff.getMatch(), feature, value, candidateValue)) {
+								conflict(candidate, PSEUDO);
+							} else {
+								conflict(candidate, REAL);
+							}
 						} else {
-							conflict(candidate, REAL);
+							conflict(candidate, PSEUDO);
 						}
 					}
 				}

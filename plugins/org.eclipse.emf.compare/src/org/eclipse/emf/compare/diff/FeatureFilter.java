@@ -30,6 +30,14 @@ import org.eclipse.emf.ecore.EcorePackage;
  * {@link FeatureFilter}s will be used by the default implementation of a diff engine in order to determine
  * which features it is to check for differences. Any feature that is not returned by this filter will be
  * ignored by the diff engine.
+ * <p>
+ * The feature filter will be attached to the comparison once created and its lifecycle will thus be the
+ * comparison's. FeatureFilters might be used by later parts of the comparison and merge process. For example,
+ * the default conflict detectors will make use of it in order to avoid detecting ordering conflicts on
+ * references which ordering is supposed to be ignored. The merge process could use the same in order to
+ * determine if it needs to insert elements at the right position in the target lists or just append to the
+ * end of these lists.
+ * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */

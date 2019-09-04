@@ -41,6 +41,8 @@ import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.diff.FeatureFilter;
+import org.eclipse.emf.compare.internal.FeatureFilterAdapter;
 import org.eclipse.emf.compare.internal.ThreeWayTextDiff;
 import org.eclipse.emf.compare.utils.ReferenceUtil;
 import org.eclipse.emf.ecore.EAttribute;
@@ -425,5 +427,13 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 				return input.getOrigin() != null && (input.getLeft() == null || input.getRight() == null);
 			}
 		};
+	}
+
+	protected FeatureFilter getFeatureFilter(Comparison comp) {
+		Object adapter = EcoreUtil.getExistingAdapter(comp, FeatureFilterAdapter.class);
+		if (adapter instanceof FeatureFilterAdapter) {
+			return ((FeatureFilterAdapter)adapter).getFeatureFilter();
+		}
+		return null;
 	}
 }

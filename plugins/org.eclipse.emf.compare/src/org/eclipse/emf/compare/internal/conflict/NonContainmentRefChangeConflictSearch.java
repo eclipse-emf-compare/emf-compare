@@ -30,6 +30,7 @@ import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.diff.FeatureFilter;
 import org.eclipse.emf.ecore.EReference;
 
 /**
@@ -73,10 +74,15 @@ public class NonContainmentRefChangeConflictSearch {
 					Object candidateValue = ((ReferenceChange)candidate).getValue();
 					if (comparison.getEqualityHelper().matchingValues(value, candidateValue)) {
 						// This is a conflict. Is it real?
-						if (matchingIndices(diff.getMatch(), feature, value, candidateValue)) {
-							conflict(candidate, PSEUDO);
+						FeatureFilter featureFilter = getFeatureFilter(comparison);
+						if (featureFilter == null || featureFilter.checkForOrderingChanges(feature)) {
+							if (matchingIndices(diff.getMatch(), feature, value, candidateValue)) {
+								conflict(candidate, PSEUDO);
+							} else {
+								conflict(candidate, REAL);
+							}
 						} else {
-							conflict(candidate, REAL);
+							conflict(candidate, PSEUDO);
 						}
 					}
 				}

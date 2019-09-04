@@ -109,7 +109,8 @@ public final class MatchUtil {
 			Object value2) {
 		boolean matching = false;
 		if (feature.isMany()) {
-			// FIXME the detection _will_ fail for non-unique lists with multiple identical values...
+			// the detection _will_ fail for non-unique lists with multiple identical values. Make sure that
+			// we don't go through here for non-unique attributes
 			int leftIndex = computeIndex(match, feature, value1, LEFT);
 			int rightIndex = computeIndex(match, feature, value2, RIGHT);
 			matching = leftIndex == rightIndex;

@@ -28,6 +28,7 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.internal.FeatureFilterAdapter;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
 import org.eclipse.emf.compare.utils.IEqualityHelper;
@@ -37,6 +38,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 
@@ -142,12 +144,23 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *            The monitor to report progress or to check for cancellation.
 	 */
 	protected void checkForDifferences(Match match, Monitor monitor) {
+		Comparison comparison = match.getComparison();
+		FeatureFilterAdapter ffa = (FeatureFilterAdapter)EcoreUtil.getExistingAdapter(comparison,
+				FeatureFilterAdapter.class);
+		if (ffa == null) {
+			FeatureFilter featureFilter = createFeatureFilter();
+			ffa = new FeatureFilterAdapter(featureFilter);
+			comparison.eAdapters().add(ffa);
+			ffa.setTarget(comparison);
+		}
+		internalCheckForDifferences(match, monitor, ffa.getFeatureFilter());
+	}
+
+	private void internalCheckForDifferences(Match match, Monitor monitor, FeatureFilter featureFilter) {
 		if (monitor.isCanceled()) {
 			throw new ComparisonCanceledException();
 		}
 		checkResourceAttachment(match, monitor);
-
-		final FeatureFilter featureFilter = createFeatureFilter();
 
 		final Iterator<EReference> references = featureFilter.getReferencesToCheck(match);
 		while (references.hasNext()) {
@@ -164,7 +177,7 @@ public class DefaultDiffEngine implements IDiffEngine {
 		}
 
 		for (Match submatch : match.getSubmatches()) {
-			checkForDifferences(submatch, monitor);
+			internalCheckForDifferences(submatch, monitor, featureFilter);
 		}
 	}
 

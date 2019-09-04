@@ -34,6 +34,7 @@ import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.diff.FeatureFilter;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 
@@ -76,10 +77,22 @@ public class ContainmentRefChangeConflictSearch {
 			for (ReferenceChange candidate : Iterables.filter(refChanges,
 					and(possiblyConflictingWith(diff), ofKind(ADD, CHANGE)))) {
 				if (candidate.getReference().isContainment()) {
-					if (candidate.getReference() == feature && candidate.getMatch() == diff.getMatch()
-							&& matchingIndices(diff.getMatch(), feature, value, candidate.getValue())) {
-						conflict(candidate, PSEUDO);
+					if (candidate.getReference() == feature && candidate.getMatch() == diff.getMatch()) {
+						// added in the same feature in the same match.
+						// Might be a real conflict if order is significant and not at the same index
+						FeatureFilter featureFilter = getFeatureFilter(comparison);
+						if (featureFilter == null || featureFilter.checkForOrderingChanges(feature)) {
+							if (matchingIndices(diff.getMatch(), feature, value, candidate.getValue())) {
+								conflict(candidate, PSEUDO);
+							} else {
+								conflict(candidate, REAL);
+							}
+						} else {
+							// order doesn't matter
+							conflict(candidate, PSEUDO);
+						}
 					} else {
+						// added in a different feature or another match
 						conflict(candidate, REAL);
 					}
 				}
