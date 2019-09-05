@@ -201,10 +201,14 @@ public class NonContainmentRefChangeConflictSearch {
 			for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
 					instanceOf(ReferenceChange.class), onFeature(feature), ofKind(MOVE)))) {
 				Object candidateValue = ((ReferenceChange)candidate).getValue();
-				if (matchingIndices(diff.getMatch(), feature, value, candidateValue)) {
-					conflict(candidate, PSEUDO);
-				} else {
-					conflict(candidate, REAL);
+
+				// This can only be a conflict if the value moved is the same
+				if (comparison.getEqualityHelper().matchingValues(value, candidateValue)) {
+					if (matchingIndices(diff.getMatch(), feature, value, candidateValue)) {
+						conflict(candidate, PSEUDO);
+					} else {
+						conflict(candidate, REAL);
+					}
 				}
 			}
 		}

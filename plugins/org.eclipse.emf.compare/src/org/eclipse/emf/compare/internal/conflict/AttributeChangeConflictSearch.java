@@ -245,10 +245,14 @@ public class AttributeChangeConflictSearch {
 			for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
 					instanceOf(AttributeChange.class), onFeature(feature), ofKind(MOVE)))) {
 				Object candidateValue = ((AttributeChange)candidate).getValue();
-				if (matchingIndices(diff.getMatch(), feature, value, candidateValue)) {
-					conflict(candidate, PSEUDO);
-				} else {
-					conflict(candidate, REAL);
+
+				// This can only be a conflict if the value moved is the same
+				if (comparison.getEqualityHelper().matchingAttributeValues(value, candidateValue)) {
+					if (matchingIndices(diff.getMatch(), feature, value, candidateValue)) {
+						conflict(candidate, PSEUDO);
+					} else {
+						conflict(candidate, REAL);
+					}
 				}
 			}
 		}
