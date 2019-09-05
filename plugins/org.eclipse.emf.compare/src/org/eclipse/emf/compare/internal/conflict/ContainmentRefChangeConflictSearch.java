@@ -283,9 +283,22 @@ public class ContainmentRefChangeConflictSearch {
 			for (ReferenceChange candidate : Iterables.filter(refChanges,
 					and(possiblyConflictingWith(diff), ofKind(MOVE)))) {
 				if (candidate.getReference().isContainment()) {
-					if (candidate.getReference() == feature && candidate.getMatch() == diff.getMatch()
-							&& matchingIndices(diff.getMatch(), feature, value, candidate.getValue())) {
-						conflict(candidate, PSEUDO);
+					// This is a containment move. It is the only case in which we could have a "move"
+					// difference in a reference where order is not significant
+					if (candidate.getReference() == feature && candidate.getMatch() == diff.getMatch()) {
+						// Same element has been moved into the same container on both sides. If we care about
+						// ordering in this new containment reference, check the indices to detect potential
+						// real conflicts.
+						FeatureFilter featureFilter = getFeatureFilter(comparison);
+						if (featureFilter == null || featureFilter.checkForOrderingChanges(feature)) {
+							if (matchingIndices(diff.getMatch(), feature, value, candidate.getValue())) {
+								conflict(candidate, PSEUDO);
+							} else {
+								conflict(candidate, REAL);
+							}
+						} else {
+							conflict(candidate, PSEUDO);
+						}
 					} else {
 						conflict(candidate, REAL);
 					}
