@@ -25,7 +25,9 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.DifferenceState;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.internal.ThreeWayTextDiff;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
@@ -372,10 +374,39 @@ public class AttributeChangeMerger extends AbstractMerger {
 
 		Set<Object> ignoredElements = DiffUtil.computeIgnoredElements(comparison, equalityHelper, targetList,
 				diff, rightToLeft);
-		if (ignoredElements.isEmpty()) {
-			ignoredElements = Collections.singleton(valueToMove);
-		} else {
-			ignoredElements.add(valueToMove);
+		// We're "moving" an element, so it is present on both sides and should not be part of the LCS
+		// computation since it is our move target. However, if we also have a diff on that same value, we do
+		// not have to ignore it.
+		Iterator<Diff> siblingDiffs = diff.getMatch().getDifferences().stream()
+				.filter(AttributeChange.class::isInstance)
+				.filter(d -> d.getState() == DifferenceState.UNRESOLVED && equalityHelper
+						.matchingAttributeValues(valueToMove, ((AttributeChange)d).getValue()))
+				.iterator();
+		boolean ignoreValue = true;
+		while (siblingDiffs.hasNext()) {
+			Diff sibling = siblingDiffs.next();
+			if (sibling.getKind() == DifferenceKind.ADD) {
+				// We have another duplicate of that value on this side that corresponds to none on the other
+				if (sibling.getSource() == DifferenceSource.LEFT && rightToLeft) {
+					ignoreValue = false;
+				} else if (sibling.getSource() == DifferenceSource.RIGHT && !rightToLeft) {
+					ignoreValue = false;
+				}
+			} else if (sibling.getKind() == DifferenceKind.DELETE) {
+				// reverse the above
+				if (sibling.getSource() == DifferenceSource.LEFT && !rightToLeft) {
+					ignoreValue = false;
+				} else if (sibling.getSource() == DifferenceSource.RIGHT && rightToLeft) {
+					ignoreValue = false;
+				}
+			}
+		}
+		if (ignoreValue) {
+			if (ignoredElements.isEmpty()) {
+				ignoredElements = Collections.singleton(valueToMove);
+			} else {
+				ignoredElements.add(valueToMove);
+			}
 		}
 		List<Object> lcs = DiffUtil.longestCommonSubsequence(comparison, ignoredElements, sourceList,
 				copyTarget);

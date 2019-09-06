@@ -16,11 +16,9 @@ package org.eclipse.emf.compare.internal.utils;
 import static com.google.common.collect.Lists.newArrayList;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 
 import java.lang.ref.WeakReference;
@@ -917,23 +915,22 @@ public final class DiffUtil {
 		}
 
 		if (lcsIndexOfSubsequenceStart > -1) {
-			// Do we have duplicates before A in the lcs?
-			final Multiset<E> dupesLCS = HashMultiset.create(lcs.subList(0, lcsIndexOfSubsequenceStart + 1));
-			final E subsequenceStart = lcs.get(lcsIndexOfSubsequenceStart);
-			int duplicatesToGo = dupesLCS.count(subsequenceStart) - 1;
+			// Now browse our target list to find the index of that lcs element in it
+			int targetCursor = 0;
+			for (int i = 0; i <= lcsIndexOfSubsequenceStart; i++) {
+				E lcsElement = lcs.get(i);
 
-			// Then, find the index of "A" in target
-			for (int i = 0; i < target.size() && insertionIndex == -1; i++) {
-				final E targetElement = target.get(i);
+				boolean isInLCS = false;
+				for (int j = targetCursor; j < target.size() && !isInLCS; j++) {
+					E targetElement = target.get(j);
 
-				if (equalityHelper.matchingValues(subsequenceStart, targetElement)) {
-					if (duplicatesToGo > 0) {
-						duplicatesToGo--;
-					} else {
-						insertionIndex = i + 1;
+					if (equalityHelper.matchingValues(lcsElement, targetElement)) {
+						isInLCS = true;
+						targetCursor = j + 1;
 					}
 				}
 			}
+			insertionIndex = targetCursor;
 		}
 
 		return insertionIndex;
