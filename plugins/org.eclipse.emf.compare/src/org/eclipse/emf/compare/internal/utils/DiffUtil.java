@@ -1079,10 +1079,12 @@ public final class DiffUtil {
 		// empty set.
 		Set<Object> ignoredElements = computeIgnoredElements(comparison, comparison.getEqualityHelper(),
 				targetList, diff, rightToLeft);
-		if (ignoredElements.isEmpty()) {
-			ignoredElements = Collections.singleton(changedValue);
-		} else {
-			ignoredElements.add(changedValue);
+		if (diff.getKind() == DifferenceKind.MOVE) {
+			if (ignoredElements.isEmpty()) {
+				ignoredElements = Collections.singleton(changedValue);
+			} else {
+				ignoredElements.add(changedValue);
+			}
 		}
 
 		return DiffUtil.findInsertionIndex(comparison, ignoredElements, sourceList, targetList, changedValue);
