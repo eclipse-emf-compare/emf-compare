@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.utils;
 
+import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.or;
@@ -24,6 +25,7 @@ import static org.eclipse.emf.compare.DifferenceKind.ADD;
 import static org.eclipse.emf.compare.DifferenceKind.CHANGE;
 import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.DifferenceKind.MOVE;
+import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 
@@ -342,8 +344,9 @@ public final class ComparisonUtil {
 	}
 
 	/**
-	 * When merging a {@link Diff}, returns the sub diffs of this given diff, and all associated diffs (see
-	 * {@link DiffUtil#getAssociatedDiffs(Iterable, boolean, Diff)}) of these sub diffs.
+	 * When merging a {@link Diff}, returns the sub diffs <b>from the same side</b> of this given diff, and
+	 * all associated diffs (see {@link DiffUtil#getAssociatedDiffs(Iterable, boolean, Diff)}) of these sub
+	 * diffs.
 	 * <p>
 	 * If the diff is an {@link org.eclipse.emf.compare.AttributeChange}, a
 	 * {@link org.eclipse.emf.compare.FeatureMapChange} or a
@@ -376,9 +379,11 @@ public final class ComparisonUtil {
 						if (matchOfValue != null) {
 							final Iterable<Diff> subDiffs;
 							if (!firstLevelOnly) {
-								subDiffs = filter(matchOfValue.getAllDifferences(), CASCADING_DIFF);
+								subDiffs = filter(matchOfValue.getAllDifferences(),
+										and(fromSide(diff.getSource()), CASCADING_DIFF));
 							} else {
-								subDiffs = filter(matchOfValue.getDifferences(), CASCADING_DIFF);
+								subDiffs = filter(matchOfValue.getDifferences(),
+										and(fromSide(diff.getSource()), CASCADING_DIFF));
 							}
 							addAll(processedDiffs, subDiffs);
 							final Iterable<Diff> associatedDiffs = getAssociatedDiffs(diff, subDiffs,

@@ -94,13 +94,13 @@ public class ComparisonUtilTest {
 		leftToRight = false;
 		subDiffs = ComparisonUtil.getSubDiffs(leftToRight).apply(leftPeriodicalDiff3Way);
 
-		assertEquals(7, Iterables.size(subDiffs));
+		assertEquals(5, Iterables.size(subDiffs));
 
 		// Left to right on a deleted element
 		leftToRight = true;
 		subDiffs = ComparisonUtil.getSubDiffs(leftToRight).apply(leftPeriodicalDiff3Way);
 
-		assertEquals(7, Iterables.size(subDiffs));
+		assertEquals(5, Iterables.size(subDiffs));
 
 		// Right to left on a added element
 		final Predicate<? super Diff> leftMagazine3Way = and(fromSide(DifferenceSource.LEFT),

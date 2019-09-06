@@ -710,8 +710,10 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 		}
 
 		if (target.getConflict() != null && target.getConflict().getKind() == PSEUDO) {
-			impliedMerges.addAll(target.getConflict().getDifferences());
-			impliedMerges.remove(target);
+			// Only diffs _from the same side_ are implied!
+			target.getConflict().getDifferences().stream()
+					.filter(d -> d != target && d.getSource() == target.getSource())
+					.forEach(impliedMerges::add);
 		}
 
 		// If a diff refines another, we have to check if the "macro" diff has to be merged with it. It is the
