@@ -471,6 +471,13 @@ public class AttributeChangeMerger extends AbstractMerger {
 		// Then the index, in the target, at which this value needs to be moved
 		int insertionIndex = DiffUtil.findInsertionIndexForElementAt(comparison, sourceList, copyTarget, lcs,
 				currentIndexInSource);
+		/*
+		 * However, it could still have been located "before" its new index, in which case we need to take it
+		 * into account.
+		 */
+		if (insertionIndex > currentIndexInTarget) {
+			insertionIndex--;
+		}
 
 		if (targetList instanceof EList<?>) {
 			if (insertionIndex < 0 || insertionIndex >= targetList.size()) {
