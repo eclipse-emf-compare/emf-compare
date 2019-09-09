@@ -1,0 +1,13 @@
+target "EMF Compare with extras based on 2019-06"
+
+include "../2019-06-sdk.tpd"
+
+with source, requirements
+
+// Sirius
+
+location "https://download.eclipse.org/sirius/updates/releases/6.2.3/2019-06/" {
+	org.eclipse.sirius lazy
+	org.eclipse.sirius.diagram lazy
+	org.eclipse.sirius.runtime.feature.group lazy
+}
