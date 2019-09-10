@@ -326,37 +326,38 @@ public final class SynchronizationModel implements IDiagnosable {
 				if (diagnosticData.isEmpty()) {
 					continue;
 				}
-				// source of problem
-				Object object = diagnosticData.get(0);
-
-				if (object instanceof ResourceStatus) {
-					ResourceStatus status = (ResourceStatus)object;
-					final IPath resourceIPath = status.getPath();
-					if (containsResourceWithPath(resourceIPath)) {
-						d.merge(child);
-					}
-				} else if (object instanceof Resource.Diagnostic) {
-					Resource.Diagnostic resourceDiagnostic = (Resource.Diagnostic)object;
-					String location = resourceDiagnostic.getLocation();
-					URI locationUri = URI.createURI(location, false);
-					String fullPath = null;
-					if (locationUri.isPlatform()) {
-						fullPath = locationUri.toPlatformString(true);
+				// Try and find the problem's source
+				for (Object potentialSource : diagnosticData) {
+					if (potentialSource instanceof ResourceStatus) {
+						ResourceStatus status = (ResourceStatus)potentialSource;
+						final IPath resourceIPath = status.getPath();
+						if (containsResourceWithPath(resourceIPath)) {
+							d.merge(child);
+						}
+					} else if (potentialSource instanceof Resource.Diagnostic) {
+						Resource.Diagnostic resourceDiagnostic = (Resource.Diagnostic)potentialSource;
+						String location = resourceDiagnostic.getLocation();
+						URI locationUri = URI.createURI(location, false);
+						String fullPath = null;
+						if (locationUri.isPlatform()) {
+							fullPath = locationUri.toPlatformString(true);
+						} else {
+							fullPath = locationUri.toString();
+						}
+						if (fullPath == null) {
+							continue;
+						}
+						final Path path = new Path(fullPath);
+						if (containsResourceWithPath(path)) {
+							d.merge(child);
+						}
 					} else {
-						fullPath = locationUri.toString();
-					}
-					if (fullPath == null) {
-						continue;
-					}
-					final Path path = new Path(fullPath);
-					if (containsResourceWithPath(path)) {
-						d.merge(child);
-					}
-				} else {
-					// best guess - if the source of the problem is one of the resources, we are interested in
-					// the diagnostic
-					if (syncModel.getResources().contains(object)) {
-						d.merge(child);
+						// best guess - if the source of the problem is one of the resources, we are
+						// interested in
+						// the diagnostic
+						if (syncModel.getResources().contains(potentialSource)) {
+							d.merge(child);
+						}
 					}
 				}
 			}
