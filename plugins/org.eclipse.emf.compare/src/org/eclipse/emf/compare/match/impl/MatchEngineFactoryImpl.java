@@ -43,6 +43,9 @@ public class MatchEngineFactoryImpl implements IMatchEngine.Factory {
 	/** A match engine may need a specific equality helper extension provider. */
 	private EqualityHelperExtensionProvider.Descriptor.Registry equalityHelperExtensionProviderRegistry;
 
+	/** Tells this factory whether the engines it creates should use identifiers or not. */
+	private UseIdentifiers shouldUseIdentifiers;
+
 	/**
 	 * Constructor that instantiate a {@link DefaultMatchEngine}. This match engine will use a the standalone
 	 * weight provider registry {@link WeightProviderDescriptorRegistryImpl.createStandaloneInstance()}.
@@ -94,25 +97,9 @@ public class MatchEngineFactoryImpl implements IMatchEngine.Factory {
 	public MatchEngineFactoryImpl(UseIdentifiers useIDs,
 			WeightProvider.Descriptor.Registry weightProviderRegistry,
 			EqualityHelperExtensionProvider.Descriptor.Registry equalityHelperExtensionProviderRegistry) {
-		final IComparisonFactory comparisonFactory = new DefaultComparisonFactory(
-				new DefaultEqualityHelperFactory());
+		this.shouldUseIdentifiers = useIDs;
 		this.weightProviderRegistry = weightProviderRegistry;
 		this.equalityHelperExtensionProviderRegistry = equalityHelperExtensionProviderRegistry;
-		final IEObjectMatcher matcher = DefaultMatchEngine.createDefaultEObjectMatcher(useIDs,
-				weightProviderRegistry, equalityHelperExtensionProviderRegistry);
-		matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
-	}
-
-	/**
-	 * Constructor that instantiate a {@link DefaultMatchEngine} with the given parameters.
-	 * 
-	 * @param matcher
-	 *            The matcher that will be in charge of pairing EObjects together for this comparison process.
-	 * @param comparisonFactory
-	 *            factory that will be use to instantiate Comparison as return by match() methods.
-	 */
-	public MatchEngineFactoryImpl(IEObjectMatcher matcher, IComparisonFactory comparisonFactory) {
-		matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
 	}
 
 	/**
@@ -121,6 +108,13 @@ public class MatchEngineFactoryImpl implements IMatchEngine.Factory {
 	 * @see org.eclipse.emf.compare.match.IMatchEngine.Factory#getMatchEngine()
 	 */
 	public IMatchEngine getMatchEngine() {
+		if (matchEngine == null) {
+			final IComparisonFactory comparisonFactory = new DefaultComparisonFactory(
+					new DefaultEqualityHelperFactory());
+			final IEObjectMatcher matcher = DefaultMatchEngine.createDefaultEObjectMatcher(
+					shouldUseIdentifiers, weightProviderRegistry, equalityHelperExtensionProviderRegistry);
+			matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
+		}
 		return matchEngine;
 	}
 
@@ -159,17 +153,19 @@ public class MatchEngineFactoryImpl implements IMatchEngine.Factory {
 	 */
 	void setWeightProviderRegistry(WeightProvider.Descriptor.Registry registry) {
 		this.weightProviderRegistry = registry;
+		this.matchEngine = null;
 	}
 
 	/**
-	 * The match engine may need a Equality Helper Extension
+	 * The match engine may need a Equality Helper Extension.
 	 * 
-	 * @param registry
+	 * @param equalityHelperExtensionProviderRegistry
 	 *            the registry to associate with the match engine.
 	 */
 	public void setEqualityHelperExtensionProviderRegistry(
 			EqualityHelperExtensionProvider.Descriptor.Registry equalityHelperExtensionProviderRegistry) {
 		this.equalityHelperExtensionProviderRegistry = equalityHelperExtensionProviderRegistry;
+		this.matchEngine = null;
 	}
 
 }
