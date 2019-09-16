@@ -72,6 +72,12 @@ public class DefaultReqEngine implements IReqEngine {
 	/** The logger. */
 	private static final Logger LOGGER = Logger.getLogger(DefaultReqEngine.class);
 
+	/** The time before we expire the values in {@link #cachedDifferences} after access, in seconds. */
+	private static final long CACHE_EXPIRATION_TIME = 30L;
+
+	/** The initial capacity of our {@link #cachedDifferences cache of differences}. */
+	private static final int CACHE_INITIAL_CAPACITY = 200;
+
 	/**
 	 * We'll be computing the list of differences related to a given EObject
 	 * ({@link #getDifferenceOnGivenObject(Comparison, EObject, DifferenceSource, DifferenceKind)}) a lot of
@@ -79,7 +85,8 @@ public class DefaultReqEngine implements IReqEngine {
 	 * anew at every call.
 	 */
 	private final Cache<CacheKey, Set<Diff>> cachedDifferences = CacheBuilder.newBuilder()
-			.expireAfterAccess(30L, TimeUnit.SECONDS).initialCapacity(200).build();
+			.expireAfterAccess(CACHE_EXPIRATION_TIME, TimeUnit.SECONDS)
+			.initialCapacity(CACHE_INITIAL_CAPACITY).build();
 
 	/**
 	 * {@inheritDoc}
@@ -309,8 +316,8 @@ public class DefaultReqEngine implements IReqEngine {
 	 * given object (a containment reference change or a resource attachment change if the given object has no
 	 * direct container.
 	 * 
-	 * @param object
-	 *            The object for which we seek containmnent differences.
+	 * @param eObject
+	 *            The object for which we seek containment differences.
 	 * @param source
 	 *            source of the differences. A diff from the left cannot "require" a diff from the right...
 	 * @param kind
@@ -514,6 +521,13 @@ public class DefaultReqEngine implements IReqEngine {
 		return result;
 	}
 
+	/**
+	 * Returns the DiffCrossReferencer attached on the given comparison.
+	 * 
+	 * @param comparison
+	 *            The comparison.
+	 * @return The DiffCrossReferencer attached on the given comparison.
+	 */
 	private DiffCrossReferencer getCrossReferencer(Comparison comparison) {
 		DiffCrossReferencer crossReferencer = null;
 		for (Adapter adapter : comparison.eAdapters()) {
@@ -524,6 +538,18 @@ public class DefaultReqEngine implements IReqEngine {
 		return crossReferencer;
 	}
 
+	/**
+	 * Returns the list of differences impacting the given match's sides, filtering as deep down as possible
+	 * to reduce the list of candidates as early as possible.
+	 * 
+	 * @param crossReferencer
+	 *            The cross referencer for the current comparison.
+	 * @param match
+	 *            The match which sides we need the differences of.
+	 * @param predicate
+	 *            The predicate with which to filter the list of differences.
+	 * @return The list of differences impacting the given match's sides.
+	 */
 	private Set<Diff> getDifferences(DiffCrossReferencer crossReferencer, Match match,
 			Predicate<Diff> predicate) {
 		final Collection<EStructuralFeature.Setting> leftInverseReference = safeGetInverseReferences(
@@ -552,6 +578,17 @@ public class DefaultReqEngine implements IReqEngine {
 		return result;
 	}
 
+	/**
+	 * Returns the list of inverse references known by the given cross-referencer for the given EObject, an
+	 * empty set otherwise.
+	 * 
+	 * @param crossReferencer
+	 *            The cross-referencer.
+	 * @param object
+	 *            The object we need the inverse references for.
+	 * @return The list of inverse references known by the given cross-referencer for the given EObject, an
+	 *         empty set otherwise.
+	 */
 	private Collection<EStructuralFeature.Setting> safeGetInverseReferences(
 			DiffCrossReferencer crossReferencer, EObject object) {
 		Collection<EStructuralFeature.Setting> crossRefs;
@@ -563,14 +600,32 @@ public class DefaultReqEngine implements IReqEngine {
 		return crossRefs;
 	}
 
+	/**
+	 * Represents the key for our {@link #cachedDifferences cache of differences}.
+	 * 
+	 * @author lgoubet
+	 */
 	private static class CacheKey {
+		/** The element for which we're caching the list of differences. */
 		private final EObject element;
 
+		/** The side from which the cached differences originate. */
 		private final DifferenceSource source;
 
+		/** The kind of differences we're storing in our list. */
 		private final DifferenceKind kind;
 
-		public CacheKey(EObject element, DifferenceSource source, DifferenceKind kind) {
+		/**
+		 * Constructor.
+		 * 
+		 * @param element
+		 *            The element for which we're caching the list of differences.
+		 * @param source
+		 *            The side from which the cached differences originate.
+		 * @param kind
+		 *            The kind of differences we're storing in our list.
+		 */
+		CacheKey(EObject element, DifferenceSource source, DifferenceKind kind) {
 			this.element = element;
 			this.source = source;
 			this.kind = kind;

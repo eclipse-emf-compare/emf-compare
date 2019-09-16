@@ -156,6 +156,17 @@ public class DefaultDiffEngine implements IDiffEngine {
 		internalCheckForDifferences(match, monitor, ffa.getFeatureFilter());
 	}
 
+	/**
+	 * This will be called recursively in order to check matches for potential differences, then their
+	 * sub-matches.
+	 * 
+	 * @param match
+	 *            The match that is to be checked.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation.
+	 * @param featureFilter
+	 *            The {@link FeatureFilter} for this comparison.
+	 */
 	private void internalCheckForDifferences(Match match, Monitor monitor, FeatureFilter featureFilter) {
 		if (monitor.isCanceled()) {
 			throw new ComparisonCanceledException();
@@ -1061,6 +1072,18 @@ public class DefaultDiffEngine implements IDiffEngine {
 		}
 	}
 
+	/**
+	 * Removes all elements from the given lcs from the given source list.
+	 * 
+	 * @param source
+	 *            The list we need to trim of its LCS-contained elements.
+	 * @param lcs
+	 *            The LCS between this list and another.
+	 * @param equalityHelper
+	 *            The equality helper used to determine which elements of <code>source</code> are contained in
+	 *            <code>lcs</code>.
+	 * @return The sub-list of <code>source</code> without any of its lcs elements.
+	 */
 	private List<Object> trimLCS(List<Object> source, List<Object> lcs, IEqualityHelper equalityHelper) {
 		List<Object> result = new ArrayList<>();
 		Iterator<Object> sourceIterator = source.iterator();
@@ -1271,7 +1294,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 */
 	protected void computeSingleValuedAttributeDifferences(Match match, EAttribute attribute) {
 		final Comparison comparison = match.getComparison();
-
 		final EObject left = match.getLeft();
 		Object leftValue = UNMATCHED_VALUE;
 		if (left != null) {

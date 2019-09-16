@@ -1286,6 +1286,8 @@ public final class EMFComparePredicates {
 	 * 
 	 * @param guava
 	 *            The guava predicate.
+	 * @param <T>
+	 *            the type of element this predicate applies to.
 	 * @return The java predicate.
 	 */
 	public static <T> java.util.function.Predicate<T> guavaToJava(Predicate<T> guava) {

@@ -16,10 +16,19 @@ import org.eclipse.emf.compare.diff.FeatureFilter;
 /**
  * This will be used to attach the FeatureFilter to its comparison so that it can be used after the diff
  * process.
+ * 
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class FeatureFilterAdapter extends AdapterImpl {
+	/** The wrapped feature filter. */
 	private final FeatureFilter featureFilter;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param featureFilter
+	 *            The wrapped feature filter.
+	 */
 	public FeatureFilterAdapter(FeatureFilter featureFilter) {
 		this.featureFilter = featureFilter;
 	}

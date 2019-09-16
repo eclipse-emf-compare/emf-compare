@@ -209,6 +209,17 @@ public class AttributeChangeMerger extends AbstractMerger {
 		}
 	}
 
+	/**
+	 * This will be called to remove an element from a list of non-unique objects. Since duplicates may exist
+	 * in the list, we'll use the LCS between the two sides in order to determine which of the duplicated
+	 * elements needs to be removed (if there are more than one duplicate of the value to be removed out of
+	 * the LCS, we'll remove the first one through a call to this).
+	 * 
+	 * @param diff
+	 *            The Diff to merge.
+	 * @param rightToLeft
+	 *            Direction of the merge operation.
+	 */
 	@SuppressWarnings("unchecked")
 	private void removeNonUniqueFromTarget(AttributeChange diff, boolean rightToLeft) {
 		Comparison comparison = diff.getMatch().getComparison();
@@ -318,6 +329,21 @@ public class AttributeChangeMerger extends AbstractMerger {
 		}
 	}
 
+	/**
+	 * This will be called to move a value around with the list of values from a given attribute. This assumes
+	 * that the attribute value list cannot contain duplicates.
+	 * 
+	 * @param diff
+	 *            The diff we are currently merging.
+	 * @param comparison
+	 *            Comparison holding this Diff.
+	 * @param expectedContainer
+	 *            The container in which we are reorganizing an attribute.
+	 * @param expectedValue
+	 *            The value that is to be moved within its attribute.
+	 * @param rightToLeft
+	 *            Whether we should move the value in the left or right side.
+	 */
 	@SuppressWarnings("unchecked")
 	private void doMoveUniqueAttribute(AttributeChange diff, Comparison comparison, EObject expectedContainer,
 			Object expectedValue, boolean rightToLeft) {
@@ -351,6 +377,19 @@ public class AttributeChangeMerger extends AbstractMerger {
 		}
 	}
 
+	/**
+	 * This will be called to move a value around with the list of values from a given attribute. We know that
+	 * the attribute value list can contain duplicated elements, so this will use the LCS between the two
+	 * sides in order to determine which of the duplicated values is to be moved. In the case were multiple
+	 * duplicates exist out of the LCS, we'll move the first one.
+	 * 
+	 * @param diff
+	 *            The diff we are currently merging.
+	 * @param comparison
+	 *            Comparison holding this Diff.
+	 * @param rightToLeft
+	 *            Whether we should move the value in the left or right side.
+	 */
 	@SuppressWarnings("unchecked")
 	private void doMoveNonUniqueAttribute(AttributeChange diff, Comparison comparison, boolean rightToLeft) {
 		IEqualityHelper equalityHelper = comparison.getEqualityHelper();
@@ -372,42 +411,7 @@ public class AttributeChangeMerger extends AbstractMerger {
 		List<Object> copyTarget = new ArrayList<>(targetList);
 		Object valueToMove = diff.getValue();
 
-		Set<Object> ignoredElements = DiffUtil.computeIgnoredElements(comparison, equalityHelper, targetList,
-				diff, rightToLeft);
-		// We're "moving" an element, so it is present on both sides and should not be part of the LCS
-		// computation since it is our move target. However, if we also have a diff on that same value, we do
-		// not have to ignore it.
-		Iterator<Diff> siblingDiffs = diff.getMatch().getDifferences().stream()
-				.filter(AttributeChange.class::isInstance)
-				.filter(d -> d.getState() == DifferenceState.UNRESOLVED && equalityHelper
-						.matchingAttributeValues(valueToMove, ((AttributeChange)d).getValue()))
-				.iterator();
-		boolean ignoreValue = true;
-		while (siblingDiffs.hasNext()) {
-			Diff sibling = siblingDiffs.next();
-			if (sibling.getKind() == DifferenceKind.ADD) {
-				// We have another duplicate of that value on this side that corresponds to none on the other
-				if (sibling.getSource() == DifferenceSource.LEFT && rightToLeft) {
-					ignoreValue = false;
-				} else if (sibling.getSource() == DifferenceSource.RIGHT && !rightToLeft) {
-					ignoreValue = false;
-				}
-			} else if (sibling.getKind() == DifferenceKind.DELETE) {
-				// reverse the above
-				if (sibling.getSource() == DifferenceSource.LEFT && !rightToLeft) {
-					ignoreValue = false;
-				} else if (sibling.getSource() == DifferenceSource.RIGHT && rightToLeft) {
-					ignoreValue = false;
-				}
-			}
-		}
-		if (ignoreValue) {
-			if (ignoredElements.isEmpty()) {
-				ignoredElements = Collections.singleton(valueToMove);
-			} else {
-				ignoredElements.add(valueToMove);
-			}
-		}
+		Set<Object> ignoredElements = computeIgnoredValuesForMove(comparison, diff, targetList, rightToLeft);
 		List<Object> lcs = DiffUtil.longestCommonSubsequence(comparison, ignoredElements, sourceList,
 				copyTarget);
 
@@ -493,6 +497,63 @@ public class AttributeChangeMerger extends AbstractMerger {
 				targetList.add(insertionIndex, valueToMove);
 			}
 		}
+	}
+
+	/**
+	 * This will compute the list of elements we need to ignore when computing the LCS. MOVE differences are
+	 * an exceptional case as we know the element is present in both sides, but at different locations. This
+	 * means that it should be excluded from the LCS here.
+	 * 
+	 * @param comparison
+	 *            The comparison.
+	 * @param diff
+	 *            The diff we're currently merging.
+	 * @param targetList
+	 *            List on the target side for this merge operation.
+	 * @param rightToLeft
+	 *            The direction of this merge operation.
+	 * @return The list of elements that need to be ignored when computing the LCS for this merge operation.
+	 */
+	private Set<Object> computeIgnoredValuesForMove(Comparison comparison, AttributeChange diff,
+			List<Object> targetList, boolean rightToLeft) {
+		Set<Object> ignoredElements = DiffUtil.computeIgnoredElements(comparison,
+				comparison.getEqualityHelper(), targetList, diff, rightToLeft);
+
+		// We're "moving" an element, so it is present on both sides and should not be part of the LCS
+		// computation since it is our move target. However, if we also have a diff on that same value, we do
+		// not have to ignore it.
+		Iterator<Diff> siblingDiffs = diff.getMatch().getDifferences().stream()
+				.filter(AttributeChange.class::isInstance)
+				.filter(d -> d.getState() == DifferenceState.UNRESOLVED && comparison.getEqualityHelper()
+						.matchingAttributeValues(diff.getValue(), ((AttributeChange)d).getValue()))
+				.iterator();
+		boolean ignoreValue = true;
+		while (siblingDiffs.hasNext()) {
+			Diff sibling = siblingDiffs.next();
+			if (sibling.getKind() == DifferenceKind.ADD) {
+				// We have another duplicate of that value on this side that corresponds to none on the other
+				if (sibling.getSource() == DifferenceSource.LEFT && rightToLeft) {
+					ignoreValue = false;
+				} else if (sibling.getSource() == DifferenceSource.RIGHT && !rightToLeft) {
+					ignoreValue = false;
+				}
+			} else if (sibling.getKind() == DifferenceKind.DELETE) {
+				// reverse the above
+				if (sibling.getSource() == DifferenceSource.LEFT && !rightToLeft) {
+					ignoreValue = false;
+				} else if (sibling.getSource() == DifferenceSource.RIGHT && rightToLeft) {
+					ignoreValue = false;
+				}
+			}
+		}
+		if (ignoreValue) {
+			if (ignoredElements.isEmpty()) {
+				ignoredElements = Collections.singleton(diff.getValue());
+			} else {
+				ignoredElements.add(diff.getValue());
+			}
+		}
+		return ignoredElements;
 	}
 
 	/**

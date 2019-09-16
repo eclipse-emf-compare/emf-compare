@@ -83,7 +83,7 @@ public final class Objects {
 		 */
 		public ToStringHelper add(String name, Object value) {
 			if (value == null) {
-				values.put(name, "null");
+				values.put(name, "null"); //$NON-NLS-1$
 			} else {
 				values.put(name, value.toString());
 			}
@@ -95,7 +95,7 @@ public final class Objects {
 			StringBuilder result = new StringBuilder();
 			result.append(target.getClass().getName());
 			result.append('{');
-			Joiner.on(',').withKeyValueSeparator("=").appendTo(result, values);
+			Joiner.on(',').withKeyValueSeparator("=").appendTo(result, values); //$NON-NLS-1$
 			result.append('}');
 			return result.toString();
 		}

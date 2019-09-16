@@ -55,13 +55,13 @@ public class MatchSpec extends MatchImpl {
 	public Comparison getComparison() {
 		Comparison ret = null;
 
-		EObject eContainer = eContainer();
-		while (!(eContainer instanceof Comparison) && eContainer != null) {
-			eContainer = eContainer.eContainer();
+		EObject container = eContainer();
+		while (!(container instanceof Comparison) && container != null) {
+			container = container.eContainer();
 		}
 
-		if (eContainer != null) {
-			ret = (Comparison)eContainer;
+		if (container != null) {
+			ret = (Comparison)container;
 		}
 
 		return ret;

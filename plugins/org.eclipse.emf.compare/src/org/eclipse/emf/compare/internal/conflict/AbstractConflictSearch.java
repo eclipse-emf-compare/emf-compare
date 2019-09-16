@@ -429,8 +429,15 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 		};
 	}
 
+	/**
+	 * Returns the feature filter attached to the given comparison if any.
+	 * 
+	 * @param comp
+	 *            The comparison.
+	 * @return The feature filter attached to the given comparison if any.
+	 */
 	protected FeatureFilter getFeatureFilter(Comparison comp) {
-		Object adapter = EcoreUtil.getExistingAdapter(comp, FeatureFilterAdapter.class);
+		Object adapter = EcoreUtil.getExistingAdapter(comparison, FeatureFilterAdapter.class);
 		if (adapter instanceof FeatureFilterAdapter) {
 			return ((FeatureFilterAdapter)adapter).getFeatureFilter();
 		}

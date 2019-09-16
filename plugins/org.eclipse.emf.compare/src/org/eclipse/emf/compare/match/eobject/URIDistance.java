@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.match.eobject;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.match.eobject.internal.AccessBasedLRUCache;
 import org.eclipse.emf.ecore.EObject;
 
@@ -53,12 +51,6 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 	private Function<EObject, String> fragmentComputation;
 
 	/**
-	 * An optional comparison to retrieve matches already computed. This will impact the way the uri is
-	 * computed by making sure two matching objects will have the same URI.
-	 */
-	private Optional<Comparison> underMatch = Optional.absent();
-
-	/**
 	 * Create a new {@link URIDistance}.
 	 */
 	public URIDistance() {
@@ -75,7 +67,7 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 	 *            the comparison to use to retrieve the matches.
 	 */
 	public void setComparison(Comparison comparison) {
-		this.underMatch = Optional.fromNullable(comparison);
+		// Unused by the default implementation
 	}
 
 	/**
@@ -146,7 +138,7 @@ public class URIDistance implements Function<EObject, Iterable<String>> {
 		String result = ""; //$NON-NLS-1$
 		EObject container = input.eContainer();
 		if (container != null) {
-				result = retrieveFragment(input);
+			result = retrieveFragment(input);
 		} else {
 			result = "0"; //$NON-NLS-1$
 		}

@@ -213,9 +213,11 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 */
 	private boolean isConflictingAdditionToSingleValuedReference(ReferenceChange diff,
 			ReferenceChange candidate) {
-		return (diff.getReference() == candidate.getReference() && !diff.getReference().isMany())
-				&& (isAddOrSetDiff(diff) && isAddOrSetDiff(candidate))
-				&& diff.getMatch() == candidate.getMatch();
+		if (diff.getMatch() == candidate.getMatch() && diff.getReference() == candidate.getReference()
+				&& !diff.getReference().isMany()) {
+			return isAddOrSetDiff(diff) && isAddOrSetDiff(candidate);
+		}
+		return false;
 	}
 
 	/**
@@ -277,21 +279,20 @@ public class DefaultConflictDetector implements IConflictDetector {
 			if (diffIsDelete && candidateIsDelete) {
 				kind = ConflictKind.PSEUDO;
 			} else if (diff.getMatch() == candidate.getMatch()
-					&& diff.getReference() == candidate.getReference()) {
+					&& diff.getReference() == candidate.getReference() && !diffIsDelete
+					&& !candidateIsDelete) {
 				// Same value added in the same container/reference couple
-				if (!diffIsDelete && !candidateIsDelete) {
-					FeatureFilter featureFilter = getFeatureFilter(comparison);
-					if (featureFilter == null || featureFilter.checkForOrderingChanges(diff.getReference())) {
-						if (matchingIndices(diff.getMatch(), diff.getReference(), diff.getValue(),
-								candidate.getValue())) {
-							kind = ConflictKind.PSEUDO;
-						} else {
-						    // real conflict
-						}
-					} else {
-						// order is irrelevant so this is not a real conflict
+				FeatureFilter featureFilter = getFeatureFilter(comparison);
+				if (featureFilter == null || featureFilter.checkForOrderingChanges(diff.getReference())) {
+					if (matchingIndices(diff.getMatch(), diff.getReference(), diff.getValue(),
+							candidate.getValue())) {
 						kind = ConflictKind.PSEUDO;
+					} else {
+						// real conflict
 					}
+				} else {
+					// order is irrelevant so this is not a real conflict
+					kind = ConflictKind.PSEUDO;
 				}
 			}
 			conflictOn(comparison, diff, candidate, kind);
@@ -309,6 +310,13 @@ public class DefaultConflictDetector implements IConflictDetector {
 		}
 	}
 
+	/**
+	 * Returns the feature filter registered on the given comparison if any.
+	 * 
+	 * @param comparison
+	 *            The comparison for which we need a FeatureFilter.
+	 * @return The feature filter registered on the given comparison if any, <code>null</code> otherwise.
+	 */
 	private FeatureFilter getFeatureFilter(Comparison comparison) {
 		Object adapter = EcoreUtil.getExistingAdapter(comparison, FeatureFilterAdapter.class);
 		if (adapter instanceof FeatureFilterAdapter) {
@@ -860,6 +868,20 @@ public class DefaultConflictDetector implements IConflictDetector {
 		}
 	}
 
+	/**
+	 * Checks if the given candidate diff 'matches' the given reference one. Matching requires the two
+	 * differences to both be on the same match, be of the same kind, on the same reference, and with the same
+	 * changed value. This is only possible in non-unique features and is used to pair differences in
+	 * pseudo-conflicts.
+	 * 
+	 * @param comparison
+	 *            The comparison.
+	 * @param reference
+	 *            The reference diff we'll be comparing <code>candidate</code> with.
+	 * @param candidate
+	 *            The diff we are to compare to <code>reference</code>.
+	 * @return <code>true</code> if these two diffs match.
+	 */
 	private static boolean matchingConflictingDiff(Comparison comparison, Diff reference, Diff candidate) {
 		if (reference == candidate) {
 			return true;
@@ -872,6 +894,13 @@ public class DefaultConflictDetector implements IConflictDetector {
 		return false;
 	}
 
+	/**
+	 * Returns the value that has been changed for the given Diff.
+	 * 
+	 * @param diff
+	 *            The difference.
+	 * @return The value that has been changed for the given Diff.
+	 */
 	private static Object getDiffValue(Diff diff) {
 		Object value;
 		if (diff instanceof ReferenceChange) {

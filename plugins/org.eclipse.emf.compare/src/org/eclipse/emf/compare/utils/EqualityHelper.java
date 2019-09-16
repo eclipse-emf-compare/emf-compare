@@ -29,9 +29,7 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.internal.spec.MatchSpec;
 import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.eobject.EqualityHelperExtensionProvider;
-import org.eclipse.emf.compare.match.eobject.EqualityHelperExtensionProvider.Descriptor.Registry;
 import org.eclipse.emf.compare.match.eobject.EqualityHelperExtensionProvider.SpecificMatch;
-import org.eclipse.emf.compare.match.eobject.EqualityHelperExtensionProviderDescriptorRegistryImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -54,7 +52,7 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	private MatchSpec eObjectMatch;
 
 	/** Registry of equality helper extension computations provider. */
-	private EqualityHelperExtensionProvider.Descriptor.Registry equalityHelperExtensionProviderRegistry = null;
+	private EqualityHelperExtensionProvider.Descriptor.Registry equalityHelperExtensionProviderRegistry;
 
 	/**
 	 * Creates a new EqualityHelper.
@@ -78,7 +76,7 @@ public class EqualityHelper extends AdapterImpl implements IEqualityHelper {
 	}
 
 	/**
-	 * Creates a new EqualityHelper with the given cache and registry
+	 * Creates a new EqualityHelper with the given cache and registry.
 	 * 
 	 * @param uriCache
 	 *            the cache to be used for {@link EcoreUtil#getURI(EObject)} calls.

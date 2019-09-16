@@ -115,6 +115,8 @@ public class ComputeDiffsToMerge {
 	}
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param rightToLeft
 	 *            Direction of the merge. Ignored if {@link MergeMode} is not null.
 	 * @param mergeMode

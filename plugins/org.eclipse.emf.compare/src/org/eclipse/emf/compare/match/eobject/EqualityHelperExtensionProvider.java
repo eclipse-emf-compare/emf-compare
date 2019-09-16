@@ -18,32 +18,41 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
 /**
- * Compute specific matching rules.This is used by the EqualityHelper
+ * Compute specific matching rules. This is used by the EqualityHelper.
  * 
  * @author <a href="mailto:stephane.thibaudeau@obeo.fr">Stephane Thibaudeau</a>
  */
 public interface EqualityHelperExtensionProvider {
 
 	/**
-	 * Enumeration used to return the result of a specific matching
+	 * Enumeration used to return the result of a specific matching.
 	 * 
 	 * @author <a href="mailto:stephane.thibaudeau@obeo.fr">Stephane Thibaudeau</a>
 	 */
-	public enum SpecificMatch {
-		UNKNOWN, MATCH, UNMATCH
+	enum SpecificMatch {
+		/** This means that this specific extension provider doesn't know how to handle the given objects. */
+		UNKNOWN,
+
+		/** If these objects have been determined to be a match by this extension. */
+		MATCH,
+
+		/** If these objects have been determined to <i>not</i> match by this extension. */
+		UNMATCH
 	}
 
 	/**
 	 * Test whether two objects match.
 	 * 
 	 * @param object1
+	 *            First of the two compared objects.
 	 * @param object2
+	 *            Second of the two compared objects.
 	 * @param equalityHelper
 	 *            Calling equality helper
 	 * @return MATCH if the objects match, UNMATCH if they do not match, UNKNOWN if the provider does not know
 	 *         how to handle these objects
 	 */
-	public SpecificMatch matchingEObjects(EObject object1, EObject object2, IEqualityHelper equalityHelper);
+	SpecificMatch matchingEObjects(EObject object1, EObject object2, IEqualityHelper equalityHelper);
 
 	/**
 	 * Wrapper describing the given equality helper extension provider.
@@ -128,7 +137,8 @@ public interface EqualityHelperExtensionProvider {
 			 *            The given ePackage.
 			 * @return The associated equality helper extension provider with the highest ranking.
 			 */
-			EqualityHelperExtensionProvider getHighestRankingEqualityHelperExtensionProvider(EPackage ePackage);
+			EqualityHelperExtensionProvider getHighestRankingEqualityHelperExtensionProvider(
+					EPackage ePackage);
 
 			/**
 			 * Retrieve the equality helper extension providers from a given <code>ePackage</code>.
@@ -137,7 +147,8 @@ public interface EqualityHelperExtensionProvider {
 			 *            The given ePackage.
 			 * @return The associated equality helper extension providers if any.
 			 */
-			Collection<EqualityHelperExtensionProvider> getEqualityHelperExtensionProviders(EPackage ePackage);
+			Collection<EqualityHelperExtensionProvider> getEqualityHelperExtensionProviders(
+					EPackage ePackage);
 		}
 	}
 }

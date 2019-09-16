@@ -229,6 +229,18 @@ public final class MatchUtil {
 		}
 	}
 
+	/**
+	 * Checks if the given reference change is attached on the expected match and refers to the given
+	 * reference (using the reference's name as only criteria).
+	 * 
+	 * @param change
+	 *            The reference change.
+	 * @param expectedMatch
+	 *            The match on which we're expecting this reference change to be attached.
+	 * @param expectedReference
+	 *            The reference we expect this change to affect.
+	 * @return <code>true</code> if the given change matches the given criterion.
+	 */
 	private static boolean matchingReferenceChange(ReferenceChange change, Match expectedMatch,
 			EReference expectedReference) {
 		if (change.getMatch() == expectedMatch) {

@@ -121,6 +121,18 @@ public class AttributeChangeConflictSearch {
 			}
 		}
 
+		/**
+		 * Checks if the given candidate diff 'matches' the given reference one. Matching requires the two
+		 * differences to both be on the same match, be of the same kind, on the same reference, and with the
+		 * same changed value. This is only possible in non-unique features and is used to pair differences in
+		 * pseudo-conflicts.
+		 * 
+		 * @param reference
+		 *            The reference diff we'll be comparing <code>candidate</code> with.
+		 * @param candidate
+		 *            The diff we are to compare to <code>reference</code>.
+		 * @return <code>true</code> if these two diffs match.
+		 */
 		private boolean matchingConflictingDiff(AttributeChange reference, AttributeChange candidate) {
 			if (reference == candidate) {
 				return false;
