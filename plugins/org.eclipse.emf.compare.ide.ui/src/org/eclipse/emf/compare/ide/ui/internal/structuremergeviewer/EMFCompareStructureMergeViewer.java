@@ -1088,6 +1088,16 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 	}
 
+	@Override
+	public void refresh() {
+		super.refresh();
+		// Make sure we clear the navigatable's caches
+		getNavigatable().refresh();
+		if (getViewer().getSelection().isEmpty()) {
+			selectFirstDiffOrDisplayLabelViewer(getCompareConfiguration().getComparison());
+		}
+	}
+
 	/**
 	 * Set the state of the cascading filter.
 	 * 
