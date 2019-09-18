@@ -560,7 +560,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 	 * 
 	 * @return The {@link Navigatable}.
 	 */
-	protected Navigatable getNavigatable() {
+	public Navigatable getNavigatable() {
 		return navigatable;
 	}
 
