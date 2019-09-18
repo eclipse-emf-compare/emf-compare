@@ -19,10 +19,11 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.possiblyConflic
 import static org.eclipse.emf.compare.utils.MatchUtil.matchingIndices;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.Monitor;
@@ -96,7 +97,8 @@ public class DefaultConflictDetector implements IConflictDetector {
 			}
 			final Diff diff = differences.get(i);
 
-			checkConflict(comparison, diff, Iterables.filter(differences, possiblyConflictingWith(diff)));
+			Stream<Diff> conflictCandidates = differences.stream().filter(possiblyConflictingWith(diff));
+			checkConflict(comparison, diff, conflictCandidates::iterator);
 		}
 
 		if (LOGGER.isInfoEnabled()) {
@@ -124,15 +126,19 @@ public class DefaultConflictDetector implements IConflictDetector {
 		// CHANGE diffs can only conflict with other CHANGE or DELETE ... here again detected on the DELETE
 		// MOVE diffs can conflict with DELETE ones, detected on the delete, or with other MOVE diffs.
 		if (diff instanceof ReferenceChange && ((ReferenceChange)diff).getReference().isContainment()) {
-			checkContainmentConflict(comparison, (ReferenceChange)diff,
-					Iterables.filter(candidates, ReferenceChange.class));
+			Stream<ReferenceChange> conflictCandidates = StreamSupport.stream(candidates.spliterator(), false)
+					.filter(ReferenceChange.class::isInstance).map(ReferenceChange.class::cast);
+			checkContainmentConflict(comparison, (ReferenceChange)diff, conflictCandidates::iterator);
 		} else if (diff instanceof ResourceAttachmentChange) {
 			// These will be handled about the same way as containment deletions,
 			// Though they can also conflict with themselves
 			checkResourceAttachmentConflict(comparison, (ResourceAttachmentChange)diff, candidates);
 		} else if (isFeatureMapContainment(diff)) {
+			Stream<FeatureMapChange> conflictCandidates = StreamSupport
+					.stream(candidates.spliterator(), false).filter(FeatureMapChange.class::isInstance)
+					.map(FeatureMapChange.class::cast);
 			checkContainmentFeatureMapConflict(comparison, (FeatureMapChange)diff,
-					Iterables.filter(candidates, FeatureMapChange.class));
+					conflictCandidates::iterator);
 		} else {
 			switch (diff.getKind()) {
 				case DELETE:
@@ -473,21 +479,22 @@ public class DefaultConflictDetector implements IConflictDetector {
 			return;
 		}
 
-		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				boolean apply = false;
-				if (input != null && input.getKind() == DifferenceKind.CHANGE) {
-					if (input instanceof ReferenceChange) {
-						apply = ((ReferenceChange)input).getReference() == feature;
-					} else if (input instanceof AttributeChange) {
-						apply = ((AttributeChange)input).getAttribute() == feature;
-					} else if (input instanceof FeatureMapChange) {
-						apply = ((FeatureMapChange)input).getAttribute() == feature;
+		final Iterable<Diff> refinedCandidates = StreamSupport.stream(candidates.spliterator(), false)
+				.filter(new Predicate<Diff>() {
+					public boolean apply(Diff input) {
+						boolean apply = false;
+						if (input != null && input.getKind() == DifferenceKind.CHANGE) {
+							if (input instanceof ReferenceChange) {
+								apply = ((ReferenceChange)input).getReference() == feature;
+							} else if (input instanceof AttributeChange) {
+								apply = ((AttributeChange)input).getAttribute() == feature;
+							} else if (input instanceof FeatureMapChange) {
+								apply = ((FeatureMapChange)input).getAttribute() == feature;
+							}
+						}
+						return apply;
 					}
-				}
-				return apply;
-			}
-		});
+				})::iterator;
 
 		final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
 
@@ -657,21 +664,22 @@ public class DefaultConflictDetector implements IConflictDetector {
 			return;
 		}
 
-		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				boolean apply = false;
-				if (input != null && input.getKind() == DifferenceKind.MOVE) {
-					if (input instanceof ReferenceChange) {
-						apply = ((ReferenceChange)input).getReference() == feature;
-					} else if (input instanceof AttributeChange) {
-						apply = ((AttributeChange)input).getAttribute() == feature;
-					} else if (input instanceof FeatureMapChange) {
-						apply = ((FeatureMapChange)input).getAttribute() == feature;
+		final Iterable<Diff> refinedCandidates = StreamSupport.stream(candidates.spliterator(), false)
+				.filter(new Predicate<Diff>() {
+					public boolean apply(Diff input) {
+						boolean apply = false;
+						if (input != null && input.getKind() == DifferenceKind.MOVE) {
+							if (input instanceof ReferenceChange) {
+								apply = ((ReferenceChange)input).getReference() == feature;
+							} else if (input instanceof AttributeChange) {
+								apply = ((AttributeChange)input).getAttribute() == feature;
+							} else if (input instanceof FeatureMapChange) {
+								apply = ((FeatureMapChange)input).getAttribute() == feature;
+							}
+						}
+						return apply;
 					}
-				}
-				return apply;
-			}
-		});
+				})::iterator;
 
 		for (Diff candidate : refinedCandidates) {
 			final Object candidateValue = getDiffValue(candidate);
@@ -724,22 +732,23 @@ public class DefaultConflictDetector implements IConflictDetector {
 		 * that value on the opposite side (the "feature" cannot be a containment reference, those are handled
 		 * through #checkContainmentDeleteConflict).
 		 */
-		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				boolean apply = false;
-				if (input != null && (input.getKind() == DifferenceKind.MOVE
-						|| input.getKind() == DifferenceKind.DELETE)) {
-					if (input instanceof ReferenceChange) {
-						apply = ((ReferenceChange)input).getReference() == feature;
-					} else if (input instanceof AttributeChange) {
-						apply = ((AttributeChange)input).getAttribute() == feature;
-					} else if (input instanceof FeatureMapChange) {
-						apply = ((FeatureMapChange)input).getAttribute() == feature;
+		final Iterable<Diff> refinedCandidates = StreamSupport.stream(candidates.spliterator(), false)
+				.filter(new Predicate<Diff>() {
+					public boolean apply(Diff input) {
+						boolean apply = false;
+						if (input != null && (input.getKind() == DifferenceKind.MOVE
+								|| input.getKind() == DifferenceKind.DELETE)) {
+							if (input instanceof ReferenceChange) {
+								apply = ((ReferenceChange)input).getReference() == feature;
+							} else if (input instanceof AttributeChange) {
+								apply = ((AttributeChange)input).getAttribute() == feature;
+							} else if (input instanceof FeatureMapChange) {
+								apply = ((FeatureMapChange)input).getAttribute() == feature;
+							}
+						}
+						return apply;
 					}
-				}
-				return apply;
-			}
-		});
+				})::iterator;
 
 		for (Diff candidate : refinedCandidates) {
 			final Object movedValue = getDiffValue(candidate);
@@ -791,22 +800,23 @@ public class DefaultConflictDetector implements IConflictDetector {
 		 * Can only conflict on Diffs : of type ADD, on the opposite side, in the same container and the same
 		 * reference, with the same added value.
 		 */
-		final Iterable<Diff> refinedCandidates = Iterables.filter(candidates, new Predicate<Diff>() {
-			public boolean apply(Diff input) {
-				boolean apply = false;
-				if (input != null
-						&& (input.getKind() == DifferenceKind.ADD && diff.getMatch() == input.getMatch())) {
-					if (input instanceof ReferenceChange) {
-						apply = ((ReferenceChange)input).getReference() == feature;
-					} else if (input instanceof AttributeChange) {
-						apply = ((AttributeChange)input).getAttribute() == feature;
-					} else if (input instanceof FeatureMapChange) {
-						apply = ((FeatureMapChange)input).getAttribute() == feature;
+		final Iterable<Diff> refinedCandidates = StreamSupport.stream(candidates.spliterator(), false)
+				.filter(new Predicate<Diff>() {
+					public boolean apply(Diff input) {
+						boolean apply = false;
+						if (input != null && (input.getKind() == DifferenceKind.ADD
+								&& diff.getMatch() == input.getMatch())) {
+							if (input instanceof ReferenceChange) {
+								apply = ((ReferenceChange)input).getReference() == feature;
+							} else if (input instanceof AttributeChange) {
+								apply = ((AttributeChange)input).getAttribute() == feature;
+							} else if (input instanceof FeatureMapChange) {
+								apply = ((FeatureMapChange)input).getAttribute() == feature;
+							}
+						}
+						return apply;
 					}
-				}
-				return apply;
-			}
-		});
+				})::iterator;
 
 		for (Diff candidate : refinedCandidates) {
 			final Object candidateValue = getDiffValue(candidate);
@@ -1008,8 +1018,10 @@ public class DefaultConflictDetector implements IConflictDetector {
 			// [477607] DELETE does not necessarily mean that the element is removed from the model
 			EObject o = getRelatedModelElement(diff);
 			if (o != null && o.eContainer() == null) {
-				for (Diff extendedCandidate : Iterables.filter(match.getAllDifferences(),
-						possiblyConflictingWith(diff))) {
+				Iterable<Diff> extendedCandidates = StreamSupport
+						.stream(match.getAllDifferences().spliterator(), false)
+						.filter(possiblyConflictingWith(diff))::iterator;
+				for (Diff extendedCandidate : extendedCandidates) {
 					if (isDeleteOrUnsetDiff(extendedCandidate)) {
 						// We do not want to create a pseudo conflict between a deleted container and its
 						// deleted content, since that would prevent us from merging the container deletion
@@ -1176,7 +1188,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 		final List<Diff> conflictDiffs = conflict.getDifferences();
 		if (toBeMerged != null) {
 			// These references are opposite. We can't simply iterate
-			for (Diff aDiff : Lists.newArrayList(toBeMerged.getDifferences())) {
+			for (Diff aDiff : new ArrayList<>(toBeMerged.getDifferences())) {
 				if (!conflictDiffs.contains(aDiff)) {
 					conflictDiffs.add(aDiff);
 				}

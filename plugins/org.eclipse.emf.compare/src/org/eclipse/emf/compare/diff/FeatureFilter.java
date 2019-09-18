@@ -12,9 +12,6 @@ package org.eclipse.emf.compare.diff;
 
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.IS_EGENERIC_TYPE_WITHOUT_PARAMETERS;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterators;
-
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.Match;
@@ -65,11 +62,7 @@ public class FeatureFilter {
 		} else {
 			clazz = match.getOrigin().eClass();
 		}
-		return Iterators.filter(clazz.getEAllReferences().iterator(), new Predicate<EReference>() {
-			public boolean apply(EReference input) {
-				return !isIgnoredReference(match, input);
-			}
-		});
+		return clazz.getEAllReferences().stream().filter(ref -> !isIgnoredReference(match, ref)).iterator();
 	}
 
 	/**
@@ -95,11 +88,7 @@ public class FeatureFilter {
 		} else {
 			clazz = match.getOrigin().eClass();
 		}
-		return Iterators.filter(clazz.getEAllAttributes().iterator(), new Predicate<EAttribute>() {
-			public boolean apply(EAttribute input) {
-				return !isIgnoredAttribute(input);
-			}
-		});
+		return clazz.getEAllAttributes().stream().filter(att -> !isIgnoredAttribute(att)).iterator();
 	}
 
 	/**

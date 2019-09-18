@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.conflict;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.instanceOf;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.DifferenceKind.ADD;
@@ -23,8 +21,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.possiblyConflictingWith;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueMatches;
 import static org.eclipse.emf.compare.utils.MatchUtil.matchingIndices;
-
-import com.google.common.collect.Iterables;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
@@ -64,7 +60,6 @@ public class FeatureMapChangeConflictSearch {
 			super(diff, index, monitor);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void detectConflicts() {
 			EAttribute feature = diff.getAttribute();
@@ -73,8 +68,10 @@ public class FeatureMapChangeConflictSearch {
 			if (feature.isUnique()) {
 				Object value = diff.getValue();
 				EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-				for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-						instanceOf(FeatureMapChange.class), onFeature(feature), ofKind(ADD)))) {
+				Iterable<Diff> candidates = diffsInSameMatch.stream()
+						.filter(possiblyConflictingWith(diff).and(FeatureMapChange.class::isInstance)
+								.and(onFeature(feature)).and(ofKind(ADD)))::iterator;
+				for (Diff candidate : candidates) {
 					Object candidateValue = ((FeatureMapChange)candidate).getValue();
 					if (comparison.getEqualityHelper().matchingValues(value, candidateValue)) {
 						// This is a conflict. Is it real?
@@ -110,14 +107,15 @@ public class FeatureMapChangeConflictSearch {
 			super(diff, index, monitor);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void detectConflicts() {
 			Object value = diff.getValue();
 			EAttribute feature = diff.getAttribute();
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-					instanceOf(FeatureMapChange.class), onFeature(feature), ofKind(CHANGE)))) {
+			Iterable<Diff> candidates = diffsInSameMatch.stream()
+					.filter(possiblyConflictingWith(diff).and(FeatureMapChange.class::isInstance)
+							.and(onFeature(feature)).and(ofKind(CHANGE)))::iterator;
+			for (Diff candidate : candidates) {
 				Object candidateValue = ((FeatureMapChange)candidate).getValue();
 				if (comparison.getEqualityHelper().matchingValues(value, candidateValue)) {
 					// Same value added on both side in the same container
@@ -150,14 +148,15 @@ public class FeatureMapChangeConflictSearch {
 			super(diff, index, monitor);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void detectConflicts() {
 			Object value = diff.getValue();
 			EAttribute feature = diff.getAttribute();
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-					instanceOf(FeatureMapChange.class), onFeature(feature), ofKind(MOVE, DELETE)))) {
+			Iterable<Diff> candidates = diffsInSameMatch.stream()
+					.filter(possiblyConflictingWith(diff).and(FeatureMapChange.class::isInstance)
+							.and(onFeature(feature)).and(ofKind(MOVE, DELETE)))::iterator;
+			for (Diff candidate : candidates) {
 				Object candidateValue = ((FeatureMapChange)candidate).getValue();
 				if (comparison.getEqualityHelper().matchingValues(value, candidateValue)) {
 					if (candidate.getKind() == MOVE) {
@@ -191,7 +190,6 @@ public class FeatureMapChangeConflictSearch {
 			super(diff, index, monitor);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void detectConflicts() {
 			Match diffMatch = diff.getMatch();
@@ -199,10 +197,11 @@ public class FeatureMapChangeConflictSearch {
 			Object value = entry.getValue();
 			EAttribute feature = diff.getAttribute();
 			EList<Diff> diffsInSameMatch = diffMatch.getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch,
-					and(possiblyConflictingWith(diff), instanceOf(FeatureMapChange.class),
-							valueMatches(comparison.getEqualityHelper(), value), onFeature(feature),
-							ofKind(MOVE)))) {
+			Iterable<Diff> candidates = diffsInSameMatch.stream()
+					.filter(possiblyConflictingWith(diff).and(FeatureMapChange.class::isInstance)
+							.and(valueMatches(comparison.getEqualityHelper(), value)).and(onFeature(feature))
+							.and(ofKind(MOVE)))::iterator;
+			for (Diff candidate : candidates) {
 				Object candidateValue = ((FeatureMapChange)candidate).getValue();
 				if (matchingIndices(diff.getMatch(), feature, value, candidateValue)) {
 					conflict(candidate, PSEUDO);

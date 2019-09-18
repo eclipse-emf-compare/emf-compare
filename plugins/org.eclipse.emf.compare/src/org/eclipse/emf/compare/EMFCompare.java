@@ -13,8 +13,6 @@ package org.eclipse.emf.compare;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.collect.Iterators;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -370,7 +368,11 @@ public class EMFCompare {
 		EList<Match> matches = comparison.getMatches();
 		for (Match match : matches) {
 			matchQuantity++;
-			matchQuantity += Iterators.size(match.getAllSubmatches().iterator());
+			Iterator<Match> subMatchIterator = match.getAllSubmatches().iterator();
+			while (subMatchIterator.hasNext()) {
+				matchQuantity++;
+				subMatchIterator.next();
+			}
 		}
 		LOGGER.info("compare() - FINISH - " + matchQuantity + " matches, " + diffQuantity + " diffs and " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				+ conflictQuantity + " conflicts found in " + duration + "ms"); //$NON-NLS-1$ //$NON-NLS-2$

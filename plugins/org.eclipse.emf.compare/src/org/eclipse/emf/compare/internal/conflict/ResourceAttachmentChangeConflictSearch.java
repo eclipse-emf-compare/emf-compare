@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.conflict;
 
-import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.instanceOf;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
@@ -19,8 +18,6 @@ import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.DifferenceKind.MOVE;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.possiblyConflictingWith;
-
-import com.google.common.collect.Iterables;
 
 import java.util.Collection;
 
@@ -72,7 +69,9 @@ public class ResourceAttachmentChangeConflictSearch {
 
 			// First let's see if ReferenceChanges point to the EObject moved
 			Collection<ReferenceChange> refChanges = index.getReferenceChangesByValue(value);
-			for (ReferenceChange candidate : Iterables.filter(refChanges, possiblyConflictingWith(diff))) {
+			Iterable<ReferenceChange> candidates = refChanges.stream()
+					.filter(possiblyConflictingWith(diff))::iterator;
+			for (ReferenceChange candidate : candidates) {
 				if (candidate.getReference().isContainment()) {
 					if (candidate.getValue().eContainer() == null) {
 						// The element is a new root on one side, but it has been moved to an EObject
@@ -96,8 +95,9 @@ public class ResourceAttachmentChangeConflictSearch {
 
 			// Then let's see if there's a conflict with another ResourceAttachmentChange
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch,
-					and(possiblyConflictingWith(diff), instanceOf(ResourceAttachmentChange.class)))) {
+			Iterable<Diff> racCandidates = diffsInSameMatch.stream().filter(
+					possiblyConflictingWith(diff).and(instanceOf(ResourceAttachmentChange.class)))::iterator;
+			for (Diff candidate : racCandidates) {
 				ConflictKind kind = REAL;
 				if (candidate.getKind() == ADD) {
 					final Resource diffRes;
@@ -174,8 +174,9 @@ public class ResourceAttachmentChangeConflictSearch {
 			// First let's see if ReferenceChanges point to the EObject moved
 			if (value != null) {
 				Collection<ReferenceChange> refChanges = index.getReferenceChangesByValue(value);
-				for (ReferenceChange candidate : Iterables.filter(refChanges,
-						possiblyConflictingWith(diff))) {
+				Iterable<ReferenceChange> candidates = refChanges.stream()
+						.filter(possiblyConflictingWith(diff))::iterator;
+				for (ReferenceChange candidate : candidates) {
 					if (candidate.getReference().isContainment()) {
 						// The element is a new root on one side, but it has been moved to an EObject
 						// container on the other
@@ -196,8 +197,9 @@ public class ResourceAttachmentChangeConflictSearch {
 
 			// Then let's see if there's a conflict with another ResourceAttachmentChange
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch,
-					and(possiblyConflictingWith(diff), instanceOf(ResourceAttachmentChange.class)))) {
+			Iterable<Diff> racCandidates = diffsInSameMatch.stream().filter(
+					possiblyConflictingWith(diff).and(instanceOf(ResourceAttachmentChange.class)))::iterator;
+			for (Diff candidate : racCandidates) {
 				ConflictKind kind = REAL;
 				if (candidate.getKind() == DELETE) {
 					final Resource diffRes;
@@ -217,17 +219,12 @@ public class ResourceAttachmentChangeConflictSearch {
 			// dependence of the existing conflict
 			if (isDanglingRootDeletion()
 					&& (diff.getConflict() == null || diff.getConflict().getKind() != PSEUDO)) {
-				for (Diff extendedCandidate : Iterables.filter(match.getDifferences(),
-						possiblyConflictingWith(diff))) {
-					if (isDeleteOrUnsetDiff(extendedCandidate)) {
-						// We do not want to create a pseudo conflict between a deleted container and its
-						// deleted content, since that would prevent us from merging the container deletion
-						// altogether (since pseudo conflicts usually mean that no action is needed).
-						// conflict(extendedCandidate, PSEUDO);
-					} else {
-						conflict(extendedCandidate, REAL);
-					}
-				}
+				// We do not want to create a pseudo conflict between a deleted container and its
+				// deleted content, since that would prevent us from merging the container deletion
+				// altogether (since pseudo conflicts usually mean that no action is needed).
+				// conflict(extendedCandidate, PSEUDO);
+				match.getDifferences().stream().filter(possiblyConflictingWith(diff))
+						.filter(d -> !isDeleteOrUnsetDiff(d)).forEach(candidate -> conflict(candidate, REAL));
 			}
 		}
 
@@ -277,17 +274,17 @@ public class ResourceAttachmentChangeConflictSearch {
 
 			// First let's see if ReferenceChanges point to the EObject moved
 			Collection<ReferenceChange> refChanges = index.getReferenceChangesByValue(value);
-			for (ReferenceChange candidate : Iterables.filter(refChanges, possiblyConflictingWith(diff))) {
-				if (candidate.getReference().isContainment()) {
-					// The element is a new root on one side, but it has been moved to an EObject container on
-					// the other
-					conflict(candidate, REAL);
-				}
-			}
+
+			// The element is a new root on one side, but it has been moved to an EObject container on
+			// the other
+			refChanges.stream().filter(possiblyConflictingWith(diff))
+					.filter(candidate -> candidate.getReference().isContainment())
+					.forEach(candidate -> conflict(candidate, REAL));
 
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch,
-					and(possiblyConflictingWith(diff), instanceOf(ResourceAttachmentChange.class)))) {
+			Iterable<Diff> candidates = diffsInSameMatch.stream().filter(
+					possiblyConflictingWith(diff).and(instanceOf(ResourceAttachmentChange.class)))::iterator;
+			for (Diff candidate : candidates) {
 				ConflictKind kind = REAL;
 				if (candidate.getKind() == MOVE) {
 					String lhsURI = diff.getResourceURI();

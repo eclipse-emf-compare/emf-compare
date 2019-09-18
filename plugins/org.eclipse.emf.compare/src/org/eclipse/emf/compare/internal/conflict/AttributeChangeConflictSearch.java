@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.conflict;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.instanceOf;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.DifferenceKind.ADD;
@@ -22,8 +20,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.possiblyConflictingWith;
 import static org.eclipse.emf.compare.utils.MatchUtil.matchingIndices;
-
-import com.google.common.collect.Iterables;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
@@ -62,16 +58,15 @@ public class AttributeChangeConflictSearch {
 			super(diff, index, monitor);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void detectConflicts() {
 			EAttribute feature = diff.getAttribute();
 			// Only unique features can have real conflicts
 			Object value = diff.getValue();
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			Iterable<Diff> conflictCandidates = Iterables.filter(diffsInSameMatch,
-					and(possiblyConflictingWith(diff), instanceOf(AttributeChange.class), onFeature(feature),
-							ofKind(ADD)));
+			Iterable<Diff> conflictCandidates = diffsInSameMatch.stream()
+					.filter(possiblyConflictingWith(diff).and(AttributeChange.class::isInstance)
+							.and(onFeature(feature)).and(ofKind(ADD)))::iterator;
 			if (feature.isUnique()) {
 				for (Diff candidate : conflictCandidates) {
 					Object candidateValue = ((AttributeChange)candidate).getValue();
@@ -167,14 +162,15 @@ public class AttributeChangeConflictSearch {
 			super(diff, index, monitor);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void detectConflicts() {
 			Object value = diff.getValue();
 			EAttribute feature = diff.getAttribute();
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-					instanceOf(AttributeChange.class), onFeature(feature), ofKind(CHANGE)))) {
+			Iterable<Diff> candidates = diffsInSameMatch.stream()
+					.filter(possiblyConflictingWith(diff).and(AttributeChange.class::isInstance)
+							.and(onFeature(feature)).and(ofKind(CHANGE)))::iterator;
+			for (Diff candidate : candidates) {
 				Object candidateValue = ((AttributeChange)candidate).getValue();
 				if (comparison.getEqualityHelper().matchingValues(value, candidateValue)) {
 					// Same value added on both side in the same container
@@ -207,14 +203,15 @@ public class AttributeChangeConflictSearch {
 			super(diff, index, monitor);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void detectConflicts() {
 			Object value = diff.getValue();
 			EAttribute feature = diff.getAttribute();
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-					instanceOf(AttributeChange.class), onFeature(feature), ofKind(MOVE, DELETE)))) {
+			Iterable<Diff> candidates = diffsInSameMatch.stream()
+					.filter(possiblyConflictingWith(diff).and(AttributeChange.class::isInstance)
+							.and(onFeature(feature)).and(ofKind(MOVE, DELETE)))::iterator;
+			for (Diff candidate : candidates) {
 				Object candidateValue = ((AttributeChange)candidate).getValue();
 				if (comparison.getEqualityHelper().matchingValues(value, candidateValue)) {
 					if (candidate.getKind() == MOVE) {
@@ -248,14 +245,15 @@ public class AttributeChangeConflictSearch {
 			super(diff, index, monitor);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void detectConflicts() {
 			Object value = diff.getValue();
 			EAttribute feature = diff.getAttribute();
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-					instanceOf(AttributeChange.class), onFeature(feature), ofKind(MOVE)))) {
+			Iterable<Diff> candidates = diffsInSameMatch.stream()
+					.filter(possiblyConflictingWith(diff).and(AttributeChange.class::isInstance)
+							.and(onFeature(feature)).and(ofKind(MOVE)))::iterator;
+			for (Diff candidate : candidates) {
 				Object candidateValue = ((AttributeChange)candidate).getValue();
 
 				// This can only be a conflict if the value moved is the same

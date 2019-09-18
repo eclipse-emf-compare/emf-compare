@@ -14,14 +14,14 @@ package org.eclipse.emf.compare.internal.conflict;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.collect.Sets.newLinkedHashSet;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -311,7 +311,7 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 		final EList<Diff> conflictDiffs = conflict.getDifferences();
 		if (toBeMerged != null) {
 			// These references are opposite. We can't simply iterate
-			for (Diff aDiff : Lists.newArrayList(toBeMerged.getDifferences())) {
+			for (Diff aDiff : new ArrayList<>(toBeMerged.getDifferences())) {
 				conflictDiffs.add(aDiff);
 			}
 			if (toBeMerged.getKind() == REAL && conflict.getKind() != REAL) {
@@ -321,8 +321,8 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 			toBeMerged.getDifferences().clear();
 		}
 
-		Set<Diff> toAdd = newLinkedHashSet();
-		for (Diff conflicting : ImmutableSet.of(diff, other)) {
+		Set<Diff> toAdd = new LinkedHashSet<>();
+		for (Diff conflicting : Arrays.asList(diff, other)) {
 			if (conflicting.getEquivalence() == null) {
 				toAdd.add(conflicting);
 			} else {

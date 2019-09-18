@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.conflict;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.instanceOf;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.DifferenceKind.ADD;
@@ -24,8 +22,6 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.possiblyConflictingWith;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueMatches;
 import static org.eclipse.emf.compare.utils.MatchUtil.matchingIndices;
-
-import com.google.common.collect.Iterables;
 
 import java.util.Collection;
 
@@ -66,7 +62,6 @@ public class ContainmentRefChangeConflictSearch {
 			super(diff, index, monitor);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void detectConflicts() {
 			EObject value = diff.getValue();
@@ -74,8 +69,9 @@ public class ContainmentRefChangeConflictSearch {
 
 			// First let's see if non-containment diffs point to the EObject added
 			Collection<ReferenceChange> refChanges = index.getReferenceChangesByValue(value);
-			for (ReferenceChange candidate : Iterables.filter(refChanges,
-					and(possiblyConflictingWith(diff), ofKind(ADD, CHANGE)))) {
+			Iterable<ReferenceChange> candidates = refChanges.stream()
+					.filter(possiblyConflictingWith(diff).and(ofKind(ADD, CHANGE)))::iterator;
+			for (ReferenceChange candidate : candidates) {
 				if (candidate.getReference().isContainment()) {
 					if (candidate.getReference() == feature && candidate.getMatch() == diff.getMatch()) {
 						// added in the same feature in the same match.
@@ -101,8 +97,10 @@ public class ContainmentRefChangeConflictSearch {
 			// Can conflict with other ADD or SET if isMany() == false
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
 			if (!feature.isMany()) {
-				for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-						instanceOf(ReferenceChange.class), onFeature(feature), ofKind(ADD, CHANGE)))) {
+				Iterable<Diff> additionalCandidates = diffsInSameMatch.stream()
+						.filter(possiblyConflictingWith(diff).and(ReferenceChange.class::isInstance)
+								.and(onFeature(feature)).and(ofKind(ADD, CHANGE)))::iterator;
+				for (Diff candidate : additionalCandidates) {
 					if (comparison.getEqualityHelper().matchingValues(((ReferenceChange)candidate).getValue(),
 							diff.getValue())) {
 						conflict(candidate, PSEUDO);
@@ -135,7 +133,6 @@ public class ContainmentRefChangeConflictSearch {
 			super(diff, index, monitor);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void detectConflicts() {
 			EObject value = diff.getValue();
@@ -143,8 +140,9 @@ public class ContainmentRefChangeConflictSearch {
 
 			// First let's see if non-containment diffs point to the EObject added
 			Collection<ReferenceChange> refChanges = index.getReferenceChangesByValue(value);
-			for (ReferenceChange candidate : Iterables.filter(refChanges,
-					and(possiblyConflictingWith(diff), ofKind(ADD, CHANGE)))) {
+			Iterable<ReferenceChange> candidates = refChanges.stream()
+					.filter(possiblyConflictingWith(diff).and(ofKind(ADD, CHANGE)))::iterator;
+			for (ReferenceChange candidate : candidates) {
 				if (candidate.getReference().isContainment()) {
 					if (candidate.getReference() == feature && candidate.getMatch() == diff.getMatch()) {
 						conflict(candidate, PSEUDO);
@@ -157,8 +155,10 @@ public class ContainmentRefChangeConflictSearch {
 			// Can conflict with other ADD or SET if isMany() == false
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
 			if (!feature.isMany() && isAddOrSetDiff(diff)) {
-				for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-						instanceOf(ReferenceChange.class), onFeature(feature)))) {
+				Iterable<Diff> additionalCandidates = diffsInSameMatch.stream()
+						.filter(possiblyConflictingWith(diff).and(ReferenceChange.class::isInstance)
+								.and(onFeature(feature)))::iterator;
+				for (Diff candidate : additionalCandidates) {
 					if (comparison.getEqualityHelper().matchingValues(((ReferenceChange)candidate).getValue(),
 							diff.getValue())) {
 						conflict(candidate, PSEUDO);
@@ -167,8 +167,10 @@ public class ContainmentRefChangeConflictSearch {
 					}
 				}
 			} else if (!isDeleteOrUnsetDiff(diff)) {
-				for (Diff candidate : Iterables.filter(diffsInSameMatch, and(possiblyConflictingWith(diff),
-						instanceOf(ReferenceChange.class), onFeature(feature)))) {
+				Iterable<Diff> additionalCandidates = diffsInSameMatch.stream()
+						.filter(possiblyConflictingWith(diff).and(ReferenceChange.class::isInstance)
+								.and(onFeature(feature)))::iterator;
+				for (Diff candidate : additionalCandidates) {
 					if (!isDeleteOrUnsetDiff(candidate)
 							&& diff.getReference() == ((ReferenceChange)candidate).getReference()) {
 						// Same value added in the same container/reference couple
@@ -203,33 +205,27 @@ public class ContainmentRefChangeConflictSearch {
 			super(diff, index, monitor);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void detectConflicts() {
 			EObject value = diff.getValue();
 
 			// First let's see if non-containment diffs point to the EObject deleted from its parent
 			Collection<ReferenceChange> refChanges = index.getReferenceChangesByValue(value);
-			for (ReferenceChange candidate : Iterables.filter(refChanges, possiblyConflictingWith(diff))) {
-				if (isDeleteOrUnsetDiff(candidate)) {
-					// No conflict here
-				} else {
-					conflict(candidate, REAL);
-				}
-			}
+			refChanges.stream().filter(possiblyConflictingWith(diff)).filter(d -> !isDeleteOrUnsetDiff(d))
+					.forEach(d -> conflict(d, REAL));
 
 			// Now let's look for conflits with containment ReferenceChanges
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch,
-					and(possiblyConflictingWith(diff), instanceOf(ReferenceChange.class),
-							valueMatches(comparison.getEqualityHelper(), value)))) {
-
-				if (isDeleteOrUnsetDiff(candidate)) {
-					conflict(candidate, PSEUDO);
-				} else {
-					conflict(candidate, REAL);
-				}
-			}
+			diffsInSameMatch.stream()
+					.filter(possiblyConflictingWith(diff).and(ReferenceChange.class::isInstance)
+							.and(valueMatches(comparison.getEqualityHelper(), value)))
+					.forEach(candidate -> {
+						if (isDeleteOrUnsetDiff(candidate)) {
+							conflict(candidate, PSEUDO);
+						} else {
+							conflict(candidate, REAL);
+						}
+					});
 
 			// [381143] Every Diff "under" a containment deletion conflicts with it.
 			final DiffTreeIterator diffIterator = new DiffTreeIterator(comparison.getMatch(value));
@@ -272,7 +268,6 @@ public class ContainmentRefChangeConflictSearch {
 			super(diff, index, monitor);
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void detectConflicts() {
 			EObject value = diff.getValue();
@@ -280,42 +275,44 @@ public class ContainmentRefChangeConflictSearch {
 
 			// First let's see if non-containment diffs point to the EObject added
 			Collection<ReferenceChange> refChanges = index.getReferenceChangesByValue(value);
-			for (ReferenceChange candidate : Iterables.filter(refChanges,
-					and(possiblyConflictingWith(diff), ofKind(MOVE)))) {
-				if (candidate.getReference().isContainment()) {
-					// This is a containment move. It is the only case in which we could have a "move"
-					// difference in a reference where order is not significant
-					if (candidate.getReference() == feature && candidate.getMatch() == diff.getMatch()) {
-						// Same element has been moved into the same container on both sides. If we care about
-						// ordering in this new containment reference, check the indices to detect potential
-						// real conflicts.
-						FeatureFilter featureFilter = getFeatureFilter(comparison);
-						if (featureFilter == null || featureFilter.checkForOrderingChanges(feature)) {
-							if (matchingIndices(diff.getMatch(), feature, value, candidate.getValue())) {
-								conflict(candidate, PSEUDO);
-							} else {
-								conflict(candidate, REAL);
-							}
-						} else {
+			Iterable<ReferenceChange> candidates = refChanges.stream()
+					.filter(possiblyConflictingWith(diff).and(ofKind(MOVE)))
+					.filter(d -> d.getReference().isContainment())::iterator;
+			for (ReferenceChange candidate : candidates) {
+				// This is a containment move. It is the only case in which we could have a "move"
+				// difference in a reference where order is not significant
+				if (candidate.getReference() == feature && candidate.getMatch() == diff.getMatch()) {
+					// Same element has been moved into the same container on both sides. If we care about
+					// ordering in this new containment reference, check the indices to detect potential
+					// real conflicts.
+					FeatureFilter featureFilter = getFeatureFilter(comparison);
+					if (featureFilter == null || featureFilter.checkForOrderingChanges(feature)) {
+						if (matchingIndices(diff.getMatch(), feature, value, candidate.getValue())) {
 							conflict(candidate, PSEUDO);
+						} else {
+							conflict(candidate, REAL);
 						}
 					} else {
-						conflict(candidate, REAL);
+						conflict(candidate, PSEUDO);
 					}
-				}
-			}
-
-			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
-			for (Diff candidate : Iterables.filter(diffsInSameMatch,
-					and(possiblyConflictingWith(diff), valueMatches(comparison.getEqualityHelper(), value),
-							instanceOf(ReferenceChange.class), onFeature(feature)))) {
-				if (matchingIndices(diff.getMatch(), diff.getReference(), value,
-						((ReferenceChange)candidate).getValue())) {
-					conflict(candidate, PSEUDO);
 				} else {
 					conflict(candidate, REAL);
 				}
 			}
+
+			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
+			diffsInSameMatch.stream()
+					.filter(possiblyConflictingWith(diff)
+							.and(valueMatches(comparison.getEqualityHelper(), value))
+							.and(ReferenceChange.class::isInstance).and(onFeature(feature)))
+					.forEach(candidate -> {
+						if (matchingIndices(diff.getMatch(), diff.getReference(), value,
+								((ReferenceChange)candidate).getValue())) {
+							conflict(candidate, PSEUDO);
+						} else {
+							conflict(candidate, REAL);
+						}
+					});
 		}
 	}
 }

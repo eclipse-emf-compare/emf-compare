@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.equi;
 
-import static com.google.common.collect.Iterables.filter;
-
 import com.google.common.base.Predicate;
-import com.google.common.collect.Sets;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -151,7 +148,8 @@ public class DefaultEquiEngine implements IEquiEngine {
 						return false;
 					}
 				};
-				final Iterable<Diff> candidates = filter(valueMatch.getDifferences(), candidateFilter);
+				final Iterable<Diff> candidates = valueMatch.getDifferences().stream()
+						.filter(candidateFilter)::iterator;
 
 				for (Diff candidate : candidates) {
 					equivalence.getDifferences().add(candidate);
@@ -230,9 +228,11 @@ public class DefaultEquiEngine implements IEquiEngine {
 			}
 
 			final EStructuralFeature entryKey = ((FeatureMap.Entry)featureMapEntry).getEStructuralFeature();
-			final Set<ReferenceChange> equivalentDiffs = Sets.newLinkedHashSet();
+			final Set<ReferenceChange> equivalentDiffs = new LinkedHashSet<>();
 			final IEqualityHelper equalityHelper = comparison.getEqualityHelper();
-			for (ReferenceChange refChange : filter(differences, ReferenceChange.class)) {
+			Iterable<ReferenceChange> refChanges = differences.stream()
+					.filter(ReferenceChange.class::isInstance).map(ReferenceChange.class::cast)::iterator;
+			for (ReferenceChange refChange : refChanges) {
 				// The current diff has the same ref & value than the Map Entry of the FeatureMapChange.
 				boolean sameValue = equalityHelper.matchingValues(refChange.getValue(), entryValue);
 				boolean sameSource = featureMapChange.getSource() == refChange.getSource();
