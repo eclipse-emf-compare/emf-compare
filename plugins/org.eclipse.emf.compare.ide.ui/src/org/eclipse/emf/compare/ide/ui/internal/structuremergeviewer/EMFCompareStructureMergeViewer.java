@@ -419,6 +419,7 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				getCompareConfiguration().getAdapterFactory(), getViewer()));
 
 		navigatable = new Navigatable(getViewer(), getContentProvider());
+		getControl().setData(INavigatable.NAVIGATOR_PROPERTY, navigatable);
 
 		toolBar = createToolBar(CompareViewerPane.getToolBarManager(parent));
 		getViewer().addSelectionChangedListener(getToolBar());
