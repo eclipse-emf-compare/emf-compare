@@ -272,6 +272,10 @@ public class SynchronizedResourceSet extends ResourceSetImpl implements Disposab
 		}
 		final URI normalized = getURIConverter().normalize(uri);
 		Resource demanded = uriCache.get(normalized);
+		if (namespaceURIs.contains(uri) && demanded != null) {
+			ensurePackageLoaded(demanded);
+		}
+
 		if (demanded == null) {
 			final EPackage ePackage = getPackageRegistry().getEPackage(uri.toString());
 			if (ePackage != null) {
@@ -324,6 +328,23 @@ public class SynchronizedResourceSet extends ResourceSetImpl implements Disposab
 			return demanded;
 		} finally {
 			packageLoadingLock.unlock();
+		}
+	}
+
+	/**
+	 * {@link #loadPackage(URI, URI)} will push the packages' resource in {@link #uriCache cache} before the
+	 * package is actually loaded in order to avoid multi-threading issues. However, multi-threading can also
+	 * make it so that another thread asks for a resource in cache and return it before the actual loading
+	 * ends. This will lock that latter thread until the package is finished loading.
+	 */
+	private void ensurePackageLoaded(Resource packageResource) {
+		if (!packageResource.isLoaded() || ((Resource.Internal)packageResource).isLoading()) {
+			packageLoadingLock.lock();
+			try {
+				ensurePackageLoaded(packageResource);
+			} finally {
+				packageLoadingLock.unlock();
+			}
 		}
 	}
 
