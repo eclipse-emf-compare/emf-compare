@@ -103,6 +103,21 @@ public class MatchEngineFactoryImpl implements IMatchEngine.Factory {
 	}
 
 	/**
+	 * Constructor that instantiate a {@link DefaultMatchEngine} with the given parameters.
+	 * 
+	 * @param matcher
+	 *            The matcher that will be in charge of pairing EObjects together for this comparison process.
+	 * @param comparisonFactory
+	 *            factory that will be use to instantiate Comparison as return by match() methods.
+	 * @deprecated Using this will ignore any weight provider or equality helper extension provided through
+	 *             extension points. Use another of the constructors if you need this functionality.
+	 */
+	@Deprecated
+	public MatchEngineFactoryImpl(IEObjectMatcher matcher, IComparisonFactory comparisonFactory) {
+		matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.match.IMatchEngine.Factory#getMatchEngine()
@@ -153,7 +168,11 @@ public class MatchEngineFactoryImpl implements IMatchEngine.Factory {
 	 */
 	void setWeightProviderRegistry(WeightProvider.Descriptor.Registry registry) {
 		this.weightProviderRegistry = registry;
-		this.matchEngine = null;
+		// TODO remove this condition once the deprecated MatchEngineFactoryImpl(IEObjectMatcher,
+		// IComparisonFactory) is removed
+		if (shouldUseIdentifiers != null) {
+			this.matchEngine = null;
+		}
 	}
 
 	/**
@@ -165,7 +184,11 @@ public class MatchEngineFactoryImpl implements IMatchEngine.Factory {
 	public void setEqualityHelperExtensionProviderRegistry(
 			EqualityHelperExtensionProvider.Descriptor.Registry equalityHelperExtensionProviderRegistry) {
 		this.equalityHelperExtensionProviderRegistry = equalityHelperExtensionProviderRegistry;
-		this.matchEngine = null;
+		// TODO remove this condition once the deprecated MatchEngineFactoryImpl(IEObjectMatcher,
+		// IComparisonFactory) is removed
+		if (shouldUseIdentifiers != null) {
+			this.matchEngine = null;
+		}
 	}
 
 }
