@@ -247,6 +247,9 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 				if (stringTokenizer.hasMoreTokens()) {
 					String value = stringTokenizer.nextToken();
 					URI uri = URI.createURI(value);
+					if (uri.isRelative()) {
+						uri = uri.resolve(delegateHelper.getResource().getURI());
+					}
 					for (Object listener : namespaceDeclarationListeners.getListeners()) {
 						((INamespaceDeclarationListener)listener).schemaLocationDeclared(key, uri);
 					}
