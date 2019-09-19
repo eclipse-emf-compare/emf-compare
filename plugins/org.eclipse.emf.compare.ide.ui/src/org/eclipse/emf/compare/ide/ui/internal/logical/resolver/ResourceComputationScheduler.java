@@ -231,7 +231,7 @@ public class ResourceComputationScheduler<T> {
 						}
 						EMFCompareIDEUIPlugin.getDefault().log(t);
 					}
-				});
+				}, MoreExecutors.directExecutor());
 			}
 		}
 	}
@@ -408,7 +408,7 @@ public class ResourceComputationScheduler<T> {
 				});
 				// even if post-treatment is null, we need this callback for proper finalization
 				Futures.addCallback(future, new ComputingFutureCallback<T>(this, computation.getKey(),
-						computation.getPostTreatment()));
+						computation.getPostTreatment()), MoreExecutors.directExecutor());
 				return true;
 			}
 			return false;
@@ -452,7 +452,7 @@ public class ResourceComputationScheduler<T> {
 	public void scheduleUnload(Runnable runnable, FutureCallback<Object> callback) {
 		ListenableFuture<?> future = unloadingPool.submit(runnable);
 		if (callback != null) {
-			Futures.addCallback(future, callback);
+			Futures.addCallback(future, callback, MoreExecutors.directExecutor());
 		}
 	}
 
