@@ -334,7 +334,8 @@ public final class SynchronizationModel implements IDiagnosable {
 						if (containsResourceWithPath(resourceIPath)) {
 							d.merge(child);
 						}
-					} else if (potentialSource instanceof Resource.Diagnostic) {
+					} else if (potentialSource instanceof Resource.Diagnostic
+							&& ((Resource.Diagnostic)potentialSource).getLocation() != null) {
 						Resource.Diagnostic resourceDiagnostic = (Resource.Diagnostic)potentialSource;
 						String location = resourceDiagnostic.getLocation();
 						URI locationUri = URI.createURI(location, false);
