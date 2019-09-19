@@ -747,8 +747,12 @@ public abstract class EMFCompareContentMergeViewer extends ContentMergeViewer im
 					propertySheetPage.setPropertySourceProvider(fAdapterFactoryContentProvider);
 					getControl().addDisposeListener(new DisposeListener() {
 						public void widgetDisposed(DisposeEvent e) {
-							propertySheetPage.selectionChanged(activePart, null);
 							propertySheetPage.setPropertySourceProvider(null);
+							// bug 551238 : protect from potential NPEs
+							if (propertySheetPage.getControl() != null
+									&& !propertySheetPage.getControl().isDisposed()) {
+								propertySheetPage.selectionChanged(activePart, null);
+							}
 						}
 					});
 					if (newSelectedObject != null) {
