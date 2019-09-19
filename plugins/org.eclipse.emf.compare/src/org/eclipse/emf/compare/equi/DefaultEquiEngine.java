@@ -11,10 +11,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.equi;
 
-import com.google.common.base.Predicate;
-
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.Monitor;
@@ -133,7 +132,7 @@ public class DefaultEquiEngine implements IEquiEngine {
 
 			if (eOpposite != null && valueMatch != null) {
 				final Predicate<? super Diff> candidateFilter = new Predicate<Diff>() {
-					public boolean apply(Diff input) {
+					public boolean test(Diff input) {
 						if (input instanceof ReferenceChange
 								&& ((ReferenceChange)input).getReference() == eOpposite) {
 							final Match candidateMatch = comparison

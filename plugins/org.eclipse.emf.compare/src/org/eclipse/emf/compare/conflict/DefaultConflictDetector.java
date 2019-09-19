@@ -15,13 +15,12 @@ package org.eclipse.emf.compare.conflict;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isAddOrSetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isFeatureMapContainment;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.possiblyConflictingWith;
+import static org.eclipse.emf.compare.utils.EMFCompareJavaPredicates.possiblyConflictingWith;
 import static org.eclipse.emf.compare.utils.MatchUtil.matchingIndices;
-
-import com.google.common.base.Predicate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -252,7 +251,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 */
 	private Predicate<? super Match> isContainmentDelete() {
 		return new Predicate<Match>() {
-			public boolean apply(Match input) {
+			public boolean test(Match input) {
 				return input.getOrigin() != null && (input.getLeft() == null || input.getRight() == null);
 			}
 		};
@@ -481,7 +480,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 
 		final Iterable<Diff> refinedCandidates = StreamSupport.stream(candidates.spliterator(), false)
 				.filter(new Predicate<Diff>() {
-					public boolean apply(Diff input) {
+					public boolean test(Diff input) {
 						boolean apply = false;
 						if (input != null && input.getKind() == DifferenceKind.CHANGE) {
 							if (input instanceof ReferenceChange) {
@@ -666,7 +665,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 
 		final Iterable<Diff> refinedCandidates = StreamSupport.stream(candidates.spliterator(), false)
 				.filter(new Predicate<Diff>() {
-					public boolean apply(Diff input) {
+					public boolean test(Diff input) {
 						boolean apply = false;
 						if (input != null && input.getKind() == DifferenceKind.MOVE) {
 							if (input instanceof ReferenceChange) {
@@ -734,7 +733,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 		 */
 		final Iterable<Diff> refinedCandidates = StreamSupport.stream(candidates.spliterator(), false)
 				.filter(new Predicate<Diff>() {
-					public boolean apply(Diff input) {
+					public boolean test(Diff input) {
 						boolean apply = false;
 						if (input != null && (input.getKind() == DifferenceKind.MOVE
 								|| input.getKind() == DifferenceKind.DELETE)) {
@@ -802,7 +801,7 @@ public class DefaultConflictDetector implements IConflictDetector {
 		 */
 		final Iterable<Diff> refinedCandidates = StreamSupport.stream(candidates.spliterator(), false)
 				.filter(new Predicate<Diff>() {
-					public boolean apply(Diff input) {
+					public boolean test(Diff input) {
 						boolean apply = false;
 						if (input != null && (input.getKind() == DifferenceKind.ADD
 								&& diff.getMatch() == input.getMatch())) {

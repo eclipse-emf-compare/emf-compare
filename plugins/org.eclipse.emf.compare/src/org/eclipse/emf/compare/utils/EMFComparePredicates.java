@@ -60,7 +60,9 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * an iterable.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @deprecated this class provides Guava predicates. Please consider using EMFCompareJavaPredicates instead.
  */
+@Deprecated
 public final class EMFComparePredicates {
 	/**
 	 * This can be used to test whether a given Diff has no conflict object associated.

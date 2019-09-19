@@ -11,19 +11,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.conflict;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
-
-import com.google.common.base.Predicate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
@@ -84,15 +81,17 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 	 *            the monitor to report progress to, must not be null
 	 */
 	public AbstractConflictSearch(T diff, ComparisonIndex index, Monitor monitor) {
-		checkNotNull(diff);
+		Objects.requireNonNull(diff);
 		if (diff.getMatch() == null || diff.getMatch().getComparison() == null) {
 			throw new IllegalArgumentException();
 		}
 		comparison = diff.getMatch().getComparison();
-		checkArgument(diff.getKind() != null && diff.getSource() != null);
+		if (diff.getKind() == null || diff.getSource() == null) {
+			throw new IllegalArgumentException();
+		}
 		this.diff = diff;
-		this.index = checkNotNull(index);
-		this.monitor = checkNotNull(monitor);
+		this.index = Objects.requireNonNull(index);
+		this.monitor = Objects.requireNonNull(monitor);
 	}
 
 	/**
@@ -350,8 +349,10 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 				soughtMatch = matchRes;
 			}
 		}
-		checkState(soughtMatch != null, EMFCompareMessages
-				.getString("ResourceAttachmentChangeSpec.MissingMatch", resource.getURI().lastSegment())); //$NON-NLS-1$
+		if (soughtMatch == null) {
+			throw new IllegalStateException(EMFCompareMessages
+					.getString("ResourceAttachmentChangeSpec.MissingMatch", resource.getURI().lastSegment())); //$NON-NLS-1$
+		}
 		return soughtMatch;
 	}
 
@@ -411,7 +412,9 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 			default:
 				throw new IllegalStateException();
 		}
-		checkState(o != null);
+		if (o == null) {
+			throw new IllegalStateException();
+		}
 		return o;
 	}
 
@@ -423,7 +426,7 @@ public abstract class AbstractConflictSearch<T extends Diff> {
 	 */
 	protected Predicate<? super Match> isContainmentDelete() {
 		return new Predicate<Match>() {
-			public boolean apply(Match input) {
+			public boolean test(Match input) {
 				return input.getOrigin() != null && (input.getLeft() == null || input.getRight() == null);
 			}
 		};

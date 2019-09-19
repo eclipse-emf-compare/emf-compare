@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.conflict;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.Diff;
@@ -49,13 +47,13 @@ public class DiffTreeIterator implements Iterator<Diff> {
 	private Diff nextDiff;
 
 	/** Only Diffs that meet this criterion will be returned by this iterator. */
-	private Predicate<? super Diff> filter = Predicates.alwaysTrue();
+	private Predicate<? super Diff> filter = x -> true;
 
 	/**
 	 * This particular filter can be used in order to prune a given Match and all of its differences and
 	 * sub-differences.
 	 */
-	private Predicate<? super Match> pruningFilter = Predicates.alwaysFalse();
+	private Predicate<? super Match> pruningFilter = x -> false;
 
 	/**
 	 * Constructs our iterator given the root of the Match tree to iterate over.
@@ -104,7 +102,7 @@ public class DiffTreeIterator implements Iterator<Diff> {
 		}
 		while (nextDiff == null && diffIterator.hasNext()) {
 			final Diff next = diffIterator.next();
-			if (filter.apply(next)) {
+			if (filter.test(next)) {
 				nextDiff = next;
 			}
 		}
@@ -118,7 +116,7 @@ public class DiffTreeIterator implements Iterator<Diff> {
 		final Match old = current;
 		while (current == old && subMatchIterator.hasNext()) {
 			final Match next = subMatchIterator.next();
-			if (pruningFilter.apply(next)) {
+			if (pruningFilter.test(next)) {
 				subMatchIterator.prune();
 			} else {
 				current = next;

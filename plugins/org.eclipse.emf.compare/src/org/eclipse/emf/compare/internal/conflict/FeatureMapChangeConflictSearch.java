@@ -16,10 +16,10 @@ import static org.eclipse.emf.compare.DifferenceKind.ADD;
 import static org.eclipse.emf.compare.DifferenceKind.CHANGE;
 import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.DifferenceKind.MOVE;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.onFeature;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.possiblyConflictingWith;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.valueMatches;
+import static org.eclipse.emf.compare.utils.EMFCompareJavaPredicates.ofKind;
+import static org.eclipse.emf.compare.utils.EMFCompareJavaPredicates.onFeature;
+import static org.eclipse.emf.compare.utils.EMFCompareJavaPredicates.possiblyConflictingWith;
+import static org.eclipse.emf.compare.utils.EMFCompareJavaPredicates.valueMatches;
 import static org.eclipse.emf.compare.utils.MatchUtil.matchingIndices;
 
 import org.eclipse.emf.common.util.EList;

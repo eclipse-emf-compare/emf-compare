@@ -10,14 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.conflict;
 
-import static com.google.common.base.Predicates.instanceOf;
 import static org.eclipse.emf.compare.ConflictKind.PSEUDO;
 import static org.eclipse.emf.compare.ConflictKind.REAL;
 import static org.eclipse.emf.compare.DifferenceKind.ADD;
 import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.DifferenceKind.MOVE;
 import static org.eclipse.emf.compare.internal.utils.ComparisonUtil.isDeleteOrUnsetDiff;
-import static org.eclipse.emf.compare.utils.EMFComparePredicates.possiblyConflictingWith;
+import static org.eclipse.emf.compare.utils.EMFCompareJavaPredicates.possiblyConflictingWith;
 
 import java.util.Collection;
 
@@ -96,7 +95,7 @@ public class ResourceAttachmentChangeConflictSearch {
 			// Then let's see if there's a conflict with another ResourceAttachmentChange
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
 			Iterable<Diff> racCandidates = diffsInSameMatch.stream().filter(
-					possiblyConflictingWith(diff).and(instanceOf(ResourceAttachmentChange.class)))::iterator;
+					possiblyConflictingWith(diff).and(ResourceAttachmentChange.class::isInstance))::iterator;
 			for (Diff candidate : racCandidates) {
 				ConflictKind kind = REAL;
 				if (candidate.getKind() == ADD) {
@@ -198,7 +197,7 @@ public class ResourceAttachmentChangeConflictSearch {
 			// Then let's see if there's a conflict with another ResourceAttachmentChange
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
 			Iterable<Diff> racCandidates = diffsInSameMatch.stream().filter(
-					possiblyConflictingWith(diff).and(instanceOf(ResourceAttachmentChange.class)))::iterator;
+					possiblyConflictingWith(diff).and(ResourceAttachmentChange.class::isInstance))::iterator;
 			for (Diff candidate : racCandidates) {
 				ConflictKind kind = REAL;
 				if (candidate.getKind() == DELETE) {
@@ -283,7 +282,7 @@ public class ResourceAttachmentChangeConflictSearch {
 
 			EList<Diff> diffsInSameMatch = diff.getMatch().getDifferences();
 			Iterable<Diff> candidates = diffsInSameMatch.stream().filter(
-					possiblyConflictingWith(diff).and(instanceOf(ResourceAttachmentChange.class)))::iterator;
+					possiblyConflictingWith(diff).and(ResourceAttachmentChange.class::isInstance))::iterator;
 			for (Diff candidate : candidates) {
 				ConflictKind kind = REAL;
 				if (candidate.getKind() == MOVE) {
