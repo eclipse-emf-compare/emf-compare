@@ -140,8 +140,7 @@
         </executions>
         <configuration>
           <!-- Please update qualified version for each release. Please also update the publisher.properties.-->
-          <!-- DO NOT name this zip ${project.artifactId}.*3.3.0.${buildQualifier} as this will somehow cause tycho to copy that particular zip as the end result documentation jar in the update site. -->
-          <finalName>website-${project.artifactId}-3.3.0.${buildQualifier}</finalName>
+          <finalName>${project.artifactId}-website-3.3.0.${buildQualifier}</finalName>
           <appendAssemblyId>false</appendAssemblyId>
           <descriptors>
             <descriptor>assembly.xml</descriptor>
