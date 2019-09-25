@@ -21,7 +21,7 @@
   </parent>
   <groupId>org.eclipse.emf.compare</groupId>
   <artifactId>org.eclipse.emf.compare.doc</artifactId>
-  <version>3.3.0-SNAPSHOT</version>
+  <version>3.3.9-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 
   <properties>
@@ -120,8 +120,8 @@
                 <argument>-website</argument>
                 <argument>${project.build.directory}/website</argument>
                 <argument>-version</argument>
-                <!-- Please update qualified version for each release. Please also update the publisher.properties.-->
-                <argument>3.3.0.${buildQualifier}</argument>
+                <!-- Please update qualified version for each release.-->
+                <argument>3.3.9.${buildQualifier}</argument>
               </arguments>
             </configuration>
           </execution>
@@ -129,22 +129,22 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
+        <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
             <phase>package</phase>
             <goals>
-              <goal>single</goal>
+              <goal>run</goal>
             </goals>
           </execution>
         </executions>
         <configuration>
-          <!-- Please update qualified version for each release. Please also update the publisher.properties.-->
-          <finalName>${project.artifactId}-website-3.3.0.${buildQualifier}</finalName>
-          <appendAssemblyId>false</appendAssemblyId>
-          <descriptors>
-            <descriptor>assembly.xml</descriptor>
-          </descriptors>
+          <target>
+            <!-- Please update qualified version for each release.-->
+            <zip destfile="${project.build.directory}/${project.artifactId}-website-3.3.9.${buildQualifier}.zip">
+              <zipfileset dir="${project.build.directory}/website"/>
+            </zip>
+          </target>
         </configuration>
       </plugin>
     </plugins>
