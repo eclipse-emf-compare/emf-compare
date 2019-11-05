@@ -12,15 +12,14 @@ package org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.property;
 
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
 
 class RootPropertyItem extends PropertyItem {
 
 	private Object object;
 
-	RootPropertyItem(EMFCompareConfiguration configuration, IItemLabelProvider itemLabelProvider,
+	RootPropertyItem(EMFCompareConfiguration configuration, Object objectImage, String objectText,
 			Object object, MergeViewerSide side) {
-		super(configuration, itemLabelProvider.getImage(object), itemLabelProvider.getText(object), side);
+		super(configuration, objectImage, objectText, side);
 		this.object = object;
 	}
 

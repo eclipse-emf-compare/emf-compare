@@ -107,11 +107,20 @@ abstract class PropertyItem extends ItemProvider implements ITableItemLabelProvi
 	 */
 	public static PropertyItem createPropertyItem(final EMFCompareConfiguration configuration,
 			final Object object, final MergeViewerSide side) {
-		final AdapterFactoryItemDelegator itemDelegator = new AdapterFactoryItemDelegator(
-				configuration.getAdapterFactory());
+		PropertyItem rootItem;
+		List<IItemPropertyDescriptor> propertyDescriptors;
+		if (configuration.getAdapterFactory() != null) {
+			final AdapterFactoryItemDelegator itemDelegator = new AdapterFactoryItemDelegator(
+					configuration.getAdapterFactory());
 
-		PropertyItem rootItem = new RootPropertyItem(configuration, itemDelegator, object, side);
-		List<IItemPropertyDescriptor> propertyDescriptors = getPropertyDescriptors(object, itemDelegator);
+			rootItem = new RootPropertyItem(configuration, itemDelegator.getImage(object),
+					itemDelegator.getText(object), object, side);
+			propertyDescriptors = getPropertyDescriptors(object, itemDelegator);
+		} else {
+			// We're currently disposing of the property content merge viewer
+			rootItem = new RootPropertyItem(configuration, null, "", object, side); //$NON-NLS-1$
+			propertyDescriptors = null;
+		}
 		populateRootPropertyItem(rootItem, propertyDescriptors, object, configuration, side);
 
 		return rootItem;
