@@ -202,7 +202,9 @@ public class EMFCompareConfiguration extends ForwardingCompareConfiguration impl
 		// EVENT_BUS must not be set to null
 		Comparison comparison = getComparison();
 		disposeComparison();
-		comparison.eAdapters().clear();
+		if (comparison != null) {
+			comparison.eAdapters().clear();
+		}
 	}
 
 	/**
