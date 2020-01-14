@@ -14,7 +14,7 @@
   </prerequisites>
   <groupId>org.eclipse.emf.compare</groupId>
   <artifactId>emf.compare-parent</artifactId>
-  <version>3.3.9-SNAPSHOT</version>
+  <version>3.3.10-SNAPSHOT</version>
   <packaging>pom</packaging>
   <licenses>
     <license>
@@ -31,7 +31,7 @@
   </licenses>
   <properties>
     <!-- Properties -->
-    <parent-version>3.3.9-SNAPSHOT</parent-version>
+    <parent-version>3.3.10-SNAPSHOT</parent-version>
     <source-java-version>1.7</source-java-version>
     <target-java-version>${source-java-version}</target-java-version>
     <java-source-encoding>UTF-8</java-source-encoding>
@@ -365,10 +365,31 @@
   <profiles>
     <!-- Target platforms are located in org.eclipse.emf.compare-parent/targetPlatforms. -->
     <profile>
-      <id>2019-06</id>
+      <id>2019-12</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <configuration>
+              <target>
+                <artifact>
+                  <groupId>org.eclipse.emf.compare</groupId>
+                  <artifactId>emf.compare-parent</artifactId>
+                  <version>${parent-version}</version>
+                  <classifier>targetPlatforms/2019-12-sdk</classifier>
+                </artifact>
+              </target>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>2019-06</id>
       <build>
         <plugins>
           <plugin>
@@ -494,6 +515,27 @@
         <module>../plugins/org.eclipse.emf.compare.diagram.sirius</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.sirius</module>
       </modules>
+    </profile>
+    <profile>
+      <id>2019-12-extras</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <configuration>
+              <target>
+                <artifact>
+                  <groupId>org.eclipse.emf.compare</groupId>
+                  <artifactId>emf.compare-parent</artifactId>
+                  <version>${parent-version}</version>
+                  <classifier>targetPlatforms/extras/2019-12-extras-sdk</classifier>
+                </artifact>
+              </target>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     <profile>
       <id>2019-06-extras</id>

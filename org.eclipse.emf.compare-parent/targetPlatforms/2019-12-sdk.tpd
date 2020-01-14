@@ -1,0 +1,17 @@
+target "EMF Compare based on 2019-12 SDK"
+
+include "fragments/licence.tpd"
+include "fragments/orbit.tpd"
+include "fragments/egit.tpd"
+include "fragments/perf.tpd"
+
+with source, requirements
+
+location "http://download.eclipse.org/releases/2019-12" {
+	org.eclipse.platform.feature.group lazy
+	org.eclipse.emf.sdk.feature.group lazy
+	org.eclipse.emf.transaction.sdk.feature.group lazy
+	org.eclipse.uml2.feature.group lazy
+	org.eclipse.gmf.runtime.notation.sdk.feature.group lazy
+	org.eclipse.gmf.runtime.diagram.ui lazy
+}
