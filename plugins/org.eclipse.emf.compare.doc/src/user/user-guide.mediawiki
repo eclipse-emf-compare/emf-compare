@@ -22,7 +22,7 @@ EMF has been part of the Eclipse release train since Galileo, you can install it
   http://download.eclipse.org/releases/helios
   http://download.eclipse.org/releases/galileo
 
-The [http://www.eclipse.org/emf/compare/downloads/ Download page] lists more specific update sites if you wish to try one of the latest integration builds.
+The [https://www.eclipse.org/emf/compare/download.html Download page] lists more specific update sites if you wish to try one of the latest integration builds.
 
 ==== Compatibility ====
 
