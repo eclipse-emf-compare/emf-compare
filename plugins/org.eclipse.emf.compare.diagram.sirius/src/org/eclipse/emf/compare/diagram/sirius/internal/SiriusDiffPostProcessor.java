@@ -1,16 +1,18 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015, 2020 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.sirius.internal;
 
 import static com.google.common.collect.Collections2.filter;
+import static org.eclipse.emf.compare.DifferenceKind.ADD;
+import static org.eclipse.emf.compare.DifferenceKind.DELETE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.CONTAINMENT_REFERENCE_CHANGE;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.fromSide;
 
@@ -36,22 +38,26 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.sirius.diagram.DDiagramElementContainer;
+import org.eclipse.sirius.diagram.DEdge;
 import org.eclipse.sirius.diagram.DNode;
+import org.eclipse.sirius.diagram.DNodeListElement;
 import org.eclipse.sirius.diagram.DiagramPackage;
-import org.eclipse.sirius.diagram.description.NodeMapping;
+import org.eclipse.sirius.viewpoint.DMappingBased;
 import org.eclipse.sirius.viewpoint.DSemanticDecorator;
 import org.eclipse.sirius.viewpoint.ViewpointPackage;
+import org.eclipse.sirius.viewpoint.description.RepresentationElementMapping;
 
 /**
  * A post processor to refine the differences found on a Sirius model.
- * 
+ *
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 @SuppressWarnings("restriction")
 public class SiriusDiffPostProcessor implements IPostProcessor {
 	/**
 	 * Create a new predicate to check whether the value of a {@link ReferenceChange} is of a given type.
-	 * 
+	 *
 	 * @param clazz
 	 *            an EClass.
 	 * @return true if the value of the {@link ReferenceChange} is of the given type.
@@ -70,6 +76,32 @@ public class SiriusDiffPostProcessor implements IPostProcessor {
 				return diff.getValue();
 			}
 		};
+	}
+
+	/**
+	 * Checks that the actualMapping reference is correct.
+	 *
+	 * @param actualMappingChange
+	 *            the mapping difference.
+	 * @param value
+	 *            the value which holds the actualMapping.
+	 * @return true if the reference is correct.
+	 */
+	private boolean isActualMappingReferenceChangeFor(ReferenceChange actualMappingChange,
+			DMappingBased value) {
+		boolean result = false;
+		if (value instanceof DNode) {
+			result = actualMappingChange.getReference() == DiagramPackage.eINSTANCE.getDNode_ActualMapping();
+		} else if (value instanceof DDiagramElementContainer) {
+			result = actualMappingChange.getReference() == DiagramPackage.eINSTANCE
+					.getDDiagramElementContainer_ActualMapping();
+		} else if (value instanceof DNodeListElement) {
+			result = actualMappingChange.getReference() == DiagramPackage.eINSTANCE
+					.getDNodeListElement_ActualMapping();
+		} else if (value instanceof DEdge) {
+			result = actualMappingChange.getReference() == DiagramPackage.eINSTANCE.getDEdge_ActualMapping();
+		}
+		return result;
 	}
 
 	/**
@@ -114,17 +146,20 @@ public class SiriusDiffPostProcessor implements IPostProcessor {
 				addRequiresToDecoratedElement(diffsByValue, referenceChange, semanticTarget);
 			}
 			/*
-			 * A DNode should always have its actualMapping reference set.
+			 * A DMappingBased should always have its actualMapping reference set.
 			 */
-			if (value instanceof DNode) {
-				NodeMapping map = ((DNode)value).getActualMapping();
+			if (value instanceof DMappingBased) {
+				RepresentationElementMapping map = ((DMappingBased)value).getMapping();
 				if (map != null) {
 					for (ReferenceChange actualMappingChange : Iterables
 							.filter(comparison.getDifferences(map), ReferenceChange.class)) {
-						if (actualMappingChange.getReference() == DiagramPackage.eINSTANCE
-								.getDNode_ActualMapping()
+						if (isActualMappingReferenceChangeFor(actualMappingChange, (DMappingBased)value)
 								&& fromSide(referenceChange.getSource()).apply(actualMappingChange)) {
-							referenceChange.getImplies().add(actualMappingChange);
+							if (referenceChange.getKind() == ADD) {
+								referenceChange.getImplies().add(actualMappingChange);
+							} else if (referenceChange.getKind() == DELETE) {
+								referenceChange.getImpliedBy().add(actualMappingChange);
+							}
 						}
 					}
 				}
@@ -154,7 +189,7 @@ public class SiriusDiffPostProcessor implements IPostProcessor {
 
 	/**
 	 * Add diff requires for every change related to the semantic target.
-	 * 
+	 *
 	 * @param diffsByValue
 	 *            {@link ReferenceChange} differences indexed by value.
 	 * @param referenceChange
@@ -216,7 +251,7 @@ public class SiriusDiffPostProcessor implements IPostProcessor {
 
 	/**
 	 * Collect the differences which have to be added as a refinment of the current DiagramDiff.
-	 * 
+	 *
 	 * @param comparison
 	 *            the current comparison.
 	 * @param refinesToAdd

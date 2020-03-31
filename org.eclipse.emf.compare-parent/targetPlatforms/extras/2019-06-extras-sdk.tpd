@@ -10,4 +10,6 @@ location "https://download.eclipse.org/sirius/updates/releases/6.2.3/2019-06/" {
 	org.eclipse.sirius lazy
 	org.eclipse.sirius.diagram lazy
 	org.eclipse.sirius.runtime.feature.group lazy
+	org.eclipse.sirius.runtime.ide.ui.feature.group lazy
+	org.eclipse.sirius.runtime.aql.feature.group lazy
 }

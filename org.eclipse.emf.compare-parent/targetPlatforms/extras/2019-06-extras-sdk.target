@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="EMF Compare with extras based on 2019-06" sequenceNumber="1568895959">
+<target name="EMF Compare with extras based on 2019-06" sequenceNumber="1585650727">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -40,6 +40,8 @@
       <unit id="org.eclipse.sirius" version="0.0.0"/>
       <unit id="org.eclipse.sirius.diagram" version="0.0.0"/>
       <unit id="org.eclipse.sirius.runtime.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.sirius.runtime.ide.ui.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.sirius.runtime.aql.feature.group" version="0.0.0"/>
       <repository location="https://download.eclipse.org/sirius/updates/releases/6.2.3/2019-06/"/>
     </location>
   </locations>
