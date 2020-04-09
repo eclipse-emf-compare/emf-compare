@@ -17,7 +17,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,17 +24,8 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor;
-import org.eclipse.emf.compare.domain.IMergeRunnable;
-import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.actions.MergeRunnableImpl;
-import org.eclipse.emf.compare.internal.merge.MergeMode;
+import org.eclipse.emf.compare.diagram.sirius.tests.AbstractSiriusTest;
 import org.eclipse.emf.compare.merge.AbstractMerger;
-import org.eclipse.emf.compare.merge.CachingDiffRelationshipComputer;
-import org.eclipse.emf.compare.merge.IMerger;
-import org.eclipse.emf.compare.postprocessor.BasicPostProcessorDescriptorImpl;
-import org.eclipse.emf.compare.postprocessor.IPostProcessor;
-import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
-import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -49,8 +39,7 @@ import org.junit.Test;
  * 
  * @author <a href="mailto:glenn.plouhinec@obeo.fr">Glenn Plouhinec</a>
  */
-@SuppressWarnings("restriction")
-public class TestBug561458 {
+public class TestBug561458 extends AbstractSiriusTest {
 
 	/**
 	 * The main comparison.
@@ -81,21 +70,6 @@ public class TestBug561458 {
 	 * Used to initialize the comparison scope.
 	 */
 	private Resource origin;
-
-	/**
-	 * The PostProcessors registry.
-	 */
-	private IPostProcessor.Descriptor.Registry<String> registry;
-
-	/**
-	 * Used to initialize a default merger registry for merge action.
-	 */
-	private IMerger.Registry mergerRegistry;
-
-	/**
-	 * Used to merge differences.
-	 */
-	private IMergeRunnable mergeRunnable;
 
 	/**
 	 * Set up the test models.
@@ -139,13 +113,12 @@ public class TestBug561458 {
 	@Before
 	public void setUp() throws IOException {
 		Bug561458 inputData = new Bug561458();
+		fillRegistries();
 		addedContainers = inputData.getResource("addedContainers.aird"); //$NON-NLS-1$
 		deletedContainers = inputData.getResource("deletedContainers.aird"); //$NON-NLS-1$
 		singleAddedContainer = inputData.getResource("singleAddedContainer.aird"); //$NON-NLS-1$
 		singleDeletedContainer = inputData.getResource("singleDeletedContainer.aird"); //$NON-NLS-1$
 		origin = null;
-		registry = registerPostProcessors();
-		mergerRegistry = EMFCompareRCPPlugin.getDefault().getMergerRegistry();
 	}
 
 	/**
@@ -155,7 +128,8 @@ public class TestBug561458 {
 	public void testSingleAddedContainerImpliesMapping() {
 		DefaultComparisonScope scope = new DefaultComparisonScope(singleAddedContainer,
 				singleDeletedContainer, origin);
-		comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build().compare(scope);
+		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
+				.compare(scope);
 		List<ReferenceChange> decorators = getAddedOrRemovedDecorators();
 
 		ReferenceChange addedDiff = decorators.get(0);
@@ -173,7 +147,8 @@ public class TestBug561458 {
 	public void testSingleDeletedContainerImpliedByMapping() {
 		DefaultComparisonScope scope = new DefaultComparisonScope(singleDeletedContainer,
 				singleAddedContainer, origin);
-		comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build().compare(scope);
+		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
+				.compare(scope);
 		List<ReferenceChange> decorators = getAddedOrRemovedDecorators();
 
 		ReferenceChange deletedDiff = decorators.get(0);
@@ -190,7 +165,8 @@ public class TestBug561458 {
 	@Test
 	public void testAddedContainersImpliesMapping() {
 		DefaultComparisonScope scope = new DefaultComparisonScope(addedContainers, deletedContainers, origin);
-		comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build().compare(scope);
+		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
+				.compare(scope);
 		List<ReferenceChange> decorators = getAddedOrRemovedDecorators();
 
 		ReferenceChange firstAddedDiff = decorators.get(0);
@@ -213,7 +189,8 @@ public class TestBug561458 {
 	@Test
 	public void testDeletedContainersImpliedByMapping() {
 		DefaultComparisonScope scope = new DefaultComparisonScope(deletedContainers, addedContainers, origin);
-		comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build().compare(scope);
+		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
+				.compare(scope);
 		List<ReferenceChange> decorators = getAddedOrRemovedDecorators();
 
 		ReferenceChange firstDeletedDiff = decorators.get(0);
@@ -237,10 +214,10 @@ public class TestBug561458 {
 	public void testMergeRightToLeftDeletedContainer() {
 		DefaultComparisonScope scope = new DefaultComparisonScope(singleDeletedContainer,
 				singleAddedContainer, origin);
-		comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build().compare(scope);
-		boolean leftToRight = false;
+		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
+				.compare(scope);
 
-		mergeDiffs(comparison.getDifferences(), leftToRight);
+		mergeDiffsRightToLeft(comparison.getDifferences());
 		comparison.getDifferences().forEach(diff -> assertTrue(AbstractMerger.isInTerminalState(diff)));
 	}
 
@@ -251,10 +228,10 @@ public class TestBug561458 {
 	public void testMergeLeftToRightDeletedContainer() {
 		DefaultComparisonScope scope = new DefaultComparisonScope(singleDeletedContainer,
 				singleAddedContainer, origin);
-		comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build().compare(scope);
-		boolean leftToRight = true;
+		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
+				.compare(scope);
 
-		mergeDiffs(comparison.getDifferences(), leftToRight);
+		mergeDiffsLeftToRight(comparison.getDifferences());
 		comparison.getDifferences().forEach(diff -> assertTrue(AbstractMerger.isInTerminalState(diff)));
 	}
 
@@ -265,12 +242,11 @@ public class TestBug561458 {
 	public void testMergeRightToLeftAddedContainer() {
 		DefaultComparisonScope scope = new DefaultComparisonScope(singleAddedContainer,
 				singleDeletedContainer, origin);
-		comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build().compare(scope);
-		boolean leftToRight = false;
+		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
+				.compare(scope);
 
-		mergeDiffs(comparison.getDifferences(), leftToRight);
+		mergeDiffsRightToLeft(comparison.getDifferences());
 		comparison.getDifferences().forEach(diff -> assertTrue(AbstractMerger.isInTerminalState(diff)));
-
 	}
 
 	/**
@@ -280,10 +256,10 @@ public class TestBug561458 {
 	public void testMergeLeftToRightAddedContainer() {
 		DefaultComparisonScope scope = new DefaultComparisonScope(singleAddedContainer,
 				singleDeletedContainer, origin);
-		comparison = EMFCompare.builder().setPostProcessorRegistry(registry).build().compare(scope);
-		boolean leftToRight = true;
+		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
+				.compare(scope);
 
-		mergeDiffs(comparison.getDifferences(), leftToRight);
+		mergeDiffsLeftToRight(comparison.getDifferences());
 		comparison.getDifferences().forEach(diff -> assertTrue(AbstractMerger.isInTerminalState(diff)));
 	}
 
@@ -302,47 +278,6 @@ public class TestBug561458 {
 		Stream<ReferenceChange> addedOrRemovedSemanticDecorators = refChanges
 				.filter(diff -> diff.getValue() instanceof DSemanticDecorator);
 		return addedOrRemovedSemanticDecorators.collect(Collectors.toList());
-	}
-
-	/**
-	 * Used to register new post processors.
-	 * 
-	 * @see org.eclipse.emf.compare.diagram.sirius.internal.SiriusDiffPostProcessor
-	 * @see org.eclipse.emf.compare.diagram.internal.CompareDiagramPostProcessor
-	 * @return the register composed of SiriusDiffPostProcessor and CompareDiagramPostProcessor.
-	 */
-	protected IPostProcessor.Descriptor.Registry<String> registerPostProcessors() {
-		final IPostProcessor.Descriptor.Registry<String> postProcessorRegistry = new PostProcessorDescriptorRegistryImpl<String>();
-
-		postProcessorRegistry.put(SiriusDiffPostProcessor.class.getName(),
-				new BasicPostProcessorDescriptorImpl(new SiriusDiffPostProcessor(),
-						Pattern.compile("http://www.eclipse.org/sirius/1.1.0"), //$NON-NLS-1$
-						Pattern.compile(""))); //$NON-NLS-1$
-		postProcessorRegistry.put(CompareDiagramPostProcessor.class.getName(),
-				new BasicPostProcessorDescriptorImpl(new CompareDiagramPostProcessor(),
-						Pattern.compile("http://www.eclipse.org/gmf/runtime/1.0.2/notation"), //$NON-NLS-1$
-						Pattern.compile(""))); //$NON-NLS-1$
-		return postProcessorRegistry;
-	}
-
-	/**
-	 * Executes a right to left or left to right merge of a list of differences.
-	 * 
-	 * @param differences
-	 *            the list of differences.
-	 * @param leftToRight
-	 *            the merge direction.
-	 */
-	protected void mergeDiffs(List<? extends Diff> differences, boolean leftToRight) {
-		if (leftToRight) {
-			mergeRunnable = new MergeRunnableImpl(true, true, MergeMode.LEFT_TO_RIGHT,
-					new CachingDiffRelationshipComputer(mergerRegistry));
-			mergeRunnable.merge(differences, true, mergerRegistry);
-		} else {
-			mergeRunnable = new MergeRunnableImpl(true, true, MergeMode.RIGHT_TO_LEFT,
-					new CachingDiffRelationshipComputer(mergerRegistry));
-			mergeRunnable.merge(differences, false, mergerRegistry);
-		}
 	}
 
 	/**

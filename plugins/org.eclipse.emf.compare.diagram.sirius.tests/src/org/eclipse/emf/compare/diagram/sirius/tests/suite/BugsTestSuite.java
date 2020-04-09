@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diagram.sirius.tests.suite;
 
 import org.eclipse.emf.compare.diagram.sirius.internal.TestBug561458;
+import org.eclipse.emf.compare.diagram.sirius.internal.merge.TestBug561825;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -22,6 +23,6 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author <a href="mailto:glenn.plouhinec@obeo.fr">Glenn Plouhinec</a>
  */
 @RunWith(Suite.class)
-@SuiteClasses({TestBug561458.class })
+@SuiteClasses({TestBug561458.class, TestBug561825.class })
 public class BugsTestSuite {
 }
