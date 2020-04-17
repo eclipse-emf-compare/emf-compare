@@ -32,6 +32,7 @@ Import-Package: com.google.common.base;version="[27.0.0,28.0.0)",
  com.google.common.eventbus;version="[27.0.0,28.0.0)",
  com.google.common.util.concurrent;version="[27.0.0,28.0.0)"
 Export-Package: org.eclipse.emf.compare.ide.ui.tests,
+ org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.util,
  org.eclipse.emf.compare.ide.ui.tests.structuremergeviewer.actions,
  org.eclipse.emf.compare.ide.ui.tests.workspace
 Bundle-ActivationPolicy: lazy

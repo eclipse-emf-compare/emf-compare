@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2017 Obeo and others.
+ * Copyright (c) 2012, 2020 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,8 @@ import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.ide.ui.tests.command.MergeAllCommandTests;
 import org.eclipse.emf.compare.ide.ui.tests.compareconfiguration.EMFCompareConfigurationTest;
 import org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.notloadedfragment.NotLoadedFragmentItemTest;
+import org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.util.RedoActionTest;
+import org.eclipse.emf.compare.ide.ui.tests.contentmergeviewer.util.UndoActionTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.modelprovider.EMFModelProviderRegistrationTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.modelprovider.EMFModelProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.logical.resolver.CachingImplicitDependenciesTest;
@@ -68,7 +70,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		SynchronizationModelDiagnosticTest.class, CascadingFilterRefinementTest.class,
 		MergeNonConflictingRunnableRefinementTest.class, CachingImplicitDependenciesTest.class,
 		MirroredMergeActionTest.class, EMFModelProviderRegistrationTest.class,
-		MergeConflictingRunnableTest.class })
+		MergeConflictingRunnableTest.class, UndoActionTest.class, RedoActionTest.class })
 public class AllTests {
 
 	@BeforeClass

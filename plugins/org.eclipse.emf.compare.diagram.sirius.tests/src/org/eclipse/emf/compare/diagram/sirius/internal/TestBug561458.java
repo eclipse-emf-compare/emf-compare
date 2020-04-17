@@ -31,7 +31,6 @@ import org.eclipse.emf.compare.tests.framework.AbstractInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.sirius.viewpoint.DMappingBased;
 import org.eclipse.sirius.viewpoint.DSemanticDecorator;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -72,6 +71,11 @@ public class TestBug561458 extends AbstractSiriusTest {
 	private Resource origin;
 
 	/**
+	 * The scope of the comparison.
+	 */
+	private DefaultComparisonScope scope;
+
+	/**
 	 * Set up the test models.
 	 * <p>
 	 * addedContainers.nodes: In this model we have a tree nodes structured like this:
@@ -110,10 +114,10 @@ public class TestBug561458 extends AbstractSiriusTest {
 	 *             Thrown if we could not access either this class' resource, or the file towards which
 	 *             <code>string</code> points.
 	 */
-	@Before
+	@Override
 	public void setUp() throws IOException {
+		super.setUp();
 		Bug561458 inputData = new Bug561458();
-		fillRegistries();
 		addedContainers = inputData.getResource("addedContainers.aird"); //$NON-NLS-1$
 		deletedContainers = inputData.getResource("deletedContainers.aird"); //$NON-NLS-1$
 		singleAddedContainer = inputData.getResource("singleAddedContainer.aird"); //$NON-NLS-1$
@@ -126,8 +130,7 @@ public class TestBug561458 extends AbstractSiriusTest {
 	 */
 	@Test
 	public void testSingleAddedContainerImpliesMapping() {
-		DefaultComparisonScope scope = new DefaultComparisonScope(singleAddedContainer,
-				singleDeletedContainer, origin);
+		scope = new DefaultComparisonScope(singleAddedContainer, singleDeletedContainer, origin);
 		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
 				.compare(scope);
 		List<ReferenceChange> decorators = getAddedOrRemovedDecorators();
@@ -145,8 +148,7 @@ public class TestBug561458 extends AbstractSiriusTest {
 	 */
 	@Test
 	public void testSingleDeletedContainerImpliedByMapping() {
-		DefaultComparisonScope scope = new DefaultComparisonScope(singleDeletedContainer,
-				singleAddedContainer, origin);
+		scope = new DefaultComparisonScope(singleDeletedContainer, singleAddedContainer, origin);
 		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
 				.compare(scope);
 		List<ReferenceChange> decorators = getAddedOrRemovedDecorators();
@@ -164,7 +166,7 @@ public class TestBug561458 extends AbstractSiriusTest {
 	 */
 	@Test
 	public void testAddedContainersImpliesMapping() {
-		DefaultComparisonScope scope = new DefaultComparisonScope(addedContainers, deletedContainers, origin);
+		scope = new DefaultComparisonScope(addedContainers, deletedContainers, origin);
 		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
 				.compare(scope);
 		List<ReferenceChange> decorators = getAddedOrRemovedDecorators();
@@ -188,7 +190,7 @@ public class TestBug561458 extends AbstractSiriusTest {
 	 */
 	@Test
 	public void testDeletedContainersImpliedByMapping() {
-		DefaultComparisonScope scope = new DefaultComparisonScope(deletedContainers, addedContainers, origin);
+		scope = new DefaultComparisonScope(deletedContainers, addedContainers, origin);
 		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
 				.compare(scope);
 		List<ReferenceChange> decorators = getAddedOrRemovedDecorators();
@@ -212,8 +214,7 @@ public class TestBug561458 extends AbstractSiriusTest {
 	 */
 	@Test
 	public void testMergeRightToLeftDeletedContainer() {
-		DefaultComparisonScope scope = new DefaultComparisonScope(singleDeletedContainer,
-				singleAddedContainer, origin);
+		scope = new DefaultComparisonScope(singleDeletedContainer, singleAddedContainer, origin);
 		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
 				.compare(scope);
 
@@ -226,8 +227,7 @@ public class TestBug561458 extends AbstractSiriusTest {
 	 */
 	@Test
 	public void testMergeLeftToRightDeletedContainer() {
-		DefaultComparisonScope scope = new DefaultComparisonScope(singleDeletedContainer,
-				singleAddedContainer, origin);
+		scope = new DefaultComparisonScope(singleDeletedContainer, singleAddedContainer, origin);
 		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
 				.compare(scope);
 
@@ -240,8 +240,7 @@ public class TestBug561458 extends AbstractSiriusTest {
 	 */
 	@Test
 	public void testMergeRightToLeftAddedContainer() {
-		DefaultComparisonScope scope = new DefaultComparisonScope(singleAddedContainer,
-				singleDeletedContainer, origin);
+		scope = new DefaultComparisonScope(singleAddedContainer, singleDeletedContainer, origin);
 		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
 				.compare(scope);
 
@@ -254,8 +253,7 @@ public class TestBug561458 extends AbstractSiriusTest {
 	 */
 	@Test
 	public void testMergeLeftToRightAddedContainer() {
-		DefaultComparisonScope scope = new DefaultComparisonScope(singleAddedContainer,
-				singleDeletedContainer, origin);
+		scope = new DefaultComparisonScope(singleAddedContainer, singleDeletedContainer, origin);
 		comparison = EMFCompare.builder().setPostProcessorRegistry(getPostProcessorRegistry()).build()
 				.compare(scope);
 
@@ -278,6 +276,16 @@ public class TestBug561458 extends AbstractSiriusTest {
 		Stream<ReferenceChange> addedOrRemovedSemanticDecorators = refChanges
 				.filter(diff -> diff.getValue() instanceof DSemanticDecorator);
 		return addedOrRemovedSemanticDecorators.collect(Collectors.toList());
+	}
+
+	/**
+	 * Getter for the scope.
+	 * 
+	 * @return scope.
+	 */
+	@Override
+	public DefaultComparisonScope getScope() {
+		return scope;
 	}
 
 	/**
