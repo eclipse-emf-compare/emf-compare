@@ -14,6 +14,9 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.util.Comparator;
+import java.util.stream.Stream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -43,7 +46,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.util.FileUtils;
 import org.eclipse.jgit.util.SystemReader;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -123,7 +125,10 @@ public class RemoteNewProjectTests extends CompareTestCase {
 		if (gitDir.exists()) {
 			File gitRoot = gitDir.getParentFile();
 			if (gitRoot.exists()) {
-				FileUtils.delete(gitRoot, FileUtils.RECURSIVE | FileUtils.RETRY);
+				try (Stream<java.nio.file.Path> walk = Files.walk(gitRoot.toPath())) {
+					walk.sorted(Comparator.reverseOrder()).map(java.nio.file.Path::toFile)
+							.forEach(File::delete);
+				}
 			}
 		}
 	}

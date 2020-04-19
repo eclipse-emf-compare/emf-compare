@@ -86,7 +86,9 @@ public abstract class AbstractGitOperationStatement extends AbstractGitStatement
 			if (expected != None.class) {
 				fail("Expected exception : " + expected.getName()); //$NON-NLS-1$
 			}
+			// CHECKSTYLE:OFF We want to catch every throwable here
 		} catch (Throwable e) {
+			// CHECKSTYLE:ON
 			if (expected.isAssignableFrom(e.getClass())) {
 				// success
 			} else {

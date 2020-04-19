@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.suite;
 
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.egit.core.GitCorePreferences;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.ide.ui.tests.merge.AdditiveMergeTests;
 import org.eclipse.emf.compare.ide.ui.tests.merge.DirCacheResourceVariantTreeProviderTest;
@@ -60,6 +63,15 @@ import org.junit.runners.Suite.SuiteClasses;
 		TreeWalkResourceVariantTreeProviderTest.class, EMFResourceMappingMergerPreMergeTest.class,
 		MultipleAncestorsTest.class, })
 public class GitTests {
+
+	@BeforeClass
+	public static void disableEGitAutomaticBehavior() {
+		// suppress auto-ignoring and auto-sharing to avoid interference
+		IEclipsePreferences eGitPreferences = InstanceScope.INSTANCE
+				.getNode(org.eclipse.egit.core.Activator.getPluginId());
+		eGitPreferences.put(GitCorePreferences.core_preferredMergeStrategy, "model recursive");
+		eGitPreferences.putBoolean(GitCorePreferences.core_autoShareProjects, false);
+	}
 
 	@BeforeClass
 	public static void fillEMFRegistries() {

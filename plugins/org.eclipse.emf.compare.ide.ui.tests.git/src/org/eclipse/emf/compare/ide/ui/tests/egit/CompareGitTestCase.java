@@ -21,7 +21,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
@@ -59,7 +61,6 @@ import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConf
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.util.FileUtils;
 import org.eclipse.jgit.util.SystemReader;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.junit.After;
@@ -120,7 +121,9 @@ public class CompareGitTestCase extends CompareTestCase {
 		repository.dispose();
 		Activator.getDefault().getRepositoryCache().clear();
 		if (gitDir.exists()) {
-			FileUtils.delete(gitDir, FileUtils.RECURSIVE | FileUtils.RETRY);
+			try (Stream<java.nio.file.Path> walk = Files.walk(gitDir.toPath())) {
+				walk.sorted(Comparator.reverseOrder()).map(java.nio.file.Path::toFile).forEach(File::delete);
+			}
 		}
 		super.tearDown();
 	}

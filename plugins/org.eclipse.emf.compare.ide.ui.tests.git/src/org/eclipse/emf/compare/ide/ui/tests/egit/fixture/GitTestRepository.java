@@ -56,6 +56,7 @@ import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
+import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefUpdate;
@@ -88,8 +89,10 @@ public class GitTestRepository {
 	 *             Thrown if we cannot write at the given location.
 	 */
 	public GitTestRepository(File gitDir) throws IOException {
+		FileRepository tmpRepository = new FileRepository(gitDir);
+		tmpRepository.create();
+		tmpRepository.close();
 		repository = Activator.getDefault().getRepositoryCache().lookupRepository(gitDir);
-		repository.create();
 
 		try {
 			workdirPrefix = repository.getWorkTree().getCanonicalPath();
@@ -203,12 +206,9 @@ public class GitTestRepository {
 	}
 
 	public RevCommit addAllAndCommit(String commitMessage) throws Exception {
-		Git git = new Git(repository);
-		try {
+		try (Git git = new Git(repository)) {
 			git.add().addFilepattern(".").call();
 			return commit(commitMessage);
-		} finally {
-			git.close();
 		}
 	}
 
@@ -222,12 +222,9 @@ public class GitTestRepository {
 	 *             if anything goes wrong.
 	 */
 	public RevCommit addAllAndAmend(String message) throws Exception {
-		Git git = new Git(repository);
-		try {
+		try (Git git = new Git(repository)) {
 			git.add().addFilepattern(".").call();
 			return git.commit().setAmend(true).setMessage(message).call();
-		} finally {
-			git.close();
 		}
 	}
 
@@ -289,8 +286,7 @@ public class GitTestRepository {
 	public void addToIndex(IResource resource)
 			throws CoreException, IOException, NoFilepatternException, GitAPIException {
 		String repoPath = getRepoRelativePath(resource.getLocation().toString());
-		Git git = new Git(repository);
-		try {
+		try (Git git = new Git(repository)) {
 			git.add().addFilepattern(repoPath).call();
 			// removed files cannot be added to the index through this add command.
 			// see bug 494323 for more details on this limitation, but
@@ -300,8 +296,6 @@ public class GitTestRepository {
 			// Will add all of the files from the repository to the index, excepted untracked files (new files
 			// added to the repository)
 			git.add().addFilepattern(repoPath).setUpdate(true).call();
-		} finally {
-			git.close();
 		}
 	}
 
@@ -383,14 +377,11 @@ public class GitTestRepository {
 	 */
 	public void addToIndex(IResource... resources)
 			throws CoreException, IOException, NoFilepatternException, GitAPIException {
-		Git git = new Git(repository);
-		try {
+		try (Git git = new Git(repository)) {
 			for (IResource resource : resources) {
 				String repoPath = getRepoRelativePath(resource.getLocation().toString());
 				git.add().addFilepattern(repoPath).call();
 			}
-		} finally {
-			git.close();
 		}
 	}
 
@@ -402,14 +393,11 @@ public class GitTestRepository {
 	 */
 	public void removeFromIndex(IResource... resources)
 			throws CoreException, IOException, NoFilepatternException, GitAPIException {
-		Git git = new Git(repository);
-		try {
+		try (Git git = new Git(repository)) {
 			for (IResource resource : resources) {
 				String repoPath = getRepoRelativePath(resource.getLocation().toString());
 				git.rm().addFilepattern(repoPath).call();
 			}
-		} finally {
-			git.close();
 		}
 	}
 
@@ -421,15 +409,12 @@ public class GitTestRepository {
 	 * @return commit object
 	 */
 	public RevCommit commit(String message) throws Exception {
-		Git git = new Git(repository);
-		try {
+		try (Git git = new Git(repository)) {
 			CommitCommand commitCommand = git.commit();
 			commitCommand.setAuthor("J. Git", "j.git@egit.org");
 			commitCommand.setCommitter(commitCommand.getAuthor());
 			commitCommand.setMessage(message);
 			return commitCommand.call();
-		} finally {
-			git.close();
 		}
 	}
 
@@ -580,11 +565,8 @@ public class GitTestRepository {
 	 * @throws Exception
 	 */
 	public Status status() throws Exception {
-		Git git = new Git(repository);
-		try {
+		try (Git git = new Git(repository)) {
 			return git.status().call();
-		} finally {
-			git.close();
 		}
 	}
 
@@ -598,11 +580,8 @@ public class GitTestRepository {
 	 */
 	public void track(File file) throws IOException, NoFilepatternException, GitAPIException {
 		String repoPath = getRepoRelativePath(new Path(file.getPath()).toString());
-		Git git = new Git(repository);
-		try {
+		try (Git git = new Git(repository)) {
 			git.add().addFilepattern(repoPath).call();
-		} finally {
-			git.close();
 		}
 	}
 

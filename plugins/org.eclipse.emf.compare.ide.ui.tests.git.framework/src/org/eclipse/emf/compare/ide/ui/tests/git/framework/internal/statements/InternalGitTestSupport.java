@@ -16,13 +16,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -33,7 +37,6 @@ import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.egit.core.op.DisconnectProviderOperation;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.util.FileUtils;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
@@ -233,20 +236,20 @@ public class InternalGitTestSupport {
 	 *             Thrown if the zip extraction goes wrong
 	 */
 	private void extractArchive(Class<?> clazz, String path, IWorkspaceRoot root) throws IOException {
-		InputStream resourceAsStream = clazz.getResourceAsStream(path);
-		ZipInputStream zipIn = new ZipInputStream(resourceAsStream);
-		ZipEntry entry = null;
-		while ((entry = zipIn.getNextEntry()) != null) {
-			String filePath = root.getLocation() + File.separator + entry.getName();
-			if (!entry.isDirectory()) {
-				extractFile(zipIn, filePath);
-			} else {
-				File dir = new File(filePath);
-				dir.mkdir();
+		try (InputStream resourceAsStream = clazz.getResourceAsStream(path);
+				ZipInputStream zipIn = new ZipInputStream(resourceAsStream);) {
+			ZipEntry entry = null;
+			while ((entry = zipIn.getNextEntry()) != null) {
+				String filePath = root.getLocation() + File.separator + entry.getName();
+				if (!entry.isDirectory()) {
+					extractFile(zipIn, filePath);
+				} else {
+					File dir = new File(filePath);
+					dir.mkdir();
+				}
+				zipIn.closeEntry();
 			}
-			zipIn.closeEntry();
 		}
-		zipIn.close();
 	}
 
 	/**
@@ -260,13 +263,13 @@ public class InternalGitTestSupport {
 	 *             Thrown if something happen during the extraction
 	 */
 	private void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
-		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
-		byte[] bytesIn = new byte[BUFFER_SIZE];
-		int read = 0;
-		while ((read = zipIn.read(bytesIn)) != -1) {
-			bos.write(bytesIn, 0, read);
+		try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));) {
+			byte[] bytesIn = new byte[BUFFER_SIZE];
+			int read = 0;
+			while ((read = zipIn.read(bytesIn)) != -1) {
+				bos.write(bytesIn, 0, read);
+			}
 		}
-		bos.close();
 	}
 
 	/**
@@ -292,7 +295,10 @@ public class InternalGitTestSupport {
 		if (listFiles != null) {
 			for (File child : listFiles) {
 				if (!child.getName().equals(METADATA_FOLDER)) {
-					FileUtils.delete(child, FileUtils.RECURSIVE | FileUtils.RETRY);
+					try (Stream<java.nio.file.Path> walk = Files.walk(child.toPath())) {
+						walk.sorted(Comparator.reverseOrder()).map(java.nio.file.Path::toFile)
+								.forEach(File::delete);
+					}
 				}
 			}
 		}
@@ -325,6 +331,8 @@ public class InternalGitTestSupport {
 			for (IProject iProject : projects) {
 				iProject.delete(true, new NullProgressMonitor());
 			}
+			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE,
+					new NullProgressMonitor());
 		}
 
 		File file = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString());
@@ -332,7 +340,10 @@ public class InternalGitTestSupport {
 		if (listFiles != null) {
 			for (File child : listFiles) {
 				if (!child.getName().equals(METADATA_FOLDER)) {
-					FileUtils.delete(child, FileUtils.RECURSIVE | FileUtils.RETRY);
+					try (Stream<java.nio.file.Path> walk = Files.walk(child.toPath())) {
+						walk.sorted(Comparator.reverseOrder()).map(java.nio.file.Path::toFile)
+								.forEach(File::delete);
+					}
 				}
 			}
 		}
