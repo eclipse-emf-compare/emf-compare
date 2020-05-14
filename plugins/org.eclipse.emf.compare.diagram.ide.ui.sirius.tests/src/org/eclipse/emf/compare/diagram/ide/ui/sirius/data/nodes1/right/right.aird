@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:nodes="http://www.eclipse.org/emf/compare/tests/nodes" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/style/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description/style">
+  <viewpoint:DAnalysis uid="_D3wqUIR_EeqXVMi-NXD3_g" selectedViews="_N7BpsJaAEeq0_dEE9gunOw" version="14.3.0.201909031200">
+    <semanticResources>right.nodes</semanticResources>
+    <ownedViews xmi:type="viewpoint:DView" uid="_N7BpsJaAEeq0_dEE9gunOw">
+      <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.compare.diagram.sirius.tests.design/description/nodes.odesign#//@ownedViewpoints[name='Nodes%20Design']"/>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_RDsDwJaAEeq0_dEE9gunOw" name="Nodes1 Diagram" repPath="#_RB1CkJaAEeq0_dEE9gunOw" changeId="7af842f9-82b9-4160-ab50-841e5b528c2d">
+        <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.compare.diagram.sirius.tests.design/description/nodes.odesign#//@ownedViewpoints[name='Nodes%20Design']/@ownedRepresentations[name='Nodes%20Diagram']"/>
+        <target xmi:type="nodes:Node" href="right.nodes#_KUSB0IR_EeqXVMi-NXD3_g"/>
+      </ownedRepresentationDescriptors>
+    </ownedViews>
+  </viewpoint:DAnalysis>
+  <diagram:DSemanticDiagram uid="_RB1CkJaAEeq0_dEE9gunOw">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_RDmkMJaAEeq0_dEE9gunOw" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" uid="_RDnLQJaAEeq0_dEE9gunOw"/>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_REVkAJaAEeq0_dEE9gunOw" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_REVkAZaAEeq0_dEE9gunOw" type="Sirius" element="_RB1CkJaAEeq0_dEE9gunOw" measurementUnit="Pixel">
+        <children xmi:type="notation:Node" xmi:id="_RFA5cJaAEeq0_dEE9gunOw" type="2002" element="_RDgdkJaAEeq0_dEE9gunOw">
+          <children xmi:type="notation:Node" xmi:id="_RFBggJaAEeq0_dEE9gunOw" type="5006"/>
+          <children xmi:type="notation:Node" xmi:id="_RFBggZaAEeq0_dEE9gunOw" type="7001">
+            <styles xmi:type="notation:SortingStyle" xmi:id="_RFBggpaAEeq0_dEE9gunOw"/>
+            <styles xmi:type="notation:FilteringStyle" xmi:id="_RFBgg5aAEeq0_dEE9gunOw"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_RFA5cZaAEeq0_dEE9gunOw" fontName="Segoe UI" fontHeight="12"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_RFA5cpaAEeq0_dEE9gunOw" x="210"/>
+        </children>
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_REVkApaAEeq0_dEE9gunOw"/>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_RDgdkJaAEeq0_dEE9gunOw" name="C">
+      <target xmi:type="nodes:Node" href="right.nodes#_UiKLEIR_EeqXVMi-NXD3_g"/>
+      <semanticElements xmi:type="nodes:Node" href="right.nodes#_UiKLEIR_EeqXVMi-NXD3_g"/>
+      <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_RDhEoJaAEeq0_dEE9gunOw" labelSize="12" borderSize="1" borderSizeComputationExpression="1">
+        <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.compare.diagram.sirius.tests.design/description/nodes.odesign#//@ownedViewpoints[name='Nodes%20Design']/@ownedRepresentations[name='Nodes%20Diagram']/@defaultLayer/@containerMappings[name='ND_Node']/@style"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.compare.diagram.sirius.tests.design/description/nodes.odesign#//@ownedViewpoints[name='Nodes%20Design']/@ownedRepresentations[name='Nodes%20Diagram']/@defaultLayer/@containerMappings[name='ND_Node']"/>
+    </ownedDiagramElements>
+    <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.compare.diagram.sirius.tests.design/description/nodes.odesign#//@ownedViewpoints[name='Nodes%20Design']/@ownedRepresentations[name='Nodes%20Diagram']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_RCMO8JaAEeq0_dEE9gunOw"/>
+    <activatedLayers xmi:type="description_1:Layer" href="platform:/plugin/org.eclipse.emf.compare.diagram.sirius.tests.design/description/nodes.odesign#//@ownedViewpoints[name='Nodes%20Design']/@ownedRepresentations[name='Nodes%20Diagram']/@defaultLayer"/>
+    <target xmi:type="nodes:Node" href="right.nodes#_KUSB0IR_EeqXVMi-NXD3_g"/>
+  </diagram:DSemanticDiagram>
+</xmi:XMI>

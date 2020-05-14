@@ -512,8 +512,9 @@
       <modules>
         <module>../packaging/org.eclipse.emf.compare.update.extras</module>
         <module>../packaging/org.eclipse.emf.compare.diagram.sirius-feature</module>
-        <module>../plugins/org.eclipse.emf.compare.diagram.sirius</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.sirius</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.ide.ui.sirius.tests</module>
+        <module>../plugins/org.eclipse.emf.compare.diagram.sirius</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.sirius.tests</module>
         <module>../plugins/org.eclipse.emf.compare.diagram.sirius.tests.design</module>
       </modules>
