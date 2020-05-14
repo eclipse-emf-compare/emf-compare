@@ -54,7 +54,7 @@ public abstract class AbstractDecoratorManager implements IDecoratorManager {
 	 * 
 	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
 	 */
-	protected abstract class AbstractDecorator {
+	public abstract class AbstractDecorator {
 
 		/** The reference <code>View</code> for this decorator. */
 		protected View fOriginView;

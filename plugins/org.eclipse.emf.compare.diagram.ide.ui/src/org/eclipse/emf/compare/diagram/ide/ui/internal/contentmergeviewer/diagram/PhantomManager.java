@@ -821,4 +821,17 @@ public class PhantomManager extends AbstractDecoratorManager {
 			handleDeleteDecorator(phantom, phantom.getLayer(), phantom.getFigure());
 		}
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.IDecoratorManager#getAllDecorators()
+	 */
+	public Collection<AbstractDecorator> getAllDecorators() {
+		Collection<AbstractDecorator> phantoms = new ArrayList<AbstractDecorator>();
+		for (AbstractDecorator phantom : fPhantomRegistry.values()) {
+			phantoms.add(phantom);
+		}
+		return phantoms;
+	}
 }

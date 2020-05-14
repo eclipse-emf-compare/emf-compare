@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 Obeo.
+ * Copyright (c) 2018, 2020 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,11 @@ import java.util.Set;
 
 import org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.IDiagramNodeAccessor;
 import org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer;
+import org.eclipse.emf.compare.diagram.ide.ui.sirius.internal.tools.actions.SiriusComparisonAsImageFileAction;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.sirius.diagram.DDiagram;
 import org.eclipse.sirius.diagram.business.api.componentization.DiagramDescriptionMappingsManager;
 import org.eclipse.sirius.diagram.business.api.componentization.DiagramDescriptionMappingsRegistry;
@@ -26,15 +29,34 @@ import org.eclipse.sirius.diagram.business.api.componentization.DiagramMappingsM
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ * Specialized {@link org.eclipse.compare.contentmergeviewer.ContentMergeViewer} used to display Sirius
+ * diagram comparison.
+ * 
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ */
 public class SiriusContentMergeViewer extends DiagramContentMergeViewer {
 	private Set<DiagramMappingsManager> siriusMappingManagers = new LinkedHashSet<>();
 
 	private Set<DiagramDescriptionMappingsManager> siriusDescriptionMappingManagers = new LinkedHashSet<>();
 
+	/**
+	 * Default constructor.
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.DiagramContentMergeViewer#DiagramContentMergeViewer(Composite,
+	 *      EMFCompareConfiguration)
+	 * @param parent
+	 *            the parent composite to build the UI in.
+	 * @param config
+	 *            the {@link EMFCompareConfiguration}.
+	 */
 	public SiriusContentMergeViewer(Composite parent, EMFCompareConfiguration config) {
 		super(parent, config);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
 		super.updateContent(ancestor, left, right);
@@ -43,6 +65,9 @@ public class SiriusContentMergeViewer extends DiagramContentMergeViewer {
 		getSiriusDiagram(right).ifPresent(this::storeManagers);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
 		super.handleDispose(event);
@@ -71,5 +96,15 @@ public class SiriusContentMergeViewer extends DiagramContentMergeViewer {
 				.add(DiagramMappingsManagerRegistry.INSTANCE.getDiagramMappingsManager(null, diagram));
 		siriusDescriptionMappingManagers.add(DiagramDescriptionMappingsRegistry.INSTANCE
 				.getDiagramDescriptionMappingsManager(null, diagram.getDescription()));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void createToolItems(ToolBarManager toolBarManager) {
+		super.createToolItems(toolBarManager);
+		SiriusComparisonAsImageFileAction saveAsImageFileAction = new SiriusComparisonAsImageFileAction(this);
+		toolBarManager.insert(0, new ActionContributionItem(saveAsImageFileAction));
 	}
 }

@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.AbstractDecoratorManager.AbstractDecorator;
 import org.eclipse.emf.compare.ide.ui.internal.configuration.EMFCompareConfiguration;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.ICompareColor;
 
@@ -94,6 +98,18 @@ public class DecoratorsManager implements IDecoratorManager {
 	public void removeAll() {
 		fMarkerManager.removeAll();
 		fPhantomManager.removeAll();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.IDecoratorManager#getAllDecorators()
+	 */
+	public Collection<AbstractDecorator> getAllDecorators() {
+		Collection<AbstractDecorator> decorators = new ArrayList<AbstractDecorator>();
+		decorators.addAll(fMarkerManager.getAllDecorators());
+		decorators.addAll(fPhantomManager.getAllDecorators());
+		return decorators;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Obeo.
+ * Copyright (c) 2015, 2020 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.sirius;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -62,6 +65,27 @@ public class CompareDiagramIDEUISiriusPlugin extends AbstractUIPlugin {
 	 */
 	public static CompareDiagramIDEUISiriusPlugin getDefault() {
 		return plugin;
+	}
+
+	/**
+	 * Returns a plugin image descriptor.
+	 * 
+	 * @param imagePath
+	 *            plugin relative path to the image
+	 * @return ImageDescriptor image descriptor.
+	 */
+	public static ImageDescriptor getImageDescriptor(String imagePath) {
+		return imageDescriptorFromPlugin(PLUGIN_ID, imagePath);
+	}
+
+	/**
+	 * Log an {@link Exception} in the {@link #getLog() current logger}.
+	 * 
+	 * @param e
+	 *            the exception to be logged.
+	 */
+	public void log(Throwable e) {
+		getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, e.getMessage(), e));
 	}
 
 }

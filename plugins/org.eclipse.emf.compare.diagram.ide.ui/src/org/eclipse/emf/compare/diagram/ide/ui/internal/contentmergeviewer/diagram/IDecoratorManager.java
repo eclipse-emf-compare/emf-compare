@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram;
 
+import java.util.Collection;
+
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.AbstractDecoratorManager.AbstractDecorator;
 
 /**
  * Interface for the management of decorators.
@@ -53,4 +56,10 @@ public interface IDecoratorManager {
 	 */
 	void removeAll();
 
+	/**
+	 * Get all registered decorators.
+	 * 
+	 * @return the list of all decorators.
+	 */
+	Collection<AbstractDecorator> getAllDecorators();
 }

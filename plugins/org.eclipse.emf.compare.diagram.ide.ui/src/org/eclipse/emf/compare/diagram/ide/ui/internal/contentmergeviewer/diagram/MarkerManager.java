@@ -279,4 +279,17 @@ public class MarkerManager extends AbstractDecoratorManager {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diagram.ide.ui.internal.contentmergeviewer.diagram.IDecoratorManager#getAllDecorators()
+	 */
+	public Collection<AbstractDecorator> getAllDecorators() {
+		Collection<AbstractDecorator> markers = new ArrayList<AbstractDecorator>();
+		for (AbstractDecorator marker : fMarkerRegistry.values()) {
+			markers.add(marker);
+		}
+		return markers;
+	}
+
 }

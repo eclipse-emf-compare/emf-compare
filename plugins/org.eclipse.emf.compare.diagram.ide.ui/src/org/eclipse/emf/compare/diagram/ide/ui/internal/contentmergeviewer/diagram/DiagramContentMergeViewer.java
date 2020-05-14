@@ -93,6 +93,15 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer impl
 	}
 
 	/**
+	 * Get the {@link DecoratorsManager}.
+	 * 
+	 * @return the {@link DecoratorsManager}.
+	 */
+	public DecoratorsManager getDecoratorsManager() {
+		return fDecoratorsManager;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.ide.ui.internal.contentmergeviewer.EMFCompareContentMergeViewer#getAncestorMergeViewer()
