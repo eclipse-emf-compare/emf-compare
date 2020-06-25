@@ -2,7 +2,7 @@ target "Orbit"
 
 with source, requirements
 
-location "http://download.eclipse.org/tools/orbit/downloads/drops/R20190827152740/repository/" {
+location "http://download.eclipse.org/tools/orbit/downloads/drops/R20200529191137/repository/" {
 	com.google.guava [27.0.0,28.0.0)
 	com.google.gson [2.2.4,3.0.0)
 	org.junit [4,5)
@@ -13,4 +13,5 @@ location "http://download.eclipse.org/tools/orbit/downloads/drops/R2019082715274
 	org.kohsuke.args4j
 	org.mockito [1.9.0,2.0.0)
 	org.hamcrest [1.1.0,2.0.0)
+	org.assertj lazy
 }
