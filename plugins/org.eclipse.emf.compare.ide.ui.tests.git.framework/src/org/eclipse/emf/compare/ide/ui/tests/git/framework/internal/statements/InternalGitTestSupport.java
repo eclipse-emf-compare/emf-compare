@@ -19,7 +19,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -36,6 +38,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.egit.core.op.DisconnectProviderOperation;
+import org.eclipse.egit.core.project.RepositoryFinder;
+import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
@@ -111,10 +115,18 @@ public class InternalGitTestSupport {
 		extractArchive(clazz, path, root);
 		importProjects(new File(location.toString()));
 		connectRepository(new File(location.toString()));
-		projects = root.getProjects();
-		for (IProject project : projects) {
-			connect(project);
+		List<IProject> existingProjects = Arrays.asList(root.getProjects());
+		List<IProject> connectedProjects = new ArrayList<>();
+		for (IProject project : existingProjects) {
+			RepositoryFinder finder = new RepositoryFinder(project);
+			finder.setFindInChildren(false);
+			Collection<RepositoryMapping> repos = finder.find(new NullProgressMonitor());
+			if (!repos.isEmpty()) {
+				connect(project);
+				connectedProjects.add(project);
+			}
 		}
+		projects = connectedProjects.toArray(new IProject[connectedProjects.size()]);
 	}
 
 	/**
@@ -327,8 +339,13 @@ public class InternalGitTestSupport {
 		Activator.getDefault().getRepositoryCache().clear();
 
 		if (projects != null) {
-			new DisconnectProviderOperation(Arrays.asList(projects)).execute(null);
+			List<IProject> disconnectMe = new ArrayList<>();
 			for (IProject iProject : projects) {
+				disconnectMe.add(iProject);
+			}
+			new DisconnectProviderOperation(disconnectMe).execute(null);
+
+			for (IProject iProject : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
 				iProject.delete(true, new NullProgressMonitor());
 			}
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE,
