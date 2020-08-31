@@ -345,8 +345,15 @@ public class InternalGitTestSupport {
 			}
 			new DisconnectProviderOperation(disconnectMe).execute(null);
 
-			for (IProject iProject : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-				iProject.delete(true, new NullProgressMonitor());
+			// Delete sub-projects first
+			List<IProject> allProjects = new ArrayList<>(
+					Arrays.asList(ResourcesPlugin.getWorkspace().getRoot().getProjects()));
+			allProjects.sort((p1, p2) -> p2.getLocation().toString().compareTo(p1.getLocation().toString()));
+
+			for (IProject iProject : allProjects) {
+				if (iProject.isAccessible()) {
+					iProject.delete(true, new NullProgressMonitor());
+				}
 			}
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE,
 					new NullProgressMonitor());
