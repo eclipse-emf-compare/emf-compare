@@ -60,6 +60,9 @@ public class InternalGitTestSupport {
 	/** Name of the Eclipse metadata folder. */
 	private static final String METADATA_FOLDER = ".metadata"; //$NON-NLS-1$
 
+	/** Name of the git metadata folder. */
+	private static final String GIT_FOLDER = ".git"; //$NON-NLS-1$
+
 	/** Size of the buffer to read/write data. */
 	private static final int BUFFER_SIZE = 4096;
 
@@ -112,8 +115,17 @@ public class InternalGitTestSupport {
 		// other tests
 		root.delete(true, new NullProgressMonitor());
 		IPath location = root.getLocation();
-		extractArchive(clazz, path, root);
-		importProjects(new File(location.toString()));
+		List<String> extractedPaths = extractArchive(clazz, path, root);
+		for (String extractedPath : extractedPaths) {
+			File extractedFile = new File(extractedPath);
+			if (!extractedFile.getPath().contains(File.separatorChar + METADATA_FOLDER + File.separatorChar)
+					&& !extractedFile.getPath()
+							.contains(File.separatorChar + GIT_FOLDER + File.separatorChar)) {
+				if (".project".equals(extractedFile.getName())) { //$NON-NLS-1$
+					importProject(extractedFile);
+				}
+			}
+		}
 		connectRepository(new File(location.toString()));
 		List<IProject> existingProjects = Arrays.asList(root.getProjects());
 		List<IProject> connectedProjects = new ArrayList<>();
@@ -183,33 +195,6 @@ public class InternalGitTestSupport {
 	}
 
 	/**
-	 * Import the Eclipse projects contained in the given file.
-	 * 
-	 * @param file
-	 *            The folder to look inside
-	 * @throws InvocationTargetException
-	 *             Thrown if an error happen during the import of the project
-	 * @throws InterruptedException
-	 *             Thrown if the import operation is interrupted
-	 * @throws CoreException
-	 *             Thrown if the project cannot be created in the workspace
-	 */
-	private void importProjects(File file)
-			throws InvocationTargetException, InterruptedException, CoreException {
-		File[] listFiles = file.listFiles();
-		if (listFiles != null) {
-			for (File child : listFiles) {
-				if (child.isDirectory() && !child.getName().equals(METADATA_FOLDER)
-						&& !child.getName().equals(".git")) { //$NON-NLS-1$
-					importProjects(child);
-				} else if (child.getName().equals(".project")) { //$NON-NLS-1$
-					importProject(child);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Import the project located in the given path into the test workspace.
 	 * 
 	 * @param file
@@ -244,10 +229,12 @@ public class InternalGitTestSupport {
 	 *            The path to the archive (relative to the test class)
 	 * @param root
 	 *            The root of the test workspace
+	 * @return The list of files extracted from this archive. Does not include folders.
 	 * @throws IOException
 	 *             Thrown if the zip extraction goes wrong
 	 */
-	private void extractArchive(Class<?> clazz, String path, IWorkspaceRoot root) throws IOException {
+	private List<String> extractArchive(Class<?> clazz, String path, IWorkspaceRoot root) throws IOException {
+		List<String> extractedPaths = new ArrayList<>();
 		try (InputStream resourceAsStream = clazz.getResourceAsStream(path);
 				ZipInputStream zipIn = new ZipInputStream(resourceAsStream);) {
 			ZipEntry entry = null;
@@ -255,6 +242,7 @@ public class InternalGitTestSupport {
 				String filePath = root.getLocation() + File.separator + entry.getName();
 				if (!entry.isDirectory()) {
 					extractFile(zipIn, filePath);
+					extractedPaths.add(filePath);
 				} else {
 					File dir = new File(filePath);
 					dir.mkdir();
@@ -262,6 +250,7 @@ public class InternalGitTestSupport {
 				zipIn.closeEntry();
 			}
 		}
+		return extractedPaths;
 	}
 
 	/**
