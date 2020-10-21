@@ -23,6 +23,7 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -306,6 +307,9 @@ public class NotifyingParserPool extends XMLParserPoolImpl {
 						potentialProxies.add(entry);
 					}
 				}
+			} else if (feature instanceof EAttribute && ((EAttribute)feature).isID()) {
+				// We cannot ignore id attributes as these are required for the reference resolution
+				super.setValue(eObject, feature, value, position);
 			} else if (!containmentOnly) {
 				super.setValue(eObject, feature, value, position);
 			}
