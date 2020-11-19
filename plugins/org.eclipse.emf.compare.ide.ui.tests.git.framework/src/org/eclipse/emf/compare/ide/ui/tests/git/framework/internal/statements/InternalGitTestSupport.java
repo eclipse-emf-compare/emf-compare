@@ -314,10 +314,6 @@ public class InternalGitTestSupport {
 	 *             Thrown if a file cannot be deleted
 	 */
 	protected void tearDown() throws CoreException, IOException {
-		if (repository != null) {
-			repository.close();
-			repository = null;
-		}
 		if (disposers != null) {
 			for (Runnable disposer : disposers) {
 				disposer.run();
