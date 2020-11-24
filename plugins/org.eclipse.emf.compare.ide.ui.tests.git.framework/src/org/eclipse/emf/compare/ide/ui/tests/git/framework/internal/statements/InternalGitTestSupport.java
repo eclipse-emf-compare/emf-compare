@@ -264,6 +264,8 @@ public class InternalGitTestSupport {
 	 *             Thrown if something happen during the extraction
 	 */
 	private void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
+		File file = new File(filePath);
+		file.getParentFile().mkdirs();
 		try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));) {
 			byte[] bytesIn = new byte[BUFFER_SIZE];
 			int read = 0;
