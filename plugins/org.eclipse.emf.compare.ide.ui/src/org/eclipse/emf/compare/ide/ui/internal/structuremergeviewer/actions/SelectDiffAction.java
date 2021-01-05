@@ -129,9 +129,11 @@ public class SelectDiffAction extends Action {
 	}
 
 	public void dispose() {
-		final IHandlerService handlerService = getHandlerService();
-		if (handlerService != null && activatedHandler != null) {
-			handlerService.deactivateHandler(activatedHandler);
+		if (PlatformUI.isWorkbenchRunning()) {
+			final IHandlerService handlerService = getHandlerService();
+			if (handlerService != null && activatedHandler != null) {
+				handlerService.deactivateHandler(activatedHandler);
+			}
 		}
 	}
 }
