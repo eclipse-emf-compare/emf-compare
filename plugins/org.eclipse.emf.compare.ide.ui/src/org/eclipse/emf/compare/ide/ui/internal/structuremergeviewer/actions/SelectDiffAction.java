@@ -17,6 +17,10 @@ import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
 import org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.Navigatable;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.commands.ActionHandler;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -113,9 +117,21 @@ public class SelectDiffAction extends Action {
 
 	@SuppressWarnings("cast")
 	protected IHandlerService getHandlerService() {
-		// explicit cast necessary for Luna
-		return (IHandlerService)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-				.getActivePart().getSite().getService(IHandlerService.class);
+		if (PlatformUI.isWorkbenchRunning()) {
+			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+			if (activePage != null) {
+				IWorkbenchPart activePart = activePage.getActivePart();
+				if (activePart != null) {
+					IWorkbenchPartSite site = activePart.getSite();
+					if (site != null) {
+						// explicit cast necessary for Luna
+						return (IHandlerService)site.getService(IHandlerService.class);
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
