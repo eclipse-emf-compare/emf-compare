@@ -150,7 +150,7 @@ public class FeatureFilter {
 		final boolean toIgnore;
 		if (reference != null) {
 			// ignore the derived, container or transient
-			if (!reference.isDerived() && !reference.isContainer() && !reference.isTransient()) {
+			if (!reference.isDerived() && !reference.isContainer() && !isTransient(reference)) {
 				/*
 				 * EGenericTypes are usually "mutually derived" references that are handled through specific
 				 * means in ecore (eGenericSuperTypes and eSuperTypes, EGenericType and eType...). As these
@@ -185,6 +185,10 @@ public class FeatureFilter {
 	 * @return {@code true} if that attribute should be ignored by the comparison engine.
 	 */
 	protected boolean isIgnoredAttribute(EAttribute attribute) {
-		return attribute == null || attribute.isDerived() || attribute.isTransient();
+		return attribute == null || attribute.isDerived() || isTransient(attribute);
+	}
+
+	protected boolean isTransient(EStructuralFeature feature) {
+		return feature.isTransient();
 	}
 }
