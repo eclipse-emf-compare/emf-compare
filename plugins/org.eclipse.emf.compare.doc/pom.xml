@@ -16,12 +16,12 @@
   <parent>
     <artifactId>emf.compare-parent</artifactId>
     <groupId>org.eclipse.emf.compare</groupId>
-    <version>3.3.13-SNAPSHOT</version>
+    <version>3.3.14-SNAPSHOT</version>
      <relativePath>../../org.eclipse.emf.compare-parent</relativePath>
   </parent>
   <groupId>org.eclipse.emf.compare</groupId>
   <artifactId>org.eclipse.emf.compare.doc</artifactId>
-  <version>3.3.13-SNAPSHOT</version>
+  <version>3.3.14-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 
   <properties>
@@ -121,7 +121,7 @@
                 <argument>${project.build.directory}/website</argument>
                 <argument>-version</argument>
                 <!-- Please update qualified version for each release.-->
-                <argument>3.3.13.${buildQualifier}</argument>
+                <argument>3.3.14.${buildQualifier}</argument>
               </arguments>
             </configuration>
           </execution>
@@ -141,7 +141,7 @@
         <configuration>
           <target>
             <!-- Please update qualified version for each release.-->
-            <zip destfile="${project.build.directory}/${project.artifactId}-website-3.3.13.${buildQualifier}.zip">
+            <zip destfile="${project.build.directory}/${project.artifactId}-website-3.3.14.${buildQualifier}.zip">
               <zipfileset dir="${project.build.directory}/website"/>
             </zip>
           </target>
