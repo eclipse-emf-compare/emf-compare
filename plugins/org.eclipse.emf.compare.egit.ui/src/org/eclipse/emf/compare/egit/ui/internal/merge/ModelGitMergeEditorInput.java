@@ -179,8 +179,9 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		// The merge drivers have done their job of putting the necessary
 		// information in the index
 		// Read that info and provide it to the file-specific comparators
-		try (final Repository repository = pathsByRepository.keySet().iterator().next();
-				RevWalk rw = new RevWalk(repository)) {
+		final Repository repository = pathsByRepository.keySet().iterator().next();
+		RevWalk rw = new RevWalk(repository);
+		try {
 			final List<String> filterPaths = new ArrayList<String>(pathsByRepository.get(repository));
 			// get the "right" side (MERGE_HEAD for merge, ORIG_HEAD for rebase)
 			final RevCommit rightCommit = getRightCommit(rw, repository);
@@ -206,6 +207,7 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		} catch (IOException e) {
 			throw new InvocationTargetException(e);
 		} finally {
+			rw.dispose();
 			monitor.done();
 		}
 	}
