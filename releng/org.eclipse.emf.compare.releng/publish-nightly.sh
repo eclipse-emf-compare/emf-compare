@@ -11,7 +11,7 @@
 # ====================================================================
 
 if [ ${REFERENCE_TARGET_PLATFORM} != ${PLATFORM} ]; then
-  exit 1
+  exit 0
 fi
 
 # Exit on error
