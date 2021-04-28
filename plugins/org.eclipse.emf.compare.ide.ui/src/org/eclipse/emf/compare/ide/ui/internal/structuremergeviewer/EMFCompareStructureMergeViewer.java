@@ -243,14 +243,17 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			final String title = new TitleBuilder(getCompareConfiguration()).toString();
-			getContentProvider().runWhenReady(IN_UI_ASYNC, new Runnable() {
-				public void run() {
-					CTabFolder control = getControl();
-					if (!control.isDisposed()) {
-						((CompareViewerSwitchingPane)control.getParent()).setTitleArgument(title);
+			EMFCompareStructureMergeViewerContentProvider contentProvider = getContentProvider();
+			if (contentProvider != null) {
+				contentProvider.runWhenReady(IN_UI_ASYNC, new Runnable() {
+					public void run() {
+						CTabFolder control = getControl();
+						if (!control.isDisposed()) {
+							((CompareViewerSwitchingPane)control.getParent()).setTitleArgument(title);
+						}
 					}
-				}
-			});
+				});
+			}
 			return Status.OK_STATUS;
 		}
 	}
