@@ -67,8 +67,10 @@ public class TreeWalkResourceVariantTreeProvider implements GitResourceVariantTr
 
 	private final LinkedHashMap<IPath, IProject> map;
 
-	private TreeWalkResourceVariantTreeProvider(Builder builder) {
+	private final Repository repository;
 
+	private TreeWalkResourceVariantTreeProvider(Builder builder) {
+		this.repository = builder.repository;
 		this.map = builder.map;
 		this.baseTree = builder.baseTree;
 		this.theirsTree = builder.theirsTree;
@@ -112,7 +114,10 @@ public class TreeWalkResourceVariantTreeProvider implements GitResourceVariantTr
 	public IResource getResourceHandleForLocation(Repository repository, String repoRelativePath,
 			boolean isFolder) {
 		return getResourceHandleForLocation(repository, repoRelativePath, isFolder, map);
+	}
 
+	public Repository getRepository() {
+		return repository;
 	}
 
 	/**
@@ -157,7 +162,7 @@ public class TreeWalkResourceVariantTreeProvider implements GitResourceVariantTr
 			// It may be a file that only exists on remote side. We need to
 			// create an IResource for it.
 			// If it is a project file, then create an IProject.
-			final List<IPath> list = new ArrayList<IPath>(map.keySet());
+			final List<IPath> list = new ArrayList<>(map.keySet());
 			for (int i = list.size() - 1; i >= 0; i--) {
 				IPath projectPath = list.get(i);
 				if (projectPath.isPrefixOf(path) && !projectPath.equals(path)) {

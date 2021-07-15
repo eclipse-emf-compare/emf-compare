@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.egit.ui.Activator;
 import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.egit.ui.internal.actions.MergeToolActionHandler;
+import org.eclipse.egit.ui.internal.merge.MergeInputMode;
 import org.eclipse.egit.ui.internal.merge.MergeModeDialog;
 import org.eclipse.emf.compare.egit.ui.internal.merge.ModelGitMergeEditorInput;
 import org.eclipse.jface.window.Window;
@@ -40,10 +41,10 @@ public class ModelMergeToolActionHandler extends MergeToolActionHandler {
 			if (dlg.open() != Window.OK) {
 				return null;
 			}
-			input = new ModelGitMergeEditorInput(dlg.useWorkspace(), locations);
+			input = new ModelGitMergeEditorInput(dlg.getMergeMode(), locations);
 		} else {
-			boolean useWorkspace = mergeMode == 1;
-			input = new ModelGitMergeEditorInput(useWorkspace, locations);
+			MergeInputMode mode = MergeInputMode.fromInteger(mergeMode);
+			input = new ModelGitMergeEditorInput(mode, locations);
 		}
 		CompareUI.openCompareEditor(input);
 		return null;

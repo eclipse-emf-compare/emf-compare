@@ -39,6 +39,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.GitCorePreferences;
+import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
@@ -86,7 +87,7 @@ public class CompareGitTestCase extends CompareTestCase {
 	@BeforeClass
 	public static void setUpClass() {
 		// suppress auto-ignoring and auto-sharing to avoid interference
-		IEclipsePreferences eGitPreferences = InstanceScope.INSTANCE.getNode(Activator.getPluginId());
+		IEclipsePreferences eGitPreferences = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID);
 		eGitPreferences.put(GitCorePreferences.core_preferredMergeStrategy, "model recursive");
 		eGitPreferences.putBoolean(GitCorePreferences.core_autoShareProjects, false);
 		// This is actually the value of "GitCorePreferences.core_autoIgnoreDerivedResources"... but it was
@@ -100,7 +101,7 @@ public class CompareGitTestCase extends CompareTestCase {
 		super.setUp();
 		// ensure there are no shared Repository instances left
 		// when starting a new test
-		Activator.getDefault().getRepositoryCache().clear();
+		RepositoryCache.getInstance().clear();
 		final MockSystemReader mockSystemReader = new MockSystemReader();
 		SystemReader.setInstance(mockSystemReader);
 		mockSystemReader.setProperty(Constants.GIT_CEILING_DIRECTORIES_KEY, ResourcesPlugin.getWorkspace()
@@ -119,7 +120,7 @@ public class CompareGitTestCase extends CompareTestCase {
 	@After
 	public void tearDown() throws Exception {
 		repository.dispose();
-		Activator.getDefault().getRepositoryCache().clear();
+		RepositoryCache.getInstance().clear();
 		if (gitDir.exists()) {
 			try (Stream<java.nio.file.Path> walk = Files.walk(gitDir.toPath())) {
 				walk.sorted(Comparator.reverseOrder()).map(java.nio.file.Path::toFile).forEach(File::delete);

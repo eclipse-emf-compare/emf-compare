@@ -65,7 +65,7 @@ public abstract class AbstractGitOperationStatement extends AbstractGitStatement
 			GitMergeStrategyID mergeStrategy, String path) {
 		super(testObject, test, resolutionStrategy, configuration);
 		this.mergeStrategy = mergeStrategy;
-		this.eGitPreferences = InstanceScope.INSTANCE.getNode(Activator.getPluginId());
+		this.eGitPreferences = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID);
 		this.path = normalizePath(path);
 	}
 

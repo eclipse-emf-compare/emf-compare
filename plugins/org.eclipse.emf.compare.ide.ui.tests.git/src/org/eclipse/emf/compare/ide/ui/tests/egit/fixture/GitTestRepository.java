@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.egit.core.Activator;
+import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.egit.core.op.DisconnectProviderOperation;
@@ -92,7 +93,7 @@ public class GitTestRepository {
 		FileRepository tmpRepository = new FileRepository(gitDir);
 		tmpRepository.create();
 		tmpRepository.close();
-		repository = Activator.getDefault().getRepositoryCache().lookupRepository(gitDir);
+		repository = RepositoryCache.getInstance().lookupRepository(gitDir);
 
 		try {
 			workdirPrefix = repository.getWorkTree().getCanonicalPath();
@@ -609,10 +610,6 @@ public class GitTestRepository {
 	 * Dispose of this wrapper along with its underlying repository.
 	 */
 	public void dispose() {
-		if (repository != null) {
-			repository.close();
-			repository = null;
-		}
 		for (Runnable disposer : disposers) {
 			disposer.run();
 		}

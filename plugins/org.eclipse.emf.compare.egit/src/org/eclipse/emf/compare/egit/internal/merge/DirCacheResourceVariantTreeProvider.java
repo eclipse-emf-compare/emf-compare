@@ -44,6 +44,8 @@ public class DirCacheResourceVariantTreeProvider implements GitResourceVariantTr
 
 	private final Set<IResource> knownResources;
 
+	private final Repository repository;
+
 	/**
 	 * Constructs the resource variant trees by iterating over the given repository's DirCache entries.
 	 *
@@ -56,6 +58,7 @@ public class DirCacheResourceVariantTreeProvider implements GitResourceVariantTr
 	 */
 	public DirCacheResourceVariantTreeProvider(Repository repository, boolean useWorkspace)
 			throws IOException {
+		this.repository = repository;
 		final DirCache cache = repository.readDirCache();
 		final GitResourceVariantCache baseCache = new GitResourceVariantCache();
 		final GitResourceVariantCache sourceCache = new GitResourceVariantCache();
@@ -102,12 +105,12 @@ public class DirCacheResourceVariantTreeProvider implements GitResourceVariantTr
 		sourceTree = new GitCachedResourceVariantTree(sourceCache);
 		remoteTree = new GitCachedResourceVariantTree(remoteCache);
 
-		roots = new LinkedHashSet<IResource>();
+		roots = new LinkedHashSet<>();
 		roots.addAll(baseCache.getRoots());
 		roots.addAll(sourceCache.getRoots());
 		roots.addAll(remoteCache.getRoots());
 
-		knownResources = new LinkedHashSet<IResource>();
+		knownResources = new LinkedHashSet<>();
 		knownResources.addAll(baseCache.getKnownResources());
 		knownResources.addAll(sourceCache.getKnownResources());
 		knownResources.addAll(remoteCache.getKnownResources());
@@ -131,6 +134,10 @@ public class DirCacheResourceVariantTreeProvider implements GitResourceVariantTr
 
 	public Set<IResource> getRoots() {
 		return roots;
+	}
+
+	public Repository getRepository() {
+		return repository;
 	}
 }
 // CHECKSTYLE:ON

@@ -133,7 +133,7 @@ public class GitSyncInfoToDiffConverter extends SyncInfoToDiffConverter {
 					local.getName());
 			Activator.logError(error, e);
 			// fall back to the working tree version
-			return new WorkspaceFileRevision(local);
+			return WorkspaceFileRevision.forFile(variantTreeProvider.getRepository(), local);
 		}
 	}
 
@@ -174,7 +174,8 @@ public class GitSyncInfoToDiffConverter extends SyncInfoToDiffConverter {
 		if (variant == null) {
 			return null;
 		} else if (variant instanceof GitLocalResourceVariant) {
-			return new WorkspaceFileRevision(((GitLocalResourceVariant)variant).getResource());
+			return WorkspaceFileRevision.forFile(variantTreeProvider.getRepository(),
+					((GitLocalResourceVariant)variant).getResource());
 		}
 		return asFileRevision(variant);
 	}

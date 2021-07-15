@@ -35,7 +35,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.egit.core.Activator;
+import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.egit.core.op.DisconnectProviderOperation;
 import org.eclipse.egit.core.project.RepositoryFinder;
@@ -166,7 +166,7 @@ public class InternalGitTestSupport {
 	 */
 	private void connectRepository(File file) throws IOException {
 		File gitDir = findGitDir(file);
-		this.repository = Activator.getDefault().getRepositoryCache().lookupRepository(gitDir);
+		this.repository = RepositoryCache.getInstance().lookupRepository(gitDir);
 		this.disposers = new ArrayList<Runnable>();
 	}
 
@@ -291,7 +291,7 @@ public class InternalGitTestSupport {
 				iProject.delete(true, new NullProgressMonitor());
 			}
 		}
-		Activator.getDefault().getRepositoryCache().clear();
+		RepositoryCache.getInstance().clear();
 
 		File file = new File(workspaceRoot.getLocation().toOSString());
 		File[] listFiles = file.listFiles();
@@ -323,7 +323,7 @@ public class InternalGitTestSupport {
 			disposers.clear();
 		}
 
-		Activator.getDefault().getRepositoryCache().clear();
+		RepositoryCache.getInstance().clear();
 
 		if (projects != null) {
 			List<IProject> disconnectMe = new ArrayList<>();

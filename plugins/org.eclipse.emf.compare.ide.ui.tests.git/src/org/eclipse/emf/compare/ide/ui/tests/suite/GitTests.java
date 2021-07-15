@@ -68,7 +68,7 @@ public class GitTests {
 	public static void disableEGitAutomaticBehavior() {
 		// suppress auto-ignoring and auto-sharing to avoid interference
 		IEclipsePreferences eGitPreferences = InstanceScope.INSTANCE
-				.getNode(org.eclipse.egit.core.Activator.getPluginId());
+				.getNode(org.eclipse.egit.core.Activator.PLUGIN_ID);
 		eGitPreferences.put(GitCorePreferences.core_preferredMergeStrategy, "model recursive");
 		eGitPreferences.putBoolean(GitCorePreferences.core_autoShareProjects, false);
 	}

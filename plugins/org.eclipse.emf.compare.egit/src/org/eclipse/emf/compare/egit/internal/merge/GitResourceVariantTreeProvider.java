@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.egit.internal.merge;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.team.core.variants.IResourceVariantTree;
 
 /**
@@ -58,5 +59,12 @@ public interface GitResourceVariantTreeProvider {
 	 * @return The whole set of resources for which this provider's trees hold variants.
 	 */
 	Set<IResource> getKnownResources();
+
+	/**
+	 * The underlying repository.
+	 * 
+	 * @return The underlying repository for this variant tree provider.
+	 */
+	Repository getRepository();
 }
 // CHECKSTYLE:ON
