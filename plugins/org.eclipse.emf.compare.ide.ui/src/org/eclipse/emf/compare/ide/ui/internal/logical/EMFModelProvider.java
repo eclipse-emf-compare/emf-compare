@@ -358,17 +358,24 @@ public class EMFModelProvider extends ModelProvider {
 		if (context instanceof RemoteResourceMappingContext) {
 			final IStorageProviderAccessor accessor = new RemoteMappingContextStorageAccessor(
 					(RemoteResourceMappingContext)context);
+			// An empty local traversal doesn't necessarily means empty remote and origin sides!
+			// If the local file no longer exists, remote and ancestor need to use a "dummy" containing only
+			// the local file to start their resolution.
+			StorageTraversal startingPoint = localTraversal;
+			if (startingPoint.getStorages().isEmpty()) {
+				startingPoint = new StorageTraversal(Collections.singleton(file));
+			}
 
 			ITypedElement left = null;
 			ITypedElement right = null;
 			ITypedElement origin = null;
 			if (((RemoteResourceMappingContext)context).isThreeWay()) {
-				left = findTypedElement(localTraversal, accessor, actualMonitor, DiffSide.SOURCE);
-				right = findTypedElement(localTraversal, accessor, actualMonitor, DiffSide.REMOTE);
-				origin = findTypedElement(localTraversal, accessor, actualMonitor, DiffSide.ORIGIN);
+				left = findTypedElement(startingPoint, accessor, actualMonitor, DiffSide.SOURCE);
+				right = findTypedElement(startingPoint, accessor, actualMonitor, DiffSide.REMOTE);
+				origin = findTypedElement(startingPoint, accessor, actualMonitor, DiffSide.ORIGIN);
 			} else {
-				left = findTypedElement(localTraversal, accessor, actualMonitor, DiffSide.SOURCE);
-				right = findTypedElement(localTraversal, accessor, actualMonitor, DiffSide.REMOTE);
+				left = findTypedElement(startingPoint, accessor, actualMonitor, DiffSide.SOURCE);
+				right = findTypedElement(startingPoint, accessor, actualMonitor, DiffSide.REMOTE);
 			}
 
 			IStorage leftStorage = null;
