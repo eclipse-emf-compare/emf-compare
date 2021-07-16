@@ -29,8 +29,6 @@ then
   exit 1
 fi
 
-echo "promoting milestone S${TIMESTAMP} as release ${VERSION}"
-
 IFS=. read MAJOR MINOR MICRO TIMESTAMP <<<"${QUALIFIER}"
 
 VERSION_SHORT=${MAJOR}.${MINOR}
@@ -41,6 +39,8 @@ then
   echo "couldn't find build with qualifier $QUALIFIER in the promoted milestones"
   exit 1
 fi
+
+echo "promoting milestone S${TIMESTAMP} as release ${VERSION}"
 
 ssh ${SSH_ACCOUNT} << EOSSH
   ## copy the drops
