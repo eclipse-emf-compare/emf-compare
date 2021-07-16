@@ -29,18 +29,18 @@ then
   exit 1
 fi
 
-if ssh ${SSH_ACCOUNT} "[ ! -d ${MILESTONES_FOLDER}/${VERSION_SHORT}/S${TIMESTAMP} ]"
-then
-  echo "couldn't find build with qualifier $QUALIFIER in the promoted milestones"
-  exit 1
-fi
-
 echo "promoting milestone S${TIMESTAMP} as release ${VERSION}"
 
 IFS=. read MAJOR MINOR MICRO TIMESTAMP <<<"${QUALIFIER}"
 
 VERSION_SHORT=${MAJOR}.${MINOR}
 VERSION=${MAJOR}.${MINOR}.${MICRO}
+
+if ssh ${SSH_ACCOUNT} "[ ! -d ${MILESTONES_FOLDER}/${VERSION_SHORT}/S${TIMESTAMP} ]"
+then
+  echo "couldn't find build with qualifier $QUALIFIER in the promoted milestones"
+  exit 1
+fi
 
 ssh ${SSH_ACCOUNT} << EOSSH
   ## copy the drops
