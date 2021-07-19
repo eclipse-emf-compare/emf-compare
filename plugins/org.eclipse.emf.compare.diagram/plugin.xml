@@ -30,7 +30,7 @@
             label="Diagram Post processor"
             ordinal="30">
          <nsURI
-               value="http://www.eclipse.org/gmf/runtime/\d.\d.\d/notation">
+               value="http://www.eclipse.org/gmf/runtime/\d+\.\d+\.\d+/notation">
          </nsURI>
       </processor>
    </extension>

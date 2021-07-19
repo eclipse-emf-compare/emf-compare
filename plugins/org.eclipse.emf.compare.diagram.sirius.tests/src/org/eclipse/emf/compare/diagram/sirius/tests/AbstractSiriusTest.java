@@ -58,7 +58,7 @@ public abstract class AbstractSiriusTest extends AbstractReverseActionTest {
 						Pattern.compile(""))); //$NON-NLS-1$
 		registry.put(CompareDiagramPostProcessor.class.getName(),
 				new BasicPostProcessorDescriptorImpl(new CompareDiagramPostProcessor(),
-						Pattern.compile("http://www.eclipse.org/gmf/runtime/1.0.2/notation"), //$NON-NLS-1$
+						Pattern.compile("http://www.eclipse.org/gmf/runtime/\\d+\\.\\d+\\.\\d+/notation"), //$NON-NLS-1$
 						Pattern.compile(""))); //$NON-NLS-1$
 		return registry;
 	}
