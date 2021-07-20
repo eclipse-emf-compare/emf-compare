@@ -56,7 +56,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.util.ResourceUIUtil;
  */
 public class ThreadedModelResolver extends AbstractModelResolver implements IGraphConsumer {
 
-	private IResolutionContext context;
+	protected IResolutionContext context;
 
 	/**
 	 * The URI Graph instance.
