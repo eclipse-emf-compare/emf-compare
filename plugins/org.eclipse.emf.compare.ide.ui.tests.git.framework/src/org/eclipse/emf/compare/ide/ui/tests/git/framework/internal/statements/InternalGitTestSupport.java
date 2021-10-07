@@ -166,7 +166,7 @@ public class InternalGitTestSupport {
 	 */
 	private void connectRepository(File file) throws IOException {
 		File gitDir = findGitDir(file);
-		this.repository = RepositoryCache.getInstance().lookupRepository(gitDir);
+		this.repository = RepositoryCache.INSTANCE.lookupRepository(gitDir);
 		this.disposers = new ArrayList<Runnable>();
 	}
 
@@ -291,7 +291,7 @@ public class InternalGitTestSupport {
 				iProject.delete(true, new NullProgressMonitor());
 			}
 		}
-		RepositoryCache.getInstance().clear();
+		RepositoryCache.INSTANCE.clear();
 
 		File file = new File(workspaceRoot.getLocation().toOSString());
 		File[] listFiles = file.listFiles();
@@ -323,7 +323,7 @@ public class InternalGitTestSupport {
 			disposers.clear();
 		}
 
-		RepositoryCache.getInstance().clear();
+		RepositoryCache.INSTANCE.clear();
 
 		if (projects != null) {
 			List<IProject> disconnectMe = new ArrayList<>();

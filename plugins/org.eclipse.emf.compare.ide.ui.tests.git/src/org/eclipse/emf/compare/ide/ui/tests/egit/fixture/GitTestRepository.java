@@ -93,7 +93,7 @@ public class GitTestRepository {
 		FileRepository tmpRepository = new FileRepository(gitDir);
 		tmpRepository.create();
 		tmpRepository.close();
-		repository = RepositoryCache.getInstance().lookupRepository(gitDir);
+		repository = RepositoryCache.INSTANCE.lookupRepository(gitDir);
 
 		try {
 			workdirPrefix = repository.getWorkTree().getCanonicalPath();

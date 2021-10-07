@@ -35,7 +35,7 @@ public class IndexBlobStorage extends GitBlobStorage {
 
 	@Override
 	public IPath getFullPath() {
-		final RepositoryUtil repositoryUtil = RepositoryUtil.getInstance();
+		final RepositoryUtil repositoryUtil = RepositoryUtil.INSTANCE;
 		IPath repoPath = new Path(repositoryUtil.getRepositoryName(db));
 		String pathString = super.getFullPath().toPortableString() + " index"; //$NON-NLS-1$
 		return repoPath.append(Path.fromPortableString(pathString));

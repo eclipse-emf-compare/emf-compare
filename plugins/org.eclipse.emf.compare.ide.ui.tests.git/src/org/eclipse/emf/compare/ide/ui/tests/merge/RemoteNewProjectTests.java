@@ -103,7 +103,7 @@ public class RemoteNewProjectTests extends CompareTestCase {
 	public void setUp() throws Exception {
 		// ensure there are no shared Repository instances left
 		// when starting a new test
-		RepositoryCache.getInstance().clear();
+		RepositoryCache.INSTANCE.clear();
 		final MockSystemReader mockSystemReader = new MockSystemReader();
 		SystemReader.setInstance(mockSystemReader);
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
@@ -122,7 +122,7 @@ public class RemoteNewProjectTests extends CompareTestCase {
 				.getModelProviderDescriptor(EMFModelProvider.PROVIDER_ID).getModelProvider();
 		emfModelProvider.clear();
 		repository.dispose();
-		RepositoryCache.getInstance().clear();
+		RepositoryCache.INSTANCE.clear();
 		if (gitDir.exists()) {
 			File gitRoot = gitDir.getParentFile();
 			if (gitRoot.exists()) {

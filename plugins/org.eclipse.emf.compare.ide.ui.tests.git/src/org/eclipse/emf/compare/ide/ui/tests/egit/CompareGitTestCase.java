@@ -101,7 +101,7 @@ public class CompareGitTestCase extends CompareTestCase {
 		super.setUp();
 		// ensure there are no shared Repository instances left
 		// when starting a new test
-		RepositoryCache.getInstance().clear();
+		RepositoryCache.INSTANCE.clear();
 		final MockSystemReader mockSystemReader = new MockSystemReader();
 		SystemReader.setInstance(mockSystemReader);
 		mockSystemReader.setProperty(Constants.GIT_CEILING_DIRECTORIES_KEY, ResourcesPlugin.getWorkspace()
@@ -120,7 +120,7 @@ public class CompareGitTestCase extends CompareTestCase {
 	@After
 	public void tearDown() throws Exception {
 		repository.dispose();
-		RepositoryCache.getInstance().clear();
+		RepositoryCache.INSTANCE.clear();
 		if (gitDir.exists()) {
 			try (Stream<java.nio.file.Path> walk = Files.walk(gitDir.toPath())) {
 				walk.sorted(Comparator.reverseOrder()).map(java.nio.file.Path::toFile).forEach(File::delete);

@@ -458,7 +458,7 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 		if (mapping == null) {
 			return conflictingResources;
 		}
-		final IndexDiffCacheEntry indexDiffCacheEntry = IndexDiffCache.getInstance()
+		final IndexDiffCacheEntry indexDiffCacheEntry = IndexDiffCache.INSTANCE
 				.getIndexDiffCacheEntry(mapping.getRepository());
 		if (indexDiffCacheEntry == null) {
 			return conflictingResources;
@@ -546,7 +546,7 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 			throw new InvocationTargetException(e);
 		}
 		setTitle(NLS.bind(UIText.GitMergeEditorInput_MergeEditorTitle,
-				new Object[] {RepositoryUtil.getInstance().getRepositoryName(repository),
+				new Object[] {RepositoryUtil.INSTANCE.getRepositoryName(repository),
 						rightCommit.getShortMessage(), fullBranch }));
 	}
 
@@ -1009,7 +1009,7 @@ public class ModelGitMergeEditorInput extends CompareEditorInput {
 					}
 				}
 				if (gitPath != null && repository != null) {
-					IndexDiffCacheEntry indexDiffCacheForRepository = IndexDiffCache.getInstance()
+					IndexDiffCacheEntry indexDiffCacheForRepository = IndexDiffCache.INSTANCE
 							.getIndexDiffCacheEntry(repository);
 					if (indexDiffCacheForRepository != null) {
 						indexDiffCacheForRepository.refreshFiles(Collections.singletonList(gitPath));
