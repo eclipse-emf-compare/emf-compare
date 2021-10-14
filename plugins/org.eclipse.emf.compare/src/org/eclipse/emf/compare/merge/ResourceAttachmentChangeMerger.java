@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -27,10 +28,12 @@ import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
@@ -354,15 +357,32 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 						+ sourceRes.getURI());
 			}
 
-			final List<MatchResource> matchedResources = comparison.getMatchedResources();
-			final int size = matchedResources.size();
 			ResourceSet targetSet = null;
-			for (int i = 0; i < size && targetSet == null; i++) {
-				final MatchResource matchRes = matchedResources.get(i);
-				if (rightToLeft && matchRes.getLeft() != null) {
-					targetSet = matchRes.getLeft().getResourceSet();
-				} else if (!rightToLeft && matchRes.getRight() != null) {
-					targetSet = matchRes.getRight().getResourceSet();
+			IComparisonScope scope = (IComparisonScope)EcoreUtil.getAdapter(comparison.eAdapters(),
+					IComparisonScope.class);
+			if (rightToLeft) {
+				Notifier left = scope.getLeft();
+				if (left instanceof ResourceSet) {
+					targetSet = (ResourceSet)left;
+				} else if (left instanceof Resource) {
+					targetSet = ((Resource)left).getResourceSet();
+				} else if (left instanceof EObject) {
+					Resource res = ((EObject)left).eResource();
+					if (res != null) {
+						targetSet = res.getResourceSet();
+					}
+				}
+			} else {
+				Notifier right = scope.getRight();
+				if (right instanceof ResourceSet) {
+					targetSet = (ResourceSet)right;
+				} else if (right instanceof Resource) {
+					targetSet = ((Resource)right).getResourceSet();
+				} else if (right instanceof EObject) {
+					Resource res = ((EObject)right).eResource();
+					if (res != null) {
+						targetSet = res.getResourceSet();
+					}
 				}
 			}
 
