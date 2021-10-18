@@ -20,7 +20,9 @@ import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.egit.ui.internal.actions.MergeToolActionHandler;
 import org.eclipse.egit.ui.internal.merge.MergeInputMode;
 import org.eclipse.egit.ui.internal.merge.MergeModeDialog;
+import org.eclipse.emf.compare.egit.internal.EGitCompatibilityUtil;
 import org.eclipse.emf.compare.egit.ui.internal.merge.ModelGitMergeEditorInput;
+import org.eclipse.emf.compare.egit.ui.internal.merge.ModelGitMergeEditorInputLegacy;
 import org.eclipse.jface.window.Window;
 
 /**
@@ -41,10 +43,20 @@ public class ModelMergeToolActionHandler extends MergeToolActionHandler {
 			if (dlg.open() != Window.OK) {
 				return null;
 			}
-			input = new ModelGitMergeEditorInput(dlg.getMergeMode(), locations);
+			if (EGitCompatibilityUtil.getEGitVersion().compareTo(EGitCompatibilityUtil.EGIT_6_0) >= 0) {
+				input = new ModelGitMergeEditorInput(dlg.getMergeMode(), locations);
+			} else {
+				Boolean useWs = (Boolean)EGitCompatibilityUtil.invoke(dlg.getClass(), dlg, "useWorkspace");
+				input = new ModelGitMergeEditorInputLegacy(useWs.booleanValue(), locations);
+			}
 		} else {
-			MergeInputMode mode = MergeInputMode.fromInteger(mergeMode);
-			input = new ModelGitMergeEditorInput(mode, locations);
+			if (EGitCompatibilityUtil.getEGitVersion().compareTo(EGitCompatibilityUtil.EGIT_6_0) >= 0) {
+				MergeInputMode mode = MergeInputMode.fromInteger(mergeMode);
+				input = new ModelGitMergeEditorInput(mode, locations);
+			} else {
+				boolean useWorkspace = mergeMode == 1;
+				input = new ModelGitMergeEditorInputLegacy(useWorkspace, locations);
+			}
 		}
 		CompareUI.openCompareEditor(input);
 		return null;

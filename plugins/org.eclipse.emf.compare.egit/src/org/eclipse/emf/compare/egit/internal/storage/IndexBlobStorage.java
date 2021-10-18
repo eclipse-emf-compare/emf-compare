@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.egit.core.internal.storage.CommitBlobStorage;
 import org.eclipse.egit.core.storage.GitBlobStorage;
+import org.eclipse.emf.compare.egit.internal.EGitCompatibilityUtil;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 
@@ -35,7 +36,7 @@ public class IndexBlobStorage extends GitBlobStorage {
 
 	@Override
 	public IPath getFullPath() {
-		final RepositoryUtil repositoryUtil = RepositoryUtil.INSTANCE;
+		final RepositoryUtil repositoryUtil = EGitCompatibilityUtil.getRepositoryUtil();
 		IPath repoPath = new Path(repositoryUtil.getRepositoryName(db));
 		String pathString = super.getFullPath().toPortableString() + " index"; //$NON-NLS-1$
 		return repoPath.append(Path.fromPortableString(pathString));

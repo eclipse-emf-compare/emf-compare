@@ -13,8 +13,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.internal.CoreText;
-import org.eclipse.egit.core.internal.storage.WorkspaceFileRevision;
 import org.eclipse.egit.core.synchronize.GitRemoteResource;
+import org.eclipse.emf.compare.egit.internal.EGitCompatibilityUtil;
 import org.eclipse.emf.compare.egit.internal.storage.GitLocalResourceVariant;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.team.core.TeamException;
@@ -133,7 +133,8 @@ public class GitSyncInfoToDiffConverter extends SyncInfoToDiffConverter {
 					local.getName());
 			Activator.logError(error, e);
 			// fall back to the working tree version
-			return WorkspaceFileRevision.forFile(variantTreeProvider.getRepository(), local);
+			return EGitCompatibilityUtil.createWorkspaceFileRevision(variantTreeProvider.getRepository(),
+					local);
 		}
 	}
 
@@ -174,7 +175,7 @@ public class GitSyncInfoToDiffConverter extends SyncInfoToDiffConverter {
 		if (variant == null) {
 			return null;
 		} else if (variant instanceof GitLocalResourceVariant) {
-			return WorkspaceFileRevision.forFile(variantTreeProvider.getRepository(),
+			return EGitCompatibilityUtil.createWorkspaceFileRevision(variantTreeProvider.getRepository(),
 					((GitLocalResourceVariant)variant).getResource());
 		}
 		return asFileRevision(variant);
