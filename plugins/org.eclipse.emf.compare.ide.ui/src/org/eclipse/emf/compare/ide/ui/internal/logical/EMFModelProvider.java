@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.ide.ui.internal.preferences.EMFCompareUIPreferences;
 import org.eclipse.emf.compare.ide.ui.logical.IModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProvider;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
@@ -84,7 +85,8 @@ public class EMFModelProvider extends ModelProvider {
 	 * place and hasten the whole process.
 	 * </p>
 	 */
-	public static final long CACHE_EXPIRATION = 120L;
+	public static final long CACHE_EXPIRATION = EMFCompareIDEUIPlugin.getDefault().getPreferenceStore()
+			.getLong(EMFCompareUIPreferences.MODEL_PROVIDER_CACHE_TIMEOUT);
 
 	/** The logger. */
 	private static final Logger LOGGER = Logger.getLogger(EMFModelProvider.class);

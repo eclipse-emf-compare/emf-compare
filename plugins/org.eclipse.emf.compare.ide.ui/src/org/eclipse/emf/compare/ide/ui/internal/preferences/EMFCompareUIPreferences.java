@@ -90,4 +90,11 @@ public interface EMFCompareUIPreferences {
 	 */
 	String SELECT_NEXT_UNRESOLVED_DIFF = EMFCompareIDEUIPlugin.PLUGIN_ID
 			+ ".preference.selectNextUnresolvedDiff"; //$NON-NLS-1$
+
+	/**
+	 * Preference key holding the value for the EMFModelProvider's internal cache expiration time. This can
+	 * only be changed at startup.
+	 */
+	String MODEL_PROVIDER_CACHE_TIMEOUT = EMFCompareIDEUIPlugin.PLUGIN_ID
+			+ ".preference.model.provider.cache.timeout"; //$NON-NLS-1$
 }
