@@ -313,11 +313,17 @@ public class DefaultDiffEngine implements IDiffEngine {
 				List<Object> originValues = getAsList(match.getOrigin(), reference);
 				for (Object value : originValues) {
 					Match valueMatch = comparison.getMatch((EObject)value);
-					if (valueMatch.getLeft() == null) {
-						featureChange(match, reference, value, DifferenceKind.DELETE, DifferenceSource.LEFT);
-					}
-					if (valueMatch.getRight() == null) {
-						featureChange(match, reference, value, DifferenceKind.DELETE, DifferenceSource.RIGHT);
+					if (valueMatch == null) {
+						// out of scope
+					} else {
+						if (valueMatch.getLeft() == null) {
+							featureChange(match, reference, value, DifferenceKind.DELETE,
+									DifferenceSource.LEFT);
+						}
+						if (valueMatch.getRight() == null) {
+							featureChange(match, reference, value, DifferenceKind.DELETE,
+									DifferenceSource.RIGHT);
+						}
 					}
 				}
 			} else {
@@ -325,8 +331,13 @@ public class DefaultDiffEngine implements IDiffEngine {
 
 				for (Object value : rightValues) {
 					Match valueMatch = comparison.getMatch((EObject)value);
-					if (valueMatch.getLeft() == null) {
-						featureChange(match, reference, value, DifferenceKind.DELETE, DifferenceSource.LEFT);
+					if (valueMatch == null) {
+						// out of scope
+					} else {
+						if (valueMatch.getLeft() == null) {
+							featureChange(match, reference, value, DifferenceKind.DELETE,
+									DifferenceSource.LEFT);
+						}
 					}
 				}
 			}
@@ -463,22 +474,26 @@ public class DefaultDiffEngine implements IDiffEngine {
 			EObject sideValue = (EObject)sideValues.get(currentSide++);
 			Match candidateMatch = comparison.getMatch(sideValue);
 
-			EObject originValue;
-			if (comparison.isThreeWay()) {
-				originValue = candidateMatch.getOrigin();
+			if (candidateMatch == null) {
+				// out of scope
 			} else {
-				originValue = candidateMatch.getRight();
-			}
-
-			if (matchingContainment(equalityHelper, sideValue, originValue)) {
-				// Object present in both sides, in the same container and same containment feature.
-				// We don't care about ordering so there is no change here.
-			} else {
-				// Object has either changed container or isn't present in the origin
-				if (originValue != null) {
-					featureChange(match, reference, sideValue, DifferenceKind.MOVE, side);
+				EObject originValue;
+				if (comparison.isThreeWay()) {
+					originValue = candidateMatch.getOrigin();
 				} else {
-					featureChange(match, reference, sideValue, DifferenceKind.ADD, side);
+					originValue = candidateMatch.getRight();
+				}
+
+				if (matchingContainment(equalityHelper, sideValue, originValue)) {
+					// Object present in both sides, in the same container and same containment feature.
+					// We don't care about ordering so there is no change here.
+				} else {
+					// Object has either changed container or isn't present in the origin
+					if (originValue != null) {
+						featureChange(match, reference, sideValue, DifferenceKind.MOVE, side);
+					} else {
+						featureChange(match, reference, sideValue, DifferenceKind.ADD, side);
+					}
 				}
 			}
 		}
@@ -1172,8 +1187,13 @@ public class DefaultDiffEngine implements IDiffEngine {
 		if (isFeatureMapMove(comparison, feature, diffCandidate, values, source)) {
 			final Object entryValue = ((FeatureMap.Entry)diffCandidate).getValue();
 			if (entryValue instanceof EObject) {
-				final EObject leftObject = comparison.getMatch((EObject)entryValue).getLeft();
-				return !ComparisonUtil.isContainedInFeatureMap(leftObject);
+				Match match = comparison.getMatch((EObject)entryValue);
+				if (match == null) {
+					// out of scope
+				} else {
+					final EObject leftObject = match.getLeft();
+					return !ComparisonUtil.isContainedInFeatureMap(leftObject);
+				}
 			}
 		}
 		return false;
