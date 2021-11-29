@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.diagram.sirius"
       label="%featureName"
-      version="3.3.16.qualifier"
+      version="3.3.17.qualifier"
       provider-name="%providerName"
       license-feature="org.eclipse.license"
       license-feature-version="1.0.1">
