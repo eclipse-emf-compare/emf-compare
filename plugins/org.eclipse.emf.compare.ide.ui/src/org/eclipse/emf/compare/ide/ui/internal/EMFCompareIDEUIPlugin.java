@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2017 Obeo and others.
+ * Copyright (c) 2012, 2022 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *     Stefan Dirix - Bug 456699
  *     Michael Borkowski - Bug 462863
  *     Martin Fleck - Bug 512562
+ *     Martin Fleck - Bug 578422
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal;
 
@@ -33,7 +34,9 @@ import org.eclipse.emf.compare.ide.ui.internal.logical.view.registry.LogicalMode
 import org.eclipse.emf.compare.ide.ui.internal.logical.view.registry.LogicalModelViewHandlerRegistryListener;
 import org.eclipse.emf.compare.ide.ui.internal.mergeresolution.MergeResolutionListenerRegistry;
 import org.eclipse.emf.compare.ide.ui.internal.mergeresolution.MergeResolutionListenerRegistryListener;
+import org.eclipse.emf.compare.ide.ui.internal.subscriber.SubscriberProviderRegistryListener;
 import org.eclipse.emf.compare.ide.ui.logical.IModelMinimizer;
+import org.eclipse.emf.compare.ide.ui.subscriber.SubscriberProviderRegistry;
 import org.eclipse.emf.compare.rcp.extension.AbstractRegistryEventListener;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -45,6 +48,7 @@ import org.osgi.framework.BundleContext;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
+@SuppressWarnings("restriction")
 public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	/** The plugin ID. */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare.ide.ui"; //$NON-NLS-1$
@@ -66,6 +70,9 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 
 	/** Merge resolution listener extension point. */
 	private static final String MERGE_RESOLUTION_PPID = "mergeResolutionListener"; //$NON-NLS-1$
+
+	/** Subscriber provider extension point. */
+	private static final String SUBSCRIBER_PROVIDER_PPID = "subscriberProvider"; //$NON-NLS-1$
 
 	/** keep track of resources that should be freed when exiting. */
 	private static Map<String, Image> resourcesMapper = new HashMap<String, Image>();
@@ -100,6 +107,12 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	/** Registry for the merge resolution listener extension point. */
 	private MergeResolutionListenerRegistry mergeResolutionListenerRegistry;
 
+	/** Registry for the subscriber provider extension point. */
+	private SubscriberProviderRegistry subscriberProviderRegistry;
+
+	/** Listener for the subscriber provider extension point. */
+	private SubscriberProviderRegistryListener subscriberProviderRegistryListener;
+
 	/** Default constructor. */
 	public EMFCompareIDEUIPlugin() {
 		// Empty constructor
@@ -120,6 +133,7 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		logicalModelViewHandlerRegistry = new LogicalModelViewHandlerRegistry();
 		modelMinimizerRegistry = new ModelMinimizerRegistry();
 		mergeResolutionListenerRegistry = new MergeResolutionListenerRegistry();
+		subscriberProviderRegistry = new SubscriberProviderRegistry();
 
 		final IExtensionRegistry globalRegistry = Platform.getExtensionRegistry();
 
@@ -148,6 +162,11 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		globalRegistry.addListener(modelMinimizerRegistryListener);
 		modelMinimizerRegistryListener.readRegistry(globalRegistry);
 
+		subscriberProviderRegistryListener = new SubscriberProviderRegistryListener(PLUGIN_ID,
+				SUBSCRIBER_PROVIDER_PPID, getLog(), subscriberProviderRegistry);
+		globalRegistry.addListener(subscriberProviderRegistryListener);
+		subscriberProviderRegistryListener.readRegistry(globalRegistry);
+
 		Platform.getAdapterManager().registerAdapters(new PropertySheetAdapterFactory(), CompareEditor.class);
 	}
 
@@ -165,6 +184,8 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 		modelResolverRegistry.clear();
 		globalRegistry.removeListener(modelDependencyProviderRegistryListener);
 		modelDependencyProviderRegistry.clear();
+		globalRegistry.removeListener(subscriberProviderRegistryListener);
+		subscriberProviderRegistry.clear();
 		plugin = null;
 		super.stop(context);
 	}
@@ -277,6 +298,15 @@ public class EMFCompareIDEUIPlugin extends AbstractUIPlugin {
 	 */
 	public MergeResolutionListenerRegistry getMergeResolutionListenerRegistry() {
 		return mergeResolutionListenerRegistry;
+	}
+
+	/**
+	 * Returns the registry containing all known subscriber providers.
+	 * 
+	 * @return The registry containing all known subscriber providers.
+	 */
+	public SubscriberProviderRegistry getSubscriberProviderRegistry() {
+		return subscriberProviderRegistry;
 	}
 
 	/**

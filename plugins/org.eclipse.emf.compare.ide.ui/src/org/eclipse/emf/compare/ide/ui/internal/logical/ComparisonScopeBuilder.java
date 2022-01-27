@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2017 Obeo and others.
+ * Copyright (c) 2013, 2022 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *     Stefan Dirix - bug 466607
  *     Philip Langer - add support for setting initial file URIs to scope
  *     Martin Fleck - bug 512562
+ *     Martin Fleck - bug 578422
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical;
 
@@ -22,9 +23,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
-import java.lang.reflect.Field;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -66,9 +64,6 @@ import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.team.core.subscribers.Subscriber;
-import org.eclipse.team.core.subscribers.SubscriberMergeContext;
-import org.eclipse.team.ui.synchronize.ISynchronizeParticipant;
-import org.eclipse.team.ui.synchronize.ModelSynchronizeParticipant;
 
 /**
  * This will be used by EMF Compare in order to construct its comparison scope given a "starting point".
@@ -188,31 +183,29 @@ public final class ComparisonScopeBuilder {
 		}
 	}
 
-			/**
-			 * Resolves and minimizes the logical model for the given three typed element as would be done by
-			 * {@link #build(ITypedElement, ITypedElement, ITypedElement, IProgressMonitor)}, but returns
-			 * directly the SynchronizationModel DTO instead of the actual IComparisonScope.
-			 * <p>
-			 * This internal API is only intended for use by the resource mapping mergers.
-			 * </p>
-			 * 
-			 * @param left
-			 *            The element that will be used as the starting point to resolve the left logical
-			 *            model.
-			 * @param right
-			 *            Element that will be used as the starting point to resolve the left logical model.
-			 * @param origin
-			 *            The origin resource, starting point of the logical model we are to resolve as the
-			 *            origin one. Can be <code>null</code>.
-			 * @param monitor
-			 *            The monitor on which to report progress information to the user.
-			 * @return The newly created SynchronizationModel.
-			 * @throws InterruptedException
-			 *             In case of user interruption.
-			 */
-			/* package */SynchronizationModel buildSynchronizationModel(ITypedElement left,
-					ITypedElement right, ITypedElement origin, IProgressMonitor monitor)
-					throws InterruptedException {
+	/**
+	 * Resolves and minimizes the logical model for the given three typed element as would be done by
+	 * {@link #build(ITypedElement, ITypedElement, ITypedElement, IProgressMonitor)}, but returns directly the
+	 * SynchronizationModel DTO instead of the actual IComparisonScope.
+	 * <p>
+	 * This internal API is only intended for use by the resource mapping mergers.
+	 * </p>
+	 * 
+	 * @param left
+	 *            The element that will be used as the starting point to resolve the left logical model.
+	 * @param right
+	 *            Element that will be used as the starting point to resolve the left logical model.
+	 * @param origin
+	 *            The origin resource, starting point of the logical model we are to resolve as the origin
+	 *            one. Can be <code>null</code>.
+	 * @param monitor
+	 *            The monitor on which to report progress information to the user.
+	 * @return The newly created SynchronizationModel.
+	 * @throws InterruptedException
+	 *             In case of user interruption.
+	 */
+	/* package */SynchronizationModel buildSynchronizationModel(ITypedElement left, ITypedElement right,
+			ITypedElement origin, IProgressMonitor monitor) throws InterruptedException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("buildSynchronizationModel - START"); //$NON-NLS-1$
 		}
@@ -254,8 +247,10 @@ public final class ComparisonScopeBuilder {
 	 */
 	public static IComparisonScope create(ICompareContainer container, ITypedElement left,
 			ITypedElement right, ITypedElement origin, IProgressMonitor monitor) {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+		Subscriber subscriber = EMFCompareIDEUIPlugin.getDefault().getSubscriberProviderRegistry()
+				.getSubscriber(container, left, right, origin, subMonitor.split(10));
 		IStorageProviderAccessor storageAccessor = null;
-		Subscriber subscriber = getSubscriber(container);
 		if (subscriber != null) {
 			storageAccessor = new SubscriberStorageAccessor(subscriber);
 		}
@@ -268,7 +263,7 @@ public final class ComparisonScopeBuilder {
 		final ComparisonScopeBuilder scopeBuilder = new ComparisonScopeBuilder(resolver,
 				EMFCompareIDEUIPlugin.getDefault().getModelMinimizerRegistry().getCompoundMinimizer(),
 				storageAccessor);
-		return scopeBuilder.build(left, right, origin, monitor);
+		return scopeBuilder.build(left, right, origin, subMonitor.split(90));
 	}
 
 	/**
@@ -296,53 +291,6 @@ public final class ComparisonScopeBuilder {
 		}
 
 		return createScope(synchronizationModel, monitor);
-	}
-
-	/**
-	 * Team left us with absolutely no way to determine whether our supplied input is the result of a
-	 * synchronization or not.
-	 * <p>
-	 * In order to properly resolve the logical model of the resource currently being compared we need to know
-	 * what "other" resources were part of its logical model, and we need to know the revisions of these
-	 * resources we are to load. All of this has already been computed by Team, but it would not let us know.
-	 * This method uses discouraged means to get around this "black box" locking from Team.
-	 * </p>
-	 * <p>
-	 * The basic need here is to retrieve the Subscriber from this point. We have a lot of accessible
-	 * variables, the two most important being the CompareConfiguration and ICompareInput... I could find no
-	 * way around the privileged access to the private ModelCompareEditorInput.participant field. There does
-	 * not seem to be any adapter (or Platform.getAdapterManager().getAdapter(...)) that would allow for this,
-	 * so I'm taking the long way 'round.
-	 * </p>
-	 * 
-	 * @return The subscriber used for this comparison if any could be found, <code>null</code> otherwise.
-	 */
-	@SuppressWarnings("restriction")
-	private static Subscriber getSubscriber(ICompareContainer container) {
-		if (container instanceof org.eclipse.team.internal.ui.mapping.ModelCompareEditorInput) {
-			final org.eclipse.team.internal.ui.mapping.ModelCompareEditorInput modelInput = (org.eclipse.team.internal.ui.mapping.ModelCompareEditorInput)container;
-			ISynchronizeParticipant participant = null;
-			try {
-				final Field field = org.eclipse.team.internal.ui.mapping.ModelCompareEditorInput.class
-						.getDeclaredField("participant"); //$NON-NLS-1$
-				AccessController.doPrivileged(new PrivilegedAction<Object>() {
-					public Object run() {
-						field.setAccessible(true);
-						return null;
-					}
-				});
-				participant = (ISynchronizeParticipant)field.get(modelInput);
-			} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-				// Swallow this, this private field was there at least from 3.5 to 4.3
-			}
-			if (participant instanceof ModelSynchronizeParticipant
-					&& ((ModelSynchronizeParticipant)participant)
-							.getContext() instanceof SubscriberMergeContext) {
-				return ((SubscriberMergeContext)((ModelSynchronizeParticipant)participant).getContext())
-						.getSubscriber();
-			}
-		}
-		return null;
 	}
 
 	/**

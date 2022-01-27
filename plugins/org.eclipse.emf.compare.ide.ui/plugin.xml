@@ -23,6 +23,7 @@
    <extension-point id="modelMinimizers" name="Logical Model Minimizers" schema="schema/modelMinimizers.exsd"/>
    <extension-point id="modelDependencyProvider" name="Model Dependency Provider" schema="schema/modelDependencyProvider.exsd"/>
    <extension-point id="mergeResolutionListener" name="Merge Resolution Listener" schema="schema/mergeResolutionListener.exsd"/>
+   <extension-point id="subscriberProvider" name="Subscriber Provider" schema="schema/subscriberProvider.exsd"/>
    
    <extension
          point="org.eclipse.compare.structureMergeViewers">
@@ -601,5 +602,12 @@
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			contextId="org.eclipse.compare.compareEditorScope">
 		</key>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.ide.ui.subscriberProvider">
+      <provider
+            class="org.eclipse.emf.compare.ide.ui.subscriber.TeamSubscriberProvider"
+            ranking="0">
+      </provider>
    </extension>
 </plugin>
