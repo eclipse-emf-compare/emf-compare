@@ -561,6 +561,15 @@ public final class NotLoadingResourceSet extends ResourceSetImpl implements Disp
 	}
 
 	/**
+	 * Returns the map from URI to IStorage used internally by this resource set to load its content.
+	 * 
+	 * @return The internal URI to IStorage map.
+	 */
+	public Map<URI, IStorage> getStorageToURI() {
+		return storageToURI;
+	}
+
+	/**
 	 * Helper class to encapsulate pairs of {@link EObject}s and {@link EStructuralFeature}s pointing to proxy
 	 * objects.
 	 */
