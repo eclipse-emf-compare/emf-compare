@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.conflict;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ComparisonCanceledException;
@@ -38,9 +37,6 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class MatchBasedConflictDetector implements IConflictDetector {
 
-	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(MatchBasedConflictDetector.class);
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -48,10 +44,6 @@ public class MatchBasedConflictDetector implements IConflictDetector {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void detect(Comparison comparison, Monitor monitor) {
-		long start = System.currentTimeMillis();
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("detect conflicts - START"); //$NON-NLS-1$
-		}
 		final List<Diff> differences = comparison.getDifferences();
 		final int diffCount = differences.size();
 
@@ -67,11 +59,6 @@ public class MatchBasedConflictDetector implements IConflictDetector {
 			final Diff diff = differences.get(i);
 			AbstractConflictSearch<? extends Diff> search = conflictSearchFactory.doSwitch(diff);
 			search.detectConflicts();
-		}
-
-		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info(String.format("detect conflicts - END - Took %d ms", Long.valueOf(System //$NON-NLS-1$
-					.currentTimeMillis() - start)));
 		}
 	}
 }

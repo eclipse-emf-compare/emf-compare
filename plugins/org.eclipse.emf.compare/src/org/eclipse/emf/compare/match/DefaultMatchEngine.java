@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
@@ -62,9 +61,6 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * Default max size of the EObject's URI loading cache.
 	 */
 	public static final int DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE = 1024;
-
-	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(DefaultMatchEngine.class);
 
 	/** The delegate {@link IEObjectMatcher matcher} that will actually pair EObjects together. */
 	private final IEObjectMatcher eObjectMatcher;
@@ -113,10 +109,6 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public Comparison match(IComparisonScope scope, Monitor monitor) {
-		long start = System.currentTimeMillis();
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug(String.format("detect matches - START")); //$NON-NLS-1$
-		}
 		Comparison comparison = comparisonFactory.createComparison();
 
 		final Notifier left = scope.getLeft();
@@ -127,10 +119,6 @@ public class DefaultMatchEngine implements IMatchEngine {
 
 		match(comparison, scope, left, right, origin, monitor);
 
-		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info(String.format("detect matches - END - Took %d ms", Long.valueOf(System //$NON-NLS-1$
-					.currentTimeMillis() - start)));
-		}
 		return comparison;
 	}
 

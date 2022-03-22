@@ -24,7 +24,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.CompareFactory;
@@ -69,9 +68,6 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  */
 public class DefaultConflictDetector implements IConflictDetector {
 
-	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(DefaultConflictDetector.class);
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -79,10 +75,6 @@ public class DefaultConflictDetector implements IConflictDetector {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void detect(Comparison comparison, Monitor monitor) {
-		long start = System.currentTimeMillis();
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("detect conflicts - START"); //$NON-NLS-1$
-		}
 		final List<Diff> differences = comparison.getDifferences();
 		final int diffCount = differences.size();
 
@@ -98,11 +90,6 @@ public class DefaultConflictDetector implements IConflictDetector {
 
 			Stream<Diff> conflictCandidates = differences.stream().filter(possiblyConflictingWith(diff));
 			checkConflict(comparison, diff, conflictCandidates::iterator);
-		}
-
-		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info(String.format("detect conflicts - END - Took %d ms", Long.valueOf(System //$NON-NLS-1$
-					.currentTimeMillis() - start)));
 		}
 	}
 

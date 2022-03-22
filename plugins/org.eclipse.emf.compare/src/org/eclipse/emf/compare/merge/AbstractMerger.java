@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
@@ -79,9 +78,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 
 	/** The key of the merge option that allows to the mergers to consider sub-diffs of a diff as a whole. */
 	public static final String SUB_DIFF_AWARE_OPTION = "subDiffAwareOption"; //$NON-NLS-1$
-
-	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(AbstractMerger.class);
 
 	/** A predicate for diffs with an unresolved state. */
 	private static final Predicate<? super Diff> HAS_UNRESOLVED_STATE = EMFComparePredicates
@@ -206,8 +202,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 * @since 3.2
 	 */
 	public Set<Diff> getDirectMergeDependencies(Diff diff, boolean mergeRightToLeft) {
-		long start = System.currentTimeMillis();
-
 		final Set<Diff> dependencies = new LazyLinkedHashSet<Diff>();
 		if (isAccepting(diff, mergeRightToLeft)) {
 			dependencies.addAll(diff.getRequires());
@@ -224,14 +218,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 			}
 		}
 
-		if (LOGGER.isDebugEnabled()) {
-			Long duration = new Long(System.currentTimeMillis() - start);
-			String log = String.format(
-					"getDirectMergeDependencies(Diff, boolean) - %d dependencies found in %d ms for diff %d", //$NON-NLS-1$
-					new Integer(dependencies.size()), duration, new Integer(diff.hashCode()));
-			LOGGER.debug(log);
-		}
-
 		return dependencies;
 	}
 
@@ -241,19 +227,9 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 * @since 3.2
 	 */
 	public Set<Diff> getDirectResultingMerges(Diff target, boolean mergeRightToLeft) {
-		long start = System.currentTimeMillis();
-
 		final Set<Diff> resulting = new LazyLinkedHashSet<Diff>();
 		resulting.addAll(getImpliedMerges(target, mergeRightToLeft));
 		resulting.addAll(getLogicallyResultingMerges(target, mergeRightToLeft));
-
-		if (LOGGER.isDebugEnabled()) {
-			Long duration = new Long(System.currentTimeMillis() - start);
-			String log = String.format(
-					"getDirectResultingMerges(Diff, boolean) - %d resulting merges found in %d ms for diff %d", //$NON-NLS-1$
-					new Integer(resulting.size()), duration, new Integer(target.hashCode()));
-			LOGGER.debug(log);
-		}
 
 		return resulting;
 	}
@@ -358,8 +334,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 * @since 3.2
 	 */
 	public Set<Diff> getDirectResultingRejections(Diff target, boolean rightToLeft) {
-		long start = System.currentTimeMillis();
-
 		final Set<Diff> directlyImpliedRejections = new LazyLinkedHashSet<Diff>();
 		final Conflict conflict = target.getConflict();
 		if (conflict != null && conflict.getKind() == ConflictKind.REAL) {
@@ -367,14 +341,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 				directlyImpliedRejections.addAll(conflict.getDifferences());
 				return Sets.filter(directlyImpliedRejections, not(sameSideAs(target)));
 			}
-		}
-
-		if (LOGGER.isDebugEnabled()) {
-			Long duration = new Long(System.currentTimeMillis() - start);
-			String log = String.format(
-					"getDirectResultingMerges(Diff, boolean) - %d implied rejections found in %d ms for diff %d", //$NON-NLS-1$
-					new Integer(directlyImpliedRejections.size()), duration, new Integer(target.hashCode()));
-			LOGGER.debug(log);
 		}
 
 		return directlyImpliedRejections;
@@ -649,8 +615,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 * @since 3.5
 	 */
 	protected Set<Diff> getLogicallyResultingMerges(Diff diff, boolean mergeRightToLeft) {
-		long start = System.currentTimeMillis();
-
 		final Set<Diff> resulting = new LazyLinkedHashSet<Diff>();
 
 		// we need to add the implication side that actually needs merging
@@ -670,14 +634,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 			Iterables.addAll(resulting, directSubDiffs);
 		}
 
-		if (LOGGER.isDebugEnabled()) {
-			Long duration = new Long(System.currentTimeMillis() - start);
-			String log = String.format(
-					"getLogicallyResultingMerges(Diff, boolean) - %d merges found in %d ms for diff %d", //$NON-NLS-1$
-					new Integer(resulting.size()), duration, new Integer(diff.hashCode()));
-			LOGGER.debug(log);
-		}
-
 		return resulting;
 	}
 
@@ -695,7 +651,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 	 * @since 3.5
 	 */
 	protected Set<Diff> getImpliedMerges(Diff target, boolean mergeRightToLeft) {
-		long start = System.currentTimeMillis();
 		final Set<Diff> impliedMerges = new LazyLinkedHashSet<Diff>();
 
 		if (isAccepting(target, mergeRightToLeft)) {
@@ -744,13 +699,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 			}
 		}
 
-		if (LOGGER.isDebugEnabled()) {
-			Long duration = new Long(System.currentTimeMillis() - start);
-			String log = String.format(
-					"getImpliedMerges(Diff, boolean) - %d implied merges found in %d ms for diff %d", //$NON-NLS-1$
-					new Integer(impliedMerges.size()), duration, new Integer(target.hashCode()));
-			LOGGER.debug(log);
-		}
 		return impliedMerges;
 	}
 
@@ -770,8 +718,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 		if (isInTerminalState(target)) {
 			return;
 		}
-
-		long start = System.currentTimeMillis();
 
 		// Change the diff's state before we actually merge it : this allows us to avoid requirement cycles.
 		target.setState(MERGING);
@@ -798,13 +744,6 @@ public abstract class AbstractMerger implements IMerger2, IMergeOptionAware, IMe
 		} else {
 			reject(target, rightToLeft);
 			target.setState(DISCARDED);
-		}
-
-		if (LOGGER.isDebugEnabled()) {
-			long duration = System.currentTimeMillis() - start;
-			LOGGER.debug("copyDiff(Diff, Monitor, Boolean) - diff " + target.hashCode() //$NON-NLS-1$
-					+ " merged (rightToLeft: " + rightToLeft + ") in " //$NON-NLS-1$ //$NON-NLS-2$
-					+ duration + "ms"); //$NON-NLS-1$
 		}
 	}
 

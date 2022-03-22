@@ -17,7 +17,6 @@ import static org.eclipse.emf.compare.merge.IMergeCriterion.NONE;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
@@ -42,8 +41,6 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ResourceAttachmentChangeMerger extends AbstractMerger {
-	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(ResourceAttachmentChangeMerger.class);
 
 	/**
 	 * {@inheritDoc}
@@ -405,9 +402,6 @@ public class ResourceAttachmentChangeMerger extends AbstractMerger {
 					target = targetSet.createResource(targetURI);
 				} else {
 					target = existing;
-				}
-				if (LOGGER.isInfoEnabled()) {
-					LOGGER.info("Created resource " + targetURI); //$NON-NLS-1$
 				}
 
 				if (rightToLeft) {

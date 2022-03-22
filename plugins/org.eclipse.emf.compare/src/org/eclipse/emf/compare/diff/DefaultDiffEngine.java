@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ComparisonCanceledException;
@@ -60,9 +59,6 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 * attributes can legitimately use.
 	 */
 	protected static final Object UNMATCHED_VALUE = new Object();
-
-	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(DefaultDiffEngine.class);
 
 	/**
 	 * The diff processor that will be used by this engine. Should be passed by the constructor and accessed
@@ -120,17 +116,9 @@ public class DefaultDiffEngine implements IDiffEngine {
 	 *      org.eclipse.emf.common.util.Monitor)
 	 */
 	public void diff(Comparison comparison, Monitor monitor) {
-		long start = System.currentTimeMillis();
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug(String.format("detect differences - START")); //$NON-NLS-1$
-		}
 		monitor.subTask(EMFCompareMessages.getString("DefaultDiffEngine.monitor.diff")); //$NON-NLS-1$
 		for (Match rootMatch : comparison.getMatches()) {
 			checkForDifferences(rootMatch, monitor);
-		}
-		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info(String.format("detect differences - END - Took %d ms", Long.valueOf(System //$NON-NLS-1$
-					.currentTimeMillis() - start)));
 		}
 	}
 

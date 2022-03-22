@@ -35,7 +35,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
@@ -69,9 +68,6 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  */
 public class DefaultReqEngine implements IReqEngine {
 
-	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(DefaultReqEngine.class);
-
 	/** The time before we expire the values in {@link #cachedDifferences} after access, in seconds. */
 	private static final long CACHE_EXPIRATION_TIME = 30L;
 
@@ -94,20 +90,12 @@ public class DefaultReqEngine implements IReqEngine {
 	 * @see org.eclipse.emf.compare.req.IReqEngine#computeRequirements(Comparison, Monitor)
 	 */
 	public void computeRequirements(Comparison comparison, Monitor monitor) {
-		long start = System.currentTimeMillis();
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug(String.format("detect requirements - START")); //$NON-NLS-1$
-		}
 		monitor.subTask(EMFCompareMessages.getString("DefaultReqEngine.monitor.req")); //$NON-NLS-1$
 		for (Diff difference : comparison.getDifferences()) {
 			if (monitor.isCanceled()) {
 				throw new ComparisonCanceledException();
 			}
 			checkForRequiredDifferences(comparison, difference);
-		}
-		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info(String.format("detect requirement - END - Took %d ms", Long.valueOf(System //$NON-NLS-1$
-					.currentTimeMillis() - start)));
 		}
 	}
 

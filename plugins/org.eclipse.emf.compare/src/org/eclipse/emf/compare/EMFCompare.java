@@ -16,14 +16,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.DiagnosticChain;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
 import org.eclipse.emf.compare.conflict.MatchBasedConflictDetector;
@@ -69,15 +67,6 @@ public class EMFCompare {
 	 * @since 3.2
 	 */
 	public static final String DIAGNOSTIC_SOURCE = "org.eclipse.emf.compare"; //$NON-NLS-1$
-
-	/** Constant for logging. */
-	private static final String START = " - START"; //$NON-NLS-1$
-
-	/** Constant for logging. */
-	private static final String FINISH = " - FINISH"; //$NON-NLS-1$
-
-	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(EMFCompare.class);
 
 	/** The registry we'll use to create a match engine for this comparison. */
 	private final IMatchEngine.Factory.Registry matchEngineFactoryRegistry;
@@ -204,19 +193,9 @@ public class EMFCompare {
 		checkNotNull(scope);
 		checkNotNull(monitor);
 
-		// Used to compute the time spent in the method
-		long startTime = System.currentTimeMillis();
-
-		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info("compare() - START"); //$NON-NLS-1$
-		}
-
 		Comparison comparison = null;
 		try {
 			Monitor subMonitor = new SafeSubMonitor(monitor);
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("compare() - starting step: MATCH"); //$NON-NLS-1$
-			}
 			comparison = matchEngineFactoryRegistry.getHighestRankingMatchEngineFactory(scope)
 					.getMatchEngine().match(scope, subMonitor);
 
@@ -226,62 +205,30 @@ public class EMFCompare {
 			List<IPostProcessor> postProcessors = postProcessorDescriptorRegistry.getPostProcessors(scope);
 
 			// CHECKSTYLE:OFF Yes, I want to have ifs here and no constant for "post-processor".
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("compare() - starting step: POST-MATCH with " + postProcessors.size() //$NON-NLS-1$
-						+ " post-processors"); //$NON-NLS-1$
-			}
 			postMatch(comparison, postProcessors, subMonitor);
 			monitor.worked(1);
 
 			if (!hasToStop(comparison, monitor)) {
-				if (LOGGER.isInfoEnabled()) {
-					LOGGER.info("compare() - starting step: DIFF"); //$NON-NLS-1$
-				}
 				diffEngine.diff(comparison, subMonitor);
 				monitor.worked(1);
-				if (LOGGER.isInfoEnabled()) {
-					LOGGER.info("compare() - starting step: POST-DIFF with " //$NON-NLS-1$
-							+ postProcessors.size() + " post-processors"); //$NON-NLS-1$
-				}
 				postDiff(comparison, postProcessors, subMonitor);
 				monitor.worked(1);
 
 				if (!hasToStop(comparison, monitor)) {
-					if (LOGGER.isInfoEnabled()) {
-						LOGGER.info("compare() - starting step: REQUIREMENTS"); //$NON-NLS-1$
-					}
 					reqEngine.computeRequirements(comparison, subMonitor);
 					monitor.worked(1);
-					if (LOGGER.isInfoEnabled()) {
-						LOGGER.info("compare() - starting step: POST-REQUIREMENTS with " //$NON-NLS-1$
-								+ postProcessors.size() + " post-processors"); //$NON-NLS-1$
-					}
 					postRequirements(comparison, postProcessors, subMonitor);
 					monitor.worked(1);
 
 					if (!hasToStop(comparison, monitor)) {
-						if (LOGGER.isInfoEnabled()) {
-							LOGGER.info("compare() - starting step: EQUIVALENCES"); //$NON-NLS-1$
-						}
 						equiEngine.computeEquivalences(comparison, subMonitor);
 						monitor.worked(1);
-						if (LOGGER.isInfoEnabled()) {
-							LOGGER.info("compare() - starting step: POST-EQUIVALENCES with " //$NON-NLS-1$
-									+ postProcessors.size() + " post-processors"); //$NON-NLS-1$
-						}
 						postEquivalences(comparison, postProcessors, subMonitor);
 						monitor.worked(1);
 
-						if (LOGGER.isInfoEnabled()) {
-							LOGGER.info("compare() - starting step: CONFLICT"); //$NON-NLS-1$
-						}
 						detectConflicts(comparison, postProcessors, subMonitor);
 						monitor.worked(1);
 
-						if (LOGGER.isInfoEnabled()) {
-							LOGGER.info("compare() - starting step: POST-COMPARISON with " //$NON-NLS-1$
-									+ postProcessors.size() + " post-processors"); //$NON-NLS-1$
-						}
 						// CHECKSTYLE:ON
 						postComparison(comparison, postProcessors, subMonitor);
 						monitor.worked(1);
@@ -289,9 +236,6 @@ public class EMFCompare {
 				}
 			}
 		} catch (ComparisonCanceledException e) {
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("compare() - Comparison has been canceled"); //$NON-NLS-1$
-			}
 			if (comparison == null) {
 				comparison = new ComparisonSpec();
 			}
@@ -305,10 +249,6 @@ public class EMFCompare {
 			}
 		} finally {
 			monitor.done();
-		}
-
-		if (LOGGER.isInfoEnabled()) {
-			logEndOfComparison(comparison, startTime);
 		}
 
 		// Add scope to the comparison's adapters to make it available throughout the framework
@@ -353,32 +293,6 @@ public class EMFCompare {
 	}
 
 	/**
-	 * Log useful informations at the end of the comparison process.
-	 * 
-	 * @param comparison
-	 *            The comparison
-	 * @param start
-	 *            The time when the method start
-	 */
-	private void logEndOfComparison(Comparison comparison, long start) {
-		long duration = System.currentTimeMillis() - start;
-		int diffQuantity = comparison.getDifferences().size();
-		int conflictQuantity = comparison.getConflicts().size();
-		int matchQuantity = 0;
-		EList<Match> matches = comparison.getMatches();
-		for (Match match : matches) {
-			matchQuantity++;
-			Iterator<Match> subMatchIterator = match.getAllSubmatches().iterator();
-			while (subMatchIterator.hasNext()) {
-				matchQuantity++;
-				subMatchIterator.next();
-			}
-		}
-		LOGGER.info("compare() - FINISH - " + matchQuantity + " matches, " + diffQuantity + " diffs and " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				+ conflictQuantity + " conflicts found in " + duration + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	/**
 	 * Launches the conflict detection engine, if any has been given and if the comparison is three way.
 	 * 
 	 * @param comparison
@@ -411,15 +325,7 @@ public class EMFCompare {
 		Iterator<IPostProcessor> processorsIterator = postProcessors.iterator();
 		while (!hasToStop(comparison, monitor) && processorsIterator.hasNext()) {
 			final IPostProcessor iPostProcessor = processorsIterator.next();
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("postMatch with post-processor: " //$NON-NLS-1$
-						+ iPostProcessor.getClass().getName() + START);
-			}
 			iPostProcessor.postMatch(comparison, monitor);
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("postMatch with post-processor: " //$NON-NLS-1$
-						+ iPostProcessor.getClass().getName() + FINISH);
-			}
 		}
 	}
 
@@ -438,15 +344,7 @@ public class EMFCompare {
 		Iterator<IPostProcessor> processorsIterator = postProcessors.iterator();
 		while (!hasToStop(comparison, monitor) && processorsIterator.hasNext()) {
 			final IPostProcessor iPostProcessor = processorsIterator.next();
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("postDiff with post-processor: " + iPostProcessor.getClass().getName() //$NON-NLS-1$
-						+ START);
-			}
 			iPostProcessor.postDiff(comparison, monitor);
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("postDiff with post-processor: " + iPostProcessor.getClass().getName() //$NON-NLS-1$
-						+ FINISH);
-			}
 		}
 	}
 
@@ -465,15 +363,7 @@ public class EMFCompare {
 		Iterator<IPostProcessor> processorsIterator = postProcessors.iterator();
 		while (!hasToStop(comparison, monitor) && processorsIterator.hasNext()) {
 			final IPostProcessor iPostProcessor = processorsIterator.next();
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("postRequirements with post-processor: " //$NON-NLS-1$
-						+ iPostProcessor.getClass().getName() + START);
-			}
 			iPostProcessor.postRequirements(comparison, monitor);
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("postRequirements with post-processor: " //$NON-NLS-1$
-						+ iPostProcessor.getClass().getName() + FINISH);
-			}
 		}
 	}
 
@@ -492,15 +382,7 @@ public class EMFCompare {
 		Iterator<IPostProcessor> processorsIterator = postProcessors.iterator();
 		while (!hasToStop(comparison, monitor) && processorsIterator.hasNext()) {
 			final IPostProcessor iPostProcessor = processorsIterator.next();
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("postEquivalences with post-processor: " //$NON-NLS-1$
-						+ iPostProcessor.getClass().getName() + START);
-			}
 			iPostProcessor.postEquivalences(comparison, monitor);
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("postEquivalences with post-processor: " //$NON-NLS-1$
-						+ iPostProcessor.getClass().getName() + FINISH);
-			}
 		}
 	}
 
@@ -519,15 +401,7 @@ public class EMFCompare {
 		Iterator<IPostProcessor> processorsIterator = postProcessors.iterator();
 		while (!hasToStop(comparison, monitor) && processorsIterator.hasNext()) {
 			final IPostProcessor iPostProcessor = processorsIterator.next();
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("postConflicts with post-processor: " //$NON-NLS-1$
-						+ iPostProcessor.getClass().getName() + START);
-			}
 			iPostProcessor.postConflicts(comparison, monitor);
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("postConflicts with post-processor: " //$NON-NLS-1$
-						+ iPostProcessor.getClass().getName() + FINISH);
-			}
 		}
 	}
 
@@ -547,19 +421,11 @@ public class EMFCompare {
 		int postProcessorIndex = 1;
 		while (!hasToStop(comparison, monitor) && processorsIterator.hasNext()) {
 			final IPostProcessor postProcessor = processorsIterator.next();
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("postComparison with post-processor: " //$NON-NLS-1$
-						+ postProcessor.getClass().getName() + START);
-			}
 			monitor.subTask(EMFCompareMessages.getString("PostComparison.monitor.postprocessor", //$NON-NLS-1$
 					postProcessor.getClass().getSimpleName(), String.valueOf(postProcessorIndex),
 					String.valueOf(postProcessors.size())));
 			postProcessor.postComparison(comparison, monitor);
 			postProcessorIndex++;
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("postComparison with post-processor: " //$NON-NLS-1$
-						+ postProcessor.getClass().getName() + FINISH);
-			}
 		}
 	}
 
