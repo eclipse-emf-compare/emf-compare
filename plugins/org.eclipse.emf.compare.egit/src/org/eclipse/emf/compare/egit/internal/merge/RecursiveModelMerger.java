@@ -290,12 +290,18 @@ public class RecursiveModelMerger extends RecursiveMerger {
 			throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException {
 		boolean hasWorkingTreeIterator = tw.getTreeCount() > T_FILE;
 		boolean hasAttributeNodeProvider = treeWalk.getAttributesNodeProvider() != null;
+		Attributes[] attributes = {new Attributes(), new Attributes(), new Attributes() };
+		if (hasAttributeNodeProvider) {
+			attributes[T_BASE] = treeWalk.getAttributes(T_BASE);
+			attributes[T_OURS] = treeWalk.getAttributes(T_OURS);
+			attributes[T_THEIRS] = treeWalk.getAttributes(T_THEIRS);
+		}
 		return processEntry(treeWalk.getTree(T_BASE, CanonicalTreeParser.class),
 				treeWalk.getTree(T_OURS, CanonicalTreeParser.class),
 				treeWalk.getTree(T_THEIRS, CanonicalTreeParser.class),
 				treeWalk.getTree(T_INDEX, DirCacheBuildIterator.class),
 				hasWorkingTreeIterator ? treeWalk.getTree(T_FILE, WorkingTreeIterator.class) : null,
-				ignoreConflicts, hasAttributeNodeProvider ? treeWalk.getAttributes() : new Attributes());
+				ignoreConflicts, attributes);
 	}
 
 	/**
