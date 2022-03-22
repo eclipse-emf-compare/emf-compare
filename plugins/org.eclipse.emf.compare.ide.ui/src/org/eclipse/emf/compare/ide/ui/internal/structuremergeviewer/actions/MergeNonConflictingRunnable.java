@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.compare.Comparison;
@@ -55,6 +54,7 @@ import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
+import org.eclipse.emf.compare.rcp.EMFCompareLogger;
 
 /**
  * Implements the "merge non-conflicting" and "merge all non-conflicting" action.
@@ -64,7 +64,7 @@ import org.eclipse.emf.compare.merge.IMerger.Registry;
 public class MergeNonConflictingRunnable extends AbstractMergeRunnable implements IMergeAllNonConflictingRunnable, IMergeRunnable {
 
 	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(MergeNonConflictingRunnable.class);
+	private static final EMFCompareLogger LOGGER = new EMFCompareLogger(MergeNonConflictingRunnable.class);
 
 	/**
 	 * Default constructor.

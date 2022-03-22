@@ -18,8 +18,8 @@ import com.google.common.eventbus.Subscribe;
 
 import java.util.Collections;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.compare.graph.IGraph;
+import org.eclipse.emf.compare.rcp.EMFCompareLogger;
 
 /**
  * This class's responsibility is to maintain the state of its graph when notified that a new model resource
@@ -33,7 +33,7 @@ public class DependencyGraphUpdater<T> {
 	private final IGraph<T> dependencyGraph;
 
 	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(DependencyGraphUpdater.class);
+	private static final EMFCompareLogger LOGGER = new EMFCompareLogger(DependencyGraphUpdater.class);
 
 	/**
 	 * Constructor.

@@ -46,41 +46,11 @@ public final class EMFComparePreferences {
 	/** Disabled adapter factories preference. */
 	public static final String DISABLED_ADAPTER_FACTORY = "org.eclipse.emf.compare.preference.disabled.adapter.factories"; //$NON-NLS-1$
 
-	/** Preference key for log4j file name. */
-	public static final String LOG_FILENAME_KEY = "org.eclipse.emf.compare.log.file.name"; //$NON-NLS-1$
-
-	/** Preference key for log4j log level. */
+	/** Preference key for log level. */
 	public static final String LOG_LEVEL_KEY = "org.eclipse.emf.compare.log.level"; //$NON-NLS-1$
 
-	/** Preference key for log4j backup file max number. */
-	public static final String LOG_BACKUP_COUNT_KEY = "org.eclipse.emf.compare.log.backup.count"; //$NON-NLS-1$
-
-	/** Preference key for log4j maximum file size. */
-	public static final String LOG_FILE_MAX_SIZE_KEY = "org.eclipse.emf.compare.log.file.max.size"; //$NON-NLS-1$
-
-	/** Log4j appender used by EMFCompare. */
-	public static final String EMFC_APPENDER_NAME = "EMFCFile"; //$NON-NLS-1$
-
-	/** Default log4j file name. */
-	public static final String LOG_FILE_DEFAULT = ""; //$NON-NLS-1$
-
-	/** Default log4j level. */
+	/** Default log level. */
 	public static final String LOG_LEVEL_DEFAULT = "OFF"; //$NON-NLS-1$
-
-	/** Default log4j backup file max number. */
-	public static final int LOG_BACKUP_DEFAULT = 10;
-
-	/** Default log4j maximum file size. */
-	public static final int LOG_FILE_SIZE_DEFAULT = 100;
-
-	/**
-	 * Pattern used for log4j logging.
-	 * 
-	 * <pre>
-	 * Date [Thread name] LEVEL 3.last.segments.of.logger.name <NDC Tag> - message\n
-	 * </pre>
-	 */
-	public static final String LOG_PATTERN = "%d{ISO8601} [%t] %-5p %c{3} %x - %m%n"; //$NON-NLS-1$
 
 	/**
 	 * Private constructor. Not to be called.

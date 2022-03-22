@@ -12,10 +12,10 @@ package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.ide.ui.internal.EMFCompareIDEUIPlugin;
+import org.eclipse.emf.compare.rcp.EMFCompareLogger;
 
 /**
  * Encapsulated a diagnostic to hide multi-threaded details.
@@ -27,7 +27,7 @@ public class DiagnosticSupport {
 	/** The wrapped diagnostic, never {@code null}. */
 	private final BasicDiagnostic diagnostic;
 
-	private static final Logger LOGGER = Logger.getLogger(DiagnosticSupport.class);
+	private static final EMFCompareLogger LOGGER = new EMFCompareLogger(DiagnosticSupport.class);
 
 	/**
 	 * Constructor.

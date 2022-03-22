@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -36,6 +35,7 @@ import org.eclipse.emf.compare.ide.internal.utils.DisposableResourceSet;
 import org.eclipse.emf.compare.ide.internal.utils.INamespaceDeclarationListener;
 import org.eclipse.emf.compare.ide.internal.utils.IProxyCreationListener;
 import org.eclipse.emf.compare.ide.internal.utils.NoNotificationParserPool;
+import org.eclipse.emf.compare.rcp.EMFCompareLogger;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.ContentHandler;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -52,7 +52,7 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 // Visible for testing
 public class SynchronizedResourceSet extends ResourceSetImpl implements DisposableResourceSet {
 	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(SynchronizedResourceSet.class);
+	private static final EMFCompareLogger LOGGER = new EMFCompareLogger(SynchronizedResourceSet.class);
 
 	/** Associates URIs with their resources. */
 	private final ConcurrentHashMap<URI, Resource> uriCache;

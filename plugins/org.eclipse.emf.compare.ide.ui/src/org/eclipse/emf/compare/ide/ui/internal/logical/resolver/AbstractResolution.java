@@ -21,7 +21,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,6 +29,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
+import org.eclipse.emf.compare.rcp.EMFCompareLogger;
 import org.eclipse.emf.ecore.resource.URIConverter;
 
 /**
@@ -49,7 +49,7 @@ public abstract class AbstractResolution {
 	protected DiagnosticSupport diagnostic;
 
 	/** The logger */
-	protected final Logger logger = Logger.getLogger(getClass());
+	protected final EMFCompareLogger logger = new EMFCompareLogger(getClass());
 
 	/** The implicit dependencies. */
 	protected IImplicitDependencies implicitDependencies;

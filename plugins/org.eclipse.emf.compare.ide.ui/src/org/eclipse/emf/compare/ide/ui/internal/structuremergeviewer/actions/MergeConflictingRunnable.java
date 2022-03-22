@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -41,6 +40,7 @@ import org.eclipse.emf.compare.merge.IDiffRelationshipComputer;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.merge.IMerger.Registry2;
+import org.eclipse.emf.compare.rcp.EMFCompareLogger;
 
 /**
  * Implements the "merge all contained conflicting" action.
@@ -50,7 +50,7 @@ import org.eclipse.emf.compare.merge.IMerger.Registry2;
 public class MergeConflictingRunnable extends AbstractMergeRunnable implements IMergeRunnable {
 
 	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(MergeConflictingRunnable.class);
+	private static final EMFCompareLogger LOGGER = new EMFCompareLogger(MergeConflictingRunnable.class);
 
 	/**
 	 * Default constructor.

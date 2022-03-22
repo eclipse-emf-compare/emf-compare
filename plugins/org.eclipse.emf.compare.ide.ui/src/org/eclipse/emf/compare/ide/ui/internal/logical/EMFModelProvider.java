@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -56,6 +55,7 @@ import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor.DiffSide;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
+import org.eclipse.emf.compare.rcp.EMFCompareLogger;
 
 /**
  * This implementation of a {@link ModelProvider} will be used to provide the logical model associated with
@@ -89,7 +89,7 @@ public class EMFModelProvider extends ModelProvider {
 			.getLong(EMFCompareUIPreferences.MODEL_PROVIDER_CACHE_TIMEOUT);
 
 	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(EMFModelProvider.class);
+	private static final EMFCompareLogger LOGGER = new EMFCompareLogger(EMFModelProvider.class);
 
 	/**
 	 * Cache the logical model computed for a given file through this provider. Note that the sub-cache

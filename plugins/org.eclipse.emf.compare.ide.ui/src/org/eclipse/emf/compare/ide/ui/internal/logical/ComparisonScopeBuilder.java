@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.compare.ICompareContainer;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
@@ -55,6 +54,7 @@ import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
+import org.eclipse.emf.compare.rcp.EMFCompareLogger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.FilterComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
@@ -86,7 +86,7 @@ public final class ComparisonScopeBuilder {
 	private final IStorageProviderAccessor storageAccessor;
 
 	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(ComparisonScopeBuilder.class);
+	private static final EMFCompareLogger LOGGER = new EMFCompareLogger(ComparisonScopeBuilder.class);
 
 	/** Function transforming an IResource into its URI. */
 	private static final Function<IResource, URI> TO_FILE_URIS = new Function<IResource, URI>() {

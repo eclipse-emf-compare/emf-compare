@@ -26,7 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -54,9 +53,6 @@ import org.eclipse.emf.ecore.EObject;
  * @author Philip Langer <planger@eclipsesource.com>
  */
 public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
-
-	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(OpaqueElementBodyChangeMerger.class);
 
 	@Override
 	public boolean isMergerFor(Diff target) {
@@ -148,12 +144,6 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 				return;
 			}
 
-			if (LOGGER.isDebugEnabled()) {
-				int refinedElementCount = bodyChange.getRefinedBy().size();
-				LOGGER.debug("accept(Diff, boolean) - " + refinedElementCount //$NON-NLS-1$
-						+ " refined diffs to merge for diff " + diff.hashCode()); //$NON-NLS-1$
-			}
-
 			switch (bodyChange.getKind()) {
 				case ADD:
 					acceptRefiningDiffs(bodyChange, rightToLeft);
@@ -187,12 +177,6 @@ public class OpaqueElementBodyChangeMerger extends AttributeChangeMerger {
 			// body try to merge it
 			if (isFullyMerged(bodyChange)) {
 				return;
-			}
-
-			if (LOGGER.isDebugEnabled()) {
-				int refinedElementCount = bodyChange.getRefinedBy().size();
-				LOGGER.debug("Reject(Diff, boolean)" + refinedElementCount //$NON-NLS-1$
-						+ " refined diffs to merge for diff " + diff.hashCode()); //$NON-NLS-1$
 			}
 
 			switch (bodyChange.getKind()) {

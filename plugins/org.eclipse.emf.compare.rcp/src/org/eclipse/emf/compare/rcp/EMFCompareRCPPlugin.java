@@ -12,15 +12,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp;
 
-import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.EMFC_APPENDER_NAME;
-import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_BACKUP_COUNT_KEY;
-import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_BACKUP_DEFAULT;
-import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILENAME_KEY;
-import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILE_MAX_SIZE_KEY;
-import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILE_SIZE_DEFAULT;
 import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_LEVEL_DEFAULT;
 import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_LEVEL_KEY;
-import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_PATTERN;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ArrayListMultimap;
@@ -29,24 +22,17 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.RollingFileAppender;
 import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.conflict.IConflictDetector;
@@ -128,14 +114,6 @@ public class EMFCompareRCPPlugin extends Plugin {
 
 	/** The id of the adapter factory extension point. */
 	public static final String FACTORY_PPID = "adapterFactory"; //$NON-NLS-1$
-
-	/**
-	 * Log4j logger to use throughout EMFCompare for logging purposes.
-	 */
-	private static final Logger LOGGER = Logger.getLogger("org.eclipse.emf.compare"); //$NON-NLS-1$
-
-	/** Number of bytes in a MiB. */
-	private static final int MEGABYTE = 1024 * 1024;
 
 	/** This plugin is a singleton, so it's quite ok to keep the plugin in a static field. */
 	private static EMFCompareRCPPlugin plugin;
@@ -768,56 +746,15 @@ public class EMFCompareRCPPlugin extends Plugin {
 	}
 
 	/**
-	 * Initializes log4j by reading the preferences.
+	 * Initializes logging by reading the preferences.
 	 */
 	private void initLogging() {
-		LOGGER.setLevel(Level.toLevel(Platform.getPreferencesService()
-				.getString(EMFCompareRCPPlugin.PLUGIN_ID, LOG_LEVEL_KEY, LOG_LEVEL_DEFAULT, null)));
-		if (!Level.OFF.equals(LOGGER.getLevel())) {
-			RollingFileAppender appender = (RollingFileAppender)LOGGER.getAppender(EMFC_APPENDER_NAME);
-			String logFileName = Platform.getPreferencesService().getString(EMFCompareRCPPlugin.PLUGIN_ID,
-					LOG_FILENAME_KEY, "", null); //$NON-NLS-1$
-			if (logFileName.length() > 0) {
-				if (appender == null) {
-					try {
-						createLogAppender(logFileName);
-					} catch (IOException e) {
-						// Invalidate file name
-						Platform.getPreferencesService().getString(EMFCompareRCPPlugin.PLUGIN_ID,
-								LOG_FILENAME_KEY, "", null); //$NON-NLS-1$
-					}
-				} else {
-					appender.setMaxBackupIndex(Platform.getPreferencesService().getInt(
-							EMFCompareRCPPlugin.PLUGIN_ID, LOG_BACKUP_COUNT_KEY, LOG_BACKUP_DEFAULT, null));
-					appender.setMaximumFileSize(
-							(Platform.getPreferencesService().getInt(EMFCompareRCPPlugin.PLUGIN_ID,
-									LOG_FILE_MAX_SIZE_KEY, LOG_FILE_SIZE_DEFAULT, null)) * MEGABYTE);
-				}
-			}
-		}
+		String level = Platform.getPreferencesService().getString(EMFCompareRCPPlugin.PLUGIN_ID,
+				LOG_LEVEL_KEY, LOG_LEVEL_DEFAULT, null);
+		EMFCompareLogger.setLevel(level);
 		preferenceChangeListener = new LoggingPreferenceChangeListener();
 		InstanceScope.INSTANCE.getNode(EMFCompareRCPPlugin.PLUGIN_ID)
 				.addPreferenceChangeListener(preferenceChangeListener);
-	}
-
-	/**
-	 * Creates the RollingFileAppender used to log with log4j.
-	 * 
-	 * @param newFileName
-	 *            Path opf the log file
-	 * @throws IOException
-	 *             If an IO problem occurs, like the given path does not represent a file, or it cannot be
-	 *             written;
-	 */
-	private void createLogAppender(String newFileName) throws IOException {
-		RollingFileAppender appender;
-		appender = new RollingFileAppender(new PatternLayout(LOG_PATTERN), newFileName, true);
-		LOGGER.removeAllAppenders(); // We don't want to log elsewhere
-		LOGGER.addAppender(appender);
-		appender.setMaxBackupIndex(Platform.getPreferencesService().getInt(EMFCompareRCPPlugin.PLUGIN_ID,
-				LOG_BACKUP_COUNT_KEY, LOG_BACKUP_DEFAULT, null));
-		appender.setMaximumFileSize((Platform.getPreferencesService().getInt(EMFCompareRCPPlugin.PLUGIN_ID,
-				LOG_FILE_MAX_SIZE_KEY, LOG_FILE_SIZE_DEFAULT, null)) * MEGABYTE);
 	}
 
 	/**
@@ -828,63 +765,14 @@ public class EMFCompareRCPPlugin extends Plugin {
 	private static class LoggingPreferenceChangeListener implements IPreferenceChangeListener {
 
 		/**
-		 * The path of the logging file.
-		 */
-		private String path;
-
-		/**
-		 * The level of the logger.
-		 */
-		private Level loggingLevel;
-
-		/**
 		 * Updates the log4j configuration when logging preferences change.
 		 * 
 		 * @param event
 		 *            the preference change event.
 		 */
 		public void preferenceChange(PreferenceChangeEvent event) {
-			final IPreferencesService prefs = Platform.getPreferencesService();
-
-			path = prefs.getString(EMFCompareRCPPlugin.PLUGIN_ID, LOG_FILENAME_KEY, "", null); //$NON-NLS-1$
 			if (LOG_LEVEL_KEY.equals(event.getKey())) {
-				loggingLevel = Level.toLevel((String)event.getNewValue());
-				LOGGER.setLevel(loggingLevel);
-			} else if (LOG_FILENAME_KEY.equals(event.getKey())) {
-				path = (String)event.getNewValue();
-			} else if (LOG_BACKUP_COUNT_KEY.equals(event.getKey())) {
-				RollingFileAppender appender = (RollingFileAppender)LOGGER.getAppender(EMFC_APPENDER_NAME);
-				if (appender != null) {
-					appender.setMaxBackupIndex(Integer.parseInt((String)event.getNewValue()));
-				}
-			} else if (LOG_FILE_MAX_SIZE_KEY.equals(event.getKey())) {
-				RollingFileAppender appender = (RollingFileAppender)LOGGER.getAppender(EMFC_APPENDER_NAME);
-				if (appender != null) {
-					appender.setMaximumFileSize(Integer.parseInt((String)event.getNewValue()) * MEGABYTE);
-				}
-			}
-			if (loggingLevel != null && !Level.OFF.equals(loggingLevel) && path != null
-					&& path.length() > 0) {
-				initFile();
-			}
-		}
-
-		/**
-		 * Create the logging file.
-		 */
-		private void initFile() {
-			RollingFileAppender appender = (RollingFileAppender)LOGGER.getAppender(EMFC_APPENDER_NAME);
-			if (appender == null) {
-				try {
-					EMFCompareRCPPlugin.getDefault().createLogAppender(path);
-				} catch (IOException e) {
-					// Force the value to be harmless
-					InstanceScope.INSTANCE.getNode(EMFCompareRCPPlugin.PLUGIN_ID).put(LOG_FILENAME_KEY, ""); //$NON-NLS-1$
-					getDefault().log(IStatus.ERROR,
-							EMFCompareRCPMessages.getString("logging.appender.error", path, e.getMessage())); //$NON-NLS-1$
-				}
-			} else {
-				appender.setFile(path);
+				EMFCompareLogger.setLevel((String)event.getNewValue());
 			}
 		}
 

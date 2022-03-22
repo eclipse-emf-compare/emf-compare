@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.mapping.RemoteResourceMappingContext;
 import org.eclipse.core.resources.mapping.ResourceMapping;
@@ -37,6 +36,7 @@ import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.emf.compare.egit.internal.storage.AbstractGitResourceVariant;
 import org.eclipse.emf.compare.egit.internal.storage.TreeParserResourceVariant;
 import org.eclipse.emf.compare.egit.internal.wrapper.JGitProgressMonitorWrapper;
+import org.eclipse.emf.compare.rcp.EMFCompareLogger;
 import org.eclipse.jgit.attributes.Attributes;
 import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.dircache.DirCacheBuildIterator;
@@ -92,7 +92,7 @@ import org.eclipse.team.core.variants.IResourceVariant;
 @SuppressWarnings("restriction")
 public class RecursiveModelMerger extends RecursiveMerger {
 
-	private static final Logger LOGGER = Logger.getLogger(RecursiveModelMerger.class);
+	private static final EMFCompareLogger LOGGER = new EMFCompareLogger(RecursiveModelMerger.class);
 
 	/**
 	 * This will be populated during the course of the RecursiveMappingMergers' executions. These files have

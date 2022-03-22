@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -36,6 +35,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.graph.IGraph;
 import org.eclipse.emf.compare.ide.ui.internal.util.ThreadSafeProgressMonitor;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
+import org.eclipse.emf.compare.rcp.EMFCompareLogger;
 
 /**
  * The default implementation of the {@link IResourceDependencyProvider}.
@@ -44,7 +44,7 @@ import org.eclipse.emf.compare.ide.utils.ResourceUtil;
  */
 public class ResourceDependencyLocalResolver implements IResourceDependencyLocalResolver {
 	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(ResourceDependencyLocalResolver.class);
+	private static final EMFCompareLogger LOGGER = new EMFCompareLogger(ResourceDependencyLocalResolver.class);
 
 	/** The event bus */
 	private final EventBus eventBus;

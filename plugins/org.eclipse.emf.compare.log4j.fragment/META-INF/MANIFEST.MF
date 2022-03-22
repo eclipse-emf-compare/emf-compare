@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: EMF Compare Logging Support
-Bundle-Vendor: Eclipse Modeling Project
-Bundle-SymbolicName: org.eclipse.emf.compare.log4j.fragment
-Bundle-Version: 1.1.0.qualifier
-Fragment-Host: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7

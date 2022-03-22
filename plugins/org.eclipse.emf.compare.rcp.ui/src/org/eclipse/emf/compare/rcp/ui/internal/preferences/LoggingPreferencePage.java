@@ -13,16 +13,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.rcp.ui.internal.preferences;
 
-import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_BACKUP_COUNT_KEY;
-import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_BACKUP_DEFAULT;
-import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILENAME_KEY;
-import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILE_DEFAULT;
-import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILE_MAX_SIZE_KEY;
-import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_FILE_SIZE_DEFAULT;
 import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_LEVEL_DEFAULT;
 import static org.eclipse.emf.compare.rcp.internal.preferences.EMFComparePreferences.LOG_LEVEL_KEY;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -37,18 +30,11 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
@@ -63,13 +49,7 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private Combo levelCombo;
 
-	private Text fileField;
-
-	private Text maxSizeField;
-
-	private Text maxBackupField;
-
-	private final String[] LOG_LEVELS = new String[] {"OFF", "ERROR", "INFO", "DEBUG" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private final String[] LOG_LEVELS = new String[] {"OFF", "INFO", "DEBUG" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	/**
 	 * Constructor.
@@ -121,46 +101,6 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 		levelCombo.setItems(LOG_LEVELS);
 		levelCombo.setLayoutData(getDefaultFieldGridData(100));
 
-		Label fileLabel = new Label(loggingComposite, SWT.LEAD);
-		fileLabel.setText(EMFCompareRCPUIMessages.getString("LoggingPreferencePage.log.file")); //$NON-NLS-1$
-		fileField = new Text(loggingComposite, SWT.BORDER | SWT.SINGLE);
-		fileField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		Button fileButton = new Button(loggingComposite, SWT.PUSH);
-		fileButton.setText(EMFCompareRCPUIMessages.getString("LoggingPreferencePage.filebutton.label")); //$NON-NLS-1$
-		fileButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				FileDialog dlg = new FileDialog(getShell(), SWT.SAVE);
-				File file = new File(fileField.getText());
-				dlg.setFileName(file.getName());
-				dlg.setFilterPath(file.getParent());
-				String fileName = dlg.open();
-				if (fileName != null) {
-					fileField.setText(fileName);
-				}
-			}
-		});
-
-		Label maxSizeLabel = new Label(loggingComposite, SWT.LEAD);
-		maxSizeLabel.setText(EMFCompareRCPUIMessages.getString("LoggingPreferencePage.log.file.size")); //$NON-NLS-1$
-		maxSizeField = new Text(loggingComposite, SWT.BORDER | SWT.SINGLE);
-		maxSizeField.setLayoutData(getDefaultFieldGridData(80));
-		maxSizeField.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				verifyIntegerFields();
-			}
-		});
-
-		Label maxBackupLabel = new Label(loggingComposite, SWT.LEAD);
-		maxBackupLabel.setText(EMFCompareRCPUIMessages.getString("LoggingPreferencePage.log.backup.count")); //$NON-NLS-1$
-		maxBackupField = new Text(loggingComposite, SWT.BORDER | SWT.SINGLE);
-		maxBackupField.setLayoutData(getDefaultFieldGridData(80));
-		maxBackupField.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				verifyIntegerFields();
-			}
-		});
-
 		refreshWidgets();
 
 		return loggingComposite;
@@ -173,35 +113,20 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	protected void savePreferences() throws BackingStoreException, IOException {
-		getPreferenceStore().setValue(LOG_FILENAME_KEY, fileField.getText());
 		String item = levelCombo.getItem(levelCombo.getSelectionIndex());
 		getPreferenceStore().setValue(LOG_LEVEL_KEY, item);
-		getPreferenceStore().setValue(LOG_BACKUP_COUNT_KEY, maxBackupField.getText());
-		getPreferenceStore().setValue(LOG_FILE_MAX_SIZE_KEY, maxSizeField.getText());
 	}
 
 	protected void resetPreferences() {
-		getPreferenceStore().setToDefault(LOG_FILENAME_KEY);
 		getPreferenceStore().setToDefault(LOG_LEVEL_KEY);
-		getPreferenceStore().setToDefault(LOG_BACKUP_COUNT_KEY);
-		getPreferenceStore().setToDefault(LOG_FILE_MAX_SIZE_KEY);
 	}
 
 	protected void refreshWidgets() {
 		IPreferencesService prefsService = Platform.getPreferencesService();
-		String fileName = prefsService.getString(EMFCompareRCPPlugin.PLUGIN_ID, LOG_FILENAME_KEY,
-				LOG_FILE_DEFAULT, null);
 		String level = prefsService.getString(EMFCompareRCPPlugin.PLUGIN_ID, LOG_LEVEL_KEY, LOG_LEVEL_DEFAULT,
 				null);
-		int maxBackupCount = prefsService.getInt(EMFCompareRCPPlugin.PLUGIN_ID, LOG_BACKUP_COUNT_KEY,
-				LOG_BACKUP_DEFAULT, null);
-		int maxSizeInMB = prefsService.getInt(EMFCompareRCPPlugin.PLUGIN_ID, LOG_FILE_MAX_SIZE_KEY,
-				LOG_FILE_SIZE_DEFAULT, null);
 		levelCombo.select(Arrays.asList(LOG_LEVELS).indexOf(level));
 		levelCombo.pack();
-		fileField.setText(fileName);
-		maxBackupField.setText(Integer.toString(maxBackupCount));
-		maxSizeField.setText(Integer.toString(maxSizeInMB));
 	}
 
 	@Override
@@ -222,30 +147,4 @@ public class LoggingPreferencePage extends PreferencePage implements IWorkbenchP
 		super.performDefaults();
 	}
 
-	/**
-	 * Verify if max size and max file fields are valid. It checks if the fields are integer and not empty.
-	 */
-	private void verifyIntegerFields() {
-		try {
-			Integer.parseInt(maxSizeField.getText());
-			Integer.parseInt(maxBackupField.getText());
-			setPreferencePageError(true, null);
-		} catch (Exception e) {
-			setPreferencePageError(false,
-					EMFCompareRCPUIMessages.getString("LoggingPreferencePage.error.message")); //$NON-NLS-1$
-		}
-	}
-
-	/**
-	 * Set preference page error message and if this page is valid.
-	 * 
-	 * @param isValid
-	 *            True if you can apply these preference
-	 * @param errorMessage
-	 *            Error message to display or null to remove the message
-	 */
-	private void setPreferencePageError(boolean isValid, String errorMessage) {
-		setValid(isValid);
-		setErrorMessage(errorMessage);
-	}
 }

@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.logical.resolver;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ide.ui.internal.util.ThreadSafeProgressMonitor;
+import org.eclipse.emf.compare.rcp.EMFCompareLogger;
 
 /**
  * The default implementation of the {@link IResourceDependencyRemoteResolver}.
@@ -23,7 +23,7 @@ import org.eclipse.emf.compare.ide.ui.internal.util.ThreadSafeProgressMonitor;
  */
 public class ResourceDependencyRemoteResolver implements IResourceDependencyRemoteResolver {
 	/** The logger. */
-	private static final Logger LOGGER = Logger.getLogger(ResourceDependencyLocalResolver.class);
+	private static final EMFCompareLogger LOGGER = new EMFCompareLogger(ResourceDependencyRemoteResolver.class);
 
 	/** The resolution context. */
 	private final IResolutionContext context;

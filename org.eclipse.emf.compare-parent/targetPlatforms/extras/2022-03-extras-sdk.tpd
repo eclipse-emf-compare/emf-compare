@@ -1,0 +1,15 @@
+target "EMF Compare with extras based on 2021-09"
+
+include "../2022-03-sdk.tpd"
+
+with source, requirements
+
+// Sirius
+
+location "https://download.eclipse.org/sirius/updates/releases/7.0.0/2021-06/" {
+	org.eclipse.sirius lazy
+	org.eclipse.sirius.diagram lazy
+	org.eclipse.sirius.runtime.feature.group lazy
+	org.eclipse.sirius.runtime.ide.ui.feature.group lazy
+	org.eclipse.sirius.runtime.aql.feature.group lazy
+}
