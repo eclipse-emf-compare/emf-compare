@@ -1,4 +1,4 @@
-target "EMF Compare based on 2021-09 SDK"
+target "EMF Compare based on 2022-03 SDK"
 
 include "fragments/licence.tpd"
 include "fragments/orbit.tpd"

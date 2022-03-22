@@ -1,4 +1,4 @@
-target "EMF Compare with extras based on 2021-09"
+target "EMF Compare with extras based on 2022-03"
 
 include "../2022-03-sdk.tpd"
 
