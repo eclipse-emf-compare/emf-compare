@@ -88,12 +88,14 @@
     <module>../plugins/org.eclipse.emf.compare.edit</module>
     <module>../plugins/org.eclipse.emf.compare.ide</module>
     <module>../plugins/org.eclipse.emf.compare.ide.ui</module>
-    <module>../plugins/org.eclipse.emf.compare.ide.ui.e4</module>
     <module>../plugins/org.eclipse.emf.compare.ide.ui.tests</module>
     <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.framework</module>
     <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git</module>
     <module>../plugins/org.eclipse.emf.compare.ide.ui.tests.git.framework</module>
     <module>../plugins/org.eclipse.emf.compare.ide.tests</module>
+    
+    <module>../packaging/org.eclipse.emf.compare.ide.ui.e4-feature</module>
+    <module>../plugins/org.eclipse.emf.compare.ide.ui.e4</module>
 
     <module>../packaging/org.eclipse.emf.compare.rcp.ui-feature</module>
     <module>../plugins/org.eclipse.emf.compare.rcp</module>

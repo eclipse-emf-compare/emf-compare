@@ -42,6 +42,12 @@
    <feature id="org.eclipse.emf.compare.egit.source" version="0.0.0">
       <category name="compare_integration"/>
    </feature>
+   <feature id="org.eclipse.emf.compare.ide.ui.e4">
+      <category name="compare"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.ide.ui.e4.source">
+      <category name="compare"/>
+   </feature>
    <category-def name="compare" label="EMF Compare">
       <description>
          EMF Compare main features.
