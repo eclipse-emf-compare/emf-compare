@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2018 Obeo and others.
+ * Copyright (c) 2013, 2022 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
  *     Stefan Dirix - bugs 473985, 474030
  *     Martin Fleck - bug 497066, 483798, 514767, 514415
  *     Alexandra Buzila - bug 513931
+ *     Martin Fleck - bug 580408
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer;
 
@@ -22,7 +23,6 @@ import static org.eclipse.emf.compare.ide.ui.internal.structuremergeviewer.EMFCo
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
-import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -242,13 +242,13 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			final String title = new TitleBuilder(getCompareConfiguration()).toString();
 			EMFCompareStructureMergeViewerContentProvider contentProvider = getContentProvider();
 			if (contentProvider != null) {
 				contentProvider.runWhenReady(IN_UI_ASYNC, new Runnable() {
 					public void run() {
 						CTabFolder control = getControl();
 						if (!control.isDisposed()) {
+							final String title = new TitleBuilder(getCompareConfiguration()).toString();
 							((CompareViewerSwitchingPane)control.getParent()).setTitleArgument(title);
 						}
 					}
@@ -1880,21 +1880,36 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		}
 	}
 
-	private void compareInputChangedToNull() {
-		if (!inputChangedTask.cancel()) {
+	protected void compareInputChangedToNull() {
+		stopJob(inputChangedTask);
+		stopJob(titleBuilderJob);
+
+		if (getCompareConfiguration() != null) {
+			if (resourceSetShouldBeDisposed) {
+				disposeResourceSets(getCompareConfiguration().getComparison());
+			}
+			editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
+			getCompareConfiguration().disposeComparison();
+		}
+		getViewer().setInput(null);
+	}
+
+	protected void stopJob(Job job) {
+		if (!job.cancel()) {
 			try {
-				inputChangedTask.join();
+				job.join();
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
-				Throwables.propagate(e);
+				throw new RuntimeException(e);
 			}
 		}
+	}
 
+	protected void disposeResourceSets(Comparison comparison) {
 		ResourceSet leftResourceSet = null;
 		ResourceSet rightResourceSet = null;
 		ResourceSet originResourceSet = null;
 
-		final Comparison comparison = getCompareConfiguration().getComparison();
 		if (comparison != null) {
 			Iterator<Match> matchIt = comparison.getMatches().iterator();
 			if (comparison.isThreeWay()) {
@@ -1923,28 +1938,18 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 				}
 			}
 		}
-
-		editingDomainChange(getCompareConfiguration().getEditingDomain(), null);
-
-		if (resourceSetShouldBeDisposed) {
-			final ResourceSet finalLeftResourceSet = leftResourceSet;
-			final ResourceSet finalRightResourceSet = rightResourceSet;
-			final ResourceSet finalOriginResourceSet = originResourceSet;
-			new Job("Resource Disposer") { //$NON-NLS-1$
-				@Override
-				protected IStatus run(IProgressMonitor monitor) {
-					disposeResourceSet(finalLeftResourceSet);
-					disposeResourceSet(finalRightResourceSet);
-					disposeResourceSet(finalOriginResourceSet);
-					return Status.OK_STATUS;
-				}
-			}.schedule();
-		}
-
-		if (getCompareConfiguration() != null) {
-			getCompareConfiguration().disposeComparison();
-		}
-		getViewer().setInput(null);
+		final ResourceSet finalLeftResourceSet = leftResourceSet;
+		final ResourceSet finalRightResourceSet = rightResourceSet;
+		final ResourceSet finalOriginResourceSet = originResourceSet;
+		new Job("Resource Disposer") { //$NON-NLS-1$
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				disposeResourceSet(finalLeftResourceSet);
+				disposeResourceSet(finalRightResourceSet);
+				disposeResourceSet(finalOriginResourceSet);
+				return Status.OK_STATUS;
+			}
+		}.schedule();
 	}
 
 	/**
@@ -2260,9 +2265,11 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		public TitleBuilder(EMFCompareConfiguration configuration) {
 			comparison = configuration.getComparison();
-			groupProvider = configuration.getStructureMergeViewerGrouper().getProvider();
-			filterPredicate = EMFComparePredicates
-					.guavaToJava(configuration.getStructureMergeViewerFilter().getAggregatedPredicate());
+			StructureMergeViewerGrouper grouper = configuration.getStructureMergeViewerGrouper();
+			groupProvider = grouper == null ? null : grouper.getProvider();
+			StructureMergeViewerFilter filter = configuration.getStructureMergeViewerFilter();
+			filterPredicate = filter == null ? null
+					: EMFComparePredicates.guavaToJava(filter.getAggregatedPredicate());
 		}
 
 		void visit(TreeNode node, boolean parentApplies) {
@@ -2303,6 +2310,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 		@Override
 		public String toString() {
+			if (groupProvider == null || filterPredicate == null) {
+				return EMFCompareIDEUIMessages.getString("EMFCompareStructureMergeViewer.title"); //$NON-NLS-1$
+			}
 			for (IDifferenceGroup group : groupProvider.getGroups(comparison)) {
 				for (TreeNode node : group.getChildren()) {
 					visit(node, true);
