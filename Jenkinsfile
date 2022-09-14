@@ -16,7 +16,7 @@ pipeline {
 	environment {
 		// Target platform to build against (must correspond to a profile in the parent pom.xml)
 		PLATFORM = '2022-03'
-		PLATFORM-EXTRAS = '2022-03-extras'
+		PLATFORM_EXTRAS = '2022-03-extras'
 	}
 	
 	stages {
@@ -29,7 +29,7 @@ pipeline {
 			steps {
 				dir ("org.eclipse.emf.compare-parent") {
 					wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
-						sh "mvn clean verify -P$PLATFORM-EXTRAS -Pextra-modules -Psign -Pjavadoc"
+						sh "mvn clean verify -P$PLATFORM_EXTRAS -Pextra-modules -Psign -Pjavadoc"
 					}
 				}
 				sh "./releng/org.eclipse.emf.compare.releng/publish-nightly.sh"
