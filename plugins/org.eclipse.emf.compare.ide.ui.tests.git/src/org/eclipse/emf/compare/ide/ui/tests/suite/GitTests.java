@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.egit.core.GitCorePreferences;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.compare.ide.ui.tests.merge.AdditiveMergeTests;
-import org.eclipse.emf.compare.ide.ui.tests.merge.DirCacheResourceVariantTreeProviderTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.EMFResourceMappingMergerPreMergeTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.GitResourceVariantTreeSubscriberTest;
 import org.eclipse.emf.compare.ide.ui.tests.merge.MultipleAncestorsTest;
@@ -51,9 +50,9 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({AdditiveMergeTests.class, DirCacheResourceVariantTreeProviderTest.class,
-		GitLogicalMergeTest.class, GitLogicalMergeWithCustomDependenciesTest.class, GitLogicalModelTest.class,
-		GitMergeTest.class, GitResourceVariantTreeSubscriberTest.class, IncomingMultiEReferenceTest.class,
+@SuiteClasses({AdditiveMergeTests.class, GitLogicalMergeTest.class,
+		GitLogicalMergeWithCustomDependenciesTest.class, GitLogicalModelTest.class, GitMergeTest.class,
+		GitResourceVariantTreeSubscriberTest.class, IncomingMultiEReferenceTest.class,
 		IncomingSingleEReferenceOldSerializationTest.class, IncomingSingleEReferenceTest.class,
 		OutgoingSingleEReferenceOldSerializationTest.class, OutgoingSingleEReferenceTest.class,
 		OutgoingMultiEReferenceTest.class, ModelResolverLocalTest.class, ModelResolverRemoteTest.class,
