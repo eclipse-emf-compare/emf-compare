@@ -53,8 +53,8 @@ pipeline {
 		always {
 			junit "**/tests/**/target/surefire-reports/*.xml"
 		}
-		failure {
-			unsuccessful (
+		unsuccessful {
+			emailext (
 				subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
 				body: """FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':
 				Check console output at ${env.BUILD_URL}""",
