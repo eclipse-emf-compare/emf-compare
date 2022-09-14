@@ -51,7 +51,7 @@ pipeline {
 	
 	post {
 		always {
-			junit "**/tests/**/target/surefire-reports/*.xml"
+			junit "plugins/*.test*/target/surefire-reports/*.xml"
 		}
 		unsuccessful {
 			emailext (
