@@ -32,10 +32,12 @@ pipeline {
 						sh "mvn clean verify -P$PLATFORM_EXTRAS -Pextra-modules -Psign -Pjavadoc"
 					}
 				}
-				sh '''
-					chmod +x ./releng/org.eclipse.emf.compare.releng/publish-nightly.sh
-					./releng/org.eclipse.emf.compare.releng/publish-nightly.sh
-				'''
+				sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
+					sh '''
+						chmod +x ./releng/org.eclipse.emf.compare.releng/publish-nightly.sh
+						./releng/org.eclipse.emf.compare.releng/publish-nightly.sh
+					'''
+				}
 			}
 		}
 		stage ('PR Verify') {
