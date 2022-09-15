@@ -17,7 +17,7 @@ This user story is linked with these bugs & reviews:
 === Related Tests ===
 
 This user story is linked with these tests:
-* http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare.uml2.tests/src/org/eclipse/emf/compare/uml2/tests/stereotypes/DanglingStereotypeApplicationTest.java
+* https://github.com/eclipse-emf-compare/emf-compare/blob/master/plugins/org.eclipse.emf.compare.uml2.tests/src/org/eclipse/emf/compare/uml2/tests/stereotypes/DanglingStereotypeApplicationTest.java
 
 === Content ===
 
@@ -410,8 +410,8 @@ This user story is linked with these bugs & reviews:
 === Related Tests ===
 
 This user story is linked with these tests:
-* https://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare.diagram.papyrus.tests/src/org/eclipse/emf/compare/diagram/papyrus/tests/difile/IgnoreDiFilePostProcessorTest.java
-* https://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare.diagram.papyrus.tests.git/src/org/eclipse/emf/compare/diagram/papyrus/tests/egit/IgnoreDiFileChangesInGitMergeTest.java
+* https://github.com/eclipse-emf-compare/emf-compare/tree/plugins/org.eclipse.emf.compare.diagram.papyrus.tests/src/org/eclipse/emf/compare/diagram/papyrus/tests/difile/IgnoreDiFilePostProcessorTest.java
+* https://github.com/eclipse-emf-compare/emf-compare/tree/plugins/org.eclipse.emf.compare.diagram.papyrus.tests.git/src/org/eclipse/emf/compare/diagram/papyrus/tests/egit/IgnoreDiFileChangesInGitMergeTest.java
 
 === Content ===
 

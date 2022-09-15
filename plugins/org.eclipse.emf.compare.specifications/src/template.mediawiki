@@ -29,8 +29,8 @@ This user story is linked with these bugs & reviews:
 === Related Tests ===
 
 This user storys is linked with these tests:
-* http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare.q7.tests/tests/abc/XXXX.test
-* http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare.tests/src/org/eclipse/emf/compare/tests/abc/yyyyyy.java
+* https://github.com/eclipse-emf-compare/emf-compare/blob/master/plugins/org.eclipse.emf.compare.q7.tests/tests/abc/XXXX.test
+* https://github.com/eclipse-emf-compare/emf-compare/blob/master/plugins/org.eclipse.emf.compare.tests/src/org/eclipse/emf/compare/tests/abc/yyyyyy.java
 
 === Content ===
 
