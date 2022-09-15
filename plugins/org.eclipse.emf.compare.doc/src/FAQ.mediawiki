@@ -59,7 +59,7 @@ The [http://www.eclipse.org/emf/compare/downloads/ Download page] lists more spe
 
 '''Q''' : How can I use EMF Compare programmatically, to compare either files or "in-memory" objects?
 
-'''A''' : Many samples of how to compare objects can be found within [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git/tree/plugins/org.eclipse.emf.compare.tests the unit tests of EMF Compare] (see also [[EMF_Compare/Contributor_Guide#Checking_out_the_code|how to checkout the source code]]). Here is a sample that should cover the basic use case (the class with this method should have a dependency towards the ''org.eclipse.emf.compare'' plugin) :
+'''A''' : Many samples of how to compare objects can be found within [https://github.com/eclipse-emf-compare/emf-compare/blob/master/plugins/org.eclipse.emf.compare.tests the unit tests of EMF Compare] (see also [[EMF_Compare/Contributor_Guide#Checking_out_the_code|how to checkout the source code]]). Here is a sample that should cover the basic use case (the class with this method should have a dependency towards the ''org.eclipse.emf.compare'' plugin) :
 
 <source lang="java">
 public void compare(File model1, File model2) {

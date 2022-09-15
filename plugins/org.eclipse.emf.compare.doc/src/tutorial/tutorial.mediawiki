@@ -32,9 +32,9 @@ This tutorial is based on the well know ExtLibrary meta-model (available from th
 
 ===== Import the plugins =====
 
-Those plugins are hosted in the [[http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare.git |EMF Compare repository]]. To import those plugins in your workspace you can follow the [[http://wiki.eclipse.org/EGit/User_Guide#Starting_from_existing_Git_Repositories | EGit tutorial]]. Here are the main steps:
+Those plugins are hosted in the [[https://github.com/eclipse-emf-compare/emf-compare |EMF Compare repository]]. To import those plugins in your workspace you can follow the [[http://wiki.eclipse.org/EGit/User_Guide#Starting_from_existing_Git_Repositories | EGit tutorial]]. Here are the main steps:
 * Clone EMF Compare repository using the following URL (see [[http://wiki.eclipse.org/EGit/User_Guide#Cloning_Remote_Repositories | Clone a repository]] for further information):
-** http://git.eclipse.org/gitroot/emfcompare/org.eclipse.emf.compare.git 
+** https://github.com/eclipse-emf-compare/emf-compare 
 * Import the required plugins into your workspace:
 ** Open the "Git Repositories" view (if not already opened): Window > "Show view" > "Other...".
 ** Select "Git Repositories".

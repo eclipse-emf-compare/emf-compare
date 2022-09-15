@@ -74,7 +74,7 @@ Once created, you will able to modify the setup model. You can also create a set
 
 Please visit [http://www.eclipse.org/oomph Oomph website] for more details about Oomph.
 
-You can find an example of setup model file for EMF compare's Git commands here: [http://git.eclipse.org/c/emfcompare/org.eclipse.emf.compare-cli.git/tree/examples/SetupExamples Setup Example]
+You can find an example of setup model file for EMF compare's Git commands here: [https://github.com/eclipse-emf-compare/emf-compare-cli/tree/master/examples/SetupExamples Setup Example]
 This example contains a workspace location to edit, an installation location to edit, and additional plugins to take into account for the git command to execute. These additional plugins are Papyrus, UML2, GMF, and EMF Compare extensions.
 
 == Git diff command with models : git logicaldiff ==
@@ -478,18 +478,6 @@ org.osgi.framework.BundleException: Could not resolve module: org.eclipse.equino
 
 A bug has been reported concerning this error: https://bugs.eclipse.org/bugs/show_bug.cgi?id=453432
 	
-=== Merge tool ===
-
-The merge tool doesn't work correctly on logical models. the problem is known and a patch has been made to fix it.
-Since the problem concerns EGit & EMF Compare, we need to stay EGit team to integrate the following contribution:
-*https://git.eclipse.org/r/#/c/36026/
-
-Once integrated, the following EMF Compare contributions will be integrated too:
-*https://git.eclipse.org/r/#/c/35541/
-*https://git.eclipse.org/r/#/c/36025/
-
-Then, the merge tool will work correctly.
-
 === Cherry-pick empty commit ===
 
 If you try to cherry-pick a commit that introduces changes that already belong to the worktree, the operation may stop on a dirty state. For example, if you have cherry-picked a commit that belongs to the ancestor tree of HEAD. The characteristics of this dirty state are:
