@@ -197,7 +197,7 @@ The goal of the "Match" phase is to discover which of the objects from model 2 m
 
 By default, EMF Compare browses through elements that are within the scope, and matches them through their identifier if they have one, or through a distance mechanism for all elements that have none. If the scope contains resources, EMF Compare will first match those two-by-two before browsing through all of their contained objects.
 
-EMF Compare "finds" the identifier of a given object through a basic function that can be found in [https://github.com/eclipse-emf-compare/emf-compare/blob/master/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/match/eobject/IdentifierEObjectMatcher.java#n268 IdentifierEObjectMatcher.DefaultIDFunction]. In short, if the object is a proxy, its identifier is its URI fragment. Otherwise its XMI ID (the identifier it was given in the XMI file) takes precedence over its functional ID (in ecore, an attribute that serves as an identifier). If the object is not a proxy and has neither XMI nor functional identifier, then the default behavior will simply pass that object over to the proximity algorithms so that it can be matched through its distance with other objects.
+EMF Compare "finds" the identifier of a given object through a basic function that can be found in [https://github.com/eclipse-emf-compare/emf-compare/blob/master/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/match/eobject/IdentifierEObjectMatcher.java#L308 IdentifierEObjectMatcher.DefaultIDFunction]. In short, if the object is a proxy, its identifier is its URI fragment. Otherwise its XMI ID (the identifier it was given in the XMI file) takes precedence over its functional ID (in ecore, an attribute that serves as an identifier). If the object is not a proxy and has neither XMI nor functional identifier, then the default behavior will simply pass that object over to the proximity algorithms so that it can be matched through its distance with other objects.
 
 PENDING: brief description of the proximity algorithm
 
@@ -229,7 +229,7 @@ EMFCompare.builder().setMatchEngineFactoryRegistry(registry).build().compare(sco
 
 By default, the logic EMF Compare uses to match resources together is very simple: if two resources have the same name (strict equality on the name, without considering folders), they match. When this is not sufficient, EMF Compare will look at the XMI ID of the resources' root(s). If the two resources share at least one root with an equal XMI ID, they match.
 
-This can be changed by just implementing your own subclass of the DefaultMatchEngine and overriding its resource matcher. The method of interest here is [https://github.com/eclipse-emf-compare/emf-compare/blob/master/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/match/DefaultMatchEngine.java#n319 DefaultMatchEngine#createResourceMatcher()].
+This can be changed by just implementing your own subclass of the DefaultMatchEngine and overriding its resource matcher. The method of interest here is [https://github.com/eclipse-emf-compare/emf-compare/blob/master/plugins/org.eclipse.emf.compare/src/org/eclipse/emf/compare/match/DefaultMatchEngine.java#L359 DefaultMatchEngine#createResourceMatcher()].
 
 ==== Defining custom identifiers ====
 
