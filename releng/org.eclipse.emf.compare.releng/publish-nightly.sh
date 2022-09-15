@@ -10,10 +10,6 @@
 #    Obeo - initial API and implementation
 # ====================================================================
 
-if [ ${REFERENCE_TARGET_PLATFORM} != ${PLATFORM} ]; then
-  exit 0
-fi
-
 # Exit on error
 set -e
 
