@@ -152,7 +152,7 @@
   <profiles>
     <profile>
       <!--
-        Do the javadoc generation in a profile to keep standard builds (e.g. gerrit) fast.
+        Do the javadoc generation in a profile to keep standard builds (e.g. Pull Requests) fast.
       -->
       <id>javadoc</id>
       <build>
