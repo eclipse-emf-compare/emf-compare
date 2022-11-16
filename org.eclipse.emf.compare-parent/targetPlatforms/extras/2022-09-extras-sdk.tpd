@@ -1,12 +1,12 @@
-target "EMF Compare with extras based on 2021-06"
+target "EMF Compare with extras based on 2022-09"
 
-include "../2021-06-sdk.tpd"
+include "../2022-09-sdk.tpd"
 
 with source, requirements
 
 // Sirius
 
-location "https://download.eclipse.org/sirius/updates/releases/6.5.0/2020-09/" {
+location "https://download.eclipse.org/sirius/updates/releases/7.0.5/2021-06/" {
 	org.eclipse.sirius lazy
 	org.eclipse.sirius.diagram lazy
 	org.eclipse.sirius.runtime.feature.group lazy
