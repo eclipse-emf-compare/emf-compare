@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="EMF Compare with extras based on 2022-09" sequenceNumber="1668598973">
+<target name="EMF Compare with extras based on 2022-09" sequenceNumber="1668607798">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
@@ -30,12 +30,11 @@
       <unit id="org.eclipse.uml2.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.gmf.runtime.diagram.ui" version="0.0.0"/>
-      <unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
       <repository location="http://download.eclipse.org/releases/2022-09"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.jgit" version="6.3.1.202211160922"/>
-      <repository location="https://repo.eclipse.org/content/unzip/snapshots.unzip/org/eclipse/jgit/org.eclipse.jgit.repository/6.3.1-SNAPSHOT/org.eclipse.jgit.repository-6.3.1-SNAPSHOT.zip-unzip/"/>
+      <unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
+      <repository location="https://download.eclipse.org/egit/staging/v6.4.0.202211160543-m3"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.sirius" version="0.0.0"/>
