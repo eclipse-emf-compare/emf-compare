@@ -368,7 +368,7 @@
   <profiles>
     <!-- Target platforms are located in org.eclipse.emf.compare-parent/targetPlatforms. -->
     <profile>
-      <id>2022-03</id>
+      <id>2022-09</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
@@ -383,49 +383,7 @@
                   <groupId>org.eclipse.emf.compare</groupId>
                   <artifactId>emf.compare-parent</artifactId>
                   <version>${parent-version}</version>
-                  <classifier>targetPlatforms/2022-03-sdk</classifier>
-                </artifact>
-              </target>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>2021-09</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>target-platform-configuration</artifactId>
-            <configuration>
-              <target>
-                <artifact>
-                  <groupId>org.eclipse.emf.compare</groupId>
-                  <artifactId>emf.compare-parent</artifactId>
-                  <version>${parent-version}</version>
-                  <classifier>targetPlatforms/2021-09-sdk</classifier>
-                </artifact>
-              </target>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>2021-06</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>target-platform-configuration</artifactId>
-            <configuration>
-              <target>
-                <artifact>
-                  <groupId>org.eclipse.emf.compare</groupId>
-                  <artifactId>emf.compare-parent</artifactId>
-                  <version>${parent-version}</version>
-                  <classifier>targetPlatforms/2021-06-sdk</classifier>
+                  <classifier>targetPlatforms/2022-09-sdk</classifier>
                 </artifact>
               </target>
             </configuration>
@@ -450,7 +408,7 @@
       </modules>
     </profile>
     <profile>
-      <id>2022-03-extras</id>
+      <id>2022-09-extras</id>
       <build>
         <plugins>
           <plugin>
@@ -462,49 +420,7 @@
                   <groupId>org.eclipse.emf.compare</groupId>
                   <artifactId>emf.compare-parent</artifactId>
                   <version>${parent-version}</version>
-                  <classifier>targetPlatforms/extras/2022-03-extras-sdk</classifier>
-                </artifact>
-              </target>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>2021-09-extras</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>target-platform-configuration</artifactId>
-            <configuration>
-              <target>
-                <artifact>
-                  <groupId>org.eclipse.emf.compare</groupId>
-                  <artifactId>emf.compare-parent</artifactId>
-                  <version>${parent-version}</version>
-                  <classifier>targetPlatforms/extras/2021-09-extras-sdk</classifier>
-                </artifact>
-              </target>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-	<profile>
-      <id>2021-06-extras</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>target-platform-configuration</artifactId>
-            <configuration>
-              <target>
-                <artifact>
-                  <groupId>org.eclipse.emf.compare</groupId>
-                  <artifactId>emf.compare-parent</artifactId>
-                  <version>${parent-version}</version>
-                  <classifier>targetPlatforms/extras/2021-06-extras-sdk</classifier>
+                  <classifier>targetPlatforms/extras/2022-09-extras-sdk</classifier>
                 </artifact>
               </target>
             </configuration>

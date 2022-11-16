@@ -14,6 +14,7 @@ package org.eclipse.emf.compare.egit.internal.merge;
 //CHECKSTYLE:OFF
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -40,7 +41,6 @@ import org.eclipse.emf.compare.rcp.EMFCompareLogger;
 import org.eclipse.jgit.attributes.Attributes;
 import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.dircache.DirCacheBuildIterator;
-import org.eclipse.jgit.dircache.DirCacheBuilder;
 import org.eclipse.jgit.dircache.DirCacheEntry;
 import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.errors.CorruptObjectException;
@@ -48,6 +48,7 @@ import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.FileMode;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.merge.MergeResult;
@@ -233,7 +234,7 @@ public class RecursiveModelMerger extends RecursiveMerger {
 					Activator.logError(MergeText.RecursiveModelMerger_AdaptError, e);
 					// ignore this model and fall back to default
 					if (!fallBackToDefaultMerge(treeWalk, ignoreConflicts)) {
-						cleanUp();
+						workTreeUpdater.revertModifiedFiles();
 						if (LOGGER.isInfoEnabled()) {
 							LOGGER.info(
 									"FAILED - Recursive model merge, could not find appropriate merger and default merge failed."); //$NON-NLS-1$
@@ -262,7 +263,7 @@ public class RecursiveModelMerger extends RecursiveMerger {
 					enterSubtree = true;
 				}
 			} else if (!fallBackToDefaultMerge(treeWalk, ignoreConflicts)) {
-				cleanUp();
+				workTreeUpdater.revertModifiedFiles();
 				if (LOGGER.isInfoEnabled()) {
 					LOGGER.info("FAILED - Recursive model merge, default merge failed."); //$NON-NLS-1$
 				}
@@ -312,6 +313,7 @@ public class RecursiveModelMerger extends RecursiveMerger {
 	 * @throws IncorrectObjectTypeException
 	 * @throws IOException
 	 */
+	@SuppressWarnings("resource") // We're not in charge of closing the ObjectInserter
 	private void indexModelMergedFiles()
 			throws CorruptObjectException, MissingObjectException, IncorrectObjectTypeException, IOException {
 		try (TreeWalk syncingTreeWalk = new TreeWalk(getRepository())) {
@@ -342,23 +344,29 @@ public class RecursiveModelMerger extends RecursiveMerger {
 						final FileMode mode = workingTree.getIndexFileMode(dirCache);
 						dce.setFileMode(mode);
 
+						final ObjectId id;
+						Instant lastModified = Instant.ofEpochSecond(0);
+						int length = 0;
 						if (FileMode.GITLINK != mode) {
-							dce.setLength(workingTree.getEntryLength());
-							dce.setLastModified(workingTree.getEntryLastModified());
+							// Note that the size was internally cast to int by DirCacheEntry.setLength(long)
+							// as well
+							length = (int)workingTree.getEntryLength();
+							lastModified = workingTree.getEntryLastModifiedInstant();
 							try (InputStream is = workingTree.openEntryStream()) {
-								dce.setObjectId(getObjectInserter().insert(Constants.OBJ_BLOB,
-										workingTree.getEntryContentLength(), is));
+								id = getObjectInserter().insert(Constants.OBJ_BLOB,
+										workingTree.getEntryContentLength(), is);
 							}
 						} else {
-							dce.setObjectId(workingTree.getEntryObjectId());
+							id = workingTree.getEntryObjectId();
 						}
-						builder.add(dce);
+						workTreeUpdater.addExistingToIndex(id, syncingTreeWalk.getRawPath(), mode,
+								DirCacheEntry.STAGE_0, lastModified, length);
 						lastAdded = path;
 					} else {
-						builder.add(dirCache.getDirCacheEntry());
+						addExistingToIndex(dirCache.getDirCacheEntry());
 					}
 				} else if (dirCache != null && FileMode.GITLINK == dirCache.getEntryFileMode()) {
-					builder.add(dirCache.getDirCacheEntry());
+					addExistingToIndex(dirCache.getDirCacheEntry());
 				}
 			}
 		}
@@ -392,24 +400,23 @@ public class RecursiveModelMerger extends RecursiveMerger {
 		}
 	}
 
-	private void markConflict(String filePath, DirCacheBuilder cacheBuilder,
-			TreeParserResourceVariant baseVariant, TreeParserResourceVariant ourVariant,
-			TreeParserResourceVariant theirVariant) {
-		add(filePath, cacheBuilder, baseVariant, DirCacheEntry.STAGE_1);
-		add(filePath, cacheBuilder, ourVariant, DirCacheEntry.STAGE_2);
-		add(filePath, cacheBuilder, theirVariant, DirCacheEntry.STAGE_3);
+	private void markConflict(String filePath, WorkTreeUpdater updater, TreeParserResourceVariant baseVariant,
+			TreeParserResourceVariant ourVariant, TreeParserResourceVariant theirVariant) {
+		add(filePath, updater, baseVariant, DirCacheEntry.STAGE_1);
+		add(filePath, updater, ourVariant, DirCacheEntry.STAGE_2);
+		add(filePath, updater, theirVariant, DirCacheEntry.STAGE_3);
 	}
 
-	private void add(String path, DirCacheBuilder cacheBuilder, TreeParserResourceVariant variant,
-			int stage) {
+	private void add(String path, WorkTreeUpdater updater, TreeParserResourceVariant variant, int stage) {
 		if (variant != null && !FileMode.TREE.equals(variant.getRawMode())) {
-			DirCacheEntry e = new DirCacheEntry(path, stage);
-			e.setFileMode(FileMode.fromBits(variant.getRawMode()));
-			e.setObjectId(variant.getObjectId());
-			e.setLastModified(0);
-			e.setLength(0);
-			cacheBuilder.add(e);
+			updater.addExistingToIndex(variant.getObjectId(), Constants.encode(path),
+					FileMode.fromBits(variant.getRawMode()), stage, Instant.ofEpochSecond(0), 0);
 		}
+	}
+
+	private void addExistingToIndex(DirCacheEntry dce) {
+		workTreeUpdater.addExistingToIndex(dce.getObjectId(), dce.getRawPath(), dce.getFileMode(),
+				dce.getStage(), dce.getLastModifiedInstant(), dce.getLength());
 	}
 
 	private static class ModelMerge {
@@ -448,13 +455,13 @@ public class RecursiveModelMerger extends RecursiveMerger {
 				registerHandledFiles(mergeContext, status);
 			} catch (CoreException e) {
 				Activator.logError(e.getMessage(), e);
-				merger.cleanUp();
+				merger.workTreeUpdater.revertModifiedFiles();
 				return false;
 			} catch (OperationCanceledException e) {
 				final String message = NLS.bind(MergeText.RecursiveModelMerger_ScopeInitializationInterrupted,
 						path);
 				Activator.logError(message, e);
-				merger.cleanUp();
+				merger.workTreeUpdater.revertModifiedFiles();
 				return false;
 			} finally {
 				if (mergeContext != null) {
@@ -535,7 +542,8 @@ public class RecursiveModelMerger extends RecursiveMerger {
 							.getSourceTree().getResourceVariant(handledFile);
 					final TreeParserResourceVariant theirVariant = (TreeParserResourceVariant)subscriber
 							.getRemoteTree().getResourceVariant(handledFile);
-					merger.markConflict(filePath, merger.builder, baseVariant, ourVariant, theirVariant);
+					merger.markConflict(filePath, merger.workTreeUpdater, baseVariant, ourVariant,
+							theirVariant);
 
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("Marking conflict on " + filePath); //$NON-NLS-1$
@@ -560,6 +568,7 @@ public class RecursiveModelMerger extends RecursiveMerger {
 
 			final ISynchronizationScopeManager manager = new SubscriberScopeManager(subscriber.getName(),
 					mappings, subscriber, remoteMappingContext, true) {
+				@SuppressWarnings("resource") // We are not in charge of closing the repository
 				@Override
 				public ISchedulingRule getSchedulingRule() {
 					return RuleUtil.getRule(merger.getRepository());
