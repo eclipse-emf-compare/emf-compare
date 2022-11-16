@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.rcp.ui"
       label="%featureName"
-      version="3.3.19.qualifier"
+      version="3.3.20.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.emf.compare.rcp.ui"
       license-feature="org.eclipse.license"
