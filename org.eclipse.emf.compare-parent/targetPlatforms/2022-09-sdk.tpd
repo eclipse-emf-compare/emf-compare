@@ -13,9 +13,8 @@ location "http://download.eclipse.org/releases/2022-09" {
 	org.eclipse.uml2.feature.group lazy
 	org.eclipse.gmf.runtime.notation.sdk.feature.group lazy
 	org.eclipse.gmf.runtime.diagram.ui lazy
-	org.eclipse.egit.feature.group lazy
 }
 
-location "https://repo.eclipse.org/content/unzip/snapshots.unzip/org/eclipse/jgit/org.eclipse.jgit.repository/6.3.1-SNAPSHOT/org.eclipse.jgit.repository-6.3.1-SNAPSHOT.zip-unzip/" {
-	org.eclipse.jgit [6.3.1,6.3.2)
+location "https://download.eclipse.org/egit/staging/v6.4.0.202211160543-m3" {
+	org.eclipse.egit.feature.group lazy
 }
