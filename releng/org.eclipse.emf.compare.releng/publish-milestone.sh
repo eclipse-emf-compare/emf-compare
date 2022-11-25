@@ -79,15 +79,16 @@ metadata.repository.factory.order = compositeContent.xml,\!
 artifact.repository.factory.order = compositeArtifacts.xml,\!
 EOF
   chgrp -R ${GROUP} ${MILESTONES_FOLDER}/${VERSION_SHORT}/S${TIMESTAMP}/p2.index
+  
+  ## Update the composite update site with this new child
+  ## The ant script we use for this requires Java 8
+  export JAVA_HOME=/shared/common/jdk1.8.0_x64-latest
+  cd ${MILESTONES_FOLDER}/${VERSION_SHORT}
+  /shared/common/apache-ant-latest/bin/ant -f /shared/modeling/tools/promotion/manage-composite.xml add -Dchild.repository=S${TIMESTAMP}
+
+  if [ "$UPDATE_ROOT_COMPOSITE" = true ]
+  then
+    cd ${MILESTONES_FOLDER}
+    /shared/common/apache-ant-latest/bin/ant -f /shared/modeling/tools/promotion/manage-composite.xml add -Dchild.repository=${VERSION_SHORT}
+  fi
 EOSSH
-
-## Update the composite update site with this new child
-
-#cd ${MILESTONES_FOLDER}/${VERSION_SHORT}
-#/shared/common/apache-ant-latest/bin/ant -f /shared/modeling/tools/promotion/manage-composite.xml add -Dchild.repository=S${TIMESTAMP}
-
-#if [ "$UPDATE_ROOT_COMPOSITE" = true ]
-#then
-#  cd ${MILESTONES_FOLDER}
-#  /shared/common/apache-ant-latest/bin/ant -f /shared/modeling/tools/promotion/manage-composite.xml add -Dchild.repository=${VERSION_SHORT}
-#fi
