@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.compare.rcp.internal.extension.IItemDescriptor;
@@ -37,7 +37,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.impl.DifferenceFilterManager;
 import org.eclipse.emf.compare.rcp.ui.structuremergeviewer.filters.IDifferenceFilter;
 import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -51,6 +51,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -423,11 +424,10 @@ public class FiltersPreferencePage extends PreferencePage implements IWorkbenchP
 		private void bindMultipleData(CheckboxTableViewer descriptorViewer, FilterDataHolder dataObject) {
 			DataBindingContext ctx = new DataBindingContext();
 			// Bind the button with the corresponding field in data
-			IViewerObservableSet target = ViewersObservables.observeCheckedElements(descriptorViewer,
-					IDifferenceFilter.class);
+			IViewerObservableSet target = ViewerProperties.checkedElements(IDifferenceFilter.class)
+					.observe((Viewer)descriptorViewer);
 			IObservableSet model = PojoProperties.set(FilterDataHolder.class, FilterDataHolder.FIELD_NAME)
 					.observe(dataObject);
-
 			ctx.bindSet(target, model);
 		}
 

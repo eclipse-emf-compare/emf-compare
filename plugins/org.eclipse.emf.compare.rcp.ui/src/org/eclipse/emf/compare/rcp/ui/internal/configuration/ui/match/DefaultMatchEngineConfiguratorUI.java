@@ -13,14 +13,14 @@ package org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.match;
 import com.google.common.base.Throwables;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.emf.compare.rcp.internal.match.DefaultRCPMatchEngineFactory;
 import org.eclipse.emf.compare.rcp.ui.internal.EMFCompareRCPUIMessages;
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.AbstractConfigurationUI;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -92,14 +92,15 @@ public class DefaultMatchEngineConfiguratorUI extends AbstractConfigurationUI {
 	 */
 	private void bindData() {
 		DataBindingContext ctx = new DataBindingContext();
-		IObservableValue whenAvailableBtnSelection = SWTObservables.observeSelection(whenAvailableButton);
-		IObservableValue onlyButtonSelection = SWTObservables.observeSelection(onlyButton);
-		IObservableValue neverButtonSelection = SWTObservables.observeSelection(neverButton);
+		IObservableValue whenAvailableBtnSelection = WidgetProperties.buttonSelection()
+				.observe(whenAvailableButton);
+		IObservableValue onlyButtonSelection = WidgetProperties.buttonSelection().observe(onlyButton);
+		IObservableValue neverButtonSelection = WidgetProperties.background().observe(neverButton);
 		SelectObservableValue featureRepoPolicyObservable = new SelectObservableValue(DataHolder.class);
 		featureRepoPolicyObservable.addOption(UseIdentifiers.WHEN_AVAILABLE, whenAvailableBtnSelection);
 		featureRepoPolicyObservable.addOption(UseIdentifiers.ONLY, onlyButtonSelection);
 		featureRepoPolicyObservable.addOption(UseIdentifiers.NEVER, neverButtonSelection);
-		ctx.bindValue(featureRepoPolicyObservable, PojoObservables.observeValue(dataHolder, "value")); //$NON-NLS-1$
+		ctx.bindValue(featureRepoPolicyObservable, PojoProperties.value("value").observe(dataHolder)); //$NON-NLS-1$
 	}
 
 	/**
