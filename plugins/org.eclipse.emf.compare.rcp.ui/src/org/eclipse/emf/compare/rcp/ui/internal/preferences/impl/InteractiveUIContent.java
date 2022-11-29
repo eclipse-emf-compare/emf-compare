@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -36,7 +36,7 @@ import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.AbstractConfigur
 import org.eclipse.emf.compare.rcp.ui.internal.configuration.ui.IConfigurationUIFactory;
 import org.eclipse.emf.compare.rcp.ui.internal.preferences.DataHolder;
 import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.GridData;
@@ -715,8 +716,8 @@ public final class InteractiveUIContent {
 		private void bindMultipleData(CheckboxTableViewer descriptorViewer, final DataHolder<T> dataObject) {
 			DataBindingContext ctx = new DataBindingContext();
 			// Bind the button with the corresponding field in data
-			IViewerObservableSet target = ViewersObservables.observeCheckedElements(descriptorViewer,
-					IItemDescriptor.class);
+			IViewerObservableSet target = ViewerProperties.checkedElements(IItemDescriptor.class)
+					.observe((Viewer)descriptorViewer);
 			IObservableSet model = PojoProperties.set(DataHolder.class, DataHolder.DATA_FIELD_NAME)
 					.observe(dataObject);
 
