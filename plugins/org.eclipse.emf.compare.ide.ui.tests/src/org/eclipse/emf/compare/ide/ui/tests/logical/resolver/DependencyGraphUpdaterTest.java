@@ -11,12 +11,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ide.ui.tests.logical.resolver;
 
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
@@ -62,7 +62,7 @@ public class DependencyGraphUpdaterTest {
 
 	@Test
 	public void testInstantiationDoesNotModifyGraph() {
-		verifyZeroInteractions(graph);
+		verifyNoInteractions(graph);
 	}
 
 	@Test
