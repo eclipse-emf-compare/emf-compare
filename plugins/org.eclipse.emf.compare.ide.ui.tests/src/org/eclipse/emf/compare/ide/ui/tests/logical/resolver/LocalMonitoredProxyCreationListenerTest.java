@@ -12,7 +12,7 @@
 package org.eclipse.emf.compare.ide.ui.tests.logical.resolver;
 
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope;
 import org.eclipse.emf.compare.ide.ui.internal.logical.resolver.LocalMonitoredProxyCreationListener;
@@ -40,7 +40,7 @@ public class LocalMonitoredProxyCreationListenerTest extends AbstractMonitoredPr
 		sut = new LocalMonitoredProxyCreationListener(monitor, eventBus, localResolver, diagnostic);
 		sut.proxyCreated(source, eObject, feature, proxy, 3);
 
-		verifyZeroInteractions(eventBus, localResolver);
+		verifyNoInteractions(eventBus, localResolver);
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class LocalMonitoredProxyCreationListenerTest extends AbstractMonitoredPr
 		sut = new LocalMonitoredProxyCreationListener(monitor, eventBus, localResolver, diagnostic);
 		sut.proxyCreated(source, eObject, feature, proxy, 3);
 
-		verifyZeroInteractions(eventBus, localResolver);
+		verifyNoInteractions(eventBus, localResolver);
 	}
 
 	@Test
@@ -58,6 +58,6 @@ public class LocalMonitoredProxyCreationListenerTest extends AbstractMonitoredPr
 		sut = new LocalMonitoredProxyCreationListener(monitor, eventBus, localResolver, diagnostic);
 		sut.proxyCreated(source, eObject, feature, proxy, 3);
 
-		verifyZeroInteractions(eventBus, localResolver);
+		verifyNoInteractions(eventBus, localResolver);
 	}
 }

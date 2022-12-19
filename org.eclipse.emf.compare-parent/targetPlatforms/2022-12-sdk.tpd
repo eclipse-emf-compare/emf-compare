@@ -1,4 +1,4 @@
-target "EMF Compare based on 2022-09 SDK"
+target "EMF Compare based on 2022-12 SDK"
 
 include "fragments/licence.tpd"
 include "fragments/orbit.tpd"
@@ -6,15 +6,12 @@ include "fragments/perf.tpd"
 
 with source, requirements
 
-location "http://download.eclipse.org/releases/2022-09" {
+location "http://download.eclipse.org/releases/2022-12" {
 	org.eclipse.platform.feature.group lazy
+	org.eclipse.egit.feature.group lazy
 	org.eclipse.emf.sdk.feature.group lazy
 	org.eclipse.emf.transaction.sdk.feature.group lazy
 	org.eclipse.uml2.feature.group lazy
 	org.eclipse.gmf.runtime.notation.sdk.feature.group lazy
 	org.eclipse.gmf.runtime.diagram.ui lazy
-}
-
-location "https://download.eclipse.org/egit/staging/v6.4.0.202211160543-m3" {
-	org.eclipse.egit.feature.group lazy
 }

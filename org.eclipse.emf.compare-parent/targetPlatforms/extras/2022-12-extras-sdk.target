@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="EMF Compare based on 2022-09 SDK" sequenceNumber="1668607794">
+<target name="EMF Compare with extras based on 2022-12" sequenceNumber="1671465242">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
       <repository location="https://download.eclipse.org/cbi/updates/license"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="com.google.guava" version="30.1.0.v20210127-2300"/>
-      <unit id="com.google.gson" version="2.8.7.v20210624-1215"/>
-      <unit id="org.junit" version="4.13.0.v20200204-1500"/>
-      <unit id="javaewah" version="1.1.12.v20210622-2206"/>
-      <unit id="org.apache.commons.compress" version="1.20.0.v20210713-1928"/>
+      <unit id="com.google.guava" version="30.1.0.v20221112-0806"/>
+      <unit id="com.google.gson" version="2.9.1.v20220915-1632"/>
+      <unit id="org.junit" version="4.13.2.v20211018-1956"/>
+      <unit id="javaewah" version="1.1.13.v20211029-0839"/>
+      <unit id="org.apache.commons.compress" version="1.21.0.v20211103-2100"/>
       <unit id="org.kohsuke.args4j" version="2.33.0.v20160323-2218"/>
-      <unit id="org.mockito" version="1.9.5.v201605172210"/>
-      <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
+      <unit id="org.mockito.mockito-core" version="4.8.1.v20221103-2317"/>
+      <unit id="net.bytebuddy.byte-buddy" version="1.12.18.v20221114-2102"/>
+      <unit id="org.hamcrest" version="2.2.0.v20210711-0821"/>
       <unit id="org.assertj" version="0.0.0"/>
-      <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20210825222808/repository/"/>
+      <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20221123021534/repository"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="fr.obeo.performance" version="1.0.0.201402071743"/>
@@ -25,16 +26,21 @@
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.platform.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.emf.transaction.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.uml2.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.gmf.runtime.diagram.ui" version="0.0.0"/>
-      <repository location="http://download.eclipse.org/releases/2022-09"/>
+      <repository location="http://download.eclipse.org/releases/2022-12"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
-      <repository location="https://download.eclipse.org/egit/staging/v6.4.0.202211160543-m3"/>
+      <unit id="org.eclipse.sirius" version="0.0.0"/>
+      <unit id="org.eclipse.sirius.diagram" version="0.0.0"/>
+      <unit id="org.eclipse.sirius.runtime.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.sirius.runtime.ide.ui.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.sirius.runtime.aql.feature.group" version="0.0.0"/>
+      <repository location="https://download.eclipse.org/sirius/updates/releases/7.0.6/2021-06/"/>
     </location>
   </locations>
 </target>

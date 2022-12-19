@@ -8,8 +8,6 @@ Automatic-Module-Name: org.eclipse.emf.compare.diagram.sirius.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Localization: plugin
 Require-Bundle: org.junit,
- org.mockito,
- org.hamcrest,
  org.eclipse.emf.compare.tests,
  org.eclipse.emf.compare,
  org.eclipse.emf.compare.diagram.sirius,
