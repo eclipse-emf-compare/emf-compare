@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ide.ui.tests.logical.resolver;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -56,8 +57,9 @@ public class CachingImplicitDependenciesTest {
 
 		// mock calculation
 		IImplicitDependencies delegate = mock(IImplicitDependencies.class);
-		when(delegate.of(any(URI.class), any(URIConverter.class))).then(new Answer<Set<URI>>() {
+		when(delegate.of(any(URI.class), nullable(URIConverter.class))).then(new Answer<Set<URI>>() {
 			public Set<URI> answer(InvocationOnMock invocation) throws Throwable {
+				System.out.println("hey!");
 				Object uriArgument = invocation.getArguments()[0];
 				if (uriArgument.equals(uri1)) {
 					return Sets.newHashSet(uri1dependencies);
@@ -75,8 +77,8 @@ public class CachingImplicitDependenciesTest {
 		assertEquals(uri2dependencies, cachingDependencies.of(uri2, null));
 
 		// delegate was only called once for each uri
-		verify(delegate, times(1)).of(eq(uri1), any(URIConverter.class));
-		verify(delegate, times(1)).of(eq(uri2), any(URIConverter.class));
+		verify(delegate, times(1)).of(eq(uri1), nullable(URIConverter.class));
+		verify(delegate, times(1)).of(eq(uri2), nullable(URIConverter.class));
 
 		// query dependencies multiple times
 		assertEquals(uri1dependencies, cachingDependencies.of(uri1, null));
@@ -89,7 +91,7 @@ public class CachingImplicitDependenciesTest {
 		assertEquals(uri2dependencies, cachingDependencies.of(uri2, null));
 
 		// delegate was only called once for each uri, cache used
-		verify(delegate, times(1)).of(eq(uri1), any(URIConverter.class));
-		verify(delegate, times(1)).of(eq(uri2), any(URIConverter.class));
+		verify(delegate, times(1)).of(eq(uri1), nullable(URIConverter.class));
+		verify(delegate, times(1)).of(eq(uri2), nullable(URIConverter.class));
 	}
 }

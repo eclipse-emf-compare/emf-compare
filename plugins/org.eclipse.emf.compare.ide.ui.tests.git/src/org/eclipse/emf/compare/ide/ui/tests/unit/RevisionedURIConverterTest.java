@@ -18,6 +18,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -236,7 +237,7 @@ public class RevisionedURIConverterTest extends AbstractURITest {
 		when(nullStorageProvider.getStorage(any(IProgressMonitor.class))).thenReturn(null);
 
 		IStorageProviderAccessor accessor = mock(IStorageProviderAccessor.class);
-		when(accessor.getStorageProvider(any(IResource.class), any(DiffSide.class)))
+		when(accessor.getStorageProvider(nullable(IResource.class), any(DiffSide.class)))
 				.then(new Answer<IStorageProvider>() {
 					public IStorageProvider answer(InvocationOnMock invocation) throws Throwable {
 						return iFile1.equals(invocation.getArguments()[0]) ? fileStorageProvider
