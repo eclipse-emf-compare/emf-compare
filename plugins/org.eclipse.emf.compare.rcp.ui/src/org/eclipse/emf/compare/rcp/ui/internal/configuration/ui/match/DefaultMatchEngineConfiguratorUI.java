@@ -95,7 +95,7 @@ public class DefaultMatchEngineConfiguratorUI extends AbstractConfigurationUI {
 		IObservableValue whenAvailableBtnSelection = WidgetProperties.buttonSelection()
 				.observe(whenAvailableButton);
 		IObservableValue onlyButtonSelection = WidgetProperties.buttonSelection().observe(onlyButton);
-		IObservableValue neverButtonSelection = WidgetProperties.background().observe(neverButton);
+		IObservableValue neverButtonSelection = WidgetProperties.buttonSelection().observe(neverButton);
 		SelectObservableValue featureRepoPolicyObservable = new SelectObservableValue(DataHolder.class);
 		featureRepoPolicyObservable.addOption(UseIdentifiers.WHEN_AVAILABLE, whenAvailableBtnSelection);
 		featureRepoPolicyObservable.addOption(UseIdentifiers.ONLY, onlyButtonSelection);
