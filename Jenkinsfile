@@ -10,7 +10,7 @@ pipeline {
 	
 	tools {
 		maven 'apache-maven-latest'
-		jdk 'adoptopenjdk-openj9-jdk11-latest'
+		jdk 'temurin-jdk17-latest'
 	}
 	
 	environment {
