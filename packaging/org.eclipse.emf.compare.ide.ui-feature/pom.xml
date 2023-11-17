@@ -16,8 +16,8 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.eclipse.tycho.extras</groupId>
-        <artifactId>tycho-source-feature-plugin</artifactId>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-source-plugin</artifactId>
         <configuration>
           <excludes>
             <plugin id="org.eclipse.emf.compare.doc"/>
