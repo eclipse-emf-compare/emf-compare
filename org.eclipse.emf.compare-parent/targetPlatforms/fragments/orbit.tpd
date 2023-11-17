@@ -2,16 +2,16 @@ target "Orbit"
 
 with source, requirements
 
-location "https://download.eclipse.org/tools/orbit/downloads/drops/R20221123021534/repository" {
-	com.google.guava [27.0.0,30.2.0)
+location "https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2023-12" {
+	com.google.guava [32.0.0,33.0.0)
 	com.google.gson [2.2.4,3.0.0)
 	org.junit [4.13.0,5.0.0)
 	/* Egit/Jgit */
-	javaewah
-	org.apache.commons.compress
+	com.googlecode.javaewah.JavaEWAH
+	org.apache.commons.commons-compress
 	org.kohsuke.args4j
-	org.mockito.mockito-core [4.8.0,4.9.0)
-	net.bytebuddy.byte-buddy [1.12.18, 1.12.20)
+	org.mockito.mockito-core
+	net.bytebuddy.byte-buddy
 	org.hamcrest.library [1.3.0,1.4.0)
-	org.assertj lazy
+	assertj-core
 }
