@@ -56,7 +56,7 @@ Export-Package: org.eclipse.emf.compare.tests,
  org.eclipse.emf.compare.tests.suite,
  org.eclipse.emf.compare.tests.unit,
  org.eclipse.emf.compare.tests.utils
-Import-Package: com.google.common.base;version="[27.0.0,30.2.0)",
- com.google.common.cache;version="[27.0.0,30.2.0)",
- com.google.common.collect;version="[27.0.0,30.2.0)"
+Import-Package: com.google.common.base;version="[27.0.0,33.0)",
+ com.google.common.cache;version="[27.0.0,33.0)",
+ com.google.common.collect;version="[27.0.0,33.0)"
 Bundle-ActivationPolicy: lazy
