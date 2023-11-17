@@ -40,17 +40,17 @@
 
     <!-- plugins versions -->
     <!-- use 'mvn versions:display-plugin-updates' to check for the latest -->
-    <tycho-version>2.7.5</tycho-version>
+    <tycho-version>3.0.5</tycho-version>
     <tycho-extras-version>${tycho-version}</tycho-extras-version>
-    <maven-resources-version>2.6</maven-resources-version>
-    <maven-antrun-version>1.7</maven-antrun-version>
-    <findbugs-maven-version>3.0.0</findbugs-maven-version>
-    <maven-pmd-version>3.1</maven-pmd-version>
+    <maven-resources-version>3.1.0</maven-resources-version>
+    <maven-antrun-version>1.8</maven-antrun-version>
+    <findbugs-maven-version>3.0.5</findbugs-maven-version>
+    <maven-pmd-version>3.12.0</maven-pmd-version>
     <exec-maven-version>1.3.1</exec-maven-version>
     <maven-compiler-version>3.1</maven-compiler-version>
     <maven-assembly-version>2.4</maven-assembly-version>
     <maven-jar-version>2.5</maven-jar-version>
-    <maven-checkstyle-version>2.12.1</maven-checkstyle-version>
+    <maven-checkstyle-version>3.1.0</maven-checkstyle-version>
     <maven-clean-version>2.5</maven-clean-version>
     <maven-deploy-version>2.8.1</maven-deploy-version>
     <maven-install-version>2.5.1</maven-install-version>
@@ -58,7 +58,7 @@
     <maven-surefire-version>2.22.2</maven-surefire-version>
     <jacoco-maven-version>0.7.1.201405082137</jacoco-maven-version>
     <eclipse-jarsigner-version>1.3.1</eclipse-jarsigner-version>
-    <maven-jxr-version>2.3</maven-jxr-version>
+    <maven-jxr-version>3.0.0</maven-jxr-version>
 
     <!-- Sonar properties -->
     <sonar.language>java</sonar.language>
@@ -178,23 +178,11 @@
               <goal>plugin-source</goal>
             </goals>
           </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho.extras</groupId>
-        <artifactId>tycho-source-feature-plugin</artifactId>
-        <version>${tycho-extras-version}</version>
-        <configuration>
-          <archive>
-            <addMavenDescriptor>false</addMavenDescriptor>
-          </archive>
-        </configuration>
-        <executions>
           <execution>
-            <id>source-feature</id>
+            <id>feature-source</id>
             <phase>package</phase>
             <goals>
-              <goal>source-feature</goal>
+              <goal>feature-source</goal>
             </goals>
           </execution>
         </executions>
