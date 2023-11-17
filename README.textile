@@ -21,14 +21,14 @@ h2. Build
 
 EMF Compare can be built using maven from within the org.eclipse.emf.compare-parent sub-folder of this repository :
 
-@mvn clean package -P2022-03@
+@mvn clean package -P2023-12@
 
-The above example will build the EMF Compare binaries against the Eclipse 2022-03 platform.
+The above example will build the EMF Compare binaries against the Eclipse 2023-12 platform.
 Select the appropriate profile according to the platform you wish to install EMF Compare on.
 
 You can also execute the tests using
 
-@mvn verify -P2022-03 --fail-at-end -Dmaven.test.failure.ignore=true@
+@mvn verify -P2023-12 --fail-at-end -Dmaven.test.failure.ignore=true@
 
 h2. Contributing
 
