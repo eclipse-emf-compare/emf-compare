@@ -6,7 +6,7 @@ with source, requirements
 
 // Sirius
 
-location "https://download.eclipse.org/sirius/updates/releases/7.2.1/2023-03/" {
+location "https://download.eclipse.org/sirius/updates/releases/7.3.0/2023-03/" {
 	org.eclipse.sirius lazy
 	org.eclipse.sirius.diagram lazy
 	org.eclipse.sirius.runtime.feature.group lazy
