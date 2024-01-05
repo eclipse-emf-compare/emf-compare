@@ -12,7 +12,7 @@
       <unit id="com.google.gson" version="2.10.1"/>
       <unit id="org.junit" version="4.13.2.v20230809-1000"/>
       <unit id="com.googlecode.javaewah.JavaEWAH" version="1.2.3"/>
-      <unit id="org.apache.commons.commons-compress" version="1.24.0"/>
+      <unit id="org.apache.commons.commons-compress" version="1.25.0"/>
       <unit id="org.kohsuke.args4j" version="2.33.0"/>
       <unit id="org.mockito.mockito-core" version="5.7.0"/>
       <unit id="net.bytebuddy.byte-buddy" version="1.14.9"/>
@@ -40,7 +40,7 @@
       <unit id="org.eclipse.sirius.runtime.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.sirius.runtime.ide.ui.feature.group" version="0.0.0"/>
       <unit id="org.eclipse.sirius.runtime.aql.feature.group" version="0.0.0"/>
-      <repository location="https://download.eclipse.org/sirius/updates/releases/7.2.1/2023-03/"/>
+      <repository location="https://download.eclipse.org/sirius/updates/releases/7.3.0/2023-03/"/>
     </location>
   </locations>
 </target>
