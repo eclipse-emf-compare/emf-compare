@@ -59,10 +59,10 @@ Export-Package: org.eclipse.emf.compare.ide.ui.dependency,
  org.eclipse.emf.compare.ide.ui.mergeresolution,
  org.eclipse.emf.compare.ide.ui.source,
  org.eclipse.emf.compare.ide.ui.subscriber
-Import-Package: com.google.common.annotations;version="[27.0.0,33.0)",
- com.google.common.base;version="[27.0.0,33.0)",
- com.google.common.cache;version="[27.0.0,33.0)",
- com.google.common.collect;version="[27.0.0,33.0)",
- com.google.common.eventbus;version="[27.0.0,33.0)",
- com.google.common.io;version="[27.0.0,33.0)",
- com.google.common.util.concurrent;version="[27.0.0,33.0)"
+Import-Package: com.google.common.annotations;version="[27.0.0,34.0)",
+ com.google.common.base;version="[27.0.0,34.0)",
+ com.google.common.cache;version="[27.0.0,34.0)",
+ com.google.common.collect;version="[27.0.0,34.0)",
+ com.google.common.eventbus;version="[27.0.0,34.0)",
+ com.google.common.io;version="[27.0.0,34.0)",
+ com.google.common.util.concurrent;version="[27.0.0,34.0)"

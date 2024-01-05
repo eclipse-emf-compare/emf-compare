@@ -17,4 +17,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Import-Package: com.google.common.io;version="[27.0.0,33.0)"
+Import-Package: com.google.common.io;version="[27.0.0,34.0)"
