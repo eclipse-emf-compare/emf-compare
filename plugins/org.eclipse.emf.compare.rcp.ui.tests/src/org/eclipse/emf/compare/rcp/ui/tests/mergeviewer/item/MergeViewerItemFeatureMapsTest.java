@@ -16,8 +16,8 @@ import java.io.IOException;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.EMFCompare.Builder;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConfigurator;
 import org.eclipse.emf.compare.rcp.ui.internal.mergeviewer.item.impl.MergeViewerItem;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
@@ -73,13 +73,13 @@ public class MergeViewerItemFeatureMapsTest {
 		MergeViewerItem.Container mapNode1MVI = new MergeViewerItem.Container(comparison, null, mapNodeMatch,
 				MergeViewerSide.LEFT, fAdapterFactory);
 		IMergeViewerItem[] children = mapNode1MVI.getChildren(null, null);
-		assertTrue(children.length == 5);
+		assertTrue(children.length == 6);
 
 		// Test Right Side
 		mapNode1MVI = new MergeViewerItem.Container(comparison, null, mapNodeMatch, MergeViewerSide.RIGHT,
 				fAdapterFactory);
 		children = mapNode1MVI.getChildren(null, null);
-		assertTrue(children.length == 5);
+		assertTrue(children.length == 6);
 
 	}
 

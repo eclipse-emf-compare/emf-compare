@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2017 Obeo and others.
+ * Copyright (c) 2012, 2024 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -127,6 +127,9 @@ public final class ReferenceUtil {
 	 */
 	public static Object safeEGet(EObject object, EStructuralFeature feature) {
 		final int featureID = getFeatureID(feature, object.eClass());
+		if (featureID == -1) {
+			return null;
+		}
 		return ((InternalEObject)object).eGet(featureID, false, true);
 	}
 
@@ -203,7 +206,10 @@ public final class ReferenceUtil {
 		if (featureID == -1) {
 			// We may have a different but equivalent EClass, so try find the feature with the same name and
 			// compute the feature ID for that.
-			featureID = eClass.getFeatureID(eClass.getEStructuralFeature(feature.getName()));
+			EStructuralFeature structuralFeature = eClass.getEStructuralFeature(feature.getName());
+			if (structuralFeature != null) {
+				featureID = eClass.getFeatureID(structuralFeature);
+			}
 		}
 		return featureID;
 	}
