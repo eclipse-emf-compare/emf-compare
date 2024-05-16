@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Obeo and others.
+ * Copyright (c) 2012, 2024 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,14 +20,19 @@ import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.BasicDiagnostic;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.CompareFactory;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ComparisonCanceledException;
+import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.EMFCompareMessages;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.match.eobject.CachingDistance;
 import org.eclipse.emf.compare.match.eobject.EditionDistance;
@@ -35,6 +40,7 @@ import org.eclipse.emf.compare.match.eobject.EqualityHelperExtensionProvider;
 import org.eclipse.emf.compare.match.eobject.EqualityHelperExtensionProviderDescriptorRegistryImpl;
 import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
 import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
+import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher.DefaultIDFunction;
 import org.eclipse.emf.compare.match.eobject.ProximityEObjectMatcher;
 import org.eclipse.emf.compare.match.eobject.WeightProvider;
 import org.eclipse.emf.compare.match.eobject.WeightProviderDescriptorRegistryImpl;
@@ -44,6 +50,7 @@ import org.eclipse.emf.compare.match.resource.StrategyResourceMatcher;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.impl.DynamicEObjectImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
@@ -61,6 +68,8 @@ public class DefaultMatchEngine implements IMatchEngine {
 	 * Default max size of the EObject's URI loading cache.
 	 */
 	public static final int DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE = 1024;
+
+	private static final String UNKNOWN_ID = "Unknown ID"; //$NON-NLS-1$
 
 	/** The delegate {@link IEObjectMatcher matcher} that will actually pair EObjects together. */
 	private final IEObjectMatcher eObjectMatcher;
@@ -119,7 +128,117 @@ public class DefaultMatchEngine implements IMatchEngine {
 
 		match(comparison, scope, left, right, origin, monitor);
 
+		verifyEClassConsistency(comparison, monitor);
+
 		return comparison;
+	}
+
+	private void verifyEClassConsistency(Comparison comparison, Monitor monitor) {
+		comparison.getMatches().forEach(match -> verifyEClassConsistency(match, monitor));
+	}
+
+	private void verifyEClassConsistency(Match match, Monitor monitor) {
+		if (monitor.isCanceled()) {
+			throw new ComparisonCanceledException();
+		}
+		checkForEClassDifferences(match, monitor);
+		match.getSubmatches().forEach(subMatch -> verifyEClassConsistency(subMatch, monitor));
+	}
+
+	/**
+	 * Verifies if the compared elements share the same eClass. If it is not the case, we log an error in the
+	 * diagnostic.
+	 * 
+	 * @param match
+	 *            The match that is to be checked.
+	 * @param monitor
+	 *            The monitor to report progress or to check for cancellation.
+	 */
+	private void checkForEClassDifferences(Match match, Monitor monitor) {
+		Diagnostic diagnostic = null;
+		if (monitor.isCanceled()) {
+			throw new ComparisonCanceledException();
+		}
+		EObject left = match.getLeft();
+		EObject right = match.getRight();
+		if (match.getComparison().isThreeWay()) {
+			diagnostic = checkThreeWayCase(match, left, right);
+		} else if (right != null && left != null && !isSameEClass(left, right)) {
+			String message = computeMessage(right, left);
+			diagnostic = new BasicDiagnostic(Diagnostic.ERROR, EMFCompare.DIAGNOSTIC_SOURCE, 0, message,
+					new Object[0]);
+		}
+		// If the compared objects do not share the same eClass, we log an error in the diagnostic to stop
+		// the comparison.
+		if (diagnostic != null) {
+			Comparison comparison = match.getComparison();
+			Diagnostic currentDiag = comparison.getDiagnostic();
+			if (currentDiag == null) {
+				comparison.setDiagnostic(diagnostic);
+			}
+			((BasicDiagnostic)comparison.getDiagnostic()).merge(diagnostic);
+		}
+	}
+
+	private Diagnostic checkThreeWayCase(Match match, EObject left, EObject right) {
+		Diagnostic diagnostic = null;
+		EObject origin = match.getOrigin();
+		if (origin != null) {
+			if (left == null && right != null && !isSameEClass(right, origin)) {
+				String message = computeMessage(right, origin);
+				diagnostic = new BasicDiagnostic(Diagnostic.ERROR, EMFCompare.DIAGNOSTIC_SOURCE, 0, message,
+						new Object[0]);
+			} else if (right == null && left != null && !isSameEClass(left, origin)) {
+				String message = computeMessage(left, origin);
+				diagnostic = new BasicDiagnostic(Diagnostic.ERROR, EMFCompare.DIAGNOSTIC_SOURCE, 0, message,
+						new Object[0]);
+			} else if (right != null && left != null
+					&& !(isSameEClass(right, origin) && isSameEClass(left, origin))) {
+				String message = computeThreeWayMessage(origin, left, right);
+				diagnostic = new BasicDiagnostic(Diagnostic.ERROR, EMFCompare.DIAGNOSTIC_SOURCE, 0, message,
+						new Object[0]);
+			}
+		} else if (right != null && left != null && !isSameEClass(left, right)) {
+			String message = computeMessage(right, left);
+			diagnostic = new BasicDiagnostic(Diagnostic.ERROR, EMFCompare.DIAGNOSTIC_SOURCE, 0, message,
+					new Object[0]);
+		}
+		return diagnostic;
+	}
+
+	private boolean isSameEClass(EObject left, EObject right) {
+		// We do not raise an issue in case of DynamicEObject (we don't have a generated EClass)
+		return right.eClass().isInstance(left) || (isDynamicEObject(left) && isDynamicEObject(right));
+	}
+
+	private boolean isDynamicEObject(EObject eObject) {
+		return eObject instanceof DynamicEObjectImpl;
+	}
+
+	private String computeMessage(EObject first, EObject second) {
+		return EMFCompareMessages.getString("DefaultDiffEngine.comparison.eClass", //$NON-NLS-1$
+				first.eClass().getName(), computeElementPath(first), second.eClass().getName(),
+				computeElementPath(second));
+	}
+
+	private String computeThreeWayMessage(EObject origin, EObject left, EObject right) {
+		return EMFCompareMessages.getString("DefaultDiffEngine.comparison.threeway.eClass", //$NON-NLS-1$
+				origin.eClass().getName(), computeElementPath(origin), left.eClass().getName(),
+				right.eClass().getName(), computeElementPath(left), computeElementPath(right));
+	}
+
+	private String computeElementPath(EObject element) {
+		return getElementResourcePath(element) + "#" + getElementId(element); //$NON-NLS-1$
+	}
+
+	private String getElementId(EObject element) {
+		DefaultIDFunction defaultIDFunction = new DefaultIDFunction();
+		return Optional.of(element).map(defaultIDFunction).orElse(UNKNOWN_ID);
+	}
+
+	private String getElementResourcePath(EObject element) {
+		return Optional.ofNullable(element).map(EObject::eResource).map(Resource::getURI).map(URI::toString)
+				.orElse(""); //$NON-NLS-1$
 	}
 
 	/**
