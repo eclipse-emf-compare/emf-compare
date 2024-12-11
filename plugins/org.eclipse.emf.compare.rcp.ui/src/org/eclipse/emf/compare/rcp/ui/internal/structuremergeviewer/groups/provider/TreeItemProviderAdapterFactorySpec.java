@@ -15,6 +15,7 @@ import org.eclipse.emf.compare.provider.IItemDescriptionProvider;
 import org.eclipse.emf.compare.provider.IItemStyledLabelProvider;
 import org.eclipse.emf.compare.provider.ISemanticObjectLabelProvider;
 import org.eclipse.emf.compare.rcp.ui.internal.structuremergeviewer.filters.StructureMergeViewerFilter;
+import org.eclipse.emf.edit.provider.Disposable;
 import org.eclipse.emf.edit.provider.IItemColorProvider;
 import org.eclipse.emf.edit.provider.IItemFontProvider;
 import org.eclipse.emf.edit.tree.provider.TreeItemProviderAdapterFactory;
@@ -54,5 +55,15 @@ public class TreeItemProviderAdapterFactorySpec extends TreeItemProviderAdapterF
 	@Override
 	public Adapter createTreeNodeAdapter() {
 		return new TreeNodeItemProviderSpec(this, filter);
+	}
+
+	@Override
+	public void dispose() {
+		// EMF Compare keeps using the same adapter factory even after disposing it.
+		// This means that the current disposable might be modified during the dispose process if we keep it
+		// the same (adding new items through the UI thread while we're disposing in the background.
+		Disposable current = disposable;
+		disposable = new Disposable();
+		current.dispose();
 	}
 }
