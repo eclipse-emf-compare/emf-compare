@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
@@ -244,6 +245,14 @@ class PropertyContentMergeViewer extends AbstractTreeContentMergeViewer {
 	public void setInput(Object input) {
 		buildProperties(input);
 		super.setInput(input);
+	}
+
+	@Override
+	protected void handleDispose(DisposeEvent event) {
+		ancestorPropertyAccessor = null;
+		leftPropertyAccessor = null;
+		rightPropertyAccessor = null;
+		super.handleDispose(event);
 	}
 
 	/**
