@@ -381,7 +381,8 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 	private EMFCompareColor fColors;
 
-	private boolean editingDomainNeedsToBeDisposed;
+	/** List of domains we've created ourselves and should thus cleanup ourselves. */
+	private final List<IDisposable> disposableDomains = new ArrayList<>();
 
 	private FetchListener toolbarUpdaterContentProviderListener;
 
@@ -1189,9 +1190,10 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 		if (preferenceChangeListener != null) {
 			preferenceStore.removePropertyChangeListener(preferenceChangeListener);
 		}
-		if (editingDomainNeedsToBeDisposed) {
-			((IDisposable)getCompareConfiguration().getEditingDomain()).dispose();
+		for (IDisposable disposable : disposableDomains) {
+			disposable.dispose();
 		}
+		disposableDomains.clear();
 		getCompareConfiguration().getStructureMergeViewerGrouper().uninstall(getViewer());
 		compareInputChanged((ICompareInput)null);
 		treeRuler.handleDispose();
@@ -1395,6 +1397,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 			if (config.getEditingDomain() == null) {
 				ICompareEditingDomain domain = EMFCompareEditingDomain.create(scope.getLeft(),
 						scope.getRight(), scope.getOrigin());
+				if (domain instanceof IDisposable) {
+					disposableDomains.add((IDisposable)domain);
+				}
 				config.setEditingDomain(domain);
 			}
 
@@ -1619,7 +1624,9 @@ public class EMFCompareStructureMergeViewer extends AbstractStructuredViewerWrap
 
 				ICompareEditingDomain editingDomain = EMFCompareEditingDomain.create(leftResourceSet,
 						rightResourceSet, originResourceSet);
-				editingDomainNeedsToBeDisposed = true;
+				if (editingDomain instanceof IDisposable) {
+					disposableDomains.add((IDisposable)editingDomain);
+				}
 				compareConfiguration.setEditingDomain(editingDomain);
 
 				if (leftResourceSet instanceof NotLoadingResourceSet) {
