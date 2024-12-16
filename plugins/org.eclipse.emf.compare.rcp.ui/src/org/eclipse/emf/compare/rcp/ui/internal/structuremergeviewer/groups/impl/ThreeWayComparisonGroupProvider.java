@@ -35,11 +35,11 @@ import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasConflict;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.hasState;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.common.collect.UnmodifiableIterator;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -412,21 +412,45 @@ public class ThreeWayComparisonGroupProvider extends AbstractDifferenceGroupProv
 			rightLabel = EMFCompareRCPUIMessages.getString("ThreeWayComparisonGroupProvider.right.label"); //$NON-NLS-1$
 		}
 
-		final ConflictsGroupImpl conflicts = new ConflictsGroupImpl(getComparison(),
-				EMFCompareRCPUIMessages.getString("ThreeWayComparisonGroupProvider.conflicts.label"), //$NON-NLS-1$
-				getCrossReferenceAdapter());
-		conflicts.buildSubTree();
+		// This may get disposed while in the process of being constructed
+		// Check that the comparison is still not null at every step
+		ConflictsGroupImpl conflicts = null;
+		BasicDifferenceGroupImpl leftSide = null;
+		BasicDifferenceGroupImpl rightSide = null;
+		Comparison theComparison = getComparison();
+		if (theComparison != null) {
+			conflicts = new ConflictsGroupImpl(theComparison,
+					EMFCompareRCPUIMessages.getString("ThreeWayComparisonGroupProvider.conflicts.label"), //$NON-NLS-1$
+					getCrossReferenceAdapter());
+			conflicts.buildSubTree();
+		}
 
-		final BasicDifferenceGroupImpl leftSide = new BasicDifferenceGroupImpl(getComparison(),
-				and(fromSide(DifferenceSource.LEFT), DEFAULT_DIFF_GROUP_FILTER_PREDICATE), leftLabel,
-				getCrossReferenceAdapter());
-		leftSide.buildSubTree();
+		theComparison = getComparison();
+		if (theComparison != null) {
+			leftSide = new BasicDifferenceGroupImpl(theComparison,
+					and(fromSide(DifferenceSource.LEFT), DEFAULT_DIFF_GROUP_FILTER_PREDICATE), leftLabel,
+					getCrossReferenceAdapter());
+			leftSide.buildSubTree();
+		}
 
-		final BasicDifferenceGroupImpl rightSide = new BasicDifferenceGroupImpl(getComparison(),
-				and(fromSide(DifferenceSource.RIGHT), DEFAULT_DIFF_GROUP_FILTER_PREDICATE), rightLabel,
-				getCrossReferenceAdapter());
-		rightSide.buildSubTree();
+		theComparison = getComparison();
+		if (theComparison != null) {
+			rightSide = new BasicDifferenceGroupImpl(theComparison,
+					and(fromSide(DifferenceSource.RIGHT), DEFAULT_DIFF_GROUP_FILTER_PREDICATE), rightLabel,
+					getCrossReferenceAdapter());
+			rightSide.buildSubTree();
+		}
 
-		return ImmutableList.of(conflicts, leftSide, rightSide);
+		List<IDifferenceGroup> result = new ArrayList<>();
+		if (conflicts != null) {
+			result.add(conflicts);
+		}
+		if (leftSide != null) {
+			result.add(leftSide);
+		}
+		if (rightSide != null) {
+			result.add(rightSide);
+		}
+		return result;
 	}
 }
