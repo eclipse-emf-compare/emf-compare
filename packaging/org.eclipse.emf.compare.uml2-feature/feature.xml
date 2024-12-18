@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.uml2"
       label="%featureName"
-      version="3.3.25.qualifier"
+      version="3.3.26.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.emf.compare.uml2"
       license-feature="org.eclipse.license"
