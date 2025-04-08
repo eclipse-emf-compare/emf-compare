@@ -21,6 +21,7 @@ import java.util.EventObject;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
+import org.eclipse.draw2d.zoom.ZoomListener;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.compare.Diff;
@@ -35,7 +36,6 @@ import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer;
 import org.eclipse.emf.compare.rcp.ui.mergeviewer.IMergeViewer.MergeViewerSide;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.RootEditPart;
-import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ZoomComboContributionItem;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
@@ -283,7 +283,7 @@ public class DiagramContentMergeViewer extends EMFCompareContentMergeViewer impl
 	/**
 	 * {@inheritDoc} When the zoom on any of the sides changes, the same zoom level is applied to other sides.
 	 * 
-	 * @see org.eclipse.gef.editparts.ZoomListener#zoomChanged(double)
+	 * @see org.eclipse.draw2d.zoom.ZoomListener#zoomChanged(double)
 	 */
 	@Override
 	public void zoomChanged(double zoom) {
