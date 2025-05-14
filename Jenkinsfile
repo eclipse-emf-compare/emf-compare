@@ -10,13 +10,13 @@ pipeline {
 	
 	tools {
 		maven 'apache-maven-latest'
-		jdk 'temurin-jdk17-latest'
+		jdk 'temurin-jdk21-latest'
 	}
 	
 	environment {
 		// Target platform to build against (must correspond to a profile in the parent pom.xml)
-		PLATFORM = '2023-12'
-		PLATFORM_EXTRAS = '2023-12-extras'
+		PLATFORM = '2025-03'
+		PLATFORM_EXTRAS = '2025-03-extras'
 	}
 	
 	stages {
