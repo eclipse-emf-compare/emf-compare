@@ -29,7 +29,7 @@ pipeline {
 			steps {
 				dir ("org.eclipse.emf.compare-parent") {
 					wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
-						sh "mvn clean verify -P$PLATFORM_EXTRAS -Pextra-modules -Psign -Pjavadoc"
+						sh "mvn clean verify -P$PLATFORM_EXTRAS -Pextra-modules -Psign -Pjavadoc -Dmaven.repo.local=../.m2-local"
 					}
 				}
 				sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
@@ -47,7 +47,7 @@ pipeline {
 			steps {
 				dir ("org.eclipse.emf.compare-parent") {
 					wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
-						sh "mvn clean verify -P$PLATFORM"
+						sh "mvn clean verify -P$PLATFORM -Dmaven.repo.local=../.m2-local"
 					}
 				}
 			}
