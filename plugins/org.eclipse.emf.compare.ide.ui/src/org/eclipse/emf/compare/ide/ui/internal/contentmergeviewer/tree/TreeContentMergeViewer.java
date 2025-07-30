@@ -158,7 +158,9 @@ public class TreeContentMergeViewer extends AbstractTreeContentMergeViewer {
 	@Override
 	protected void handleDispose(DisposeEvent event) {
 		fAdapterFactory.dispose();
-		moveDifferences.clear();
+		if (moveDifferences != null) {
+			moveDifferences.clear();
+		}
 		super.handleDispose(event);
 	}
 
