@@ -100,9 +100,6 @@ public class DefaultEquiEngine implements IEquiEngine {
 			// If no equivalence, create one
 			equivalence = CompareFactory.eINSTANCE.createEquivalence();
 
-			// Add the current difference to the equivalence
-			equivalence.getDifferences().add(referenceChange);
-
 			/*
 			 * Add the difference where the value is the object containing the current difference, which is
 			 * contained by the value of the current difference, where the reference is linked to the opposite
@@ -144,8 +141,11 @@ public class DefaultEquiEngine implements IEquiEngine {
 
 				addChangesFromOrigin(comparison, referenceChange, equivalence);
 			}
-			if (equivalence.getDifferences().size() > 1) {
+			if (!equivalence.getDifferences().isEmpty()) {
 				comparison.getEquivalences().add(equivalence);
+
+				// Add the current difference to the equivalence
+				equivalence.getDifferences().add(referenceChange);
 			}
 		}
 	}
