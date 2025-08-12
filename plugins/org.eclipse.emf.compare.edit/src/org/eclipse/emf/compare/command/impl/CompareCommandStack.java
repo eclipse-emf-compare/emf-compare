@@ -117,31 +117,37 @@ public class CompareCommandStack extends DelegatingCommandStack implements IComp
 
 	/**
 	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean canUndo() {
+		return getUndoCommand() instanceof ICompareCopyCommand && super.canUndo();
+	}
+
+	/**
+	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.common.command.BasicCommandStack#undo()
 	 */
 	@Override
 	public void undo() {
 		if (canUndo()) {
-			if (getUndoCommand() instanceof ICompareCopyCommand) {
-				ICompareCopyCommand compareCommand = (ICompareCopyCommand)getUndoCommand();
-				super.undo();
+			ICompareCopyCommand compareCommand = (ICompareCopyCommand)getUndoCommand();
+			super.undo();
 
-				final CompareSideCommandStack commandStack;
-				if (compareCommand.isLeftToRight()) {
-					commandStack = rightCommandStack;
-				} else {
-					commandStack = leftCommandStack;
-				}
-
-				if (super.canRedo()) {
-					commandStack.undone();
-				} else {
-					commandStack.undoneWithException();
-				}
-
-				notifyListeners(this);
+			final CompareSideCommandStack commandStack;
+			if (compareCommand.isLeftToRight()) {
+				commandStack = rightCommandStack;
+			} else {
+				commandStack = leftCommandStack;
 			}
+
+			if (super.canRedo()) {
+				commandStack.undone();
+			} else {
+				commandStack.undoneWithException();
+			}
+
+			notifyListeners(this);
 		}
 	}
 
