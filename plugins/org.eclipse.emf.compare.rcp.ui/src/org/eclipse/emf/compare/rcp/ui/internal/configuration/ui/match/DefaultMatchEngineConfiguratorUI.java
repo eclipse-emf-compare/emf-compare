@@ -92,11 +92,14 @@ public class DefaultMatchEngineConfiguratorUI extends AbstractConfigurationUI {
 	 */
 	private void bindData() {
 		DataBindingContext ctx = new DataBindingContext();
-		IObservableValue whenAvailableBtnSelection = WidgetProperties.buttonSelection()
+		IObservableValue<Boolean> whenAvailableBtnSelection = WidgetProperties.buttonSelection()
 				.observe(whenAvailableButton);
-		IObservableValue onlyButtonSelection = WidgetProperties.buttonSelection().observe(onlyButton);
-		IObservableValue neverButtonSelection = WidgetProperties.buttonSelection().observe(neverButton);
-		SelectObservableValue featureRepoPolicyObservable = new SelectObservableValue(DataHolder.class);
+		IObservableValue<Boolean> onlyButtonSelection = WidgetProperties.buttonSelection()
+				.observe(onlyButton);
+		IObservableValue<Boolean> neverButtonSelection = WidgetProperties.buttonSelection()
+				.observe(neverButton);
+		SelectObservableValue<UseIdentifiers> featureRepoPolicyObservable = new SelectObservableValue<>(
+				UseIdentifiers.class);
 		featureRepoPolicyObservable.addOption(UseIdentifiers.WHEN_AVAILABLE, whenAvailableBtnSelection);
 		featureRepoPolicyObservable.addOption(UseIdentifiers.ONLY, onlyButtonSelection);
 		featureRepoPolicyObservable.addOption(UseIdentifiers.NEVER, neverButtonSelection);

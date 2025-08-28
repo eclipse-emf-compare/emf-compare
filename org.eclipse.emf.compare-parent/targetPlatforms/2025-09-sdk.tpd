@@ -1,4 +1,4 @@
-target "EMF Compare based on 2025-03 SDK"
+target "EMF Compare based on 2025-09 SDK"
 
 include "fragments/licence.tpd"
 include "fragments/orbit.tpd"
@@ -6,7 +6,7 @@ include "fragments/perf.tpd"
 
 with source, requirements
 
-location "http://download.eclipse.org/releases/2025-03" {
+location "http://download.eclipse.org/releases/2025-09" {
 	org.eclipse.platform.feature.group lazy
 	org.eclipse.egit.feature.group lazy
 	org.eclipse.emf.sdk.feature.group lazy
