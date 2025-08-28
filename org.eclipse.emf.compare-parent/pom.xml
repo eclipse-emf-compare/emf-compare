@@ -345,7 +345,7 @@
   <profiles>
     <!-- Target platforms are located in org.eclipse.emf.compare-parent/targetPlatforms. -->
     <profile>
-      <id>2025-03</id>
+      <id>2025-09</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
@@ -360,7 +360,7 @@
                   <groupId>org.eclipse.emf.compare</groupId>
                   <artifactId>emf.compare-parent</artifactId>
                   <version>${parent-version}</version>
-                  <classifier>targetPlatforms/2025-03-sdk</classifier>
+                  <classifier>targetPlatforms/2025-09-sdk</classifier>
                 </artifact>
               </target>
             </configuration>
