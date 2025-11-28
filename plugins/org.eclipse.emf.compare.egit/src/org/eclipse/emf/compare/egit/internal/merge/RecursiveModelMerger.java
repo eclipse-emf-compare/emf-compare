@@ -6,8 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Laurent Goubet <laurent.goubet@obeo.fr> - initial API and implementation
- *     Axel Richard <axel.richard@obeo.fr> - Update #registerHandledFiles()
+ *	 Laurent Goubet <laurent.goubet@obeo.fr> - initial API and implementation
+ *	 Axel Richard <axel.richard@obeo.fr> - Update #registerHandledFiles()
  *******************************************************************************/
 package org.eclipse.emf.compare.egit.internal.merge;
 
@@ -17,7 +17,9 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
@@ -114,6 +116,12 @@ public class RecursiveModelMerger extends RecursiveMerger {
 	private RevTree aHeadTree;
 
 	private RevTree aMergeTree;
+
+	/**
+	 * Finding a resource merger for a given set of resources can be a time consuming operation for large
+	 * models. If we've already computed a merger for a given set, do not re-compute.
+	 */
+	private Map<Set<IResource>, IResourceMappingMerger> cachedMergers = new LinkedHashMap<>();
 
 	/**
 	 * Default recursive model merger.
@@ -227,8 +235,6 @@ public class RecursiveModelMerger extends RecursiveMerger {
 			IResourceMappingMerger modelMerger = null;
 			if (logicalModel != null) {
 				try {
-					// We need to refresh because new resources may have been added
-					refreshRoots(subscriber.roots());
 					modelMerger = getResourceMappingMerger(logicalModel);
 				} catch (CoreException e) {
 					Activator.logError(MergeText.RecursiveModelMerger_AdaptError, e);
@@ -248,6 +254,15 @@ public class RecursiveModelMerger extends RecursiveMerger {
 
 				boolean success = new ModelMerge(this, subscriber, remoteMappingContext, path, logicalModel,
 						modelMerger, handleUnchangedFiles).run(new JGitProgressMonitorWrapper(monitor));
+				if (success) {
+					for (IResource res : logicalModel) {
+						try {
+							res.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+						} catch (CoreException e) {
+							// Carry on with the merge, the workspace won't be in sync with the filesystem
+						}
+					}
+				}
 				if (!success) {
 					if (LOGGER.isInfoEnabled()) {
 						LOGGER.info("FAILED - Recursive model merge."); //$NON-NLS-1$
@@ -268,6 +283,15 @@ public class RecursiveModelMerger extends RecursiveMerger {
 					LOGGER.info("FAILED - Recursive model merge, default merge failed."); //$NON-NLS-1$
 				}
 				return false;
+			} else {
+				// fallBackToDefaultMerge returned true
+				if (resource != null && resource.exists()) {
+					try {
+						resource.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+					} catch (CoreException e) {
+						// Carry on with the merge, the workspace won't be in sync with the filesystem
+					}
+				}
 			}
 			if (treeWalk.isSubtree() && enterSubtree) {
 				treeWalk.enterSubtree();
@@ -279,12 +303,18 @@ public class RecursiveModelMerger extends RecursiveMerger {
 		if (LOGGER.isInfoEnabled()) {
 			LOGGER.info("SUCCESS - Recursive model merge."); //$NON-NLS-1$
 		}
+		cachedMergers.clear();
 		return true;
 	}
 
 	protected IResourceMappingMerger getResourceMappingMerger(Set<IResource> logicalModel)
 			throws CoreException {
-		return LogicalModels.findAdapter(logicalModel, IResourceMappingMerger.class);
+		IResourceMappingMerger cached = cachedMergers.get(logicalModel);
+		if (cached == null) {
+			cached = LogicalModels.findAdapter(logicalModel, IResourceMappingMerger.class);
+			cachedMergers.put(logicalModel, cached);
+		}
+		return cached;
 	}
 
 	private boolean fallBackToDefaultMerge(TreeWalk treeWalk, boolean ignoreConflicts)
