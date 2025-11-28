@@ -34,7 +34,14 @@ public final class SimilarityComputer {
 	public static final int MINIMUM_LENGTH = 1024;
 
 	/**
-	 * The maximum percentage of differing lines contained in the content for files to be considered a rename.
+	 * Maximum percentage of file size difference: consider that a file that is more than 10% bigger cannot be
+	 * a rename of another file.
+	 */
+	public static final double THRESHOLD_SIZE_RATIO = 0.1;
+
+	/**
+	 * The maximum percentage of differing characters contained in the content for files to be considered a
+	 * rename.
 	 */
 	public static final double THRESHOLD = 0.3;
 
@@ -88,7 +95,7 @@ public final class SimilarityComputer {
 			fileA = readUtf8(a);
 			fileB = readUtf8(b);
 
-			return internalCalculateSimilarity(fileA, fileB);
+			return 1d - internalCalculateSimilarity(fileA, fileB);
 		} finally {
 			try {
 				a.close();
@@ -113,23 +120,36 @@ public final class SimilarityComputer {
 	 * @return the similarity
 	 */
 	private static double internalCalculateSimilarity(LineFile a, LineFile b) {
-		if (a.characterCount < MINIMUM_LENGTH || b.characterCount < MINIMUM_LENGTH) {
-			return Double.MAX_VALUE;
+		// if file sizes are lower than the minimum count,
+		// or if one file is more than THRESHOLD_SIZE_RATIO bigger than the other,
+		// No use computing further
+		double smaller;
+		double bigger;
+		if (a.characterCount < b.characterCount) {
+			smaller = a.characterCount;
+			bigger = b.characterCount;
+		} else {
+			smaller = b.characterCount;
+			bigger = a.characterCount;
+		}
+		if (smaller < MINIMUM_LENGTH || (bigger - (smaller * THRESHOLD_SIZE_RATIO)) > smaller) {
+			return 0d;
 		}
 
 		final LineBasedDiff lineBasedDiff = new LineBasedDiff();
 
-		long differences = 0;
+		final LinkedList<Diff> diffs = lineBasedDiff.computeLineBasedDiff(a.content, b.content);
 
-		final LinkedList<Diff> diffs = lineBasedDiff.diff_main(a.content, b.content, false);
-
+		double equalChars = 0;
 		for (Diff diff : diffs) {
-			if (diff.operation != diff_match_patch.Operation.EQUAL) {
-				differences++;
+			if (diff.operation == diff_match_patch.Operation.EQUAL) {
+				equalChars += diff.text.length();
 			}
 		}
 
-		return (double)differences / Math.max(a.lineCount, b.lineCount);
+		// The maximum number of "equal" characters is the minimum character count of one of our files.
+		// The similarity is the number of equal chars divided by the greater of the two counts
+		return equalChars / Math.max(a.characterCount, b.characterCount);
 	}
 
 	/**
