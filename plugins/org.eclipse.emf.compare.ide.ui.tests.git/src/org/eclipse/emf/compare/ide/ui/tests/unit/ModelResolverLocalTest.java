@@ -87,13 +87,13 @@ public class ModelResolverLocalTest extends LogicalModelGraphTest {
 	@Override
 	@Before
 	public void setUp() throws Exception {
+		super.setUp();
+
 		final IPreferenceStore store = EMFCompareIDEUIPlugin.getDefault().getPreferenceStore();
 		final String stringValue = store.getString(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE);
 		originalResolutionScope = CrossReferenceResolutionScope.valueOf(stringValue);
 
 		project2 = new TestProject(PROJECT2_NAME);
-
-		super.setUp();
 	}
 
 	@Override

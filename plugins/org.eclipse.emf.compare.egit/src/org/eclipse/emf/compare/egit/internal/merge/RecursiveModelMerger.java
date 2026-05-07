@@ -15,13 +15,16 @@ package org.eclipse.emf.compare.egit.internal.merge;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.mapping.RemoteResourceMappingContext;
 import org.eclipse.core.resources.mapping.ResourceMapping;
@@ -197,6 +200,11 @@ public class RecursiveModelMerger extends RecursiveMerger {
 			handleUnchangedFiles = false;
 		}
 
+		// Git starts the merge operation with a restrictive scheduling rule.
+		// We cannot refresh a resource that is not part of a project that was already present in the
+		// workspace when we started the operation.
+		List<IProject> initialProjects = Arrays.asList(RuleUtil.getProjects(getRepository()));
+
 		// We are done with the setup. We can now iterate over the tree walk and
 		// either delegate to the logical model's merger if any or fall back to
 		// standard git merging. Basically, any file that is not a part of a
@@ -256,10 +264,12 @@ public class RecursiveModelMerger extends RecursiveMerger {
 						modelMerger, handleUnchangedFiles).run(new JGitProgressMonitorWrapper(monitor));
 				if (success) {
 					for (IResource res : logicalModel) {
-						try {
-							res.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
-						} catch (CoreException e) {
-							// Carry on with the merge, the workspace won't be in sync with the filesystem
+						if (initialProjects.contains(res.getProject())) {
+							try {
+								res.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+							} catch (CoreException e) {
+								// Carry on with the merge, the workspace won't be in sync with the filesystem
+							}
 						}
 					}
 				}
@@ -286,10 +296,12 @@ public class RecursiveModelMerger extends RecursiveMerger {
 			} else {
 				// fallBackToDefaultMerge returned true
 				if (resource != null && resource.exists()) {
-					try {
-						resource.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
-					} catch (CoreException e) {
-						// Carry on with the merge, the workspace won't be in sync with the filesystem
+					if (initialProjects.contains(resource.getProject())) {
+						try {
+							resource.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+						} catch (CoreException e) {
+							// Carry on with the merge, the workspace won't be in sync with the filesystem
+						}
 					}
 				}
 			}

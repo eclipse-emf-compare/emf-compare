@@ -9,13 +9,17 @@
 package org.eclipse.emf.compare.ide.ui.tests.unit;
 
 import static org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope.CONTAINER;
-import static org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope.PROJECT;
-import static org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope.WORKSPACE;
 import static org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope.OUTGOING;
+import static org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope.PROJECT;
 import static org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope.SELF;
+import static org.eclipse.emf.compare.ide.ui.internal.logical.resolver.CrossReferenceResolutionScope.WORKSPACE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -54,21 +58,14 @@ import org.eclipse.emf.compare.ide.ui.tests.workspace.TestProject;
 import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 import org.eclipse.emf.compare.internal.utils.Graph;
-import org.eclipse.emf.compare.internal.utils.ReadOnlyGraph;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jgit.api.Status;
-import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 
 /*
  * basic model setup will be one package containing two classes, from which we'll create cross-references through the 'suertypes' feature.
@@ -112,13 +109,12 @@ public class ModelResolverRemoteTest extends CompareGitTestCase {
 	@Override
 	@Before
 	public void setUp() throws Exception {
+		super.setUp();
 		final IPreferenceStore store = EMFCompareIDEUIPlugin.getDefault().getPreferenceStore();
 		final String stringValue = store.getString(EMFCompareUIPreferences.RESOLUTION_SCOPE_PREFERENCE);
 		originalResolutionScope = CrossReferenceResolutionScope.valueOf(stringValue);
 
 		project2 = new TestProject(PROJECT2_NAME);
-
-		super.setUp();
 	}
 
 	@Override

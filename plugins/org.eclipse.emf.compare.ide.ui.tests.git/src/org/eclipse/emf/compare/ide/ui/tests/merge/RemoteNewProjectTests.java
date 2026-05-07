@@ -132,6 +132,7 @@ public class RemoteNewProjectTests extends CompareTestCase {
 				}
 			}
 		}
+		Files.deleteIfExists(gitDir.toPath());
 	}
 
 	/**

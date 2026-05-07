@@ -21,9 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.resources.IFile;
@@ -40,6 +38,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.GitCorePreferences;
 import org.eclipse.egit.core.RepositoryCache;
+import org.eclipse.egit.core.internal.indexdiff.IndexDiffCache;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
@@ -62,6 +61,7 @@ import org.eclipse.emf.compare.rcp.internal.extension.impl.EMFCompareBuilderConf
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.util.FileUtils;
 import org.eclipse.jgit.util.SystemReader;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.junit.After;
@@ -83,6 +83,8 @@ public class CompareGitTestCase extends CompareTestCase {
 
 	// The ".git" folder of the test repository
 	protected File gitDir;
+
+	private File gitIgnore;
 
 	@BeforeClass
 	public static void setUpClass() {
@@ -110,8 +112,8 @@ public class CompareGitTestCase extends CompareTestCase {
 		gitDir = new File(workspaceRoot.getRawLocation().toFile(), Constants.DOT_GIT);
 		repository = new GitTestRepository(gitDir);
 		repository.connect(project.getProject());
-		File gitIgnoreFile = workspaceRoot.getRawLocation().append(".gitignore").toFile();
-		Path gitIgnorePath = gitIgnoreFile.toPath();
+		gitIgnore = workspaceRoot.getRawLocation().append(".gitignore").toFile();
+		Path gitIgnorePath = gitIgnore.toPath();
 		Files.write(gitIgnorePath, Collections.singleton("/.metadata/"), Charset.forName("UTF-8"),
 				StandardOpenOption.CREATE);
 	}
@@ -120,12 +122,29 @@ public class CompareGitTestCase extends CompareTestCase {
 	@After
 	public void tearDown() throws Exception {
 		repository.dispose();
+		IndexDiffCache.INSTANCE.dispose();
 		RepositoryCache.INSTANCE.clear();
-		if (gitDir.exists()) {
-			try (Stream<java.nio.file.Path> walk = Files.walk(gitDir.toPath())) {
-				walk.sorted(Comparator.reverseOrder()).map(java.nio.file.Path::toFile).forEach(File::delete);
+		int retryCount = 0;
+		boolean retry = true;
+		while (retry && retryCount <= 2) {
+			retry = false;
+			try {
+				FileUtils.delete(gitDir, FileUtils.RECURSIVE | FileUtils.RETRY);
+			} catch (IOException e) {
+				// File deletion is completely flimsy with recent JGit versions.
+				// Might be due to the IndexDiffUpdateJob keeping the lock...
+				// Retry twice.
+				retry = true;
+				retryCount++;
+				System.err.println("Failed to delete : " + e.getClass().getName() + ' ' + e.getMessage());
+				if (e.getCause() != null) {
+					System.err.println(
+							"Caused by : " + e.getCause().getClass().getName() + ' ' + e.getMessage());
+				}
+				System.err.println("\nRetry attempt " + retryCount);
 			}
 		}
+		Files.deleteIfExists(gitIgnore.toPath());
 		super.tearDown();
 	}
 
