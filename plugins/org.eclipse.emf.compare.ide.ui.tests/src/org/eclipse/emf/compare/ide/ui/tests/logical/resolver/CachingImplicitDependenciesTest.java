@@ -59,7 +59,6 @@ public class CachingImplicitDependenciesTest {
 		IImplicitDependencies delegate = mock(IImplicitDependencies.class);
 		when(delegate.of(any(URI.class), nullable(URIConverter.class))).then(new Answer<Set<URI>>() {
 			public Set<URI> answer(InvocationOnMock invocation) throws Throwable {
-				System.out.println("hey!");
 				Object uriArgument = invocation.getArguments()[0];
 				if (uriArgument.equals(uri1)) {
 					return Sets.newHashSet(uri1dependencies);
