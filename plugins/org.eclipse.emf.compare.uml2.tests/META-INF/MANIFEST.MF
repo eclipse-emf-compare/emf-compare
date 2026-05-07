@@ -6,7 +6,7 @@ Bundle-Version: 2.6.1.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile,
  org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl,
  org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.provider,

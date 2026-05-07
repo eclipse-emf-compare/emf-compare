@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.emf.compare,
  org.eclipse.compare
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.emf.compare.diagram.ide.ui.internal;x-internal:=true,
  org.eclipse.emf.compare.diagram.ide.ui.internal.accessor;x-friends:="org.eclipse.emf.compare.diagram.ide.ui.sirius",
  org.eclipse.emf.compare.diagram.ide.ui.internal.accessor.factory;x-friends:="org.eclipse.emf.compare.diagram.ide.ui.sirius",
