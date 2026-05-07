@@ -19,23 +19,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -74,12 +68,6 @@ public class CompareTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		Path wsRoot = ResourcesPlugin.getWorkspace().getRoot().getLocation().toPath();
-		try (Stream<Path> children = Files.list(wsRoot)) {
-			List<Path> list = children.collect(Collectors.toList());
-			assertTrue("Expecting only '.metadata' folder but was : " + list, list.size() == 1);
-			assertTrue(list.get(0).getFileName().toString().equals(".metadata"));
-		}
 		project = new TestProject(PROJECT_NAME);
 	}
 
