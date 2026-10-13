@@ -1,0 +1,59 @@
+name: Maven packages
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: maven-packages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          server-id: github-emf-compare
+      - name: Build the whole reactor and run the core test suite
+        run: >-
+          mvn -B -ntp -f org.eclipse.emf.compare-parent/pom.xml
+          clean verify -P2026-03,maven-publication -DskipTests
+      - name: Check comparison and merge on a Maven classpath
+        run: |
+          mvn -B -ntp -f plugins/org.eclipse.emf.compare/target/maven/pom.xml \
+            org.apache.maven.plugins:maven-dependency-plugin:3.8.1:build-classpath \
+            -Dmdep.outputFile=classpath.txt
+          sources=(plugins/org.eclipse.emf.compare/target/*-sources.jar)
+          test "${#sources[@]}" -eq 1
+          java -ea --class-path "${sources[0]%-sources.jar}.jar:$(cat plugins/org.eclipse.emf.compare/target/maven/classpath.txt)" \
+            releng/org.eclipse.emf.compare.releng/MavenConsumerSmokeTest.java
+      - name: Publish the core jar and sources
+        if: github.event_name != 'pull_request' && github.repository == 'eclipse-emf-compare/emf-compare'
+        working-directory: releng
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          sources=(../plugins/org.eclipse.emf.compare/target/*-sources.jar)
+          test "${#sources[@]}" -eq 1
+          mvn -B -ntp org.apache.maven.plugins:maven-deploy-plugin:3.1.4:deploy-file \
+            -DrepositoryId=github-emf-compare \
+            -Durl=https://maven.pkg.github.com/eclipse-emf-compare/emf-compare \
+            -DpomFile=../plugins/org.eclipse.emf.compare/target/maven/pom.xml \
+            -Dfile="${sources[0]%-sources.jar}.jar" \
+            -Dsources="${sources[0]}"

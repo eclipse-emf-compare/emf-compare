@@ -12,4 +12,35 @@
   <artifactId>org.eclipse.emf.compare</artifactId>
   <version>3.5.3-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
+  <profiles>
+    <profile>
+      <id>maven-publication</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>maven-consumer-pom</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/maven</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>maven</directory>
+                      <filtering>true</filtering>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

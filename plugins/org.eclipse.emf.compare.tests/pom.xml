@@ -28,6 +28,23 @@
   </build>
   <profiles>
     <profile>
+      <id>maven-publication</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>tycho-surefire-plugin</artifactId>
+            <configuration>
+              <!-- Publication must run the core suite even when other reactor tests are skipped. -->
+              <skipTests>false</skipTests>
+              <failIfNoTests>true</failIfNoTests>
+              <testFailureIgnore>false</testFailureIgnore>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
      <id>kepler</id>
      <build>
       <plugins>
