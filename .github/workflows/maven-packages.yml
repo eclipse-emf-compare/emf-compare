@@ -30,6 +30,20 @@ jobs:
           java-version: '21'
           cache: maven
           server-id: github-emf-compare
+      - name: Set up Maven 3.9.14
+        working-directory: ${{ runner.temp }}
+        run: |
+          # Tycho 3.0.5 cannot start its p2 resolver with Maven 3.10.0.
+          maven_version=3.9.14
+          maven_archive="apache-maven-${maven_version}-bin.tar.gz"
+          maven_url="https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/${maven_version}/${maven_archive}"
+          curl -fsSLO "$maven_url"
+          maven_checksum=$(curl -fsSL "${maven_url}.sha512")
+          printf '%s  %s\n' "$maven_checksum" "$maven_archive" | sha512sum --check
+          tar -xzf "$maven_archive"
+          echo "$PWD/apache-maven-${maven_version}/bin" >> "$GITHUB_PATH"
+      - name: Show build tool versions
+        run: mvn --version
       - name: Build the whole reactor and run the core test suite
         run: >-
           mvn -B -ntp -f org.eclipse.emf.compare-parent/pom.xml
