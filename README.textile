@@ -9,6 +9,53 @@ h2. Installation
 * The latest version of EMF Compare can be installed from https://download.eclipse.org/modeling/emf/compare/updates/releases/latest/
 * More detailed installation instructions on http://www.eclipse.org/emf/compare/documentation/latest/user/user-guide.html#Installing_EMF_Compare
 
+h2. Maven dependencies
+
+The core comparison and merge engine is published to "GitHub Packages":https://github.com/eclipse-emf-compare/emf-compare/packages with its sources and a standalone Maven POM. EMF and Guava dependencies are resolved transitively from Maven Central. Eclipse UI and other integration bundles are distributed through the update sites above.
+
+Create a GitHub personal access token (classic) with the @read:packages@ scope. Authentication is required even for public Maven packages; see "GitHub's Maven registry documentation":https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry. Set @GITHUB_USERNAME@ to your GitHub username and @GITHUB_TOKEN@ to the token in your environment, then add this server to @~/.m2/settings.xml@:
+
+bc. <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0">
+  <servers>
+    <server>
+      <id>github-emf-compare</id>
+      <username>${env.GITHUB_USERNAME}</username>
+      <password>${env.GITHUB_TOKEN}</password>
+    </server>
+  </servers>
+</settings>
+
+Add the repository and dependency to your project's @pom.xml@:
+
+bc. <repositories>
+  <repository>
+    <id>github-emf-compare</id>
+    <url>https://maven.pkg.github.com/eclipse-emf-compare/emf-compare</url>
+    <snapshots>
+      <enabled>true</enabled>
+    </snapshots>
+  </repository>
+</repositories>
+<dependencies>
+  <dependency>
+    <groupId>org.eclipse.emf.compare</groupId>
+    <artifactId>org.eclipse.emf.compare</artifactId>
+    <version>3.5.3-SNAPSHOT</version>
+  </dependency>
+</dependencies>
+
+Successful builds of @master@ publish snapshots automatically. Run Maven with @-U@ to refresh a snapshot. The version above follows the core bundle's version, independently of the update-site version.
+
+h3. Publishing Maven builds
+
+The @Maven packages@ GitHub Actions workflow builds the whole reactor and runs the core @org.eclipse.emf.compare.tests@ suite. The @maven-publication@ profile forces this suite to run despite @-DskipTests@, which skips the other reactor test suites. Core test failures or an empty suite stop publication. The workflow also checks comparison, XMI serialization and merging on a plain Maven classpath before uploading the core binary and sources. Pull requests run the same build and checks without publishing. The workflow uses the repository's @GITHUB_TOKEN@ with @packages:write@ permission; no publishing token needs to be stored as a secret. Maintainers can also run it manually through @workflow_dispatch@. Publishing is enabled only in @eclipse-emf-compare/emf-compare@.
+
+To generate the publication POM and run the core tests locally, build the whole reactor:
+
+bc. mvn -f org.eclipse.emf.compare-parent/pom.xml clean verify -P2026-03,maven-publication -DskipTests
+
+The standalone POM is generated at @plugins/org.eclipse.emf.compare/target/maven/pom.xml@ using the core bundle's Maven coordinates. Its dependency versions must be kept aligned with the bundle manifest and target platform. The workflow publishes this POM with the Tycho-built jars using @deploy-file@, so consumers do not need Tycho or the build's parent POMs. Release versions must be prepared in the bundle's existing versioning files before publishing, and cannot be overwritten in GitHub Packages.
+
 h2. Reporting Bugs
 
 There may be errors in the <workspace>/.metadata/.log or even on stdout that can help you track down and problem.
