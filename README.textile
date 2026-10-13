@@ -50,6 +50,8 @@ h3. Publishing Maven builds
 
 The @Maven packages@ GitHub Actions workflow builds the whole reactor and runs the core @org.eclipse.emf.compare.tests@ suite. The @maven-publication@ profile forces this suite to run despite @-DskipTests@, which skips the other reactor test suites. Core test failures or an empty suite stop publication. The workflow also checks comparison, XMI serialization and merging on a plain Maven classpath before uploading the core binary and sources. Pull requests run the same build and checks without publishing. The workflow uses the repository's @GITHUB_TOKEN@ with @packages:write@ permission; no publishing token needs to be stored as a secret. Maintainers can also run it manually through @workflow_dispatch@. Publishing is enabled only in @eclipse-emf-compare/emf-compare@.
 
+The workflow uses Java 21 and Maven 3.9.14. Use the same versions locally: Tycho 3.0.5 fails to initialize its p2 resolver with Maven 3.10.0, which is installed on current GitHub runners.
+
 To generate the publication POM and run the core tests locally, build the whole reactor:
 
 bc. mvn -f org.eclipse.emf.compare-parent/pom.xml clean verify -P2026-03,maven-publication -DskipTests
