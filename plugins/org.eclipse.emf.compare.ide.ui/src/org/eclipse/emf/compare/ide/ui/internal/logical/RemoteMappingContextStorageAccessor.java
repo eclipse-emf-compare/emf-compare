@@ -42,6 +42,13 @@ public class RemoteMappingContextStorageAccessor implements IStorageProviderAcce
 	private final RenameDetector renameDetector;
 
 	/**
+	 * The subscriber underneath this storageAccessor. May be <code>null</code>.
+	 * 
+	 * @see #obtainSubscriber(RemoteResourceMappingContext)
+	 */
+	private final Subscriber subscriber;
+
+	/**
 	 * Wraps the given mapping context within this accessor.
 	 * 
 	 * @param context
@@ -49,7 +56,8 @@ public class RemoteMappingContextStorageAccessor implements IStorageProviderAcce
 	 */
 	public RemoteMappingContextStorageAccessor(RemoteResourceMappingContext context) {
 		this.context = checkNotNull(context);
-		renameDetector = new RenameDetector(obtainSubscriber(context), this);
+		this.subscriber = obtainSubscriber(context);
+		this.renameDetector = new RenameDetector(subscriber, this);
 
 		// Avoid the cost of auto refresh.
 		if (context instanceof SubscriberResourceMappingContext) {
@@ -113,5 +121,14 @@ public class RemoteMappingContextStorageAccessor implements IStorageProviderAcce
 	/** {@inheritDoc} */
 	public IFile getFileAfterRename(IFile originFile, DiffSide side) {
 		return renameDetector.getFileAfterRename(originFile, side).orNull();
+	}
+
+	/**
+	 * Returns the subscriber underneath this mapping context. May be <code>null</code>.
+	 * 
+	 * @return the subscriber underneath this mapping context if any.
+	 */
+	public Subscriber getSubscriber() {
+		return subscriber;
 	}
 }

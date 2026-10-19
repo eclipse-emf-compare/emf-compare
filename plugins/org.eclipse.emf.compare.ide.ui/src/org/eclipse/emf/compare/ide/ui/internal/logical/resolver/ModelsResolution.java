@@ -163,7 +163,7 @@ public class ModelsResolution extends AbstractResolution {
 	 * @throws InterruptedException
 	 *             Thrown if the resolution is cancelled or interrupted one way or another.
 	 */
-	private SynchronizationModel resolveModelsWithLocal(final IFile leftFile,
+	protected SynchronizationModel resolveModelsWithLocal(final IFile leftFile,
 			final ThreadSafeProgressMonitor tspm) throws InterruptedException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("resolveModelsWithLocal() - updating dependencies"); //$NON-NLS-1$
@@ -197,7 +197,7 @@ public class ModelsResolution extends AbstractResolution {
 	 * @throws InterruptedException
 	 *             Thrown if the resolution is cancelled or interrupted one way or another.
 	 */
-	private SynchronizationModel resolveRemoteModels(ThreadSafeProgressMonitor tspm)
+	protected SynchronizationModel resolveRemoteModels(ThreadSafeProgressMonitor tspm)
 			throws InterruptedException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("resolveRemoteModels() - resolving left remote traversal"); //$NON-NLS-1$
