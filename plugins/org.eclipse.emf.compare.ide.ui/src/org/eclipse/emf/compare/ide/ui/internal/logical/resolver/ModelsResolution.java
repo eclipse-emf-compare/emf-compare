@@ -488,7 +488,7 @@ public class ModelsResolution extends AbstractResolution {
 		Set<URI> bounds = Sets.newLinkedHashSet(urisToResolve);
 		for (URI resolveMe : urisToResolve) {
 			IResource file = ResourceUtil.getResourceFromURI(resolveMe);
-			if (file instanceof IFile && !alreadyLoaded.contains(file)) {
+			if (file instanceof IFile && !alreadyLoaded.contains(file) && file.exists()) {
 				localResolver.updateDependencies(monitor, diagnostic, (IFile)file);
 				if (tspm.isCanceled()) {
 					throw new OperationCanceledException();

@@ -44,7 +44,8 @@ import org.eclipse.emf.compare.rcp.EMFCompareLogger;
  */
 public class ResourceDependencyLocalResolver implements IResourceDependencyLocalResolver {
 	/** The logger. */
-	private static final EMFCompareLogger LOGGER = new EMFCompareLogger(ResourceDependencyLocalResolver.class);
+	private static final EMFCompareLogger LOGGER = new EMFCompareLogger(
+			ResourceDependencyLocalResolver.class);
 
 	/** The event bus */
 	private final EventBus eventBus;
@@ -244,7 +245,7 @@ public class ResourceDependencyLocalResolver implements IResourceDependencyLocal
 				new LocalMonitoredProxyCreationListener(tspm, eventBus, this, diagnostic));
 		Iterable<IFile> filesToResolve = Iterables.filter(Arrays.asList(files), new Predicate<IFile>() {
 			public boolean apply(IFile file) {
-				return !dependencyGraph.contains(ResourceUtil.asURI().apply(file))
+				return !dependencyGraph.contains(ResourceUtil.asURI().apply(file)) && file.exists()
 						&& ResourceUtil.hasModelType(file);
 			}
 		});
