@@ -363,21 +363,16 @@ public class EMFModelProvider extends ModelProvider {
 			// An empty local traversal doesn't necessarily means empty remote and origin sides!
 			// If the local file no longer exists, remote and ancestor need to use a "dummy" containing only
 			// the local file to start their resolution.
-			StorageTraversal startingPoint = localTraversal;
-			if (startingPoint.getStorages().isEmpty()) {
-				startingPoint = new StorageTraversal(Collections.singleton(file));
-			}
-
 			ITypedElement left = null;
 			ITypedElement right = null;
 			ITypedElement origin = null;
 			if (((RemoteResourceMappingContext)context).isThreeWay()) {
-				left = findTypedElement(startingPoint, accessor, actualMonitor, DiffSide.SOURCE);
-				right = findTypedElement(startingPoint, accessor, actualMonitor, DiffSide.REMOTE);
-				origin = findTypedElement(startingPoint, accessor, actualMonitor, DiffSide.ORIGIN);
+				left = findTypedElement(file, localTraversal, accessor, actualMonitor, DiffSide.SOURCE);
+				right = findTypedElement(file, localTraversal, accessor, actualMonitor, DiffSide.REMOTE);
+				origin = findTypedElement(file, localTraversal, accessor, actualMonitor, DiffSide.ORIGIN);
 			} else {
-				left = findTypedElement(startingPoint, accessor, actualMonitor, DiffSide.SOURCE);
-				right = findTypedElement(startingPoint, accessor, actualMonitor, DiffSide.REMOTE);
+				left = findTypedElement(file, localTraversal, accessor, actualMonitor, DiffSide.SOURCE);
+				right = findTypedElement(file, localTraversal, accessor, actualMonitor, DiffSide.REMOTE);
 			}
 
 			IStorage leftStorage = null;
@@ -461,7 +456,6 @@ public class EMFModelProvider extends ModelProvider {
 			final List<SynchronizationModel> toCombine = new LinkedList<SynchronizationModel>();
 
 			for (SynchronizationModel syncModel : syncModels.keySet()) {
-
 				if (!Collections.disjoint(syncModel.getResources(), currentSyncModel.getResources())) {
 					toCombine.add(syncModel);
 
@@ -549,6 +543,8 @@ public class EMFModelProvider extends ModelProvider {
 	/**
 	 * Browses the given traversal in order to create a typed element for the given side of the comparison.
 	 * 
+	 * @param preferredStartingPoint
+	 *            The file which logical model is to be resolved.
 	 * @param traversal
 	 *            The local traversal from which to find remote typed elements.
 	 * @param storageAccessor
@@ -562,22 +558,45 @@ public class EMFModelProvider extends ModelProvider {
 	 * @throws CoreException
 	 *             if we cannot retrieve the content of a resource for some reason.
 	 */
-	private ITypedElement findTypedElement(StorageTraversal traversal,
+	private ITypedElement findTypedElement(IFile preferredStartingPoint, StorageTraversal localTraversal,
 			IStorageProviderAccessor storageAccessor, IProgressMonitor monitor, DiffSide side)
 			throws CoreException {
-		if (traversal != null && !traversal.getStorages().isEmpty()) {
-			for (IStorage storage : traversal.getStorages()) {
-				if (storage instanceof IFile) {
-					final IStorageProvider storageProvider = storageAccessor
-							.getStorageProvider((IFile)storage, side);
-					if (storageProvider != null) {
-						return new StorageTypedElement(storageProvider.getStorage(monitor),
-								ResourceUtil.getFixedPath(storage).toString());
+		ITypedElement result = null;
+		if (localTraversal != null) {
+			IStorageProvider storageProvider;
+			if (localTraversal.getStorages().contains(preferredStartingPoint)) {
+				// if the file itself is part of the traversal, use it directly
+				storageProvider = storageAccessor.getStorageProvider(preferredStartingPoint, side);
+				result = new StorageTypedElement(storageProvider.getStorage(monitor),
+						ResourceUtil.getFixedPath(preferredStartingPoint).toString());
+			} else {
+				// Otherwise, double-check if that file exists on the remote side
+				storageProvider = storageAccessor.getStorageProvider(preferredStartingPoint, side);
+				IStorage storage = storageProvider.getStorage(monitor);
+				if (storage != null) {
+					result = new StorageTypedElement(storage, ResourceUtil.getFixedPath(storage).toString());
+				} else {
+					// Use the first existing storage we find on that side, using the local traversal as
+					// starting point
+					// This will happen if the file we're trying to compute the logical model of does not
+					// exist on either remote or ancestor side : we still want the logical model computed
+					// according to what exists locally for this logical model.
+					Iterator<? extends IStorage> localStorages = localTraversal.getStorages().iterator();
+					while (result == null && localStorages.hasNext()) {
+						IStorage localStorage = localStorages.next();
+						if (localStorage instanceof IFile) {
+							storageProvider = storageAccessor.getStorageProvider((IFile)localStorage, side);
+							storage = storageProvider.getStorage(monitor);
+							if (storage != null) {
+								result = new StorageTypedElement(storage,
+										ResourceUtil.getFixedPath(storage).toString());
+							}
+						}
 					}
 				}
 			}
 		}
 
-		return null;
+		return result;
 	}
 }
