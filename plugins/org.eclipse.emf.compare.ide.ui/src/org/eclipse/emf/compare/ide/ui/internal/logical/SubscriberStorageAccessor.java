@@ -296,4 +296,34 @@ public final class SubscriberStorageAccessor implements IStorageProviderAccessor
 	public IFile getFileAfterRename(IFile originFile, DiffSide side) {
 		return renameDetector.getFileAfterRename(originFile, side).orNull();
 	}
+
+	/**
+	 * Return the variant tree for the origin side of this comparison if any.
+	 * 
+	 * @return The resource variant tree holding data for the common ancestor of the underlying subscriber,
+	 *         <code>null</code> if none or not accessible.
+	 */
+	public IResourceVariantTree getOriginTree() {
+		return originTree;
+	}
+
+	/**
+	 * Return the variant tree for the remote side of this comparison if any.
+	 * 
+	 * @return The resource variant tree holding data for the remote side of the underlying subscriber,
+	 *         <code>null</code> if none or not accessible.
+	 */
+	public IResourceVariantTree getRemoteTree() {
+		return remoteTree;
+	}
+
+	/**
+	 * Return the variant tree for the source side of this comparison if any.
+	 * 
+	 * @return The resource variant tree holding data for the source side of the underlying subscriber,
+	 *         <code>null</code> if none or not accessible.
+	 */
+	public IResourceVariantTree getSourceTree() {
+		return sourceTree;
+	}
 }
