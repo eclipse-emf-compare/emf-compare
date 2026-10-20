@@ -14,9 +14,7 @@ import static java.util.Collections.emptyIterator;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Diagnostic;
@@ -28,37 +26,48 @@ import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.eclipse.emf.compare.diff.IDiffEngine;
 import org.eclipse.emf.compare.equi.DefaultEquiEngine;
 import org.eclipse.emf.compare.equi.IEquiEngine;
-import org.eclipse.emf.compare.match.DefaultMatchEngine;
 import org.eclipse.emf.compare.match.IMatchEngine;
-import org.eclipse.emf.compare.match.IMatchEngine.Factory;
 import org.eclipse.emf.compare.req.DefaultReqEngine;
 import org.eclipse.emf.compare.req.IReqEngine;
 import org.eclipse.emf.compare.scope.AbstractComparisonScope;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
 import org.eclipse.emf.compare.tests.monitor.data.MonitorCancelInputData;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.junit.Before;
 import org.junit.Test;
 
-public class MonitorCancelTest {
+/**
+ * Checks cancellation reporting and comparison stages using each configured matcher.
+ *
+ */
+public class MonitorCancelTest extends AbstractMatcherTest {
 
-	private Comparison fComparison;
-
-	private Comparison fComparisonWithDiff;
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public MonitorCancelTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
 
 	/**
 	 * Checks that the sending of a ComparisonCanceledException by the match engine causes a cancelled
 	 * comparison to be returned.
+	 *
+	 * @throws IOException
+	 *             if the input fixture cannot be loaded
 	 */
 	@Test
-	public void testCancelDuringMatch() {
-		EMFCompare compare = EMFCompare.builder().setMatchEngineFactoryRegistry(TestRegistry.INSTANCE)
-				.build();
-		Comparison comparison = compare.compare(getEmptyScope(), new BasicMonitor());
+	public void testCancelDuringMatch() throws IOException {
+		EMFCompare compare = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build();
+		Comparison comparison = compare.compare(getNonEmptyTestScope(), getCanceledMonitor());
 		assertEquals(Diagnostic.CANCEL, comparison.getDiagnostic().getSeverity());
 	}
 
@@ -68,7 +77,7 @@ public class MonitorCancelTest {
 	 */
 	@Test
 	public void testCancelDuringDiff() {
-		EMFCompare compare = EMFCompare.builder().setDiffEngine(new IDiffEngine() {
+		EMFCompare compare = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).setDiffEngine(new IDiffEngine() {
 			public void diff(Comparison comparison, Monitor monitor) {
 				throw new ComparisonCanceledException();
 			}
@@ -83,7 +92,8 @@ public class MonitorCancelTest {
 	 */
 	@Test
 	public void testCancelDuringReq() {
-		EMFCompare compare = EMFCompare.builder().setRequirementEngine(new IReqEngine() {
+		EMFCompare compare = matcher.builder(UseIdentifiers.WHEN_AVAILABLE)
+				.setRequirementEngine(new IReqEngine() {
 			public void computeRequirements(Comparison comparison, Monitor monitor) {
 				throw new ComparisonCanceledException();
 			}
@@ -98,7 +108,8 @@ public class MonitorCancelTest {
 	 */
 	@Test
 	public void testCancelDuringEqui() {
-		EMFCompare compare = EMFCompare.builder().setEquivalenceEngine(new IEquiEngine() {
+		EMFCompare compare = matcher.builder(UseIdentifiers.WHEN_AVAILABLE)
+				.setEquivalenceEngine(new IEquiEngine() {
 			public void computeEquivalences(Comparison comparison, Monitor monitor) {
 				throw new ComparisonCanceledException();
 			}
@@ -109,44 +120,57 @@ public class MonitorCancelTest {
 
 	@Test(expected = ComparisonCanceledException.class)
 	public void testMonitorCancelInMatch() throws IOException {
-		IMatchEngine engine = DefaultMatchEngine.create(UseIdentifiers.WHEN_AVAILABLE);
+		IMatchEngine engine = matcher.createMatchEngine(UseIdentifiers.WHEN_AVAILABLE);
 		engine.match(getNonEmptyTestScope(), getCanceledMonitor());
 	}
 
 	@Test(expected = ComparisonCanceledException.class)
 	public void testMonitorCancelInDiff() throws IOException {
 		IDiffEngine diffEngine = new DefaultDiffEngine();
-		diffEngine.diff(fComparison, getCanceledMonitor());
+		diffEngine.diff(createMatchedComparison(), getCanceledMonitor());
 	}
 
 	@Test(expected = ComparisonCanceledException.class)
 	public void testMonitorCancelInReq() throws IOException {
 		IReqEngine reqEngine = new DefaultReqEngine();
-		reqEngine.computeRequirements(fComparisonWithDiff, getCanceledMonitor());
+		reqEngine.computeRequirements(createComparisonWithDifferences(), getCanceledMonitor());
 	}
 
 	@Test(expected = ComparisonCanceledException.class)
 	public void testMonitorCancelInEqui() throws IOException {
 		IEquiEngine equiEngine = new DefaultEquiEngine();
-		equiEngine.computeEquivalences(fComparisonWithDiff, getCanceledMonitor());
+		equiEngine.computeEquivalences(createComparisonWithDifferences(), getCanceledMonitor());
 	}
 
-	@Before
-	public void setUp() throws IOException {
-		IMatchEngine matchEngine = DefaultMatchEngine.create(UseIdentifiers.WHEN_AVAILABLE);
-		fComparison = matchEngine.match(getNonEmptyTestScope(), new BasicMonitor());
-		fComparisonWithDiff = matchEngine.match(getNonEmptyTestScope(), new BasicMonitor());
-		IDiffEngine diffEngine = new DefaultDiffEngine();
-		diffEngine.diff(fComparisonWithDiff, new BasicMonitor());
+	/**
+	 * Creates the matched input needed by the diff cancellation test.
+	 *
+	 * @return the comparison containing matches
+	 * @throws IOException
+	 *             if the input fixture cannot be loaded
+	 */
+	private Comparison createMatchedComparison() throws IOException {
+		return matcher.createMatchEngine(UseIdentifiers.WHEN_AVAILABLE)
+				.match(getNonEmptyTestScope(), new BasicMonitor());
+	}
+
+	/**
+	 * Creates the differences needed by requirement and equivalence cancellation tests.
+	 *
+	 * @return the comparison containing differences
+	 * @throws IOException
+	 *             if the input fixture cannot be loaded
+	 */
+	private Comparison createComparisonWithDifferences() throws IOException {
+		Comparison comparison = createMatchedComparison();
+		new DefaultDiffEngine().diff(comparison, new BasicMonitor());
+		return comparison;
 	}
 
 	private BasicMonitor getCanceledMonitor() {
-		return new BasicMonitor() {
-			@Override
-			public boolean isCanceled() {
-				return true;
-			}
-		};
+		BasicMonitor monitor = new BasicMonitor();
+		monitor.setCanceled(true);
+		return monitor;
 	}
 
 	private IComparisonScope getNonEmptyTestScope() throws IOException {
@@ -171,76 +195,4 @@ public class MonitorCancelTest {
 		};
 	}
 
-	/**
-	 * A match engine to use for tests, which systematically throws a ComparisonCanceledException.
-	 * 
-	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
-	 */
-	private static final class CanceledMatchEngine implements IMatchEngine {
-
-		private static final CanceledMatchEngine INSTANCE = new CanceledMatchEngine();
-
-		public Comparison match(IComparisonScope scope, Monitor monitor) {
-			throw new ComparisonCanceledException();
-		}
-
-	}
-
-	/**
-	 * A factory for tests that provides a CanceledMatchEngine.
-	 * 
-	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a
-	 */
-	private static final class TestFactory implements IMatchEngine.Factory {
-
-		private static final TestFactory INSTANCE = new TestFactory();
-
-		public IMatchEngine getMatchEngine() {
-			return CanceledMatchEngine.INSTANCE;
-		}
-
-		public int getRanking() {
-			return 0;
-		}
-
-		public void setRanking(int parseInt) {
-			// Intentionally blank
-		}
-
-		public boolean isMatchEngineFactoryFor(IComparisonScope scope) {
-			return true;
-		}
-
-	}
-
-	/**
-	 * A registry for tests that provides a TestFactory.
-	 * 
-	 * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
-	 */
-	private static final class TestRegistry implements IMatchEngine.Factory.Registry {
-
-		private static final TestRegistry INSTANCE = new TestRegistry();
-
-		public Factory getHighestRankingMatchEngineFactory(IComparisonScope scope) {
-			return TestFactory.INSTANCE;
-		}
-
-		public List<Factory> getMatchEngineFactories(IComparisonScope scope) {
-			return Arrays.<Factory> asList(TestFactory.INSTANCE);
-		}
-
-		public Factory add(Factory matchEngineFactory) {
-			throw new RuntimeException();
-		}
-
-		public Factory remove(String className) {
-			return null;
-		}
-
-		public void clear() {
-			// Intentionally blank
-		}
-
-	}
 }

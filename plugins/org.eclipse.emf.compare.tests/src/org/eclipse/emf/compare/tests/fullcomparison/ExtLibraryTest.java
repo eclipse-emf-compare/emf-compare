@@ -32,10 +32,12 @@ import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
 import org.eclipse.emf.compare.tests.fullcomparison.data.identifier.IdentifierMatchInputData;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
@@ -44,8 +46,19 @@ import org.junit.Test;
  * EMFCompareTestRunner. We need more generic tests for the conflicts.
  */
 @SuppressWarnings("nls")
-public class ExtLibraryTest {
+public class ExtLibraryTest extends AbstractMatcherTest {
+
 	private IdentifierMatchInputData inputData = new IdentifierMatchInputData();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public ExtLibraryTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void testConflicts() throws IOException {
@@ -54,7 +67,7 @@ public class ExtLibraryTest {
 		final Resource right = inputData.getExtlibraryRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		final List<Diff> differences = comparison.getDifferences();
 
 		final Predicate<? super Diff> rightAudiovisualName = and(fromSide(DifferenceSource.RIGHT),

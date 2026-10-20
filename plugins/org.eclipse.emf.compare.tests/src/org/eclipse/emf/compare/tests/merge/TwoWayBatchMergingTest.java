@@ -20,7 +20,6 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Equivalence;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.internal.utils.DiffUtil;
@@ -31,11 +30,14 @@ import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.ReferenceChangeMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
 import org.eclipse.emf.compare.tests.merge.data.TwoWayMergeInputData;
 import org.eclipse.emf.compare.tests.nodes.Node;
 import org.eclipse.emf.compare.tests.nodes.NodeMultipleContainment;
 import org.eclipse.emf.compare.tests.nodes.NodeOppositeRefOneToMany;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -48,7 +50,7 @@ import org.junit.Test;
  * 
  * @author Philip Langer <planger@eclipsesource.com>
  */
-public class TwoWayBatchMergingTest {
+public class TwoWayBatchMergingTest extends AbstractMatcherTest {
 
 	private enum Direction {
 		LEFT_TO_RIGHT, RIGHT_TO_LEFT;
@@ -57,6 +59,16 @@ public class TwoWayBatchMergingTest {
 	private TwoWayMergeInputData input = new TwoWayMergeInputData();
 
 	private IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public TwoWayBatchMergingTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
 
 	/**
 	 * Tests a scenario in which an element is moved from one container to another, whereas the containment
@@ -261,7 +273,7 @@ public class TwoWayBatchMergingTest {
 	private void batchMergeAndAssertEquality(Resource left, Resource right, Direction direction) {
 		// perform comparison
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		final EList<Diff> differences = comparison.getDifferences();
 
 		// batch merging of all detected differences:
@@ -274,7 +286,8 @@ public class TwoWayBatchMergingTest {
 		}
 
 		// check that models are equal after batch merging
-		Comparison assertionComparison = EMFCompare.builder().build().compare(scope);
+		Comparison assertionComparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE)
+				.build().compare(scope);
 		EList<Diff> assertionDifferences = assertionComparison.getDifferences();
 		assertEquals(0, assertionDifferences.size());
 	}

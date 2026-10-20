@@ -18,11 +18,13 @@ import java.util.List;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.merge.IMerger.Registry;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
@@ -34,7 +36,7 @@ import org.junit.Test;
  * 
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
-public abstract class AbstractMergerTest {
+public abstract class AbstractMergerTest extends AbstractMatcherTest {
 
 	protected Resource origin;
 
@@ -50,8 +52,28 @@ public abstract class AbstractMergerTest {
 
 	protected Comparison comparison;
 
-	public AbstractMergerTest(final Resource origin, final Resource left, final Resource right,
-			final boolean rightToLeft, final Resource expected, IMerger.Registry mergerRegistry) {
+	/**
+	 * Retains the supplied merge fixtures for the selected matcher; tests mutate the target resource.
+	 *
+	 * @param matcher
+	 *            the selected matcher
+	 * @param origin
+	 *            the ancestor model
+	 * @param left
+	 *            the left model
+	 * @param right
+	 *            the right model
+	 * @param rightToLeft
+	 *            whether to merge from right to left
+	 * @param expected
+	 *            the expected merged model
+	 * @param mergerRegistry
+	 *            the available mergers
+	 */
+	protected AbstractMergerTest(MatchingAlgorithm matcher, final Resource origin, final Resource left,
+			final Resource right, final boolean rightToLeft, final Resource expected,
+			IMerger.Registry mergerRegistry) {
+		super(matcher);
 		this.origin = checkNotNull(origin);
 		this.left = checkNotNull(left);
 		this.right = checkNotNull(right);
@@ -79,7 +101,7 @@ public abstract class AbstractMergerTest {
 	 */
 	protected void createComparison() {
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 	}
 
 	/**
@@ -104,7 +126,7 @@ public abstract class AbstractMergerTest {
 			scope = new DefaultComparisonScope(right, expected, null);
 		}
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		assertEquals(0, comparison.getDifferences().size());
 	}
 

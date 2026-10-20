@@ -25,7 +25,6 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceState;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.merge.BatchMerger;
@@ -33,16 +32,33 @@ import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.fragmentation.data.FragmentationInputData;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.junit.Test;
 
-public class ResourceAttachmentChangeBug492261 {
+/**
+ * Tests resource attachment changes with both matchers.
+ *
+ */
+public class ResourceAttachmentChangeBug492261 extends AbstractMatcherTest {
 
 	private final FragmentationInputData input = new FragmentationInputData();
 
 	private final BatchMerger batchMerger = new BatchMerger(IMerger.RegistryImpl.createStandaloneInstance());
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public ResourceAttachmentChangeBug492261(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void testUncontrolRootResourceImplication_1() throws IOException {
@@ -147,7 +163,7 @@ public class ResourceAttachmentChangeBug492261 {
 	private void mergeUncontrolDiffsAndAssertResult(final ResourceSet leftSet, final ResourceSet originSet,
 			final ResourceSet rightSet, boolean fragmentedOnLeft) {
 		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -191,14 +207,14 @@ public class ResourceAttachmentChangeBug492261 {
 		assertEquals(DifferenceState.DISCARDED, container.getState());
 		assertEquals(DifferenceState.DISCARDED, innerNode.getState());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		assertEquals(0, comparison.getDifferences().size());
 	}
 
 	private void mergeControlDiffsAndAssertResult(final ResourceSet leftSet, final ResourceSet originSet,
 			final ResourceSet rightSet, boolean fragmentedOnLeft) {
 		final IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 
@@ -242,7 +258,7 @@ public class ResourceAttachmentChangeBug492261 {
 		assertEquals(DifferenceState.DISCARDED, container.getState());
 		assertEquals(DifferenceState.DISCARDED, innerNode.getState());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		assertEquals(0, comparison.getDifferences().size());
 	}
 

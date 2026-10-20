@@ -16,14 +16,16 @@ import java.io.IOException;
 
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
 import org.eclipse.emf.compare.tests.fullcomparison.data.dynamic.DynamicInstancesInputData;
 import org.eclipse.emf.compare.tests.suite.AllTests;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +36,7 @@ import org.junit.Test;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 @SuppressWarnings("nls")
-public class DynamicInstanceComparisonTest {
+public class DynamicInstanceComparisonTest extends AbstractMatcherTest {
 
 	DynamicInstancesInputData data = new DynamicInstancesInputData();
 
@@ -45,6 +47,16 @@ public class DynamicInstanceComparisonTest {
 	Resource origin;
 
 	final IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public DynamicInstanceComparisonTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -57,7 +69,7 @@ public class DynamicInstanceComparisonTest {
 	@Test
 	public void compare2Ways() throws IOException {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison result = EMFCompare.builder().build().compare(scope);
+		Comparison result = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1,
 				result.getDifferences().size());
 	}
@@ -65,7 +77,7 @@ public class DynamicInstanceComparisonTest {
 	@Test
 	public void compare3Ways() throws IOException {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison result = EMFCompare.builder().build().compare(scope);
+		Comparison result = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1,
 				result.getDifferences().size());
 	}
@@ -73,7 +85,7 @@ public class DynamicInstanceComparisonTest {
 	@Test
 	public void copyLeftToRight() throws IOException {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison result = EMFCompare.builder().build().compare(scope);
+		Comparison result = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1,
 				result.getDifferences().size());
 
@@ -81,13 +93,14 @@ public class DynamicInstanceComparisonTest {
 		merger.copyAllLeftToRight(result.getDifferences(), new BasicMonitor());
 
 		assertEquals("We are supposed to have no difference as we merged everything", 0,
-				EMFCompare.builder().build().compare(scope).getDifferences().size());
+				matcher.builder(UseIdentifiers.WHEN_AVAILABLE)
+						.build().compare(scope).getDifferences().size());
 	}
 
 	@Test
 	public void copyRightToLeft() throws IOException {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison result = EMFCompare.builder().build().compare(scope);
+		Comparison result = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		assertEquals("We are supposed to have one difference (ADD/REMOVE of an instance)", 1,
 				result.getDifferences().size());
 
@@ -95,7 +108,8 @@ public class DynamicInstanceComparisonTest {
 		merger.copyAllRightToLeft(result.getDifferences(), new BasicMonitor());
 
 		assertEquals("We are supposed to have no difference as we merged everything", 0,
-				EMFCompare.builder().build().compare(scope).getDifferences().size());
+				matcher.builder(UseIdentifiers.WHEN_AVAILABLE)
+						.build().compare(scope).getDifferences().size());
 	}
 
 }
